@@ -1,0 +1,97 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+/*
+ * Created on Jan 13, 2005
+ */
+package org.eclipse.mylar.tasks;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * @author Mik Kersten
+ * 
+ * TODO: make IDs be handles
+ */
+public interface ITask extends Serializable {
+    
+    @Override
+    public abstract String toString();
+
+    public abstract String getPath();
+
+    public abstract void setPath(String path);
+
+    public abstract List<ITask> getChildren();
+
+    public abstract String getHandle();
+
+    public abstract void setHandle(String id);
+
+    public abstract String getLabel();
+
+    public abstract void setLabel(String label);
+
+    public abstract ITask getParent(); 
+
+    public abstract void setParent(ITask parent);
+
+    public abstract void removeSubtask(ITask task);
+    
+    public abstract void addSubtask(ITask task);
+
+    public abstract boolean isActive();
+    
+    public abstract void setActive(boolean active);
+    
+    public abstract boolean isCompleted();
+    
+    public abstract void setCompleted(boolean completed);
+    
+    public abstract RelatedLinks getRelatedLinks();
+    
+    public abstract void setRelatedLinks(RelatedLinks relatedLinks);
+    
+    public abstract void addLink(String url);
+    
+    public abstract void removeLink(String url);
+    
+    public abstract String getNotes();
+    
+    public abstract void setNotes(String notes);
+    
+    public abstract String getElapsedTime();
+    
+    public abstract void setElapsedTime(String elapsed);
+    
+    public abstract String getEstimatedTime();
+    
+    public abstract void setEstimatedTime(String estimated);
+
+    public abstract List<ITask> getSubTasksInProgress();
+    
+    /**
+     * Opens this task in an editor
+     */
+	public abstract void openTaskInEditor();
+	
+	public abstract String getToolTipText();
+    
+    public abstract List<Category> getCategories();
+
+    public abstract String getPriority();
+    
+    public abstract void setPriority(String priority);
+    
+    public abstract boolean isCategory();
+
+    public abstract void setIsCategory(boolean b);
+}

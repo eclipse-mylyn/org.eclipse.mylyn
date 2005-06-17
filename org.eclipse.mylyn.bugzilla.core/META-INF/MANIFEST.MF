@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bugzilla Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.bugzilla; singleton:=true
+Bundle-Version: 1.7.2
+Bundle-Activator: org.eclipse.mylar.bugzilla.BugzillaPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.compare,
+ org.eclipse.search,
+ org.eclipse.ui.views,
+ org.eclipse.ui.ide,
+ org.eclipse.help,
+ org.eclipse.help.ui,
+ org.eclipse.jface.text,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.ui.editors,
+ org.eclipse.pde.ui
+Eclipse-AutoStart: true
+Bundle-Vendor: University of British Columbia
+Bundle-ClassPath: bugzilla-eclipse.jar
+Export-Package: org.eclipse.mylar.bugzilla,
+ org.eclipse.mylar.bugzilla.compare,
+ org.eclipse.mylar.bugzilla.core,
+ org.eclipse.mylar.bugzilla.core.internal,
+ org.eclipse.mylar.bugzilla.favorites,
+ org.eclipse.mylar.bugzilla.favorites.actions,
+ org.eclipse.mylar.bugzilla.offlineReports,
+ org.eclipse.mylar.bugzilla.saveQuery,
+ org.eclipse.mylar.bugzilla.search,
+ org.eclipse.mylar.bugzilla.ui,
+ org.eclipse.mylar.bugzilla.ui.editor,
+ org.eclipse.mylar.bugzilla.ui.outline,
+ org.eclipse.mylar.bugzilla.ui.wizard

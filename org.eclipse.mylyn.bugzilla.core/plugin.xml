@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+   
+   <extension
+      id="org.eclipse.mylar.bugzilla.wizards"
+      name="Bug Wizard"
+      point="org.eclipse.ui.newWizards">
+   <category
+         name="Bugzilla Wizards"
+         id="org.eclipse.mylar.bugzilla.wizard.category">
+   </category>
+   <wizard
+         name="New Bug Report"
+         icon="Icons/bug.gif"
+         category="org.eclipse.mylar.bugzilla.wizard.category"
+         class="org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard"
+         id="org.eclipse.mylar.bugzilla.bugWizard">
+      <description>
+      	Create a new bug report
+      </description>
+   </wizard>
+</extension>
+   
+   <extension
+         id="org.eclipse.mylar.bugzilla.help.browser"
+         name="Bugzilla Help"
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="true">
+      </toc>
+   </extension>
+   <extension
+   			id="org.eclipse.mylar.bugzilla.favorites.view"
+   			name="Bugzilla Favorites View"
+   			point="org.eclipse.ui.views">
+   		 <category
+   				name="Bugzilla"
+            	id="org.eclipse.mylar.bugzilla.category"/>
+   		 <view
+   		 		name="Bugzilla Favorites"
+   				icon="Icons/bugzilla-bookmark.gif"
+   				category="org.eclipse.mylar.bugzilla.category"
+   				class="org.eclipse.mylar.bugzilla.ui.FavoritesView"
+   				id="org.eclipse.mylar.bugzilla.ui.favoritesView"/>
+   </extension>
+   <extension
+   			id="org.eclipse.mylar.bugzilla.favorites.view"
+   			name="Bugzilla Offline Reports View"
+   			point="org.eclipse.ui.views">
+   		 <category
+   				name="Bugzilla"
+            	id="org.eclipse.mylar.bugzilla.category"/>
+   		 <view
+   		 		name="Bugzilla Offline Reports"
+   				icon="Icons/bugzilla-bookmark.gif"
+   				category="org.eclipse.mylar.bugzilla.category"
+   				class="org.eclipse.mylar.bugzilla.ui.OfflineView"
+   				id="org.eclipse.mylar.bugzilla.ui.offlineReportsView"/>
+   </extension>
+   <extension
+         point="org.eclipse.search.searchPages"
+         id="org.eclipse.mylar.bugzilla.search.searchPage"
+         name="Bugzilla Search Page">
+      <page
+            label="Bugzilla Search"
+            enabled="true"
+            icon="Icons/bug.gif"
+            class="org.eclipse.mylar.bugzilla.search.BugzillaSearchPage"
+            id="org.eclipse.mylar.bugzilla.search.bugzillaSearchPage"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Bugzilla viewer"
+            icon="Icons/bug.gif"
+            class="org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor"
+            id="org.eclipse.mylar.bugzilla.ui.existingBugEditor">
+      </editor>
+      <editor
+      		name="Bugzilla viewer"
+      		icon="Icons/bug.gif"
+      		class="org.eclipse.mylar.bugzilla.ui.editor.NewBugEditor"
+      		id="org.eclipse.mylar.bugzilla.ui.newBugEditor">
+      </editor>
+   </extension>   
+   <extension
+         id="searchHit"
+         name="Bugzilla Search Match"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.search.searchmarker"/>
+      <attribute name="id"/>
+      <attribute name="href"/>
+      <attribute name="description"/>
+      <attribute name="label"/>
+      <attribute name="severity"/>
+      <attribute name="priority"/>
+      <attribute name="platform"/>
+      <attribute name="status"/>
+      <attribute name="result"/>
+      <attribute name="owner"/>
+      <attribute name="query"/>
+   </extension>
+   <extension
+   		 point="org.eclipse.ui.preferencePages">
+   	  <page
+   	  		name="Bugzilla"
+   	  		class="org.eclipse.mylar.bugzilla.BugzillaPreferences"
+   	  		id="org.eclipse.mylar.bugzilla.bugzillaPreferences"/>
+   </extension>
+   <extension
+         id="org.eclipse.mylar.bugzilla.help.context"
+         name="Bugzilla Context-sensitive Help"
+         point="org.eclipse.help.contexts">
+      <contexts 
+      		file="bugzilla_contexts.xml">
+      </contexts>
+   </extension>
+   <extension
+         id="BugzillaSearchPage"
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="org.eclipse.mylar.bugzilla.search.BugzillaSearchResultView"
+            searchResultClass="org.eclipse.mylar.bugzilla.search.BugzillaSearchResult"
+            id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
+   </extension>
+
+</plugin>
+

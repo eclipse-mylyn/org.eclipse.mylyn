@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylar Documentation Plugin
+Bundle-SymbolicName: org.eclipse.mylar.doc; singleton:=true
+Bundle-Version: 0.2.3
+Bundle-Activator: org.eclipse.mylar.doc.MylarDocPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources
+Eclipse-AutoStart: true
+Bundle-Vendor: University of British Columbia
+Export-Package: org.eclipse.mylar.doc
+Bundle-ClassPath: mylar-doc.jar

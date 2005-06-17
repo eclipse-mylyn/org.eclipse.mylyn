@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         name="Mylar Tasks startup"
+         point="org.eclipse.ui.startup">
+   </extension>
+
+  <extension point="org.eclipse.ui.views">
+      <category name="Mylar Tools" id="org.eclipse.mylar"/>
+
+	  <view name="Mylar Tasks" 
+	  	icon="icons/eview16/tasklist.gif" 
+	  	category="org.eclipse.mylar" 
+	  	class="org.eclipse.mylar.tasks.ui.views.TaskListView" 
+	  	id="org.eclipse.mylar.tasks.ui.views.TaskListView" /> 
+  </extension>
+  <extension
+        point="org.eclipse.ui.editors">
+     <editor
+           icon="icons/eview16/tasklist.gif"
+           class="org.eclipse.mylar.tasks.ui.TaskEditor"
+           name="Task Viewer"
+           id="org.eclipse.mylar.tasks.ui.taskEditor"/>
+     <editor
+           icon="icons/eview16/tasklist.gif"
+           name="Bugzilla task viewer"
+           class="org.eclipse.mylar.tasks.ui.BugzillaTaskEditor"
+           id="org.eclipse.mylar.tasks.ui.bugzillaTaskEditor"/>
+  </extension>
+  
+  <extension point="org.eclipse.ui.commands">
+      <command
+            name="Interest filtering"
+            description="Interest filtering"
+            id="org.eclipse.mylar.ui.interest.filtering"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
+      <command
+            name="Intersection mode"
+            description="Intersection mode"
+            id="org.eclipse.mylar.ui.interest.intersection"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
+   </extension>
+</plugin>

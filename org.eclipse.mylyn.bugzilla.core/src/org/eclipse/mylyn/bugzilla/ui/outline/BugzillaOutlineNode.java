@@ -1,0 +1,331 @@
+/*******************************************************************************
+ * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.mylar.bugzilla.ui.outline;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.eclipse.mylar.bugzilla.BugzillaImages;
+import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.Comment;
+import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.ui.wizard.NewBugModel;
+import org.eclipse.swt.graphics.Image;
+
+
+/**
+ * A node for the tree in the <code>BugzillaOutlinePage</code>.
+ */
+public class BugzillaOutlineNode implements IBugzillaReportSelection {
+	
+	/** The id of the Bugzilla object that the selection was on. */
+	protected int id;
+	
+	/** The server of the Bugzilla object that the selection was on. */
+	protected String server;
+	
+	/** The label for this piece of data. */
+	private String key;
+	
+	/** The children of this node. */
+	private ArrayList<BugzillaOutlineNode> nodeChildren;
+	
+	/** The parent of this node or null if it is the bug report */
+	private BugzillaOutlineNode parent;
+	
+	/** This node's image. */
+	private Image image;
+	
+    private Object data = null;
+    
+    private boolean fromEditor = false;
+    
+    private boolean isCommentHeader = false;
+    private boolean isDescription = false;
+	
+	/**
+	 * Creates a new <code>BugzillaOutlineNode</code>.
+	 * 
+	 * @param id
+	 *            The id of the bug this outline is for.
+	 * @param server
+	 *            The server of the bug this outline is for.
+	 * @param key
+	 *            The label for this node.
+	 * @param image
+	 *            The image that will be displayed by this node in the tree.
+	 * @param data
+	 *            The data, if necessary, this node represents.
+	 * @param parent
+	 * 			  The parent of this node
+	 */
+	public BugzillaOutlineNode(int id, String server, String key, Image image, Object data) {
+		this.id = id;
+		this.server = server;
+		this.key = key;
+		this.nodeChildren = null;
+		this.image = image;
+        this.data = data;
+        this.parent = null;
+	}
+	
+    public boolean isFromEditor(){
+        return fromEditor;
+    }
+    
+	/**
+	 * @return The children of this node, represented as an <code>Object</code> array.
+	 */
+	public BugzillaOutlineNode[] getChildren() {
+		return (nodeChildren == null) ? new BugzillaOutlineNode[0] : nodeChildren.toArray(new BugzillaOutlineNode[nodeChildren.size()]);
+	}
+	
+	/**
+	 * Adds a node to this node's list of children.
+	 * @param bugNode The new child.
+	 */
+	public void addChild(BugzillaOutlineNode bugNode) {
+		if (nodeChildren == null) {
+			nodeChildren = new ArrayList<BugzillaOutlineNode>();
+		}
+		bugNode.setParent(this);
+		nodeChildren.add(bugNode);
+	}
+
+	/**
+	 * @return The label of this node.
+	 */
+	public String getKey() {
+		return key;
+	}
+	
+	/**
+	 * Set the label of this node.
+	 * @param key The new label.
+	 */
+	public void setKey(String key) {
+		this.key = key;
+	}
+	
+	/**
+	 * @return The decorator image for this node.
+	 */
+	public Image getImage() {
+		return image;
+	}
+	
+	/**
+	 * Sets the decorator image for this node.
+	 * @param newImage The new image.
+	 */
+	public void setImage(Image newImage) {
+		this.image = newImage;
+	}
+
+	/**
+	 * @return <code>true</code> if the given object is another node
+	 *         representing the same piece of data in the editor.
+	 */
+	@Override
+	public boolean equals(Object arg0) {
+		if (arg0 instanceof BugzillaOutlineNode) {
+			BugzillaOutlineNode bugNode = (BugzillaOutlineNode) arg0;
+			return getKey().equals(bugNode.getKey());
+		}
+		return super.equals(arg0);
+	}
+	
+	@Override
+	public int hashCode() {
+		return getKey().hashCode();
+	}
+	
+	
+	/**
+	 * @return The name of this node.
+	 */
+	public String getName() {
+		return getKey();
+	}
+
+    /**
+	 * @return The data (where applicable) this node represents.
+	 */
+    public Object getData() {
+        return data;
+    }
+    
+
+    /**
+     * Sets the data that this node represents.
+     * @param data The new piece of data.
+     */
+    public void setData(Object data) {
+        this.data = data;
+    }
+	
+	/**
+	 * Parses the given <code>IBugzillaBug</code> into a tree of
+	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
+	 * <code>BugzillaOutlinePage</code> view.
+	 * 
+	 * @param bug
+	 *            The bug that needs parsing.
+	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
+	 */
+	public static BugzillaOutlineNode parseBugReport(IBugzillaBug bug) {
+		// Choose the appropriate parsing function based on
+		// the type of IBugzillaBug.
+		if (bug instanceof NewBugModel) {
+			return parseBugReport((NewBugModel)bug);
+		}
+		else if (bug instanceof BugReport) {
+			return parseBugReport((BugReport)bug);
+		}
+		else {
+			return null;
+		}
+	}
+    
+	/**
+	 * Parses the given <code>NewBugModel</code> into a tree of
+	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
+	 * <code>BugzillaOutlinePage</code> view.
+	 * 
+	 * @param bug
+	 *            The <code>NewBugModel</code> that needs parsing.
+	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
+	 */
+    protected static BugzillaOutlineNode parseBugReport(NewBugModel bug){
+		int bugId = bug.getId();
+		String bugServer = bug.getServer();
+        Image defaultImage = BugzillaImages.getImageDescriptor(BugzillaImages.BUG).createImage();
+        BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), defaultImage, bug);
+
+        topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null));
+        
+        BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage, null);
+        titleNode.addChild(topNode);
+        
+        return titleNode;
+    }
+    
+	/**
+	 * Parses the given <code>BugReport</code> into a tree of
+	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
+	 * <code>BugzillaOutlinePage</code> view.
+	 * 
+	 * @param bug
+	 *            The <code>BugReport</code> that needs parsing.
+	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
+	 */
+	protected static BugzillaOutlineNode parseBugReport(BugReport bug) {
+	
+		int bugId = bug.getId();
+		String bugServer = bug.getServer();
+        Image defaultImage = BugzillaImages.getImageDescriptor(BugzillaImages.BUG).createImage();
+		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), defaultImage, bug);
+		
+		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug.getDescription());
+		desc.setIsDescription(true);
+		
+		topNode.addChild(desc);
+		
+		
+		BugzillaOutlineNode comments = null;
+		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
+            Comment comment = iter.next();
+
+            if(comments == null){
+                comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment);
+                comments.setIsCommentHeader(true);
+            }
+			comments.addChild(new BugzillaOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage, comment));
+		}
+        if(comments != null){
+            topNode.addChild(comments);
+        }
+		
+		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Comment", defaultImage, null));
+			
+		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "BugReport Object", defaultImage, null);
+		titleNode.addChild(topNode);
+		
+		return titleNode;
+    }
+	
+	public boolean hasComment() {
+		// If the comment category was selected, then the comment object is
+		// not the intended selection (it is just used to help find the correct
+		// location in the editor).
+		return (data instanceof Comment) && !(key.toLowerCase().equals("comments"));
+	}
+
+	public Comment getComment() {
+		return (hasComment()) ? (Comment)data : null;
+	}
+
+	public void setComment(Comment comment) {
+		data = comment;
+	}
+
+	public String getContents() {
+		return key;
+	}
+
+	public void setContents(String contents) {
+		key = contents;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getServer() {
+		return server;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
+	}
+
+	public boolean isEmpty() {
+		return (server == null) || ((getContents() == null) && (getComment() == null));
+	}
+
+	public BugzillaOutlineNode getParent() {
+		return parent;
+	}
+
+	public void setParent(BugzillaOutlineNode parent) {
+		this.parent = parent;
+	}
+
+	public boolean isCommentHeader() {
+		return isCommentHeader;
+	}
+
+	public boolean isDescription() {
+		return isDescription;
+	}
+	
+	public void setIsCommentHeader(boolean isCommentHeader) {
+		this.isCommentHeader = isCommentHeader;
+	}
+
+	public void setIsDescription(boolean isDescription) {
+		this.isDescription = isDescription;
+	}
+}
