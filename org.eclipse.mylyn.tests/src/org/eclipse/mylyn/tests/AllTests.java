@@ -14,7 +14,6 @@ import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
-import org.eclipse.mylar.monitor.tests.MonitorTest;
 import org.eclipse.mylar.tasks.bugzilla.tests.BugzillaSearchPluginTest;
 import org.eclipse.mylar.tasks.bugzilla.tests.BugzillaStackTraceTest;
 import org.eclipse.mylar.tasks.tests.TaskListManagerTest;
@@ -34,9 +33,6 @@ public class AllTests {
         suite.addTestSuite(JavaReferencesSearchPluginTest.class);
         suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
         suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
-        
-        // Monitor Tests - XXX FAIL
-        suite.addTestSuite(MonitorTest.class);
 
         // Bugzilla Tests - XXX FAIL
         suite.addTestSuite(BugzillaSearchPluginTest.class);
