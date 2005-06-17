@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+
+
 package org.eclipse.mylar.core.util;
 
 import java.io.IOException;
@@ -23,7 +35,11 @@ import org.eclipse.mylar.core.model.internal.Taskscape;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
+/**
+ * TODO: remove the explicit string references
+ * 
+ * @author Mik Kersten
+ */
 public class TaskscapeXmlWriter {	
 	
 	private DocumentBuilderFactory dbf = null;
@@ -60,31 +76,12 @@ public class TaskscapeXmlWriter {
 		return;
 	}
 
-    /**
-	 * Writes the provided XML document out to the specified output stream.
-	 * 
-	 * doc - the document to be written outputStream - the stream to which the
-	 * document is to be written
-	 */
     private void writeDOMtoStream(Document document) {
-        // Prepare the DOM document for writing
-        // DOMSource - Acts as a holder for a transformation Source tree in the 
-        // form of a Document Object Model (DOM) tree
         Source source = new DOMSource(document);
-
-        // StreamResult - Acts as an holder for a XML transformation result
-        // Prepare the output stream
         result = new StreamResult(outputStream);
-        
-        // An instance of this class can be obtained with the 
-        // TransformerFactory.newTransformer  method. This instance may 
-        // then be used to process XML from a variety of sources and write 
-        // the transformation output to a variety of sinks
         Transformer xformer = null;
         try {
             xformer = TransformerFactory.newInstance().newTransformer();
-            //Transform the XML Source to a Result
-            //
             xformer.transform(source, result);
         } catch (TransformerConfigurationException e) {
             e.printStackTrace();
@@ -153,11 +150,6 @@ public class TaskscapeXmlWriter {
 	}	
     
     private  String getReplacement(char c) {
-		// Encode special XML characters into the equivalent character references.
-		// The first five are defined by default for all XML documents.
-		// The next three (#xD, #xA, #x9) are encoded to avoid them
-		// being converted to spaces on deserialization
-		// (fixes bug 93720)
 		switch (c) {
 			case '<' :
 				return "lt"; //$NON-NLS-1$
