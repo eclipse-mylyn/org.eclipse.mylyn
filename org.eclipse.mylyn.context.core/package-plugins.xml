@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build" default="plugin_export">
+	<target name="plugin_export">
+		<pde.exportPlugins plugins="org.eclipse.mylar,org.eclipse.mylar.ui" destination="C:\Apps\mylar" filename="org.eclipse.mylar_0.1.1.zip" exportType="zip" exportSource="true"/>
+	</target>
+</project>

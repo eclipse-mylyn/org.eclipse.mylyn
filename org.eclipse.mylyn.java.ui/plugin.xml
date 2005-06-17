@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         name="Mylar Java startup"
+         point="org.eclipse.ui.startup">
+   </extension>
+
+  <extension point="org.eclipse.ui.views">   
+	  <view name="Active Type Hierarchy" 
+	  	icon="icons/eview16/type-hierarchy-mylar.gif" 
+	  	category="org.eclipse.mylar" 
+	  	class="org.eclipse.mylar.java.ui.views.ActiveTypeHierarchyView" 
+	  	id="org.eclipse.mylar.java.ui.views.ActiveTypeHierarchyView" />
+  	</extension>  
+  
+  <extension point="org.eclipse.ui.viewActions"> 
+	<viewContribution 
+		id="org.eclipse.mylar.java.explorer.contribution" 
+   		targetID="org.eclipse.jdt.ui.PackageExplorer">
+   		<!--
+    	<action
+	         id="org.eclipse.mylar.actions.filter.interest" 
+	         label="Filter uninteresting" 
+	         icon="icons/elcl16/auto-expand.gif"
+	         tooltip="Filter uninteresting"
+	      	 toolbarPath="mylar"
+	         class="org.eclipse.mylar.java.ui.actions.FilterBoringJavaAction"
+	         enablesFor="*"> 
+  		</action> 
+  		-->
+    	<action
+	         id="org.eclipse.mylar.actions.filter.members" 
+	         label="Filter member" 
+	         icon="icons/elcl16/filter-members.gif"
+	         tooltip="Filter uninteresting"
+	      	 toolbarPath="mylar" 
+	         class="org.eclipse.mylar.java.ui.actions.FilterMembersAction"
+	         enablesFor="*"> 
+  		</action>  
+      </viewContribution> 
+	</extension>
+	
+	<!--
+	<extension point="org.eclipse.ui.editorActions"> 
+		<editorContribution 
+      		id="org.eclipse.ui.articles.action.contribution.editor" 
+   			targetID="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor">
+	   		<action
+	         	id="org.eclipse.mylar.action.contribution.editor.action1" 
+	         	label="Mylar automatic folding" 
+	         	icon="icons/elcl16/auto-fold.gif"
+	         	tooltip="Mylar automatic folding"
+	      		toolbarPath="Normal/additions"
+	         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
+	      	</action> 
+   	 	</editorContribution> 
+   </extension>
+   -->
+  
+   <extension point="org.eclipse.jdt.ui.javaElementFilters">
+        <filter
+            targetId="org.eclipse.jdt.ui.PackageExplorer"
+            name="Mylar Java Declarations Filter"
+            enabled="false"
+            description="Mylar Declarations Filter"
+            class="org.eclipse.mylar.java.ui.MembersFilter"
+            id="org.eclipse.mylar.java.ui.MembersFilter">
+   		</filter>
+    	<filter
+            name="Mylar Degree-of-interest filter"
+            enabled="true"
+            description="Mylar Degree-of-interest filter"
+            class="org.eclipse.mylar.ui.InterestFilter"
+            id="org.eclipse.mylar.ui.java.InterestFilter">
+   		</filter>
+  </extension>
+   
+  
+  <!-- ** EDITOR ****************************************** -->
+
+  <extension
+         id="editors"
+         point="org.eclipse.ui.editors">
+      <editor 
+            name="Mylar Java Editor"
+            icon="icons/eview16/editor-mylar-java.gif"
+            extensions="java"
+            contributorClass="org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor"
+            class="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor"
+            id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor">
+      		<contentTypeBinding contentTypeId="org.eclipse.jdt.core.javaSource" /> 
+      </editor>  
+   </extension> 
+   
+     <extension point="org.eclipse.ui.actionSetPartAssociations">
+  	<actionSetPartAssociation targetID="org.eclipse.jdt.ui.A_OpenActionSet">
+		<part id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor" /> 
+    </actionSetPartAssociation>
+  	<actionSetPartAssociation targetID="org.eclipse.jdt.ui.CodingActionSet">
+		<part id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor" /> 
+    </actionSetPartAssociation>
+    <actionSetPartAssociation targetID="org.eclipse.jdt.ui.SearchActionSet">
+  		<part id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor" /> 
+  		<part id="org.eclipse.mylar.java.ui.editor.MylarClassFileEditor" /> 
+  	</actionSetPartAssociation>
+    <actionSetPartAssociation targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+		<part id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor" /> 
+  		<part id="org.eclipse.mylar.java.ui.editor.MylarClassFileEditor" /> 
+   </actionSetPartAssociation>
+   <actionSetPartAssociation targetID="org.eclipse.ui.edit.text.actionSet.presentation">
+		<part id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor" /> 
+  		<part id="org.eclipse.mylar.java.ui.editor.MylarClassFileEditor" /> 
+   </actionSetPartAssociation>
+   <actionSetPartAssociation targetID="org.eclipse.jdt.ui.text.java.actionSet.presentation">
+		<part id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor" /> 
+  		<part id="org.eclipse.mylar.java.ui.editor.MylarClassFileEditor" /> 
+   </actionSetPartAssociation>
+  </extension>
+  
+  <extension point="org.eclipse.jdt.ui.foldingStructureProviders">
+  	<provider 
+  		preferencesClass="org.eclipse.mylar.java.ui.editor.AutoFoldPreferenceBlock" 
+  		class="org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider" 
+  		name="Myalr Auto Folding" 
+  		id="org.eclipse.mylar.java.ui.editor.foldingprovider" /> 
+    </extension> 
+
+</plugin>

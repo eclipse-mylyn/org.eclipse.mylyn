@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         name="Mylar UI startup"
+         point="org.eclipse.ui.startup">
+   </extension>
+  
+  <extension point="org.eclipse.ui.views">
+      <category name="Mylar" id="org.eclipse.mylar"/>
+	  
+	  <view name="Active Search" 
+	  	icon="icons/eview16/search-mylar.gif"  
+	  	category="org.eclipse.mylar" 
+	  	class="org.eclipse.mylar.ui.views.ActiveSearchView" 
+	  	id="org.eclipse.mylar.ui.views.ActiveSearchView" /> 
+	  	
+	  <view name="Taskscape Model"
+            icon="icons/eview16/monitor.gif"
+            category="org.eclipse.mylar"
+            class="org.eclipse.mylar.ui.views.TaskscapeTreeView"
+            id="org.eclipse.mylar.ui.views.TaskscapeTreeView">
+      </view>
+      
+      	  <view name="Taskscape Control Panel"
+            icon="icons/eview16/monitor.gif"
+            category="org.eclipse.mylar"
+            class="org.eclipse.mylar.ui.views.TaskscapeControlPanelView"
+            id="org.eclipse.mylar.ui.views.TaskscapeControlPanelView">
+      </view>
+  </extension>     
+   
+  <extension point = "org.eclipse.ui.popupMenus">
+     <objectContribution
+        id="org.eclipse.mylar.interest"
+        objectClass="java.lang.Object">
+	    <action  
+  		  	label="Make landmark" 
+	  		tooltip="Make selected element a landmark"
+	  		menubarPath="mylar" 
+	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
+	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+	  		icon="icons/elcl16/interest-increase.gif"
+	  		enablesFor="1"/>   
+	    <action  
+  		  	label="Make less interesting" 
+	  		tooltip="Mark selected element as uninteresting"
+	  		menubarPath="mylar" 
+	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
+	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+	  		icon="icons/elcl16/interest-decrease.gif"
+	  		enablesFor="1"/>
+	  	<action id="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
+              label="Raise children" 
+	      	  menubarPath="mylar" 
+              icon="icons/elcl16/raise-children.gif" 
+              tooltip="Show all children of the current element" 
+              class="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
+              enablesFor="1"/> 
+        <action id="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView" 
+              label="Related elements" 
+	      	  menubarPath="mylar" 
+              icon="icons/eview16/search-mylar.gif" 
+              tooltip="Active Search quick view" 
+              class="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView" 
+              enablesFor="1"/> 
+        <action id="org.eclipse.mylar.ui.actions.ShowInteractionHistory" 
+              label="Show interarction history" 
+	      	  menubarPath="mylar" 
+              tooltip="Show interaction history" 
+              class="org.eclipse.mylar.ui.actions.ShowInteractionHistory" 
+              enablesFor="1"/> 
+	 </objectContribution>
+  </extension>
+    
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Mylar"
+            class="org.eclipse.mylar.ui.preferences.MylarPreferencePage"
+            id="Mylar preferences">
+      </page>  
+   </extension>
+ 
+  <!--  MARKER STUFF -->
+  
+    <extension point="org.eclipse.ui.ide.markerImageProviders">
+    <imageprovider 
+  		markertype="org.eclipse.mylar.ui.landmark" 
+  		icon="icons/structure/landmark.gif" 
+  		id="org.eclipse.mylar.landmarkMarkerProvider" /> 
+   </extension> 
+  
+  <extension point="org.eclipse.ui.editors.annotationTypes">
+  	<type name="org.eclipse.mylar.ui.landmark.annotation"
+  		markerType="org.eclipse.mylar.ui.landmark"/> 
+  </extension> 
+   
+  <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+  	<specification annotationType="org.eclipse.mylar.ui.landmark.annotation" 
+  		label="Mylar Landmark" 
+  		icon="icons/structure/landmark.gif" 
+  		textPreferenceKey="landmarkIndication" 
+  		textPreferenceValue="false" 
+  		highlightPreferenceKey="landmarkHighlighting" 
+  		highlightPreferenceValue="true" 
+  		contributesToHeader="true" 
+  		overviewRulerPreferenceKey="landmarkIndicationInOverviewRuler" 
+  		overviewRulerPreferenceValue="true" 
+  		verticalRulerPreferenceKey="landmarkIndicationInVerticalRuler" 
+  		verticalRulerPreferenceValue="true" 
+  		colorPreferenceKey="landmarkIndicationColor" 
+  		colorPreferenceValue="255,255,255" 
+  		presentationLayer="4" 
+  		showInNextPrevDropdownToolbarActionKey="showLandmarkInNextPrevDropdownToolbarAction" 
+  		showInNextPrevDropdownToolbarAction="true" /> 
+  </extension>
+    
+      <!--  ACTION STUFF -->
+    
+   <extension
+       	 point="org.eclipse.ui.actionSets">
+   	  <actionSet
+            label="Mylar"
+            description="Mylar"
+            visible="true"
+            id="org.eclipse.mylar.ui.mylar.actionSet">
+        <!--
+         <action 
+            label="Mylar interest filtering"
+         	style="toggle" 
+         	state="true"
+         	id="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringAction" 
+         	class="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringAction" 
+         	definitionId="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringAction" 
+         	hoverIcon="icons/elcl16/auto-expand.gif"
+         	disabledIcon="icons/elcl16/auto-expand.gif" 
+         	icon="icons/elcl16/auto-expand.gif" 
+         	tooltip="Toggle Mylar global filtering" />
+         	-->
+         <action
+               definitionId="org.eclipse.mylar.ui.related.show"
+               label="Open Mylar related elements"
+               class="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView"
+               menubarPath="navigate/open.ext2"
+               id="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView">
+         </action>
+         <action
+               definitionId="org.eclipse.mylar.ui.interest.increment"
+               label="Make landmark"
+               class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+               menubarPath="navigate/open.ext2"
+               id="org.eclipse.mylar.ui.actions.InterestIncrementAction">
+         </action>
+         <action
+               definitionId="org.eclipse.mylar.ui.interest.decrement"
+               label="Make less interesting"
+               class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+               menubarPath="navigate/open.ext2"
+               id="org.eclipse.mylar.ui.actions.InterestDecrementAction">
+         </action>
+         <action
+               definitionId="org.eclipse.mylar.ui.show.filtered"
+               label="Make less interesting"
+               class="org.eclipse.mylar.ui.actions.ShowFilteredAction"
+               menubarPath="navigate/open.ext2"
+               id="org.eclipse.mylar.ui.actions.ShowFilteredAction">
+         </action>
+      </actionSet>
+   </extension> 
+                              
+   <extension point="org.eclipse.ui.commands">
+      <category
+            name="Mylar"
+            description="Mylar commands"
+            id="org.eclipse.mylar.ui">
+      </category>
+      <command
+            name="Related elements"
+            description="Related elements"
+            id="org.eclipse.mylar.ui.related.show"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
+      <command
+            name="Make landmark"
+            description="Make landmark"
+            id="org.eclipse.mylar.ui.interest.increment"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
+      <command
+            name="Make less interesting"
+            description="Make less interesting"
+            id="org.eclipse.mylar.ui.interest.decrement"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
+      <command
+            name="Show children"
+            description="Show children"
+            id="org.eclipse.mylar.ui.show.filtered"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
+   </extension>
+         
+   <extension point="org.eclipse.ui.bindings">     
+      <key
+            sequence="Ctrl+Alt+Shift+ARROW_UP"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.ui.interest.increment"
+            schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="Ctrl+Alt+Shift+ARROW_DOWN"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.ui.interest.decrement"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="Ctrl+Alt+Shift+ARROW_RIGHT"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.ui.show.filtered"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="Ctrl+Alt+Shift+ARROW_LEFT"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.ui.related.show"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key> 
+   </extension>     
+
+   <extension point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            label="Mylar Label Decorator"
+            class="org.eclipse.mylar.ui.InterestDecoratorLightweight"
+            state="true"
+            id="org.eclipse.mylar.ui.decorator.interest">
+         <description>
+			Mylar degree of interest decorator
+		 </description>
+         <enablement>
+            <objectClass name="java.lang.Object"/>
+         </enablement>
+      </decorator>
+   </extension>
+
+    <extension point="org.eclipse.ui.workingSets">
+        <workingSet
+            id="org.eclipse.mylar.workingSetPage"
+            name="Mylar Task Context"
+            icon="icons/eview16/monitor.gif"
+            pageClass="org.eclipse.mylar.ui.internal.MylarWorkingSetPage"
+            updaterClass="org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater">
+        </workingSet>
+    </extension>
+
+</plugin>
+
+<!-- MISC -->
+
+   <!--
+   <extension point="org.eclipse.ui.viewActions"> 
+	  <viewContribution 
+		id="org.eclipse.mylar.outline.contribution.filter" 
+   		targetID="org.eclipse.ui.views.ContentOutline">
+    	<action
+	         id="org.eclipse.mylar.ui.actions.SuppressFilterAction" 
+	         style="toggle"
+	         label="Filter uninteresting" 
+	         icon="icons/elcl16/auto-expand.gif"
+	         tooltip="Filter uninteresting"
+	      	 toolbarPath="mylar"
+	         class="org.eclipse.mylar.ui.actions.SuppressFilterAction"
+	         enablesFor="*"> 
+  		</action> 
+  		</viewContribution>
+  			<viewContribution 
+		id="org.eclipse.mylar.java.explorer.contribution" 
+   		targetID="org.eclipse.ui.views.ResourceNavigator">
+    	<action
+	         id="org.eclipse.mylar.actions.filter.interest" 
+	         label="Filter uninteresting resources" 
+	         icon="icons/elcl16/auto-expand.gif"
+	         tooltip="Filter uninteresting resources"
+	      	 toolbarPath="mylar"
+	         class="org.eclipse.mylar.ui.actions.SuppressFilterAction"
+	         enablesFor="*"> 
+  		</action> 
+      </viewContribution> 
+      <viewContribution 
+		id="org.eclipse.mylar.java.problems.contribution" 
+   		targetID="org.eclipse.ui.views.ProblemView">
+    	<action
+	         id="org.eclipse.mylar.actions.filter.interest" 
+	         label="Filter uninteresting" 
+	         icon="icons/elcl16/auto-expand.gif"
+	         tooltip="Filter uninteresting"
+	      	 toolbarPath="mylar" 
+	         class="org.eclipse.mylar.ui.actions.FilterUninterestingProblemsAction"
+	         enablesFor="*"> 
+  		</action>  
+      </viewContribution> 
+   </extension>
+   -->
