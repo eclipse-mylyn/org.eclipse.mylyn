@@ -113,23 +113,26 @@ public class JavaModelUiUpdateBridge implements ITaskscapeListener {
         } else {
             ITaskscapeNode lastNode = nodes.get(nodes.size()-1);
             IJavaElement lastElement = JavaCore.create(lastNode.getElementHandle());            
-            final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-
-            if (packageExplorer != null && lastElement != null) { // HACK: use a more reasoanble method
-                if (packageExplorer.getTreeViewer().testFindItem(lastElement) != null) return;
-            }
-                    
-            for (ITaskscapeNode node : nodes) {
-                IJavaElement element = JavaCore.create(node.getElementHandle());
-                if (element != null && element.exists()) {
-                    if (node.getDegreeOfInterest().isInteresting()) {
-                        fireModelUpdate(element, ChangeKind.ADDED);
-                    } else {
-                        fireModelUpdate(element, ChangeKind.REMOVED);
-                    }
+            
+            PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+        	if (packageExplorer != null && lastElement != null) { // HACK: use a more reasoanble method
+                if (packageExplorer.getTreeViewer().testFindItem(lastElement) == null) {
+		            for (ITaskscapeNode node : nodes) {
+		                IJavaElement element = JavaCore.create(node.getElementHandle());
+		                if (element != null && element.exists()) {
+		                    if (node.getDegreeOfInterest().isInteresting()) {
+		                        fireModelUpdate(element, ChangeKind.ADDED);
+		                    } else {
+		                        fireModelUpdate(element, ChangeKind.REMOVED);
+		                    }
+		                }
+		            }
                 }
+        	}
+//            System.err.println(lastElement);
+            if (lastElement != null) {
+            	revealInPackageExplorer(lastElement);
             }
-            if (lastElement != null) revealInPackageExplorer(lastElement);
         }
     }
     
@@ -195,30 +198,15 @@ public class JavaModelUiUpdateBridge implements ITaskscapeListener {
     }
 
     private void revealInPackageExplorer(final Object element) {
-        final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-//        System.out.println(packageExplorer + " " + element);
-        if (packageExplorer != null && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
-            packageExplorer.getTreeViewer().getControl().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                	packageExplorer.selectAndReveal(element);
-//                    packageExplorer.getTreeViewer().reveal(element);
+         Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+            public void run() {
+            	PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+		        if (packageExplorer != null && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
+		        	packageExplorer.selectAndReveal(element);
                 }
-            });
-        }
-    }
-    
-//    private void revealInPackageExplorer(final IJavaElement element) {
-//        final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-//        System.out.println(packageExplorer);
-//        if (packageExplorer != null && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
-//            packageExplorer.getTreeViewer().getControl().getDisplay().asyncExec(new Runnable() {
-//                public void run() {
-//                    packageExplorer.selectAndReveal(element);
-////                        packageExplorer.getTreeViewer().reveal(element);
-//                }
-//            });
-//        }
-//    } 	
+            }
+        });
+    }	
     
     public void relationshipsChanged() {
     	// don't care when the relationships are changed
