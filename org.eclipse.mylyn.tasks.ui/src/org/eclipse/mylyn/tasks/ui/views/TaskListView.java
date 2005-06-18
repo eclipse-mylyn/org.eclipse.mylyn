@@ -809,8 +809,10 @@ public class TaskListView extends ViewPart {
         	@Override
             public void run() {
                 Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
-                viewer.refresh();
+                if (selectedObject != null) {
+                	MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+                	viewer.refresh();
+                }
             }
         };
         clearSelectedTaskscapeAction.setText("Erase Taskscape");
