@@ -105,7 +105,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
     @Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
 		if(!getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 	        workbench.getDisplay().asyncExec(new Runnable() {
@@ -120,8 +119,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 	            }
 	        });
 		}
-		getPreferenceStore().setDefault(MylarPreferenceWizard.MYLAR_FIRST_RUN, true);
-		getPreferenceStore().setValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, true);
+		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+		savePluginPreferences();
 	}
 
     @Override
@@ -189,28 +189,26 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 		IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
 		// return "AspectJ/Java Editor".equals(desc.getLabel());
 
-		return MYLAR_JAVA_EDITOR_ID.equals(
-				desc.getLabel());
+		return MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
 	}
-    
-    public static void setDefaultEditorForJavaFiles(boolean mylar) {
+
+	public static void setDefaultEditorForJavaFiles(boolean mylar) {
 
 		EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin
 				.getDefault().getEditorRegistry(); // HACK: cast to allow save
-													// to be called
+		// to be called
 		IFileEditorMapping[] array = WorkbenchPlugin.getDefault()
 				.getEditorRegistry().getFileEditorMappings();
 
 		// HACK: cast to allow set to be called
-		editorRegistry.setFileEditorMappings((FileEditorMapping[]) array); 
+		editorRegistry.setFileEditorMappings((FileEditorMapping[]) array);
 		String defaultEditor = editorRegistry.getDefaultEditor("*.java")
 				.getId();
-		
+
 		if (mylar) {
 
 			if (!(defaultEditor.equals(MYLAR_JAVA_EDITOR_ID))) {
-				editorRegistry.setDefaultEditor("*.java",
-						MYLAR_JAVA_EDITOR_ID);
+				editorRegistry.setDefaultEditor("*.java", MYLAR_JAVA_EDITOR_ID);
 				editorRegistry.saveAssociations();
 			}
 		} else {
