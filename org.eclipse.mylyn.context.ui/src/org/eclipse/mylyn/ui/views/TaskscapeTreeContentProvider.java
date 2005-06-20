@@ -32,7 +32,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
     private IViewSite site = null;
     private Shell shell = null;
     private boolean landmarkOnlyMode;
-    private List<ITaskscapeNode> addedNodes = new ArrayList<ITaskscapeNode>();
+    private List<ITaskscapeNode> topLevelNodes = new ArrayList<ITaskscapeNode>();
     
     public TaskscapeTreeContentProvider(IViewSite site, boolean landmarkOnlyMode) {
         this.site = site;
@@ -53,7 +53,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
     }
     
     public Object[] getElements(Object parent) {
-        addedNodes.clear();
+        topLevelNodes.clear();
         if (matchesParent(parent)) {
             List<ITaskscapeNode> nodes;
             if (landmarkOnlyMode) {
@@ -61,7 +61,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
             } else {
                 nodes = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getAllElements();
             }
-            addedNodes = nodes;
+            topLevelNodes = nodes;
             return nodes.toArray(); 
         } 
         return getChildren(parent); 
@@ -86,27 +86,50 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
         assert(parent != null);
         if (parent instanceof ITaskscapeNode) {
             ITaskscapeNode node = (ITaskscapeNode)parent;
-            if (addedNodes.contains(node)) {
-                addedNodes.remove(node);
+            if (topLevelNodes.contains(node)) {
+                topLevelNodes.remove(node);
                 return node.getEdges().toArray(); 
             } else {
-                return new String[] { "can not recurse..." };
+            	return new Object[0];
             }
-        } else 
+        } else {
             if (parent instanceof TaskscapeEdge) {
-            return new Object[] { MylarPlugin.getTaskscapeManager().getNode(((ITaskscapeEdge)parent).getTarget().getElementHandle()) };
-        } else { 
-            return new Object[0]; 
+            	ITaskscapeEdge edge = (ITaskscapeEdge)parent;
+            	ITaskscapeNode target = MylarPlugin.getTaskscapeManager().getNode(
+            			((ITaskscapeEdge)parent).getTarget().getElementHandle());
+            	
+            	return new Object[] { target };
+            }
         }
+        return new Object[0]; 
     } 
     
-    public boolean hasChildren(Object parent) {
+//    private Object[] createCompositeEdge(Collection<TaskscapeEdge> edges) {
+//    	Map<String, List<ITaskscapeNode>> map = new HashMap<String, List<ITaskscapeNode>>();
+//    	for (ITaskscapeEdge edge : edges) {
+//    		List<ITaskscapeNode> targets = map.get(edge.getRelationshipHandle());
+//    		if (targets == null) {
+//    			targets = new ArrayList<ITaskscapeNode>();
+//    			map.put(edge.getRelationshipHandle(), targets);
+//    		}
+//    		targets.add(edge.getTarget());
+//		}
+//    	Object[] composites = new Object[map.size()];
+//    	int index = 0;
+//    	for (String key : map.keySet()) {
+//    		composites[index] = new TaskscapeEdge(
+//			
+//		}
+//		return null;
+//	}
+
+	public boolean hasChildren(Object parent) {
         assert(parent != null);
         if (parent instanceof ITaskscapeNode) {
-              return ((ITaskscapeNode)parent).getEdges().size() > 0;
+        	return topLevelNodes.contains(parent)
+              &&((ITaskscapeNode)parent).getEdges().size() > 0;
         } else if (parent instanceof TaskscapeEdge) {
             return true;
-            //            return ((TaskscapeEdge)parent).getRelatedElements().size() > 0;
         } else {
             return false;
         }
