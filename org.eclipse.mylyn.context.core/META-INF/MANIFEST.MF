@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
- mylar-core.jar
 Export-Package: org.eclipse.mylar.core,
  org.eclipse.mylar.core.model,
  org.eclipse.mylar.core.model.internal,
@@ -19,3 +18,4 @@ Export-Package: org.eclipse.mylar.core,
  org.eclipse.mylar.core.search,
  org.eclipse.mylar.core.util,
  org.eclipse.mylar.dt
+Bundle-ClassPath: mylar-core.jar
