@@ -248,12 +248,6 @@ litigation.
          version="0.2.3"/>
 
    <plugin
-         id="org.eclipse.mylar.hypertext"
-         download-size="0"
-         install-size="0"
-         version="0.2.3"/>
-
-   <plugin
          id="org.eclipse.mylar.java"
          download-size="0"
          install-size="0"
