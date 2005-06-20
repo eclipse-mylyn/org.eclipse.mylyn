@@ -21,9 +21,11 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.filters.CustomFiltersDialog;
 import org.eclipse.jdt.internal.ui.filters.FilterDescriptor;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
@@ -33,10 +35,19 @@ import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.java.ui.JavaUiBridge;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
+import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.registry.EditorRegistry;
+import org.eclipse.ui.internal.registry.FileEditorMapping;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -50,6 +61,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
     private static JavaModelUiUpdateBridge modelUpdateBridge = new JavaModelUiUpdateBridge();
     private static JavaUiBridge uiBridge = new JavaUiBridge();
 
+    public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
+    
+    
     private static IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
@@ -60,7 +74,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 			}
 		}        
     };
-    
+      
 	public MylarJavaPlugin() {
 		super();
 		plugin = this;
@@ -84,9 +98,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
                 modelUpdateBridge.revealInteresting();
                 JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-                
-                // HACK: used to disable the filter from the quick outline by default
-                initializeWithPluginContributions();
             }
         });
     }
@@ -94,6 +105,23 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
     @Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+
+		if(!getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
+			final IWorkbench workbench = PlatformUI.getWorkbench();
+	        workbench.getDisplay().asyncExec(new Runnable() {
+	            public void run() {
+		            	MylarPreferenceWizard wizard= new MylarPreferenceWizard();
+	        			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+		        		if (wizard != null && shell != null && !shell.isDisposed()) { 
+		        			WizardDialog dialog = new WizardDialog(shell, wizard);
+		        			dialog.create();
+		        			dialog.open();
+		        		}
+	            }
+	        });
+		}
+		getPreferenceStore().setDefault(MylarPreferenceWizard.MYLAR_FIRST_RUN, true);
+		getPreferenceStore().setValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, true);
 	}
 
     @Override
@@ -155,17 +183,56 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
         return structureBridge;
     }
     
+    public static boolean isMylarEditorDefault() {
+		IEditorRegistry editorRegistry = WorkbenchPlugin.getDefault()
+				.getEditorRegistry();
+		IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
+		// return "AspectJ/Java Editor".equals(desc.getLabel());
+
+		return MYLAR_JAVA_EDITOR_ID.equals(
+				desc.getLabel());
+	}
     
+    public static void setDefaultEditorForJavaFiles(boolean mylar) {
+
+		EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin
+				.getDefault().getEditorRegistry(); // HACK: cast to allow save
+													// to be called
+		IFileEditorMapping[] array = WorkbenchPlugin.getDefault()
+				.getEditorRegistry().getFileEditorMappings();
+
+		// HACK: cast to allow set to be called
+		editorRegistry.setFileEditorMappings((FileEditorMapping[]) array); 
+		String defaultEditor = editorRegistry.getDefaultEditor("*.java")
+				.getId();
+		
+		if (mylar) {
+
+			if (!(defaultEditor.equals(MYLAR_JAVA_EDITOR_ID))) {
+				editorRegistry.setDefaultEditor("*.java",
+						MYLAR_JAVA_EDITOR_ID);
+				editorRegistry.saveAssociations();
+			}
+		} else {
+			if (!(defaultEditor.equals(JavaUI.ID_CU_EDITOR))) {
+				editorRegistry.setDefaultEditor("*.java", JavaUI.ID_CU_EDITOR);
+				editorRegistry.saveAssociations();
+			}
+		}
+	}
+
     
     
     /**
-     * 
-     * CODE FROM @see org.eclipse.jdt.ui.actions.CustomFiltersActionGroup
-     * 
-     * Slightly modified.
-     * Needed to initialize the structure view to have no filter
-     * 
-     */
+	 * 
+	 * CODE FROM
+	 * 
+	 * @see org.eclipse.jdt.ui.actions.CustomFiltersActionGroup
+	 * 
+	 * Slightly modified. Needed to initialize the structure view to have no
+	 * filter
+	 * 
+	 */
     
 	private static final String TAG_USER_DEFINED_PATTERNS_ENABLED= "userDefinedPatternsEnabled"; //$NON-NLS-1$
 	private static final String TAG_USER_DEFINED_PATTERNS= "userDefinedPatterns"; //$NON-NLS-1$
@@ -175,7 +242,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private final String fTargetId = "org.eclipse.jdt.internal.ui.text.QuickOutline";
 	
-    private void initializeWithPluginContributions() {
+    // HACK: used to disable the filter from the quick outline by default
+    public void initializeWithPluginContributions() {
     	IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
     	if (store.contains(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE")))
     		return;

@@ -128,4 +128,18 @@
   		id="org.eclipse.mylar.java.ui.editor.foldingprovider" /> 
     </extension> 
 
+	<extension point="org.eclipse.ui.newWizards">
+      <category
+            name="Mylar Wizards"
+            id="org.eclipse.mylar.java.wizards">
+      </category>
+      <wizard
+            name="Mylar Preference Wizard"
+            icon="icons/eview16/monitor.gif"
+            category="org.eclipse.mylar.java.wizards"
+            class="org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard"
+            id="org.eclipse.mylar.java.ui.mylarPreferenceWizard">
+      </wizard>
+   </extension>
+
 </plugin>
