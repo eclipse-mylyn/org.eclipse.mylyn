@@ -324,8 +324,8 @@ public class BugzillaTask extends Task {
 	
 	public void updateTaskDetails() {
 		for (Iterator<Attribute> it = bugReport.getAttributes().iterator(); it.hasNext();) {
-			Attribute attribute = it.next();
-			String key = attribute.getParameterName();
+//			Attribute attribute = it.next();
+//			String key = attribute.getParameterName();
 		}
 	}
 	
