@@ -88,40 +88,53 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
             ITaskscapeNode node = (ITaskscapeNode)parent;
             if (topLevelNodes.contains(node)) {
                 topLevelNodes.remove(node);
-                return node.getEdges().toArray(); 
+                return getAllEdgeTypes(node.getEdges()); 
             } else {
             	return new Object[0];
             }
         } else {
             if (parent instanceof TaskscapeEdge) {
             	ITaskscapeEdge edge = (ITaskscapeEdge)parent;
-            	ITaskscapeNode target = MylarPlugin.getTaskscapeManager().getNode(
-            			((ITaskscapeEdge)parent).getTarget().getElementHandle());
             	
-            	return new Object[] { target };
+            	ITaskscapeNode source = MylarPlugin.getTaskscapeManager().getNode(
+            			((ITaskscapeEdge)parent).getSource().getElementHandle());
+            	
+            	return getAllTagetsForSource(source, edge.getRelationshipHandle());
             }
         }
         return new Object[0]; 
     } 
     
-//    private Object[] createCompositeEdge(Collection<TaskscapeEdge> edges) {
-//    	Map<String, List<ITaskscapeNode>> map = new HashMap<String, List<ITaskscapeNode>>();
-//    	for (ITaskscapeEdge edge : edges) {
-//    		List<ITaskscapeNode> targets = map.get(edge.getRelationshipHandle());
-//    		if (targets == null) {
-//    			targets = new ArrayList<ITaskscapeNode>();
-//    			map.put(edge.getRelationshipHandle(), targets);
-//    		}
-//    		targets.add(edge.getTarget());
-//		}
-//    	Object[] composites = new Object[map.size()];
-//    	int index = 0;
-//    	for (String key : map.keySet()) {
-//    		composites[index] = new TaskscapeEdge(
-//			
-//		}
-//		return null;
-//	}
+    private Object[] getAllTagetsForSource(ITaskscapeNode source, String kind) {
+    	Collection<TaskscapeEdge> edges = source.getEdges();
+    	List<ITaskscapeNode> targets = new ArrayList<ITaskscapeNode>();
+    	for (TaskscapeEdge edge : edges) {
+			if (edge.getRelationshipHandle().equals(kind)) {
+				targets.add(edge.getTarget());
+			}
+		}
+		
+		return targets.toArray();
+	}
+
+
+	private Object[] getAllEdgeTypes(Collection<TaskscapeEdge> edges) {
+		Map<String, ITaskscapeEdge> map = new HashMap<String, ITaskscapeEdge>();
+		for (ITaskscapeEdge edge : edges) {
+			ITaskscapeEdge edgeType = map.get(edge.getRelationshipHandle());
+			if (edgeType == null) {
+				edgeType = edge;
+				map.put(edge.getRelationshipHandle(), edgeType);
+			}
+		}
+		Object[] edgeTypes = new Object[map.size()];
+		int index = 0;
+		for (ITaskscapeEdge value : map.values()) {
+			edgeTypes[index] = value;
+			
+		}
+		return edgeTypes;
+	}
 
 	public boolean hasChildren(Object parent) {
         assert(parent != null);
