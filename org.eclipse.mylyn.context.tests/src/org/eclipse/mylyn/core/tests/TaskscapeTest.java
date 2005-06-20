@@ -44,10 +44,8 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
         
         taskscape.parseEvent(mockInterestContribution("1", 40));
         assertEquals(41-(scaling.getDecay().getValue()*2), node.getDegreeOfInterest().getValue());
-        System.err.println(node.getDegreeOfInterest().getValue()); 
         
         taskscape.parseEvent(mockInterestContribution("1", -20));
-        System.err.println(node.getDegreeOfInterest().getValue());
         assertEquals(21-(scaling.getDecay().getValue()*3), node.getDegreeOfInterest().getValue());
     }
     

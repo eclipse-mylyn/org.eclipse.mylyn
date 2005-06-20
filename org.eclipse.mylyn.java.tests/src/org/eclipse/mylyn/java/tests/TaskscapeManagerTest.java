@@ -183,6 +183,7 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         monitor.selectionChanged(part, sm1);
         manager.handleInteractionEvent(mockInterestContribution(
                 m1.getHandleIdentifier(), scaling.getLandmark()));
+
         assertEquals(1, listener.numAdditions);
     }
 

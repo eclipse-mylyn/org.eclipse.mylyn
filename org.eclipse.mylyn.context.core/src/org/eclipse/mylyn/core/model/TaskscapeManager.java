@@ -151,6 +151,13 @@ public class TaskscapeManager {
         interestDelta.add(node); // TODO: check that the order of these is sensible
         for (ITaskscapeListener listener : listeners) listener.interestChanged(interestDelta);
         tempRaisedHandle = null;
+        
+        // TODO: don't call interestChanged if it's a landmark?
+        if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
+            for (ITaskscapeListener listener : listeners) listener.landmarkRemoved(node);
+        } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
+            for (ITaskscapeListener listener : listeners) listener.landmarkAdded(node);
+        }
         return node;
     }
     
