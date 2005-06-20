@@ -31,6 +31,9 @@ public class ResourceMarkerListener implements IResourceChangeListener {
 						if(marker == null || !marker.exists()){
 							final IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource());
 							if(bridge != null){
+								if(PlatformUI.getWorkbench().getDisplay().isDisposed())
+									return true;
+								
 								PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 						            public void run() {
 						            	MylarPlugin.getTaskscapeManager().removeErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()), bridge.getResourceExtension(), true);
@@ -42,6 +45,9 @@ public class ResourceMarkerListener implements IResourceChangeListener {
 						if(markerDelta.getMarker().isSubtypeOf(IMarker.PROBLEM)){
 							final IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource());
 							if(bridge != null){
+								if(PlatformUI.getWorkbench().getDisplay().isDisposed())
+									return true;
+								
 								PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 						            public void run() {
 						            	MylarPlugin.getTaskscapeManager().addErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()), bridge.getResourceExtension(), true);
@@ -50,6 +56,9 @@ public class ResourceMarkerListener implements IResourceChangeListener {
 						} else {//if(!markerDelta.getMarker().getType().equals("org.eclipse.jdt.core.problem")){
 							final IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource());
 							if(bridge != null){
+								if(PlatformUI.getWorkbench().getDisplay().isDisposed())
+									return true;
+								
 								PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 						            public void run() {
 						            	MylarPlugin.getTaskscapeManager().removeErrorPredictedInterest(bridge.getHandleIdentifier(marker.getResource()), bridge.getResourceExtension(), true);
