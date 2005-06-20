@@ -33,7 +33,7 @@ import org.eclipse.mylar.tasks.bugzilla.Util;
 /**
  * Used to facilitate bugzilla searches based on IJavaElements
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaMylarSearch implements IMylarSearchOperation {
 

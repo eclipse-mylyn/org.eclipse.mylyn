@@ -28,7 +28,7 @@ import org.eclipse.mylar.bugzilla.search.BugzillaSearchHit;
 /**
  * Class to store the DoiInfo of a BugzillaSearchHit
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaReportNode {
 

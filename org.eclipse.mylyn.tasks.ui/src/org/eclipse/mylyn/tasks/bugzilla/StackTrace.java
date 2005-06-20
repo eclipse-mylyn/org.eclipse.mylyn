@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Class to hold all of the information about a stack trace
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class StackTrace {
 

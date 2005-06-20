@@ -20,8 +20,7 @@ import org.eclipse.ui.IWorkbench;
 
 
 /**
- * @author sminto
- * @author ebooth
+ * @author Shawn Minto
  * 
  * The first page of the new bug wizard where the user chooses the bug's product
  */

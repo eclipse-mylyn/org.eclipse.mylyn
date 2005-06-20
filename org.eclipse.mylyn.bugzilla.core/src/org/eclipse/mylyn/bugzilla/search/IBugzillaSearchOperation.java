@@ -19,7 +19,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * Interface for the bugzilla search operation
- * @author sminto
+ * @author Shawn Minto
  */
 public interface IBugzillaSearchOperation extends IRunnableWithProgress
 {

@@ -29,8 +29,7 @@ import org.eclipse.ui.IWorkbenchPage;
 /**
  * This class is used to store data about the new bug that is being created while the wizard is being used
  * 
- * @author sminto
- * @author ebooth
+ * @author Eric Booth
  */
 public class NewBugModel implements Serializable, IBugzillaBug {
 

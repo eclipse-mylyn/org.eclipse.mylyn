@@ -34,7 +34,7 @@ import org.eclipse.mylar.tasks.bugzilla.search.BugzillaMylarSearchOperation;
 /**
  * Utilities methods for the BugzillaMylarBridge
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class Util {
 

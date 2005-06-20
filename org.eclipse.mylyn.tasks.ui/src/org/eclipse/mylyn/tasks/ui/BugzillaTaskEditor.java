@@ -39,7 +39,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
- * @author ebooth
+ * @author Eric Booth
  */
 public class BugzillaTaskEditor extends MultiPageEditorPart {
 

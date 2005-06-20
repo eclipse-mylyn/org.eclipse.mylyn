@@ -16,7 +16,7 @@ package org.eclipse.mylar.tasks.ui;
 import org.eclipse.jface.action.Action;
 
 /**
- * @author ebooth
+ * TODO: delete?
  */
 public class TaskEditorCopyAction extends Action {
 	

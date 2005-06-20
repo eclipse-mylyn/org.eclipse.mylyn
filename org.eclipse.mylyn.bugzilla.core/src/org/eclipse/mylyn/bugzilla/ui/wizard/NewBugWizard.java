@@ -23,8 +23,7 @@ import org.eclipse.mylar.bugzilla.ui.OfflineView;
 /**
  * The main wizard class for creating a new bug
  * 
- * @author sminto
- * @author ebooth
+ * @author Shawn Minto
  */
 public class NewBugWizard extends AbstractBugWizard {
 

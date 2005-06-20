@@ -31,7 +31,7 @@ import org.eclipse.mylar.tasks.bugzilla.search.BugzillaMylarSearchOperation;
 
 /**
  * Class to test the Bridge methods that do not require server queries
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaStackTraceTest extends TestCase {
 

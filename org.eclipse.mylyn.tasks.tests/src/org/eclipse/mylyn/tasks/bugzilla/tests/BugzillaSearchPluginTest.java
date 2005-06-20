@@ -48,7 +48,7 @@ import org.eclipse.mylar.tasks.bugzilla.search.BugzillaMylarSearch;
 
 /**
  * Test the bugzilla search functionality of the bridge
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaSearchPluginTest extends TestCase{
     

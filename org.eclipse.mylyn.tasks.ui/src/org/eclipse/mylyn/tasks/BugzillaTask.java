@@ -45,7 +45,7 @@ import org.eclipse.ui.internal.Workbench;
 
 
 /**
- * @author ebooth
+ * @author Mik Kersten
  */
 public class BugzillaTask extends Task {
 	

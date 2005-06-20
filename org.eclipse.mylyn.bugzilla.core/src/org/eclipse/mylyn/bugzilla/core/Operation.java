@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * A representation of an operation that can be done to the bug when it is submitted
- * @author sminto
+ * @author Shawn Minto
  */
 public class Operation implements Serializable
 {

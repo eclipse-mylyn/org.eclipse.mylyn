@@ -30,7 +30,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 
 
 /**
- * @author ebooth
+ * @author Eric Booth
  */
 public class TaskEditor extends MultiPageEditorPart {
 

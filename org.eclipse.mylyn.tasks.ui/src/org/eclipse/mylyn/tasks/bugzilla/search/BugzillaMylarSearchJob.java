@@ -30,7 +30,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * The bugzilla search job used to search a bugzilla site
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaMylarSearchJob extends Job {
 

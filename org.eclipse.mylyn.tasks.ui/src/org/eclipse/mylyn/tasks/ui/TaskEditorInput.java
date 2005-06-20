@@ -20,7 +20,7 @@ import org.eclipse.ui.IPersistableElement;
 
 
 /**
- * @author ebooth
+ * @author Eric Booth
  */
 public class TaskEditorInput implements IEditorInput {
 

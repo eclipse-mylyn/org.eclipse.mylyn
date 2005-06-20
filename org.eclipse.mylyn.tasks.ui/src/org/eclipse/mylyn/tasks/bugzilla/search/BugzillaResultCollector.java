@@ -27,7 +27,7 @@ import org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector;
 /**
  * Collector for the bugzilla search results
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaResultCollector implements IBugzillaSearchResultCollector {
     /** A list of all of the search results found */

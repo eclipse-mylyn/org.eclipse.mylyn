@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.IMember;
 /**
  * Class to handle the bridge between mylar and bugzilla
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaMylarBridge { 
 

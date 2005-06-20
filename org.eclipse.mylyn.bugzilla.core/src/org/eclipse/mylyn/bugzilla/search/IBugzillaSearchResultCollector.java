@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * Interface for the bugzilla search result collector.
- * @author sminto
+ * @author Shawn Minto
  */
 public interface IBugzillaSearchResultCollector
 {

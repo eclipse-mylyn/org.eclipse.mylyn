@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author sminto
+ * @author Shawn Minto
  */
 public class TaskTest {
     private int id = -1;

@@ -38,7 +38,7 @@ import org.eclipse.ui.PartInitException;
 /**
  * Class that contains shared functions for the wizards that submit bug reports.
  *
- * @author ebooth
+ * @author Eric Booth
  */
 public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 

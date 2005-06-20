@@ -46,7 +46,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 /**
  * Bugzilla search operation for Mylar
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
         implements IBugzillaSearchOperation {

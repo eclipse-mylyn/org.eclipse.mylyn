@@ -29,7 +29,7 @@ import org.eclipse.mylar.tasks.bugzilla.search.BugzillaMylarSearch;
 
 
 /**
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaReferencesProvider extends RelationshipProvider {
 

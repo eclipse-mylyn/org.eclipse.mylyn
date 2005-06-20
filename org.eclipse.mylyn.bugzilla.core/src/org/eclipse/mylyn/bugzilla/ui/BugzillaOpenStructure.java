@@ -13,7 +13,7 @@ package org.eclipse.mylar.bugzilla.ui;
 /**
  * Class to hold information about opening a bug report, such as what comment
  * number to jump to
- * @author sminto
+ * @author Shawn Minto
  */
 public class BugzillaOpenStructure{
     

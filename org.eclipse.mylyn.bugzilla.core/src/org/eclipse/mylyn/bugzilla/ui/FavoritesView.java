@@ -256,7 +256,7 @@ public class FavoritesView extends ViewPart {
 	
 	/**
 	 * Inner class to handle sorting
-	 * @author sminto
+	 * @author Shawn Minto
 	 */
 	class SortByAction extends Action {
 		/** The criteria to sort the favorites menu based on */
