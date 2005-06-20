@@ -1039,7 +1039,6 @@ public class TaskListView extends ViewPart {
 //							setServerStatus(canReadFromServer);
 //						}
 //					});
-//					System.out.println(counter++);
 //					Thread.sleep(10000/*MylarPreferencePage.getServerPing()*5000*/);
 //				} catch (InterruptedException e) {
 //					break;

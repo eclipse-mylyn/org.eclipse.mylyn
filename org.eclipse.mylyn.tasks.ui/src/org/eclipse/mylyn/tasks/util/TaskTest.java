@@ -37,8 +37,6 @@ public class TaskTest {
 
         boolean result = true;
         result = result && (this.id == otherTask.id);
-        if (!result)
-            System.out.println("ID's are different");
         int compare = (this.name.compareTo(otherTask.name));
         if (compare != 0)
             result = false;

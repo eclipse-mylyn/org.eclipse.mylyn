@@ -326,9 +326,6 @@ public class BugzillaTask extends Task {
 		for (Iterator<Attribute> it = bugReport.getAttributes().iterator(); it.hasNext();) {
 			Attribute attribute = it.next();
 			String key = attribute.getParameterName();
-			if (key  != null &&key.equals("priority")) {
-				System.out.println(attribute.getValue());
-			}
 		}
 	}
 	

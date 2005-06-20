@@ -123,7 +123,6 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 //            String newHandle = "";
 //            for(int i = 0; i < parts.length - 1; i++)
 //                newHandle += parts[i] + ";";
-//            System.out.println(handle + " " + newHandle.substring(0, newHandle.length() - 1));
 //            return newHandle.substring(0, newHandle.length() - 1);
 ////            return handle.substring(0, handle.lastIndexOf(";"));
 //        }
