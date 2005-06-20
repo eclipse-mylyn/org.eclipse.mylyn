@@ -60,7 +60,7 @@ public class JavaUiBridge implements IMylarUiBridge {
     public void open(ITaskscapeNode node) {
         //get the element and open it in an editor
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
-        if (javaElement == null) return;
+        if (javaElement == null || !javaElement.exists()) return;
         try {
             IEditorPart part = JavaUI.openInEditor(javaElement);
             JavaUI.revealInEditor(part, javaElement);

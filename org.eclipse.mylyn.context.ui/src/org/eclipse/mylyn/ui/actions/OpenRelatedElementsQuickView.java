@@ -28,7 +28,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDelegate {
 
-    ActiveSearchQuickView inplaceDialog;
+    private ActiveSearchQuickView inplaceDialog;
 
     public void dispose() {
         inplaceDialog = null;

@@ -7,30 +7,6 @@
          name="Mylar UI startup"
          point="org.eclipse.ui.startup">
    </extension>
-  
-  <extension point="org.eclipse.ui.views">
-      <category name="Mylar" id="org.eclipse.mylar"/>
-	  
-	  <view name="Active Search" 
-	  	icon="icons/eview16/search-mylar.gif"  
-	  	category="org.eclipse.mylar" 
-	  	class="org.eclipse.mylar.ui.views.ActiveSearchView" 
-	  	id="org.eclipse.mylar.ui.views.ActiveSearchView" /> 
-	  	
-	  <view name="Taskscape Model"
-            icon="icons/eview16/monitor.gif"
-            category="org.eclipse.mylar"
-            class="org.eclipse.mylar.ui.views.TaskscapeTreeView"
-            id="org.eclipse.mylar.ui.views.TaskscapeTreeView">
-      </view>
-      
-      	  <view name="Taskscape Control Panel"
-            icon="icons/eview16/monitor.gif"
-            category="org.eclipse.mylar"
-            class="org.eclipse.mylar.ui.views.TaskscapeControlPanelView"
-            id="org.eclipse.mylar.ui.views.TaskscapeControlPanelView">
-      </view>
-  </extension>     
    
   <extension point = "org.eclipse.ui.popupMenus">
      <objectContribution

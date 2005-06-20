@@ -134,20 +134,12 @@ public class ActiveFoldingListener implements ITaskscapeListener {
         public void resetFolding() {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() { 
-//                	System.err.println("> resetting");
                     if (editor == null || editor.getEditorInput() == null) monitor.unregisterEditor(editor);
                     if (!editor.getSite().getPage().isPartVisible(editor)) return;
                     ISourceViewer sourceViewer = editor.getViewer();
                     if (sourceViewer instanceof ProjectionViewer) {
                         ProjectionViewer pv= (ProjectionViewer) sourceViewer;
-//                        if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
-//                        if (isAutoFoldingEnabled()) { 
-//                        	if (MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
-                        		if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
-//                        	} else {
-//                        		if (pv.canDoOperation(ProjectionViewer.EXPAND)) pv.doOperation(ProjectionViewer.EXPAND);	
-//                            } 
-//                        }
+                        if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
                     } 
                 }
             });    

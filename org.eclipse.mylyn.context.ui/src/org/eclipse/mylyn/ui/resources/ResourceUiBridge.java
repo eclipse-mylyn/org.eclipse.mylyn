@@ -46,13 +46,15 @@ public class ResourceUiBridge implements IMylarUiBridge {
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
         if (adapter == null) return;
         IResource resource = (IResource)adapter.getObjectForHandle(node.getElementHandle());
-        if (resource instanceof IFile) {
-            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-            try {
-                if (page != null) IDE.openEditor(page, (IFile)resource, true);
-            } catch (PartInitException e) { 
-            	MylarPlugin.log(this.getClass().toString(), e);
-            }
+        if (resource != null && resource.exists()) {
+	        if (resource instanceof IFile) {
+	            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+	            try {
+	                if (page != null) IDE.openEditor(page, (IFile)resource, true);
+	            } catch (PartInitException e) { 
+	            	MylarPlugin.log(this.getClass().toString(), e);
+	            }
+	        }
         }
     }
 

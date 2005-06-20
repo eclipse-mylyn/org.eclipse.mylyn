@@ -7,14 +7,6 @@
          name="Mylar Java startup"
          point="org.eclipse.ui.startup">
    </extension>
-
-  <extension point="org.eclipse.ui.views">   
-	  <view name="Active Type Hierarchy" 
-	  	icon="icons/eview16/type-hierarchy-mylar.gif" 
-	  	category="org.eclipse.mylar" 
-	  	class="org.eclipse.mylar.java.ui.views.ActiveTypeHierarchyView" 
-	  	id="org.eclipse.mylar.java.ui.views.ActiveTypeHierarchyView" />
-  	</extension>  
   
   <extension point="org.eclipse.ui.viewActions"> 
 	<viewContribution 
