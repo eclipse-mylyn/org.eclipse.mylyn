@@ -124,7 +124,7 @@
   	<provider 
   		preferencesClass="org.eclipse.mylar.java.ui.editor.AutoFoldPreferenceBlock" 
   		class="org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider" 
-  		name="Myalr Auto Folding" 
+  		name="Mylar Auto Folding" 
   		id="org.eclipse.mylar.java.ui.editor.foldingprovider" /> 
     </extension> 
 

@@ -77,7 +77,7 @@ public class Taskscape implements ITaskscape, Serializable {
             node = new TaskscapeNode(event.getStructureKind(), event.getStructureHandle(), this);
             nodes.put(event.getStructureHandle(), node);
         }
-        if (event.getNavigation() != null && event.getNavigation() != "null" && lastEdgeEvent != null && lastEdgeNode != null
+        if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null && lastEdgeNode != null
             && event.getKind() != InteractionEvent.Kind.PROPAGATION) {
             ITaskscapeNode navigationSource = nodes.get(lastEdgeEvent.getStructureHandle());
             if (navigationSource != null) {

@@ -212,7 +212,7 @@ public class TaskscapeManager {
     }
     
     public void notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind kind) { 
-        for (ITaskscapeListener listener : listeners) listener.presentationSettingsChanged(kind);
+    	for (ITaskscapeListener listener : listeners) listener.presentationSettingsChanged(kind);
     }
     
     public void notifyActivePresentationSettingsChange(ITaskscapeListener.UpdateKind kind) {

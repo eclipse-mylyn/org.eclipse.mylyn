@@ -81,12 +81,8 @@ public class ToggleAutoFoldAction extends Action implements IEditorActionDelegat
                 // TODO: put back functionality of reverting to non-standard provider
 //			    if (previousFoldingProvider != null) {
                 javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER);
-//                }
-//			    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, DEFAULT_FOLDING_PROVIDER);
 			}
             javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, on); 
-			
-//	        MonitorPlugin.log(this, getText() + " set to: " + on);
 	    } catch (Throwable t) {
 	        MylarPlugin.fail(t, "Could not enable editor management", true);
 	    }

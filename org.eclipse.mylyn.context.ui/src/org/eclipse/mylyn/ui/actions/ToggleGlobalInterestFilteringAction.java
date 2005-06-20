@@ -38,9 +38,9 @@ public class ToggleGlobalInterestFilteringAction extends Action {
     public void run() {
         setChecked(isChecked());
         MylarUiPlugin.getDefault().setGlobalFilteringEnabled(isChecked());
-        MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(
-                ITaskscapeListener.UpdateKind.UPDATE);
-//        ToggleGlobalFilteringActionDelegate.getDefault().update();
+        MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE);
+//        		MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(
+//        				ITaskscapeListener.UpdateKind.UPDATE);
     }
 }
 

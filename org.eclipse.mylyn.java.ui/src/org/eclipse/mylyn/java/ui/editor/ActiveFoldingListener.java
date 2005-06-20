@@ -24,6 +24,7 @@ import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.java.JavaEditingMonitor;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -39,17 +40,23 @@ public class ActiveFoldingListener implements ITaskscapeListener {
     private ActiveFoldingController controller;
     private JavaEditingMonitor monitor;
 
+    private ITaskscapeNode lastUpdatedNode = null;
+    
     public ActiveFoldingListener(JavaEditingMonitor monitor, JavaEditor editor) {
-        this.editor = editor;
+    	this.editor = editor;
         this.monitor = monitor;
         this.controller = new ActiveFoldingController(editor);
     }
 
-    public void interestChanged(ITaskscapeNode info) {
-        refresh();
+    public void interestChanged(ITaskscapeNode node) {
+    	if (!node.equals(lastUpdatedNode)) {
+    		controller.updateFolding(true);
+    		lastUpdatedNode = node;
+    	}
     }
 
     public void interestChanged(List<ITaskscapeNode> nodes) {
+    	interestChanged(nodes.get(nodes.size()-1));
 //        ProjectionAnnotationModel model=(ProjectionAnnotationModel)  editor.getAdapter(ProjectionAnnotatioModel.class); 
 //        for(Iterator<Annotation> i = model.getAnnotationIterator(); i.hasNext(); ) {
 //            Annotation annotation = i.next();
@@ -58,15 +65,14 @@ public class ActiveFoldingListener implements ITaskscapeListener {
 //                Position position = model.getPosition(annotation);
 //            }
 //        }      
-        refresh();
     }
 
     public void taskscapeActivated(ITaskscape taskscape) {
-        hardRefresh();
+    	controller.resetFolding();
     }
 
     public void taskscapeDeactivated(ITaskscape taskscape) {
-        hardRefresh();
+    	controller.resetFolding();
     }
 
     public void presentationSettingsChanging(ITaskscapeListener.UpdateKind kind) {
@@ -75,7 +81,7 @@ public class ActiveFoldingListener implements ITaskscapeListener {
 
     // HACK: using preferences to reset folding
     public void presentationSettingsChanged(ITaskscapeListener.UpdateKind kind) { 
-        if (kind.equals(ITaskscapeListener.UpdateKind.SCALING)) hardRefresh();
+    	controller.resetFolding();
     }
 
     public void landmarkAdded(ITaskscapeNode element) { 
@@ -88,17 +94,6 @@ public class ActiveFoldingListener implements ITaskscapeListener {
 
     public void relationshipsChanged() { 
     	// don't care when relationships change
-    }
-
-    private void refresh() {
-        controller.updateFolding(true);
-    }
-
-    private void hardRefresh() {
-        if (this.editor.getSite().getPage().isPartVisible(this.editor)) {
-            JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, false);
-            JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
-        }
     }
 
     public void nodeDeleted(ITaskscapeNode node) {
@@ -120,30 +115,46 @@ public class ActiveFoldingListener implements ITaskscapeListener {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() { 
                     if (editor == null || editor.getEditorInput() == null) monitor.unregisterEditor(editor);
-//                    System.err.println(">>> trying: " + editor.getEditorInput());
                     if (!editor.getSite().getPage().isPartVisible(editor)) return;
                     ISourceViewer sourceViewer = editor.getViewer();
                     if (sourceViewer instanceof ProjectionViewer) {
                         ProjectionViewer pv= (ProjectionViewer) sourceViewer;
-                        //if (pv.isProjectionMode() != isFoldingEnabled()) {
-                        if (isAutoFoldingEnabled()) { 
+                        if (isAutoFoldingEnabled() && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) { 
                             if (expand) {
                                 if (pv.canDoOperation(ProjectionViewer.EXPAND)) pv.doOperation(ProjectionViewer.EXPAND);
                             } else {
                                 if (pv.canDoOperation(ProjectionViewer.COLLAPSE)) pv.doOperation(ProjectionViewer.COLLAPSE);  
                             }
                         } 
-                    } else {
-    //                    System.err.println("> sourceViewer: " + sourceViewer);
                     }
                 }
-            });   
-            
+            });    
         } 
     
+        public void resetFolding() {
+            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+                public void run() { 
+//                	System.err.println("> resetting");
+                    if (editor == null || editor.getEditorInput() == null) monitor.unregisterEditor(editor);
+                    if (!editor.getSite().getPage().isPartVisible(editor)) return;
+                    ISourceViewer sourceViewer = editor.getViewer();
+                    if (sourceViewer instanceof ProjectionViewer) {
+                        ProjectionViewer pv= (ProjectionViewer) sourceViewer;
+//                        if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
+//                        if (isAutoFoldingEnabled()) { 
+//                        	if (MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
+                        		if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
+//                        	} else {
+//                        		if (pv.canDoOperation(ProjectionViewer.EXPAND)) pv.doOperation(ProjectionViewer.EXPAND);	
+//                            } 
+//                        }
+                    } 
+                }
+            });    
+        } 
+        
         private boolean isAutoFoldingEnabled() {
-            // XXX: works for any folding provider
-            return JavaPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
+        	return AutoFoldingStructureProvider.ID.equals(JavaPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER));
         }
         
         public void partVisible(IWorkbenchPartReference partRef) {
@@ -181,4 +192,33 @@ public class ActiveFoldingListener implements ITaskscapeListener {
     }
 }
 
+//if (this.editor.getSite().getPage().isPartVisible(this.editor)) {
+//IJavaElement active = EditorUtility.getActiveEditorJavaInput();
+//final ITaskscapeNode active = MylarPlugin.getTaskscapeManager().getActiveNode();
+//editor.close(true);
+//	MylarJavaPlugin.getUiBridge().open(active);
+//            JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, false);
+//JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
+//}
+
+//Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//    public void run() {
+//        	controller.updateFolding(true);
+//        	ISourceViewer sourceViewer = editor.getViewer();
+//            if (sourceViewer instanceof ProjectionViewer) {
+//                ProjectionViewer pv= (ProjectionViewer) sourceViewer;
+//                try {
+//					pv.reinitializeProjection();
+//				} catch (BadLocationException e) {
+//					// ignore
+//				}
+//            }
+//        }
+//});
+//}
+//ProjectionAnnotationModel model = (ProjectionAnnotationModel)editor.getAdapter(ProjectionAnnotationModel.class);
+//for (Iterator it = model.getAnnotationIterator(); it.hasNext(); ) {
+//	ProjectionAnnotation annotation = (ProjectionAnnotation)it.next();
+//	model.toggleExpansionState(annotation);
+//}
 
