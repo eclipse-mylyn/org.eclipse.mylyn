@@ -53,6 +53,10 @@ public class TaskListManager {
         try { 
         	if (file.exists()) {
         		XmlUtil.readTaskList(taskList, file);
+        		int maxHandle = taskList.findLargestTaskHandle();
+        		if (maxHandle > nextTaskId) {
+        			nextTaskId = maxHandle + 1;
+        		}
                 for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
         	}
             return true;

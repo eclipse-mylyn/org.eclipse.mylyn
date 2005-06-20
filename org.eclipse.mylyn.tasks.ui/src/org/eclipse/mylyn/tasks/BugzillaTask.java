@@ -16,6 +16,7 @@ package org.eclipse.mylar.tasks;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -29,6 +30,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
@@ -311,11 +313,22 @@ public class BugzillaTask extends Task {
 			notifyTaskDataChange();
 			// Update time this bugtask was last downloaded.
 			lastRefresh = new Date();
-			bugReport = downloadReport();
-			state = BugTaskState.FREE;
+			bugReport = downloadReport();			
+			state = BugTaskState.FREE;			
+			updateTaskDetails();
 			notifyTaskDataChange();
 			saveBugReport(true);
 			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
+		}	
+	}
+	
+	public void updateTaskDetails() {
+		for (Iterator<Attribute> it = bugReport.getAttributes().iterator(); it.hasNext();) {
+			Attribute attribute = it.next();
+			String key = attribute.getParameterName();
+			if (key  != null &&key.equals("priority")) {
+				System.out.println(attribute.getValue());
+			}
 		}
 	}
 	

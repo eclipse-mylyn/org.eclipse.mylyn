@@ -189,10 +189,16 @@ public class XmlUtil {
 		node.setAttribute("Notes", t.getNotes());
 		node.setAttribute("Elapsed", t.getElapsedTime());
 		node.setAttribute("Estimated", t.getEstimatedTime());
+		List<String> rl = t.getRelatedLinks().getLinks();
+		int i = 0;
+		for (String link : rl) {
+			node.setAttribute("link"+i, link);
+			i++;
+		}
 		
 		List<ITask> children = t.getChildren();
 
-		int i = 0; 
+		i = 0; 
 		for (i = 0; i < children.size(); i++) {
 			writeTask(children.get(i), doc, node);
 		}
@@ -333,15 +339,19 @@ public class XmlUtil {
 		} else {
 			t.setEstimatedTime("");
 		}
+		
+		int i = 0;
+		while (e.hasAttribute("link"+i)) {
+			t.getRelatedLinks().add(e.getAttribute("link"+i));
+			i++;
+		}
 				
 		if (!readVersion.equals("1.0.0")) {
 			// for newer revisions
 			// XXX: readVersion had to be read once to remove warning..
 		}
 
-		// Recursively read subtask and add to root task
-		//
-		int i = 0;
+		i = 0;
 		NodeList list = e.getChildNodes();
 		for (i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);

@@ -44,8 +44,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.Category;
@@ -157,30 +155,6 @@ public class TaskListView extends ViewPart {
         }
     }
     
-    private final ITaskscapeListener FILTER_LISTENER = new ITaskscapeListener() { 
-        public void interestChanged(ITaskscapeNode info) {}        
-        public void interestChanged(List<ITaskscapeNode> nodes) {}  
-        public void taskscapeActivated(ITaskscape taskscape) {}
-        public void taskscapeDeactivated(ITaskscape taskscape) {}
-        public void nodeDeleted(ITaskscapeNode node) {}
-        public void landmarkAdded(ITaskscapeNode element) {}
-        public void landmarkRemoved(ITaskscapeNode element) {}
-        public void relationshipsChanged() {}
-        public void presentationSettingsChanged(UpdateKind kind) {
-        	refresh();
-        }         
-        public void presentationSettingsChanging(UpdateKind kind) {
-        	refresh();
-        }
-                         
-        private void refresh() {
-        	if (viewer != null && !viewer.getTree().isDisposed()) {        		
-        		viewer.refresh();
-                setCheckedState(viewer.getTree().getItems());       
-        	}
-        }        
-    };
-    
     class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
         	// don't care if the input changes
@@ -190,11 +164,20 @@ public class TaskListView extends ViewPart {
         }
         public Object[] getElements(Object parent) {
             if (parent.equals(getViewSite())) {
-            	if (MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
-            		return MylarTasksPlugin.getTaskListManager().getTaskList().getTasksInProgress().toArray();
+            	if (MylarUiPlugin.getDefault().isFilterCompleteMode()) {
+            		// don't show completed tasks
+            		if (!MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
+            			return MylarTasksPlugin.getTaskListManager().getTaskList().getTasksInProgress().toArray();
+            		}
             	} else {
-            		return MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks().toArray();
-            	}                
+            		if (MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
+            			// show only completed tasks
+            			return MylarTasksPlugin.getTaskListManager().getTaskList().getCompletedTasks().toArray();
+            		} else {
+            			// show all tasks
+            			return MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks().toArray();
+            		}
+            	}              
             }
             return getChildren(parent);
         }
@@ -206,11 +189,19 @@ public class TaskListView extends ViewPart {
         }
         public Object [] getChildren(Object parent) {
             if (parent instanceof ITask) {
-            	if (MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
-            		return ((ITask)parent).getSubTasksInProgress().toArray();
+            	if (MylarUiPlugin.getDefault().isFilterCompleteMode()) {
+            		if (!MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
+            			return ((ITask)parent).getSubTasksInProgress().toArray();
+            		}
             	} else {
-            		return ((ITask)parent).getChildren().toArray();
-            	}                
+            		if (MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
+            			// show only completed tasks
+            			return ((ITask)parent).getCompletedSubTasks().toArray();
+            		} else {
+            			// show all tasks
+            			return ((ITask)parent).getChildren().toArray();
+            		}
+            	}
             } 
             return new Object[0];
         }
@@ -225,7 +216,6 @@ public class TaskListView extends ViewPart {
 
     public TaskListView() { 
     	INSTANCE = this;
-    	MylarPlugin.getTaskscapeManager().addListener(FILTER_LISTENER);
     }
 
     class TaskListCellModifier implements ICellModifier {
@@ -426,7 +416,6 @@ public class TaskListView extends ViewPart {
             			}
             		}
             	}
-
 				public void controlMoved(ControlEvent e) {	
 					// don't care if the control is moved
 				}
@@ -459,7 +448,8 @@ public class TaskListView extends ViewPart {
         ToolTipHandler toolTipHandler = new ToolTipHandler(viewer.getControl().getShell());
         toolTipHandler.activateHoverHelp(viewer.getControl());
         
-        initDragAndDrop(parent);      
+        initDragAndDrop(parent);
+        expandToActiveTasks();
         restoreState();
    }
 
@@ -528,16 +518,11 @@ public class TaskListView extends ViewPart {
         });
     }
     
-    private void setCheckedState(TreeItem[] items) {
-        for (int i = 0; i < items.length; i++) {
-            TreeItem item = items[i];
-            if (item.getData() instanceof Task) {
-                item.setChecked(((Task)item.getData()).isCompleted());            	
-            } else if (item.getData() instanceof Category) {
-                item.setGrayed(true);
-            }
-            setCheckedState(item.getItems());
-        }
+    private void expandToActiveTasks() {
+    	List<ITask> activeTasks = MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks();
+    	for (ITask t : activeTasks) {
+    		viewer.expandToLevel(t, 0);
+    	}
     }
 
     private void hookContextMenu() {
@@ -841,6 +826,7 @@ public class TaskListView extends ViewPart {
         filterCompleteTask.setText("Filter Complete tasks");
         filterCompleteTask.setToolTipText("Filter Completed tasks");
         filterCompleteTask.setImageDescriptor(MylarImages.TASK_ACTIVE);
+        filterCompleteTask.setChecked(MylarUiPlugin.getDefault().isFilterCompleteMode());
         
         filterInCompleteTask = new Action() {
         	@Override
@@ -851,7 +837,8 @@ public class TaskListView extends ViewPart {
         };
         filterInCompleteTask.setText("Filter Incomplete tasks");
         filterInCompleteTask.setToolTipText("Filter Incomplete tasks");
-        filterInCompleteTask.setImageDescriptor(MylarImages.TASK_INACTIVE);        
+        filterInCompleteTask.setImageDescriptor(MylarImages.TASK_INACTIVE);
+        filterInCompleteTask.setChecked(MylarUiPlugin.getDefault().isFilterInCompleteMode());
     }
 
     /**

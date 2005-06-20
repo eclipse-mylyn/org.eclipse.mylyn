@@ -131,8 +131,20 @@ public class TaskList implements Serializable {
     	for (ITask task : rootTasks) {
     		if (task.isCompleted()) {
     			complete.add(task);
+    		} else if (task.hasCompletedSubTasks()) {
+    			complete.add(task);
     		}
     	}
     	return complete;
+    }
+    public int findLargestTaskHandle() {
+    	int max = 0;
+    	for (ITask t : rootTasks) {
+    		int maxSub = t.findLargestTaskHandle();
+    		if (maxSub > max) {
+    			max = maxSub; 
+    		}
+    	}
+    	return max;
     }
 }

@@ -16,7 +16,6 @@ package org.eclipse.mylar.tasks.ui;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -57,8 +56,7 @@ public class TaskEditor extends MultiPageEditorPart {
 	 */
 	private void createTaskSummaryPage() {
 		taskSummaryEditor.createPartControl(getContainer());
-		Composite composite = taskSummaryEditor.getEditorComposite();
-		int index = addPage(composite);
+		int index = addPage(taskSummaryEditor.getControl());
 		setPageText(index, "Summary");
 	}
 

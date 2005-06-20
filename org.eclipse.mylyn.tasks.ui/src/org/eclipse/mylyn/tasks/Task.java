@@ -303,4 +303,50 @@ public class Task implements ITask {
         }
 		return complete;
 	}
+	
+	public boolean hasCompletedSubTasks() {
+		return findCompletedSubtask(getChildren());
+	}
+		
+	private boolean findCompletedSubtask(List<ITask> subtasks) {
+		for(ITask t : subtasks) {
+			if (t.isCompleted()) {
+				return true;
+			}
+			findCompletedSubtask(t.getChildren());
+		}
+		return false;
+	}
+	
+	public int findLargestTaskHandle() {
+		int ihandle = 0;
+		if (this instanceof BugzillaTask) {
+			ihandle = 0;			
+		} else {
+			ihandle = Integer.parseInt(this.handle.substring(handle.indexOf('-')+1, handle.length()));
+		}
+		int maxSub = findLargestSubTaskHandle(getChildren());
+		return maxSub > ihandle ? maxSub : ihandle;
+	}
+	
+	private int findLargestSubTaskHandle(List<ITask> tasks) {
+		int ihandle = 0;
+		int maxHandle = 0;
+		for (ITask t : tasks) {
+			if (t instanceof BugzillaTask) {
+				ihandle = 0;				
+			} else {
+				ihandle = Integer.parseInt(t.getHandle().substring(t.getHandle().indexOf('-')+1, t.getHandle().length()));
+			}
+			
+			if (ihandle > maxHandle) {
+				maxHandle = ihandle;
+			}
+			int maxSub = findLargestSubTaskHandle(t.getChildren());
+			if (maxSub > maxHandle) {
+				maxHandle = maxSub;
+			}
+		}
+		return maxHandle;
+	}
 }

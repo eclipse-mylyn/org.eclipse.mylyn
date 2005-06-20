@@ -78,6 +78,11 @@ public interface ITask extends Serializable {
 
     public abstract List<ITask> getSubTasksInProgress();
     
+    public abstract List<ITask> getCompletedSubTasks();
+    
+    public abstract boolean hasCompletedSubTasks();
+    
+    public abstract int findLargestTaskHandle();
     /**
      * Opens this task in an editor
      */

@@ -18,8 +18,13 @@ package org.eclipse.mylar.tasks.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -37,9 +42,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskActivityListener;
+import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.RelatedLinks;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.util.RelativePathUtil;
+import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -55,9 +63,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -69,8 +79,11 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
@@ -80,6 +93,8 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 import org.eclipse.ui.part.EditorPart;
 
 /**
+ * For details on forms, go to:
+ * 	http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/pde-ui-home/working/EclipseForms/EclipseForms.html
  * @author Ken Sueda
  */
 public class TaskSummaryEditor extends EditorPart {
@@ -99,9 +114,34 @@ public class TaskSummaryEditor extends EditorPart {
 	private TableViewer tableViewer;
 	private RelatedLinks links;
 	private RelatedLinksContentProvider contentProvider;
-	
+		
+	private Button browse;
 	private Text pathText;
+	private ScrolledForm sform;
+	private Action add;
+    private Action delete;
 
+    private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
+
+        public void taskActivated(ITask activeTask) {    
+        	if (activeTask.getHandle().equals(task.getHandle())) {
+        		browse.setEnabled(false);
+        	}
+        }
+
+        public void tasksActivated(List<ITask> tasks) {
+            for (ITask t : tasks) {
+            	taskActivated(t);
+            }
+        }
+
+        public void taskDeactivated(ITask deactiveTask) {
+        	if (deactiveTask.getHandle().equals(task.getHandle())) {
+        		browse.setEnabled(true);
+        	}
+        }
+        
+    };    
 	/**
 	 * 
 	 */
@@ -146,17 +186,16 @@ public class TaskSummaryEditor extends EditorPart {
 		copyAction.setAccelerator(SWT.CTRL | 'c');
 
 		copyAction.setEnabled(false);
+		MylarTasksPlugin.getTaskListManager().addListener(TASK_LIST_LISTENER);
 	}
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		// don't support saving
 	}
-
 	@Override
 	public void doSaveAs() {
 		// don't support saving
 	}
-
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof TaskEditorInput)) {
@@ -167,12 +206,10 @@ public class TaskSummaryEditor extends EditorPart {
 		editorInput = (TaskEditorInput)input;
 		setPartName(editorInput.getLabel());
 	}
-
 	@Override
 	public boolean isDirty() {
 		return false;
 	}
-
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
@@ -184,7 +221,9 @@ public class TaskSummaryEditor extends EditorPart {
 //		FormToolkit toolkit = form.getToolkit();
 //		editorComposite = form.getForm();
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		editorComposite = toolkit.createComposite(parent);
+		sform = toolkit.createScrolledForm(parent);
+		sform.getBody().setLayout(new TableWrapLayout());
+		editorComposite = sform.getBody();
 		
 		
 		TableWrapLayout layout = new TableWrapLayout();
@@ -215,6 +254,10 @@ public class TaskSummaryEditor extends EditorPart {
 		return editorComposite;
 	}
 
+	public Control getControl() {
+		return sform;
+	}
+	
 	public void setTask(ITask task) throws Exception {
 		if (task == null)
 			throw new Exception("ITask object is null.");
@@ -245,17 +288,28 @@ public class TaskSummaryEditor extends EditorPart {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText("Mylar Task Description");
 		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));		
+		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				sform.reflow(true);
+			}
+			public void expansionStateChanged(ExpansionEvent e) {
+				sform.reflow(true);
+			}			
+		});
+		
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);		
 		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;						
+		layout.numColumns = 3;						
 		container.setLayout(layout);
 		
         Label l = toolkit.createLabel(container, "Description:");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
         final Text text = toolkit.createText(container,task.getLabel(), SWT.BORDER);
-        text.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+        td.colspan = 2;
+        text.setLayoutData(td);
         text.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 				// don't care about focus gained
@@ -264,37 +318,26 @@ public class TaskSummaryEditor extends EditorPart {
 			public void focusLost(FocusEvent e) {
 				String label = text.getText();
 				task.setLabel(label);
-				refreshViewer();
+				refreshTaskListView();
 			}			
 		});
         
         l = toolkit.createLabel(container, "Task Handle:");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
         Text handle = toolkit.createText(container, task.getHandle(), SWT.BORDER);
-        handle.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        td = new TableWrapData(TableWrapData.FILL_GRAB);
+        td.colspan = 2;
+        handle.setLayoutData(td);
         handle.setEditable(false);               
-        
-        
-        Composite taskContextContainer = toolkit.createComposite(parent);
-        layout = new TableWrapLayout();
-		layout.numColumns = 3;						
-		taskContextContainer.setLayout(layout);
-		taskContextContainer.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+              		
 		
-		
-		// TODO: fix the form so it looks better.
-		l = toolkit.createLabel(taskContextContainer, "To change the Mylar_Dir, go to Mylar Preferences");
-        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.colspan = 3;
-		l.setLayoutData(td);
-        Label l2 = toolkit.createLabel(taskContextContainer, "Task context path:");
+        Label l2 = toolkit.createLabel(container, "Task context path:");
         l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-        pathText = toolkit.createText(taskContextContainer, "<Mylar_Dir>/"+task.getPath()+".xml", SWT.BORDER);
+        pathText = toolkit.createText(container, "<Mylar_Dir>/"+task.getPath()+".xml", SWT.BORDER);
         pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
         pathText.setEditable(false);                
         
-        Button browse = toolkit.createButton(taskContextContainer, "Change", SWT.PUSH | SWT.CENTER);
+        browse = toolkit.createButton(container, "Change", SWT.PUSH | SWT.CENTER);
         if (task.isActive()) {
         	browse.setEnabled(false);
         } else {
@@ -304,24 +347,40 @@ public class TaskSummaryEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
-				String[] ext = {"*.xml"};
-				dialog.setFilterExtensions(ext);
-				
-				String mylarDir = MylarPlugin.getTaskscapeManager().getMylarDir() + "/";
-				mylarDir = mylarDir.replaceAll("\\\\", "/");
-				//mylarDir = formatPath(mylarDir);
-				dialog.setFilterPath(formatPath(mylarDir));
-				
-				String res = dialog.open();				
-				if (res != null) {
-					res = formatPath(res);
-					res = RelativePathUtil.findRelativePath(mylarDir, res);
-					pathText.setText("<MylarDir>/" + res + ".xml");
-					task.setPath(res);
+				if (task.isActive()) {
+					MessageDialog.openInformation(
+							Display.getDefault().getActiveShell(),
+				            "Task Message",
+				            "Task can not be active when changing taskscape");
+				} else {
+					FileDialog dialog = new FileDialog(Display.getDefault()
+							.getActiveShell(), SWT.OPEN);
+					String[] ext = { "*.xml" };
+					dialog.setFilterExtensions(ext);
+
+					String mylarDir = MylarPlugin.getTaskscapeManager()
+							.getMylarDir()
+							+ "/";
+					mylarDir = mylarDir.replaceAll("\\\\", "/");
+					// mylarDir = formatPath(mylarDir);
+					dialog.setFilterPath(formatPath(mylarDir));
+
+					String res = dialog.open();
+					if (res != null) {
+						res = formatPath(res);
+						res = RelativePathUtil.findRelativePath(mylarDir, res);
+						pathText.setText("<MylarDir>/" + res + ".xml");
+						task.setPath(res);
+					}
 				}
 			}
 		});
+		toolkit.createLabel(container, "");
+		l = toolkit.createLabel(container, "Go to Mylar Preferences to change <Mylar_Dir>");
+        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//        td = new TableWrapData(TableWrapData.FILL_GRAB);
+//		td.colspan = ;
+//		l.setLayoutData(td);
 	}	
 	
 	private String formatPath(String path) {
@@ -342,14 +401,23 @@ public class TaskSummaryEditor extends EditorPart {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText("Notes");			
 		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));		
+		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				sform.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				sform.reflow(true);
+			}			
+		});
 		Composite container = toolkit.createComposite(section);			
 		section.setClient(container);		
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;					
 		container.setLayout(layout);
 		
-		final Text text = toolkit.createText(container, task.getNotes(), SWT.BORDER);
+		final Text text = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI);
 		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
 		tablewrap.heightHint = 100;
 		text.setLayoutData(tablewrap);
@@ -369,7 +437,16 @@ public class TaskSummaryEditor extends EditorPart {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Planning Game");			
 		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));		
+		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				sform.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				sform.reflow(true);
+			}			
+		});
 		Composite container = toolkit.createComposite(section);			
 		section.setClient(container);		
 		TableWrapLayout layout = new TableWrapLayout();
@@ -401,15 +478,23 @@ public class TaskSummaryEditor extends EditorPart {
 	}
 	
 	private void createRelatedLinksSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText("Related Links");			
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				sform.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				sform.reflow(true);
+			}			
+		});
 		Composite container = toolkit.createComposite(section);			
 		section.setClient(container);		
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;					
-
 		container.setLayout(layout);			
 		
 		Label l = toolkit.createLabel(container, "Related Links:");
@@ -426,14 +511,14 @@ public class TaskSummaryEditor extends EditorPart {
 		table = toolkit.createTable(parent, SWT.NONE );		
 		TableColumn col1 = new TableColumn(table, SWT.NULL);
 		TableLayout tlayout = new TableLayout();
-		tlayout.addColumnData(new ColumnWeightData(200, 20, true));
+		tlayout.addColumnData(new ColumnWeightData(0,0,false));
 		table.setLayout(tlayout);
 		TableWrapData wd = new TableWrapData(TableWrapData.FILL_GRAB);
+		wd.heightHint = 100;
 		wd.grabVertical = true;
-		wd.heightHint = 100;		
-		table.setLayoutData(wd);		
-		col1.addSelectionListener(new SelectionAdapter() {
-			
+		table.setLayoutData(wd);
+		table.setHeaderVisible(false);
+		col1.addSelectionListener(new SelectionAdapter() {			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableViewer.setSorter(new RelatedLinksTableSorter(
@@ -467,11 +552,10 @@ public class TaskSummaryEditor extends EditorPart {
 		tableViewer = new TableViewer(table);
 		tableViewer.setColumnProperties(columnNames);
 		
-		//CellEditor[] editors = new CellEditor[columnNames.length];
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		
 		TextCellEditor textEditor = new TextCellEditor(table);
-		((Text) textEditor.getControl()).setTextLimit(20);
+		((Text) textEditor.getControl()).setTextLimit(50);
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = textEditor;		
 		
@@ -482,47 +566,33 @@ public class TaskSummaryEditor extends EditorPart {
 		tableViewer.setLabelProvider(new RelatedLinksLabelProvider());
 		links = task.getRelatedLinks();
 		tableViewer.setInput(links);
+		defineActions();
+		hookContextMenu();
 	}	
 	private void createAddDeleteButtons(Composite parent, FormToolkit toolkit) {
 		Composite container = toolkit.createComposite(parent);
 		container.setLayout(new GridLayout(1, true));
-		Button add = toolkit.createButton(container, "Add", SWT.PUSH | SWT.CENTER);
-		add.addSelectionListener(new SelectionAdapter() {
-			
+		Button addButton = toolkit.createButton(container, "  Add  ", SWT.PUSH | SWT.CENTER);
+		//add.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		addButton.addSelectionListener(new SelectionAdapter() {			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), "New related link", 
-						"Enter new related link for this task", "", null);
-				dialog.open();
-				String url = null;
-				String link = dialog.getValue();
-				if (!(link.startsWith("http://") || link.startsWith("https://"))) {
-					url = "http://" + link;					
-				} else {
-					url = link;
-				}
-				links.add(url);
-				tableViewer.add(url);				
+				addLink();	
 			}
 		});
 
-		Button delete = toolkit.createButton(container, "Delete", SWT.PUSH | SWT.CENTER);
-		delete.setText("Delete");
-		
-		delete.addSelectionListener(new SelectionAdapter() {
+		Button deleteButton = toolkit.createButton(container, "Delete", SWT.PUSH | SWT.CENTER);
+		deleteButton.setText("Delete");
+		//delete.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		deleteButton.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String url = (String) ((IStructuredSelection) tableViewer
-						.getSelection()).getFirstElement();
-				if (url != null) {
-					links.remove(url);
-					tableViewer.remove(url);
-				}
+				removeLink();
 			}
 		});
 	}	
-	private void refreshViewer() {
+	private void refreshTaskListView() {
 		if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged();
 	}
 	private class RelatedLinksCellModifier implements ICellModifier, IColorProvider {
@@ -536,6 +606,7 @@ public class TaskSummaryEditor extends EditorPart {
 		public Object getValue(Object element, String property) {			
 			Object res = null;
 			if (element instanceof String) {
+				tableViewer.setSelection(null);
 				String url = (String) element;
 				try {					
 					IWebBrowser b = null;
@@ -654,6 +725,65 @@ public class TaskSummaryEditor extends EditorPart {
 			return criteria;
 		}
 	}
+	
+	private void addLink() {
+		InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), "New related link", 
+				"Enter new related link for this task", "", null);
+		dialog.open();
+		String url = null;
+		String link = dialog.getValue();
+		if (!(link.startsWith("http://") || link.startsWith("https://"))) {
+			url = "http://" + link;					
+		} else {
+			url = link;
+		}
+		links.add(url);
+		tableViewer.add(url);	
+	}
+	
+	private void removeLink() {
+		String url = (String) ((IStructuredSelection) tableViewer
+				.getSelection()).getFirstElement();
+		if (url != null) {
+			links.remove(url);
+			tableViewer.remove(url);
+		}
+	}
+	private void defineActions() {		  
+        delete = new Action() {
+			@Override
+			public void run() {
+				removeLink();
+			}
+		};
+        delete.setText("Delete");
+        delete.setToolTipText("Delete");
+        delete.setImageDescriptor(MylarImages.REMOVE);
+        
+        add = new Action() {
+			@Override
+			public void run() {
+				addLink();
+			}
+		};
+		add.setText("Add");
+		add.setToolTipText("Add");
+		//add.setImageDescriptor(MylarImages.REMOVE);
+	}
+	
+	private void hookContextMenu() {
+        MenuManager menuMgr = new MenuManager("#PopupMenu");
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
+            public void menuAboutToShow(IMenuManager manager) {
+            	manager.add(add);
+                manager.add(delete);
+            }
+        });
+        Menu menu = menuMgr.createContextMenu(tableViewer.getControl());
+        tableViewer.getControl().setMenu(menu);
+        //getSite().registerContextMenu(menuMgr, tableViewer);
+    }
 	
 	
 
