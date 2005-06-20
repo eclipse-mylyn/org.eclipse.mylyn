@@ -28,6 +28,7 @@ import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.model.TaskscapeManager;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.ui.IEditorPart;
@@ -67,15 +68,18 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                         IMember member = null; 
                         if (info instanceof MemberProposalInfo) member = (IMember)method.invoke(info, new Object[] { });
                         if (member == null || MylarPlugin.getTaskscapeManager().getActiveTaskscape() == null) {
-                            rest.add(proposal);
+                            // nothing for now
                         } else {
-                            float interest = MylarPlugin.getTaskscapeManager().getNode(member.getHandleIdentifier()).getDegreeOfInterest().getValue();
-                            if (!(member instanceof IType) 
-                                 && interest > TaskscapeManager.getScalingFactors().getInteresting()) {
-                                interesting.put(-interest, proposal);  // negative to invert sorting order
-                            } 
-                            rest.add(proposal);
+                        	ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(member.getHandleIdentifier()); 
+                            if (node != null) {
+                            	float interest = node.getDegreeOfInterest().getValue();
+	                            if (!(member instanceof IType) 
+	                                 && interest > TaskscapeManager.getScalingFactors().getInteresting()) {
+	                                interesting.put(-interest, proposal);  // negative to invert sorting order
+	                            }
+                            }
                         }
+                        rest.add(proposal);
                     }
                 } catch (Exception e) {
                 	MylarPlugin.log(this.getClass().toString(), e);
