@@ -115,9 +115,11 @@ public class LandmarkMarkerManager implements ITaskscapeListener {
                         public void run(IProgressMonitor monitor) throws CoreException {
                             if (resource != null) {
                                 try {
-                                    long id = markerMap.get(node);
-                                    IMarker marker = resource.getMarker(id); 
-                                    if (marker != null) marker.delete();
+                                	if (markerMap.containsKey(node)) {
+                                		long id = markerMap.get(node);	
+                                		IMarker marker = resource.getMarker(id); 
+                                		if (marker != null) marker.delete();
+                                	}
                                 } catch (NullPointerException e) {
                                 	MylarPlugin.log(this.getClass().toString(), e);
                                 }

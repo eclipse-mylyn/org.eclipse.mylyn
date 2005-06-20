@@ -145,7 +145,7 @@ public class TaskscapeManager {
         }
         ITaskscapeNode node = activeTaskscape.addEvent(event);
         List<ITaskscapeNode> interestDelta = new ArrayList<ITaskscapeNode>();
-        propegateDoiToParents(node, previousInterest, 1, interestDelta); 
+        if (!event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) propegateDoiToParents(node, previousInterest, 1, interestDelta); 
         activeTaskscape.setActiveElement(node);
 
         interestDelta.add(node); // TODO: check that the order of these is sensible

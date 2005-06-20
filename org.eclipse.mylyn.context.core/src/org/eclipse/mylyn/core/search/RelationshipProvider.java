@@ -28,7 +28,7 @@ import org.eclipse.mylar.core.model.TaskscapeManager;
  */
 public abstract class RelationshipProvider implements ITaskscapeListener {
 
-    private boolean enabled = true;
+    private boolean enabled = false;
     private String id;
     private String structureKind;
     

@@ -122,14 +122,15 @@ public class JavaModelUiUpdateBridge implements ITaskscapeListener {
 		                if (element != null && element.exists()) {
 		                    if (node.getDegreeOfInterest().isInteresting()) {
 		                        fireModelUpdate(element, ChangeKind.ADDED);
-		                    } else {
-		                        fireModelUpdate(element, ChangeKind.REMOVED);
-		                    }
+		                    } 
 		                }
 		            }
+                } else if (lastElement != null) {
+                	if (!lastNode.getDegreeOfInterest().isInteresting()) {
+                        fireModelUpdate(lastElement, ChangeKind.REMOVED);
+                    }
                 }
         	}
-//            System.err.println(lastElement);
             if (lastElement != null) {
             	revealInPackageExplorer(lastElement);
             }

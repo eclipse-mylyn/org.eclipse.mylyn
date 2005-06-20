@@ -77,7 +77,7 @@ class DegreeOfInterest implements IDegreeOfInterest {
             propagatedBias += event.getInterestContribution();
             break;
         case MANIPULATION:
-            manipulationBias = event.getInterestContribution();
+            manipulationBias += event.getInterestContribution();
             break;
         }
     }

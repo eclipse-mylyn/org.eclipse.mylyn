@@ -35,13 +35,13 @@ public class TaskscapeManipulationMonitor extends AbstractCommandMonitor {
         
         ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getActiveNode();
         if (node == null) return;
-        float originalValue = node.getDegreeOfInterest().getEncodedValue();
+        float originalValue = node.getDegreeOfInterest().getValue();
         float changeValue = 0;
         if (commandId.equals(InterestDecrementAction.COMMAND_ID)) {
             if (node.getDegreeOfInterest().isLandmark()) { // keep it interesting
                 changeValue = (-1 * originalValue) + 1; 
             } else { // XXX could be < 0
-                changeValue = (-1 * originalValue) - TaskscapeManager.getScalingFactors().getDecay().getValue() -1;
+                changeValue = (-1 * originalValue);
             }
         } else if (commandId.equals(InterestIncrementAction.COMMAND_ID)) {
             if (originalValue >  TaskscapeManager.getScalingFactors().getLandmark()) {
@@ -57,7 +57,6 @@ public class TaskscapeManipulationMonitor extends AbstractCommandMonitor {
                     node.getElementHandle(), 
                     SOURCE_ID,
                     changeValue);
-//            interactionEvent.setInterestContribution(changeValue);
             MylarPlugin.getTaskscapeManager().handleInteractionEvent(interactionEvent);
         }
     }
