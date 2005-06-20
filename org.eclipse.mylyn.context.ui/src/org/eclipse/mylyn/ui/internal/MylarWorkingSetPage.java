@@ -29,13 +29,15 @@ import org.eclipse.ui.dialogs.IWorkingSetPage;
 
 
 /**
- * @author sminto
+ * @author Shawn Minto
  */
 public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private Text workingSetNameText;
 	private IWorkingSet workingSet;
-
+	public static final String WORKING_SET_NAME = "Mylar Task Context";
+	
+	
 	public MylarWorkingSetPage() {
 		super("org.eclipse.mylar.monitor.workingSetPage", "Mylar Task Context Working Set", MylarImages.MYLAR);
 		setDescription("Mylar Working Set - All of the files contained in the active taskscape"); 
@@ -58,7 +60,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		workingSetNameText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		workingSetNameText.setFocus();
 		workingSetNameText.setEditable(false);
-		workingSetNameText.setText("Mylar Task Context");
+		workingSetNameText.setText(WORKING_SET_NAME);
 
 		label = new Label(composite, SWT.WRAP);
 		label.setText("");

@@ -276,7 +276,7 @@ public class PdeUiBridge implements IMylarUiBridge {
      * Class to listen to the tree views to attempt to refresh them more
      * frequently to keep the ui model consistant with the user selections
      * 
-     * @author sminto
+     * @author Shawn Minto
      */
     private class TreeViewerListener implements ISelectionChangedListener, ITreeViewerListener{
     	public void selectionChanged(SelectionChangedEvent event) {

@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Interface for a listener of when the bugzilla search is completed
  * 
- * @author sminto
+ * @author Shawn Minto
  */
 public interface IActiveSearchListener {
     /**

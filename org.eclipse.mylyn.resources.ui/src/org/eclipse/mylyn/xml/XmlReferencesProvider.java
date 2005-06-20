@@ -51,7 +51,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 
 /**
- * @author sminto
+ * @author Shawn Minto
  */
 public class XmlReferencesProvider extends RelationshipProvider {
 
