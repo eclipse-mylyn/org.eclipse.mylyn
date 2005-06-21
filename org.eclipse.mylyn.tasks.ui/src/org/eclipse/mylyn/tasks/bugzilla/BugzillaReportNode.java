@@ -179,6 +179,6 @@ public class BugzillaReportNode {
     }
 
     public String getElementHandle() {
-        return "<server-id>;" + hit.getId();
+        return hit.getServer() + ";" + hit.getId();
     }
 }

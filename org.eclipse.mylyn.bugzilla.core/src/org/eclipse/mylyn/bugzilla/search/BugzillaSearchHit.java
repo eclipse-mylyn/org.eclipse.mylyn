@@ -37,6 +37,9 @@ import org.eclipse.ui.PartInitException;
  */
 public class BugzillaSearchHit 
 {
+	/** The server that the result was from */
+	private String server;
+	
 	/** The bug id */
 	private int id;
 	
@@ -79,7 +82,7 @@ public class BugzillaSearchHit
 	 * @param owner The owner of the bug
 	 * @param query the query that the bug was a result of
 	 */
-	public BugzillaSearchHit(int id, String description, String severity, String priority, String platform, String state, String result, String owner, String query) 
+	public BugzillaSearchHit(int id, String description, String severity, String priority, String platform, String state, String result, String owner, String query, String server) 
 	{
 		this.id = id;
 		this.description = description;
@@ -90,6 +93,16 @@ public class BugzillaSearchHit
 		this.result = result;
 		this.owner = owner;
 		this.query = query;
+		this.server = server;
+	}
+	
+	/**
+	 * Get the bugs server
+	 * @return The server the bug resides on
+	 */
+	public String getServer() 
+	{
+		return server;
 	}
 	
 	/**

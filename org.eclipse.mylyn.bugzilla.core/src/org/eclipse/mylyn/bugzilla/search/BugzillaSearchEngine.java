@@ -190,7 +190,9 @@ public class BugzillaSearchEngine {
 					if (query == null)
 						query = "";
 					
-					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query);
+					String server = BugzillaPlugin.getDefault().getServerName();
+					
+					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
 					collector.accept(hit);
 					numCollected++;
 				}
@@ -237,8 +239,11 @@ public class BugzillaSearchEngine {
 					String description = line.substring(8);
 					String query = BugzillaPlugin.getMostRecentQuery();
 					if (query == null)
-						query = ""; 
-					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query);
+						query = "";
+					
+					String server = BugzillaPlugin.getDefault().getServerName();
+					
+					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
 					collector.accept(hit);
 					numCollected++;
 				}

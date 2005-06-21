@@ -139,7 +139,7 @@ public class BugzillaStackTraceTest extends TestCase {
 	
 	private void performParse(int bugNumber, String bugFileName, int numTracesExpected, boolean printStackTraces){
 		
-	    BugzillaSearchHit hit = new BugzillaSearchHit(bugNumber,"","","","","","","",""); // stack trace in desc and com
+	    BugzillaSearchHit hit = new BugzillaSearchHit(bugNumber,"","","","","","","","", "<TEST-SERVER>"); // stack trace in desc and com
 		
 		// create a new doi info
 	    BugzillaReportNode doi = new BugzillaReportNode(0, hit, false);

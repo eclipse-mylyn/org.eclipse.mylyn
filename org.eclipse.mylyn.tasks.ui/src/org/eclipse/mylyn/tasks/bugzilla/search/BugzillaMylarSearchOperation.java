@@ -214,7 +214,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 				if(isHit){
 					
 					// make a search hit from the bug and then add it to the collector
-					BugzillaSearchHit hit = new BugzillaSearchHit(bug.getId(), bug.getDescription(), "","","","","","","");
+					BugzillaSearchHit hit = new BugzillaSearchHit(bug.getId(), bug.getDescription(), "","","","","","","", bug.getServer());
 					try{
 						searchCollector.accept(hit);
 					}catch(CoreException e){
