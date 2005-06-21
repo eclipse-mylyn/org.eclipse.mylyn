@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<!-- should be in UI but the monitor depends on this -->
+	<!-- these should be in UI but the monitor depends on them -->
+	
      <extension point="org.eclipse.ui.views">
      	<category name="Mylar" id="org.eclipse.mylar"/>
+     </extension>
+     	
+     <extension point="org.eclipse.ui.newWizards">
+        <category name="Mylar" id="org.eclipse.mylar.wizards"/>
      </extension>
 </plugin>
