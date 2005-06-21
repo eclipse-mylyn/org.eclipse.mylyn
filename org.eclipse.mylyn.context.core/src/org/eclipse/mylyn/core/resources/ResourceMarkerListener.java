@@ -76,7 +76,7 @@ public class ResourceMarkerListener implements IResourceChangeListener {
 							}
 						}
 					}catch (Exception e){
-						MylarPlugin.log(this.getClass().toString(), e);
+						MylarPlugin.log(this.getClass().toString() + " could not update marker", e);
 					}
 				}
 				
