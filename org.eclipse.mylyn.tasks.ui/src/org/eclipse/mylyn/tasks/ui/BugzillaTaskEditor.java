@@ -16,12 +16,15 @@ package org.eclipse.mylar.tasks.ui;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.bugzilla.IBugzillaAttributeListener;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
+import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
+import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -49,7 +52,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 	/** This bug report can be modified by the user and saved offline. */
 	protected BugReport offlineBug;
 	
-	private ExistingBugEditor buzillaEditor;
+	private ExistingBugEditor bugzillaEditor;
 
 	private BugzillaTaskEditorInput bugzillaEditorInput;
 	
@@ -57,6 +60,16 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
     
 	protected IContentOutlinePage outlinePage = null;
 	
+	private IBugzillaAttributeListener ATTRIBUTE_LISTENER = new IBugzillaAttributeListener() {
+		public void attributeChanged(String attribute, String value) {
+			if (attribute.equals("Priority")) {
+				bugTask.setPriority(value);
+				if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged();
+			}
+		}
+    };    
+
+    
 	public BugzillaTaskEditor() {
 		super();
 
@@ -67,12 +80,13 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 		BugzillaTaskEditorListener listener = new BugzillaTaskEditorListener();
 		ap.addPartListener(listener);
 		
-		buzillaEditor = new ExistingBugEditor();
+		bugzillaEditor = new ExistingBugEditor();
+		bugzillaEditor.addAttributeListener(ATTRIBUTE_LISTENER);
         taskSummaryEditor = new TaskSummaryEditor();
 	}
 
     public AbstractBugEditor getBugzillaEditor(){
-        return buzillaEditor;
+        return bugzillaEditor;
     }
     
     public TaskSummaryEditor getTaskEditor(){
@@ -89,8 +103,8 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 	 * which allows you to change the font used in page 2.
 	 */
 	private void createBugzillaSubmitPage() {
-		buzillaEditor.createPartControl(getContainer());
-		Composite composite = buzillaEditor.getEditorComposite();
+		bugzillaEditor.createPartControl(getContainer());
+		Composite composite = bugzillaEditor.getEditorComposite();
 		int index = addPage(composite);
 		setPageText(index, "Bugzilla");
 	}
@@ -148,7 +162,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 		super.setInput(editorInput);
 		
 		try {
-			buzillaEditor.init(this.getEditorSite(), this.getEditorInput());
+			bugzillaEditor.init(this.getEditorSite(), this.getEditorInput());
 		}
 		catch (Exception e) {
 			throw new PartInitException(e.getMessage());
@@ -178,7 +192,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 	@Override
 	public void setFocus() {
 		// The default focus for this editor is the submit page
-		buzillaEditor.setFocus();
+		bugzillaEditor.setFocus();
 	}
 
 	/**
@@ -228,13 +242,16 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 				BugzillaTaskEditor taskEditor = (BugzillaTaskEditor)part;
 				
 				// check if it needs to be saved
-				if (taskEditor.buzillaEditor.isDirty) {
+				if (taskEditor.bugzillaEditor.isDirty) {
 					// ask the user whether they want to save it or not and perform the appropriate action
-					taskEditor.buzillaEditor.changeDirtyStatus(false);
+					taskEditor.bugzillaEditor.changeDirtyStatus(false);
 					boolean response = MessageDialog.openQuestion(null, "Save Changes", 
 							"You have made some changes to the bug, do you want to save them?");
 					if (response) {
-						taskEditor.buzillaEditor.saveBug();
+						taskEditor.bugzillaEditor.saveBug();
+					} else {
+						ExistingBugEditorInput input = (ExistingBugEditorInput)taskEditor.bugzillaEditor.getEditorInput();
+						bugTask.setPriority(input.getBug().getAttribute("Priority").getValue());
 					}
 				}
 			}
@@ -260,7 +277,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public Object getAdapter(Class adapter) {
-		return buzillaEditor.getAdapter(adapter);
+		return bugzillaEditor.getAdapter(adapter);
 	}
     
     public void close() {

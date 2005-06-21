@@ -301,9 +301,9 @@ public class XmlUtil {
 				MylarPlugin.log("Failed to read bug report");
 			}
 		} else {
-			t = new Task(handle, label);
-			t.setPriority(priority);
+			t = new Task(handle, label);			
 		}
+		t.setPriority(priority);
 		t.setPath(e.getAttribute("Path"));
 		
 		if (e.getAttribute("Active").compareTo("true") == 0) {

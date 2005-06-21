@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.IBugzillaAttributeListener;
 import org.eclipse.mylar.bugzilla.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugPost;
@@ -182,6 +184,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected Composite infoArea;
 
 	protected StyledText generalTitleText;
+	
+	private List<IBugzillaAttributeListener> attributesListeners = new ArrayList<IBugzillaAttributeListener>();
 	
 	protected final ISelectionProvider selectionProvider = new ISelectionProvider() {
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
@@ -1319,7 +1323,10 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				String sel = combo.getItem(combo.getSelectionIndex());
 				Attribute a = getBug().getAttribute(comboListenerMap.get(combo));
 				if (!(a.getNewValue().equals(sel))) {
-					a.setNewValue(sel);
+					a.setNewValue(sel);					
+					for(IBugzillaAttributeListener client : attributesListeners) {
+						client.attributeChanged(a.getName(), sel);
+					}
 					changeDirtyStatus(true);
 				}
 			}
@@ -1518,5 +1525,13 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
                 getSite().getPage().closeEditor(AbstractBugEditor.this, false);
             }
         });
+    }
+   
+    public void addAttributeListener(IBugzillaAttributeListener listener) {
+    	attributesListeners.add(listener);
+    }
+    
+    public void removeAttributeListener(IBugzillaAttributeListener listener) {
+    	attributesListeners.remove(listener);
     }
 }

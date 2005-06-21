@@ -122,9 +122,8 @@ public class TaskSummaryEditor extends EditorPart {
     private Action delete;
 
     private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
-
         public void taskActivated(ITask activeTask) {    
-        	if (activeTask.getHandle().equals(task.getHandle())) {
+        	if (task != null && activeTask.getHandle().equals(task.getHandle())) {
         		browse.setEnabled(false);
         	}
         }
@@ -136,11 +135,10 @@ public class TaskSummaryEditor extends EditorPart {
         }
 
         public void taskDeactivated(ITask deactiveTask) {
-        	if (deactiveTask.getHandle().equals(task.getHandle())) {
+        	if (task != null &&  deactiveTask.getHandle().equals(task.getHandle())) {
         		browse.setEnabled(true);
         	}
-        }
-        
+        }        
     };    
 	/**
 	 * 

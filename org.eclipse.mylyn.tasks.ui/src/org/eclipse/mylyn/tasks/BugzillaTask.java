@@ -16,7 +16,6 @@ package org.eclipse.mylar.tasks;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -30,7 +29,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
@@ -323,9 +321,10 @@ public class BugzillaTask extends Task {
 	}
 	
 	public void updateTaskDetails() {
-		for (Iterator<Attribute> it = bugReport.getAttributes().iterator(); it.hasNext();) {
-//			Attribute attribute = it.next();
-//			String key = attribute.getParameterName();
+		setPriority(bugReport.getAttribute("Priority").getValue());
+		String status = bugReport.getAttribute("Status").getValue();
+		if (status.equals("RESOLVED")) {
+			setCompleted(true);
 		}
 	}
 	

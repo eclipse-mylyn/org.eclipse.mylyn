@@ -280,17 +280,18 @@ public class TaskListView extends ViewPart {
 				case 2:
 					Integer intVal = (Integer) value;
 					task.setPriority("P" + (intVal + 1));
-					viewer.setSelection(null);
+					viewer.setSelection(null);					
 					break;
 				case 3:
 					task.setLabel(((String) value).trim());
-					viewer.setSelection(null);
+					viewer.setSelection(null);					
 					break;
 				case 4:
 					break;
 				}
 				viewer.refresh();
 			} catch (Exception e) {
+				MylarPlugin.log(e, e.getMessage());
 			}
 		}                
     }
@@ -667,7 +668,11 @@ public class TaskListView extends ViewPart {
                 String bugIdString = getBugIdFromUser();
                 int bugId = -1;
                 try {
-                    bugId = Integer.parseInt(bugIdString);
+                	if (bugIdString != null) {
+                		bugId = Integer.parseInt(bugIdString);
+                	} else {
+                		return;
+                	}
                 } catch (NumberFormatException nfe) {
                     showMessage("Please enter a valid report number");
                     return;
@@ -680,10 +685,10 @@ public class TaskListView extends ViewPart {
 				List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
 				for (Iterator<ITask> iter = tasks.iterator(); iter.hasNext() && !doesIdExistAlready;) {
 					ITask task = iter.next();
-					doesIdExistAlready = lookForId(task, "" + bugId); // HACK:
+					doesIdExistAlready = lookForId(task, "Bugzilla-" + bugId);
 				}
 				if (doesIdExistAlready) {
-                    showMessage("A Bugzilla task with ID " + bugId + " already exists.");
+                    showMessage("A Bugzilla task with ID Bugzilla-" + bugId + " already exists.");
                     return;
 				}
 				
@@ -853,7 +858,7 @@ public class TaskListView extends ViewPart {
 	 *         children
 	 */
     protected boolean lookForId(ITask task, String taskId) {
-		if (task.getHandle() == taskId) {
+		if (task.getHandle().equals(taskId)) {
 			return true;
 		}
 		
