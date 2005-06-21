@@ -277,7 +277,7 @@ public class TaskSummaryEditor extends EditorPart {
 			createPlanningGameSection(parent, toolkit);
 	        createRelatedLinksSection(parent, toolkit);						
         } catch (SWTException e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "content failed");
         }	       
 		return null;
 	}

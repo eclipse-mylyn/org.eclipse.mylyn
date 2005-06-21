@@ -169,7 +169,7 @@ public class Task implements ITask {
 		} 
 		catch (PartInitException ex) 
 		{
-			MylarPlugin.log(this.getClass().toString(), ex);
+			MylarPlugin.log(ex, "open failed");
 		}
 	}
 

@@ -61,7 +61,7 @@ public class TaskListManager {
         	}
             return true;
         } catch (Exception e) { 
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "task read failed");
             return false;
         }
     }

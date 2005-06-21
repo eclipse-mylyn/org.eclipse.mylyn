@@ -733,7 +733,7 @@ public class TaskListView extends ViewPart {
 						try{
                             closeBugTaskEditors((ITask)selectedObject, page);
                         }catch(Exception e){
-                        	MylarPlugin.log(this.getClass().toString(), e);
+                        	MylarPlugin.log(e, " deletion failed");
                         }
                     } 
                 }

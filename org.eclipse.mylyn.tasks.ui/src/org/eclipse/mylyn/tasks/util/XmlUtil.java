@@ -98,7 +98,7 @@ public class XmlUtil {
 			outputStream.flush();
 			outputStream.close();
 		} catch (Exception fnfe) {
-			MylarPlugin.log("Tasklist could not be found");
+			MylarPlugin.log(fnfe, "Tasklist could not be found");
 		}
 	}
 
@@ -229,7 +229,7 @@ public class XmlUtil {
 			String name = inFile.getAbsolutePath();
 			name = name.substring(0, name.lastIndexOf('.')) + "-save.xml";
 			inFile.renameTo(new File(name));
-			MylarPlugin.log("XmlUtil", e);
+			MylarPlugin.log(e, "XmlUtil");
 		}
 	}
 
@@ -258,7 +258,7 @@ public class XmlUtil {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException pce) {
 			inputFile.renameTo(new File(inputFile.getName() + "save.xml"));
-			MylarPlugin.log("Failed to load XML file", pce);
+			MylarPlugin.log(pce, "Failed to load XML file");
 		}
 		try {
 			// Parse the content of the given file as an XML document 
@@ -266,7 +266,7 @@ public class XmlUtil {
 			document = builder.parse(inputFile);
 		} catch (SAXException se) {
 			inputFile.renameTo(new File(inputFile.getName() + "save.xml"));
-			MylarPlugin.log("Failed to parse XML file", se);
+			MylarPlugin.log(se, "Failed to parse XML file");
 		}
 		return document;
 	}
@@ -298,7 +298,7 @@ public class XmlUtil {
 				bt.setDirty(false);
 			}
 			if (bt.readBugReport() == false) {
-				MylarPlugin.log("Failed to read bug report");
+				MylarPlugin.log("Failed to read bug report", null);
 			}
 		} else {
 			t = new Task(handle, label);			

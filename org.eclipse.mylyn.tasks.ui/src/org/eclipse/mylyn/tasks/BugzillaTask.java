@@ -178,9 +178,9 @@ public class BugzillaTask extends Task {
 			// XXX make sure to send in the server name if there are multiple repositories
 			return BugzillaRepository.getInstance().getBug(getBugId(getHandle()));
 		} catch (LoginException e) {
-			MylarPlugin.log(this.getClass().toString(), e);
+			MylarPlugin.log(e, "download failed");
 		} catch (IOException e) {
-			MylarPlugin.log(this.getClass().toString(), e);
+			MylarPlugin.log(e, "download failed");
 		}
 		return null;
 	}
@@ -263,7 +263,7 @@ public class BugzillaTask extends Task {
 						page.openEditor(input, "org.eclipse.mylar.tasks.ui.bugzillaTaskEditor");
 					} 
 					catch (PartInitException ex) {
-						MylarPlugin.log(this.getClass().toString(), ex);
+						MylarPlugin.log(ex, "couldn't open");
 						return;
 					}
 				}
@@ -349,7 +349,7 @@ public class BugzillaTask extends Task {
 				notifyTaskDataChange();
 				return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 			}catch(Exception e){
-				MylarPlugin.log(this.getClass().toString(), e);
+				MylarPlugin.log(e, "couldn't open");
 			}
 			return Status.CANCEL_STATUS;
 		}

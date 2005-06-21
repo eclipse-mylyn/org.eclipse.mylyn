@@ -115,7 +115,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
             int index = addPage(taskSummaryEditor, new TaskEditorInput(bugTask));
             setPageText(index, "Summary");         
         }catch(Exception e){
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "summary failed");
         }
     }
 	

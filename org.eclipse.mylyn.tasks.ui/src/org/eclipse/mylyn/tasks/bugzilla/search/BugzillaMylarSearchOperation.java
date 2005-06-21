@@ -218,7 +218,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 					try{
 						searchCollector.accept(hit);
 					}catch(CoreException e){
-	                    MylarPlugin.log(this.getClass().toString(), e);
+	                    MylarPlugin.log(e, "bug search failed");
 					}
 				}
 			}
@@ -284,10 +284,10 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 		    // check the status so that we don't keep searching if there
 		    // is a problem
 		    if (status.getCode() == IStatus.CANCEL) {
-		        MylarPlugin.log(this, "SEARCH CANCELLED");
+		        MylarPlugin.log("search cancelled", this);
 		        return null;
 		    } else if (!status.isOK()) {
-		        MylarPlugin.log(this, "SEARCH ERROR");
+		        MylarPlugin.log("search error", this);
 		        MylarPlugin.log(status);
 		        return null;
 		    }
@@ -448,7 +448,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 //                }
                 
             } catch (Exception e) {
-            	MylarPlugin.log(this.getClass().toString(), e);
+            	MylarPlugin.log(e, "search failed");
             }
             finally{
                 doiList.add(info);
