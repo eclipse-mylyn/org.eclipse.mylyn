@@ -8,7 +8,7 @@
       name="Bug Wizard"
       point="org.eclipse.ui.newWizards">
    <category
-         name="Bugzilla Wizards"
+         name="Bugzilla Client"
          id="org.eclipse.mylar.bugzilla.wizard.category">
    </category>
    <wizard
