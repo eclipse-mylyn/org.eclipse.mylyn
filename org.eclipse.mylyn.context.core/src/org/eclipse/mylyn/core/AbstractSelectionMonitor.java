@@ -36,7 +36,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
     	    ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
     		service.addPostSelectionListener(this); 
         } catch (NullPointerException npe) {
-            MylarPlugin.log("Monitors can not be instantiated until the workbench is active: " + this.getClass());  
+            MylarPlugin.log("Monitors can not be instantiated until the workbench is active", this);
         }
 	} 
     
@@ -45,7 +45,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
             ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
             service.removePostSelectionListener(this); 
         } catch (NullPointerException npe) {
-            MylarPlugin.log("Could not dispose monitor.");  
+            MylarPlugin.log(npe, "Could not dispose monitor.");  
         }
     }
     

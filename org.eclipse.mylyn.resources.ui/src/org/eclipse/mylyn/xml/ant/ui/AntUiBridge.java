@@ -83,7 +83,7 @@ public class AntUiBridge implements IMylarUiBridge {
          
             // if the editor is null, we had a problem and should return
             if(editor == null){
-                MylarPlugin.log(this, "Unable to open editor for file: " + filename);
+                MylarPlugin.log("Unable to open editor for file: " + filename, this);
                 return;
             }
             
@@ -183,7 +183,7 @@ public class AntUiBridge implements IMylarUiBridge {
                 method.setAccessible(true);
                 return (TreeViewer)method.invoke(outline, new Object[] { });
             } catch (Exception e) {
-            	MylarPlugin.log(this.getClass().toString(), e);
+            	MylarPlugin.log(e, "couldn't get outline");
                 return null;
             }
         }

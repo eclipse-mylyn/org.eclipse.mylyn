@@ -98,7 +98,7 @@ public class CompositeTaskscapeNode implements ITaskscapeNode {
         if (edges.size() == 0) {
             return null;
         } else if (edges.size() > 1) {
-            MylarPlugin.log(this, "Multiple edges found in composite, not supported");
+            MylarPlugin.log("Multiple edges found in composite, not supported", this);
         }
         return edges.iterator().next();
     }

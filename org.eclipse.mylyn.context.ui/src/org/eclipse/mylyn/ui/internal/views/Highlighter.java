@@ -110,7 +110,7 @@ public class Highlighter {
                     greenStep,
                     blueStep);
         } catch (Throwable t) {
-        	MylarPlugin.log(this.getClass().toString(), t);
+        	MylarPlugin.log(t, "highlighter init failed");
         }
     }
 
@@ -125,7 +125,7 @@ public class Highlighter {
                     greenStep,
                     blueStep);
         } catch (Throwable t) {
-        	MylarPlugin.log(this.getClass().toString(), t);
+        	MylarPlugin.log(t, "landmark init failed");
         }
     }
     
@@ -151,7 +151,7 @@ public class Highlighter {
                 green += greenStep;
             }       
         } catch (Throwable t) {
-        	MylarPlugin.log(this.getClass().toString(), t);
+        	MylarPlugin.log(t, "gradients failed");
         }
     }
     

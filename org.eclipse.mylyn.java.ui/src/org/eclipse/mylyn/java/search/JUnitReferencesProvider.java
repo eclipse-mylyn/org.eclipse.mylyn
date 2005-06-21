@@ -55,7 +55,7 @@ public class JUnitReferencesProvider extends AbstractJavaRelationshipProvider {
                         }
                     }
                 } catch (JavaModelException e) {
-                	MylarPlugin.log(this.getClass().toString(), e);
+                	MylarPlugin.log(e, "could not accept results");
                 }
             }
             return isTestMethod && isTestCase;

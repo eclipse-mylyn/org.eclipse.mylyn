@@ -165,7 +165,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         } catch (MissingResourceException x) {
             resourceBundle = null;
         } catch (Throwable t) {
-        	MylarPlugin.log(this.getClass().toString(), t);      
+        	MylarPlugin.log(t, "plug-in init failed");      
         }
 	} 
 
@@ -201,7 +201,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
             }
             if (!found) viewer.addFilter(new InterestFilter());
         } else {
-        	MylarPlugin.log("Could not install navigator filter");
+        	MylarPlugin.log("Could not install navigator filter", this);
         }
     }
     

@@ -103,7 +103,7 @@ public class XmlReferencesProvider extends RelationshipProvider {
                             IPath path = new Path(filename);
                             element = ((Workspace)ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
                         }catch(Exception e){
-                        	MylarPlugin.log(this.getClass().toString(), e);
+                        	MylarPlugin.log(e, "scope creation failed");
                         }
                         l.add(element);
                         
@@ -216,7 +216,7 @@ public class XmlReferencesProvider extends RelationshipProvider {
                                            nodes.put(handle, name);
                                        }
                                    } catch(Exception e){
-                                	   MylarPlugin.log(this.getClass().toString(), e);
+                                	   MylarPlugin.log(e, "search failed");
                                    }
                                }
                            }

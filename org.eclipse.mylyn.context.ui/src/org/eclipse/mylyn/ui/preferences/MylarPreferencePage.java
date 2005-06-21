@@ -308,7 +308,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 				contentProvider.updateHighlighter(selection);
 			}
 		} else {
-            MylarPlugin.log(this, "Received Unknown change in Editor: " + obj.getClass().toString());
+            MylarPlugin.log("Received Unknown change in Editor: " + obj.getClass().toString(), this);
 		}
 	}
 

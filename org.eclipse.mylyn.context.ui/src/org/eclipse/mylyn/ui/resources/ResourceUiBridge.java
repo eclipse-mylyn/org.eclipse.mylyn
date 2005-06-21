@@ -52,7 +52,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 	            try {
 	                if (page != null) IDE.openEditor(page, (IFile)resource, true);
 	            } catch (PartInitException e) { 
-	            	MylarPlugin.log(this.getClass().toString(), e);
+	            	MylarPlugin.log(e, "open failed");
 	            }
 	        }
         }

@@ -59,7 +59,7 @@ public class AntEditingMonitor extends AbstractSelectionMonitor {
                     XmlNodeHelper xnode = new XmlNodeHelper(fei, node.getOffset());
                     super.handleElementSelection(part, xnode);
                 } catch (Exception e) {
-                	MylarPlugin.log(this.getClass().toString(), e);
+                	MylarPlugin.log(e, "selection resolve failed");
                 }
             }
         }     

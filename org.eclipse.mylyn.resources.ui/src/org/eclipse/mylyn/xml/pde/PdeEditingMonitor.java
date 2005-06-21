@@ -100,7 +100,7 @@ public class PdeEditingMonitor extends AbstractSelectionMonitor {
                         super.handleElementSelection(part, xnode);
                     }
                 } catch (Exception e) {
-                	MylarPlugin.log(this.getClass().toString(), e);
+                	MylarPlugin.log(e, "couldn't resolve selection");
                 }
             }
         }

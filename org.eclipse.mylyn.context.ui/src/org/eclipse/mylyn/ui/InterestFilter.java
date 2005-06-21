@@ -48,7 +48,7 @@ public class InterestFilter extends ViewerFilter {
                 return false;
             }
         } catch (Exception e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "filter failed");
         }
         return false;
     }   

@@ -110,7 +110,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
             return null;
         }
         catch (Throwable t) {
-            MylarPlugin.fail(t, "Could not find element for: " + marker, false);
+            MylarPlugin.log(t, "Could not find element for: " + marker);
             return null;
         }
     }

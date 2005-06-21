@@ -94,7 +94,7 @@ public class PdeUiBridge implements IMylarUiBridge {
          
             // if the editor is null, we had a problem and should return
             if(editor == null){
-                MylarPlugin.log(this, "Unable to open editor for file: " + filename);
+                MylarPlugin.log("Unable to open editor for file: " + filename, this);
                 return;
             }
             
@@ -119,7 +119,7 @@ public class PdeUiBridge implements IMylarUiBridge {
             
 
         } catch(Exception e){
-            MylarPlugin.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
+            MylarPlugin.log(e, "ERROR OPENING XML EDITOR\n" + e.getMessage());
         }
     }
     
@@ -206,7 +206,7 @@ public class PdeUiBridge implements IMylarUiBridge {
                             }
                         }
                     }catch (Exception e) {
-                    	MylarPlugin.log(this.getClass().toString(), e);
+                    	MylarPlugin.log(e, "failed to get tree viewers");
                         return Collections.emptyList();
                     }
         		}
@@ -230,7 +230,7 @@ public class PdeUiBridge implements IMylarUiBridge {
                     }
                 }
             } catch (Exception e) {
-                MylarPlugin.log(this, e.getMessage());
+                MylarPlugin.log(e.getMessage(), this);
                 return Collections.emptyList();
             }
             

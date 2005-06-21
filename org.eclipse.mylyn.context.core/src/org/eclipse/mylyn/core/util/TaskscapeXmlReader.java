@@ -57,7 +57,7 @@ public class TaskscapeXmlReader {
 			}
 			return t;
         } catch (Exception e) {
-            MylarPlugin.log(this, "could not read taskscape, recreating");
+            MylarPlugin.log("could not read taskscape, recreating", this);
             file.renameTo(new File(file.getAbsolutePath() + "-save"));
             return null;
         }
@@ -72,9 +72,9 @@ public class TaskscapeXmlReader {
             builder = factory.newDocumentBuilder();
             document = builder.parse(inputFile); 
         } catch (SAXException se) {
-            MylarPlugin.log(this.getClass().getName(), se);
+            MylarPlugin.log(se, "could not build");
         } catch (ParserConfigurationException e) {
-        	MylarPlugin.log(this.getClass().getName(), e);
+        	MylarPlugin.log(e, "could not parse");
 		}
         return document;
     }
@@ -100,7 +100,7 @@ public class TaskscapeXmlReader {
 					format.parse(endDate));
 			return ie;
 		} catch (ParseException e) {
-			MylarPlugin.log(this.getClass().getName(), e);
+			MylarPlugin.log(e, "could not read interaction event");
 		}
     	return null;
     }

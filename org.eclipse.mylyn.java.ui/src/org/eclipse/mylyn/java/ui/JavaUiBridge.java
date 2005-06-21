@@ -65,9 +65,9 @@ public class JavaUiBridge implements IMylarUiBridge {
             IEditorPart part = JavaUI.openInEditor(javaElement);
             JavaUI.revealInEditor(part, javaElement);
         } catch (PartInitException e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "could not open: " + node);
         } catch (JavaModelException e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "could not open: " + node);
         }
     }
 
@@ -126,7 +126,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                     field.setAccessible(true); 
                     return (TreeViewer)field.get(page);
                 } catch (Exception e) { 
-                	MylarPlugin.log(this.getClass().toString(), e);
+                	MylarPlugin.log(e, "could not get outline viewer");
                 }
             }
         }

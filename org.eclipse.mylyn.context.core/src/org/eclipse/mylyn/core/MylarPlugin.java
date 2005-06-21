@@ -78,18 +78,18 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
 
         public Object getObjectForHandle(String handle) {
-            MylarPlugin.log(this, "null bridge for handle: " + handle);
+            MylarPlugin.log("null bridge for handle: " + handle, this);
             return null;
 //            throw new RuntimeException("null adapter for handle: " + handle);
         }
 
         public String getParentHandle(String handle) {
-            MylarPlugin.log(this, "null bridge for handle: " + handle);
+            MylarPlugin.log("null bridge for handle: " + handle, this);
             return null;
         }
 
         public String getName(Object object) {
-            MylarPlugin.log(this, "null bridge for object: " + object.getClass());
+            MylarPlugin.log("null bridge for object: " + object.getClass(), this);
             return "";
 //            throw new RuntimeException("null adapter");
         }
@@ -115,7 +115,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
 
         public String getHandleForMarker(ProblemMarker marker) {
-            MylarPlugin.log(this, "null bridge for marker: " + marker.getClass());
+            MylarPlugin.log("null bridge for marker: " + marker.getClass(), this);
             return null;
 //            throw new RuntimeException("null adapter");
         }
@@ -188,36 +188,8 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
         if (getDefault().logStream != null) getDefault().logStream.println(status.getMessage());
     }
-    
-    public static void log(String sourceClass, Throwable t){
-    	IStatus s = new Status(IStatus.ERROR, MylarPlugin.IDENTIFIER, IStatus.ERROR,sourceClass + t.getMessage(), t);
-        log(s);
-    }
 
-
-    /**
-     * Log a simple string message
-     * @param message The message to log
-     */
-    public static void log(String message) {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("[");
-        buffer.append(DateUtil.getFormattedDate());
-        buffer.append(", ");
-        buffer.append(DateUtil.getFormattedTime());
-        buffer.append("] ");
-        
-        System.err.println("> log: " + buffer.toString());
-        log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, buffer.toString(), null));
-    }
-
-
-    /**
-     * Log a message sent by an object
-     * @param source The source object
-     * @param message The message to be logged
-     */
-    public static void log(Object source, String message) {
+    public static void log(String message, Object source) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("[");
         buffer.append(DateUtil.getFormattedDate());
@@ -226,11 +198,14 @@ public class MylarPlugin extends AbstractUIPlugin {
         buffer.append("] ");
         
         if (source != null) buffer.append(source.getClass().getName());
-        buffer.append(": " + message);
+        buffer.append("source: " + message);
         
-        log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, buffer.toString(), null));
+        log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, buffer.toString(), null));    	
     }
-
+    
+    public static void log(Throwable throwable, String message) {
+    	fail(throwable, message, false);
+    }
 
     /**
          * Log a failure
@@ -238,34 +213,34 @@ public class MylarPlugin extends AbstractUIPlugin {
          * @param message The message to include
          * @param informUser if true dialog box will be popped up
          */
-        public static void fail(Throwable throwable, String message, boolean informUser) {
-            StringWriter stringWriter= new StringWriter();
-            PrintWriter writer= new PrintWriter(stringWriter);
-            if (throwable != null) {
-                throwable.printStackTrace(writer);
-            }
-    
-            final Status status= new Status(
-                    Status.ERROR,
-                    MylarPlugin.IDENTIFIER, 
-                    IStatus.OK,
-                    message,
-                    throwable);
-    
-            log(status);
-            
-            if (informUser) {
-              Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-                  public void run() {
-                      ErrorDialog.openError(
-                              Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-                              "Mylar error",
-                              "Please report the following error",
-                              status);
-                  }
-              });
-            }
+    public static void fail(Throwable throwable, String message, boolean informUser) {
+        StringWriter stringWriter= new StringWriter();
+        PrintWriter writer= new PrintWriter(stringWriter);
+        if (throwable != null) {
+            throwable.printStackTrace(writer);
         }
+
+        final Status status= new Status(
+                Status.ERROR,
+                MylarPlugin.IDENTIFIER, 
+                IStatus.OK,
+                message,
+                throwable);
+
+        log(status);
+        
+        if (informUser) {
+          Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+              public void run() {
+                  ErrorDialog.openError(
+                          Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+                          "Mylar error",
+                          "Please report the following error",
+                          status);
+              }
+          });
+        }
+    }
 
 
     /**

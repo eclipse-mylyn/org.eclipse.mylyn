@@ -205,7 +205,7 @@ public class TaskscapeManager {
         if (listener != null) {
             listeners.add(listener);            
         } else {
-            MylarPlugin.log(this, "attempted to add null lisetener");
+            MylarPlugin.log("attempted to add null lisetener", this);
         }
 	}
 	
@@ -249,7 +249,7 @@ public class TaskscapeManager {
             activeTaskscape.getTaskscapeMap().put(id, taskscape);
             for (ITaskscapeListener listener : listeners) listener.taskscapeActivated(taskscape);
         } else {
-            MylarPlugin.log(this, "Could not load taskscape");
+            MylarPlugin.log("Could not load taskscape", this);
         }
         suppressSelections = false;
     }
@@ -386,7 +386,7 @@ public class TaskscapeManager {
     }
 
     public void dumpInteractionHistoryForSelected() {
-    	MylarPlugin.log("> interaction history: " + activeTaskscape.getActiveNode().getDegreeOfInterest().getEvents());
+    	MylarPlugin.log("> interaction history: " + activeTaskscape.getActiveNode().getDegreeOfInterest().getEvents(), this);
     }
     
     public void updateMylarDirContents(String prevDir) {    	    	    	

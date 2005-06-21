@@ -82,7 +82,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                         rest.add(proposal);
                     }
                 } catch (Exception e) {
-                	MylarPlugin.log(this.getClass().toString(), e);
+                	MylarPlugin.log(e, "proposals problem");
                 } 
             }
             if (interesting.keySet().size() == 0) {
@@ -101,7 +101,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                     } else if (sorted[i-1] instanceof LazyJavaCompletionProposal) {
                         replacementOffset = ((LazyJavaCompletionProposal)sorted[i-1]).getReplacementOffset();
                     } else {
-                        MylarPlugin.log(this, "Could not create proposal separator for class: " + sorted[i-1].getClass());
+                        MylarPlugin.log("Could not create proposal separator for class: " + sorted[i-1].getClass(), this);
                     }
                     sorted[i] = new JavaCompletionProposal("", replacementOffset, 0, null, "----------------", 0);
                     i++;
@@ -113,7 +113,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                 return sorted;
             }
         } catch (Exception e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "completion proposal failed");
         }
         return null;
     } 

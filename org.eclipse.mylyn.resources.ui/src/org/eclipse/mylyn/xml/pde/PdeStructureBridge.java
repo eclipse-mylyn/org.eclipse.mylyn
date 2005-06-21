@@ -151,7 +151,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
                 return node;
             }
         }catch(Exception e){
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "handle failed");
         }
         return null;
     }
@@ -172,7 +172,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
                 String handle = new XmlNodeHelper(new FileEditorInput(file), node.getOffset()).getHandle();
                 return handle;
             }catch(Exception e){
-            	MylarPlugin.log(this.getClass().toString(), e);
+            	MylarPlugin.log(e, "pde handle failed");
             }
             
         }else if (object instanceof File) {
@@ -256,7 +256,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
             return null;
         }
         catch (Throwable t) {
-            MylarPlugin.fail(t, "Could not find element for: " + marker, false);
+            MylarPlugin.log(t, "Could not find element for: " + marker);
             return null;
         }
     }

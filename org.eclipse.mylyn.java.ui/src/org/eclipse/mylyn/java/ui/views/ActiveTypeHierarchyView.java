@@ -255,7 +255,7 @@ public class ActiveTypeHierarchyView extends ViewPart {
                         try {
                             JavaUI.openInEditor(treeParent.getElement());
                         } catch (Throwable e) { 
-                        	MylarPlugin.log(this.getClass().toString(), e);
+                        	MylarPlugin.log(e, "open problem");
                         }
                     } else {
                         return;
@@ -267,7 +267,7 @@ public class ActiveTypeHierarchyView extends ViewPart {
 			contributeToActionBars();
 			viewer.getTree().setBackground(MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR);
         } catch (Throwable t) {
-        	MylarPlugin.log(this.getClass().toString(), t);
+        	MylarPlugin.log(t, "create failed");
         }
 	}
 

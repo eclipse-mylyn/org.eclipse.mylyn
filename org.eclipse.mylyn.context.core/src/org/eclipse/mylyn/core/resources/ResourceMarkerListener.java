@@ -76,7 +76,7 @@ public class ResourceMarkerListener implements IResourceChangeListener {
 							}
 						}
 					}catch (Exception e){
-						MylarPlugin.log(this.getClass().toString() + " could not update marker", e);
+						MylarPlugin.log(e, " could not update marker");
 					}
 				}
 				
@@ -86,7 +86,7 @@ public class ResourceMarkerListener implements IResourceChangeListener {
 		try {
 			rootDelta.accept(visitor);
 		} catch (CoreException e) {
-			MylarPlugin.log(this.getClass().toString(), e);
+			MylarPlugin.log(e, "could not accet marker visitor");
 		}
 		
 	}

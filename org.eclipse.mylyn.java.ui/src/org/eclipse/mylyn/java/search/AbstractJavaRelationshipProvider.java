@@ -252,7 +252,7 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
                         IStatus.OK,
                         "could not run Java search",
                         npe); 
-            	MylarPlugin.log(this.getClass().toString(), npe);
+            	MylarPlugin.log(npe, "java search failed");
             	notifySearchCompleted(null);
                 return status;
             }

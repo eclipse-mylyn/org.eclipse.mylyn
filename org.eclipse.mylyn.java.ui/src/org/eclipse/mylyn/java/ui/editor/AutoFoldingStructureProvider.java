@@ -545,7 +545,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 							try {
 								unit.reconcile(ICompilationUnit.NO_AST, false, null, null);
 							} catch (JavaModelException e) {
-								MylarPlugin.log(this.getClass().toString(), e);
+								MylarPlugin.log(e, "could not initialize");
 							}
 						}
 					}
@@ -571,7 +571,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 		try {
 			computeAdditions(parent.getChildren(), map);
 		} catch (JavaModelException e) {
-			MylarPlugin.log(this.getClass().toString(), e);
+			MylarPlugin.log(e, "");
 		}
 		return map;
 	}
@@ -666,9 +666,9 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 				}
 			}
 		} catch (JavaModelException e) {
-			MylarPlugin.log(this.getClass().toString(), e);
+			MylarPlugin.log(e, "");
 		} catch (InvalidInputException e) {
-			MylarPlugin.log(this.getClass().toString(), e);
+			MylarPlugin.log(e, "");
 		}
 
 		return null;
@@ -755,7 +755,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 			}
 
 		} catch (BadLocationException e) {
-			MylarPlugin.log(this.getClass().toString(), e);
+			MylarPlugin.log(e, "");
 		}
 
 		return null;

@@ -61,7 +61,7 @@ public class UiUtil {
                 return cachedProblemsTableViewer;
             } 
         } catch (Exception e) {
-        	MylarPlugin.log("org.eclipse.mylar.ui.UiUtil", e);
+        	MylarPlugin.log(e, "couldn't get problmes viewer");
         }
         return null;
     }

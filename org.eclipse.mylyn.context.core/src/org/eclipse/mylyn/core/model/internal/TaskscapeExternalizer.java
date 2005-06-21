@@ -51,8 +51,7 @@ public class TaskscapeExternalizer {
             writer.writeTaskscapeToStream(taskscape);
             stream.close();
         } catch (IOException e) {
-            MylarPlugin.log("could not write: " + file.getName());
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "Could not write: " + file.getName());
         }
     }
     
@@ -61,7 +60,7 @@ public class TaskscapeExternalizer {
             if (!file.exists()) return null;
             return reader.readTaskscape(file);
         } catch (Exception e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "Could not read: " + file.getName());
         }
         return null;
     }
@@ -83,11 +82,9 @@ public class TaskscapeExternalizer {
         } catch (InvalidClassException ice) {
             String saveFilePath = file.getAbsolutePath() + "-save";
             file.renameTo(new File(saveFilePath)); // TODO: this fails?
-            MylarPlugin.log(this, "Found invalid taskscape, moved to: " + saveFilePath);
+            MylarPlugin.log("Found invalid taskscape, moved to: " + saveFilePath, this);
         } catch (Exception e) {
-            e.printStackTrace();
-            MylarPlugin.fail(e, "Could not load taskscape: " + e.getMessage()
-                    + ", " + e.getStackTrace()[0], true);
+            MylarPlugin.log(e, "Could not load taskscape");
         } 
         return null;
     }
@@ -101,7 +98,7 @@ public class TaskscapeExternalizer {
             stream.flush();
             stream.close();
         } catch (Exception e) {
-            MylarPlugin.fail(e, "Could not save taskscape", true);
+            MylarPlugin.log(e, "Could not save taskscape");
         }
     }
 

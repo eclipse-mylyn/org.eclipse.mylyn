@@ -102,7 +102,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                 // XXX: notify, but using the correct node
 //                MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE); // HACK: wrong notification
             } catch (Exception e) {
-            	MylarPlugin.log(this.getClass().toString(), e);
+            	MylarPlugin.log(e, "could not update on marker change");
             }
         }
     };
@@ -186,7 +186,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
             }   
             if (selectedElement != null) lastSelectedElement = selectedElement;
         } catch (Throwable t) {
-            MylarPlugin.fail(t, "Failed to update model based on selection.", false); 
+            MylarPlugin.log(t, "Failed to update model based on selection."); 
         }
     }
     

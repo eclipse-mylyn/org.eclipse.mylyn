@@ -155,7 +155,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 //            return null;
             
         }catch(Exception e){
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "handle failed");
         }
         return null;
     }
@@ -175,7 +175,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
                 String handle = new XmlNodeHelper(new FileEditorInput(node.getIFile()), node.getOffset()).getHandle();
                 return handle;
             }catch(Exception e){
-            	MylarPlugin.log(this.getClass().toString(), e);
+            	MylarPlugin.log(e, "couldn't get handle");
             }
             
         }else if (object instanceof File) {

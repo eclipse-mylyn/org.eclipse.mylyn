@@ -51,7 +51,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
                 } 
             } 
         } catch (Exception e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
+        	MylarPlugin.log(e, "decoration failed");
         }
     } 
   

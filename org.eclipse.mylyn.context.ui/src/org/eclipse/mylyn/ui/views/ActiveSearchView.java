@@ -102,7 +102,7 @@ public class ActiveSearchView extends ViewPart {
                             viewer.expandAll();
                         }
                     } catch (Throwable t) {
-                    	MylarPlugin.log(this.getClass().toString(), t);
+                    	MylarPlugin.log(t, "refresh failed");
                     }
                 }
             });

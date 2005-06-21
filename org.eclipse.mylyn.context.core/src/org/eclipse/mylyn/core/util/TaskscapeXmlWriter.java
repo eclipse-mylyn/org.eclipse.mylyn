@@ -53,7 +53,7 @@ public class TaskscapeXmlWriter {
 			dbf = DocumentBuilderFactory.newInstance();
 			doc = dbf.newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
-			MylarPlugin.log(this.getClass().getName(), e);
+			MylarPlugin.log(e, "could not create xml writer");
 		}
 	}
 	
@@ -175,7 +175,7 @@ public class TaskscapeXmlWriter {
     	try {
     		this.doc = dbf.newDocumentBuilder().newDocument();
     	} catch(ParserConfigurationException e) {
-    		MylarPlugin.log(this.getClass().getName(), e);
+    		MylarPlugin.log(e, "could not clear document");
     	}
     	
     }

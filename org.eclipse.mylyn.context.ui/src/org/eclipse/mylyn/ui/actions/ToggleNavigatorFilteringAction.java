@@ -60,14 +60,7 @@ public class ToggleNavigatorFilteringAction extends Action implements IViewActio
      * @see org.eclipse.jdt.internal.ui.javaeditor.EditorUtility
      */
     public void init(IViewPart view) {
-        try {
-//          XXX never used
-//            IViewSite site = view.getViewSite();
-//            IAction toggleAction= view.getViewSite().getActionBars().getGlobalActionHandler(ACTION_ID );
-//            toggleAction.setChecked(true);
-        } catch (Exception e) {
-        	MylarPlugin.log(this.getClass().toString(), e);
-        }
+
     }
 
     public void selectionChanged(IAction action, ISelection selection) {

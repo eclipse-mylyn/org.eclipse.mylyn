@@ -121,7 +121,7 @@ public class LandmarkMarkerManager implements ITaskscapeListener {
                                 		if (marker != null) marker.delete();
                                 	}
                                 } catch (NullPointerException e) {
-                                	MylarPlugin.log(this.getClass().toString(), e);
+                                	MylarPlugin.log(e, "could not update markers");
                                 }
                             }
                         }

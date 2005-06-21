@@ -104,7 +104,7 @@ public class XmlNodeHelper {
                 contents += s;
             }
         } catch (IOException e) {
-            MylarPlugin.log(e.getMessage());
+            MylarPlugin.log(e, "couldn't get contents");
         }
         return contents;
     }
