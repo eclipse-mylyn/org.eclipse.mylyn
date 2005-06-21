@@ -54,13 +54,17 @@ public class XmlNodeHelper {
      * @throws CoreException
      * @throws BadLocationException
      */
-    public XmlNodeHelper(FileEditorInput fei, int offset) throws CoreException,
-            BadLocationException {
+    public XmlNodeHelper(FileEditorInput fei, int offset) throws CoreException {
         this.filename = fei.getFile().getFullPath().toString();
         InputStream i = fei.getFile().getContents();
         String contents = getContents(i);
         Document d = new Document(contents);
-        this.startLine = d.getLineOfOffset(offset);
+        try{
+        	startLine = d.getLineOfOffset(offset - 1);
+        } catch (BadLocationException e){
+        	startLine = 0;
+        	MylarPlugin.log(e, "Unable to get start line from the pde editor: " + filename + ":" + offset);
+        }
     }
 
     /**

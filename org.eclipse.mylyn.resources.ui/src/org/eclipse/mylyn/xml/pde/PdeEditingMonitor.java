@@ -52,6 +52,11 @@ public class PdeEditingMonitor extends AbstractSelectionMonitor {
 
             ManifestEditor editor = (ManifestEditor) part;
 
+            // fix bug when user is looking in the cvs repository since the input
+            // is not a FileEditorInput
+            if(!(editor.getEditorInput() instanceof FileEditorInput))
+            	return;
+            
             // make sure that the selection is a text selection
             if (!(editor.getSelection() instanceof TextSelection || editor.getSelection() instanceof StructuredSelection)) {
                 return;
@@ -91,6 +96,12 @@ public class PdeEditingMonitor extends AbstractSelectionMonitor {
                     if (node != null) {
                         FileEditorInput fei = (FileEditorInput) in;
 
+                        // fix a bug when there is a selection and the editor input is the manifest.mf file
+                        // not the plugin.xml
+                        if(fei.getFile().getFullPath().toString().toLowerCase().endsWith("/manifest.mf")){
+                        	return;
+                        }
+                        
                         // create the helper to get the handle for the node
                         XmlNodeHelper xnode = new XmlNodeHelper(fei, node.getOffset());
 
