@@ -46,6 +46,8 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	
     private Object data = null;
     
+    private String bugSummary;
+    
     private boolean fromEditor = false;
     
     private boolean isCommentHeader = false;
@@ -67,7 +69,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 * @param parent
 	 * 			  The parent of this node
 	 */
-	public BugzillaOutlineNode(int id, String server, String key, Image image, Object data) {
+	public BugzillaOutlineNode(int id, String server, String key, Image image, Object data, String summary) {
 		this.id = id;
 		this.server = server;
 		this.key = key;
@@ -75,6 +77,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		this.image = image;
         this.data = data;
         this.parent = null;
+        this.bugSummary = summary;
 	}
 	
     public boolean isFromEditor(){
@@ -208,11 +211,11 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		int bugId = bug.getId();
 		String bugServer = bug.getServer();
         Image defaultImage = BugzillaImages.getImageDescriptor(BugzillaImages.BUG).createImage();
-        BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), defaultImage, bug);
+        BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), defaultImage, bug, bug.getSummary());
 
-        topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null));
+        topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null, bug.getSummary()));
         
-        BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage, null);
+        BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage, null, bug.getSummary());
         titleNode.addChild(topNode);
         
         return titleNode;
@@ -232,9 +235,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		int bugId = bug.getId();
 		String bugServer = bug.getServer();
         Image defaultImage = BugzillaImages.getImageDescriptor(BugzillaImages.BUG).createImage();
-		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), defaultImage, bug);
+		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), defaultImage, bug, bug.getSummary());
 		
-		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug.getDescription());
+		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
 		
 		topNode.addChild(desc);
@@ -245,18 +248,18 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
             Comment comment = iter.next();
 
             if(comments == null){
-                comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment);
+                comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug.getSummary());
                 comments.setIsCommentHeader(true);
             }
-			comments.addChild(new BugzillaOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage, comment));
+			comments.addChild(new BugzillaOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage, comment, bug.getSummary()));
 		}
         if(comments != null){
             topNode.addChild(comments);
         }
 		
-		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Comment", defaultImage, null));
+		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Comment", defaultImage, null, bug.getSummary()));
 			
-		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "BugReport Object", defaultImage, null);
+		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "BugReport Object", defaultImage, null, bug.getSummary());
 		titleNode.addChild(topNode);
 		
 		return titleNode;
@@ -327,5 +330,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 
 	public void setIsDescription(boolean isDescription) {
 		this.isDescription = isDescription;
+	}
+
+	public String getBugSummary() {
+		return bugSummary;
 	}
 }

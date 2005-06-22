@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.ui.outline;
 
+import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+
 
 /**
  * Miscellaneous constants and functions for this plugin.
@@ -40,15 +42,8 @@ public class BugzillaTools {
 		return handle;
 	}
     
-    /**
-     * The name for the given bug report
-     * 
-     * @param bugSel
-     *            The bugzilla selection.
-     * @return The name for the bugzilla selection
-     */
     public static String getName(IBugzillaReportSelection bugSel) {
-        String name = bugSel.getServer() + ": Bug#: " + bugSel.getId();
+        String name = bugSel.getServer() + ": Bug#: " + bugSel.getId() + ": " + bugSel.getBugSummary();
         if (bugSel.hasComment()) {
         	name+= " : Comment#: " + bugSel.getComment().getNumber();
         } else if(bugSel.isCommentHeader()){
@@ -57,6 +52,14 @@ public class BugzillaTools {
 			name+= ": Description";
 		}
         return name;
+    }
+    
+    public static String getHandle(IBugzillaBug bug) {
+		return bug.getServer() + ";" + bug.getId();
+	}
+    
+    public static String getName(IBugzillaBug bug) {
+        return bug.getServer() + ": Bug#: " + bug.getId() + ": " + bug.getSummary();
     }
 	
 }

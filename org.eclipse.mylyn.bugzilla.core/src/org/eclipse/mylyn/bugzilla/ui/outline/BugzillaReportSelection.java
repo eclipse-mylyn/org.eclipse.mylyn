@@ -28,6 +28,8 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	/** The contents of the selection. */
 	protected String contents;
 	
+	protected String bugSummary;
+	
 	/**
 	 * The comment, if a comment was selected. If the selection was not a
 	 * comment, then this is <code>null</code>.
@@ -43,8 +45,8 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
 	 */
-	public BugzillaReportSelection(int id, String server) {
-		this(id, server, null, null);
+	public BugzillaReportSelection(int id, String server, String summary) {
+		this(id, server, null, null, summary);
 	}
 	
 	/**
@@ -58,8 +60,8 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 * @param contents
 	 *            The contents of the selection.
 	 */
-	public BugzillaReportSelection(int id, String server, String contents, boolean isDescription) {
-		this(id, server, contents, null);
+	public BugzillaReportSelection(int id, String server, String contents, boolean isDescription, String summary) {
+		this(id, server, contents, null, summary);
 		this.isDescription = isDescription;
 	}
 	
@@ -76,8 +78,8 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public BugzillaReportSelection(int id, String server, Comment comment) {
-		this(id, server, null, comment);
+	public BugzillaReportSelection(int id, String server, Comment comment, String summary) {
+		this(id, server, null, comment, summary);
 	}
 	
 	/**
@@ -94,11 +96,12 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 *            comment was not selected, then this should be
 	 *            <code>null</code>.
 	 */
-	public BugzillaReportSelection(int id, String server, String contents, Comment comment) {
+	public BugzillaReportSelection(int id, String server, String contents, Comment comment, String summary) {
 		this.id = id;
 		this.server = server;
 		this.contents = contents;
 		this.comment = comment;
+		this.bugSummary = summary;
 	}
 	
 	public boolean hasComment() {
@@ -158,5 +161,9 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 
 	public void setIsDescription(boolean isDescription) {
 		this.isDescription = isDescription;
+	}
+
+	public String getBugSummary() {
+		return bugSummary;
 	}
 }

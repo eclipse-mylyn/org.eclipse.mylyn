@@ -83,6 +83,8 @@ public interface IBugzillaReportSelection extends ISelection {
 	public boolean isCommentHeader();
 	
 	public boolean isDescription();
+
+	public String getBugSummary();
 	
 
 }

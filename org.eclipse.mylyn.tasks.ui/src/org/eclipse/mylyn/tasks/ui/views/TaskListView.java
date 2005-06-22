@@ -11,12 +11,17 @@
 package org.eclipse.mylar.tasks.ui.views;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -42,6 +47,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
@@ -50,6 +57,7 @@ import org.eclipse.mylar.tasks.Category;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
+import org.eclipse.mylar.tasks.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.tasks.ui.BugzillaTaskEditorInput;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -80,9 +88,12 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Mik Kersten
@@ -609,27 +620,58 @@ public class TaskListView extends ViewPart {
 
     private void makeActions() {
     	refresh = new Action() {
-    		
+  		
     		@Override
-			public void run() { 
-//    			Object[] expanded = viewer.getExpandedElements();
-//    			for (int i = 0; i < expanded.length; i++) {
-//					Object element = expanded[i];
-//					if (element instanceof BugzillaTask) {
-//						((BugzillaTask)element).refresh();
-//					}
-//				}
-				
-				List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
-				
-                for (ITask task : tasks) {
-					if (task instanceof BugzillaTask) {
-						((BugzillaTask)task).refresh();
-					}
-					refreshChildren(task.getChildren());
-				}
-				
-				viewer.refresh();
+			public void run() {
+    			// TODO background?
+    			// perform the update in an operation so that we get a progress monitor 
+                // update the structure bridge cache with the reference provider cached bugs
+                WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+                	protected void execute(IProgressMonitor monitor) throws CoreException {
+	    								
+						List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
+						
+		                for (ITask task : tasks) {
+							if (task instanceof BugzillaTask) {
+								((BugzillaTask)task).refresh();
+							}
+							refreshChildren(task.getChildren());
+						}
+						
+		                // clear the caches
+		        		Set<String> cachedHandles = new HashSet<String>();
+		        		cachedHandles.addAll(MylarTasksPlugin.getDefault().getStructureBridge().getCachedHandles());
+		                cachedHandles.addAll(MylarTasksPlugin.getReferenceProvider().getCachedHandles());
+		                MylarTasksPlugin.getDefault().getStructureBridge().clearCache();
+	                	MylarTasksPlugin.getReferenceProvider().clearCachedReports();
+	
+	                	BugzillaStructureBridge bridge = MylarTasksPlugin.getDefault().getStructureBridge();
+	            		monitor.beginTask("Downloading Bugs" , cachedHandles.size());
+	                	for(String key: cachedHandles){
+	                        try {
+	                        	String [] parts = key.split(";");
+	                            final int id = Integer.parseInt(parts[1]);
+	                        	BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
+	                        	if(bug != null)
+	                        		bridge.cache(key, bug);
+	                        }catch(Exception e){}
+	                        
+	                        monitor.worked(1);
+	                	}
+	                	monitor.done();
+	                	viewer.refresh();
+                	}
+                };
+                	
+           	 	// Use the progess service to execute the runnable
+            	IProgressService service = PlatformUI.getWorkbench().getProgressService();
+            	try {
+            		service.run(true, false, op);
+            	} catch (InvocationTargetException e) {
+            		// Operation was canceled
+            	} catch (InterruptedException e) {
+            		// Handle the wrapped exception
+            	}
 			}
 		};  
     	refresh.setText("Refresh all Bugzilla reports");

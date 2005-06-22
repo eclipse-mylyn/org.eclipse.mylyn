@@ -13,8 +13,11 @@
  */
 package org.eclipse.mylar.tasks.bugzilla;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
@@ -25,6 +28,7 @@ import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.search.RelationshipProvider;
+import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaMylarSearch;
 
 
@@ -76,11 +80,16 @@ public class BugzillaReferencesProvider extends RelationshipProvider {
             public void searchCompleted(List<?> nodes) {
                 Iterator<?> itr = nodes.iterator();
 
+                BugzillaStructureBridge bridge = MylarTasksPlugin.getDefault().getStructureBridge();
+                
                 while(itr.hasNext()) {
                     Object o = itr.next();
                     if(o instanceof BugzillaReportNode){
                         BugzillaReportNode bugzillaNode = (BugzillaReportNode)o;
-                        incrementInterest(degreeOfSeparation, BugzillaStructureBridge.EXTENSION, bugzillaNode.getElementHandle());
+                        String handle = bugzillaNode.getElementHandle();
+                        if(bridge.getCached(handle) == null)
+                        	cache(handle, bugzillaNode);
+                        incrementInterest(degreeOfSeparation, BugzillaStructureBridge.EXTENSION, handle);
                         }
                     }
                 gathered = true;
@@ -94,7 +103,7 @@ public class BugzillaReferencesProvider extends RelationshipProvider {
         search.run(new NullProgressMonitor());
 	}
 
-    @Override
+	@Override
     protected String getSourceId() {
         return ID;
     }
@@ -103,4 +112,31 @@ public class BugzillaReferencesProvider extends RelationshipProvider {
     public String getName() {
         return NAME;
     }
+    
+    /*
+     * 
+     * STUFF FOR TEMPORARILY CACHING A PROXY REPORT
+     * 
+     * TODO remove the proxys and update the BugzillaStructureBridge cache so that on restart, 
+     * we dont have to get all of the bugs
+     * 
+     */
+    private static final Map<String, BugzillaReportNode> reports = new HashMap<String, BugzillaReportNode>();
+	
+	public BugzillaReportNode getCached(String handle){
+		return reports.get(handle);
+	}
+	
+    protected void cache(String handle, BugzillaReportNode bugzillaNode) {
+    	reports.put(handle, bugzillaNode);
+	}
+    
+    public void clearCachedReports(){
+    	reports.clear();    	
+    }
+
+	public Collection<? extends String> getCachedHandles() {
+		return reports.keySet();
+	}
+
 }

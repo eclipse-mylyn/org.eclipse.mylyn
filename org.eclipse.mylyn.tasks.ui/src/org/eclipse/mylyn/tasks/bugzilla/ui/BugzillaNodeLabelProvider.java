@@ -15,8 +15,10 @@ package org.eclipse.mylar.tasks.bugzilla.ui;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
+import org.eclipse.mylar.tasks.bugzilla.BugzillaReportNode;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -34,10 +36,17 @@ public class BugzillaNodeLabelProvider implements ILabelProvider {
      */
     public String getText(Object element) {
         ITaskscapeNode node = (ITaskscapeNode)element;
-        String name = MylarTasksPlugin.getStructureBridge().getName(
-                MylarTasksPlugin.getStructureBridge().getObjectForHandle(node.getElementHandle())
-        );
-        return name;
+        
+        // try to get from the cache before downloading
+        Object report;
+    	BugzillaReportNode reportNode = MylarTasksPlugin.getReferenceProvider().getCached(node.getElementHandle());
+    	BugReport cachedReport = MylarTasksPlugin.getDefault().getStructureBridge().getCached(node.getElementHandle());
+    	if(reportNode != null && cachedReport == null){
+    		report = reportNode;
+    	} else{
+    		report = MylarTasksPlugin.getDefault().getStructureBridge().getObjectForHandle(node.getElementHandle());
+    	}
+        return MylarTasksPlugin.getDefault().getStructureBridge().getName(report);
     }
 
     public void addListener(ILabelProviderListener listener) {

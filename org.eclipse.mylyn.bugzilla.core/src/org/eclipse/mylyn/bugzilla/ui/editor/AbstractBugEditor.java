@@ -1359,7 +1359,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected class GenericListener implements Listener {
 		public void handleEvent(Event event) {
 			IBugzillaBug bug = getBug();
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), bug.getLabel(), false))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), bug.getLabel(), false, bug.getSummary()))));
 		}
 	}
 

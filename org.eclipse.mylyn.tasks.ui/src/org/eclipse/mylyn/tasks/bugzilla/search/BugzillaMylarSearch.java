@@ -24,7 +24,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaMylarBridge;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaReportNode;
 import org.eclipse.mylar.tasks.bugzilla.Util;
@@ -73,16 +72,16 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
             // search on them
             for(IMember m : members){
 
-            	// FIXME: decide whether to do leave the caching in for now or not
+            	// FIXME: decide whether to do leave the caching of searches in for now or not
                 // check if we have the info cached
-                List<BugzillaReportNode> landmarkDoi = MylarTasksPlugin.getBridge()
-                        .getFromLandmarksHash(m, scope);
+//                List<BugzillaReportNode> landmarkDoi = MylarTasksPlugin.getBridge()
+//                        .getFromLandmarksHash(m, scope);
 
-                if (landmarkDoi != null) {
-                    //TODO decide when to queue up and do a refresh search
-                    notifySearchCompleted(landmarkDoi);
-                    continue;
-                }
+//                if (landmarkDoi != null) {
+//                    //TODO decide when to queue up and do a refresh search
+//                    notifySearchCompleted(landmarkDoi);
+//                    continue;
+//                }
 
                 // create a search operation so that we can search
                 BugzillaMylarSearchOperation op = new BugzillaMylarSearchOperation(

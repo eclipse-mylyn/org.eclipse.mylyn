@@ -53,7 +53,9 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     /** The bridge between Bugzilla and mylar */
     private static BugzillaMylarBridge bridge = null;
 
-    private static BugzillaStructureBridge structureBridge = new BugzillaStructureBridge();
+    private BugzillaStructureBridge structureBridge;
+    
+    private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
     
     private static ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
 
@@ -118,9 +120,11 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-                            	
+                
+            	structureBridge = new BugzillaStructureBridge();
+            	
                 MylarPlugin.getDefault().addBridge(structureBridge);
-                MylarPlugin.getTaskscapeManager().addListener(new BugzillaReferencesProvider());
+                MylarPlugin.getTaskscapeManager().addListener(referencesProvider);
                 MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
                 MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
                 
@@ -218,7 +222,12 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
         this.bugzillaProvider = bugzillaProvider;
     }
     
-    public static BugzillaStructureBridge getStructureBridge() {
+    public BugzillaStructureBridge getStructureBridge() {
         return structureBridge;
     }
+
+	public static BugzillaReferencesProvider getReferenceProvider() {
+		return referencesProvider;
+		
+	}
 }

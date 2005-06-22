@@ -345,7 +345,7 @@ public class NewBugEditor extends AbstractBugEditor {
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), "New Description", false))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), "New Description", false, bug.getSummary()))));
 		}
 	}
 	

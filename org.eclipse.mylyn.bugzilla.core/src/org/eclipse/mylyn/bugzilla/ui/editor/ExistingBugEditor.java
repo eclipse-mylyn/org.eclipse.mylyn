@@ -659,7 +659,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), "Description", true))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), "Description", true, bug.getSummary()))));
 		}
 	}
 	
@@ -680,7 +680,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 		}
 		
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), comment.getCreated().toString(), comment))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), comment.getCreated().toString(), comment, bug.getSummary()))));
 		}
 	}
 	
@@ -690,7 +690,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 	 */
 	protected class NewCommentListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), "New Comment", false))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(), "New Comment", false, bug.getSummary()))));
 		}
 	}
 	
