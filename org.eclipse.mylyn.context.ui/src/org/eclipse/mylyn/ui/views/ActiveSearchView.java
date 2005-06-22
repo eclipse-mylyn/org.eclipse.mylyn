@@ -56,7 +56,6 @@ public class ActiveSearchView extends ViewPart {
     private final ITaskscapeListener REFRESH_UPDATE_LISTENER = new ITaskscapeListener() { 
         public void interestChanged(ITaskscapeNode node) { 
             refresh(node);
-//            refresh();
         }
         
         public void interestChanged(List<ITaskscapeNode> nodes) {
@@ -90,7 +89,7 @@ public class ActiveSearchView extends ViewPart {
         }
 
         private void refresh(final ITaskscapeNode node) {
-            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+            Workbench.getInstance().getDisplay().syncExec(new Runnable() {
                 public void run() {
                     try { 
                         if (viewer != null && !viewer.getTree().isDisposed()) {
@@ -99,6 +98,7 @@ public class ActiveSearchView extends ViewPart {
                             } else {
                                 viewer.refresh(); 
                             }
+                            viewer.refresh();
                             viewer.expandAll();
                         }
                     } catch (Throwable t) {
@@ -187,6 +187,7 @@ public class ActiveSearchView extends ViewPart {
 //        getViewSite().getActionBars().getToolBarManager().update(true);
         IActionBars bars = getViewSite().getActionBars();
         bars.updateActionBars();
+        viewer.refresh();
     }
     
     private void fillLocalPullDown(IMenuManager manager) {
@@ -223,6 +224,7 @@ public class ActiveSearchView extends ViewPart {
      */
     @Override
     public void setFocus() {
+    	viewer.refresh();
         viewer.getControl().setFocus();
         //TODO: foo
     }

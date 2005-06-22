@@ -131,7 +131,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
 		int index = 0;
 		for (ITaskscapeEdge value : map.values()) {
 			edgeTypes[index] = value;
-			
+			index++;
 		}
 		return edgeTypes;
 	}

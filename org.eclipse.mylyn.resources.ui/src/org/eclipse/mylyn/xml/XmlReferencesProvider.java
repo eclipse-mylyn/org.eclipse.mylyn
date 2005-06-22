@@ -56,7 +56,7 @@ import org.eclipse.ui.part.FileEditorInput;
 public class XmlReferencesProvider extends RelationshipProvider {
 
     public static final String SOURCE_ID = "org.eclipse.mylar.xml.search.references";
-    public static final String NAME = "Java references";
+    public static final String NAME = "Xml references";
         
     public XmlReferencesProvider() {
         // TODO: should this be a generic XML extension?
