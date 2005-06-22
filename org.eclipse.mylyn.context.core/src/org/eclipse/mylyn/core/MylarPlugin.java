@@ -197,8 +197,8 @@ public class MylarPlugin extends AbstractUIPlugin {
         buffer.append(DateUtil.getFormattedTime());
         buffer.append("] ");
         
-        if (source != null) buffer.append(source.getClass().getName());
-        buffer.append("source: " + message);
+        if (source != null) buffer.append("source: " + source.getClass().getName());
+        buffer.append(", message: " + message);
         
         log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, buffer.toString(), null));    	
     }
@@ -219,6 +219,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         if (throwable != null) {
             throwable.printStackTrace(writer);
         }
+        if (message == null) message = "no message";
 
         final Status status= new Status(
                 Status.ERROR,
