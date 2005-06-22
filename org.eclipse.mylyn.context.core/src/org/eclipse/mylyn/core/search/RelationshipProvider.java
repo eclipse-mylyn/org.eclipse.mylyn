@@ -68,7 +68,7 @@ public abstract class RelationshipProvider implements ITaskscapeListener {
     }
      
     protected void incrementInterest(int degreeOfSeparation, String elementKind, String elementHandle) {
-        int predictedInterest = (7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
+        int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
         MylarPlugin.getTaskscapeManager().handleInteractionEvent(event);
     }

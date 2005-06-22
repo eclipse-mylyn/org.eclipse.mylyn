@@ -68,9 +68,15 @@ public class UiUpdateListener implements ITaskscapeListener {
             public void run() { 
                 if (node != null) {
                     IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+                    
+                    // no need to update the outline if it isn't there
+                    IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind());
+                    IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                    if(uiBridge.getTreeViewers(editorPart).isEmpty())
+                    	return;
+                    
                     Object concreteElement = structureBridge.getObjectForHandle(node.getElementHandle());
                     if (concreteElement != null) {
-                        IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind());
                         uiBridge.refreshOutline(concreteElement, false);  
                     } 
                 } else {

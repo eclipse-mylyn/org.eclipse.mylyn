@@ -116,6 +116,12 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, ITaskscapeLis
 		ITaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		for(ITaskscapeNode node: t.getInterestingResources()){
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+
+			// HACK comparing extension to string
+			// No need to add bugzilla resources to the taskscape search...really slow and eclipese doesn't know about them
+			if(bridge.getResourceExtension().equals("bugzilla"))
+				continue;
+			
 			Object o = bridge.getObjectForHandle(node.getElementHandle());
 			if(o instanceof IAdaptable){
 				elements.add((IAdaptable)o);

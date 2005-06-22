@@ -93,11 +93,12 @@ public class ActiveSearchView extends ViewPart {
                 public void run() {
                     try { 
                         if (viewer != null && !viewer.getTree().isDisposed()) {
-                            if (node != null) {
-                                viewer.refresh(node);
-                            } else {
-                                viewer.refresh(); 
-                            }
+                        	//TODO add back in for lazy refreshes
+//                            if (node != null) {
+//                                viewer.refresh(node);
+//                            } else {
+//                                viewer.refresh(); 
+//                            }
                             viewer.refresh();
                             viewer.expandAll();
                         }
