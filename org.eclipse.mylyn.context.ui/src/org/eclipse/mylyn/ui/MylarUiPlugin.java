@@ -185,6 +185,23 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
                 MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
                 
                 installNavigatorFilter();
+                
+//                IWorkbenchPartSite site = workbench.getActiveWorkbenchWindow().get;
+//                System.err.println(">>> " + site);
+//                SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
+    
+//                System.err.println(Arrays.asList(((WorkbenchWindow)workbench.getActiveWorkbenchWindow()).getToolBarManager().getItems()));
+                
+//        		IMenuManager editMenu= bars.getMenuManager().findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+////        		if (editMenu != null) {
+//        			editMenu.appendToGroup(IContextMenuConstants.GROUP_ADDITIONS, new ToggleGlobalFilteringActionDelegate());
+//        			bars.updateActionBars();
+////        		}
+                
+//                ((WorkbenchPage)workbench.getActiveWorkbenchWindow().getActivePage()).getActionBars().setGlobalActionHandler(
+//                	"org.eclipse.mylar.ui.interest.filter.global.action",
+//                	new ToggleGlobalFilteringActionDelegate());
+//                ((WorkbenchPage)workbench.getActiveWorkbenchWindow().getActivePage()).updateActionBars();
             }
         });
     }

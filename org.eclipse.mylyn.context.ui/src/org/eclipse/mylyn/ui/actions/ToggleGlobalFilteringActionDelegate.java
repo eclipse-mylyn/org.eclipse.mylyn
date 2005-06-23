@@ -17,28 +17,32 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.ui.*;
+import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.PreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchPage;
 
 
 public class ToggleGlobalFilteringActionDelegate extends Action implements IWorkbenchWindowActionDelegate, IPropertyChangeListener {
 
-    /**
-     * TODO: unfortunately needed to update checked state on startup
-     */
-    private static ToggleGlobalFilteringActionDelegate INSTANCE; 
     
     public ToggleGlobalFilteringActionDelegate() {
         super("Mylar filtering", IAction.AS_CHECK_BOX);
-        INSTANCE = this;
-        this.setImageDescriptor(MylarImages.MYLAR);
+//    	setChecked(true);
+    	((WorkbenchPage)Workbench.getInstance().getActiveWorkbenchWindow().getActivePage()).updateActionBars();
+
+//        INSTANCE = this;
+//        this.setImageDescriptor(MylarImages.MYLAR);
+//        super.setActionDefinitionId("org.eclipse.mylar.ui.interest.filter.global2");
 //        super(MylarUiPlugin.get, "ToggleGlobalFilteringAction.", null, IAction.AS_CHECK_BOX); //$NON-NLS-1$
 //        JavaPluginImages.setToolImageDescriptors(this, "mark_occurrences.gif"); //$NON-NLS-1$
 //        PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.TOGGLE_MARK_OCCURRENCES_ACTION);
     }
 
     public void propertyChange(PropertyChangeEvent event) {
+//    	System.err.println("> called");
         if (event.getProperty().equals(PreferenceConstants.GLOBAL_FILTERING))
             setChecked(Boolean.valueOf(event.getNewValue().toString()).booleanValue());
     }
@@ -48,7 +52,21 @@ public class ToggleGlobalFilteringActionDelegate extends Action implements IWork
     }
 
     public void init(IWorkbenchWindow window) {
-        update();
+//    	System.err.println("> init");
+    	
+//        update();
+        
+//        IWorkbenchPartSite site = window.getActivePage().getActivePart().getSite();
+//        SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
+//        bars.addPropertyChangeListener(propertyChangeListener);
+//        System.err.println(">>>>" + bars.getGlobalActionHandlers().keySet());
+        
+        
+//      System.err.println(">>> " + ((WorkbenchPage)Workbench.getInstance().getActiveWorkbenchWindow().
+//    		  getActivePage()).getActionBars().
+//    		  getGlobalActionHandler(
+//    				  "org.eclipse.mylar.ui.interest.filter.global.action"));
+      
     }
     
     public void update() {
@@ -57,6 +75,7 @@ public class ToggleGlobalFilteringActionDelegate extends Action implements IWork
     }
 
     public void run(IAction action) {
+    	System.err.println(">> running: " + action.getId()); 
 //        setChecked(!isChecked());
         MylarUiPlugin.getPrefs().setValue(PreferenceConstants.GLOBAL_FILTERING, isChecked());
     }
@@ -65,7 +84,4 @@ public class ToggleGlobalFilteringActionDelegate extends Action implements IWork
     	// don't care when the selection changes
     }
 
-    public static ToggleGlobalFilteringActionDelegate getDefault() {
-        return INSTANCE;
-    }
 }

@@ -96,6 +96,21 @@
             description="Mylar"
             visible="true"
             id="org.eclipse.mylar.ui.mylar.actionSet">
+      	
+      	<action
+             class="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringActionDelegate"
+             definitionId="org.eclipse.mylar.ui.interest.filter.global2"
+             disabledIcon="icons/elcl16/auto-expand.gif"
+             icon="icons/elcl16/auto-expand.gif"
+             id="org.eclipse.mylar.ui.interest.filter.global.action"
+             label="Toggle Mylar global filtering"
+             retarget="false"
+             style="toggle"
+             toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
+             tooltip="Toggle Mylar global filtering">
+         </action>
+         
+         
         <!--
          <action 
             label="Mylar interest filtering"
@@ -138,7 +153,7 @@
                id="org.eclipse.mylar.ui.actions.ShowFilteredAction">
          </action>
       </actionSet>
-   </extension> 
+   </extension>
                               
    <extension point="org.eclipse.ui.commands">
       <category
@@ -146,6 +161,11 @@
             description="Mylar commands"
             id="org.eclipse.mylar.ui">
       </category>
+      <command
+            name="Global filtering"
+            id="org.eclipse.mylar.ui.interest.filter.global2"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
       <command
             name="Global filtering"
             id="org.eclipse.mylar.ui.interest.filter.global"
