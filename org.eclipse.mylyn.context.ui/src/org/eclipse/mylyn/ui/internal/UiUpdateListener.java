@@ -34,10 +34,11 @@ import org.eclipse.ui.internal.Workbench;
 public class UiUpdateListener implements ITaskscapeListener {
 
     public void taskscapeActivated(ITaskscape taskscape) {
-        for (ITaskscapeNode node : taskscape.getLandmarks()) {
-            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).open(node);
-        }
+//        for (ITaskscapeNode node : taskscape.getLandmarks()) {
+//            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).open(node);
+//        }
         ITaskscapeNode activeNode = taskscape.getActiveNode();
+//        System.err.println("> active: " + activeNode);
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
         }
