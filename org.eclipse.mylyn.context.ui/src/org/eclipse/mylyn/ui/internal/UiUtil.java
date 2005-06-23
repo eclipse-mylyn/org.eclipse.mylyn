@@ -70,7 +70,7 @@ public class UiUtil {
         Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() { 
                 TableViewer problemsTableView = UiUtil.getProblemViewFromActivePerspective();
-                if (problemsTableView != null && problemsTableView.getTable().isVisible()) {
+                if (problemsTableView != null && problemsTableView.getTable().isVisible() && !problemsTableView.getTable().isDisposed()) {
                     problemsTableView.refresh();
                 } 
             }
