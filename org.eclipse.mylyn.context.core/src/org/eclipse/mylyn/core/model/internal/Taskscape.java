@@ -100,6 +100,7 @@ public class Taskscape implements ITaskscape, Serializable {
         if (event.getKind().isUserEvent()) {
             lastEdgeEvent = event;
             lastEdgeNode = node;
+            activeNode = node;
         } 
         return node;        
     }
@@ -144,9 +145,6 @@ public class Taskscape implements ITaskscape, Serializable {
         return interestingFiles;
     }
 
-    public void setActiveElement(ITaskscapeNode activeNode) {
-        this.activeNode = activeNode;
-    }
 
     public ITaskscapeNode getActiveNode() {
         return activeNode;

@@ -38,7 +38,7 @@ public class UiUpdateListener implements ITaskscapeListener {
 //            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).open(node);
 //        }
         ITaskscapeNode activeNode = taskscape.getActiveNode();
-//        System.err.println("> active: " + activeNode);
+//        System.err.println("> active: " + activeNode + ".");
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
         }

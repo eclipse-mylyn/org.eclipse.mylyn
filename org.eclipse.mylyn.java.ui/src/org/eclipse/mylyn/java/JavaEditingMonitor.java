@@ -44,6 +44,7 @@ import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -190,13 +191,17 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
         }
     }
     
-    private void registerEditor(JavaEditor editor) {
+    private void registerEditor(final JavaEditor editor) {
         if (editorListenerMap.containsKey(editor)) {
             return;
         } else {
-            ActiveFoldingListener listener = new ActiveFoldingListener(this, editor);
-            editorListenerMap.put(editor, listener);
-            MylarPlugin.getTaskscapeManager().addListener(listener);
+            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+                public void run() { 
+	            ActiveFoldingListener listener = new ActiveFoldingListener(JavaEditingMonitor.this, editor);
+	            editorListenerMap.put(editor, listener);
+	            MylarPlugin.getTaskscapeManager().addListener(listener);
+                }
+            });
         }        
     }
     

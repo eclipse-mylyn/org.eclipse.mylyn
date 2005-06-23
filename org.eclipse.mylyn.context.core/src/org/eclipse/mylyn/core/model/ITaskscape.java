@@ -31,8 +31,6 @@ public interface ITaskscape {
     
     public abstract Set<ITaskscapeNode> getInterestingResources();
 
-    public abstract void setActiveElement(ITaskscapeNode activeNode);
-
     public abstract ITaskscapeNode getActiveNode();
 
     public abstract void remove(ITaskscapeNode node);
