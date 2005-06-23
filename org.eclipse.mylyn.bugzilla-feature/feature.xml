@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="org.eclipse.mylar.bugzilla-feature"
-      version="1.7.2"
+      version="1.7.3"
       provider-name="University of British Columbia">
 
    <description>
@@ -233,6 +233,7 @@ litigation.
          id="org.eclipse.mylar.bugzilla"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.7.3"
+         unpack="false"/>
 
 </feature>

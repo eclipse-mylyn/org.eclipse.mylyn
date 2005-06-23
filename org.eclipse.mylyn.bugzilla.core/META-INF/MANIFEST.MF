@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bugzilla Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.bugzilla; singleton:=true
-Bundle-Version: 1.7.2
+Bundle-Version: 1.7.3
 Bundle-Activator: org.eclipse.mylar.bugzilla.BugzillaPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
