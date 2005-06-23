@@ -32,14 +32,19 @@ import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
 public class JavaModelUiUpdateBridge implements ITaskscapeListener {
-
+	
     private enum ChangeKind { ADDED, REMOVED, CHANGED }
+
+	private boolean firstExplorerRefresh = true;
     
     public void taskscapeActivated(ITaskscape taskscape) {
         refreshPackageExplorer(null);
@@ -216,7 +221,11 @@ public class JavaModelUiUpdateBridge implements ITaskscapeListener {
     private void refreshPackageExplorer(Object element) {         
         final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
         if (packageExplorer != null && packageExplorer.getTreeViewer() != null) {
-            if (element == null) {
+            if (firstExplorerRefresh) {
+            	installExplorerListeners(packageExplorer);
+            	firstExplorerRefresh = false;
+            }
+        	if (element == null) {
                 packageExplorer.getTreeViewer().setInput(packageExplorer.getTreeViewer().getInput()); 
                 packageExplorer.getTreeViewer().refresh();
                 if (MylarUiPlugin.getDefault().isGlobalFilteringEnabled()
@@ -226,7 +235,27 @@ public class JavaModelUiUpdateBridge implements ITaskscapeListener {
             }
         }
     }
-    private boolean containsMylarInterestFilter(TreeViewer viewer) {
+    
+    private void installExplorerListeners(PackageExplorerPart packageExplorer) {
+    	packageExplorer.getTreeViewer().getTree().addMouseListener(new MouseListener() {
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore
+			}
+
+			public void mouseDown(MouseEvent e) {
+				if ((e.stateMask & SWT.ALT) != 0) {
+					MylarPlugin.getTaskscapeManager().setNextEventIsRaiseChildren();
+				}
+			}
+
+			public void mouseUp(MouseEvent e) {
+				// ignore
+			}	
+    	});
+		
+	}
+
+	private boolean containsMylarInterestFilter(TreeViewer viewer) {
         boolean found = false;
         for (int i = 0; i < viewer.getFilters().length; i++) {
             ViewerFilter filter = viewer.getFilters()[i];

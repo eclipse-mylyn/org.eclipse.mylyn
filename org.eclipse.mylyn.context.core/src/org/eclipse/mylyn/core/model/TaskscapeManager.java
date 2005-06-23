@@ -57,6 +57,7 @@ public class TaskscapeManager {
     private boolean suppressSelections = false;
     
     private TaskscapeExternalizer externalizer = new TaskscapeExternalizer();
+	private boolean nextEventIsRaiseChildren;
     
     private static ScalingFactors scalingFactors = new ScalingFactors();
     
@@ -158,6 +159,12 @@ public class TaskscapeManager {
         } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
             for (ITaskscapeListener listener : listeners) listener.landmarkAdded(node);
         }
+        
+        if (nextEventIsRaiseChildren && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
+    		tempRaiseChildrenForSelected();
+    		nextEventIsRaiseChildren = false;
+    	}
+        
         return node;
     }
     
@@ -404,5 +411,9 @@ public class TaskscapeManager {
 				f.renameTo(new File(name));
 			}
 		}		
+	}
+
+	public void setNextEventIsRaiseChildren() {
+		nextEventIsRaiseChildren = true;
 	}
 }
