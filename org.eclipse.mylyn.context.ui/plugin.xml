@@ -248,36 +248,35 @@
         </workingSet>
     </extension>
 
-</plugin>
 
-<!-- MISC -->
+<!-- filtering actions -->
 
-   <!--
-   <extension point="org.eclipse.ui.viewActions"> 
+ <extension point="org.eclipse.ui.viewActions"> 
 	  <viewContribution 
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
-	         id="org.eclipse.mylar.ui.actions.SuppressFilterAction" 
+	         id="org.eclipse.mylar.ui.actions.FilterOutlineAction" 
 	         style="toggle"
 	         label="Filter uninteresting" 
 	         icon="icons/elcl16/auto-expand.gif"
 	         tooltip="Filter uninteresting"
 	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.ui.actions.SuppressFilterAction"
+	         class="org.eclipse.mylar.ui.actions.FilterOutlineAction"
 	         enablesFor="*"> 
   		</action> 
   		</viewContribution>
-  			<viewContribution 
-		id="org.eclipse.mylar.java.explorer.contribution" 
+  	  <viewContribution 
+		id="org.eclipse.mylar.ui.resource.navigator.filter" 
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action
-	         id="org.eclipse.mylar.actions.filter.interest" 
+	         id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction" 
+   	         style="toggle"
 	         label="Filter uninteresting resources" 
 	         icon="icons/elcl16/auto-expand.gif"
 	         tooltip="Filter uninteresting resources"
 	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.ui.actions.SuppressFilterAction"
+	         class="org.eclipse.mylar.ui.actions.FilterNavigatorAction"
 	         enablesFor="*"> 
   		</action> 
       </viewContribution> 
@@ -285,7 +284,8 @@
 		id="org.eclipse.mylar.java.problems.contribution" 
    		targetID="org.eclipse.ui.views.ProblemView">
     	<action
-	         id="org.eclipse.mylar.actions.filter.interest" 
+	         id="org.eclipse.mylar.ui.actions.FilterProblemsAction" 
+   	         style="toggle"
 	         label="Filter uninteresting" 
 	         icon="icons/elcl16/auto-expand.gif"
 	         tooltip="Filter uninteresting"
@@ -295,4 +295,5 @@
   		</action>  
       </viewContribution> 
    </extension>
-   -->
+
+</plugin>

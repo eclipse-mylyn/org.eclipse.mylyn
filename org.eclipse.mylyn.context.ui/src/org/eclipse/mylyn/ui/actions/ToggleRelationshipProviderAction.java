@@ -49,7 +49,6 @@ public class ToggleRelationshipProviderAction extends Action {
 	}
 	
 	private void valueChanged(final boolean on, boolean store) {
-//        System.err.println(">>> changed: " + prefId);
 		setChecked(on);
 		if (store) MylarUiPlugin.getPrefs().setValue(prefId, on); //$NON-NLS-1$
 		provider.setEnabled(on);

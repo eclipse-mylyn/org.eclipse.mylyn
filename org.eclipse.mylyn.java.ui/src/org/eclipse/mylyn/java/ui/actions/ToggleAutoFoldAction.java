@@ -22,13 +22,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider;
 import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 
 /**
  * @author Mik Kersten
  */
-public class ToggleAutoFoldAction extends Action implements IEditorActionDelegate {
+public class ToggleAutoFoldAction extends Action implements IEditorActionDelegate, IActionDelegate2 {
 	
     private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
     public static final String PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
@@ -43,29 +45,23 @@ public class ToggleAutoFoldAction extends Action implements IEditorActionDelegat
 		setText("Auto fold"); 
 		setImageDescriptor(MylarImages.AUTO_FOLD);	
 		setToolTipText("Auto manage editors and folding"); 
-		
-		boolean checked= MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID); 
-		valueChanged(checked, false);
-		
+				
 		// TODO: this should be done whenever the prefs change
 //		previousFoldingEnabledState =javaPrefs.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
 //		previousFoldingProvider = javaPrefs.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);		    
     }
 	
     public void run(IAction action) {
-        run();
+    		valueChanged(action, action.isChecked(), true);
     }
-    
-    @Override
-	public void run() {
-		valueChanged(isChecked(), true);
-	}
 	
-	private void valueChanged(final boolean on, boolean store) {
+	
+	private void valueChanged(IAction action, final boolean on, boolean store) {
 	    try {
-			setChecked(on);
-//			if (store) 
-            MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
+			action.setChecked(on);
+			if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
+			
+			// XXX add autofolding 
             if (on) {
 			    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);    
 //			    if (!initMode) { // TODO: avoiding run on initialization here
@@ -95,5 +91,18 @@ public class ToggleAutoFoldAction extends Action implements IEditorActionDelegat
     public void selectionChanged(IAction action, ISelection selection) {
     	// don't care when the selection changes
     }
+
+	public void init(IAction action) {
+		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID), true);
+	}
+
+	public void dispose() {
+		// don't need to do anything
+		
+	}
+
+	public void runWithEvent(IAction action, Event event) {
+		run(action);
+	}
 }
 

@@ -12,17 +12,16 @@
 	<viewContribution 
 		id="org.eclipse.mylar.java.explorer.contribution" 
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
-   		<!--
     	<action
-	         id="org.eclipse.mylar.actions.filter.interest" 
+	         id="org.eclipse.mylar.actions.filter.packageExplorer" 
+	         style="toggle"
 	         label="Filter uninteresting" 
 	         icon="icons/elcl16/auto-expand.gif"
 	         tooltip="Filter uninteresting"
 	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.java.ui.actions.FilterBoringJavaAction"
+	         class="org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction"
 	         enablesFor="*"> 
   		</action> 
-  		-->
     	<action
 	         id="org.eclipse.mylar.actions.filter.members" 
 	         label="Filter member" 
@@ -34,14 +33,14 @@
   		</action>  
       </viewContribution> 
 	</extension>
-	
-	<!--
+
 	<extension point="org.eclipse.ui.editorActions"> 
 		<editorContribution 
       		id="org.eclipse.ui.articles.action.contribution.editor" 
    			targetID="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor">
 	   		<action
-	         	id="org.eclipse.mylar.action.contribution.editor.action1" 
+	         	id="org.eclipse.mylar.action.contribution.editor.autoFold" 
+	         	style="toggle"
 	         	label="Mylar automatic folding" 
 	         	icon="icons/elcl16/auto-fold.gif"
 	         	tooltip="Mylar automatic folding"
@@ -50,7 +49,6 @@
 	      	</action> 
    	 	</editorContribution> 
    </extension>
-   -->
   
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter

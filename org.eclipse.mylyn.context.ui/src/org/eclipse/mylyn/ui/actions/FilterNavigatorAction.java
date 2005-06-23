@@ -15,56 +15,57 @@ package org.eclipse.mylar.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 
+/**
+ * @author Shawn Minto
+ */
+public class FilterNavigatorAction extends Action implements IViewActionDelegate, IActionDelegate2 {
 
-public class ToggleGlobalFilteringActionDelegate extends Action implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
-
-	public static final String PREF_ID = "org.eclipse.mylar.ui.filter.global";
-    
-    public ToggleGlobalFilteringActionDelegate() {
+	public static final String PREF_ID = "org.eclipse.mylar.ui.navigator.filterBoring";
+	
+    public FilterNavigatorAction() {
         super();
-        setText("Global filter uninteresting"); 
+    	setText("Filter uninteresting"); 
 		setImageDescriptor(MylarImages.FILTER_UNINTERESTING);	
-		setToolTipText("Filter uninteresting items from all views");
+		setToolTipText("Filter uninteresting items from package explorer");
     }
 
-    private void valueChanged(IAction action, final boolean on, boolean store) {
-        action.setChecked(on);
-        if (store) MylarUiPlugin.getDefault().setGlobalFilteringEnabled(on); //$NON-NLS-1$
-
-        //XXX add the global filtering
-    }
-    
     public void dispose() {
     	// don't care when we are disposed
-    }
-
-    public void init(IWorkbenchWindow window) {
-    	// don't care about this
     }
 
     public void run(IAction action) {
     	valueChanged(action, action.isChecked(), true);
     }
 
+    private void valueChanged(IAction action, final boolean on, boolean store) {
+        action.setChecked(on);
+        if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
+
+        //XXX add the filtering for the navigator view
+    }
+    
     public void selectionChanged(IAction action, ISelection selection) {
     	// don't care when the selection changes
     }
 
-
+	public void init(IViewPart view) {
+		// don't care about this
+		
+	}
+	
 	public void init(IAction action) {
-		valueChanged(action, MylarUiPlugin.getDefault().isGlobalFilteringEnabled(), true);
+		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID), true);
 	}
 
 	public void runWithEvent(IAction action, Event event) {
 		run(action);
-		
 	}
 
 }
