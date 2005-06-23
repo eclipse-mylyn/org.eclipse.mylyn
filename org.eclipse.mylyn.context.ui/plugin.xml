@@ -147,6 +147,11 @@
             id="org.eclipse.mylar.ui">
       </category>
       <command
+            name="Global filtering"
+            id="org.eclipse.mylar.ui.interest.filter.global"
+            categoryId="org.eclipse.mylar.ui">
+      </command>
+      <command
             name="Related elements"
             description="Related elements"
             id="org.eclipse.mylar.ui.related.show"

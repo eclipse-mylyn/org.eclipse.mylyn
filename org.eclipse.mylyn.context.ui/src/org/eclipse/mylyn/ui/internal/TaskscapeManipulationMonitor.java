@@ -32,7 +32,6 @@ public class TaskscapeManipulationMonitor extends AbstractCommandMonitor {
      */
     @Override
     protected void handleCommandExecution(String commandId, ExecutionEvent event) {
-        
         ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getActiveNode();
         if (node == null) return;
         float originalValue = node.getDegreeOfInterest().getValue();

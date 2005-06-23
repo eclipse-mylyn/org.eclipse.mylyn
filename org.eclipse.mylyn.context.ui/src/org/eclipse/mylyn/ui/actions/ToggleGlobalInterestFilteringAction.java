@@ -24,13 +24,15 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
  * @author Mik Kersten
  */
 public class ToggleGlobalInterestFilteringAction extends Action {
-
+	
+	public static final String ID = "org.eclipse.mylar.ui.interest.filter.global";
+	
     public ToggleGlobalInterestFilteringAction() {
         super();
         setText("Filter uninteresting");
         setToolTipText("Filter uninteresting");
         setImageDescriptor(MylarImages.FILTER_UNINTERESTING);
-        setActionDefinitionId("org.eclipse.mylar.ui.interest.filtering");
+        setActionDefinitionId(ID);
         setChecked(MylarUiPlugin.getDefault().isGlobalFilteringEnabled());
     }
     

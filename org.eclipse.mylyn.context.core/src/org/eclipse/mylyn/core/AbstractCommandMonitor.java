@@ -55,11 +55,13 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
     }     
     
     public void postExecuteSuccess(String commandId, Object returnValue) { 
+        System.err.println("> post: " + commandId);
     	// don't care about this
     }
 
     public void preExecute(String commandId, ExecutionEvent event) {
-        if (commandId != null) handleCommandExecution(commandId, event);
+    	System.err.println("> pre: " + commandId);
+    	if (commandId != null) handleCommandExecution(commandId, event);
     } 
         
     protected abstract void handleCommandExecution(String commandId, ExecutionEvent event);
