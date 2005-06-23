@@ -177,9 +177,10 @@ public class Task implements ITask {
      * Refreshes the tasklist viewer.
      */
     public void notifyTaskDataChange() {
+    	final Task task = this;
         Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
-                if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged();
+                if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(task);
             }
         });
     }
@@ -304,16 +305,16 @@ public class Task implements ITask {
 		return complete;
 	}
 	
-	public boolean hasCompletedSubTasks() {
-		return findCompletedSubtask(getChildren());
+	public boolean hasCompletedSubTasks(boolean completed) {
+		return findCompletedSubtask(getChildren(), completed);
 	}
 		
-	private boolean findCompletedSubtask(List<ITask> subtasks) {
+	private boolean findCompletedSubtask(List<ITask> subtasks, boolean completed) {
 		for(ITask t : subtasks) {
-			if (t.isCompleted()) {
+			if (t.isCompleted() == completed) {
 				return true;
 			}
-			findCompletedSubtask(t.getChildren());
+			findCompletedSubtask(t.getChildren(), completed);
 		}
 		return false;
 	}
@@ -348,5 +349,19 @@ public class Task implements ITask {
 			}
 		}
 		return maxHandle;
+	}
+	
+	public boolean hasSubTaskWithPriority(String priority) {
+		return findSubTaskWithPriority(getChildren(), priority);
+	}
+	
+	private boolean findSubTaskWithPriority(List<ITask> subtasks, String priority) {
+		for(ITask t : subtasks) {
+			if (t.getPriority().equals(priority)) {
+				return true;
+			}
+			findSubTaskWithPriority(t.getChildren(), priority);
+		}
+		return false;
 	}
 }

@@ -72,6 +72,10 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
         public void taskDeactivated(ITask task) {
             MylarPlugin.getTaskscapeManager().taskDeactivated(task.getHandle(), task.getPath());
         }
+
+		public void taskPropertyChanged(ITask updatedTask, String property) {
+			// don't care about property change	
+		}
         
     };
     

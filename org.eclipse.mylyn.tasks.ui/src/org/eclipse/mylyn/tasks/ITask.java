@@ -80,9 +80,11 @@ public interface ITask extends Serializable {
     
     public abstract List<ITask> getCompletedSubTasks();
     
-    public abstract boolean hasCompletedSubTasks();
+    public abstract boolean hasCompletedSubTasks(boolean completed);
     
     public abstract int findLargestTaskHandle();
+    
+    public abstract boolean hasSubTaskWithPriority(String priority);
     /**
      * Opens this task in an editor
      */

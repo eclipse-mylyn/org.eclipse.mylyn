@@ -12,6 +12,7 @@ package org.eclipse.mylar.tasks.ui.views;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +24,8 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -45,6 +48,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.bugzilla.core.BugReport;
@@ -59,6 +63,7 @@ import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.tasks.ui.BugzillaTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.ToggleGlobalInterestFilteringAction;
@@ -76,6 +81,7 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -120,9 +126,10 @@ public class TaskListView extends ViewPart {
 
     private Action completeTask;
     private Action incompleteTask;
-    
     private Action filterCompleteTask;
     private Action filterInCompleteTask;
+    private PriorityDropDownAction filterOnPriority;
+    private PriorityFilter priorityFilter = new PriorityFilter();
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description", "handle" };
     protected int[] columnWidths = new int[] { 70, 20, 20, 120, 70 };
@@ -132,7 +139,6 @@ public class TaskListView extends ViewPart {
     public static final String tableSortIdentifier = "org.eclipse.mylar.tasks.ui.views.tasklist.sortIndex";
     private int sortIndex = 2;
     
-
     private String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
     
     private final class CreateTaskAction extends Action {
@@ -160,11 +166,224 @@ public class TaskListView extends ViewPart {
             MylarUiPlugin.getDefault().setHighlighterMapping(
                     newTask.getHandle(), 
                     MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
-            TaskListView.this.viewer.refresh();
-            
             viewer.refresh();
         }
     }
+    
+    private final class PriorityDropDownAction extends Action implements IMenuCreator {
+    	private Menu dropDownMenu = null;
+    	
+		public PriorityDropDownAction() {
+			setText("Display Priorities");
+			setToolTipText("Show Tasks with Priority Levels");
+			setImageDescriptor(MylarImages.FILTER_DECLARATIONS);
+			setMenuCreator(this);
+		}
+    	
+		public void dispose() {			
+			if (dropDownMenu != null) {
+				dropDownMenu.dispose();
+				dropDownMenu = null;
+			}
+		}
+
+		public Menu getMenu(Control parent) {			
+			if (dropDownMenu != null) {
+				dropDownMenu.dispose();
+			}
+			dropDownMenu = new Menu(parent);
+			addActionsToMenu();
+			return dropDownMenu;
+		}
+
+		public Menu getMenu(Menu parent) {
+			if (dropDownMenu != null) {
+				dropDownMenu.dispose();
+			}
+			dropDownMenu = new Menu(parent);
+			addActionsToMenu();
+			return dropDownMenu;
+		}     
+		
+		public void addActionsToMenu() {
+			Action P1 = new Action(PRIORITY_LEVELS[0], AS_CHECK_BOX) {	    		
+	    		@Override
+				public void run() {
+	    			MylarUiPlugin.getDefault().setP1FilterMode(!isChecked());
+	    			if (isChecked()) {
+	    				priorityFilter.displayPriority(PRIORITY_LEVELS[0]);
+	    			} else {
+	    				priorityFilter.hidePriority(PRIORITY_LEVELS[0]);
+	    			}
+	    			viewer.refresh();
+				}
+			};  
+			P1.setEnabled(true);
+			P1.setChecked(!MylarUiPlugin.getDefault().isP1FilterMode());
+			P1.setToolTipText(PRIORITY_LEVELS[0]);
+			ActionContributionItem item= new ActionContributionItem(P1);
+			item.fill(dropDownMenu, -1);
+			
+			Action P2 = new Action(PRIORITY_LEVELS[1], AS_CHECK_BOX) {	    		
+	    		@Override
+				public void run() {
+	    			MylarUiPlugin.getDefault().setP2FilterMode(!isChecked());
+	    			if (isChecked()) {
+	    				priorityFilter.displayPriority(PRIORITY_LEVELS[1]);
+	    			} else {
+	    				priorityFilter.hidePriority(PRIORITY_LEVELS[1]);
+	    			}
+	    			viewer.refresh();
+				}
+			};  
+			P2.setEnabled(true);
+			P2.setChecked(!MylarUiPlugin.getDefault().isP2FilterMode());
+			P2.setToolTipText(PRIORITY_LEVELS[1]);
+			item= new ActionContributionItem(P2);
+			item.fill(dropDownMenu, -1);
+			
+			Action P3 = new Action(PRIORITY_LEVELS[2], AS_CHECK_BOX) {	    		
+	    		@Override
+				public void run() { 
+	    			MylarUiPlugin.getDefault().setP3FilterMode(!isChecked());
+	    			if (isChecked()) {
+	    				priorityFilter.displayPriority(PRIORITY_LEVELS[2]);
+	    			} else {
+	    				priorityFilter.hidePriority(PRIORITY_LEVELS[2]);
+	    			}
+	    			viewer.refresh();
+				}
+			};
+			P3.setEnabled(true);
+			P3.setChecked(!MylarUiPlugin.getDefault().isP3FilterMode());
+			P3.setToolTipText(PRIORITY_LEVELS[2]);
+			item= new ActionContributionItem(P3);
+			item.fill(dropDownMenu, -1);
+			
+			Action P4 = new Action(PRIORITY_LEVELS[3], AS_CHECK_BOX) {	    		
+	    		@Override
+				public void run() {
+	    			MylarUiPlugin.getDefault().setP4FilterMode(!isChecked());
+	    			if (isChecked()) {
+	    				priorityFilter.displayPriority(PRIORITY_LEVELS[3]);
+	    			} else {
+	    				priorityFilter.hidePriority(PRIORITY_LEVELS[3]);
+	    			}
+	    			viewer.refresh();
+				}
+			};
+			P4.setEnabled(true);
+			P4.setChecked(!MylarUiPlugin.getDefault().isP4FilterMode());
+			P4.setToolTipText(PRIORITY_LEVELS[3]);
+			item= new ActionContributionItem(P4);
+			item.fill(dropDownMenu, -1);
+						
+			Action P5 = new Action(PRIORITY_LEVELS[4], AS_CHECK_BOX) {	    		
+	    		@Override
+				public void run() { 
+	    			MylarUiPlugin.getDefault().setP5FilterMode(!isChecked());
+	    			if (isChecked()) {
+	    				priorityFilter.displayPriority(PRIORITY_LEVELS[4]);
+	    			} else {
+	    				priorityFilter.hidePriority(PRIORITY_LEVELS[4]);
+	    			}	
+	    			viewer.refresh();
+	    		}
+			};  
+			P5.setEnabled(true);
+			P5.setChecked(!MylarUiPlugin.getDefault().isP5FilterMode());
+			P5.setToolTipText(PRIORITY_LEVELS[4]);
+			item= new ActionContributionItem(P5);
+			item.fill(dropDownMenu, -1);			
+		}
+		public void run() {			
+		}
+    }
+    
+    private ViewerFilter completeFilter = new ViewerFilter(){
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (element instanceof ITask) {
+				if (((ITask)element).hasCompletedSubTasks(false)) {
+					return true;
+				} else {
+				return !((ITask)element).isCompleted();
+				}
+			} else {
+				return false;
+			}
+		}    	
+    };
+    
+    private ViewerFilter inCompleteFilter = new ViewerFilter(){
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (element instanceof ITask) {
+				if (((ITask)element).hasCompletedSubTasks(true)) {
+					return true;
+				} else {
+					return ((ITask)element).isCompleted();
+				}				
+			} else {
+				return false;
+			}
+		}    			
+    };
+    
+    public class PriorityFilter extends ViewerFilter {
+    	// list of priorities that will be shown in the tasklistview
+    	private List<String> priorities = new ArrayList<String>();
+    	
+    	public PriorityFilter() {
+    		// if filter is off, then add to list
+    		if (!MylarUiPlugin.getDefault().isP1FilterMode()) {
+    			displayPriority("P1");
+    		}
+    		if (!MylarUiPlugin.getDefault().isP2FilterMode()) {
+    			displayPriority("P2");
+    		}
+    		if (!MylarUiPlugin.getDefault().isP3FilterMode()) {
+    			displayPriority("P3");
+    		}
+    		if (!MylarUiPlugin.getDefault().isP4FilterMode()) {
+    			displayPriority("P4");
+    		}
+    		if (!MylarUiPlugin.getDefault().isP5FilterMode()) {
+    			displayPriority("P5");
+    		}
+    	}
+    	
+    	public void displayPriority(String p) {
+    		if (!priorities.contains(p)) {
+    			priorities.add(p);
+    		}    		
+    	}
+    	
+    	public void hidePriority(String p) {
+    		priorities.remove(p);
+    	}
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (element instanceof ITask) {
+				ITask task = (ITask) element;
+				if (priorities.size() == PRIORITY_LEVELS.length) {
+					return true;
+				} else if (task.isCategory()) {
+					return true;
+				} else {
+					for (String filter : priorities) {
+						if (task.getPriority().equals(filter) ||
+								task.hasSubTaskWithPriority(filter)) {
+							return true;
+						}
+					}
+					return false;
+				}								
+			}
+			return false;
+		}
+    	
+    };
     
     class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -175,20 +394,7 @@ public class TaskListView extends ViewPart {
         }
         public Object[] getElements(Object parent) {
             if (parent.equals(getViewSite())) {
-            	if (MylarUiPlugin.getDefault().isFilterCompleteMode()) {
-            		// don't show completed tasks
-            		if (!MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
-            			return MylarTasksPlugin.getTaskListManager().getTaskList().getTasksInProgress().toArray();
-            		}
-            	} else {
-            		if (MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
-            			// show only completed tasks
-            			return MylarTasksPlugin.getTaskListManager().getTaskList().getCompletedTasks().toArray();
-            		} else {
-            			// show all tasks
-            			return MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks().toArray();
-            		}
-            	}              
+            	return MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks().toArray();            	          
             }
             return getChildren(parent);
         }
@@ -199,22 +405,10 @@ public class TaskListView extends ViewPart {
             return null;
         }
         public Object [] getChildren(Object parent) {
-            if (parent instanceof ITask) {
-            	if (MylarUiPlugin.getDefault().isFilterCompleteMode()) {
-            		if (!MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
-            			return ((ITask)parent).getSubTasksInProgress().toArray();
-            		}
-            	} else {
-            		if (MylarUiPlugin.getDefault().isFilterInCompleteMode()) {
-            			// show only completed tasks
-            			return ((ITask)parent).getCompletedSubTasks().toArray();
-            		} else {
-            			// show all tasks
-            			return ((ITask)parent).getChildren().toArray();
-            		}
-            	}
-            } 
-            return new Object[0];
+        	if (parent instanceof ITask) {
+        		return ((ITask)parent).getChildren().toArray();
+        	}
+        	return new Object[0];
         }
         public boolean hasChildren(Object parent) {  
             if (parent instanceof ITask) {
@@ -295,12 +489,13 @@ public class TaskListView extends ViewPart {
 					break;
 				case 3:
 					task.setLabel(((String) value).trim());
+					MylarTasksPlugin.getTaskListManager().taskPropertyChanged(task, columnNames[3]);
 					viewer.setSelection(null);					
 					break;
 				case 4:
 					break;
 				}
-				viewer.refresh();
+				viewer.refresh(task);
 			} catch (Exception e) {
 				MylarPlugin.log(e, e.getMessage());
 			}
@@ -391,6 +586,7 @@ public class TaskListView extends ViewPart {
         	sortIndex = 2; // default priority
         }
         viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+        viewer.addFilter(priorityFilter);
         viewer.refresh();
     }
         
@@ -615,13 +811,18 @@ public class TaskListView extends ViewPart {
         manager.add(new Separator());
         manager.add(filterCompleteTask);
         manager.add(filterInCompleteTask);
+        manager.add(filterOnPriority);
         drillDownAdapter.addNavigationActions(manager);
     }
 
+    /**
+     * @see org.eclipse.pde.internal.ui.view.HistoryDropDownAction
+     *
+     */
     private void makeActions() {
     	refresh = new Action() {
-  		
-    		@Override
+    		
+    		@Override			
 			public void run() {
     			// TODO background?
     			// perform the update in an operation so that we get a progress monitor 
@@ -744,7 +945,6 @@ public class TaskListView extends ViewPart {
                 } else { 
                     MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
                 }
-//                viewer.expandAll();
                 viewer.refresh();
             }
         };
@@ -773,7 +973,7 @@ public class TaskListView extends ViewPart {
 						if (page == null)
 							return;
 						try{
-                            closeBugTaskEditors((ITask)selectedObject, page);
+                            closeTaskEditors((ITask)selectedObject, page);
                         }catch(Exception e){
                         	MylarPlugin.log(e, " deletion failed");
                         }
@@ -793,7 +993,7 @@ public class TaskListView extends ViewPart {
                 Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
                 if (selectedObject instanceof Task){ 
                 	((Task)selectedObject).setCompleted(true);                	
-                	viewer.refresh();
+                	viewer.refresh(selectedObject);
                 }
             }
         };
@@ -808,7 +1008,7 @@ public class TaskListView extends ViewPart {
                 Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
                 if (selectedObject instanceof Task){ 
                 	((Task)selectedObject).setCompleted(false);                	
-                	viewer.refresh();
+                	viewer.refresh(selectedObject);
                 }
             }
         };
@@ -830,7 +1030,7 @@ public class TaskListView extends ViewPart {
                 } else if (selectedObject instanceof Category) {
                     ((Category)selectedObject).setName(newName);
                 }
-                viewer.refresh();
+                viewer.refresh(selectedObject);
             }
         };
         rename.setText("Rename");
@@ -859,7 +1059,7 @@ public class TaskListView extends ViewPart {
                 if (obj instanceof ITask) {
                 	((ITask)obj).openTaskInEditor();
                 }
-                viewer.refresh();
+                viewer.refresh(obj);
             }
         };            
 
@@ -867,6 +1067,13 @@ public class TaskListView extends ViewPart {
         	@Override
             public void run() {
         		MylarUiPlugin.getDefault().setFilterCompleteMode(isChecked());
+        		if (isChecked()) {
+        			viewer.addFilter(completeFilter);
+        			filterInCompleteTask.setChecked(false);
+        			viewer.removeFilter(inCompleteFilter);
+        		} else {
+        			viewer.removeFilter(completeFilter);        			
+        		}
                 viewer.refresh();
             }
         };
@@ -879,6 +1086,13 @@ public class TaskListView extends ViewPart {
         	@Override
             public void run() {
         		MylarUiPlugin.getDefault().setFilterInCompleteMode(isChecked());
+        		if (isChecked()) {
+        			viewer.addFilter(inCompleteFilter);
+        			filterCompleteTask.setChecked(false);
+        			viewer.removeFilter(completeFilter);
+        		} else {
+        			viewer.removeFilter(inCompleteFilter);
+        		}
                 viewer.refresh();
             }
         };
@@ -886,6 +1100,9 @@ public class TaskListView extends ViewPart {
         filterInCompleteTask.setToolTipText("Filter Incomplete tasks");
         filterInCompleteTask.setImageDescriptor(MylarImages.TASK_INACTIVE);
         filterInCompleteTask.setChecked(MylarUiPlugin.getDefault().isFilterInCompleteMode());
+        
+        
+        filterOnPriority = new PriorityDropDownAction();        
     }
 
     /**
@@ -918,19 +1135,25 @@ public class TaskListView extends ViewPart {
 		return false;
 	}
 	
-	protected void closeBugTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
+	protected void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
+		IEditorInput input = null;		
 		if (task instanceof BugzillaTask) {
-			IEditorInput input = new BugzillaTaskEditorInput((BugzillaTask)task);
-			IEditorPart bugEditor = page.findEditor(input);
-			
-			if (bugEditor != null) {
-				page.closeEditor(bugEditor, false);	
-			}
+			input = new BugzillaTaskEditorInput((BugzillaTask)task);
+		} else if (task instanceof Task) {
+			input = new TaskEditorInput((Task) task);
+		}
+		IEditorPart editor = page.findEditor(input);
+
+		if (editor != null) {
+			page.closeEditor(editor, false);
 		}
 		
+		
 		List<ITask> children = task.getChildren();
-		if (children == null) return;
-        for (ITask child : children) closeBugTaskEditors(child, page);
+		if (children == null) 
+			return;
+        for (ITask child : children) 
+        	closeTaskEditors(child, page);
 	}
 	
 	protected void refreshChildren(List<ITask> children) {
@@ -998,13 +1221,31 @@ public class TaskListView extends ViewPart {
         }
     }
     
-    public void notifyTaskDataChanged() {
-        if (viewer.getTree() != null && !viewer.getTree().isDisposed()) viewer.refresh();
+    public void notifyTaskDataChanged(ITask task) {
+        if (viewer.getTree() != null && !viewer.getTree().isDisposed()) { 
+        	viewer.refresh(task);
+        }
     }
     
     public static TaskListView getDefault() {
     	return INSTANCE;
-    }    
+    }
+    
+    public TreeViewer getViewer() {
+    	return viewer;
+    }
+    
+    public ViewerFilter getCompleteFilter() {
+    	return completeFilter;
+    }
+    
+    public ViewerFilter getInCompleteFilter() {
+    	return inCompleteFilter;
+    }
+    
+    public PriorityFilter getPriorityFilter() {
+    	return priorityFilter;
+    }
 }
 
 //TextTransfer textTransfer = TextTransfer.getInstance();

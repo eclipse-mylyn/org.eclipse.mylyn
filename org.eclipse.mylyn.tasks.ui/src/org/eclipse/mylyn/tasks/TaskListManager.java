@@ -54,7 +54,7 @@ public class TaskListManager {
         	if (file.exists()) {
         		XmlUtil.readTaskList(taskList, file);
         		int maxHandle = taskList.findLargestTaskHandle();
-        		if (maxHandle > nextTaskId) {
+        		if (maxHandle >= nextTaskId) {
         			nextTaskId = maxHandle + 1;
         		}
                 for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
@@ -125,6 +125,10 @@ public class TaskListManager {
         }
     }
     
+    public void taskPropertyChanged(ITask task, String property) {
+    	for (ITaskActivityListener listener : listeners) listener.taskPropertyChanged(task, property);
+    }
+    
     public void updateTaskscapeReference(String prevDir) {    	
     	List<ITask> rootTasks = this.getTaskList().getRootTasks();
     	updateTaskscapeReferenceHelper(rootTasks, prevDir);
@@ -144,11 +148,13 @@ public class TaskListManager {
 					absPath = absPath.replaceAll("\\\\", "/");
 					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getUserDataDirectory() + "/", absPath);										
 					task.setPath(rel);
+					taskPropertyChanged(task, "Path");
 				} else {
 					String absPath = prevDir + "/" + task.getPath() + MylarTasksPlugin.FILE_EXTENSION;
 					absPath = absPath.replaceAll("\\\\", "/");
 					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getUserDataDirectory(), absPath);
 					task.setPath(rel);
+					taskPropertyChanged(task, "Path");
 				}
 			}
 			updateTaskscapeReferenceHelper(task.getChildren(), prevDir);

@@ -98,10 +98,6 @@ import org.eclipse.ui.part.EditorPart;
  * @author Ken Sueda
  */
 public class TaskSummaryEditor extends EditorPart {
-
-
-
-	private Color background;
 	private ITask task;
 	private TaskEditorInput editorInput;
 	private Composite editorComposite;
@@ -120,10 +116,11 @@ public class TaskSummaryEditor extends EditorPart {
 	private ScrolledForm sform;
 	private Action add;
     private Action delete;
+    private Text description;
 
     private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
         public void taskActivated(ITask activeTask) {    
-        	if (task != null && activeTask.getHandle().equals(task.getHandle())) {
+        	if (task != null && !browse.isDisposed() && activeTask.getHandle().equals(task.getHandle())) {
         		browse.setEnabled(false);
         	}
         }
@@ -135,10 +132,20 @@ public class TaskSummaryEditor extends EditorPart {
         }
 
         public void taskDeactivated(ITask deactiveTask) {
-        	if (task != null &&  deactiveTask.getHandle().equals(task.getHandle())) {
+        	if (task != null && !browse.isDisposed() && deactiveTask.getHandle().equals(task.getHandle())) {
         		browse.setEnabled(true);
         	}
-        }        
+        }
+
+		public void taskPropertyChanged(ITask updatedTask, String property) {
+			if (task != null && updatedTask.getHandle().equals(task.getHandle())) {
+        		if (property.equals("Description") && !description.isDisposed()) {
+        			description.setText(task.getLabel());
+        		} else if (property.equals("Path") && !pathText.isDisposed()) {
+        			pathText.setText("<Mylar_Dir>/" + task.getPath());
+        		}
+        	}
+		}        
     };    
 	/**
 	 * 
@@ -304,19 +311,19 @@ public class TaskSummaryEditor extends EditorPart {
 		
         Label l = toolkit.createLabel(container, "Description:");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
-        final Text text = toolkit.createText(container,task.getLabel(), SWT.BORDER);
+        description = toolkit.createText(container,task.getLabel(), SWT.BORDER);
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.colspan = 2;
-        text.setLayoutData(td);
-        text.addFocusListener(new FocusListener() {
+        description.setLayoutData(td);
+        description.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 				// don't care about focus gained
 			}
 
 			public void focusLost(FocusEvent e) {
-				String label = text.getText();
+				String label = description.getText();
 				task.setLabel(label);
-				refreshTaskListView();
+				refreshTaskListView(task);
 			}			
 		});
         
@@ -326,14 +333,16 @@ public class TaskSummaryEditor extends EditorPart {
         td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.colspan = 2;
         handle.setLayoutData(td);
-        handle.setEditable(false);               
+        handle.setEditable(false);
+        handle.setEnabled(false);
               		
 		
         Label l2 = toolkit.createLabel(container, "Task context path:");
         l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
         pathText = toolkit.createText(container, "<Mylar_Dir>/"+task.getPath()+".xml", SWT.BORDER);
         pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        pathText.setEditable(false);                
+        pathText.setEditable(false);        
+        pathText.setEnabled(false);
         
         browse = toolkit.createButton(container, "Change", SWT.PUSH | SWT.CENTER);
         if (task.isActive()) {
@@ -376,9 +385,6 @@ public class TaskSummaryEditor extends EditorPart {
 		toolkit.createLabel(container, "");
 		l = toolkit.createLabel(container, "Go to Mylar Preferences to change <Mylar_Dir>");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-//        td = new TableWrapData(TableWrapData.FILL_GRAB);
-//		td.colspan = ;
-//		l.setLayoutData(td);
 	}	
 	
 	private String formatPath(String path) {
@@ -472,7 +478,8 @@ public class TaskSummaryEditor extends EditorPart {
 		Text text2 = toolkit.createText(container,task.getElapsedTime(), SWT.BORDER);	        
         text2.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
         text2.setEditable(false);
-        text2.setForeground(background);
+        text2.setEnabled(false);
+        //text2.setForeground(background);
 	}
 	
 	private void createRelatedLinksSection(Composite parent, FormToolkit toolkit) {
@@ -542,7 +549,7 @@ public class TaskSummaryEditor extends EditorPart {
 					Display.getCurrent().getCursorControl().setCursor(hyperlinkCursor);
 				}
 			}
-		});
+		});		
 	}
 	
 	private void createTableViewer(Composite parent, FormToolkit toolkit) {
@@ -590,8 +597,8 @@ public class TaskSummaryEditor extends EditorPart {
 			}
 		});
 	}	
-	private void refreshTaskListView() {
-		if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged();
+	private void refreshTaskListView(ITask task) {
+		if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(task);
 	}
 	private class RelatedLinksCellModifier implements ICellModifier, IColorProvider {
 		RelatedLinksCellModifier() {
@@ -603,8 +610,7 @@ public class TaskSummaryEditor extends EditorPart {
 		}
 		public Object getValue(Object element, String property) {			
 			Object res = null;
-			if (element instanceof String) {
-				tableViewer.setSelection(null);
+			if (element instanceof String) {								
 				String url = (String) element;
 				try {					
 					IWebBrowser b = null;
@@ -622,7 +628,7 @@ public class TaskSummaryEditor extends EditorPart {
 					}
 					b = WorkbenchBrowserSupport.getInstance().createBrowser(
 							flags, "org.eclipse.mylar.tasks", "Task", "tasktooltip");
-					b.openURL(new URL((String) element));
+					b.openURL(new URL((String) element));					
 				} catch (PartInitException e) {
 					MessageDialog.openError( Display.getDefault().getActiveShell(), 
 							"URL not found", url + " could not be opened");

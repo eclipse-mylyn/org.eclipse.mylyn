@@ -64,7 +64,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 		public void attributeChanged(String attribute, String value) {
 			if (attribute.equals("Priority")) {
 				bugTask.setPriority(value);
-				if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged();
+				if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(bugTask);
 			}
 		}
     };    

@@ -131,7 +131,7 @@ public class TaskList implements Serializable {
     	for (ITask task : rootTasks) {
     		if (task.isCompleted()) {
     			complete.add(task);
-    		} else if (task.hasCompletedSubTasks()) {
+    		} else if (task.hasCompletedSubTasks(false)) {
     			complete.add(task);
     		}
     	}
