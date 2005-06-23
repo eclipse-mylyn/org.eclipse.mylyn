@@ -28,6 +28,7 @@
 	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="1"/>
+	    <!--
 	  	<action id="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
               label="Raise children" 
 	      	  menubarPath="mylar" 
@@ -35,12 +36,7 @@
               tooltip="Show all children of the current element" 
               class="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
               enablesFor="1"/> 
-        <action id="org.eclipse.mylar.ui.actions.ShowInteractionHistory" 
-              label="Show interarction history" 
-	      	  menubarPath="mylar" 
-              tooltip="Show interaction history" 
-              class="org.eclipse.mylar.ui.actions.ShowInteractionHistory" 
-              enablesFor="1"/> 
+          --> 
 	 </objectContribution>
   </extension>
     
@@ -145,6 +141,7 @@
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylar.ui.actions.InterestDecrementAction">
          </action>
+       <!--
          <action
                definitionId="org.eclipse.mylar.ui.show.filtered"
                label="Make less interesting"
@@ -152,6 +149,7 @@
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylar.ui.actions.ShowFilteredAction">
          </action>
+         -->
       </actionSet>
    </extension>
                               
