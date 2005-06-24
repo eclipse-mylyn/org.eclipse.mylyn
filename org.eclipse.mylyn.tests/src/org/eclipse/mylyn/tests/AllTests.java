@@ -27,6 +27,7 @@ import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
 import org.eclipse.mylar.tasks.bugzilla.tests.BugzillaSearchPluginTest;
 import org.eclipse.mylar.tasks.bugzilla.tests.BugzillaStackTraceTest;
 import org.eclipse.mylar.tasks.tests.TaskListManagerTest;
+import org.eclipse.mylar.tasks.tests.TaskListUiTest;
 import org.eclipse.mylar.xml.tests.XMLSearchPluginTest;
 	
 public class AllTests {
@@ -59,7 +60,7 @@ public class AllTests {
         suite.addTestSuite(TaskscapeTest.class);
 //        suite.addTestSuite(InteractionEventExternalizationTest.class);
 //        suite.addTestSuite(ManualUiTest.class);
-
+        suite.addTestSuite(TaskListUiTest.class);
         //$JUnit-END$
         return suite;
     }
