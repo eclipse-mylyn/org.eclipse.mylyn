@@ -91,11 +91,10 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
         assertNotNull(edge);
         assertEquals(1, node.getEdges().size());
         taskscape.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue()*3));
-//        System.err.println(doi);
         assertTrue("interest: " + taskscape.get("3").getDegreeOfInterest().getValue(), taskscape.get("3").getDegreeOfInterest().isLandmark());
         float doi = node.getDegreeOfInterest().getValue();
         assertNotNull(taskscape.getLandmarks());
-        assertEquals("3", taskscape.getActiveNode().getElementHandle());
+        assertEquals("2", taskscape.getActiveNode().getElementHandle()); // "3" not a user event
         
         externalizer.writeXMLTaskscapeToFile(taskscape, file);
         ITaskscape loaded = externalizer.readXMLTaskscapeFromFile(file);
@@ -112,7 +111,7 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
         assertTrue(landmark.getDegreeOfInterest().isLandmark());
         assertNotNull(loaded.getLandmarks());
         
-        assertEquals("3", loaded.getActiveNode().getElementHandle());
+        assertEquals("2", loaded.getActiveNode().getElementHandle());
     }
     
     public void testSelections() {
