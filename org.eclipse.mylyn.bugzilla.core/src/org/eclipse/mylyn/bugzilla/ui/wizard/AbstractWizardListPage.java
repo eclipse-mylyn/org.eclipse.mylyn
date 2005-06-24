@@ -83,7 +83,7 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 
 		// create the bug report label
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("Saved bug report:");
+		label.setText(getTableName());
 		FontData fontData = label.getFont().getFontData()[0];
 		fontData.setStyle(SWT.BOLD | fontData.getStyle());
 		int height = (int) Math.abs(fontData.getHeight() * 1.25);
@@ -107,6 +107,8 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 		setControl(composite);
 		addListeners();
 	}
+
+	public abstract String getTableName();
 
 	/**
 	 * Populate the list of items
