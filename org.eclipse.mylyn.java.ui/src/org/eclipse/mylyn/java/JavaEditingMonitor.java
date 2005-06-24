@@ -8,13 +8,8 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 5, 2005
-  */
-package org.eclipse.mylar.java;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.eclipse.mylar.java;
 
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IMarker;
@@ -41,10 +36,8 @@ import org.eclipse.mylar.core.AbstractSelectionMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -55,8 +48,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
     protected IJavaElement lastResolvedElement = null;
     protected JavaEditor currentEditor;
     protected StructuredSelection currentSelection = null;
-    protected Map<JavaEditor, ActiveFoldingListener> editorListenerMap = new HashMap<JavaEditor, ActiveFoldingListener>();
-    
+  
     public JavaEditingMonitor() {
         super();
         JavaPlugin.getDefault().getProblemMarkerManager().addListener(PROBLEM_LISTENER);
@@ -136,7 +128,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
             } else {
                 if (selection instanceof TextSelection && part instanceof JavaEditor) {
                     currentEditor = (JavaEditor)part;
-                    registerEditor(currentEditor);
+//                    registerEditor(currentEditor);
                     TextSelection textSelection = (TextSelection)selection;
                     selectedElement = SelectionConverter.resolveEnclosingElement(currentEditor, textSelection);
                     if (selectedElement instanceof IPackageDeclaration) return; // HACK: ignoring these selections
@@ -189,27 +181,6 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
         } catch (Throwable t) {
             MylarPlugin.log(t, "Failed to update model based on selection."); 
         }
-    }
-    
-    private void registerEditor(final JavaEditor editor) {
-    	System.err.println("> registering: " + editor.getTitle());
-        if (editorListenerMap.containsKey(editor)) {
-            return;
-        } else {
-            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-                public void run() { 
-                	ActiveFoldingListener listener = new ActiveFoldingListener(JavaEditingMonitor.this, editor);
-                	editorListenerMap.put(editor, listener);
-                	MylarPlugin.getTaskscapeManager().addListener(listener);
-                }
-            });
-        }        
-    }
-    
-    public void unregisterEditor(JavaEditor editor) {
-        ActiveFoldingListener listener = editorListenerMap.get(editor);
-        MylarPlugin.getTaskscapeManager().removeListener(listener);
-        editorListenerMap.remove(editor);
     }
 
     /**

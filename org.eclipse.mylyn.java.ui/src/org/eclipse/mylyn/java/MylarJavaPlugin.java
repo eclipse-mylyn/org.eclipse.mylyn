@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.filters.CustomFiltersDialog;
 import org.eclipse.jdt.internal.ui.filters.FilterDescriptor;
+import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -35,10 +36,14 @@ import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
@@ -58,7 +63,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
     private static JavaUiBridge uiBridge = new JavaUiBridge();
 
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
-      
+    
 	public MylarJavaPlugin() {
 		super();
 		plugin = this;
@@ -70,7 +75,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
                 MylarPlugin.getDefault().addBridge(structureBridge); 
                 MylarPlugin.getTaskscapeManager().addListener(modelUpdateBridge);
-
+                
                 MylarPlugin.getTaskscapeManager().addListener(new JavaReferencesProvider());
                 MylarPlugin.getTaskscapeManager().addListener(new JavaImplementorsProvider());
                 MylarPlugin.getTaskscapeManager().addListener(new JavaReadAccessProvider());
@@ -81,6 +86,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 MylarPlugin.getTaskscapeManager().addListener(new LandmarkMarkerManager());
                 MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
                 modelUpdateBridge.revealInteresting();
+                
+            	installEditorTracker(workbench);
             }
         });
     }
@@ -114,6 +121,33 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 		resourceBundle = null;
 	}
 
+	private void installEditorTracker(IWorkbench workbench) {
+		editorTracker = new JavaEditorTracker();
+		workbench.addWindowListener(editorTracker);
+		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+		for (int i= 0; i < windows.length; i++) {
+			windows[i].addPageListener(editorTracker);
+			IWorkbenchPage[] pages= windows[i].getPages();
+			for (int j= 0; j < pages.length; j++) {
+				pages[j].addPartListener(editorTracker);
+			}
+		}
+		
+		// update editos that are already opene
+        IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+        if (page != null) {
+            IEditorReference[] references = page.getEditorReferences();
+            for (int i = 0; i < references.length; i++) {
+                IEditorPart part = references[i].getEditor(false);
+                if (part != null  && part instanceof JavaEditor) {
+                	JavaEditor editor = (JavaEditor)part;
+                	editorTracker.registerEditor(editor);
+                	editor.setInput(editor.getEditorInput()); // hack to fold
+                }
+            }
+        }
+	}
+    
 	/**
 	 * Returns the shared instance.
 	 */
@@ -222,6 +256,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 	private static final String SEPARATOR= ",";  //$NON-NLS-1$
 	
 	private final String fTargetId = "org.eclipse.jdt.internal.ui.text.QuickOutline";
+	private JavaEditorTracker editorTracker;
 	
     // HACK: used to disable the filter from the quick outline by default
     public void initializeWithPluginContributions() {

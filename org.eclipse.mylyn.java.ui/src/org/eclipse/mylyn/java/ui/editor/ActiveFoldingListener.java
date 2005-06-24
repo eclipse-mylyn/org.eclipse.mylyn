@@ -25,7 +25,6 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -39,7 +38,7 @@ import org.eclipse.ui.internal.Workbench;
 public class ActiveFoldingListener implements ITaskscapeListener {
     private final JavaEditor editor;
     private ActiveFoldingController controller;
-    private JavaEditingMonitor monitor;
+//    private JavaEditingMonitor monitor;
 
     private ITaskscapeNode lastUpdatedNode = null;
     
@@ -55,9 +54,9 @@ public class ActiveFoldingListener implements ITaskscapeListener {
 		}        
     };
     
-    public ActiveFoldingListener(JavaEditingMonitor monitor, JavaEditor editor) {
+    public ActiveFoldingListener(JavaEditor editor) {
     	this.editor = editor;
-        this.monitor = monitor;
+//        this.monitor = monitor;
         this.controller = new ActiveFoldingController(editor);
         JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
     }
@@ -120,7 +119,7 @@ public class ActiveFoldingListener implements ITaskscapeListener {
         public void updateFolding(final boolean expand) {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() { 
-                    if (editor == null || editor.getEditorInput() == null) monitor.unregisterEditor(editor);
+//                    if (editor == null || editor.getEditorInput() == null) monitor.unregisterEditor(editor);
                     if (!editor.getSite().getPage().isPartVisible(editor)) return;
                     ISourceViewer sourceViewer = editor.getViewer();
                     if (sourceViewer instanceof ProjectionViewer) {
@@ -140,13 +139,13 @@ public class ActiveFoldingListener implements ITaskscapeListener {
         public void resetFolding() {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() { 
-                    if (editor == null || editor.getEditorInput() == null) monitor.unregisterEditor(editor);
                     if (!editor.getSite().getPage().isPartVisible(editor)) return;
-                    ISourceViewer sourceViewer = editor.getViewer();
-                    if (sourceViewer instanceof ProjectionViewer) {
-                        ProjectionViewer pv = (ProjectionViewer) sourceViewer;
-                        if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
-                    } 
+                    	editor.setInput(editor.getEditorInput());
+//                    ISourceViewer sourceViewer = editor.getViewer();
+//                    if (sourceViewer instanceof ProjectionViewer) {
+//                        ProjectionViewer pv = (ProjectionViewer) sourceViewer;
+//                        if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
+//                    } 
                 }
             });    
         } 
@@ -166,7 +165,7 @@ public class ActiveFoldingListener implements ITaskscapeListener {
         }
     
         public void partClosed(IWorkbenchPartReference partRef) {
-            monitor.unregisterEditor(editor);
+//            monitor.unregisterEditor(editor);
         }
         
         public void partBroughtToTop(IWorkbenchPartReference partRef) {
