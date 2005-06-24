@@ -34,21 +34,14 @@ public class ToggleAutoFoldAction extends Action implements IEditorActionDelegat
 	
     private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
     public static final String PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
-//    private static final String DEFAULT_JAVA_FOLDING_ID = "org.eclipse.mylar.ui.explorer.filter.declarations.isChecked";
-//    private boolean previousFoldingEnabledState;
 
     private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
-//    private boolean initMode = true;
     
     public ToggleAutoFoldAction() {
 		super();
 		setText("Auto fold"); 
 		setImageDescriptor(MylarImages.AUTO_FOLD);	
 		setToolTipText("Auto manage editors and folding"); 
-				
-		// TODO: this should be done whenever the prefs change
-//		previousFoldingEnabledState =javaPrefs.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-//		previousFoldingProvider = javaPrefs.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);		    
     }
 	
     public void run(IAction action) {
@@ -61,24 +54,13 @@ public class ToggleAutoFoldAction extends Action implements IEditorActionDelegat
 			action.setChecked(on);
 			if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
 			
-			// XXX add autofolding 
             if (on) {
-			    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);    
-//			    if (!initMode) { // TODO: avoiding run on initialization here
-//			    Util.closeActiveJavaEditors();
-//			    Set<ITaskscapeNode> files = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getInterestingFiles();
-//                for (ITaskscapeNode node : files) {
-//                    Util.openElement(JavaCore.create(node.getElementHandle()));
-//                } 
-//			    } else {
-//			        initMode = false;
-//			    }
-			} else {
+	            javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, on); 
+            	javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);    
+            } else {
                 // TODO: put back functionality of reverting to non-standard provider
-//			    if (previousFoldingProvider != null) {
                 javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER);
 			}
-            javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, on); 
 	    } catch (Throwable t) {
 	        MylarPlugin.fail(t, "Could not enable editor management", true);
 	    }

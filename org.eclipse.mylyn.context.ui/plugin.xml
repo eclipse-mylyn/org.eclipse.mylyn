@@ -92,34 +92,6 @@
             description="Mylar"
             visible="true"
             id="org.eclipse.mylar.ui.mylar.actionSet">
-      	
-      	<action
-             class="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringActionDelegate"
-             definitionId="org.eclipse.mylar.ui.interest.filter.global2"
-             disabledIcon="icons/elcl16/auto-expand.gif"
-             icon="icons/elcl16/auto-expand.gif"
-             id="org.eclipse.mylar.ui.interest.filter.global.action"
-             label="Toggle Mylar global filtering"
-             retarget="false"
-             style="toggle"
-             toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
-             tooltip="Toggle Mylar global filtering">
-         </action>
-         
-         
-        <!--
-         <action 
-            label="Mylar interest filtering"
-         	style="toggle" 
-         	state="true"
-         	id="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringAction" 
-         	class="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringAction" 
-         	definitionId="org.eclipse.mylar.ui.actions.ToggleGlobalFilteringAction" 
-         	hoverIcon="icons/elcl16/auto-expand.gif"
-         	disabledIcon="icons/elcl16/auto-expand.gif" 
-         	icon="icons/elcl16/auto-expand.gif" 
-         	tooltip="Toggle Mylar global filtering" />
-         	-->
          <action
                definitionId="org.eclipse.mylar.ui.related.show"
                label="Open Mylar related elements"

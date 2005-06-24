@@ -15,6 +15,8 @@ package org.eclipse.mylar.java.ui.editor;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.PreferenceConstants;
@@ -24,7 +26,6 @@ import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.java.JavaEditingMonitor;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -42,10 +43,23 @@ public class ActiveFoldingListener implements ITaskscapeListener {
 
     private ITaskscapeNode lastUpdatedNode = null;
     
+    private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+
+		public void propertyChange(PropertyChangeEvent event) {
+//			System.err.println("> update: " + event);
+			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {// ||
+				controller.resetFolding();
+//				event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_ENABLED)) {				
+//				MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE);
+			}
+		}        
+    };
+    
     public ActiveFoldingListener(JavaEditingMonitor monitor, JavaEditor editor) {
     	this.editor = editor;
         this.monitor = monitor;
         this.controller = new ActiveFoldingController(editor);
+        JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
     }
 
     public void interestChanged(ITaskscapeNode node) {
@@ -56,15 +70,7 @@ public class ActiveFoldingListener implements ITaskscapeListener {
     }
 
     public void interestChanged(List<ITaskscapeNode> nodes) {
-    	interestChanged(nodes.get(nodes.size()-1));
-//        ProjectionAnnotationModel model=(ProjectionAnnotationModel)  editor.getAdapter(ProjectionAnnotatioModel.class); 
-//        for(Iterator<Annotation> i = model.getAnnotationIterator(); i.hasNext(); ) {
-//            Annotation annotation = i.next();
-//            if (annotation instanceof ProjectionAnnotation) {
-//                ProjectionAnnotation projectionAnnotation = (ProjectionAnnotation)annotation;
-//                Position position = model.getPosition(annotation);
-//            }
-//        }      
+    	interestChanged(nodes.get(nodes.size()-1));     
     }
 
     public void taskscapeActivated(ITaskscape taskscape) {
@@ -119,7 +125,7 @@ public class ActiveFoldingListener implements ITaskscapeListener {
                     ISourceViewer sourceViewer = editor.getViewer();
                     if (sourceViewer instanceof ProjectionViewer) {
                         ProjectionViewer pv= (ProjectionViewer) sourceViewer;
-                        if (isAutoFoldingEnabled() && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) { 
+                        if (isAutoFoldingEnabled()) {// && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) { 
                             if (expand) {
                                 if (pv.canDoOperation(ProjectionViewer.EXPAND)) pv.doOperation(ProjectionViewer.EXPAND);
                             } else {
@@ -138,7 +144,7 @@ public class ActiveFoldingListener implements ITaskscapeListener {
                     if (!editor.getSite().getPage().isPartVisible(editor)) return;
                     ISourceViewer sourceViewer = editor.getViewer();
                     if (sourceViewer instanceof ProjectionViewer) {
-                        ProjectionViewer pv= (ProjectionViewer) sourceViewer;
+                        ProjectionViewer pv = (ProjectionViewer) sourceViewer;
                         if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
                     } 
                 }
@@ -183,6 +189,15 @@ public class ActiveFoldingListener implements ITaskscapeListener {
         }
     }
 }
+
+//ProjectionAnnotationModel model=(ProjectionAnnotationModel)  editor.getAdapter(ProjectionAnnotatioModel.class); 
+//for(Iterator<Annotation> i = model.getAnnotationIterator(); i.hasNext(); ) {
+//  Annotation annotation = i.next();
+//  if (annotation instanceof ProjectionAnnotation) {
+//      ProjectionAnnotation projectionAnnotation = (ProjectionAnnotation)annotation;
+//      Position position = model.getPosition(annotation);
+//  }
+//} 
 
 //if (this.editor.getSite().getPage().isPartVisible(this.editor)) {
 //IJavaElement active = EditorUtility.getActiveEditorJavaInput();

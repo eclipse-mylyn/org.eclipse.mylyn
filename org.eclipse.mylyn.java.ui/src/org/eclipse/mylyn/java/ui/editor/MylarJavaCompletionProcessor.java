@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProcessor;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal;
@@ -69,17 +68,19 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                         if (info instanceof MemberProposalInfo) member = (IMember)method.invoke(info, new Object[] { });
                         if (member == null || MylarPlugin.getTaskscapeManager().getActiveTaskscape() == null) {
                             // nothing for now
+                        	rest.add(proposal);
                         } else {
                         	ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(member.getHandleIdentifier()); 
                             if (node != null) {
                             	float interest = node.getDegreeOfInterest().getValue();
-	                            if (!(member instanceof IType) 
-	                                 && interest > TaskscapeManager.getScalingFactors().getInteresting()) {
+	                            if (interest > TaskscapeManager.getScalingFactors().getInteresting()) {
 	                                interesting.put(-interest, proposal);  // negative to invert sorting order
+	                            } else {
+	                            	rest.add(proposal);
 	                            }
                             }
                         }
-                        rest.add(proposal);
+//                        rest.add(proposal);
                     }
                 } catch (Exception e) {
                 	MylarPlugin.log(e, "proposals problem");

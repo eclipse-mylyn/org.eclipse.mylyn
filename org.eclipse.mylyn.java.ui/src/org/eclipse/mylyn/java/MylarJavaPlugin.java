@@ -16,17 +16,13 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.filters.CustomFiltersDialog;
 import org.eclipse.jdt.internal.ui.filters.FilterDescriptor;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
@@ -62,18 +58,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
     private static JavaUiBridge uiBridge = new JavaUiBridge();
 
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
-    
-    
-    private static IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
-
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {// ||
-//				event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_ENABLED)) {				
-//				System.err.println("> updating");
-				MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE);
-			}
-		}        
-    };
       
 	public MylarJavaPlugin() {
 		super();
@@ -97,7 +81,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 MylarPlugin.getTaskscapeManager().addListener(new LandmarkMarkerManager());
                 MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
                 modelUpdateBridge.revealInteresting();
-                JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
             }
         });
     }

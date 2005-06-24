@@ -192,14 +192,15 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
     }
     
     private void registerEditor(final JavaEditor editor) {
+    	System.err.println("> registering: " + editor.getTitle());
         if (editorListenerMap.containsKey(editor)) {
             return;
         } else {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() { 
-	            ActiveFoldingListener listener = new ActiveFoldingListener(JavaEditingMonitor.this, editor);
-	            editorListenerMap.put(editor, listener);
-	            MylarPlugin.getTaskscapeManager().addListener(listener);
+                	ActiveFoldingListener listener = new ActiveFoldingListener(JavaEditingMonitor.this, editor);
+                	editorListenerMap.put(editor, listener);
+                	MylarPlugin.getTaskscapeManager().addListener(listener);
                 }
             });
         }        
