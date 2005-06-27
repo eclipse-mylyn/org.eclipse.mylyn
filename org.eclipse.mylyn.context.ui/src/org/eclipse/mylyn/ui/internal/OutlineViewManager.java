@@ -48,7 +48,8 @@ public class OutlineViewManager implements IPartListener {
         List<TreeViewer> viewers = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart).getTreeViewers(editorPart);
         for (TreeViewer viewer : viewers) { 
             if (viewer != null) {
-            	FilterOutlineAction.getDefault().update();
+            	if(FilterOutlineAction.getDefault()!= null)
+            		FilterOutlineAction.getDefault().update();
 //                boolean found = false;
 //                for (int i = 0; i < viewer.getFilters().length; i++) {
 //                    ViewerFilter filter = viewer.getFilters()[i];
