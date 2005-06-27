@@ -570,7 +570,6 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 		try {
 			computeAdditions(parent.getChildren(), map);
 		} catch (JavaModelException e) {
-			MylarPlugin.log(e, "");
 		}
 		return map;
 	}
