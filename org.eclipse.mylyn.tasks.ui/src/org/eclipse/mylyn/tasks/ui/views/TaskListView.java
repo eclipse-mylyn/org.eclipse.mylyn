@@ -66,7 +66,6 @@ import org.eclipse.mylar.tasks.ui.BugzillaTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.actions.ToggleGlobalInterestFilteringAction;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -122,7 +121,7 @@ public class TaskListView extends ViewPart {
     private Action clearSelectedTaskscapeAction;
 
     //private Action toggleIntersectionModeAction = new ToggleIntersectionModeAction();
-    private Action toggleFilteringAction = new ToggleGlobalInterestFilteringAction();
+//    private Action toggleFilteringAction = new ToggleGlobalInterestFilteringAction();
 
     private Action completeTask;
     private Action incompleteTask;
@@ -753,6 +752,7 @@ public class TaskListView extends ViewPart {
     }
 
     private void fillLocalPullDown(IMenuManager manager) {
+    	drillDownAdapter.addNavigationActions(manager);
 //        manager.add(createCategory);
 //        manager.add(new Separator());
 //        manager.add(createTask);
@@ -805,14 +805,14 @@ public class TaskListView extends ViewPart {
 //        manager.add(new Separator());
         manager.add(addBugzillaReport);
         manager.add(refresh);
-        manager.add(new Separator());
-        manager.add(toggleFilteringAction);
+//        manager.add(new Separator());
+//        manager.add(toggleFilteringAction);
         //manager.add(toggleIntersectionModeAction);
         manager.add(new Separator());
         manager.add(filterCompleteTask);
         manager.add(filterInCompleteTask);
         manager.add(filterOnPriority);
-        drillDownAdapter.addNavigationActions(manager);
+        
     }
 
     /**

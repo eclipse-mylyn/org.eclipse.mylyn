@@ -193,7 +193,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
         return "";
     }
 
-    public boolean acceptAsLandmark(String handle) {
+    public boolean canBeLandmark(Object element) {
         return false;
     }
 
