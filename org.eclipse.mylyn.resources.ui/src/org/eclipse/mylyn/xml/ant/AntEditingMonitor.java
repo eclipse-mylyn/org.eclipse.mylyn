@@ -54,6 +54,10 @@ public class AntEditingMonitor extends AbstractSelectionMonitor {
   
                     AntElementNode node = editor.getAntModel().getNode(textSelection.getOffset(), false);
 
+                    if(node == null){
+                    	return;
+                    }
+                    
                     FileEditorInput fei = (FileEditorInput)in;
                     
                     XmlNodeHelper xnode = new XmlNodeHelper(fei, node.getOffset());
