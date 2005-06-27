@@ -195,6 +195,9 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
     @Override
     public IMylarSearchOperation getSearchOperation(ITaskscapeNode node, int limitTo, int degreeOfSeparation){
     	IJavaElement javaElement = JavaCore.create(node.getElementHandle());
+    	if(javaElement == null)
+    		return null;
+    	
         IJavaSearchScope scope = createJavaSearchScope(javaElement, degreeOfSeparation);
 
         if(scope == null) return null;
