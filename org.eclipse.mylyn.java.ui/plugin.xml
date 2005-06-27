@@ -33,7 +33,25 @@
   		</action>  
       </viewContribution> 
 	</extension>
+  <extension point="org.eclipse.ui.actionSets">
+	<actionSet
+            id="org.eclipse.mylar.action.contribution.folding"
+            label="Mylar Java Plugin"
+            visible="true"> 
+            
+  		<action
+         	id="org.eclipse.mylar.action.contribution.editor.autoFold" 
+         	style="toggle"
+         	label="Mylar automatic folding" 
+         	icon="icons/elcl16/auto-fold.gif"
+         	tooltip="Mylar automatic folding"
+      		toolbarPath="org.eclipse.mylar.java.folding"
+         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
+      	</action> 
+  	</actionSet>
+  </extension>
 
+<!--
 	<extension point="org.eclipse.ui.editorActions"> 
 		<editorContribution 
       		id="org.eclipse.ui.articles.action.contribution.editor" 
@@ -48,9 +66,22 @@
 	         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
 	      	</action> 
    	 	</editorContribution> 
+   	 	
+   	 	<editorContribution 
+      		id="org.eclipse.ui.articles.action.contribution.editor.classFile" 
+   			targetID="org.eclipse.jdt.internal.ui.javaeditor.ClassFileEditor">
+	   		<action
+	         	id="org.eclipse.mylar.action.contribution.editor.autoFold.classFile" 
+	         	style="toggle"
+	         	label="Mylar automatic folding" 
+	         	icon="icons/elcl16/auto-fold.gif"
+	         	tooltip="Mylar automatic folding"
+	      		toolbarPath="Normal/additions"
+	         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
+	      	</action> 
+   	 	</editorContribution>
    </extension>
-  
-  <!--
+
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
             targetId="org.eclipse.jdt.ui.PackageExplorer"

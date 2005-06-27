@@ -24,13 +24,14 @@ import org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
-import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * @author Mik Kersten
  */
-public class ToggleAutoFoldAction extends Action implements IEditorActionDelegate, IActionDelegate2 {
+public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
 	
     private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
     public static final String PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
@@ -86,5 +87,7 @@ public class ToggleAutoFoldAction extends Action implements IEditorActionDelegat
 	public void runWithEvent(IAction action, Event event) {
 		run(action);
 	}
+
+	public void init(IWorkbenchWindow window) {}
 }
 
