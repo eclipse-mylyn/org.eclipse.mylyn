@@ -159,7 +159,10 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
         // get all of the root tasks and start the search
         List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
         searchLocal(tasks, collector, elementName, monitor);
-        
+		for (Category cat : MylarTasksPlugin.getTaskListManager().getTaskList().getCategories()) {
+			searchLocal(cat.getTasks(), collector, elementName,  monitor);
+		}
+		
         // return the collector
         return collector;
     }
