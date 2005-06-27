@@ -23,7 +23,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 /**
  * @author Mik Kersten
  */
-public class ProblemListInterestFilter extends InterestFilter {
+public class ProblemsListInterestFilter extends InterestFilter {
 	
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {

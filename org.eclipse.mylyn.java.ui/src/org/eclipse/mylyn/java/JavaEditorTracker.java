@@ -29,7 +29,6 @@ public class JavaEditorTracker extends EditorTracker {
     	
 	@Override
 	public void editorOpened(IEditorPart part) {
-//		System.err.println(">>>> " + part.getClass());
 		if (part instanceof JavaEditor) registerEditor((JavaEditor)part);
 	}
 
@@ -39,7 +38,6 @@ public class JavaEditorTracker extends EditorTracker {
 	}
 	    
     public void registerEditor(final JavaEditor editor) {
-//    	System.err.println("> registering: " + editor.getTitle());
         if (editorListenerMap.containsKey(editor)) {
             return;
         } else {

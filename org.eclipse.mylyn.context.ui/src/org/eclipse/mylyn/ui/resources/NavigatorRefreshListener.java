@@ -31,7 +31,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public class NavigatorRefreshListener implements ITaskscapeListener {
 
-    public ResourceNavigator getResourceNavigator() {
+    public static ResourceNavigator getResourceNavigator() {
         if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
         IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (activePage == null)

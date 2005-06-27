@@ -10,19 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylar.java;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.filters.CustomFiltersDialog;
-import org.eclipse.jdt.internal.ui.filters.FilterDescriptor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
@@ -32,6 +27,7 @@ import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.java.ui.JavaUiBridge;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
+import org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction;
 import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -59,10 +55,19 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 	private static MylarJavaPlugin plugin;
 	private ResourceBundle resourceBundle;
     private static JavaStructureBridge structureBridge = new JavaStructureBridge();
-    private static JavaModelUiUpdateBridge modelUpdateBridge = new JavaModelUiUpdateBridge();
+    private static JavaUiUpdateBridge modelUpdateBridge = new JavaUiUpdateBridge();
     private static JavaUiBridge uiBridge = new JavaUiBridge();
-
+	private JavaEditorTracker editorTracker;
+    
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
+
+    private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+//			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {// ||
+				
+//			}
+		}        
+    };
     
 	public MylarJavaPlugin() {
 		super();
@@ -88,6 +93,11 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 modelUpdateBridge.revealInteresting();
                 
             	installEditorTracker(workbench);
+            	MylarPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PREFERENCE_LISTENER);
+            
+            	if (FilterPackageExplorerAction.getDefault() != null) {
+            		FilterPackageExplorerAction.getDefault().update();
+            	}
             }
         });
     }
@@ -238,75 +248,82 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 
     
     
-    /**
-	 * 
-	 * CODE FROM
-	 * 
-	 * @see org.eclipse.jdt.ui.actions.CustomFiltersActionGroup
-	 * 
-	 * Slightly modified. Needed to initialize the structure view to have no
-	 * filter
-	 * 
+//    /**
+//	 * 
+//	 * CODE FROM
+//	 * 
+//	 * @see org.eclipse.jdt.ui.actions.CustomFiltersActionGroup
+//	 * 
+//	 * Slightly modified. Needed to initialize the structure view to have no
+//	 * filter
+//	 * 
+//	 */
+//    
+//	private static final String TAG_USER_DEFINED_PATTERNS_ENABLED= "userDefinedPatternsEnabled"; //$NON-NLS-1$
+//	private static final String TAG_USER_DEFINED_PATTERNS= "userDefinedPatterns"; //$NON-NLS-1$
+//	private static final String TAG_LRU_FILTERS = "lastRecentlyUsedFilters"; //$NON-NLS-1$
+//
+//	private static final String SEPARATOR= ",";  //$NON-NLS-1$
+//	
+//	private final String fTargetId = "org.eclipse.jdt.internal.ui.text.QuickOutline";
+	
+//    // HACK: used to disable the filter from the quick outline by default
+//    public void initializeWithPluginContributions() {
+//    	IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+//    	if (store.contains(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE")))
+//    		return;
+//    	
+//		FilterDescriptor[] filterDescs= getCachedFilterDescriptors();
+//		Map<String, FilterDescriptor> fFilterDescriptorMap= new HashMap<String, FilterDescriptor>(filterDescs.length);
+//		Map<String, Boolean> fEnabledFilterIds= new HashMap<String, Boolean>(filterDescs.length);
+//		for (int i= 0; i < filterDescs.length; i++) {
+//			String id= filterDescs[i].getId();
+//			Boolean isEnabled= new Boolean(filterDescs[i].isEnabled());
+//			if (fEnabledFilterIds.containsKey(id))
+//				JavaPlugin.logErrorMessage("WARNING: Duplicate id for extension-point \"org.eclipse.jdt.ui.javaElementFilters\""); //$NON-NLS-1$
+//			fEnabledFilterIds.put(id, isEnabled);
+//			fFilterDescriptorMap.put(id, filterDescs[i]);
+//		}
+//		storeViewDefaults(fEnabledFilterIds, store);
+//	}
+    
+//    private void storeViewDefaults(Map<String, Boolean> fEnabledFilterIds, IPreferenceStore store) {
+//		// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=22533
+//		store.setValue(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE"), "storedViewPreferences");//$NON-NLS-1$//$NON-NLS-2$
+//		
+//		store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS_ENABLED), false);
+//		store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS), CustomFiltersDialog.convertToString(new String[0],SEPARATOR));
+//
+//		Iterator iter= fEnabledFilterIds.entrySet().iterator();
+//		while (iter.hasNext()) {
+//			Map.Entry entry= (Map.Entry)iter.next();
+//			String id= (String)entry.getKey();
+//			boolean isEnabled= ((Boolean)entry.getValue()).booleanValue();
+//			if(id.equals("org.eclipse.mylar.ui.java.InterestFilter")){
+//				store.setValue(id, false);	
+//			} else {
+//				store.setValue(id, isEnabled);
+//			}
+//		}
+//
+//		StringBuffer buf= new StringBuffer("");
+//		store.setValue(TAG_LRU_FILTERS, buf.toString());
+//	}
+	
+//	private String getPreferenceKey(String tag) {
+//		return "CustomFiltersActionGroup." + fTargetId + '.' + tag; //$NON-NLS-1$
+//	}
+//    
+//	private FilterDescriptor[] getCachedFilterDescriptors() {
+//		FilterDescriptor[] fCachedFilterDescriptors= FilterDescriptor.getFilterDescriptors(fTargetId);
+//		return fCachedFilterDescriptors;
+//	}
+
+	
+	/**
+	 * TODO: remove
 	 */
-    
-	private static final String TAG_USER_DEFINED_PATTERNS_ENABLED= "userDefinedPatternsEnabled"; //$NON-NLS-1$
-	private static final String TAG_USER_DEFINED_PATTERNS= "userDefinedPatterns"; //$NON-NLS-1$
-	private static final String TAG_LRU_FILTERS = "lastRecentlyUsedFilters"; //$NON-NLS-1$
-
-	private static final String SEPARATOR= ",";  //$NON-NLS-1$
-	
-	private final String fTargetId = "org.eclipse.jdt.internal.ui.text.QuickOutline";
-	private JavaEditorTracker editorTracker;
-	
-    // HACK: used to disable the filter from the quick outline by default
-    public void initializeWithPluginContributions() {
-    	IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
-    	if (store.contains(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE")))
-    		return;
-    	
-		FilterDescriptor[] filterDescs= getCachedFilterDescriptors();
-		Map<String, FilterDescriptor> fFilterDescriptorMap= new HashMap<String, FilterDescriptor>(filterDescs.length);
-		Map<String, Boolean> fEnabledFilterIds= new HashMap<String, Boolean>(filterDescs.length);
-		for (int i= 0; i < filterDescs.length; i++) {
-			String id= filterDescs[i].getId();
-			Boolean isEnabled= new Boolean(filterDescs[i].isEnabled());
-			if (fEnabledFilterIds.containsKey(id))
-				JavaPlugin.logErrorMessage("WARNING: Duplicate id for extension-point \"org.eclipse.jdt.ui.javaElementFilters\""); //$NON-NLS-1$
-			fEnabledFilterIds.put(id, isEnabled);
-			fFilterDescriptorMap.put(id, filterDescs[i]);
-		}
-		storeViewDefaults(fEnabledFilterIds, store);
-	}
-    
-    private void storeViewDefaults(Map<String, Boolean> fEnabledFilterIds, IPreferenceStore store) {
-		// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=22533
-		store.setValue(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE"), "storedViewPreferences");//$NON-NLS-1$//$NON-NLS-2$
-		
-		store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS_ENABLED), false);
-		store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS), CustomFiltersDialog.convertToString(new String[0],SEPARATOR));
-
-		Iterator iter= fEnabledFilterIds.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry entry= (Map.Entry)iter.next();
-			String id= (String)entry.getKey();
-			boolean isEnabled= ((Boolean)entry.getValue()).booleanValue();
-			if(id.equals("org.eclipse.mylar.ui.java.InterestFilter")){
-				store.setValue(id, false);	
-			} else {
-				store.setValue(id, isEnabled);
-			}
-		}
-
-		StringBuffer buf= new StringBuffer("");
-		store.setValue(TAG_LRU_FILTERS, buf.toString());
-	}
-	
-	private String getPreferenceKey(String tag) {
-		return "CustomFiltersActionGroup." + fTargetId + '.' + tag; //$NON-NLS-1$
-	}
-    
-	private FilterDescriptor[] getCachedFilterDescriptors() {
-		FilterDescriptor[] fCachedFilterDescriptors= FilterDescriptor.getFilterDescriptors(fTargetId);
-		return fCachedFilterDescriptors;
+	public static JavaUiUpdateBridge getModelUpdateBridge() {
+		return modelUpdateBridge;
 	}
 }

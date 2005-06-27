@@ -262,7 +262,7 @@
 	         icon="icons/elcl16/auto-expand.gif"
 	         tooltip="Filter uninteresting"
 	      	 toolbarPath="mylar" 
-	         class="org.eclipse.mylar.ui.actions.FilterUninterestingProblemsAction"
+	         class="org.eclipse.mylar.ui.actions.FilterProblemsListAction"
 	         enablesFor="*"> 
   		</action>  
       </viewContribution> 

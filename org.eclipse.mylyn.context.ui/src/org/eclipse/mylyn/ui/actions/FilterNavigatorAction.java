@@ -12,60 +12,40 @@
 package org.eclipse.mylar.ui.actions;
 
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IActionDelegate2;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.mylar.ui.InterestFilter;
+import org.eclipse.mylar.ui.resources.NavigatorRefreshListener;
+import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
- * @author Shawn Minto
+ * @author Mik Kersten
  */
-public class FilterNavigatorAction extends Action implements IViewActionDelegate, IActionDelegate2 {
+public class FilterNavigatorAction extends AbstractInterestFilterAction {
 
-	public static final String PREF_ID = "org.eclipse.mylar.ui.navigator.filterBoring";
+	public static FilterNavigatorAction INSTANCE;
 	
-    public FilterNavigatorAction() {
-        super();
-    	setText("Filter uninteresting"); 
-		setImageDescriptor(MylarImages.FILTER_UNINTERESTING);	
-		setToolTipText("Filter uninteresting items from package explorer");
-    }
-
-    public void dispose() {
-    	// don't care when we are disposed
-    }
-
-    public void run(IAction action) {
-    	valueChanged(action, action.isChecked(), true);
-    }
-
-    private void valueChanged(IAction action, final boolean on, boolean store) {
-        action.setChecked(on);
-        if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
-
-        //XXX add the filtering for the navigator view
-    }
-    
-    public void selectionChanged(IAction action, ISelection selection) {
-    	// don't care when the selection changes
-    }
-
-	public void init(IViewPart view) {
-		// don't care about this
-		
+	public FilterNavigatorAction() {
+		super(new InterestFilter());
+		INSTANCE = this;
 	}
 	
-	public void init(IAction action) {
-		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID), true);
+	@Override
+	protected StructuredViewer getViewer() {
+		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
+        if (navigator != null) {
+			return navigator.getTreeViewer();
+		} else {
+			return null;
+		}
 	}
 
-	public void runWithEvent(IAction action, Event event) {
-		run(action);
+	@Override
+	protected void refreshViewer() {
+		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
+        if (navigator != null) navigator.getTreeViewer().refresh();
 	}
 
+	public static FilterNavigatorAction getDefault() {
+		return INSTANCE;
+	}
 }

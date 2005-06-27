@@ -33,12 +33,12 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
     public void decorate(Object element, IDecoration decoration) {
         try {
             ITaskscapeNode node = null;
+            IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(element);
             if (element instanceof TaskscapeEdge) {
                 decoration.setForegroundColor(MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP);
             } else  if (element instanceof ITaskscapeNode) {
                 node = (ITaskscapeNode)element;
             } else {
-                IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(element);
                 if (adapter != null && adapter.getResourceExtension() != null) {
                     node = MylarPlugin.getTaskscapeManager().getNode(adapter.getHandleIdentifier(element));
                 }
@@ -46,7 +46,9 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
             if (node != null) {
                 decoration.setBackgroundColor(UiUtil.getBackgroundForElement(node));
                 decoration.setForegroundColor(UiUtil.getForegroundForElement(node));      
-                if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
+                if (adapter != null && adapter.canBeLandmark(element) 
+                    && node.getDegreeOfInterest().isLandmark() 
+                    && !node.getDegreeOfInterest().isPredicted()) {
                     decoration.setFont(UiUtil.BOLD);
                 } 
             } 

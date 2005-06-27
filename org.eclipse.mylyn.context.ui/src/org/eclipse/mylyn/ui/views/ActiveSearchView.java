@@ -205,7 +205,6 @@ public class ActiveSearchView extends ViewPart {
     
     private void fillLocalToolBar(IToolBarManager manager) {
         manager.removeAll();
-//        System.err.println(">>>> " + MylarPlugin.getTaskscapeManager().getRelationshipProviders());
         for (RelationshipProvider provider : MylarPlugin.getTaskscapeManager().getRelationshipProviders()) {
             IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(provider.getStructureKind());
             ImageDescriptor image = bridge.getIconForRelationship(provider.getId());
@@ -230,46 +229,5 @@ public class ActiveSearchView extends ViewPart {
         //TODO: foo
     }
 
-//    XXX never used
-//    
-//    private void showMessage(String message) {
-//        MessageDialog.openInformation(
-//            viewer.getControl().getShell(),
-//            "Tasklist Message",
-//            message);
-//    }
-//    
-//    private String getBugIdFromUser() {
-//        InputDialog dialog = new InputDialog(
-//            Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
-//            "Enter Bugzilla ID", 
-//            "Enter the Bugzilla ID: ", 
-//            "", 
-//            null);
-//        int dialogResult = dialog.open();
-//        String answer;
-//        if (dialogResult == Window.OK) { 
-//            return dialog.getValue();
-//        } else {
-//            return null;
-//        }
-//    }
-//    
-//    private String getLabelNameFromUser(String kind) {
-//        
-//        InputDialog dialog = new InputDialog(
-//            Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
-//            "Enter name", 
-//            "Enter a name for the " + kind + ": ", 
-//            "", 
-//            null);
-//        int dialogResult = dialog.open();
-//        String answer;
-//        if (dialogResult == Window.OK) { 
-//            return dialog.getValue();
-//        } else {
-//            return null;
-//        }
-//    }
 }
 

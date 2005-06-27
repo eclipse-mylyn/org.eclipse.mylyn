@@ -43,6 +43,7 @@ public class UiUtil {
     public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
     
     public static TableViewer cachedProblemsTableViewer = null;
+	
     /**
      * HACK: changing accessibility
      */

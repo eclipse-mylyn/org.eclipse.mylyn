@@ -23,6 +23,7 @@ import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
@@ -38,7 +39,6 @@ public class UiUpdateListener implements ITaskscapeListener {
 //            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).open(node);
 //        }
         ITaskscapeNode activeNode = taskscape.getActiveNode();
-//        System.err.println("> active: " + activeNode + ".");
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
         }
@@ -95,6 +95,7 @@ public class UiUpdateListener implements ITaskscapeListener {
     
     public void interestChanged(ITaskscapeNode node) {
         UiUtil.refreshProblemsView();
+        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().update();
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
             refreshOutlines(null);
         } else {

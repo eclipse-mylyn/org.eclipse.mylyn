@@ -58,10 +58,9 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard{
 	}
 	
    private void setPreferences() {
-		if(preferencePage.isInPlace()){
-			MylarJavaPlugin.getDefault().initializeWithPluginContributions();
-		}
-		
+//		if(preferencePage.isInPlace()){
+//			MylarJavaPlugin.getDefault().initializeWithPluginContributions();
+//		}		
 		if(preferencePage.isMylarEditorDefault()){
 			if(!MylarJavaPlugin.isMylarEditorDefault()){
 				MylarJavaPlugin.setDefaultEditorForJavaFiles(true);

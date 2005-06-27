@@ -8,9 +8,6 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 13, 2005
-  */
 package org.eclipse.mylar.java;
 
 import java.util.List;
@@ -40,7 +37,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class JavaModelUiUpdateBridge implements ITaskscapeListener {
+public class JavaUiUpdateBridge implements ITaskscapeListener {
 	
     private enum ChangeKind { ADDED, REMOVED, CHANGED }
 
@@ -147,10 +144,7 @@ public class JavaModelUiUpdateBridge implements ITaskscapeListener {
         if(element == null) { 
         	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
         	Object object = bridge.getObjectForHandle(node.getElementHandle());
-//        	System.err.println("> full refresh for: " + object.getClass());
         	if(object != null) refreshPackageExplorer(object);
-//        		revealInPackageExplorer(object);
-//        	return;
         } else {
 	        if (node.getDegreeOfInterest().isInteresting()) {
 	            fireModelUpdate(element, ChangeKind.ADDED);
@@ -218,7 +212,7 @@ public class JavaModelUiUpdateBridge implements ITaskscapeListener {
     	// don't care when the relationships are changed
     }
     
-    private void refreshPackageExplorer(Object element) {         
+    public void refreshPackageExplorer(Object element) {         
         final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
         if (packageExplorer != null && packageExplorer.getTreeViewer() != null) {
             if (firstExplorerRefresh) {

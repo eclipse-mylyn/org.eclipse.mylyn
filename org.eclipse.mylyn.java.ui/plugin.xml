@@ -50,6 +50,7 @@
    	 	</editorContribution> 
    </extension>
   
+  <!--
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
             targetId="org.eclipse.jdt.ui.PackageExplorer"
@@ -67,6 +68,7 @@
             id="org.eclipse.mylar.ui.java.InterestFilter">
    		</filter>
   </extension>
+  -->
    
   
   <!-- ** EDITOR ****************************************** -->

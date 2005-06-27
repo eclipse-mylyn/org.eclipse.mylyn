@@ -111,7 +111,6 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
                 createProjection= true;
                 break;
             default: 
-//                System.err.println(element.getElementType());
                 collapse = true;
 //                collapse= fAllowCollapsing && fCollapseMethods;
 //                createProjection= true;

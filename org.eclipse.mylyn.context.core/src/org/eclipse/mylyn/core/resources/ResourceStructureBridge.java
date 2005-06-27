@@ -81,7 +81,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
         }
     }
 
-    public boolean acceptAsLandmark(String handle) {
+    public boolean canBeLandmark(Object element) {
         return true;
     }
 

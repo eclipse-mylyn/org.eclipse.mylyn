@@ -36,7 +36,7 @@ public interface IMylarStructureBridge {
      */
     public abstract String getName(Object object);
     
-    public abstract boolean acceptAsLandmark(String handle);
+    public abstract boolean canBeLandmark(Object element);
 
     public abstract boolean acceptsObject(Object object);
 

@@ -38,25 +38,19 @@ import org.eclipse.ui.internal.Workbench;
 public class ActiveFoldingListener implements ITaskscapeListener {
     private final JavaEditor editor;
     private ActiveFoldingController controller;
-//    private JavaEditingMonitor monitor;
 
     private ITaskscapeNode lastUpdatedNode = null;
     
     private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
-
 		public void propertyChange(PropertyChangeEvent event) {
-//			System.err.println("> update: " + event);
 			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {// ||
 				controller.resetFolding();
-//				event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_ENABLED)) {				
-//				MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE);
 			}
 		}        
     };
     
     public ActiveFoldingListener(JavaEditor editor) {
     	this.editor = editor;
-//        this.monitor = monitor;
         this.controller = new ActiveFoldingController(editor);
         JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
     }
@@ -84,7 +78,6 @@ public class ActiveFoldingListener implements ITaskscapeListener {
     	// don't care when the presentation settings are changing
     }
 
-    // HACK: using preferences to reset folding
     public void presentationSettingsChanged(ITaskscapeListener.UpdateKind kind) { 
     	controller.resetFolding();
     }

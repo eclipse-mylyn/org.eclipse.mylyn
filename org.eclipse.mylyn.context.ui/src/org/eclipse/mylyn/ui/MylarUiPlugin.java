@@ -24,20 +24,22 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.resources.ResourceSelectionMonitor;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
+import org.eclipse.mylar.ui.actions.FilterNavigatorAction;
+import org.eclipse.mylar.ui.actions.FilterOutlineAction;
+import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
-import org.eclipse.mylar.ui.internal.OutlineFilterInstallListener;
+import org.eclipse.mylar.ui.internal.OutlineViewManager;
 import org.eclipse.mylar.ui.internal.TaskscapeManipulationMonitor;
 import org.eclipse.mylar.ui.internal.UiUpdateListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
-import org.eclipse.mylar.ui.internal.views.ProblemListInterestFilter;
+import org.eclipse.mylar.ui.internal.views.ProblemsListInterestFilter;
 import org.eclipse.mylar.ui.internal.views.ProblemsListLabelProvider;
 import org.eclipse.mylar.ui.resources.NavigatorRefreshListener;
 import org.eclipse.mylar.ui.resources.ResourceUiBridge;
@@ -50,7 +52,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 
 /**
@@ -86,12 +87,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     
     private List<MylarWorkingSetUpdater> workingSetUpdaters = null;
     
-    protected ProblemListInterestFilter interestFilter = new ProblemListInterestFilter();
-    
-//    XXX never used
-//    private ToggleNavigatorFilteringAction filterAction = new ToggleNavigatorFilteringAction();
-    
-    private OutlineFilterInstallListener editorPartLisener = new OutlineFilterInstallListener();
+    protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();
+
+    private OutlineViewManager editorPartLisener = new OutlineViewManager();
     
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
     
@@ -181,7 +179,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
                 MylarPlugin.getTaskscapeManager().addListener(UI_UPDATE_LISTENER);
                 MylarPlugin.getDefault().getCommandMonitors().add(new TaskscapeManipulationMonitor());
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(editorPartLisener);
-//                Workbench.getInstance().getActiveWorkbenchWindow().addPageListener(editorPartLisener);
                 setupProblemsView();
                 
                 MylarPlugin.getTaskscapeManager().addListener(navigatorRefreshListener);
@@ -189,42 +186,11 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
                 
                 MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
                 
-                installNavigatorFilter();
-                
-//                IWorkbenchPartSite site = workbench.getActiveWorkbenchWindow().get;
-//                System.err.println(">>> " + site);
-//                SubActionBars bars = (SubActionBars) ((PartSite) site).getActionBars();
-    
-//                System.err.println(Arrays.asList(((WorkbenchWindow)workbench.getActiveWorkbenchWindow()).getToolBarManager().getItems()));
-                
-//        		IMenuManager editMenu= bars.getMenuManager().findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
-////        		if (editMenu != null) {
-//        			editMenu.appendToGroup(IContextMenuConstants.GROUP_ADDITIONS, new ToggleGlobalFilteringActionDelegate());
-//        			bars.updateActionBars();
-////        		}
-                
-//                ((WorkbenchPage)workbench.getActiveWorkbenchWindow().getActivePage()).getActionBars().setGlobalActionHandler(
-//                	"org.eclipse.mylar.ui.interest.filter.global.action",
-//                	new ToggleGlobalFilteringActionDelegate());
-//                ((WorkbenchPage)workbench.getActiveWorkbenchWindow().getActivePage()).updateActionBars();
+                if (FilterNavigatorAction.getDefault() != null) FilterNavigatorAction.getDefault().update();
+                if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().update();
+                if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().update();
             }
         });
-    }
-    
-    private void installNavigatorFilter() {
-        ResourceNavigator navigator = navigatorRefreshListener.getResourceNavigator();
-        if (navigator == null) return;
-        TreeViewer viewer = navigator.getTreeViewer();
-        if (viewer != null) {
-            boolean found = false;
-            for (int i = 0; i < viewer.getFilters().length; i++) {
-                ViewerFilter filter = viewer.getFilters()[i];
-                if (filter instanceof InterestFilter) found = true;
-            }
-            if (!found) viewer.addFilter(new InterestFilter());
-        } else {
-        	MylarPlugin.log("Could not install navigator filter", this);
-        }
     }
     
     private void initializeActions() {
@@ -234,19 +200,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     protected void setupProblemsView() {
         TableViewer viewer = UiUtil.getProblemViewFromActivePerspective();
         if (viewer != null) {
-            if (viewer != null) {
-                ViewerFilter[] filters = viewer.getFilters();
-                boolean found = false;
-                for (int i = 0; i < filters.length; i++) {
-                    if (filters[i] instanceof ProblemListInterestFilter) found = true;
-                }
-                if (!found) viewer.addFilter(interestFilter);
-            } 
             viewer.setLabelProvider(new ProblemsListLabelProvider(
                     (TableViewLabelProvider)viewer.getLabelProvider()));
-            
-            viewer.refresh();
-
         }
     }
 
@@ -427,8 +382,12 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         this.intersectionHighlighter = intersectionHighlighter;
     }
 
+    /**
+     * TODO: refactor
+     */
     public boolean isGlobalFilteringEnabled() {
-        return getPrefs().getBoolean(GLOBAL_FILTERING);
+    	return true;
+//        return getPrefs().getBoolean(GLOBAL_FILTERING);
     }
 
     public boolean isGlobalFoldingEnabled() {

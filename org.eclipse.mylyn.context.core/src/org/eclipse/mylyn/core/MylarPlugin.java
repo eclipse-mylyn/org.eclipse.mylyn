@@ -61,8 +61,8 @@ public class MylarPlugin extends AbstractUIPlugin {
     
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";
-    
-    private final IMylarStructureBridge NULL_BRIDGE = new IMylarStructureBridge() {
+    private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
+    	
 
         /**
          * Used to check for the null adapter
@@ -94,9 +94,13 @@ public class MylarPlugin extends AbstractUIPlugin {
 //            throw new RuntimeException("null adapter");
         }
 
-        public boolean acceptAsLandmark(String handle) {
+        /**
+         * TODO: this behavir is depended on, move?
+         */
+        public boolean canBeLandmark(Object element) {
+        	return false;
 //            return false;
-            throw new RuntimeException("null bridge: " + handle);
+//            throw new RuntimeException("null bridge: " + element);
         }
 
         public boolean acceptsObject(Object object) {
@@ -281,7 +285,7 @@ public class MylarPlugin extends AbstractUIPlugin {
             if (genericResourceBridge.acceptsObject(object)) {
                 return genericResourceBridge;
             } else {
-                return NULL_BRIDGE;
+                return DEFAULT_BRIDGE;
             }
         }
     }

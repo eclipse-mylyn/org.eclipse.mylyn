@@ -12,61 +12,59 @@
 package org.eclipse.mylar.ui.actions;
 
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IActionDelegate2;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
+import java.util.List;
+
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.ui.InterestFilter;
+import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Shawn Minto
  */
-public class FilterOutlineAction extends Action implements IViewActionDelegate, IActionDelegate2 {
-
-	public static final String PREF_ID = "org.eclipse.mylar.ui.outline.filterBoring";
+public class FilterOutlineAction extends AbstractInterestFilterAction {
 	
-    public FilterOutlineAction() {
-        super();
-    	setText("Filter uninteresting"); 
-		setImageDescriptor(MylarImages.FILTER_UNINTERESTING);	
-		setToolTipText("Filter uninteresting items from package explorer");
-    }
-
-    public void dispose() {
-    	// don't care when we are disposed
-    }
-
-    public void run(IAction action) {
-    	valueChanged(action, action.isChecked(), true);
-    }
-
-    private void valueChanged(IAction action, final boolean on, boolean store) {
-        action.setChecked(on);
-        if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
-        //XXX add the filtering for the outline view
-     
-    }
-    
-    public void selectionChanged(IAction action, ISelection selection) {
-    	// don't care when the selection changes
-    }
-
-	public void init(IViewPart view) {
-		// don't care about this
-		
+	public static FilterOutlineAction INSTANCE;
+	
+	public FilterOutlineAction() {
+		super(new InterestFilter());
+		INSTANCE = this;
 	}
 	
-	public void init(IAction action) {
-		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID), true);
+	/**
+	 * TODO: a bit wierd how it gets the first viewer
+	 */
+	@Override
+	protected StructuredViewer getViewer() {
+		IEditorPart activeEditorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        List<TreeViewer> viewers = MylarUiPlugin.getDefault().getUiBridgeForEditor(activeEditorPart).getTreeViewers(activeEditorPart);
+        if (viewers.size() > 0) {
+        	return viewers.get(0);
+        } else {
+        	return null;
+        }
+        //        for (TreeViewer viewer : viewers) { 
+//            if (viewer != null) {
+//                boolean found = false;
+//                for (int i = 0; i < viewer.getFilters().length; i++) {
+//                    ViewerFilter filter = viewer.getFilters()[i];
+//                    if (filter instanceof InterestFilter) found = true;
+//                }
+//		return null;
 	}
 
-	public void runWithEvent(IAction action, Event event) {
-		run(action);
-		
+	/**
+	 * TODO: cache viewer?
+	 */
+	@Override
+	protected void refreshViewer() {
+		StructuredViewer viewer = getViewer();
+		if (viewer != null) viewer.refresh();
 	}
 
+	public static FilterOutlineAction getDefault() {
+		return INSTANCE;
+	}
 }
