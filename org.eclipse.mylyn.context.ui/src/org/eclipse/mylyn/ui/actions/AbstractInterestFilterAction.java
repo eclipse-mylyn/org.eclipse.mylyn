@@ -75,7 +75,8 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
 			}
 			refreshViewer();
         } else {
-        	MylarPlugin.log("Couldn't mange filter installation on null viewer: " + prefId, this);
+        	// ignore, failure to install is ok if there is no outline when attempted
+//        	MylarPlugin.log("Couldn't mange filter installation on null viewer: " + prefId, this);
         }
 	}
 	
