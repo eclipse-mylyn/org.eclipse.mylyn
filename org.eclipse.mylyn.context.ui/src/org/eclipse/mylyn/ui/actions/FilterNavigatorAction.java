@@ -40,7 +40,7 @@ public class FilterNavigatorAction extends AbstractInterestFilterAction {
 	}
 
 	@Override
-	protected void refreshViewer() {
+	public void refreshViewer() {
 		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
         if (navigator != null) navigator.getTreeViewer().refresh();
 	}

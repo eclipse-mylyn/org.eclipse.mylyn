@@ -56,6 +56,9 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
         valueChanged(action, action.isChecked(), true);
     }
     
+    /**
+     * This operation is expensive.
+     */
     public void update() {
     	valueChanged(initAction, MylarPlugin.getDefault().getPreferenceStore().getBoolean(prefId), false);
     }
@@ -78,7 +81,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
 	
 	protected abstract StructuredViewer getViewer() ;
 	
-	protected abstract void refreshViewer();
+	public abstract void refreshViewer();
 
 	protected void installInterestFilter(StructuredViewer viewer) {
 		if (viewer != null) {

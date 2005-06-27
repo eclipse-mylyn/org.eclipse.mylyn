@@ -40,7 +40,7 @@ public class FilterPackageExplorerAction extends AbstractInterestFilterAction {
 	}
 
 	@Override
-	protected void refreshViewer() {
+	public void refreshViewer() {
 		MylarJavaPlugin.getModelUpdateBridge().refreshPackageExplorer(null);
 	}
 

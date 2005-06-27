@@ -32,8 +32,8 @@ import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.ui.actions.FilterNavigatorAction;
 import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
+import org.eclipse.mylar.ui.internal.MylarViewerManager;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
-import org.eclipse.mylar.ui.internal.OutlineViewManager;
 import org.eclipse.mylar.ui.internal.TaskscapeManipulationMonitor;
 import org.eclipse.mylar.ui.internal.UiUpdateListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
@@ -48,6 +48,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -89,7 +90,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();
 
-    private OutlineViewManager editorPartLisener = new OutlineViewManager();
+    private MylarViewerManager viewerManager = new MylarViewerManager();
     
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
     
@@ -178,7 +179,17 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
                 MylarPlugin.getTaskscapeManager().addListener(UI_UPDATE_LISTENER);
                 MylarPlugin.getDefault().getCommandMonitors().add(new TaskscapeManipulationMonitor());
-                Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(editorPartLisener);
+                
+                Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerManager);
+        		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+        		for (int i= 0; i < windows.length; i++) {
+        			windows[i].addPageListener(viewerManager);
+//        			IWorkbenchPage[] pages= windows[i].getPages();
+//        			for (int j= 0; j < pages.length; j++) {
+//        				pages[j].addPartListener(viewerManager);
+//        			}
+        		}
+        		
                 setupProblemsView();
                 
                 MylarPlugin.getTaskscapeManager().addListener(navigatorRefreshListener);

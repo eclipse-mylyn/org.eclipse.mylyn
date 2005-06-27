@@ -45,23 +45,15 @@ public class FilterOutlineAction extends AbstractInterestFilterAction {
         } else {
         	return null;
         }
-        //        for (TreeViewer viewer : viewers) { 
-//            if (viewer != null) {
-//                boolean found = false;
-//                for (int i = 0; i < viewer.getFilters().length; i++) {
-//                    ViewerFilter filter = viewer.getFilters()[i];
-//                    if (filter instanceof InterestFilter) found = true;
-//                }
-//		return null;
 	}
 
 	/**
 	 * TODO: cache viewer?
 	 */
 	@Override
-	protected void refreshViewer() {
+	public void refreshViewer() {
 		StructuredViewer viewer = getViewer();
-		if (viewer != null) viewer.refresh();
+		if (viewer != null && viewer.getControl().isVisible()) viewer.refresh();
 	}
 
 	public static FilterOutlineAction getDefault() {

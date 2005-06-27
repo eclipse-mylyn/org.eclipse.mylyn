@@ -24,6 +24,7 @@ import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.FilterOutlineAction;
+import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
@@ -93,9 +94,12 @@ public class UiUpdateListener implements ITaskscapeListener {
         interestChanged(nodes.get(nodes.size()-1));
     }
     
+    /**
+     * TODO: it would be better if this didn't explicitly refresh views
+     */
     public void interestChanged(ITaskscapeNode node) {
-        UiUtil.refreshProblemsView();
-        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().update();
+        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().refreshViewer();
+        if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().refreshViewer();
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
             refreshOutlines(null);
         } else {

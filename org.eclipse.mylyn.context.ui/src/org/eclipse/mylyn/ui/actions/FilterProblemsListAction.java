@@ -38,7 +38,7 @@ public class FilterProblemsListAction extends AbstractInterestFilterAction {
 	}
 
 	@Override
-	protected void refreshViewer() {
+	public void refreshViewer() {
 		getViewer().refresh();
 	}
 	

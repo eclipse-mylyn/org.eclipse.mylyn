@@ -31,7 +31,7 @@ public class AutoFoldPreferenceBlock
 	
 	public AutoFoldPreferenceBlock() {
 //		preferences = MylarPlugin.getDefault().getPreferenceStore(); XXX never used
-	}
+	}  
 	
 	public Control createControl(Composite parent) {
 	    try {
