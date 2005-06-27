@@ -125,7 +125,11 @@ public class AntStructureBridge implements IMylarStructureBridge {
             
             // get the line number that the element is on
             int start = Integer.parseInt(handle.substring(first + 1));
-
+            
+            if(start == -1){
+                return f;
+            }
+            
             // get the contents of the file and create a document so that we can get the offset
             String content = XmlNodeHelper.getContents(f.getContents());
             IDocument d = new Document(content);
@@ -193,7 +197,8 @@ public class AntStructureBridge implements IMylarStructureBridge {
     public String getName(Object object) {
         if(object instanceof AntElementNode){
             AntElementNode n = (AntElementNode)object;
-            return n.getIFile().getName() + " " + n.getName();
+            String name = n.getIFile().getName() + ": " + n.getName();
+            return name;
         }else if (object instanceof File) {
             File file = (File)object;
             if (file.getFullPath().toString().endsWith("build.xml")) return "build.xml";
@@ -213,8 +218,10 @@ public class AntStructureBridge implements IMylarStructureBridge {
      */
     public boolean acceptsObject(Object object) {
         // we accept AntElementNode and build.xml File objects
-        if (object instanceof XmlNodeHelper || object instanceof AntElementNode) {
+        if (object instanceof AntElementNode) {
             return true;
+        }else if (object instanceof XmlNodeHelper){
+        	if (((XmlNodeHelper)object).getFilename().endsWith("build.xml")) return true;
         } else if (object instanceof File) {
             File file = (File)object;
             if (file.getFullPath().toString().endsWith("build.xml")) return true;

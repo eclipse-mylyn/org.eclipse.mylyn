@@ -217,8 +217,10 @@ public class PdeStructureBridge implements IMylarStructureBridge {
      */
     public boolean acceptsObject(Object object) {
         // we only accept PluginObjectNodes and plugin.xml Files
-        if (object instanceof XmlNodeHelper || object instanceof PluginObjectNode || object instanceof BuildEntry) {
+        if (object instanceof PluginObjectNode || object instanceof BuildEntry) {
             return true;
+        } else if (object instanceof XmlNodeHelper){
+            if (((XmlNodeHelper)object).getFilename().endsWith("plugin.xml")) return true;
         } else if (object instanceof File) {
             File file = (File)object;
             if (file.getFullPath().toString().endsWith("plugin.xml")) return true;
