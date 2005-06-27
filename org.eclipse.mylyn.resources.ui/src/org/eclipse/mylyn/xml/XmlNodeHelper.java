@@ -55,15 +55,18 @@ public class XmlNodeHelper {
      * @throws BadLocationException
      */
     public XmlNodeHelper(FileEditorInput fei, int offset) throws CoreException {
-        this.filename = fei.getFile().getFullPath().toString();
+
+    	this.filename = fei.getFile().getFullPath().toString();
         InputStream i = fei.getFile().getContents();
         String contents = getContents(i);
         Document d = new Document(contents);
         try{
         	startLine = d.getLineOfOffset(offset - 1);
         } catch (BadLocationException e){
+        	// SHAWNTODO this happens when the document has not been saved and selections 
+        	// are made to new nodes
         	startLine = 0;
-        	MylarPlugin.log(e, "Unable to get start line from the pde editor: " + filename + ":" + offset);
+        	MylarPlugin.log(e, "Unable to get start line from the editor: " + filename + ":" + offset);
         }
     }
 
@@ -84,6 +87,14 @@ public class XmlNodeHelper {
 
     public int getStartLine() {
         return startLine;
+    }
+    
+    public boolean equals(Object e){
+    	if(e instanceof XmlNodeHelper){
+    		XmlNodeHelper xnode = ((XmlNodeHelper)e);
+    		return xnode.getHandle().equals(getHandle());
+    	}
+    	return false;
     }
 
     /**
