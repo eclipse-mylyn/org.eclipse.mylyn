@@ -85,12 +85,12 @@ public class TaskListManager {
     }
 
     public void deleteTask(ITask task) {
-        taskList.setActive(task, false); 
-        if (taskList.getRootTasks().contains(task)) {
-            taskList.getRootTasks().remove(task);
-        } else {
-            task.getParent().getChildren().remove(task);
-        }
+        taskList.setActive(task, false);        
+        taskList.deleteTask(task);
+    }
+    
+    public void deleteCategory(Category cat) {
+    	taskList.deleteCategory(cat);
     }
     
     public void addListener(ITaskActivityListener listener) {
@@ -102,28 +102,14 @@ public class TaskListManager {
     }
 
     public void activateTask(ITask task) {
-        if (task.isCategory()) {
-            for (ITask childTask : task.getChildren()) {
-                taskList.setActive(childTask, true);
-                for (ITaskActivityListener listener : listeners) listener.taskActivated(childTask);
-            }
-        } else {
-            taskList.setActive(task, true);
-            for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
-        }
-    }
+		taskList.setActive(task, true);
+		for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
+	}
 
-    public void deactivateTask(ITask task) { 
-        if (task.isCategory()) {
-            for (ITask childTask : task.getChildren()) {
-                taskList.setActive(childTask, false);
-                for (ITaskActivityListener listener : listeners) listener.taskDeactivated(childTask);
-            }
-        } else {
-            taskList.setActive(task, false);
-            for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
-        }
-    }
+    public void deactivateTask(ITask task) {
+		taskList.setActive(task, false);
+		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
+	}
     
     public void taskPropertyChanged(ITask task, String property) {
     	for (ITaskActivityListener listener : listeners) listener.taskPropertyChanged(task, property);
@@ -131,7 +117,11 @@ public class TaskListManager {
     
     public void updateTaskscapeReference(String prevDir) {    	
     	List<ITask> rootTasks = this.getTaskList().getRootTasks();
+    	for (Category cat : taskList.getCategories()) {
+    		updateTaskscapeReferenceHelper(cat.getTasks(), prevDir);
+    	}
     	updateTaskscapeReferenceHelper(rootTasks, prevDir);
+    	
     }
     public void updateTaskscapeReferenceHelper(List<ITask> list, String prevDir) {
     	for (ITask task : list) {
@@ -157,7 +147,7 @@ public class TaskListManager {
 					taskPropertyChanged(task, "Path");
 				}
 			}
-			updateTaskscapeReferenceHelper(task.getChildren(), prevDir);
+//			updateTaskscapeReferenceHelper(task.getChildren(), prevDir);
     	}
     }
     public void setFile(File f) {

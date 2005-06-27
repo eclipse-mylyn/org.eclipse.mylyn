@@ -30,8 +30,6 @@ public interface ITask extends Serializable {
 
     public abstract void setPath(String path);
 
-    public abstract List<ITask> getChildren();
-
     public abstract String getHandle();
 
     public abstract void setHandle(String id);
@@ -39,14 +37,10 @@ public interface ITask extends Serializable {
     public abstract String getLabel();
 
     public abstract void setLabel(String label);
-
-    public abstract ITask getParent(); 
-
-    public abstract void setParent(ITask parent);
-
-    public abstract void removeSubtask(ITask task);
     
-    public abstract void addSubtask(ITask task);
+    public abstract ITask getParent(); 
+    
+    public abstract void setParent(ITask parent);
 
     public abstract boolean isActive();
     
@@ -76,29 +70,28 @@ public interface ITask extends Serializable {
     
     public abstract void setEstimatedTime(String estimated);
 
-    public abstract List<ITask> getSubTasksInProgress();
-    
-    public abstract List<ITask> getCompletedSubTasks();
-    
-    public abstract boolean hasCompletedSubTasks(boolean completed);
-    
-    public abstract int findLargestTaskHandle();
-    
-    public abstract boolean hasSubTaskWithPriority(String priority);
+    public abstract List<ITask> getChildren();
+
+    public abstract void addSubTask(ITask t);
+
+    public abstract void removeSubTask(ITask t);
+        
     /**
      * Opens this task in an editor
      */
 	public abstract void openTaskInEditor();
 	
 	public abstract String getToolTipText();
-    
-    public abstract List<Category> getCategories();
 
     public abstract String getPriority();
     
     public abstract void setPriority(String priority);
-    
+    @Deprecated
     public abstract boolean isCategory();
-
+    @Deprecated
     public abstract void setIsCategory(boolean b);
+    
+    public abstract void setCategory(Category cat);
+    
+    public abstract Category getCategory();
 }

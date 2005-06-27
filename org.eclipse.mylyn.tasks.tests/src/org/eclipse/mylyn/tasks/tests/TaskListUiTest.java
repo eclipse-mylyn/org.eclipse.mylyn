@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylar.tasks.Category;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
@@ -36,19 +37,21 @@ import org.eclipse.ui.PartInitException;
  */
 public class TaskListUiTest extends TestCase {	
 	private TaskList tlist = null;
-	private Task cat1 = null;
+	private Category cat1 = null;
 	private Task cat1task1 = null;
 	private Task cat1task2 = null;
 	private Task cat1task3 = null;
 	private Task cat1task4 = null;
 	private Task cat1task5 = null;
+	private Task cat1task1sub1 = null;
 	
-	private Task cat2 = null;
+	private Category cat2 = null;
 	private Task cat2task1 = null;
 	private Task cat2task2 = null;
 	private Task cat2task3 = null;
 	private Task cat2task4 = null;
 	private Task cat2task5 = null;
+	private Task cat2task1sub1 = null;
 	
 	
 	private final static int CHECK_COMPLETE_FILTER = 1;
@@ -60,61 +63,80 @@ public class TaskListUiTest extends TestCase {
 		File file = new File("foo" + MylarTasksPlugin.FILE_EXTENSION);
         TaskListManager manager = new TaskListManager(file);        
         tlist = manager.createNewTaskList();        
-        cat1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "First Category");
-        cat1.setIsCategory(true);
+        cat1 = new Category("First Category");
         
-        cat1task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1");
+        cat1task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
         cat1task1.setPriority("P1");
         cat1task1.setCompleted(true);
-		cat1.addSubtask(cat1task1);
+        cat1task1.setCategory(cat1);
+		cat1.addTask(cat1task1);
 		
-		cat1task2 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 2");
+		cat1task1sub1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1");
+		cat1task1sub1.setPriority("P1");
+		cat1task1sub1.setCompleted(true);
+		cat1task1sub1.setParent(cat1task1);
+        cat1task1.addSubTask(cat1task1sub1);
+		
+		cat1task2 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 2");
 		cat1task2.setPriority("P2");
-		cat1.addSubtask(cat1task2);		
+		cat1task2.setCategory(cat1);
+		cat1.addTask(cat1task2);		
 		
-		cat1task3 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 3");
+		cat1task3 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 3");
 		cat1task3.setPriority("P3");
 		cat1task3.setCompleted(true);
-		cat1.addSubtask(cat1task3);
+		cat1task3.setCategory(cat1);
+		cat1.addTask(cat1task3);
 		
-		cat1task4 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 4");
+		cat1task4 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 4");
 		cat1task4.setPriority("P4");
-		cat1.addSubtask(cat1task4);
+		cat1task4.setCategory(cat1);
+		cat1.addTask(cat1task4);
 		
-		cat1task5 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 5");
+		cat1task5 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 5");
 		cat1task5.setPriority("P5");
 		cat1task5.setCompleted(true);
-		cat1.addSubtask(cat1task5);
+		cat1task5.setCategory(cat1);
+		cat1.addTask(cat1task5);
 		
-		tlist.addRootTask(cat1);
-		assertEquals(cat1.getChildren().size(), 5);
+		tlist.addCategory(cat1);
+		assertEquals(cat1.getTasks().size(), 5);
 		
-		cat2 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "Second Category");
-        cat2.setIsCategory(true);
+		cat2 = new Category("Second Category");
         
-        cat2task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1");
+        cat2task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
         cat2task1.setPriority("P1");
-		cat2.addSubtask(cat2task1);
+        cat2task1.setCategory(cat2);
+		cat2.addTask(cat2task1);
 		
-		cat2task2 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 2");
+		cat2task1sub1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1");
+		cat2task1sub1.setPriority("P1");
+		cat2task1sub1.setParent(cat2task1);
+		cat2task1.addSubTask(cat2task1sub1);
+		
+		cat2task2 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 2");
 		cat2task2.setPriority("P2");
 		cat2task2.setCompleted(true);
-		cat2.addSubtask(cat2task2);
+		cat2task2.setCategory(cat2);
+		cat2.addTask(cat2task2);
 		
-		cat2task3 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 3");
+		cat2task3 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 3");
 		cat2task3.setPriority("P3");
-		cat2.addSubtask(cat2task3);
+		cat2task3.setCategory(cat2);
+		cat2.addTask(cat2task3);
 		
-		cat2task4 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 4");
+		cat2task4 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 4");
 		cat2task4.setPriority("P4");
 		cat2task4.setCompleted(true);
-		cat2.addSubtask(cat2task4);
+		cat2task4.setCategory(cat2);
+		cat2.addTask(cat2task4);
 		
-		cat2task5 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub task 5");
+		cat2task5 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 5");
 		cat2task5.setPriority("P5");
-		cat2.addSubtask(cat2task5);
+		cat2task5.setCategory(cat2);
+		cat2.addTask(cat2task5);
 		
-		tlist.addRootTask(cat2);
+		tlist.addCategory(cat2);
 		manager.saveTaskList();
 	}
 	
@@ -169,10 +191,7 @@ public class TaskListUiTest extends TestCase {
 		assertTrue(items.length == 2);
 		int count = 0;
 		for (int i = 0; i < items.length; i++) {
-			assertTrue(items[i].getData() instanceof ITask);
-			ITask cat = (ITask) items[i].getData();
-			assertTrue(cat.isCategory());
-
+			assertTrue(items[i].getData() instanceof Category);
 			TreeItem[] sub = items[i].getItems();
 			for (int j = 0; j < sub.length; j++) {
 				assertTrue(sub[j].getData() instanceof ITask);
@@ -194,10 +213,7 @@ public class TaskListUiTest extends TestCase {
 		int p2Count = 0;
 		int p5Count = 0;
 		for (int i = 0; i < items.length; i++) {
-			assertTrue(items[i].getData() instanceof ITask);
-			ITask cat = (ITask) items[i].getData();
-			assertTrue(cat.isCategory());
-
+			assertTrue(items[i].getData() instanceof Category);
 			TreeItem[] sub = items[i].getItems();
 			for (int j = 0; j < sub.length; j++) {
 				assertTrue(sub[j].getData() instanceof ITask);
@@ -222,24 +238,24 @@ public class TaskListUiTest extends TestCase {
         	// don't care if we are disposed
         }
         public Object[] getElements(Object parent) {
-            return tlist.getRootTasks().toArray();            	          
+            return tlist.getRoots().toArray();            	          
         }
         public Object getParent(Object child) {
-            if (child instanceof Task) {
-                return ((Task)child).getParent();
+            if (child instanceof Category) {
+                return ((Task)child).getCategory();
             }
             return null;
         }
         public Object [] getChildren(Object parent) {
-        	if (parent instanceof ITask) {
-        		return ((ITask)parent).getChildren().toArray();
+        	if (parent instanceof Category) {
+        		return ((Category)parent).getTasks().toArray();
         	}
         	return new Object[0];
         }
         public boolean hasChildren(Object parent) {  
-            if (parent instanceof ITask) {
-                ITask task = (ITask)parent;
-                return task.getChildren() != null && task.getChildren().size() > 0;
+            if (parent instanceof Category) {
+            	Category cat = (Category)parent;
+                return cat.getTasks() != null && cat.getTasks().size() > 0;
             } 
             return false;
         }

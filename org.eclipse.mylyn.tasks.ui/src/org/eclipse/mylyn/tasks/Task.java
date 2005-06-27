@@ -47,8 +47,8 @@ public class Task implements ITask {
     private String estimatedTime = "";
     private String elapsedTime = "";
     private boolean completed;
-    private transient List<Category> categories = new ArrayList<Category>();
     private RelatedLinks links = new RelatedLinks();
+    private Category parentCategory = null;
     
     /**
      * null if root
@@ -67,16 +67,6 @@ public class Task implements ITask {
         return path;
     }
     
-//    public String getRelativePath() {
-//    	//returns relative path from Mylar Directory
-//    
-//    	if (path.startsWith("..")) {
-//    		return "../" + path;
-//    	} else {
-//    		return path.substring(path.indexOf('/')+1, path.length());
-//    	}    	
-//    }
-    
     public void setPath(String path) {
     	if (path.startsWith(".mylar")) {
     		this.path = path.substring(path.lastIndexOf('/')+1, path.length());
@@ -90,10 +80,6 @@ public class Task implements ITask {
         this.label = label;     
         this.path = handle;
     } 
-
-    public List<ITask> getChildren() {
-        return children;
-    }
     
     public String getHandle() {
         return handle;
@@ -107,25 +93,17 @@ public class Task implements ITask {
     public void setLabel(String label) {
         this.label = label;
     }
+
     public ITask getParent() {
         return parent;
     }
+
     public void setParent(ITask parent) {
         this.parent = parent;
     }
     public Object getAdapter(Class adapter) {
         return null;
-    }
-
-    public void removeSubtask(ITask task) {
-        children.remove(task);
-        task.setParent(null); // HACK
-    }
-    
-    public void addSubtask(ITask task) {
-        children.add(task);
-        task.setParent(this);
-    }
+    }    
 
     /**
      * Package visible in order to prevent sets that don't update the index.
@@ -189,9 +167,6 @@ public class Task implements ITask {
 		// No tool-tip used for a general task as of yet.
 		return null;
 	}
-    public List<Category> getCategories() {
-        return categories;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -283,85 +258,25 @@ public class Task implements ITask {
 
 	public void setEstimatedTime(String estimated) {
 		this.estimatedTime = estimated;
-	}
-
-	public List<ITask> getSubTasksInProgress() {
-		List<ITask> inprogress = new ArrayList<ITask>();
-		for (ITask task : children) {
-            if (!task.isCompleted()) {
-            	inprogress.add(task);
-            }
-        }
-		return inprogress;
+	}	
+	
+	public List<ITask> getChildren() {
+		return children;
 	}
 	
-	public List<ITask> getCompletedSubTasks() {
-		List<ITask> complete = new ArrayList<ITask>();
-		for (ITask task : children) {
-            if (task.isCompleted()) {
-            	complete.add(task);
-            }
-        }
-		return complete;
+	public void addSubTask(ITask t) {
+		children.add(t);
 	}
 	
-	public boolean hasCompletedSubTasks(boolean completed) {
-		return findCompletedSubtask(getChildren(), completed);
-	}
-		
-	private boolean findCompletedSubtask(List<ITask> subtasks, boolean completed) {
-		for(ITask t : subtasks) {
-			if (t.isCompleted() == completed) {
-				return true;
-			}
-			findCompletedSubtask(t.getChildren(), completed);
-		}
-		return false;
+	public void removeSubTask(ITask t) {
+		children.remove(t);
 	}
 	
-	public int findLargestTaskHandle() {
-		int ihandle = 0;
-		if (this instanceof BugzillaTask) {
-			ihandle = 0;			
-		} else {
-			ihandle = Integer.parseInt(this.handle.substring(handle.indexOf('-')+1, handle.length()));
-		}
-		int maxSub = findLargestSubTaskHandle(getChildren());
-		return maxSub > ihandle ? maxSub : ihandle;
+	public void setCategory(Category cat) {
+		this.parentCategory = cat;
 	}
-	
-	private int findLargestSubTaskHandle(List<ITask> tasks) {
-		int ihandle = 0;
-		int maxHandle = 0;
-		for (ITask t : tasks) {
-			if (t instanceof BugzillaTask) {
-				ihandle = 0;				
-			} else {
-				ihandle = Integer.parseInt(t.getHandle().substring(t.getHandle().indexOf('-')+1, t.getHandle().length()));
-			}
-			
-			if (ihandle > maxHandle) {
-				maxHandle = ihandle;
-			}
-			int maxSub = findLargestSubTaskHandle(t.getChildren());
-			if (maxSub > maxHandle) {
-				maxHandle = maxSub;
-			}
-		}
-		return maxHandle;
-	}
-	
-	public boolean hasSubTaskWithPriority(String priority) {
-		return findSubTaskWithPriority(getChildren(), priority);
-	}
-	
-	private boolean findSubTaskWithPriority(List<ITask> subtasks, String priority) {
-		for(ITask t : subtasks) {
-			if (t.getPriority().equals(priority)) {
-				return true;
-			}
-			findSubTaskWithPriority(t.getChildren(), priority);
-		}
-		return false;
-	}
+    
+    public Category getCategory() {
+    	return parentCategory;
+    }
 }

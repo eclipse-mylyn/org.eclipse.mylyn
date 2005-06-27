@@ -36,6 +36,7 @@ import org.eclipse.mylar.bugzilla.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.Category;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaReportNode;
 import org.eclipse.mylar.tasks.bugzilla.StackTrace;
@@ -181,7 +182,9 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 		// get all of the root tasks and start the search
 		List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
 		searchLocal(tasks, collector, elementName,  monitor);
-		
+		for (Category cat : MylarTasksPlugin.getTaskListManager().getTaskList().getCategories()) {
+			searchLocal(cat.getTasks(), collector, elementName,  monitor);
+		}
 		// return the collector
 		return collector;
 	}
@@ -221,12 +224,6 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 	                    MylarPlugin.log(e, "bug search failed");
 					}
 				}
-			}
-			
-			// get the children and perform the search on them as well 
-			List<ITask> children = task.getChildren();
-			if(children != null){
-				searchLocal(children, searchCollector, elementName, monitor);
 			}
 		}
         status = Status.OK_STATUS;

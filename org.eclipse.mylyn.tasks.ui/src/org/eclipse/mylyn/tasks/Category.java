@@ -14,6 +14,8 @@
 package org.eclipse.mylar.tasks;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -23,24 +25,24 @@ public class Category implements Serializable {
 
     private static final long serialVersionUID = 3834024740813027380L;
     
-//    private List<ITask> tasks = new ArrayList<ITask>();
+    private List<ITask> tasks = new ArrayList<ITask>();
     private String name = "";
     
     public Category(String name) {
         this.name = name;
     }
     
-//    public void addTask(ITask task) {
-//        tasks.add(task);
-//    }
-//    
-//    public void removeTask(Task task) {
-//        tasks.remove(task);
-//    }
-//    
-//    public List<ITask> getTasks() {
-//        return tasks;
-//    }
+    public void addTask(ITask task) {
+        tasks.add(task);
+    }
+    
+    public void removeTask(ITask task) {
+        tasks.remove(task);
+    }
+    
+    public List<ITask> getTasks() {
+        return tasks;
+    }
 
     @Override
     public String toString() {

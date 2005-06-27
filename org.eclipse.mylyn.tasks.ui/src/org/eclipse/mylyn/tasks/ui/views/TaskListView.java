@@ -111,23 +111,24 @@ public class TaskListView extends ViewPart {
 	private TreeViewer viewer;
     private DrillDownAdapter drillDownAdapter;
     
-    private Action refresh;
-    private Action createTask;
-    private Action createCategory;
-    private Action addBugzillaReport; 
-    private Action rename;
-    private Action delete;
-    private Action doubleClickAction;
-    private Action clearSelectedTaskscapeAction;
+    private RefreshAction refresh;
+    private CreateTaskAction createTask;
+    private CreateCategoryAction createCategory;
+    private CreateBugzillaTaskAction createBugzillaTask; 
+    private RenameAction rename;
+    private DeleteAction delete;
+    private OpenTaskEditorAction doubleClickAction;
+    private ClearTaskscapeAction clearSelectedTaskscapeAction;
 
     //private Action toggleIntersectionModeAction = new ToggleIntersectionModeAction();
 //    private Action toggleFilteringAction = new ToggleGlobalInterestFilteringAction();
 
-    private Action completeTask;
-    private Action incompleteTask;
-    private Action filterCompleteTask;
-    private Action filterInCompleteTask;
+    private MarkTaskCompleteAction completeTask;
+    private MarkTaskIncompleteAction incompleteTask;
+    private FilterCompletedTasksAction filterCompleteTask;
+    private FilterIncompleteTasksAction filterInCompleteTask;
     private PriorityDropDownAction filterOnPriority;
+    private Action moveTaskToRoot; 
     private PriorityFilter priorityFilter = new PriorityFilter();
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description", "handle" };
@@ -140,13 +141,322 @@ public class TaskListView extends ViewPart {
     
     private String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
     
-    private final class CreateTaskAction extends Action {
-        private boolean isCategory = false;
-        
-        public CreateTaskAction(boolean isCategory) {
-            this.isCategory = isCategory;
-        }
-        
+    private final class MoveTaskToRootAction extends Action {
+		public MoveTaskToRootAction() {
+			setText("Move Task to Root");
+	        setToolTipText("Move Task to Root");
+		}
+		@Override
+		public void run() {
+			ISelection selection = viewer.getSelection();
+		    Object obj = ((IStructuredSelection)selection).getFirstElement();
+		    if (obj instanceof ITask) {
+		    	ITask t = (ITask) obj;
+		    	Category cat = t.getCategory();
+		    	if (cat != null) {
+		    		cat.removeTask(t);
+		    		t.setCategory(null);
+		    		t.setParent(null);
+		    		MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(t);
+		    		viewer.refresh();
+		    	} else if (t.getParent() != null) {
+		    		t.getParent().removeSubTask(t);
+		    		t.setParent(null);
+		    		MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(t);
+		    		viewer.refresh();
+		    	}
+		    }		    
+		}
+	}
+    
+    private final class FilterIncompleteTasksAction extends Action {
+    	public FilterIncompleteTasksAction() {
+    		setText("Filter Incomplete tasks");
+            setToolTipText("Filter Incomplete tasks");
+            setImageDescriptor(MylarImages.TASK_INACTIVE);
+            setChecked(MylarUiPlugin.getDefault().isFilterInCompleteMode());
+    	}
+    	
+		@Override
+		public void run() {
+			MylarUiPlugin.getDefault().setFilterInCompleteMode(isChecked());
+			if (isChecked()) {
+				viewer.addFilter(inCompleteFilter);
+				filterCompleteTask.setChecked(false);
+				viewer.removeFilter(completeFilter);
+			} else {
+				viewer.removeFilter(inCompleteFilter);
+			}
+		    viewer.refresh();
+		}
+	}
+
+	private final class FilterCompletedTasksAction extends Action {
+		public FilterCompletedTasksAction() {
+			setText("Filter Complete tasks");
+	        setToolTipText("Filter Completed tasks");
+	        setImageDescriptor(MylarImages.TASK_ACTIVE);
+	        setChecked(MylarUiPlugin.getDefault().isFilterCompleteMode());
+		}
+		@Override
+		public void run() {
+			MylarUiPlugin.getDefault().setFilterCompleteMode(isChecked());
+			if (isChecked()) {
+				viewer.addFilter(completeFilter);
+				filterInCompleteTask.setChecked(false);
+				viewer.removeFilter(inCompleteFilter);
+			} else {
+				viewer.removeFilter(completeFilter);        			
+			}
+		    viewer.refresh();
+		}
+	}
+
+	private final class OpenTaskEditorAction extends Action {
+		@Override
+		public void run() {
+		    ISelection selection = viewer.getSelection();
+		    Object obj = ((IStructuredSelection)selection).getFirstElement();
+		    if (obj instanceof ITask) {
+		    	((ITask)obj).openTaskInEditor();
+		    }
+		    viewer.refresh(obj);
+		}
+	}
+
+	private final class ClearTaskscapeAction extends Action {
+		public ClearTaskscapeAction() {
+			setText("Erase Taskscape");
+	        setToolTipText("Erase Taskscape");
+	        setImageDescriptor(MylarImages.ERASE_TASKSCAPE);
+		}
+		@Override
+		public void run() {
+		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+		    if (selectedObject != null) {
+		    	MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+		    	viewer.refresh();
+		    }
+		}
+	}
+
+	private final class RenameAction extends Action {
+		public RenameAction() {
+			setText("Rename");
+	        setToolTipText("Rename");
+		}
+		@Override
+		public void run() {
+		    String label = "category";
+		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+		    if (selectedObject instanceof Task)  label = "task";
+		    
+		    String newName = getLabelNameFromUser(label);
+		    if (selectedObject instanceof Task) {
+		        ((Task)selectedObject).setLabel(newName);
+		    } else if (selectedObject instanceof Category) {
+		        ((Category)selectedObject).setName(newName);
+		    }
+		    viewer.refresh(selectedObject);
+		}
+	}
+
+	private final class MarkTaskIncompleteAction extends Action {
+		public MarkTaskIncompleteAction() {
+			setText("Mark Incomplete");
+	        setToolTipText("Mark Incomplete");
+		}
+		@Override
+		public void run() {              
+		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+		    if (selectedObject instanceof Task){ 
+		    	((Task)selectedObject).setCompleted(false);                	
+		    }
+		    viewer.refresh();
+		}
+	}
+
+	private final class MarkTaskCompleteAction extends Action {
+		public MarkTaskCompleteAction() {
+			setText("Mark Complete");
+	        setToolTipText("Mark Complete");
+		}
+		@Override
+		public void run() {              
+		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+		    if (selectedObject instanceof Task){ 
+		    	((Task)selectedObject).setCompleted(true);
+		    	viewer.refresh(selectedObject);
+		    }
+		}
+	}
+
+	private final class DeleteAction extends Action {
+		public DeleteAction() {
+			setText("Delete");
+	        setToolTipText("Delete");
+	        setImageDescriptor(MylarImages.REMOVE);
+		}
+		@Override
+		public void run() {              
+		    boolean deleteConfirmed = MessageDialog.openQuestion(
+		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		            "Confirm delete", 
+		            "Delete selected item?");
+		    if (!deleteConfirmed) { 
+		        return;
+		    } else {
+		        Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+		        if (selectedObject instanceof Task) {
+					MylarTasksPlugin.getTaskListManager().deleteTask((Task)selectedObject);
+					MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+					IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					
+					// if we couldn't get the page, get out of here
+					if (page == null)
+						return;
+					try{
+		                closeTaskEditors((ITask)selectedObject, page);
+		            }catch(Exception e){
+		            	MylarPlugin.log(e, " deletion failed");
+		            }
+		        } else if (selectedObject instanceof Category) {
+		        	Category cat = (Category) selectedObject;
+		        	for (ITask task : cat.getTasks()) {
+		        		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
+		        		IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();    					
+						if (page == null)
+							return;
+						try{
+		                    closeTaskEditors(task, page);
+		                }catch(Exception e){
+		                	MylarPlugin.log(e, " deletion failed");
+		                }
+		        	}
+		        	MylarTasksPlugin.getTaskListManager().deleteCategory((Category)selectedObject);
+		        }
+		    }
+		    viewer.refresh();
+		}
+	}
+
+	private final class CreateBugzillaTaskAction extends Action {
+		public CreateBugzillaTaskAction() {
+			setText("Add bugzilla report");
+	        setToolTipText("Add bugzilla report");
+	        setImageDescriptor(MylarImages.TASK_BUGZILLA_NEW);
+		}
+		@Override
+		public void run() {
+		    String bugIdString = getBugIdFromUser();
+		    int bugId = -1;
+		    try {
+		    	if (bugIdString != null) {
+		    		bugId = Integer.parseInt(bugIdString);
+		    	} else {
+		    		return;
+		    	}
+		    } catch (NumberFormatException nfe) {
+		        showMessage("Please enter a valid report number");
+		        return;
+		    }
+			
+			// Check the existing tasks to see if the id is used already.
+			// This is to prevent the creation of mutliple Bugzilla tasks
+			//   for the same Bugzilla report.
+			boolean doesIdExistAlready = false;
+			doesIdExistAlready = lookForId("Bugzilla-" + bugId);				
+			if (doesIdExistAlready) {
+		        showMessage("A Bugzilla task with ID Bugzilla-" + bugId + " already exists.");
+		        return;
+			}
+		
+		    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");				
+		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+		    if (selectedObject instanceof Category){
+		        ((Category)selectedObject).addTask(newTask);
+		    } else { 
+		        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
+		    }
+		    viewer.refresh();
+		}
+	}
+
+	private final class RefreshAction extends Action {
+		public RefreshAction() {
+			setText("Refresh all Bugzilla reports");
+	    	setToolTipText("Refresh all Bugzilla reports"); 
+	    	setImageDescriptor(MylarImages.REFRESH);
+		}
+		
+		@Override			
+		public void run() {
+			// TODO background?
+			// perform the update in an operation so that we get a progress monitor 
+		    // update the structure bridge cache with the reference provider cached bugs
+		    WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+		    	protected void execute(IProgressMonitor monitor) throws CoreException {
+									
+					List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
+					
+		            for (ITask task : tasks) {
+						if (task instanceof BugzillaTask) {
+							((BugzillaTask)task).refresh();
+						}							
+					}
+		            for (Category cat : MylarTasksPlugin.getTaskListManager().getTaskList().getCategories()) {
+		            	for (ITask task : cat.getTasks()) {
+		            		if (task instanceof BugzillaTask) {
+								((BugzillaTask)task).refresh();
+							}	
+		            	}
+		            	refreshChildren(cat.getTasks());
+					}		                
+					
+		            // clear the caches
+		    		Set<String> cachedHandles = new HashSet<String>();
+		    		cachedHandles.addAll(MylarTasksPlugin.getDefault().getStructureBridge().getCachedHandles());
+		            cachedHandles.addAll(MylarTasksPlugin.getReferenceProvider().getCachedHandles());
+		            MylarTasksPlugin.getDefault().getStructureBridge().clearCache();
+		        	MylarTasksPlugin.getReferenceProvider().clearCachedReports();
+		
+		        	BugzillaStructureBridge bridge = MylarTasksPlugin.getDefault().getStructureBridge();
+		    		monitor.beginTask("Downloading Bugs" , cachedHandles.size());
+		        	for(String key: cachedHandles){
+		                try {
+		                	String [] parts = key.split(";");
+		                    final int id = Integer.parseInt(parts[1]);
+		                	BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
+		                	if(bug != null)
+		                		bridge.cache(key, bug);
+		                }catch(Exception e){}
+		                
+		                monitor.worked(1);
+		        	}
+		        	monitor.done();
+		        	viewer.refresh();
+		    	}
+		    };
+		    	
+		 	// Use the progess service to execute the runnable
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.run(true, false, op);
+			} catch (InvocationTargetException e) {
+				// Operation was canceled
+			} catch (InterruptedException e) {
+				// Handle the wrapped exception
+			}
+		}
+	}
+
+	private final class CreateTaskAction extends Action {
+		public CreateTaskAction() {
+			setText("Create task");
+	        setToolTipText("Create task");
+	        setImageDescriptor(MylarImages.TASK_NEW);
+		}
+		
         @Override
         public void run() {
             String label = getLabelNameFromUser("task");
@@ -154,17 +464,38 @@ public class TaskListView extends ViewPart {
             Task newTask = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), label);
             
             Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-            if (selectedObject instanceof Task && !isCategory){
-                ((Task)selectedObject).addSubtask(newTask);
-            } else {
-            	if (isCategory) {
-            		newTask.setIsCategory(true);
-            	} 
-                MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
+            if (selectedObject instanceof Category){
+            	newTask.setCategory((Category)selectedObject);
+                ((Category)selectedObject).addTask(newTask);
+            } 
+//            else if (selectedObject instanceof Task) {
+//            	ITask t = (ITask) selectedObject;
+//            	newTask.setParent(t);
+//            	t.addSubTask(newTask);
+//            }
+            else {            	
+                MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);                
             }  
             MylarUiPlugin.getDefault().setHighlighterMapping(
                     newTask.getHandle(), 
                     MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
+            viewer.refresh();
+        }
+    }
+    
+    private final class CreateCategoryAction extends Action {        
+        public CreateCategoryAction() {
+        	setText("Create category");
+            setToolTipText("Create category");
+            setImageDescriptor(MylarImages.CATEGORY_NEW);
+        }
+        
+        @Override
+        public void run() {
+            String label = getLabelNameFromUser("Category");
+            if(label == null) return;
+            Category cat = new Category(label);
+            MylarTasksPlugin.getTaskListManager().getTaskList().addCategory(cat);
             viewer.refresh();
         }
     }
@@ -176,7 +507,7 @@ public class TaskListView extends ViewPart {
 			setText("Display Priorities");
 			setToolTipText("Show Tasks with Priority Levels");
 			setImageDescriptor(MylarImages.FILTER_DECLARATIONS);
-			setMenuCreator(this);
+			setMenuCreator(this);			
 		}
     	
 		public void dispose() {			
@@ -303,11 +634,9 @@ public class TaskListView extends ViewPart {
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITask) {
-				if (((ITask)element).hasCompletedSubTasks(false)) {
-					return true;
-				} else {
 				return !((ITask)element).isCompleted();
-				}
+			} else if (element instanceof Category){ 
+				return true;
 			} else {
 				return false;
 			}
@@ -318,11 +647,9 @@ public class TaskListView extends ViewPart {
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITask) {
-				if (((ITask)element).hasCompletedSubTasks(true)) {
-					return true;
-				} else {
-					return ((ITask)element).isCompleted();
-				}				
+				return ((ITask)element).isCompleted();
+			} else if (element instanceof Category){
+				return true;
 			} else {
 				return false;
 			}
@@ -367,19 +694,19 @@ public class TaskListView extends ViewPart {
 				ITask task = (ITask) element;
 				if (priorities.size() == PRIORITY_LEVELS.length) {
 					return true;
-				} else if (task.isCategory()) {
-					return true;
 				} else {
 					for (String filter : priorities) {
-						if (task.getPriority().equals(filter) ||
-								task.hasSubTaskWithPriority(filter)) {
+						if (task.getPriority().equals(filter)) {
 							return true;
 						}
 					}
 					return false;
 				}								
-			}
-			return false;
+			} else if (element instanceof Category) {
+				return true;
+			} else {
+				return false;
+			}			
 		}
     	
     };
@@ -393,27 +720,37 @@ public class TaskListView extends ViewPart {
         }
         public Object[] getElements(Object parent) {
             if (parent.equals(getViewSite())) {
-            	return MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks().toArray();            	          
+            	return MylarTasksPlugin.getTaskListManager().getTaskList().getRoots().toArray();            	          
             }
             return getChildren(parent);
         }
         public Object getParent(Object child) {
             if (child instanceof Task) {
-                return ((Task)child).getParent();
+            	if (((Task)child).getParent() != null) {
+            		return ((Task)child).getParent();
+            	} else {
+            		return ((Task)child).getCategory();
+            	}
+                
             }
             return null;
         }
         public Object [] getChildren(Object parent) {
-        	if (parent instanceof ITask) {
-        		return ((ITask)parent).getChildren().toArray();
+        	if (parent instanceof Category) {
+        		return ((Category)parent).getTasks().toArray();
+        	} else if (parent instanceof Task) {
+        		return ((Task)parent).getChildren().toArray();
         	}
         	return new Object[0];
         }
         public boolean hasChildren(Object parent) {  
-            if (parent instanceof ITask) {
-                ITask task = (ITask)parent;
-                return task.getChildren() != null && task.getChildren().size() > 0;
-            } 
+            if (parent instanceof Category) {
+            	Category cat = (Category)parent;
+                return cat.getTasks() != null && cat.getTasks().size() > 0;
+            }  else if (parent instanceof Task) {
+            	Task t = (Task) parent;
+            	return t.getChildren() != null && t.getChildren().size() > 0;
+            }
             return false;
         }
     }
@@ -426,38 +763,60 @@ public class TaskListView extends ViewPart {
 
         public boolean canModify(Object element, String property) {
             int columnIndex = Arrays.asList(columnNames).indexOf(property);
-            ITask task = (ITask) element;
-            switch (columnIndex) {
-            case 0:
-                return true;
-            case 1:
-            	return false;
-            case 2:
-                return !(task instanceof BugzillaTask);
-            case 3:
-                return !(task instanceof BugzillaTask);
-            case 4:
-            	return false;
-            }
+            if (element instanceof ITask) {
+            	ITask task = (ITask) element;
+                switch (columnIndex) {
+                case 0: return true;
+                case 1: return false;
+                case 2: return !(task instanceof BugzillaTask);
+                case 3: return !(task instanceof BugzillaTask);
+                case 4: return false;
+                }
+            } else if (element instanceof Category) {
+                switch (columnIndex) {
+                case 0:
+                case 1: 
+                case 2:
+                	return false;
+                case 3: return true;
+                case 4: return false;
+                } 
+            }            
             return false;
         }
 
         public Object getValue(Object element, String property) {
             int columnIndex = Arrays.asList(columnNames).indexOf(property);
-            ITask task = (ITask) element;
-            switch (columnIndex) {
-            case 0:
-            	return new Boolean(task.isCompleted());
-			case 1:            	
-            	return "";
-            case 2:
-                String priorityString = task.getPriority().substring(1);
-                return new Integer(priorityString);
-            case 3:
-                return task.getLabel();
-            case 4:
-            	return task.getHandle();
-            }
+            if (element instanceof ITask) {
+				ITask task = (ITask) element;
+				switch (columnIndex) {
+				case 0:
+					return new Boolean(task.isCompleted());
+				case 1:
+					return "";
+				case 2:
+					String priorityString = task.getPriority().substring(1);
+					return new Integer(priorityString);
+				case 3:
+					return task.getLabel();
+				case 4:
+					return task.getHandle();
+				}
+			} else if (element instanceof Category) {
+				Category cat = (Category) element;
+				switch (columnIndex) {
+				case 0:
+					return new Boolean(false);
+				case 1:
+					return "";
+				case 2:
+					return "";
+				case 3:
+					return cat.getName();
+				case 4:
+					return "";
+				}
+			}
             return "";
         }
 
@@ -465,36 +824,55 @@ public class TaskListView extends ViewPart {
 			int columnIndex = -1;
 			try {
 				columnIndex = Arrays.asList(columnNames).indexOf(property);
-				ITask task = (ITask) ((TreeItem) element).getData();
-				switch (columnIndex) {
-				case 0:
-					if (!task.isCategory()) {
+				if (((TreeItem) element).getData() instanceof ITask) {
+
+					ITask task = (ITask) ((TreeItem) element).getData();
+					switch (columnIndex) {
+					case 0:
 						if (task.isActive()) {
-							MylarTasksPlugin.getTaskListManager().deactivateTask(
-									task);
+							MylarTasksPlugin.getTaskListManager()
+									.deactivateTask(task);
 						} else {
 							MylarTasksPlugin.getTaskListManager().activateTask(
 									task);
 						}
+						viewer.setSelection(null);
+						break;
+					case 1:
+						break;
+					case 2:
+						Integer intVal = (Integer) value;
+						task.setPriority("P" + (intVal + 1));
+						viewer.setSelection(null);
+						break;
+					case 3:
+						task.setLabel(((String) value).trim());
+						MylarTasksPlugin.getTaskListManager()
+								.taskPropertyChanged(task, columnNames[3]);
+						viewer.setSelection(null);
+						break;
+					case 4:
+						break;
 					}
-					viewer.setSelection(null);
-					break;
-				case 1:
-					break;
-				case 2:
-					Integer intVal = (Integer) value;
-					task.setPriority("P" + (intVal + 1));
-					viewer.setSelection(null);					
-					break;
-				case 3:
-					task.setLabel(((String) value).trim());
-					MylarTasksPlugin.getTaskListManager().taskPropertyChanged(task, columnNames[3]);
-					viewer.setSelection(null);					
-					break;
-				case 4:
-					break;
+				} else if (((TreeItem) element).getData() instanceof Category) {
+					Category cat = (Category)((TreeItem) element).getData();
+					switch (columnIndex) {
+					case 0:						
+						viewer.setSelection(null);
+						break;
+					case 1:
+						break;
+					case 2:
+						break;
+					case 3:
+						cat.setName(((String) value).trim());
+						viewer.setSelection(null);
+						break;
+					case 4:
+						break;
+					}
 				}
-				viewer.refresh(task);
+				viewer.refresh();
 			} catch (Exception e) {
 				MylarPlugin.log(e, e.getMessage());
 			}
@@ -516,26 +894,38 @@ public class TaskListView extends ViewPart {
 		 */
         @Override
         public int compare(Viewer compareViewer, Object o1, Object o2) {
-            ITask task1 = (ITask) o1;
-            ITask task2 = (ITask) o2;
-            
-            if (task1.isCompleted()) return 1;
-            if (task2.isCompleted()) return -1;
-            if (column == columnNames[1]) {
-                if (task1 instanceof BugzillaTask && !(task2 instanceof BugzillaTask)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else if (column == columnNames[2]) {
-                return task1.getPriority().compareTo(task2.getPriority());
-            } else if (column == columnNames[3]) {
-                return task1.getLabel().compareTo(task2.getLabel());
-            } else if (column == columnNames[4]){
-            	return task1.getPath().compareTo(task2.getPath());
-            } else {
-            	return 0;
-            }
+        	if (o1 instanceof Category) {
+        		if (o2 instanceof Category) {
+        			return 0;
+        		} else {
+        			return -1;
+        		}
+        	} else {
+        		if (o2 instanceof Category) {
+        			return -1;
+        		} else {
+        			ITask task1 = (ITask) o1;
+                    ITask task2 = (ITask) o2;
+                    
+                    if (task1.isCompleted()) return 1;
+                    if (task2.isCompleted()) return -1;
+                    if (column == columnNames[1]) {
+                        if (task1 instanceof BugzillaTask && !(task2 instanceof BugzillaTask)) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    } else if (column == columnNames[2]) {
+                        return task1.getPriority().compareTo(task2.getPriority());
+                    } else if (column == columnNames[3]) {
+                        return task1.getLabel().compareTo(task2.getLabel());
+                    } else if (column == columnNames[4]){
+                    	return task1.getPath().compareTo(task2.getPath());
+                    } else {
+                    	return 0;
+                    }
+        		}
+        	}            
         }
     }
     
@@ -586,6 +976,8 @@ public class TaskListView extends ViewPart {
         }
         viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
         viewer.addFilter(priorityFilter);
+        if(MylarUiPlugin.getDefault().isFilterInCompleteMode()) viewer.addFilter(inCompleteFilter);
+        if(MylarUiPlugin.getDefault().isFilterCompleteMode()) viewer.addFilter(completeFilter);
         viewer.refresh();
     }
         
@@ -697,9 +1089,24 @@ public class TaskListView extends ViewPart {
                         .getSelection()).getFirstElement();
                 if (selectedObject instanceof ITask) {
                     ITask source = (ITask) selectedObject;
-                    ITask target = (ITask) getCurrentTarget();
-                    source.getParent().removeSubtask(source);
-                    target.addSubtask(source);
+                    if (source.getCategory() != null) {
+                		source.getCategory().removeTask(source);
+                	} else if (source.getParent() != null) {
+                		source.getParent().removeSubTask(source);
+                	} else {
+                		MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks().remove(source);
+                	}
+                    
+                    if (getCurrentTarget() instanceof Category) {
+                    	((Category) getCurrentTarget()).addTask(source);
+                    	source.setCategory((Category)getCurrentTarget());
+                    } else if (getCurrentTarget() instanceof ITask) {
+                    	ITask target = (ITask) getCurrentTarget();
+                    	source.setCategory(null);
+                    	target.addSubTask(source);                    	
+                    	source.setParent(target);
+                    }           
+                    viewer.setSelection(null);
                     viewer.refresh();
                     return true;
                 }
@@ -712,12 +1119,12 @@ public class TaskListView extends ViewPart {
                 Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer())
                         .getSelection()).getFirstElement();
                 if (selectedObject instanceof ITask) {
-                    ITask source = (ITask) selectedObject;
-                    ITask target = (ITask) getCurrentTarget();
-                    if (target != null && !target.isCategory())
-                        return false;
-                    if (source.isCategory())
-                        return false;
+                    if (getCurrentTarget() != null && 
+                    		(getCurrentTarget() instanceof ITask || getCurrentTarget() instanceof Category)) {
+                    	return true;
+                    } else {
+                    	return false;
+                    }
                 }
                 return TextTransfer.getInstance().isSupportedType(transferType);
             }
@@ -763,10 +1170,11 @@ public class TaskListView extends ViewPart {
         manager.add(incompleteTask);
 //        manager.add(new Separator());
         manager.add(createTask);
-        manager.add(addBugzillaReport);
+        manager.add(createBugzillaTask);
         manager.add(rename);
         manager.add(delete);
         manager.add(clearSelectedTaskscapeAction);
+        manager.add(moveTaskToRoot);
         manager.add(new Separator());
         MenuManager subMenuManager = new MenuManager("choose highlighter");
         for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
@@ -803,7 +1211,7 @@ public class TaskListView extends ViewPart {
         manager.add(createCategory);
         manager.add(createTask);
 //        manager.add(new Separator());
-        manager.add(addBugzillaReport);
+        manager.add(createBugzillaTask);
         manager.add(refresh);
 //        manager.add(new Separator());
 //        manager.add(toggleFilteringAction);
@@ -820,289 +1228,20 @@ public class TaskListView extends ViewPart {
      *
      */
     private void makeActions() {
-    	refresh = new Action() {
-    		
-    		@Override			
-			public void run() {
-    			// TODO background?
-    			// perform the update in an operation so that we get a progress monitor 
-                // update the structure bridge cache with the reference provider cached bugs
-                WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-                	protected void execute(IProgressMonitor monitor) throws CoreException {
-	    								
-						List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
-						
-		                for (ITask task : tasks) {
-							if (task instanceof BugzillaTask) {
-								((BugzillaTask)task).refresh();
-							}
-							refreshChildren(task.getChildren());
-						}
-						
-		                // clear the caches
-		        		Set<String> cachedHandles = new HashSet<String>();
-		        		cachedHandles.addAll(MylarTasksPlugin.getDefault().getStructureBridge().getCachedHandles());
-		                cachedHandles.addAll(MylarTasksPlugin.getReferenceProvider().getCachedHandles());
-		                MylarTasksPlugin.getDefault().getStructureBridge().clearCache();
-	                	MylarTasksPlugin.getReferenceProvider().clearCachedReports();
-	
-	                	BugzillaStructureBridge bridge = MylarTasksPlugin.getDefault().getStructureBridge();
-	            		monitor.beginTask("Downloading Bugs" , cachedHandles.size());
-	                	for(String key: cachedHandles){
-	                        try {
-	                        	String [] parts = key.split(";");
-	                            final int id = Integer.parseInt(parts[1]);
-	                        	BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
-	                        	if(bug != null)
-	                        		bridge.cache(key, bug);
-	                        }catch(Exception e){}
-	                        
-	                        monitor.worked(1);
-	                	}
-	                	monitor.done();
-	                	viewer.refresh();
-                	}
-                };
-                	
-           	 	// Use the progess service to execute the runnable
-            	IProgressService service = PlatformUI.getWorkbench().getProgressService();
-            	try {
-            		service.run(true, false, op);
-            	} catch (InvocationTargetException e) {
-            		// Operation was canceled
-            	} catch (InterruptedException e) {
-            		// Handle the wrapped exception
-            	}
-			}
-		};  
-    	refresh.setText("Refresh all Bugzilla reports");
-    	refresh.setToolTipText("Refresh all Bugzilla reports"); 
-    	refresh.setImageDescriptor(MylarImages.REFRESH);
-        
-//        createCategory = new Action() {
-//            public void run() {
-//                try {
-//                    String label = getLabelNameFromUser("category");
-//                    MylarTasksPlugin.getTaskListManager().getTaskList().createCategory(label);
-//                    viewer.refresh();
-//                } catch (Exception e) {
-//                    MylarPlugin.fail(e, "Couldn't create category", true); 
-//                }
-//            }
-//        };
-//        createCategory.setText("Create category");
-//        createCategory.setToolTipText("Create category");
-//        createCategory.setImageDescriptor(MylarImages.TASK_CATEGORY_NEW);
-        
-        createTask = new CreateTaskAction(false);
-        createTask.setText("Create task");
-        createTask.setToolTipText("Create task");
-        createTask.setImageDescriptor(MylarImages.TASK_NEW);
-
-        createCategory = new CreateTaskAction(true);
-        createCategory.setText("Create category");
-        createCategory.setToolTipText("Create category");
-        createCategory.setImageDescriptor(MylarImages.CATEGORY_NEW);
-        
-        addBugzillaReport = new Action() {
-        	
-        	@Override
-            public void run() {
-                String bugIdString = getBugIdFromUser();
-                int bugId = -1;
-                try {
-                	if (bugIdString != null) {
-                		bugId = Integer.parseInt(bugIdString);
-                	} else {
-                		return;
-                	}
-                } catch (NumberFormatException nfe) {
-                    showMessage("Please enter a valid report number");
-                    return;
-                }
-				
-				// Check the existing tasks to see if the id is used already.
-				// This is to prevent the creation of mutliple Bugzilla tasks
-				//   for the same Bugzilla report.
-				boolean doesIdExistAlready = false;
-				List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
-				for (Iterator<ITask> iter = tasks.iterator(); iter.hasNext() && !doesIdExistAlready;) {
-					ITask task = iter.next();
-					doesIdExistAlready = lookForId(task, "Bugzilla-" + bugId);
-				}
-				if (doesIdExistAlready) {
-                    showMessage("A Bugzilla task with ID Bugzilla-" + bugId + " already exists.");
-                    return;
-				}
-				
-                
-				//HACK need the server name and handle properly
-                ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");
-				
-                Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                if (selectedObject instanceof Task){
-                    ((Task)selectedObject).addSubtask(newTask);
-                } else { 
-                    MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
-                }
-                viewer.refresh();
-            }
-        };
-        addBugzillaReport.setText("Add bugzilla report");
-        addBugzillaReport.setToolTipText("Add bugzilla report");
-        addBugzillaReport.setImageDescriptor(MylarImages.TASK_BUGZILLA_NEW);
-        
-        delete = new Action() {
-        	
-        	@Override
-            public void run() {              
-                boolean deleteConfirmed = MessageDialog.openQuestion(
-                        Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-                        "Confirm delete", 
-                        "Delete selected task and all subtasks?");
-                if (!deleteConfirmed) { 
-                    return;
-                } else {
-                    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                    if (selectedObject instanceof Task) {
-						MylarTasksPlugin.getTaskListManager().deleteTask((Task)selectedObject);
-						MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
-						IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-						
-						// if we couldn't get the page, get out of here
-						if (page == null)
-							return;
-						try{
-                            closeTaskEditors((ITask)selectedObject, page);
-                        }catch(Exception e){
-                        	MylarPlugin.log(e, " deletion failed");
-                        }
-                    } 
-                }
-                viewer.refresh();
-            }
-        };
-        delete.setText("Delete");
-        delete.setToolTipText("Delete");
-        delete.setImageDescriptor(MylarImages.REMOVE);
-        
-        completeTask = new Action() {
-        	
-        	@Override
-            public void run() {              
-                Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                if (selectedObject instanceof Task){ 
-                	((Task)selectedObject).setCompleted(true);                	
-                	viewer.refresh(selectedObject);
-                }
-            }
-        };
-        completeTask.setText("Mark Complete");
-        completeTask.setToolTipText("Mark Complete");
-//        activateTask.setImageDescriptor(MylarImages.REMOVE);
-        
-        incompleteTask = new Action() {
-        	
-        	@Override
-            public void run() {              
-                Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                if (selectedObject instanceof Task){ 
-                	((Task)selectedObject).setCompleted(false);                	
-                	viewer.refresh(selectedObject);
-                }
-            }
-        };
-        incompleteTask.setText("Mark Incomplete");
-        incompleteTask.setToolTipText("Mark Incomplete");
-//        deactivateTask.setImageDescriptor(MylarImages.REMOVE);
-
-        rename = new Action() {
-        	
-        	@Override
-            public void run() {
-                String label = "category";
-                Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                if (selectedObject instanceof Task)  label = "task";
-                
-                String newName = getLabelNameFromUser(label);
-                if (selectedObject instanceof Task) {
-                    ((Task)selectedObject).setLabel(newName);
-                } else if (selectedObject instanceof Category) {
-                    ((Category)selectedObject).setName(newName);
-                }
-                viewer.refresh(selectedObject);
-            }
-        };
-        rename.setText("Rename");
-        rename.setToolTipText("Rename");
-
-        clearSelectedTaskscapeAction = new Action() {
-        	
-        	@Override
-            public void run() {
-                Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                if (selectedObject != null) {
-                	MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
-                	viewer.refresh();
-                }
-            }
-        };
-        clearSelectedTaskscapeAction.setText("Erase Taskscape");
-        clearSelectedTaskscapeAction.setToolTipText("Erase Taskscape");
-        clearSelectedTaskscapeAction.setImageDescriptor(MylarImages.ERASE_TASKSCAPE);
-        
-        doubleClickAction = new Action() {        	
-        	@Override
-            public void run() {
-                ISelection selection = viewer.getSelection();
-                Object obj = ((IStructuredSelection)selection).getFirstElement();
-                if (obj instanceof ITask) {
-                	((ITask)obj).openTaskInEditor();
-                }
-                viewer.refresh(obj);
-            }
-        };            
-
-        filterCompleteTask = new Action() {
-        	@Override
-            public void run() {
-        		MylarUiPlugin.getDefault().setFilterCompleteMode(isChecked());
-        		if (isChecked()) {
-        			viewer.addFilter(completeFilter);
-        			filterInCompleteTask.setChecked(false);
-        			viewer.removeFilter(inCompleteFilter);
-        		} else {
-        			viewer.removeFilter(completeFilter);        			
-        		}
-                viewer.refresh();
-            }
-        };
-        filterCompleteTask.setText("Filter Complete tasks");
-        filterCompleteTask.setToolTipText("Filter Completed tasks");
-        filterCompleteTask.setImageDescriptor(MylarImages.TASK_ACTIVE);
-        filterCompleteTask.setChecked(MylarUiPlugin.getDefault().isFilterCompleteMode());
-        
-        filterInCompleteTask = new Action() {
-        	@Override
-            public void run() {
-        		MylarUiPlugin.getDefault().setFilterInCompleteMode(isChecked());
-        		if (isChecked()) {
-        			viewer.addFilter(inCompleteFilter);
-        			filterCompleteTask.setChecked(false);
-        			viewer.removeFilter(completeFilter);
-        		} else {
-        			viewer.removeFilter(inCompleteFilter);
-        		}
-                viewer.refresh();
-            }
-        };
-        filterInCompleteTask.setText("Filter Incomplete tasks");
-        filterInCompleteTask.setToolTipText("Filter Incomplete tasks");
-        filterInCompleteTask.setImageDescriptor(MylarImages.TASK_INACTIVE);
-        filterInCompleteTask.setChecked(MylarUiPlugin.getDefault().isFilterInCompleteMode());
-        
-        
-        filterOnPriority = new PriorityDropDownAction();        
+    	refresh = new RefreshAction();      	               
+        createTask = new CreateTaskAction();        
+        createCategory = new CreateCategoryAction();                
+        createBugzillaTask = new CreateBugzillaTaskAction();                
+        delete = new DeleteAction();
+        completeTask = new MarkTaskCompleteAction();
+        incompleteTask = new MarkTaskIncompleteAction();        
+        rename = new RenameAction();        
+        clearSelectedTaskscapeAction = new ClearTaskscapeAction();
+        moveTaskToRoot = new MoveTaskToRootAction();
+        doubleClickAction = new OpenTaskEditorAction();            
+        filterCompleteTask = new FilterCompletedTasksAction();        
+        filterInCompleteTask = new FilterIncompleteTasksAction();                        
+        filterOnPriority = new PriorityDropDownAction();             
     }
 
     /**
@@ -1116,22 +1255,19 @@ public class TaskListView extends ViewPart {
 	 * @return <code>true</code> if the id was found in the node or any of its
 	 *         children
 	 */
-    protected boolean lookForId(ITask task, String taskId) {
-		if (task.getHandle().equals(taskId)) {
-			return true;
-		}
-		
-		List<ITask> children = task.getChildren();
-		if (children == null) {
-			return false;
-		}
-		
-        for (ITask childTask : children) {
-			if (lookForId(childTask, taskId)) {
-				return true;
-			}
-		}
-		
+    protected boolean lookForId(String taskId) {
+    	for (ITask task : MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks()) {
+    		if (task.getHandle().equals(taskId)) {
+    			return true;
+    		}
+    	}
+    	for (Category cat : MylarTasksPlugin.getTaskListManager().getTaskList().getCategories()) {
+    		for (ITask task : cat.getTasks()) {
+        		if (task.getHandle().equals(taskId)) {
+        			return true;
+        		}
+        	}
+    	}
 		return false;
 	}
 	
@@ -1146,14 +1282,7 @@ public class TaskListView extends ViewPart {
 
 		if (editor != null) {
 			page.closeEditor(editor, false);
-		}
-		
-		
-		List<ITask> children = task.getChildren();
-		if (children == null) 
-			return;
-        for (ITask child : children) 
-        	closeTaskEditors(child, page);
+		}		
 	}
 	
 	protected void refreshChildren(List<ITask> children) {
@@ -1162,7 +1291,6 @@ public class TaskListView extends ViewPart {
 				if (child instanceof BugzillaTask) {
 					((BugzillaTask)child).refresh();
 				}
-				refreshChildren(child.getChildren());
 			}
 		}
 	}

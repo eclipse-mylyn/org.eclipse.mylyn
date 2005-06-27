@@ -35,6 +35,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaTask;
+import org.eclipse.mylar.tasks.Category;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskList;
@@ -71,12 +72,15 @@ public class XmlUtil {
 		}
 
 		Element root = doc.createElement("TaskList");
-		root.setAttribute("Version", "1.0.0");
+		root.setAttribute("Version", "1.0.1");
 
 		// iterate through each subtask and externalize those
 		//
-		for (int i = 0; i < tlist.getRootTasks().size(); i++) {
-			writeTask(tlist.getRootTasks().get(i), doc, root);
+		for (Category cat : tlist.getCategories()) {
+			writeCategory(cat, doc, root);
+		}
+		for (ITask task : tlist.getRootTasks()) {
+			writeTask(task, doc, root);
 		}
 		doc.appendChild(root);
 		writeDOMtoFile(doc, outFile);
@@ -89,7 +93,7 @@ public class XmlUtil {
 	 * doc  - the document to write
 	 * file - the file to be written to
 	 */
-	public static void writeDOMtoFile(Document doc, File file) {
+	private static void writeDOMtoFile(Document doc, File file) {
 		try {
 			// A file output stream is an output stream for writing data to a File
 			//
@@ -108,7 +112,7 @@ public class XmlUtil {
 	 * doc - the document to be written
 	 * outputStream - the stream to which the document is to be written
 	 */
-	public static void writeDOMtoStream(Document doc, OutputStream outputStream) {
+	private static void writeDOMtoStream(Document doc, OutputStream outputStream) {
 		// Prepare the DOM document for writing
 		// DOMSource - Acts as a holder for a transformation Source tree in the 
 		// form of a Document Object Model (DOM) tree
@@ -141,39 +145,103 @@ public class XmlUtil {
 		}
 	}
 
-	/**
-	 * 
-	 * @param t
-	 * @param doc
-	 * @param root
-	 */
-	public static void writeTask(ITask t, Document doc, Element root) {
+//	/**
+//	 * Method deprecated until subtasks are introduced again.
+//	 * @param t
+//	 * @param doc
+//	 * @param root
+//	 */
+//	private static void writeTaskAndSubTasks(ITask t, Document doc, Element root) {
+//
+//		// create node and set attributes
+//		//    	
+//		Element node = doc.createElement("Task");
+//		node.setAttribute("Path", t.getPath());
+//		node.setAttribute("Label", t.getLabel());
+//		node.setAttribute("Handle", t.getHandle());
+//		node.setAttribute("Priority", t.getPriority());
+//
+//		if (t.isCategory()) {
+//			node.setAttribute("IsCategory", "true");
+//		} else {
+//			node.setAttribute("IsCategory", "false");
+//		}
+//		if (t.isCompleted()) {
+//			node.setAttribute("Complete", "true");
+//		} else {
+//			node.setAttribute("Complete", "false");
+//		}
+//		if (t.isActive()) {
+//			node.setAttribute("Active", "true");
+//		} else {
+//			node.setAttribute("Active", "false");
+//		}
+//		if (t instanceof BugzillaTask) {
+//			BugzillaTask bt = (BugzillaTask) t;
+//			node.setAttribute("Bugzilla", "true");
+//			node.setAttribute("LastDate", new Long(bt.getLastRefreshTime()
+//					.getTime()).toString());
+//			if (bt.isDirty()) {
+//				node.setAttribute("Dirty", "true");
+//			} else {
+//				node.setAttribute("Dirty", "false");
+//			}
+//			bt.saveBugReport(false);
+//		} else {
+//			node.setAttribute("Bugzilla", "false");
+//		}
+//		node.setAttribute("Notes", t.getNotes());
+//		node.setAttribute("Elapsed", t.getElapsedTime());
+//		node.setAttribute("Estimated", t.getEstimatedTime());
+//		List<String> rl = t.getRelatedLinks().getLinks();
+//		int i = 0;
+//		for (String link : rl) {
+//			node.setAttribute("link"+i, link);
+//			i++;
+//		}
+//		
+//		List<ITask> children = t.getChildren();
+//
+//		i = 0; 
+//		for (i = 0; i < children.size(); i++) {
+//			writeTaskAndSubTasks(children.get(i), doc, node);
+//		}
+//
+//		// append new node to root node
+//		//
+//		root.appendChild(node);
+//		return;
+//	}
 
-		// create node and set attributes
-		//    	
-		Element node = doc.createElement("Task");
-		node.setAttribute("Path", t.getPath());
-		node.setAttribute("Label", t.getLabel());
-		node.setAttribute("Handle", t.getHandle());
-		node.setAttribute("Priority", t.getPriority());
-
-		if (t.isCategory()) {
-			node.setAttribute("IsCategory", "true");
-		} else {
-			node.setAttribute("IsCategory", "false");
+	private static void writeCategory(Category cat, Document doc, Element parent) {
+		Element node = doc.createElement("Category");
+		node.setAttribute("Name", cat.getName());
+		
+		for (ITask t : cat.getTasks()) {
+			writeTask(t, doc, node);
 		}
-		if (t.isCompleted()) {
+		parent.appendChild(node);
+	}
+	
+	private static void writeTask(ITask task, Document doc, Element parent) {
+		Element node = doc.createElement("Task");
+		node.setAttribute("Path", task.getPath());
+		node.setAttribute("Label", task.getLabel());
+		node.setAttribute("Handle", task.getHandle());
+		node.setAttribute("Priority", task.getPriority());
+		
+		if (task.isCompleted()) {
 			node.setAttribute("Complete", "true");
 		} else {
 			node.setAttribute("Complete", "false");
 		}
-		if (t.isActive()) {
+		if (task.isActive()) {
 			node.setAttribute("Active", "true");
 		} else {
 			node.setAttribute("Active", "false");
 		}
-		if (t instanceof BugzillaTask) {
-			BugzillaTask bt = (BugzillaTask) t;
+		if (task instanceof BugzillaTask) {
+			BugzillaTask bt = (BugzillaTask) task;
 			node.setAttribute("Bugzilla", "true");
 			node.setAttribute("LastDate", new Long(bt.getLastRefreshTime()
 					.getTime()).toString());
@@ -186,29 +254,23 @@ public class XmlUtil {
 		} else {
 			node.setAttribute("Bugzilla", "false");
 		}
-		node.setAttribute("Notes", t.getNotes());
-		node.setAttribute("Elapsed", t.getElapsedTime());
-		node.setAttribute("Estimated", t.getEstimatedTime());
-		List<String> rl = t.getRelatedLinks().getLinks();
+		node.setAttribute("Notes", task.getNotes());
+		node.setAttribute("Elapsed", task.getElapsedTime());
+		node.setAttribute("Estimated", task.getEstimatedTime());
+		List<String> rl = task.getRelatedLinks().getLinks();
 		int i = 0;
 		for (String link : rl) {
 			node.setAttribute("link"+i, link);
 			i++;
 		}
 		
-		List<ITask> children = t.getChildren();
-
-		i = 0; 
-		for (i = 0; i < children.size(); i++) {
-			writeTask(children.get(i), doc, node);
+		for (ITask t : task.getChildren()) {
+			writeTask(t, doc, node);
 		}
-
-		// append new node to root node
-		//
-		root.appendChild(node);
+		parent.appendChild(node);
 		return;
 	}
-
+	
 	public static void readTaskList(TaskList tlist, File inFile) {
 		try {
 			// parse file
@@ -220,10 +282,23 @@ public class XmlUtil {
 			Element root = doc.getDocumentElement();
 			readVersion = root.getAttribute("Version");
 
-			NodeList list = root.getChildNodes();
-			for (int i = 0; i < list.getLength(); i++) {
-				Node child = list.item(i);
-				tlist.addRootTask(readTask(child, null, tlist));
+			if (readVersion.equals("1.0.0")) {
+				NodeList list = root.getChildNodes();
+				for (int i = 0; i < list.getLength(); i++) {
+					Node child = list.item(i);
+					readTasksToNewFormat(child, tlist);
+					//tlist.addRootTask(readTaskAndSubTasks(child, null, tlist));
+				}
+			} else {
+				NodeList list = root.getChildNodes();
+				for (int i = 0; i < list.getLength(); i++) {
+					Node child = list.item(i);
+					if (child.getNodeName().equals("Category")) {
+						readCategory(child, tlist);
+					} else {
+						tlist.addRootTask(readTask(child, tlist, null, null));
+					}
+				}
 			}
 		} catch (Exception e) {
 			String name = inFile.getAbsolutePath();
@@ -241,7 +316,7 @@ public class XmlUtil {
 	 * Throws   - XMLException if the file cannot be parsed as XML
 	 *          - IOException if the file cannot be opened
 	 */
-	public static Document openAsDOM(File inputFile) throws IOException {
+	private static Document openAsDOM(File inputFile) throws IOException {
 
 		// A factory API that enables applications to obtain a parser 
 		// that produces DOM object trees from XML documents
@@ -270,19 +345,113 @@ public class XmlUtil {
 		}
 		return document;
 	}
+
+//	private static ITask readTaskAndSubTasks(Node node, ITask root, TaskList tlist) {
+//		//extract node and create new sub task
+//		//
+//		Element e = (Element) node;
+//		ITask t;
+//		String handle = "";
+//		if (e.hasAttribute("ID")) {
+//			handle = e.getAttribute("ID");
+//		} else {
+//			handle = e.getAttribute("Handle");
+//		}
+//		
+//		String label = e.getAttribute("Label");
+//		String priority = e.getAttribute("Priority");
+//
+//		if (e.getAttribute("Bugzilla").compareTo("true") == 0) {
+//			t = new BugzillaTask(handle, label, true);
+//			BugzillaTask bt = (BugzillaTask) t;
+//			bt.setState(BugTaskState.FREE);
+//			bt.setLastRefresh(new Date(new Long(e.getAttribute("LastDate"))
+//					.longValue()));
+//			if (e.getAttribute("Dirty").compareTo("true") == 0) {
+//				bt.setDirty(true);
+//			} else {
+//				bt.setDirty(false);
+//			}
+//			if (bt.readBugReport() == false) {
+//				MylarPlugin.log("Failed to read bug report", null);
+//			}
+//		} else {
+//			t = new Task(handle, label);			
+//		}
+//		t.setPriority(priority);
+//		t.setPath(e.getAttribute("Path"));
+//		
+//		if (e.getAttribute("Active").compareTo("true") == 0) {
+//			t.setActive(true);
+//			tlist.setActive(t, true);
+//		} else {
+//			t.setActive(false);
+//		}
+//
+//		if (e.getAttribute("Complete").compareTo("true") == 0) {
+//			t.setCompleted(true);
+//		} else {
+//			t.setCompleted(false);
+//		}
+//		if (e.getAttribute("IsCategory").compareTo("true") == 0) {
+//			t.setIsCategory(true);
+//		} else {
+//			t.setIsCategory(false);
+//		}
+//
+//		if (e.hasAttribute("Notes")) {
+//			t.setNotes(e.getAttribute("Notes"));			
+//		} else {
+//			t.setNotes("");
+//		}
+//		if (e.hasAttribute("Elapsed")) {
+//			t.setElapsedTime(e.getAttribute("Elapsed"));			
+//		} else {
+//			t.setElapsedTime("");
+//		}
+//		if (e.hasAttribute("Estimated")) {
+//			t.setEstimatedTime(e.getAttribute("Estimated"));			
+//		} else {
+//			t.setEstimatedTime("");
+//		}
+//		
+//		int i = 0;
+//		while (e.hasAttribute("link"+i)) {
+//			t.getRelatedLinks().add(e.getAttribute("link"+i));
+//			i++;
+//		}
+//				
+//		if (!readVersion.equals("1.0.0")) {
+//			// for newer revisions
+//		}
+//
+//		i = 0;
+//		NodeList list = e.getChildNodes();
+//		for (i = 0; i < list.getLength(); i++) {
+//			Node child = list.item(i);
+//			t.addSubTask(readTaskAndSubTasks(child, t, tlist));
+//		}
+//		if (root != null) {
+//			t.setParent(root);
+//		}
+//		return t;
+//	}	
 	
-	public static ITask readTask(Node node, ITask root, TaskList tlist) {
-		//extract node and create new sub task
-		//
+	private static void readCategory(Node node, TaskList tlist) {
+		Element e = (Element) node;
+		Category cat = new Category(e.getAttribute("Name"));
+		tlist.addCategory(cat);
+		NodeList list = node.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			cat.addTask(readTask(child, tlist, cat, null));
+		}
+	}
+	
+	private static ITask readTask(Node node, TaskList tlist, Category cat, ITask parent) {
 		Element e = (Element) node;
 		ITask t;
-		String handle = "";
-		if (e.hasAttribute("ID")) {
-			handle = e.getAttribute("ID");
-		} else {
-			handle = e.getAttribute("Handle");
-		}
-		
+		String handle = e.getAttribute("Handle");		
 		String label = e.getAttribute("Label");
 		String priority = e.getAttribute("Priority");
 
@@ -312,18 +481,11 @@ public class XmlUtil {
 		} else {
 			t.setActive(false);
 		}
-
 		if (e.getAttribute("Complete").compareTo("true") == 0) {
 			t.setCompleted(true);
 		} else {
 			t.setCompleted(false);
-		}
-		if (e.getAttribute("IsCategory").compareTo("true") == 0) {
-			t.setIsCategory(true);
-		} else {
-			t.setIsCategory(false);
-		}
-
+		}		
 		if (e.hasAttribute("Notes")) {
 			t.setNotes(e.getAttribute("Notes"));			
 		} else {
@@ -345,22 +507,140 @@ public class XmlUtil {
 			t.getRelatedLinks().add(e.getAttribute("link"+i));
 			i++;
 		}
-				
-		if (!readVersion.equals("1.0.0")) {
-			// for newer revisions
-			// XXX: readVersion had to be read once to remove warning..
+		t.setCategory(cat);
+		t.setParent(parent);
+		NodeList list = e.getChildNodes();
+		for (i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			t.addSubTask(readTask(child, tlist, null, t));
+		}
+		return t;
+	}
+	
+	private static void readTasksToNewFormat(Node node, TaskList tlist) {
+		Element e = (Element) node;
+		ITask t;
+		String handle = e.getAttribute("Handle");
+		String label = e.getAttribute("Label");
+		
+		if (e.getAttribute("IsCategory").compareTo("true") == 0) {
+			Category c = new Category(label);
+			NodeList list = e.getChildNodes();
+			for (int i = 0; i < list.getLength(); i++) {
+				Node child = list.item(i);
+				readSubTasksToNewFormat(child, tlist, c);
+			}
+			tlist.addCategory(c);
+		} else {			
+			String priority = e.getAttribute("Priority");
+			if (e.getAttribute("Bugzilla").compareTo("true") == 0) {
+				t = new BugzillaTask(handle, label, true);
+				BugzillaTask bt = (BugzillaTask) t;
+				bt.setState(BugTaskState.FREE);
+				bt.setLastRefresh(new Date(new Long(e.getAttribute("LastDate"))
+						.longValue()));
+				if (e.getAttribute("Dirty").compareTo("true") == 0) {
+					bt.setDirty(true);
+				} else {
+					bt.setDirty(false);
+				}
+				if (bt.readBugReport() == false) {
+					MylarPlugin.log("Failed to read bug report", null);
+				}
+			} else {
+				t = new Task(handle, label);
+			}
+			t.setPriority(priority);
+			t.setPath(e.getAttribute("Path"));
+			t.setNotes(e.getAttribute("Notes"));
+			t.setElapsedTime(e.getAttribute("Elapsed"));
+			t.setEstimatedTime(e.getAttribute("Estimated"));
+
+			if (e.getAttribute("Active").compareTo("true") == 0) {
+				t.setActive(true);
+				tlist.setActive(t, true);
+			} else {
+				t.setActive(false);
+			}
+			if (e.getAttribute("Complete").compareTo("true") == 0) {
+				t.setCompleted(true);
+			} else {
+				t.setCompleted(false);
+			}
+
+			int i = 0;
+			while (e.hasAttribute("link" + i)) {
+				t.getRelatedLinks().add(e.getAttribute("link" + i));
+				i++;
+			}
+			tlist.addRootTask(t);
+			i = 0;
+			NodeList list = e.getChildNodes();
+			for (i = 0; i < list.getLength(); i++) {
+				Node child = list.item(i);
+				readSubTasksToNewFormat(child, tlist, null);
+			}
+		}
+	}
+	private static void readSubTasksToNewFormat(Node node, TaskList tlist, Category cat) {
+		Element e = (Element) node;
+		ITask t;
+		String handle = e.getAttribute("Handle");
+		String label = e.getAttribute("Label");
+		String priority = e.getAttribute("Priority");
+		if (e.getAttribute("Bugzilla").compareTo("true") == 0) {
+			t = new BugzillaTask(handle, label, true);
+			BugzillaTask bt = (BugzillaTask) t;
+			bt.setState(BugTaskState.FREE);
+			bt.setLastRefresh(new Date(new Long(e.getAttribute("LastDate"))
+					.longValue()));
+			if (e.getAttribute("Dirty").compareTo("true") == 0) {
+				bt.setDirty(true);
+			} else {
+				bt.setDirty(false);
+			}
+			if (bt.readBugReport() == false) {
+				MylarPlugin.log("Failed to read bug report", null);
+			}
+		} else {
+			t = new Task(handle, label);
+		}
+		t.setPriority(priority);
+		t.setPath(e.getAttribute("Path"));
+		t.setNotes(e.getAttribute("Notes"));
+		t.setElapsedTime(e.getAttribute("Elapsed"));
+		t.setEstimatedTime(e.getAttribute("Estimated"));
+
+		if (e.getAttribute("Active").compareTo("true") == 0) {
+			t.setActive(true);
+			tlist.setActive(t, true);
+		} else {
+			t.setActive(false);
+		}
+		if (e.getAttribute("Complete").compareTo("true") == 0) {
+			t.setCompleted(true);
+		} else {
+			t.setCompleted(false);
 		}
 
+		int i = 0;
+		while (e.hasAttribute("link" + i)) {
+			t.getRelatedLinks().add(e.getAttribute("link" + i));
+			i++;
+		}
+		if (cat == null) {
+			tlist.addRootTask(t);
+		} else {
+			cat.addTask(t);
+			t.setCategory(cat);
+		}
+		
 		i = 0;
 		NodeList list = e.getChildNodes();
 		for (i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
-			t.addSubtask(readTask(child, t, tlist));
+			readSubTasksToNewFormat(child, tlist, cat);
 		}
-		if (root != null) {
-			t.setParent(root);
-		}
-		return t;
-	}	
+	}
 }
 
