@@ -56,11 +56,11 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
  * Bugzilla search page
  */
 public class BugzillaSearchPage extends DialogPage implements ISearchPage {
-	private Combo summaryPattern = null;
+	protected Combo summaryPattern = null;
 	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<BugzillaSearchData>(20);
 	private static ArrayList<BugzillaSearchData> previousEmailPatterns = new ArrayList<BugzillaSearchData>(20);
 	private static ArrayList<BugzillaSearchData> previousCommentPatterns = new ArrayList<BugzillaSearchData>(20);
-	private ISearchPageContainer scontainer = null;
+	protected ISearchPageContainer scontainer = null;
 	private boolean firstTime = true;
 
 	private IDialogSettings fDialogSettings;
@@ -71,7 +71,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	private static final String [] emailOperationValues = {"substring", "exact", "regexp"};
 	private static final String [] emailRoleValues = {"emailassigned_to1", "emailreporter1", "emailcc1", "emaillongdesc1"};
 
-	IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
+	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 	private String [] statusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES));
 	private String [] preselectedStatusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES));
 	private String [] resolutionValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES));
@@ -132,7 +132,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		WorkbenchHelpSystem.getInstance().setHelp(control, IBugzillaConstants.SEARCH_PAGE_CONTEXT);
 	}
 
-	private Control createTextSearchComposite(Composite control) {
+	protected Control createTextSearchComposite(Composite control) {
 		GridData gd;
 		Label label;
 
@@ -225,7 +225,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	/**
 	 * Creates the area for selection on product/component/version.
 	 */
-	private Control createProductAttributes(Composite control) {
+	protected Control createProductAttributes(Composite control) {
 		GridData gd;
 		GridLayout layout;
 		
@@ -278,7 +278,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	/**
 	 * Creates the area for selection of bug attributes (status, etc.)
 	 */
-	private Control createLists(Composite control) {
+	protected Control createLists(Composite control) {
 		GridData gd;
 		GridLayout layout;
 		
@@ -346,7 +346,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	
 	private Text daysText;
 	
-	private Control createLastDays(Composite control)
+	protected Control createLastDays(Composite control)
 	{
 		GridLayout layout;
 		GridData gd;
@@ -393,7 +393,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	}
 	
 	private static final String [] emailText = {"bug owner", "reporter", "CC list", "commenter"};
-	private Control createEmail(Composite control) {
+	protected Control createEmail(Composite control) {
 		GridLayout layout;
 		GridData gd;
 
@@ -453,7 +453,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	 * Creates the buttons for remembering a query and accessing previously
 	 * saved queries.
 	 */
-	private Control createSaveQuery(Composite control) {
+	protected Control createSaveQuery(Composite control) {
 		GridLayout layout;
 		GridData gd;
 
@@ -521,7 +521,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		return input;
 	}
 			
-	private Control createUpdate(final Composite control) {
+	protected Control createUpdate(final Composite control) {
 		GridData gd;
 		Label label;
 
@@ -759,7 +759,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	}
 	
 	
-	private String getQueryURL(StringBuffer params) {
+	protected String getQueryURL(StringBuffer params) {
 		StringBuffer url = new StringBuffer(getQueryURLStart().toString());
 		url.append(params);
 		return url.toString();
@@ -800,7 +800,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	 * Example: short_desc_type=substring&amp;short_desc=bla&amp; ...
 	 * @throws UnsupportedEncodingException
 	 */
-	private StringBuffer getQueryParameters() throws UnsupportedEncodingException {
+	protected StringBuffer getQueryParameters() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
 		
 		sb.append("short_desc_type=");
@@ -906,55 +906,55 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	//--------------- Configuration handling --------------
 
 	// Dialog store id constants
-	private final static String PAGE_NAME = "BugzillaSearchPage"; //$NON-NLS-1$
+	protected final static String PAGE_NAME = "BugzillaSearchPage"; //$NON-NLS-1$
 
-	private Combo summaryOperation;
+	protected Combo summaryOperation;
 
-	private List product;
+	protected List product;
 
-	private List os;
+	protected List os;
 
-	private List hardware;
+	protected List hardware;
 
-	private List priority;
+	protected List priority;
 
-	private List severity;
+	protected List severity;
 
-	private List resolution;
+	protected List resolution;
 
-	private List status;
+	protected List status;
 
-	private Combo commentOperation;
+	protected Combo commentOperation;
 
-	private Combo commentPattern;
+	protected Combo commentPattern;
 
-	private List component;
+	protected List component;
 
-	private List version;
+	protected List version;
 
-	private List target;
+	protected List target;
 
-	private Combo emailOperation;
+	protected Combo emailOperation;
 
-	private Combo emailPattern;
+	protected Combo emailPattern;
 	
-	private Button [] emailButton;
+	protected Button [] emailButton;
 	
 	/** File containing saved queries */
-	private static SavedQueryFile input;
+	protected static SavedQueryFile input;
 
 	/** "Remember query" button */
-	private Button saveButton;
+	protected Button saveButton;
 	/** "Saved queries..." button */
-	private Button loadButton;
+	protected Button loadButton;
 	/** Run a remembered query */
-	boolean rememberedQuery = false;
+	protected boolean rememberedQuery = false;
 	/** Index of the saved query to run */
-	int selIndex;
+	protected int selIndex;
 
-	private Button updateButton;
+	protected Button updateButton;
 	
-	private ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
+	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
 	
 	/**
 	 * Returns the page settings for this Java search page.
