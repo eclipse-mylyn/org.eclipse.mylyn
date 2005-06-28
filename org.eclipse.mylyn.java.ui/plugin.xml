@@ -161,4 +161,38 @@
       </wizard>
    </extension>
 
+   <extension
+       	 point="org.eclipse.ui.actionSets">
+   	  <actionSet
+            label="Mylar Java"
+            description="Mylar Java"
+            visible="true"
+            id="org.eclipse.mylar.java.actionSet">
+          <action
+               definitionId="org.eclipse.mylar.java.ui.search.taskscape"
+               label="Search the current task context"
+               class="org.eclipse.mylar.java.ui.actions.FindReferencesInTaskscapeAction"
+               id="org.eclipse.mylar.java.ui.search.taskscape">
+         </action>
+      </actionSet>
+   </extension>
+
+   <extension point="org.eclipse.ui.commands">
+	  <command
+            name="Search Current Task Context"
+            description="Search the current task context"
+            id="org.eclipse.mylar.java.ui.search.taskscape"
+            categoryId="org.eclipse.mylar">
+      </command>
+   </extension>
+
+   <extension point="org.eclipse.ui.bindings">   
+	  <key
+            sequence="M2+M3+G"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.java.ui.search.taskscape"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key> 
+   </extension> 
+
 </plugin>

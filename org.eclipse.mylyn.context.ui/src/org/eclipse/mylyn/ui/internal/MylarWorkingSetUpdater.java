@@ -131,4 +131,8 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, ITaskscapeLis
 		}
 	}
 
+	public IWorkingSet getWorkingSet() {
+		return workingSets.get(0);
+	}
+
 }

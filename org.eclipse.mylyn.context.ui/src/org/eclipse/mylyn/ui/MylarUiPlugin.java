@@ -422,5 +422,12 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 			workingSetUpdaters = new ArrayList<MylarWorkingSetUpdater>();
 		workingSetUpdaters.add(updater);
 		MylarPlugin.getTaskscapeManager().addListener(updater);
+	}
+
+	public MylarWorkingSetUpdater getWorkingSetUpdater() {
+		if(workingSetUpdaters == null)
+			return null;
+		else
+			return workingSetUpdaters.get(0);
 	}	
 }
