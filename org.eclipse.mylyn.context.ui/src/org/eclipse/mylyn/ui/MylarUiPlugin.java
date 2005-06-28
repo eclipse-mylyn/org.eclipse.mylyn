@@ -75,14 +75,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     public static final String GAMMA_SETTING_STANDARD = "org.eclipse.mylar.ui.gamma.standard";
     public static final String GAMMA_SETTING_LIGHTENED = "org.eclipse.mylar.ui.gamma.lightened";
     public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.filter.global";
-    public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.mode.intersection";
-    public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylar.ui.mode.filter.complete";
-    public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.ui.mode.filter.incomplete";
-    public static final String FILTER_P1_MODE = "org.eclipse.mylar.ui.mode.show.p1";
-    public static final String FILTER_P2_MODE = "org.eclipse.mylar.ui.mode.show.p2";
-    public static final String FILTER_P3_MODE = "org.eclipse.mylar.ui.mode.show.p3";
-    public static final String FILTER_P4_MODE = "org.eclipse.mylar.ui.mode.show.p4";
-    public static final String FILTER_P5_MODE = "org.eclipse.mylar.ui.mode.show.p5";
+    public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.mode.intersection";    
     
     private HighlighterList highlighters = null;
     private Highlighter intersectionHighlighter;
@@ -429,89 +422,5 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 			workingSetUpdaters = new ArrayList<MylarWorkingSetUpdater>();
 		workingSetUpdaters.add(updater);
 		MylarPlugin.getTaskscapeManager().addListener(updater);
-	}
-	
-	public void setFilterCompleteMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_COMPLETE_MODE, isFilterOn);
-	}
-	
-	public boolean isFilterCompleteMode() {
-		if (getPrefs().contains(FILTER_COMPLETE_MODE)) {
-			return getPrefs().getBoolean(FILTER_COMPLETE_MODE);
-		} else {
-			return false;
-		}
-	}
-	
-	public void setFilterInCompleteMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_INCOMPLETE_MODE, isFilterOn);
-	}
-	
-	public boolean isFilterInCompleteMode() {
-		if (getPrefs().contains(FILTER_INCOMPLETE_MODE)) {
-			return getPrefs().getBoolean(FILTER_INCOMPLETE_MODE);
-		} else {
-			return false;
-		}
-	}
-	
-	public void setP1FilterMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_P1_MODE, isFilterOn);
-	}
-	
-	public boolean isP1FilterMode() {
-		if (getPrefs().contains(FILTER_P1_MODE)) {
-			return getPrefs().getBoolean(FILTER_P1_MODE);
-		} else {
-			return false;
-		}
-	}
-	
-	public void setP2FilterMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_P2_MODE, isFilterOn);
-	}
-	
-	public boolean isP2FilterMode() {
-		if (getPrefs().contains(FILTER_P2_MODE)) {
-			return getPrefs().getBoolean(FILTER_P2_MODE);
-		} else {
-			return false;
-		}
-	}
-	
-	public void setP3FilterMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_P3_MODE, isFilterOn);
-	}
-	
-	public boolean isP3FilterMode() {
-		if (getPrefs().contains(FILTER_P3_MODE)) {
-			return getPrefs().getBoolean(FILTER_P3_MODE);
-		} else {
-			return false;
-		}
-	}
-	
-	public void setP4FilterMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_P4_MODE, isFilterOn);
-	}
-	
-	public boolean isP4FilterMode() {
-		if (getPrefs().contains(FILTER_P4_MODE)) {
-			return getPrefs().getBoolean(FILTER_P4_MODE);
-		} else {
-			return false;
-		}
-	}
-	
-	public void setP5FilterMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_P5_MODE, isFilterOn);
-	}
-	
-	public boolean isP5FilterMode() {
-		if (getPrefs().contains(FILTER_P5_MODE)) {
-			return getPrefs().getBoolean(FILTER_P5_MODE);
-		} else {
-			return false;
-		}
-	}
+	}	
 }
