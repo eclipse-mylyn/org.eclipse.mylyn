@@ -61,6 +61,7 @@ import org.eclipse.mylar.tasks.Category;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
+import org.eclipse.mylar.tasks.MylarTasksPlugin.Priority_Level;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.tasks.ui.BugzillaTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
@@ -139,7 +140,7 @@ public class TaskListView extends ViewPart {
     public static final String tableSortIdentifier = "org.eclipse.mylar.tasks.ui.views.tasklist.sortIndex";
     private int sortIndex = 2;
     
-    private String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
+    private String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };    
     
     private final class MoveTaskToRootAction extends Action {
 		public MoveTaskToRootAction() {
@@ -174,12 +175,12 @@ public class TaskListView extends ViewPart {
     		setText("Filter Incomplete tasks");
             setToolTipText("Filter Incomplete tasks");
             setImageDescriptor(MylarImages.TASK_INACTIVE);
-            setChecked(MylarUiPlugin.getDefault().isFilterInCompleteMode());
+            setChecked(MylarTasksPlugin.getDefault().isFilterInCompleteMode());
     	}
     	
 		@Override
 		public void run() {
-			MylarUiPlugin.getDefault().setFilterInCompleteMode(isChecked());
+			MylarTasksPlugin.getDefault().setFilterInCompleteMode(isChecked());
 			if (isChecked()) {
 				viewer.addFilter(inCompleteFilter);
 				filterCompleteTask.setChecked(false);
@@ -196,11 +197,11 @@ public class TaskListView extends ViewPart {
 			setText("Filter Complete tasks");
 	        setToolTipText("Filter Completed tasks");
 	        setImageDescriptor(MylarImages.TASK_ACTIVE);
-	        setChecked(MylarUiPlugin.getDefault().isFilterCompleteMode());
+	        setChecked(MylarTasksPlugin.getDefault().isFilterCompleteMode());
 		}
 		@Override
 		public void run() {
-			MylarUiPlugin.getDefault().setFilterCompleteMode(isChecked());
+			MylarTasksPlugin.getDefault().setFilterCompleteMode(isChecked());
 			if (isChecked()) {
 				viewer.addFilter(completeFilter);
 				filterInCompleteTask.setChecked(false);
@@ -504,6 +505,7 @@ public class TaskListView extends ViewPart {
     	private Menu dropDownMenu = null;
     	
 		public PriorityDropDownAction() {
+			super();
 			setText("Display Priorities");
 			setToolTipText("Show Tasks with Priority Levels");
 			setImageDescriptor(MylarImages.FILTER_DECLARATIONS);
@@ -539,7 +541,7 @@ public class TaskListView extends ViewPart {
 			Action P1 = new Action(PRIORITY_LEVELS[0], AS_CHECK_BOX) {	    		
 	    		@Override
 				public void run() {
-	    			MylarUiPlugin.getDefault().setP1FilterMode(!isChecked());
+	    			MylarTasksPlugin.setPriorityLevel(MylarTasksPlugin.Priority_Level.P1, isChecked());
 	    			if (isChecked()) {
 	    				priorityFilter.displayPriority(PRIORITY_LEVELS[0]);
 	    			} else {
@@ -549,7 +551,7 @@ public class TaskListView extends ViewPart {
 				}
 			};  
 			P1.setEnabled(true);
-			P1.setChecked(!MylarUiPlugin.getDefault().isP1FilterMode());
+			P1.setChecked(MylarTasksPlugin.getPriorityLevel(MylarTasksPlugin.Priority_Level.P1));
 			P1.setToolTipText(PRIORITY_LEVELS[0]);
 			ActionContributionItem item= new ActionContributionItem(P1);
 			item.fill(dropDownMenu, -1);
@@ -557,7 +559,7 @@ public class TaskListView extends ViewPart {
 			Action P2 = new Action(PRIORITY_LEVELS[1], AS_CHECK_BOX) {	    		
 	    		@Override
 				public void run() {
-	    			MylarUiPlugin.getDefault().setP2FilterMode(!isChecked());
+	    			MylarTasksPlugin.setPriorityLevel(MylarTasksPlugin.Priority_Level.P2, isChecked());
 	    			if (isChecked()) {
 	    				priorityFilter.displayPriority(PRIORITY_LEVELS[1]);
 	    			} else {
@@ -567,7 +569,7 @@ public class TaskListView extends ViewPart {
 				}
 			};  
 			P2.setEnabled(true);
-			P2.setChecked(!MylarUiPlugin.getDefault().isP2FilterMode());
+			P2.setChecked(MylarTasksPlugin.getPriorityLevel(MylarTasksPlugin.Priority_Level.P2));
 			P2.setToolTipText(PRIORITY_LEVELS[1]);
 			item= new ActionContributionItem(P2);
 			item.fill(dropDownMenu, -1);
@@ -575,7 +577,7 @@ public class TaskListView extends ViewPart {
 			Action P3 = new Action(PRIORITY_LEVELS[2], AS_CHECK_BOX) {	    		
 	    		@Override
 				public void run() { 
-	    			MylarUiPlugin.getDefault().setP3FilterMode(!isChecked());
+	    			MylarTasksPlugin.setPriorityLevel(MylarTasksPlugin.Priority_Level.P3, isChecked());
 	    			if (isChecked()) {
 	    				priorityFilter.displayPriority(PRIORITY_LEVELS[2]);
 	    			} else {
@@ -585,7 +587,7 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P3.setEnabled(true);
-			P3.setChecked(!MylarUiPlugin.getDefault().isP3FilterMode());
+			P3.setChecked(MylarTasksPlugin.getPriorityLevel(MylarTasksPlugin.Priority_Level.P3));
 			P3.setToolTipText(PRIORITY_LEVELS[2]);
 			item= new ActionContributionItem(P3);
 			item.fill(dropDownMenu, -1);
@@ -593,7 +595,7 @@ public class TaskListView extends ViewPart {
 			Action P4 = new Action(PRIORITY_LEVELS[3], AS_CHECK_BOX) {	    		
 	    		@Override
 				public void run() {
-	    			MylarUiPlugin.getDefault().setP4FilterMode(!isChecked());
+	    			MylarTasksPlugin.setPriorityLevel(MylarTasksPlugin.Priority_Level.P4, isChecked());
 	    			if (isChecked()) {
 	    				priorityFilter.displayPriority(PRIORITY_LEVELS[3]);
 	    			} else {
@@ -603,7 +605,7 @@ public class TaskListView extends ViewPart {
 				}
 			};
 			P4.setEnabled(true);
-			P4.setChecked(!MylarUiPlugin.getDefault().isP4FilterMode());
+			P4.setChecked(MylarTasksPlugin.getPriorityLevel(MylarTasksPlugin.Priority_Level.P4));
 			P4.setToolTipText(PRIORITY_LEVELS[3]);
 			item= new ActionContributionItem(P4);
 			item.fill(dropDownMenu, -1);
@@ -611,7 +613,7 @@ public class TaskListView extends ViewPart {
 			Action P5 = new Action(PRIORITY_LEVELS[4], AS_CHECK_BOX) {	    		
 	    		@Override
 				public void run() { 
-	    			MylarUiPlugin.getDefault().setP5FilterMode(!isChecked());
+	    			MylarTasksPlugin.setPriorityLevel(MylarTasksPlugin.Priority_Level.P5, isChecked());
 	    			if (isChecked()) {
 	    				priorityFilter.displayPriority(PRIORITY_LEVELS[4]);
 	    			} else {
@@ -621,12 +623,13 @@ public class TaskListView extends ViewPart {
 	    		}
 			};  
 			P5.setEnabled(true);
-			P5.setChecked(!MylarUiPlugin.getDefault().isP5FilterMode());
+			P5.setChecked(MylarTasksPlugin.getPriorityLevel(MylarTasksPlugin.Priority_Level.P5));
 			P5.setToolTipText(PRIORITY_LEVELS[4]);
 			item= new ActionContributionItem(P5);
 			item.fill(dropDownMenu, -1);			
 		}
-		public void run() {			
+		public void run() {	
+			this.setChecked(isChecked());
 		}
     }
     
@@ -661,21 +664,8 @@ public class TaskListView extends ViewPart {
     	private List<String> priorities = new ArrayList<String>();
     	
     	public PriorityFilter() {
-    		// if filter is off, then add to list
-    		if (!MylarUiPlugin.getDefault().isP1FilterMode()) {
-    			displayPriority("P1");
-    		}
-    		if (!MylarUiPlugin.getDefault().isP2FilterMode()) {
-    			displayPriority("P2");
-    		}
-    		if (!MylarUiPlugin.getDefault().isP3FilterMode()) {
-    			displayPriority("P3");
-    		}
-    		if (!MylarUiPlugin.getDefault().isP4FilterMode()) {
-    			displayPriority("P4");
-    		}
-    		if (!MylarUiPlugin.getDefault().isP5FilterMode()) {
-    			displayPriority("P5");
+    		for (Priority_Level level : MylarTasksPlugin.getPriorityLevels()) {
+    			displayPriority(level.toString());
     		}
     	}
     	
@@ -976,8 +966,8 @@ public class TaskListView extends ViewPart {
         }
         viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
         viewer.addFilter(priorityFilter);
-        if(MylarUiPlugin.getDefault().isFilterInCompleteMode()) viewer.addFilter(inCompleteFilter);
-        if(MylarUiPlugin.getDefault().isFilterCompleteMode()) viewer.addFilter(completeFilter);
+        if(MylarTasksPlugin.getDefault().isFilterInCompleteMode()) viewer.addFilter(inCompleteFilter);
+        if(MylarTasksPlugin.getDefault().isFilterCompleteMode()) viewer.addFilter(completeFilter);
         viewer.refresh();
     }
         
