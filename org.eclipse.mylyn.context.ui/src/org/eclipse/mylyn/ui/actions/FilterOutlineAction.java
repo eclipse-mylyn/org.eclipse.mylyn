@@ -38,6 +38,7 @@ public class FilterOutlineAction extends AbstractInterestFilterAction {
 	 */
 	@Override
 	protected StructuredViewer getViewer() {
+		if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
 		IEditorPart activeEditorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         List<TreeViewer> viewers = MylarUiPlugin.getDefault().getUiBridgeForEditor(activeEditorPart).getTreeViewers(activeEditorPart);
         if (viewers.size() > 0) {

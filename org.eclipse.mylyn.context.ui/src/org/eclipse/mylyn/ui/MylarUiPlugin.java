@@ -20,6 +20,8 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TableViewer;
@@ -93,10 +95,13 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private MylarViewerManager viewerManager = new MylarViewerManager();
     
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
-    
-    /**
-     * Used to prevent null check when getting adapters
-     */
+
+    private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			System.err.println("> mylar prefs event: " + event.getProperty());
+		}        
+    };
+
     private static final IMylarUiBridge DEFAULT_UI_BRIDGE = new IMylarUiBridge() {
 
         public void open(ITaskscapeNode node) {
@@ -179,6 +184,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
                 MylarPlugin.getTaskscapeManager().addListener(UI_UPDATE_LISTENER);
                 MylarPlugin.getDefault().getCommandMonitors().add(new TaskscapeManipulationMonitor());
+                
+                getPreferenceStore().addPropertyChangeListener(PREFERENCE_LISTENER);
                 
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerManager);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();

@@ -16,8 +16,6 @@ import java.util.ResourceBundle;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
@@ -60,14 +58,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 	private JavaEditorTracker editorTracker;
     
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
-
-    private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-//			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {// ||
-				
-//			}
-		}        
-    };
     
 	public MylarJavaPlugin() {
 		super();
@@ -93,7 +83,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 modelUpdateBridge.revealInteresting();
                 
             	installEditorTracker(workbench);
-            	MylarPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PREFERENCE_LISTENER);
+//            	MylarPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PREFERENCE_LISTENER);
             
             	if (FilterPackageExplorerAction.getDefault() != null) {
             		FilterPackageExplorerAction.getDefault().update();
