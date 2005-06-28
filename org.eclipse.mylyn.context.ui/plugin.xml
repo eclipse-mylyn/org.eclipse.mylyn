@@ -169,25 +169,25 @@
          
    <extension point="org.eclipse.ui.bindings">     
       <key
-            sequence="Ctrl+Alt+Shift+ARROW_UP"
+            sequence="M1+M2+M3+ARROW_UP"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.ui.interest.increment"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
-            sequence="Ctrl+Alt+Shift+ARROW_DOWN"
+            sequence="M1+M2+M3+ARROW_DOWN"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.ui.interest.decrement"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
-            sequence="Ctrl+Alt+Shift+ARROW_RIGHT"
+            sequence="M1+M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.ui.show.filtered"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
-            sequence="Ctrl+Alt+Shift+ARROW_LEFT"
+            sequence="M1+M2+M3+ARROW_LEFT"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.ui.related.show"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
