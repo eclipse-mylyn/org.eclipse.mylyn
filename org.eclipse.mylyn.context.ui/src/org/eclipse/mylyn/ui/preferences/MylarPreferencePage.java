@@ -19,6 +19,7 @@ import java.util.Arrays;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -109,6 +110,8 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 
     private IntegerFieldEditor userStudyId;
     
+    private BooleanFieldEditor closeOnDeactivate;
+    
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since
 	 * the tasklist plugin needs access to the values stored from the preference
@@ -147,7 +150,8 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		gl.verticalSpacing = 4;
 		browseComposite.setLayout(gl);
 		
-		createUserIDControl(browseComposite);		
+		new Label(entryTable, SWT.NONE);
+		createUserbooleanControl(entryTable);	
 		createTaskDirectoryControl(browseComposite);
 		        		
 		return entryTable;
@@ -188,7 +192,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	 */
 	@Override
 	public boolean performOk() {
-				
+		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeOnDeactivate.getBooleanValue());
         int uidNum = -1;
         try{
             if(userStudyId.getStringValue() == ""){
@@ -272,6 +276,9 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	public void performDefaults() {
 		super.performDefaults();
       
+		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, true);
+		closeOnDeactivate.load();
+		
 		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();				
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
@@ -805,6 +812,16 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	 * adds task directory control
 	 */
 	private void createTaskDirectoryControl(Composite parent) {
+		
+		userStudyId = new IntegerFieldEditor("", "User Study ID", parent);
+		userStudyId.setErrorMessage("Your user id must be an integer");
+		int uidNum = getPreferenceStore().getInt(MylarPlugin.USER_ID);
+		if (uidNum == 0)
+			uidNum = -1;
+		userStudyId.setEmptyStringAllowed(false);
+		userStudyId.setStringValue(uidNum + "");
+		addField(userStudyId);
+		
 		String taskDirectory = getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
 		taskDirectoryEditor = new StringFieldEditor(MylarPlugin.MYLAR_DIR,
@@ -850,14 +867,19 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	/**
 	 * adds user ID control
 	 */
-	private void createUserIDControl(Composite parent) {
-		userStudyId = new IntegerFieldEditor("", "User Study ID", parent);
-		userStudyId.setErrorMessage("Your user id must be an integer");
-		int uidNum = getPreferenceStore().getInt(MylarPlugin.USER_ID);
-		if (uidNum == 0)
-			uidNum = -1;
-		userStudyId.setEmptyStringAllowed(false);
-		userStudyId.setStringValue(uidNum + "");
+	private void createUserbooleanControl(Composite parent) {
+		
+		Composite browseComposite = new Composite(parent, SWT.NULL);
+		GridData gridData = new GridData (GridData.HORIZONTAL_ALIGN_FILL);
+		browseComposite.setLayoutData (gridData);
+		GridLayout gl = new GridLayout(1, false);
+		gl.verticalSpacing = 4;
+		browseComposite.setLayout(gl);
+		
+		closeOnDeactivate = new BooleanFieldEditor(MylarPlugin.CLOSE_EDITORS, "Close all editors automatically on task deactivation", browseComposite);
+		closeOnDeactivate.setPreferenceStore(getPreferenceStore());
+		closeOnDeactivate.load();
+		addField(closeOnDeactivate);
 	}
 	
     @Override

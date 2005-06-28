@@ -77,6 +77,12 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard{
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, false);
 		}
 		
+		if(preferencePage.closeEditors()){
+			MylarUiPlugin.getPrefs().setValue(MylarPlugin.CLOSE_EDITORS, true); //$NON-NLS-1$
+		} else {
+			MylarUiPlugin.getPrefs().setValue(MylarPlugin.CLOSE_EDITORS, false); //$NON-NLS-1$
+		}
+		
 		if(preferencePage.isWorkingSet()){
 			IWorkingSetManager workingSetManager= MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			IWorkingSetNewWizard wizard= workingSetManager.createWorkingSetNewWizard(new String[]{"org.eclipse.mylar.workingSetPage"}); 

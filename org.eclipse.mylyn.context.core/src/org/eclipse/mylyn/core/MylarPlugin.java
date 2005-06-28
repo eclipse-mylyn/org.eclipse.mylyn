@@ -48,6 +48,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
     
     public static final String USER_ID = "org.eclipse.mylar.user.id";
+    public static final String CLOSE_EDITORS = "org.eclipse.mylar.close.editors";
     
     public static boolean started = false;
     

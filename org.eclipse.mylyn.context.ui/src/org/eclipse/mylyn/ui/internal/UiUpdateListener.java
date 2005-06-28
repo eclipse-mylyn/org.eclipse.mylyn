@@ -48,7 +48,7 @@ public class UiUpdateListener implements ITaskscapeListener {
 
     public void taskscapeDeactivated(ITaskscape taskscape) {
     	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
-        if (confirmed) {
+        if (confirmed && MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.CLOSE_EDITORS)) {
 	    	for (ITaskscapeNode node : taskscape.getInterestingResources()) {
 	            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
 	        }

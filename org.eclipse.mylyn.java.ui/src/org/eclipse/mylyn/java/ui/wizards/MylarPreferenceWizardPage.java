@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Label;
  */
 public class MylarPreferenceWizardPage extends WizardPage {
 
-	Button removeInPlace;
-	boolean inPlace = true;
+//	Button removeInPlace;
+//	boolean inPlace = true;
 	
 	Button setMylarEditorDefault;
 	boolean mylarEditorDefault = true;
@@ -37,6 +37,9 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	
 	Button addMylarActiveWorkingSet;
 	boolean workingSet = true;
+	
+	Button closeEditorsOnDeactivation;
+	boolean closeEditors = true;
 	
 	protected MylarPreferenceWizardPage(String pageName) {
 		super(pageName);
@@ -51,28 +54,28 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		layout.makeColumnsEqualWidth = false;
 		buttonComposite.setLayout(layout);
 		
-		removeInPlace = new Button(buttonComposite, SWT.CHECK);
-		GridData gd = new GridData();
-		removeInPlace.setLayoutData(gd);
-		removeInPlace.setSelection(true);
-		removeInPlace.addSelectionListener(new SelectionListener(){
-
-			public void widgetSelected(SelectionEvent e) {
-				inPlace = removeInPlace.getSelection();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// don't care about this event
-			}
-		});
-		
-		Label label = new Label(buttonComposite, SWT.NONE);
-		label.setText("Remove the mylar filter from the in-place outline view");
-		gd = new GridData();
-		label.setLayoutData(gd);
+//		removeInPlace = new Button(buttonComposite, SWT.CHECK);
+//		GridData gd = new GridData();
+//		removeInPlace.setLayoutData(gd);
+//		removeInPlace.setSelection(true);
+//		removeInPlace.addSelectionListener(new SelectionListener(){
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				inPlace = removeInPlace.getSelection();
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				// don't care about this event
+//			}
+//		});
+//		
+//		Label label = new Label(buttonComposite, SWT.NONE);
+//		label.setText("Remove the mylar filter from the in-place outline view");
+//		gd = new GridData();
+//		label.setLayoutData(gd);
 		
 		setMylarEditorDefault = new Button(buttonComposite, SWT.CHECK);
-		gd = new GridData();
+		GridData gd = new GridData();
 		setMylarEditorDefault.setLayoutData(gd);
 		setMylarEditorDefault.setSelection(true);
 		setMylarEditorDefault.addSelectionListener(new SelectionListener(){
@@ -86,7 +89,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 			}
 		});
 		
-		label = new Label(buttonComposite, SWT.NONE);
+		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText("Set the Mylar editor to be the default java editor");
 		gd = new GridData();
 		label.setLayoutData(gd);
@@ -111,6 +114,26 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		gd = new GridData();
 		label.setLayoutData(gd);
 
+		closeEditorsOnDeactivation = new Button(buttonComposite, SWT.CHECK);
+		gd = new GridData();
+		closeEditorsOnDeactivation.setLayoutData(gd);
+		closeEditorsOnDeactivation.setSelection(true);
+		closeEditorsOnDeactivation.addSelectionListener(new SelectionListener(){
+
+			public void widgetSelected(SelectionEvent e) {
+				closeEditors = closeEditorsOnDeactivation.getSelection();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// don't care about this event
+			}
+		});
+		
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setText("Close all editors automatically on task deactivation");
+		gd = new GridData();
+		label.setLayoutData(gd);
+		
 		addMylarActiveWorkingSet = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
 		addMylarActiveWorkingSet.setSelection(true);
@@ -135,10 +158,14 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	public boolean isAutoFolding() {
 		return autoFolding;
 	}
-
-	public boolean isInPlace() {
-		return inPlace;
+	
+	public boolean closeEditors(){
+		return closeEditors;
 	}
+
+//	public boolean isInPlace() {
+//		return inPlace;
+//	}
 
 	public boolean isMylarEditorDefault() {
 		return mylarEditorDefault;
