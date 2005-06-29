@@ -199,4 +199,13 @@
       </key> 
    </extension> 
 
+	<extension point="org.eclipse.ui.perspectives">
+	   <perspective
+          class="org.eclipse.mylar.java.ui.views.MylarPerspectiveFactory"
+          icon="icons/eview16/editor-mylar-java.gif"
+          id="org.eclipse.mylar.java.perspective"
+          name="Mylar">
+	   </perspective>
+	</extension>
+
 </plugin>
