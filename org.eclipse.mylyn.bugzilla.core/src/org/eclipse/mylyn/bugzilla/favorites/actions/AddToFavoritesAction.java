@@ -35,7 +35,7 @@ public class AddToFavoritesAction extends Action {
 	public AddToFavoritesAction(EditorPart editor) {
 		editorPart = editor;
 		setText("&Add to favorites");
-		setImageDescriptor(BugzillaImages.getImageDescriptor(BugzillaImages.IMG_TOOL_ADD_TO_FAVORITES));
+		setImageDescriptor(BugzillaImages.IMG_TOOL_ADD_TO_FAVORITES);
 	}
 	
 	@Override

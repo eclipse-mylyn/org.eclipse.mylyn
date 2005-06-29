@@ -13,11 +13,9 @@ package org.eclipse.mylar.bugzilla;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -56,89 +54,44 @@ import org.eclipse.swt.graphics.Image;
  *          Add the declaration to this file
  */
 public class BugzillaImages {
-	public static final String IMG_TOOL_ADD_TO_FAVORITES = "IMG_TOOL_FAVORITE";
+
+	private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
 	
-    public static final String BUG = "IMG_BUG";
-    public static final String IMG_COMMENT = "IMG_COMMENT";
-    
-    
-	private static HashMap<String, ImageDescriptor> descriptors = new HashMap<String, ImageDescriptor>();
+	private static final URL baseURL = BugzillaPlugin.getDefault().getBundle().getEntry("/icons/");
+	public static final String T_ELCL = "elcl16";
 	
-	private static ImageRegistry imageRegistry;
-
-	// Subdirectory (under the package containing this class) where 16 color images are
-	private static final URL URL_BASIC = BugzillaPlugin.getDefault().getBundle().getEntry("/");
-
-	public final static String ICONS_PATH = "icons/";//$NON-NLS-1$
-
-	private final static void declareImages() {
-		// toolbar icons for the result view
-		declareImage(IMG_TOOL_ADD_TO_FAVORITES, ICONS_PATH+"elcl16/bug-favorite.gif");//$NON-NLS-1$
-        declareImage(BUG, ICONS_PATH+"elcl16/bug.gif");//$NON-NLS-1$
-        declareImage(IMG_COMMENT, ICONS_PATH+"elcl16/bug-comment.gif");//$NON-NLS-1$
-	}
-
-	/**
-	 * Declare an ImageDescriptor in the descriptor table.
-	 * @param key   The key to use when registering the image
-	 * @param path  The path where the image can be found. This path is relative to where
-	 *              this plugin class is found (i.e. typically the packages directory)
-	 */
-	private final static void declareImage(String key,String path) {
-		URL url = null;
+	public static final ImageDescriptor IMG_TOOL_ADD_TO_FAVORITES = create(T_ELCL, "bug-favorite.gif");
+    public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
+    public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
+   
+	private static ImageDescriptor create(String prefix, String name) {
 		try {
-			url = new URL(URL_BASIC, path);
+			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
 		} catch (MalformedURLException e) {
-			BugzillaPlugin.log(new Status(IStatus.WARNING, IBugzillaConstants.PLUGIN_ID,IStatus.OK,"Unable to declare the image for: " + path, e));
+			return ImageDescriptor.getMissingImageDescriptor();
 		}
-		ImageDescriptor desc = ImageDescriptor.createFromURL(url);
-		descriptors.put(key, desc);
 	}
-
+	
+	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
+		if (baseURL == null)
+			throw new MalformedURLException();
+			
+		StringBuffer buffer= new StringBuffer(prefix);
+		buffer.append('/');
+		buffer.append(name);
+		return new URL(baseURL, buffer.toString());
+	}	
+	
 	/**
-	 * Returns the image stored in the workbench plugin's image registry 
-	 * under the given symbolic name.  If there isn't any value associated 
-	 * with the name then <code>null</code> is returned.  
-	 *
-	 * The returned Image is managed by the workbench plugin's image registry.  
-	 * Callers of this method must not dispose the returned image.
-	 *
-	 * This method is essentially a convenient short form of
-	 * HipikatImages.getImageRegistry.get(symbolicName).
+	 * Lazily initializes image map.
 	 */
-	public static Image getImage(String symbolicName) {
-		return getImageRegistry().get(symbolicName);
+	public static Image getImage(ImageDescriptor imageDescriptor) {
+	    Image image = imageMap.get(imageDescriptor);
+	    if (image == null) {
+	        image = imageDescriptor.createImage();
+	        imageMap.put(imageDescriptor, image);
+	    }
+	    return image;
 	}
-
-	/**
-	 * Returns the image descriptor stored under the given symbolic name.
-	 * If there isn't any value associated with the name then <code>null
-	 * </code> is returned.
-	 *
-	 * The class also "caches" commonly used images in the image registry.
-	 * If you are looking for one of these common images it is recommended you use 
-	 * the getImage() method instead.
-	 */
-	public static ImageDescriptor getImageDescriptor(String symbolicName) {
-		if (imageRegistry == null) {
-			initializeImageRegistry();
-		}
-		return descriptors.get(symbolicName);
-	}
-
-	/**
-	 * Returns the ImageRegistry.
-	 */
-	public static ImageRegistry getImageRegistry() {
-		if (imageRegistry == null) {
-			initializeImageRegistry();
-		}
-		return imageRegistry;
-	}
-
-	private static ImageRegistry initializeImageRegistry() {
-		imageRegistry = new ImageRegistry();
-		declareImages();
-		return imageRegistry;
-	}
+	
 }
