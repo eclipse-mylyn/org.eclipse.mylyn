@@ -574,7 +574,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				keywords = value;
 			}
 			else if (key.equals("cc")) {
-				// we don't do anything with the cc yet
+				// XXX we don't do anything with the cc yet
 			}
 			else if (key.equals("bug_file_loc")) {
 				url = value;

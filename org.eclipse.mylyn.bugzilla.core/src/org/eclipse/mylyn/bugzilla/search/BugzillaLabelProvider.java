@@ -11,7 +11,6 @@
 package org.eclipse.mylar.bugzilla.search;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.bugzilla.IBugzillaConstants;
 
@@ -67,6 +66,8 @@ public class BugzillaLabelProvider extends LabelProvider
 				// return a string containing the information about the bug to
 				// be displayed
 				// in the searh window
+				String assignedTo = marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_OWNER).toString();
+				assignedTo = assignedTo.replace("&#64;", "@");
 				return "Bug "
 						+ marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID)
 						+ " ("
@@ -80,10 +81,10 @@ public class BugzillaLabelProvider extends LabelProvider
 						+ " - "
 						+ marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC)
 						+ " ("
-						+ marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_OWNER)
+						+ assignedTo
 						+ ") ";
 			}
-			catch (CoreException ignored) {
+			catch (Exception ignored) {
 				// ignore if there is a problem
 			}
 		}
