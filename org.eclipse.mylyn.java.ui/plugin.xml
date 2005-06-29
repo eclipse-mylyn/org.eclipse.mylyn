@@ -16,12 +16,13 @@
 	         id="org.eclipse.mylar.actions.filter.packageExplorer" 
 	         style="toggle"
 	         label="Filter uninteresting" 
-	         icon="icons/elcl16/auto-expand.gif"
+	         icon="icons/elcl16/interest-filtering.gif"
 	         tooltip="Filter uninteresting"
 	      	 toolbarPath="mylar"
 	         class="org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction"
 	         enablesFor="*"> 
   		</action> 
+  		<!--
     	<action
 	         id="org.eclipse.mylar.actions.filter.members" 
 	         label="Filter member" 
@@ -31,6 +32,7 @@
 	         class="org.eclipse.mylar.java.ui.actions.FilterMembersAction"
 	         enablesFor="*"> 
   		</action>  
+  		-->
       </viewContribution> 
 	</extension>
   <extension point="org.eclipse.ui.actionSets">
@@ -43,7 +45,7 @@
          	id="org.eclipse.mylar.action.contribution.editor.autoFold" 
          	style="toggle"
          	label="Mylar automatic folding" 
-         	icon="icons/elcl16/auto-fold.gif"
+         	icon="icons/elcl16/interest-folding.gif"
          	tooltip="Mylar automatic folding"
       		toolbarPath="org.eclipse.mylar.java.folding"
          	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
@@ -81,16 +83,17 @@
 	      	</action> 
    	 	</editorContribution>
    </extension>
-
+	-->
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
             targetId="org.eclipse.jdt.ui.PackageExplorer"
             name="Mylar Java Declarations Filter"
             enabled="false"
-            description="Mylar Declarations Filter"
+            description="Mylar Java Declarations Filter"
             class="org.eclipse.mylar.java.ui.MembersFilter"
             id="org.eclipse.mylar.java.ui.MembersFilter">
    		</filter>
+   		<!--
     	<filter
             name="Mylar Degree-of-interest filter"
             enabled="true"
@@ -98,8 +101,9 @@
             class="org.eclipse.mylar.ui.InterestFilter"
             id="org.eclipse.mylar.ui.java.InterestFilter">
    		</filter>
+   		-->
   </extension>
-  -->
+  
    
   
   <!-- ** EDITOR ****************************************** -->
@@ -153,11 +157,11 @@
 
 	<extension point="org.eclipse.ui.newWizards">
       <wizard
-            name="Preference Configuration"
-            icon="icons/eview16/monitor.gif"
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard"
-            id="org.eclipse.mylar.java.ui.mylarPreferenceWizard">
+            icon="icons/etool16/wizard-prefs.gif"
+            id="org.eclipse.mylar.java.ui.mylarPreferenceWizard"
+            name="Preference Configuration">
       </wizard>
    </extension>
 

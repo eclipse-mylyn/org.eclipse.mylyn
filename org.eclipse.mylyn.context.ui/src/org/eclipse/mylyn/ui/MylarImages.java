@@ -29,71 +29,51 @@ public class MylarImages {
     private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
      
 	private static final String T_ELCL = "elcl16";
-	private static final String T_EVIEW = "eview16";
-    private static final String STRUCTURE = "structure";
-    private static final String RELATIONSHIPS = "relationships";
+	private static final String T_TOOL = "etool16";
 	private static final URL baseURL = MylarUiPlugin.getDefault().getBundle().getEntry("/icons/");
-	  
+	
+	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
+		
 	public static final ImageDescriptor REFRESH = create(T_ELCL, "refresh.gif");
 	public static final ImageDescriptor SYNCHED = create(T_ELCL, "synched.gif");
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
-	public static final ImageDescriptor TIME = create(T_ELCL, "time.gif");
-	public static final ImageDescriptor ERASE_TASKSCAPE = create(T_ELCL, "erase-model.gif");
-	public static final ImageDescriptor FILTER_UNINTERESTING = create(T_ELCL, "auto-fold.gif");
-	public static final ImageDescriptor AUTO_EXPAND = create(T_ELCL, "auto-expand.gif");
-	public static final ImageDescriptor AUTO_FOLD = create(T_ELCL, "auto-fold.gif");
-	public static final ImageDescriptor FILTER_DECLARATIONS = create(T_ELCL, "filter-declarations.gif");
-    public static final ImageDescriptor INTERSECTION = create(T_ELCL, "filter-declarations.gif");
+	public static final ImageDescriptor ERASE_TASKSCAPE = create(T_ELCL, "context-clear.gif");
+
+    public static final ImageDescriptor INTEREST_LANDMARK = create(T_ELCL, "interest-landmark.gif"); 
+	public static final ImageDescriptor INTEREST_FILTERING = create(T_ELCL, "interest-filtering.gif");
+	public static final ImageDescriptor INTEREST_FOLDING = create(T_ELCL, "interest-filtering.gif");
+
+    public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
+    public static final ImageDescriptor FILTER_PRIORITY = create(T_ELCL, "filter-priority.gif");
+        
+    public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
+    
+    public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
+    public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
+    public static final ImageDescriptor TASK = create(T_TOOL, "task.gif"); 
+    public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif"); 
+    public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif"); 
+    public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");
+    public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif"); 
+    public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
+    public static final ImageDescriptor TASK_ACTIVE = create(T_TOOL, "task-active.gif");
+    public static final ImageDescriptor TASK_INACTIVE = create(T_TOOL, "task-inactive.gif");
+    public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
+    public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
+
+    public static ImageDescriptor EDGE_INHERITANCE = create(T_ELCL, "edge-inheritance.gif"); 
+    public static ImageDescriptor EDGE_REF_JAVA = create(T_ELCL, "edge-ref-java.gif"); 
+    public static ImageDescriptor EDGE_READ = create(T_ELCL, "edge-read.gif");
+    public static ImageDescriptor EDGE_WRITE = create(T_ELCL, "edge-write.gif");
+    public static ImageDescriptor EDGE_REF_BUGZILLA = create(T_ELCL, "edge-ref-bugzilla.gif"); 
+    public static ImageDescriptor EDGE_REF_XML = create(T_ELCL, "edge-ref-xml.gif"); 
+    public static ImageDescriptor EDGE_REF_JUNIT = create(T_ELCL, "edge-ref-junit.gif"); 
 
     public static final ImageDescriptor IMPORT_ZIP = create(T_ELCL, "import-zip.gif");
-    
-    public static final ImageDescriptor BUG = create(STRUCTURE, "bug-report.gif");
-    public static final ImageDescriptor TASK_BUGZILLA = create(STRUCTURE, "bug-task.gif");
-    public static final ImageDescriptor TASK_BUGZILLA_NEW = create(STRUCTURE, "bug-task-new.gif");
-    public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = create(STRUCTURE, "bug-outgoing.gif");
-    public static final ImageDescriptor TASK_BUGZILLA_LOCAL = create(STRUCTURE, "bug-local.gif");
-    public static final ImageDescriptor TASK = create(STRUCTURE, "task.gif"); 
-    public static final ImageDescriptor TASK_NEW = create(STRUCTURE, "task-new.gif"); 
-    public static final ImageDescriptor TASK_WITH_TASKSCAPE = create(STRUCTURE, "task-with-taskscape.gif"); 
-    public static final ImageDescriptor BUG_WITH_TASKSCAPE = create(STRUCTURE, "bug-with-taskscape.gif"); 
-    public static final ImageDescriptor CATEGORY = create(T_ELCL, "task-category.gif"); 
-    public static final ImageDescriptor CATEGORY_NEW = create(T_ELCL, "task-category-new.gif");
-    public static final ImageDescriptor TASK_ACTIVE = create(T_ELCL, "complete_tsk.gif");
-    public static final ImageDescriptor TASK_INACTIVE = create(T_ELCL, "incomplete_tsk.gif");
-    
-    public static final ImageDescriptor FILE_GENERIC = create(STRUCTURE, "file_obj.gif");
-    public static final ImageDescriptor FOLDER_GENERIC = create(STRUCTURE, "fldr_obj.gif");
-    public static final ImageDescriptor FILE_XML = create(STRUCTURE, "file-xml.gif");
-    public static final ImageDescriptor LANDMARK = create(STRUCTURE, "landmark.gif"); 
-//    public static final ImageDescriptor LANDMARK_SMALL = create("structure", "landmark-small.gif");
-//    public static final ImageDescriptor LANDMARK_LARGE = create("structure", "landmark-large.gif");
-    
-	public static ImageDescriptor MYLAR = create(T_EVIEW, "mylar.gif");
-	public static final ImageDescriptor PATHFINDER = create(T_EVIEW, "pathfinder.gif");
-	public static ImageDescriptor OUTLINE = create(T_EVIEW, "outline.gif");
-	public static ImageDescriptor OUTLINE_MYLAR = create(T_EVIEW, "outline-mylar.gif");
-	public static ImageDescriptor PACKAGE_EXPLORER = create(T_EVIEW, "package-explorer.gif");
-	public static ImageDescriptor PACKAGE_EXPLORER_MYLAR = create(T_EVIEW, "package-explorer-mylar.gif");
-	public static ImageDescriptor SEARCH = create(T_EVIEW, "search.gif");
-	public static ImageDescriptor SEARCH_MYLAR = create(T_EVIEW, "search-mylar.gif");
-	public static ImageDescriptor PROBLEMS = create(T_EVIEW, "problems.gif");
-	public static ImageDescriptor PROBLEMS_MYLAR = create(T_EVIEW, "problems-mylar.gif");
-
-    public static ImageDescriptor RELATIONSHIPS_INHERITANCE_JAVA = create(RELATIONSHIPS, "inheritance-java.gif"); 
-    public static ImageDescriptor RELATIONSHIPS_REFS_JAVA = create(RELATIONSHIPS, "refs-java.gif"); 
-    public static ImageDescriptor RELATIONSHIPS_READ_JAVA = create(RELATIONSHIPS, "read-java.gif");
-    public static ImageDescriptor RELATIONSHIPS_WRITE_JAVA = create(RELATIONSHIPS, "write-java.gif");
-    public static ImageDescriptor RELATIONSHIPS_REFS_BUGZILLA = create(RELATIONSHIPS, "refs-bugzilla.gif"); 
-    public static ImageDescriptor RELATIONSHIPS_REFS_XML = create(RELATIONSHIPS, "refs-xml.gif"); 
-    public static ImageDescriptor RELATIONSHIPS_REFS_JUNIT = create(RELATIONSHIPS, "refs-junit.gif"); 
-    
-//	public static ImageDescriptor USAGE_KEYSTROKES = JavaPluginImages.DESC_OBJS_TEXT_EDIT;
-//	public static ImageDescriptor USAGE_SELECTIONS = JavaPluginImages.DESC_OBJS_CUNIT;
-//	public static ImageDescriptor USAGE_SELECTIONS_EDITOR = JavaPluginImages.DESC_OBJS_CUNIT;
-//	public static ImageDescriptor USAGE_UNKNOWN = JavaPluginImages.DESC_OBJS_UNKNOWN;
-    
-    public static ImageDescriptor TEST_OVERLAY = create("", "warning_co.gif");
-	
+    public static final ImageDescriptor FILE_XML = create(T_ELCL, "file-xml.gif");
+    public static final ImageDescriptor FILE_GENERIC = create(T_ELCL, "file_obj.gif");
+    public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif");
+   
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

@@ -41,7 +41,7 @@ public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActi
     public ToggleAutoFoldAction() {
 		super();
 		setText("Auto fold"); 
-		setImageDescriptor(MylarImages.AUTO_FOLD);	
+		setImageDescriptor(MylarImages.INTEREST_FOLDING);	
 		setToolTipText("Auto manage editors and folding"); 
     }
 	

@@ -39,7 +39,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
         super();
         this.interestFilter = interestFilter;
         setText("Filter uninteresting"); 
-		setImageDescriptor(MylarImages.FILTER_UNINTERESTING);	
+		setImageDescriptor(MylarImages.INTEREST_FILTERING);	
 		setToolTipText("Filter uninteresting elements"); 
    } 
 

@@ -159,15 +159,15 @@ public class JavaUiBridge implements IMylarUiBridge {
 
     public ImageDescriptor getIconForRelationship(String relationshipHandle) {
         if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
-            return MylarImages.RELATIONSHIPS_REFS_JAVA; 
+            return MylarImages.EDGE_REF_JAVA; 
         } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
-            return MylarImages.RELATIONSHIPS_INHERITANCE_JAVA; 
+            return MylarImages.EDGE_INHERITANCE; 
         } else if (relationshipHandle.equals(JUnitReferencesProvider.ID)) {
-            return MylarImages.RELATIONSHIPS_REFS_JUNIT; 
+            return MylarImages.EDGE_REF_JUNIT; 
         } else if (relationshipHandle.equals(JavaWriteAccessProvider.ID)) {
-            return MylarImages.RELATIONSHIPS_WRITE_JAVA; 
+            return MylarImages.EDGE_WRITE; 
         } else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
-            return MylarImages.RELATIONSHIPS_READ_JAVA; 
+            return MylarImages.EDGE_READ; 
         } else {
             return null;
         }

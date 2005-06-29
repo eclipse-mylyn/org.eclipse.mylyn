@@ -30,7 +30,7 @@ public class ToggleGlobalFilteringActionDelegate extends Action implements IWork
     public ToggleGlobalFilteringActionDelegate() {
         super();
         setText("Global filter uninteresting"); 
-		setImageDescriptor(MylarImages.FILTER_UNINTERESTING);	
+		setImageDescriptor(MylarImages.INTEREST_FILTERING);	
 		setToolTipText("Filter uninteresting items from all views");
     }
 

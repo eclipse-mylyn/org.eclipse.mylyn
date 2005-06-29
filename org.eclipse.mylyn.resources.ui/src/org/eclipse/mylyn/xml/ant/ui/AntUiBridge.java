@@ -206,7 +206,7 @@ public class AntUiBridge implements IMylarUiBridge {
     }
     
     public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-        return MylarImages.RELATIONSHIPS_REFS_XML;
+        return MylarImages.EDGE_REF_XML;
     }
 
     public String getNameForRelationship(String relationshipHandle) {
