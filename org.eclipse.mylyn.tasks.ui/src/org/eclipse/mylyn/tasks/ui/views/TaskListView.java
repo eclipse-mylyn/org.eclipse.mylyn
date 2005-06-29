@@ -127,7 +127,7 @@ public class TaskListView extends ViewPart {
     private MarkTaskCompleteAction completeTask;
     private MarkTaskIncompleteAction incompleteTask;
     private FilterCompletedTasksAction filterCompleteTask;
-    private FilterIncompleteTasksAction filterInCompleteTask;
+//    private FilterIncompleteTasksAction filterInCompleteTask;
     private PriorityDropDownAction filterOnPriority;
     private Action moveTaskToRoot; 
     private PriorityFilter priorityFilter = new PriorityFilter();
@@ -170,33 +170,33 @@ public class TaskListView extends ViewPart {
 		}
 	}
     
-    private final class FilterIncompleteTasksAction extends Action {
-    	public FilterIncompleteTasksAction() {
-    		setText("Filter Incomplete tasks");
-            setToolTipText("Filter Incomplete tasks");
-            setImageDescriptor(MylarImages.TASK_INACTIVE);
-            setChecked(MylarTasksPlugin.getDefault().isFilterInCompleteMode());
-    	}
-    	
-		@Override
-		public void run() {
-			MylarTasksPlugin.getDefault().setFilterInCompleteMode(isChecked());
-			if (isChecked()) {
-				viewer.addFilter(inCompleteFilter);
-				filterCompleteTask.setChecked(false);
-				viewer.removeFilter(completeFilter);
-			} else {
-				viewer.removeFilter(inCompleteFilter);
-			}
-		    viewer.refresh();
-		}
-	}
+//    private final class FilterIncompleteTasksAction extends Action {
+//    	public FilterIncompleteTasksAction() {
+//    		setText("Filter Incomplete Tasks");
+//            setToolTipText("Filter Incomplete Tasks");
+////            setImageDescriptor(MylarImages.FILTER_COMPLETE);
+//            setChecked(MylarTasksPlugin.getDefault().isFilterInCompleteMode());
+//    	}
+//    	
+//		@Override
+//		public void run() {
+//			MylarTasksPlugin.getDefault().setFilterInCompleteMode(isChecked());
+//			if (isChecked()) {
+//				viewer.addFilter(inCompleteFilter);
+//				filterCompleteTask.setChecked(false);
+//				viewer.removeFilter(completeFilter);
+//			} else {
+//				viewer.removeFilter(inCompleteFilter);
+//			}
+//		    viewer.refresh();
+//		}
+//	}
 
 	private final class FilterCompletedTasksAction extends Action {
 		public FilterCompletedTasksAction() {
 			setText("Filter Complete tasks");
 	        setToolTipText("Filter Completed tasks");
-	        setImageDescriptor(MylarImages.TASK_ACTIVE);
+	        setImageDescriptor(MylarImages.FILTER_COMPLETE);
 	        setChecked(MylarTasksPlugin.getDefault().isFilterCompleteMode());
 		}
 		@Override
@@ -204,7 +204,7 @@ public class TaskListView extends ViewPart {
 			MylarTasksPlugin.getDefault().setFilterCompleteMode(isChecked());
 			if (isChecked()) {
 				viewer.addFilter(completeFilter);
-				filterInCompleteTask.setChecked(false);
+//				filterInCompleteTask.setChecked(false);
 				viewer.removeFilter(inCompleteFilter);
 			} else {
 				viewer.removeFilter(completeFilter);        			
@@ -266,6 +266,7 @@ public class TaskListView extends ViewPart {
 		public MarkTaskIncompleteAction() {
 			setText("Mark Incomplete");
 	        setToolTipText("Mark Incomplete");
+	        setImageDescriptor(MylarImages.TASK_INCOMPLETE);
 		}
 		@Override
 		public void run() {              
@@ -281,6 +282,7 @@ public class TaskListView extends ViewPart {
 		public MarkTaskCompleteAction() {
 			setText("Mark Complete");
 	        setToolTipText("Mark Complete");
+	        setImageDescriptor(MylarImages.TASK_COMPLETE);
 		}
 		@Override
 		public void run() {              
@@ -508,7 +510,7 @@ public class TaskListView extends ViewPart {
 			super();
 			setText("Display Priorities");
 			setToolTipText("Show Tasks with Priority Levels");
-			setImageDescriptor(MylarImages.FILTER_DECLARATIONS);
+			setImageDescriptor(MylarImages.MYLAR);
 			setMenuCreator(this);			
 		}
     	
@@ -1208,7 +1210,7 @@ public class TaskListView extends ViewPart {
         //manager.add(toggleIntersectionModeAction);
         manager.add(new Separator());
         manager.add(filterCompleteTask);
-        manager.add(filterInCompleteTask);
+//        manager.add(filterInCompleteTask);
         manager.add(filterOnPriority);
         
     }
@@ -1230,7 +1232,7 @@ public class TaskListView extends ViewPart {
         moveTaskToRoot = new MoveTaskToRootAction();
         doubleClickAction = new OpenTaskEditorAction();            
         filterCompleteTask = new FilterCompletedTasksAction();        
-        filterInCompleteTask = new FilterIncompleteTasksAction();                        
+//        filterInCompleteTask = new FilterIncompleteTasksAction();                        
         filterOnPriority = new PriorityDropDownAction();             
     }
 

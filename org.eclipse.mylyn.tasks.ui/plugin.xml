@@ -8,7 +8,6 @@
    </extension>
 
   <extension point="org.eclipse.ui.views">
-      <category name="Mylar Tools" id="org.eclipse.mylar"/>
 
 	  <view name="Mylar Tasks" 
 	  	icon="icons/eview16/tasklist.gif" 

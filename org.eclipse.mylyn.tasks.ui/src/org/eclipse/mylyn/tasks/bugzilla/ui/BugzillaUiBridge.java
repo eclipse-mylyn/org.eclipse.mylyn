@@ -131,7 +131,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
     }
 
     public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-        return MylarImages.RELATIONSHIPS_REFS_BUGZILLA; 
+        return MylarImages.EDGE_REF_BUGZILLA; 
         
     }
 

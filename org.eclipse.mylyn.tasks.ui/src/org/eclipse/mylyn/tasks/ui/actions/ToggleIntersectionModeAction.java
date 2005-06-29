@@ -28,7 +28,7 @@ public class ToggleIntersectionModeAction extends Action {
         super();
         setText("Intersect Tasskscapes");
         setToolTipText("Intersect Taskscapes");
-        setImageDescriptor(MylarImages.INTERSECTION);
+        setImageDescriptor(MylarImages.MYLAR);
         setActionDefinitionId("org.eclipse.mylar.ui.interest.intersection");
         setChecked(MylarUiPlugin.getDefault().isGlobalFilteringEnabled());
     }
