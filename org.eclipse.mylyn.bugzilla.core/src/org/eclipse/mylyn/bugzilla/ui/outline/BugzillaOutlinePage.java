@@ -35,7 +35,15 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if ((part instanceof AbstractBugEditor) && (selection instanceof IStructuredSelection)) {
 				if (((IStructuredSelection)selection).getFirstElement() instanceof IBugzillaReportSelection) {
-						getTreeViewer().setSelection(selection, true);
+					if(((IStructuredSelection)getSelection()).getFirstElement() instanceof IBugzillaReportSelection){
+						IBugzillaReportSelection brs1 = (IBugzillaReportSelection)((IStructuredSelection)getSelection()).getFirstElement();
+						IBugzillaReportSelection brs2 = ((IBugzillaReportSelection)((IStructuredSelection)selection).getFirstElement());
+						if(BugzillaTools.getHandle(brs1).compareTo(BugzillaTools.getHandle(brs2)) == 0){
+							// don't need to make a selection for the same element
+							return;
+						}
+					}
+					getTreeViewer().setSelection(selection, true);
 				}
 			}
 		}

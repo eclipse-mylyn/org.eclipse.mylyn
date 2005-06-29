@@ -49,6 +49,8 @@ import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
+import org.eclipse.mylar.bugzilla.ui.outline.BugzillaTools;
+import org.eclipse.mylar.bugzilla.ui.outline.IBugzillaReportSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -209,12 +211,21 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	
 	protected HashMap<Combo, String> comboListenerMap = new HashMap<Combo, String>();
 	
+	private IBugzillaReportSelection lastSelected = null;
+	
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if ((part instanceof ContentOutline) && (selection instanceof StructuredSelection)) {
 				Object select = ((StructuredSelection)selection).getFirstElement();
 	            if(select instanceof BugzillaOutlineNode){
-	                BugzillaOutlineNode n = (BugzillaOutlineNode) select;
+	            	BugzillaOutlineNode n = (BugzillaOutlineNode) select;
+	            	
+		            if (n != null && lastSelected != null && BugzillaTools.getHandle(n).equals(BugzillaTools.getHandle(lastSelected))){
+		            	// we don't need to set the selection if it is alredy set
+		            	return;
+		            }
+		            lastSelected = n;
+	            	
 	                Object data = n.getData();
                     boolean highlight = true;
                     if(n.getKey().toLowerCase().equals("comments")){
