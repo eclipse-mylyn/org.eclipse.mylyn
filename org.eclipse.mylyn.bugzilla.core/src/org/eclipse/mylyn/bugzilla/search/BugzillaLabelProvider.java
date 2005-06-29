@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugzilla.search;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.bugzilla.IBugzillaConstants;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 
 /**
  * Label provider for Bugzilla search items.
@@ -66,8 +67,8 @@ public class BugzillaLabelProvider extends LabelProvider
 				// return a string containing the information about the bug to
 				// be displayed
 				// in the searh window
-				String assignedTo = marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_OWNER).toString();
-				assignedTo = assignedTo.replace("&#64;", "@");
+				String assignedTo = HtmlStreamTokenizer.unescape(marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_OWNER).toString());
+				String description = HtmlStreamTokenizer.unescape(marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC).toString());
 				return "Bug "
 						+ marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID)
 						+ " ("
@@ -79,7 +80,7 @@ public class BugzillaLabelProvider extends LabelProvider
 						+ (result.length() > 0 ? " " + result : "")
 						+ ") "
 						+ " - "
-						+ marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC)
+						+ description
 						+ " ("
 						+ assignedTo
 						+ ") ";
