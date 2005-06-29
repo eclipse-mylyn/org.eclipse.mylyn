@@ -234,8 +234,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	
 		int bugId = bug.getId();
 		String bugServer = bug.getServer();
+		Image bugImage = BugzillaImages.getImageDescriptor(BugzillaImages.BUG).createImage();
         Image defaultImage = BugzillaImages.getImageDescriptor(BugzillaImages.IMG_COMMENT).createImage();
-		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), defaultImage, bug, bug.getSummary());
+		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());
 		
 		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
