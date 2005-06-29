@@ -17,6 +17,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.swt.graphics.Image;
+
 
 /**
  * @author Mik Kersten
@@ -30,6 +33,10 @@ public class TaskCategory extends AbstractCategory implements Serializable {
     public TaskCategory(String description) {
     	super(description);
     }
+    
+	public Image getIcon() {
+		return MylarImages.getImage(MylarImages.CATEGORY);
+	}
     
     public void addTask(ITask task) {
         tasks.add(task);

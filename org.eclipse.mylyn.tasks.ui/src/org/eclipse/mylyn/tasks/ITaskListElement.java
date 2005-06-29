@@ -16,7 +16,8 @@ import org.eclipse.swt.graphics.Image;
  * @author Ken Sueda
  */
 public interface ITaskListElement {
-	public abstract Image getTypeIcon();
+	
+	public abstract Image getIcon();
 	
 	public abstract Image getStatusIcon();
     

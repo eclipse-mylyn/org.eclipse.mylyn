@@ -34,7 +34,7 @@ public class BugzillaContentProvider {
 		if (bugTask == null) return "<no info>";
 		
 		String prefix = //((bugTask.isDirty()) ? ">" : "") +
-					    "<" + BugzillaTask.getBugId(bugTask.getHandle()) + ">: ";
+					    BugzillaTask.getBugId(bugTask.getHandle()) + ": ";
     	
 		if (bugTask.getState() == BugzillaTask.BugTaskState.DOWNLOADING) {
 			return prefix + ": <Downloading bug report from server...>";

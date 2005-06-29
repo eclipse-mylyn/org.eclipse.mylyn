@@ -459,7 +459,7 @@ public class BugzillaTask extends Task {
 		return -1;
 	}
 	
-	public Image getTypeIcon() {
+	public Image getIcon() {
 		return MylarImages.getImage(MylarImages.TASK_BUGZILLA);
 	}
 }

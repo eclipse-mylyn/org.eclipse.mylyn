@@ -28,7 +28,7 @@ public class BugzillaHit implements ITaskListElement {
 		this.priority = priority;
 		this.id = id;
 	}
-	public Image getTypeIcon() {
+	public Image getIcon() {
 		return BugzillaImages.getImage(BugzillaImages.BUG);
 	}
 

@@ -280,7 +280,7 @@ public class Task implements ITask, ITaskListElement {
     	return parentCategory;
     }
 
-	public Image getTypeIcon() {
+	public Image getIcon() {
 		return MylarImages.getImage(MylarImages.TASK);
 	}
 

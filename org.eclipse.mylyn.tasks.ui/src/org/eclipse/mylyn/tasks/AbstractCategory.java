@@ -26,7 +26,7 @@ public class AbstractCategory implements ITaskListElement {
 		this.description = description;
 	}
 	
-	public Image getTypeIcon() {
+	public Image getIcon() {
 		return null;
 	}
 

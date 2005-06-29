@@ -7,7 +7,9 @@
  *
  * Contributors:
  *     University Of British Columbia - initial API and implementation
- *******************************************************************************/package org.eclipse.mylar.tasks;
+ *******************************************************************************/
+
+package org.eclipse.mylar.tasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,8 @@ import org.eclipse.mylar.bugzilla.search.BugzillaSearchHit;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaCategorySearchOperation;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaResultCollector;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaCategorySearchOperation.ICategorySearchListener;
+import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -36,6 +40,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	private static final long serialVersionUID = 5517146402031743253L;	
 	private String url;
 	private List<BugzillaHit> hits = new ArrayList<BugzillaHit>();
+	private boolean hasBeenRefreshed = false;
 	
 	public class BugzillaQueryCategorySearchListener implements
 			ICategorySearchListener {
@@ -43,11 +48,10 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		Map<Integer, BugzillaSearchHit> hits = new HashMap<Integer, BugzillaSearchHit>();
 		
 		public void searchCompleted(BugzillaResultCollector collector) {
-
 			for(BugzillaSearchHit hit: collector.getResults()){
 		
 				// HACK need the server name and handle properly
-				addHit(new BugzillaHit(hit.getDescription(), hit.getPriority(), hit.getId()));
+				addHit(new BugzillaHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), hit.getId()));
 			}
 		}
 
@@ -60,6 +64,20 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		this.url = url;
 	}
 
+	public String getDescription() {
+		if (hits.size() > 0) {
+			return super.getDescription();
+		} else if (!hasBeenRefreshed) {
+			return super.getDescription() + " <needs refresh>";
+		} else {
+			return super.getDescription() + " <no hits>";
+		}
+	}
+	
+	public Image getIcon() {
+		return MylarImages.getImage(MylarImages.CATEGORY_QUERY);
+	}
+	
 	public String getUrl() {
 		return url;
 	}
@@ -86,6 +104,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		try {
 			// execute the search operation
 			catSearch.execute(new NullProgressMonitor());
+			hasBeenRefreshed = true;
 
 			// get the status of the search operation
 			status[0] = catSearch.getStatus();

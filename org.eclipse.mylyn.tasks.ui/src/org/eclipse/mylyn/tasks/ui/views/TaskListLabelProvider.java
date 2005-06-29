@@ -82,7 +82,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
         if (columnIndex == 0) {
         	return ((ITaskListElement)element).getStatusIcon();
         } else if (columnIndex == 1) {
-        	return ((ITaskListElement)element).getTypeIcon();
+        	return ((ITaskListElement)element).getIcon();
         } else {
         	return null;
         }
