@@ -89,7 +89,7 @@ public class TaskListManager {
         taskList.deleteTask(task);
     }
     
-    public void deleteCategory(Category cat) {
+    public void deleteCategory(AbstractCategory cat) {
     	taskList.deleteCategory(cat);
     }
     
@@ -117,8 +117,8 @@ public class TaskListManager {
     
     public void updateTaskscapeReference(String prevDir) {    	
     	List<ITask> rootTasks = this.getTaskList().getRootTasks();
-    	for (Category cat : taskList.getCategories()) {
-    		updateTaskscapeReferenceHelper(cat.getTasks(), prevDir);
+    	for (TaskCategory cat : taskList.getTaskCategories()) {
+    			updateTaskscapeReferenceHelper(cat.getChildren(), prevDir);
     	}
     	updateTaskscapeReferenceHelper(rootTasks, prevDir);
     	
@@ -155,5 +155,9 @@ public class TaskListManager {
     		this.file.delete();
     	}
     	this.file = f;
+    }
+    
+    public void activateHit(BugzillaHit hit) {
+    	
     }
 }

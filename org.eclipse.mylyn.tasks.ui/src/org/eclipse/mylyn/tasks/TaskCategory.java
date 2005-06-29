@@ -21,15 +21,14 @@ import java.util.List;
 /**
  * @author Mik Kersten
  */
-public class Category implements Serializable {
+public class TaskCategory extends AbstractCategory implements Serializable {
 
     private static final long serialVersionUID = 3834024740813027380L;
     
     private List<ITask> tasks = new ArrayList<ITask>();
-    private String name = "";
     
-    public Category(String name) {
-        this.name = name;
+    public TaskCategory(String description) {
+    	super(description);
     }
     
     public void addTask(ITask task) {
@@ -40,28 +39,16 @@ public class Category implements Serializable {
         tasks.remove(task);
     }
     
-    public List<ITask> getTasks() {
+    public List<ITask> getChildren() {
         return tasks;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    public void setName(String label) {
-        this.name = label;
-    }
+    }   
    
     @Override
     public boolean equals(Object object) {
         if (object == null) return false;
-        if (object instanceof Category) {
-           Category compare = (Category)object;
-           return this.getName().equals(compare.getName());
+        if (object instanceof TaskCategory) {
+           TaskCategory compare = (TaskCategory)object;
+           return this.getDescription().equals(compare.getDescription());
         } else {
             return false;
         }

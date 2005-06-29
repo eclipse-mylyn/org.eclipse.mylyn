@@ -19,6 +19,8 @@ import java.util.List;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -28,7 +30,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class Task implements ITask {
+public class Task implements ITask, ITaskListElement {
 
     private static final long serialVersionUID = 3545518391537382197L;
     private boolean active = false;
@@ -48,7 +50,7 @@ public class Task implements ITask {
     private String elapsedTime = "";
     private boolean completed;
     private RelatedLinks links = new RelatedLinks();
-    private Category parentCategory = null;
+    private TaskCategory parentCategory = null;
     
     /**
      * null if root
@@ -237,7 +239,6 @@ public class Task implements ITask {
 	}
 
 	public String getElapsedTime() {
-		// TODO: removed check for null once xml updated.
 		if (elapsedTime == null) {
 			elapsedTime = "";
 		}
@@ -249,7 +250,6 @@ public class Task implements ITask {
 	}
 
 	public String getEstimatedTime() {
-		// TODO: removed check for null once xml updated.
 		if (estimatedTime == null) {
 			estimatedTime = "";
 		}
@@ -272,11 +272,27 @@ public class Task implements ITask {
 		children.remove(t);
 	}
 	
-	public void setCategory(Category cat) {
+	public void setCategory(TaskCategory cat) {
 		this.parentCategory = cat;
 	}
     
-    public Category getCategory() {
+    public TaskCategory getCategory() {
     	return parentCategory;
     }
+
+	public Image getTypeIcon() {
+		return MylarImages.getImage(MylarImages.TASK);
+	}
+
+	public String getDescription() {
+		return getLabel();
+	}
+
+	public Image getStatusIcon() {
+		if (isActive()) {
+    		return MylarImages.getImage(MylarImages.TASK_ACTIVE);
+    	} else {
+    		return MylarImages.getImage(MylarImages.TASK_INACTIVE);
+    	}        	
+	}
 }

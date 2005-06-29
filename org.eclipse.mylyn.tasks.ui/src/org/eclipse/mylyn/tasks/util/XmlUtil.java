@@ -34,10 +34,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.AbstractCategory;
+import org.eclipse.mylar.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.tasks.BugzillaTask;
-import org.eclipse.mylar.tasks.Category;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.Task;
+import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.TaskList;
 import org.eclipse.mylar.tasks.BugzillaTask.BugTaskState;
 import org.w3c.dom.Document;
@@ -76,8 +78,12 @@ public class XmlUtil {
 
 		// iterate through each subtask and externalize those
 		//
-		for (Category cat : tlist.getCategories()) {
-			writeCategory(cat, doc, root);
+		for (AbstractCategory cat : tlist.getCategories()) {
+			if (cat instanceof TaskCategory) {
+				writeTaskCategory((TaskCategory)cat, doc, root);
+			} else if (cat instanceof BugzillaQueryCategory) {
+				writeQueryCategory((BugzillaQueryCategory)cat, doc, root);
+			}			
 		}
 		for (ITask task : tlist.getRootTasks()) {
 			writeTask(task, doc, root);
@@ -213,13 +219,20 @@ public class XmlUtil {
 //		return;
 //	}
 
-	private static void writeCategory(Category cat, Document doc, Element parent) {
-		Element node = doc.createElement("Category");
-		node.setAttribute("Name", cat.getName());
+	private static void writeTaskCategory(TaskCategory cat, Document doc, Element parent) {
+		Element node = doc.createElement("TaskCategory");
+		node.setAttribute("Name", cat.getDescription());
 		
-		for (ITask t : cat.getTasks()) {
+		for (ITask t : cat.getChildren()) {
 			writeTask(t, doc, node);
 		}
+		parent.appendChild(node);
+	}
+	
+	private static void writeQueryCategory(BugzillaQueryCategory cat, Document doc, Element parent) {
+		Element node = doc.createElement("QueryCategory");
+		node.setAttribute("Description", cat.getDescription());
+		node.setAttribute("URL", cat.getUrl());
 		parent.appendChild(node);
 	}
 	
@@ -293,8 +306,11 @@ public class XmlUtil {
 				NodeList list = root.getChildNodes();
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
-					if (child.getNodeName().equals("Category")) {
-						readCategory(child, tlist);
+					if (child.getNodeName().equals("Category") || 
+							child.getNodeName().equals("TaskCategory")) {
+						readTaskCategory(child, tlist);
+					} else if (child.getNodeName().equals("QueryCategory")) {
+						readQueryCategory(child, tlist);
 					} else {
 						tlist.addRootTask(readTask(child, tlist, null, null));
 					}
@@ -437,9 +453,9 @@ public class XmlUtil {
 //		return t;
 //	}	
 	
-	private static void readCategory(Node node, TaskList tlist) {
+	private static void readTaskCategory(Node node, TaskList tlist) {
 		Element e = (Element) node;
-		Category cat = new Category(e.getAttribute("Name"));
+		TaskCategory cat = new TaskCategory(e.getAttribute("Name"));
 		tlist.addCategory(cat);
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
@@ -448,7 +464,13 @@ public class XmlUtil {
 		}
 	}
 	
-	private static ITask readTask(Node node, TaskList tlist, Category cat, ITask parent) {
+	private static void readQueryCategory(Node node, TaskList tlist) {
+		Element e = (Element) node;
+		BugzillaQueryCategory cat = new BugzillaQueryCategory(e.getAttribute("Description"), e.getAttribute("URL"));
+		tlist.addCategory(cat);
+	}
+	
+	private static ITask readTask(Node node, TaskList tlist, TaskCategory cat, ITask parent) {
 		Element e = (Element) node;
 		ITask t;
 		String handle = e.getAttribute("Handle");		
@@ -524,7 +546,7 @@ public class XmlUtil {
 		String label = e.getAttribute("Label");
 		
 		if (e.getAttribute("IsCategory").compareTo("true") == 0) {
-			Category c = new Category(label);
+			TaskCategory c = new TaskCategory(label);
 			NodeList list = e.getChildNodes();
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);
@@ -582,7 +604,7 @@ public class XmlUtil {
 			}
 		}
 	}
-	private static void readSubTasksToNewFormat(Node node, TaskList tlist, Category cat) {
+	private static void readSubTasksToNewFormat(Node node, TaskList tlist, TaskCategory cat) {
 		Element e = (Element) node;
 		ITask t;
 		String handle = e.getAttribute("Handle");

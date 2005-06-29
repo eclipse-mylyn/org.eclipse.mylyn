@@ -36,6 +36,8 @@ import org.eclipse.mylar.bugzilla.offlineReports.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ui.BugzillaTaskEditorInput;
+import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -455,5 +457,9 @@ public class BugzillaTask extends Task {
 			return Integer.parseInt(id);
 		}
 		return -1;
+	}
+	
+	public Image getTypeIcon() {
+		return MylarImages.getImage(MylarImages.TASK_BUGZILLA);
 	}
 }

@@ -24,7 +24,7 @@ import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
 import org.eclipse.mylar.tasks.BugzillaTask;
-import org.eclipse.mylar.tasks.Category;
+import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.TaskList;
 import org.eclipse.mylar.tasks.BugzillaTask.BugTaskState;
@@ -214,7 +214,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		
 		TaskList t = MylarTasksPlugin.getTaskListManager().createNewTaskList();
 		MylarTasksPlugin.getTaskListManager().setTaskList(t);
-		Category cat = new Category("Testing Category");
+		TaskCategory cat = new TaskCategory("Testing Category");
 		t.addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix +94185, "<bugzilla info>");
 		cat.addTask(bugTask1);
@@ -276,7 +276,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		
 		TaskList t = MylarTasksPlugin.getTaskListManager().createNewTaskList();
 		MylarTasksPlugin.getTaskListManager().setTaskList(t);
-		Category cat = new Category("Testing Category");
+		TaskCategory cat = new TaskCategory("Testing Category");
 		t.addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>");
 		cat.addTask(bugTask1);

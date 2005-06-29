@@ -17,10 +17,10 @@ import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylar.tasks.BugzillaTask;
-import org.eclipse.mylar.tasks.Category;
+import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.mylar.tasks.ITaskListElement;
+import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
@@ -36,30 +36,23 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 	private Color backgroundColor = null;
 	
     public String getColumnText(Object obj, int columnIndex) {
-        if (obj instanceof ITask) {
-            ITask task = (ITask) obj;
-            switch (columnIndex) {
-                case 0: return ""; // padding for background
-                case 1: return "";
-                case 2: return task.getPriority(); 
-                case 3: 
-                    return task.getLabel();
-                case 4:
-                	return task.getHandle();
-            }
-        } else if (obj instanceof Category) {
-        	Category cat = (Category) obj;
-            switch (columnIndex) {
-                case 0: return ""; // padding for background
-                case 1: return "";
-                case 2: return ""; 
-                case 3: 
-                    return cat.getName();
-                case 4:
-                	return "";
-            }
-        }
-        return null;
+    	if (obj instanceof ITaskListElement) {
+			ITaskListElement element = (ITaskListElement) obj;
+			switch (columnIndex) {
+			case 0:
+				return "";
+			case 1:
+				return "";
+			case 2:
+				return element.getPriority();
+			case 3:
+				return element.getDescription();
+			case 4:
+				return element.getHandle();
+			}
+		}
+    	System.out.println("Not TaskListElement");
+    	return "";
     }
 
     public Font getFont(Object element) {
@@ -71,9 +64,9 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 				if (child.isActive())
 					return UiUtil.BOLD;
 			}
-        } else if (element instanceof Category) {
-        	Category cat = (Category) element;
-            for (ITask child : cat.getTasks()) {
+        } else if (element instanceof TaskCategory) {
+        	TaskCategory cat = (TaskCategory) element;
+            for (ITask child : cat.getChildren()) {
 				if (child.isActive())
 					return UiUtil.BOLD;
 			}
@@ -83,21 +76,13 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
    
     public Image getColumnImage(Object element, int columnIndex) {
         
-        if (!(element instanceof ITask)) { 
+        if (! (element instanceof ITaskListElement)) { 
         	return null;
         }
         if (columnIndex == 0) {
-        	if (((ITask) element).isActive()) {
-        		return MylarImages.getImage(MylarImages.TASK_ACTIVE);
-        	} else {
-        		return MylarImages.getImage(MylarImages.TASK_INACTIVE);
-        	}        	
+        	return ((ITaskListElement)element).getStatusIcon();
         } else if (columnIndex == 1) {
-        	if (element instanceof BugzillaTask) {
-    			return MylarImages.getImage(MylarImages.TASK_BUGZILLA);
-    		} else {
-    			return MylarImages.getImage(MylarImages.TASK);
-    		} 
+        	return ((ITaskListElement)element).getTypeIcon();
         } else {
         	return null;
         }
@@ -108,7 +93,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
           ITask task = (ITask)element;
           Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
           if (highlighter != null) return highlighter.getHighlightColor();
-      } else if (element instanceof Category) {
+      } else if (element instanceof AbstractCategory) {
     	  return backgroundColor;
       }
       return null;

@@ -91,7 +91,7 @@ public interface ITask extends Serializable {
     @Deprecated
     public abstract void setIsCategory(boolean b);
     
-    public abstract void setCategory(Category cat);
+    public abstract void setCategory(TaskCategory cat);
     
-    public abstract Category getCategory();
+    public abstract TaskCategory getCategory();
 }

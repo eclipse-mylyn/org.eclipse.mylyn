@@ -31,6 +31,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -40,9 +41,11 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -53,14 +56,20 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
+import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.tasks.AbstractCategory;
+import org.eclipse.mylar.tasks.BugzillaHit;
+import org.eclipse.mylar.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.tasks.BugzillaTask;
-import org.eclipse.mylar.tasks.Category;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
+import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.MylarTasksPlugin.Priority_Level;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.tasks.ui.BugzillaTaskEditorInput;
@@ -82,6 +91,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -115,7 +125,7 @@ public class TaskListView extends ViewPart {
     private RefreshAction refresh;
     private CreateTaskAction createTask;
     private CreateCategoryAction createCategory;
-    private CreateQueryCategoryAction createQueryCategory;
+    private CreateBugzillaQueryCategoryAction createBugzillaQueryCategory;
     private CreateBugzillaTaskAction createBugzillaTask; 
 //    private RenameAction rename;
     private DeleteAction delete;
@@ -154,7 +164,7 @@ public class TaskListView extends ViewPart {
 		    Object obj = ((IStructuredSelection)selection).getFirstElement();
 		    if (obj instanceof ITask) {
 		    	ITask t = (ITask) obj;
-		    	Category cat = t.getCategory();
+		    	TaskCategory cat = t.getCategory();
 		    	if (cat != null) {
 		    		cat.removeTask(t);
 		    		t.setCategory(null);
@@ -206,7 +216,7 @@ public class TaskListView extends ViewPart {
 			if (isChecked()) {
 				viewer.addFilter(completeFilter);
 //				filterInCompleteTask.setChecked(false);
-				viewer.removeFilter(inCompleteFilter);
+//				viewer.removeFilter(inCompleteFilter);
 			} else {
 				viewer.removeFilter(completeFilter);        			
 			}
@@ -221,6 +231,23 @@ public class TaskListView extends ViewPart {
 		    Object obj = ((IStructuredSelection)selection).getFirstElement();
 		    if (obj instanceof ITask) {
 		    	((ITask)obj).openTaskInEditor();
+		    } else if (obj instanceof BugzillaQueryCategory){
+		    	
+		    	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
+	        	if(sqd.open() == Dialog.OK){
+		        	BugzillaQueryCategory queryCategory = (BugzillaQueryCategory)obj;
+		        	queryCategory.setDescription(sqd.getName());
+		        	queryCategory.setUrl(sqd.getUrl());
+		        	
+		            queryCategory.refreshBugs();
+		            viewer.refresh();
+	        	}
+		    } else if(obj instanceof BugzillaHit){
+		    	BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaHit)obj).getServerName(), ((BugzillaHit)obj).getID(),-1);
+		    	List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
+		    	selectedBugs.add(open);
+		    	ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
+				viewBugs.schedule();
 		    }
 		    viewer.refresh(obj);
 		}
@@ -241,7 +268,7 @@ public class TaskListView extends ViewPart {
 		    }
 		}
 	}
-
+	
 //	private final class RenameAction extends Action {
 //		public RenameAction() {
 //			setText("Rename");
@@ -301,6 +328,7 @@ public class TaskListView extends ViewPart {
 	        setToolTipText("Delete");
 	        setImageDescriptor(MylarImages.REMOVE);
 		}
+		
 		@Override
 		public void run() {              
 		    boolean deleteConfirmed = MessageDialog.openQuestion(
@@ -324,9 +352,9 @@ public class TaskListView extends ViewPart {
 		            }catch(Exception e){
 		            	MylarPlugin.log(e, " deletion failed");
 		            }
-		        } else if (selectedObject instanceof Category) {
-		        	Category cat = (Category) selectedObject;
-		        	for (ITask task : cat.getTasks()) {
+		        } else if (selectedObject instanceof TaskCategory) {
+		        	TaskCategory cat = (TaskCategory) selectedObject;
+		        	for (ITask task : cat.getChildren()) {
 		        		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
 		        		IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();    					
 						if (page == null)
@@ -337,13 +365,51 @@ public class TaskListView extends ViewPart {
 		                	MylarPlugin.log(e, " deletion failed");
 		                }
 		        	}
-		        	MylarTasksPlugin.getTaskListManager().deleteCategory((Category)selectedObject);
+		        	MylarTasksPlugin.getTaskListManager().deleteCategory((TaskCategory)selectedObject);
+		        }  else if (selectedObject instanceof BugzillaQueryCategory) {
+		        	BugzillaQueryCategory cat = (BugzillaQueryCategory) selectedObject;
+		        	MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
 		        }
 		    }
 		    viewer.refresh();
 		}
 	}
 
+	private final class CreateBugzillaQueryCategoryAction extends Action {
+        
+        public CreateBugzillaQueryCategoryAction() {
+        	setText("Add Bugzilla Query");
+            setToolTipText("Add Bugzilla Query");
+            setImageDescriptor(MylarImages.CATEGORY_QUERY_NEW);
+        }
+        
+        @Override
+        public void run() {
+
+        	// ask the user for the query string and a name
+
+        	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
+        	if(sqd.open() == Dialog.OK){
+	        	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl());
+	        	
+	            MylarTasksPlugin.getTaskListManager().getTaskList().addCategory(queryCategory);
+	            WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+	            	protected void execute(IProgressMonitor monitor) throws CoreException {
+		            	queryCategory.refreshBugs();
+	            	}
+	            };
+	            
+	            IProgressService service = PlatformUI.getWorkbench().getProgressService();
+	            try {
+	            	service.run(true, true, op);
+	            } catch (Exception e) {
+	            	MylarPlugin.log(e, "There was a problem executing the query refresh");
+	            }  
+				viewer.refresh();
+        	}
+        }
+    }
+	
 	private final class CreateBugzillaTaskAction extends Action {
 		public CreateBugzillaTaskAction() {
 			setText("Add Bugzilla Report");
@@ -377,8 +443,8 @@ public class TaskListView extends ViewPart {
 		
 		    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");				
 		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-		    if (selectedObject instanceof Category){
-		        ((Category)selectedObject).addTask(newTask);
+		    if (selectedObject instanceof TaskCategory){
+		        ((TaskCategory)selectedObject).addTask(newTask);
 		    } else { 
 		        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
 		    }
@@ -408,13 +474,25 @@ public class TaskListView extends ViewPart {
 							((BugzillaTask)task).refresh();
 						}							
 					}
-		            for (Category cat : MylarTasksPlugin.getTaskListManager().getTaskList().getCategories()) {
-		            	for (ITask task : cat.getTasks()) {
-		            		if (task instanceof BugzillaTask) {
-								((BugzillaTask)task).refresh();
-							}	
+		            for (AbstractCategory cat : MylarTasksPlugin.getTaskListManager().getTaskList().getCategories()) {
+		            	if (cat instanceof TaskCategory) {
+		            		for (ITask task : ((TaskCategory)cat).getChildren()) {
+			            		if (task instanceof BugzillaTask) {
+									((BugzillaTask)task).refresh();
+								}	
+			            	}
+			            	refreshChildren(((TaskCategory)cat).getChildren());
 		            	}
-		            	refreshChildren(cat.getTasks());
+		            	else if (cat instanceof BugzillaQueryCategory) {
+		            		final BugzillaQueryCategory bqc = (BugzillaQueryCategory) cat;
+		            		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+								public void run() {
+									bqc.refreshBugs();
+									viewer.refresh();
+								}
+		            		});
+		            	}
 					}		                
 					
 		            // clear the caches
@@ -468,9 +546,9 @@ public class TaskListView extends ViewPart {
             Task newTask = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), label);
             
             Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-            if (selectedObject instanceof Category){
-            	newTask.setCategory((Category)selectedObject);
-                ((Category)selectedObject).addTask(newTask);
+            if (selectedObject instanceof TaskCategory){
+            	newTask.setCategory((TaskCategory)selectedObject);
+                ((TaskCategory)selectedObject).addTask(newTask);
             } 
 //            else if (selectedObject instanceof Task) {
 //            	ITask t = (ITask) selectedObject;
@@ -498,24 +576,11 @@ public class TaskListView extends ViewPart {
         public void run() {
             String label = getLabelNameFromUser("Category");
             if(label == null) return;
-            Category cat = new Category(label);
+            TaskCategory cat = new TaskCategory(label);
             MylarTasksPlugin.getTaskListManager().getTaskList().addCategory(cat);
             viewer.refresh();
         }
-    }
-    
-    private final class CreateQueryCategoryAction extends Action {        
-        public CreateQueryCategoryAction() {
-        	setText("Add Bugzilla Query");
-            setToolTipText("Add Bugzilla Query");
-            setImageDescriptor(MylarImages.CATEGORY_QUERY_NEW);
-        }
-        
-        @Override
-        public void run() {
-            MylarPlugin.log("not implemented", this);
-        }
-    }
+    }    
     
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
@@ -654,10 +719,8 @@ public class TaskListView extends ViewPart {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITask) {
 				return !((ITask)element).isCompleted();
-			} else if (element instanceof Category){ 
+			} else { 
 				return true;
-			} else {
-				return false;
 			}
 		}    	
     };
@@ -667,11 +730,9 @@ public class TaskListView extends ViewPart {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITask) {
 				return ((ITask)element).isCompleted();
-			} else if (element instanceof Category){
-				return true;
 			} else {
-				return false;
-			}
+				return true;
+			} 
 		}    			
     };
     
@@ -708,10 +769,8 @@ public class TaskListView extends ViewPart {
 					}
 					return false;
 				}								
-			} else if (element instanceof Category) {
-				return true;
 			} else {
-				return false;
+				return true;
 			}			
 		}
     	
@@ -731,32 +790,37 @@ public class TaskListView extends ViewPart {
             return getChildren(parent);
         }
         public Object getParent(Object child) {
-            if (child instanceof Task) {
-            	if (((Task)child).getParent() != null) {
-            		return ((Task)child).getParent();
+            if (child instanceof ITask) {
+            	if (((ITask)child).getParent() != null) {
+            		return ((ITask)child).getParent();
             	} else {
-            		return ((Task)child).getCategory();
+            		return ((ITask)child).getCategory();
             	}
                 
             }
             return null;
         }
         public Object [] getChildren(Object parent) {
-        	if (parent instanceof Category) {
-        		return ((Category)parent).getTasks().toArray();
+        	if (parent instanceof TaskCategory) {
+        		return ((TaskCategory)parent).getChildren().toArray();
         	} else if (parent instanceof Task) {
         		return ((Task)parent).getChildren().toArray();
+        	} else if (parent instanceof BugzillaQueryCategory) {
+        		return ((BugzillaQueryCategory) parent).getHits().toArray();
         	}
         	return new Object[0];
         }
         public boolean hasChildren(Object parent) {  
-            if (parent instanceof Category) {
-            	Category cat = (Category)parent;
-                return cat.getTasks() != null && cat.getTasks().size() > 0;
+            if (parent instanceof TaskCategory) {
+            	TaskCategory cat = (TaskCategory)parent;
+                return cat.getChildren() != null && cat.getChildren().size() > 0;
             }  else if (parent instanceof Task) {
             	Task t = (Task) parent;
             	return t.getChildren() != null && t.getChildren().size() > 0;
-            }
+            } else if (parent instanceof BugzillaQueryCategory) {
+            	BugzillaQueryCategory cat = (BugzillaQueryCategory)parent;
+                return cat.getHits() != null && cat.getHits().size() > 0;
+            } 
             return false;
         }
     }
@@ -778,7 +842,7 @@ public class TaskListView extends ViewPart {
                 case 3: return !(task instanceof BugzillaTask);
                 case 4: return false;
                 }
-            } else if (element instanceof Category) {
+            } else if (element instanceof AbstractCategory) {
                 switch (columnIndex) {
                 case 0:
                 case 1: 
@@ -787,7 +851,13 @@ public class TaskListView extends ViewPart {
                 case 3: return true;
                 case 4: return false;
                 } 
-            }            
+            } else if (element instanceof ITaskListElement){
+            	if (columnIndex == 0) {
+            		return true;
+            	}else {
+            		return false;
+            	}            	
+            }
             return false;
         }
 
@@ -808,8 +878,8 @@ public class TaskListView extends ViewPart {
 				case 4:
 					return task.getHandle();
 				}
-			} else if (element instanceof Category) {
-				Category cat = (Category) element;
+			} else if (element instanceof AbstractCategory) {
+				AbstractCategory cat = (AbstractCategory) element;
 				switch (columnIndex) {
 				case 0:
 					return new Boolean(false);
@@ -818,9 +888,24 @@ public class TaskListView extends ViewPart {
 				case 2:
 					return "";
 				case 3:
-					return cat.getName();
+					return cat.getDescription();
 				case 4:
 					return "";
+				}
+			} else if (element instanceof ITaskListElement) {
+				ITaskListElement e = (ITaskListElement) element;
+				switch (columnIndex) {
+				case 0:
+					return new Boolean(false);
+				case 1:
+					return "";
+				case 2:
+					String priorityString = e.getPriority().substring(1);
+					return new Integer(priorityString);
+				case 3:
+					return e.getDescription();
+				case 4:
+					return e.getHandle();					
 				}
 			}
             return "";
@@ -860,8 +945,8 @@ public class TaskListView extends ViewPart {
 					case 4:
 						break;
 					}
-				} else if (((TreeItem) element).getData() instanceof Category) {
-					Category cat = (Category)((TreeItem) element).getData();
+				} else if (((TreeItem) element).getData() instanceof AbstractCategory) {
+					AbstractCategory cat = (AbstractCategory)((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:						
 						viewer.setSelection(null);
@@ -871,12 +956,28 @@ public class TaskListView extends ViewPart {
 					case 2:
 						break;
 					case 3:
-						cat.setName(((String) value).trim());
+						cat.setDescription(((String) value).trim());
 						viewer.setSelection(null);
 						break;
 					case 4:
 						break;
 					}
+				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
+////					ITaskListElement e = (ITaskListElement)((TreeItem) element).getData();
+//					switch (columnIndex) {
+//					case 0:						
+//						viewer.setSelection(null);
+//						break;
+//					case 1:
+//						break;
+//					case 2:
+//						break;
+//					case 3:						
+//						viewer.setSelection(null);
+//						break;
+//					case 4:
+//						break;
+//					}
 				}
 				viewer.refresh();
 			} catch (Exception e) {
@@ -900,18 +1001,19 @@ public class TaskListView extends ViewPart {
 		 */
         @Override
         public int compare(Viewer compareViewer, Object o1, Object o2) {
-        	if (o1 instanceof Category) {
-        		if (o2 instanceof Category) {
+        	if (o1 instanceof AbstractCategory) {
+        		if (o2 instanceof AbstractCategory) {
         			return 0;
         		} else {
         			return -1;
         		}
-        	} else {
-        		if (o2 instanceof Category) {
+        	} else if(o1 instanceof ITask){
+        		if (o2 instanceof AbstractCategory) {
         			return -1;
-        		} else {
+        		} else if(o2 instanceof ITask) {
+        			
         			ITask task1 = (ITask) o1;
-                    ITask task2 = (ITask) o2;
+        			ITask task2 = (ITask) o2;
                     
                     if (task1.isCompleted()) return 1;
                     if (task2.isCompleted()) return -1;
@@ -931,7 +1033,25 @@ public class TaskListView extends ViewPart {
                     	return 0;
                     }
         		}
-        	}            
+        	} else if(o1 instanceof BugzillaHit && o2 instanceof BugzillaHit){
+        		ITaskListElement task1 = (ITaskListElement) o1;
+        		ITaskListElement task2 = (ITaskListElement) o2;
+                
+                if (column == columnNames[1]) {
+                    return 0;
+                } else if (column == columnNames[2]) {
+                    return task1.getPriority().compareTo(task2.getPriority());
+                } else if (column == columnNames[3]) {
+                    return task1.getDescription().compareTo(task2.getDescription());
+                } else if (column == columnNames[4]){
+                	return task1.getHandle().compareTo(task2.getHandle());
+                } else {
+                	return 0;
+                }
+        	} else{
+        		return 0;
+        	}
+        	return 0;
         }
     }
     
@@ -1025,9 +1145,22 @@ public class TaskListView extends ViewPart {
 					// don't care if the control is moved
 				}
             });
-
         }
-                
+         
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				if(event.getSelection() instanceof IStructuredSelection){
+					IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+					if(sel.getFirstElement() instanceof BugzillaHit){
+						delete.setEnabled(false);
+					}else {
+						delete.setEnabled(true);
+					}
+				}
+			}
+        	
+        });
         CellEditor[] editors = new CellEditor[columnNames.length];
         TextCellEditor textEditor = new TextCellEditor(viewer.getTree());
         ((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
@@ -1103,9 +1236,9 @@ public class TaskListView extends ViewPart {
                 		MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks().remove(source);
                 	}
                     
-                    if (getCurrentTarget() instanceof Category) {
-                    	((Category) getCurrentTarget()).addTask(source);
-                    	source.setCategory((Category)getCurrentTarget());
+                    if (getCurrentTarget() instanceof TaskCategory) {
+                    	((TaskCategory) getCurrentTarget()).addTask(source);
+                    	source.setCategory((TaskCategory)getCurrentTarget());
                     } else if (getCurrentTarget() instanceof ITask) {
                     	ITask target = (ITask) getCurrentTarget();
                     	source.setCategory(null);
@@ -1126,7 +1259,7 @@ public class TaskListView extends ViewPart {
                         .getSelection()).getFirstElement();
                 if (selectedObject instanceof ITask) {
                     if (getCurrentTarget() != null && 
-                    		(getCurrentTarget() instanceof ITask || getCurrentTarget() instanceof Category)) {
+                    		(getCurrentTarget() instanceof ITask || getCurrentTarget() instanceof TaskCategory)) {
                     	return true;
                     } else {
                     	return false;
@@ -1214,16 +1347,18 @@ public class TaskListView extends ViewPart {
     }
     
     private void fillLocalToolBar(IToolBarManager manager) {
-        manager.add(createTask);
+            manager.add(createTask);
         manager.add(createCategory);
         manager.add(new Separator());
         manager.add(createBugzillaTask);
-        manager.add(createQueryCategory);
-        manager.add(refresh);
+        
+    	manager.add(createBugzillaQueryCategory);
+    	manager.add(refresh);
         manager.add(new Separator());
         manager.add(filterCompleteTask);
 //        manager.add(filterInCompleteTask);
         manager.add(filterOnPriority);
+        
     }
 
     /**
@@ -1233,9 +1368,9 @@ public class TaskListView extends ViewPart {
     private void makeActions() {
     	refresh = new RefreshAction();      	               
         createTask = new CreateTaskAction();        
-        createCategory = new CreateCategoryAction();                
-        createBugzillaTask = new CreateBugzillaTaskAction();   
-        createQueryCategory = new CreateQueryCategoryAction();
+        createCategory = new CreateCategoryAction();
+        createBugzillaQueryCategory = new CreateBugzillaQueryCategoryAction();
+        createBugzillaTask = new CreateBugzillaTaskAction();                
         delete = new DeleteAction();
         completeTask = new MarkTaskCompleteAction();
         incompleteTask = new MarkTaskIncompleteAction();        
@@ -1265,8 +1400,8 @@ public class TaskListView extends ViewPart {
     			return true;
     		}
     	}
-    	for (Category cat : MylarTasksPlugin.getTaskListManager().getTaskList().getCategories()) {
-    		for (ITask task : cat.getTasks()) {
+    	for (TaskCategory cat : MylarTasksPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
+    		for (ITask task : cat.getChildren()) {
         		if (task.getHandle().equals(taskId)) {
         			return true;
         		}

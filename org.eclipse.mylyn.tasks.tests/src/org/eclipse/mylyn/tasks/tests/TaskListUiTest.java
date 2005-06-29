@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.tasks.Category;
+import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
@@ -37,7 +37,7 @@ import org.eclipse.ui.PartInitException;
  */
 public class TaskListUiTest extends TestCase {	
 	private TaskList tlist = null;
-	private Category cat1 = null;
+	private TaskCategory cat1 = null;
 	private Task cat1task1 = null;
 	private Task cat1task2 = null;
 	private Task cat1task3 = null;
@@ -45,7 +45,7 @@ public class TaskListUiTest extends TestCase {
 	private Task cat1task5 = null;
 	private Task cat1task1sub1 = null;
 	
-	private Category cat2 = null;
+	private TaskCategory cat2 = null;
 	private Task cat2task1 = null;
 	private Task cat2task2 = null;
 	private Task cat2task3 = null;
@@ -63,7 +63,7 @@ public class TaskListUiTest extends TestCase {
 		File file = new File("foo" + MylarTasksPlugin.FILE_EXTENSION);
         TaskListManager manager = new TaskListManager(file);        
         tlist = manager.createNewTaskList();        
-        cat1 = new Category("First Category");
+        cat1 = new TaskCategory("First Category");
         
         cat1task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
         cat1task1.setPriority("P1");
@@ -100,9 +100,9 @@ public class TaskListUiTest extends TestCase {
 		cat1.addTask(cat1task5);
 		
 		tlist.addCategory(cat1);
-		assertEquals(cat1.getTasks().size(), 5);
+		assertEquals(cat1.getChildren().size(), 5);
 		
-		cat2 = new Category("Second Category");
+		cat2 = new TaskCategory("Second Category");
         
         cat2task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
         cat2task1.setPriority("P1");
@@ -191,7 +191,7 @@ public class TaskListUiTest extends TestCase {
 		assertTrue(items.length == 2);
 		int count = 0;
 		for (int i = 0; i < items.length; i++) {
-			assertTrue(items[i].getData() instanceof Category);
+			assertTrue(items[i].getData() instanceof TaskCategory);
 			TreeItem[] sub = items[i].getItems();
 			for (int j = 0; j < sub.length; j++) {
 				assertTrue(sub[j].getData() instanceof ITask);
@@ -213,7 +213,7 @@ public class TaskListUiTest extends TestCase {
 		int p2Count = 0;
 		int p5Count = 0;
 		for (int i = 0; i < items.length; i++) {
-			assertTrue(items[i].getData() instanceof Category);
+			assertTrue(items[i].getData() instanceof TaskCategory);
 			TreeItem[] sub = items[i].getItems();
 			for (int j = 0; j < sub.length; j++) {
 				assertTrue(sub[j].getData() instanceof ITask);
@@ -241,21 +241,21 @@ public class TaskListUiTest extends TestCase {
             return tlist.getRoots().toArray();            	          
         }
         public Object getParent(Object child) {
-            if (child instanceof Category) {
+            if (child instanceof TaskCategory) {
                 return ((Task)child).getCategory();
             }
             return null;
         }
         public Object [] getChildren(Object parent) {
-        	if (parent instanceof Category) {
-        		return ((Category)parent).getTasks().toArray();
+        	if (parent instanceof TaskCategory) {
+        		return ((TaskCategory)parent).getChildren().toArray();
         	}
         	return new Object[0];
         }
         public boolean hasChildren(Object parent) {  
-            if (parent instanceof Category) {
-            	Category cat = (Category)parent;
-                return cat.getTasks() != null && cat.getTasks().size() > 0;
+            if (parent instanceof TaskCategory) {
+            	TaskCategory cat = (TaskCategory)parent;
+                return cat.getChildren() != null && cat.getChildren().size() > 0;
             } 
             return false;
         }
