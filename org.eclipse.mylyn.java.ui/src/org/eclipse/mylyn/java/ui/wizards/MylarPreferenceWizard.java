@@ -48,6 +48,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard{
 		super();
 		setDefaultPageImageDescriptor(MylarImages.MYLAR);
 		setWindowTitle("Mylar Preferences Wizard");
+		super.setDefaultPageImageDescriptor(MylarJavaPlugin.imageDescriptorFromPlugin(MylarJavaPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
 		preferencePage = new MylarPreferenceWizardPage("Mylar Preferences");
 	}
 	

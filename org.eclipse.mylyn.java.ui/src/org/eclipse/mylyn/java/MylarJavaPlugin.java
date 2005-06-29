@@ -57,6 +57,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
     private static JavaUiBridge uiBridge = new JavaUiBridge();
 	private JavaEditorTracker editorTracker;
     
+
+    public static final String PLUGIN_ID = "org.eclipse.mylar.java";
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
     
 	public MylarJavaPlugin() {

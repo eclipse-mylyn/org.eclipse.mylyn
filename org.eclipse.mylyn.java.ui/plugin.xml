@@ -35,55 +35,54 @@
   		-->
       </viewContribution> 
 	</extension>
+	
+  <extension point = "org.eclipse.ui.popupMenus">
+     <objectContribution
+        id="org.eclipse.mylar.ui.interest"
+        objectClass="org.eclipse.jdt.core.IJavaElement">
+     	<action  
+  		  	label="Make Less Interesting" 
+	  		tooltip="Mark selected element as uninteresting"
+	  		menubarPath="mylar" 
+	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
+	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+	  		icon="icons/elcl16/interest-decrease.gif"
+	  		enablesFor="1"/>
+	    <action  
+  		  	label="Make Landmark" 
+	  		tooltip="Make selected element a landmark"
+	  		menubarPath="mylar" 
+	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
+	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+	  		icon="icons/elcl16/interest-increase.gif"
+	  		enablesFor="1"/>
+	 </objectContribution>
+  </extension>
+
   <extension point="org.eclipse.ui.actionSets">
 	<actionSet
-            id="org.eclipse.mylar.action.contribution.folding"
-            label="Mylar Java Plugin"
+            id="org.eclipse.mylar.java.actionSet"
+            label="Mylar Java"
             visible="true"> 
             
   		<action
          	id="org.eclipse.mylar.action.contribution.editor.autoFold" 
          	style="toggle"
-         	label="Mylar automatic folding" 
+         	label="Mylar Automatic Editor Folding" 
          	icon="icons/elcl16/interest-folding.gif"
          	tooltip="Mylar automatic folding"
-      		toolbarPath="org.eclipse.mylar.java.folding"
+      		toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
          	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
       	</action> 
+        <action
+               definitionId="org.eclipse.mylar.java.ui.search.taskscape"
+               label="Search the current task context"
+               class="org.eclipse.mylar.java.ui.actions.FindReferencesInTaskscapeAction"
+               id="org.eclipse.mylar.java.ui.search.taskscape">
+         </action>
   	</actionSet>
-  </extension>
-
-<!--
-	<extension point="org.eclipse.ui.editorActions"> 
-		<editorContribution 
-      		id="org.eclipse.ui.articles.action.contribution.editor" 
-   			targetID="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor">
-	   		<action
-	         	id="org.eclipse.mylar.action.contribution.editor.autoFold" 
-	         	style="toggle"
-	         	label="Mylar automatic folding" 
-	         	icon="icons/elcl16/auto-fold.gif"
-	         	tooltip="Mylar automatic folding"
-	      		toolbarPath="Normal/additions"
-	         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
-	      	</action> 
-   	 	</editorContribution> 
-   	 	
-   	 	<editorContribution 
-      		id="org.eclipse.ui.articles.action.contribution.editor.classFile" 
-   			targetID="org.eclipse.jdt.internal.ui.javaeditor.ClassFileEditor">
-	   		<action
-	         	id="org.eclipse.mylar.action.contribution.editor.autoFold.classFile" 
-	         	style="toggle"
-	         	label="Mylar automatic folding" 
-	         	icon="icons/elcl16/auto-fold.gif"
-	         	tooltip="Mylar automatic folding"
-	      		toolbarPath="Normal/additions"
-	         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
-	      	</action> 
-   	 	</editorContribution>
    </extension>
-	-->
+
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
             targetId="org.eclipse.jdt.ui.PackageExplorer"
@@ -165,22 +164,6 @@
       </wizard>
    </extension>
 
-   <extension
-       	 point="org.eclipse.ui.actionSets">
-   	  <actionSet
-            label="Mylar Java"
-            description="Mylar Java"
-            visible="true"
-            id="org.eclipse.mylar.java.actionSet">
-          <action
-               definitionId="org.eclipse.mylar.java.ui.search.taskscape"
-               label="Search the current task context"
-               class="org.eclipse.mylar.java.ui.actions.FindReferencesInTaskscapeAction"
-               id="org.eclipse.mylar.java.ui.search.taskscape">
-         </action>
-      </actionSet>
-   </extension>
-
    <extension point="org.eclipse.ui.commands">
 	  <command
          categoryId="org.eclipse.mylar.ui"
@@ -209,3 +192,36 @@
 	</extension>
 
 </plugin>
+
+
+<!--
+	<extension point="org.eclipse.ui.editorActions"> 
+		<editorContribution 
+      		id="org.eclipse.ui.articles.action.contribution.editor" 
+   			targetID="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor">
+	   		<action
+	         	id="org.eclipse.mylar.action.contribution.editor.autoFold" 
+	         	style="toggle"
+	         	label="Mylar automatic folding" 
+	         	icon="icons/elcl16/auto-fold.gif"
+	         	tooltip="Mylar automatic folding"
+	      		toolbarPath="Normal/additions"
+	         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
+	      	</action> 
+   	 	</editorContribution> 
+   	 	
+   	 	<editorContribution 
+      		id="org.eclipse.ui.articles.action.contribution.editor.classFile" 
+   			targetID="org.eclipse.jdt.internal.ui.javaeditor.ClassFileEditor">
+	   		<action
+	         	id="org.eclipse.mylar.action.contribution.editor.autoFold.classFile" 
+	         	style="toggle"
+	         	label="Mylar automatic folding" 
+	         	icon="icons/elcl16/auto-fold.gif"
+	         	tooltip="Mylar automatic folding"
+	      		toolbarPath="Normal/additions"
+	         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
+	      	</action> 
+   	 	</editorContribution>
+   </extension>
+	-->

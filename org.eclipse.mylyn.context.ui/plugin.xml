@@ -10,9 +10,9 @@
    
   <extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
-        id="org.eclipse.mylar.interest"
-        objectClass="java.lang.Object">   
-	    <action  
+        id="org.eclipse.mylar.ui.interest"
+        objectClass="org.eclipse.mylar.core.model.ITaskscapeNode">
+     	<action  
   		  	label="Make Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="mylar" 
@@ -28,15 +28,26 @@
 	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="1"/>
-	    <!--
-	  	<action id="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
-              label="Raise children" 
-	      	  menubarPath="mylar" 
-              icon="icons/elcl16/raise-children.gif" 
-              tooltip="Show all children of the current element" 
-              class="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
-              enablesFor="1"/> 
-          --> 
+	 </objectContribution>
+     <objectContribution
+        id="org.eclipse.mylar.ui.interest"
+        objectClass="org.eclipse.core.resources.IResource">
+     	<action  
+  		  	label="Make Less Interesting" 
+	  		tooltip="Mark selected element as uninteresting"
+	  		menubarPath="mylar" 
+	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
+	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+	  		icon="icons/elcl16/interest-decrease.gif"
+	  		enablesFor="1"/>
+	    <action  
+  		  	label="Make Landmark" 
+	  		tooltip="Make selected element a landmark"
+	  		menubarPath="mylar" 
+	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
+	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+	  		icon="icons/elcl16/interest-increase.gif"
+	  		enablesFor="1"/>
 	 </objectContribution>
   </extension>
     
@@ -251,16 +262,25 @@
 		id="org.eclipse.mylar.java.problems.contribution" 
    		targetID="org.eclipse.ui.views.ProblemView">
     	<action
-	         id="org.eclipse.mylar.ui.actions.FilterProblemsAction" 
-   	         style="toggle"
-	         label="Filter uninteresting" 
-	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Filter uninteresting"
-	      	 toolbarPath="mylar" 
-	         class="org.eclipse.mylar.ui.actions.FilterProblemsListAction"
-	         enablesFor="*"> 
+           class="org.eclipse.mylar.ui.actions.FilterProblemsListAction"
+           enablesFor="*"
+           icon="icons/elcl16/interest-filtering.gif"
+           id="org.eclipse.mylar.ui.actions.FilterProblemsAction"
+           label="Filter uninteresting"
+           style="toggle"
+           toolbarPath="mylar"
+           tooltip="Filter uninteresting"> 
   		</action>  
       </viewContribution> 
    </extension>
-
 </plugin>
+
+	    <!--
+	  	<action id="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
+              label="Raise children" 
+	      	  menubarPath="mylar" 
+              icon="icons/elcl16/raise-children.gif" 
+              tooltip="Show all children of the current element" 
+              class="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
+              enablesFor="1"/> 
+          --> 
