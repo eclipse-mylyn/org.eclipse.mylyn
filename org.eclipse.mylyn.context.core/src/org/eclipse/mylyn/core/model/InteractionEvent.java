@@ -31,10 +31,14 @@ public class InteractionEvent implements Serializable {
         SELECTION,
         EDIT,
         COMMAND,
+        PREFERENCE,
         PREDICTION,
         PROPAGATION,
         MANIPULATION;
         
+        /**
+         * TODO: add PREFERENCE?
+         */
         public boolean isUserEvent() {
         	return this == SELECTION || this == EDIT || this == COMMAND;
         }
@@ -45,6 +49,7 @@ public class InteractionEvent implements Serializable {
                 case SELECTION: return "selection";
                 case EDIT: return "edit";
                 case COMMAND: return "command";
+                case PREFERENCE: return "preference";
                 case PREDICTION: return "prediction";
                 case PROPAGATION: return "propagation";
                 case MANIPULATION: return "manipulation";
@@ -57,6 +62,7 @@ public class InteractionEvent implements Serializable {
             if (string.equals("selection")) return SELECTION;
             if (string.equals("edit")) return EDIT;
             if (string.equals("command")) return COMMAND;
+            if (string.equals("preference")) return PREFERENCE;
             if (string.equals("prediction")) return PREDICTION;
             if (string.equals("propagation")) return PROPAGATION;
             if (string.equals("manipulation")) return MANIPULATION;
@@ -85,6 +91,10 @@ public class InteractionEvent implements Serializable {
     public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, float interestContribution) {
         this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); // default contribution
     } 
+
+    public InteractionEvent(String originId, String delta) {
+        this(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default contribution
+    }
     
     public InteractionEvent(Kind kind, String structureKind, String handle, String originId, float interestContribution) {
         this(kind, structureKind, handle, originId, "null", "null", interestContribution); // default contribution

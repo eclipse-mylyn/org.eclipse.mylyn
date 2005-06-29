@@ -49,7 +49,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
     
     public void init(IViewPart view) {
     	String id = view.getSite().getId();
-    	prefId = PREF_ID_PREFIX + id.substring(id.lastIndexOf('.') + 1);
+    	prefId = PREF_ID_PREFIX + id;//.substring(id.lastIndexOf('.') + 1);
     }
     
     public void run(IAction action) {

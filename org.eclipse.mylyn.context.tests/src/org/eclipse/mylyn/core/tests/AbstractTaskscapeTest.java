@@ -40,6 +40,10 @@ public class AbstractTaskscapeTest extends TestCase {
         return event;
     }
 
+    protected InteractionEvent mockPreferenceChange(String handle) {
+        return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "<mock-kind>", handle, "<mock-origin>");
+    }
+    
     protected boolean compareTaskscapeEquality(ITaskscape t1, ITaskscape t2) {
 //        List<ITaskscapeNode> nodes1 = t1.get
         return false;
