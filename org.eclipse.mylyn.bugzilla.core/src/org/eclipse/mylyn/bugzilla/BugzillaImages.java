@@ -59,6 +59,7 @@ public class BugzillaImages {
 	public static final String IMG_TOOL_ADD_TO_FAVORITES = "IMG_TOOL_FAVORITE";
 	
     public static final String BUG = "IMG_BUG";
+    public static final String IMG_COMMENT = "IMG_COMMENT";
     
     
 	private static HashMap<String, ImageDescriptor> descriptors = new HashMap<String, ImageDescriptor>();
@@ -68,12 +69,13 @@ public class BugzillaImages {
 	// Subdirectory (under the package containing this class) where 16 color images are
 	private static final URL URL_BASIC = BugzillaPlugin.getDefault().getBundle().getEntry("/");
 
-	public final static String ICONS_PATH = "Icons/";//$NON-NLS-1$
+	public final static String ICONS_PATH = "icons/";//$NON-NLS-1$
 
 	private final static void declareImages() {
 		// toolbar icons for the result view
-		declareImage(IMG_TOOL_ADD_TO_FAVORITES, ICONS_PATH+"bugzilla-bookmark.gif");//$NON-NLS-1$
-        declareImage(BUG, ICONS_PATH+"bug.gif");//$NON-NLS-1$
+		declareImage(IMG_TOOL_ADD_TO_FAVORITES, ICONS_PATH+"elcl16/bug-favorite.gif");//$NON-NLS-1$
+        declareImage(BUG, ICONS_PATH+"elcl16/bug.gif");//$NON-NLS-1$
+        declareImage(IMG_COMMENT, ICONS_PATH+"elcl16/bug-comment.gif");//$NON-NLS-1$
 	}
 
 	/**

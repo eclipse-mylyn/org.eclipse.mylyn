@@ -44,7 +44,7 @@ public class AddFavoriteAction extends AbstractFavoritesAction {
 	 */
 	public AddFavoriteAction(String text, BugzillaSearchResultView resultView) {
 		setText(text);
-		setIcon("Icons/bugzilla-bookmark.gif");
+		setIcon("icons/elcl16/bug-favorite.gif");
 		this.resultView = resultView;
 		selected = null;
 	}

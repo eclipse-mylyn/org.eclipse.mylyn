@@ -115,8 +115,9 @@ public class TaskListView extends ViewPart {
     private RefreshAction refresh;
     private CreateTaskAction createTask;
     private CreateCategoryAction createCategory;
+    private CreateQueryCategoryAction createQueryCategory;
     private CreateBugzillaTaskAction createBugzillaTask; 
-    private RenameAction rename;
+//    private RenameAction rename;
     private DeleteAction delete;
     private OpenTaskEditorAction doubleClickAction;
     private ClearTaskscapeAction clearSelectedTaskscapeAction;
@@ -194,8 +195,8 @@ public class TaskListView extends ViewPart {
 
 	private final class FilterCompletedTasksAction extends Action {
 		public FilterCompletedTasksAction() {
-			setText("Filter Complete tasks");
-	        setToolTipText("Filter Completed tasks");
+			setText("Filter Completed Tasks");
+	        setToolTipText("Filter Completed Tasks");
 	        setImageDescriptor(MylarImages.FILTER_COMPLETE);
 	        setChecked(MylarTasksPlugin.getDefault().isFilterCompleteMode());
 		}
@@ -227,8 +228,8 @@ public class TaskListView extends ViewPart {
 
 	private final class ClearTaskscapeAction extends Action {
 		public ClearTaskscapeAction() {
-			setText("Erase Taskscape");
-	        setToolTipText("Erase Taskscape");
+			setText("Clear Task Context");
+	        setToolTipText("Clear Task Context");
 	        setImageDescriptor(MylarImages.ERASE_TASKSCAPE);
 		}
 		@Override
@@ -241,26 +242,26 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-	private final class RenameAction extends Action {
-		public RenameAction() {
-			setText("Rename");
-	        setToolTipText("Rename");
-		}
-		@Override
-		public void run() {
-		    String label = "category";
-		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-		    if (selectedObject instanceof Task)  label = "task";
-		    
-		    String newName = getLabelNameFromUser(label);
-		    if (selectedObject instanceof Task) {
-		        ((Task)selectedObject).setLabel(newName);
-		    } else if (selectedObject instanceof Category) {
-		        ((Category)selectedObject).setName(newName);
-		    }
-		    viewer.refresh(selectedObject);
-		}
-	}
+//	private final class RenameAction extends Action {
+//		public RenameAction() {
+//			setText("Rename");
+//	        setToolTipText("Rename");
+//		}
+//		@Override
+//		public void run() {
+//		    String label = "category";
+//		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+//		    if (selectedObject instanceof Task)  label = "task";
+//		    
+//		    String newName = getLabelNameFromUser(label);
+//		    if (selectedObject instanceof Task) {
+//		        ((Task)selectedObject).setLabel(newName);
+//		    } else if (selectedObject instanceof Category) {
+//		        ((Category)selectedObject).setName(newName);
+//		    }
+//		    viewer.refresh(selectedObject);
+//		}
+//	}
 
 	private final class MarkTaskIncompleteAction extends Action {
 		public MarkTaskIncompleteAction() {
@@ -345,8 +346,8 @@ public class TaskListView extends ViewPart {
 
 	private final class CreateBugzillaTaskAction extends Action {
 		public CreateBugzillaTaskAction() {
-			setText("Add bugzilla report");
-	        setToolTipText("Add bugzilla report");
+			setText("Add Bugzilla Report");
+	        setToolTipText("Add Bugzilla Report");
 	        setImageDescriptor(MylarImages.TASK_BUGZILLA_NEW);
 		}
 		@Override
@@ -387,9 +388,9 @@ public class TaskListView extends ViewPart {
 
 	private final class RefreshAction extends Action {
 		public RefreshAction() {
-			setText("Refresh all Bugzilla reports");
-	    	setToolTipText("Refresh all Bugzilla reports"); 
-	    	setImageDescriptor(MylarImages.REFRESH);
+			setText("Refresh Bugzilla reports");
+	    	setToolTipText("Refresh Bugzilla reports"); 
+	    	setImageDescriptor(MylarImages.TASK_BUG_REFRESH);
 		}
 		
 		@Override			
@@ -455,8 +456,8 @@ public class TaskListView extends ViewPart {
 
 	private final class CreateTaskAction extends Action {
 		public CreateTaskAction() {
-			setText("Create task");
-	        setToolTipText("Create task");
+			setText("Add Task");
+	        setToolTipText("Add Task");
 	        setImageDescriptor(MylarImages.TASK_NEW);
 		}
 		
@@ -488,8 +489,8 @@ public class TaskListView extends ViewPart {
     
     private final class CreateCategoryAction extends Action {        
         public CreateCategoryAction() {
-        	setText("Create category");
-            setToolTipText("Create category");
+        	setText("Add Category");
+            setToolTipText("Add Category");
             setImageDescriptor(MylarImages.CATEGORY_NEW);
         }
         
@@ -503,6 +504,19 @@ public class TaskListView extends ViewPart {
         }
     }
     
+    private final class CreateQueryCategoryAction extends Action {        
+        public CreateQueryCategoryAction() {
+        	setText("Add Bugzilla Query");
+            setToolTipText("Add Bugzilla Query");
+            setImageDescriptor(MylarImages.CATEGORY_QUERY_NEW);
+        }
+        
+        @Override
+        public void run() {
+            MylarPlugin.log("not implemented", this);
+        }
+    }
+    
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
     	
@@ -510,7 +524,7 @@ public class TaskListView extends ViewPart {
 			super();
 			setText("Display Priorities");
 			setToolTipText("Show Tasks with Priority Levels");
-			setImageDescriptor(MylarImages.MYLAR);
+			setImageDescriptor(MylarImages.FILTER_PRIORITY);
 			setMenuCreator(this);			
 		}
     	
@@ -1163,12 +1177,12 @@ public class TaskListView extends ViewPart {
 //        manager.add(new Separator());
         manager.add(createTask);
         manager.add(createBugzillaTask);
-        manager.add(rename);
+//        manager.add(rename);
         manager.add(delete);
         manager.add(clearSelectedTaskscapeAction);
         manager.add(moveTaskToRoot);
         manager.add(new Separator());
-        MenuManager subMenuManager = new MenuManager("choose highlighter");
+        MenuManager subMenuManager = new MenuManager("Choose Highlighter");
         for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
             final Highlighter highlighter = it.next();
             final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
@@ -1200,19 +1214,16 @@ public class TaskListView extends ViewPart {
     }
     
     private void fillLocalToolBar(IToolBarManager manager) {
-        manager.add(createCategory);
         manager.add(createTask);
-//        manager.add(new Separator());
+        manager.add(createCategory);
+        manager.add(new Separator());
         manager.add(createBugzillaTask);
+        manager.add(createQueryCategory);
         manager.add(refresh);
-//        manager.add(new Separator());
-//        manager.add(toggleFilteringAction);
-        //manager.add(toggleIntersectionModeAction);
         manager.add(new Separator());
         manager.add(filterCompleteTask);
 //        manager.add(filterInCompleteTask);
         manager.add(filterOnPriority);
-        
     }
 
     /**
@@ -1223,11 +1234,12 @@ public class TaskListView extends ViewPart {
     	refresh = new RefreshAction();      	               
         createTask = new CreateTaskAction();        
         createCategory = new CreateCategoryAction();                
-        createBugzillaTask = new CreateBugzillaTaskAction();                
+        createBugzillaTask = new CreateBugzillaTaskAction();   
+        createQueryCategory = new CreateQueryCategoryAction();
         delete = new DeleteAction();
         completeTask = new MarkTaskCompleteAction();
         incompleteTask = new MarkTaskIncompleteAction();        
-        rename = new RenameAction();        
+//        rename = new RenameAction();        
         clearSelectedTaskscapeAction = new ClearTaskscapeAction();
         moveTaskToRoot = new MoveTaskToRootAction();
         doubleClickAction = new OpenTaskEditorAction();            

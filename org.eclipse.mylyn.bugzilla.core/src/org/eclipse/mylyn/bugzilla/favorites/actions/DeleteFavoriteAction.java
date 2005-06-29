@@ -38,13 +38,13 @@ public class DeleteFavoriteAction extends AbstractFavoritesAction
 		{
 			setToolTipText("Remove all favorites");
 			setText("Remove all");
-			setIcon("Icons/remove-all.gif");
+			setIcon("icons/remove-all.gif");
 		}
 		else 
 		{
 			setToolTipText( "Remove selected favorites" );
 			setText( "Remove" );
-			setIcon( "Icons/remove.gif" );
+			setIcon( "icons/remove.gif" );
 		}
 		
 		view = favoritesView;

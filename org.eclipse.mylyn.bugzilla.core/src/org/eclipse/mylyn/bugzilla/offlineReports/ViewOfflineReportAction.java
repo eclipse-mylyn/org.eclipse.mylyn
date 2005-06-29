@@ -42,7 +42,7 @@ public class ViewOfflineReportAction extends AbstractOfflineReportsAction
 	{
 		setToolTipText( "View selected offline reports" );
 		setText( "View selected" );
-		setIcon( "Icons/openresult.gif" );
+		setIcon( "icons/openresult.gif" );
 		view = resultsView;
 	}
 	

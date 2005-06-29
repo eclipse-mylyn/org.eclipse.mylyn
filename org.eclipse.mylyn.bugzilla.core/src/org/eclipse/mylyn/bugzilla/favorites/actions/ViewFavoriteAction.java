@@ -34,7 +34,7 @@ public class ViewFavoriteAction extends AbstractFavoritesAction
 	{
 		setToolTipText( "View selected favorites" );
 		setText( "View selected" );
-		setIcon( "Icons/openresult.gif" );
+		setIcon( "icons/openresult.gif" );
 		view = resultsView;
 	}
 	

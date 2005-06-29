@@ -38,13 +38,13 @@ public class DeleteOfflineReportAction extends AbstractOfflineReportsAction
 		{
 			setToolTipText("Remove all offline reports");
 			setText("Remove all");
-			setIcon("Icons/remove-all.gif");
+			setIcon("icons/remove-all.gif");
 		}
 		else 
 		{
 			setToolTipText( "Remove selected offline reports" );
 			setText( "Remove" );
-			setIcon( "Icons/remove.gif" );
+			setIcon( "icons/remove.gif" );
 		}
 		
 		view = offlineReportsView;
