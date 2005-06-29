@@ -29,7 +29,7 @@ public class ToggleDecorateInterestLevelAction extends Action {
     
 	public ToggleDecorateInterestLevelAction() {
 		super();
-		setImageDescriptor(MylarImages.REFRESH);	
+		setImageDescriptor(MylarImages.DECORATE_INTEREST);	
 		setToolTipText("Toggle interest level decorator"); 
 		
 		boolean checked= MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID); 

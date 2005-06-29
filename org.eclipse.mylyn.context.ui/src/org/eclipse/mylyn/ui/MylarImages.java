@@ -34,7 +34,7 @@ public class MylarImages {
 	
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
 		
-	public static final ImageDescriptor REFRESH = create(T_ELCL, "refresh.gif");
+	public static final ImageDescriptor DECORATE_INTEREST = create(T_ELCL, "refresh.gif");
 	public static final ImageDescriptor SYNCHED = create(T_ELCL, "synched.gif");
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
 	public static final ImageDescriptor ERASE_TASKSCAPE = create(T_ELCL, "context-clear.gif");
@@ -45,7 +45,8 @@ public class MylarImages {
 
     public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
     public static final ImageDescriptor FILTER_PRIORITY = create(T_ELCL, "filter-priority.gif");
-        
+    
+    public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
     public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
     
     public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
@@ -60,12 +61,13 @@ public class MylarImages {
     public static final ImageDescriptor TASK_INACTIVE = create(T_TOOL, "task-inactive.gif");
     public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
     public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
-
+    public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
+	    
     public static ImageDescriptor EDGE_INHERITANCE = create(T_ELCL, "edge-inheritance.gif"); 
     public static ImageDescriptor EDGE_REF_JAVA = create(T_ELCL, "edge-ref-java.gif"); 
     public static ImageDescriptor EDGE_READ = create(T_ELCL, "edge-read.gif");
     public static ImageDescriptor EDGE_WRITE = create(T_ELCL, "edge-write.gif");
-    public static ImageDescriptor EDGE_REF_BUGZILLA = create(T_ELCL, "edge-ref-bugzilla.gif"); 
+    public static ImageDescriptor EDGE_REF_BUGZILLA = create(T_ELCL, "edge-ref-bug.gif"); 
     public static ImageDescriptor EDGE_REF_XML = create(T_ELCL, "edge-ref-xml.gif"); 
     public static ImageDescriptor EDGE_REF_JUNIT = create(T_ELCL, "edge-ref-junit.gif"); 
 
