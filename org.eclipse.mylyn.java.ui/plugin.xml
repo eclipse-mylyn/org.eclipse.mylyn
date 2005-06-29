@@ -183,10 +183,10 @@
 
    <extension point="org.eclipse.ui.commands">
 	  <command
-            name="Search Current Task Context"
-            description="Search the current task context"
-            id="org.eclipse.mylar.java.ui.search.taskscape"
-            categoryId="org.eclipse.mylar">
+         categoryId="org.eclipse.mylar.ui"
+         description="Search the current task context"
+         id="org.eclipse.mylar.java.ui.search.taskscape"
+         name="Search Task Context">
       </command>
    </extension>
 
