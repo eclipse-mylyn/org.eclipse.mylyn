@@ -64,6 +64,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		super();
 		model = new NewBugModel();
 		id = null; // Since there is no bug posted yet.
+		super.setDefaultPageImageDescriptor(BugzillaPlugin.imageDescriptorFromPlugin(IBugzillaConstants.PLUGIN_ID, "icons/wizban/bug-wizard.gif"));
 	}
 
 	/*
