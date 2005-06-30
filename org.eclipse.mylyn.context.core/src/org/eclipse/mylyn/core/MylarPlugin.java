@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.model.TaskscapeManager;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
@@ -59,6 +60,8 @@ public class MylarPlugin extends AbstractUIPlugin {
     public static boolean DEBUG_MODE = true;
     public static final String LOG_FILE_NAME = "mylar-log.txt";
     private PrintStream logStream = null;
+
+	private List<IActionListener> actionListeners = new ArrayList<IActionListener>();
     
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";
@@ -336,5 +339,17 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public PrintStream getLogStream() {
 		return logStream;
+	}
+
+	public void actionObserved(IAction action){
+		for (IActionListener listener : actionListeners) listener.actionObserved(action);
+	}
+
+	public void addActionListener(IActionListener listener) {
+		actionListeners.add(listener);
+	}
+
+	public boolean removeActionListener(IActionListener listener) {
+		return actionListeners.remove(listener);
 	}	
 }

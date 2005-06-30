@@ -61,8 +61,7 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 
     private Map<String, IMylarUiBridge> bridges = new HashMap<String, IMylarUiBridge>();
-    
-	private static MylarUiPlugin plugin;
+    private static MylarUiPlugin plugin;
 	private ResourceBundle resourceBundle;
     private boolean decorateInterestMode = false;
     public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.landmark";
@@ -373,10 +372,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     public void setColorMap(ColorMap colorMap) {
         this.colorMap = colorMap;
     }
-
-//    public void setDefaultHighlighter(Highlighter defaultHighlighter) {
-//    	this.defaultHighlighter = defaultHighlighter;
-//    }
 
     public void setIntersectionHighlighter(Highlighter intersectionHighlighter) {
         this.intersectionHighlighter = intersectionHighlighter;
