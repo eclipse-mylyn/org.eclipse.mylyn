@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="org.eclipse.mylar.bugzilla-feature"
-      version="1.7.3"
+      version="1.7.5"
       provider-name="University of British Columbia">
 
    <description>
@@ -209,8 +209,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Bugzilla update site at UBC Software Practices Lab" url="http://www.cs.ubc.ca/labs/spl/projects/hipikat/updates"/>
-      <discovery label="Bugzilla update site at UBC Software Practices Lab" url="http://www.cs.ubc.ca/labs/spl/projects/hipikat/updates"/>
+      <update label="Eclipse.org Mylar Update Site" url="http://download.eclipse.org/technology/mylar/update-site/bugzilla"/>
    </url>
 
    <requires>
@@ -233,7 +232,7 @@ litigation.
          id="org.eclipse.mylar.bugzilla"
          download-size="0"
          install-size="0"
-         version="1.7.3"
+         version="1.7.5"
          unpack="false"/>
 
 </feature>
