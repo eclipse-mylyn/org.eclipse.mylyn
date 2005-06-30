@@ -562,6 +562,7 @@ public class TaskListView extends ViewPart {
                     newTask.getHandle(), 
                     MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
             viewer.refresh();
+//            MylarUiPlugin.getDefault().actionObserved(this);
         }
     }
     
@@ -921,11 +922,9 @@ public class TaskListView extends ViewPart {
 					switch (columnIndex) {
 					case 0:
 						if (task.isActive()) {
-							MylarTasksPlugin.getTaskListManager()
-									.deactivateTask(task);
+							MylarTasksPlugin.getTaskListManager().deactivateTask(task);
 						} else {
-							MylarTasksPlugin.getTaskListManager().activateTask(
-									task);
+							MylarTasksPlugin.getTaskListManager().activateTask(task);
 						}
 						viewer.setSelection(null);
 						break;
