@@ -44,7 +44,7 @@ public class BugzillaQueryDialog extends Dialog {
 	private String name;
 	private BugzillaSearchOptionPage searchOptionPage;
 	
-	BugzillaQueryDialog(Shell parentShell) {
+	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
 		searchOptionPage = new BugzillaSearchOptionPage();
 		
