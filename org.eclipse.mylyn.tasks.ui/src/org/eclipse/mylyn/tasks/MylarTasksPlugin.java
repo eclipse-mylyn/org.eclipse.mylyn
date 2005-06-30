@@ -121,19 +121,25 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     private static ShellListener SHELL_LISTENER = new ShellListener() {
         private void saveState() {
             taskListManager.saveTaskList();
-        }
-        public void shellClosed(ShellEvent arg0) {
-            saveState();
             for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
                 MylarPlugin.getTaskscapeManager().saveTaskscape(task.getHandle(), task.getPath());
             }
-        }  
-        public void shellDeactivated(ShellEvent arg0) { 
+        }
+        
+        public void shellClosed(ShellEvent arg0) {
             saveState();
+        }  
+        
+        public void shellDeactivated(ShellEvent arg0) { 
+        	// bug 1002249: too slow to save state here
         }
         public void shellActivated(ShellEvent arg0) { }
+        
         public void shellDeiconified(ShellEvent arg0) { }
-        public void shellIconified(ShellEvent arg0) { }
+        
+        public void shellIconified(ShellEvent arg0) { 
+        	saveState();
+        }
     };
     
     private static IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
