@@ -377,13 +377,13 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         this.intersectionHighlighter = intersectionHighlighter;
     }
 
-    /**
-     * TODO: refactor
-     */
-    public boolean isGlobalFilteringEnabled() {
-    	return true;
-//        return getPrefs().getBoolean(GLOBAL_FILTERING);
-    }
+//    /**
+//     * TODO: refactor
+//     */
+//    public boolean isGlobalFilteringEnabled() {
+//    	return true;
+////        return getPrefs().getBoolean(GLOBAL_FILTERING);
+//    }
 
     public boolean isGlobalFoldingEnabled() {
         return getPrefs().getBoolean(GLOBAL_FILTERING);

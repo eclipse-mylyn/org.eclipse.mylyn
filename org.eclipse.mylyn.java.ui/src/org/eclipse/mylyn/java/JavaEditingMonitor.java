@@ -36,7 +36,6 @@ import org.eclipse.mylar.core.AbstractSelectionMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -106,7 +105,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
     @Override
     public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
         try {
-            if (MylarUiPlugin.getDefault().isGlobalFilteringEnabled() && part instanceof ProjectsView) return;
+            if (part instanceof ProjectsView) return; // HACK
 
             IJavaElement selectedElement = null;
             if (selection instanceof StructuredSelection) {

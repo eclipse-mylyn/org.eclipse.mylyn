@@ -45,6 +45,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
 
 	public void init(IAction action) {
 		initAction = action;
+        setChecked(action.isChecked());
 	}
     
     public void init(IViewPart view) {
@@ -53,6 +54,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
     }
     
     public void run(IAction action) {
+        setChecked(action.isChecked());
         valueChanged(action, action.isChecked(), true);
     }
     

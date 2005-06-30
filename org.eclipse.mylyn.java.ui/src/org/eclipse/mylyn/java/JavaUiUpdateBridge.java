@@ -20,15 +20,12 @@ import org.eclipse.jdt.internal.core.JavaElementDelta;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.StandardJavaElementContentProvider;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.ui.InterestFilter;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -63,9 +60,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
     }
 
     public void presentationSettingsChanged(UpdateKind kind) {
-        if (!MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
-            refreshPackageExplorer(null);
-        } else if (kind == ITaskscapeListener.UpdateKind.FILTER) {
+        if (kind == ITaskscapeListener.UpdateKind.FILTER) {
             IJavaElement selected = JavaCore.create(MylarPlugin.getTaskscapeManager().getActiveNode().getElementHandle());
             
             PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
@@ -101,7 +96,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
      * TODO: currently punts if there was something temporarily raised
      */
     public void interestChanged(List<ITaskscapeNode> nodes) {
-        if (!MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) return;
+//        if (!MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) return;
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
             final IJavaElement raisedElement = JavaCore.create(MylarPlugin.getTaskscapeManager().getTempRaisedHandle());
             final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
@@ -129,7 +124,13 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 		            }
                 } else if (lastElement != null) {
                 	if (!lastNode.getDegreeOfInterest().isInteresting()) {
-                        fireModelUpdate(lastElement, ChangeKind.REMOVED);
+                		if (Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof PackageExplorerPart) {
+                			if (FilterPackageExplorerAction.getDefault() != null && FilterPackageExplorerAction.getDefault().isChecked()) {
+                				fireModelUpdate(lastElement, ChangeKind.REMOVED);
+                			}
+                		} else {
+                			fireModelUpdate(lastElement, ChangeKind.REMOVED);
+                		}
                     }
                 }
         	}
@@ -200,8 +201,11 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
     private void revealInPackageExplorer(final Object element) {
          Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
+
             	PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-		        if (packageExplorer != null && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) {
+		        if (packageExplorer != null 
+		        		&& FilterPackageExplorerAction.getDefault() != null 
+		        		&& FilterPackageExplorerAction.getDefault().isChecked()) {
 		        	packageExplorer.selectAndReveal(element);
                 }
             }
@@ -222,8 +226,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
         	if (element == null) {
                 packageExplorer.getTreeViewer().setInput(packageExplorer.getTreeViewer().getInput()); 
                 packageExplorer.getTreeViewer().refresh();
-                if (MylarUiPlugin.getDefault().isGlobalFilteringEnabled()
-                    && containsMylarInterestFilter(packageExplorer.getTreeViewer())) packageExplorer.getTreeViewer().expandAll();
+                if (FilterPackageExplorerAction.getDefault() != null && FilterPackageExplorerAction.getDefault().isChecked()) packageExplorer.getTreeViewer().expandAll();
             } else {
                 packageExplorer.getTreeViewer().refresh(element);
             }
@@ -248,42 +251,21 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
     	});
 		
 	}
-
-	private boolean containsMylarInterestFilter(TreeViewer viewer) {
-        boolean found = false;
-        for (int i = 0; i < viewer.getFilters().length; i++) {
-            ViewerFilter filter = viewer.getFilters()[i];
-            if (filter instanceof InterestFilter) found = true;
-        }
-        return found;
-    }
-
-//        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//            public void run() { 
-//                try { 
-//                    if (packageExplorer != null && packageExplorer.getTreeViewer() != null) { 
-//                        packageExplorer.getTreeViewer().refresh();   
-//                    }
-//                } catch (Throwable t) {
-//                    MylarPlugin.fail(t, "Could not update viewer", false);
-//                }    
-////            }
-////        });
-//    }
-    
-    public void tryToReveal(List<IJavaElement> elements) {
-        PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-        for (IJavaElement element : elements) {
-            if (packageExplorer != null) {
-                if (element != null &&
-                    (MylarUiPlugin.getDefault().isGlobalFilteringEnabled() ||
-                    element.getElementType() <= IJavaElement.COMPILATION_UNIT)) {
-                    packageExplorer.tryToReveal(element);
-                }
-            }
-        }
-    }
 }
+
+//public void tryToReveal(List<IJavaElement> elements) {
+//PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//for (IJavaElement element : elements) {
+//  if (packageExplorer != null) {
+//      if (element != null &&
+//          ((FilterPackageExplorerAction.getDefault() != null 
+//            && FilterPackageExplorerAction.getDefault().isChecked()) ||
+//          element.getElementType() <= IJavaElement.COMPILATION_UNIT)) {
+//          packageExplorer.tryToReveal(element);
+//      }
+//  }
+//}
+//}
 
 //PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 //IJavaElement element = JavaCore.create(node.getElementHandle());

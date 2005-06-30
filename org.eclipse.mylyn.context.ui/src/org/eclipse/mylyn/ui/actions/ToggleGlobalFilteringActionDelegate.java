@@ -59,7 +59,7 @@ public class ToggleGlobalFilteringActionDelegate extends Action implements IWork
 
 
 	public void init(IAction action) {
-		valueChanged(action, MylarUiPlugin.getDefault().isGlobalFilteringEnabled(), true);
+//		valueChanged(action, MylarUiPlugin.getDefault().isGlobalFilteringEnabled(), true);
 	}
 
 	public void runWithEvent(IAction action, Event event) {

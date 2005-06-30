@@ -33,7 +33,7 @@ public class ToggleGlobalInterestFilteringAction extends Action {
         setToolTipText("Filter uninteresting");
         setImageDescriptor(MylarImages.INTEREST_FILTERING);
         setActionDefinitionId(ID);
-        setChecked(MylarUiPlugin.getDefault().isGlobalFilteringEnabled());
+//        setChecked(MylarUiPlugin.getDefault().isGlobalFilteringEnabled());
     }
     
     @Override

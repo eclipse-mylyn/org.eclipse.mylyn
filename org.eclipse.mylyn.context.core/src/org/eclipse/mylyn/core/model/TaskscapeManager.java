@@ -161,7 +161,7 @@ public class TaskscapeManager {
         }
         
         if (nextEventIsRaiseChildren && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
-    		tempRaiseChildrenForSelected();
+        	tempRaiseChildrenForSelected();
     		nextEventIsRaiseChildren = false;
     	}
         
@@ -414,6 +414,7 @@ public class TaskscapeManager {
 	}
 
 	public void setNextEventIsRaiseChildren() {
+    	System.err.println("!!!!!");
 		nextEventIsRaiseChildren = true;
 	}
 }

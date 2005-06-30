@@ -13,6 +13,7 @@
   */
 package org.eclipse.mylar.ui;
 
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -29,7 +30,8 @@ public class InterestFilter extends ViewerFilter {
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {
         try {
-            if (!MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) return true;
+        	if (!(viewer instanceof StructuredViewer)) return true;
+        	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
             ITaskscapeNode node = null;
             if (element instanceof ITaskscapeNode) {
                 node = (ITaskscapeNode)element;
@@ -52,4 +54,13 @@ public class InterestFilter extends ViewerFilter {
         }
         return false;
     }   
+	
+	private boolean containsMylarInterestFilter(StructuredViewer viewer) {
+		boolean found = false;
+		for (int i = 0; i < viewer.getFilters().length; i++) {
+			ViewerFilter filter = viewer.getFilters()[i];
+			if (filter instanceof InterestFilter) found = true;
+		}
+		return found;
+	}
 }
