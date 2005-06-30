@@ -726,6 +726,9 @@ public class ExistingBugEditor extends AbstractBugEditor
 		                selected.setSelection(false);
 				}
 			}
+			if(addCommentsText.getText() == null || addCommentsText.getText().equals("")){
+				addCommentsText.setText("No Comment");
+			}
 		}
 		
 	}

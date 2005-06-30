@@ -573,8 +573,10 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			if (key.equals("short_desc") || key.equals("keywords")) {
 				keywords = value;
 			}
-			else if (key.equals("cc")) {
-				// XXX we don't do anything with the cc yet
+			else if (key.equals("newcc")) {
+				// we don't do anything with the cc yet
+				// add add an editable field as well as a table with the other cc's in it
+				// problem is is that we don't want to handle the error when the e-mail addr is incorrect - add a note saying that if wrong, no changes submitted
 			}
 			else if (key.equals("bug_file_loc")) {
 				url = value;
