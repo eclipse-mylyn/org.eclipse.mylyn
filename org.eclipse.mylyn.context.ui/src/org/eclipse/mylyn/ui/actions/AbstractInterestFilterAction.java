@@ -67,7 +67,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
     
     protected void valueChanged(IAction action, final boolean on, boolean store) {
         action.setChecked(on);
-        if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
+        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
 
         if (getViewer() != null) {
 			if (on) {

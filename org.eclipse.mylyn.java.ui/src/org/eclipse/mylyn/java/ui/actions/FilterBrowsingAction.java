@@ -1,0 +1,122 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylar.java.ui.actions;
+
+import java.lang.reflect.Method;
+
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.InterestFilter;
+import org.eclipse.mylar.ui.actions.AbstractInterestFilterAction;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.internal.Workbench;
+
+/**
+ * This class is a bit weird since it doesn't obey the same contract as the other subclasses
+ * 
+ * @author Shawn Minto
+ */
+public class FilterBrowsingAction extends AbstractInterestFilterAction implements IWorkbenchWindowActionDelegate{
+
+	public static FilterBrowsingAction INSTANCE;
+	
+	private String[] viewNames = { 	"org.eclipse.jdt.ui.MembersView",
+									"org.eclipse.jdt.ui.PackagesView",
+									"org.eclipse.jdt.ui.TypesView"
+									};
+	
+	private String[] classNames = { "org.eclipse.jdt.internal.ui.browsing.MembersView",
+									"org.eclipse.jdt.internal.ui.browsing.PackagesView",
+									"org.eclipse.jdt.internal.ui.browsing.TypesView"
+			};
+	
+	public FilterBrowsingAction() {
+		super(new InterestFilter());
+		INSTANCE = this;
+		prefId = PREF_ID_PREFIX + "javaBrowsing";
+	}
+		
+	@Override
+    protected void valueChanged(IAction action, final boolean on, boolean store) {
+        action.setChecked(on);
+        
+        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
+
+        for(int i = 0; i < viewNames.length; i++){
+        	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
+        	if(viewer == null) continue;
+        	if (on) {
+				installInterestFilter(viewer);
+			} else {
+				uninstallInterestFilter(viewer);
+			}
+
+        }
+		refreshViewer();
+	}
+	
+	@Override
+	protected StructuredViewer getViewer() {
+		return null;
+	}
+
+	@Override
+	public void refreshViewer() {
+        for(int i = 0; i < viewNames.length; i++){
+        	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
+        	if(viewer != null){
+    			viewer.refresh();
+    		} else System.out.println("TESTOMG");
+        }
+	}
+
+	public static FilterBrowsingAction getDefault() {
+		return INSTANCE;
+	}
+
+	private StructuredViewer getBrowsingViewerFromActivePerspective(String id, String className) {
+		IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+        if (activePage == null) return null;
+        try {
+            IViewPart viewPart = activePage.findView(id);
+            Class sub = Class.forName(className);
+            
+            if (sub.isInstance(viewPart)) {
+            	IViewPart view = viewPart;
+        		if(view != null){
+        			try{
+        	            Class clazz = sub.getSuperclass();
+        	            Method method= clazz.getDeclaredMethod("getViewer", new Class[] { });
+        	            method.setAccessible(true);
+        	            return (StructuredViewer)method.invoke(sub.cast(view), new Object[] { });
+        	        } catch (Exception e) {
+        	        	MylarPlugin.log(e, "couldn't get members view tree viewer");
+        	            return null;
+        	        }
+        		} else {
+        			return null;
+        		}
+        	
+            } 
+        } catch (Exception e) {
+        	MylarPlugin.log(e, "couldn't get problmes viewer");
+        }
+        return null;
+    }
+	
+	public void init(IWorkbenchWindow window) {}
+	
+}

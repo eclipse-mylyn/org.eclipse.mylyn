@@ -52,9 +52,10 @@ public class TaskscapeManager {
     private String taskscapeStoreDirPath;
 	private boolean editorAutoCloseEnabled = false;
 	private List<ITaskscapeListener> listeners = new ArrayList<ITaskscapeListener>();
-//    private List<IInteractionListener> interactionListeners = new ArrayList<IInteractionListener>();
-    private String tempRaisedHandle = null;
-    private boolean suppressSelections = false;
+	private List<ITaskscapeListener> waitingListeners = new ArrayList<ITaskscapeListener>();
+
+	private String tempRaisedHandle = null;
+    private boolean suppressListenerNotification = false;
     
     private TaskscapeExternalizer externalizer = new TaskscapeExternalizer();
 	private boolean nextEventIsRaiseChildren;
@@ -124,7 +125,7 @@ public class TaskscapeManager {
     public ITaskscapeNode handleInteractionEvent(InteractionEvent event) {
         if (event.getKind() == InteractionEvent.Kind.COMMAND) return null;
         if (activeTaskscape.getTaskscapeMap().values().size() == 0) return null;
-        if (suppressSelections) return null;
+        if (suppressListenerNotification) return null;
         
         ITaskscapeNode previous = activeTaskscape.get(event.getStructureHandle());
         float previousInterest = 0;
@@ -207,11 +208,17 @@ public class TaskscapeManager {
     }
 	
 	public void addListener(ITaskscapeListener listener) {
-        if (listener != null) {
-            listeners.add(listener);            
-        } else {
-            MylarPlugin.log("attempted to add null lisetener", this);
-        }
+//		synchronized (listeners) {
+	        if (listener != null) {
+	        	if (suppressListenerNotification) {
+	        		waitingListeners.add(listener);
+	        	} else {
+	        		listeners.add(listener);   
+	        	}
+	        } else {
+	            MylarPlugin.log("attempted to add null lisetener", this);
+	        }
+//		}
 	}
 	
 	public void removeListener(ITaskscapeListener listener) {
@@ -247,16 +254,17 @@ public class TaskscapeManager {
     } 
     
     public void taskActivated(String id, String path) {
-        suppressSelections = true;
-        Taskscape taskscape = activeTaskscape.getTaskscapeMap().get(id);
-        if (taskscape == null) taskscape = loadTaskscape(id, path);
-        if (taskscape != null) {
-            activeTaskscape.getTaskscapeMap().put(id, taskscape);
-            for (ITaskscapeListener listener : listeners) listener.taskscapeActivated(taskscape);
-        } else {
-            MylarPlugin.log("Could not load taskscape", this);
-        }
-        suppressSelections = false;
+	    suppressListenerNotification = true;
+	    Taskscape taskscape = activeTaskscape.getTaskscapeMap().get(id);
+	    if (taskscape == null) taskscape = loadTaskscape(id, path);
+	    if (taskscape != null) {
+	        activeTaskscape.getTaskscapeMap().put(id, taskscape);
+	        for (ITaskscapeListener listener : listeners) listener.taskscapeActivated(taskscape);
+	    } else {
+	        MylarPlugin.log("Could not load taskscape", this);
+	    }
+	    suppressListenerNotification = false;
+	    listeners.addAll(waitingListeners);
     }
 
     /**

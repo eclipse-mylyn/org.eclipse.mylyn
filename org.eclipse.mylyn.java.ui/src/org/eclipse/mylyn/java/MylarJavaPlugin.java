@@ -25,6 +25,7 @@ import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.java.ui.JavaUiBridge;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
+import org.eclipse.mylar.java.ui.actions.FilterBrowsingAction;
 import org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction;
 import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -89,6 +90,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
             
             	if (FilterPackageExplorerAction.getDefault() != null) {
             		FilterPackageExplorerAction.getDefault().update();
+            	}
+            	if (FilterBrowsingAction.getDefault() != null) {
+            		FilterBrowsingAction.getDefault().update();
             	}
             }
         });

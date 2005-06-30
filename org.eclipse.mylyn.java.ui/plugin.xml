@@ -22,6 +22,7 @@
 	         class="org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction"
 	         enablesFor="*"> 
   		</action> 
+    </viewContribution> 
   		<!--
     	<action
 	         id="org.eclipse.mylar.actions.filter.members" 
@@ -33,7 +34,6 @@
 	         enablesFor="*"> 
   		</action>  
   		-->
-      </viewContribution> 
 	</extension>
 	
   <extension point = "org.eclipse.ui.popupMenus">
@@ -80,8 +80,41 @@
                class="org.eclipse.mylar.java.ui.actions.FindReferencesInTaskscapeAction"
                id="org.eclipse.mylar.java.ui.search.taskscape">
          </action>
+    </actionSet>
+  </extension>
+  
+  <extension point="org.eclipse.ui.actionSets">
+	<actionSet
+            id="org.eclipse.mylar.java.actionSet.browsing"
+            label="Mylar Java Browsing"
+            visible="false"> 
+	    <action
+           class="org.eclipse.mylar.java.ui.actions.FilterBrowsingAction"
+           id="org.eclipse.mylar.java.ui.actions.FilterBrowsingAction"
+           style="toggle"
+	       label="Filter uninteresting" 
+	       icon="icons/elcl16/interest-filtering.gif"
+	       tooltip="Filter uninteresting"
+	       toolbarPath="mylar"
+	       enablesFor="*">
+	    </action>
   	</actionSet>
-   </extension>
+  </extension>
+
+ <extension point="org.eclipse.ui.actionSetPartAssociations">
+	<actionSetPartAssociation targetID="org.eclipse.mylar.java.actionSet.browsing">
+         <part id="org.eclipse.jdt.ui.MembersView"/>
+         <part id="org.eclipse.jdt.ui.PackagesView"/>
+         <part id="org.eclipse.jdt.ui.TypesView"/>
+    </actionSetPartAssociation>
+  </extension>
+
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension 
+			targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+			<actionSet id="org.eclipse.mylar.java.actionSet.browsing"/>
+		</perspectiveExtension>
+	</extension>
 
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
