@@ -144,7 +144,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 if (part != null  && part instanceof JavaEditor) {
                 	JavaEditor editor = (JavaEditor)part;
                 	editorTracker.registerEditor(editor);
-                	editor.setInput(editor.getEditorInput()); // hack to fold
+                	editor.doSave(null); // HACK: to avoid discarding changes
+                	editor.setInput(editor.getEditorInput()); // HACK: to fold
                 }
             }
         }

@@ -132,8 +132,12 @@ public class ActiveFoldingListener implements ITaskscapeListener {
         public void resetFolding() {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() { 
-                    if (!editor.getSite().getPage().isPartVisible(editor)) return;
-                    	editor.setInput(editor.getEditorInput());
+                    if (!editor.getSite().getPage().isPartVisible(editor)) {
+                    	return;
+                    } else {
+                    	editor.doSave(null); // HACK: to avoid losing data
+                    	editor.setInput(editor.getEditorInput()); // HACK: should be a better way
+                    }
 //                    ISourceViewer sourceViewer = editor.getViewer();
 //                    if (sourceViewer instanceof ProjectionViewer) {
 //                        ProjectionViewer pv = (ProjectionViewer) sourceViewer;
