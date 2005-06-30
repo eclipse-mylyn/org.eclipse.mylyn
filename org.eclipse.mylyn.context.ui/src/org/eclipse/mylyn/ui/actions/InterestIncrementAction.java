@@ -8,42 +8,20 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 27, 2004
-  */
+
 package org.eclipse.mylar.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.*;
 
 /**
  * @author Mik Kersten
  */
-public class InterestIncrementAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
-
-    public static final String COMMAND_ID = "org.eclipse.mylar.ui.interest.increment";
-
-    public void init(IViewPart view) {
-    	// don't need to do anything
-    }
+public class InterestIncrementAction extends AbstractInterestAction {
 
     /**
      * Does nothing, since thi is handled by command monitor
      */
     public void run(IAction action) {
-//        MylarPlugin.getTaskscapeManager().promoteCurrentSelectionToLandmark();
-    }
-    
-    public void dispose() { 
-    	// don't care when we are disposed
-    }
-    
-    public void selectionChanged(IAction action, ISelection selection) { 
-    	// don't care about selection changes
-    }
-
-    public void init(IWorkbenchWindow window) {
-    	// don't have anything to initialize
+    	super.changeInterestForSelected(true);
     }
 }

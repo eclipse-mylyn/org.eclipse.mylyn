@@ -14,32 +14,17 @@
 package org.eclipse.mylar.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.*;
 
 /**
  * @author Mik Kersten
  */
-public class InterestDecrementAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
+public class InterestDecrementAction extends AbstractInterestAction {
 
-    public static final String COMMAND_ID = "org.eclipse.mylar.ui.interest.decrement";
-        
-    public void run(IAction action) { 
-    	// Does nothing, since this is handled by command monitor
-    }  
-    
-    public void dispose() { 
-    	// don't care when we are disposed
-    }
-    
-    public void init(IViewPart view) {
-    	// don't need to do anything here
-    }
-    public void selectionChanged(IAction action, ISelection selection) { 
-    	// don't care about selectio changes
-    }
-
-    public void init(IWorkbenchWindow window) { 
-    	// don't have anything to initialize
+    /**
+     * Does nothing, since thi is handled by command monitor
+     */
+    public void run(IAction action) {
+    	super.changeInterestForSelected(false);
     }
 }
+

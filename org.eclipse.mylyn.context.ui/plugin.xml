@@ -104,13 +104,6 @@
             visible="true"
             id="org.eclipse.mylar.ui.mylar.actionSet">
          <action
-               definitionId="org.eclipse.mylar.ui.related.show"
-               label="Open Mylar related elements"
-               class="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView"
-               menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView">
-         </action>
-         <action
                definitionId="org.eclipse.mylar.ui.interest.increment"
                label="Make landmark"
                class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
@@ -124,7 +117,14 @@
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylar.ui.actions.InterestDecrementAction">
          </action>
-       <!--
+         <!--
+         <action
+               definitionId="org.eclipse.mylar.ui.related.show"
+               label="Open Mylar related elements"
+               class="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView"
+               menubarPath="navigate/open.ext2"
+               id="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView">
+         </action>
          <action
                definitionId="org.eclipse.mylar.ui.show.filtered"
                label="Make less interesting"

@@ -8,41 +8,43 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on May 22, 2005
-  */
-package org.eclipse.mylar.ui.internal;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.mylar.core.*;
-import org.eclipse.mylar.core.model.*;
-import org.eclipse.mylar.ui.actions.InterestDecrementAction;
-import org.eclipse.mylar.ui.actions.InterestIncrementAction;
+package org.eclipse.mylar.ui.actions;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.model.InteractionEvent;
+import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * @author Mik Kersten
  */
-public class TaskscapeManipulationMonitor extends AbstractCommandMonitor {
+public abstract class AbstractInterestAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
     public static final String SOURCE_ID = "org.eclipse.mylar.ui.interest.user";
-       
-    /**
-     * HACK: uses numbers
-     */
-    @Override
-    protected void handleCommandExecution(String commandId, ExecutionEvent event) {
+	
+    public void init(IViewPart view) {
+    	// don't need to do anything
+    }
+
+    protected void changeInterestForSelected(boolean increment) {
         ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getActiveNode();
         if (node == null) return;
         float originalValue = node.getDegreeOfInterest().getValue();
         float changeValue = 0;
-        if (commandId.equals(InterestDecrementAction.COMMAND_ID)) {
+        if (!increment) {
             if (node.getDegreeOfInterest().isLandmark()) { // keep it interesting
                 changeValue = (-1 * originalValue) + 1; 
             } else { // XXX could be < 0
                 changeValue = (-1 * originalValue);
             }
-        } else if (commandId.equals(InterestIncrementAction.COMMAND_ID)) {
+        } else {
             if (originalValue >  TaskscapeManager.getScalingFactors().getLandmark()) {
                 changeValue = 0;
             } else {
@@ -59,26 +61,16 @@ public class TaskscapeManipulationMonitor extends AbstractCommandMonitor {
             MylarPlugin.getTaskscapeManager().handleInteractionEvent(interactionEvent);
         }
     }
+    
+    public void dispose() { 
+    	// don't care when we are disposed
+    }
+    
+    public void selectionChanged(IAction action, ISelection selection) { 
+    	// don't care about selection changes
+    }
+
+    public void init(IWorkbenchWindow window) {
+    	// don't have anything to initialize
+    }
 }
-
-//CompositeTaskscapeNode activeNode = (CompositeTaskscapeNode)getActiveNode();
-//if (activeNode == null || activeNode.getNodes().size() == 0) {
-//  activeNode = (CompositeTaskscapeNode) composite.create(activeNode.getElementHandle(), activeNode.getName(), activeNode.getKind());
-//}
-
-//if (MylarPlugin.getTaskscapeManager().getActiveNode() != null) {
-//    MylarPlugin.getTaskscapeManager().lowerDoiByUser(
-//        MylarPlugin.getTaskscapeManager().getActiveNode().getElementHandle()
-//    ); 
-//}
-
-//node.getDegreeOfInterest().getDegreeOfInterest().reset();
-//composite.remove(node);
-//for (ITaskscapeListener listener : listeners) listener.nodeDeleted(node);
-
-//MylarPlugin.getTaskscapeManager().getScalingFactors().getLandmark() - originalValue + 2;
-//composite.removeLandmark(node);
-//node.getDegreeOfInterest().getDegreeOfInterest().reset();
-//node.getDegreeOfInterest().getDegreeOfInterest().increment(IDegreeOfInterest.Value.Selections);
-//for (ITaskscapeListener listener : listeners) listener.landmarkRemoved(node);
-//for (ITaskscapeListener provider : relationshipProviders) provider.landmarkRemoved(node);

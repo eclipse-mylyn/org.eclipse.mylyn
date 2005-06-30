@@ -60,7 +60,6 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
     }
 
     public void preExecute(String commandId, ExecutionEvent event) {
-//    	System.err.println("> pre: " + commandId);
     	if (commandId != null) handleCommandExecution(commandId, event);
     } 
         

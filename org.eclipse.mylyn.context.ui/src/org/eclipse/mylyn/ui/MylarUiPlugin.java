@@ -34,7 +34,6 @@ import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
 import org.eclipse.mylar.ui.internal.MylarViewerManager;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
-import org.eclipse.mylar.ui.internal.TaskscapeManipulationMonitor;
 import org.eclipse.mylar.ui.internal.UiUpdateListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
@@ -168,8 +167,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
                 MylarPlugin.getTaskscapeManager().addListener(UI_UPDATE_LISTENER);
-                MylarPlugin.getDefault().getCommandMonitors().add(new TaskscapeManipulationMonitor());
-
+                
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerManager);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
         		for (int i= 0; i < windows.length; i++) {
