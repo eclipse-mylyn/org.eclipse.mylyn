@@ -210,6 +210,7 @@ public class TaskListView extends ViewPart {
 		}
 		@Override
 		public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
 			MylarTasksPlugin.getDefault().setFilterCompleteMode(isChecked());
 			if (isChecked()) {
 				viewer.addFilter(completeFilter);
@@ -225,6 +226,7 @@ public class TaskListView extends ViewPart {
 	private final class OpenTaskEditorAction extends Action {
 		@Override
 		public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
 		    ISelection selection = viewer.getSelection();
 		    Object obj = ((IStructuredSelection)selection).getFirstElement();
 		    if (obj instanceof ITask) {
@@ -264,6 +266,7 @@ public class TaskListView extends ViewPart {
 		}
 		@Override
 		public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
 		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
 		    if (selectedObject != null && selectedObject instanceof ITask) {
 		    	MylarPlugin.getTaskscapeManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
@@ -306,7 +309,8 @@ public class TaskListView extends ViewPart {
 	        setImageDescriptor(MylarImages.TASK_INCOMPLETE);
 		}
 		@Override
-		public void run() {              
+		public void run() {         
+            MylarPlugin.getDefault().actionObserved(this);
 		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
 		    if (selectedObject instanceof Task){ 
 		    	((Task)selectedObject).setCompleted(false);                	
@@ -329,7 +333,8 @@ public class TaskListView extends ViewPart {
 	        setImageDescriptor(MylarImages.TASK_COMPLETE);
 		}
 		@Override
-		public void run() {              
+		public void run() {   
+            MylarPlugin.getDefault().actionObserved(this);
 		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
 		    if (selectedObject instanceof Task){ 
 		    	((Task)selectedObject).setCompleted(true);
@@ -353,7 +358,8 @@ public class TaskListView extends ViewPart {
 		}
 		
 		@Override
-		public void run() {              
+		public void run() {     
+            MylarPlugin.getDefault().actionObserved(this);
 		    boolean deleteConfirmed = MessageDialog.openQuestion(
 		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 		            "Confirm delete", 
@@ -410,7 +416,7 @@ public class TaskListView extends ViewPart {
         public void run() {
 
         	// ask the user for the query string and a name
-
+            MylarPlugin.getDefault().actionObserved(this);
         	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
         	if(sqd.open() == Dialog.OK){
 	        	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl());
@@ -441,6 +447,7 @@ public class TaskListView extends ViewPart {
 		}
 		@Override
 		public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
 		    String bugIdString = getBugIdFromUser();
 		    int bugId = -1;
 		    try {
@@ -485,6 +492,7 @@ public class TaskListView extends ViewPart {
 		
 		@Override			
 		public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
 			// TODO background?
 			// perform the update in an operation so that we get a progress monitor 
 		    // update the structure bridge cache with the reference provider cached bugs
@@ -565,6 +573,7 @@ public class TaskListView extends ViewPart {
 		
         @Override
         public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
             String label = getLabelNameFromUser("task");
             if(label == null) return;
             Task newTask = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), label);
@@ -586,7 +595,6 @@ public class TaskListView extends ViewPart {
                     newTask.getHandle(), 
                     MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
             viewer.refresh();
-//            MylarUiPlugin.getDefault().actionObserved(this);
         }
     }
     
@@ -599,6 +607,7 @@ public class TaskListView extends ViewPart {
         
         @Override
         public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
             String label = getLabelNameFromUser("Category");
             if(label == null) return;
             TaskCategory cat = new TaskCategory(label);
@@ -606,6 +615,35 @@ public class TaskListView extends ViewPart {
             viewer.refresh();
         }
     }    
+    
+    private final class TaskActivateAction extends Action {
+    	
+    	private ITask task;
+    	
+    	public TaskActivateAction(ITask task) {
+    		this.task = task;
+    	}
+    	
+		public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
+            MylarTasksPlugin.getTaskListManager().activateTask(task);
+		}
+    }
+    
+    private final class TaskDeactivateAction extends Action {
+    	
+    	private ITask task;
+    	
+    	public TaskDeactivateAction(ITask task) {
+    		this.task = task;
+    	}
+    	
+		public void run() {
+            MylarPlugin.getDefault().actionObserved(this);
+            MylarTasksPlugin.getTaskListManager().deactivateTask(task);
+		}
+    }
+    
     
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
@@ -947,13 +985,13 @@ public class TaskListView extends ViewPart {
 				columnIndex = Arrays.asList(columnNames).indexOf(property);
 				if (((TreeItem) element).getData() instanceof ITask) {
 
-					ITask task = (ITask) ((TreeItem) element).getData();
+					final ITask task = (ITask) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
 						if (task.isActive()) {
-							MylarTasksPlugin.getTaskListManager().deactivateTask(task);
+							new TaskDeactivateAction(task).run();
 						} else {
-							MylarTasksPlugin.getTaskListManager().activateTask(task);
+							new TaskActivateAction(task).run();
 						}
 						viewer.setSelection(null);
 						break;
