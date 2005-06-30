@@ -41,10 +41,15 @@ public class CreateTaskAction extends Action {
     @Override
     public void run() {
         MylarPlugin.getDefault().actionObserved(this);
-        String label = this.view.getLabelNameFromUser("task");
+        String[] input = this.view.getLabelPriorityFromUser("task");
+        if (input == null) return;
+        String label = input[0];
+        String priority = input[1];
         if(label == null) return;
         Task newTask = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), label);
-        
+        if (priority != null) {
+        	newTask.setPriority(priority);
+        }        
         Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
         if (selectedObject instanceof TaskCategory){
         	newTask.setCategory((TaskCategory)selectedObject);

@@ -38,7 +38,9 @@ public class CreateCategoryAction extends Action {
     @Override
     public void run() {
         MylarPlugin.getDefault().actionObserved(this);
-        String label = this.view.getLabelNameFromUser("Category");
+        String[] input = this.view.getLabelPriorityFromUser("Category");
+        if (input == null) return;
+        String label = input[0];
         if(label == null) return;
         TaskCategory cat = new TaskCategory(label);
         MylarTasksPlugin.getTaskListManager().getTaskList().addCategory(cat);

@@ -41,6 +41,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskActivityListener;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
@@ -316,17 +317,21 @@ public class TaskSummaryEditor extends EditorPart {
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.colspan = 2;
         description.setLayoutData(td);
-        description.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-				// don't care about focus gained
-			}
+        if (task instanceof BugzillaTask) {
+        	description.setEnabled(false);
+        } else {
+        	description.addFocusListener(new FocusListener() {
+    			public void focusGained(FocusEvent e) {
+    				// don't care about focus gained
+    			}
 
-			public void focusLost(FocusEvent e) {
-				String label = description.getText();
-				task.setLabel(label);
-				refreshTaskListView(task);
-			}			
-		});
+    			public void focusLost(FocusEvent e) {
+    				String label = description.getText();
+    				task.setLabel(label);
+    				refreshTaskListView(task);
+    			}			
+    		});
+        }        
 	}	
 	
 //	private String formatPath(String path) {
@@ -542,7 +547,7 @@ public class TaskSummaryEditor extends EditorPart {
 	
 	private void createDetailsSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText("Mylar Task Details");
+		section.setText("Details");
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {

@@ -50,8 +50,6 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 				return element.getPriority();
 			case 3:
 				return element.getDescription(true);
-			case 4:
-				return element.getHandle();
 			}
 		}
     	System.out.println("Not TaskListElement");
@@ -143,93 +141,3 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
     	this.backgroundColor = c;
     }
 }
-
-//public Image getColumnImage(Object obj, int columnIndex) {
-//if (obj instanceof Highlighter) {
-//  Highlighter h = (Highlighter) obj;
-//  switch (columnIndex) {
-//  case 1:
-//      HighlighterImageDescriptor des;
-//      if (h.isGradient()) {
-//          des = new HighlighterImageDescriptor(h.getBase(), h
-//                  .getLandmarkColor());
-//      } else {
-//          des = new HighlighterImageDescriptor(h
-//                  .getLandmarkColor(), h.getLandmarkColor());
-//      }
-//      return des.getImage();
-//      default:
-//          break;
-//      }
-//  }
-//  return null;
-//}
-
-//public Color getBackground(Object element) {
-//if (element instanceof Task) {
-//  Task task = (Task)element;
-//  if (task.isActive()) {
-//      Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(((Task)task).getId());
-//      if (highlighter != null) {  
-//          return highlighter.getHighlightColor();
-//      } else {
-//          return null;
-//      }
-//  }
-//}
-//return null;
-//}
-
-//public class TaskListLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
-//
-//    public String getText(Object obj) {
-//        if (obj instanceof BugzillaTask) {
-//        	String desc = MylarTasksPlugin.getDefault().getBugzillaProvider().getBugzillaDescription(
-//        			((BugzillaTask)obj));
-//            return desc;
-//        } else if (obj instanceof Task) {
-//            Task task = (Task)obj;
-//            return task.toString();// + "  [" + task.getId() + "]"; 
-//        } else { 
-//            return obj.toString();
-//        }
-//    }
-//    
-//    public Image getImage(Object obj) {
-//        String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
-//        if (obj instanceof BugzillaTask) {
-//        	return MylarImages.getImage(MylarImages.TASK_BUGZILLA);         
-//        } else if (obj instanceof Task) {
-//            return MylarImages.getImage(MylarImages.TASK);
-//        } else {
-//            return null;
-//        }
-//    }
-//    public Color getForeground(Object element) {
-//        return null;
-//    }
-//    
-//    public Color getBackground(Object element) {
-//        if (element instanceof Task) {
-//            Task task = (Task)element;
-//            if (task.isActive()) {
-//                Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(((Task)task).getId());
-//                if (highlighter != null) {  
-//                    return highlighter.getHighlightColor();
-//                } else {
-//                    return null;
-//                }
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public Font getFont(Object element) {
-//        if (element instanceof Task) {
-//            if (((Task)element).isActive()) {
-//                return UiUtil.BOLD;
-//            }
-//        }
-//        return null;
-//    }
-//}
