@@ -121,12 +121,12 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     private static ShellListener SHELL_LISTENER = new ShellListener() {
         private void saveState() {
             taskListManager.saveTaskList();
-            for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
-                MylarPlugin.getTaskscapeManager().saveTaskscape(task.getHandle(), task.getPath());
-            } 
         }
         public void shellClosed(ShellEvent arg0) {
             saveState();
+            for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
+                MylarPlugin.getTaskscapeManager().saveTaskscape(task.getHandle(), task.getPath());
+            }
         }  
         public void shellDeactivated(ShellEvent arg0) { 
             saveState();
