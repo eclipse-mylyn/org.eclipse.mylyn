@@ -93,14 +93,20 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
         return null;
     }
    
-    public Image getColumnImage(Object element, int columnIndex) {
-        
+    public Image getColumnImage(Object element, int columnIndex) {        
         if (! (element instanceof ITaskListElement)) { 
         	return null;
         }
         if (columnIndex == 0) {
-        	return ((ITaskListElement)element).getStatusIcon();
+        	if (element instanceof AbstractCategory) {
+        		return ((ITaskListElement)element).getIcon(); 
+        	} else {
+        		return ((ITaskListElement)element).getStatusIcon();
+        	}        	
         } else if (columnIndex == 1) {
+        	if (element instanceof AbstractCategory) {
+        		return null;
+        	}
         	return ((ITaskListElement)element).getIcon();
         } else {
         	return null;

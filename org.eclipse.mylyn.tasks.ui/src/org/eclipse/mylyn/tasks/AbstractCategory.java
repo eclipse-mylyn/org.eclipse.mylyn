@@ -19,7 +19,7 @@ import org.eclipse.swt.graphics.Image;
 public class AbstractCategory implements ITaskListElement {
 
 	private String priority = "";
-	private String description = "";
+	protected String description = "";
 	private String handle = "";
 		
 	public AbstractCategory(String description) {

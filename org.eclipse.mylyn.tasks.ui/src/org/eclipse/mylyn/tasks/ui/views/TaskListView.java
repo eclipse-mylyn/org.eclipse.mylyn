@@ -291,10 +291,17 @@ public class TaskListView extends ViewPart {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITask) {
 				return !((ITask)element).isCompleted();
-			} else { 
+			} else if (element instanceof BugzillaHit){
+				BugzillaHit hit = (BugzillaHit)element;
+	        	BugzillaTask task = hit.getAssociatedTask();
+	        	if (task != null) {
+	        		return !task.isCompleted();
+	        	}
+				return true;
+			} else {
 				return true;
 			}
-		}    	
+		}    			
     };
     
     private ViewerFilter inCompleteFilter = new ViewerFilter(){
@@ -329,8 +336,8 @@ public class TaskListView extends ViewPart {
     	}
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (element instanceof ITask) {
-				ITask task = (ITask) element;
+			if (element instanceof ITaskListElement && !(element instanceof AbstractCategory)) {
+				ITaskListElement task = (ITaskListElement) element;
 				if (priorities.size() == PRIORITY_LEVELS.length) {
 					return true;
 				} else {
