@@ -84,10 +84,8 @@ public class TaskscapeManager {
                 kind, handle, 
                 SOURCE_ID_MODEL_ERROR,
                 scalingFactors.getErrorInterest());
-//        ITaskscapeNode node = activeTaskscape.addEvent(errorEvent);
         handleInteractionEvent(errorEvent);
         numInterestingErrors++;
-//        if (notify) for (ITaskscapeListener listener : listeners) listener.interestChanged(node); 
     }
 
     /**
@@ -163,7 +161,7 @@ public class TaskscapeManager {
         if (nextEventIsRaiseChildren && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
         	tempRaiseChildrenForSelected();
     		nextEventIsRaiseChildren = false;
-    	}
+    	} 
         
         return node;
     }
@@ -414,7 +412,6 @@ public class TaskscapeManager {
 	}
 
 	public void setNextEventIsRaiseChildren() {
-    	System.err.println("!!!!!");
 		nextEventIsRaiseChildren = true;
 	}
 }

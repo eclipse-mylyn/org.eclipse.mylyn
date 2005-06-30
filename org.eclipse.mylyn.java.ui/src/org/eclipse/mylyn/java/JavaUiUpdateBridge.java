@@ -233,7 +233,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
         }
     }
     
-    private void installExplorerListeners(PackageExplorerPart packageExplorer) {
+    private void installExplorerListeners(final PackageExplorerPart packageExplorer) {
     	packageExplorer.getTreeViewer().getTree().addMouseListener(new MouseListener() {
 			public void mouseDoubleClick(MouseEvent e) {
 				// ignore
@@ -246,8 +246,10 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 			}
 
 			public void mouseUp(MouseEvent e) {
-				// ignore
-			}	
+//				if ((e.stateMask & SWT.ALT) != 0) {
+//					packageExplorer.getTreeViewer().setSelection(null);
+//				}
+			}
     	});
 		
 	}

@@ -53,7 +53,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
         JavaPlugin.getDefault().getProblemMarkerManager().addListener(PROBLEM_LISTENER);
         JavaCore.addElementChangedListener(new IElementChangedListener() {
             public void elementChanged(ElementChangedEvent event) {
-            	// don't care when an element is changed right now
+            	// TODO: implement interest move
 //                IJavaElementDelta delta = event.getDelta();
 //                super.handleElementEdit(part, selectedElement);
             }
@@ -106,7 +106,6 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
     public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
         try {
             if (part instanceof ProjectsView) return; // HACK
-
             IJavaElement selectedElement = null;
             if (selection instanceof StructuredSelection) {
                 StructuredSelection structuredSelection = (StructuredSelection)selection;
@@ -186,7 +185,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
      * @return null for elements that aren't modeled
      */
     protected IJavaElement checkIfAcceptedAndPromoteIfNecessary(IJavaElement element) {
-        if (element instanceof IPackageDeclaration) return null;
+//        if (element instanceof IPackageDeclaration) return null;
         if (element instanceof IImportContainer) {
             return element.getParent();
         } else if (element instanceof IImportDeclaration) {
