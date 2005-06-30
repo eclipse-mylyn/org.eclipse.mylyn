@@ -284,7 +284,7 @@ public class Task implements ITask, ITaskListElement {
 		return MylarImages.getImage(MylarImages.TASK);
 	}
 
-	public String getDescription() {
+	public String getDescription(boolean label) {
 		return getLabel();
 	}
 

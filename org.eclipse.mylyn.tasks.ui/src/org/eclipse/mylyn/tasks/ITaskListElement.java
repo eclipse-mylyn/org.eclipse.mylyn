@@ -23,7 +23,7 @@ public interface ITaskListElement {
     
     public abstract String getPriority();
     
-    public abstract String getDescription();
+    public abstract String getDescription(boolean label);
     
     public abstract String getHandle();
 }

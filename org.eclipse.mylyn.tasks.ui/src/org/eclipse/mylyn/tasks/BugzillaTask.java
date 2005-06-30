@@ -101,7 +101,11 @@ public class BugzillaTask extends Task {
         }        
     }
 	
-    @Override
+    public BugzillaTask(BugzillaHit hit) {
+    	this(hit.getHandle(), hit.getDescription(false));
+	}
+
+	@Override
 	public String getLabel() {
         return MylarTasksPlugin.getDefault().getBugzillaProvider().getBugzillaDescription(this);
     }
@@ -371,6 +375,8 @@ public class BugzillaTask extends Task {
 
 	@Override
 	public String getToolTipText() {
+		if(lastRefresh == null)
+			return "";
 		// Get the current time.
 		Date timeNow = new Date();
 		

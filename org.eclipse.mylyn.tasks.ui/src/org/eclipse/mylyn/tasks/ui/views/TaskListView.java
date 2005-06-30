@@ -41,11 +41,9 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -243,11 +241,16 @@ public class TaskListView extends ViewPart {
 		            viewer.refresh();
 	        	}
 		    } else if(obj instanceof BugzillaHit){
-		    	BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaHit)obj).getServerName(), ((BugzillaHit)obj).getID(),-1);
-		    	List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
-		    	selectedBugs.add(open);
-		    	ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
-				viewBugs.schedule();
+		    	BugzillaHit hit = (BugzillaHit)obj;
+		    	if(hit.isTask()){
+		    		hit.getAssociatedTask().openTaskInEditor();
+		    	} else {
+			    	BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaHit)obj).getServerName(), ((BugzillaHit)obj).getID(),-1);
+			    	List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
+			    	selectedBugs.add(open);
+			    	ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
+					viewBugs.schedule();
+		    	}
 		    }
 		    viewer.refresh(obj);
 		}
@@ -262,8 +265,14 @@ public class TaskListView extends ViewPart {
 		@Override
 		public void run() {
 		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-		    if (selectedObject != null) {
-		    	MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+		    if (selectedObject != null && selectedObject instanceof ITask) {
+		    	MylarPlugin.getTaskscapeManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+		    	viewer.refresh();
+		    } else if (selectedObject != null && selectedObject instanceof BugzillaHit) {
+		    	BugzillaTask task = ((BugzillaHit)selectedObject).getAssociatedTask();
+		    	if(task != null){
+		    		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
+		    	}
 		    	viewer.refresh();
 		    }
 		}
@@ -301,6 +310,13 @@ public class TaskListView extends ViewPart {
 		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
 		    if (selectedObject instanceof Task){ 
 		    	((Task)selectedObject).setCompleted(false);                	
+		    } else if (selectedObject instanceof BugzillaHit){
+		    	BugzillaHit hit = (BugzillaHit)selectedObject;
+	        	BugzillaTask task = hit.getAssociatedTask(); 
+	        	if(task != null){
+			    	task.setCompleted(false);
+			    	viewer.refresh();
+	        	}
 		    }
 		    viewer.refresh();
 		}
@@ -318,6 +334,13 @@ public class TaskListView extends ViewPart {
 		    if (selectedObject instanceof Task){ 
 		    	((Task)selectedObject).setCompleted(true);
 		    	viewer.refresh(selectedObject);
+		    } else if (selectedObject instanceof BugzillaHit){
+		    	BugzillaHit hit = (BugzillaHit)selectedObject;
+	        	BugzillaTask task = hit.getAssociatedTask(); 
+	        	if(task != null){
+			    	task.setCompleted(true);
+			    	viewer.refresh();
+	        	}
 		    }
 		}
 	}
@@ -431,15 +454,16 @@ public class TaskListView extends ViewPart {
 		        return;
 		    }
 			
+		    // XXX we don't care about duplicates since we use a registrey
 			// Check the existing tasks to see if the id is used already.
 			// This is to prevent the creation of mutliple Bugzilla tasks
 			//   for the same Bugzilla report.
-			boolean doesIdExistAlready = false;
-			doesIdExistAlready = lookForId("Bugzilla-" + bugId);				
-			if (doesIdExistAlready) {
-		        showMessage("A Bugzilla task with ID Bugzilla-" + bugId + " already exists.");
-		        return;
-			}
+//			boolean doesIdExistAlready = false;
+//			doesIdExistAlready = lookForId("Bugzilla-" + bugId);				
+//			if (doesIdExistAlready) {
+//		        showMessage("A Bugzilla task with ID Bugzilla-" + bugId + " already exists.");
+//		        return;
+//			}
 		
 		    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");				
 		    Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
@@ -852,7 +876,7 @@ public class TaskListView extends ViewPart {
                 case 3: return true;
                 case 4: return false;
                 } 
-            } else if (element instanceof ITaskListElement){
+            } else if (element instanceof BugzillaHit){
             	if (columnIndex == 0) {
             		return true;
             	}else {
@@ -889,24 +913,29 @@ public class TaskListView extends ViewPart {
 				case 2:
 					return "";
 				case 3:
-					return cat.getDescription();
+					return cat.getDescription(true);
 				case 4:
 					return "";
 				}
-			} else if (element instanceof ITaskListElement) {
-				ITaskListElement e = (ITaskListElement) element;
+			} else if (element instanceof BugzillaHit) {
+				BugzillaHit hit = (BugzillaHit) element;
+				ITask task = hit.getAssociatedTask();
 				switch (columnIndex) {
 				case 0:
-					return new Boolean(false);
+					if(task == null){
+						return new Boolean(true);
+					} else {
+						return new Boolean(task.isCompleted());
+					}
 				case 1:
 					return "";
 				case 2:
-					String priorityString = e.getPriority().substring(1);
+					String priorityString = hit.getPriority().substring(1);
 					return new Integer(priorityString);
 				case 3:
-					return e.getDescription();
+					return hit.getDescription(true);
 				case 4:
-					return e.getHandle();					
+					return hit.getHandle();					
 				}
 			}
             return "";
@@ -961,22 +990,36 @@ public class TaskListView extends ViewPart {
 					case 4:
 						break;
 					}
-				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
-////					ITaskListElement e = (ITaskListElement)((TreeItem) element).getData();
-//					switch (columnIndex) {
-//					case 0:						
-//						viewer.setSelection(null);
-//						break;
-//					case 1:
-//						break;
-//					case 2:
-//						break;
-//					case 3:						
-//						viewer.setSelection(null);
-//						break;
-//					case 4:
-//						break;
-//					}
+				} else if (((TreeItem) element).getData() instanceof BugzillaHit) {
+					BugzillaHit hit = (BugzillaHit)((TreeItem) element).getData();
+					switch (columnIndex) {
+					case 0:
+						BugzillaTask task = hit.getAssociatedTask();
+						if(task == null){
+							task = new BugzillaTask(hit);
+							hit.setAssociatedTask(task);
+							MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry(task);
+							// TODO move the task to a special folder
+						} 
+						if (task.isActive()) {
+							MylarTasksPlugin.getTaskListManager()
+									.deactivateTask(task);
+						} else {
+							MylarTasksPlugin.getTaskListManager().activateTask(
+									task);
+						}
+						viewer.setSelection(null);
+						break;
+					case 1:
+						break;
+					case 2:
+						break;
+					case 3:						
+						viewer.setSelection(null);
+						break;
+					case 4:
+						break;
+					}
 				}
 				viewer.refresh();
 			} catch (Exception e) {
@@ -1033,15 +1076,15 @@ public class TaskListView extends ViewPart {
                     }
         		}
         	} else if(o1 instanceof BugzillaHit && o2 instanceof BugzillaHit){
-        		ITaskListElement task1 = (ITaskListElement) o1;
-        		ITaskListElement task2 = (ITaskListElement) o2;
+        		BugzillaHit task1 = (BugzillaHit) o1;
+        		BugzillaHit task2 = (BugzillaHit) o2;
                 
                 if (column == columnNames[1]) {
                     return 0;
                 } else if (column == columnNames[2]) {
                     return task1.getPriority().compareTo(task2.getPriority());
                 } else if (column == columnNames[3]) {
-                    return task1.getDescription().compareTo(task2.getDescription());
+                    return task1.getDescription(false).compareTo(task2.getDescription(false));
                 } else if (column == columnNames[4]){
                 	return task1.getHandle().compareTo(task2.getHandle());
                 } else {
@@ -1146,20 +1189,6 @@ public class TaskListView extends ViewPart {
             });
         }
          
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			public void selectionChanged(SelectionChangedEvent event) {
-				if(event.getSelection() instanceof IStructuredSelection){
-					IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-					if(sel.getFirstElement() instanceof BugzillaHit){
-						delete.setEnabled(false);
-					}else {
-						delete.setEnabled(true);
-					}
-				}
-			}
-        	
-        });
         CellEditor[] editors = new CellEditor[columnNames.length];
         TextCellEditor textEditor = new TextCellEditor(viewer.getTree());
         ((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
@@ -1315,9 +1344,9 @@ public class TaskListView extends ViewPart {
         manager.add(moveTaskToRoot);
         manager.add(new Separator());
         MenuManager subMenuManager = new MenuManager("Choose Highlighter");
+        final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
         for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
             final Highlighter highlighter = it.next();
-            final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
             if (selectedObject instanceof Task){
                 Action action = new Action() {
                 	
@@ -1343,6 +1372,43 @@ public class TaskListView extends ViewPart {
         }
         manager.add(subMenuManager);
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        updateActionEnablement(selectedObject);
+    }
+    
+    private void updateActionEnablement(Object sel){
+    	if(sel != null && sel instanceof ITaskListElement){
+	    	if(sel instanceof BugzillaHit){
+				BugzillaTask task = ((BugzillaHit)sel).getAssociatedTask();
+				if(task == null){
+					clearSelectedTaskscapeAction.setEnabled(false);
+				} else {
+					clearSelectedTaskscapeAction.setEnabled(true);
+				}
+				completeTask.setEnabled(false);
+				incompleteTask.setEnabled(false);
+				moveTaskToRoot.setEnabled(false);
+				delete.setEnabled(false);
+			} else if(sel instanceof BugzillaTask){
+				completeTask.setEnabled(false);
+				incompleteTask.setEnabled(false);
+			} else if(sel instanceof AbstractCategory){
+				clearSelectedTaskscapeAction.setEnabled(false);
+				moveTaskToRoot.setEnabled(false);
+				completeTask.setEnabled(false);
+				incompleteTask.setEnabled(false);
+			} else {
+				delete.setEnabled(true);
+				moveTaskToRoot.setEnabled(true);
+				completeTask.setEnabled(true);
+				incompleteTask.setEnabled(true);
+				clearSelectedTaskscapeAction.setEnabled(true);
+			}
+			
+		}else {
+			delete.setEnabled(true);
+			moveTaskToRoot.setEnabled(true);
+			clearSelectedTaskscapeAction.setEnabled(false);
+		}
     }
     
     private void fillLocalToolBar(IToolBarManager manager) {
@@ -1489,7 +1555,7 @@ public class TaskListView extends ViewPart {
     
     public void notifyTaskDataChanged(ITask task) {
         if (viewer.getTree() != null && !viewer.getTree().isDisposed()) { 
-        	viewer.refresh(task);
+        	viewer.refresh();
         }
     }
     

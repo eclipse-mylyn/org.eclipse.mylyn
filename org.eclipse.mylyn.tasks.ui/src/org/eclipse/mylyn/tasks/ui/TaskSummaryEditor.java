@@ -282,7 +282,8 @@ public class TaskSummaryEditor extends EditorPart {
 			createTaskSection(parent, toolkit);		
 			createNotesSection(parent, toolkit);
 			createPlanningGameSection(parent, toolkit);
-	        createRelatedLinksSection(parent, toolkit);						
+	        createRelatedLinksSection(parent, toolkit);
+	        createDetailsSection(parent, toolkit);
         } catch (SWTException e) {
         	MylarPlugin.log(e, "content failed");
         }	       
@@ -326,80 +327,21 @@ public class TaskSummaryEditor extends EditorPart {
 				refreshTaskListView(task);
 			}			
 		});
-        
-        l = toolkit.createLabel(container, "Task Handle:");
-        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-        Text handle = toolkit.createText(container, task.getHandle(), SWT.BORDER);
-        td = new TableWrapData(TableWrapData.FILL_GRAB);
-        td.colspan = 2;
-        handle.setLayoutData(td);
-        handle.setEditable(false);
-        handle.setEnabled(false);
-              		
-		
-        Label l2 = toolkit.createLabel(container, "Task context path:");
-        l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-        pathText = toolkit.createText(container, "<Mylar_Dir>/"+task.getPath()+".xml", SWT.BORDER);
-        pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        pathText.setEditable(false);        
-        pathText.setEnabled(false);
-        
-        browse = toolkit.createButton(container, "Change", SWT.PUSH | SWT.CENTER);
-        if (task.isActive()) {
-        	browse.setEnabled(false);
-        } else {
-        	browse.setEnabled(true);
-        }		
-		browse.addSelectionListener(new SelectionAdapter() {			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-				if (task.isActive()) {
-					MessageDialog.openInformation(
-							Display.getDefault().getActiveShell(),
-				            "Task Message",
-				            "Task can not be active when changing taskscape");
-				} else {
-					FileDialog dialog = new FileDialog(Display.getDefault()
-							.getActiveShell(), SWT.OPEN);
-					String[] ext = { "*.xml" };
-					dialog.setFilterExtensions(ext);
-
-					String mylarDir = MylarPlugin.getTaskscapeManager()
-							.getMylarDir()
-							+ "/";
-					mylarDir = mylarDir.replaceAll("\\\\", "/");
-					// mylarDir = formatPath(mylarDir);
-					dialog.setFilterPath(formatPath(mylarDir));
-
-					String res = dialog.open();
-					if (res != null) {
-						res = formatPath(res);
-						res = RelativePathUtil.findRelativePath(mylarDir, res);
-						pathText.setText("<MylarDir>/" + res + ".xml");
-						task.setPath(res);
-					}
-				}
-			}
-		});
-		toolkit.createLabel(container, "");
-		l = toolkit.createLabel(container, "Go to Mylar Preferences to change <Mylar_Dir>");
-        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 	}	
 	
-	private String formatPath(String path) {
-		if (path == null) return "";
-		StringBuffer result = new StringBuffer(path.length() + 10);		
-		for (int i = 0; i < path.length(); i++) {
-			if (path.charAt(i) == '\\'){
-				result.append('/');
-			} else {
-				result.append(path.charAt(i));
-			}
-		}
-		
-		return result.toString();
-	}	
+//	private String formatPath(String path) {
+//		if (path == null) return "";
+//		StringBuffer result = new StringBuffer(path.length() + 10);		
+//		for (int i = 0; i < path.length(); i++) {
+//			if (path.charAt(i) == '\\'){
+//				result.append('/');
+//			} else {
+//				result.append(path.charAt(i));
+//			}
+//		}
+//		
+//		return result.toString();
+//	}	
 	
 	private void createNotesSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
@@ -483,7 +425,7 @@ public class TaskSummaryEditor extends EditorPart {
 	}
 	
 	private void createRelatedLinksSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Related Links");			
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
@@ -597,6 +539,87 @@ public class TaskSummaryEditor extends EditorPart {
 			}
 		});
 	}	
+	
+	private void createDetailsSection(Composite parent, FormToolkit toolkit) {
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		section.setText("Mylar Task Details");
+		section.setLayout(new TableWrapLayout());
+		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				sform.reflow(true);
+			}
+			public void expansionStateChanged(ExpansionEvent e) {
+				sform.reflow(true);
+			}			
+		});
+		
+		Composite container = toolkit.createComposite(section);
+		section.setClient(container);
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 3;						
+		container.setLayout(layout);
+		
+		Label l = toolkit.createLabel(container, "Task Handle:");
+        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+        Text handle = toolkit.createText(container, task.getHandle(), SWT.BORDER);
+        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+        td.colspan = 2;
+        handle.setLayoutData(td);
+        handle.setEditable(false);
+        handle.setEnabled(false);
+              		
+		
+        Label l2 = toolkit.createLabel(container, "Task context path:");
+        l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+        pathText = toolkit.createText(container, "<Mylar_Dir>/"+task.getPath()+".xml", SWT.BORDER);
+        pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        pathText.setEditable(false);        
+        pathText.setEnabled(false);
+        
+        browse = toolkit.createButton(container, "Change", SWT.PUSH | SWT.CENTER);
+        if (task.isActive()) {
+        	browse.setEnabled(false);
+        } else {
+        	browse.setEnabled(true);
+        }		
+		browse.addSelectionListener(new SelectionAdapter() {			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				if (task.isActive()) {
+					MessageDialog.openInformation(
+							Display.getDefault().getActiveShell(),
+				            "Task Message",
+				            "Task can not be active when changing taskscape");
+				} else {
+					FileDialog dialog = new FileDialog(Display.getDefault()
+							.getActiveShell(), SWT.OPEN);
+					String[] ext = { "*.xml" };
+					dialog.setFilterExtensions(ext);
+
+					String mylarDir = MylarPlugin.getTaskscapeManager()
+							.getMylarDir()
+							+ "/";
+					mylarDir = mylarDir.replaceAll("\\\\", "/");
+					// mylarDir = formatPath(mylarDir);
+					dialog.setFilterPath(mylarDir);
+
+					String res = dialog.open();
+					if (res != null) {
+						res = res.replaceAll("\\\\", "/");
+						res = RelativePathUtil.findRelativePath(mylarDir, res);
+						pathText.setText("<MylarDir>/" + res + ".xml");
+						task.setPath(res);
+					}
+				}
+			}
+		});
+		toolkit.createLabel(container, "");
+		l = toolkit.createLabel(container, "Go to Mylar Preferences to change <Mylar_Dir>");
+        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+	}
+	
 	private void refreshTaskListView(ITask task) {
 		if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(task);
 	}

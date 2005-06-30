@@ -18,6 +18,9 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.tasks.AbstractCategory;
+import org.eclipse.mylar.tasks.BugzillaHit;
+import org.eclipse.mylar.tasks.BugzillaQueryCategory;
+import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.TaskCategory;
@@ -46,7 +49,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 			case 2:
 				return element.getPriority();
 			case 3:
-				return element.getDescription();
+				return element.getDescription(true);
 			case 4:
 				return element.getHandle();
 			}
@@ -69,6 +72,24 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
             for (ITask child : cat.getChildren()) {
 				if (child.isActive())
 					return UiUtil.BOLD;
+			}
+        }else if (element instanceof BugzillaHit) {
+        	BugzillaHit hit = (BugzillaHit)element;
+        	BugzillaTask task = hit.getAssociatedTask(); 
+        	if(task != null){
+	            if (task.isActive()) return UiUtil.BOLD;            
+	            if (task.isCompleted()) return UiUtil.ITALIC;
+        	}
+        } else if (element instanceof BugzillaQueryCategory) {
+        	BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
+            for (ITaskListElement child : cat.getHits()) {
+				if (child instanceof BugzillaHit){
+					BugzillaHit hit = (BugzillaHit) child;
+					BugzillaTask task = hit.getAssociatedTask();
+					if(task != null && task.isActive()){
+						return UiUtil.BOLD;
+					}
+				}
 			}
         }
         return null;
@@ -93,7 +114,14 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
           ITask task = (ITask)element;
           Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
           if (highlighter != null) return highlighter.getHighlightColor();
-      } else if (element instanceof AbstractCategory) {
+      } else if (element instanceof BugzillaHit) {
+    	  BugzillaHit hit = (BugzillaHit)element;
+    	  BugzillaTask task = hit.getAssociatedTask();
+    	  if(task != null){
+	          Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
+	          if (highlighter != null) return highlighter.getHighlightColor();
+    	  }
+      }else if (element instanceof AbstractCategory) {
     	  return backgroundColor;
       }
       return null;
@@ -103,6 +131,10 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
         if (element instanceof ITask) {
             ITask task = (ITask)element;
             if (task.isCompleted()) return MylarUiPlugin.getDefault().getColorMap().GRAY_VERY_LIGHT;
+        } else if (element instanceof  BugzillaHit) {
+    	  BugzillaHit hit = (BugzillaHit)element;
+    	  BugzillaTask task = hit.getAssociatedTask();
+          if (task != null && task.isCompleted()) return MylarUiPlugin.getDefault().getColorMap().GRAY_VERY_LIGHT;
         }
         return null;
     }

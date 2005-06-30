@@ -15,7 +15,9 @@ package org.eclipse.mylar.tasks;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
  
 /**
@@ -29,8 +31,35 @@ public class TaskList implements Serializable {
     private List<AbstractCategory> categories = new ArrayList<AbstractCategory>();
     private transient List<ITask> activeTasks = new ArrayList<ITask>();
     
+    // XXX we never delete anything from this registry
+    private Map<String, BugzillaTask> bugzillaTaskRegistry = new HashMap<String, BugzillaTask>();
+    
+    public void addToBugzillaTaskRegistry(BugzillaTask task){
+    	if(bugzillaTaskRegistry.get(task.getHandle()) == null){
+    		bugzillaTaskRegistry.put(task.getHandle(), task);
+    	}
+    }
+    
+    public BugzillaTask getFromBugzillaTaskRegistry(String handle){
+    	return bugzillaTaskRegistry.get(handle);
+    }
+    
+    public Map<String, BugzillaTask> getBugzillaTaskRegistry(){
+    	return bugzillaTaskRegistry;
+    }
+    
     public void addRootTask(ITask task) {
-        rootTasks.add(task);         
+    	if(task instanceof BugzillaTask){
+    		BugzillaTask bugTask = bugzillaTaskRegistry.get(task.getHandle());
+    		if(bugTask == null){
+    			bugzillaTaskRegistry.put(task.getHandle(), (BugzillaTask)task);
+    			rootTasks.add(task);	
+    		} else {
+    			rootTasks.add(bugTask);
+    		}
+    	} else {
+    		rootTasks.add(task);
+    	}
     }
     
     public void addCategory(AbstractCategory cat) {

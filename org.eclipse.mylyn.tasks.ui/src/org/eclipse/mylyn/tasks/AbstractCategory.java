@@ -34,7 +34,7 @@ public class AbstractCategory implements ITaskListElement {
 		return priority;
 	}
 
-	public String getDescription() {
+	public String getDescription(boolean label) {
 		return description;
 	}
 

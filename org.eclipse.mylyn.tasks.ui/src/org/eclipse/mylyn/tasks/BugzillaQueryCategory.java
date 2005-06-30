@@ -51,7 +51,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 			for(BugzillaSearchHit hit: collector.getResults()){
 		
 				// HACK need the server name and handle properly
-				addHit(new BugzillaHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), hit.getId()));
+				addHit(new BugzillaHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), hit.getId(), null));
 			}
 		}
 
@@ -64,15 +64,16 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		this.url = url;
 	}
 
-	public String getDescription() {
-		if (hits.size() > 0) {
-			return super.getDescription();
+	public String getDescription(boolean label) {
+		if (hits.size() > 0 || !label) {
+			return super.getDescription(label);
 		} else if (!hasBeenRefreshed) {
-			return super.getDescription() + " <needs refresh>";
+			return super.getDescription(label) + " <needs refresh>";
 		} else {
-			return super.getDescription() + " <no hits>";
+			return super.getDescription(label) + " <no hits>";
 		}
 	}
+	
 	
 	public Image getIcon() {
 		return MylarImages.getImage(MylarImages.CATEGORY_QUERY);
@@ -87,6 +88,8 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	}
 	
 	public void addHit(BugzillaHit hit) {
+		BugzillaTask task = MylarTasksPlugin.getTaskListManager().getTaskList().getFromBugzillaTaskRegistry(hit.getHandle());
+		hit.setAssociatedTask(task);
 		hits.add(hit);
 	}
 

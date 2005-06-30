@@ -39,7 +39,16 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 	}
     
     public void addTask(ITask task) {
-        tasks.add(task);
+    	if(task instanceof BugzillaTask){
+    		BugzillaTask bugTask = MylarTasksPlugin.getTaskListManager().getTaskList().getFromBugzillaTaskRegistry(task.getHandle());
+    		if(bugTask == null){
+    			MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry((BugzillaTask)task);
+    		} else {
+    			task = bugTask;
+    		}
+    	} 
+    	tasks.add(task);
+    	
     }
     
     public void removeTask(ITask task) {
@@ -55,7 +64,7 @@ public class TaskCategory extends AbstractCategory implements Serializable {
         if (object == null) return false;
         if (object instanceof TaskCategory) {
            TaskCategory compare = (TaskCategory)object;
-           return this.getDescription().equals(compare.getDescription());
+           return this.getDescription(false).equals(compare.getDescription(false));
         } else {
             return false;
         }

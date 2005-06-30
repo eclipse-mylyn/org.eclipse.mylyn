@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -76,6 +77,8 @@ public class XmlUtil {
 		Element root = doc.createElement("TaskList");
 		root.setAttribute("Version", "1.0.1");
 
+		writeBugzillaRegistry(tlist.getBugzillaTaskRegistry(), doc, root);
+		
 		// iterate through each subtask and externalize those
 		//
 		for (AbstractCategory cat : tlist.getCategories()) {
@@ -93,6 +96,15 @@ public class XmlUtil {
 		return;
 	}
 	
+	private static void writeBugzillaRegistry(Map<String, BugzillaTask> bugzillaTaskRegistry, Document doc, Element parent) {
+		Element node = doc.createElement("BugzillaTaskRegistry");
+		
+		for (BugzillaTask t : bugzillaTaskRegistry.values()) {
+			writeTask(t, doc, node);
+		}
+		parent.appendChild(node);
+	}
+
 	/**
 	 * Writes an XML file from a DOM.
 	 * 
@@ -221,7 +233,7 @@ public class XmlUtil {
 
 	private static void writeTaskCategory(TaskCategory cat, Document doc, Element parent) {
 		Element node = doc.createElement("TaskCategory");
-		node.setAttribute("Name", cat.getDescription());
+		node.setAttribute("Name", cat.getDescription(false));
 		
 		for (ITask t : cat.getChildren()) {
 			writeTask(t, doc, node);
@@ -231,7 +243,7 @@ public class XmlUtil {
 	
 	private static void writeQueryCategory(BugzillaQueryCategory cat, Document doc, Element parent) {
 		Element node = doc.createElement("QueryCategory");
-		node.setAttribute("Description", cat.getDescription());
+		node.setAttribute("Description", cat.getDescription(false));
 		node.setAttribute("URL", cat.getUrl());
 		parent.appendChild(node);
 	}
@@ -309,6 +321,8 @@ public class XmlUtil {
 					if (child.getNodeName().equals("Category") || 
 							child.getNodeName().equals("TaskCategory")) {
 						readTaskCategory(child, tlist);
+					} else if (child.getNodeName().equals("BugzillaTaskRegistry")) {
+						readBugzillaRegistry(child, tlist);
 					} else if (child.getNodeName().equals("QueryCategory")) {
 						readQueryCategory(child, tlist);
 					} else {
@@ -321,6 +335,17 @@ public class XmlUtil {
 			name = name.substring(0, name.lastIndexOf('.')) + "-save.xml";
 			inFile.renameTo(new File(name));
 			MylarPlugin.log(e, "XmlUtil");
+		}
+	}
+
+	private static void readBugzillaRegistry(Node node, TaskList tlist) {
+		NodeList list = node.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			ITask task = readTask(child, tlist, null, null);
+			if(task instanceof BugzillaTask){
+				tlist.addToBugzillaTaskRegistry((BugzillaTask)task);
+			}
 		}
 	}
 
