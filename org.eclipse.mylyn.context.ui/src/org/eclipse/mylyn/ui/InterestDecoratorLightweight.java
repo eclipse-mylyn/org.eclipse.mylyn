@@ -13,6 +13,8 @@
   */
 package org.eclipse.mylar.ui;
 
+import java.util.ConcurrentModificationException;
+
 import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -31,9 +33,14 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
     }
 
     public void decorate(Object element, IDecoration decoration) {
-        try {
-            ITaskscapeNode node = null;
-            IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(element);
+    	IMylarStructureBridge adapter = null;
+    	try {
+    		adapter = MylarPlugin.getDefault().getStructureBridge(element);
+	    } catch (ConcurrentModificationException cme) {
+	    	// ignored, because we can add structure bridges during decoration
+	    }
+    	try {
+    		ITaskscapeNode node = null;
             if (element instanceof TaskscapeEdge) {
                 decoration.setForegroundColor(MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP);
             } else  if (element instanceof ITaskscapeNode) {
@@ -51,7 +58,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
                     && !node.getDegreeOfInterest().isPredicted()) {
                     decoration.setFont(UiUtil.BOLD);
                 } 
-            } 
+            }
         } catch (Exception e) {
         	MylarPlugin.log(e, "decoration failed");
         }
