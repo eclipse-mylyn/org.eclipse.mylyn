@@ -20,6 +20,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
@@ -102,14 +103,17 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, ITaskscapeLis
 	}
 
 	private void updateWorkingSet() {
-		if(workingSets.size() <= 0)
-			return;
-		IWorkingSet set = workingSets.get(0);
-		set.setElements(new IAdaptable[]{});
-		List<IAdaptable> elements = new ArrayList<IAdaptable>();
-		getElementsFromTaskscape(elements);
-		set.setElements(elements.toArray(new IAdaptable[elements.size()]));
-		
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+				if(workingSets.size() <= 0)
+					return;
+				IWorkingSet set = workingSets.get(0);
+				set.setElements(new IAdaptable[]{});
+				List<IAdaptable> elements = new ArrayList<IAdaptable>();
+				getElementsFromTaskscape(elements);
+				set.setElements(elements.toArray(new IAdaptable[elements.size()]));
+            }
+        });
 	}
 	
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {

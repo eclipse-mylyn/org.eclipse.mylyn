@@ -208,17 +208,15 @@ public class TaskscapeManager {
     }
 	
 	public void addListener(ITaskscapeListener listener) {
-//		synchronized (listeners) {
-	        if (listener != null) {
-	        	if (suppressListenerNotification) {
-	        		waitingListeners.add(listener);
-	        	} else {
-	        		listeners.add(listener);   
-	        	}
-	        } else {
-	            MylarPlugin.log("attempted to add null lisetener", this);
-	        }
-//		}
+        if (listener != null) {
+        	if (suppressListenerNotification) {
+        		waitingListeners.add(listener);
+        	} else {
+        		listeners.add(listener);   
+        	}
+        } else {
+            MylarPlugin.log("attempted to add null lisetener", this);
+        }
 	}
 	
 	public void removeListener(ITaskscapeListener listener) {
