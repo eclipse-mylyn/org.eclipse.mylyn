@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Mylar" topic="docs/html/book.html"> 
+<toc label="Mylar User Guide"> 
+	<topic label="Overview" href="user/overview.html"/>
+	<topic label="What's New" href="user/new.html"/>
+	<topic label="Known Limitations" href="user/limitations.html"/>
 </toc>

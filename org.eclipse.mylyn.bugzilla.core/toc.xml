@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Bugzilla: Bugzilla Database Server Querying" topic="docs/html/book.html"> 
+<toc label="Bugzilla Client User Guide" topic="docs/html/book.html"> 
     <topic label="Getting Started" href="docs/html/start.html">
         <topic label="Bugzilla Setup" href="docs/html/start/setup.html"/>
 		<topic label="Using Bugzilla" href="docs/html/start/use.html">

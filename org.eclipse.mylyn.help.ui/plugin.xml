@@ -2,7 +2,6 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   
 	<extension
          id="org.eclipse.mylar.helpDocs"
          name="Mylar Help"
