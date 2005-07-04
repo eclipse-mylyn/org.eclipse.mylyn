@@ -46,6 +46,8 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     private static TaskListManager taskListManager;
     private BugzillaContentProvider bugzillaProvider;
     
+    public static final String REFRESH_QUERIES = "org.eclipse.mylar.tasks.queries.refresh";
+    
     public static final String FILE_EXTENSION = ".xml";
     public static final String TASK_ID = "org.eclipse.mylar.tasks.userid";
     public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
@@ -358,5 +360,9 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 		} else {
 			return false;
 		}
+	}
+
+		public boolean refreshOnStartUpEnabled() {
+		return getPrefs().getBoolean(REFRESH_QUERIES);
 	}
 }

@@ -74,6 +74,7 @@ import org.eclipse.mylar.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasks.ui.actions.MoveTaskToRootAction;
 import org.eclipse.mylar.tasks.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasks.ui.actions.RefreshBugzillaQueryAction;
 import org.eclipse.mylar.tasks.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.ui.actions.TaskDeactivateAction;
@@ -145,6 +146,7 @@ public class TaskListView extends ViewPart {
 //    private FilterIncompleteTasksAction filterInCompleteTask;
     private PriorityDropDownAction filterOnPriority;
     private Action moveTaskToRoot; 
+    private RefreshBugzillaQueryAction refreshQuery;
     private PriorityFilter priorityFilter = new PriorityFilter();
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description" };
@@ -685,8 +687,13 @@ public class TaskListView extends ViewPart {
 			viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
 		}
         viewer.addFilter(priorityFilter);
-        if(MylarTasksPlugin.getDefault().isFilterInCompleteMode()) viewer.addFilter(inCompleteFilter);
-        if(MylarTasksPlugin.getDefault().isFilterCompleteMode()) viewer.addFilter(completeFilter);
+        if (MylarTasksPlugin.getDefault().isFilterInCompleteMode()) viewer.addFilter(inCompleteFilter);
+        if (MylarTasksPlugin.getDefault().isFilterCompleteMode()) viewer.addFilter(completeFilter);
+        if (MylarTasksPlugin.getDefault().refreshOnStartUpEnabled()) {
+        	refresh.setShowProgress(false);
+        	refresh.run();
+        	refresh.setShowProgress(true);
+        }
         viewer.refresh();
     }
         
@@ -915,6 +922,7 @@ public class TaskListView extends ViewPart {
         manager.add(delete);
         manager.add(clearSelectedTaskscapeAction);
         manager.add(moveTaskToRoot);
+        manager.add(refreshQuery);
         manager.add(new Separator());
         MenuManager subMenuManager = new MenuManager("Choose Highlighter");
         final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
@@ -961,42 +969,48 @@ public class TaskListView extends ViewPart {
 				incompleteTask.setEnabled(false);
 				moveTaskToRoot.setEnabled(false);
 				delete.setEnabled(false);
+				refreshQuery.setEnabled(false);
 			} else if(sel instanceof BugzillaTask){
 				completeTask.setEnabled(false);
 				incompleteTask.setEnabled(false);
+				refreshQuery.setEnabled(false);
 			} else if(sel instanceof AbstractCategory){
 				clearSelectedTaskscapeAction.setEnabled(false);
 				moveTaskToRoot.setEnabled(false);
 				completeTask.setEnabled(false);
 				incompleteTask.setEnabled(false);
+				if (sel instanceof BugzillaQueryCategory) {
+					refreshQuery.setEnabled(true);
+				} else {
+					refreshQuery.setEnabled(false);
+				}
 			} else {
 				delete.setEnabled(true);
 				moveTaskToRoot.setEnabled(true);
 				completeTask.setEnabled(true);
 				incompleteTask.setEnabled(true);
 				clearSelectedTaskscapeAction.setEnabled(true);
-			}
-			
+				refreshQuery.setEnabled(false);
+			}			
 		}else {
 			delete.setEnabled(true);
 			moveTaskToRoot.setEnabled(true);
 			clearSelectedTaskscapeAction.setEnabled(false);
+			refreshQuery.setEnabled(false);
 		}
     }
     
     private void fillLocalToolBar(IToolBarManager manager) {
-            manager.add(createTask);
+        manager.add(createTask);
         manager.add(createCategory);
         manager.add(new Separator());
-        manager.add(createBugzillaTask);
-        
+        manager.add(createBugzillaTask);        
     	manager.add(createBugzillaQueryCategory);
     	manager.add(refresh);
         manager.add(new Separator());
         manager.add(filterCompleteTask);
 //        manager.add(filterInCompleteTask);
-        manager.add(filterOnPriority);
-        
+        manager.add(filterOnPriority);        
     }
 
     /**
@@ -1018,7 +1032,8 @@ public class TaskListView extends ViewPart {
         doubleClickAction = new OpenTaskEditorAction(this);            
         filterCompleteTask = new FilterCompletedTasksAction(this);        
 //        filterInCompleteTask = new FilterIncompleteTasksAction();                        
-        filterOnPriority = new PriorityDropDownAction();             
+        filterOnPriority = new PriorityDropDownAction();
+        refreshQuery = new RefreshBugzillaQueryAction(this);
     }
 
     /**
