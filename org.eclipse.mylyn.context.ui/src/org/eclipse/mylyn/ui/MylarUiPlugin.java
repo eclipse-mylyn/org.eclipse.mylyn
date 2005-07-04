@@ -64,15 +64,15 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private static MylarUiPlugin plugin;
 	private ResourceBundle resourceBundle;
     private boolean decorateInterestMode = false;
-    public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.landmark";
+    public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";
     
-    private static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.highlighters.task.";
-    public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.highlighters";
+    private static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters.task.";
+    public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
     public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylar.ui.gamma.darkened";
     public static final String GAMMA_SETTING_STANDARD = "org.eclipse.mylar.ui.gamma.standard";
     public static final String GAMMA_SETTING_LIGHTENED = "org.eclipse.mylar.ui.gamma.lightened";
-    public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.filter.global";
-    public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.mode.intersection";    
+    public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.interest.filter.global";
+    public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.interest.intersection";    
     
     private HighlighterList highlighters = null;
     private Highlighter intersectionHighlighter;
@@ -413,5 +413,5 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 			return null;
 		else
 			return workingSetUpdaters.get(0);
-	}	
+	}
 }

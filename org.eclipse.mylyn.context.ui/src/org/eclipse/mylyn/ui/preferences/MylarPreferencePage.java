@@ -111,6 +111,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
     private IntegerFieldEditor userStudyId;
     
     private BooleanFieldEditor closeOnDeactivate;
+    private BooleanFieldEditor refreshQueryOnStartup;
     
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since
@@ -130,7 +131,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		layout.verticalSpacing = 4;
 		entryTable.setLayout (layout);    
         
-		createLabel(entryTable, "Highlighter List:");
+		createLabel(entryTable, "Task Context Highlighters:");
 		createTable(entryTable);
 		createTableViewer();
 
@@ -193,6 +194,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public boolean performOk() {
 		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeOnDeactivate.getBooleanValue());
+//		getPreferenceStore().setValue(MylarTasksPlugin.REFRESH_QUERIES, refreshQueryOnStartup.getBooleanValue());
         int uidNum = -1;
         try{
             if(userStudyId.getStringValue() == ""){
@@ -278,6 +280,8 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
       
 		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, true);
 		closeOnDeactivate.load();
+//		getPreferenceStore().setValue(MylarPlugin.REFRESH_QUERIES, false);
+		refreshQueryOnStartup.load();
 		
 		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();				
 		contentProvider = new HighlighterContentProvider();
@@ -825,7 +829,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		String taskDirectory = getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
 		taskDirectoryEditor = new StringFieldEditor(MylarPlugin.MYLAR_DIR,
-				"Task Directory:", parent);
+				"Mylar Directory:", parent);
 		taskDirectoryEditor.fillIntoGrid(parent, 2);
 		taskDirectoryEditor.setStringValue(taskDirectory);
 
@@ -880,6 +884,11 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		closeOnDeactivate.setPreferenceStore(getPreferenceStore());
 		closeOnDeactivate.load();
 		addField(closeOnDeactivate);
+		
+//		refreshQueryOnStartup = new BooleanFieldEditor(MylarPlugin.REFRESH_QUERIES, "Automatically refresh Bugzilla reports and queries on startup", browseComposite);
+		refreshQueryOnStartup.setPreferenceStore(getPreferenceStore());
+		refreshQueryOnStartup.load();
+		addField(refreshQueryOnStartup);
 	}
 	
     @Override
