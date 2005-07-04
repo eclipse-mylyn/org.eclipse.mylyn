@@ -12,8 +12,6 @@ package org.eclipse.mylar.core;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +55,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     private static TaskscapeManager taskscapeManager;
     private ResourceBundle resourceBundle;
     public static final String IDENTIFIER = "org.eclipse.mylar.core";
-    public static boolean DEBUG_MODE = true;
+//    public static boolean DEBUG_MODE = true;
     public static final String LOG_FILE_NAME = "mylar-log.txt";
     private PrintStream logStream = null;
 
@@ -188,27 +186,22 @@ public class MylarPlugin extends AbstractUIPlugin {
      * @param status status to log
      */
     public static void log(IStatus status) {
-        if (DEBUG_MODE){
-            System.err.println(status.getMessage());
-            MylarPlugin.getDefault().getLog().log(status);
-            Throwable e = status.getException();
-            if(e != null) e.printStackTrace();
-        }
-        if (getDefault().logStream != null) getDefault().logStream.println(status.getMessage());
-    }
-
-    public static void log(String message, Object source) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("[");
         buffer.append(DateUtil.getFormattedDate());
         buffer.append(", ");
         buffer.append(DateUtil.getFormattedTime());
         buffer.append("] ");
+        buffer.append(status.toString());
         
-        if (source != null) buffer.append("source: " + source.getClass().getName());
-        buffer.append(", message: " + message);
-        
-        log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, buffer.toString(), null));    	
+        MylarPlugin.getDefault().getLog().log(status);
+        if (getDefault().logStream != null) getDefault().logStream.println(buffer.toString());
+    }
+
+    public static void log(String message, Object source) {
+        if (source != null) message += ", source: " + source.getClass().getName();
+    	
+        log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, message, null));    	
     }
     
     public static void log(Throwable throwable, String message) {
@@ -222,11 +215,11 @@ public class MylarPlugin extends AbstractUIPlugin {
          * @param informUser if true dialog box will be popped up
          */
     public static void fail(Throwable throwable, String message, boolean informUser) {
-        StringWriter stringWriter= new StringWriter();
-        PrintWriter writer= new PrintWriter(stringWriter);
-        if (throwable != null) {
-            throwable.printStackTrace(writer);
-        }
+//        StringWriter stringWriter= new StringWriter();
+//        PrintWriter writer= new PrintWriter(stringWriter);
+//        if (throwable != null) {
+//            throwable.printStackTrace(writer);
+//        }
         if (message == null) message = "no message";
 
         final Status status= new Status(
