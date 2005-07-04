@@ -27,7 +27,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -92,6 +93,8 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -654,31 +657,33 @@ public class TaskListView extends ViewPart {
 	}
     
     private void restoreState() {
-        if (taskListMemento == null)
-                return;
-        IMemento taskListWidth = taskListMemento.getChild(columnWidthIdentifier);
-        if (taskListWidth != null) {
-        	for (int i = 0; i < columnWidths.length; i++) {
-        		IMemento m = taskListWidth.getChild("col"+i);
-        		if (m != null) {
-        			int width = m.getInteger("width");
-        			columnWidths[i] = width;
-        			columns[i].setWidth(width);
-        		}
-        	}        	
-        }
-        IMemento sorterMemento = taskListMemento.getChild(tableSortIdentifier);
-        if (sorterMemento != null) {
-        	IMemento m = sorterMemento.getChild("sorter");
-        	if (m != null) {
-        		sortIndex = m.getInteger("sortIndex");
-        	} else {
-        		sortIndex = 2;
-        	}
-        } else {
-        	sortIndex = 2; // default priority
-        }
-        viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+		if (taskListMemento != null) {
+			IMemento taskListWidth = taskListMemento
+					.getChild(columnWidthIdentifier);
+			if (taskListWidth != null) {
+				for (int i = 0; i < columnWidths.length; i++) {
+					IMemento m = taskListWidth.getChild("col" + i);
+					if (m != null) {
+						int width = m.getInteger("width");
+						columnWidths[i] = width;
+						columns[i].setWidth(width);
+					}
+				}
+			}
+			IMemento sorterMemento = taskListMemento
+					.getChild(tableSortIdentifier);
+			if (sorterMemento != null) {
+				IMemento m = sorterMemento.getChild("sorter");
+				if (m != null) {
+					sortIndex = m.getInteger("sortIndex");
+				} else {
+					sortIndex = 2;
+				}
+			} else {
+				sortIndex = 2; // default priority
+			}
+			viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+		}
         viewer.addFilter(priorityFilter);
         if(MylarTasksPlugin.getDefault().isFilterInCompleteMode()) viewer.addFilter(inCompleteFilter);
         if(MylarTasksPlugin.getDefault().isFilterCompleteMode()) viewer.addFilter(completeFilter);
@@ -769,10 +774,18 @@ public class TaskListView extends ViewPart {
 
             public void dragSetData(DragSourceEvent event) {
                 StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-                if (!selection.isEmpty()) {
-                    event.data = "" + ((ITask) selection.getFirstElement()).getHandle();
-                } else {
-                    event.data = "null";
+                if (selection.getFirstElement() instanceof ITask) {
+                	if (!selection.isEmpty()) {
+                        event.data = "" + ((ITask) selection.getFirstElement()).getHandle();
+                    } else {
+                        event.data = "null";
+                    }
+                } else if (selection.getFirstElement() instanceof BugzillaHit) {
+                	if (!selection.isEmpty()) {
+                        event.data = "" + ((BugzillaHit) selection.getFirstElement()).getHandle();
+                    } else {
+                        event.data = "null";
+                    }
                 }
             }
 
@@ -812,6 +825,24 @@ public class TaskListView extends ViewPart {
                     viewer.setSelection(null);
                     viewer.refresh();
                     return true;
+                } else if (selectedObject instanceof BugzillaHit) {
+                	BugzillaHit bh = (BugzillaHit) selectedObject;
+                	if (getCurrentTarget() instanceof TaskCategory) {
+                		TaskCategory cat = (TaskCategory) getCurrentTarget();
+                		if (bh.getAssociatedTask() != null) {
+                    		bh.getAssociatedTask().setCategory(cat);
+                    		cat.addTask(bh.getAssociatedTask());
+                    	} else {
+                    		BugzillaTask bt = new BugzillaTask(bh);
+                    		bh.setAssociatedTask(bt);
+                    		bt.setCategory(cat);
+                    		cat.addTask(bt);
+                    		MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry(bt);
+                    	}
+                		viewer.setSelection(null);
+                        viewer.refresh();
+                        return true;
+                	}                	
                 }
                 return false;
             }
@@ -822,13 +853,19 @@ public class TaskListView extends ViewPart {
                 Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer())
                         .getSelection()).getFirstElement();
                 if (selectedObject instanceof ITask) {
-                    if (getCurrentTarget() != null && 
-                    		(getCurrentTarget() instanceof ITask || getCurrentTarget() instanceof TaskCategory)) {
+                    if (getCurrentTarget() != null &&  getCurrentTarget() instanceof TaskCategory) {
                     	return true;
                     } else {
                     	return false;
                     }
+                } else if (selectedObject instanceof BugzillaHit) {
+                	if (getCurrentTarget() != null &&  getCurrentTarget() instanceof TaskCategory) {
+                		return true;
+                	} else {
+                		return false;
+                	}
                 }
+               
                 return TextTransfer.getInstance().isSupportedType(transferType);
             }
 
@@ -1076,15 +1113,11 @@ public class TaskListView extends ViewPart {
     
     public String[] getLabelPriorityFromUser(String kind) {
     	String[] result = new String[2];
-    	InputDialog dialog = null;
+    	Dialog dialog = null;
     	boolean isTask = kind.equals("task");
     	if (isTask) {
     		dialog = new TaskInputDialog(
-    	            Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
-    	            "Enter name", 
-    	            "Enter a name for the " + kind + ": ", 
-    	            "", 
-    	            null);
+    	            Workbench.getInstance().getActiveWorkbenchWindow().getShell());
     	} else {
     		dialog = new InputDialog(
     				Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
@@ -1095,11 +1128,12 @@ public class TaskListView extends ViewPart {
     	}
     	
         int dialogResult = dialog.open();
-        if (dialogResult == Window.OK) { 
-            //return dialog.getValue();
-        	result[0] = dialog.getValue();
+        if (dialogResult == Window.OK) {
         	if (isTask) {
-        		result[1] = ((TaskInputDialog)dialog).getSelectedPriority();	
+        		result[0] = ((TaskInputDialog)dialog).getTaskname();
+        		result[1] = ((TaskInputDialog)dialog).getSelectedPriority();
+        	} else {
+        		result[0] = ((InputDialog)dialog).getValue();
         	}
         	return result;
         } else {
@@ -1132,15 +1166,34 @@ public class TaskListView extends ViewPart {
     public PriorityFilter getPriorityFilter() {
     	return priorityFilter;
     }
-    public class TaskInputDialog extends InputDialog {
+    public class TaskInputDialog extends Dialog {
+    	private String taskName = "";
     	private String priority = "P3";
-		public TaskInputDialog(Shell parentShell, String dialogTitle, String dialogMessage, String initialValue, IInputValidator validator) {
-			super(parentShell, dialogTitle, dialogMessage, initialValue, validator);
+    	private Text text;
+		public TaskInputDialog(Shell parentShell) {
+			super(parentShell);
 		}
-		protected Control createDialogArea(Composite parent) {
-			Composite composite = (Composite) super.createDialogArea(parent);
-			Label l = new Label(composite, SWT.NONE);
-			l.setText("Select task priority:");
+		protected Control createDialogArea(Composite parent) {			
+			Composite composite = (Composite)super.createDialogArea(parent);
+			GridLayout gl = new GridLayout(3, false);
+			composite.setLayout(gl);
+			GridData data = new GridData(GridData.GRAB_HORIZONTAL
+                    | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
+                    | GridData.VERTICAL_ALIGN_CENTER);
+            data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
+            composite.setLayoutData(data);
+			
+			
+			Label label = new Label(composite, SWT.WRAP);
+            label.setText("Task name:");            
+            label.setFont(parent.getFont());
+            
+            text = new Text(composite, SWT.SINGLE | SWT.BORDER);
+            text.setLayoutData(data);
+            text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
+                | GridData.HORIZONTAL_ALIGN_FILL));
+
+			
 			final Combo c = new Combo(composite, SWT.NO_BACKGROUND
 						| SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY | SWT.DROP_DOWN);
 			c.setItems(PRIORITY_LEVELS);
@@ -1154,12 +1207,28 @@ public class TaskListView extends ViewPart {
 				public void widgetDefaultSelected(SelectionEvent e) {	
 					widgetSelected(e);
 				}				
-			});
+			});			
+			label = new Label(composite, SWT.NONE);
 			return composite;
 		}
 		public String getSelectedPriority() {
 			return priority;
 		}
+		public String getTaskname() {
+			return taskName;
+		}
+		protected void buttonPressed(int buttonId) {
+	        if (buttonId == IDialogConstants.OK_ID) {
+	        	taskName = text.getText();
+	        } else {
+	        	taskName = null;
+	        }
+	        super.buttonPressed(buttonId);
+	    }
+		protected void configureShell(Shell shell) {
+	        super.configureShell(shell);
+	        shell.setText("Enter Task Name");
+	    }
     };
 }
 
