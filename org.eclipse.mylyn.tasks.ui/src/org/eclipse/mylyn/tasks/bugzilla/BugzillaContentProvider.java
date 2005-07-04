@@ -37,13 +37,13 @@ public class BugzillaContentProvider {
 					    BugzillaTask.getBugId(bugTask.getHandle()) + ": ";
     	
 		if (bugTask.getState() == BugzillaTask.BugTaskState.DOWNLOADING) {
-			return prefix + ": <Downloading bug report from server...>";
+			return prefix + "<Downloading bug report from server...>";
 		} else if (bugTask.getState() == BugzillaTask.BugTaskState.OPENING) {
-			return prefix + ": <Opening bug report in editor...>";
+			return prefix + "<Opening bug report in editor...>";
 		} else if (bugTask.getState() == BugzillaTask.BugTaskState.COMPARING) {
-			return prefix + ": <Comparing bug report with server...>";
+			return prefix + "<Comparing bug report with server...>";
 		} else if (bugTask.getState() == BugzillaTask.BugTaskState.WAITING) {
-			return prefix + ": <Waiting to check server...>";
+			return prefix + "<Waiting to check server...>";
 		}
 		
     	// generate the label
@@ -52,7 +52,7 @@ public class BugzillaContentProvider {
 			return prefix + report.getSummary();
 		}
 		else {
-			return prefix + ": <could not find bug>";
+			return prefix + "<Could not find bug>";
 		}
     }
 
