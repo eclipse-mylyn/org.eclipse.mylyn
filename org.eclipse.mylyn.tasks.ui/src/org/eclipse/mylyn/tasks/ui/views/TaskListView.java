@@ -449,7 +449,7 @@ public class TaskListView extends ViewPart {
 				ITask task = (ITask) element;
 				switch (columnIndex) {
 				case 0:
-					return new Boolean(task.isCompleted());
+					return new Boolean(true); // return tyep doesn't matter
 				case 1:
 					return "";
 				case 2:
@@ -502,7 +502,7 @@ public class TaskListView extends ViewPart {
 					switch (columnIndex) {
 					case 0:
 						if (task.isActive()) {
-							new TaskDeactivateAction(task).run();
+							new TaskDeactivateAction(task, INSTANCE).run();
 						} else {
 							new TaskActivateAction(task).run();
 						}
