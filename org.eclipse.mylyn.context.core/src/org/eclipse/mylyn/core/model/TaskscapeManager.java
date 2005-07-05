@@ -282,6 +282,10 @@ public class TaskscapeManager {
         if (taskscape != null) {
             for (ITaskscapeListener listener : listeners) listener.taskscapeDeactivated(taskscape);
         }
+        File f = getFileForTaskscape(path);
+        if (f.exists()) {
+        	f.delete();
+        }
         eraseTaskscape(id);
     }
      
