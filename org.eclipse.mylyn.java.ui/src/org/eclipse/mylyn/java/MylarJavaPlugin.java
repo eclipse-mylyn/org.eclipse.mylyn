@@ -105,13 +105,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 	        workbench.getDisplay().asyncExec(new Runnable() {
 	            public void run() {
-		            	MylarPreferenceWizard wizard= new MylarPreferenceWizard();
-	        			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
-		        		if (wizard != null && shell != null && !shell.isDisposed()) { 
-		        			WizardDialog dialog = new WizardDialog(shell, wizard);
-		        			dialog.create();
-		        			dialog.open();
-		        		}
+	            	MylarPreferenceWizard wizard= new MylarPreferenceWizard();
+        			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+	        		if (wizard != null && shell != null && !shell.isDisposed()) { 
+	        			WizardDialog dialog = new WizardDialog(shell, wizard);
+	        			dialog.create();
+	        			dialog.open();
+	        		}
 	            }
 	        });
 		}
