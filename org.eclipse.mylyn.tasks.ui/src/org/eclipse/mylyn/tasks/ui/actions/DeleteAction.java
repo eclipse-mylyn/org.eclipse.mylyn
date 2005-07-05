@@ -16,9 +16,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaQueryCategory;
+import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarImages;
@@ -42,48 +42,79 @@ public class DeleteAction extends Action {
 	}
 	
 	@Override
-	public void run() {     
-        MylarPlugin.getDefault().actionObserved(this);
-	    boolean deleteConfirmed = MessageDialog.openQuestion(
-	            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-	            "Confirm delete", 
-	            "Delete selected item?");
-	    if (!deleteConfirmed) { 
-	        return;
-	    } else {
-	        Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
-	        if (selectedObject instanceof Task) {
-				MylarTasksPlugin.getTaskListManager().deleteTask((Task)selectedObject);
-				MylarPlugin.getTaskscapeManager().taskDeleted(((Task)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+	public void run() {
+		MylarPlugin.getDefault().actionObserved(this);
+		Object selectedObject = ((IStructuredSelection) this.view.getViewer()
+				.getSelection()).getFirstElement();
+		if (selectedObject instanceof ITask) {
+			ITask task = (ITask) selectedObject;
+			if (task.isActive()) {
+				MessageDialog.openError(Workbench.getInstance()
+						.getActiveWorkbenchWindow().getShell(), "Delete failed",
+						"Task must be deactivated in order to delete.");
+				return;
+			}
+			
+			String message = "";
+			if (selectedObject instanceof BugzillaTask) {
+				message = "Remove this report from the task list, and discard any task context or local notes?";
+			} else {
+				message = "Delete the selected task and discard task context?";
+			}					
+			boolean deleteConfirmed = MessageDialog.openQuestion(
+		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		            "Confirm delete", message);
+			if (!deleteConfirmed) 
+				return;
+									
+			MylarTasksPlugin.getTaskListManager().deleteTask(task);
+			MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
+			IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+
+			// if we couldn't get the page, get out of here
+			if (page == null)
+				return;
+			try {
+				this.view.closeTaskEditors((ITask) selectedObject, page);
+			} catch (Exception e) {
+				MylarPlugin.log(e, " deletion failed");
+			}
+		} else if (selectedObject instanceof TaskCategory) {
+			boolean deleteConfirmed = MessageDialog.openQuestion(
+		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		            "Confirm delete", 
+		            "Delete the selected category and all contained tasks?");
+			if (!deleteConfirmed) 
+				return;
+			
+			TaskCategory cat = (TaskCategory) selectedObject;
+			for (ITask task : cat.getChildren()) {
+				MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
 				IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				
-				// if we couldn't get the page, get out of here
-				if (page == null)
-					return;
-				try{
-	                this.view.closeTaskEditors((ITask)selectedObject, page);
-	            }catch(Exception e){
-	            	MylarPlugin.log(e, " deletion failed");
-	            }
-	        } else if (selectedObject instanceof TaskCategory) {
-	        	TaskCategory cat = (TaskCategory) selectedObject;
-	        	for (ITask task : cat.getChildren()) {
-	        		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
-	        		IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();    					
-					if (page == null)
-						return;
-					try{
-	                    this.view.closeTaskEditors(task, page);
-	                }catch(Exception e){
-	                	MylarPlugin.log(e, " deletion failed");
-	                }
-	        	}
-	        	MylarTasksPlugin.getTaskListManager().deleteCategory((TaskCategory)selectedObject);
-	        }  else if (selectedObject instanceof BugzillaQueryCategory) {
-	        	BugzillaQueryCategory cat = (BugzillaQueryCategory) selectedObject;
-	        	MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
-	        }
-	    }
-	    this.view.getViewer().refresh();
+				if (page != null) {
+					try {
+						this.view.closeTaskEditors(task, page);
+					} catch (Exception e) {
+						MylarPlugin.log(e, " deletion failed");
+					}
+				}
+			}
+			MylarTasksPlugin.getTaskListManager().deleteCategory((TaskCategory) selectedObject);
+		} else if (selectedObject instanceof BugzillaQueryCategory) {
+			boolean deleteConfirmed = MessageDialog.openQuestion(
+		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		            "Confirm delete", 
+		            "Delete the selected query and all contained tasks?");
+			if (!deleteConfirmed) 
+				return;
+			BugzillaQueryCategory cat = (BugzillaQueryCategory) selectedObject;
+			MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
+		} else {
+			MessageDialog.openError(Workbench.getInstance()
+					.getActiveWorkbenchWindow().getShell(), "Delete failed",
+					"Nothing selected.");
+			return;
+		}
+		this.view.getViewer().refresh();
 	}
 }

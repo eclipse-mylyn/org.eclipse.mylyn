@@ -76,6 +76,9 @@ public class TaskList implements Serializable {
     }
     
     public void deleteTask(ITask task) {
+    	if (task instanceof BugzillaTask) {
+    		((BugzillaTask)task).removeReport();
+    	}
     	boolean deleted = deleteTaskHelper(rootTasks, task);
     	if (!deleted) {
 			for (TaskCategory cat : getTaskCategories()) {

@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaHit;
@@ -20,6 +21,7 @@ import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -42,11 +44,37 @@ public class ClearContextAction extends Action {
         MylarPlugin.getDefault().actionObserved(this);
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    if (selectedObject != null && selectedObject instanceof ITask) {
+	    	ITask task = (ITask) selectedObject;
+	    	if (task.isActive()) {
+	    		MessageDialog.openError(Workbench.getInstance()
+						.getActiveWorkbenchWindow().getShell(), "Clear context failed",
+						"Task must be deactivated before clearing task context.");
+				return;
+	    	}
+	    	boolean deleteConfirmed = MessageDialog.openQuestion(
+		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		            "Confirm clear context", 
+		            "Clear context for the selected task?");
+			if (!deleteConfirmed) 
+				return;
+			
 	    	MylarPlugin.getTaskscapeManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
 	    	this.view.getViewer().refresh();
 	    } else if (selectedObject != null && selectedObject instanceof BugzillaHit) {
 	    	BugzillaTask task = ((BugzillaHit)selectedObject).getAssociatedTask();
 	    	if(task != null){
+	    		if (task.isActive()) {
+		    		MessageDialog.openError(Workbench.getInstance()
+							.getActiveWorkbenchWindow().getShell(), "Clear context failed",
+							"Task must be deactivated before clearing task context.");
+					return;
+		    	}
+		    	boolean deleteConfirmed = MessageDialog.openQuestion(
+			            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+			            "Confirm clear context", 
+			            "Clear context for the selected task?");
+				if (!deleteConfirmed) 
+					return;
 	    		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
 	    	}
 	    	this.view.getViewer().refresh();

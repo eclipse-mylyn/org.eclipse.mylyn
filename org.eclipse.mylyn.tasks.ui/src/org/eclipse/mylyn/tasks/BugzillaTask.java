@@ -447,6 +447,17 @@ public class BugzillaTask extends Task {
 	        });
 	    }	    
     }
+    
+    public void removeReport() {
+    	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
+    	int location = offlineReports.find(getBugId(getHandle()));
+    	if(location != -1){
+	    	IBugzillaBug tmpBugReport = offlineReports.elements().get(location);
+	    	List<IBugzillaBug> l = new ArrayList<IBugzillaBug>(1);
+	    	l.add(tmpBugReport);
+	    	offlineReports.remove(l);
+    	}
+    }
 
     public static String getServerName(String handle) {
 		int index = handle.lastIndexOf('-'); 

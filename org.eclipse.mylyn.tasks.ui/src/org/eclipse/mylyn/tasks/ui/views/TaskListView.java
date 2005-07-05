@@ -971,31 +971,38 @@ public class TaskListView extends ViewPart {
 				delete.setEnabled(false);
 				refreshQuery.setEnabled(false);
 			} else if(sel instanceof BugzillaTask){
+				clearSelectedTaskscapeAction.setEnabled(true);
 				completeTask.setEnabled(false);
 				incompleteTask.setEnabled(false);
+				moveTaskToRoot.setEnabled(true);
+				delete.setEnabled(true);
 				refreshQuery.setEnabled(false);
 			} else if(sel instanceof AbstractCategory){
 				clearSelectedTaskscapeAction.setEnabled(false);
-				moveTaskToRoot.setEnabled(false);
 				completeTask.setEnabled(false);
 				incompleteTask.setEnabled(false);
+				moveTaskToRoot.setEnabled(false);
+				delete.setEnabled(true);
 				if (sel instanceof BugzillaQueryCategory) {
 					refreshQuery.setEnabled(true);
 				} else {
 					refreshQuery.setEnabled(false);
 				}
+				//delete.setEnabled(true);
 			} else {
-				delete.setEnabled(true);
-				moveTaskToRoot.setEnabled(true);
+				clearSelectedTaskscapeAction.setEnabled(true);
 				completeTask.setEnabled(true);
 				incompleteTask.setEnabled(true);
-				clearSelectedTaskscapeAction.setEnabled(true);
+				moveTaskToRoot.setEnabled(true);
+				delete.setEnabled(true);
 				refreshQuery.setEnabled(false);
 			}			
 		}else {
-			delete.setEnabled(true);
-			moveTaskToRoot.setEnabled(true);
 			clearSelectedTaskscapeAction.setEnabled(false);
+			completeTask.setEnabled(false);
+			incompleteTask.setEnabled(false);
+			moveTaskToRoot.setEnabled(false);
+			delete.setEnabled(false);
 			refreshQuery.setEnabled(false);
 		}
     }
