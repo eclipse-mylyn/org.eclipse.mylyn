@@ -70,15 +70,16 @@ public class InteractionEvent implements Serializable {
         }
     }
 
-    private final Kind kind; // TODO: externalize as string
-    private final Date date;
-    private final Date endDate;
-    private final String originId;
-    private final String structureKind;
-    private final String structureHandle;
-    private final String navigation;
-    private final String delta;
-    private final float interestContribution;
+    /* TODO: these should be final, XStream on JRockit gets confused bug#102786 */
+    private Kind kind; 
+    private Date date;
+    private Date endDate;
+    private String originId;
+    private String structureKind;
+    private String structureHandle;
+    private String navigation;
+    private String delta;
+    private float interestContribution;
 
     public InteractionEvent(Kind kind, String structureKind, String handle, String originId) {
         this(kind, structureKind, handle, originId, 1f); // default contribution
