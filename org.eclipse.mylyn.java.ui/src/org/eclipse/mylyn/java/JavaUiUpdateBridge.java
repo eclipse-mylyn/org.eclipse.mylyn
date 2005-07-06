@@ -138,7 +138,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
     }
     
     private boolean suppressJavaModelAddition(IJavaElement lastElement, PackageExplorerPart explorer) {
-    	return explorer != null && explorer.getTreeViewer().testFindItem(lastElement) != null; // HACK: use more sensible method
+    	return lastElement != null && explorer != null && explorer.getTreeViewer().testFindItem(lastElement) != null; // HACK: use more sensible method
     }
     
     public void interestChanged(ITaskscapeNode node) {
