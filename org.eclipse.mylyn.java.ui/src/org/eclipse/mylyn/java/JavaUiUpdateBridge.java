@@ -96,7 +96,6 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
      * TODO: currently punts if there was something temporarily raised
      */
     public void interestChanged(List<ITaskscapeNode> nodes) {
-//        if (!MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) return;
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
             final IJavaElement raisedElement = JavaCore.create(MylarPlugin.getTaskscapeManager().getTempRaisedHandle());
             final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
@@ -112,32 +111,34 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
             IJavaElement lastElement = JavaCore.create(lastNode.getElementHandle());            
             
             PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-        	if (packageExplorer != null && lastElement != null) { // HACK: use a more reasoanble method
-                if (packageExplorer.getTreeViewer().testFindItem(lastElement) == null) {
-		            for (ITaskscapeNode node : nodes) {
-		                IJavaElement element = JavaCore.create(node.getElementHandle());
-		                if (element != null && element.exists()) {
-		                    if (node.getDegreeOfInterest().isInteresting()) {
-		                        fireModelUpdate(element, ChangeKind.ADDED);
-		                    } 
-		                }
-		            }
-                } else if (lastElement != null) {
-                	if (!lastNode.getDegreeOfInterest().isInteresting()) {
-                		if (Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof PackageExplorerPart) {
-                			if (FilterPackageExplorerAction.getDefault() != null && FilterPackageExplorerAction.getDefault().isChecked()) {
-                				fireModelUpdate(lastElement, ChangeKind.REMOVED);
-                			}
-                		} else {
-                			fireModelUpdate(lastElement, ChangeKind.REMOVED);
-                		}
-                    }
+            if (!suppressJavaModelAddition(lastElement, packageExplorer)) {
+	            for (ITaskscapeNode node : nodes) {
+	                IJavaElement element = JavaCore.create(node.getElementHandle());
+	                if (element != null && element.exists()) {
+	                    if (node.getDegreeOfInterest().isInteresting()) {
+	                        fireModelUpdate(element, ChangeKind.ADDED);
+	                    } 
+	                }
+	            }
+            } else if (lastElement != null) {
+            	if (!lastNode.getDegreeOfInterest().isInteresting()) {
+            		if (Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof PackageExplorerPart) {
+            			if (FilterPackageExplorerAction.getDefault() != null && FilterPackageExplorerAction.getDefault().isChecked()) {
+            				fireModelUpdate(lastElement, ChangeKind.REMOVED);
+            			}
+            		} else {
+            			fireModelUpdate(lastElement, ChangeKind.REMOVED);
+            		}
                 }
-        	}
-            if (lastElement != null) {
+            }
+            if (lastElement != null && packageExplorer != null && packageExplorer.getTreeViewer().getControl().isVisible()) {
             	revealInPackageExplorer(lastElement);
             }
         }
+    }
+    
+    private boolean suppressJavaModelAddition(IJavaElement lastElement, PackageExplorerPart explorer) {
+    	return explorer != null && explorer.getTreeViewer().testFindItem(lastElement) != null; // HACK: use more sensible method
     }
     
     public void interestChanged(ITaskscapeNode node) {

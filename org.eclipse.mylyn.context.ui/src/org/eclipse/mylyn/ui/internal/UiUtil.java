@@ -67,16 +67,16 @@ public class UiUtil {
         return null;
     }
     
-    public static void refreshProblemsView() {
-        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() { 
-                TableViewer problemsTableView = UiUtil.getProblemViewFromActivePerspective();
-                if (problemsTableView != null && problemsTableView.getTable().isVisible() && !problemsTableView.getTable().isDisposed()) {
-                    problemsTableView.refresh();
-                } 
-            }
-        });   
-    }
+//    public static void refreshProblemsView() {
+//        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//            public void run() { 
+//                TableViewer problemsTableView = UiUtil.getProblemViewFromActivePerspective();
+//                if (problemsTableView != null && problemsTableView.getTable().isVisible() && !problemsTableView.getTable().isDisposed()) {
+//                    problemsTableView.refresh();
+//                } 
+//            }
+//        });   
+//    }
     
 //    public static String getFilterStatisticsDecoration(IParent parent) {
 //        IJavaElement[] children;

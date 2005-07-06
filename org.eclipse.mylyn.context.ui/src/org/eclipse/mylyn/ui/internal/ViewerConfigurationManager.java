@@ -31,7 +31,7 @@ import org.eclipse.ui.internal.Workbench;
  * 
  * @author Mik Kersten
  */
-public class MylarViewerManager implements IPartListener, IPageListener {
+public class ViewerConfigurationManager implements IPartListener, IPageListener {
     
 	public void partActivated(IWorkbenchPart part) {
 //        if (part instanceof IEditorPart) {

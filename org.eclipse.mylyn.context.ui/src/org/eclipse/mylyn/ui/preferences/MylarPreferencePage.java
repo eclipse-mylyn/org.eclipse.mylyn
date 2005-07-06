@@ -111,7 +111,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
     private IntegerFieldEditor userStudyId;
     
     private BooleanFieldEditor closeOnDeactivate;
-    private BooleanFieldEditor refreshQueryOnStartup;
+//    private BooleanFieldEditor refreshQueryOnStartup;
     
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since
@@ -281,7 +281,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, true);
 		closeOnDeactivate.load();
 //		getPreferenceStore().setValue(MylarPlugin.REFRESH_QUERIES, false);
-		refreshQueryOnStartup.load();
+//		refreshQueryOnStartup.load();
 		
 		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();				
 		contentProvider = new HighlighterContentProvider();
@@ -886,9 +886,9 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		addField(closeOnDeactivate);
 		
 //		refreshQueryOnStartup = new BooleanFieldEditor(MylarPlugin.REFRESH_QUERIES, "Automatically refresh Bugzilla reports and queries on startup", browseComposite);
-		refreshQueryOnStartup.setPreferenceStore(getPreferenceStore());
-		refreshQueryOnStartup.load();
-		addField(refreshQueryOnStartup);
+//		refreshQueryOnStartup.setPreferenceStore(getPreferenceStore());
+//		refreshQueryOnStartup.load();
+//		addField(refreshQueryOnStartup);
 	}
 	
     @Override

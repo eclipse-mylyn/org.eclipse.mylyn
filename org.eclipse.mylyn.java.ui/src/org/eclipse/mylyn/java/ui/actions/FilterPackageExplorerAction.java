@@ -26,6 +26,7 @@ public class FilterPackageExplorerAction extends AbstractInterestFilterAction {
 	
 	public FilterPackageExplorerAction() {
 		super(new InterestFilter());
+		super.setViewerIsSelfManaged(true);
 		INSTANCE = this;
 	}
 	

@@ -25,7 +25,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.resources.ResourceSelectionMonitor;
@@ -33,10 +32,10 @@ import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.ui.actions.FilterNavigatorAction;
 import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
-import org.eclipse.mylar.ui.internal.MylarViewerManager;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
-import org.eclipse.mylar.ui.internal.UiUpdateListener;
+import org.eclipse.mylar.ui.internal.UiUpdateManager;
 import org.eclipse.mylar.ui.internal.UiUtil;
+import org.eclipse.mylar.ui.internal.ViewerConfigurationManager;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
 import org.eclipse.mylar.ui.internal.views.ProblemsListInterestFilter;
@@ -82,7 +81,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();
 
-    private MylarViewerManager viewerManager = new MylarViewerManager();
+    private ViewerConfigurationManager viewerManager = new ViewerConfigurationManager();
     
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
 
@@ -145,7 +144,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         
     };
     
-    protected ITaskscapeListener UI_UPDATE_LISTENER = new UiUpdateListener();
+    protected UiUpdateManager uiUpdateManager = new UiUpdateManager();
     
     public MylarUiPlugin() {
 		super();
@@ -166,7 +165,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-                MylarPlugin.getTaskscapeManager().addListener(UI_UPDATE_LISTENER);
+                MylarPlugin.getTaskscapeManager().addListener(uiUpdateManager);
                 
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerManager);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
@@ -413,5 +412,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 			return null;
 		else
 			return workingSetUpdaters.get(0);
+	}
+
+	public UiUpdateManager getUiUpdateManager() {
+		return uiUpdateManager;
 	}
 }

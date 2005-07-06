@@ -85,11 +85,13 @@ public class LandmarkMarkerManager implements ITaskscapeListener {
                     IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
                         public void run(IProgressMonitor monitor) throws CoreException {
                             IMarker marker = resource.createMarker("org.eclipse.mylar.ui.landmark");//MylarUiPlugin.MARKER_LANDMARK);
-                            marker.setAttribute(IMarker.CHAR_START, range.getOffset());
-                            marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
-                            marker.setAttribute(IMarker.MESSAGE, "Mylar Landmark"); 
-                            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO); 
-                            markerMap.put(node, marker.getId());
+                            if (marker != null) {
+	                            marker.setAttribute(IMarker.CHAR_START, range.getOffset());
+	                            marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
+	                            marker.setAttribute(IMarker.MESSAGE, "Mylar Landmark"); 
+	                            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO); 
+	                            markerMap.put(node, marker.getId());
+                            }
                         }
                     };
                     if (resource != null) resource.getWorkspace().run(runnable, null);

@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IViewActionDelegate;
@@ -32,6 +33,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
     public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";
     protected String prefId;
     private IAction initAction = null;
+    private boolean isSelfManaged = false;
     
     protected ViewerFilter interestFilter;
     
@@ -69,11 +71,14 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
         action.setChecked(on);
         if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
 
-        if (getViewer() != null) {
+        StructuredViewer viewer = getViewer();
+        if (viewer != null) {
 			if (on) {
 				installInterestFilter(getViewer());
+				if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
 			} else {
 				uninstallInterestFilter(getViewer());
+				if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
 			}
 			refreshViewer();
         } else {
@@ -122,6 +127,10 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
 
 	public void runWithEvent(IAction action, Event event) {
 		run(action);
+	}
+
+	public void setViewerIsSelfManaged(boolean isSelfManaged) {
+		this.isSelfManaged = isSelfManaged;
 	}
 }
 

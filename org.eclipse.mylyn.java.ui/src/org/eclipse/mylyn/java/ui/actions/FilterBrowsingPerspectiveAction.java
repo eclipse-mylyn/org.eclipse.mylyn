@@ -17,6 +17,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.AbstractInterestFilterAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -29,9 +30,9 @@ import org.eclipse.ui.internal.Workbench;
  * 
  * @author Shawn Minto
  */
-public class FilterBrowsingAction extends AbstractInterestFilterAction implements IWorkbenchWindowActionDelegate{
+public class FilterBrowsingPerspectiveAction extends AbstractInterestFilterAction implements IWorkbenchWindowActionDelegate{
 
-	public static FilterBrowsingAction INSTANCE;
+	public static FilterBrowsingPerspectiveAction INSTANCE;
 	
 	private String[] viewNames = { 	"org.eclipse.jdt.ui.MembersView",
 									"org.eclipse.jdt.ui.PackagesView",
@@ -43,12 +44,15 @@ public class FilterBrowsingAction extends AbstractInterestFilterAction implement
 									"org.eclipse.jdt.internal.ui.browsing.TypesView"
 			};
 	
-	public FilterBrowsingAction() {
+	public FilterBrowsingPerspectiveAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
 		prefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
 		
+	/**
+	 * TODO: refactor duplicate behavior into super class
+	 */
 	@Override
     protected void valueChanged(IAction action, final boolean on, boolean store) {
         action.setChecked(on);
@@ -60,8 +64,10 @@ public class FilterBrowsingAction extends AbstractInterestFilterAction implement
         	if(viewer == null) continue;
         	if (on) {
 				installInterestFilter(viewer);
+				MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
 			} else {
 				uninstallInterestFilter(viewer);
+				MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
 			}
 
         }
@@ -83,7 +89,7 @@ public class FilterBrowsingAction extends AbstractInterestFilterAction implement
         }
 	}
 
-	public static FilterBrowsingAction getDefault() {
+	public static FilterBrowsingPerspectiveAction getDefault() {
 		return INSTANCE;
 	}
 

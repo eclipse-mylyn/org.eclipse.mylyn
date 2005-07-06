@@ -89,12 +89,12 @@
             label="Mylar Java Browsing"
             visible="false"> 
 	    <action
-           class="org.eclipse.mylar.java.ui.actions.FilterBrowsingAction"
-           id="org.eclipse.mylar.java.ui.actions.FilterBrowsingAction"
+           class="org.eclipse.mylar.java.ui.actions.FilterBrowsingPerspectiveAction"
+           id="org.eclipse.mylar.java.ui.actions.FilterBrowsingPerspectiveAction"
            style="toggle"
-	       label="Filter uninteresting" 
-	       icon="icons/elcl16/interest-filtering.gif"
-	       tooltip="Filter uninteresting"
+	       label="Filter Uninteresting" 
+	       icon="icons/elcl16/interest-filtering-browsing.gif"
+	       tooltip="Filter Packages, Types, and Members views"
 	       toolbarPath="mylar"
 	       enablesFor="*">
 	    </action>
