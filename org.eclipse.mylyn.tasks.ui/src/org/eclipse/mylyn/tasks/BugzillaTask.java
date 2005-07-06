@@ -437,9 +437,9 @@ public class BugzillaTask extends Task {
 	    	offlineReports.remove(l);
     	}
 	    offlineReports.add(bugReport);
-	    
-	    if(refresh){
-		    final IWorkbench workbench = PlatformUI.getWorkbench();
+
+	    final IWorkbench workbench = PlatformUI.getWorkbench();
+	    if (refresh && !workbench.getDisplay().isDisposed()) {
 	        workbench.getDisplay().asyncExec(new Runnable() {
 	            public void run() {
 	            	OfflineView.refresh();
