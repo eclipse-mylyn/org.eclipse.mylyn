@@ -13,7 +13,6 @@ package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
@@ -40,7 +39,7 @@ public class CreateBugzillaTaskAction extends Action {
 	
 	@Override
 	public void run() {
-        MylarPlugin.getDefault().actionObserved(this);
+//        MylarPlugin.getDefault().actionObserved(this);
 	    String bugIdString = this.view.getBugIdFromUser();
 	    int bugId = -1;
 	    try {

@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -37,7 +36,7 @@ public class CreateCategoryAction extends Action {
     
     @Override
     public void run() {
-        MylarPlugin.getDefault().actionObserved(this);
+//        MylarPlugin.getDefault().actionObserved(this);
         String[] input = this.view.getLabelPriorityFromUser("Category");
         if (input == null) return;
         String label = input[0];

@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaHit;
 import org.eclipse.mylar.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.tasks.ITask;
@@ -47,7 +46,7 @@ public class OpenTaskEditorAction extends Action {
 
 	@Override
 	public void run() {
-        MylarPlugin.getDefault().actionObserved(this);
+//        MylarPlugin.getDefault().actionObserved(this);
 	    ISelection selection = this.view.getViewer().getSelection();
 	    Object obj = ((IStructuredSelection)selection).getFirstElement();
 	    if (obj instanceof ITask) {

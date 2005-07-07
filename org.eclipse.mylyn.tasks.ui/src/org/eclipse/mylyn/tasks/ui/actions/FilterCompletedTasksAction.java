@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarImages;
@@ -36,7 +35,7 @@ public class FilterCompletedTasksAction extends Action {
 	}
 	@Override
 	public void run() {
-        MylarPlugin.getDefault().actionObserved(this);
+//        MylarPlugin.getDefault().actionObserved(this);
 		MylarTasksPlugin.getDefault().setFilterCompleteMode(isChecked());
 		if (isChecked()) {
 			this.view.getViewer().addFilter(this.view.getCompleteFilter());

@@ -47,7 +47,7 @@ public class CreateBugzillaQueryCategoryAction extends Action {
     public void run() {
 
     	// ask the user for the query string and a name
-        MylarPlugin.getDefault().actionObserved(this);
+//        MylarPlugin.getDefault().actionObserved(this);
     	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
     	if(sqd.open() == Dialog.OK){
         	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl());

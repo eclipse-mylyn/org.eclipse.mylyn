@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.tasks.BugzillaTask;
@@ -60,7 +59,7 @@ public class RefreshBugzillaReportsAction extends Action {
 
 	@Override
 	public void run() {
-		MylarPlugin.getDefault().actionObserved(this);
+//		MylarPlugin.getDefault().actionObserved(this);
 		// TODO background?
 		// perform the update in an operation so that we get a progress monitor
 		// update the structure bridge cache with the reference provider cached

@@ -13,7 +13,6 @@ package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarImages;
@@ -36,7 +35,7 @@ public class MarkTaskIncompleteAction extends Action {
 	}
 	@Override
 	public void run() {         
-        MylarPlugin.getDefault().actionObserved(this);
+//        MylarPlugin.getDefault().actionObserved(this);
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    if (selectedObject instanceof Task){ 
 	    	((Task)selectedObject).setCompleted(false);                	

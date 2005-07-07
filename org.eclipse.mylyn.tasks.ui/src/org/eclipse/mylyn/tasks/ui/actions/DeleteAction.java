@@ -43,7 +43,7 @@ public class DeleteAction extends Action {
 	
 	@Override
 	public void run() {
-		MylarPlugin.getDefault().actionObserved(this);
+//		MylarPlugin.getDefault().actionObserved(this);
 		Object selectedObject = ((IStructuredSelection) this.view.getViewer()
 				.getSelection()).getFirstElement();
 		if (selectedObject instanceof ITask) {
