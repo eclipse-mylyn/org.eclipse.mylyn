@@ -93,8 +93,12 @@ public class InteractionEvent implements Serializable {
         this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); // default contribution
     } 
 
-    public InteractionEvent(String originId, String delta) {
-        this(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default contribution
+    public static InteractionEvent commandObserved(String originId, String delta) {
+        return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1); 
+    }
+    
+    public static InteractionEvent preferenceObserved(String originId, String delta) {
+        return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default contribution
     }
     
     public InteractionEvent(Kind kind, String structureKind, String handle, String originId, float interestContribution) {
@@ -152,7 +156,12 @@ public class InteractionEvent implements Serializable {
     
     @Override
     public String toString() {
-        return "(date: " + date + ", kind: " + kind + ", sourceHandle: " + structureHandle + ")";
+        return "(date: " + date 
+        	+ ", kind: " 
+        	+ kind + ", sourceHandle: "
+        	+ structureHandle 
+        	+ ", origin: " + originId
+        	+ ", delta: " + delta + ")";
     }
 
     public String getStructureHandle() {

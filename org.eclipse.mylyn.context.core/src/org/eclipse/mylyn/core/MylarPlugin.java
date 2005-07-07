@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.model.TaskscapeManager;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
@@ -334,9 +333,9 @@ public class MylarPlugin extends AbstractUIPlugin {
 		return logStream;
 	}
 
-	public void actionObserved(IAction action){
-		for (IActionListener listener : actionListeners) listener.actionObserved(action);
-	}
+//	public void actionObserved(IAction action){
+//		for (IActionListener listener : actionListeners) listener.actionObserved(action);
+//	}
 
 	public void addActionListener(IActionListener listener) {
 		actionListeners.add(listener);
