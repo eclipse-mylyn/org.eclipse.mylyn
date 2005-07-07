@@ -47,6 +47,9 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     private BugzillaContentProvider bugzillaProvider;
     
     public static final String REFRESH_QUERIES = "org.eclipse.mylar.tasks.queries.refresh";
+    public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
+    public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasks.report.open.internal";
+    public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasks.report.open.external";
     
     public static final String FILE_EXTENSION = ".xml";
     public static final String TASK_ID = "org.eclipse.mylar.tasks.userid";
@@ -62,6 +65,11 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     
 	private ResourceBundle resourceBundle;
 
+	public enum Report_Open_Mode {
+		EDITOR,
+		INTERNAL_BROWSER,
+		EXTERNAL_BROWSER;
+	}
 	public enum Priority_Level {
         P1,
         P2,
@@ -165,6 +173,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 	public MylarTasksPlugin() {
 		super();
 		plugin = this;
+		initializeDefaultPreferences(getPrefs());
 	}
 
     public void earlyStartup() {
@@ -183,12 +192,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
                 
                 Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
                 MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-                
-                getPrefs().setDefault(SHOW_P1_MODE, true);
-                getPrefs().setDefault(SHOW_P2_MODE, true);
-                getPrefs().setDefault(SHOW_P3_MODE, true);
-                getPrefs().setDefault(SHOW_P4_MODE, true);
-                getPrefs().setDefault(SHOW_P5_MODE, true);                
+                                
                 if (window != null) {
                     // create a new bridge and initialize it
                     bridge = new BugzillaMylarBridge();
@@ -217,6 +221,19 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 		resourceBundle = null;
 	}
 
+    @Override
+    protected void initializeDefaultPreferences(IPreferenceStore store) {
+    	store.setDefault(SHOW_P1_MODE, true);
+    	store.setDefault(SHOW_P2_MODE, true);
+    	store.setDefault(SHOW_P3_MODE, true);
+    	store.setDefault(SHOW_P4_MODE, true);
+    	store.setDefault(SHOW_P5_MODE, true);
+    	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);
+    	store.setDefault(REFRESH_QUERIES, false);
+    	store.setDefault(REPORT_OPEN_EDITOR, true);
+    	store.setDefault(REPORT_OPEN_INTERNAL, false);
+    	store.setDefault(REPORT_OPEN_EXTERNAL, false);
+    }
     /**
      * Get the bridge for this plugin
      * 
@@ -362,7 +379,17 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-		public boolean refreshOnStartUpEnabled() {
+	public boolean refreshOnStartUpEnabled() {
 		return getPrefs().getBoolean(REFRESH_QUERIES);
+	}
+	
+	public Report_Open_Mode getReportMode() {
+		if (getPrefs().getBoolean(REPORT_OPEN_EDITOR)) {
+			return Report_Open_Mode.EDITOR;
+		} else if (getPrefs().getBoolean(REPORT_OPEN_INTERNAL)) {
+			return Report_Open_Mode.INTERNAL_BROWSER;
+		} else {
+			return Report_Open_Mode.EXTERNAL_BROWSER;
+		} 
 	}
 }

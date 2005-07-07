@@ -14,6 +14,7 @@
 package org.eclipse.mylar.tasks;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
@@ -52,6 +53,8 @@ public class Task implements ITask, ITaskListElement {
     private RelatedLinks links = new RelatedLinks();
     private TaskCategory parentCategory = null;
     
+    private Date activeStart = null;
+    private long elapsed;
     /**
      * null if root
      */
@@ -111,7 +114,21 @@ public class Task implements ITask, ITaskListElement {
      * Package visible in order to prevent sets that don't update the index.
      */
     public void setActive(boolean active) {
+    	if (active) {
+    		activeStart = new Date();
+    	} else {    		
+    		calculateElapsedTime();
+    		activeStart = null;
+    	}    	
         this.active = active;
+    }
+    
+    private void calculateElapsedTime() {
+    	if (activeStart == null) 
+    		return;
+    	long elapsedMin = new Date().getTime() - activeStart.getTime();
+    	long min = 1000*60;
+    	this.elapsed += elapsedMin / min;
     }
     
     public boolean isActive() {
@@ -239,8 +256,9 @@ public class Task implements ITask, ITaskListElement {
 	}
 
 	public String getElapsedTime() {
-		if (elapsedTime == null) {
-			elapsedTime = "";
+		if (elapsedTime == "" && activeStart != null) {
+			calculateElapsedTime();
+			
 		}
 		return elapsedTime;
 	}

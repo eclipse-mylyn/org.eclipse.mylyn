@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugzilla.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -393,5 +394,22 @@ public class BugzillaRepository
 		model.attributes = attributes;
 	}
 	
-	
+	public static String getBugUrl(int id) {		
+		String url = BugzillaPlugin.getDefault().getServerName() + "/show_bug.cgi?id=" + id;
+		try {
+			if (BugzillaPreferences.getUserName() != null
+					&& !BugzillaPreferences.getUserName().equals("")
+					&& BugzillaPreferences.getPassword() != null
+					&& !BugzillaPreferences.getPassword().equals("")) {
+
+				url += "&GoAheadAndLogIn=1&Bugzilla_login="
+						+ URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8")
+						+ "&Bugzilla_password="
+						+ URLEncoder.encode(BugzillaPreferences.getPassword(),"UTF-8");
+			}
+		} catch (UnsupportedEncodingException e) {		
+			return "";
+		}
+		return url;
+	}
 }

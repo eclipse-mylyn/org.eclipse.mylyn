@@ -31,4 +31,12 @@
   
   <extension point="org.eclipse.ui.commands">
    </extension>
+  <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="Task"
+         class="org.eclipse.mylar.tasks.ui.preferences.MylarTaskPreferencePage"
+         id="MylarTaskPreferences"
+         category="MylarPreferences">
+      </page>  
+   </extension>
 </plugin>

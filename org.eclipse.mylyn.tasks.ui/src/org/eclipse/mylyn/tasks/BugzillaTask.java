@@ -479,4 +479,8 @@ public class BugzillaTask extends Task {
 	public Image getIcon() {
 		return MylarImages.getImage(MylarImages.TASK_BUGZILLA);
 	}
+	
+	public String getBugUrl() {
+		return BugzillaRepository.getBugUrl(getBugId(handle));
+	}
 }
