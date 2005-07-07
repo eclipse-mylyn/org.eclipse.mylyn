@@ -74,7 +74,7 @@ import org.eclipse.mylar.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasks.ui.actions.MoveTaskToRootAction;
 import org.eclipse.mylar.tasks.ui.actions.OpenTaskEditorAction;
-import org.eclipse.mylar.tasks.ui.actions.RefreshBugzillaQueryAction;
+import org.eclipse.mylar.tasks.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.tasks.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.ui.actions.TaskDeactivateAction;
@@ -146,7 +146,7 @@ public class TaskListView extends ViewPart {
 //    private FilterIncompleteTasksAction filterInCompleteTask;
     private PriorityDropDownAction filterOnPriority;
     private Action moveTaskToRoot; 
-    private RefreshBugzillaQueryAction refreshQuery;
+    private RefreshBugzillaAction refreshQuery;
     private PriorityFilter priorityFilter = new PriorityFilter();
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description" };
@@ -1040,7 +1040,7 @@ public class TaskListView extends ViewPart {
         filterCompleteTask = new FilterCompletedTasksAction(this);        
 //        filterInCompleteTask = new FilterIncompleteTasksAction();                        
         filterOnPriority = new PriorityDropDownAction();
-        refreshQuery = new RefreshBugzillaQueryAction(this);
+        refreshQuery = new RefreshBugzillaAction(this);
     }
 
     /**

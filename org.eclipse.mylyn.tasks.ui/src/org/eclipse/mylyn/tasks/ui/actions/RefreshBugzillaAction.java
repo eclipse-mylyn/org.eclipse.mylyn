@@ -29,14 +29,15 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Ken Sueda
  */
-public class RefreshBugzillaQueryAction extends Action {
-	public static final String ID = "org.eclipse.mylar.tasks.actions.refresh.bugquery";
+public class RefreshBugzillaAction extends Action {
+	
+	public static final String ID = "org.eclipse.mylar.tasks.actions.refresh.bugzilla";
 	
 	private final TaskListView view;
-	public RefreshBugzillaQueryAction(TaskListView view) {
+	public RefreshBugzillaAction(TaskListView view) {
 		this.view = view;
-		setText("Refresh Bugzilla Query");
-        setToolTipText("Refresh Bugzilla Query");
+		setText("Bugzilla Rrefresh");
+        setToolTipText("Bugzilla Refresh");
         setId(ID);
         setImageDescriptor(MylarImages.TASK_BUG_REFRESH);
 	}
@@ -51,7 +52,7 @@ public class RefreshBugzillaQueryAction extends Action {
 					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 						public void run() {
 							cat.refreshBugs();
-							RefreshBugzillaQueryAction.this.view.getViewer().refresh();
+							RefreshBugzillaAction.this.view.getViewer().refresh();
 						}
 					});
 				}
