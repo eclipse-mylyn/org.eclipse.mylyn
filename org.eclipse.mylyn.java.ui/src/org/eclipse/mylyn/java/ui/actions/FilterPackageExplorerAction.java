@@ -12,7 +12,9 @@
 package org.eclipse.mylar.java.ui.actions;
 
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.actions.AbstractInterestFilterAction;
@@ -23,6 +25,13 @@ import org.eclipse.mylar.ui.actions.AbstractInterestFilterAction;
 public class FilterPackageExplorerAction extends AbstractInterestFilterAction {
 
 	public static FilterPackageExplorerAction INSTANCE;
+	
+	public void init(IAction action) {
+		super.init(action);
+		if (super.isChecked()) {
+			((TreeViewer)getViewer()).expandAll();
+		}
+	}
 	
 	public FilterPackageExplorerAction() {
 		super(new InterestFilter());

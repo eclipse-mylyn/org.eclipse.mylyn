@@ -83,7 +83,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
                 MylarPlugin.getTaskscapeManager().addListener(new LandmarkMarkerManager());
                 MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
-                modelUpdateBridge.revealInteresting();
+//                modelUpdateBridge.revealInteresting();
                 
             	installEditorTracker(workbench);
 //            	MylarPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PREFERENCE_LISTENER);
