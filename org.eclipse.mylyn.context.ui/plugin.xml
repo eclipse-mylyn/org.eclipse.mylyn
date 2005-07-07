@@ -56,7 +56,7 @@
       <page
             name="Mylar"
             class="org.eclipse.mylar.ui.preferences.MylarPreferencePage"
-            id="Mylar preferences">
+            id="MylarPreferences">
       </page>  
    </extension>
  

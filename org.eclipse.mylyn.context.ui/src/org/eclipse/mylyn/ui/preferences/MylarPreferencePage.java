@@ -19,9 +19,8 @@ import java.util.Arrays;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
@@ -72,7 +71,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * 
  * @author Ken Sueda
  */
-public class MylarPreferencePage extends FieldEditorPreferencePage implements
+public class MylarPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage, SelectionListener, ICellEditorListener {
 
 	// Table
@@ -110,9 +109,6 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 
     private IntegerFieldEditor userStudyId;
     
-    private BooleanFieldEditor closeOnDeactivate;
-//    private BooleanFieldEditor refreshQueryOnStartup;
-    
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since
 	 * the tasklist plugin needs access to the values stored from the preference
@@ -120,7 +116,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	 *
 	 */
 	public MylarPreferencePage() {		
-		super(GRID);
+		super();
 		setPreferenceStore(MylarUiPlugin.getPrefs());		
 	}
 	
@@ -152,9 +148,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		browseComposite.setLayout(gl);
 		
 		new Label(entryTable, SWT.NONE);
-		createUserbooleanControl(entryTable);	
-		createTaskDirectoryControl(browseComposite);
-		        		
+		createTaskDirectoryControl(browseComposite);		        		
 		return entryTable;
 	}
 
@@ -193,7 +187,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	 */
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeOnDeactivate.getBooleanValue());
+//		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeOnDeactivate.getBooleanValue());
 //		getPreferenceStore().setValue(MylarTasksPlugin.REFRESH_QUERIES, refreshQueryOnStartup.getBooleanValue());
         int uidNum = -1;
         try{
@@ -276,20 +270,18 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	 */
 	@Override
 	public void performDefaults() {
-		super.performDefaults();
-      
-		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, true);
-		closeOnDeactivate.load();
-//		getPreferenceStore().setValue(MylarPlugin.REFRESH_QUERIES, false);
-//		refreshQueryOnStartup.load();
+		super.performDefaults();     
 		
 		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();				
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		
-		standard.setSelection(true);
-		lightened.setSelection(false);
-		darkened.setSelection(false);
+		standard.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarUiPlugin.GAMMA_SETTING_STANDARD));
+		lightened.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+		darkened.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarUiPlugin.GAMMA_SETTING_DARKENED));
 		
 		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 		String taskDirectory = rootPath.toString() + "/" +MylarPlugin.MYLAR_DIR_NAME;
@@ -699,14 +691,14 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 	/**
 	 * Helper method to build a labelled radio button.
 	 */
-	private Button createRadioButton(Composite parent, String text) {
-		Button button = new Button(parent, SWT.RADIO | SWT.LEFT
-				| SWT.IMAGE_COPY);
-		button.setText(text);
-		button.setVisible(true);
-		button.addSelectionListener(this);
-		return button;
-	}
+//	private Button createRadioButton(Composite parent, String text) {
+//		Button button = new Button(parent, SWT.RADIO | SWT.LEFT
+//				| SWT.IMAGE_COPY);
+//		button.setText(text);
+//		button.setVisible(true);
+//		button.addSelectionListener(this);
+//		return button;
+//	}
 	
 	/**
 	 * Helper method to build a labelled button.
@@ -800,15 +792,15 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		
 		gammaSettingComposite.setLayout(new RowLayout());
 		gammaSettingComposite.setText("Gamma Setting");
-		lightened = createRadioButton(gammaSettingComposite, "Lightened");
-		standard = createRadioButton(gammaSettingComposite, "Standard");
-		darkened = createRadioButton(gammaSettingComposite, "Darkened");
-		lightened.setSelection(getPreferenceStore().getBoolean(
-				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
-		standard.setSelection(getPreferenceStore().getBoolean(
-				MylarUiPlugin.GAMMA_SETTING_STANDARD));
-		darkened.setSelection(getPreferenceStore().getBoolean(
-				MylarUiPlugin.GAMMA_SETTING_DARKENED));
+		lightened = new Button(gammaSettingComposite, SWT.RADIO);
+		lightened.setText("Lightened");
+		lightened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+		standard = new Button(gammaSettingComposite, SWT.RADIO);
+		standard.setText("Standard");
+		standard.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_STANDARD));
+		darkened = new Button(gammaSettingComposite, SWT.RADIO);
+		darkened.setText("Darkened");
+		darkened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_DARKENED));		
 		return;
 	}
 	
@@ -824,7 +816,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 			uidNum = -1;
 		userStudyId.setEmptyStringAllowed(false);
 		userStudyId.setStringValue(uidNum + "");
-		addField(userStudyId);
+//		addField(userStudyId);
 		
 		String taskDirectory = getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
@@ -837,7 +829,7 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 		taskDirectoryEditor.setPreferenceStore(getPreferenceStore());
 		taskDirectoryEditor.setEmptyStringAllowed(false);
 		
-		addField(taskDirectoryEditor);
+//		addField(taskDirectoryEditor);
 		
 		createEmptySpace(parent, 1);
 		browse = createButton(parent, "Browse...");
@@ -866,33 +858,10 @@ public class MylarPreferencePage extends FieldEditorPreferencePage implements
 			}
 		});        
 
-	}
+	}	
 	
-	/**
-	 * adds user ID control
-	 */
-	private void createUserbooleanControl(Composite parent) {
-		
-		Composite browseComposite = new Composite(parent, SWT.NULL);
-		GridData gridData = new GridData (GridData.HORIZONTAL_ALIGN_FILL);
-		browseComposite.setLayoutData (gridData);
-		GridLayout gl = new GridLayout(1, false);
-		gl.verticalSpacing = 4;
-		browseComposite.setLayout(gl);
-		
-		closeOnDeactivate = new BooleanFieldEditor(MylarPlugin.CLOSE_EDITORS, "Close all editors automatically on task deactivation", browseComposite);
-		closeOnDeactivate.setPreferenceStore(getPreferenceStore());
-		closeOnDeactivate.load();
-		addField(closeOnDeactivate);
-		
-//		refreshQueryOnStartup = new BooleanFieldEditor(MylarPlugin.REFRESH_QUERIES, "Automatically refresh Bugzilla reports and queries on startup", browseComposite);
-//		refreshQueryOnStartup.setPreferenceStore(getPreferenceStore());
-//		refreshQueryOnStartup.load();
-//		addField(refreshQueryOnStartup);
-	}
-	
-    @Override
-    protected void createFieldEditors() {
-    	// no field editors to create
-    }
+//    @Override
+//    protected void createFieldEditors() {
+//    	// no field editors to create
+//    }
 }

@@ -150,15 +150,15 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 		super();
 		plugin = this;
         try {
-            resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.MylarUiPluginResources");
-            initializeHighlighters();
-            initializeDefaultPreferences(getPrefs());
-            initializeActions();
+            resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.MylarUiPluginResources");            
         } catch (MissingResourceException x) {
             resourceBundle = null;
         } catch (Throwable t) {
         	MylarPlugin.log(t, "plug-in init failed");      
         }
+        initializeHighlighters();
+        initializeDefaultPreferences(getPrefs());
+        initializeActions();
 	} 
 
     public void earlyStartup() {
