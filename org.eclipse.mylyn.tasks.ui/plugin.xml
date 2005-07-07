@@ -9,7 +9,7 @@
 
   <extension point="org.eclipse.ui.views">
 
-	  <view name="Mylar Tasks" 
+	  <view name="Mylar Task List" 
 	  	icon="icons/eview16/task-list.gif" 
 	  	category="org.eclipse.mylar" 
 	  	class="org.eclipse.mylar.tasks.ui.views.TaskListView" 
@@ -33,9 +33,9 @@
    </extension>
   <extension point="org.eclipse.ui.preferencePages">
       <page 
-         name="Task"
+         name="Task List"
          class="org.eclipse.mylar.tasks.ui.preferences.MylarTaskPreferencePage"
-         id="MylarTaskPreferences"
+         id="org.eclipse.mylar.tasks.ui.preferences"
          category="MylarPreferences">
       </page>  
    </extension>
