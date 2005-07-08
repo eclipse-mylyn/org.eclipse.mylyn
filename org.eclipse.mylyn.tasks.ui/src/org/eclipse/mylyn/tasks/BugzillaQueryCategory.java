@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.search.BugzillaSearchHit;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaCategorySearchOperation;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaResultCollector;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaCategorySearchOperation.ICategorySearchListener;
@@ -152,4 +152,13 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		this.url = url;
 	}
 	
+	public String getPriority() {
+		String highestPriority = "P5";
+		for (BugzillaHit hit : hits) {
+			if (highestPriority.compareTo(hit.getPriority()) > 0) {
+				highestPriority = hit.getPriority();
+			}
+		}
+		return highestPriority;
+	}
 }

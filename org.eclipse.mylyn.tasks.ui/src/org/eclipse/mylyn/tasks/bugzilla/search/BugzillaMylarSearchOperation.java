@@ -29,10 +29,10 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.search.BugzillaSearchEngine;
-import org.eclipse.mylar.bugzilla.search.BugzillaSearchHit;
-import org.eclipse.mylar.bugzilla.search.BugzillaSearchQuery;
-import org.eclipse.mylar.bugzilla.search.IBugzillaSearchOperation;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchEngine;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchQuery;
+import org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
@@ -458,7 +458,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchOperation#getStatus()
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation#getStatus()
      */
     public IStatus getStatus() throws LoginException {
         // if a LoginException was thrown while trying to search, throw this
@@ -469,7 +469,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchOperation#getImageDescriptor()
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation#getImageDescriptor()
      */
     public ImageDescriptor getImageDescriptor() {
         return null;
@@ -494,14 +494,14 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchOperation#getQuery()
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation#getQuery()
      */
     public BugzillaSearchQuery getQuery() {
         return query;
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchOperation#setQuery(org.eclipse.mylar.bugzilla.search.BugzillaSearchQuery)
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation#setQuery(org.eclipse.mylar.bugzilla.core.search.BugzillaSearchQuery)
      */
     public void setQuery(BugzillaSearchQuery newQuery) {
         this.query = newQuery;

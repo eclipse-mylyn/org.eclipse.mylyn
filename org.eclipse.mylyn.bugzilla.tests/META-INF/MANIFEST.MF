@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.ui.editors,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.mylar.bugzilla
+ org.eclipse.mylar.bugzilla.core
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Export-Package: org.eclipse.mylar.bugzilla.test

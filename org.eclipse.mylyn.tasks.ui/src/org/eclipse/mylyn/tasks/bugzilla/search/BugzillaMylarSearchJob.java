@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.IBugzillaConstants;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaMylarBridge;
 import org.eclipse.ui.PlatformUI;
 

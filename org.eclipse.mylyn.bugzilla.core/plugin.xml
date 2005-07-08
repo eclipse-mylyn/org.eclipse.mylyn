@@ -54,14 +54,14 @@
    </extension>
    <extension
          point="org.eclipse.search.searchPages"
-         id="org.eclipse.mylar.bugzilla.search.searchPage"
+         id="org.eclipse.mylar.bugzilla.core.search.searchPage"
          name="Bugzilla Search Page">
       <page
             label="Bugzilla Search"
             enabled="true"
             icon="icons/elcl16/bug-search.gif"
-            class="org.eclipse.mylar.bugzilla.search.BugzillaSearchPage"
-            id="org.eclipse.mylar.bugzilla.search.bugzillaSearchPage"/>
+            class="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchPage"
+            id="org.eclipse.mylar.bugzilla.core.search.bugzillaSearchPage"/>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -99,7 +99,7 @@
    		 point="org.eclipse.ui.preferencePages">
    	  <page
    	  		name="Bugzilla"
-   	  		class="org.eclipse.mylar.bugzilla.BugzillaPreferences"
+   	  		class="org.eclipse.mylar.bugzilla.core.BugzillaPreferences"
    	  		id="org.eclipse.mylar.bugzilla.bugzillaPreferences"/>
    </extension>
    <extension
@@ -114,8 +114,8 @@
          id="BugzillaSearchPage"
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
-            class="org.eclipse.mylar.bugzilla.search.BugzillaSearchResultView"
-            searchResultClass="org.eclipse.mylar.bugzilla.search.BugzillaSearchResult"
+            class="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResultView"
+            searchResultClass="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>
 

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tasks;
 
-import org.eclipse.mylar.bugzilla.BugzillaImages;
+import org.eclipse.mylar.bugzilla.core.BugzillaImages;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;

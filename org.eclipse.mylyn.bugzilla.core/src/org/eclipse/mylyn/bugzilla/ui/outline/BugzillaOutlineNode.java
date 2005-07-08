@@ -13,8 +13,8 @@ package org.eclipse.mylar.bugzilla.ui.outline;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.mylar.bugzilla.BugzillaImages;
 import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaImages;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugModel;

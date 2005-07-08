@@ -229,7 +229,7 @@ litigation.
    </requires>
 
    <plugin
-         id="org.eclipse.mylar.bugzilla"
+         id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
          version="0.3.0"

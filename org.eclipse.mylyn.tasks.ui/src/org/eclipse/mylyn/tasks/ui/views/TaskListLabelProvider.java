@@ -47,6 +47,9 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 			case 1:
 				return "";
 			case 2:
+				if (element instanceof AbstractCategory) {
+					return "";
+				}
 				return element.getPriority();
 			case 3:
 				return element.getDescription(true);

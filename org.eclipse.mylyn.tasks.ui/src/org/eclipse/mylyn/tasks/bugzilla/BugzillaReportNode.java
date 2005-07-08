@@ -22,7 +22,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
-import org.eclipse.mylar.bugzilla.search.BugzillaSearchHit;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
 
 
 /**

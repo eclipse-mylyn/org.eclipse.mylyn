@@ -22,7 +22,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 
 
 /**

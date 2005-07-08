@@ -32,9 +32,6 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.TrustAll;
 
 
 /**

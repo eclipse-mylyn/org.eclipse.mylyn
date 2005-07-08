@@ -38,6 +38,17 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 		return MylarImages.getImage(MylarImages.CATEGORY);
 	}
     
+
+	public String getPriority() {
+		String highestPriority = "P5";
+		for (ITask task : tasks) {
+			if (highestPriority.compareTo(task.getPriority()) > 0) {
+				highestPriority = task.getPriority();
+			}
+		}
+		return highestPriority;
+	}
+	
     public void addTask(ITask task) {
     	if(task instanceof BugzillaTask){
     		BugzillaTask bugTask = MylarTasksPlugin.getTaskListManager().getTaskList().getFromBugzillaTaskRegistry(task.getHandle());

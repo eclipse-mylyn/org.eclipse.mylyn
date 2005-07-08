@@ -89,7 +89,11 @@ public class XmlUtil {
 			}			
 		}
 		for (ITask task : tlist.getRootTasks()) {
-			writeTask(task, doc, root);
+			try {
+				writeTask(task, doc, root);
+			}catch (Exception e) {
+				MylarPlugin.log(e, e.getMessage());
+			}			
 		}
 		doc.appendChild(root);
 		writeDOMtoFile(doc, outFile);
@@ -100,7 +104,12 @@ public class XmlUtil {
 		Element node = doc.createElement("BugzillaTaskRegistry");
 		
 		for (BugzillaTask t : bugzillaTaskRegistry.values()) {
-			writeTask(t, doc, node);
+			try {
+				writeTask(t, doc, node);
+			} catch (Exception e) {
+				MylarPlugin.log(e, e.getMessage());
+			}
+			
 		}
 		parent.appendChild(node);
 	}
@@ -236,7 +245,12 @@ public class XmlUtil {
 		node.setAttribute("Name", cat.getDescription(false));
 		
 		for (ITask t : cat.getChildren()) {
-			writeTask(t, doc, node);
+			try {
+				writeTask(t, doc, node);
+			} catch (Exception e) {
+				MylarPlugin.log(e, e.getMessage());
+			}
+			
 		}
 		parent.appendChild(node);
 	}
@@ -268,8 +282,13 @@ public class XmlUtil {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bt = (BugzillaTask) task;
 			node.setAttribute("Bugzilla", "true");
-			node.setAttribute("LastDate", new Long(bt.getLastRefreshTime()
-					.getTime()).toString());
+			if (bt.getLastRefresh() != null) {
+				node.setAttribute("LastDate", new Long(bt.getLastRefreshTime()
+						.getTime()).toString());
+			} else {
+				node.setAttribute("LastDate", new Long(new Date().getTime()).toString());
+			}
+			
 			if (bt.isDirty()) {
 				node.setAttribute("Dirty", "true");
 			} else {

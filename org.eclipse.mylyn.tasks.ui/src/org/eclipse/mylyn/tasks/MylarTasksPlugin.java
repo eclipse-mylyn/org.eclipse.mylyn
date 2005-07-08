@@ -11,7 +11,6 @@
 package org.eclipse.mylar.tasks;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -55,11 +54,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     public static final String TASK_ID = "org.eclipse.mylar.tasks.userid";
     public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
     public static final String TASK_EDITOR_ID = "org.eclipse.mylar.tasks.ui.taskEditor";
-    public static final String SHOW_P1_MODE = "org.eclipse.mylar.tasks.show.p1";
-    public static final String SHOW_P2_MODE = "org.eclipse.mylar.tasks.show.p2";
-    public static final String SHOW_P3_MODE = "org.eclipse.mylar.tasks.show.p3";
-    public static final String SHOW_P4_MODE = "org.eclipse.mylar.tasks.show.p4";
-    public static final String SHOW_P5_MODE = "org.eclipse.mylar.tasks.show.p5";
+    public static final String SELECTED_PRIORITY = "org.eclipse.mylar.tasks.filter.priority";
     public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylar.tasks.filter.complete";
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasks.filter.incomplete";
     
@@ -70,7 +65,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 		INTERNAL_BROWSER,
 		EXTERNAL_BROWSER;
 	}
-	public enum Priority_Level {
+	public enum PriorityLevel {
         P1,
         P2,
         P3,
@@ -85,10 +80,10 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
                 case P3: return "P3";
                 case P4: return "P4";
                 case P5: return "P5";
-                default: return "null";
+                default: return "P5";
             }
         }
-        public static Priority_Level fromString(String string) {
+        public static PriorityLevel fromString(String string) {
             if (string == null) return null;
             if (string.equals("P1")) return P1;
             if (string.equals("P2")) return P2;
@@ -223,11 +218,12 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 
     @Override
     protected void initializeDefaultPreferences(IPreferenceStore store) {
-    	store.setDefault(SHOW_P1_MODE, true);
-    	store.setDefault(SHOW_P2_MODE, true);
-    	store.setDefault(SHOW_P3_MODE, true);
-    	store.setDefault(SHOW_P4_MODE, true);
-    	store.setDefault(SHOW_P5_MODE, true);
+//    	store.setDefault(SHOW_P1_MODE, true);
+//    	store.setDefault(SHOW_P2_MODE, true);
+//    	store.setDefault(SHOW_P3_MODE, true);
+//    	store.setDefault(SHOW_P4_MODE, true);
+//    	store.setDefault(SHOW_P5_MODE, true);
+    	store.setDefault(SELECTED_PRIORITY, "P5");
     	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);
     	store.setDefault(REFRESH_QUERIES, false);
     	store.setDefault(REPORT_OPEN_EDITOR, true);
@@ -308,53 +304,17 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 		return MylarPlugin.getDefault().getPreferenceStore();
 	}
 	
-	public static void setPriorityLevel(Priority_Level pl, boolean showPriority) {
-		String key = "";
-		switch(pl) {
-		case P1: key = SHOW_P1_MODE; break;
-		case P2: key = SHOW_P2_MODE; break;
-		case P3: key = SHOW_P3_MODE; break;
-		case P4: key = SHOW_P4_MODE; break;
-		case P5: key = SHOW_P5_MODE; break;
-		default: key = SHOW_P1_MODE; break;
-		}		
-		getPrefs().setValue(key, showPriority);
+	public static void setPriorityLevel(PriorityLevel pl) {
+		getPrefs().setValue(SELECTED_PRIORITY, pl.toString());
 	}
-	public static boolean getPriorityLevel(Priority_Level pl) {
-		String key = "";
-		switch(pl) {
-		case P1: key = SHOW_P1_MODE; break;
-		case P2: key = SHOW_P2_MODE; break;
-		case P3: key = SHOW_P3_MODE; break;
-		case P4: key = SHOW_P4_MODE; break;
-		case P5: key = SHOW_P5_MODE; break;
-		default: key = SHOW_P1_MODE; break;
-		}		
-		if(getPrefs().contains(key)) {
-			return getPrefs().getBoolean(key);
+	public static String getPriorityLevel() {
+		if(getPrefs().contains(SELECTED_PRIORITY)) {
+			return getPrefs().getString(SELECTED_PRIORITY);
 		} else {			
-			return true;
+			return PriorityLevel.P5.toString();
 		}		
 	}
-	public static List<Priority_Level> getPriorityLevels() {
-		List<Priority_Level>  levels = new ArrayList<Priority_Level>();
-		if (getPriorityLevel(Priority_Level.P1)) {
-			levels.add(Priority_Level.P1);
-		}
-		if (getPriorityLevel(Priority_Level.P2)) {
-			levels.add(Priority_Level.P2);
-		}
-		if (getPriorityLevel(Priority_Level.P3)) {
-			levels.add(Priority_Level.P3);
-		}
-		if (getPriorityLevel(Priority_Level.P4)) {
-			levels.add(Priority_Level.P4);
-		}
-		if (getPriorityLevel(Priority_Level.P5)) {
-			levels.add(Priority_Level.P5);
-		}
-		return levels;
-	}
+	
 	public void setFilterCompleteMode(boolean isFilterOn) {
 		getPrefs().setValue(FILTER_COMPLETE_MODE, isFilterOn);
 	}

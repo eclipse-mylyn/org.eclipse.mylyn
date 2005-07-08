@@ -19,9 +19,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.bugzilla.search.BugzillaSearchHit;
-import org.eclipse.mylar.bugzilla.search.IBugzillaSearchOperation;
-import org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation;
+import org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector;
 
 
 /**
@@ -55,7 +55,7 @@ public class BugzillaResultCollector implements IBugzillaSearchResultCollector {
     private static final String MATCHES = "Bugzilla Mylar search - {0} matches";
     
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector#aboutToStart()
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector#aboutToStart()
      */
     public void aboutToStart(int startMatchCount) throws CoreException {
         // initiailize the number of matches
@@ -66,7 +66,7 @@ public class BugzillaResultCollector implements IBugzillaSearchResultCollector {
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector#accept(org.eclipse.mylar.bugzilla.search.BugzillaSearchHit)
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector#accept(org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit)
      */
     public void accept(BugzillaSearchHit hit) throws CoreException {
         // add the result to the list of results
@@ -87,7 +87,7 @@ public class BugzillaResultCollector implements IBugzillaSearchResultCollector {
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector#done()
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector#done()
      */
     public void done() {
         if (getProgressMonitor() != null) {
@@ -104,28 +104,28 @@ public class BugzillaResultCollector implements IBugzillaSearchResultCollector {
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector#getProgressMonitor()
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector#getProgressMonitor()
      */
     public IProgressMonitor getProgressMonitor() {
         return monitor;
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
      */
     public void setProgressMonitor(IProgressMonitor monitor) {
         this.monitor = monitor;
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector#setOperation(org.eclipse.mylar.bugzilla.search.BugzillaSearchOperation)
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector#setOperation(org.eclipse.mylar.bugzilla.core.search.BugzillaSearchOperation)
      */
     public void setOperation(IBugzillaSearchOperation operation) {
         this.operation = operation;
     }
 
     /**
-     * @see org.eclipse.mylar.bugzilla.search.IBugzillaSearchResultCollector#getOperation()
+     * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector#getOperation()
      */
     public IBugzillaSearchOperation getOperation() {
         return operation;

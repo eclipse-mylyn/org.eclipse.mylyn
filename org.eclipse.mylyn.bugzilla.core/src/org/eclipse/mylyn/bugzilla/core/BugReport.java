@@ -21,8 +21,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.ui.IEditorInput;

@@ -24,9 +24,9 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.BugzillaPreferences;
-import org.eclipse.mylar.bugzilla.IBugzillaConstants;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.core.model.InterestComparator;
 import org.eclipse.mylar.tasks.bugzilla.search.BugzillaMylarSearchOperation;
 

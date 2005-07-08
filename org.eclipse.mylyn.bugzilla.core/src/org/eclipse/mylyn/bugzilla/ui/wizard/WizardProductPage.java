@@ -13,7 +13,7 @@ package org.eclipse.mylar.bugzilla.ui.wizard;
 import java.util.Iterator;
 
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbench;

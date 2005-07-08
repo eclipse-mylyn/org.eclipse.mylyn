@@ -238,7 +238,7 @@ litigation.
       <import plugin="org.eclipse.ant.core" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.pde.core" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.core"/>
-      <import plugin="org.eclipse.mylar.bugzilla"/>
+      <import plugin="org.eclipse.mylar.bugzilla.core"/>
    </requires>
 
    <plugin

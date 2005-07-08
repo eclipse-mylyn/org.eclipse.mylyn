@@ -30,14 +30,10 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.bugzilla.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.BugzillaPreferences;
-import org.eclipse.mylar.bugzilla.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.TrustAll;
 import org.eclipse.mylar.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
-import org.eclipse.mylar.bugzilla.offlineReports.OfflineReportsFile;
+import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugModel;
 
 

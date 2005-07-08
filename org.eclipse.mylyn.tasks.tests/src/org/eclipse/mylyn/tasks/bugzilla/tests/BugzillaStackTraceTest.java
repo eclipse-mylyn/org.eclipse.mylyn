@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.bugzilla.core.internal.BugParser;
-import org.eclipse.mylar.bugzilla.search.BugzillaSearchHit;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.core.tests.MylarCoreTestsPlugin;
 import org.eclipse.mylar.core.tests.support.FileTool;
 import org.eclipse.mylar.tasks.bugzilla.BugzillaReportNode;
