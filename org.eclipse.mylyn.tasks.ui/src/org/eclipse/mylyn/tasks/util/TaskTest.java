@@ -49,16 +49,11 @@ public class TaskTest {
                 compare = this.categories.get(i).compareTo(
                         otherTask.categories.get(i));
                 if (compare != 0) {
-                    System.err.println(this.categories.get(i) + " vs "
-                            + otherTask.categories.get(i));
                     result = false;
                     break;
                 }
             }
         } else {
-            System.err.println("Category length different");
-            System.err.println("length: " + this.categories.size()
-                    + " VS Length: " + otherTask.categories.size());
             result = false;
         }
         if (this.taskList.size() == otherTask.taskList.size()) {
@@ -68,7 +63,6 @@ public class TaskTest {
                                 .get(i)));
             }
         } else {
-            System.err.println("TaskList size is different!");
             result = false;
         }
         return result;

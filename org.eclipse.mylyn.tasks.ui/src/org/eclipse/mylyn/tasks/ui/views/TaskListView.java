@@ -1447,7 +1447,6 @@ public class TaskListView extends ViewPart {
 //                } else {
 //                    ITask task = (ITask) selection.getFirstElement();
 //                    
-//                    System.err.println(">>> got task: " + task + ">> " + );
 //
 //                }
 //            }
