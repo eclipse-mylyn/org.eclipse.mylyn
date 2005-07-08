@@ -727,7 +727,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 				}
 			}
 			if(addCommentsText.getText() == null || addCommentsText.getText().equals("")){
-				addCommentsText.setText("No Comment");
+				addCommentsText.setText("Resolved.");
 			}
 		}
 		
