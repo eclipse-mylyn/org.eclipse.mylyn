@@ -48,12 +48,12 @@ public class Task implements ITask, ITaskListElement {
     private String priority = "P3";
     private String notes = "";
     private String estimatedTime = "";
-    private String elapsedTime = "";
+//    private String elapsedTime = "";
     private boolean completed;
     private RelatedLinks links = new RelatedLinks();
     private TaskCategory parentCategory = null;
     
-    private Date activeStart = null;
+    private Date timeActivated = null;
     private long elapsed;
     /**
      * null if root
@@ -114,21 +114,24 @@ public class Task implements ITask, ITaskListElement {
      * Package visible in order to prevent sets that don't update the index.
      */
     public void setActive(boolean active) {
+    	this.active = active;
     	if (active) {
-    		activeStart = new Date();
+    		timeActivated = new Date();
     	} else {    		
     		calculateElapsedTime();
-    		activeStart = null;
-    	}    	
-        this.active = active;
+    		timeActivated = null;
+    	}    	        
     }
     
     private void calculateElapsedTime() {
-    	if (activeStart == null) 
+    	if (timeActivated == null) 
     		return;
-    	long elapsedMin = new Date().getTime() - activeStart.getTime();
-    	long min = 1000*60;
-    	this.elapsed += elapsedMin / min;
+    	elapsed += new Date().getTime() - timeActivated.getTime();
+    	if (isActive()) {
+    		timeActivated = new Date();
+    	} else {
+    		timeActivated = null;
+    	}
     }
     
     public boolean isActive() {
@@ -256,15 +259,18 @@ public class Task implements ITask, ITaskListElement {
 	}
 
 	public String getElapsedTime() {
-		if (elapsedTime == "" && activeStart != null) {
-			calculateElapsedTime();
-			
+		if (isActive()) {
+			calculateElapsedTime();			
 		}
-		return elapsedTime;
+		return "" + elapsed;
 	}
 
-	public void setElapsedTime(String elapsed) {
-		this.elapsedTime = elapsed;
+	public void setElapsedTime(String elapsedString) {
+		if (elapsedString.equals("")) {
+			elapsed = 0;
+		} else {
+			elapsed = Long.parseLong(elapsedString);
+		}
 	}
 
 	public String getEstimatedTime() {
@@ -312,5 +318,62 @@ public class Task implements ITask, ITaskListElement {
     	} else {
     		return MylarImages.getImage(MylarImages.TASK_INACTIVE);
     	}        	
+	}
+	
+	public String getElapsedTimeForDisplay() {
+		long seconds = elapsed / 1000;
+		long minutes = 0;
+		long hours = 0;
+//		final long SECOND = 1000;
+		final long MIN = 60;
+		final long HOUR = MIN * 60;
+		
+		String hour = "";
+		String min = "";
+		String sec = "";
+		if (seconds >= HOUR) {
+			hours = seconds / HOUR;
+			if (hours == 1) {
+				hour = hours + " hour ";
+			} else if (hours > 1) {
+				hour = hours + " hours ";
+			}
+			seconds -= hours * HOUR;
+			
+			minutes = seconds / MIN;
+			if (minutes == 1) {
+				min = minutes + " minute ";
+			} else if (minutes > 1) {
+				min = minutes + " minutes ";
+			}
+//			seconds -= minutes * MIN;
+//			if (seconds == 1) {
+//				sec = seconds + " second";
+//			} else if (seconds > 1) {
+//				sec = seconds + " seconds";
+//			}
+			return hour + min + sec;
+		} else if (seconds >= MIN) {
+			minutes = seconds / MIN;
+			if (minutes == 1) {
+				min = minutes + " minute ";
+			} else if (minutes > 1) {
+				min = minutes + " minutes ";
+			}
+//			seconds -= minutes * MIN;
+//			if (seconds == 1) {
+//				sec = seconds + " second";
+//			} else if (seconds > 1) {
+//				sec = seconds + " seconds";
+//			}
+			return min + sec;
+		} else {
+//			if (seconds == 1) {
+//				sec = seconds + " second";
+//			} else if (seconds > 1) {
+//				sec = seconds + " seconds";
+//			}
+			return sec;
+		}
 	}
 }

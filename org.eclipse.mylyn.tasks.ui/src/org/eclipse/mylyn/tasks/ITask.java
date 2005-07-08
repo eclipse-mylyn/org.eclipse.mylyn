@@ -94,4 +94,6 @@ public interface ITask extends Serializable {
     public abstract void setCategory(TaskCategory cat);
     
     public abstract TaskCategory getCategory();
+    
+    public abstract String getElapsedTimeForDisplay();
 }

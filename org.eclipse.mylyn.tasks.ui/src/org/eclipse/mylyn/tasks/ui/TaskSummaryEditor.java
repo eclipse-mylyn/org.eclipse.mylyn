@@ -422,7 +422,7 @@ public class TaskSummaryEditor extends EditorPart {
 		
 		l = toolkit.createLabel(container, "Elapsed Time:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		Text text2 = toolkit.createText(container,task.getElapsedTime(), SWT.BORDER);	        
+		Text text2 = toolkit.createText(container,task.getElapsedTimeForDisplay(), SWT.BORDER);	        
         text2.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
         text2.setEditable(false);
         text2.setEnabled(false);
