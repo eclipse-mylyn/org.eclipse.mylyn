@@ -36,8 +36,8 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class UiUpdateManager implements ITaskscapeListener {
 
-	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 	
+	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
     public void taskscapeActivated(ITaskscape taskscape) {
         ITaskscapeNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
@@ -65,36 +65,57 @@ public class UiUpdateManager implements ITaskscapeListener {
         if (kind == ITaskscapeListener.UpdateKind.UPDATE) refreshViewers(null);
     }
 
-    protected void refreshViewers(final ITaskscapeNode node) {
-    	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() { 
-		    	Object objectToRefresh = null;
-		    	
-		        if (node != null) {
-		            IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-		            // no need to update the outline if it isn't there
-//		            uiBridge = MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind());
-		            objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
-		        }  
-		        for (StructuredViewer viewer : managedViewers) {
-		        	if (viewer != null && viewer.getControl().isVisible()) {
-		        		if (objectToRefresh == null) {
-		        			viewer.refresh();
-		        		} else {
-		        			viewer.refresh(objectToRefresh, false);
-		        		}
-		        	}
-		        }
-		        // also refresh the current outline
-                IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
-                bridge.refreshOutline(objectToRefresh, false);
-            }
-        });   
+    public void interestChanged(final List<ITaskscapeNode> nodes) {
+    	refreshViewers(nodes);
     }
 
-    public void interestChanged(List<ITaskscapeNode> nodes) {
-        interestChanged(nodes.get(nodes.size()-1));
+    protected void refreshViewers(final List<ITaskscapeNode> nodes) {
+        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+            public void run() { 
+            	try {
+            		List<ITaskscapeNode> nodesToRefresh = new ArrayList<ITaskscapeNode>();
+			    	if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
+			            String raisedElementHandle = MylarPlugin.getTaskscapeManager().getTempRaisedHandle();
+			            nodesToRefresh = new ArrayList<ITaskscapeNode>(); // override refresh nodes
+			            nodesToRefresh.add(MylarPlugin.getTaskscapeManager().getNode(raisedElementHandle));
+			            //		            final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//			            packageExplorer.getTreeViewer().refresh(raisedElement.getParent());
+			    	} else if (nodes != null) {
+			    		nodesToRefresh.addAll(nodes);
+			    	}	
+
+    		        for (StructuredViewer viewer : managedViewers) {
+						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
+							if (nodes == null) {
+								viewer.refresh();
+							} else {
+								Object objectToRefresh = null;
+								for (ITaskscapeNode node : nodesToRefresh) {
+									if (node != null) {
+										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
+//										System.err.println(objectToRefresh);
+										if (objectToRefresh != null) {
+											viewer.refresh(objectToRefresh, false);
+											// also refresh the current outline
+											IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+											IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+											bridge.refreshOutline(objectToRefresh, false);
+										}
+									}
+								}
+//								System.err.println("> refresh");
+//								if (viewer.testFindItem(objectToRefresh)) {
+//									viewer.setSelection(new StructuredSelection(objectToRefresh));
+//								}
+							}
+						}
+					}		
+            	} catch (Throwable t) {
+            		MylarPlugin.fail(t, "could not refresh viewer", false);
+            	}
+            }
+        });
     }
     
     /**
@@ -106,13 +127,20 @@ public class UiUpdateManager implements ITaskscapeListener {
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
         	refreshViewers(null);
         } else {
-        	refreshViewers(node);
+        	ArrayList<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();
+        	toRefresh.add(node);
+        	refreshViewers(toRefresh);
         }
     }  
 
     public void nodeDeleted(ITaskscapeNode node) {
-//        UiUtil.refreshProblemsView();
-    	refreshViewers(node);
+    	System.err.println(">>>> deleted: " + node);
+    	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+		ITaskscapeNode parent = MylarPlugin.getTaskscapeManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
+    	ArrayList<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();
+    	
+    	toRefresh.add(parent);
+    	refreshViewers(toRefresh);
     }
 
     public void landmarkAdded(ITaskscapeNode node) {

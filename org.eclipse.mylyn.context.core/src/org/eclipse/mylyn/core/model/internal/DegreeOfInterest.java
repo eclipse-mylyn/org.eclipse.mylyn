@@ -41,9 +41,11 @@ class DegreeOfInterest implements IDegreeOfInterest {
     private float manipulationBias = 0;
     
     private Taskscape taskscape;
+    private int eventCountOnCreation;
     
     public DegreeOfInterest(Taskscape taskscape) {
         this.taskscape = taskscape;
+        this.eventCountOnCreation = taskscape.getUserEventCount();
         init();
     }
     
@@ -87,23 +89,29 @@ class DegreeOfInterest implements IDegreeOfInterest {
         float value = getEncodedValue(); 
         value += predictedBias; 
         value += propagatedBias; 
+//        value -= getDecayValue();
         return value;
     }
-    
+
     public float getEncodedValue() {
         float value = 0;
         value += selections * scaling.get(InteractionEvent.Kind.SELECTION).getValue();
         value += edits * scaling.get(InteractionEvent.Kind.EDIT).getValue();
         value += commands * scaling.get(InteractionEvent.Kind.COMMAND).getValue();
         value += manipulationBias; 
-        value -= getDecayValue(); 
-        
-        return Math.max(0, value);   
+        value -= getDecayValue();
+//      return Math.max(0, value);   
+        return value;
     }
     
+    /**
+     * @return a scaled decay count based on the number of events since the creation
+     * of this interest object
+     */
     public float getDecayValue() {
+//    	if (isPredicted()) return 0;
         if (taskscape != null) {
-            return taskscape.getEventCount() * scaling.getDecay().getValue();
+            return (taskscape.getUserEventCount() - eventCountOnCreation) * scaling.getDecay().getValue();
         } else {
             return 0;
         }
@@ -113,7 +121,9 @@ class DegreeOfInterest implements IDegreeOfInterest {
      * Sums predicted and propagated values
      */
     public boolean isPredicted() {
-        return getEncodedValue() == 0 && predictedBias + propagatedBias >= 0;
+//        return getEncodedValue() == 0 && predictedBias + propagatedBias >= 0;
+        return getEncodedValue() <= 0 && predictedBias + propagatedBias >= 0;
+
     }
 
     public boolean isLandmark() {

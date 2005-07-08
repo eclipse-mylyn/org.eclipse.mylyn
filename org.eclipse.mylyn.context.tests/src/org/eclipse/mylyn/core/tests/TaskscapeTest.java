@@ -63,7 +63,7 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
         
         taskscape.parseEvent(mockSelection("2"));
         for (int i = 0; i < 98; i++) taskscape.parseEvent(mockSelection("1"));
-        assertEquals(99-(decay*100), node1.getDegreeOfInterest().getValue());
+        assertEquals(99-(decay*99), node1.getDegreeOfInterest().getValue());
     }
      
     public void testLandmarks() {

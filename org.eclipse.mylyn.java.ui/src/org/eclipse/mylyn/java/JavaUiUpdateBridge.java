@@ -20,7 +20,6 @@ import org.eclipse.jdt.internal.core.JavaElementDelta;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.StandardJavaElementContentProvider;
-import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
@@ -111,29 +110,36 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
             IJavaElement lastElement = JavaCore.create(lastNode.getElementHandle());            
             
             PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-            if (!suppressJavaModelAddition(lastElement, packageExplorer)) {
-	            for (ITaskscapeNode node : nodes) {
-	                IJavaElement element = JavaCore.create(node.getElementHandle());
-	                if (element != null && element.exists()) {
-	                    if (node.getDegreeOfInterest().isInteresting()) {
-	                        fireModelUpdate(element, ChangeKind.ADDED);
-	                    } 
-	                }
-	            }
-            } else if (lastElement != null) {
-            	if (!lastNode.getDegreeOfInterest().isInteresting()) {
-            		if (Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof PackageExplorerPart) {
-            			if (FilterPackageExplorerAction.getDefault() != null && FilterPackageExplorerAction.getDefault().isChecked()) {
-            				fireModelUpdate(lastElement, ChangeKind.REMOVED);
-            			}
-            		} else {
-            			fireModelUpdate(lastElement, ChangeKind.REMOVED);
-            		}
-                }
-            }
-            if (lastElement != null && packageExplorer != null && packageExplorer.getTreeViewer().getControl().isVisible()) {
-            	revealInPackageExplorer(lastElement);
-            }
+
+//            for (ITaskscapeNode node : nodes) {
+//            	IJavaElement element = JavaCore.create(node.getElementHandle());
+//            	packageExplorer.getTreeViewer().refresh(element, false);
+//            }
+            revealInPackageExplorer(lastElement); 
+            
+//            if (!suppressJavaModelAddition(lastElement, packageExplorer)) {
+//	            for (ITaskscapeNode node : nodes) {
+//	                IJavaElement element = JavaCore.create(node.getElementHandle());
+//	                if (element != null && element.exists()) {
+//	                    if (node.getDegreeOfInterest().isInteresting()) {
+//	                        fireModelUpdate(element, ChangeKind.ADDED);
+//	                    } 
+//	                }
+//	            }
+//            } else if (lastElement != null) {
+//            	if (!lastNode.getDegreeOfInterest().isInteresting()) {
+//            		if (Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart() instanceof PackageExplorerPart) {
+//            			if (FilterPackageExplorerAction.getDefault() != null && FilterPackageExplorerAction.getDefault().isChecked()) {
+//            				fireModelUpdate(lastElement, ChangeKind.REMOVED);
+//            			}
+//            		} else {
+//            			fireModelUpdate(lastElement, ChangeKind.REMOVED);
+//            		}
+//                }
+//            }
+//            if (lastElement != null && packageExplorer != null && packageExplorer.getTreeViewer().getControl().isVisible()) {
+//            	revealInPackageExplorer(lastElement);
+//            }
         }
     }
     
@@ -142,24 +148,24 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
     }
     
     public void interestChanged(ITaskscapeNode node) {
-        IJavaElement element = JavaCore.create(node.getElementHandle()); 
-        if(element == null) { 
-        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-        	Object object = bridge.getObjectForHandle(node.getElementHandle());
-        	if(object != null) refreshPackageExplorer(object);
-        } else {
-	        if (node.getDegreeOfInterest().isInteresting()) {
-	            fireModelUpdate(element, ChangeKind.ADDED);
-	        } else {
-	            fireModelUpdate(element, ChangeKind.REMOVED);
-	        }
-	        revealInPackageExplorer(element);
-        }
+//        IJavaElement element = JavaCore.create(node.getElementHandle()); 
+//        if(element == null) { 
+//        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+//        	Object object = bridge.getObjectForHandle(node.getElementHandle());
+//        	if(object != null) refreshPackageExplorer(object);
+//        } else {
+//	        if (node.getDegreeOfInterest().isInteresting()) {
+//	            fireModelUpdate(element, ChangeKind.ADDED);
+//	        } else {
+//	            fireModelUpdate(element, ChangeKind.REMOVED);
+//	        }
+//	        revealInPackageExplorer(element);
+//        }
     }
     
     public void nodeDeleted(ITaskscapeNode node) {
-        IJavaElement element = JavaCore.create(node.getElementHandle());
-        fireModelUpdate(element, ChangeKind.REMOVED);
+//        IJavaElement element = JavaCore.create(node.getElementHandle());
+//        fireModelUpdate(element, ChangeKind.REMOVED);
     }
     
     /**
@@ -200,6 +206,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
     }
 
     private void revealInPackageExplorer(final Object element) {
+    	if (element == null) return;
          Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
 

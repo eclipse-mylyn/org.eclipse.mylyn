@@ -35,6 +35,7 @@ import org.eclipse.mylar.core.search.RelationshipProvider;
 public class TaskscapeManager {
     
     public static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylar.core.model.interest.propagation";
+    public static final String SOURCE_ID_DECAY = "org.eclipse.mylar.core.model.interest.decay";
     public static final String SOURCE_ID_DECAY_CORRECTION = "org.eclipse.mylar.core.model.interest.decay.correction";
     
     public static final String SOURCE_ID_MODEL_ERROR = "org.eclipse.mylar.core.model.interest.propagation";
@@ -133,17 +134,20 @@ public class TaskscapeManager {
         	previousInterest = previous.getDegreeOfInterest().getValue();
         	// deal with decay
         	float decay = previous.getDegreeOfInterest().getDecayValue();
+//        	System.err.println("> prev: " + previousInterest + ", decay: " + decay + ", compensation: " + (-1)*(previousInterest-decay));
         	// reset interest if not interesting
+        	System.err.println(previousInterest - decay);
         	if (previousInterest - decay < 0) {
-        		activeTaskscape.addEvent(new InteractionEvent(
-                        InteractionEvent.Kind.MANIPULATION, 
-                        event.getStructureKind(),
-                        event.getStructureHandle(), 
-                        SOURCE_ID_MODEL_PROPAGATION,
-                        -1*(previousInterest-decay)));
+//        		activeTaskscape.addEvent(new InteractionEvent(
+//                        InteractionEvent.Kind.MANIPULATION, 
+//                        event.getStructureKind(),
+//                        event.getStructureHandle(), 
+//                        SOURCE_ID_DECAY_CORRECTION,
+//                        -1*(previousInterest+decay)));
         	}
         }
         ITaskscapeNode node = activeTaskscape.addEvent(event);
+//        System.err.println(">> result: " + node.getDegreeOfInterest().getValue());
         List<ITaskscapeNode> interestDelta = new ArrayList<ITaskscapeNode>();
         if (!event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) propegateDoiToParents(node, previousInterest, 1, interestDelta); 
         activeTaskscape.setActiveElement(node);
@@ -178,7 +182,10 @@ public class TaskscapeManager {
         }
         
         level++; // original is 1st level
-        float propagatedIncrement = scalingFactors.getParentPropagationIncrement(level);
+//        float propropagatedIncrement
+//        System.err.println(">> node: " + node.getElementHandle() + ": " + node.getDegreeOfInterest().getValue() + ", prev: " + previousInterest);
+        float propagatedIncrement = node.getDegreeOfInterest().getValue() - previousInterest;
+//        float propagatedIncrement = scalingFactors.getParentPropagationIncrement(level);
       
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
                 
@@ -317,6 +324,7 @@ public class TaskscapeManager {
         if (taskscape == null) {
             return;
         } else {
+        	taskscape.collapse();
             externalizer.writeXMLTaskscapeToFile(taskscape, getFileForTaskscape(path));
         }
     }

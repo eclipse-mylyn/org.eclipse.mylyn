@@ -28,7 +28,7 @@ public class ScalingFactors implements Serializable {
     private static final long serialVersionUID = 1L;
 
     // weird
-    private ScalingFactor decay = new ScalingFactor("decay", .005f);
+    private ScalingFactor decay = new ScalingFactor("decay", .5f);
     
     // thesholds, not factors
     private float landmark = 40f;

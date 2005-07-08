@@ -26,6 +26,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.model.InteractionEvent;
+import org.eclipse.mylar.core.model.TaskscapeManager;
 import org.eclipse.mylar.dt.MylarInterest;
 
 
@@ -46,6 +47,7 @@ public class Taskscape implements ITaskscape, Serializable {
     protected transient ScalingFactors scaling;
     private transient InteractionEvent lastEdgeEvent = null;
     private transient TaskscapeNode lastEdgeNode = null;
+    private transient int numUserEvents = 0;
     
     public Taskscape() { 
     	// only needed for serialization
@@ -72,6 +74,7 @@ public class Taskscape implements ITaskscape, Serializable {
 
     @MylarInterest(level=MylarInterest.Level.LANDMARK)
     private ITaskscapeNode parseInteractionEvent(InteractionEvent event) {
+    	if (event.getKind().isUserEvent()) numUserEvents++;
         TaskscapeNode node = nodes.get(event.getStructureHandle());
         if (node == null) {
             node = new TaskscapeNode(event.getStructureKind(), event.getStructureHandle(), this);
@@ -177,8 +180,8 @@ public class Taskscape implements ITaskscape, Serializable {
         landmarks.clear(); 
     }
     
-    public int getEventCount() {
-        return interactionHistory.size();
+    public int getUserEventCount() {
+        return numUserEvents;
     }
 
     /**
@@ -187,6 +190,17 @@ public class Taskscape implements ITaskscape, Serializable {
     public List<InteractionEvent> getInteractionHistory() {
         return interactionHistory;
     }
+
+	public void collapse() {
+		for (TaskscapeNode node : nodes.values()) {
+			interactionHistory.add(0, new InteractionEvent(
+	                InteractionEvent.Kind.MANIPULATION, 
+	                node.getStructureKind(),
+	                node.getElementHandle(), 
+	                TaskscapeManager.SOURCE_ID_DECAY,
+	                -node.getDegreeOfInterest().getDecayValue()));
+		}
+	}
 }
 
 //private void writeObject(ObjectOutputStream stream) throws IOException {
