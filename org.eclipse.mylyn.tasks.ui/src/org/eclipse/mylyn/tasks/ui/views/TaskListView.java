@@ -350,9 +350,6 @@ public class TaskListView extends ViewPart {
     		}
     	}
     	
-    	public void hidePriority(String p) {
-    		priorities.remove(p);
-    	}
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITaskListElement) {

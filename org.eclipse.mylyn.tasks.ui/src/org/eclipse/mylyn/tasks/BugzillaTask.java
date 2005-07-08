@@ -327,10 +327,14 @@ public class BugzillaTask extends Task {
 	}
 	
 	public void updateTaskDetails() {
-		setPriority(bugReport.getAttribute("Priority").getValue());
-		String status = bugReport.getAttribute("Status").getValue();
-		if (status.equals("RESOLVED")) {
-			setCompleted(true);
+		try {
+			setPriority(bugReport.getAttribute("Priority").getValue());
+			String status = bugReport.getAttribute("Status").getValue();
+			if (status.equals("RESOLVED")) {
+				setCompleted(true);
+			}
+		} catch (NullPointerException npe) {
+			// TODO: handle this better
 		}
 	}
 	

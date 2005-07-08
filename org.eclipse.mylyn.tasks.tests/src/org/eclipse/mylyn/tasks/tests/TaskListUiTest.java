@@ -166,16 +166,14 @@ public class TaskListUiTest extends TestCase {
 		
 		viewer.removeFilter(TaskListView.getDefault().getInCompleteFilter());
 		PriorityFilter filter = TaskListView.getDefault().getPriorityFilter();
-		filter.hidePriority("P1");
-		filter.hidePriority("P3");
-		filter.hidePriority("P4");
+		filter.displayPrioritiesAbove("P2");
 		viewer.addFilter(filter);
 		viewer.refresh();
 		viewer.expandAll();
 		items = viewer.getTree().getItems();
 		
 		// check priority tasks
-		assertTrue(checkFilter(CHECK_PRIORITY_FILTER, items));
+		assertTrue(checkFilter(CHECK_PRIORITY_FILTER, items));		
 	}
 	
 	public boolean checkFilter(int type, TreeItem[] items) {
@@ -211,22 +209,22 @@ public class TaskListUiTest extends TestCase {
 	public boolean checkPriorityFilter(TreeItem[] items) {
 		assertTrue(items.length == 2);
 		int p2Count = 0;
-		int p5Count = 0;
+		int p1Count = 0;
 		for (int i = 0; i < items.length; i++) {
 			assertTrue(items[i].getData() instanceof TaskCategory);
 			TreeItem[] sub = items[i].getItems();
 			for (int j = 0; j < sub.length; j++) {
 				assertTrue(sub[j].getData() instanceof ITask);
 				ITask task = (ITask) sub[j].getData();
-				assertTrue(task.getPriority().equals("P2") || task.getPriority().equals("P5"));
+				assertTrue(task.getPriority().equals("P2") || task.getPriority().equals("P1"));
 				if (task.getPriority().equals("P2")) {
 					p2Count++;
 				} else {
-					p5Count++;
+					p1Count++;
 				}
 			}			
 		}
-		assertTrue(p2Count == 2 && p5Count == 2);
+		assertTrue(p2Count == 2 && p1Count == 2);
 		return true;
 	}
 	

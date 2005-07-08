@@ -63,23 +63,28 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
         if (element instanceof ITask) {
             ITask task = (ITask)element;            
             if (task.isActive()) return UiUtil.BOLD;            
-            if (task.isCompleted()) return UiUtil.ITALIC;
+//            if (task.isCompleted()) return UiUtil.ITALIC;
             for (ITask child : task.getChildren()) {
 				if (child.isActive())
 					return UiUtil.BOLD;
 			}
+            if (task instanceof BugzillaTask) {
+            	if (((BugzillaTask)task).getState() != BugzillaTask.BugTaskState.FREE) {
+            		return UiUtil.ITALIC;
+            	}
+            }
         } else if (element instanceof TaskCategory) {
         	TaskCategory cat = (TaskCategory) element;
             for (ITask child : cat.getChildren()) {
 				if (child.isActive())
 					return UiUtil.BOLD;
 			}
-        }else if (element instanceof BugzillaHit) {
+        } else if (element instanceof BugzillaHit) {
         	BugzillaHit hit = (BugzillaHit)element;
         	BugzillaTask task = hit.getAssociatedTask(); 
         	if(task != null){
 	            if (task.isActive()) return UiUtil.BOLD;            
-	            if (task.isCompleted()) return UiUtil.ITALIC;
+//	            if (task.isCompleted()) return UiUtil.ITALIC;
         	}
         } else if (element instanceof BugzillaQueryCategory) {
         	BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
