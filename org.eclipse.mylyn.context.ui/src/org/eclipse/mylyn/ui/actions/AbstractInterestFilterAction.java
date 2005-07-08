@@ -15,6 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
@@ -32,7 +33,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
 
     public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";
     protected String prefId;
-    private IAction initAction = null;
+    protected IAction initAction = null;
     private boolean isSelfManaged = false;
     
     protected ViewerFilter interestFilter;
@@ -81,6 +82,9 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
 				if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
 			}
 			refreshViewer();
+			if (on && viewer instanceof TreeViewer) {
+				((TreeViewer)viewer).expandAll();
+			}
         } else {
         	// ignore, failure to install is ok if there is no outline when attempted
 //        	MylarPlugin.log("Couldn't mange filter installation on null viewer: " + prefId, this);

@@ -12,21 +12,15 @@ package org.eclipse.mylar.java;
 
 import java.util.List;
 
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.mylar.core.ITaskscapeListener;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
+ * @deprecated
  */
 public class JavaUiUpdateBridge implements ITaskscapeListener {
 	
@@ -101,8 +95,8 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //              });
 //            }
 //        } else {
-            ITaskscapeNode lastNode = nodes.get(nodes.size()-1);
-            IJavaElement lastElement = JavaCore.create(lastNode.getElementHandle());            
+//            ITaskscapeNode lastNode = nodes.get(nodes.size()-1);
+//            IJavaElement lastElement = JavaCore.create(lastNode.getElementHandle());            
             
 //            PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 
@@ -110,7 +104,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //            	IJavaElement element = JavaCore.create(node.getElementHandle());
 //            	packageExplorer.getTreeViewer().refresh(element, false);
 //            }
-            revealInPackageExplorer(lastElement); 
+//            revealInPackageExplorer(lastElement); 
             
 //            if (!suppressJavaModelAddition(lastElement, packageExplorer)) {
 //	            for (ITaskscapeNode node : nodes) {
@@ -200,20 +194,20 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //        }
 //    }
 
-    private void revealInPackageExplorer(final Object element) {
-    	if (element == null) return;
-         Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() {
-
-            	PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-		        if (packageExplorer != null 
-		        		&& FilterPackageExplorerAction.getDefault() != null 
-		        		&& FilterPackageExplorerAction.getDefault().isChecked()) {
-		        	packageExplorer.selectAndReveal(element);
-                }
-            }
-        });
-    }	
+//    private void revealInPackageExplorer(final Object element) {
+//    	if (element == null) return;
+//         Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//            public void run() {
+//
+//            	PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//		        if (packageExplorer != null 
+//		        		&& FilterPackageExplorerAction.getDefault() != null 
+//		        		&& FilterPackageExplorerAction.getDefault().isChecked()) {
+//		        	packageExplorer.selectAndReveal(element);
+//                }
+//            }
+//        });
+//    }	
     
     public void relationshipsChanged() {
     	// don't care when the relationships are changed
@@ -223,7 +217,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
         final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
         if (packageExplorer != null && packageExplorer.getTreeViewer() != null) {
             if (firstExplorerRefresh) {
-            	installExplorerListeners(packageExplorer);
+//            	installExplorerListeners(packageExplorer);
             	firstExplorerRefresh = false;
             }
         	if (element == null) {
@@ -235,27 +229,6 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
             }
         }
     }
-    
-    private void installExplorerListeners(final PackageExplorerPart packageExplorer) {
-    	packageExplorer.getTreeViewer().getTree().addMouseListener(new MouseListener() {
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-			}
-
-			public void mouseDown(MouseEvent e) {
-				if ((e.stateMask & SWT.ALT) != 0) {
-					MylarPlugin.getTaskscapeManager().setNextEventIsRaiseChildren();
-				}
-			}
-
-			public void mouseUp(MouseEvent e) {
-//				if ((e.stateMask & SWT.ALT) != 0) {
-//					packageExplorer.getTreeViewer().setSelection(null);
-//				}
-			}
-    	});
-		
-	}
 }
 
 //public void tryToReveal(List<IJavaElement> elements) {

@@ -54,7 +54,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 	private static MylarJavaPlugin plugin;
 	private ResourceBundle resourceBundle;
     private static JavaStructureBridge structureBridge = new JavaStructureBridge();
-    private static JavaUiUpdateBridge modelUpdateBridge = new JavaUiUpdateBridge();
+//    private static JavaUiUpdateBridge modelUpdateBridge = new JavaUiUpdateBridge();
     private static JavaUiBridge uiBridge = new JavaUiBridge();
 	private JavaEditorTracker editorTracker;
     
@@ -72,7 +72,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
                 MylarPlugin.getDefault().addBridge(structureBridge); 
-                MylarPlugin.getTaskscapeManager().addListener(modelUpdateBridge);
+//                MylarPlugin.getTaskscapeManager().addListener(modelUpdateBridge);
                 
                 MylarPlugin.getTaskscapeManager().addListener(new JavaReferencesProvider());
                 MylarPlugin.getTaskscapeManager().addListener(new JavaImplementorsProvider());
@@ -317,10 +317,10 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 //	}
 
 	
-	/**
-	 * TODO: remove
-	 */
-	public static JavaUiUpdateBridge getModelUpdateBridge() {
-		return modelUpdateBridge;
-	}
+//	/**
+//	 * TODO: remove
+//	 */
+//	public static JavaUiUpdateBridge getModelUpdateBridge() {
+//		return modelUpdateBridge;
+//	}
 }

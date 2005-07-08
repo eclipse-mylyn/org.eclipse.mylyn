@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -28,6 +29,9 @@ import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
@@ -36,10 +40,22 @@ import org.eclipse.ui.internal.Workbench;
  * @author Mik Kersten
  */
 public class UiUpdateManager implements ITaskscapeListener {
-
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
-    public void taskscapeActivated(ITaskscape taskscape) {
+
+	private static final MouseListener EXPANSION_REQUEST_LISTENER = new MouseListener() {
+		public void mouseDown(MouseEvent e) {
+			if ((e.stateMask & SWT.ALT) != 0) {
+				MylarPlugin.getTaskscapeManager().setNextEventIsRaiseChildren();
+			}
+		}
+
+		public void mouseUp(MouseEvent e) { }
+
+		public void mouseDoubleClick(MouseEvent e) { }
+	};
+	
+	public void taskscapeActivated(ITaskscape taskscape) {
         ITaskscapeNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
@@ -157,9 +173,15 @@ public class UiUpdateManager implements ITaskscapeListener {
 
 	public void addManagedViewer(StructuredViewer viewer) {
 		managedViewers.add(viewer);
+		if (viewer instanceof TreeViewer) { 
+			((TreeViewer)viewer).getTree().addMouseListener(EXPANSION_REQUEST_LISTENER);
+		}
 	}
 	
 	public void removeManagedViewer(StructuredViewer viewer) {
 		managedViewers.remove(viewer);
+		if (viewer instanceof TreeViewer) { 
+			((TreeViewer)viewer).getTree().removeMouseListener(EXPANSION_REQUEST_LISTENER);
+		}
 	}
 }
