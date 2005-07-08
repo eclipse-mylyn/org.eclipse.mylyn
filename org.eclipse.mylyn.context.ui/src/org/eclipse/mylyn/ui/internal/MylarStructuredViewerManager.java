@@ -39,7 +39,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class UiUpdateManager implements ITaskscapeListener {
+public class MylarStructuredViewerManager implements ITaskscapeListener {
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 

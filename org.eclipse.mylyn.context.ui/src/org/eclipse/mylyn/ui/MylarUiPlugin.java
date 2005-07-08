@@ -33,7 +33,7 @@ import org.eclipse.mylar.ui.actions.FilterNavigatorAction;
 import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
-import org.eclipse.mylar.ui.internal.UiUpdateManager;
+import org.eclipse.mylar.ui.internal.MylarStructuredViewerManager;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.mylar.ui.internal.ViewerConfigurationManager;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
@@ -144,7 +144,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         
     };
     
-    protected UiUpdateManager uiUpdateManager = new UiUpdateManager();
+    protected MylarStructuredViewerManager uiUpdateManager = new MylarStructuredViewerManager();
     
     public MylarUiPlugin() {
 		super();
@@ -414,7 +414,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 			return workingSetUpdaters.get(0);
 	}
 
-	public UiUpdateManager getUiUpdateManager() {
+	public MylarStructuredViewerManager getUiUpdateManager() {
 		return uiUpdateManager;
 	}
 }
