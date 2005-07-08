@@ -45,7 +45,6 @@ public class FindReferencesInTaskscapeAction extends Action implements IWorkbenc
 			try {
 				resolved = SelectionConverter.codeResolve((JavaEditor)editor);
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
-					System.err.println(">> " + resolved[0].getHandleIdentifier());
 					IJavaElement element = resolved[0];
 					
 					MylarWorkingSetUpdater updater = MylarUiPlugin.getDefault().getWorkingSetUpdater();

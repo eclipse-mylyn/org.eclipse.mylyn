@@ -41,12 +41,12 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
     
     public void testManipulation() {
         ITaskscapeNode node = taskscape.parseEvent(mockSelection("1"));
-        
+        taskscape.parseEvent(mockSelection("1"));
         taskscape.parseEvent(mockInterestContribution("1", 40));
-        assertEquals(41-(scaling.getDecay().getValue()*2), node.getDegreeOfInterest().getValue());
+        assertEquals(42-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());
         
         taskscape.parseEvent(mockInterestContribution("1", -20));
-        assertEquals(21-(scaling.getDecay().getValue()*3), node.getDegreeOfInterest().getValue());
+        assertEquals(22-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());
     }
     
     public void testEdges() {
@@ -73,6 +73,7 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
         }
         assertTrue(node1.getDegreeOfInterest().isInteresting());
         assertFalse(node1.getDegreeOfInterest().isLandmark());
+        taskscape.parseEvent(mockSelection("1"));
         taskscape.parseEvent(mockSelection("1"));
         assertTrue(node1.getDegreeOfInterest().isLandmark());
         assertEquals(1, taskscape.getLandmarks().size());
@@ -125,6 +126,6 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
         taskscape.parseEvent(mockSelection());
         
         float doi = node.getDegreeOfInterest().getEncodedValue();
-        assertEquals(3.0f -(3*scaling.getDecay().getValue()), doi);  
+        assertEquals(3.0f -(2*scaling.getDecay().getValue()), doi);  
     }
 }

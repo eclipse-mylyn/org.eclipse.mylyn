@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.ITaskscapeListener;
@@ -87,14 +88,15 @@ public class UiUpdateManager implements ITaskscapeListener {
     		        for (StructuredViewer viewer : managedViewers) {
 						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
 							if (nodes == null) {
+					            viewer.getControl().setRedraw(false); // TODO: does this really help?
 								viewer.refresh();
+								viewer.getControl().setRedraw(true);
 							} else {
 								Object objectToRefresh = null;
 								for (ITaskscapeNode node : nodesToRefresh) {
 									if (node != null) {
 										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
 										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
-//										System.err.println(objectToRefresh);
 										if (objectToRefresh != null) {
 											viewer.refresh(objectToRefresh, false);
 											// also refresh the current outline
@@ -104,9 +106,8 @@ public class UiUpdateManager implements ITaskscapeListener {
 										}
 									}
 								}
-//								System.err.println("> refresh");
 //								if (viewer.testFindItem(objectToRefresh)) {
-//									viewer.setSelection(new StructuredSelection(objectToRefresh));
+									viewer.setSelection(new StructuredSelection(objectToRefresh));
 //								}
 							}
 						}
@@ -114,7 +115,7 @@ public class UiUpdateManager implements ITaskscapeListener {
             	} catch (Throwable t) {
             		MylarPlugin.fail(t, "could not refresh viewer", false);
             	}
-            }
+            } 
         });
     }
     
@@ -134,7 +135,6 @@ public class UiUpdateManager implements ITaskscapeListener {
     }  
 
     public void nodeDeleted(ITaskscapeNode node) {
-    	System.err.println(">>>> deleted: " + node);
     	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
 		ITaskscapeNode parent = MylarPlugin.getTaskscapeManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
     	ArrayList<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();

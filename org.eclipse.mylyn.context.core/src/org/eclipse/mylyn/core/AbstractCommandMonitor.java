@@ -55,7 +55,6 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
     }     
     
     public void postExecuteSuccess(String commandId, Object returnValue) { 
-//        System.err.println("> post: " + commandId);
     	// don't care about this
     }
 

@@ -163,7 +163,8 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         do {
             level++; 
             ITaskscapeNode parentNode = MylarPlugin.getTaskscapeManager().getNode(parent.getHandleIdentifier());    
-            assertEquals(scaling.getParentPropagationIncrement(level), parentNode.getDegreeOfInterest().getValue());
+//            assertEquals(scaling.getParentPropagationIncrement(level), parentNode.getDegreeOfInterest().getValue());
+            assertEquals(node.getDegreeOfInterest().getValue(), parentNode.getDegreeOfInterest().getValue());
             parent = parent.getParent();
             
         } while (parent != null);

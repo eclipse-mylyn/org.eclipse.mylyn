@@ -133,16 +133,7 @@ public class TaskscapeManager {
         float decayOffset = 0;
         if (event.getKind().isUserEvent() && previous != null) {
         	previousInterest = previous.getDegreeOfInterest().getValue();
-//        	previousInterest = previous.getDegreeOfInterest().getValue();
-        	// deal with decay
-//        	float decay = previous.getDegreeOfInterest().getValue();
-//        	System.err.println("> prev: " + previousInterest + ", decay: " + decay + ", compensation: " + (-1)*(previousInterest-decay));
-        	// reset interest if not interesting
-//        	System.err.println(previousInterest - decay);
-        	
-//        	if (previousInterest - decay < 0) {
-//        		System.err.println(">> before: " + previous.getDegreeOfInterest().getValue());
-            if (previousInterest <= 0) {
+        	if (previousInterest <= 0) {  // reset interest if not interesting
             	decayOffset = (-1)*(previous.getDegreeOfInterest().getValue());
         		activeTaskscape.addEvent(new InteractionEvent(
                         InteractionEvent.Kind.MANIPULATION, 
@@ -150,13 +141,9 @@ public class TaskscapeManager {
                         event.getStructureHandle(), 
                         SOURCE_ID_DECAY_CORRECTION,
                         decayOffset));
-//                        (-1)*(previousInterest+decay)));
-        		System.err.println(">>> after: " + previous.getDegreeOfInterest().getValue());
             }
         }
         ITaskscapeNode node = activeTaskscape.addEvent(event);
-        System.err.println(">>>> after: " + node.getDegreeOfInterest().getValue());
-//        System.err.println(">> result: " + node.getElementHandle() + ": " + node.getDegreeOfInterest().getValue());
         List<ITaskscapeNode> interestDelta = new ArrayList<ITaskscapeNode>();
         if (!event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) propegateDoiToParents(node, previousInterest, decayOffset, 1, interestDelta); 
         activeTaskscape.setActiveElement(node);
@@ -191,7 +178,6 @@ public class TaskscapeManager {
         }
         
         level++; // original is 1st level
-//        System.err.println(">> node: " + node.getElementHandle() + ": " + node.getDegreeOfInterest().getValue() + ", prev: " + previousInterest);
         float propagatedIncrement = node.getDegreeOfInterest().getValue() - previousInterest + decayOffset;
 //        float propagatedIncrement = scalingFactors.getParentPropagationIncrement(level);
       

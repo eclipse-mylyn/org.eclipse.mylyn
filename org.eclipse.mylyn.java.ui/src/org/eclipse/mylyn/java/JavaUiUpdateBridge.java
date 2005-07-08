@@ -12,14 +12,9 @@ package org.eclipse.mylar.java;
 
 import java.util.List;
 
-import org.eclipse.jdt.core.ElementChangedEvent;
-import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.core.JavaElementDelta;
-import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
-import org.eclipse.jdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
@@ -35,58 +30,58 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class JavaUiUpdateBridge implements ITaskscapeListener {
 	
-    private enum ChangeKind { ADDED, REMOVED, CHANGED }
+//    private enum ChangeKind { ADDED, REMOVED, CHANGED }
 
 	private boolean firstExplorerRefresh = true;
     
     public void taskscapeActivated(ITaskscape taskscape) {
-        refreshPackageExplorer(null);
+//        refreshPackageExplorer(null);
     }
 
     public void taskscapeDeactivated(ITaskscape taskscape) {
-        refreshPackageExplorer(null);
+//        refreshPackageExplorer(null);
     }
     
     public void revealInteresting() {
-        refreshPackageExplorer(null);       
+//        refreshPackageExplorer(null);       
     }
     
     /**
      * TODO: should be more lazy
      */
     public void presentationSettingsChanging(UpdateKind kind) {
-        refreshPackageExplorer(null);
+//        refreshPackageExplorer(null);
     }
 
     public void presentationSettingsChanged(UpdateKind kind) {
-        if (kind == ITaskscapeListener.UpdateKind.FILTER) {
-            IJavaElement selected = JavaCore.create(MylarPlugin.getTaskscapeManager().getActiveNode().getElementHandle());
-            
-            PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-            if (packageExplorer != null && selected!= null) packageExplorer.getTreeViewer().expandToLevel(selected, 1);
-            ITaskscapeNode currentNode = MylarPlugin.getTaskscapeManager().getActiveNode();
-            
-            IJavaElement activeElement = JavaCore.create(currentNode.getElementHandle());
-            if (activeElement != null && activeElement.exists()) refreshPackageExplorer(activeElement);
-        } else { 
-            refreshPackageExplorer(null);
-        }
+//        if (kind == ITaskscapeListener.UpdateKind.FILTER) {
+//            IJavaElement selected = JavaCore.create(MylarPlugin.getTaskscapeManager().getActiveNode().getElementHandle());
+//            
+//            PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//            if (packageExplorer != null && selected!= null) packageExplorer.getTreeViewer().expandToLevel(selected, 1);
+//            ITaskscapeNode currentNode = MylarPlugin.getTaskscapeManager().getActiveNode();
+//            
+//            IJavaElement activeElement = JavaCore.create(currentNode.getElementHandle());
+//            if (activeElement != null && activeElement.exists()) refreshPackageExplorer(activeElement);
+//        } else { 
+//            refreshPackageExplorer(null);
+//        }
     }
 
     public void landmarkAdded(ITaskscapeNode node) {
-        PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-        IJavaElement element = JavaCore.create(node.getElementHandle());
-        if (packageExplorer != null) {
-            packageExplorer.getTreeViewer().getControl().setRedraw(false);
-            packageExplorer.getTreeViewer().refresh(element, true);
-            packageExplorer.getTreeViewer().getControl().setRedraw(true);
-        }
+//        PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//        IJavaElement element = JavaCore.create(node.getElementHandle());
+//        if (packageExplorer != null) {
+//            packageExplorer.getTreeViewer().getControl().setRedraw(false);
+//            packageExplorer.getTreeViewer().refresh(element, true);
+//            packageExplorer.getTreeViewer().getControl().setRedraw(true);
+//        }
     } 
 
     public void landmarkRemoved(ITaskscapeNode node) {
-        PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-        IJavaElement element = JavaCore.create(node.getElementHandle());
-        if (packageExplorer != null) packageExplorer.getTreeViewer().refresh(element, true);
+//        PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//        IJavaElement element = JavaCore.create(node.getElementHandle());
+//        if (packageExplorer != null) packageExplorer.getTreeViewer().refresh(element, true);
     }
     
     /**
@@ -95,21 +90,21 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
      * TODO: currently punts if there was something temporarily raised
      */
     public void interestChanged(List<ITaskscapeNode> nodes) {
-        if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
-            final IJavaElement raisedElement = JavaCore.create(MylarPlugin.getTaskscapeManager().getTempRaisedHandle());
-            final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-            if (packageExplorer != null) {
-              Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-                  public void run() { 
-                      packageExplorer.getTreeViewer().refresh(raisedElement.getParent());
-                  }
-              });
-            }
-        } else {
+//        if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
+//            final IJavaElement raisedElement = JavaCore.create(MylarPlugin.getTaskscapeManager().getTempRaisedHandle());
+//            final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//            if (packageExplorer != null) {
+//              Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//                  public void run() { 
+//                      packageExplorer.getTreeViewer().refresh(raisedElement.getParent());
+//                  }
+//              });
+//            }
+//        } else {
             ITaskscapeNode lastNode = nodes.get(nodes.size()-1);
             IJavaElement lastElement = JavaCore.create(lastNode.getElementHandle());            
             
-            PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//            PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 
 //            for (ITaskscapeNode node : nodes) {
 //            	IJavaElement element = JavaCore.create(node.getElementHandle());
@@ -140,12 +135,12 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //            if (lastElement != null && packageExplorer != null && packageExplorer.getTreeViewer().getControl().isVisible()) {
 //            	revealInPackageExplorer(lastElement);
 //            }
-        }
+//        }
     }
     
-    private boolean suppressJavaModelAddition(IJavaElement lastElement, PackageExplorerPart explorer) {
-    	return lastElement != null && explorer != null && explorer.getTreeViewer().testFindItem(lastElement) != null; // HACK: use more sensible method
-    }
+//    private boolean suppressJavaModelAddition(IJavaElement lastElement, PackageExplorerPart explorer) {
+//    	return lastElement != null && explorer != null && explorer.getTreeViewer().testFindItem(lastElement) != null; // HACK: use more sensible method
+//    }
     
     public void interestChanged(ITaskscapeNode node) {
 //        IJavaElement element = JavaCore.create(node.getElementHandle()); 
@@ -173,37 +168,37 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
      * 
      * @see{JavaElementContentProvider}
      */
-    private void fireModelUpdate(final IJavaElement element, ChangeKind changeKind) {
-        if (element == null) return;
-        JavaElementDelta mylarUpdateDelta = new JavaElementDelta(element);
-        switch(changeKind) {
-            case ADDED: mylarUpdateDelta.added(); break;
-            case REMOVED: mylarUpdateDelta.removed(); break;
-//            case CHANGED: mylarUpdateDelta.changed(element, IJavaElementDelta.F_CLOSED); break;
-        }
-            
-        IElementChangedListener[] listeners = JavaModelManager.getJavaModelManager().deltaState.elementChangedListeners;
-        for (int i = 0; i < listeners.length; i++) {
-            IElementChangedListener listener = listeners[i];
-            
-            if (listener != null) {
-                if (listener instanceof StandardJavaElementContentProvider) {
-                    listener.elementChanged(new ElementChangedEvent(mylarUpdateDelta, ElementChangedEvent.POST_CHANGE));
-                } 
-//                else {  
-//                    Class enclosingClass = listener.getClass().getEnclosingClass();
-//                    if (enclosingClass != null && enclosingClass.getSimpleName().equals("JavaOutlinePage")) {
-//                        IJavaElement compilationUnit = element.getAncestor(IJavaElement.COMPILATION_UNIT);
-//                        if (compilationUnit != null) {
-//                            JavaElementDelta outlineViewDelta = new JavaElementDelta(compilationUnit);
-//                            outlineViewDelta.changed(IJavaElementDelta.F_CONTENT | IJavaElementDelta.F_REORDER);
-//                            listener.elementChanged(new ElementChangedEvent(outlineViewDelta, ElementChangedEvent.POST_CHANGE));
-//                        }
-//                    }
-//                }
-            }
-        }
-    }
+//    private void fireModelUpdate(final IJavaElement element, ChangeKind changeKind) {
+//        if (element == null) return;
+//        JavaElementDelta mylarUpdateDelta = new JavaElementDelta(element);
+//        switch(changeKind) {
+//            case ADDED: mylarUpdateDelta.added(); break;
+//            case REMOVED: mylarUpdateDelta.removed(); break;
+////            case CHANGED: mylarUpdateDelta.changed(element, IJavaElementDelta.F_CLOSED); break;
+//        }
+//            
+//        IElementChangedListener[] listeners = JavaModelManager.getJavaModelManager().deltaState.elementChangedListeners;
+//        for (int i = 0; i < listeners.length; i++) {
+//            IElementChangedListener listener = listeners[i];
+//            
+//            if (listener != null) {
+//                if (listener instanceof StandardJavaElementContentProvider) {
+//                    listener.elementChanged(new ElementChangedEvent(mylarUpdateDelta, ElementChangedEvent.POST_CHANGE));
+//                } 
+////                else {  
+////                    Class enclosingClass = listener.getClass().getEnclosingClass();
+////                    if (enclosingClass != null && enclosingClass.getSimpleName().equals("JavaOutlinePage")) {
+////                        IJavaElement compilationUnit = element.getAncestor(IJavaElement.COMPILATION_UNIT);
+////                        if (compilationUnit != null) {
+////                            JavaElementDelta outlineViewDelta = new JavaElementDelta(compilationUnit);
+////                            outlineViewDelta.changed(IJavaElementDelta.F_CONTENT | IJavaElementDelta.F_REORDER);
+////                            listener.elementChanged(new ElementChangedEvent(outlineViewDelta, ElementChangedEvent.POST_CHANGE));
+////                        }
+////                    }
+////                }
+//            }
+//        }
+//    }
 
     private void revealInPackageExplorer(final Object element) {
     	if (element == null) return;
