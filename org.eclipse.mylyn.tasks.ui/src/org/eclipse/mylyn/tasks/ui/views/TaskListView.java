@@ -163,8 +163,8 @@ public class TaskListView extends ViewPart {
     	
 		public PriorityDropDownAction() {
 			super();
-			setText("Display Priorities");
-			setToolTipText("Show Tasks with Priority Levels");
+			setText("Priority Filter");
+			setToolTipText("Filter priority lower than");
 			setImageDescriptor(MylarImages.FILTER_PRIORITY);
 			setMenuCreator(this);			
 		}
