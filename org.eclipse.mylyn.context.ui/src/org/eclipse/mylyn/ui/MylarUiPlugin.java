@@ -77,7 +77,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private Highlighter intersectionHighlighter;
     private ColorMap colorMap = new ColorMap(); 
     
-    private List<MylarWorkingSetUpdater> workingSetUpdaters = null;
+    private List<MylarWorkingSetUpdater> workingSetUpdaters = null; 
     
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();
 
@@ -100,7 +100,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         }
 
         public boolean acceptsEditor(IEditorPart editorPart) {
-            return false;
+            return false; 
         }
 
         public List<TreeViewer> getTreeViewers(IEditorPart editor) {
@@ -147,14 +147,14 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     protected MylarStructuredViewerManager uiUpdateManager = new MylarStructuredViewerManager();
     
     public MylarUiPlugin() {
-		super();
+		super(); 
 		plugin = this;
         try {
             resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.MylarUiPluginResources");            
         } catch (MissingResourceException x) {
             resourceBundle = null;
         } catch (Throwable t) {
-        	MylarPlugin.log(t, "plug-in init failed");      
+        	MylarPlugin.log(t, "plug-in intialization failed");      
         }
         initializeHighlighters();
         initializeDefaultPreferences(getPrefs());
@@ -176,7 +176,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 //        				pages[j].addPartListener(viewerManager);
 //        			}
         		}
-        		
                 setupProblemsView();
                 
                 MylarPlugin.getTaskscapeManager().addListener(navigatorRefreshListener);
