@@ -195,7 +195,11 @@ public class MylarPlugin extends AbstractUIPlugin {
         buffer.append(DateUtil.getFormattedTime());
         buffer.append("] ");
         buffer.append(status.toString());
-        
+        if (status.getException() != null) {
+        	buffer.append(", exception: ");
+        	buffer.append(status.getException().getStackTrace()[0]);
+        }
+     
         MylarPlugin.getDefault().getLog().log(status);
         if (getDefault().logStream != null) getDefault().logStream.println(buffer.toString());
     }
@@ -217,11 +221,6 @@ public class MylarPlugin extends AbstractUIPlugin {
          * @param informUser if true dialog box will be popped up
          */
     public static void fail(Throwable throwable, String message, boolean informUser) {
-//        StringWriter stringWriter= new StringWriter();
-//        PrintWriter writer= new PrintWriter(stringWriter);
-//        if (throwable != null) {
-//            throwable.printStackTrace(writer);
-//        }
         if (message == null) message = "no message";
 
         final Status status= new Status(
@@ -245,7 +244,6 @@ public class MylarPlugin extends AbstractUIPlugin {
           });
         }
     }
-
 
     /**
      * TODO: performance issue?
@@ -323,7 +321,6 @@ public class MylarPlugin extends AbstractUIPlugin {
         return resourceBundle;
     }   
     
-
     public ResourceStructureBridge getGenericResourceBridge() {
         return genericResourceBridge;
     }
@@ -335,10 +332,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 	public PrintStream getLogStream() {
 		return logStream;
 	}
-
-//	public void actionObserved(IAction action){
-//		for (IActionListener listener : actionListeners) listener.actionObserved(action);
-//	}
 
 	public void addActionListener(IActionListener listener) {
 		actionListeners.add(listener);

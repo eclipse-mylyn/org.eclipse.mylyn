@@ -113,7 +113,7 @@ public class MylarViewerManager implements ITaskscapeListener {
         if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().refreshViewer();
     	
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() { 
+            public void run() {
             	try {
             		List<ITaskscapeNode> nodesToRefresh = new ArrayList<ITaskscapeNode>();
 			    	boolean showChildrenRequested = false;
