@@ -131,8 +131,8 @@ public class TaskscapeManager {
         ITaskscapeNode previous = activeTaskscape.get(event.getStructureHandle());
         float previousInterest = 0;
         float decayOffset = 0;
-        if (event.getKind().isUserEvent() && previous != null) {
-        	previousInterest = previous.getDegreeOfInterest().getValue();
+        if (previous != null) previousInterest = previous.getDegreeOfInterest().getValue();
+        if (event.getKind().isUserEvent() ) {
         	if (previousInterest <= 0) {  // reset interest if not interesting
             	decayOffset = (-1)*(previous.getDegreeOfInterest().getValue());
         		activeTaskscape.addEvent(new InteractionEvent(
@@ -151,7 +151,7 @@ public class TaskscapeManager {
         interestDelta.add(node); // TODO: check that the order of these is sensible
         for (ITaskscapeListener listener : listeners) listener.interestChanged(interestDelta);
         tempRaisedHandle = null;
-        
+         
         // TODO: don't call interestChanged if it's a landmark?
         if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
             for (ITaskscapeListener listener : listeners) listener.landmarkRemoved(node);

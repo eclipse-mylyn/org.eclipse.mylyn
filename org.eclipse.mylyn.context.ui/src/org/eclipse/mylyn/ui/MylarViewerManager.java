@@ -11,9 +11,10 @@
 /**
  * 
  */
-package org.eclipse.mylar.ui.internal;
+package org.eclipse.mylar.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -25,8 +26,6 @@ import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
 import org.eclipse.swt.SWT;
@@ -39,7 +38,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class MylarStructuredViewerManager implements ITaskscapeListener {
+public class MylarViewerManager implements ITaskscapeListener {
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
@@ -54,13 +53,27 @@ public class MylarStructuredViewerManager implements ITaskscapeListener {
 
 		public void mouseDoubleClick(MouseEvent e) { }
 	};
+
+	public void addManagedViewer(StructuredViewer viewer) {
+		managedViewers.add(viewer);
+		if (viewer instanceof TreeViewer) { 
+			((TreeViewer)viewer).getTree().addMouseListener(EXPANSION_REQUEST_LISTENER);
+		}
+	}
+	
+	public void removeManagedViewer(StructuredViewer viewer) {
+		managedViewers.remove(viewer);
+		if (viewer instanceof TreeViewer) { 
+			((TreeViewer)viewer).getTree().removeMouseListener(EXPANSION_REQUEST_LISTENER);
+		}
+	}
 	
 	public void taskscapeActivated(ITaskscape taskscape) {
         ITaskscapeNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
         }
-        refreshViewers(null);
+        refreshViewers();
     }
 
     public void taskscapeDeactivated(ITaskscape taskscape) {
@@ -70,24 +83,36 @@ public class MylarStructuredViewerManager implements ITaskscapeListener {
 	            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
 	        }
         }
-        refreshViewers(null);
+        refreshViewers();
     }
 
     public void presentationSettingsChanging(UpdateKind kind) {
-    	// don't care about this event
+    	// ignore
     }
 
     public void presentationSettingsChanged(UpdateKind kind) {
 //        UiUtil.refreshProblemsView();
-        if (kind == ITaskscapeListener.UpdateKind.UPDATE) refreshViewers(null);
+//        if (kind == ITaskscapeListener.UpdateKind.UPDATE) 
+        refreshViewers();
     }
 
     public void interestChanged(final List<ITaskscapeNode> nodes) {
-    	refreshViewers(nodes);
+    	refreshViewers(nodes, false);
     }
 
-    protected void refreshViewers(final List<ITaskscapeNode> nodes) {
-        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+    protected void refreshViewers() {
+    	List<ITaskscapeNode> toRefresh = Collections.emptyList();
+    	refreshViewers(toRefresh, true);
+    }
+    
+    protected void refreshViewers(ITaskscapeNode node, boolean updateLabels) {
+    	List<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();
+    	toRefresh.add(node);
+    	refreshViewers(toRefresh, updateLabels);
+    }
+    
+    protected void refreshViewers(final List<ITaskscapeNode> nodes, final boolean updateLabels) {
+    	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() { 
             	try {
             		List<ITaskscapeNode> nodesToRefresh = new ArrayList<ITaskscapeNode>();
@@ -95,15 +120,13 @@ public class MylarStructuredViewerManager implements ITaskscapeListener {
 			            String raisedElementHandle = MylarPlugin.getTaskscapeManager().getTempRaisedHandle();
 			            nodesToRefresh = new ArrayList<ITaskscapeNode>(); // override refresh nodes
 			            nodesToRefresh.add(MylarPlugin.getTaskscapeManager().getNode(raisedElementHandle));
-			            //		            final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-//			            packageExplorer.getTreeViewer().refresh(raisedElement.getParent());
 			    	} else if (nodes != null) {
 			    		nodesToRefresh.addAll(nodes);
 			    	}	
 
     		        for (StructuredViewer viewer : managedViewers) {
 						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
-							if (nodes == null) {
+							if (nodes == null || nodes.isEmpty()) {
 					            viewer.getControl().setRedraw(false); // TODO: does this really help?
 								viewer.refresh();
 								viewer.getControl().setRedraw(true);
@@ -113,12 +136,15 @@ public class MylarStructuredViewerManager implements ITaskscapeListener {
 									if (node != null) {
 										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
 										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
+										if (node.getDegreeOfInterest().getValue() <= 0) {
+											objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
+										}										
 										if (objectToRefresh != null) {
-											viewer.refresh(objectToRefresh, false);
+											viewer.refresh(objectToRefresh, updateLabels);
 											// also refresh the current outline
 											IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 											IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
-											bridge.refreshOutline(objectToRefresh, false);
+											bridge.refreshOutline(objectToRefresh, updateLabels);
 										}
 									}
 								}
@@ -142,11 +168,9 @@ public class MylarStructuredViewerManager implements ITaskscapeListener {
         if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().refreshViewer();
         if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().refreshViewer();
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
-        	refreshViewers(null);
+        	refreshViewers();
         } else {
-        	ArrayList<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();
-        	toRefresh.add(node);
-        	refreshViewers(toRefresh);
+        	refreshViewers(node, false);
         }
     }  
 
@@ -156,32 +180,18 @@ public class MylarStructuredViewerManager implements ITaskscapeListener {
     	ArrayList<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();
     	
     	toRefresh.add(parent);
-    	refreshViewers(toRefresh);
+    	refreshViewers(toRefresh, false);
     }
 
     public void landmarkAdded(ITaskscapeNode node) {
-    	// don't care about this event
+    	refreshViewers(node, true);
     }
 
     public void landmarkRemoved(ITaskscapeNode node) {
-    	// don't care about this event
+    	refreshViewers(node, true);
     }
 
     public void relationshipsChanged() {
-    	// don't care about this event
+    	// ignore
     }
-
-	public void addManagedViewer(StructuredViewer viewer) {
-		managedViewers.add(viewer);
-		if (viewer instanceof TreeViewer) { 
-			((TreeViewer)viewer).getTree().addMouseListener(EXPANSION_REQUEST_LISTENER);
-		}
-	}
-	
-	public void removeManagedViewer(StructuredViewer viewer) {
-		managedViewers.remove(viewer);
-		if (viewer instanceof TreeViewer) { 
-			((TreeViewer)viewer).getTree().removeMouseListener(EXPANSION_REQUEST_LISTENER);
-		}
-	}
 }

@@ -41,8 +41,8 @@ public abstract class AbstractInterestAction implements IViewActionDelegate, IWo
         if (!increment) {
             if (node.getDegreeOfInterest().isLandmark()) { // keep it interesting
                 changeValue = (-1 * originalValue) + 1; 
-            } else { // XXX could be < 0
-                changeValue = (-1 * originalValue);
+            } else { 
+            	if (originalValue >=0) changeValue = (-1 * originalValue)-1;
             }
         } else {
             if (originalValue >  TaskscapeManager.getScalingFactors().getLandmark()) {

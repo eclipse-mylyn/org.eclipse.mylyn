@@ -60,7 +60,6 @@ public class Highlighter {
 	}
     
     public Color getHighlightColor() {
-//		System.out.println("Getting Highlighter Color");
         return highlightColor;
     }
     

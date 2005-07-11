@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on Dec 29, 2004
-  */
+ */
 package org.eclipse.mylar.core.model.internal;
 
 import java.io.Serializable;
@@ -19,98 +19,114 @@ import java.util.Map;
 
 import org.eclipse.mylar.core.model.InteractionEvent;
 
-
 /**
  * @author Mik Kersten
  */
 public class ScalingFactors implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    // weird
-    private ScalingFactor decay = new ScalingFactor("decay", .05f);
-    
-    // thesholds, not factors
-    private float landmark = 40f;
-    private float interesting = 0f;
-    private float delete = -2f;  
- 
-    // search
-    private int degreeOfSeparation = 2;
-    private int degreeOfSeparationScale = 3;
+	// weird
+	private ScalingFactor defaultDecay = new ScalingFactor("decay", .05f);
+	private ScalingFactor defaultEdit = new ScalingFactor("edit", .5f);
+	private ScalingFactor defaultPurge = new ScalingFactor("edit", -10f);
+	
+	// thesholds, not factors
+	private float landmark = 40f;
 
-    // misc
-//    XXX never used
-//    private int maxParentPropagationdDistance = 7;
-    private float errorInterest = 1.234f;
-    private int maxNumInterestingErrors = 20;
-    
-    private Map<InteractionEvent.Kind, ScalingFactor> factors = new HashMap<InteractionEvent.Kind, ScalingFactor>();
-    
-    private static final ScalingFactor DEFAULT_SCALING_FACTOR = new ScalingFactor("<default", 1);
-    
-    public ScalingFactor get(InteractionEvent.Kind kind) {
-        ScalingFactor factor = factors.get(kind);
-        if (factor != null) {
-            return factor;
-        } else {
-            return DEFAULT_SCALING_FACTOR;
-        }
-    }
+	private float interesting = 0f;
 
-    public ScalingFactor getDecay() {
-        return decay;
-    }
-    public void setDecay(ScalingFactor decay) {
-        this.decay = decay;
-    }
-   
-    public float getInteresting() {
-        return interesting;
-    }
-    public void setInteresting(float interesting) {
-        this.interesting = interesting;
-    }
-    public float getLandmark() {
-        return landmark;
-    }
-    public void setLandmark(float landmark) {
-        this.landmark = landmark;
-    }
-    public int getDegreeOfSeparation() {
-        return degreeOfSeparation;
-    }
-    public void setDegreeOfSeparation(int degreeOfSeparation) {
-        this.degreeOfSeparation = degreeOfSeparation;
-    }
-    public int getDegreeOfSeparationScale() {
-        return degreeOfSeparationScale;
-    }
-    public void setDegreeOfSeparationScale(int degreeOfSeparationScale) {
-        this.degreeOfSeparationScale = degreeOfSeparationScale;
-    }
-    public float getDelete() {
-        return delete;
-    }
-    
-    public void setDelete(float delete) {
-        this.delete = delete;
-    }
-    public float getParentPropagationIncrement(int level) {
-//        int d = ;
-        return 1f / (level*level);
-//        return 1f - (float)(1f/Math.sqrt(level+1));
-//                
-//                Math.abs(PARENT_PROPAGATION_STRENGTH
-//                
-//                (level/Math.sqrt(level));//   (level*level);
-    }
-    public float getErrorInterest() {
-        return errorInterest; 
-    }
-    
-    public int getMaxNumInterestingErrors() {
-        return maxNumInterestingErrors;
-    }
-    
+	// search
+	private int degreeOfSeparation = 2;
+
+	private int degreeOfSeparationScale = 3;
+
+	// misc
+	// XXX never used
+	// private int maxParentPropagationdDistance = 7;
+	private float errorInterest = 1.234f;
+
+	private int maxNumInterestingErrors = 20;
+
+	private Map<InteractionEvent.Kind, ScalingFactor> factors = new HashMap<InteractionEvent.Kind, ScalingFactor>();
+
+	private static final ScalingFactor DEFAULT_SCALING_FACTOR = new ScalingFactor(
+			"<default>", 1);
+
+	public ScalingFactors() {
+		factors.put(InteractionEvent.Kind.EDIT, defaultEdit);
+	}
+
+	public ScalingFactor get(InteractionEvent.Kind kind) {
+		ScalingFactor factor = factors.get(kind);
+		if (factor != null) {
+			return factor;
+		} else {
+			return DEFAULT_SCALING_FACTOR;
+		}
+	}
+
+	public ScalingFactor getDecay() {
+		return defaultDecay;
+	}
+
+	public void setDecay(ScalingFactor decay) {
+		this.defaultDecay = decay;
+	}
+
+	public float getInteresting() {
+		return interesting;
+	}
+
+	public void setInteresting(float interesting) {
+		this.interesting = interesting;
+	}
+
+	public float getLandmark() {
+		return landmark;
+	}
+
+	public void setLandmark(float landmark) {
+		this.landmark = landmark;
+	}
+
+	public int getDegreeOfSeparation() {
+		return degreeOfSeparation;
+	}
+
+	public void setDegreeOfSeparation(int degreeOfSeparation) {
+		this.degreeOfSeparation = degreeOfSeparation;
+	}
+
+	public int getDegreeOfSeparationScale() {
+		return degreeOfSeparationScale;
+	}
+
+	public void setDegreeOfSeparationScale(int degreeOfSeparationScale) {
+		this.degreeOfSeparationScale = degreeOfSeparationScale;
+	}
+
+	@Deprecated
+	public float getParentPropagationIncrement(int level) {
+		// int d = ;
+		return 1f / (level * level);
+		// return 1f - (float)(1f/Math.sqrt(level+1));
+		//                
+		// Math.abs(PARENT_PROPAGATION_STRENGTH
+		//                
+		// (level/Math.sqrt(level));// (level*level);
+	}
+
+	public float getErrorInterest() {
+		return errorInterest;
+	}
+
+	public int getMaxNumInterestingErrors() {
+		return maxNumInterestingErrors;
+	}
+
+	public ScalingFactor getPurge() {
+		return defaultPurge;
+	}
+
 }

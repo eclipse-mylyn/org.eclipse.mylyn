@@ -22,12 +22,14 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.model.InteractionEvent;
 import org.eclipse.mylar.core.model.TaskscapeManager;
 import org.eclipse.mylar.core.model.internal.ScalingFactors;
 import org.eclipse.mylar.core.model.internal.Taskscape;
@@ -35,6 +37,7 @@ import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.ui.actions.AbstractInterestAction;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
 
@@ -133,11 +136,9 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         ITaskscapeNode parent = MylarPlugin.getTaskscapeManager().getNode(bridge.getParentHandle(node.getElementHandle()));
         assertTrue(parent.getDegreeOfInterest().isPredicted());
         
-//        System.err.println(MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier()).getDegreeOfInterest().getValue());
         for (int i = 0; i < 1/(scaling.getDecay().getValue())*3; i++) {
             MylarPlugin.getTaskscapeManager().handleInteractionEvent(mockSelection());            
         }
-//        System.err.println(MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier()).getDegreeOfInterest().getValue());
         
         assertFalse(MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier()).getDegreeOfInterest().isInteresting());
         MylarPlugin.getTaskscapeManager().handleInteractionEvent(mockSelection(m1.getHandleIdentifier()));
@@ -180,13 +181,50 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
         IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);     
+        
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
         manager.handleInteractionEvent(mockInterestContribution(
                 m1.getHandleIdentifier(), scaling.getLandmark()));
-
         assertEquals(1, listener.numAdditions);
+        
+        manager.handleInteractionEvent(mockInterestContribution(
+                m1.getHandleIdentifier(), -scaling.getLandmark()));
+        assertEquals(1, listener.numDeletions);
     }
+    
+    public void testManipulation() throws JavaModelException {
+    	InterestManipulationAction action = new InterestManipulationAction();
+    	
+    	IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);     
+        StructuredSelection sm1 = new StructuredSelection(m1);
+        monitor.selectionChanged(part, sm1);
+        ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier());
+        assertFalse(node.getDegreeOfInterest().isLandmark());
+        action.changeInterestForSelected(true);
+        assertTrue(node.getDegreeOfInterest().isLandmark());
+        action.changeInterestForSelected(true);
+        assertEquals(node.getDegreeOfInterest().getValue(), scaling.getLandmark() + scaling.get(InteractionEvent.Kind.SELECTION).getValue());
+        
+        action.changeInterestForSelected(false);
+        assertFalse(node.getDegreeOfInterest().isLandmark());
+        assertTrue(node.getDegreeOfInterest().isInteresting());
+        action.changeInterestForSelected(false);
+        assertFalse(node.getDegreeOfInterest().isInteresting());  
+        assertEquals(node.getDegreeOfInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION).getValue());
+        action.changeInterestForSelected(false);
+        assertEquals(node.getDegreeOfInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION).getValue());
+    }
+    
+	class InterestManipulationAction extends AbstractInterestAction {
+		public void run(IAction action) { }
+
+		@Override
+		public void changeInterestForSelected(boolean increment) {
+			super.changeInterestForSelected(increment);
+		}
+	};
 
 //    public void testDoiSelectionAndDecay() throws Exception {
 //        listener.selectionChanged(explorer, selectionFoo);
