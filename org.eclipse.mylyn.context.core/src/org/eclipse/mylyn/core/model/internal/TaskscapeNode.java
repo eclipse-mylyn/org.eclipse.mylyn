@@ -71,6 +71,7 @@ public class TaskscapeNode implements ITaskscapeNode {
     @Override
     public boolean equals(Object obj) { 
         if (obj == null) return false;
+        if (this.getElementHandle() == null) return false;
         if (obj instanceof TaskscapeNode) {
             TaskscapeNode node = (TaskscapeNode)obj;
             return this.getElementHandle().equals(node.getElementHandle());

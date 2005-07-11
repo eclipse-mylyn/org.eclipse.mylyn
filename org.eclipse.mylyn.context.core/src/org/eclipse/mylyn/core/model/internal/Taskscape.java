@@ -43,7 +43,7 @@ public class Taskscape implements ITaskscape, Serializable {
     protected transient Map<String, TaskscapeNode> nodes = new HashMap<String, TaskscapeNode>();
     protected transient ITaskscapeNode activeNode = null;
     protected transient List tempRaised = new ArrayList();
-    protected transient List<ITaskscapeNode> landmarks;
+    protected transient Map<String, ITaskscapeNode> landmarks;
     protected transient ScalingFactors scaling;
     private transient InteractionEvent lastEdgeEvent = null;
     private transient TaskscapeNode lastEdgeNode = null;
@@ -55,7 +55,7 @@ public class Taskscape implements ITaskscape, Serializable {
     
     void parseInteractionHistory() {
         nodes = new HashMap<String, TaskscapeNode>();
-        landmarks = new ArrayList<ITaskscapeNode>();
+        landmarks = new HashMap<String, ITaskscapeNode>();
         for (InteractionEvent event : interactionHistory) parseInteractionEvent(event);
         updateLandmarks();
         activeNode = lastEdgeNode;
@@ -96,9 +96,9 @@ public class Taskscape implements ITaskscape, Serializable {
         DegreeOfInterest doi = (DegreeOfInterest)node.getDegreeOfInterest();
         doi.addEvent(event); 
         if (doi.isLandmark()) {
-            landmarks.add(node);
+            landmarks.put(node.getElementHandle(), node);
         } else {
-            landmarks.remove(node);
+            landmarks.remove(node.getElementHandle());
         }
         if (event.getKind().isUserEvent()) {
             lastEdgeEvent = event;
@@ -109,9 +109,9 @@ public class Taskscape implements ITaskscape, Serializable {
     }
 
     private void updateLandmarks() {
-        landmarks = new ArrayList<ITaskscapeNode>();
+//        landmarks = new HashMap<String, ITaskscapeNode>();
         for (TaskscapeNode node : nodes.values()) {
-            if (node.getDegreeOfInterest().isLandmark()) landmarks.add(node);
+            if (node.getDegreeOfInterest().isLandmark()) landmarks.put(node.getElementHandle(), node);
         }
     }
     
@@ -131,7 +131,7 @@ public class Taskscape implements ITaskscape, Serializable {
     }
 
     public List<ITaskscapeNode> getLandmarks() {
-        return Collections.unmodifiableList(landmarks);
+        return Collections.unmodifiableList(new ArrayList<ITaskscapeNode>(landmarks.values()));
     }
 
     /**
@@ -157,7 +157,7 @@ public class Taskscape implements ITaskscape, Serializable {
      * @param handleIdentifier
      */
     public void remove(ITaskscapeNode node) {
-        landmarks.remove(node); 
+        landmarks.remove(node.getElementHandle()); 
         nodes.remove(node.getElementHandle());
     }
 
