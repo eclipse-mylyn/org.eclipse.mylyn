@@ -3,6 +3,7 @@
 
 <toc label="Mylar User Guide"> 
 	<topic label="Overview" href="user/overview.html"/>
-	<topic label="What's New" href="user/new.html"/>
+	<!--<topic label="What's New" href="user/new.html"/>-->
+	<topic label="Tips & Tricks" href="user/tips.html"/>
 	<topic label="Known Limitations" href="user/limitations.html"/>
 </toc>
