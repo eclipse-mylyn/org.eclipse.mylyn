@@ -12,17 +12,17 @@ package org.eclipse.mylar.bugzilla.core.search;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,7 +33,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.core.TrustAll;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlTag;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
@@ -160,33 +159,34 @@ public class BugzillaQueryPageParser
 			
 			// try to connect to the server
 			monitor.subTask("Connecting to server");
-				
-			SSLContext ctx = SSLContext.getInstance("TLS");
 			
-			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-			ctx.init(null, tm, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-			monitor.worked(1);
+			URL url = new URL(this.urlString);	
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
+			if(cntx != null){
+				InputStream input = cntx.getInputStream();
+				if(input != null) {
 			
-			URL url = new URL(this.urlString);			
+					monitor.worked(1);
+					
+					// initialize the input stream
+					in = new BufferedReader(new InputStreamReader(input));
+					
+					// increment the position of the status monitor
+					monitor.worked(2);
+					
+					// check if the operation has been cancelled so we can end if it has been
+					if (monitor.isCanceled())
+						monitor.done();
+					else
+						monitor.subTask("Reading values from server");
 			
-			// initialize the input stream
-			in = new BufferedReader(new InputStreamReader(url.openStream()));
-			
-			// increment the position of the status monitor
-			monitor.worked(2);
-			
-			// check if the operation has been cancelled so we can end if it has been
-			if (monitor.isCanceled())
-				monitor.done();
-			else
-				monitor.subTask("Reading values from server");
-	
-			// parse the data from the server
-			parseQueryPage(in);
-			
-			// set the operation to being successful
-			successful = true;
+					// parse the data from the server
+					parseQueryPage(in);
+					
+					// set the operation to being successful
+					successful = true;
+				}
+			}
 			
 		}
 		catch (LoginException e) {

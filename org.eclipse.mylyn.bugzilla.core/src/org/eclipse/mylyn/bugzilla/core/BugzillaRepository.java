@@ -12,10 +12,12 @@ package org.eclipse.mylar.bugzilla.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -23,8 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -113,13 +113,7 @@ public class BugzillaRepository
 
 		BufferedReader in = null;
 		try {
-			// connect to the bugzilla server
-			SSLContext ctx = SSLContext.getInstance("TLS");
 			
-			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-			ctx.init(null, tm, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());	
-		
 			// create a new input stream for getting the bug
 			
 			String url = bugzillaUrl + "/show_bug.cgi?id=" + id;
@@ -137,12 +131,20 @@ public class BugzillaRepository
 				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
 			}
 			
-			in = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-
-			// get the actual bug fron the server and return it
-			BugReport bug = BugParser.parseBug(in, id, BugzillaPlugin.getDefault().getServerName(), BugzillaPreferences.is218(), BugzillaPreferences.getUserName(), BugzillaPreferences.getPassword());
-			
-			return bug;
+			URL bugUrl = new URL(url);
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
+			if(cntx != null){
+				InputStream input = cntx.getInputStream();
+				if(input != null) {
+					in = new BufferedReader(new InputStreamReader(input));
+		
+					// get the actual bug fron the server and return it
+					BugReport bug = BugParser.parseBug(in, id, BugzillaPlugin.getDefault().getServerName(), BugzillaPreferences.is218(), BugzillaPreferences.getUserName(), BugzillaPreferences.getPassword());
+					return bug; 
+				}
+			}
+			// TODO handle the error
+			return null;
 		} 
 		catch (MalformedURLException e) {
 			throw e;
@@ -205,12 +207,6 @@ public class BugzillaRepository
 		try 
 		{
 			// connect to the bugzilla server
-			SSLContext ctx = SSLContext.getInstance("TLS");
-	
-			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-			ctx.init(null, tm, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());	
-
 			String urlText = "";
 
 			// use the usename and password to get into bugzilla if we have it
@@ -227,11 +223,18 @@ public class BugzillaRepository
 
 			URL url = new URL(bugzillaUrl + "/enter_bug.cgi"+urlText);
 
-			// create a new input stream for getting the bug
-			in = new BufferedReader(new InputStreamReader(url.openStream()));
-
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
+			if(cntx != null){
+				InputStream input = cntx.getInputStream();
+				if(input != null) {
 			
-			return new ProductParser(in).getProducts();
+					// create a new input stream for getting the bug
+					in = new BufferedReader(new InputStreamReader(input));
+				
+					return new ProductParser(in).getProducts();
+				}
+			}
+			return null;
 		}
 		finally
 		{
@@ -255,13 +258,6 @@ public class BugzillaRepository
 		BufferedReader in = null;
 		try 
 		{
-			// connect to the bugzilla server
-			SSLContext ctx = SSLContext.getInstance("TLS");
-
-			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-			ctx.init(null, tm, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());	
-
 			// create a new input stream for getting the bug
 			String prodname = URLEncoder.encode(nbm.getProduct(), "UTF-8");
 			
@@ -282,9 +278,16 @@ public class BugzillaRepository
 			 */
 			url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
 			
-			in = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+			URL bugUrl = new URL(url);
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
+			if(cntx != null){
+				InputStream input = cntx.getInputStream();
+				if(input != null) {	
+					in = new BufferedReader(new InputStreamReader(input));
 
-			new NewBugParser(in).parseBugAttributes(nbm, getProd);
+					new NewBugParser(in).parseBugAttributes(nbm, getProd);
+				}
+			}
 			
 		} catch(Exception e) {
 			

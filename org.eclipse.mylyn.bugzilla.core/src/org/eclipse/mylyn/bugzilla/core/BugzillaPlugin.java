@@ -11,7 +11,18 @@
 package org.eclipse.mylar.bugzilla.core;
 
 import java.io.IOException;
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.Proxy.Type;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -26,6 +37,8 @@ import org.eclipse.mylar.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.favorites.FavoritesFile;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.update.internal.core.UpdateCore;
+import org.eclipse.update.internal.ui.UpdateUI;
 import org.osgi.framework.BundleContext;
 
 
@@ -60,6 +73,8 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	{
 		super();
 	}
+
+	Authenticator authenticator = null;
 	
 	/**
 	 * Get the singleton instance for the plugin
@@ -76,6 +91,12 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		plugin = this;
+
+		authenticator = UpdateUI.getDefault().getAuthenticator();
+		if(authenticator == null)
+			authenticator = new BugzillaAuthenticator();
+		Authenticator.setDefault(authenticator);
+		
 		readFavoritesFile();
 		readOfflineReportsFile();
 		readCachedProductConfiguration();
@@ -283,5 +304,24 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	 */
 	public List<IBugzillaBug> getSavedBugReports() {
 		return offlineReportsFile.elements();
+	}
+
+    public URLConnection getUrlConnection(URL url) throws IOException, NoSuchAlgorithmException, KeyManagementException{
+		SSLContext ctx = SSLContext.getInstance("TLS");
+		
+		javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
+		ctx.init(null, tm, null);
+		HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+		
+		Proxy p = Proxy.NO_PROXY;
+		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
+			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
+			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
+			
+			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+			p = new Proxy(Type.HTTP, sockAddr);
+		}
+		URLConnection cntx = url.openConnection(p);
+		return cntx;
 	}
 }

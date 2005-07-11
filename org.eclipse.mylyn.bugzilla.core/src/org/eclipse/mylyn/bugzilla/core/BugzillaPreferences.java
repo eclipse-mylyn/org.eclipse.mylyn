@@ -14,12 +14,11 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -168,17 +167,16 @@ public class BugzillaPreferences
 		ProductConfiguration configuration = null;
 		
 		try {
-			SSLContext ctx = SSLContext.getInstance("TLS");
-		
-			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-			ctx.init(null, tm, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());	
-					
+			
 			// append "/show_bug.cgi" to url provided for cases where the connection is successful,  
 			// but full path hasn't been specified  (i.e. http://hipikat.cs.ubc.ca:8081)
 			URL serverURL = new URL(bugzillaServer.getStringValue() + "/show_bug.cgi");
- 	 
-			HttpURLConnection serverConnection = (HttpURLConnection) serverURL.openConnection();
+ 	
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
+			if(cntx == null || !(cntx instanceof HttpURLConnection))
+				return false;
+			
+			HttpURLConnection serverConnection = (HttpURLConnection)cntx;
 			
 			serverConnection.connect();	
 			

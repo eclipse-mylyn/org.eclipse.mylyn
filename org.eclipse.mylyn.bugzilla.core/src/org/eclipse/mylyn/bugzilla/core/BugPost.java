@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -26,8 +27,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -103,13 +102,12 @@ public class BugPost {
 		
 		try {
 			// connect to the bugzilla server
-			SSLContext ctx = SSLContext.getInstance("TLS");
-		
-			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-			ctx.init(null, tm, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());	
-			HttpURLConnection postConnection = (HttpURLConnection) anURL.openConnection();
-	
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(anURL);
+			if(cntx == null || !(cntx instanceof HttpURLConnection))
+				return null;
+
+			HttpURLConnection postConnection = (HttpURLConnection) cntx;
+			
 			// set the connection method
 			postConnection.setRequestMethod("POST");
 			postConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");

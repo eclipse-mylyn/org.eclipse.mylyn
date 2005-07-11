@@ -16,10 +16,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -32,9 +31,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.core.TrustAll;
 import org.eclipse.search.ui.NewSearchUI;
-
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
@@ -134,15 +131,12 @@ public class BugzillaSearchEngine {
 			monitor.beginTask(QUERYING_SERVER, IProgressMonitor.UNKNOWN);
 			collector.aboutToStart(startMatches);
 
-			SSLContext ctx = SSLContext.getInstance("TLS");
-			
-			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-			ctx.init(null, tm, null);
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());	
-		
-			URL url = new URL(this.urlString);
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(new URL(urlString));
+			if(cntx == null || !(cntx instanceof HttpURLConnection))
+				return null;
 
-			HttpURLConnection connect =  (HttpURLConnection) url.openConnection();
+			HttpURLConnection connect = (HttpURLConnection) cntx;
+			
 			connect.connect();
 
 			int responseCode = connect.getResponseCode();
@@ -158,7 +152,7 @@ public class BugzillaSearchEngine {
 				throw new BugzillaException(msg);
 			}
 			
-			in = new BufferedReader(new InputStreamReader(url.openStream()));
+			in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
 
 			Match match = new Match();
 			String line;

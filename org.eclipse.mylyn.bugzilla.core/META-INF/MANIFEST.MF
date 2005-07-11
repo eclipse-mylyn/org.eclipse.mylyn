@@ -17,7 +17,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.ui.editors,
- org.eclipse.pde.ui
+ org.eclipse.pde.ui,
+ org.eclipse.update.core,
+ org.eclipse.update.ui
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: bugzilla-core.jar
