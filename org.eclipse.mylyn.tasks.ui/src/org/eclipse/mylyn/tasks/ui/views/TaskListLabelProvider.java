@@ -55,7 +55,6 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 				return element.getDescription(true);
 			}
 		}
-    	System.out.println("Not TaskListElement");
     	return "";
     }
 

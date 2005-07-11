@@ -40,9 +40,6 @@ public class TaskTest {
         int compare = (this.name.compareTo(otherTask.name));
         if (compare != 0)
             result = false;
-        if (!result)
-            System.out.println("this: " + this.name + " otherName: "
-                    + otherTask.name + " a");
 
         if (this.categories.size() == otherTask.categories.size()) {
             for (int i = 0; i < this.categories.size(); i++) {
