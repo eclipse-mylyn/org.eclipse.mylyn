@@ -215,6 +215,7 @@
       </key> 
    </extension> 
 
+	<!--
 	<extension point="org.eclipse.ui.perspectives">
 	   <perspective
           class="org.eclipse.mylar.java.ui.views.MylarPerspectiveFactory"
@@ -223,6 +224,7 @@
           name="Mylar">
 	   </perspective>
 	</extension>
+	-->
 
 </plugin>
 
