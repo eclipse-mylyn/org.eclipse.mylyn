@@ -34,6 +34,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author Mik Kersten
@@ -150,11 +151,13 @@ public class MylarViewerManager implements ITaskscapeListener {
 											bridge.refreshOutline(objectToRefresh, updateLabels);
 										}
 									}
-								}
+								}								
 						    	InteractionEvent lastInteraction = lastNode.getDegreeOfInterest().getEvents().get(lastNode.getDegreeOfInterest().getEvents().size()-1);
 						    	if (showChildrenRequested && viewer instanceof TreeViewer) {
 									((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
-								} else if (objectToRefresh != null && lastInteraction.getKind().isUserEvent()) {
+								} else if (objectToRefresh != null 
+										&& lastInteraction.getKind().isUserEvent()
+										&& (!IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass()))) { // ignore outlines since they're synched
 									StructuredSelection selection = new StructuredSelection(objectToRefresh);
 									if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
 								}
@@ -164,7 +167,7 @@ public class MylarViewerManager implements ITaskscapeListener {
             	} catch (Throwable t) {
             		MylarPlugin.fail(t, "could not refresh viewer", false);
             	}
-            } 
+			} 
         });
     }
     
