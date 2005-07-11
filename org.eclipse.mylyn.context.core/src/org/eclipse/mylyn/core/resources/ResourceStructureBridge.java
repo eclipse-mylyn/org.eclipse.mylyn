@@ -28,10 +28,11 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 
     public final static String EXTENSION = "*";
 
-    public ResourceStructureBridge(){
-    	IWorkspace workspace = ResourcesPlugin.getWorkspace();
-   	   	workspace.addResourceChangeListener(new ResourceMarkerListener());
-
+    public ResourceStructureBridge(boolean predictedInterestEnabled) {
+    	if (predictedInterestEnabled) {
+    		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+   	   		workspace.addResourceChangeListener(new ResourceMarkerListener());
+    	}
     }
     
     public String getResourceExtension() {

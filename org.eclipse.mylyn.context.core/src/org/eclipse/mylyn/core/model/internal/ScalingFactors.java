@@ -32,7 +32,7 @@ public class ScalingFactors implements Serializable {
 	private ScalingFactor defaultPurge = new ScalingFactor("edit", -10f);
 	
 	// thesholds, not factors
-	private float landmark = 40f;
+	private float landmark = 30f;
 
 	private float interesting = 0f;
 

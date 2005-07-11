@@ -27,7 +27,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -97,10 +96,6 @@ public class MylarViewerManager implements ITaskscapeListener {
         refreshViewers();
     }
 
-    public void interestChanged(final List<ITaskscapeNode> nodes) {
-    	refreshViewers(nodes, false);
-    }
-
     protected void refreshViewers() {
     	List<ITaskscapeNode> toRefresh = Collections.emptyList();
     	refreshViewers(toRefresh, true); 
@@ -113,6 +108,9 @@ public class MylarViewerManager implements ITaskscapeListener {
     }
     
     protected void refreshViewers(final List<ITaskscapeNode> nodes, final boolean updateLabels) {
+    	// HACK: improve laziness and update
+        if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().refreshViewer();
+    	
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() { 
             	try {
@@ -162,7 +160,7 @@ public class MylarViewerManager implements ITaskscapeListener {
 								}
 							}
 						}
-					}		
+					}
             	} catch (Throwable t) {
             		MylarPlugin.fail(t, "could not refresh viewer", false);
             	}
@@ -170,12 +168,15 @@ public class MylarViewerManager implements ITaskscapeListener {
         });
     }
     
+    public void interestChanged(final List<ITaskscapeNode> nodes) {
+    	refreshViewers(nodes, false);
+    }
+    
     /**
      * TODO: it would be better if this didn't explicitly refresh views
      */
     public void interestChanged(ITaskscapeNode node) {
-        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().refreshViewer();
-        if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().refreshViewer();
+//        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().refreshViewer();
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
         	refreshViewers();
         } else {

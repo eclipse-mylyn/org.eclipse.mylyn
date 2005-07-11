@@ -50,8 +50,10 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
   
     public JavaEditingMonitor() {
         super();
-        JavaPlugin.getDefault().getProblemMarkerManager().addListener(PROBLEM_LISTENER);
-        JavaCore.addElementChangedListener(new IElementChangedListener() {
+        if (MylarPlugin.getDefault().isPredictedInterestEnabled()) {
+        	JavaPlugin.getDefault().getProblemMarkerManager().addListener(PROBLEM_LISTENER);
+        }
+    	JavaCore.addElementChangedListener(new IElementChangedListener() {
             public void elementChanged(ElementChangedEvent event) {
             	// TODO: implement interest move
 //                IJavaElementDelta delta = event.getDelta();

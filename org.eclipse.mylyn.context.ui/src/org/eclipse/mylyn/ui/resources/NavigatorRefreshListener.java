@@ -47,7 +47,7 @@ public class NavigatorRefreshListener implements ITaskscapeListener {
         if (navigator == null || navigator.getTreeViewer() == null) return;
         
         if (node != null) {
-            Object object = MylarPlugin.getGenericResourceBridge().getObjectForHandle(node.getElementHandle());
+            Object object = MylarPlugin.getDefault().getGenericResourceBridge().getObjectForHandle(node.getElementHandle());
             getResourceNavigator().getTreeViewer().refresh(object);
         } else {
             getResourceNavigator().getTreeViewer().refresh();

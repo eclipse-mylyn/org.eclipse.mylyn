@@ -21,9 +21,10 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.PlatformUI;
 
-
+/**
+ * @author Shawn Minto 
+ */
 public class ResourceMarkerListener implements IResourceChangeListener {
-
 
 	public void resourceChanged(IResourceChangeEvent event) {
 		//we are only interested in POST_CHANGE events

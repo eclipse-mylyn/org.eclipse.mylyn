@@ -49,8 +49,8 @@ public class ResourceLabelProvider implements ILabelProvider {
      */
     public String getText(Object element) {
         ITaskscapeNode node = (ITaskscapeNode)element;
-        String name = MylarPlugin.getGenericResourceBridge().getName(
-                MylarPlugin.getGenericResourceBridge().getObjectForHandle(node.getElementHandle())
+        String name = MylarPlugin.getDefault().getGenericResourceBridge().getName(
+                MylarPlugin.getDefault().getGenericResourceBridge().getObjectForHandle(node.getElementHandle())
         );
         return name;
     }

@@ -38,9 +38,11 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarPlugin extends AbstractUIPlugin {
     
+	private boolean predictedInterestEnabled = false;
+	
     private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
     
-    private static ResourceStructureBridge genericResourceBridge = new ResourceStructureBridge();
+    private ResourceStructureBridge genericResourceBridge;
         
     private List<AbstractSelectionMonitor> selectionMonitors = new ArrayList<AbstractSelectionMonitor>();
     private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
@@ -136,7 +138,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     };
        
 	public MylarPlugin() {  
-		INSTANCE = this;   
+		INSTANCE = this;  
 	}
     
     /**
@@ -151,6 +153,7 @@ public class MylarPlugin extends AbstractUIPlugin {
                 + File.separator
                 + MYLAR_DIR_NAME);
         taskscapeManager = new TaskscapeManager(); 
+        genericResourceBridge = new ResourceStructureBridge(predictedInterestEnabled);
     }
 
     /**
@@ -321,7 +324,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     }   
     
 
-    public static ResourceStructureBridge getGenericResourceBridge() {
+    public ResourceStructureBridge getGenericResourceBridge() {
         return genericResourceBridge;
     }
 
@@ -343,5 +346,9 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public boolean removeActionListener(IActionListener listener) {
 		return actionListeners.remove(listener);
+	}
+
+	public boolean isPredictedInterestEnabled() {
+		return predictedInterestEnabled;
 	}	
 }

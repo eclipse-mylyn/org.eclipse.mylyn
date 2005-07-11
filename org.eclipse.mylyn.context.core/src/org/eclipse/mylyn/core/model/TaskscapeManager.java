@@ -86,7 +86,7 @@ public class TaskscapeManager {
                 kind, handle, 
                 SOURCE_ID_MODEL_ERROR,
                 scalingFactors.getErrorInterest());
-        handleInteractionEvent(errorEvent);
+        handleInteractionEvent(errorEvent, false);
         numInterestingErrors++;
     }
 
@@ -100,12 +100,11 @@ public class TaskscapeManager {
         if (node == null) return;
         if (node.getDegreeOfInterest().getValue() >= scalingFactors.getErrorInterest()) { // TODO: hack?
             InteractionEvent errorEvent = new InteractionEvent(
-                    InteractionEvent.Kind.PREDICTION, 
+                    InteractionEvent.Kind.MANIPULATION, 
                     kind, handle, 
                     SOURCE_ID_MODEL_ERROR,
                     -scalingFactors.getErrorInterest());
-            handleInteractionEvent(errorEvent);
-//            activeTaskscape.addEvent(errorEvent);
+            handleInteractionEvent(errorEvent, false);
             numInterestingErrors--;
             // TODO: this will results in double-notification
             if (notify) for (ITaskscapeListener listener : listeners) listener.interestChanged(node);
@@ -120,10 +119,14 @@ public class TaskscapeManager {
         }
     }
 
+    public ITaskscapeNode handleInteractionEvent(InteractionEvent event) {
+    	return handleInteractionEvent(event, true);
+    }
+    
     /**
      * TODO: consider moving this into the taskscape?
      */
-    public ITaskscapeNode handleInteractionEvent(InteractionEvent event) {
+    public ITaskscapeNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
         if (event.getKind() == InteractionEvent.Kind.COMMAND) return null;
         if (activeTaskscape.getTaskscapeMap().values().size() == 0) return null;
         if (suppressListenerNotification) return null;
@@ -132,8 +135,8 @@ public class TaskscapeManager {
         float previousInterest = 0;
         float decayOffset = 0;
         if (previous != null) previousInterest = previous.getDegreeOfInterest().getValue();
-        if (event.getKind().isUserEvent() ) {
-        	if (previousInterest <= 0) {  // reset interest if not interesting
+        if (event.getKind().isUserEvent()) {
+        	if (previousInterest < 0) {  // reset interest if not interesting
             	decayOffset = (-1)*(previous.getDegreeOfInterest().getValue());
         		activeTaskscape.addEvent(new InteractionEvent(
                         InteractionEvent.Kind.MANIPULATION, 
@@ -145,8 +148,10 @@ public class TaskscapeManager {
         }
         ITaskscapeNode node = activeTaskscape.addEvent(event);
         List<ITaskscapeNode> interestDelta = new ArrayList<ITaskscapeNode>();
-        if (!event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) propegateDoiToParents(node, previousInterest, decayOffset, 1, interestDelta); 
-        activeTaskscape.setActiveElement(node);
+        if (propagateToParents && !event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) {
+        	propegateDoiToParents(node, previousInterest, decayOffset, 1, interestDelta); 
+        }
+        if (event.getKind().isUserEvent()) activeTaskscape.setActiveElement(node);
 
         interestDelta.add(node); // TODO: check that the order of these is sensible
         for (ITaskscapeListener listener : listeners) listener.interestChanged(interestDelta);

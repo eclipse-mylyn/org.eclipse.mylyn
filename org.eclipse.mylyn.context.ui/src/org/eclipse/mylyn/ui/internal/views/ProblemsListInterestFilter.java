@@ -32,6 +32,9 @@ public class ProblemsListInterestFilter extends InterestFilter {
          if (marker.getSeverity() == IMarker.SEVERITY_ERROR) {
              return true;
          } else {
+        	 if (MylarPlugin.getTaskscapeManager().getActiveTaskscape().getTaskscapeMap().values().size() == 0) {
+        		 return false;
+        	 }
              String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension()).getHandleForMarker(marker);
              if (handle == null) {
                  return false;
