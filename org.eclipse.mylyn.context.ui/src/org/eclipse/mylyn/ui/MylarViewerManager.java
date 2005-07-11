@@ -26,6 +26,7 @@ import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.model.InteractionEvent;
 import org.eclipse.mylar.ui.actions.FilterOutlineAction;
 import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
 import org.eclipse.swt.SWT;
@@ -102,7 +103,7 @@ public class MylarViewerManager implements ITaskscapeListener {
 
     protected void refreshViewers() {
     	List<ITaskscapeNode> toRefresh = Collections.emptyList();
-    	refreshViewers(toRefresh, true);
+    	refreshViewers(toRefresh, true); 
     }
     
     protected void refreshViewers(ITaskscapeNode node, boolean updateLabels) {
@@ -116,11 +117,13 @@ public class MylarViewerManager implements ITaskscapeListener {
             public void run() { 
             	try {
             		List<ITaskscapeNode> nodesToRefresh = new ArrayList<ITaskscapeNode>();
-			    	if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
-			            String raisedElementHandle = MylarPlugin.getTaskscapeManager().getTempRaisedHandle();
+			    	boolean showChildrenRequested = false;
+            		if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
+			    		String raisedElementHandle = MylarPlugin.getTaskscapeManager().getTempRaisedHandle();
 			            nodesToRefresh = new ArrayList<ITaskscapeNode>(); // override refresh nodes
 			            nodesToRefresh.add(MylarPlugin.getTaskscapeManager().getNode(raisedElementHandle));
-			    	} else if (nodes != null) {
+			            showChildrenRequested = true;
+            		} else if (nodes != null) {
 			    		nodesToRefresh.addAll(nodes);
 			    	}	
 
@@ -132,8 +135,10 @@ public class MylarViewerManager implements ITaskscapeListener {
 								viewer.getControl().setRedraw(true);
 							} else {
 								Object objectToRefresh = null;
+								ITaskscapeNode lastNode = null;
 								for (ITaskscapeNode node : nodesToRefresh) {
 									if (node != null) {
+										lastNode = node;
 										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
 										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
 										if (node.getDegreeOfInterest().getValue() <= 0) {
@@ -148,9 +153,14 @@ public class MylarViewerManager implements ITaskscapeListener {
 										}
 									}
 								}
-//								if (viewer.testFindItem(objectToRefresh)) {
-									viewer.setSelection(new StructuredSelection(objectToRefresh));
-//								}
+						    	InteractionEvent lastInteraction = lastNode.getDegreeOfInterest().getEvents().get(lastNode.getDegreeOfInterest().getEvents().size()-1);
+						    	System.err.println("> last: " + lastInteraction.getKind());
+						    	if (showChildrenRequested && viewer instanceof TreeViewer) {
+									((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
+								} else if (objectToRefresh != null && lastInteraction.getKind().isUserEvent()) {
+									StructuredSelection selection = new StructuredSelection(objectToRefresh);
+									if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
+								}
 							}
 						}
 					}		
