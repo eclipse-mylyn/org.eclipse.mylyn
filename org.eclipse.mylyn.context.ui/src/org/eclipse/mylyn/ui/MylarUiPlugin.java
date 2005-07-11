@@ -60,6 +60,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 
     private Map<String, IMylarUiBridge> bridges = new HashMap<String, IMylarUiBridge>();
     private static MylarUiPlugin plugin;
+	public static final String PLUGIN_ID = "org.eclipse.mylar.ui";
 	private ResourceBundle resourceBundle;
     private boolean decorateInterestMode = false;
     public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";

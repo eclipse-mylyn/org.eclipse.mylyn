@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -39,8 +38,12 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	
 	
 	public MylarWorkingSetPage() {
-		super("org.eclipse.mylar.monitor.workingSetPage", "Mylar Task Context Working Set", MylarImages.MYLAR);
-		setDescription("Mylar Working Set - All of the files contained in the active taskscape"); 
+		super("org.eclipse.mylar.monitor.workingSetPage", 
+			"Mylar Task Context Working Set", 
+			MylarUiPlugin.imageDescriptorFromPlugin(MylarUiPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
+		setDescription(
+			"Create the Mylar Task Context working set.  It will be updated automatically to contain\n" +
+			"all of the resources related to the active task.");
 	}
 
 	public void createControl(Composite parent) {
@@ -68,7 +71,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		label.setLayoutData(gd);
 		
 		label = new Label(composite, SWT.WRAP);
-		label.setText("NOTE: This working set is dynamically created by Mylar using your current task context.");
+		label.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
 		label.setFont(UiUtil.BOLD);
 		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
@@ -78,11 +81,11 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 		
-		label = new Label(composite, SWT.WRAP);
-		label.setText("PLEASE DO NOT ACTIVATE THIS WORKING SET AT ANYTIME.\nTHIS WORKING SET IS ONLY USEFUL FOR SEARCHING.");
-		label.setFont(UiUtil.BOLD);
-		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
-		label.setLayoutData(gd);
+//		label = new Label(composite, SWT.WRAP);
+//		label.setText("PLEASE DO NOT ACTIVATE THIS WORKING SET AT ANYTIME.\nTHIS WORKING SET IS ONLY USEFUL FOR SEARCHING.");
+//		label.setFont(UiUtil.BOLD);
+//		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+//		label.setLayoutData(gd);
 		
 		Dialog.applyDialogFont(composite);
 	}

@@ -11,6 +11,7 @@
 package org.eclipse.mylar.java.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -26,8 +27,12 @@ import org.eclipse.swt.widgets.Label;
  */
 public class MylarPreferenceWizardPage extends WizardPage {
 
-//	Button removeInPlace;
-//	boolean inPlace = true;
+	private static final String FIRST_USE = "If this is your first time using Mylar see:  Help -> Help Contents -> Mylar -> Overview";
+	private static final  String AUTO_FOLDING = "Turn interest-based automatic Java editor folding on";
+	private static final  String AUTO_CLOSE = "Close all editors automatically on task deactivation";
+	private static final  String WORKING_SET = "Add the \"active task context\" working set";
+	private static final  String DEFAULT_EDITOR = "Set the Mylar editor to be the default for .java " +
+		"(enables interest-based content assist)";
 	
 	Button setMylarEditorDefault;
 	boolean mylarEditorDefault = true;
@@ -44,6 +49,9 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	protected MylarPreferenceWizardPage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
+		setDescription(
+			"Configures Mylar preferences to the recommended defaults. To alter these \n" +
+			"go to the Mylar preference page or re-invoke this wizard via the \"New\" menu.");
 	}
 
 	public void createControl(Composite parent) {
@@ -90,7 +98,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		});
 		
 		Label label = new Label(buttonComposite, SWT.NONE);
-		label.setText("Set the Mylar editor to be the default java editor");
+		label.setText(DEFAULT_EDITOR);
 		gd = new GridData();
 		label.setLayoutData(gd);
 		
@@ -110,7 +118,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		});
 		
 		label = new Label(buttonComposite, SWT.NONE);
-		label.setText("Turn automatic folding on");
+		label.setText(AUTO_FOLDING);
 		gd = new GridData();
 		label.setLayoutData(gd);
 
@@ -130,7 +138,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		});
 		
 		label = new Label(buttonComposite, SWT.NONE);
-		label.setText("Close all editors automatically on task deactivation");
+		label.setText(AUTO_CLOSE);
 		gd = new GridData();
 		label.setLayoutData(gd);
 		
@@ -149,7 +157,19 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		});
 		
 		label = new Label(buttonComposite, SWT.NONE);
-		label.setText("Add the Mylar working set");
+		label.setText(WORKING_SET);
+		gd = new GridData();
+		label.setLayoutData(gd);
+		setControl(buttonComposite);
+		
+		Label spacer = new Label(buttonComposite, SWT.NONE);
+		spacer.setText(" ");
+		spacer = new Label(buttonComposite, SWT.NONE);
+		spacer = new Label(buttonComposite, SWT.NONE);
+		spacer.setText(" ");
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setText(FIRST_USE);
+		label.setFont(UiUtil.BOLD);
 		gd = new GridData();
 		label.setLayoutData(gd);
 		setControl(buttonComposite);
