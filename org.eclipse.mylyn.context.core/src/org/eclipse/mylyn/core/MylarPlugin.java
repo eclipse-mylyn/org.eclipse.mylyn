@@ -200,6 +200,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         	buffer.append(status.getException().getStackTrace()[0]);
         }
      
+        System.err.println(">>>> " + buffer.toString());
         MylarPlugin.getDefault().getLog().log(status);
         if (getDefault().logStream != null) getDefault().logStream.println(buffer.toString());
     }
@@ -222,7 +223,7 @@ public class MylarPlugin extends AbstractUIPlugin {
          */
     public static void fail(Throwable throwable, String message, boolean informUser) {
         if (message == null) message = "no message";
-
+ 
         final Status status= new Status(
                 Status.ERROR,
                 MylarPlugin.IDENTIFIER, 

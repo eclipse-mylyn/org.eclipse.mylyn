@@ -125,8 +125,7 @@ public class MylarViewerManager implements ITaskscapeListener {
             		} else if (nodes != null) {
 			    		nodesToRefresh.addAll(nodes);
 			    	}	
-
-    		        for (StructuredViewer viewer : managedViewers) {
+            		for (StructuredViewer viewer : managedViewers) {
 						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
 							if (nodes == null || nodes.isEmpty()) {
 					            viewer.getControl().setRedraw(false); // TODO: does this really help?
@@ -157,7 +156,7 @@ public class MylarViewerManager implements ITaskscapeListener {
 									((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
 								} else if (objectToRefresh != null 
 										&& lastInteraction.getKind().isUserEvent()
-										&& (!IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass()))) { // ignore outlines since they're synched
+										&& isSelectableViewer(viewer)) { // ignore outlines since they're synched
 									StructuredSelection selection = new StructuredSelection(objectToRefresh);
 									if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
 								}
@@ -171,7 +170,14 @@ public class MylarViewerManager implements ITaskscapeListener {
         });
     }
     
-    public void interestChanged(final List<ITaskscapeNode> nodes) {
+    private boolean isSelectableViewer(StructuredViewer viewer) {
+    	if (viewer.getClass().getEnclosingClass() != null) {
+    		return !IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass());
+    	} 
+    	return true;
+	}
+
+	public void interestChanged(final List<ITaskscapeNode> nodes) {
     	refreshViewers(nodes, false);
     }
     
