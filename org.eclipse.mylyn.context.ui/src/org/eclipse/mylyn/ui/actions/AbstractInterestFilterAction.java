@@ -69,26 +69,29 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
     }
     
     protected void valueChanged(IAction action, final boolean on, boolean store) {
-        action.setChecked(on);
-        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
-
-        StructuredViewer viewer = getViewer();
-        if (viewer != null) {
-			if (on) {
-				installInterestFilter(getViewer());
-				if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
-			} else {
-				uninstallInterestFilter(getViewer());
-				if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
-			}
-			refreshViewer();
-			if (on && viewer instanceof TreeViewer) {
-				((TreeViewer)viewer).expandAll();
-			}
-        } else {
-        	// ignore, failure to install is ok if there is no outline when attempted
-//        	MylarPlugin.log("Couldn't mange filter installation on null viewer: " + prefId, this);
-        }
+    	try {
+	        action.setChecked(on);
+	        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
+	
+	        StructuredViewer viewer = getViewer();
+	        if (viewer != null) {
+				if (on) {
+					installInterestFilter(getViewer());
+					if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
+				} else {
+					uninstallInterestFilter(getViewer());
+					if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
+				}
+				refreshViewer();
+				if (on && viewer instanceof TreeViewer) {
+					((TreeViewer)viewer).expandAll();
+				}
+	        } else {
+	        	// ignore, failure to install is ok if there is no outline when attempted
+	        }
+    	} catch (Throwable t) {
+    		MylarPlugin.fail(t, "Could not install viewer manager on: " + prefId, false);
+    	}
 	}
 	
 	protected abstract StructuredViewer getViewer() ;
@@ -96,16 +99,20 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
 	public abstract void refreshViewer();
 
 	protected void installInterestFilter(StructuredViewer viewer) {
-		if (viewer != null) {
-            boolean found = false;
-            for (int i = 0; i < viewer.getFilters().length; i++) {
-                ViewerFilter filter = viewer.getFilters()[i];
-                if (filter instanceof InterestFilter) found = true;
-            }
-            if (!found) viewer.addFilter(interestFilter);
-        } else {
-        	MylarPlugin.log("Could not install interest filter", null);
-        }
+		try {
+			if (viewer != null) {
+	            boolean found = false;
+	            for (int i = 0; i < viewer.getFilters().length; i++) {
+	                ViewerFilter filter = viewer.getFilters()[i];
+	                if (filter instanceof InterestFilter) found = true;
+	            }
+	            if (!found) viewer.addFilter(interestFilter);
+	        } else {
+	        	MylarPlugin.log("Could not install interest filter", this);
+	        }
+		} catch (Throwable t) {
+			MylarPlugin.fail(t, "Could not install viewer fitler on: " + prefId, false);
+		}
 	}
 
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
@@ -117,7 +124,7 @@ public abstract class AbstractInterestFilterAction extends Action implements IVi
                 }
             }
         } else {
-        	MylarPlugin.log("Could not uninstall interest filter", null);
+        	MylarPlugin.log("Could not uninstall interest filter", this);
         }
 	}	
 	
