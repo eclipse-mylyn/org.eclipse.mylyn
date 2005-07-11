@@ -218,16 +218,11 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 
     @Override
     protected void initializeDefaultPreferences(IPreferenceStore store) {
-//    	store.setDefault(SHOW_P1_MODE, true);
-//    	store.setDefault(SHOW_P2_MODE, true);
-//    	store.setDefault(SHOW_P3_MODE, true);
-//    	store.setDefault(SHOW_P4_MODE, true);
-//    	store.setDefault(SHOW_P5_MODE, true);
     	store.setDefault(SELECTED_PRIORITY, "P5");
     	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);
     	store.setDefault(REFRESH_QUERIES, false);
-    	store.setDefault(REPORT_OPEN_EDITOR, true);
-    	store.setDefault(REPORT_OPEN_INTERNAL, false);
+    	store.setDefault(REPORT_OPEN_EDITOR, false);
+    	store.setDefault(REPORT_OPEN_INTERNAL, true);
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     }
     /**
@@ -239,8 +234,6 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
         // make sure that the bridge initialized, if not, make a new one
         if (bridge == null) {
             bridge = new BugzillaMylarBridge();
-//            MylarPlugin.getTaskscapeManager().addRelationshipProvider(new BugzillaRelationshipProvider());
-//            MylarUiPlugin.getDefault().getAdapters().put(ITaskscapeNode.Kind.Bugzilla, new BugzillaUiAdapter());
         }
         return bridge;
     }
