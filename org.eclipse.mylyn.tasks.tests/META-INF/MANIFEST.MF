@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tasklist Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasks.tests
-Bundle-Version: 1.0.0
+Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylar.tasks.tests.MylarTasksTestsPlugin
 Bundle-Vendor: University of British Columbia
 Bundle-Localization: plugin
