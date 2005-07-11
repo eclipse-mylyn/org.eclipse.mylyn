@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -44,6 +45,7 @@ public class FilterOutlineAction extends AbstractInterestFilterAction {
         if (viewers.size() > 0) {
         	return viewers.get(0);
         } else {
+        	MylarPlugin.log("Could notfind outline", this);
         	return null;
         }
 	}

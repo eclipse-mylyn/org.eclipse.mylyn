@@ -124,7 +124,7 @@ public class MylarViewerManager implements ITaskscapeListener {
 			            showChildrenRequested = true;
             		} else if (nodes != null) {
 			    		nodesToRefresh.addAll(nodes);
-			    	}	
+            		}
             		for (StructuredViewer viewer : managedViewers) {
 						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
 							if (nodes == null || nodes.isEmpty()) {
@@ -150,8 +150,8 @@ public class MylarViewerManager implements ITaskscapeListener {
 											bridge.refreshOutline(objectToRefresh, updateLabels);
 										}
 									}
-								}								
-						    	InteractionEvent lastInteraction = lastNode.getDegreeOfInterest().getEvents().get(lastNode.getDegreeOfInterest().getEvents().size()-1);
+								}			
+								InteractionEvent lastInteraction = lastNode.getDegreeOfInterest().getEvents().get(lastNode.getDegreeOfInterest().getEvents().size()-1);
 						    	if (showChildrenRequested && viewer instanceof TreeViewer) {
 									((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
 								} else if (objectToRefresh != null 
@@ -171,8 +171,11 @@ public class MylarViewerManager implements ITaskscapeListener {
     }
     
     private boolean isSelectableViewer(StructuredViewer viewer) {
-    	if (viewer.getClass().getEnclosingClass() != null) {
-    		return !IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass());
+    	if (viewer instanceof IContentOutlinePage) {
+    		return false;
+    	} else if (viewer.getClass().getEnclosingClass() != null
+    		&& IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass())) {
+    		return false;
     	} 
     	return true;
 	}
