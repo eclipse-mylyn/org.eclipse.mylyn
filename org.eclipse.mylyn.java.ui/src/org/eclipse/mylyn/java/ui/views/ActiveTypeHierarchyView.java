@@ -64,10 +64,6 @@ public class ActiveTypeHierarchyView extends ViewPart {
     private TreeParent root = new TreeParent("<no hierarchy>");
     
     private TreeViewer viewer;
-
-//  XXX never used
-//	private DrillDownAdapter drillDownAdapter;
-//  private HashMap targetHistory = new HashMap();
 	
 	final ITaskscapeListener MODEL_LISTENER = new ITaskscapeListener() { 
         
@@ -110,9 +106,6 @@ public class ActiveTypeHierarchyView extends ViewPart {
 	class ViewContentProvider implements IStructuredContentProvider, 
 										   ITreeContentProvider {
 		
-//		XXX never read
-//		private TreeParent invisibleRoot;
-
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			// don't care when the input is changed
 		}
