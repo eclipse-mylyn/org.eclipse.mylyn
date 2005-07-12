@@ -208,6 +208,10 @@ Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
 
+   <url>
+      <update label="Mylar Phase 1" url="http://www.cs.ubc.ca/~mylar/alpha/phase1"/>
+   </url>
+
    <includes
          id="org.eclipse.mylar.bugzilla_feature"
          version="0.0.0"/>
