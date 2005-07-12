@@ -57,11 +57,12 @@
          id="org.eclipse.mylar.bugzilla.core.search.searchPage"
          name="Bugzilla Search Page">
       <page
-            label="Bugzilla Search"
+            class="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchPage"
             enabled="true"
             icon="icons/elcl16/bug-search.gif"
-            class="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchPage"
-            id="org.eclipse.mylar.bugzilla.core.search.bugzillaSearchPage"/>
+            id="org.eclipse.mylar.bugzilla.core.search.bugzillaSearchPage"
+            label="Bugzilla Search"
+            tabPosition="999"/>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
