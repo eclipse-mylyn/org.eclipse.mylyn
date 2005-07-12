@@ -26,6 +26,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
@@ -65,7 +66,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		super();
 		model = new NewBugModel();
 		id = null; // Since there is no bug posted yet.
-		super.setDefaultPageImageDescriptor(BugzillaPlugin.imageDescriptorFromPlugin(IBugzillaConstants.PLUGIN_ID, "icons/wizban/bug-wizard.gif"));
+		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 	}
 
 	/*

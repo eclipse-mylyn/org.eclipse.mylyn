@@ -62,15 +62,9 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -103,13 +97,6 @@ public class ExistingBugEditor extends AbstractBugEditor
 	public ExistingBugEditor() {
 		super();
 		
-		// get the workbench page and add a listener so we can detect when it closes
-		IWorkbench wb = BugzillaPlugin.getDefault().getWorkbench();
-		IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
-		IWorkbenchPage ap = aw.getActivePage();
-		BugzillaEditorListener listener = new BugzillaEditorListener();
-		ap.addPartListener(listener);
-		
 		// Set up the input for comparing the bug report to the server
 		CompareConfiguration config = new CompareConfiguration();
 		config.setLeftEditable(false);
@@ -132,6 +119,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 		model = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
 		bug = ei.getBug();
 		restoreBug();
+		isDirty = false;
 		updateEditorTitle();
 	}
 
@@ -171,27 +159,28 @@ public class ExistingBugEditor extends AbstractBugEditor
 	@Override
 	protected void addRadioButtons(Composite buttonComposite) {
 		int i = 0;
+		Button selected = null;
 		radios = new Button[bug.getOperations().size()];
 		radioOptions = new Combo[bug.getAttributes().size()];
 		for (Iterator<Operation> it = bug.getOperations().iterator(); it.hasNext(); ) {
 			Operation o = it.next();
 			radios[i] = new Button(buttonComposite, SWT.RADIO);
+			radios[i].setFont(TEXT_FONT);
 			GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			if (!o.hasOptions())
 				radioData.horizontalSpan = 4;
 			else
 				radioData.horizontalSpan = 3;
 			radioData.heightHint = 20;
-			radios[i].setText(o.getOperationName());
+			String opName = o.getOperationName();
+			opName = opName.replaceAll("</.*>", "");
+			opName = opName.replaceAll("<.*>", "");
+			radios[i].setText(opName);
 			radios[i].setLayoutData(radioData);
 			radios[i].setBackground(background);
 			radios[i].addSelectionListener(new RadioButtonListener());
 			radios[i].addListener(SWT.FocusIn, new GenericListener());
-			if (i == 0 || o.isChecked()) {
-				radios[i].setSelection(true);
-				bug.setSelectedOperation(o);
-			}
-
+			
 			if (o.hasOptions()) {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
@@ -203,7 +192,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 							| SWT.MULTI
 							| SWT.V_SCROLL
 							| SWT.READ_ONLY);
-		
+				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
 				radioOptions[i].setBackground(background);
 				
@@ -215,6 +204,24 @@ public class ExistingBugEditor extends AbstractBugEditor
 				radioOptions[i].select(0);
 				radioOptions[i].addSelectionListener(new RadioButtonListener());
 			}
+			
+			if (i == 0 || o.isChecked()) {
+				if(selected != null)
+					selected.setSelection(false);
+				selected = radios[i];
+				radios[i].setSelection(true);
+				if(o.hasOptions() && o.getOptionSelection() != null){
+					int j = 0;
+					for(String s: radioOptions[i].getItems()){
+						if(s.compareTo(o.getOptionSelection()) == 0){
+							radioOptions[i].select(j);
+						}
+						j++;
+					}
+				}
+				bug.setSelectedOperation(o);
+			}
+			
 			i++;
 		}
 	}
@@ -224,8 +231,9 @@ public class ExistingBugEditor extends AbstractBugEditor
 		super.addActionButtons(buttonComposite);
 
 		compareButton = new Button(buttonComposite, SWT.NONE);
+		compareButton.setFont(TEXT_FONT);
 		GridData compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		compareButtonData.widthHint = 80;
+		compareButtonData.widthHint = 100;
 		compareButtonData.heightHint = 20;
 		compareButton.setText("Compare");
 		compareButton.setLayoutData(compareButtonData);
@@ -334,6 +342,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 		StyledText t = newLayout(descriptionComposite, 4, "Description:", HEADER);
 		t.addListener(SWT.FocusIn, new DescriptionListener());
 		t = newLayout(descriptionComposite, 4, bug.getDescription(), VALUE);
+		t.setFont(COMMENT_FONT);
 		t.addListener(SWT.FocusIn, new DescriptionListener());
         
         texts.add(textsindex, t);
@@ -367,6 +376,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 				t = newLayout(addCommentsComposite, 4, commentHeader, HEADER);
 				t.addListener(SWT.FocusIn, new CommentListener(comment));
 				t = newLayout(addCommentsComposite, 4, comment.getText(), VALUE);
+				t.setFont(COMMENT_FONT);
 				t.addListener(SWT.FocusIn, new CommentListener(comment));
                                 
                 //code for outline
@@ -391,20 +401,23 @@ public class ExistingBugEditor extends AbstractBugEditor
 			newLayout(
 				addCommentsTitleComposite,
 				4,
-				"New Additional Comment:",
+				"Additional Comments:",
 				HEADER).addListener(SWT.FocusIn, new NewCommentListener());
 			addCommentsText =
 				new Text(
 					addCommentsComposite,
 					SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+			addCommentsText.setFont(COMMENT_FONT);
 			GridData addCommentsTextData =
 				new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 			addCommentsTextData.horizontalSpan = 4;
-			addCommentsTextData.widthHint = 250;
-			addCommentsTextData.heightHint = 100;
+			addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
+			addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
+			
 			addCommentsText.setLayoutData(addCommentsTextData);
 			addCommentsText.setText(bug.getNewComment());
-			addCommentsText.addListener(SWT.FocusOut, new Listener() {
+			addCommentsText.addListener(SWT.KeyUp, new Listener() {
+				
 				public void handleEvent(Event event) {
 					String sel = addCommentsText.getText();
 					if (!(bug.getNewNewComment().equals(sel))) {
@@ -420,11 +433,12 @@ public class ExistingBugEditor extends AbstractBugEditor
             
 			this.createSeparatorSpace(addCommentsComposite);
 		}
-
+	
 	@Override
 	protected void addKeywordsList(String keywords, Composite attributesComposite) {
 		newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
 		keywordsText = new Text(attributesComposite, SWT.BORDER);
+		keywordsText.setFont(TEXT_FONT);
 		keywordsText.setEditable(false);
 		keywordsText.setForeground(foreground);
 		keywordsText.setBackground(JFaceColors.getErrorBackground(display));
@@ -435,6 +449,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 		keywordsText.setText(keywords);
 		keywordsText.addListener(SWT.FocusIn, new GenericListener());
 		keyWordsList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		keyWordsList.setFont(TEXT_FONT);
 		GridData keyWordsTextData =
 			new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		keyWordsTextData.horizontalSpan = 1;
@@ -481,7 +496,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 			Attribute a = it.next();
 			a.setValue(a.getNewValue());
 		}
-		
+				
 		// Update some other fields as well.
 		bug.setNewComment(bug.getNewNewComment());
 			
@@ -540,75 +555,6 @@ public class ExistingBugEditor extends AbstractBugEditor
 			}
 		
 		}
-
-	/**
-	 * Class to listen for editor events.
-	 */
-	protected class BugzillaEditorListener implements IPartListener
-	{
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partActivated(IWorkbenchPart part) {
-			// no need to listen to this
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partBroughtToTop(IWorkbenchPart part) {
-			// no need to listen to this
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partClosed(IWorkbenchPart part) {
-			
-			if (part instanceof ExistingBugEditor) {
-
-				ExistingBugEditor editor = (ExistingBugEditor)part;
-				
-				// check if the bug editor needs to be saved
-				if (editor.isDirty) {
-					// ask the user whether they want to save it or not and perform the appropriate action
-					editor.changeDirtyStatus(false);
-					boolean response = MessageDialog.openQuestion(null, "Save Changes", 
-							"You have made some changes to the bug, do you want to save them?");
-					if (response) {
-						editor.saveBug();
-					}
-				}
-				
-				// get the active workbench page
-				IWorkbenchPage page = BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-
-				if (page != null) {
-					// Close the compare editor, if there is one
-					IEditorPart compareEditor = page.findEditor(getCompareInput());
-					if (compareEditor != null) {
-						page.closeEditor(compareEditor, false);
-					}
-				}
-
-			}
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partDeactivated(IWorkbenchPart part) {
-			// no need to listen to this
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partOpened(IWorkbenchPart part) {
-			// no need to listen to this
-		}
-	}
 	
 	/**
 	 * Class to handle the selection change of the keywords.
@@ -711,19 +657,29 @@ public class ExistingBugEditor extends AbstractBugEditor
 			}
 			// determine the operation to do to the bug
 			for (int i = 0; i < radios.length; i++) {
-				if (radios[i] != e.widget && radios[i] != selected)
+				if (radios[i] != e.widget && radios[i] != selected){
 					radios[i].setSelection(false);
+				}
+				
 				if (e.widget == radios[i]) {
 					Operation o = bug.getOperation(radios[i].getText());
 					bug.setSelectedOperation(o);
+					ExistingBugEditor.this.changeDirtyStatus(true);
 				}
 				else if(e.widget == radioOptions[i]) {
 					Operation o = bug.getOperation(radios[i].getText());
 					o.setOptionSelection(radioOptions[i].getItem(radioOptions[i].getSelectionIndex()));
+					
+					if(bug.getSelectedOperation() != null)
+						bug.getSelectedOperation().setChecked(false);
+					o.setChecked(true);
+					
 					bug.setSelectedOperation(o);
 					radios[i].setSelection(true);
-		            if(selected != null && selected != radios[i])
+		            if(selected != null && selected != radios[i]){
 		                selected.setSelection(false);
+		            }
+		            ExistingBugEditor.this.changeDirtyStatus(true);
 				}
 			}
 			if(addCommentsText.getText() == null || addCommentsText.getText().equals("")){

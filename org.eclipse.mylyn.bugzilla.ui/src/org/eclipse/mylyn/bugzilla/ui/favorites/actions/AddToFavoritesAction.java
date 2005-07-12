@@ -11,9 +11,9 @@
 package org.eclipse.mylar.bugzilla.ui.favorites.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.bugzilla.core.BugzillaImages;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.favorites.Favorite;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.FavoritesView;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.ui.part.EditorPart;

@@ -21,6 +21,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -579,11 +580,12 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		descriptionText = new Text(attributesComposite, SWT.BORDER | SWT.MULTI
 				| SWT.WRAP | SWT.V_SCROLL);
 
+		descriptionText.setFont(AbstractBugEditor.COMMENT_FONT);
 		GridData descriptionTextData = new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
-		descriptionTextData.widthHint = 200;
-		descriptionTextData.heightHint = 100;
+		descriptionTextData.widthHint = AbstractBugEditor.DESCRIPTION_WIDTH;
+		descriptionTextData.heightHint = AbstractBugEditor.DESCRIPTION_HEIGHT;
 		descriptionText.setLayoutData(descriptionTextData);
 		descriptionText.addListener(SWT.Modify, this);
 

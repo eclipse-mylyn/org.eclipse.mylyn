@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.ui.actions;
 
-import org.eclipse.mylar.bugzilla.core.offline.AbstractOfflineReportsAction;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 
 /**

@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.core.offline;
+package org.eclipse.mylar.bugzilla.ui.actions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +16,7 @@ import java.net.URL;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 
@@ -35,7 +36,7 @@ public class AbstractOfflineReportsAction extends Action
 		try 
 		{
 			// try to change the default icon
-			url = new URL(BugzillaPlugin.getDefault().getBundle().getEntry("/"), filename);
+			url = new URL(BugzillaUiPlugin.getDefault().getBundle().getEntry("/"), filename);
 			setImageDescriptor(ImageDescriptor.createFromURL(url));
 		} 
 		catch (MalformedURLException e) 
@@ -43,7 +44,7 @@ public class AbstractOfflineReportsAction extends Action
 			// Simply don't change the default icon
 		}    	    
 	}	
-
+	
 	/**
 	 * Convienience method for getting the current shell
 	 * @return The current shell

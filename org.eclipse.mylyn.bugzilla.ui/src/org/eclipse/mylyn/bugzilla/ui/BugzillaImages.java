@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.core;
+package org.eclipse.mylar.bugzilla.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,7 +57,7 @@ public class BugzillaImages {
 
 	private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
 	
-	private static final URL baseURL = BugzillaPlugin.getDefault().getBundle().getEntry("/icons/");
+	private static final URL baseURL = BugzillaUiPlugin.getDefault().getBundle().getEntry("/icons/");
 	public static final String T_ELCL = "elcl16";
 	
 	public static final ImageDescriptor IMG_TOOL_ADD_TO_FAVORITES = create(T_ELCL, "bug-favorite.gif");

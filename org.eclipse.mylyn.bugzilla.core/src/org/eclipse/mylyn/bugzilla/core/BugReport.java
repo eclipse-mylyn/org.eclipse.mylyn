@@ -357,7 +357,10 @@ public class BugReport implements Serializable, IBugzillaBug {
 		Iterator<Operation> itr = operations.iterator();
 		while (itr.hasNext()) {
 			Operation o = itr.next();
-			if (o.getOperationName().equals(displayText))
+			String opName = o.getOperationName();
+			opName = opName.replaceAll("</.*>", "");
+			opName = opName.replaceAll("<.*>", "");
+			if (opName.equals(displayText))
 				return o;
 		}
 		return null;

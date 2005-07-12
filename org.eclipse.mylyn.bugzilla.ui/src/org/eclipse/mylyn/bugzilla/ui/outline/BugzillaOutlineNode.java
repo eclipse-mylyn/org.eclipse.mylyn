@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaImages;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.swt.graphics.Image;
 
 

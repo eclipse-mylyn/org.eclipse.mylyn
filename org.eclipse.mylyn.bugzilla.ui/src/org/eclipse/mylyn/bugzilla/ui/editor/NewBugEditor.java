@@ -35,11 +35,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
 
@@ -59,13 +54,6 @@ public class NewBugEditor extends AbstractBugEditor {
 	 */
 	public NewBugEditor() {
 		super();
-		
-		// get the workbench page and add a listener so we can detect when it closes
-		IWorkbench wb = BugzillaPlugin.getDefault().getWorkbench();
-		IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
-		IWorkbenchPage ap = aw.getActivePage();
-		BugzillaEditorListener listener = new BugzillaEditorListener();
-		ap.addPartListener(listener);
 	}
 
 	@Override
@@ -111,15 +99,16 @@ public class NewBugEditor extends AbstractBugEditor {
 		descriptionText = 
 			new Text(descriptionComposite,
 				SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		descriptionText.setFont(COMMENT_FONT);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
-		descriptionTextData.widthHint = 250;
-		descriptionTextData.heightHint = 100;
+		descriptionTextData.widthHint = DESCRIPTION_WIDTH;
+		descriptionTextData.heightHint = DESCRIPTION_HEIGHT;
 		descriptionText.setLayoutData(descriptionTextData);
 		descriptionText.setText(bug.getDescription());
-		descriptionText.addListener(SWT.FocusOut, new Listener() {
+		descriptionText.addListener(SWT.KeyUp, new Listener() {
 			public void handleEvent(Event event) {
-				String sel = descriptionText.getText();
+				String sel = descriptionText.getText() + event.character;
 				if (!(newDescription.equals(sel))) {
 					newDescription = sel;
 					changeDirtyStatus(true);
@@ -280,64 +269,8 @@ public class NewBugEditor extends AbstractBugEditor {
 		newSummary = bug.getSummary();
 		newDescription = bug.getDescription();
 		restoreBug();
+		isDirty = false;
 		updateEditorTitle();
-	}
-
-	/**
-	 * Class to listen for editor events.
-	 */
-	protected class BugzillaEditorListener implements IPartListener
-	{
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partActivated(IWorkbenchPart part) {
-			// don't need to listen to this
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partBroughtToTop(IWorkbenchPart part) {
-			// don't need to listen to this
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partClosed(IWorkbenchPart part) {
-			
-			if (part instanceof NewBugEditor) {
-
-				NewBugEditor editor = (NewBugEditor)part;
-				
-				// check if the bug editor needs to be saved
-				if (editor.isDirty) {
-					// ask the user whether they want to save it or not and perform the appropriate action
-					editor.changeDirtyStatus(false);
-					boolean response = MessageDialog.openQuestion(null, "Save Changes", 
-							"You have made some changes to the bug, do you want to save them?");
-					if (response) {
-						editor.saveBug();
-					}
-				}
-			}
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partDeactivated(IWorkbenchPart part) {
-			// don't need to listen to this
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partOpened(IWorkbenchPart part) {
-			// don't need to listen to this
-		}
 	}
 
 	/**

@@ -410,4 +410,9 @@ public class BugzillaRepository
 		}
 		return url;
 	}
+	
+	public static String getBugUrlWithoutLogin(int id) {		
+		String url = BugzillaPlugin.getDefault().getServerName() + "/show_bug.cgi?id=" + id;
+		return url;
+	}
 }
