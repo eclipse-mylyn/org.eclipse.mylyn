@@ -1,0 +1,53 @@
+package org.eclipse.mylar.bugzilla.ui;
+
+import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResult;
+import org.eclipse.mylar.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
+import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
+import org.eclipse.search.ui.text.AbstractTextSearchResult;
+import org.eclipse.search.ui.text.Match;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+
+public class BugzillaResultMatchAdapter implements
+		IBugzillaResultEditorMatchAdapter {
+
+
+	/** An empty array of matches */
+	private final Match[] EMPTY_ARR= new Match[0];
+	
+	
+	private BugzillaSearchResult result;
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.search.ui.text.IEditorMatchAdapter#isShownInEditor(org.eclipse.search.ui.text.Match, org.eclipse.ui.IEditorPart)
+	 */
+	public boolean isShownInEditor(Match match, IEditorPart editor) {
+		if(result == null)
+			return false;
+		IEditorInput ei= editor.getEditorInput();
+		if (ei instanceof ExistingBugEditorInput) {
+			ExistingBugEditorInput bi= (ExistingBugEditorInput) ei;
+			return match.getElement().equals(bi.getBug());
+		}
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.search.ui.text.IEditorMatchAdapter#computeContainedMatches(org.eclipse.search.ui.text.AbstractTextSearchResult, org.eclipse.ui.IEditorPart)
+	 */
+	public Match[] computeContainedMatches(AbstractTextSearchResult result, IEditorPart editor) {
+		if(result == null)
+			return EMPTY_ARR;
+		IEditorInput ei= editor.getEditorInput();
+		if (ei instanceof ExistingBugEditorInput) {
+			ExistingBugEditorInput bi= (ExistingBugEditorInput) ei;
+			return result.getMatches(bi.getBug());
+		}
+		return EMPTY_ARR;
+	}
+
+	public void setResult(BugzillaSearchResult result) {
+		this.result = result;
+	}
+
+}

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+   
+   <extension
+      id="org.eclipse.mylar.bugzilla.wizards"
+      name="Bug Wizard"
+      point="org.eclipse.ui.newWizards">
+   <category
+         name="Bugzilla Client"
+         id="org.eclipse.mylar.bugzilla.wizard.category">
+   </category>
+   <wizard
+         category="org.eclipse.mylar.bugzilla.wizard.category"
+         class="org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard"
+         icon="icons/elcl16/bug-new.gif"
+         id="org.eclipse.mylar.bugzilla.bugWizard"
+         name="New Bug Report">
+      <description>
+      	Create a new bug report
+      </description>
+   </wizard>
+</extension>
+   
+   <extension
+         id="org.eclipse.mylar.bugzilla.help.browser"
+         name="Bugzilla Help"
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="true">
+      </toc>
+   </extension>
+   <extension
+   			id="org.eclipse.mylar.bugzilla.ui"
+   			name="Bugzilla Client Views"
+   			point="org.eclipse.ui.views">
+   		 <category
+   				name="Bugzilla"
+            	id="org.eclipse.mylar.bugzilla.category"/>
+   		 <view
+   		 		name="Bugzilla Offline Reports"
+   				icon="icons/elcl16/bug-dirty.gif"
+   				category="org.eclipse.mylar.bugzilla.category"
+   				class="org.eclipse.mylar.bugzilla.ui.OfflineView"
+   				id="org.eclipse.mylar.bugzilla.ui.offlineReportsView"/>
+   		 <view
+   		 		name="Bugzilla Favorites"
+   				icon="icons/elcl16/bug-favorite.gif"
+   				category="org.eclipse.mylar.bugzilla.category"
+   				class="org.eclipse.mylar.bugzilla.ui.FavoritesView"
+   				id="org.eclipse.mylar.bugzilla.ui.favoritesView"/>
+   </extension>
+   <extension
+         point="org.eclipse.search.searchPages"
+         id="org.eclipse.mylar.bugzilla.core.search.searchPage"
+         name="Bugzilla Search Page">
+      <page
+            class="org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchPage"
+            enabled="true"
+            icon="icons/elcl16/bug-search.gif"
+            id="org.eclipse.mylar.bugzilla.core.search.bugzillaSearchPage"
+            label="Bugzilla Search"
+            tabPosition="999"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Bugzilla viewer"
+            icon="icons/elcl16/bug.gif"
+            class="org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor"
+            id="org.eclipse.mylar.bugzilla.ui.existingBugEditor">
+      </editor>
+      <editor
+      		name="Bugzilla viewer"
+      		icon="icons/elcl16/bug.gif"
+      		class="org.eclipse.mylar.bugzilla.ui.editor.NewBugEditor"
+      		id="org.eclipse.mylar.bugzilla.ui.newBugEditor">
+      </editor>
+   </extension>   
+   <extension
+         id="org.eclipse.mylar.bugzilla.help.context"
+         name="Bugzilla Context-sensitive Help"
+         point="org.eclipse.help.contexts">
+      <contexts 
+      		file="bugzilla_contexts.xml">
+      </contexts>
+   </extension>
+   <extension
+         id="BugzillaSearchPage"
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView"
+            searchResultClass="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResult"
+            id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
+   </extension>
+
+</plugin>
+

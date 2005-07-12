@@ -1,7 +1,8 @@
 package org.eclipse.mylar.bugzilla.ui;
 
-import org.eclipse.ui.plugin.*;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -24,6 +25,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
 	}
 
 	/**

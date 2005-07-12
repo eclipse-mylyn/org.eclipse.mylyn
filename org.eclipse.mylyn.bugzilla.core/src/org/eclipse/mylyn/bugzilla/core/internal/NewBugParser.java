@@ -17,8 +17,8 @@ import java.text.ParseException;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.bugzilla.core.Attribute;
+import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.bugzilla.ui.wizard.NewBugModel;
 
 
 /**

@@ -21,11 +21,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
-import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 
 
 /**
@@ -395,17 +390,4 @@ public class BugReport implements Serializable, IBugzillaBug {
 	public void setOfflineState(boolean newOfflineState) {
 		savedOffline = newOfflineState;
 	}
-
-	public void closeEditor(IWorkbenchPage page) {
-		IEditorInput input = new ExistingBugEditorInput(this);
-		IEditorPart bugEditor = page.findEditor(input);
-		if (bugEditor != null) {
-			page.closeEditor(bugEditor, false);
-			IEditorPart compareEditor = page.findEditor(((ExistingBugEditor)bugEditor).getCompareInput());
-			if (compareEditor != null) {
-				page.closeEditor(compareEditor, false);
-			}
-		}
-	}
-
 }

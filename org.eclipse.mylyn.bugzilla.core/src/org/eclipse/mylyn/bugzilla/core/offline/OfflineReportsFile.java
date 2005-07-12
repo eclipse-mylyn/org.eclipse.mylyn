@@ -275,4 +275,47 @@ public class OfflineReportsFile
 				return 0;
 		}
 	}
+
+	/**
+	 * Saves the given report to the offlineReportsFile, or, if it already
+	 * exists in the file, updates it.
+	 * 
+	 * @param bug
+	 *            The bug to add/update.
+	 */
+	public static void saveOffline(IBugzillaBug bug) {
+		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+		// If there is already an offline report for this bug, update the file.
+		if (bug.isSavedOffline()) {
+			file.update();
+		}
+		// If this bug has not been saved offline before, add it to the file.
+		else {
+			// If there is already an offline report with the same id, don't save this report.
+			if (file.find(bug.getId()) >= 0) {
+				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
+				return;
+			}
+			file.add(bug);
+			bug.setOfflineState(true);
+			file.sort(OfflineReportsFile.lastSel);
+		}
+	}
+	
+	public static List<IBugzillaBug> getOfflineBugs(){
+		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+		return file.elements();
+	}
+
+	/**
+	 * Removes the given report from the offlineReportsFile.
+	 * 
+	 * @param bug
+	 *            The report to remove.
+	 */
+	public static void removeReport(IBugzillaBug bug) {
+		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
+		bugList.add(bug);
+		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
+	}
 }

@@ -3,7 +3,8 @@
       id="org.eclipse.mylar.bugzilla_feature"
       label="org.eclipse.mylar.bugzilla-feature"
       version="0.3.1"
-      provider-name="University of British Columbia">
+      provider-name="University of British Columbia"
+      plugin="org.eclipse.mylar.bugzilla.core">
 
    <description>
       Bugzilla Client Plugin

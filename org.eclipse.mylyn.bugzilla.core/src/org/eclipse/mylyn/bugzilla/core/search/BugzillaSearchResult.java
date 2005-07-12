@@ -11,15 +11,12 @@
 package org.eclipse.mylar.bugzilla.core.search;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.search.internal.ui.SearchPluginImages;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.IFileMatchAdapter;
-import org.eclipse.search.ui.text.Match;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 
 
 
@@ -27,16 +24,13 @@ import org.eclipse.ui.IEditorPart;
  * The collection of all the bugzilla matches.
  * @see org.eclipse.search.ui.text.AbstractTextSearchResult
  */
-public class BugzillaSearchResult extends AbstractTextSearchResult implements IEditorMatchAdapter {
+public class BugzillaSearchResult extends AbstractTextSearchResult{
 
-	/** An empty array of matches */
-	private final Match[] EMPTY_ARR= new Match[0];
-	
 	/**
 	 * The query producing this result.
 	 */
 	private BugzillaSearchQuery bugQuery;
-
+	
 	/**
 	 * Constructor for <code>BugzillaSearchResult</code> class.
 	 * 
@@ -49,9 +43,15 @@ public class BugzillaSearchResult extends AbstractTextSearchResult implements IE
 
 	@Override
 	public IEditorMatchAdapter getEditorMatchAdapter() {
-		return this;
+		IBugzillaResultEditorMatchAdapter adapter = BugzillaPlugin.getResultEditorMatchAdapter();
+		if(adapter == null){
+			return null;
+		} else {
+			adapter.setResult(this);
+			return adapter;
+		}
 	}
-
+	
 	/**
 	 * This function always returns <code>null</code>, as the matches for this implementation of <code>AbstractTextSearchResult</code> never contain files.
 	 * @see org.eclipse.search.ui.text.AbstractTextSearchResult#getFileMatchAdapter()
@@ -61,29 +61,7 @@ public class BugzillaSearchResult extends AbstractTextSearchResult implements IE
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.search.ui.text.IEditorMatchAdapter#isShownInEditor(org.eclipse.search.ui.text.Match, org.eclipse.ui.IEditorPart)
-	 */
-	public boolean isShownInEditor(Match match, IEditorPart editor) {
-		IEditorInput ei= editor.getEditorInput();
-		if (ei instanceof ExistingBugEditorInput) {
-			ExistingBugEditorInput bi= (ExistingBugEditorInput) ei;
-			return match.getElement().equals(bi.getBug());
-		}
-		return false;
-	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.search.ui.text.IEditorMatchAdapter#computeContainedMatches(org.eclipse.search.ui.text.AbstractTextSearchResult, org.eclipse.ui.IEditorPart)
-	 */
-	public Match[] computeContainedMatches(AbstractTextSearchResult result, IEditorPart editor) {
-		IEditorInput ei= editor.getEditorInput();
-		if (ei instanceof ExistingBugEditorInput) {
-			ExistingBugEditorInput bi= (ExistingBugEditorInput) ei;
-			return getMatches(bi.getBug());
-		}
-		return EMPTY_ARR;
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.search.ui.ISearchResult#getLabel()

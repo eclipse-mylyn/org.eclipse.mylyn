@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.core,
  org.eclipse.mylar.ui,
  org.eclipse.jdt.core,
- org.eclipse.mylar.bugzilla.core
+ org.eclipse.mylar.bugzilla.core,
+ org.eclipse.mylar.bugzilla.ui
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: mylar-tasklist.jar

@@ -34,7 +34,6 @@ import org.eclipse.mylar.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
-import org.eclipse.mylar.bugzilla.ui.wizard.NewBugModel;
 
 
 /**

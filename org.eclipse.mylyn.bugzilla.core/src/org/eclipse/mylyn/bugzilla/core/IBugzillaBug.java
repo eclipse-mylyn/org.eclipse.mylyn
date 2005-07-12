@@ -13,8 +13,6 @@ package org.eclipse.mylar.bugzilla.core;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eclipse.ui.IWorkbenchPage;
-
 
 /**
  * Interface representing a Bugzilla bug report.
@@ -85,11 +83,4 @@ public interface IBugzillaBug extends Serializable {
 	 * @param newOfflineState <code>true</code> if this bug is saved offline
 	 */
 	public void setOfflineState(boolean newOfflineState);
-
-	/**
-	 * Closes any open editors for this bug.
-	 * @param page The workbench page.  This cannot be <code>null</code>.
-	 */
-	public void closeEditor(IWorkbenchPage page);
-
 }

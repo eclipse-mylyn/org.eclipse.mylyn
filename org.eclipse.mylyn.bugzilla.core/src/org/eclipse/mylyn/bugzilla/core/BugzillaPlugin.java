@@ -32,10 +32,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.mylar.bugzilla.core.favorites.FavoritesFile;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
-import org.eclipse.mylar.bugzilla.ui.favorites.FavoritesFile;
+import org.eclipse.mylar.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.core.UpdateCore;
 import org.eclipse.update.internal.ui.UpdateUI;
@@ -129,6 +130,12 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		return offlineReportsFile;
 	}
 
+	@Override
+	protected void initializeDefaultPreferences(IPreferenceStore store)
+	{
+		BugzillaPreferences.initDefaults(store);
+	}
+	
 	/**
 	 * Get the name of the bugzilla server
 	 * 
@@ -240,12 +247,6 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		IPath configFile = stateLocation.append("productConfig");
 		return configFile;
 	}
-
-	@Override
-	protected void initializeDefaultPreferences(IPreferenceStore store)
-	{
-		BugzillaPreferences.initDefaults(store);
-	}
 	
 	/**
 	 * Convenience method for logging statuses to the plugin log
@@ -324,4 +325,16 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		URLConnection cntx = url.openConnection(p);
 		return cntx;
 	}
+
+    private static IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter = null;
+    
+	public static IBugzillaResultEditorMatchAdapter getResultEditorMatchAdapter() {
+		return resultEditorMatchAdapter;
+	}
+
+	public static void setResultEditorMatchAdapter(IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter) {
+		BugzillaPlugin.resultEditorMatchAdapter = resultEditorMatchAdapter;
+	}
+	
+	
 }
