@@ -2,16 +2,25 @@ package org.eclipse.mylar.bugzilla.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaContentProvider;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
+import org.eclipse.mylar.tasks.MylarTasksPlugin;
+import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class BugzillaUiPlugin extends AbstractUIPlugin {
+public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
 
-	//The shared instance.
-	private static BugzillaUiPlugin plugin;
+    private BugzillaContentProvider bugzillaProvider;
+	private BugzillaTaskListManager bugzillaTaskListManager;
+    private static BugzillaUiPlugin plugin;
+		
 	
 	/**
 	 * The constructor.
@@ -20,12 +29,26 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		plugin = this;
 	}
 
+    public void earlyStartup() {
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+        		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
+                bugzillaProvider = new BugzillaContentProvider();
+        		bugzillaTaskListManager = new BugzillaTaskListManager();
+        		
+        		MylarTasksPlugin.getDefault().getTaskListExternalizer().addExternalizer(
+        			new BugzillaTaskExternalizer()
+        		);        		
+            }
+        });
+    }
+	
 	/**
 	 * This method is called upon plug-in activation
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
 	}
 
 	/**
@@ -52,5 +75,17 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui", path);
+	}
+	
+    public BugzillaContentProvider getBugzillaProvider() {
+        return bugzillaProvider;
+    }
+    
+    public void setBugzillaProvider(BugzillaContentProvider bugzillaProvider) {
+        this.bugzillaProvider = bugzillaProvider;
+    }
+
+	public BugzillaTaskListManager getBugzillaTaskListManager() {
+		return bugzillaTaskListManager;
 	}
 }

@@ -69,8 +69,8 @@ public class TaskListManagerTest extends TestCase {
         manager.setTaskList(list);
         manager.readTaskList();
         assertNotNull(manager.getTaskList());
-        assertEquals(manager.getTaskList().getRootTasks().size(), 2);
-        assertEquals(manager.getTaskList().getCategories().size(), 2);
+        assertEquals(2, manager.getTaskList().getRootTasks().size());
+        assertEquals(2, manager.getTaskList().getCategories().size());
         check(manager);
     }
     

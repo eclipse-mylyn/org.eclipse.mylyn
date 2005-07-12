@@ -4,6 +4,11 @@
 <plugin>
    
    <extension
+         name="Bugzilla startup"
+         point="org.eclipse.ui.startup">
+   </extension>
+      
+   <extension
       id="org.eclipse.mylar.bugzilla.wizards"
       name="Bug Wizard"
       point="org.eclipse.ui.newWizards">
@@ -18,7 +23,7 @@
          id="org.eclipse.mylar.bugzilla.bugWizard"
          name="New Bug Report">
       <description>
-      	Create a new bug report
+      	 Create a new bug report
       </description>
    </wizard>
 </extension>
@@ -63,7 +68,7 @@
             id="org.eclipse.mylar.bugzilla.core.search.bugzillaSearchPage"
             label="Bugzilla Search"
             tabPosition="999"/>
-   </extension>
+   </extension>   
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -78,6 +83,11 @@
       		class="org.eclipse.mylar.bugzilla.ui.editor.NewBugEditor"
       		id="org.eclipse.mylar.bugzilla.ui.newBugEditor">
       </editor>
+           <editor
+           icon="icons/elcl16/bug.gif"
+           name="Bugzilla task viewer"
+           class="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskEditor"
+           id="org.eclipse.mylar.bugzilla.ui.tasks.bugzillaTaskEditor"/>
    </extension>   
    <extension
          id="org.eclipse.mylar.bugzilla.help.context"

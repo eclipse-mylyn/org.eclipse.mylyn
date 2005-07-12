@@ -19,18 +19,13 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.bugzilla.BugzillaContentProvider;
-import org.eclipse.mylar.tasks.bugzilla.BugzillaEditingMonitor;
-import org.eclipse.mylar.tasks.bugzilla.BugzillaMylarBridge;
-import org.eclipse.mylar.tasks.bugzilla.BugzillaReferencesProvider;
-import org.eclipse.mylar.tasks.bugzilla.BugzillaStructureBridge;
-import org.eclipse.mylar.tasks.bugzilla.ui.BugzillaUiBridge;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.tasks.util.TaskListExternalizer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -39,11 +34,15 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
+public class MylarTasksPlugin extends AbstractUIPlugin {
     
     private static MylarTasksPlugin plugin;
     private static TaskListManager taskListManager;
-    private BugzillaContentProvider bugzillaProvider;
+    private TaskListExternalizer externalizer;
+    
+    // TODO: remove hard-coded fonts
+    public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
+    public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
     
     public static final String REFRESH_QUERIES = "org.eclipse.mylar.tasks.queries.refresh";
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
@@ -94,12 +93,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
         }
     }
 	
-    /** The bridge between Bugzilla and mylar */
-    private static BugzillaMylarBridge bridge = null;
 
-    private BugzillaStructureBridge structureBridge;
-    
-    private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
     
     private static ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
 
@@ -158,7 +152,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 					getTaskListManager().updateTaskscapeReference(prevDir);
 					
 					String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
-					getTaskListManager().setFile(new File(path));
+					getTaskListManager().setTaskListFile(new File(path));
 				}
 			} else {
 			}
@@ -168,43 +162,40 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 	public MylarTasksPlugin() {
 		super();
 		plugin = this;
-		initializeDefaultPreferences(getPrefs());
 	}
-
-    public void earlyStartup() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                
-            	structureBridge = new BugzillaStructureBridge();
-            	
-                MylarPlugin.getDefault().addBridge(structureBridge);
-                MylarPlugin.getTaskscapeManager().addListener(referencesProvider);
-                MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
-                MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
-                
-                IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-                
-                Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
-                MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-                                
-                if (window != null) {
-                    // create a new bridge and initialize it
-                    bridge = new BugzillaMylarBridge();
-                }
-            }
-        });
-    }
     
+//	/**
+//	 * TODO: consider making a non early startup plug-in
+//	 */
+//    public void earlyStartup() {
+//        final IWorkbench workbench = PlatformUI.getWorkbench();
+//        workbench.getDisplay().asyncExec(new Runnable() {
+//            public void run() {
+//		
+//            }
+//        });
+//    }
+	
     @Override
 	public void start(BundleContext context) throws Exception {
-        bugzillaProvider = new BugzillaContentProvider();
+		initializeDefaultPreferences(getPrefs());
+        externalizer = new TaskListExternalizer();  
+    	
         String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
         File taskListFile = new File(path);
         taskListManager = new TaskListManager(taskListFile);
         taskListManager.addListener(TASK_LIST_LISTENER);
         taskListManager.readTaskList();
         if (taskListManager.getTaskList() == null) taskListManager.createNewTaskList();
+    	
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+        		Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+                MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+            
+            }
+        });
         
 		super.start(context);
 	}
@@ -225,19 +216,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
     	store.setDefault(REPORT_OPEN_INTERNAL, true);
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     }
-    /**
-     * Get the bridge for this plugin
-     * 
-     * @return The bugzilla mylar bridge
-     */
-    public static BugzillaMylarBridge getBridge() {
-        // make sure that the bridge initialized, if not, make a new one
-        if (bridge == null) {
-            bridge = new BugzillaMylarBridge();
-        }
-        return bridge;
-    }
-    
+
     
     public static TaskListManager getTaskListManager() {
         return taskListManager;
@@ -274,23 +253,6 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 			resourceBundle = null;
 		}
 		return resourceBundle;
-	}
-    
-    public BugzillaContentProvider getBugzillaProvider() {
-        return bugzillaProvider;
-    }
-    
-    public void setBugzillaProvider(BugzillaContentProvider bugzillaProvider) {
-        this.bugzillaProvider = bugzillaProvider;
-    }
-    
-    public BugzillaStructureBridge getStructureBridge() {
-        return structureBridge;
-    }
-
-	public static BugzillaReferencesProvider getReferenceProvider() {
-		return referencesProvider;
-		
 	}
 	
 	public static IPreferenceStore getPrefs() {
@@ -344,5 +306,9 @@ public class MylarTasksPlugin extends AbstractUIPlugin implements IStartup {
 		} else {
 			return Report_Open_Mode.EXTERNAL_BROWSER;
 		} 
+	}
+
+	public TaskListExternalizer getTaskListExternalizer() {
+		return externalizer;
 	}
 }

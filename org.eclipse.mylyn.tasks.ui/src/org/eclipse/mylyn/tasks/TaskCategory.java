@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -35,7 +34,7 @@ public class TaskCategory extends AbstractCategory implements Serializable {
     }
     
 	public Image getIcon() {
-		return MylarImages.getImage(MylarImages.CATEGORY);
+		return TaskListImages.getImage(TaskListImages.CATEGORY);
 	}
     
 
@@ -50,16 +49,7 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 	}
 	
     public void addTask(ITask task) {
-    	if(task instanceof BugzillaTask){
-    		BugzillaTask bugTask = MylarTasksPlugin.getTaskListManager().getTaskList().getFromBugzillaTaskRegistry(task.getHandle());
-    		if(bugTask == null){
-    			MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry((BugzillaTask)task);
-    		} else {
-    			task = bugTask;
-    		}
-    	} 
     	tasks.add(task);
-    	
     }
     
     public void removeTask(ITask task) {

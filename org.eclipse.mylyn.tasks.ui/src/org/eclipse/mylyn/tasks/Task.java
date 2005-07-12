@@ -20,7 +20,6 @@ import java.util.List;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
@@ -175,6 +174,8 @@ public class Task implements ITask, ITaskListElement {
 
     /**
      * Refreshes the tasklist viewer.
+     * 
+     * TODO: shouldn't be coupled to the TaskListView
      */
     public void notifyTaskDataChange() {
     	final Task task = this;
@@ -305,7 +306,7 @@ public class Task implements ITask, ITaskListElement {
     }
 
 	public Image getIcon() {
-		return MylarImages.getImage(MylarImages.TASK);
+		return TaskListImages.getImage(TaskListImages.TASK);
 	}
 
 	public String getDescription(boolean label) {
@@ -314,9 +315,9 @@ public class Task implements ITask, ITaskListElement {
 
 	public Image getStatusIcon() {
 		if (isActive()) {
-    		return MylarImages.getImage(MylarImages.TASK_ACTIVE);
+    		return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
     	} else {
-    		return MylarImages.getImage(MylarImages.TASK_INACTIVE);
+    		return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
     	}        	
 	}
 	
@@ -376,4 +377,12 @@ public class Task implements ITask, ITaskListElement {
 			return sec;
 		}
 	}
+	
+    public boolean canEditDescription() {
+    	return true;
+    }
+    
+    public String getDeleteConfirmationMessage() {
+    	return "Delete the selected task and discard task context?";
+    }
 }

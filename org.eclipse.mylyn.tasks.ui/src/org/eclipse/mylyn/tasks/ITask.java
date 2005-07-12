@@ -85,6 +85,10 @@ public interface ITask extends Serializable {
 
     public abstract String getPriority();
     
+    public abstract boolean canEditDescription();
+    
+    public abstract String getDeleteConfirmationMessage();
+    
     public abstract void setPriority(String priority);
     @Deprecated
     public abstract boolean isCategory();

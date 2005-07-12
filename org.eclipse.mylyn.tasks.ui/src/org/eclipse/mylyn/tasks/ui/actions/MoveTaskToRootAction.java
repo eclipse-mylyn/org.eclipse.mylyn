@@ -12,11 +12,6 @@
 package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 
 /**
@@ -35,23 +30,24 @@ public class MoveTaskToRootAction extends Action {
 	}
 	@Override
 	public void run() {
-		ISelection selection = this.view.getViewer().getSelection();
-	    Object obj = ((IStructuredSelection)selection).getFirstElement();
-	    if (obj instanceof ITask) {
-	    	ITask t = (ITask) obj;
-	    	TaskCategory cat = t.getCategory();
-	    	if (cat != null) {
-	    		cat.removeTask(t);
-	    		t.setCategory(null);
-	    		t.setParent(null);
-	    		MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(t);
-	    		this.view.getViewer().refresh();
-	    	} else if (t.getParent() != null) {
-	    		t.getParent().removeSubTask(t);
-	    		t.setParent(null);
-	    		MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(t);
-	    		this.view.getViewer().refresh();
-	    	}
-	    }		    
+		throw new RuntimeException("unimplemented");
+//		ISelection selection = this.view.getViewer().getSelection();
+//	    Object obj = ((IStructuredSelection)selection).getFirstElement();
+//	    if (obj instanceof ITask) {
+//	    	ITask t = (ITask) obj;
+//	    	TaskCategory cat = t.getCategory();
+//	    	if (cat != null) {
+//	    		cat.removeTask(t);
+//	    		t.setCategory(null);
+//	    		t.setParent(null);
+//	    		MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(t);
+//	    		this.view.getViewer().refresh();
+//	    	} else if (t.getParent() != null) {
+//	    		t.getParent().removeSubTask(t);
+//	    		t.setParent(null);
+//	    		MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(t);
+//	    		this.view.getViewer().refresh();
+//	    	}
+//	    }		    
 	}
 }

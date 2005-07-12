@@ -15,13 +15,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.BugzillaQueryCategory;
-import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
 
@@ -38,7 +36,7 @@ public class DeleteAction extends Action {
 		this.view = view;
 		setText("Delete");
 		setId(ID);
-        setImageDescriptor(MylarImages.REMOVE);
+        setImageDescriptor(TaskListImages.REMOVE);
 	}
 	
 	@Override
@@ -55,12 +53,7 @@ public class DeleteAction extends Action {
 				return;
 			}
 			
-			String message = "";
-			if (selectedObject instanceof BugzillaTask) {
-				message = "Remove this report from the task list, and discard any task context or local notes?";
-			} else {
-				message = "Delete the selected task and discard task context?";
-			}					
+			String message = task.getDeleteConfirmationMessage();			
 			boolean deleteConfirmed = MessageDialog.openQuestion(
 		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 		            "Confirm delete", message);
@@ -99,16 +92,17 @@ public class DeleteAction extends Action {
 					}
 				}
 			}
-			MylarTasksPlugin.getTaskListManager().deleteCategory((TaskCategory) selectedObject);
-		} else if (selectedObject instanceof BugzillaQueryCategory) {
-			boolean deleteConfirmed = MessageDialog.openQuestion(
-		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-		            "Confirm delete", 
-		            "Delete the selected query and all contained tasks?");
-			if (!deleteConfirmed) 
-				return;
-			BugzillaQueryCategory cat = (BugzillaQueryCategory) selectedObject;
 			MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
+		// XXX refactored
+//		} else if (selectedObject instanceof BugzillaQueryCategory) {
+//			boolean deleteConfirmed = MessageDialog.openQuestion(
+//		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+//		            "Confirm delete", 
+//		            "Delete the selected query and all contained tasks?");
+//			if (!deleteConfirmed) 
+//				return;
+//			BugzillaQueryCategory cat = (BugzillaQueryCategory) selectedObject;
+//			MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
 		} else {
 			MessageDialog.openError(Workbench.getInstance()
 					.getActiveWorkbenchWindow().getShell(), "Delete failed",

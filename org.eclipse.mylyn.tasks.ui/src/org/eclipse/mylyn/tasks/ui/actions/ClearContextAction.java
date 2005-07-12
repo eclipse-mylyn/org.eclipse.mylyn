@@ -15,12 +15,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.BugzillaHit;
-import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -37,7 +35,7 @@ public class ClearContextAction extends Action {
 		setText("Clear Task Context");
         setToolTipText("Clear Task Context");
         setId(ID);
-        setImageDescriptor(MylarImages.ERASE_TASKSCAPE);
+        setImageDescriptor(TaskListImages.ERASE_TASKSCAPE);
 	}
 	
 	@Override
@@ -53,24 +51,26 @@ public class ClearContextAction extends Action {
 			
 	    	MylarPlugin.getTaskscapeManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
 	    	this.view.getViewer().refresh();
-	    } else if (selectedObject != null && selectedObject instanceof BugzillaHit) {
-	    	BugzillaTask task = ((BugzillaHit)selectedObject).getAssociatedTask();
-	    	if(task != null){
-	    		if (task.isActive()) {
-		    		MessageDialog.openError(Workbench.getInstance()
-							.getActiveWorkbenchWindow().getShell(), "Clear context failed",
-							"Task must be deactivated before clearing task context.");
-					return;
-		    	}
-		    	boolean deleteConfirmed = MessageDialog.openQuestion(
-			            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-			            "Confirm clear context", 
-			            "Clear context for the selected task?");
-				if (!deleteConfirmed) 
-					return;
-	    		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
-	    	}
-	    	this.view.getViewer().refresh();
-	    }
+	    } 
+	    //	  XXX: refactored put this somewhere
+//	    else if (selectedObject != null && selectedObject instanceof BugzillaHit) {
+//	    	BugzillaTask task = ((BugzillaHit)selectedObject).getAssociatedTask();
+//	    	if(task != null){
+//	    		if (task.isActive()) {
+//		    		MessageDialog.openError(Workbench.getInstance()
+//							.getActiveWorkbenchWindow().getShell(), "Clear context failed",
+//							"Task must be deactivated before clearing task context.");
+//					return;
+//		    	}
+//		    	boolean deleteConfirmed = MessageDialog.openQuestion(
+//			            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+//			            "Confirm clear context", 
+//			            "Clear context for the selected task?");
+//				if (!deleteConfirmed) 
+//					return;
+//	    		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
+//	    	}
+//	    	this.view.getViewer().refresh();
+//	    }
 	}
 }

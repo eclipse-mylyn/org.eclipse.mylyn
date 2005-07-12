@@ -14,13 +14,13 @@ package org.eclipse.mylar.tasks.ui.views;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -48,39 +48,26 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasks.AbstractCategory;
-import org.eclipse.mylar.tasks.BugzillaHit;
-import org.eclipse.mylar.tasks.BugzillaQueryCategory;
-import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskListElement;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskCategory;
-import org.eclipse.mylar.tasks.ui.BugzillaTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.tasks.ui.actions.ClearContextAction;
-import org.eclipse.mylar.tasks.ui.actions.CreateBugzillaQueryCategoryAction;
-import org.eclipse.mylar.tasks.ui.actions.CreateBugzillaTaskAction;
 import org.eclipse.mylar.tasks.ui.actions.CreateCategoryAction;
 import org.eclipse.mylar.tasks.ui.actions.CreateTaskAction;
 import org.eclipse.mylar.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasks.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasks.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylar.tasks.ui.actions.MoveTaskToRootAction;
 import org.eclipse.mylar.tasks.ui.actions.OpenTaskEditorAction;
-import org.eclipse.mylar.tasks.ui.actions.RefreshBugzillaAction;
-import org.eclipse.mylar.tasks.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.internal.views.Highlighter;
-import org.eclipse.mylar.ui.internal.views.HighlighterImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -123,15 +110,14 @@ public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
 	
+	private List<IAction> contributedActions = new ArrayList<IAction>();
+		
 	TreeViewer viewer;
     private DrillDownAdapter drillDownAdapter;
     
-    private RefreshBugzillaReportsAction refresh;
     private CreateTaskAction createTask;
     private CreateCategoryAction createCategory;
-    private CreateBugzillaQueryCategoryAction createBugzillaQueryCategory;
-    private CreateBugzillaTaskAction createBugzillaTask; 
-//    private RenameAction rename;
+    
     private DeleteAction delete;
     private OpenTaskEditorAction doubleClickAction;
     private ClearContextAction clearSelectedTaskscapeAction;
@@ -145,7 +131,6 @@ public class TaskListView extends ViewPart {
 //    private FilterIncompleteTasksAction filterInCompleteTask;
     private PriorityDropDownAction filterOnPriority;
     private Action moveTaskToRoot; 
-    private RefreshBugzillaAction refreshQuery;
     private PriorityFilter priorityFilter = new PriorityFilter();
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description" };
@@ -165,7 +150,7 @@ public class TaskListView extends ViewPart {
 			super();
 			setText("Priority Filter");
 			setToolTipText("Filter priority lower than");
-			setImageDescriptor(MylarImages.FILTER_PRIORITY);
+			setImageDescriptor(TaskListImages.FILTER_PRIORITY);
 			setMenuCreator(this);			
 		}
     	
@@ -293,16 +278,19 @@ public class TaskListView extends ViewPart {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITask) {
 				return !((ITask)element).isCompleted();
-			} else if (element instanceof BugzillaHit){
-				BugzillaHit hit = (BugzillaHit)element;
-	        	BugzillaTask task = hit.getAssociatedTask();
-	        	if (task != null) {
-	        		return !task.isCompleted();
-	        	}
-				return true;
-			} else {
-				return true;
-			}
+			} 
+			return false;
+			// XXX refactored
+//			else if (element instanceof BugzillaHit){
+//				BugzillaHit hit = (BugzillaHit)element;
+//	        	BugzillaTask task = hit.getAssociatedTask();
+//	        	if (task != null) {
+//	        		return !task.isCompleted();
+//	        	}
+//				return true;
+//			} else {
+//				return true;
+//			}
 		}    			
     };
     
@@ -402,9 +390,11 @@ public class TaskListView extends ViewPart {
         		return ((TaskCategory)parent).getChildren().toArray();
         	} else if (parent instanceof Task) {
         		return ((Task)parent).getChildren().toArray();
-        	} else if (parent instanceof BugzillaQueryCategory) {
-        		return ((BugzillaQueryCategory) parent).getHits().toArray();
         	}
+        	// XXX refactored
+//        	else if (parent instanceof BugzillaQueryCategory) {
+//        		return ((BugzillaQueryCategory) parent).getHits().toArray();
+//        	}
         	return new Object[0];
         }
         public boolean hasChildren(Object parent) {  
@@ -414,10 +404,12 @@ public class TaskListView extends ViewPart {
             }  else if (parent instanceof Task) {
             	Task t = (Task) parent;
             	return t.getChildren() != null && t.getChildren().size() > 0;
-            } else if (parent instanceof BugzillaQueryCategory) {
-            	BugzillaQueryCategory cat = (BugzillaQueryCategory)parent;
-                return cat.getHits() != null && cat.getHits().size() > 0;
             } 
+            // XXX refactored
+//            else if (parent instanceof BugzillaQueryCategory) {
+//            	BugzillaQueryCategory cat = (BugzillaQueryCategory)parent;
+//                return cat.getHits() != null && cat.getHits().size() > 0;
+//            } 
             return false;
         }
     }
@@ -435,8 +427,9 @@ public class TaskListView extends ViewPart {
                 switch (columnIndex) {
                 case 0: return true;
                 case 1: return false;
-                case 2: return !(task instanceof BugzillaTask);
-                case 3: return !(task instanceof BugzillaTask);
+                // XXX refactored
+                case 2: return true;//!(task instanceof BugzillaTask);
+                case 3: return true;//!(task instanceof BugzillaTask);
                 }
             } else if (element instanceof AbstractCategory) {
                 switch (columnIndex) {
@@ -446,13 +439,15 @@ public class TaskListView extends ViewPart {
                 	return false;
                 case 3: return true;
                 } 
-            } else if (element instanceof BugzillaHit){
-            	if (columnIndex == 0) {
-            		return true;
-            	}else {
-            		return false;
-            	}            	
-            }
+            } 
+            // XXX refactored
+//            else if (element instanceof BugzillaHit){
+//            	if (columnIndex == 0) {
+//            		return true;
+//            	}else {
+//            		return false;
+//            	}            	
+//            }
             return false;
         }
 
@@ -483,24 +478,26 @@ public class TaskListView extends ViewPart {
 				case 3:
 					return cat.getDescription(true);
 				}
-			} else if (element instanceof BugzillaHit) {
-				BugzillaHit hit = (BugzillaHit) element;
-				ITask task = hit.getAssociatedTask();
-				switch (columnIndex) {
-				case 0:
-					if(task == null){
-						return new Boolean(true);
-					} else {
-						return new Boolean(task.isCompleted());
-					}
-				case 1:
-					return "";
-				case 2:
-					String priorityString = hit.getPriority().substring(1);
-					return new Integer(priorityString);
-				case 3:
-					return hit.getDescription(true);					
-				}
+				// XXX refactored
+//			} 
+//			else if (element instanceof BugzillaHit) {
+//				BugzillaHit hit = (BugzillaHit) element;
+//				ITask task = hit.getAssociatedTask();
+//				switch (columnIndex) {
+//				case 0:
+//					if(task == null){
+//						return new Boolean(true);
+//					} else {
+//						return new Boolean(task.isCompleted());
+//					}
+//				case 1:
+//					return "";
+//				case 2:
+//					String priorityString = hit.getPriority().substring(1);
+//					return new Integer(priorityString);
+//				case 3:
+//					return hit.getDescription(true);					
+//				}
 			}
             return "";
         }
@@ -550,34 +547,36 @@ public class TaskListView extends ViewPart {
 						viewer.setSelection(null);
 						break;
 					}
-				} else if (((TreeItem) element).getData() instanceof BugzillaHit) {
-					BugzillaHit hit = (BugzillaHit)((TreeItem) element).getData();
-					switch (columnIndex) {
-					case 0:
-						BugzillaTask task = hit.getAssociatedTask();
-						if(task == null){
-							task = new BugzillaTask(hit);
-							hit.setAssociatedTask(task);
-							MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry(task);
-							// TODO move the task to a special folder
-						} 
-						if (task.isActive()) {
-							MylarTasksPlugin.getTaskListManager()
-									.deactivateTask(task);
-						} else {
-							MylarTasksPlugin.getTaskListManager().activateTask(
-									task);
-						}
-						viewer.setSelection(null);
-						break;
-					case 1:
-						break;
-					case 2:
-						break;
-					case 3:						
-						viewer.setSelection(null);
-						break;
-					}
+					// XXX refactored
+//				} 
+//				else if (((TreeItem) element).getData() instanceof BugzillaHit) {
+//					BugzillaHit hit = (BugzillaHit)((TreeItem) element).getData();
+//					switch (columnIndex) {
+//					case 0:
+//						BugzillaTask task = hit.getAssociatedTask();
+//						if(task == null){
+//							task = new BugzillaTask(hit);
+//							hit.setAssociatedTask(task);
+//							MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry(task);
+//							// TODO move the task to a special folder
+//						} 
+//						if (task.isActive()) {
+//							MylarTasksPlugin.getTaskListManager()
+//									.deactivateTask(task);
+//						} else {
+//							MylarTasksPlugin.getTaskListManager().activateTask(
+//									task);
+//						}
+//						viewer.setSelection(null);
+//						break;
+//					case 1:
+//						break;
+//					case 2:
+//						break;
+//					case 3:						
+//						viewer.setSelection(null);
+//						break;
+//					}
 				}
 				viewer.refresh();
 			} catch (Exception e) {
@@ -619,11 +618,12 @@ public class TaskListView extends ViewPart {
                     if (task1.isCompleted()) return 1;
                     if (task2.isCompleted()) return -1;
                     if (column == columnNames[1]) {
-                        if (task1 instanceof BugzillaTask && !(task2 instanceof BugzillaTask)) {
-                            return 1;
-                        } else {
-                            return -1;
-                        }
+                    	// XXX refactored
+//                        if (task1 instanceof BugzillaTask && !(task2 instanceof BugzillaTask)) {
+//                            return 1;
+//                        } else {
+//                            return -1;
+//                        }
                     } else if (column == columnNames[2]) {
                         return task1.getPriority().compareTo(task2.getPriority());
                     } else if (column == columnNames[3]) {
@@ -632,19 +632,21 @@ public class TaskListView extends ViewPart {
                     	return 0;
                     }
         		}
-        	} else if(o1 instanceof BugzillaHit && o2 instanceof BugzillaHit){
-        		BugzillaHit task1 = (BugzillaHit) o1;
-        		BugzillaHit task2 = (BugzillaHit) o2;
-                
-                if (column == columnNames[1]) {
-                    return 0;
-                } else if (column == columnNames[2]) {
-                    return task1.getPriority().compareTo(task2.getPriority());
-                } else if (column == columnNames[3]) {
-                    return task1.getDescription(false).compareTo(task2.getDescription(false));
-                }  else {
-                	return 0;
-                }
+//        	}
+        	// XXX refactored
+//        	else if(o1 instanceof BugzillaHit && o2 instanceof BugzillaHit){
+//        		BugzillaHit task1 = (BugzillaHit) o1;
+//        		BugzillaHit task2 = (BugzillaHit) o2;
+//                
+//                if (column == columnNames[1]) {
+//                    return 0;
+//                } else if (column == columnNames[2]) {
+//                    return task1.getPriority().compareTo(task2.getPriority());
+//                } else if (column == columnNames[3]) {
+//                    return task1.getDescription(false).compareTo(task2.getDescription(false));
+//                }  else {
+//                	return 0;
+//                }
         	} else{
         		return 0;
         	}
@@ -703,11 +705,13 @@ public class TaskListView extends ViewPart {
         viewer.addFilter(priorityFilter);
         if (MylarTasksPlugin.getDefault().isFilterInCompleteMode()) viewer.addFilter(inCompleteFilter);
         if (MylarTasksPlugin.getDefault().isFilterCompleteMode()) viewer.addFilter(completeFilter);
-        if (MylarTasksPlugin.getDefault().refreshOnStartUpEnabled()) {
-        	refresh.setShowProgress(false);
-        	refresh.run();
-        	refresh.setShowProgress(true);
-        }
+        
+        // XXX refactored
+//        if (MylarTasksPlugin.getDefault().refreshOnStartUpEnabled()) {
+//        	refresh.setShowProgress(false);
+//        	refresh.run();
+//        	refresh.setShowProgress(true);
+//        }
         viewer.refresh();
     }
             
@@ -801,13 +805,15 @@ public class TaskListView extends ViewPart {
                     } else {
                         event.data = "null";
                     }
-                } else if (selection.getFirstElement() instanceof BugzillaHit) {
-                	if (!selection.isEmpty()) {
-                        event.data = "" + ((BugzillaHit) selection.getFirstElement()).getHandle();
-                    } else {
-                        event.data = "null";
-                    }
-                }
+                } 
+                // XXX refactored
+//                else if (selection.getFirstElement() instanceof BugzillaHit) {
+//                	if (!selection.isEmpty()) {
+//                        event.data = "" + ((BugzillaHit) selection.getFirstElement()).getHandle();
+//                    } else {
+//                        event.data = "null";
+//                    }
+//                }
             }
 
             public void dragFinished(DragSourceEvent event) {
@@ -846,25 +852,27 @@ public class TaskListView extends ViewPart {
                     viewer.setSelection(null);
                     viewer.refresh();
                     return true;
-                } else if (selectedObject instanceof BugzillaHit) {
-                	BugzillaHit bh = (BugzillaHit) selectedObject;
-                	if (getCurrentTarget() instanceof TaskCategory) {
-                		TaskCategory cat = (TaskCategory) getCurrentTarget();
-                		if (bh.getAssociatedTask() != null) {
-                    		bh.getAssociatedTask().setCategory(cat);
-                    		cat.addTask(bh.getAssociatedTask());
-                    	} else {
-                    		BugzillaTask bt = new BugzillaTask(bh);
-                    		bh.setAssociatedTask(bt);
-                    		bt.setCategory(cat);
-                    		cat.addTask(bt);
-                    		MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry(bt);
-                    	}
-                		viewer.setSelection(null);
-                		viewer.refresh();
-                        return true;
-                	}                	
                 }
+                // XXX refactored
+//                else if (selectedObject instanceof BugzillaHit) {
+//                	BugzillaHit bh = (BugzillaHit) selectedObject;
+//                	if (getCurrentTarget() instanceof TaskCategory) {
+//                		TaskCategory cat = (TaskCategory) getCurrentTarget();
+//                		if (bh.getAssociatedTask() != null) {
+//                    		bh.getAssociatedTask().setCategory(cat);
+//                    		cat.addTask(bh.getAssociatedTask());
+//                    	} else {
+//                    		BugzillaTask bt = new BugzillaTask(bh);
+//                    		bh.setAssociatedTask(bt);
+//                    		bt.setCategory(cat);
+//                    		cat.addTask(bt);
+//                    		MylarTasksPlugin.getTaskListManager().getTaskList().addToBugzillaTaskRegistry(bt);
+//                    	}
+//                		viewer.setSelection(null);
+//                		viewer.refresh();
+//                        return true;
+//                	}                	
+//                }
                 return false;
             }
 
@@ -879,13 +887,15 @@ public class TaskListView extends ViewPart {
                     } else {
                     	return false;
                     }
-                } else if (selectedObject instanceof BugzillaHit) {
-                	if (getCurrentTarget() != null &&  getCurrentTarget() instanceof TaskCategory) {
-                		return true;
-                	} else {
-                		return false;
-                	}
-                }
+                } 
+                // XXX refactored
+//                else if (selectedObject instanceof BugzillaHit) {
+//                	if (getCurrentTarget() != null &&  getCurrentTarget() instanceof TaskCategory) {
+//                		return true;
+//                	} else {
+//                		return false;
+//                	}
+//                }
                
                 return TextTransfer.getInstance().isSupportedType(transferType);
             }
@@ -931,104 +941,108 @@ public class TaskListView extends ViewPart {
         manager.add(incompleteTask);
 //        manager.add(new Separator());
         manager.add(createTask);
-        manager.add(createBugzillaTask);
+//        manager.add(createBugzillaTask);
 //        manager.add(rename);
         manager.add(delete);
         manager.add(clearSelectedTaskscapeAction);
-        manager.add(moveTaskToRoot);
-        manager.add(refreshQuery);
+//        manager.add(moveTaskToRoot);
+//        manager.add(refreshQuery);
         manager.add(new Separator());
         MenuManager subMenuManager = new MenuManager("Choose Highlighter");
         final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
-        for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
-            final Highlighter highlighter = it.next();
-            if (selectedObject instanceof Task){
-                Action action = new Action() {
-                	
-                	@Override
-                    public void run() { 
-                        Task task = (Task)selectedObject;
-                        MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandle(), highlighter.getName());
-                        TaskListView.this.viewer.refresh();
-                        MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.HIGHLIGHTER);
-//                        taskscapeComponent.getTableViewer().refresh();
-                    }
-                };
-                if (highlighter.isGradient()) {
-                    action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter.getLandmarkColor()));
-                } else {
-                    action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter.getLandmarkColor()));
-                }
-                action.setText(highlighter.toString());
-                subMenuManager.add(action);
-            } else {
-//                showMessage("Select task before choosing highlighter");
-            }
-        }
+        
+        // XXX refactored
+//        for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
+//            final Highlighter highlighter = it.next();
+//            if (selectedObject instanceof Task){
+//                Action action = new Action() {
+//                	
+//                	@Override
+//                    public void run() { 
+//                        Task task = (Task)selectedObject;
+//                        MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandle(), highlighter.getName());
+//                        TaskListView.this.viewer.refresh();
+//                        MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.HIGHLIGHTER);
+////                        taskscapeComponent.getTableViewer().refresh();
+//                    }
+//                };
+//                if (highlighter.isGradient()) {
+//                    action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter.getLandmarkColor()));
+//                } else {
+//                    action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter.getLandmarkColor()));
+//                }
+//                action.setText(highlighter.toString());
+//                subMenuManager.add(action);
+//            } else {
+////                showMessage("Select task before choosing highlighter");
+//            }
+//        }
         manager.add(subMenuManager);
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         updateActionEnablement(selectedObject);
     }
     
     private void updateActionEnablement(Object sel){
-    	if(sel != null && sel instanceof ITaskListElement){
-	    	if(sel instanceof BugzillaHit){
-				BugzillaTask task = ((BugzillaHit)sel).getAssociatedTask();
-				if(task == null){
-					clearSelectedTaskscapeAction.setEnabled(false);
-				} else {
-					clearSelectedTaskscapeAction.setEnabled(true);
-				}
-				completeTask.setEnabled(false);
-				incompleteTask.setEnabled(false);
-				moveTaskToRoot.setEnabled(false);
-				delete.setEnabled(false);
-				refreshQuery.setEnabled(false);
-			} else if(sel instanceof BugzillaTask){
-				clearSelectedTaskscapeAction.setEnabled(true);
-				completeTask.setEnabled(false);
-				incompleteTask.setEnabled(false);
-				moveTaskToRoot.setEnabled(true);
-				delete.setEnabled(true);
-				refreshQuery.setEnabled(false);
-			} else if(sel instanceof AbstractCategory){
-				clearSelectedTaskscapeAction.setEnabled(false);
-				completeTask.setEnabled(false);
-				incompleteTask.setEnabled(false);
-				moveTaskToRoot.setEnabled(false);
-				delete.setEnabled(true);
-				if (sel instanceof BugzillaQueryCategory) {
-					refreshQuery.setEnabled(true);
-				} else {
-					refreshQuery.setEnabled(false);
-				}
-				//delete.setEnabled(true);
-			} else {
-				clearSelectedTaskscapeAction.setEnabled(true);
-				completeTask.setEnabled(true);
-				incompleteTask.setEnabled(true);
-				moveTaskToRoot.setEnabled(true);
-				delete.setEnabled(true);
-				refreshQuery.setEnabled(false);
-			}			
-		}else {
-			clearSelectedTaskscapeAction.setEnabled(false);
-			completeTask.setEnabled(false);
-			incompleteTask.setEnabled(false);
-			moveTaskToRoot.setEnabled(false);
-			delete.setEnabled(false);
-			refreshQuery.setEnabled(false);
-		}
+    	// XXX refactored
+    	throw new RuntimeException("unimplemented");
+//    	if(sel != null && sel instanceof ITaskListElement){
+//	    	if(sel instanceof BugzillaHit){
+//				BugzillaTask task = ((BugzillaHit)sel).getAssociatedTask();
+//				if(task == null){
+//					clearSelectedTaskscapeAction.setEnabled(false);
+//				} else {
+//					clearSelectedTaskscapeAction.setEnabled(true);
+//				}
+//				completeTask.setEnabled(false);
+//				incompleteTask.setEnabled(false);
+//				moveTaskToRoot.setEnabled(false);
+//				delete.setEnabled(false);
+//				refreshQuery.setEnabled(false);
+//			} else if(sel instanceof BugzillaTask){
+//				clearSelectedTaskscapeAction.setEnabled(true);
+//				completeTask.setEnabled(false);
+//				incompleteTask.setEnabled(false);
+//				moveTaskToRoot.setEnabled(true);
+//				delete.setEnabled(true);
+//				refreshQuery.setEnabled(false);
+//			} else if(sel instanceof AbstractCategory){
+//				clearSelectedTaskscapeAction.setEnabled(false);
+//				completeTask.setEnabled(false);
+//				incompleteTask.setEnabled(false);
+//				moveTaskToRoot.setEnabled(false);
+//				delete.setEnabled(true);
+//				if (sel instanceof BugzillaQueryCategory) {
+//					refreshQuery.setEnabled(true);
+//				} else {
+//					refreshQuery.setEnabled(false);
+//				}
+//				//delete.setEnabled(true);
+//			} else {
+//				clearSelectedTaskscapeAction.setEnabled(true);
+//				completeTask.setEnabled(true);
+//				incompleteTask.setEnabled(true);
+//				moveTaskToRoot.setEnabled(true);
+//				delete.setEnabled(true);
+//				refreshQuery.setEnabled(false);
+//			}			
+//		} else {
+//			clearSelectedTaskscapeAction.setEnabled(false);
+//			completeTask.setEnabled(false);
+//			incompleteTask.setEnabled(false);
+//			moveTaskToRoot.setEnabled(false);
+//			delete.setEnabled(false);
+//			refreshQuery.setEnabled(false);
+//		}
     }
     
     private void fillLocalToolBar(IToolBarManager manager) {
         manager.add(createTask);
         manager.add(createCategory);
         manager.add(new Separator());
-        manager.add(createBugzillaTask);        
-    	manager.add(createBugzillaQueryCategory);
-    	manager.add(refresh);
-        manager.add(new Separator());
+//        manager.add(createBugzillaTask);        
+//    	manager.add(createBugzillaQueryCategory);
+//    	manager.add(refresh);
+//        manager.add(new Separator());
         manager.add(filterCompleteTask);
 //        manager.add(filterInCompleteTask);
         manager.add(filterOnPriority);        
@@ -1039,22 +1053,19 @@ public class TaskListView extends ViewPart {
      *
      */
     private void makeActions() {
-    	refresh = new RefreshBugzillaReportsAction(this);      	               
-        createTask = new CreateTaskAction(this);        
+    	createTask = new CreateTaskAction(this);        
         createCategory = new CreateCategoryAction(this);
-        createBugzillaQueryCategory = new CreateBugzillaQueryCategoryAction(this);
-        createBugzillaTask = new CreateBugzillaTaskAction(this);                
+         
         delete = new DeleteAction(this);
         completeTask = new MarkTaskCompleteAction(this);
         incompleteTask = new MarkTaskIncompleteAction(this);        
 //        rename = new RenameAction();        
         clearSelectedTaskscapeAction = new ClearContextAction(this);
-        moveTaskToRoot = new MoveTaskToRootAction(this);
+//        moveTaskToRoot = new MoveTaskToRootAction(this);
         doubleClickAction = new OpenTaskEditorAction(this);            
         filterCompleteTask = new FilterCompletedTasksAction(this);        
 //        filterInCompleteTask = new FilterIncompleteTasksAction();                        
         filterOnPriority = new PriorityDropDownAction();
-        refreshQuery = new RefreshBugzillaAction(this);
     }
 
     /**
@@ -1086,9 +1097,11 @@ public class TaskListView extends ViewPart {
 	
 	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
 		IEditorInput input = null;		
-		if (task instanceof BugzillaTask) {
-			input = new BugzillaTaskEditorInput((BugzillaTask)task);
-		} else if (task instanceof Task) {
+		// XXX refactored
+//		if (task instanceof BugzillaTask) {
+//			input = new BugzillaTaskEditorInput((BugzillaTask)task);
+//		} else 
+		if (task instanceof Task) {
 			input = new TaskEditorInput((Task) task);
 		}
 		IEditorPart editor = page.findEditor(input);
@@ -1101,9 +1114,10 @@ public class TaskListView extends ViewPart {
 	public void refreshChildren(List<ITask> children) {
 		if (children != null) {
             for (ITask child : children) {
-				if (child instanceof BugzillaTask) {
-					((BugzillaTask)child).refresh();
-				}
+            	// XXX refactored
+//				if (child instanceof BugzillaTask) {
+//					((BugzillaTask)child).refresh();
+//				}
 			}
 		}
 	}

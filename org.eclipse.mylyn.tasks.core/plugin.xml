@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         name="Mylar Bugzilla startup"
+         point="org.eclipse.ui.startup">
+   </extension> 
+</plugin>

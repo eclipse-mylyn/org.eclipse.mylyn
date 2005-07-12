@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.util.RelativePathUtil;
-import org.eclipse.mylar.tasks.util.XmlUtil;
 
 
 /**
@@ -27,14 +26,14 @@ import org.eclipse.mylar.tasks.util.XmlUtil;
  */
 public class TaskListManager {
     
-    private File file;
+    private File taskListFile;
     private TaskList taskList = new TaskList();
     private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
     private int nextTaskId;
     
     public TaskListManager(File file) {
-        this.file = file;
-        if (MylarPlugin.getDefault().getPreferenceStore().contains(MylarTasksPlugin.TASK_ID)) { // TODO: fix to MylarTasksPlugin
+        this.taskListFile = file;
+        if (MylarPlugin.getDefault() != null && MylarPlugin.getDefault().getPreferenceStore().contains(MylarTasksPlugin.TASK_ID)) { // TODO: fix to MylarTasksPlugin
         	nextTaskId = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarTasksPlugin.TASK_ID);
         } else {
         	nextTaskId = 1;
@@ -51,8 +50,8 @@ public class TaskListManager {
     
     public boolean readTaskList() {
         try { 
-        	if (file.exists()) {
-        		XmlUtil.readTaskList(taskList, file);
+        	if (taskListFile.exists()) {
+        		MylarTasksPlugin.getDefault().getTaskListExternalizer().readTaskList(taskList, taskListFile);
         		int maxHandle = taskList.findLargestTaskHandle();
         		if (maxHandle >= nextTaskId) {
         			nextTaskId = maxHandle + 1;
@@ -61,18 +60,17 @@ public class TaskListManager {
         	}
             return true;
         } catch (Exception e) { 
-        	MylarPlugin.log(e, "task read failed");
+        	MylarPlugin.log(e, "Could not read task list");
             return false;
         }
     }
 
     public void saveTaskList() {
         try {   
-            XmlUtil.writeTaskList(taskList, file);
+        	MylarTasksPlugin.getDefault().getTaskListExternalizer().writeTaskList(taskList, taskListFile);
             MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTasksPlugin.TASK_ID, nextTaskId);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO: fix
-//            MylarPlugin.fail(e, "Could not save task list", true);
+            MylarPlugin.fail(e, "Could not save task list", true);
         }
     } 
     
@@ -150,14 +148,14 @@ public class TaskListManager {
 //			updateTaskscapeReferenceHelper(task.getChildren(), prevDir);
     	}
     }
-    public void setFile(File f) {
-    	if (this.file.exists()) {
-    		this.file.delete();
+    public void setTaskListFile(File f) {
+    	if (this.taskListFile.exists()) {
+    		this.taskListFile.delete();
     	}
-    	this.file = f;
+    	this.taskListFile = f;
     }
-    
-    public void activateHit(BugzillaHit hit) {
-    	
-    }
+
+	public File getTaskListFile() {
+		return taskListFile;
+	}
 }

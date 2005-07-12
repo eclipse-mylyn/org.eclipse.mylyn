@@ -2,11 +2,12 @@
 <?eclipse version="3.0"?>
 <plugin>
 
+<!--
    <extension
          name="Mylar Tasks startup"
          point="org.eclipse.ui.startup">
    </extension>
-
+-->
   <extension point="org.eclipse.ui.views">
 
 	  <view name="Mylar Task List" 
@@ -22,11 +23,6 @@
            class="org.eclipse.mylar.tasks.ui.TaskEditor"
            name="Task Viewer"
            id="org.eclipse.mylar.tasks.ui.taskEditor"/>
-     <editor
-           icon="icons/eview16/task-bug.gif"
-           name="Bugzilla task viewer"
-           class="org.eclipse.mylar.tasks.ui.BugzillaTaskEditor"
-           id="org.eclipse.mylar.tasks.ui.bugzillaTaskEditor"/>
   </extension>
   
   <extension point="org.eclipse.ui.commands">

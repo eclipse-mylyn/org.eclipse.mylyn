@@ -15,9 +15,7 @@ package org.eclipse.mylar.tasks;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
  
 /**
@@ -31,35 +29,19 @@ public class TaskList implements Serializable {
     private List<AbstractCategory> categories = new ArrayList<AbstractCategory>();
     private transient List<ITask> activeTasks = new ArrayList<ITask>();
     
-    // XXX we never delete anything from this registry
-    private Map<String, BugzillaTask> bugzillaTaskRegistry = new HashMap<String, BugzillaTask>();
-    
-    public void addToBugzillaTaskRegistry(BugzillaTask task){
-    	if(bugzillaTaskRegistry.get(task.getHandle()) == null){
-    		bugzillaTaskRegistry.put(task.getHandle(), task);
-    	}
-    }
-    
-    public BugzillaTask getFromBugzillaTaskRegistry(String handle){
-    	return bugzillaTaskRegistry.get(handle);
-    }
-    
-    public Map<String, BugzillaTask> getBugzillaTaskRegistry(){
-    	return bugzillaTaskRegistry;
-    }
-    
     public void addRootTask(ITask task) {
-    	if(task instanceof BugzillaTask){
-    		BugzillaTask bugTask = bugzillaTaskRegistry.get(task.getHandle());
-    		if(bugTask == null){
-    			bugzillaTaskRegistry.put(task.getHandle(), (BugzillaTask)task);
-    			rootTasks.add(task);	
-    		} else {
-    			rootTasks.add(bugTask);
-    		}
-    	} else {
+    	// XXX refactored
+//    	if(task instanceof BugzillaTask){
+//    		BugzillaTask bugTask = bugzillaTaskRegistry.get(task.getHandle());
+//    		if(bugTask == null){
+//    			bugzillaTaskRegistry.put(task.getHandle(), (BugzillaTask)task);
+//    			rootTasks.add(task);	
+//    		} else {
+//    			rootTasks.add(bugTask);
+//    		}
+//    	} else {
     		rootTasks.add(task);
-    	}
+//    	}
     }
     
     public void addCategory(AbstractCategory cat) {
@@ -76,9 +58,10 @@ public class TaskList implements Serializable {
     }
     
     public void deleteTask(ITask task) {
-    	if (task instanceof BugzillaTask) {
-    		((BugzillaTask)task).removeReport();
-    	}
+    	// XXX refactored
+//    	if (task instanceof BugzillaTask) {
+//    		((BugzillaTask)task).removeReport();
+//    	}
     	boolean deleted = deleteTaskHelper(rootTasks, task);
     	if (!deleted) {
 			for (TaskCategory cat : getTaskCategories()) {
@@ -157,11 +140,12 @@ public class TaskList implements Serializable {
     	int ihandle = 0;
     	int max = 0;
     	for (ITask t : tasks) {
-    		if (t instanceof BugzillaTask) {
-    			ihandle = 0;
-    		} else {
+    		// XXX refactored
+//    		if (t instanceof BugzillaTask) {
+//    			ihandle = 0;
+//    		} else {
     			ihandle = Integer.parseInt(t.getHandle().substring(t.getHandle().indexOf('-')+1, t.getHandle().length()));
-    		}
+//    		}
     		max = Math.max(ihandle, max);
     		ihandle = largestTaskHandleHelper(t.getChildren());
     		max = Math.max(ihandle, max);

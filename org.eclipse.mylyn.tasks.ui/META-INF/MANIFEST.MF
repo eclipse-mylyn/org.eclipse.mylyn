@@ -17,18 +17,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.pde.ui,
  org.eclipse.mylar.core,
- org.eclipse.mylar.ui,
- org.eclipse.jdt.core,
- org.eclipse.mylar.bugzilla.core,
- org.eclipse.mylar.bugzilla.ui
+ org.eclipse.jdt.core
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: mylar-tasklist.jar
 Export-Package: org.eclipse.mylar.tasks,
- org.eclipse.mylar.tasks.bugzilla,
- org.eclipse.mylar.tasks.bugzilla.search,
- org.eclipse.mylar.tasks.bugzilla.ui,
  org.eclipse.mylar.tasks.ui,
  org.eclipse.mylar.tasks.ui.actions,
+ org.eclipse.mylar.tasks.ui.preferences,
  org.eclipse.mylar.tasks.ui.views,
  org.eclipse.mylar.tasks.util

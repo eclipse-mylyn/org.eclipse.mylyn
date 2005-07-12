@@ -41,15 +41,13 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskActivityListener;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.RelatedLinks;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.util.RelativePathUtil;
-import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.FocusEvent;
@@ -99,6 +97,12 @@ import org.eclipse.ui.part.EditorPart;
  * @author Ken Sueda
  */
 public class TaskSummaryEditor extends EditorPart {
+	
+	/**
+	 * TODO: use workbench theme
+	 */
+	public static final Color HYPERLINK  = new Color(Display.getDefault(), 0, 0, 255);
+	
 	private ITask task;
 	private TaskEditorInput editorInput;
 	private Composite editorComposite;
@@ -317,7 +321,7 @@ public class TaskSummaryEditor extends EditorPart {
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.colspan = 2;
         description.setLayoutData(td);
-        if (task instanceof BugzillaTask) {
+        if (task.canEditDescription()) {
         	description.setEnabled(false);
         } else {
         	description.addFocusListener(new FocusListener() {
@@ -673,7 +677,7 @@ public class TaskSummaryEditor extends EditorPart {
 		}
 		
 		public Color getForeground(Object element) {
-			return MylarUiPlugin.getDefault().getColorMap().HYPERLINK;
+			return HYPERLINK;
 		}
 		
 		public Color getBackground(Object element) {
@@ -704,7 +708,7 @@ public class TaskSummaryEditor extends EditorPart {
 			return null;
 		}
 		public Color getForeground(Object element) {
-			return MylarUiPlugin.getDefault().getColorMap().HYPERLINK;
+			return HYPERLINK;
 		}
 		
 		public Color getBackground(Object element) {
@@ -790,7 +794,7 @@ public class TaskSummaryEditor extends EditorPart {
 		};
         delete.setText("Delete");
         delete.setToolTipText("Delete");
-        delete.setImageDescriptor(MylarImages.REMOVE);
+        delete.setImageDescriptor(TaskListImages.REMOVE);
         
         add = new Action() {
 			@Override

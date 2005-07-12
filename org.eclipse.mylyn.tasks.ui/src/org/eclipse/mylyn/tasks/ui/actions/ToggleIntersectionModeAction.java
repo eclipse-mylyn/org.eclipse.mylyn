@@ -14,21 +14,20 @@
 package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.tasks.TaskListImages;
 
 /**
  * @author Mik Kersten
  */
+@Deprecated
 public class ToggleIntersectionModeAction extends Action {
 
     public ToggleIntersectionModeAction() {
         super();
         setText("Intersect Tasskscapes");
         setToolTipText("Intersect Taskscapes");
-        setImageDescriptor(MylarImages.MYLAR);
+//        setImageDescriptor(TaskListImages.);
         setActionDefinitionId("org.eclipse.mylar.ui.interest.intersection");
 //        setChecked(MylarUiPlugin.getDefault().isGlobalFilteringEnabled());
     }
@@ -36,7 +35,8 @@ public class ToggleIntersectionModeAction extends Action {
     @Override
     public void run() { 
         setChecked(!isChecked());
-        MylarUiPlugin.getDefault().setIntersectionMode(isChecked());
-        MylarPlugin.getTaskscapeManager().notifyActivePresentationSettingsChange(ITaskscapeListener.UpdateKind.HIGHLIGHTER);
+        MylarPlugin.log("not implemented", this);
+//        MylarUiPlugin.getDefault().setIntersectionMode(isChecked());
+//        MylarPlugin.getTaskscapeManager().notifyActivePresentationSettingsChange(ITaskscapeListener.UpdateKind.HIGHLIGHTER);
     }
 }

@@ -30,7 +30,6 @@ public class TaskActivateAction extends Action {
 	}
 	
 	public void run() {
-//        MylarPlugin.getDefault().actionObserved(this);
         MylarTasksPlugin.getTaskListManager().activateTask(task);
 	}
 }

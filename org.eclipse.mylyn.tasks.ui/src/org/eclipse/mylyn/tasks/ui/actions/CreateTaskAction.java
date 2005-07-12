@@ -13,12 +13,11 @@ package org.eclipse.mylar.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -34,7 +33,7 @@ public class CreateTaskAction extends Action {
 		setText("Add Task");
         setToolTipText("Add Task");
         setId(ID);
-        setImageDescriptor(MylarImages.TASK_NEW);
+        setImageDescriptor(TaskListImages.TASK_NEW);
 	}
 	
     @Override
@@ -62,9 +61,9 @@ public class CreateTaskAction extends Action {
         else {            	
             MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);                
         }  
-        MylarUiPlugin.getDefault().setHighlighterMapping(
-                newTask.getHandle(), 
-                MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
+//        MylarUiPlugin.getDefault().setHighlighterMapping(
+//                newTask.getHandle(), 
+//                MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
         this.view.getViewer().refresh();
     }
 }

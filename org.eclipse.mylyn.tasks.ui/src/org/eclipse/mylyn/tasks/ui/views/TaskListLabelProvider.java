@@ -18,15 +18,7 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.tasks.AbstractCategory;
-import org.eclipse.mylar.tasks.BugzillaHit;
-import org.eclipse.mylar.tasks.BugzillaQueryCategory;
-import org.eclipse.mylar.tasks.BugzillaTask;
-import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskListElement;
-import org.eclipse.mylar.tasks.TaskCategory;
-import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.internal.UiUtil;
-import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -59,44 +51,43 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
     }
 
     public Font getFont(Object element) {
-        if (element instanceof ITask) {
-            ITask task = (ITask)element;            
-            if (task.isActive()) return UiUtil.BOLD;            
-//            if (task.isCompleted()) return UiUtil.ITALIC;
-            for (ITask child : task.getChildren()) {
-				if (child.isActive())
-					return UiUtil.BOLD;
-			}
-            if (task instanceof BugzillaTask) {
-            	if (((BugzillaTask)task).getState() != BugzillaTask.BugTaskState.FREE) {
-            		return UiUtil.ITALIC;
-            	}
-            }
-        } else if (element instanceof TaskCategory) {
-        	TaskCategory cat = (TaskCategory) element;
-            for (ITask child : cat.getChildren()) {
-				if (child.isActive())
-					return UiUtil.BOLD;
-			}
-        } else if (element instanceof BugzillaHit) {
-        	BugzillaHit hit = (BugzillaHit)element;
-        	BugzillaTask task = hit.getAssociatedTask(); 
-        	if(task != null){
-	            if (task.isActive()) return UiUtil.BOLD;            
-//	            if (task.isCompleted()) return UiUtil.ITALIC;
-        	}
-        } else if (element instanceof BugzillaQueryCategory) {
-        	BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
-            for (ITaskListElement child : cat.getHits()) {
-				if (child instanceof BugzillaHit){
-					BugzillaHit hit = (BugzillaHit) child;
-					BugzillaTask task = hit.getAssociatedTask();
-					if(task != null && task.isActive()){
-						return UiUtil.BOLD;
-					}
-				}
-			}
-        }
+    	// XXX refactored
+//        if (element instanceof ITask) {
+//            ITask task = (ITask)element;            
+//            if (task.isActive()) return UiUtil.BOLD;            
+//            for (ITask child : task.getChildren()) {
+//				if (child.isActive())
+//					return UiUtil.BOLD;
+//			}
+//            if (task instanceof BugzillaTask) {
+//            	if (((BugzillaTask)task).getState() != BugzillaTask.BugTaskState.FREE) {
+//            		return UiUtil.ITALIC;
+//            	}
+//            }
+//        } else if (element instanceof TaskCategory) {
+//        	TaskCategory cat = (TaskCategory) element;
+//            for (ITask child : cat.getChildren()) {
+//				if (child.isActive())
+//					return UiUtil.BOLD;
+//			}
+//        } else if (element instanceof BugzillaHit) {
+//        	BugzillaHit hit = (BugzillaHit)element;
+//        	BugzillaTask task = hit.getAssociatedTask(); 
+//        	if(task != null){
+//	            if (task.isActive()) return UiUtil.BOLD;        
+//        	}
+//        } else if (element instanceof BugzillaQueryCategory) {
+//        	BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
+//            for (ITaskListElement child : cat.getHits()) {
+//				if (child instanceof BugzillaHit){
+//					BugzillaHit hit = (BugzillaHit) child;
+//					BugzillaTask task = hit.getAssociatedTask();
+//					if(task != null && task.isActive()){
+//						return UiUtil.BOLD;
+//					}
+//				}
+//			}
+//        }
         return null;
     }
    
@@ -121,32 +112,34 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
     }
 
     public Color getBackground(Object element) {
-      if (element instanceof ITask) {
-          ITask task = (ITask)element;
-          Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
-          if (highlighter != null) return highlighter.getHighlightColor();
-      } else if (element instanceof BugzillaHit) {
-    	  BugzillaHit hit = (BugzillaHit)element;
-    	  BugzillaTask task = hit.getAssociatedTask();
-    	  if(task != null){
-	          Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
-	          if (highlighter != null) return highlighter.getHighlightColor();
-    	  }
-      }else if (element instanceof AbstractCategory) {
-    	  return backgroundColor;
-      }
-      return null;
+    	// XXX refactored
+//		  if (element instanceof ITask) {
+//		      ITask task = (ITask)element;
+//		      Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
+//		      if (highlighter != null) return highlighter.getHighlightColor();
+//		  } else if (element instanceof BugzillaHit) {
+//			  BugzillaHit hit = (BugzillaHit)element;
+//			  BugzillaTask task = hit.getAssociatedTask();
+//			  if(task != null){
+//		          Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
+//		          if (highlighter != null) return highlighter.getHighlightColor();
+//			  }
+//		  }else if (element instanceof AbstractCategory) {
+//			  return backgroundColor;
+//		  }
+		  return null;
     }
     
     public Color getForeground(Object element) {
-        if (element instanceof ITask) {
-            ITask task = (ITask)element;
-            if (task.isCompleted()) return MylarUiPlugin.getDefault().getColorMap().GRAY_VERY_LIGHT;
-        } else if (element instanceof  BugzillaHit) {
-    	  BugzillaHit hit = (BugzillaHit)element;
-    	  BugzillaTask task = hit.getAssociatedTask();
-          if (task != null && task.isCompleted()) return MylarUiPlugin.getDefault().getColorMap().GRAY_VERY_LIGHT;
-        }
+    	// XXX refactored
+//        if (element instanceof ITask) {
+//            ITask task = (ITask)element;
+//            if (task.isCompleted()) return MylarUiPlugin.getDefault().getColorMap().GRAY_VERY_LIGHT;
+//        } else if (element instanceof  BugzillaHit) {
+//    	  BugzillaHit hit = (BugzillaHit)element;
+//    	  BugzillaTask task = hit.getAssociatedTask();
+//          if (task != null && task.isCompleted()) return MylarUiPlugin.getDefault().getColorMap().GRAY_VERY_LIGHT;
+//        }
         return null;
     }
     
