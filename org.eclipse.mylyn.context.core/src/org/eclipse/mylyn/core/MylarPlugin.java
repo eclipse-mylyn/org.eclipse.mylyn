@@ -13,6 +13,7 @@ package org.eclipse.mylar.core;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.model.TaskscapeManager;
@@ -136,8 +138,8 @@ public class MylarPlugin extends AbstractUIPlugin {
             return getResourceExtension();
         }
     };
-       
-	public MylarPlugin() {  
+    
+    public MylarPlugin() {  
 		INSTANCE = this;  
 	}
     
@@ -344,4 +346,13 @@ public class MylarPlugin extends AbstractUIPlugin {
 	public boolean isPredictedInterestEnabled() {
 		return predictedInterestEnabled;
 	}	
+	
+	public boolean suppressWizardsOnStartup() {
+    	List<String> commandLineArgs = Arrays.asList(Platform.getCommandLineArgs());
+    	if (commandLineArgs.contains("-showmylarwizards")) {
+    		return false;
+    	} else {
+    		return commandLineArgs.contains("-pdelaunch");
+    	}
+	}
 }

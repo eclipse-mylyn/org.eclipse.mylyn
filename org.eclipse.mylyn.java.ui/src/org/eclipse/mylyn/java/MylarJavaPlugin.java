@@ -83,10 +83,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
                 MylarPlugin.getTaskscapeManager().addListener(new LandmarkMarkerManager());
                 MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
-//                modelUpdateBridge.revealInteresting();
                 
             	installEditorTracker(workbench);
-//            	MylarPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PREFERENCE_LISTENER);
             
             	if (FilterPackageExplorerAction.getDefault() != null) {
             		FilterPackageExplorerAction.getDefault().update();
@@ -101,7 +99,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
     @Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		if(!getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
+		if(!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 	        workbench.getDisplay().asyncExec(new Runnable() {
 	            public void run() {
