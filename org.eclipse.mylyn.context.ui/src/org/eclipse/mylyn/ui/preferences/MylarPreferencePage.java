@@ -107,7 +107,7 @@ public class MylarPreferencePage extends PreferencePage implements
 			COLOR_COLUMN, TYPE_COLUMN, };
 	static final String[] TYPE_ARRAY = { "Gradient", "Solid", "Intersection" };
 
-    private IntegerFieldEditor userStudyId;
+//    private IntegerFieldEditor userStudyId;
     
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since
@@ -189,29 +189,29 @@ public class MylarPreferencePage extends PreferencePage implements
 	public boolean performOk() {
 //		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeOnDeactivate.getBooleanValue());
 //		getPreferenceStore().setValue(MylarTasksPlugin.REFRESH_QUERIES, refreshQueryOnStartup.getBooleanValue());
-        int uidNum = -1;
-        try{
-            if(userStudyId.getStringValue() == ""){
-                uidNum = -1;
-                userStudyId.setStringValue(uidNum + "");
-            }
-            else{
-                uidNum = userStudyId.getIntValue();
-            }
-            
-            if(uidNum <= 0 && uidNum != -1){
-                MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "The user study id must be a posative integer");
-                return false;
-            }
-            if(uidNum != -1 && uidNum % 17 != 1){
-                MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "Your user study id is not valid, please make sure it is correct or get a new id");
-                return false;
-            }
-        }catch(NumberFormatException e){
-            MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "The user study id must be a posative integer");
-            return false;
-        }
-        getPreferenceStore().setValue(MylarPlugin.USER_ID, uidNum);        
+//        int uidNum = -1;
+//        try{
+//            if(userStudyId.getStringValue() == ""){
+//                uidNum = -1;
+//                userStudyId.setStringValue(uidNum + "");
+//            }
+//            else{
+//                uidNum = userStudyId.getIntValue();
+//            }
+//            
+//            if(uidNum <= 0 && uidNum != -1){
+//                MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "The user study id must be a posative integer");
+//                return false;
+//            }
+//            if(uidNum != -1 && uidNum % 17 != 1){
+//                MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "Your user study id is not valid, please make sure it is correct or get a new id");
+//                return false;
+//            }
+//        }catch(NumberFormatException e){
+//            MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "The user study id must be a posative integer");
+//            return false;
+//        }
+//        getPreferenceStore().setValue(MylarPlugin.USER_ID, uidNum);        
 		getPreferenceStore().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX, MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
         		
 		ColorMap.GammaSetting gm = null;
@@ -259,7 +259,7 @@ public class MylarPreferencePage extends PreferencePage implements
 		darkened.setSelection(getPreferenceStore().getBoolean(
 				MylarUiPlugin.GAMMA_SETTING_DARKENED));
 		
-		userStudyId.setStringValue(getPreferenceStore().getInt(MylarPlugin.USER_ID)+"");
+//		userStudyId.setStringValue(getPreferenceStore().getInt(MylarPlugin.USER_ID)+"");
 		return true;
 	}
 
@@ -809,13 +809,13 @@ public class MylarPreferencePage extends PreferencePage implements
 	 */
 	private void createTaskDirectoryControl(Composite parent) {
 		
-		userStudyId = new IntegerFieldEditor("", "User Study ID", parent);
-		userStudyId.setErrorMessage("Your user id must be an integer");
-		int uidNum = getPreferenceStore().getInt(MylarPlugin.USER_ID);
-		if (uidNum == 0)
-			uidNum = -1;
-		userStudyId.setEmptyStringAllowed(false);
-		userStudyId.setStringValue(uidNum + "");
+//		userStudyId = new IntegerFieldEditor("", "User Study ID", parent);
+//		userStudyId.setErrorMessage("Your user id must be an integer");
+//		int uidNum = getPreferenceStore().getInt(MylarPlugin.USER_ID);
+//		if (uidNum == 0)
+//			uidNum = -1;
+//		userStudyId.setEmptyStringAllowed(false);
+//		userStudyId.setStringValue(uidNum + "");
 //		addField(userStudyId);
 		
 		String taskDirectory = getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);

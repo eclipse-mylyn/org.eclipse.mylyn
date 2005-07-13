@@ -51,6 +51,7 @@
 	 </objectContribution>
   </extension>
     
+    
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
