@@ -21,9 +21,9 @@ public class MoveTaskToRootAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasks.actions.move.toroot";
 		
-	private final TaskListView view;
+//	private final TaskListView view;
 	public MoveTaskToRootAction(TaskListView view) {
-		this.view = view;
+//		this.view = view;
 		setText("Move Task to Root");
         setToolTipText("Move Task to Root");
         setId(ID);
