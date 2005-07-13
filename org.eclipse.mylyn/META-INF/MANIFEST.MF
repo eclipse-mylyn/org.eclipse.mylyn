@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylar Plug-in
+Bundle-SymbolicName: org.eclipse.mylar
+Bundle-Version: 0.3.1
+Bundle-Vendor: University of British Columbia
+Bundle-Localization: plugin
+Eclipse-AutoStart: true
+Require-Bundle: org.eclipse.mylar.bugzilla,
+ org.eclipse.mylar.bugzilla.core,
+ org.eclipse.mylar.bugzilla.ui,
+ org.eclipse.mylar.core,
+ org.eclipse.mylar.doc,
+ org.eclipse.mylar.java,
+ org.eclipse.mylar.monitor,
+ org.eclipse.mylar.tasks,
+ org.eclipse.mylar.ui,
+ org.eclipse.mylar.xml
