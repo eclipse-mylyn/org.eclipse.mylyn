@@ -130,7 +130,7 @@ public class TaskListView extends ViewPart {
     private FilterCompletedTasksAction filterCompleteTask;
 //    private FilterIncompleteTasksAction filterInCompleteTask;
     private PriorityDropDownAction filterOnPriority;
-    private Action moveTaskToRoot; 
+    private Action moveTaskToRoot;   
     private PriorityFilter priorityFilter = new PriorityFilter();
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description" };

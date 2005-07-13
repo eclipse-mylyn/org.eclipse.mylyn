@@ -34,9 +34,9 @@ public class CreateBugzillaTaskAction extends Action {
 		this.view = view;
 		setText("Add Bugzilla Report");
         setToolTipText("Add Bugzilla Report");
-        setId(ID);
+        setId(ID); 
         setImageDescriptor(BugzillaImages.TASK_BUGZILLA_NEW);
-	}
+	} 
 	
 	@Override
 	public void run() {
