@@ -28,7 +28,7 @@ public class ScalingFactors implements Serializable {
 
 	// weird
 	private ScalingFactor defaultDecay = new ScalingFactor("decay", .01f);
-	private ScalingFactor defaultEdit = new ScalingFactor("edit", .5f);
+	private ScalingFactor defaultEdit = new ScalingFactor("edit", .7f);
 	private ScalingFactor defaultPurge = new ScalingFactor("edit", -10f);
 	
 	// thesholds, not factors
