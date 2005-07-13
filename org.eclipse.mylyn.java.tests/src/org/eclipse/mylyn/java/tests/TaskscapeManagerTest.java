@@ -37,7 +37,7 @@ import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.MylarJavaPlugin;
-import org.eclipse.mylar.ui.actions.AbstractInterestAction;
+import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
 
@@ -217,7 +217,7 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         assertEquals(node.getDegreeOfInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION).getValue());
     }
     
-	class InterestManipulationAction extends AbstractInterestAction {
+	class InterestManipulationAction extends AbstractInterestManipulationAction {
 		public void run(IAction action) { }
 
 		@Override

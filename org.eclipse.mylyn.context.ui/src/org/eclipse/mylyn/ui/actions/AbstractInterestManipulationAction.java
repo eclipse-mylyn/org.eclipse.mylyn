@@ -25,7 +25,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractInterestAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
+public abstract class AbstractInterestManipulationAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
     public static final String SOURCE_ID = "org.eclipse.mylar.ui.interest.user";
 	

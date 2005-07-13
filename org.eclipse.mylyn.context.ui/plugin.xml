@@ -8,7 +8,7 @@
          point="org.eclipse.ui.startup">
    </extension>
    
-  <extension point = "org.eclipse.ui.popupMenus">
+  	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.mylar.core.model.ITaskscapeNode">
@@ -234,13 +234,13 @@
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
-	         id="org.eclipse.mylar.ui.actions.FilterOutlineAction" 
+	         id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction" 
 	         style="toggle"
-	         label="Filter uninteresting" 
+	         label="Apply Mylar" 
 	         icon="icons/elcl16/interest-filtering.gif"
 	         tooltip="Filter uninteresting"
 	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.ui.actions.FilterOutlineAction"
+	         class="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
 	         enablesFor="*"> 
   		</action> 
   		</viewContribution>
@@ -250,11 +250,11 @@
     	<action
 	         id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction" 
    	         style="toggle"
-	         label="Filter uninteresting resources" 
+	         label="Apply Mylar" 
 	         icon="icons/elcl16/interest-filtering.gif"
 	         tooltip="Filter uninteresting resources"
 	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.ui.actions.FilterNavigatorAction"
+	         class="org.eclipse.mylar.ui.actions.ApplyMylarToNavigatorAction"
 	         enablesFor="*"> 
   		</action> 
       </viewContribution> 
@@ -262,11 +262,11 @@
 		id="org.eclipse.mylar.java.problems.contribution" 
    		targetID="org.eclipse.ui.views.ProblemView">
     	<action
-           class="org.eclipse.mylar.ui.actions.FilterProblemsListAction"
+           class="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterProblemsAction"
-           label="Filter uninteresting"
+           label="Apply Mylar"
            style="toggle"
            toolbarPath="mylar"
            tooltip="Filter uninteresting"> 

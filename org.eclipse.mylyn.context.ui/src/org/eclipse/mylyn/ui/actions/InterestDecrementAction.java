@@ -18,7 +18,7 @@ import org.eclipse.jface.action.IAction;
 /**
  * @author Mik Kersten
  */
-public class InterestDecrementAction extends AbstractInterestAction {
+public class InterestDecrementAction extends AbstractInterestManipulationAction {
 
     /**
      * Does nothing, since thi is handled by command monitor

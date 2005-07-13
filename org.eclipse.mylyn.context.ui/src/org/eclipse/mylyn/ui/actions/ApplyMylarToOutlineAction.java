@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.ui.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -24,11 +25,11 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Shawn Minto
  */
-public class FilterOutlineAction extends AbstractInterestFilterAction {
+public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	
-	public static FilterOutlineAction INSTANCE;
+	public static ApplyMylarToOutlineAction INSTANCE;
 	
-	public FilterOutlineAction() {
+	public ApplyMylarToOutlineAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
 	}
@@ -58,7 +59,7 @@ public class FilterOutlineAction extends AbstractInterestFilterAction {
 		if (viewer != null && viewer.getControl().isVisible()) viewer.refresh();
 	}
 
-	public static FilterOutlineAction getDefault() {
+	public static ApplyMylarToOutlineAction getDefault() {
 		return INSTANCE;
 	}
 }

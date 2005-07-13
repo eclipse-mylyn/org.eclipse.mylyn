@@ -13,10 +13,7 @@
  */
 package org.eclipse.mylar.ui.internal;
 
-import java.lang.reflect.Method;
-
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.model.internal.CompositeTaskscapeNode;
 import org.eclipse.mylar.core.model.internal.Taskscape;
@@ -26,11 +23,6 @@ import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.views.markers.internal.ProblemView;
-import org.eclipse.ui.views.markers.internal.TableView;
 
  
 /**
@@ -41,32 +33,6 @@ public class UiUtil {
     // TODO: remove hard-coded fonts
     public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
     public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
-    
-    public static TableViewer cachedProblemsTableViewer = null;
-	
-    /**
-     * HACK: changing accessibility
-     */
-    public static TableViewer getProblemViewFromActivePerspective() {
-        if (cachedProblemsTableViewer != null) return cachedProblemsTableViewer;
-        IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-        if (activePage == null) return null;
-        try {
-            IViewPart view= activePage.findView("org.eclipse.ui.views.ProblemView");
-            if (view instanceof ProblemView) {
-
-                Class infoClass = TableView.class;//problemView.getClass();
-                Method method = infoClass.getDeclaredMethod("getViewer", new Class[] { } );
-                method.setAccessible(true);
-                cachedProblemsTableViewer = (TableViewer)method.invoke(view, new Object[] { });
-                return cachedProblemsTableViewer;
-            } 
-        } catch (Exception e) {
-        	MylarPlugin.log(e, "couldn't get problmes viewer");
-        }
-        return null;
-    }
-    
 //    public static void refreshProblemsView() {
 //        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 //            public void run() { 

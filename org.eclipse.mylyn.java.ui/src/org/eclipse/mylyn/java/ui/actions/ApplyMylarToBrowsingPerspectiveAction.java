@@ -16,9 +16,9 @@ import java.lang.reflect.Method;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.actions.AbstractInterestFilterAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -30,9 +30,9 @@ import org.eclipse.ui.internal.Workbench;
  * 
  * @author Shawn Minto
  */
-public class FilterBrowsingPerspectiveAction extends AbstractInterestFilterAction implements IWorkbenchWindowActionDelegate{
+public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAction implements IWorkbenchWindowActionDelegate{
 
-	public static FilterBrowsingPerspectiveAction INSTANCE;
+	public static ApplyMylarToBrowsingPerspectiveAction INSTANCE;
 	
 	private String[] viewNames = { 	"org.eclipse.jdt.ui.MembersView",
 									"org.eclipse.jdt.ui.PackagesView",
@@ -44,7 +44,7 @@ public class FilterBrowsingPerspectiveAction extends AbstractInterestFilterActio
 									"org.eclipse.jdt.internal.ui.browsing.TypesView"
 			};
 	
-	public FilterBrowsingPerspectiveAction() {
+	public ApplyMylarToBrowsingPerspectiveAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
 		prefId = PREF_ID_PREFIX + "javaBrowsing";
@@ -89,7 +89,7 @@ public class FilterBrowsingPerspectiveAction extends AbstractInterestFilterActio
         }
 	}
 
-	public static FilterBrowsingPerspectiveAction getDefault() {
+	public static ApplyMylarToBrowsingPerspectiveAction getDefault() {
 		return INSTANCE;
 	}
 

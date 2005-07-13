@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.actions.FilterOutlineAction;
+import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
@@ -31,7 +31,7 @@ import org.eclipse.ui.internal.Workbench;
  * 
  * @author Mik Kersten
  */
-public class ViewerConfigurationManager implements IPartListener, IPageListener {
+public class ViewerConfigurator implements IPartListener, IPageListener {
     
 	public void partActivated(IWorkbenchPart part) {
 //        if (part instanceof IEditorPart) {
@@ -47,7 +47,7 @@ public class ViewerConfigurationManager implements IPartListener, IPageListener 
         }
         Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() { 
-            	if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().update();
+            	if (ApplyMylarToOutlineAction.getDefault() != null) ApplyMylarToOutlineAction.getDefault().update();
             }
         });
     }

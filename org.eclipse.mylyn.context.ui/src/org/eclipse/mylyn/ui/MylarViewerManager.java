@@ -27,7 +27,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
+import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -92,8 +92,6 @@ public class MylarViewerManager implements ITaskscapeListener {
     }
 
     public void presentationSettingsChanged(UpdateKind kind) {
-//        UiUtil.refreshProblemsView();
-//        if (kind == ITaskscapeListener.UpdateKind.UPDATE) 
         refreshViewers();
     }
 
@@ -110,7 +108,7 @@ public class MylarViewerManager implements ITaskscapeListener {
     
     protected void refreshViewers(final List<ITaskscapeNode> nodes, final boolean updateLabels) {
     	// HACK: improve laziness and update
-        if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().refreshViewer();
+        if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
     	
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
@@ -150,9 +148,10 @@ public class MylarViewerManager implements ITaskscapeListener {
 											bridge.refreshOutline(objectToRefresh, updateLabels);
 										}
 									}
-								}			
+								}		 	
 								InteractionEvent lastInteraction = lastNode.getDegreeOfInterest().getEvents().get(lastNode.getDegreeOfInterest().getEvents().size()-1);
-						    	if (showChildrenRequested && viewer instanceof TreeViewer) {
+								System.err.println(">>>> " + viewer.getClass());
+								if (showChildrenRequested && viewer instanceof TreeViewer) {
 									((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
 								} else if (objectToRefresh != null 
 										&& lastInteraction.getKind().isUserEvent()

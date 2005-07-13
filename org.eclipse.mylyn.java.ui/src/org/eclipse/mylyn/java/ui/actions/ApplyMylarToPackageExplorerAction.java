@@ -9,31 +9,37 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui.actions;
+package org.eclipse.mylar.java.ui.actions;
 
-
+import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.ui.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.InterestFilter;
-import org.eclipse.mylar.ui.resources.NavigatorRefreshListener;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
  * @author Mik Kersten
  */
-public class FilterNavigatorAction extends AbstractInterestFilterAction {
+public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction {
 
-	public static FilterNavigatorAction INSTANCE;
+	public static ApplyMylarToPackageExplorerAction INSTANCE;
 	
-	public FilterNavigatorAction() {
+	public void init(IAction action) {
+		super.init(action);
+
+	}
+	
+	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
 	}
 	
 	@Override
 	protected StructuredViewer getViewer() {
-		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
-        if (navigator != null) {
-			return navigator.getTreeViewer();
+		PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
+		if (part != null) {
+			return part.getTreeViewer();
 		} else {
 			return null;
 		}
@@ -41,11 +47,12 @@ public class FilterNavigatorAction extends AbstractInterestFilterAction {
 
 	@Override
 	public void refreshViewer() {
-		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
-        if (navigator != null) navigator.getTreeViewer().refresh();
+		TreeViewer viewer = (TreeViewer)getViewer();
+		viewer.refresh();
 	}
 
-	public static FilterNavigatorAction getDefault() {
+	public static ApplyMylarToPackageExplorerAction getDefault() {
 		return INSTANCE;
 	}
+	
 }

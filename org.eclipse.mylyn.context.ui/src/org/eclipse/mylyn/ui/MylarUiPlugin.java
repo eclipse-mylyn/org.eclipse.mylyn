@@ -29,12 +29,12 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.resources.ResourceSelectionMonitor;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
-import org.eclipse.mylar.ui.actions.FilterNavigatorAction;
-import org.eclipse.mylar.ui.actions.FilterOutlineAction;
-import org.eclipse.mylar.ui.actions.FilterProblemsListAction;
+import org.eclipse.mylar.ui.actions.ApplyMylarToNavigatorAction;
+import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
+import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
 import org.eclipse.mylar.ui.internal.UiUtil;
-import org.eclipse.mylar.ui.internal.ViewerConfigurationManager;
+import org.eclipse.mylar.ui.internal.ViewerConfigurator;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
 import org.eclipse.mylar.ui.internal.views.ProblemsListInterestFilter;
@@ -78,11 +78,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private ColorMap colorMap = new ColorMap(); 
     
     private List<MylarWorkingSetUpdater> workingSetUpdaters = null; 
-    
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();
-
-    private ViewerConfigurationManager viewerManager = new ViewerConfigurationManager();
-    
+    protected MylarViewerManager uiUpdateManager = new MylarViewerManager();
+    private ViewerConfigurator viewerConfigurator = new ViewerConfigurator();
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
 
     private static final IMylarUiBridge DEFAULT_UI_BRIDGE = new IMylarUiBridge() {
@@ -143,9 +141,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         }
         
     };
-    
-    protected MylarViewerManager uiUpdateManager = new MylarViewerManager();
-    
+        
     public MylarUiPlugin() {
 		super(); 
 		plugin = this;
@@ -167,39 +163,30 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
                 MylarPlugin.getTaskscapeManager().addListener(uiUpdateManager);
                 
-                Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerManager);
+                Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerConfigurator);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
         		for (int i= 0; i < windows.length; i++) {
-        			windows[i].addPageListener(viewerManager);
+        			windows[i].addPageListener(viewerConfigurator);
 //        			IWorkbenchPage[] pages= windows[i].getPages();
 //        			for (int j= 0; j < pages.length; j++) {
 //        				pages[j].addPartListener(viewerManager);
 //        			}
         		}
-                setupProblemsView();
                 
                 MylarPlugin.getTaskscapeManager().addListener(navigatorRefreshListener);
                 MylarUiPlugin.getDefault().addAdapter(ResourceStructureBridge.EXTENSION, new ResourceUiBridge());
                 
                 MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
                 
-                if (FilterNavigatorAction.getDefault() != null) FilterNavigatorAction.getDefault().update();
-                if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().update();
-                if (FilterProblemsListAction.getDefault() != null) FilterProblemsListAction.getDefault().update();
+                if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
+                if (ApplyMylarToOutlineAction.getDefault() != null) ApplyMylarToOutlineAction.getDefault().update();
+                if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
             }
         });
     }
     
     private void initializeActions() {
         // don't have any actions to initialize
-    }
-    
-    protected void setupProblemsView() {
-        TableViewer viewer = UiUtil.getProblemViewFromActivePerspective();
-        if (viewer != null) {
-            viewer.setLabelProvider(new ProblemsListLabelProvider(
-                    (TableViewLabelProvider)viewer.getLabelProvider()));
-        }
     }
 
     private void initializeHighlighters() {

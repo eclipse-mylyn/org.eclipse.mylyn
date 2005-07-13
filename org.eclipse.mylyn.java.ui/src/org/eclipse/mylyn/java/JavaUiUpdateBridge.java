@@ -16,7 +16,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.mylar.core.ITaskscapeListener;
 import org.eclipse.mylar.core.model.ITaskscape;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction;
+import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 
 /**
  * @author Mik Kersten
@@ -223,7 +223,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
         	if (element == null) {
                 packageExplorer.getTreeViewer().setInput(packageExplorer.getTreeViewer().getInput()); 
                 packageExplorer.getTreeViewer().refresh();
-                if (FilterPackageExplorerAction.getDefault() != null && FilterPackageExplorerAction.getDefault().isChecked()) packageExplorer.getTreeViewer().expandAll();
+                if (ApplyMylarToPackageExplorerAction.getDefault() != null && ApplyMylarToPackageExplorerAction.getDefault().isChecked()) packageExplorer.getTreeViewer().expandAll();
             } else {
                 packageExplorer.getTreeViewer().refresh(element);
             }

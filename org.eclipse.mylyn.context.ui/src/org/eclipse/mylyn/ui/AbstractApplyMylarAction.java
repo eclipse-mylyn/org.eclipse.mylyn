@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui.actions;
+package org.eclipse.mylar.ui;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -18,32 +18,33 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.InterestFilter;
-import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 /**
+ * Extending this class makes it possible to apply Mylar management to a structured view
+ * (e.g. to provide interest-based filtering).
+ * 
  * @author Mik Kersten
  */
-public abstract class AbstractInterestFilterAction extends Action implements IViewActionDelegate, IActionDelegate2 {
+public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2 {
 
-    public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";
+    private static final String ACTION_LABEL = "Apply Mylar";
+	public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";
     protected String prefId;
     protected IAction initAction = null;
     private boolean isSelfManaged = false;
     
     protected ViewerFilter interestFilter;
     
-    public AbstractInterestFilterAction(InterestFilter interestFilter) {
+    public AbstractApplyMylarAction(InterestFilter interestFilter) {
         super();
         this.interestFilter = interestFilter;
-        setText("Filter uninteresting"); 
+        setText(ACTION_LABEL); 
+		setToolTipText(ACTION_LABEL);
 		setImageDescriptor(MylarImages.INTEREST_FILTERING);	
-		setToolTipText("Filter uninteresting elements"); 
    } 
 
 	public void init(IAction action) {

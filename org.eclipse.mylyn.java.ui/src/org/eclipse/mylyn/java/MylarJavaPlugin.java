@@ -25,8 +25,8 @@ import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.java.ui.JavaUiBridge;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
-import org.eclipse.mylar.java.ui.actions.FilterBrowsingPerspectiveAction;
-import org.eclipse.mylar.java.ui.actions.FilterPackageExplorerAction;
+import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
+import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -86,11 +86,11 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 
             	installEditorTracker(workbench);
             
-            	if (FilterPackageExplorerAction.getDefault() != null) {
-            		FilterPackageExplorerAction.getDefault().update();
+            	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+            		ApplyMylarToPackageExplorerAction.getDefault().update();
             	}
-            	if (FilterBrowsingPerspectiveAction.getDefault() != null) {
-            		FilterBrowsingPerspectiveAction.getDefault().update();
+            	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+            		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
             	}
             }
         });

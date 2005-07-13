@@ -71,27 +71,27 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                 for (int i = 0; i < changedResources.length; i++) {
                     IResource resource = changedResources[i];
 //                    if (resource instanceof IFile) {
-                        try {
-                            IMarker[] markers = resource.findMarkers(
-                                    IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
-                                    false, IResource.DEPTH_INFINITE);
-                            IJavaElement element = (IJavaElement)resource.getAdapter(IJavaElement.class);
-                            boolean hasError = false; 
-                            for (int j = 0; j < markers.length; j++) {
-                                if (markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
-                                    hasError = true;
-                                } 
-                            }
-                            if (element != null) {
-                                if (!hasError) {
-                                    MylarPlugin.getTaskscapeManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
-                                } else {
-                                    MylarPlugin.getTaskscapeManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
-                                }
-                            }
-                        } catch (ResourceException e) {
-                            // ignore missing resources
+                    try {
+                        IMarker[] markers = resource.findMarkers(
+                                IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
+                                false, IResource.DEPTH_INFINITE);
+                        IJavaElement element = (IJavaElement)resource.getAdapter(IJavaElement.class);
+                        boolean hasError = false; 
+                        for (int j = 0; j < markers.length; j++) {
+                            if (markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
+                                hasError = true;
+                            } 
                         }
+                        if (element != null) {
+                            if (!hasError) {
+                                MylarPlugin.getTaskscapeManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
+                            } else {
+                                MylarPlugin.getTaskscapeManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
+                            }
+                        }
+                    } catch (ResourceException e) {
+                        // ignore missing resources
+                    }
                 }
                 // XXX: notify, but using the correct node
 //                MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE); // HACK: wrong notification
