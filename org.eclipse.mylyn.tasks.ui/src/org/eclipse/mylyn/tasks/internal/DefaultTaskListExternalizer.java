@@ -141,7 +141,6 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	}
 
 	public boolean canReadTask(Node node) {
-		System.err.println("> " + node.getNodeName() + ", " + externalizers);
 		return node.getNodeName().equals(getTaskTagName());
 	}
 

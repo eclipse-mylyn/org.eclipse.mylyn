@@ -89,22 +89,17 @@ public class TaskListExternalizer {
 		for (ITaskListExternalizer externalizer : externalizers) {
 			externalizer.createRegistry(doc, root);
 		}		
-//		writeBugzillaRegistry(tlist.getBugzillaTaskRegistry(), doc, root);
-		
-		// iterate through each subtask and externalize those
-		//
+
 		for (AbstractCategory category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category)) element = externalizer.createCategoryElement(category, doc, root);
 			}
-			if (element == null) defaultExternalizer.createCategoryElement(category, doc, root);
-//			
-//			if (cat instanceof TaskCategory) {
-//				writeTaskCategory((TaskCategory)cat, doc, root);
-//			} else if (cat instanceof BugzillaQueryCategory) {
-//				writeQueryCategory((BugzillaQueryCategory)cat, doc, root);
-//			}			
+			if (element == null && defaultExternalizer.canCreateElementFor(category)) {
+				defaultExternalizer.createCategoryElement(category, doc, root);		
+			} else {
+				MylarPlugin.log("Did not externalize: " + category, this);
+			}
 		}
 		for (ITask task : tlist.getRootTasks()) {
 			try {
@@ -112,7 +107,11 @@ public class TaskListExternalizer {
 				for (ITaskListExternalizer externalizer : externalizers) {
 					if (externalizer.canCreateElementFor(task)) element = externalizer.createTaskElement(task, doc, root);
 				}
-				if (element == null) defaultExternalizer.createTaskElement(task, doc, root);
+				if (element == null && defaultExternalizer.canCreateElementFor(task)) {
+					defaultExternalizer.createTaskElement(task, doc, root);
+				} else {
+					MylarPlugin.log("Did not externalize: " + task, this);
+				}
 			}catch (Exception e) {
 				MylarPlugin.log(e, e.getMessage());
 			}			
@@ -216,7 +215,11 @@ public class TaskListExternalizer {
 								break;
 							}
 						}
-						if (!wasRead) defaultExternalizer.readCategory(child, tlist);
+						if (!wasRead && defaultExternalizer.canReadCategory(child)) {
+							defaultExternalizer.readCategory(child, tlist);
+						} else {
+							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
+						}
 					} else {
 						for (ITaskListExternalizer externalizer : externalizers) {
 							if (externalizer.canReadTask(child)) {
@@ -231,19 +234,12 @@ public class TaskListExternalizer {
 								break;
 							}
 						}
-						if (!wasRead) tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+						if (!wasRead && defaultExternalizer.canReadTask(child)) {
+							tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+						} else {
+							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
+						}
 					}
-					
-//					if (child.getNodeName().equals("Category") || 
-//							child.getNodeName().equals("TaskCategory")) {
-//						readTaskCategory(child, tlist);
-////					} else if (child.getNodeName().equals("BugzillaTaskRegistry")) {
-////						readBugzillaRegistry(child, tlist);
-//					} else if (child.getNodeName().equals("QueryCategory")) {
-//						readQueryCategory(child, tlist);
-//					} else {
-//						tlist.addRootTask(readTask(child, tlist, null, null));
-//					}
 				}
 			}
 		} catch (Exception e) {
