@@ -60,7 +60,9 @@ public class TaskListExternalizer {
 		readTaskList(MylarTasksPlugin.getTaskListManager().getTaskList(), MylarTasksPlugin.getTaskListManager().getTaskListFile());
 		if(MylarTasksPlugin.getDefault().getContributor() != null){
 			MylarTasksPlugin.getDefault().getContributor().restoreState(TaskListView.getDefault());
-			TaskListView.getDefault().getViewer().refresh();
+			if (TaskListView.getDefault() != null) {
+				TaskListView.getDefault().getViewer().refresh();
+			}
 		}
 	}
 	

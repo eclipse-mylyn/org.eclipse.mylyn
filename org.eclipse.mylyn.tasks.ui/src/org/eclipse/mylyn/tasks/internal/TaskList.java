@@ -128,8 +128,11 @@ public class TaskList implements Serializable {
     	int ihandle = 0;
     	int max = 0;
     	for (ITask t : tasks) {
-    		if(t.participatesInTaskHandles()){
-    			ihandle = Integer.parseInt(t.getHandle().substring(t.getHandle().indexOf('-')+1, t.getHandle().length()));
+    		if(t.participatesInTaskHandles()) {
+    			String string = t.getHandle().substring(t.getHandle().indexOf('-')+1, t.getHandle().length());
+    			if (string != "") {
+    				ihandle = Integer.parseInt(string);
+    			}
     		}
     		max = Math.max(ihandle, max);
     		ihandle = largestTaskHandleHelper(t.getChildren());
