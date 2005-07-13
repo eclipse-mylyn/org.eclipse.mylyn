@@ -69,7 +69,7 @@ public class BugzillaPreferences
 
 	private static final String bugzillaPasswordLabel = "Bugzilla Password: ";
 
-    private static final String bugzilla218Label = "Using Bugzilla 2.18 ";
+    private static final String bugzilla218Label = "Using Bugzilla 2.18 (default is 2.16)";
     
     private BooleanFieldEditor bugzilla218;
     

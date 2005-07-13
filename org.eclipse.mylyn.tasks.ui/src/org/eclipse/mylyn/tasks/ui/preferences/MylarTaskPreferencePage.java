@@ -72,7 +72,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	private void createBugzillaReportOption(Composite parent) {
 		Group container= new Group(parent, SWT.SHADOW_ETCHED_IN);		
 		container.setLayout(new RowLayout());
-		container.setText("Open Bugzilla reports with: ");
+		container.setText("Open Bugzilla reports with");
 		reportEditor = new Button(container, SWT.RADIO);
 		reportEditor.setText("Bug editor");
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REPORT_OPEN_EDITOR));
