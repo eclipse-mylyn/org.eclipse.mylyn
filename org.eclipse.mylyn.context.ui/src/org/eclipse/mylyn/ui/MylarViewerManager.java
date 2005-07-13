@@ -150,7 +150,7 @@ public class MylarViewerManager implements ITaskscapeListener {
 									}
 								}		 	
 								InteractionEvent lastInteraction = lastNode.getDegreeOfInterest().getEvents().get(lastNode.getDegreeOfInterest().getEvents().size()-1);
-								System.err.println(">>>> " + viewer.getClass());
+//								System.err.println(">>>> " + objectToRefresh);
 								if (showChildrenRequested && viewer instanceof TreeViewer) {
 									((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
 								} else if (objectToRefresh != null 

@@ -60,7 +60,6 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
         }
     }
 
-
     protected abstract void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection);
     
     /**
