@@ -18,9 +18,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -39,7 +39,7 @@ public class RefreshBugzillaAction extends Action {
 		setText("Bugzilla Rrefresh");
         setToolTipText("Bugzilla Refresh");
         setId(ID);
-        setImageDescriptor(TaskListImages.TASK_BUG_REFRESH);
+        setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
 	@Override
 	public void run() {

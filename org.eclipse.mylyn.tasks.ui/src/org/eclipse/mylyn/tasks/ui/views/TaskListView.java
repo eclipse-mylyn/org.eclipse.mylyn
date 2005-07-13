@@ -53,10 +53,10 @@ import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskListElement;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskCategory;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.tasks.ui.actions.ClearContextAction;
 import org.eclipse.mylar.tasks.ui.actions.CreateCategoryAction;
@@ -96,9 +96,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
@@ -109,8 +111,6 @@ import org.eclipse.ui.part.ViewPart;
 public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
-	
-	private List<IAction> contributedActions = new ArrayList<IAction>();
 		
 	TreeViewer viewer;
     private DrillDownAdapter drillDownAdapter;
@@ -939,15 +939,17 @@ public class TaskListView extends ViewPart {
     void fillContextMenu(IMenuManager manager) {
         manager.add(completeTask);
         manager.add(incompleteTask);
-//        manager.add(new Separator());
-        manager.add(createTask);
-//        manager.add(createBugzillaTask);
-//        manager.add(rename);
         manager.add(delete);
-        manager.add(clearSelectedTaskscapeAction);
-//        manager.add(moveTaskToRoot);
-//        manager.add(refreshQuery);
         manager.add(new Separator());
+        manager.add(createTask);
+//        manager.add(new Separator());   
+        if (MylarTasksPlugin.getDefault().getContributor() != null) {
+	        for (IAction action : MylarTasksPlugin.getDefault().getContributor().getPopupActions(this)) {
+				manager.add(action);
+			}
+        }
+        manager.add(new Separator());
+        manager.add(clearSelectedTaskscapeAction);
         MenuManager subMenuManager = new MenuManager("Choose Highlighter");
         final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
         
@@ -982,10 +984,9 @@ public class TaskListView extends ViewPart {
         updateActionEnablement(selectedObject);
     }
     
-    private void updateActionEnablement(Object sel){
-    	// XXX refactored
-    	throw new RuntimeException("unimplemented");
+    private void updateActionEnablement(Object sel) {
 //    	if(sel != null && sel instanceof ITaskListElement){
+//    		// TODO: use enables for part of contribution
 //	    	if(sel instanceof BugzillaHit){
 //				BugzillaTask task = ((BugzillaHit)sel).getAssociatedTask();
 //				if(task == null){
@@ -1039,12 +1040,13 @@ public class TaskListView extends ViewPart {
         manager.add(createTask);
         manager.add(createCategory);
         manager.add(new Separator());
-//        manager.add(createBugzillaTask);        
-//    	manager.add(createBugzillaQueryCategory);
-//    	manager.add(refresh);
-//        manager.add(new Separator());
+        if (MylarTasksPlugin.getDefault().getContributor() != null) {
+	        for (IAction action : MylarTasksPlugin.getDefault().getContributor().getToolbarActions(this)) {
+				manager.add(action);
+			}
+        }
+        manager.add(new Separator());
         manager.add(filterCompleteTask);
-//        manager.add(filterInCompleteTask);
         manager.add(filterOnPriority);        
     }
 
@@ -1279,7 +1281,24 @@ public class TaskListView extends ViewPart {
 	        super.configureShell(shell);
 	        shell.setText("Enter Task Name");
 	    }
-    };
+    }
+
+	public void resetToolbarsAndPopups() {
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+        		getViewSite().getActionBars().getToolBarManager().removeAll();
+        		getViewSite().getActionBars().getMenuManager().removeAll();
+                fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
+                fillContextMenu(getViewSite().getActionBars().getMenuManager());
+        		IActionBars bars = getViewSite().getActionBars();
+        		bars.updateActionBars();
+        		getViewSite().getActionBars().getMenuManager().update(true);
+        		getViewSite().getActionBars().getToolBarManager().update(true);
+        		viewer.refresh();
+            }
+        });
+	}
 }
 
 //TextTransfer textTransfer = TextTransfer.getInstance();
@@ -1287,7 +1306,7 @@ public class TaskListView extends ViewPart {
 //target.setTransfer(new Transfer[] { textTransfer });
 //target.addDropListener(new TaskListDropTargetListener(parent, null, textTransfer, true));
 //
-//DragSource source = new DragSource(viewer.getTree(), DND.DROP_MOVE);
+//DragSource source = new DragSouarce(viewer.getTree(), DND.DROP_MOVE);
 //source.setTransfer(types); 
 
 //source.addDragListener(new DragSourceListener() {

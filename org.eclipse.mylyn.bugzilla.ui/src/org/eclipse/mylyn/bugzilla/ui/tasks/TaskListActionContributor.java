@@ -11,27 +11,34 @@
 
 package org.eclipse.mylar.bugzilla.ui.tasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction;
 import org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
+import org.eclipse.mylar.tasks.ITaskListActionContributor;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class TaskListActionContributor {
+public class TaskListActionContributor implements ITaskListActionContributor {
 
-    private RefreshBugzillaReportsAction refresh;
-    private CreateBugzillaQueryCategoryAction createBugzillaQueryCategory;
-    private CreateBugzillaTaskAction createBugzillaTask; 
-    private RefreshBugzillaAction refreshQuery;
-	
-    public TaskListActionContributor(TaskListView view) {
-    	refresh = new RefreshBugzillaReportsAction(view);      	               
-        createBugzillaQueryCategory = new CreateBugzillaQueryCategoryAction(view);
-        createBugzillaTask = new CreateBugzillaTaskAction(view);   
-        refreshQuery = new RefreshBugzillaAction(view);
-    }
-    
+	public List<IAction> getToolbarActions(TaskListView view) {
+	    List<IAction> actions = new ArrayList<IAction>();
+        actions.add(new CreateBugzillaQueryCategoryAction(view));
+        actions.add(new CreateBugzillaTaskAction(view));
+    	actions.add(new RefreshBugzillaReportsAction(view));
+        return actions;
+	}
+
+	public List<IAction> getPopupActions(TaskListView view) {
+	    List<IAction> actions = new ArrayList<IAction>();
+        actions.add(new CreateBugzillaTaskAction(view));
+        actions.add(new RefreshBugzillaAction(view));
+        return actions;
+	} 
 }

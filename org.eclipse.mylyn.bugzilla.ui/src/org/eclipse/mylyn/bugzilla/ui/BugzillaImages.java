@@ -59,11 +59,17 @@ public class BugzillaImages {
 	
 	private static final URL baseURL = BugzillaUiPlugin.getDefault().getBundle().getEntry("/icons/");
 	public static final String T_ELCL = "elcl16";
+	public static final String T_TOOL = "etool16";
 	
 	public static final ImageDescriptor IMG_TOOL_ADD_TO_FAVORITES = create(T_ELCL, "bug-favorite.gif");
     public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
     public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
-   
+    public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
+    public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
+    public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif"); 
+    public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
+    public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
+    
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

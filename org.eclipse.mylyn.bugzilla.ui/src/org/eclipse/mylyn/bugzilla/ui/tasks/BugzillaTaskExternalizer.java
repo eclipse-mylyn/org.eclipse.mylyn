@@ -12,21 +12,16 @@
 package org.eclipse.mylar.bugzilla.ui.tasks;
 
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.Task;
-import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.TaskList;
 import org.eclipse.mylar.tasks.util.DefaultTaskListExternalizer;
-import org.eclipse.mylar.tasks.util.ITaskListExternalizer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * @author Mik Kersten and Ken Sueda

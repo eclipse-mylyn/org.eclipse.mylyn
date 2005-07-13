@@ -21,11 +21,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -49,7 +49,7 @@ public class RefreshBugzillaReportsAction extends Action {
 		setText("Refresh Bugzilla reports");
 		setToolTipText("Refresh Bugzilla reports");
 		setId(ID);
-		setImageDescriptor(TaskListImages.TASK_BUG_REFRESH);
+		setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
 
 	public void setShowProgress(boolean show) {

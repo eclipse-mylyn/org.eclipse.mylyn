@@ -39,21 +39,16 @@ public class TaskListImages {
     public static final ImageDescriptor FILTER_PRIORITY = create(T_ELCL, "filter-priority.gif");
     
     public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
-    public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
     
-    public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
-    public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
     public static final ImageDescriptor TASK = create(T_TOOL, "task.gif"); 
     public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif"); 
     public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif"); 
     public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");
-    public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif"); 
-    public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
+    
     public static final ImageDescriptor TASK_ACTIVE = create(T_TOOL, "task-active.gif");
     public static final ImageDescriptor TASK_INACTIVE = create(T_TOOL, "task-inactive.gif");
     public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
     public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
-    public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
    
 	private static ImageDescriptor create(String prefix, String name) {
 		try {

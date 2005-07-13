@@ -18,6 +18,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
@@ -59,9 +60,15 @@ public class TaskListManagerTest extends TestCase {
         Task task5 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 5");
         cat2.addTask(task5);
         Task task6 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 6");
-        cat2.addTask(task6);        
+        cat2.addTask(task6);    
         
-        assertEquals(manager.getTaskList().getRoots().size(), 4);
+        BugzillaTask report = new BugzillaTask("123", "label 123", true);
+        cat2.addTask(report);
+
+        BugzillaTask report2 = new BugzillaTask("124", "label 124", true);
+        tlist.addRootTask(report2);
+        
+        assertEquals(manager.getTaskList().getRoots().size(), 5);
 
         manager.saveTaskList();
         assertNotNull(manager.getTaskList());
@@ -69,25 +76,24 @@ public class TaskListManagerTest extends TestCase {
         manager.setTaskList(list);
         manager.readTaskList();
         assertNotNull(manager.getTaskList());
-        assertEquals(2, manager.getTaskList().getRootTasks().size());
+        assertEquals(3, manager.getTaskList().getRootTasks().size());
         assertEquals(2, manager.getTaskList().getCategories().size());
-        check(manager);
-    }
-    
-    public boolean check(TaskListManager manager) {
-    	List<ITask> list = manager.getTaskList().getRootTasks();
-    	assertTrue(list.get(0).getLabel().equals("task 1"));
-    	assertTrue(list.get(0).getChildren().get(0).getLabel().equals("sub 1"));
-    	assertTrue(list.get(1).getLabel().equals("task 2"));
+
+    	List<ITask> readList = manager.getTaskList().getRootTasks();
+    	assertTrue(readList.get(0).getLabel().equals("task 1"));
+    	assertTrue(readList.get(0).getChildren().get(0).getLabel().equals("sub 1"));
+    	assertTrue(readList.get(1).getLabel().equals("task 2"));
+    	assertTrue(readList.get(2) instanceof BugzillaTask);
     	
-    	List<TaskCategory> clist = manager.getTaskList().getTaskCategories();
-    	list = clist.get(0).getChildren();
-    	assertTrue(list.get(0).getLabel().equals("task 3"));
-    	assertTrue(list.get(0).getChildren().get(0).getLabel().equals("sub 2"));
-    	assertTrue(list.get(1).getLabel().equals("task 4"));
-    	list = clist.get(1).getChildren();
-    	assertTrue(list.get(0).getLabel().equals("task 5"));
-    	assertTrue(list.get(1).getLabel().equals("task 6"));
-    	return true;
+    	List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
+    	readList = readCats.get(0).getChildren();
+    	assertTrue(readList.get(0).getLabel().equals("task 3"));
+    	assertTrue(readList.get(0).getChildren().get(0).getLabel().equals("sub 2"));
+    	assertTrue(readList.get(1).getLabel().equals("task 4"));
+    	readList = readCats.get(1).getChildren();
+    	assertTrue(readList.get(0).getLabel().equals("task 5"));
+    	assertTrue(readList.get(1).getLabel().equals("task 6"));
+    	assertTrue(readList.get(2) instanceof BugzillaTask);
     }
+
 }

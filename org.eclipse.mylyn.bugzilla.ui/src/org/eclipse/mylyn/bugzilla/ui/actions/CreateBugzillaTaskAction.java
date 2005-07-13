@@ -13,10 +13,10 @@ package org.eclipse.mylar.bugzilla.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -35,7 +35,7 @@ public class CreateBugzillaTaskAction extends Action {
 		setText("Add Bugzilla Report");
         setToolTipText("Add Bugzilla Report");
         setId(ID);
-        setImageDescriptor(TaskListImages.TASK_BUGZILLA_NEW);
+        setImageDescriptor(BugzillaImages.TASK_BUGZILLA_NEW);
 	}
 	
 	@Override
@@ -65,17 +65,26 @@ public class CreateBugzillaTaskAction extends Action {
 //		        return;
 //			}
 	
-	    BugzillaTask newBugTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");	
-	    BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(newBugTask.getHandle());
-		if(bugTask == null) {
-			BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)bugTask);
-		} 
+	    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");				
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    if (selectedObject instanceof TaskCategory){
-	        ((TaskCategory)selectedObject).addTask((ITask)bugTask);
+	        ((TaskCategory)selectedObject).addTask(newTask);
 	    } else { 
-	        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask((ITask)bugTask);
+	        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
 	    }
+	    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
+//	    
+//	    BugzillaTask newBugTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");	
+//	    BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(newBugTask.getHandle());
+//		if(bugTask == null) {
+//			BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)bugTask);
+//		} 
+//	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
+//	    if (selectedObject instanceof TaskCategory){
+//	        ((TaskCategory)selectedObject).addTask((ITask)bugTask);
+//	    } else { 
+//	        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask((ITask)bugTask);
+//	    }
 	    this.view.getViewer().refresh();
 	}
 }

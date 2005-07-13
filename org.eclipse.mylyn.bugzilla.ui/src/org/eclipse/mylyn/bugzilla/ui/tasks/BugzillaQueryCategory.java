@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaCategorySearchOperation.ICategorySearchListener;
@@ -76,7 +77,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	
 	
 	public Image getIcon() {
-		return TaskListImages.getImage(TaskListImages.CATEGORY_QUERY);
+		return TaskListImages.getImage(BugzillaImages.CATEGORY_QUERY);
 	}
 	
 	public String getUrl() {

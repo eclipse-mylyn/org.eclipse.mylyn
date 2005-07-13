@@ -48,14 +48,15 @@ import org.xml.sax.SAXException;
 public class TaskListExternalizer {
 	
 	private List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
-	private ITaskListExternalizer defaultExternalizer = new DefaultTaskListExternalizer();
+	private DefaultTaskListExternalizer defaultExternalizer = new DefaultTaskListExternalizer();
 	
 	private String readVersion = "";
 
 	public void addExternalizer(ITaskListExternalizer externalizer) {
 		externalizers.add(externalizer);
-//		System.err.println(">>>>>>>>> " + MylarTasksPlugin.getTaskListManager().getTaskListFile());
-//		readTaskList(MylarTasksPlugin.getTaskListManager().getTaskList(), MylarTasksPlugin.getTaskListManager().getTaskListFile());
+		defaultExternalizer.setExternalizers(externalizers);
+		MylarTasksPlugin.getTaskListManager().getTaskList().clear();
+		readTaskList(MylarTasksPlugin.getTaskListManager().getTaskList(), MylarTasksPlugin.getTaskListManager().getTaskListFile());
 	}
 	
 	public void removeExternalizer(ITaskListExternalizer externalizer) {

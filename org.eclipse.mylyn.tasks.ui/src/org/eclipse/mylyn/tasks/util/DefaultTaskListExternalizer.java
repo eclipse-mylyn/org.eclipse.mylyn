@@ -63,9 +63,13 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		Element node = doc.createElement(getCategoryTagName());
 		node.setAttribute(NAME, category.getDescription(false));
 		
-		for (ITask t : ((TaskCategory)category).getChildren()) {
+		for (ITask task : ((TaskCategory)category).getChildren()) {
 			try {
-				createTaskElement(t, doc, node);
+				Element element = null;
+				for (ITaskListExternalizer externalizer : externalizers) {
+					if (externalizer.canCreateElementFor(task)) element = externalizer.createTaskElement(task, doc, node);
+				}
+				if (element == null) createTaskElement(task, doc, node);
 			} catch (Exception e) {
 				MylarPlugin.log(e, e.getMessage());
 			}
@@ -138,6 +142,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	}
 
 	public boolean canReadTask(Node node) {
+		System.err.println("> " + node.getNodeName() + ", " + externalizers);
 		return node.getNodeName().equals(getTaskTagName());
 	}
 

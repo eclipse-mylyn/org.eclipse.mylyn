@@ -18,12 +18,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaAttributeListener;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.tasks.ui.TaskSummaryEditor;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -171,7 +172,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 		
 		// Set the title on the editor's tab
 		this.setPartName("Bug #" + bugzillaEditorInput.getBugId());
-		this.setTitleImage(TaskListImages.getImage(TaskListImages.TASK_BUGZILLA));
+		this.setTitleImage(TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA));
 	}
 	
 	@Override

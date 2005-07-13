@@ -33,12 +33,13 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbench;
@@ -483,7 +484,7 @@ public class BugzillaTask extends Task {
 	}
 	
 	public Image getIcon() {
-		return TaskListImages.getImage(TaskListImages.TASK_BUGZILLA);
+		return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
 	}
 	
 	public String getBugUrl() {

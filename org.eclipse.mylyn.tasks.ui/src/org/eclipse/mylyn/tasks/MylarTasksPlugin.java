@@ -19,12 +19,12 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.util.TaskListExternalizer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -39,6 +39,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     private static MylarTasksPlugin plugin;
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
+    private ITaskListActionContributor contributor; // TODO: use extension points
     
     // TODO: remove hard-coded fonts
     public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
@@ -310,5 +311,21 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 
 	public TaskListExternalizer getTaskListExternalizer() {
 		return externalizer;
+	}
+
+	public void addActionContributor() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public ITaskListActionContributor getContributor() {
+		return contributor;
+	}
+
+	public void setContributor(ITaskListActionContributor contributor) {
+		this.contributor = contributor;
+		if (TaskListView.getDefault() != null) {
+			TaskListView.getDefault().resetToolbarsAndPopups();
+		}
 	}
 }

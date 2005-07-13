@@ -178,4 +178,10 @@ public class TaskList implements Serializable {
     	}
     	return cats;
     }
+
+	public void clear() {
+		activeTasks.clear();
+		categories.clear();
+		rootTasks.clear();
+	}
 }

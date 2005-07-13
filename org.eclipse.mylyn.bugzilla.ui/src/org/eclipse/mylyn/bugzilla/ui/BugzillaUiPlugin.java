@@ -5,6 +5,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaContentProvider;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
+import org.eclipse.mylar.bugzilla.ui.tasks.TaskListActionContributor;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
@@ -39,7 +40,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
         		
         		MylarTasksPlugin.getDefault().getTaskListExternalizer().addExternalizer(
         			new BugzillaTaskExternalizer()
-        		);        		
+        		);   
+        		MylarTasksPlugin.getDefault().setContributor(new TaskListActionContributor());
             }
         });
     }
