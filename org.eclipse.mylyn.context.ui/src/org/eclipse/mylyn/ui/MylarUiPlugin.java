@@ -23,7 +23,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
@@ -33,12 +32,10 @@ import org.eclipse.mylar.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
-import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.mylar.ui.internal.ViewerConfigurator;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
 import org.eclipse.mylar.ui.internal.views.ProblemsListInterestFilter;
-import org.eclipse.mylar.ui.internal.views.ProblemsListLabelProvider;
 import org.eclipse.mylar.ui.resources.NavigatorRefreshListener;
 import org.eclipse.mylar.ui.resources.ResourceUiBridge;
 import org.eclipse.mylar.ui.views.ActiveSearchView;
@@ -50,7 +47,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 
 /**

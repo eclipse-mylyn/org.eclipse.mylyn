@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.InterestComparator;
 import org.eclipse.mylar.ui.AbstractApplyMylarAction;
-import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.mylar.ui.internal.views.ProblemsListInterestFilter;
 import org.eclipse.mylar.ui.internal.views.ProblemsListLabelProvider;
 import org.eclipse.ui.IViewPart;

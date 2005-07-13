@@ -13,7 +13,6 @@
  */
 package org.eclipse.mylar.ui.internal;
 
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.model.internal.CompositeTaskscapeNode;
 import org.eclipse.mylar.core.model.internal.Taskscape;
