@@ -11,12 +11,17 @@
 /*
  * Created on Dec 26, 2004
   */
-package org.eclipse.mylar.tasks;
+package org.eclipse.mylar.tasks.internal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylar.tasks.AbstractCategory;
+import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.TaskListImages;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -70,4 +75,35 @@ public class TaskCategory extends AbstractCategory implements Serializable {
             return false;
         }
     }
+
+	public ITask getCorrespondingActivatableTask() {
+		return null;
+	}
+	public boolean hasCorrespondingActivatableTask() {
+		return false;
+	}
+
+	public boolean isDirectlyModifiable() {
+		return true;
+	}
+	
+	public boolean isActivatable() {
+		return false;
+	}
+	
+	public boolean isDragAndDropEnabled() {
+		return false;
+	}
+	
+	public Color getForeground() {
+       	return null;
+	}
+
+	public Font getFont() {
+        for (ITask child : getChildren()) {
+			if (child.isActive())
+				return BOLD;
+		}
+		return null;
+	}
 }

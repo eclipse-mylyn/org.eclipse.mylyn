@@ -11,11 +11,14 @@
 /*
  * Created on Dec 22, 2004
   */
-package org.eclipse.mylar.tasks;
+package org.eclipse.mylar.tasks.internal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.mylar.tasks.AbstractCategory;
+import org.eclipse.mylar.tasks.ITask;
 
  
 /**
@@ -30,18 +33,7 @@ public class TaskList implements Serializable {
     private transient List<ITask> activeTasks = new ArrayList<ITask>();
     
     public void addRootTask(ITask task) {
-    	// XXX refactored
-//    	if(task instanceof BugzillaTask){
-//    		BugzillaTask bugTask = bugzillaTaskRegistry.get(task.getHandle());
-//    		if(bugTask == null){
-//    			bugzillaTaskRegistry.put(task.getHandle(), (BugzillaTask)task);
-//    			rootTasks.add(task);	
-//    		} else {
-//    			rootTasks.add(bugTask);
-//    		}
-//    	} else {
     		rootTasks.add(task);
-//    	}
     }
     
     public void addCategory(AbstractCategory cat) {
@@ -58,10 +50,6 @@ public class TaskList implements Serializable {
     }
     
     public void deleteTask(ITask task) {
-    	// XXX refactored
-//    	if (task instanceof BugzillaTask) {
-//    		((BugzillaTask)task).removeReport();
-//    	}
     	boolean deleted = deleteTaskHelper(rootTasks, task);
     	if (!deleted) {
 			for (TaskCategory cat : getTaskCategories()) {
@@ -140,12 +128,9 @@ public class TaskList implements Serializable {
     	int ihandle = 0;
     	int max = 0;
     	for (ITask t : tasks) {
-    		// XXX refactored
-//    		if (t instanceof BugzillaTask) {
-//    			ihandle = 0;
-//    		} else {
+    		if(t.participatesInTaskHandles()){
     			ihandle = Integer.parseInt(t.getHandle().substring(t.getHandle().indexOf('-')+1, t.getHandle().length()));
-//    		}
+    		}
     		max = Math.max(ihandle, max);
     		ihandle = largestTaskHandleHelper(t.getChildren());
     		max = Math.max(ihandle, max);

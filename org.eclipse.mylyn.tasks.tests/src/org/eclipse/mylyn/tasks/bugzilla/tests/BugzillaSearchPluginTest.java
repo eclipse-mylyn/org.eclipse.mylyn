@@ -28,8 +28,8 @@ import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.TaskCategory;
-import org.eclipse.mylar.tasks.TaskList;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
+import org.eclipse.mylar.tasks.internal.TaskList;
 import org.eclipse.mylar.tasks.search.BugzillaMylarSearch;
 
 /*TEST CASES TO HANDLE

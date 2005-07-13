@@ -16,9 +16,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.TaskCategory;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
@@ -41,10 +42,14 @@ public class DeleteAction extends Action {
 	
 	@Override
 	public void run() {
+		
 //		MylarPlugin.getDefault().actionObserved(this);
 		Object selectedObject = ((IStructuredSelection) this.view.getViewer()
 				.getSelection()).getFirstElement();
-		if (selectedObject instanceof ITask) {
+		if(selectedObject instanceof ITaskListElement &&
+		   MylarTasksPlugin.getDefault().getContributor().acceptsItem((ITaskListElement)selectedObject)){
+			MylarTasksPlugin.getDefault().getContributor().itemDeleted((ITaskListElement)selectedObject);
+		}else if (selectedObject instanceof ITask) {
 			ITask task = (ITask) selectedObject;
 			if (task.isActive()) {
 				MessageDialog.openError(Workbench.getInstance()
@@ -93,16 +98,6 @@ public class DeleteAction extends Action {
 				}
 			}
 			MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
-		// XXX refactored
-//		} else if (selectedObject instanceof BugzillaQueryCategory) {
-//			boolean deleteConfirmed = MessageDialog.openQuestion(
-//		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-//		            "Confirm delete", 
-//		            "Delete the selected query and all contained tasks?");
-//			if (!deleteConfirmed) 
-//				return;
-//			BugzillaQueryCategory cat = (BugzillaQueryCategory) selectedObject;
-//			MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
 		} else {
 			MessageDialog.openError(Workbench.getInstance()
 					.getActiveWorkbenchWindow().getShell(), "Delete failed",

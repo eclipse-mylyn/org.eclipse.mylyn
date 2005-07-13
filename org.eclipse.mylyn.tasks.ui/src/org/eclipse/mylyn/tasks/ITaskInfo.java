@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jan 12, 2005
-  */
+
 package org.eclipse.mylar.tasks;
 
 /**

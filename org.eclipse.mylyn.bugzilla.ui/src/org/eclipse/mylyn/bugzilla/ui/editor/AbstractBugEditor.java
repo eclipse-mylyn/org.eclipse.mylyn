@@ -106,11 +106,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	public static final  Font TITLE_FONT = JFaceResources.getHeaderFont();
 	
+	// TODO: don't use hard-coded font
 	public static final  Font TEXT_FONT = JFaceResources.getDefaultFont();
-	
 	public static final  Font COMMENT_FONT = new Font(null, "Courier New", 9, SWT.NORMAL);
-	
-	public static final  Font URL_FONT = new Font(null, "Courier New", 10, SWT.BOLD);
 	
 	public static final  Font HEADER_FONT = JFaceResources.getDefaultFont();
 	
@@ -1143,7 +1141,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected void setGeneralTitleText() {
 		String text = getTitleString();
 		generalTitleText.setText(text);
-		generalTitleText.setFont(URL_FONT);
+		generalTitleText.setFont(TEXT_FONT);
 		if(this instanceof ExistingBugEditor){
 			generalTitleText.setUnderlined(true);
 			generalTitleText.setForeground(new Color(Display.getCurrent(), 0, 0, 255));

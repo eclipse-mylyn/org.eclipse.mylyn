@@ -16,12 +16,14 @@ package org.eclipse.mylar.tasks;
 import java.io.Serializable;
 import java.util.List;
 
+import org.eclipse.mylar.tasks.internal.TaskCategory;
+
 /**
  * @author Mik Kersten
  * 
  * TODO: make IDs be handles
  */
-public interface ITask extends Serializable {
+public interface ITask extends Serializable, ITaskListElement {
     
     @Override
     public abstract String toString();
@@ -75,12 +77,7 @@ public interface ITask extends Serializable {
     public abstract void addSubTask(ITask t);
 
     public abstract void removeSubTask(ITask t);
-        
-    /**
-     * Opens this task in an editor
-     */
-	public abstract void openTaskInEditor();
-	
+        	
 	public abstract String getToolTipText();
 
     public abstract String getPriority();
@@ -90,14 +87,12 @@ public interface ITask extends Serializable {
     public abstract String getDeleteConfirmationMessage();
     
     public abstract void setPriority(String priority);
-    @Deprecated
-    public abstract boolean isCategory();
-    @Deprecated
-    public abstract void setIsCategory(boolean b);
     
     public abstract void setCategory(TaskCategory cat);
     
     public abstract TaskCategory getCategory();
     
     public abstract String getElapsedTimeForDisplay();
+
+	public abstract boolean participatesInTaskHandles();
 }

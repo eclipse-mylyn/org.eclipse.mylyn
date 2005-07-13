@@ -41,7 +41,7 @@ import org.eclipse.mylar.bugzilla.ui.tasks.StackTrace;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.TaskCategory;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 

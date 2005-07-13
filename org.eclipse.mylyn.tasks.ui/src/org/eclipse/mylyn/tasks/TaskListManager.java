@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.util.RelativePathUtil;
+import org.eclipse.mylar.tasks.internal.RelativePathUtil;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
+import org.eclipse.mylar.tasks.internal.TaskList;
 
 
 /**

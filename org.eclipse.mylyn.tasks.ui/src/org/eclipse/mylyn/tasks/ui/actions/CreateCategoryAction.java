@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.TaskCategory;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 
 /**

@@ -136,4 +136,8 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation
 	public void addResultsListener(ICategorySearchListener listener){
 		listeners.add(listener);
 	}
+
+	public String getName() {
+		return null;
+	}
 }

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.util;
+package org.eclipse.mylar.tasks.internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,8 @@ import java.util.List;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.Task;
-import org.eclipse.mylar.tasks.TaskCategory;
-import org.eclipse.mylar.tasks.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -209,5 +208,9 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 
 	public String getTaskTagName() {
 		return TAG_TASK;
+	}
+
+	public void createRegistry(Document doc, Node parent) {
+		// nothing to do
 	}
 }

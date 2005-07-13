@@ -11,12 +11,14 @@
 
 package org.eclipse.mylar.tasks;
 
+import java.util.List;
+
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Ken Sueda
  */
-public class AbstractCategory implements ITaskListElement {
+public abstract class AbstractCategory implements ITaskListElement {
 
 	private String priority = "";
 	protected String description = "";
@@ -57,4 +59,6 @@ public class AbstractCategory implements ITaskListElement {
 	public Image getStatusIcon() {
 		return null;
 	}
+	
+	public abstract List<?> getChildren();
 }

@@ -9,11 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.util;
+package org.eclipse.mylar.tasks;
 
-import org.eclipse.mylar.tasks.AbstractCategory;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.TaskList;
+import org.eclipse.mylar.tasks.internal.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -24,6 +22,12 @@ import org.w3c.dom.Node;
  * TODO: consider merging tasks and categories
  */
 public interface ITaskListExternalizer {
+	
+	/**
+	 * Note that registries get read as a normal category, but get 
+	 * written out first.
+	 */
+	public abstract void createRegistry(Document doc, Node parent);
 	
 	public abstract String getCategoryTagName();
 	

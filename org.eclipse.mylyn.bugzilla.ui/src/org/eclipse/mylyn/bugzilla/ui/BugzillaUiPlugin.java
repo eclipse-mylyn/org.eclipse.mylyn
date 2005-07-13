@@ -37,11 +37,12 @@ public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
         		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
                 bugzillaProvider = new BugzillaContentProvider();
         		bugzillaTaskListManager = new BugzillaTaskListManager();
+        		MylarTasksPlugin.getDefault().setContributor(new TaskListActionContributor());
         		
         		MylarTasksPlugin.getDefault().getTaskListExternalizer().addExternalizer(
         			new BugzillaTaskExternalizer()
         		);   
-        		MylarTasksPlugin.getDefault().setContributor(new TaskListActionContributor());
+        		
             }
         });
     }

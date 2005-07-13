@@ -18,8 +18,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
@@ -30,7 +33,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class Task implements ITask, ITaskListElement {
+public class Task implements ITask {
 
     private static final long serialVersionUID = 3545518391537382197L;
     private boolean active = false;
@@ -385,4 +388,45 @@ public class Task implements ITask, ITaskListElement {
     public String getDeleteConfirmationMessage() {
     	return "Delete the selected task and discard task context?";
     }
+
+	public boolean isDirectlyModifiable() {
+		return true;
+	}
+
+	public ITask getCorrespondingActivatableTask() {
+		return this;
+	}
+	
+	public boolean hasCorrespondingActivatableTask() {
+		return true;
+	}
+	
+	public boolean isActivatable() {
+		return true;
+	}
+	
+	public boolean isDragAndDropEnabled() {
+		return true;
+	}
+
+	public boolean participatesInTaskHandles() {
+		return true;
+	}
+	
+	public Color getForeground() {
+        if (isCompleted()){
+        	return GRAY_VERY_LIGHT;
+        } else {
+        	return null;
+        }
+	}
+	
+	public Font getFont(){
+		if (isActive()) return BOLD;            
+        for (ITask child : getChildren()) {
+			if (child.isActive())
+				return BOLD;
+		}
+        return null;
+	}
 }

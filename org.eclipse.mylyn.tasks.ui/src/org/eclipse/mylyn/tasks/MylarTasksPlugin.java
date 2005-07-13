@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.internal.TaskListExternalizer;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.util.TaskListExternalizer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
@@ -164,19 +164,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		super();
 		plugin = this;
 	}
-    
-//	/**
-//	 * TODO: consider making a non early startup plug-in
-//	 */
-//    public void earlyStartup() {
-//        final IWorkbench workbench = PlatformUI.getWorkbench();
-//        workbench.getDisplay().asyncExec(new Runnable() {
-//            public void run() {
-//		
-//            }
-//        });
-//    }
-	
+
     @Override
 	public void start(BundleContext context) throws Exception {
 		initializeDefaultPreferences(getPrefs());
@@ -311,11 +299,6 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 
 	public TaskListExternalizer getTaskListExternalizer() {
 		return externalizer;
-	}
-
-	public void addActionContributor() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public ITaskListActionContributor getContributor() {

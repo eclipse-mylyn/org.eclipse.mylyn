@@ -96,4 +96,8 @@ public class BugzillaSearchOperation extends WorkspaceModifyOperation implements
 		this.query = newQuery;
 	}
 
+	public String getName() {
+		return null;
+	}
+
 }

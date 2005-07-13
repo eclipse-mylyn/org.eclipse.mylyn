@@ -30,7 +30,11 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.tasks.AbstractCategory;
+import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.TaskListImages;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
@@ -52,7 +56,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 			for(BugzillaSearchHit hit: collector.getResults()){
 		
 				// HACK need the server name and handle properly
-				addHit(new BugzillaHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), hit.getId(), null));
+				addHit(new BugzillaHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), hit.getId(), null, hit.getState()));
 			}
 		}
 
@@ -84,7 +88,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		return url;
 	}
 	
-	public List<BugzillaHit> getHits() {
+	public List<BugzillaHit> getChildren() {
 		return hits;
 	}
 	
@@ -161,5 +165,42 @@ public class BugzillaQueryCategory extends AbstractCategory {
 			}
 		}
 		return highestPriority;
+	}
+
+	public ITask getCorrespondingActivatableTask() {
+		return null;
+	}
+	
+	public boolean hasCorrespondingActivatableTask() {
+		return false;
+	}
+
+	public boolean isDirectlyModifiable() {
+		return false;
+	}
+	
+	public boolean isActivatable() {
+		return false;
+	}
+
+	public boolean isDragAndDropEnabled() {
+		return false;
+	}
+	
+	public Color getForeground() {
+       	return null;
+	}
+
+	public Font getFont() {
+        for (ITaskListElement child : getChildren()) {
+			if (child instanceof BugzillaHit){
+				BugzillaHit hit = (BugzillaHit) child;
+				BugzillaTask task = hit.getAssociatedTask();
+				if(task != null && task.isActive()){
+					return BOLD;
+				}
+			}
+		}
+		return null;
 	}
 }

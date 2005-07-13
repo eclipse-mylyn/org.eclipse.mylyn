@@ -10,12 +10,22 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Ken Sueda
  */
 public interface ITaskListElement {
+	
+	// TODO: remove hard-coded fonts and colors
+    public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
+    public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
+    public Color GRAY_VERY_LIGHT  = new Color(Display.getDefault(), 200, 200, 200); // TODO: use theme?
+    	
 	
 	public abstract Image getIcon();
 	
@@ -26,4 +36,21 @@ public interface ITaskListElement {
     public abstract String getDescription(boolean label);
     
     public abstract String getHandle();
+    
+    /**
+     * Used for wrapping bugzilla hits
+     */
+    public ITask getCorrespondingActivatableTask();
+
+	public abstract boolean hasCorrespondingActivatableTask();
+	
+    public abstract boolean isDirectlyModifiable();
+    
+    public abstract boolean isActivatable();
+
+	public abstract boolean isDragAndDropEnabled();
+
+	public abstract Color getForeground();
+
+	public abstract Font getFont();
 }

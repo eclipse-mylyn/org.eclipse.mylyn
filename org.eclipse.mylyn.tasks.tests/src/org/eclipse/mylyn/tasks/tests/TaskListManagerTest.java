@@ -19,12 +19,12 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
-import org.eclipse.mylar.tasks.TaskCategory;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
-import org.eclipse.mylar.tasks.TaskList;
 import org.eclipse.mylar.tasks.TaskListManager;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
+import org.eclipse.mylar.tasks.internal.TaskList;
 
 /**
  * @author Mik Kersten

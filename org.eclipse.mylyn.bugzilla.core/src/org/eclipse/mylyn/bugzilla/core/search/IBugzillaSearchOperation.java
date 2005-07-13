@@ -53,4 +53,6 @@ public interface IBugzillaSearchOperation extends IRunnableWithProgress
 	 * @param newQuery The bugzilla search query to be set
 	 */
 	public void setQuery(BugzillaSearchQuery newQuery);
+
+	public String getName();
 }

@@ -40,6 +40,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskListImages;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbench;
@@ -91,16 +92,14 @@ public class BugzillaTask extends Task {
 	public BugzillaTask(String id, String label) {
 		super(id, label);
 		isDirty = false;
-		GetBugReportJob job = new GetBugReportJob("Downloading from Bugzilla server...");
-		job.schedule();
+		scheduleDownloadReport();
 	}    
     
 	public BugzillaTask(String id, String label, boolean noDownload) {
         super(id, label);
         isDirty = false;
         if (!noDownload) {
-            GetBugReportJob job = new GetBugReportJob("Downloading from Bugzilla server...");
-            job.schedule();
+            scheduleDownloadReport();
         }        
     }
 	
@@ -269,7 +268,7 @@ public class BugzillaTask extends Task {
 					try {
 						// try to open an editor on the input bug
 						//page.openEditor(input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
-						page.openEditor(input, "org.eclipse.mylar.tasks.ui.bugzillaTaskEditor");
+						page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasks.bugzillaTaskEditor");
 					} 
 					catch (PartInitException ex) {
 						MylarPlugin.log(ex, "couldn't open");
@@ -483,6 +482,7 @@ public class BugzillaTask extends Task {
 		return -1;
 	}
 	
+	@Override
 	public Image getIcon() {
 		return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
 	}
@@ -491,11 +491,39 @@ public class BugzillaTask extends Task {
 		return BugzillaRepository.getBugUrl(getBugId(handle));
 	}
 	
+	@Override
     public boolean canEditDescription() {
     	return false;
     }
     
+    @Override
     public String getDeleteConfirmationMessage() {
     	return "Remove this report from the task list, and discard any task context or local notes?";
     }
+    
+    @Override
+	public boolean isDirectlyModifiable() {
+		return false;
+	}
+	
+	@Override
+	public boolean participatesInTaskHandles() {
+		return false;
+	}
+	
+	@Override
+	public Font getFont(){
+		Font f = super.getFont();
+		if(f != null) return f;
+		
+    	if (getState() != BugzillaTask.BugTaskState.FREE) {
+    		return ITALIC;
+    	}
+    	return null;
+	}
+
+	public void scheduleDownloadReport() {
+		GetBugReportJob job = new GetBugReportJob("Downloading from Bugzilla server...");
+        job.schedule();
+	}
 }

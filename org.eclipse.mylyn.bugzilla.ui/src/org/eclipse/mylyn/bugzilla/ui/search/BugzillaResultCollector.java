@@ -141,10 +141,8 @@ public class BugzillaResultCollector implements IBugzillaSearchResultCollector {
     private String getFormattedMatchesString(int count) {
         // if only 1 match, return the singular match string
         String name = "";
-        
-        // XXX refactored
-//        if(operation instanceof BugzillaMylarSearchOperation)
-//            name = " - " + ((BugzillaMylarSearchOperation)operation).getName();
+        if(operation.getName() != null)
+        	name = " - " + operation.getName();
         if (count == 1)
             return MATCH + name;
 

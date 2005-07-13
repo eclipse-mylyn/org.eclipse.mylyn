@@ -12,22 +12,18 @@
 package org.eclipse.mylar.bugzilla.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.bugzilla.core.BugReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.TaskCategory;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -77,33 +73,30 @@ public class RefreshBugzillaReportsAction extends Action {
 
 				refreshTasksAndQueries();
 
+// XXX refactored active search
 				// clear the caches
-				Set<String> cachedHandles = new HashSet<String>();
-				
-				// XXX refactored
+//				Set<String> cachedHandles = new HashSet<String>();
 //				cachedHandles.addAll(MylarTasksPlugin.getDefault().getStructureBridge().getCachedHandles());
 //				cachedHandles.addAll(MylarTasksPlugin.getReferenceProvider().getCachedHandles());
 //				MylarTasksPlugin.getDefault().getStructureBridge().clearCache();
 //				MylarTasksPlugin.getReferenceProvider().clearCachedReports();
 //				BugzillaStructureBridge bridge = MylarTasksPlugin.getDefault().getStructureBridge();
 				
-				monitor.beginTask("Downloading Bugs", cachedHandles.size());
-				for (String key : cachedHandles) {
-					try {
-						String[] parts = key.split(";");
-						final int id = Integer.parseInt(parts[1]);
-						BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
-						if (bug != null) {
-							// XXX refactored
-							throw new RuntimeException("unimplemented");
+//				monitor.beginTask("Downloading Bugs", cachedHandles.size());
+//				for (String key : cachedHandles) {
+//					try {
+//						String[] parts = key.split(";");
+//						final int id = Integer.parseInt(parts[1]);
+//						BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
+//						if (bug != null) {
 //							bridge.cache(key, bug);
-						}							
-					} catch (Exception e) {
-					}
-
-					monitor.worked(1);
-				}
-				monitor.done();
+//						}							
+//					} catch (Exception e) {
+//					}
+//
+//					monitor.worked(1);
+//				}
+//				monitor.done();
 				RefreshBugzillaReportsAction.this.view.getViewer().refresh();
 			}
 		};
@@ -136,7 +129,13 @@ public class RefreshBugzillaReportsAction extends Action {
 						((BugzillaTask) task).refresh();
 					}
 				}
-				RefreshBugzillaReportsAction.this.view.refreshChildren(((TaskCategory) cat).getChildren());
+				if (((TaskCategory) cat).getChildren() != null) {
+		            for (ITask child : ((TaskCategory) cat).getChildren()) {
+						if (child instanceof BugzillaTask) {
+							((BugzillaTask)child).refresh();
+						}
+					}
+				}
 			} else if (cat instanceof BugzillaQueryCategory) {
 				final BugzillaQueryCategory bqc = (BugzillaQueryCategory) cat;
 				PlatformUI.getWorkbench().getDisplay().syncExec(

@@ -13,17 +13,23 @@ package org.eclipse.mylar.bugzilla.ui.tasks;
 
 import java.util.Date;
 
+import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.TaskList;
-import org.eclipse.mylar.tasks.util.DefaultTaskListExternalizer;
+import org.eclipse.mylar.tasks.MylarTasksPlugin;
+import org.eclipse.mylar.tasks.internal.DefaultTaskListExternalizer;
+import org.eclipse.mylar.tasks.internal.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
+ * The wierd thing here is that the registry gets read in as a normal
+ * category, but gets written out by createRegistry
+ * 
  * @author Mik Kersten and Ken Sueda
  */
 public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
@@ -33,22 +39,53 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 	private static final String DIRTY = "Dirty";
 	private static final String URL = "URL";
 	private static final String DESCRIPTION = "Description";
-	
+
+	private static final String BUGZILLA_TASK_REGISTRY = "BugzillaTaskRegistry" + TAG_CATEGORY;
 	private static final String TAG_BUGZILLA_CATEGORY = "BugzillaQuery" + TAG_CATEGORY;
 	private static final String TAG_TASK = "BugzillaReport";
 	
 	@Override
+	public void createRegistry(Document doc, Node parent) {
+		Element node = doc.createElement(BUGZILLA_TASK_REGISTRY);
+		for (BugzillaTask task : BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getBugzillaTaskRegistry().values()) {
+			try {
+				createTaskElement(task, doc, node);
+			} catch (Exception e) {
+				MylarPlugin.log(e, e.getMessage());
+			}
+			
+		}
+		parent.appendChild(node);
+	} 
+	
+	@Override
 	public boolean canReadCategory(Node node) {
-		return node.getNodeName().equals(getCategoryTagName());
+		return node.getNodeName().equals(getCategoryTagName())
+			|| node.getNodeName().equals(BUGZILLA_TASK_REGISTRY);
 	}
 
 	@Override
-	public void readCategory(Node node, TaskList tlist) {
+	public void readCategory(Node node, TaskList taskList) {
 		Element e = (Element) node;
-		BugzillaQueryCategory cat = new BugzillaQueryCategory(e.getAttribute(DESCRIPTION), e.getAttribute(URL));
-		tlist.addCategory(cat);
+		if (e.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
+			readRegistry(node, taskList);
+		} else {
+			BugzillaQueryCategory cat = new BugzillaQueryCategory(e.getAttribute(DESCRIPTION), e.getAttribute(URL));
+			taskList.addCategory(cat);
+		}
 	}
 
+	public void readRegistry(Node node, TaskList taskList) {
+		NodeList list = node.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			ITask task = readTask(child, taskList, null, null);
+			if(task instanceof BugzillaTask){
+				BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)task);
+			}
+		}
+	}
+	
 	public boolean canCreateElementFor(AbstractCategory category) {
 		return category instanceof BugzillaQueryCategory;
 	}
@@ -110,6 +147,10 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		if (task.readBugReport() == false) {
 			MylarPlugin.log("Failed to read bug report", null);
 		}
+		
+		if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(task)){
+    		task = (BugzillaTask)MylarTasksPlugin.getDefault().getContributor().taskAdded(task);
+    	}
 		return task;
 	}
 	

@@ -22,8 +22,8 @@ Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: mylar-tasklist.jar
 Export-Package: org.eclipse.mylar.tasks,
+ org.eclipse.mylar.tasks.internal,
  org.eclipse.mylar.tasks.ui,
  org.eclipse.mylar.tasks.ui.actions,
  org.eclipse.mylar.tasks.ui.preferences,
- org.eclipse.mylar.tasks.ui.views,
- org.eclipse.mylar.tasks.util
+ org.eclipse.mylar.tasks.ui.views

@@ -19,6 +19,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaHit;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -45,8 +46,8 @@ public class RefreshBugzillaAction extends Action {
 	public void run() {
 		ISelection selection = this.view.getViewer().getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		final BugzillaQueryCategory cat = (BugzillaQueryCategory) obj;
 		if (obj instanceof BugzillaQueryCategory) {
+			final BugzillaQueryCategory cat = (BugzillaQueryCategory) obj;
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
@@ -68,6 +69,6 @@ public class RefreshBugzillaAction extends Action {
 				// Handle the wrapped exception
 				MylarPlugin.log(e, e.getMessage());
 			}
-		}
+		} 
 	}
 }

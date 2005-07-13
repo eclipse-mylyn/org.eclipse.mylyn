@@ -9,7 +9,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasks.util;
+package org.eclipse.mylar.tasks.internal;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,8 +34,9 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.TaskList;
+import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -57,6 +58,10 @@ public class TaskListExternalizer {
 		defaultExternalizer.setExternalizers(externalizers);
 		MylarTasksPlugin.getTaskListManager().getTaskList().clear();
 		readTaskList(MylarTasksPlugin.getTaskListManager().getTaskList(), MylarTasksPlugin.getTaskListManager().getTaskListFile());
+		if(MylarTasksPlugin.getDefault().getContributor() != null){
+			MylarTasksPlugin.getDefault().getContributor().restoreState(TaskListView.getDefault());
+			TaskListView.getDefault().getViewer().refresh();
+		}
 	}
 	
 	public void removeExternalizer(ITaskListExternalizer externalizer) {
@@ -79,7 +84,9 @@ public class TaskListExternalizer {
 		Element root = doc.createElement("TaskList");
 		root.setAttribute("Version", "1.0.1");
 
-		// XXX refactored
+		for (ITaskListExternalizer externalizer : externalizers) {
+			externalizer.createRegistry(doc, root);
+		}		
 //		writeBugzillaRegistry(tlist.getBugzillaTaskRegistry(), doc, root);
 		
 		// iterate through each subtask and externalize those
@@ -113,21 +120,6 @@ public class TaskListExternalizer {
 		return;
 	}
 	
-	// XXX refactored
-//	private static void writeBugzillaRegistry(Map<String, BugzillaTask> bugzillaTaskRegistry, Document doc, Element parent) {
-//		Element node = doc.createElement("BugzillaTaskRegistry");
-//		
-//		for (BugzillaTask t : bugzillaTaskRegistry.values()) {
-//			try {
-//				writeTask(t, doc, node);
-//			} catch (Exception e) {
-//				MylarPlugin.log(e, e.getMessage());
-//			}
-//			
-//		}
-//		parent.appendChild(node);
-//	}
-
 	/**
 	 * Writes an XML file from a DOM.
 	 * 
@@ -226,7 +218,13 @@ public class TaskListExternalizer {
 					} else {
 						for (ITaskListExternalizer externalizer : externalizers) {
 							if (externalizer.canReadTask(child)) {
-								tlist.addRootTask(externalizer.readTask(child, tlist, null, null));
+								// TODO add the tasks properly
+								ITask newTask = externalizer.readTask(child, tlist, null, null);
+							    if(MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
+						    		newTask = MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
+						    	}
+							    tlist.addRootTask(newTask);
+								
 								wasRead = true;
 								break;
 							}
@@ -253,18 +251,6 @@ public class TaskListExternalizer {
 			MylarPlugin.log(e, "Could not read task list");
 		}
 	}
-
-	// XXX refactored
-//	private void readBugzillaRegistry(Node node, TaskList tlist) {
-//		NodeList list = node.getChildNodes();
-//		for (int i = 0; i < list.getLength(); i++) {
-//			Node child = list.item(i);
-//			ITask task = readTask(child, tlist, null, null);
-//			if(task instanceof BugzillaTask){
-//				tlist.addToBugzillaTaskRegistry((BugzillaTask)task);
-//			}
-//		}
-//	}
 
 	/**
 	 * Opens the specified XML file and parses it into a DOM Document.
