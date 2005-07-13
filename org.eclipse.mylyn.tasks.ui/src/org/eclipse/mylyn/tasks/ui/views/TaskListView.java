@@ -277,13 +277,15 @@ public class TaskListView extends ViewPart {
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITaskListElement) {
-				if(((ITaskListElement)element).hasCorrespondingActivatableTask()){
+				if(element instanceof ITask && ((ITaskListElement)element).hasCorrespondingActivatableTask()){
 					ITask task = ((ITaskListElement)element).getCorrespondingActivatableTask();
 					if(task != null){
 						return !task.isCompleted();
 					} else {
 						return true;
 					}
+				} else {
+					return true;
 				}
 			} 
 			return false;
