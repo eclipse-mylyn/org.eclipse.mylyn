@@ -27,7 +27,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.bugzilla.MylarBugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.search.RelationshipProvider;
@@ -54,7 +54,7 @@ public class BugzillaReferencesProvider extends RelationshipProvider {
      * HACK: checking kind as string - don't want the dependancy to mylar.java
      */
     @Override
-    protected void findRelated(final ITaskscapeNode node, int degreeOfSeparation) {
+    protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
         if (!node.getStructureKind().equals("java")) return; 
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
         if (!acceptElement(javaElement)) {
@@ -66,12 +66,12 @@ public class BugzillaReferencesProvider extends RelationshipProvider {
     }
 
 	@Override
-	public IMylarSearchOperation getSearchOperation(ITaskscapeNode node, int limitTo, int degreeOfSepatation) {
+	public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSepatation) {
 		IJavaElement javaElement = JavaCore.create(node.getElementHandle());
 		return new BugzillaMylarSearch(degreeOfSepatation, javaElement); 
 	}
     
-	private void runJob(final ITaskscapeNode node,  final int degreeOfSeparation) {
+	private void runJob(final IMylarContextNode node,  final int degreeOfSeparation) {
 		BugzillaMylarSearch search = (BugzillaMylarSearch)getSearchOperation(node, 0, degreeOfSeparation);        
 		
         search.addListener(new IActiveSearchListener(){

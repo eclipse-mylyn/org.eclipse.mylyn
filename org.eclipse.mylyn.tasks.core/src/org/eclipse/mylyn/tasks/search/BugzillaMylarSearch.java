@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.mylar.bugzilla.BugzillaMylarBridge;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
-import org.eclipse.mylar.core.model.InterestComparator;
+import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 

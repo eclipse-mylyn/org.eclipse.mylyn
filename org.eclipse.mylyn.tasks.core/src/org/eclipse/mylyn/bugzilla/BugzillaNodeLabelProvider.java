@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -34,7 +34,7 @@ public class BugzillaNodeLabelProvider implements ILabelProvider {
      * TODO: slow?
      */
     public String getText(Object element) {
-        ITaskscapeNode node = (ITaskscapeNode)element;
+        IMylarContextNode node = (IMylarContextNode)element;
         
         // try to get from the cache before downloading
         Object report;
