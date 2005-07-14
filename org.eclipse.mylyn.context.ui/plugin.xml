@@ -239,7 +239,7 @@
 	         style="toggle"
 	         label="Apply Mylar" 
 	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Filter uninteresting"
+	         tooltip="Appl Mylar"
 	      	 toolbarPath="mylar"
 	         class="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
 	         enablesFor="*"> 
@@ -253,7 +253,7 @@
    	         style="toggle"
 	         label="Apply Mylar" 
 	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Filter uninteresting resources"
+	         tooltip="Apply Mylar"
 	      	 toolbarPath="mylar"
 	         class="org.eclipse.mylar.ui.actions.ApplyMylarToNavigatorAction"
 	         enablesFor="*"> 
@@ -270,7 +270,7 @@
            label="Apply Mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Filter uninteresting"> 
+           tooltip="Apply Mylar"> 
   		</action>  
       </viewContribution> 
    </extension>

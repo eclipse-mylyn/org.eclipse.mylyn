@@ -23,17 +23,6 @@
 	         enablesFor="*"> 
   		</action> 
     </viewContribution> 
-  		<!--
-    	<action
-	         id="org.eclipse.mylar.actions.filter.members" 
-	         label="Filter member" 
-	         icon="icons/elcl16/filter-members.gif"
-	         tooltip="Filter uninteresting"
-	      	 toolbarPath="mylar" 
-	         class="org.eclipse.mylar.java.ui.actions.FilterMembersAction"
-	         enablesFor="*"> 
-  		</action>  
-  		-->
 	</extension>
 	
   <extension point = "org.eclipse.ui.popupMenus">
@@ -41,7 +30,7 @@
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.jdt.core.IJavaElement">
      	<action  
-  		  	label="Make Less Interesting" 
+  		  	label="Mylar: Make Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
@@ -49,7 +38,7 @@
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="1"/>
 	    <action  
-  		  	label="Make Landmark" 
+  		  	label="Mylar: Make Landmark" 
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
@@ -92,7 +81,7 @@
            class="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
            id="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
            style="toggle"
-	       label="Filter Uninteresting" 
+	       label="Apply Mylar" 
 	       icon="icons/elcl16/interest-filtering-browsing.gif"
 	       tooltip="Filter Packages, Types, and Members views"
 	       toolbarPath="mylar"
