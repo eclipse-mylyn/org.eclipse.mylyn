@@ -61,7 +61,8 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                     info = ((JavaCompletionProposal)proposal).getProposalInfo();
                 } else if (proposal instanceof LazyJavaCompletionProposal) {
                     info = ((LazyJavaCompletionProposal)proposal).getProposalInfo();
-                }
+                } 
+                boolean added = false;
                 try { // HACK
                     if (info != null) {
                         IMember member = null; 
@@ -80,11 +81,12 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 	                            }
                             }
                         }
-//                        rest.add(proposal);
+                        added = true;
                     }
                 } catch (Exception e) {
                 	MylarPlugin.log(e, "proposals problem");
                 } 
+                if (!added) rest.add(proposal);
             }
             if (interesting.keySet().size() == 0) {
                 return proposals;
