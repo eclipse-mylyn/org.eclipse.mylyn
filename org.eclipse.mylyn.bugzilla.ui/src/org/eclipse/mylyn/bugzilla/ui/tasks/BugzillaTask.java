@@ -32,6 +32,7 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
@@ -109,7 +110,17 @@ public class BugzillaTask extends Task {
 
 	@Override
 	public String getLabel() {
-        return BugzillaTasksTools.getBugzillaDescription(this);
+		if (this.isBugDownloaded() || !super.getLabel().startsWith("<")) {
+			return super.getLabel();
+		} else {
+			if (getState() == BugzillaTask.BugTaskState.FREE) {
+				return BugzillaTask.getBugId(getHandle()) + ": <Could not find bug>";
+			} else {
+				return BugzillaTask.getBugId(getHandle()) + ":";
+			}
+		}
+		
+//        return BugzillaTasksTools.getBugzillaDescription(this);
     }
 
     /**
@@ -335,6 +346,7 @@ public class BugzillaTask extends Task {
 			if (status.equals("RESOLVED")) {
 				setCompleted(true);
 			}
+			this.setLabel(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandle()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
 			// TODO: handle this better
 		}

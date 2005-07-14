@@ -76,6 +76,7 @@ public class CreateBugzillaTaskAction extends Action {
     			((BugzillaTask)newTask).scheduleDownloadReport();
     		} else {
     			newTask = newTask2;
+    			((BugzillaTask)newTask).updateTaskDetails();
     		}
     	} else {
     		((BugzillaTask)newTask).scheduleDownloadReport();
