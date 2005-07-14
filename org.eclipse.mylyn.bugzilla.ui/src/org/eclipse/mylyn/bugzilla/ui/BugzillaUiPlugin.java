@@ -4,7 +4,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
-import org.eclipse.mylar.bugzilla.ui.tasks.TaskListActionContributor;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListActionContributor;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
@@ -34,7 +34,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
         		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
         		bugzillaTaskListManager = new BugzillaTaskListManager();
-        		MylarTasksPlugin.getDefault().setContributor(new TaskListActionContributor());
+        		MylarTasksPlugin.getDefault().addPrimaryContributor(new BugzillaTaskListActionContributor());
         		
         		MylarTasksPlugin.getDefault().getTaskListExternalizer().addExternalizer(
         			new BugzillaTaskExternalizer()

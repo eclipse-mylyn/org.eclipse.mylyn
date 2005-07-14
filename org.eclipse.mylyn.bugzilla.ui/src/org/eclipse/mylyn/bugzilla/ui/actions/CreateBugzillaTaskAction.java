@@ -69,8 +69,7 @@ public class CreateBugzillaTaskAction extends Action {
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
     	
 	    if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
-	    	
-    		BugzillaTask newTask2 = (BugzillaTask)MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
+	    	BugzillaTask newTask2 = (BugzillaTask)MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
     		if(newTask2 == newTask){
     			((BugzillaTask)newTask).scheduleDownloadReport();
     		} else {

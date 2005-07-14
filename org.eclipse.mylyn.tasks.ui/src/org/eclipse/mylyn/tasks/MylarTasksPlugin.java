@@ -11,6 +11,7 @@
 package org.eclipse.mylar.tasks;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -37,7 +38,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     private static MylarTasksPlugin plugin;
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
-    private ITaskListActionContributor contributor; // TODO: use extension points
+    private List<ITaskListActionContributor> contributors = new ArrayList<ITaskListActionContributor>(); // TODO: use extension points
         
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasks.report.open.internal";
@@ -52,6 +53,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasks.filter.incomplete";
     
 	private ResourceBundle resourceBundle;
+	private ITaskListActionContributor primaryContributor;
 
 	public enum Report_Open_Mode {
 		EDITOR,
@@ -289,14 +291,21 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		return externalizer;
 	}
 
-	public ITaskListActionContributor getContributor() {
-		return contributor;
+	public List<ITaskListActionContributor> getContributors() {
+		return contributors;
 	}
 
-	public void setContributor(ITaskListActionContributor contributor) {
-		this.contributor = contributor;
-		if (TaskListView.getDefault() != null) {
-			TaskListView.getDefault().resetToolbarsAndPopups();
-		}
+	public ITaskListActionContributor getContributor() {
+		return primaryContributor;
+	}
+	
+	public void addPrimaryContributor(ITaskListActionContributor contributor) {
+		this.primaryContributor = contributor;
+		addContributor(contributor);
+	}
+	
+	public void addContributor(ITaskListActionContributor contributor) {
+		contributors.add(contributor);
+		if (TaskListView.getDefault() != null) TaskListView.getDefault().resetToolbarsAndPopups();
 	}
 }

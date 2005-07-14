@@ -52,6 +52,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListActionContributor;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
@@ -856,43 +857,22 @@ public class TaskListView extends ViewPart {
         manager.add(new Separator());
         manager.add(createTask);
 //        manager.add(new Separator());   
-        if (MylarTasksPlugin.getDefault().getContributor() != null) {
-	        for (IAction action : MylarTasksPlugin.getDefault().getContributor().getPopupActions(this)) {
-				manager.add(action);
-			}
-        }
-        manager.add(new Separator());
-        manager.add(clearSelectedTaskscapeAction);
-        MenuManager subMenuManager = new MenuManager("Choose Highlighter");
-        final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
         
-        // XXX refactored highlighters
-//        for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
-//            final Highlighter highlighter = it.next();
-//            if (selectedObject instanceof Task){
-//                Action action = new Action() {
-//                	
-//                	@Override
-//                    public void run() { 
-//                        Task task = (Task)selectedObject;
-//                        MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandle(), highlighter.getName());
-//                        TaskListView.this.viewer.refresh();
-//                        MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.HIGHLIGHTER);
-////                        taskscapeComponent.getTableViewer().refresh();
-//                    }
-//                };
-//                if (highlighter.isGradient()) {
-//                    action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter.getLandmarkColor()));
-//                } else {
-//                    action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter.getLandmarkColor()));
-//                }
-//                action.setText(highlighter.toString());
-//                subMenuManager.add(action);
-//            } else {
-////                showMessage("Select task before choosing highlighter");
-//            }
-//        }
-        manager.add(subMenuManager);
+        final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+        if (selectedObject instanceof ITaskListElement) {
+        	for (ITaskListActionContributor contributor : MylarTasksPlugin.getDefault().getContributors()) {
+		        for (IAction action : contributor.getPopupActions(this, null)) {
+					manager.add(action);
+				}				
+			}
+
+        	for (ITaskListActionContributor contributor : MylarTasksPlugin.getDefault().getContributors()) {
+    	        manager.add(new Separator());
+    	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
+    	        if (subMenuManager != null) manager.add(subMenuManager);
+			}
+	        manager.add(clearSelectedTaskscapeAction);
+        }
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         updateActionEnablement(selectedObject);
     }

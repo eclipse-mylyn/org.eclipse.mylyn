@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks;
 import java.util.List;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
@@ -27,7 +28,9 @@ public interface ITaskListActionContributor {
 	
 	public abstract List<IAction> getToolbarActions(TaskListView view);
 
-	public abstract List<IAction> getPopupActions(TaskListView view);
+	public abstract List<IAction> getPopupActions(TaskListView view, ITaskListElement selection);
+	
+	public abstract MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection);
 	
 	public abstract void taskActivated(ITask task);
 
