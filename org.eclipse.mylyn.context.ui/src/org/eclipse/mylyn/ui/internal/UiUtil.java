@@ -13,13 +13,13 @@
  */
 package org.eclipse.mylar.ui.internal;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.model.internal.CompositeTaskscapeNode;
 import org.eclipse.mylar.core.model.internal.Taskscape;
 import org.eclipse.mylar.core.model.internal.TaskscapeNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 
@@ -29,9 +29,10 @@ import org.eclipse.swt.graphics.Font;
  */
 public class UiUtil {
 
-    // TODO: remove hard-coded fonts
-    public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
-    public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
+    public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+    public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
+
+	
 //    public static void refreshProblemsView() {
 //        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 //            public void run() { 
