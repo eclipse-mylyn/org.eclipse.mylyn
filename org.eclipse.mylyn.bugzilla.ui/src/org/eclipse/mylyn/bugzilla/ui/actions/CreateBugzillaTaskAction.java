@@ -26,14 +26,16 @@ import org.eclipse.mylar.tasks.ui.views.TaskListView;
  */
 public class CreateBugzillaTaskAction extends Action {
 	
+	private static final String LABEL = "Add Existing Bugzilla Report";
+
 	public static final String ID = "org.eclipse.mylar.tasks.actions.create.bug";
 		
 	private final TaskListView view;
 	
 	public CreateBugzillaTaskAction(TaskListView view) {
 		this.view = view;
-		setText("Add Bugzilla Report");
-        setToolTipText("Add Bugzilla Report");
+		setText(LABEL);
+        setToolTipText(LABEL);
         setId(ID); 
         setImageDescriptor(BugzillaImages.TASK_BUGZILLA_NEW);
 	} 
