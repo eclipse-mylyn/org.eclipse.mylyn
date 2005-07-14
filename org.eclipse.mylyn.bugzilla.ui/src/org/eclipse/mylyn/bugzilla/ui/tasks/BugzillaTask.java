@@ -34,7 +34,6 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
@@ -109,7 +108,7 @@ public class BugzillaTask extends Task {
 
 	@Override
 	public String getLabel() {
-        return BugzillaUiPlugin.getDefault().getBugzillaProvider().getBugzillaDescription(this);
+        return BugzillaTasksTools.getBugzillaDescription(this);
     }
 
     /**

@@ -21,16 +21,12 @@ import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
  * @author Mik Kersten
  * @author Eric Booth
  */
-public class BugzillaContentProvider {
-	
-    public BugzillaContentProvider() {
-    	// don't have any initialization to do
-    }
-    
+public class BugzillaTasksTools {
+	    
     /**
      * @return  String containing bug priority and label, e.g. "[12345] P2: fix failing test"
      */
-    public String getBugzillaDescription(BugzillaTask bugTask) {
+    public static String getBugzillaDescription(BugzillaTask bugTask) {
 		if (bugTask == null) return "<no info>";
 		
 		String prefix = //((bugTask.isDirty()) ? ">" : "") +

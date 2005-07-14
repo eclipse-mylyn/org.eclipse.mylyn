@@ -2,7 +2,6 @@ package org.eclipse.mylar.bugzilla.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaContentProvider;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
 import org.eclipse.mylar.bugzilla.ui.tasks.TaskListActionContributor;
@@ -18,7 +17,6 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
 
-    private BugzillaContentProvider bugzillaProvider;
 	private BugzillaTaskListManager bugzillaTaskListManager;
     private static BugzillaUiPlugin plugin;
 		
@@ -35,7 +33,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
         		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
-                bugzillaProvider = new BugzillaContentProvider();
         		bugzillaTaskListManager = new BugzillaTaskListManager();
         		MylarTasksPlugin.getDefault().setContributor(new TaskListActionContributor());
         		
@@ -80,14 +77,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui", path);
 	}
 	
-    public BugzillaContentProvider getBugzillaProvider() {
-        return bugzillaProvider;
-    }
-    
-    public void setBugzillaProvider(BugzillaContentProvider bugzillaProvider) {
-        this.bugzillaProvider = bugzillaProvider;
-    }
-
 	public BugzillaTaskListManager getBugzillaTaskListManager() {
 		return bugzillaTaskListManager;
 	}
