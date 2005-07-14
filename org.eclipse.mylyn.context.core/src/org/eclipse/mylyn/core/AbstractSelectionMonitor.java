@@ -53,8 +53,8 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection == null || selection.isEmpty()) return;
 
-        CompositeContext compositeTaskscape = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
-        if (compositeTaskscape.getTaskscapes().size() == 0) {
+        CompositeContext compositeContext = MylarPlugin.getContextManager().getActiveContext();
+        if (compositeContext.getContexts().size() == 0) {
             return;
         } else {
             handleWorkbenchPartSelection(part, selection);
@@ -74,7 +74,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
                 bridge.getResourceExtension(),
                 bridge.getHandleIdentifier(selectedElement),
                 part.getSite().getId());
-        MylarPlugin.getTaskscapeManager().handleInteractionEvent(selectionEvent);
+        MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
     }
 
     /**
@@ -88,7 +88,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
                 bridge.getResourceExtension(),
                 bridge.getHandleIdentifier(selectedElement),
                 part.getSite().getId());
-        MylarPlugin.getTaskscapeManager().handleInteractionEvent(selectionEvent);
+        MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
     }
     
     /**
@@ -103,7 +103,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
                 adapter.getHandleIdentifier(targetElement),
                 part.getSite().getId(),
                 kind);
-            MylarPlugin.getTaskscapeManager().handleInteractionEvent(selectionEvent);
+            MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
         }
     }
 

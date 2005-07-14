@@ -88,7 +88,7 @@ public class UiUtil {
         
         if (dominantNode != null) { 
             Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(
-                  ((Context)dominantNode.getTaskscape()).getId());
+                  ((Context)dominantNode.getContext()).getId());
             if (highlighter == null) {
                 return null;
             } else if (MylarUiPlugin.getDefault().isIntersectionMode()) {

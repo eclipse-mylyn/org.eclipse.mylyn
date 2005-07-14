@@ -52,6 +52,6 @@ public class ToggleRelationshipProviderAction extends Action {
 		setChecked(on);
 		if (store) MylarUiPlugin.getPrefs().setValue(prefId, on); //$NON-NLS-1$
 		provider.setEnabled(on);
-        MylarPlugin.getTaskscapeManager().updateSearchKindEnabled(provider, on);
+        MylarPlugin.getContextManager().updateSearchKindEnabled(provider, on);
 	}
 }

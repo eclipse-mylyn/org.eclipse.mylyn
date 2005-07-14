@@ -64,7 +64,7 @@ public class WorkspaceSetupHelper {
 	}
 	
 	public static void clearDoiModel(){
-		MylarPlugin.getTaskscapeManager().taskDeleted("1", "1");
+		MylarPlugin.getContextManager().taskDeleted("1", "1");
 		taskscape = new Context("1", new ScalingFactors());
 	}
 	

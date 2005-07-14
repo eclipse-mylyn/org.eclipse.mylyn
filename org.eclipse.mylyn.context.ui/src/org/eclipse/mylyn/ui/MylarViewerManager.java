@@ -46,7 +46,7 @@ public class MylarViewerManager implements IMylarContextListener {
 	private static final MouseListener EXPANSION_REQUEST_LISTENER = new MouseListener() {
 		public void mouseDown(MouseEvent e) {
 			if ((e.stateMask & SWT.ALT) != 0) {
-				MylarPlugin.getTaskscapeManager().setNextEventIsRaiseChildren();
+				MylarPlugin.getContextManager().setNextEventIsRaiseChildren();
 			}
 		}
 
@@ -69,7 +69,7 @@ public class MylarViewerManager implements IMylarContextListener {
 		}
 	}
 	
-	public void taskscapeActivated(IMylarContext taskscape) {
+	public void contextActivated(IMylarContext taskscape) {
         IMylarContextNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
@@ -77,7 +77,7 @@ public class MylarViewerManager implements IMylarContextListener {
         refreshViewers();
     }
 
-    public void taskscapeDeactivated(IMylarContext taskscape) {
+    public void contextDeactivated(IMylarContext taskscape) {
     	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
         if (confirmed && MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.CLOSE_EDITORS)) {
 	    	for (IMylarContextNode node : taskscape.getInterestingResources()) {
@@ -115,10 +115,10 @@ public class MylarViewerManager implements IMylarContextListener {
             	try {
             		List<IMylarContextNode> nodesToRefresh = new ArrayList<IMylarContextNode>();
 			    	boolean showChildrenRequested = false;
-            		if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
-			    		String raisedElementHandle = MylarPlugin.getTaskscapeManager().getTempRaisedHandle();
+            		if (MylarPlugin.getContextManager().getTempRaisedHandle() != null) {
+			    		String raisedElementHandle = MylarPlugin.getContextManager().getTempRaisedHandle();
 			            nodesToRefresh = new ArrayList<IMylarContextNode>(); // override refresh nodes
-			            nodesToRefresh.add(MylarPlugin.getTaskscapeManager().getNode(raisedElementHandle));
+			            nodesToRefresh.add(MylarPlugin.getContextManager().getNode(raisedElementHandle));
 			            showChildrenRequested = true;
             		} else if (nodes != null) {
 			    		nodesToRefresh.addAll(nodes);
@@ -187,7 +187,7 @@ public class MylarViewerManager implements IMylarContextListener {
      */
     public void interestChanged(IMylarContextNode node) {
 //        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().refreshViewer();
-        if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
+        if (MylarPlugin.getContextManager().getTempRaisedHandle() != null) {
         	refreshViewers();
         } else {
         	refreshViewers(node, false);
@@ -196,7 +196,7 @@ public class MylarViewerManager implements IMylarContextListener {
 
     public void nodeDeleted(IMylarContextNode node) {
     	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-		IMylarContextNode parent = MylarPlugin.getTaskscapeManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
+		IMylarContextNode parent = MylarPlugin.getContextManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
     	ArrayList<IMylarContextNode> toRefresh = new ArrayList<IMylarContextNode>();
     	
     	toRefresh.add(parent);

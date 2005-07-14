@@ -57,9 +57,9 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
         if (matchesParent(parent)) {
             List<IMylarContextNode> nodes;
             if (landmarkOnlyMode) {
-                nodes = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
+                nodes = MylarPlugin.getContextManager().getActiveContext().getLandmarks();
             } else {
-                nodes = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getAllElements();
+                nodes = MylarPlugin.getContextManager().getActiveContext().getAllElements();
             }
             topLevelNodes = nodes;
             return nodes.toArray(); 
@@ -96,7 +96,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
             if (parent instanceof ContextEdge) {
             	IMylarContextEdge edge = (IMylarContextEdge)parent;
             	
-            	IMylarContextNode source = MylarPlugin.getTaskscapeManager().getNode(
+            	IMylarContextNode source = MylarPlugin.getContextManager().getNode(
             			((IMylarContextEdge)parent).getSource().getElementHandle());
             	
             	return getAllTagetsForSource(source, edge.getRelationshipHandle());

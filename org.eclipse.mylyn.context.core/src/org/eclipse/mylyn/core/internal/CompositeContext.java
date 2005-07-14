@@ -105,7 +105,7 @@ public class CompositeContext implements IMylarContext  {
         }        
     }
 
-    public Collection<Context> getTaskscapes() {
+    public Collection<Context> getContexts() {
         return taskscapes.values();
     }
     

@@ -31,7 +31,7 @@ public class ContextNode implements IMylarContextNode {
     private String handle;
     private String kind;
     private DegreeOfInterest interest;
-    private Context taskscape;
+    private Context context;
     
     private Map<String/*target handle*/, ContextEdge> edges = new HashMap<String, ContextEdge>();
     
@@ -40,7 +40,7 @@ public class ContextNode implements IMylarContextNode {
         interest = new DegreeOfInterest(taskscape);
         this.handle = elementHandle;
         this.kind = kind;
-        this.taskscape = taskscape;
+        this.context = taskscape;
     }
        
     public String getElementHandle() {
@@ -92,8 +92,8 @@ public class ContextNode implements IMylarContextNode {
         return interest;
     }
 
-    public Context getTaskscape() {
-        return taskscape;
+    public Context getContext() {
+        return context;
     }
     
     @Override

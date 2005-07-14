@@ -70,7 +70,7 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     protected void incrementInterest(int degreeOfSeparation, String elementKind, String elementHandle) {
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
-        MylarPlugin.getTaskscapeManager().handleInteractionEvent(event);
+        MylarPlugin.getContextManager().handleInteractionEvent(event);
     }
     
     protected abstract String getSourceId();
@@ -94,11 +94,11 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     	// we don't care about this event
     }
     
-    public void taskscapeActivated(IMylarContext taskscape) { 
+    public void contextActivated(IMylarContext taskscape) { 
     	// we don't care about this event
     }
 
-    public void taskscapeDeactivated(IMylarContext taskscape) { 
+    public void contextDeactivated(IMylarContext taskscape) { 
     	// we don't care about this event
     }
 

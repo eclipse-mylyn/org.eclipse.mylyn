@@ -159,7 +159,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-                MylarPlugin.getTaskscapeManager().addListener(uiUpdateManager);
+                MylarPlugin.getContextManager().addListener(uiUpdateManager);
                 
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerConfigurator);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
@@ -171,7 +171,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 //        			}
         		}
                 
-                MylarPlugin.getTaskscapeManager().addListener(navigatorRefreshListener);
+                MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
                 MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
                 MylarUiPlugin.getDefault().addAdapter(ResourceStructureBridge.EXTENSION, new ResourceUiBridge());
                 MylarTasksPlugin.getDefault().addContributor(new TaskListHighlighterContributor());
@@ -389,7 +389,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 		if(workingSetUpdaters == null)
 			workingSetUpdaters = new ArrayList<MylarWorkingSetUpdater>();
 		workingSetUpdaters.add(updater);
-		MylarPlugin.getTaskscapeManager().addListener(updater);
+		MylarPlugin.getContextManager().addListener(updater);
 	}
 
 	public MylarWorkingSetUpdater getWorkingSetUpdater() {

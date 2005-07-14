@@ -39,7 +39,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
             node = (IMylarContextNode)element;
         } else {
             IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(element);
-            node = MylarPlugin.getTaskscapeManager().getNode(adapter.getHandleIdentifier(element));
+            node = MylarPlugin.getContextManager().getNode(adapter.getHandleIdentifier(element));
         }
         return node;
     } 

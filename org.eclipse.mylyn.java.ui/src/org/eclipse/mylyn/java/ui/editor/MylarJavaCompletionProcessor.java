@@ -66,11 +66,11 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                     if (info != null) {
                         IMember member = null; 
                         if (info instanceof MemberProposalInfo) member = (IMember)method.invoke(info, new Object[] { });
-                        if (member == null || MylarPlugin.getTaskscapeManager().getActiveTaskscape() == null) {
+                        if (member == null || MylarPlugin.getContextManager().getActiveContext() == null) {
                             // nothing for now
                         	rest.add(proposal);
                         } else {
-                        	IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(member.getHandleIdentifier()); 
+                        	IMylarContextNode node = MylarPlugin.getContextManager().getNode(member.getHandleIdentifier()); 
                             if (node != null) {
                             	float interest = node.getDegreeOfInterest().getValue();
 	                            if (interest > ContextManager.getScalingFactors().getInteresting()) {

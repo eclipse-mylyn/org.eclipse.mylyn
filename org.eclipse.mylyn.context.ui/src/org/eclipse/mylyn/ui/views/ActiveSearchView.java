@@ -62,11 +62,11 @@ public class ActiveSearchView extends ViewPart {
             refresh(nodes.get(nodes.size()-1));
         }
 
-        public void taskscapeActivated(IMylarContext taskscape) {
+        public void contextActivated(IMylarContext taskscape) {
             refresh(null);
         }
 
-        public void taskscapeDeactivated(IMylarContext taskscape) {
+        public void contextDeactivated(IMylarContext taskscape) {
             refresh(null);
         } 
         
@@ -137,7 +137,7 @@ public class ActiveSearchView extends ViewPart {
     }
     
     public ActiveSearchView() { 
-        MylarPlugin.getTaskscapeManager().addListener(REFRESH_UPDATE_LISTENER);
+        MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
     }
 
     /**
@@ -206,7 +206,7 @@ public class ActiveSearchView extends ViewPart {
     
     private void fillLocalToolBar(IToolBarManager manager) {
         manager.removeAll();
-        for (RelationshipProvider provider : MylarPlugin.getTaskscapeManager().getRelationshipProviders()) {
+        for (RelationshipProvider provider : MylarPlugin.getContextManager().getRelationshipProviders()) {
             IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(provider.getStructureKind());
             ImageDescriptor image = bridge.getIconForRelationship(provider.getId());
             ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(provider, image);

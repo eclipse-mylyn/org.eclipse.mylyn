@@ -39,11 +39,11 @@ class DegreeOfInterest implements IDegreeOfInterest {
     private float propagatedBias = 0;
     private float manipulationBias = 0;
     
-    private Context taskscape;
+    private Context context;
     private int eventCountOnCreation;
     
     public DegreeOfInterest(Context taskscape) {
-        this.taskscape = taskscape;
+        this.context = taskscape;
         this.eventCountOnCreation = taskscape.getUserEventCount();
         init();
     }
@@ -109,8 +109,8 @@ class DegreeOfInterest implements IDegreeOfInterest {
      */
     public float getDecayValue() {
 //    	if (isPredicted()) return 0;
-        if (taskscape != null) {
-            return (taskscape.getUserEventCount() - eventCountOnCreation) * scaling.getDecay().getValue();
+        if (context != null) {
+            return (context.getUserEventCount() - eventCountOnCreation) * scaling.getDecay().getValue();
         } else {
             return 0;
         }

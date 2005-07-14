@@ -40,9 +40,9 @@ public class InterestFilter extends ViewerFilter {
                 if (bridge == null) return false;
                 if (!bridge.canFilter(element)) return true;                
                 String handle = bridge.getHandleIdentifier(element);
-                node = MylarPlugin.getTaskscapeManager().getNode(handle);
+                node = MylarPlugin.getContextManager().getNode(handle);
                 String parentHandle = bridge.getParentHandle(handle);
-                if (MylarPlugin.getTaskscapeManager().isTempRaised(parentHandle)) return true;
+                if (MylarPlugin.getContextManager().isTempRaised(parentHandle)) return true;
             }
             if (node != null) {
                 return node.getDegreeOfInterest().getValue() > ContextManager.getScalingFactors().getInteresting();

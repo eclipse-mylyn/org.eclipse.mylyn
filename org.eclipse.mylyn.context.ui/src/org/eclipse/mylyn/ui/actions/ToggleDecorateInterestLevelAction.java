@@ -45,6 +45,6 @@ public class ToggleDecorateInterestLevelAction extends Action {
 		setChecked(on);
 		if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); 
         MylarUiPlugin.getDefault().setDecorateInterestMode(on);
-        MylarPlugin.getTaskscapeManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
+        MylarPlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
 	}
 }

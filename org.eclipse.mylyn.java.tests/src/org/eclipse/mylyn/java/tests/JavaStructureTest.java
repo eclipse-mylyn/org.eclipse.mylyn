@@ -39,7 +39,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class JavaStructureTest extends AbstractTaskscapeTest {
     
-    private ContextManager manager = MylarPlugin.getTaskscapeManager();
+    private ContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
     

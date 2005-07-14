@@ -46,11 +46,11 @@ public class LandmarkMarkerManager implements IMylarContextListener {
         super();
     }
 
-    public void taskscapeActivated(IMylarContext taskscape) {
+    public void contextActivated(IMylarContext taskscape) {
         modelUpdated();
     }
 
-    public void taskscapeDeactivated(IMylarContext taskscape) {
+    public void contextDeactivated(IMylarContext taskscape) {
         modelUpdated();
     }
     
@@ -59,7 +59,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
             landmarkRemoved(node);
         }
         markerMap.clear();
-        for (IMylarContextNode node : MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks()) {
+        for (IMylarContextNode node : MylarPlugin.getContextManager().getActiveContext().getLandmarks()) {
             landmarkAdded(node);
         }
     } 

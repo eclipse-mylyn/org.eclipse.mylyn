@@ -66,7 +66,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
         public void problemsChanged(IResource[] changedResources,
                 boolean isMarkerChange) {
             try {
-                if (MylarPlugin.getTaskscapeManager().getActiveTaskscape() == null)
+                if (MylarPlugin.getContextManager().getActiveContext() == null)
                     return;
                 for (int i = 0; i < changedResources.length; i++) {
                     IResource resource = changedResources[i];
@@ -84,9 +84,9 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                         }
                         if (element != null) {
                             if (!hasError) {
-                                MylarPlugin.getTaskscapeManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
+                                MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
                             } else {
-                                MylarPlugin.getTaskscapeManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
+                                MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
                             }
                         }
                     } catch (ResourceException e) {

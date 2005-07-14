@@ -67,11 +67,11 @@ public class ActiveTypeHierarchyView extends ViewPart {
 	
 	final IMylarContextListener MODEL_LISTENER = new IMylarContextListener() { 
         
-        public void taskscapeActivated(IMylarContext taskscape) {
+        public void contextActivated(IMylarContext taskscape) {
             refreshHierarchy(); 
         }
 
-        public void taskscapeDeactivated(IMylarContext taskscape) {
+        public void contextDeactivated(IMylarContext taskscape) {
             refreshHierarchy();
         }        
         
@@ -140,14 +140,14 @@ public class ActiveTypeHierarchyView extends ViewPart {
 	}
 
 	public ActiveTypeHierarchyView() {
-	    MylarPlugin.getTaskscapeManager().addListener(MODEL_LISTENER);
+	    MylarPlugin.getContextManager().addListener(MODEL_LISTENER);
 	    refreshHierarchy();
 	}
 
 	private void refreshHierarchy() {
         try {            
             root.removeAllChildren();
-            List<IMylarContextNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
+            List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveContext().getLandmarks();
             List<TreeParent> previousHierarchy = new ArrayList<TreeParent>();
             for (Iterator<IMylarContextNode> it = landmarks.iterator(); it.hasNext();) {
                 IMylarContextNode node = it.next();
@@ -390,14 +390,14 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
     @Override
     public Color getForeground(Object element) {
         IJavaElement javaElement = ((TreeParent)element).getElement();
-        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
         return UiUtil.getForegroundForElement(node);
     }
 
     @Override
     public Color getBackground(Object element) {
         IJavaElement javaElement = ((TreeParent)element).getElement();
-        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
         return UiUtil.getBackgroundForElement(node);
     }
 
@@ -413,7 +413,7 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
     
     public Font getFont(Object element) {
         IJavaElement javaElement = ((TreeParent)element).getElement();
-        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
         if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
             return UiUtil.BOLD;
         }

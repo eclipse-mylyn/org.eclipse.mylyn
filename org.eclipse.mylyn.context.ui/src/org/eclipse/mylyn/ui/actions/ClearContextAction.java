@@ -56,7 +56,7 @@ public class ClearContextAction extends Action {
 			if (!deleteConfirmed) 
 				return;
 			
-	    	MylarPlugin.getTaskscapeManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+	    	MylarPlugin.getContextManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
 	    	this.view.getViewer().refresh();
 	    } 
 //	    else if (selectedObject != null && selectedObject instanceof BugzillaHit) {

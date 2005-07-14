@@ -30,9 +30,9 @@ public interface IMylarContextListener {
         FILTER
     }
     
-    public void taskscapeActivated(IMylarContext taskscape);
+    public void contextActivated(IMylarContext context);
 
-    public void taskscapeDeactivated(IMylarContext taskscape);
+    public void contextDeactivated(IMylarContext context);
     
     /**
      * E.g. highlighters or scaling factors are being actively modified (for active updating).

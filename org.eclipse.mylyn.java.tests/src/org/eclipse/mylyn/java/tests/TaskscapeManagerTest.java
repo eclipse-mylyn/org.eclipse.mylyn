@@ -46,7 +46,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class TaskscapeManagerTest extends AbstractTaskscapeTest {
  
-    private ContextManager manager = MylarPlugin.getTaskscapeManager();
+    private ContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     
     private TestProject project;
@@ -116,10 +116,10 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         public void interestChanged(List<IMylarContextNode> nodes) {
         	// don't care about this event
         }
-        public void taskscapeActivated(IMylarContext taskscapeActivated) {
+        public void contextActivated(IMylarContext taskscapeActivated) {
         	// don't care about this event        	
         }
-        public void taskscapeDeactivated(IMylarContext taskscapeDeactivated) {
+        public void contextDeactivated(IMylarContext taskscapeDeactivated) {
         	// don't care about this event
         }
     }
@@ -130,19 +130,19 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
         
-        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-        IMylarContextNode parent = MylarPlugin.getTaskscapeManager().getNode(bridge.getParentHandle(node.getElementHandle()));
+        IMylarContextNode parent = MylarPlugin.getContextManager().getNode(bridge.getParentHandle(node.getElementHandle()));
         assertTrue(parent.getDegreeOfInterest().isPredicted());
         
         for (int i = 0; i < 1/(scaling.getDecay().getValue())*3; i++) {
-            MylarPlugin.getTaskscapeManager().handleInteractionEvent(mockSelection());            
+            MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());            
         }
         
-        assertFalse(MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier()).getDegreeOfInterest().isInteresting());
-        MylarPlugin.getTaskscapeManager().handleInteractionEvent(mockSelection(m1.getHandleIdentifier()));
-        assertTrue(MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier()).getDegreeOfInterest().isInteresting());
+        assertFalse(MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier()).getDegreeOfInterest().isInteresting());
+        MylarPlugin.getContextManager().handleInteractionEvent(mockSelection(m1.getHandleIdentifier()));
+        assertTrue(MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier()).getDegreeOfInterest().isInteresting());
     }
     
     public void testIncremenOfParentDoi() throws JavaModelException {
@@ -156,14 +156,14 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         
         monitor.selectionChanged(part, sm1);
         
-        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
         assertTrue(node.getDegreeOfInterest().isInteresting());
 
         IJavaElement parent = m1.getParent();
         int level = 1;
         do {
             level++; 
-            IMylarContextNode parentNode = MylarPlugin.getTaskscapeManager().getNode(parent.getHandleIdentifier());    
+            IMylarContextNode parentNode = MylarPlugin.getContextManager().getNode(parent.getHandleIdentifier());    
 //            assertEquals(scaling.getParentPropagationIncrement(level), parentNode.getDegreeOfInterest().getValue());
             assertEquals(node.getDegreeOfInterest().getValue(), parentNode.getDegreeOfInterest().getValue());
             parent = parent.getParent();
@@ -200,7 +200,7 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);     
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
-        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(m1.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
         assertFalse(node.getDegreeOfInterest().isLandmark());
         action.changeInterestForSelected(true);
         assertTrue(node.getDegreeOfInterest().isLandmark());

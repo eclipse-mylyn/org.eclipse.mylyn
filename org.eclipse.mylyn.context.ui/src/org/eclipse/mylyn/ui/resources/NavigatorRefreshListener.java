@@ -54,11 +54,11 @@ public class NavigatorRefreshListener implements IMylarContextListener {
         }
     }
     
-    public void taskscapeActivated(IMylarContext taskscape) {
+    public void contextActivated(IMylarContext taskscape) {
         refresh(null);
     }
 
-    public void taskscapeDeactivated(IMylarContext taskscape) {
+    public void contextDeactivated(IMylarContext taskscape) {
         refresh(null);
     }
 

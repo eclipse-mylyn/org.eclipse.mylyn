@@ -111,7 +111,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
             for (int i = 0; i < children.length; i++) {
                 if (children[i] instanceof JarPackageFragmentRoot) {
                     JarPackageFragmentRoot element = (JarPackageFragmentRoot)children[i];
-                    IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(element.getHandleIdentifier());
+                    IMylarContextNode node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
                     if (node != null && node.getDegreeOfInterest().isInteresting()) {
                         return false;
                     } 

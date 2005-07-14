@@ -260,7 +260,7 @@ public class ContextManager {
 	    if (taskscape == null) taskscape = loadTaskscape(id, path);
 	    if (taskscape != null) {
 	        activeTaskscape.getTaskscapeMap().put(id, taskscape);
-	        for (IMylarContextListener listener : listeners) listener.taskscapeActivated(taskscape);
+	        for (IMylarContextListener listener : listeners) listener.contextActivated(taskscape);
 	    } else {
 	        MylarPlugin.log("Could not load taskscape", this);
 	    }
@@ -276,14 +276,14 @@ public class ContextManager {
         if (taskscape != null) {
             saveTaskscape(id, path); 
             activeTaskscape.getTaskscapeMap().remove(id);
-            for (IMylarContextListener listener : listeners) listener.taskscapeDeactivated(taskscape);
+            for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
         }
     }
 
     public void taskDeleted(String id, String path) {
         IMylarContext taskscape = activeTaskscape.getTaskscapeMap().get(id);
         if (taskscape != null) {
-            for (IMylarContextListener listener : listeners) listener.taskscapeDeactivated(taskscape);
+            for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
         }
         File f = getFileForTaskscape(path);
         if (f.exists()) {
@@ -333,7 +333,7 @@ public class ContextManager {
         return "" + taskscapeStoreDirPath;
     }
     
-    public CompositeContext getActiveTaskscape() {
+    public CompositeContext getActiveContext() {
         return activeTaskscape;
     }
   
@@ -382,7 +382,7 @@ public class ContextManager {
 //        throw new RuntimeException("unimplemented");
         for (RelationshipProvider provider : getRelationshipProviders()) {
             if (provider.isEnabled()) {
-                MylarPlugin.getTaskscapeManager().resetLandmarkRelationshipsOfKind(provider.getId());
+                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
             }
             for (IMylarContextNode node : activeTaskscape.getLandmarks()) provider.landmarkAdded(node);
         }
@@ -390,7 +390,7 @@ public class ContextManager {
 
     public void updateSearchKindEnabled(RelationshipProvider provider, boolean on) {
         if (!on) {
-            MylarPlugin.getTaskscapeManager().resetLandmarkRelationshipsOfKind(provider.getId());
+            MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
         } else {
             for (IMylarContextNode node : activeTaskscape.getLandmarks()) provider.landmarkAdded(node);
         }

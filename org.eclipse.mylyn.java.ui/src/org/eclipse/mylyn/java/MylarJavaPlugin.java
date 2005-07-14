@@ -73,14 +73,14 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
                 MylarPlugin.getDefault().addBridge(structureBridge); 
                 
-                MylarPlugin.getTaskscapeManager().addListener(new JavaReferencesProvider());
-                MylarPlugin.getTaskscapeManager().addListener(new JavaImplementorsProvider());
-                MylarPlugin.getTaskscapeManager().addListener(new JavaReadAccessProvider());
-                MylarPlugin.getTaskscapeManager().addListener(new JavaWriteAccessProvider()); 
-                MylarPlugin.getTaskscapeManager().addListener(new JUnitReferencesProvider());
+                MylarPlugin.getContextManager().addListener(new JavaReferencesProvider());
+                MylarPlugin.getContextManager().addListener(new JavaImplementorsProvider());
+                MylarPlugin.getContextManager().addListener(new JavaReadAccessProvider());
+                MylarPlugin.getContextManager().addListener(new JavaWriteAccessProvider()); 
+                MylarPlugin.getContextManager().addListener(new JUnitReferencesProvider());
                 
                 MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
-                MylarPlugin.getTaskscapeManager().addListener(new LandmarkMarkerManager());
+                MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
                 MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
                 
             	installEditorTracker(workbench);

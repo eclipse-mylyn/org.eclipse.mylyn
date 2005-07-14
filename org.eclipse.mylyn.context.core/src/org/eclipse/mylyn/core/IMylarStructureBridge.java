@@ -32,7 +32,7 @@ public interface IMylarStructureBridge {
     
     /**
      * @return 	The name or a null String("").  Can't be null since the views
-     * 			displaying the taskscape can't handle null names
+     * 			displaying the context can't handle null names
      */
     public abstract String getName(Object object);
     

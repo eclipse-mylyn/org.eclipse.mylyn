@@ -72,8 +72,8 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
     }
 
     private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
-        List<IMylarContextNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
-        List<IMylarContextNode> interestingElements = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getInteresting();
+        List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveContext().getLandmarks();
+        List<IMylarContextNode> interestingElements = MylarPlugin.getContextManager().getActiveContext().getInteresting();
         Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
         int includeMask = IJavaSearchScope.SOURCES;
         if (degreeOfSeparation == 1) {

@@ -36,7 +36,7 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
     public Font getFont(Object element) {
         if (element instanceof ProblemMarker) {
             String handle = MylarPlugin.getDefault().getStructureBridge(((ProblemMarker)element).getResource().getFileExtension()).getHandleForMarker(((ProblemMarker)element));
-            IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(handle);
+            IMylarContextNode node = MylarPlugin.getContextManager().getNode(handle);
             if (node != null) {    
                 if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
                     return UiUtil.BOLD;
@@ -57,7 +57,7 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
     public Color getForeground(Object element) {
         if (element instanceof ProblemMarker) {
             String handle = MylarPlugin.getDefault().getStructureBridge(((ProblemMarker)element).getResource().getFileExtension()).getHandleForMarker(((ProblemMarker)element));
-            return UiUtil.getForegroundForElement(MylarPlugin.getTaskscapeManager().getNode(handle));
+            return UiUtil.getForegroundForElement(MylarPlugin.getContextManager().getNode(handle));
         } else {
             return null;
         }  
@@ -66,7 +66,7 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
     public Color getBackground(Object element) {
         if (element instanceof ProblemMarker) {
             String handle = MylarPlugin.getDefault().getStructureBridge(((ProblemMarker)element).getResource().getFileExtension()).getHandleForMarker(((ProblemMarker)element));
-            return UiUtil.getBackgroundForElement(MylarPlugin.getTaskscapeManager().getNode(handle));
+            return UiUtil.getBackgroundForElement(MylarPlugin.getContextManager().getNode(handle));
         } else {
             return null;
         }

@@ -45,7 +45,7 @@ public class JavaEditorTracker extends EditorTracker {
                 public void run() { 
                 	ActiveFoldingListener listener = new ActiveFoldingListener(editor);
                 	editorListenerMap.put(editor, listener);
-                	MylarPlugin.getTaskscapeManager().addListener(listener);
+                	MylarPlugin.getContextManager().addListener(listener);
                 }
             });
         }        
@@ -53,7 +53,7 @@ public class JavaEditorTracker extends EditorTracker {
     
     public void unregisterEditor(JavaEditor editor) {
         ActiveFoldingListener listener = editorListenerMap.get(editor);
-        MylarPlugin.getTaskscapeManager().removeListener(listener);
+        MylarPlugin.getContextManager().removeListener(listener);
         editorListenerMap.remove(editor);
     }
 

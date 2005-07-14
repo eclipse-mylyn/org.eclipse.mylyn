@@ -66,11 +66,11 @@ public class ActiveFoldingListener implements IMylarContextListener {
     	interestChanged(nodes.get(nodes.size()-1));     
     }
 
-    public void taskscapeActivated(IMylarContext taskscape) {
+    public void contextActivated(IMylarContext taskscape) {
     	controller.resetFolding();
     }
 
-    public void taskscapeDeactivated(IMylarContext taskscape) {
+    public void contextDeactivated(IMylarContext taskscape) {
     	controller.resetFolding();
     }
 

@@ -48,7 +48,7 @@ public class JavaUiUtil {
 //      if (activeElement == null) return null;
 //    
       if (element == null) return null;
-      IMylarContextNode info = MylarPlugin.getTaskscapeManager().getNode(element.getHandleIdentifier());
+      IMylarContextNode info = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
       if (info.getDegreeOfInterest().isLandmark() && !info.getDegreeOfInterest().isPredicted()) {
           return UiUtil.BOLD;
       }

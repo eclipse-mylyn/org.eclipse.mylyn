@@ -28,11 +28,11 @@ public class JavaUiUpdateBridge implements IMylarContextListener {
 
 	private boolean firstExplorerRefresh = true;
     
-    public void taskscapeActivated(IMylarContext taskscape) {
+    public void contextActivated(IMylarContext taskscape) {
 //        refreshPackageExplorer(null);
     }
 
-    public void taskscapeDeactivated(IMylarContext taskscape) {
+    public void contextDeactivated(IMylarContext taskscape) {
 //        refreshPackageExplorer(null);
     }
     

@@ -40,13 +40,13 @@ public class CompositeContextNode implements IMylarContextNode {
      * @return the taskscape with the hightest value
      * TODO: is this always best?
      */
-    public IMylarContext getTaskscape() {
+    public IMylarContext getContext() {
         IMylarContextNode highestValueNode = null;
         for (IMylarContextNode node : nodes) {
             if (highestValueNode == null || node.getDegreeOfInterest().getValue() < highestValueNode.getDegreeOfInterest().getValue()) highestValueNode = node;
         }
         if (highestValueNode != null) {
-            return highestValueNode.getTaskscape();
+            return highestValueNode.getContext();
         } else {
             return null;
         }

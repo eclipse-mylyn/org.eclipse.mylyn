@@ -174,7 +174,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		return INSTANCE;
 	}
 	
-    public static ContextManager getTaskscapeManager() {
+    public static ContextManager getContextManager() {
         return taskscapeManager;
     }
 

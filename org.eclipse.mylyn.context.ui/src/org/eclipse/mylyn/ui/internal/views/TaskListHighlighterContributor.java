@@ -61,7 +61,7 @@ public class TaskListHighlighterContributor implements ITaskListActionContributo
             		  ITask task = (ITask)selectedElement; 
             		  MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandle(), highlighter.getName());
             		  taskListView.getViewer().refresh();
-                      MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
+                      MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
                   }
               };
               if (highlighter.isGradient()) {

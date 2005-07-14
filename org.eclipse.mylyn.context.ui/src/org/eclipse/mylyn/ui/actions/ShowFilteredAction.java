@@ -29,7 +29,7 @@ public class ShowFilteredAction implements IViewActionDelegate, IWorkbenchWindow
     }
 
     public void run(IAction action) {
-        MylarPlugin.getTaskscapeManager().tempRaiseChildrenForSelected();
+        MylarPlugin.getContextManager().tempRaiseChildrenForSelected();
     }
 
     public void selectionChanged(IAction action, ISelection selection) {

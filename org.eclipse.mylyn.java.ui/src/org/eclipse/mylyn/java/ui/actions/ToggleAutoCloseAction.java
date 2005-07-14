@@ -35,8 +35,8 @@ public class ToggleAutoCloseAction extends Action implements IWorkbenchWindowAct
     }
     
     public void run(IAction action) {
-        MylarPlugin.getTaskscapeManager().setEditorAutoCloseEnabled(
-        	!MylarPlugin.getTaskscapeManager().isEditorAutoCloseEnabled());
+        MylarPlugin.getContextManager().setEditorAutoCloseEnabled(
+        	!MylarPlugin.getContextManager().isEditorAutoCloseEnabled());
     }
     
     public void selectionChanged(IAction action, ISelection selection) {

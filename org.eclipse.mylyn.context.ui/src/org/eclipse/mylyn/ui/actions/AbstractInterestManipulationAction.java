@@ -34,7 +34,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     }
 
     protected void changeInterestForSelected(boolean increment) {
-        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getActiveNode();
+        IMylarContextNode node = MylarPlugin.getContextManager().getActiveNode();
         if (node == null) return;
         float originalValue = node.getDegreeOfInterest().getValue();
         float changeValue = 0;
@@ -58,7 +58,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
                     node.getElementHandle(), 
                     SOURCE_ID,
                     changeValue);
-            MylarPlugin.getTaskscapeManager().handleInteractionEvent(interactionEvent);
+            MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent);
         }
     }
     

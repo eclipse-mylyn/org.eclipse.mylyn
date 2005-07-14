@@ -55,11 +55,11 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	}
 
 	
-	public void taskscapeActivated(IMylarContext taskscape) {
+	public void contextActivated(IMylarContext taskscape) {
 		updateWorkingSet();
 	}
 
-	public void taskscapeDeactivated(IMylarContext taskscape) {
+	public void contextDeactivated(IMylarContext taskscape) {
 		updateWorkingSet();
 	}
 
@@ -117,7 +117,7 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	}
 	
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
-		IMylarContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+		IMylarContext t = MylarPlugin.getContextManager().getActiveContext();
 		for(IMylarContextNode node: t.getInterestingResources()){
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
 

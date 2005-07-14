@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 29, 2004
- */
+
 package org.eclipse.mylar.core;
 
 import java.util.Collection;
@@ -31,7 +29,7 @@ public interface IMylarContextNode {
     
     public abstract String getStructureKind();
    
-    public abstract IMylarContext getTaskscape();
+    public abstract IMylarContext getContext();
     
     public abstract Collection<ContextEdge> getEdges();
     
