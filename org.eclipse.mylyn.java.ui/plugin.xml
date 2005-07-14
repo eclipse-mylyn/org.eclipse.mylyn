@@ -8,15 +8,6 @@
          point="org.eclipse.ui.startup">
    </extension>
   
-     <extension point="org.eclipse.ui.perspectiveExtensions">
-          <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
-               <view id="org.eclipse.mylar.tasks.ui.views.TaskListView"
-                    relative="org.eclipse.ui.views.ContentOutline"
-                    relationship="top"/>
-          </perspectiveExtension>
-	</extension>
-  
   <extension point="org.eclipse.ui.viewActions"> 
 	<viewContribution 
 		id="org.eclipse.mylar.java.explorer.contribution" 
