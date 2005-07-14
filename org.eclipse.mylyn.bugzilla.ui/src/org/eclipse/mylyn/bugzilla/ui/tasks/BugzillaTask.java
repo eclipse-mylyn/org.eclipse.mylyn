@@ -343,7 +343,7 @@ public class BugzillaTask extends Task {
 		try {
 			setPriority(bugReport.getAttribute("Priority").getValue());
 			String status = bugReport.getAttribute("Status").getValue();
-			if (status.equals("RESOLVED")) {
+			if (status.equals("RESOLVED") || status.equals("CLOSED") || status.equals("VERIFIED")) {
 				setCompleted(true);
 			}
 			this.setLabel(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandle()) + ": " + bugReport.getSummary()));
