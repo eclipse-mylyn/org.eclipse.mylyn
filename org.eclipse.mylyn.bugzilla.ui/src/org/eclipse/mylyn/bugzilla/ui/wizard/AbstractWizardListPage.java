@@ -65,6 +65,8 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 		listStatus = new Status(IStatus.OK, "not_used", 0, "", null);
 	}
 
+	public abstract void createAdditionalControls(Composite parent);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -102,7 +104,9 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 
 		// Each wizard has different types of items to add to the list
 		populateList();
-
+		
+		createAdditionalControls(composite);
+		
 		// set the composite as the control for this page
 		setControl(composite);
 		addListeners();
