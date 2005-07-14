@@ -21,12 +21,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.InteractionEvent;
 import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -39,7 +39,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * @author Mik Kersten
  */
-public class MylarViewerManager implements ITaskscapeListener {
+public class MylarViewerManager implements IMylarContextListener {
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
@@ -69,18 +69,18 @@ public class MylarViewerManager implements ITaskscapeListener {
 		}
 	}
 	
-	public void taskscapeActivated(ITaskscape taskscape) {
-        ITaskscapeNode activeNode = taskscape.getActiveNode();
+	public void taskscapeActivated(IMylarContext taskscape) {
+        IMylarContextNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
         }
         refreshViewers();
     }
 
-    public void taskscapeDeactivated(ITaskscape taskscape) {
+    public void taskscapeDeactivated(IMylarContext taskscape) {
     	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
         if (confirmed && MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.CLOSE_EDITORS)) {
-	    	for (ITaskscapeNode node : taskscape.getInterestingResources()) {
+	    	for (IMylarContextNode node : taskscape.getInterestingResources()) {
 	            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
 	        }
         }
@@ -96,28 +96,28 @@ public class MylarViewerManager implements ITaskscapeListener {
     }
 
     protected void refreshViewers() {
-    	List<ITaskscapeNode> toRefresh = Collections.emptyList();
+    	List<IMylarContextNode> toRefresh = Collections.emptyList();
     	refreshViewers(toRefresh, true); 
     }
     
-    protected void refreshViewers(ITaskscapeNode node, boolean updateLabels) {
-    	List<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();
+    protected void refreshViewers(IMylarContextNode node, boolean updateLabels) {
+    	List<IMylarContextNode> toRefresh = new ArrayList<IMylarContextNode>();
     	toRefresh.add(node);
     	refreshViewers(toRefresh, updateLabels);
     }
     
-    protected void refreshViewers(final List<ITaskscapeNode> nodes, final boolean updateLabels) {
+    protected void refreshViewers(final List<IMylarContextNode> nodes, final boolean updateLabels) {
     	// HACK: improve laziness and update
         if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
     	
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
             	try {
-            		List<ITaskscapeNode> nodesToRefresh = new ArrayList<ITaskscapeNode>();
+            		List<IMylarContextNode> nodesToRefresh = new ArrayList<IMylarContextNode>();
 			    	boolean showChildrenRequested = false;
             		if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
 			    		String raisedElementHandle = MylarPlugin.getTaskscapeManager().getTempRaisedHandle();
-			            nodesToRefresh = new ArrayList<ITaskscapeNode>(); // override refresh nodes
+			            nodesToRefresh = new ArrayList<IMylarContextNode>(); // override refresh nodes
 			            nodesToRefresh.add(MylarPlugin.getTaskscapeManager().getNode(raisedElementHandle));
 			            showChildrenRequested = true;
             		} else if (nodes != null) {
@@ -131,8 +131,8 @@ public class MylarViewerManager implements ITaskscapeListener {
 								viewer.getControl().setRedraw(true);
 							} else {
 								Object objectToRefresh = null;
-								ITaskscapeNode lastNode = null;
-								for (ITaskscapeNode node : nodesToRefresh) {
+								IMylarContextNode lastNode = null;
+								for (IMylarContextNode node : nodesToRefresh) {
 									if (node != null) {
 										lastNode = node;
 										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
@@ -178,14 +178,14 @@ public class MylarViewerManager implements ITaskscapeListener {
     	return true;
 	}
 
-	public void interestChanged(final List<ITaskscapeNode> nodes) {
+	public void interestChanged(final List<IMylarContextNode> nodes) {
     	refreshViewers(nodes, false);
     }
     
     /**
      * TODO: it would be better if this didn't explicitly refresh views
      */
-    public void interestChanged(ITaskscapeNode node) {
+    public void interestChanged(IMylarContextNode node) {
 //        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().refreshViewer();
         if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
         	refreshViewers();
@@ -194,20 +194,20 @@ public class MylarViewerManager implements ITaskscapeListener {
         }
     }  
 
-    public void nodeDeleted(ITaskscapeNode node) {
+    public void nodeDeleted(IMylarContextNode node) {
     	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-		ITaskscapeNode parent = MylarPlugin.getTaskscapeManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
-    	ArrayList<ITaskscapeNode> toRefresh = new ArrayList<ITaskscapeNode>();
+		IMylarContextNode parent = MylarPlugin.getTaskscapeManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
+    	ArrayList<IMylarContextNode> toRefresh = new ArrayList<IMylarContextNode>();
     	
     	toRefresh.add(parent);
     	refreshViewers(toRefresh, false);
     }
 
-    public void landmarkAdded(ITaskscapeNode node) {
+    public void landmarkAdded(IMylarContextNode node) {
     	refreshViewers(node, true);
     }
 
-    public void landmarkRemoved(ITaskscapeNode node) {
+    public void landmarkRemoved(IMylarContextNode node) {
     	refreshViewers(node, true);
     }
 

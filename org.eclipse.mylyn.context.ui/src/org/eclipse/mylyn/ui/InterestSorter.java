@@ -15,7 +15,7 @@ package org.eclipse.mylar.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.core.model.InterestComparator;
+import org.eclipse.mylar.core.InterestComparator;
 
 
 /**

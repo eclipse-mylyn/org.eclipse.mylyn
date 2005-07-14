@@ -22,11 +22,11 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.TaskscapeManager;
-import org.eclipse.mylar.core.model.internal.ScalingFactors;
-import org.eclipse.mylar.core.model.internal.Taskscape;
+import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.ScalingFactors;
+import org.eclipse.mylar.core.internal.Context;
 import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
@@ -39,7 +39,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class JavaStructureTest extends AbstractTaskscapeTest {
     
-    private TaskscapeManager manager = MylarPlugin.getTaskscapeManager();
+    private ContextManager manager = MylarPlugin.getTaskscapeManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
     
@@ -49,7 +49,7 @@ public class JavaStructureTest extends AbstractTaskscapeTest {
     private IType typeFoo;
     private IMethod caller;
     private IMethod callee;
-    private Taskscape taskscape;
+    private Context taskscape;
     private ScalingFactors scaling = new ScalingFactors();
     
     @Override
@@ -60,7 +60,7 @@ public class JavaStructureTest extends AbstractTaskscapeTest {
         caller = typeFoo.createMethod("void caller() { callee(); }", null, true, null);
         callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
-        taskscape = new Taskscape("1", scaling);
+        taskscape = new Context("1", scaling);
         manager.taskActivated(taskscape);
     }
     
@@ -90,8 +90,8 @@ public class JavaStructureTest extends AbstractTaskscapeTest {
         editorPart.setHighlightRange(callerSelection.getOffset(),callerSelection.getLength(), true);
         monitor.selectionChanged(editorPart, calleeSelection);
         
-        ITaskscapeNode callerNode = manager.getNode(caller.getHandleIdentifier());
-        ITaskscapeNode calleeNode = manager.getNode(callee.getHandleIdentifier());
+        IMylarContextNode callerNode = manager.getNode(caller.getHandleIdentifier());
+        IMylarContextNode calleeNode = manager.getNode(callee.getHandleIdentifier());
         assertTrue(callerNode.getDegreeOfInterest().isInteresting());
         assertTrue(calleeNode.getDegreeOfInterest().isInteresting());
         assertEquals(1, callerNode.getEdges().size());

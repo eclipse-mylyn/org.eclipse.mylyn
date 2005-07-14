@@ -16,9 +16,9 @@ package org.eclipse.mylar.ui.views;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.core.model.ITaskscapeEdge;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.TaskscapeEdge;
+import org.eclipse.mylar.core.IMylarContextEdge;
+import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.internal.ContextEdge;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -33,16 +33,16 @@ import org.eclipse.swt.graphics.Image;
 public class TaskscapeNodeLabelProvider implements ILabelProvider {
 
     public Image getImage(Object element) {
-        if (element instanceof ITaskscapeNode) {
-            ITaskscapeNode node = (ITaskscapeNode)element;
+        if (element instanceof IMylarContextNode) {
+            IMylarContextNode node = (IMylarContextNode)element;
             IMylarUiBridge adapter = MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind());
             if (adapter != null) {
                 return adapter.getLabelProvider().getImage(element);
             } else {
                 return null;
             }
-        } else if (element instanceof TaskscapeEdge) {
-            ITaskscapeEdge edge = (ITaskscapeEdge)element;
+        } else if (element instanceof ContextEdge) {
+            IMylarContextEdge edge = (IMylarContextEdge)element;
             IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(edge.getStructureKind());
             ImageDescriptor descriptor = bridge.getIconForRelationship(edge.getRelationshipHandle());
             if (descriptor != null) return MylarImages.getImage(descriptor);
@@ -52,16 +52,16 @@ public class TaskscapeNodeLabelProvider implements ILabelProvider {
 
     public String getText(Object object) {
         assert(object != null);
-        if (object instanceof ITaskscapeNode) {
-            ITaskscapeNode node = (ITaskscapeNode)object;
+        if (object instanceof IMylarContextNode) {
+            IMylarContextNode node = (IMylarContextNode)object;
             IMylarUiBridge adapter = MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind());
             if (MylarUiPlugin.getDefault().isDecorateInterestMode()) {
                 return adapter.getLabelProvider().getText(object) + " [" + node.getDegreeOfInterest().getValue() + "]";     
             } else {
                 return adapter.getLabelProvider().getText(object);
             }
-        } else if (object instanceof ITaskscapeEdge) {
-            ITaskscapeEdge edge = (ITaskscapeEdge)object;
+        } else if (object instanceof IMylarContextEdge) {
+            IMylarContextEdge edge = (IMylarContextEdge)object;
             String interestDecoration = "";
             if (MylarUiPlugin.getDefault().isDecorateInterestMode()) interestDecoration = " [" + edge.getDegreeOfInterest().getValue() + "]";     
             

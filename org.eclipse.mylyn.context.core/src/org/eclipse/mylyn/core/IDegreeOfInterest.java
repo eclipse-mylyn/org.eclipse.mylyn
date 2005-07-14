@@ -9,31 +9,33 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 /*
- * Created on Dec 29, 2004
+ * Created on Feb 2, 2005
  */
-package org.eclipse.mylar.core.model;
+package org.eclipse.mylar.core;
 
 import java.util.List;
-import java.util.Set;
+
+
 
 /**
  * @author Mik Kersten
  */
-public interface ITaskscape {
+public interface IDegreeOfInterest {
 
-    public abstract List<InteractionEvent> getInteractionHistory();
+//    public abstract void addEvent(InteractionEvent event);
+        
+    public abstract boolean isPredicted();
     
-    public List<ITaskscapeNode> getInteresting();
+    public abstract boolean isLandmark();
     
-    public abstract ITaskscapeNode get(String element);
+    public abstract boolean isInteresting();
 
-    public abstract List<ITaskscapeNode> getLandmarks();
+    public abstract float getEncodedValue();
     
-    public abstract Set<ITaskscapeNode> getInterestingResources();
+    public float getDecayValue();
 
-    public abstract ITaskscapeNode getActiveNode();
+    public abstract float getValue();
 
-    public abstract void remove(ITaskscapeNode node);
-
-    public abstract List<ITaskscapeNode> getAllElements();
+    public abstract List<InteractionEvent> getEvents();
 }
+

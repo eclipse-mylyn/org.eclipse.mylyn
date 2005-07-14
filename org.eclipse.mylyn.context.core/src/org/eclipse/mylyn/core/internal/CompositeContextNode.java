@@ -11,26 +11,26 @@
 /*
  * Created on Dec 29, 2004
   */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
 import java.util.*;
 
+import org.eclipse.mylar.core.IDegreeOfInterest;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.IDegreeOfInterest;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 
 
 /**
  * @author Mik Kersten
  */
-public class CompositeTaskscapeNode implements ITaskscapeNode {
-    private Set<TaskscapeNode> nodes = null;//new HashSet<ITaskscapeNode>();
+public class CompositeContextNode implements IMylarContextNode {
+    private Set<ContextNode> nodes = null;//new HashSet<ITaskscapeNode>();
     
     private String handle = "<no handle>";
 //    private String name = "";
     
-    public CompositeTaskscapeNode(String handle, Set<TaskscapeNode> nodes) {
+    public CompositeContextNode(String handle, Set<ContextNode> nodes) {
         assert(handle != null);
         this.nodes = nodes;
         this.handle = handle;
@@ -40,9 +40,9 @@ public class CompositeTaskscapeNode implements ITaskscapeNode {
      * @return the taskscape with the hightest value
      * TODO: is this always best?
      */
-    public ITaskscape getTaskscape() {
-        ITaskscapeNode highestValueNode = null;
-        for (ITaskscapeNode node : nodes) {
+    public IMylarContext getTaskscape() {
+        IMylarContextNode highestValueNode = null;
+        for (IMylarContextNode node : nodes) {
             if (highestValueNode == null || node.getDegreeOfInterest().getValue() < highestValueNode.getDegreeOfInterest().getValue()) highestValueNode = node;
         }
         if (highestValueNode != null) {
@@ -54,7 +54,7 @@ public class CompositeTaskscapeNode implements ITaskscapeNode {
     
     public IDegreeOfInterest getDegreeOfInterest() {
         CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
-        for (ITaskscapeNode node : nodes) {
+        for (IMylarContextNode node : nodes) {
             degreeOfInterest.getInfos().add(node.getDegreeOfInterest());
         }
         return degreeOfInterest;
@@ -68,7 +68,7 @@ public class CompositeTaskscapeNode implements ITaskscapeNode {
     	// can't set a handle on this
     }
 
-    public Set<TaskscapeNode> getNodes() {
+    public Set<ContextNode> getNodes() {
         return nodes;
     }
     
@@ -78,7 +78,7 @@ public class CompositeTaskscapeNode implements ITaskscapeNode {
     public String getStructureKind() {
         Set<String> kinds = new HashSet<String>();
         String lastKind = null;
-        for (ITaskscapeNode node : nodes) {
+        for (IMylarContextNode node : nodes) {
             lastKind = node.getStructureKind();
             kinds.add(lastKind);
         }
@@ -92,9 +92,9 @@ public class CompositeTaskscapeNode implements ITaskscapeNode {
     /**
      * TODO: need composite edges here
      */
-    public TaskscapeEdge getEdge(String targetHandle) {
-        Set<TaskscapeEdge> edges = new HashSet<TaskscapeEdge>();
-        for (ITaskscapeNode node : nodes) edges.add(node.getEdge(targetHandle));
+    public ContextEdge getEdge(String targetHandle) {
+        Set<ContextEdge> edges = new HashSet<ContextEdge>();
+        for (IMylarContextNode node : nodes) edges.add(node.getEdge(targetHandle));
         if (edges.size() == 0) {
             return null;
         } else if (edges.size() > 1) {
@@ -103,18 +103,18 @@ public class CompositeTaskscapeNode implements ITaskscapeNode {
         return edges.iterator().next();
     }
     
-    public Collection<TaskscapeEdge> getEdges() {
-        Set<TaskscapeEdge> edges = new HashSet<TaskscapeEdge>();
+    public Collection<ContextEdge> getEdges() {
+        Set<ContextEdge> edges = new HashSet<ContextEdge>();
         
-        for (ITaskscapeNode node : nodes) edges.addAll(node.getEdges());
+        for (IMylarContextNode node : nodes) edges.addAll(node.getEdges());
         return edges;
     }
     
     @Override
     public boolean equals(Object obj) { 
         if (obj == null) return false;
-        if (obj instanceof CompositeTaskscapeNode) {
-            CompositeTaskscapeNode node = (CompositeTaskscapeNode)obj;
+        if (obj instanceof CompositeContextNode) {
+            CompositeContextNode node = (CompositeContextNode)obj;
             return this.getElementHandle().equals(node.getElementHandle());
         }
         return false;

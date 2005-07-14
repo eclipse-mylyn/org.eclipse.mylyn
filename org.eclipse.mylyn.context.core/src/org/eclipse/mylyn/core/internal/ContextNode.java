@@ -11,14 +11,14 @@
 /*
  * Created on Jul 22, 2004
   */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.core.model.IDegreeOfInterest;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IDegreeOfInterest;
+import org.eclipse.mylar.core.IMylarContextNode;
 
 
 /**
@@ -26,16 +26,16 @@ import org.eclipse.mylar.core.model.ITaskscapeNode;
  * 
  * @author Mik Kersten
  */
-public class TaskscapeNode implements ITaskscapeNode {
+public class ContextNode implements IMylarContextNode {
     
     private String handle;
     private String kind;
     private DegreeOfInterest interest;
-    private Taskscape taskscape;
+    private Context taskscape;
     
-    private Map<String/*target handle*/, TaskscapeEdge> edges = new HashMap<String, TaskscapeEdge>();
+    private Map<String/*target handle*/, ContextEdge> edges = new HashMap<String, ContextEdge>();
     
-    public TaskscapeNode(String kind, String elementHandle, Taskscape taskscape) {
+    public ContextNode(String kind, String elementHandle, Context taskscape) {
         if (elementHandle == null) throw new RuntimeException("malformed taskscape: null handle");
         interest = new DegreeOfInterest(taskscape);
         this.handle = elementHandle;
@@ -56,15 +56,15 @@ public class TaskscapeNode implements ITaskscapeNode {
         this.kind = kind;
     }
 
-    public Collection<TaskscapeEdge> getEdges() {
+    public Collection<ContextEdge> getEdges() {
         return edges.values();
     }
 
-    public TaskscapeEdge getEdge(String targetHandle) {
+    public ContextEdge getEdge(String targetHandle) {
         return edges.get(targetHandle);
     }
     
-    public void addEdge(TaskscapeEdge edge) {
+    public void addEdge(ContextEdge edge) {
         edges.put(edge.getTarget().getElementHandle(), edge);
     }
     
@@ -72,8 +72,8 @@ public class TaskscapeNode implements ITaskscapeNode {
     public boolean equals(Object obj) { 
         if (obj == null) return false;
         if (this.getElementHandle() == null) return false;
-        if (obj instanceof TaskscapeNode) {
-            TaskscapeNode node = (TaskscapeNode)obj;
+        if (obj instanceof ContextNode) {
+            ContextNode node = (ContextNode)obj;
             return this.getElementHandle().equals(node.getElementHandle());
         }
         return false;
@@ -92,7 +92,7 @@ public class TaskscapeNode implements ITaskscapeNode {
         return interest;
     }
 
-    public Taskscape getTaskscape() {
+    public Context getTaskscape() {
         return taskscape;
     }
     

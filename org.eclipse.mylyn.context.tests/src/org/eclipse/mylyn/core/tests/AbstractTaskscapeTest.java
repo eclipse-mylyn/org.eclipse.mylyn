@@ -13,8 +13,8 @@
   */
 package org.eclipse.mylar.core.tests;
 
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.InteractionEvent;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.InteractionEvent;
 
 import junit.framework.TestCase;
 
@@ -44,7 +44,7 @@ public class AbstractTaskscapeTest extends TestCase {
         return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "<mock-kind>", handle, "<mock-origin>");
     }
     
-    protected boolean compareTaskscapeEquality(ITaskscape t1, ITaskscape t2) {
+    protected boolean compareTaskscapeEquality(IMylarContext t1, IMylarContext t2) {
 //        List<ITaskscapeNode> nodes1 = t1.get
         return false;
     }

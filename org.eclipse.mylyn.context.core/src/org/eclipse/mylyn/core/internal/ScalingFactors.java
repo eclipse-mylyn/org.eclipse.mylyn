@@ -11,13 +11,13 @@
 /*
  * Created on Dec 29, 2004
  */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.core.model.InteractionEvent;
+import org.eclipse.mylar.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

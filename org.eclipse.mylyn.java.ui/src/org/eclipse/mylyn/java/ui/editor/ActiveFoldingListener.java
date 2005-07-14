@@ -22,9 +22,9 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.mylar.core.ITaskscapeListener;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -35,11 +35,11 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class ActiveFoldingListener implements ITaskscapeListener {
+public class ActiveFoldingListener implements IMylarContextListener {
     private final JavaEditor editor;
     private ActiveFoldingController controller;
 
-    private ITaskscapeNode lastUpdatedNode = null;
+    private IMylarContextNode lastUpdatedNode = null;
     
     private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -55,38 +55,38 @@ public class ActiveFoldingListener implements ITaskscapeListener {
         JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
     }
 
-    public void interestChanged(ITaskscapeNode node) {
+    public void interestChanged(IMylarContextNode node) {
     	if (!node.equals(lastUpdatedNode)) {
     		controller.updateFolding(true);
     		lastUpdatedNode = node;
     	}
     }
 
-    public void interestChanged(List<ITaskscapeNode> nodes) {
+    public void interestChanged(List<IMylarContextNode> nodes) {
     	interestChanged(nodes.get(nodes.size()-1));     
     }
 
-    public void taskscapeActivated(ITaskscape taskscape) {
+    public void taskscapeActivated(IMylarContext taskscape) {
     	controller.resetFolding();
     }
 
-    public void taskscapeDeactivated(ITaskscape taskscape) {
+    public void taskscapeDeactivated(IMylarContext taskscape) {
     	controller.resetFolding();
     }
 
-    public void presentationSettingsChanging(ITaskscapeListener.UpdateKind kind) {
+    public void presentationSettingsChanging(IMylarContextListener.UpdateKind kind) {
     	// don't care when the presentation settings are changing
     }
 
-    public void presentationSettingsChanged(ITaskscapeListener.UpdateKind kind) { 
+    public void presentationSettingsChanged(IMylarContextListener.UpdateKind kind) { 
     	controller.resetFolding();
     }
 
-    public void landmarkAdded(ITaskscapeNode element) { 
+    public void landmarkAdded(IMylarContextNode element) { 
     	// don't care when a landmark is added
     }
 
-    public void landmarkRemoved(ITaskscapeNode element) { 
+    public void landmarkRemoved(IMylarContextNode element) { 
     	// don't are when a landmark is removed
     }
 
@@ -94,7 +94,7 @@ public class ActiveFoldingListener implements ITaskscapeListener {
     	// don't care when relationships change
     }
 
-    public void nodeDeleted(ITaskscapeNode node) {
+    public void nodeDeleted(IMylarContextNode node) {
 //        hardRefresh(); 
 //        foldingController.updateFolding(false);
     }

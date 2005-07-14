@@ -29,9 +29,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.core.model.internal.Taskscape;
+import org.eclipse.mylar.core.internal.Context;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * 
  * @author Mik Kersten
  */
-public class TaskscapeXmlWriter {	
+public class ContextWriter {	
 	
 	private DocumentBuilderFactory dbf = null;
 	private Document doc = null;
@@ -48,7 +48,7 @@ public class TaskscapeXmlWriter {
 	private OutputStream outputStream = null;
 	private Result result = null;
 	
-	public TaskscapeXmlWriter() {
+	public ContextWriter() {
 		try {
 			dbf = DocumentBuilderFactory.newInstance();
 			doc = dbf.newDocumentBuilder().newDocument();
@@ -57,7 +57,7 @@ public class TaskscapeXmlWriter {
 		}
 	}
 	
-	public void writeTaskscapeToStream(Taskscape t) throws IOException{
+	public void writeTaskscapeToStream(Context t) throws IOException{
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;

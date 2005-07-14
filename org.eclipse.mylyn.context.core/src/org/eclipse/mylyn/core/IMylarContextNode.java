@@ -11,17 +11,17 @@
 /*
  * Created on Dec 29, 2004
  */
-package org.eclipse.mylar.core.model;
+package org.eclipse.mylar.core;
 
 import java.util.Collection;
 
-import org.eclipse.mylar.core.model.internal.TaskscapeEdge;
+import org.eclipse.mylar.core.internal.ContextEdge;
 
 
 /**
  * @author Mik Kersten
  */
-public interface ITaskscapeNode {
+public interface IMylarContextNode {
    
     public abstract IDegreeOfInterest getDegreeOfInterest();
     
@@ -31,9 +31,9 @@ public interface ITaskscapeNode {
     
     public abstract String getStructureKind();
    
-    public abstract ITaskscape getTaskscape();
+    public abstract IMylarContext getTaskscape();
     
-    public abstract Collection<TaskscapeEdge> getEdges();
+    public abstract Collection<ContextEdge> getEdges();
     
-    public abstract TaskscapeEdge getEdge(String targetHandle);
+    public abstract ContextEdge getEdge(String targetHandle);
 }

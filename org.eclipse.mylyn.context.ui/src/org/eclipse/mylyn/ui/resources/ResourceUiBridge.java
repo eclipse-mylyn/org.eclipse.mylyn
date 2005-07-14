@@ -21,9 +21,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -42,7 +42,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 
     private ILabelProvider labelProvider = new ResourceLabelProvider();
     
-    public void open(ITaskscapeNode node) {
+    public void open(IMylarContextNode node) {
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
         if (adapter == null) return;
         IResource resource = (IResource)adapter.getObjectForHandle(node.getElementHandle());
@@ -62,7 +62,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
         return labelProvider;
     }
 
-    public void close(ITaskscapeNode node) {
+    public void close(IMylarContextNode node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();

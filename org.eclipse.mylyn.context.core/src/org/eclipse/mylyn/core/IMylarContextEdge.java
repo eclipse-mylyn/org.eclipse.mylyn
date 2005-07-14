@@ -9,32 +9,26 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 /*
- * Created on Feb 2, 2005
+ * Created on Jun 15, 2005
  */
-package org.eclipse.mylar.core.model;
-
-import java.util.List;
+package org.eclipse.mylar.core;
 
 
 /**
  * @author Mik Kersten
  */
-public interface IDegreeOfInterest {
+public interface IMylarContextEdge {
 
-//    public abstract void addEvent(InteractionEvent event);
-        
-    public abstract boolean isPredicted();
-    
-    public abstract boolean isLandmark();
-    
-    public abstract boolean isInteresting();
+    public abstract IMylarContextNode getTarget();
 
-    public abstract float getEncodedValue();
-    
-    public float getDecayValue();
+    public abstract IDegreeOfInterest getDegreeOfInterest();
 
-    public abstract float getValue();
+    public abstract String getLabel();
 
-    public abstract List<InteractionEvent> getEvents();
+    public abstract String getRelationshipHandle();
+
+    public abstract String getStructureKind();
+
+    public abstract IMylarContextNode getSource();
+
 }
-

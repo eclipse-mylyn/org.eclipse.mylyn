@@ -13,10 +13,10 @@ package org.eclipse.mylar.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.mylar.core.internal.ContextManager;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -34,7 +34,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     }
 
     protected void changeInterestForSelected(boolean increment) {
-        ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getActiveNode();
+        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getActiveNode();
         if (node == null) return;
         float originalValue = node.getDegreeOfInterest().getValue();
         float changeValue = 0;
@@ -45,10 +45,10 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
             	if (originalValue >=0) changeValue = (-1 * originalValue)-1;
             }
         } else {
-            if (originalValue >  TaskscapeManager.getScalingFactors().getLandmark()) {
+            if (originalValue >  ContextManager.getScalingFactors().getLandmark()) {
                 changeValue = 0;
             } else {
-                changeValue = TaskscapeManager.getScalingFactors().getLandmark() - originalValue + 1;
+                changeValue = ContextManager.getScalingFactors().getLandmark() - originalValue + 1;
             } 
         }
         if (changeValue != 0) {

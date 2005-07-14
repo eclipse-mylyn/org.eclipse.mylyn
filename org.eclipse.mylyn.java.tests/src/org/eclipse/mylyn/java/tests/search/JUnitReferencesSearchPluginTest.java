@@ -15,7 +15,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
@@ -47,7 +47,7 @@ public class JUnitReferencesSearchPluginTest extends TestCase implements ISearch
 //		List<?> results = search(5);
 //	}
 	
-	public List<?> search(int dos, ITaskscapeNode node){
+	public List<?> search(int dos, IMylarContextNode node){
 	
 		if(node == null)
 			return null;

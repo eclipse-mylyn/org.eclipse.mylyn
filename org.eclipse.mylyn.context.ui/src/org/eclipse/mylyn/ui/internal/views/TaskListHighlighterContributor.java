@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskListActionContributor;
@@ -61,7 +61,7 @@ public class TaskListHighlighterContributor implements ITaskListActionContributo
             		  ITask task = (ITask)selectedElement; 
             		  MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandle(), highlighter.getName());
             		  taskListView.getViewer().refresh();
-                      MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.HIGHLIGHTER);
+                      MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
                   }
               };
               if (highlighter.isGradient()) {

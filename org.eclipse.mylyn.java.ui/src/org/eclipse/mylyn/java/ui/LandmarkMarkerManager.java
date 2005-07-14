@@ -28,51 +28,51 @@ import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.java.JavaStructureBridge;
 
 
 /**
  * @author Mik Kersten
  */
-public class LandmarkMarkerManager implements ITaskscapeListener {
+public class LandmarkMarkerManager implements IMylarContextListener {
 
-    private Map<ITaskscapeNode, Long> markerMap = new HashMap<ITaskscapeNode, Long>();
+    private Map<IMylarContextNode, Long> markerMap = new HashMap<IMylarContextNode, Long>();
     
     public LandmarkMarkerManager() {
         super();
     }
 
-    public void taskscapeActivated(ITaskscape taskscape) {
+    public void taskscapeActivated(IMylarContext taskscape) {
         modelUpdated();
     }
 
-    public void taskscapeDeactivated(ITaskscape taskscape) {
+    public void taskscapeDeactivated(IMylarContext taskscape) {
         modelUpdated();
     }
     
     private void modelUpdated() {
-        for (ITaskscapeNode node : markerMap.keySet()) {
+        for (IMylarContextNode node : markerMap.keySet()) {
             landmarkRemoved(node);
         }
         markerMap.clear();
-        for (ITaskscapeNode node : MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks()) {
+        for (IMylarContextNode node : MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks()) {
             landmarkAdded(node);
         }
     } 
 
-    public void interestChanged(ITaskscapeNode element) {
+    public void interestChanged(IMylarContextNode element) {
     	// don't care when the interest changes
     }
     
-    public void interestChanged(List<ITaskscapeNode> nodes) {
+    public void interestChanged(List<IMylarContextNode> nodes) {
     	// don't care when the interest changes
     }
 
-    public void landmarkAdded(final ITaskscapeNode node) {
+    public void landmarkAdded(final IMylarContextNode node) {
         if (node == null || node.getStructureKind() == null) return;
         if (node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) {
             final IJavaElement element = JavaCore.create(node.getElementHandle());
@@ -104,7 +104,7 @@ public class LandmarkMarkerManager implements ITaskscapeListener {
         }
     }
     
-    public void landmarkRemoved(final ITaskscapeNode node) {
+    public void landmarkRemoved(final IMylarContextNode node) {
         if (node == null) return;
         if (node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) {
             IJavaElement element = JavaCore.create(node.getElementHandle());
@@ -150,7 +150,7 @@ public class LandmarkMarkerManager implements ITaskscapeListener {
     	// don't care when there is a presentation setting change
     }
 
-    public void nodeDeleted(ITaskscapeNode node) {
+    public void nodeDeleted(IMylarContextNode node) {
     	// don't care when a node is deleted
     }
 

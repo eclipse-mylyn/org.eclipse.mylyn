@@ -13,8 +13,8 @@ package org.eclipse.mylar.ui.internal.views;
 
 import java.util.*;
 
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -65,7 +65,7 @@ public class Highlighter {
         return landmarkColor;
     }
     
-    public Color getHighlight(ITaskscapeNode info, boolean isLandmark) {
+    public Color getHighlight(IMylarContextNode info, boolean isLandmark) {
         if (info.getDegreeOfInterest().getValue() > 0) {
             if (isLandmark) {
                 return landmarkColor;
@@ -81,7 +81,7 @@ public class Highlighter {
         }
     }
     
-    public Color mapDoiToElevation(ITaskscapeNode info) {
+    public Color mapDoiToElevation(IMylarContextNode info) {
         if (info == null) return base;
         if (info.getDegreeOfInterest().getValue() < 0) return highlightColor;
         
@@ -169,7 +169,7 @@ public class Highlighter {
         this.base = base;
     }
     
-    public static Color blend(List<Highlighter> highlighters, ITaskscapeNode info, boolean isLandmark) {
+    public static Color blend(List<Highlighter> highlighters, IMylarContextNode info, boolean isLandmark) {
         int red = 0;
         int green = 0;
         int blue = 0;

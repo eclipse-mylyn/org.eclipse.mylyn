@@ -23,11 +23,11 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.InterestComparator;
 import org.eclipse.mylar.core.search.RelationshipProvider;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -53,20 +53,20 @@ public class ActiveSearchView extends ViewPart {
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
     private static final String VIEW_ID = "org.eclipse.mylar.ui.views.ActiveSearchView";
     
-    private final ITaskscapeListener REFRESH_UPDATE_LISTENER = new ITaskscapeListener() { 
-        public void interestChanged(ITaskscapeNode node) { 
+    private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
+        public void interestChanged(IMylarContextNode node) { 
             refresh(node);
         }
         
-        public void interestChanged(List<ITaskscapeNode> nodes) {
+        public void interestChanged(List<IMylarContextNode> nodes) {
             refresh(nodes.get(nodes.size()-1));
         }
 
-        public void taskscapeActivated(ITaskscape taskscape) {
+        public void taskscapeActivated(IMylarContext taskscape) {
             refresh(null);
         }
 
-        public void taskscapeDeactivated(ITaskscape taskscape) {
+        public void taskscapeDeactivated(IMylarContext taskscape) {
             refresh(null);
         } 
         
@@ -74,12 +74,12 @@ public class ActiveSearchView extends ViewPart {
             refresh(null);
         }
         
-        public void landmarkAdded(ITaskscapeNode element) { 
+        public void landmarkAdded(IMylarContextNode element) { 
 //            viewer.refresh(element, true);
             refresh(null);
         }
 
-        public void landmarkRemoved(ITaskscapeNode element) { 
+        public void landmarkRemoved(IMylarContextNode element) { 
 //            viewer.refresh(element, true);
             refresh(null);
         }
@@ -88,7 +88,7 @@ public class ActiveSearchView extends ViewPart {
             refresh(null);
         }
 
-        private void refresh(final ITaskscapeNode node) {
+        private void refresh(final IMylarContextNode node) {
             Workbench.getInstance().getDisplay().syncExec(new Runnable() {
                 public void run() {
                     try { 
@@ -110,10 +110,10 @@ public class ActiveSearchView extends ViewPart {
         }
 
         public void presentationSettingsChanged(UpdateKind kind) {
-            if (kind == ITaskscapeListener.UpdateKind.HIGHLIGHTER) viewer.refresh(); 
+            if (kind == IMylarContextListener.UpdateKind.HIGHLIGHTER) viewer.refresh(); 
         }
 
-        public void nodeDeleted(ITaskscapeNode node) {
+        public void nodeDeleted(IMylarContextNode node) {
         }
     };
     

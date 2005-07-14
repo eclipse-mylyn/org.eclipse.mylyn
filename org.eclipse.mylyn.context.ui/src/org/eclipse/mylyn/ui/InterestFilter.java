@@ -16,10 +16,10 @@ package org.eclipse.mylar.ui;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.mylar.core.internal.ContextManager;
 
 
 /**
@@ -32,9 +32,9 @@ public class InterestFilter extends ViewerFilter {
         try {
         	if (!(viewer instanceof StructuredViewer)) return true;
         	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
-            ITaskscapeNode node = null;
-            if (element instanceof ITaskscapeNode) {
-                node = (ITaskscapeNode)element;
+            IMylarContextNode node = null;
+            if (element instanceof IMylarContextNode) {
+                node = (IMylarContextNode)element;
             } else { 
                 IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
                 if (bridge == null) return false;
@@ -45,7 +45,7 @@ public class InterestFilter extends ViewerFilter {
                 if (MylarPlugin.getTaskscapeManager().isTempRaised(parentHandle)) return true;
             }
             if (node != null) {
-                return node.getDegreeOfInterest().getValue() > TaskscapeManager.getScalingFactors().getInteresting();
+                return node.getDegreeOfInterest().getValue() > ContextManager.getScalingFactors().getInteresting();
             } else {
                 return false;
             }

@@ -26,8 +26,8 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
@@ -48,7 +48,7 @@ public class JavaUiUtil {
 //      if (activeElement == null) return null;
 //    
       if (element == null) return null;
-      ITaskscapeNode info = MylarPlugin.getTaskscapeManager().getNode(element.getHandleIdentifier());
+      IMylarContextNode info = MylarPlugin.getTaskscapeManager().getNode(element.getHandleIdentifier());
       if (info.getDegreeOfInterest().isLandmark() && !info.getDegreeOfInterest().isPredicted()) {
           return UiUtil.BOLD;
       }

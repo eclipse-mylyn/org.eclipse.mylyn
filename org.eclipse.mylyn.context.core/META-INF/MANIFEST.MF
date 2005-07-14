@@ -13,8 +13,7 @@ Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: mylar-core.jar
 Export-Package: org.eclipse.mylar.core,
- org.eclipse.mylar.core.model,
- org.eclipse.mylar.core.model.internal,
+ org.eclipse.mylar.core.internal,
  org.eclipse.mylar.core.resources,
  org.eclipse.mylar.core.search,
  org.eclipse.mylar.core.util,

@@ -17,9 +17,9 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
@@ -31,7 +31,7 @@ import org.eclipse.swt.graphics.Image;
 public class ResourceLabelProvider implements ILabelProvider {
 
     public Image getImage(Object element) {
-        ITaskscapeNode node = (ITaskscapeNode)element;
+        IMylarContextNode node = (IMylarContextNode)element;
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.EXTENSION);
         if (adapter != null) {
             Object object = adapter.getObjectForHandle(node.getElementHandle());
@@ -48,7 +48,7 @@ public class ResourceLabelProvider implements ILabelProvider {
      * TODO: slow?
      */
     public String getText(Object element) {
-        ITaskscapeNode node = (ITaskscapeNode)element;
+        IMylarContextNode node = (IMylarContextNode)element;
         String name = MylarPlugin.getDefault().getGenericResourceBridge().getName(
                 MylarPlugin.getDefault().getGenericResourceBridge().getObjectForHandle(node.getElementHandle())
         );

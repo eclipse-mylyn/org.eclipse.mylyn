@@ -30,9 +30,9 @@ import org.eclipse.jdt.internal.core.JarEntryFile;
 import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
 
@@ -111,7 +111,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
             for (int i = 0; i < children.length; i++) {
                 if (children[i] instanceof JarPackageFragmentRoot) {
                     JarPackageFragmentRoot element = (JarPackageFragmentRoot)children[i];
-                    ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(element.getHandleIdentifier());
+                    IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(element.getHandleIdentifier());
                     if (node != null && node.getDegreeOfInterest().isInteresting()) {
                         return false;
                     } 

@@ -19,7 +19,7 @@ import org.eclipse.jdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.jdt.ui.JavaElementLabels;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.swt.graphics.Image;
 
@@ -78,8 +78,8 @@ public class MylarJavaLabelProvider extends AppearanceAwareLabelProvider {
 	
 	@Override
 	public String getText(Object object) {
-        if (object instanceof ITaskscapeNode) { 
-            ITaskscapeNode node = (ITaskscapeNode)object;
+        if (object instanceof IMylarContextNode) { 
+            IMylarContextNode node = (IMylarContextNode)object;
             if (node == null) return "<missing info>";
             if (JavaStructureBridge.EXTENSION.equals(node.getStructureKind())) {
                 IJavaElement element = JavaCore.create(node.getElementHandle());
@@ -95,8 +95,8 @@ public class MylarJavaLabelProvider extends AppearanceAwareLabelProvider {
 
 	@Override
 	public Image getImage(Object object) { 
-        if (object instanceof ITaskscapeNode) {
-            ITaskscapeNode node = (ITaskscapeNode)object;
+        if (object instanceof IMylarContextNode) {
+            IMylarContextNode node = (IMylarContextNode)object;
             if (node == null) return null;
             if (node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) {
                 return super.getImage(JavaCore.create(node.getElementHandle()));

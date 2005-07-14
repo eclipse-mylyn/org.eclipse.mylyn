@@ -11,13 +11,12 @@
 /*
  * Created on Feb 2, 2005
   */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
 import java.util.*;
 
-import org.eclipse.mylar.core.model.IDegreeOfInterest;
-import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.mylar.core.IDegreeOfInterest;
+import org.eclipse.mylar.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
@@ -73,7 +72,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
     }
         
     public boolean isLandmark() {
-        return getValue() > TaskscapeManager.getScalingFactors().getLandmark();
+        return getValue() > ContextManager.getScalingFactors().getLandmark();
     }
     
     @Override
@@ -89,7 +88,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
         return infos;
     }
 
-    public Taskscape getCorrespondingTaskscape() {
+    public Context getCorrespondingTaskscape() {
         return null;
     }
 

@@ -11,7 +11,7 @@
 /*
  * Created on May 22, 2005
   */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,10 +22,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
+import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.util.TaskscapeXmlReader;
-import org.eclipse.mylar.core.util.TaskscapeXmlWriter;
+import org.eclipse.mylar.core.util.ContextReader;
+import org.eclipse.mylar.core.util.ContextWriter;
 
 
 /**
@@ -33,15 +33,15 @@ import org.eclipse.mylar.core.util.TaskscapeXmlWriter;
  * 
  * TODO: stop using java.io ?
  */
-public class TaskscapeExternalizer {
+public class ContextExternalizer {
 
     public static final String INTERACTION_EVENT_ID = "interactionEvent";
     public static final String TASKSCAPE_ID = "taskMemory";
     
-    private TaskscapeXmlReader reader = new TaskscapeXmlReader();
-    private TaskscapeXmlWriter writer = new TaskscapeXmlWriter();
+    private ContextReader reader = new ContextReader();
+    private ContextWriter writer = new ContextWriter();
     
-    public void writeXMLTaskscapeToFile(Taskscape taskscape, File file) { 
+    public void writeXMLTaskscapeToFile(Context taskscape, File file) { 
         try {
         	if (!file.exists()) {        		
         		file.createNewFile();
@@ -55,7 +55,7 @@ public class TaskscapeExternalizer {
         }
     }
     
-    public Taskscape readXMLTaskscapeFromFile(File file) {
+    public Context readXMLTaskscapeFromFile(File file) {
         try {
             if (!file.exists()) return null;
             return reader.readTaskscape(file);
@@ -66,7 +66,7 @@ public class TaskscapeExternalizer {
     }
     
     @Deprecated
-    public Taskscape readTaskscapeFromFile(String sourcePath) {
+    public Context readTaskscapeFromFile(String sourcePath) {
         //Taskscape loadedTaskscape;
         File file = new File(sourcePath);
         try {
@@ -75,7 +75,7 @@ public class TaskscapeExternalizer {
             } else {
                 FileInputStream fileStream = new FileInputStream(file);
                 ObjectInputStream stream = new ObjectInputStream(fileStream);
-                Taskscape taskscape =  (Taskscape)stream.readObject();
+                Context taskscape =  (Context)stream.readObject();
                 fileStream.close();
                 return taskscape;
             }
@@ -90,7 +90,7 @@ public class TaskscapeExternalizer {
     }
  
     @Deprecated
-    public void writeTaskscapeToFile(ITaskscape taskscape, String destinationPath) {
+    public void writeTaskscapeToFile(IMylarContext taskscape, String destinationPath) {
         try {
             File file = new File(destinationPath);
             ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file));

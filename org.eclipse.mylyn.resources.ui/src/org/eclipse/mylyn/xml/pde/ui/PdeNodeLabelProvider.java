@@ -15,7 +15,7 @@ package org.eclipse.mylar.xml.pde.ui;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
 import org.eclipse.swt.graphics.Image;
@@ -33,7 +33,7 @@ public class PdeNodeLabelProvider implements ILabelProvider {
      * TODO: slow?
      */
     public String getText(Object element) {
-        ITaskscapeNode node = (ITaskscapeNode)element;
+        IMylarContextNode node = (IMylarContextNode)element;
         String name = MylarXmlPlugin.getPdeStructureBridge().getName(
                 MylarXmlPlugin.getPdeStructureBridge().getObjectForHandle(node.getElementHandle())
         );

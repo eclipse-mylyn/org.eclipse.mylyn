@@ -15,15 +15,13 @@ package org.eclipse.mylar.core;
 
 import java.util.List;
 
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 
 
 
 /**
  * @author Mik Kersten
  */
-public interface ITaskscapeListener {
+public interface IMylarContextListener {
 
     public enum UpdateKind {
         HIGHLIGHTER,
@@ -32,9 +30,9 @@ public interface ITaskscapeListener {
         FILTER
     }
     
-    public void taskscapeActivated(ITaskscape taskscape);
+    public void taskscapeActivated(IMylarContext taskscape);
 
-    public void taskscapeDeactivated(ITaskscape taskscape);
+    public void taskscapeDeactivated(IMylarContext taskscape);
     
     /**
      * E.g. highlighters or scaling factors are being actively modified (for active updating).
@@ -52,26 +50,26 @@ public interface ITaskscapeListener {
      * Called when the interest level for a single element changes, e.g.
      * when it is selected by the user.
      */
-    public void interestChanged(ITaskscapeNode node);
+    public void interestChanged(IMylarContextNode node);
 
     /**
      * Called when the interest level for multiple elements changes,
      * sorted according to the containment hierarchy.  The last element
      * is the element invoking the change.
      */
-    public void interestChanged(List<ITaskscapeNode> nodes);
+    public void interestChanged(List<IMylarContextNode> nodes);
     
-    public void nodeDeleted(ITaskscapeNode node);
-    
-    /**
-     * @param newLandmarks  list of IJavaElement(s)
-     */
-    public void landmarkAdded(ITaskscapeNode node);
+    public void nodeDeleted(IMylarContextNode node);
     
     /**
      * @param newLandmarks  list of IJavaElement(s)
      */
-    public void landmarkRemoved(ITaskscapeNode node);    
+    public void landmarkAdded(IMylarContextNode node);
+    
+    /**
+     * @param newLandmarks  list of IJavaElement(s)
+     */
+    public void landmarkRemoved(IMylarContextNode node);    
     
     public void relationshipsChanged();
 }

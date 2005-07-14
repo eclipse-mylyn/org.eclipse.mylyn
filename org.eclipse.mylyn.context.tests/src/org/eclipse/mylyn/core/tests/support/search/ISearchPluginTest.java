@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
 
 
 public interface ISearchPluginTest {
-	public List<?> search(int dos, ITaskscapeNode node) throws IOException, CoreException;
+	public List<?> search(int dos, IMylarContextNode node) throws IOException, CoreException;
 }

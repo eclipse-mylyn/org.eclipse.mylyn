@@ -35,8 +35,8 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
@@ -71,9 +71,9 @@ public class PdeUiBridge implements IMylarUiBridge {
     }
     
     /**
-     * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.model.ITaskscapeNode)
+     * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarContextNode)
      */
-    public void open(ITaskscapeNode node) {
+    public void open(IMylarContextNode node) {
         // get the handle of the node
         String handle = node.getElementHandle();
         
@@ -146,7 +146,7 @@ public class PdeUiBridge implements IMylarUiBridge {
         return labelProvider;
     }
 
-    public void close(ITaskscapeNode node) {
+    public void close(IMylarContextNode node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();

@@ -15,24 +15,24 @@ package org.eclipse.mylar.core.search;
 
 import java.util.List;
 
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.mylar.core.internal.ContextManager;
 
 
 /**
  * @author Mik Kersten
  */
-public abstract class RelationshipProvider implements ITaskscapeListener {
+public abstract class RelationshipProvider implements IMylarContextListener {
 
     private boolean enabled = false;
     private String id;
     private String structureKind;
     
-    public void nodeDeleted(ITaskscapeNode node) {
+    public void nodeDeleted(IMylarContextNode node) {
     	// we don't care when this happens
     }
 
@@ -46,12 +46,12 @@ public abstract class RelationshipProvider implements ITaskscapeListener {
         this.structureKind = structureKind;
     }
    
-    protected abstract void findRelated(final ITaskscapeNode node, int degreeOfSeparation);
+    protected abstract void findRelated(final IMylarContextNode node, int degreeOfSeparation);
     
     /**
      * @param limitTo Only used in thye AbstractJavaRelationshipProvider for the search type
      */
-    public abstract IMylarSearchOperation getSearchOperation(ITaskscapeNode node, int limitTo, int degreeOfSeparation);
+    public abstract IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation);
 
     public abstract String getName();
     
@@ -59,11 +59,11 @@ public abstract class RelationshipProvider implements ITaskscapeListener {
     	return true;
     }
     
-    public void landmarkAdded(ITaskscapeNode node) { 
-        if (enabled) findRelated(node, TaskscapeManager.getScalingFactors().getDegreeOfSeparation());
+    public void landmarkAdded(IMylarContextNode node) { 
+        if (enabled) findRelated(node, ContextManager.getScalingFactors().getDegreeOfSeparation());
   } 
     
-    public void landmarkRemoved(ITaskscapeNode node) {
+    public void landmarkRemoved(IMylarContextNode node) {
 //        MylarPlugin.getTaskscapeManager().removeEdge(element, id);
     }
      
@@ -94,19 +94,19 @@ public abstract class RelationshipProvider implements ITaskscapeListener {
     	// we don't care about this event
     }
     
-    public void taskscapeActivated(ITaskscape taskscape) { 
+    public void taskscapeActivated(IMylarContext taskscape) { 
     	// we don't care about this event
     }
 
-    public void taskscapeDeactivated(ITaskscape taskscape) { 
+    public void taskscapeDeactivated(IMylarContext taskscape) { 
     	// we don't care about this event
     }
 
-    public void interestChanged(ITaskscapeNode info) { 
+    public void interestChanged(IMylarContextNode info) { 
     	// we don't care about this event
     }
     
-    public void interestChanged(List<ITaskscapeNode> nodes) { 
+    public void interestChanged(List<IMylarContextNode> nodes) { 
     	// we don't care about this event
     }
 

@@ -16,10 +16,10 @@ package org.eclipse.mylar.ui;
 import java.util.ConcurrentModificationException;
 
 import org.eclipse.jface.viewers.*;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.TaskscapeEdge;
+import org.eclipse.mylar.core.internal.ContextEdge;
 import org.eclipse.mylar.ui.internal.UiUtil;
 
 
@@ -40,11 +40,11 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 	    	// ignored, because we can add structure bridges during decoration
 	    }
     	try {
-    		ITaskscapeNode node = null;
-            if (element instanceof TaskscapeEdge) {
+    		IMylarContextNode node = null;
+            if (element instanceof ContextEdge) {
                 decoration.setForegroundColor(MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP);
-            } else  if (element instanceof ITaskscapeNode) {
-                node = (ITaskscapeNode)element;
+            } else  if (element instanceof IMylarContextNode) {
+                node = (IMylarContextNode)element;
             } else {
                 if (adapter != null && adapter.getResourceExtension() != null) {
                     node = MylarPlugin.getTaskscapeManager().getNode(adapter.getHandleIdentifier(element));

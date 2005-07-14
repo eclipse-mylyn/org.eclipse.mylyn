@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkingSetUpdater;
 /**
  * @author Shawn Minto
  */
-public class MylarWorkingSetUpdater implements IWorkingSetUpdater, ITaskscapeListener {
+public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContextListener {
 
 	/** Should only ever have 1 working set */
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
@@ -55,11 +55,11 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, ITaskscapeLis
 	}
 
 	
-	public void taskscapeActivated(ITaskscape taskscape) {
+	public void taskscapeActivated(IMylarContext taskscape) {
 		updateWorkingSet();
 	}
 
-	public void taskscapeDeactivated(ITaskscape taskscape) {
+	public void taskscapeDeactivated(IMylarContext taskscape) {
 		updateWorkingSet();
 	}
 
@@ -73,26 +73,26 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, ITaskscapeLis
 		
 	}
 
-	public void interestChanged(ITaskscapeNode node) {
+	public void interestChanged(IMylarContextNode node) {
 		updateWorkingSet();
 		
 	}
 
-	public void interestChanged(List<ITaskscapeNode> nodes) {
+	public void interestChanged(List<IMylarContextNode> nodes) {
 		updateWorkingSet();
 		
 	}
 
-	public void nodeDeleted(ITaskscapeNode node) {
+	public void nodeDeleted(IMylarContextNode node) {
 		updateWorkingSet();
 	}
 
-	public void landmarkAdded(ITaskscapeNode node) {
+	public void landmarkAdded(IMylarContextNode node) {
 		updateWorkingSet();
 		
 	}
 
-	public void landmarkRemoved(ITaskscapeNode node) {
+	public void landmarkRemoved(IMylarContextNode node) {
 		updateWorkingSet();
 		
 	}
@@ -117,8 +117,8 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, ITaskscapeLis
 	}
 	
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
-		ITaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
-		for(ITaskscapeNode node: t.getInterestingResources()){
+		IMylarContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+		for(IMylarContextNode node: t.getInterestingResources()){
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
 
 			// HACK comparing extension to string

@@ -16,10 +16,10 @@ package org.eclipse.mylar.ui.resources;
 
 import java.util.List;
 
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
@@ -29,7 +29,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 /**
  * @author Mik Kersten
  */
-public class NavigatorRefreshListener implements ITaskscapeListener {
+public class NavigatorRefreshListener implements IMylarContextListener {
 
     public static ResourceNavigator getResourceNavigator() {
         if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
@@ -42,7 +42,7 @@ public class NavigatorRefreshListener implements ITaskscapeListener {
         return null;    
     }
     
-    protected void refresh(ITaskscapeNode node) {
+    protected void refresh(IMylarContextNode node) {
         ResourceNavigator navigator = getResourceNavigator();
         if (navigator == null || navigator.getTreeViewer() == null) return;
         
@@ -54,11 +54,11 @@ public class NavigatorRefreshListener implements ITaskscapeListener {
         }
     }
     
-    public void taskscapeActivated(ITaskscape taskscape) {
+    public void taskscapeActivated(IMylarContext taskscape) {
         refresh(null);
     }
 
-    public void taskscapeDeactivated(ITaskscape taskscape) {
+    public void taskscapeDeactivated(IMylarContext taskscape) {
         refresh(null);
     }
 
@@ -70,24 +70,24 @@ public class NavigatorRefreshListener implements ITaskscapeListener {
         refresh(null);
     }
 
-    public void interestChanged(ITaskscapeNode node) {
+    public void interestChanged(IMylarContextNode node) {
         refresh(node);
     }
 
-    public void interestChanged(List<ITaskscapeNode> nodes) {
-        ITaskscapeNode node = nodes.get(nodes.size()-1);
+    public void interestChanged(List<IMylarContextNode> nodes) {
+        IMylarContextNode node = nodes.get(nodes.size()-1);
         interestChanged(node);
     }
 
-    public void nodeDeleted(ITaskscapeNode node) {
+    public void nodeDeleted(IMylarContextNode node) {
         refresh(node);
     }
 
-    public void landmarkAdded(ITaskscapeNode node) {
+    public void landmarkAdded(IMylarContextNode node) {
         refresh(node);
     }
 
-    public void landmarkRemoved(ITaskscapeNode node) {
+    public void landmarkRemoved(IMylarContextNode node) {
         refresh(node);
     }
 

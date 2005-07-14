@@ -14,10 +14,10 @@
 package org.eclipse.mylar.ui.internal;
 
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.CompositeTaskscapeNode;
-import org.eclipse.mylar.core.model.internal.Taskscape;
-import org.eclipse.mylar.core.model.internal.TaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.internal.CompositeContextNode;
+import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.ContextNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
@@ -67,28 +67,28 @@ public class UiUtil {
 //	    return text;
 //    }
     
-    public static Color getBackgroundForElement(ITaskscapeNode node) {
+    public static Color getBackgroundForElement(IMylarContextNode node) {
         if (node == null || node.getDegreeOfInterest().isPredicted()) return null;
-        ITaskscapeNode dominantNode = null;
+        IMylarContextNode dominantNode = null;
         boolean isMultiple = false;
-        if (node instanceof CompositeTaskscapeNode) {
-            CompositeTaskscapeNode compositeNode = (CompositeTaskscapeNode)node;
-            dominantNode = (ITaskscapeNode)compositeNode.getNodes().toArray()[0];
+        if (node instanceof CompositeContextNode) {
+            CompositeContextNode compositeNode = (CompositeContextNode)node;
+            dominantNode = (IMylarContextNode)compositeNode.getNodes().toArray()[0];
             if (compositeNode.getNodes().size() > 1) isMultiple = true;
                 
-            for(ITaskscapeNode concreteNode : compositeNode.getNodes()) {
+            for(IMylarContextNode concreteNode : compositeNode.getNodes()) {
                 if (dominantNode != null 
                     && dominantNode.getDegreeOfInterest().getValue() < concreteNode.getDegreeOfInterest().getValue()) {
                     dominantNode = concreteNode;
                 }
             }
-        } else if (node instanceof TaskscapeNode) {
+        } else if (node instanceof ContextNode) {
             dominantNode = node;
         }
         
         if (dominantNode != null) { 
             Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(
-                  ((Taskscape)dominantNode.getTaskscape()).getId());
+                  ((Context)dominantNode.getTaskscape()).getId());
             if (highlighter == null) {
                 return null;
             } else if (MylarUiPlugin.getDefault().isIntersectionMode()) {
@@ -120,7 +120,7 @@ public class UiUtil {
         }
     }
  
-    public static Color getForegroundForElement(ITaskscapeNode node) {
+    public static Color getForegroundForElement(IMylarContextNode node) {
         if (node == null) return null; 
         if (node.getDegreeOfInterest().isPredicted()) { 
             if (node.getDegreeOfInterest().getValue() >= 20) { // HACK: parametrize

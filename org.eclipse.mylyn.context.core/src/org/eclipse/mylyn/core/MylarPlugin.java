@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.mylar.core.internal.ContextManager;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.ui.internal.Workbench;
@@ -55,14 +55,12 @@ public class MylarPlugin extends AbstractUIPlugin {
     public static boolean started = false;
     
 	private static MylarPlugin INSTANCE;
-    private static TaskscapeManager taskscapeManager;
+    private static ContextManager taskscapeManager;
     private ResourceBundle resourceBundle;
     public static final String IDENTIFIER = "org.eclipse.mylar.core";
 //    public static boolean DEBUG_MODE = true;
     public static final String LOG_FILE_NAME = "mylar-log.txt";
     private PrintStream logStream = null;
-
-	private List<IActionListener> actionListeners = new ArrayList<IActionListener>();
     
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";
@@ -154,7 +152,7 @@ public class MylarPlugin extends AbstractUIPlugin {
                 MYLAR_DIR, ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
                 + File.separator
                 + MYLAR_DIR_NAME);
-        taskscapeManager = new TaskscapeManager(); 
+        taskscapeManager = new ContextManager(); 
         genericResourceBridge = new ResourceStructureBridge(predictedInterestEnabled);
     }
 
@@ -176,7 +174,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		return INSTANCE;
 	}
 	
-    public static TaskscapeManager getTaskscapeManager() {
+    public static ContextManager getTaskscapeManager() {
         return taskscapeManager;
     }
 
@@ -333,14 +331,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public PrintStream getLogStream() {
 		return logStream;
-	}
-
-	public void addActionListener(IActionListener listener) {
-		actionListeners.add(listener);
-	}
-
-	public boolean removeActionListener(IActionListener listener) {
-		return actionListeners.remove(listener);
 	}
 
 	public boolean isPredictedInterestEnabled() {

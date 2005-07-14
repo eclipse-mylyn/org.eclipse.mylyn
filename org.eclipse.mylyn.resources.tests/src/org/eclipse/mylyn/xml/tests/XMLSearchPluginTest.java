@@ -19,10 +19,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.CompositeTaskscape;
-import org.eclipse.mylar.core.model.internal.Taskscape;
+import org.eclipse.mylar.core.internal.CompositeContext;
+import org.eclipse.mylar.core.internal.Context;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
@@ -75,7 +75,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	tocNoRefs = WorkspaceSetupHelper.getFile(jp1, "toc-no-refs.xml");
     	plugin2 = WorkspaceSetupHelper.getFile(jp2, "plugin.xml");
     	
-    	Taskscape t = WorkspaceSetupHelper.getTaskscape();
+    	Context t = WorkspaceSetupHelper.getTaskscape();
     	MylarPlugin.getTaskscapeManager().taskActivated(t.getId(), t.getId());
     	helper = new SearchPluginTestHelper(this);
     }
@@ -90,9 +90,9 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	int dos = 1;
     	
     	
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
     	//
     	// results should be null since the scope would be null.
@@ -148,9 +148,9 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 
 		int dos = 2;
 		
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 		
 		//
     	// results should be null since the scope would be null.
@@ -210,9 +210,9 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
 		int dos = 3;
 		
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 		
 		//
 		// add an element to the taskscape, results should not be null
@@ -251,9 +251,9 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
 		int dos = 4;
 		
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 		
 		//
 		// add an element to the taskscape, results should not be null
@@ -288,7 +288,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 	}
 	
 	
-	public List<?> search(int dos, ITaskscapeNode node) throws IOException, CoreException{
+	public List<?> search(int dos, IMylarContextNode node) throws IOException, CoreException{
 		if(node == null)
 			return null;
 		

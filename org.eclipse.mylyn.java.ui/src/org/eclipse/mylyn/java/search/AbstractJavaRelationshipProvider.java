@@ -38,9 +38,9 @@ import org.eclipse.jdt.internal.ui.search.JavaSearchQuery;
 import org.eclipse.jdt.internal.ui.search.JavaSearchResult;
 import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.search.RelationshipProvider;
@@ -59,7 +59,7 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
     }
     
     @Override
-    protected void findRelated(final ITaskscapeNode node, int degreeOfSeparation) {
+    protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
         if (node == null) return;
         if (!node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
@@ -72,12 +72,12 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
     }
 
     private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
-        List<ITaskscapeNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
-        List<ITaskscapeNode> interestingElements = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getInteresting();
+        List<IMylarContextNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
+        List<IMylarContextNode> interestingElements = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getInteresting();
         Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
         int includeMask = IJavaSearchScope.SOURCES;
         if (degreeOfSeparation == 1) {
-            for (ITaskscapeNode landmark : landmarks) {
+            for (IMylarContextNode landmark : landmarks) {
             	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getStructureKind());
             	Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
             	if(o instanceof IJavaElement){
@@ -90,7 +90,7 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
             	}
             } 
         } else if (degreeOfSeparation == 2) {
-            for (ITaskscapeNode interesting : interestingElements) {
+            for (IMylarContextNode interesting : interestingElements) {
             	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getStructureKind());
             	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
             	if(o instanceof IJavaElement){
@@ -103,7 +103,7 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
             	}
             }  
         } else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
-            for (ITaskscapeNode interesting : interestingElements) {
+            for (IMylarContextNode interesting : interestingElements) {
             	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getStructureKind());
             	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
             	IProject project = sbridge.getProjectForObject(o);// TODO what to do when the element is not a java element, how determine if a javaProject?
@@ -143,7 +143,7 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
     }
 
     private void runJob(
-            final ITaskscapeNode node, 
+            final IMylarContextNode node, 
             final int degreeOfSeparation, 
             final String kind) {
         
@@ -193,7 +193,7 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
     }
 
     @Override
-    public IMylarSearchOperation getSearchOperation(ITaskscapeNode node, int limitTo, int degreeOfSeparation){
+    public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation){
     	IJavaElement javaElement = JavaCore.create(node.getElementHandle());
     	if(javaElement == null)
     		return null;

@@ -15,23 +15,23 @@ package org.eclipse.mylar.core.tests;
 
 import java.io.File;
 
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeEdge;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.ScalingFactors;
-import org.eclipse.mylar.core.model.internal.Taskscape;
-import org.eclipse.mylar.core.model.internal.TaskscapeExternalizer;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextEdge;
+import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.internal.ScalingFactors;
+import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.ContextExternalizer;
 
 
 public class TaskscapeTest extends AbstractTaskscapeTest {
 
-    private Taskscape taskscape;
+    private Context taskscape;
     private ScalingFactors scaling;
     
     @Override
     protected void setUp() throws Exception {
         scaling = new ScalingFactors();
-        taskscape = new Taskscape("0", scaling);
+        taskscape = new Context("0", scaling);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
     }
     
     public void testManipulation() {
-        ITaskscapeNode node = taskscape.parseEvent(mockSelection("1"));
+        IMylarContextNode node = taskscape.parseEvent(mockSelection("1"));
         taskscape.parseEvent(mockSelection("1"));
         taskscape.parseEvent(mockInterestContribution("1", 40));
         assertEquals(42-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());
@@ -50,16 +50,16 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
     }
     
     public void testEdges() {
-        ITaskscapeNode node = taskscape.parseEvent(mockSelection("1"));
+        IMylarContextNode node = taskscape.parseEvent(mockSelection("1"));
         taskscape.parseEvent(mockNavigation("2"));
-        ITaskscapeEdge edge = node.getEdge("2");
+        IMylarContextEdge edge = node.getEdge("2");
         assertNotNull(edge);
         assertEquals(edge.getTarget().getElementHandle(), "2");
     }
     
     public void testDecay() {
         float decay = scaling.getDecay().getValue();
-        ITaskscapeNode node1 = taskscape.parseEvent(mockSelection("1"));
+        IMylarContextNode node1 = taskscape.parseEvent(mockSelection("1"));
         
         taskscape.parseEvent(mockSelection("2"));
         for (int i = 0; i < 98; i++) taskscape.parseEvent(mockSelection("1"));
@@ -67,7 +67,7 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
     }
      
     public void testLandmarks() {
-        ITaskscapeNode node1 = taskscape.parseEvent(mockSelection("1"));
+        IMylarContextNode node1 = taskscape.parseEvent(mockSelection("1"));
         for (int i = 0; i < scaling.getLandmark()-2 + (scaling.getLandmark()* scaling.getDecay().getValue()); i++) {
             taskscape.parseEvent(mockSelection("1"));
         }
@@ -81,14 +81,14 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
     }
    
     public void testExternalization() {
-        TaskscapeExternalizer externalizer = new TaskscapeExternalizer();
+        ContextExternalizer externalizer = new ContextExternalizer();
         String path = "test-taskscape.xml";
         File file = new File(path);
         file.deleteOnExit();   
         
-        ITaskscapeNode node = taskscape.parseEvent(mockSelection("1"));
+        IMylarContextNode node = taskscape.parseEvent(mockSelection("1"));
         taskscape.parseEvent(mockNavigation("2"));
-        ITaskscapeEdge edge = node.getEdge("2");
+        IMylarContextEdge edge = node.getEdge("2");
         assertNotNull(edge);
         assertEquals(1, node.getEdges().size());
         taskscape.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue()*3));
@@ -98,15 +98,15 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
         assertEquals("2", taskscape.getActiveNode().getElementHandle()); // "3" not a user event
         
         externalizer.writeXMLTaskscapeToFile(taskscape, file);
-        ITaskscape loaded = externalizer.readXMLTaskscapeFromFile(file);
+        IMylarContext loaded = externalizer.readXMLTaskscapeFromFile(file);
         assertNotNull(loaded);
         assertEquals(3, loaded.getInteractionHistory().size());
-        ITaskscapeNode loadedNode = loaded.get("1");
-        ITaskscapeEdge edgeNode = loadedNode.getEdge("2");
+        IMylarContextNode loadedNode = loaded.get("1");
+        IMylarContextEdge edgeNode = loadedNode.getEdge("2");
         assertNotNull(edgeNode);
         assertEquals(1, loadedNode.getEdges().size());
         
-        ITaskscapeNode landmark = loaded.get("3");
+        IMylarContextNode landmark = loaded.get("3");
         assertNotNull(loadedNode); 
         assertEquals(doi, loadedNode.getDegreeOfInterest().getValue());
         assertTrue(landmark.getDegreeOfInterest().isLandmark());
@@ -116,10 +116,10 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
     }
     
     public void testSelections() {
-        ITaskscapeNode missing = taskscape.get("0");
+        IMylarContextNode missing = taskscape.get("0");
         assertNull(missing);
         
-        ITaskscapeNode node = taskscape.parseEvent(mockSelection());
+        IMylarContextNode node = taskscape.parseEvent(mockSelection());
         assertTrue(node.getDegreeOfInterest().isInteresting());
         taskscape.parseEvent(mockSelection());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 

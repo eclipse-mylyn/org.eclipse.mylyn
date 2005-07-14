@@ -11,7 +11,7 @@
 /*
  * Created on May 16, 2005
   */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
 import java.io.Serializable;
 

@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.CompositeTaskscape;
-import org.eclipse.mylar.core.model.internal.Taskscape;
+import org.eclipse.mylar.core.internal.CompositeContext;
+import org.eclipse.mylar.core.internal.Context;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
@@ -56,7 +56,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
     	type2 = WorkspaceSetupHelper.getType(jp2, "org.eclipse.mylar.tests.project2.builder.ToggleNatureAction");
     	plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
     	
-    	Taskscape t = WorkspaceSetupHelper.getTaskscape();
+    	Context t = WorkspaceSetupHelper.getTaskscape();
     	MylarPlugin.getTaskscapeManager().taskActivated(t.getId(), t.getId());
     	helper = new SearchPluginTestHelper(this);
     }
@@ -70,9 +70,9 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
 		int dos = 1;
     	
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 
     	//
     	// results should be null since the scope would be null.
@@ -117,9 +117,9 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException{
 		int dos = 2;
 		
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
     	
     	//
@@ -179,9 +179,9 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 	public void testJavaReferencesSearchDOS3() throws Exception{
 		int dos = 3;
     	
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
     	//
     	// results should be null since the scope would be null.
@@ -239,9 +239,9 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
 		int dos = 4;
     	
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
     	//
     	// results should be null since the scope would be null.
@@ -297,9 +297,9 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 	public void testJavaReferencesSearchDOS5() throws IOException, CoreException{
 		int dos = 5;
 		
-        CompositeTaskscape t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext t = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		ITaskscapeNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
     	//
     	// we should have 1 result since we are searching the entire workspace
@@ -315,7 +315,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		//
 	}
 	
-	public List<?> search(int dos, ITaskscapeNode node){
+	public List<?> search(int dos, IMylarContextNode node){
 
 		if(node == null)
 			return null;

@@ -14,10 +14,11 @@
 package org.eclipse.mylar.core;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.model.*;
-import org.eclipse.mylar.core.model.InteractionEvent.Kind;
-import org.eclipse.mylar.core.model.internal.CompositeTaskscape;
-import org.eclipse.ui.*;
+import org.eclipse.mylar.core.InteractionEvent.Kind;
+import org.eclipse.mylar.core.internal.CompositeContext;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
 
 
@@ -52,7 +53,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection == null || selection.isEmpty()) return;
 
-        CompositeTaskscape compositeTaskscape = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
+        CompositeContext compositeTaskscape = MylarPlugin.getTaskscapeManager().getActiveTaskscape();
         if (compositeTaskscape.getTaskscapes().size() == 0) {
             return;
         } else {

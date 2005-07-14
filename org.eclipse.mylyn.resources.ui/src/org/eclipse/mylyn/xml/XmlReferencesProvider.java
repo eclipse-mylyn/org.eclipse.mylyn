@@ -34,9 +34,9 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.search.RelationshipProvider;
@@ -64,10 +64,10 @@ public class XmlReferencesProvider extends RelationshipProvider {
     }
 
     /**
-     * @see org.eclipse.mylar.core.search.RelationshipProvider#findRelated(org.eclipse.mylar.core.model.ITaskscapeNode, int)
+     * @see org.eclipse.mylar.core.search.RelationshipProvider#findRelated(org.eclipse.mylar.core.IMylarContextNode, int)
      */
     @Override
-    protected void findRelated(final ITaskscapeNode node, int degreeOfSeparation) {
+    protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
         
         if (!node.getStructureKind().equals("java")) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
@@ -83,14 +83,14 @@ public class XmlReferencesProvider extends RelationshipProvider {
     
     protected SearchScope createTextSearchScope(IJavaElement javaElement, int degreeOfSeparation){    
         
-        List<ITaskscapeNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
+        List<IMylarContextNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
         
         switch(degreeOfSeparation){
             
             case 1:
                 // create a search scope for the projects of landmarks
                 List<IResource> l = new ArrayList<IResource>();
-                for (ITaskscapeNode landmark : landmarks) {
+                for (IMylarContextNode landmark : landmarks) {
                     if (landmark.getStructureKind().equals(PdeStructureBridge.EXTENSION) || landmark.getStructureKind().equals(AntStructureBridge.EXTENSION)) {
                         String handle = landmark.getElementHandle();
                         IResource element = null;
@@ -120,7 +120,7 @@ public class XmlReferencesProvider extends RelationshipProvider {
                 
                 // create a search scope for the projects of landmarks
                 List<IProject> proj = new ArrayList<IProject>();
-                for (ITaskscapeNode landmark : landmarks) {
+                for (IMylarContextNode landmark : landmarks) {
                 	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getStructureKind());
                 	if(sbridge != null){
                 		Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
@@ -169,7 +169,7 @@ public class XmlReferencesProvider extends RelationshipProvider {
             && (javaElement instanceof IMember || javaElement instanceof IType);
     }
     
-    private void runJob(final ITaskscapeNode node, final IJavaElement javaElement, final int degreeOfSeparation, final String kind) {
+    private void runJob(final IMylarContextNode node, final IJavaElement javaElement, final int degreeOfSeparation, final String kind) {
         
         // get the fully qualified name and if it is null, don't search
     	String fullyQualifiedName = getFullyQualifiedName(javaElement);
@@ -242,7 +242,7 @@ public class XmlReferencesProvider extends RelationshipProvider {
 	}
 
     @Override
-	public IMylarSearchOperation getSearchOperation(ITaskscapeNode node, int limitTo, int degreeOfSeparation) {    	
+	public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation) {    	
     	IJavaElement javaElement = JavaCore.create(node.getElementHandle());
     	SearchScope scope = createTextSearchScope(javaElement, degreeOfSeparation);
     	if(scope == null) return null;

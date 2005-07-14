@@ -14,7 +14,7 @@
 package org.eclipse.mylar.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -40,7 +40,7 @@ public class ToggleGlobalInterestFilteringAction extends Action {
     public void run() {
         setChecked(isChecked());
         MylarUiPlugin.getDefault().setGlobalFilteringEnabled(isChecked());
-        MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE);
+        MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
 //        		MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(
 //        				ITaskscapeListener.UpdateKind.UPDATE);
     }

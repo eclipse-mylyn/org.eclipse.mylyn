@@ -11,27 +11,27 @@
 /*
  * Created on Jan 26, 2005
   */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
-import org.eclipse.mylar.core.model.IDegreeOfInterest;
-import org.eclipse.mylar.core.model.ITaskscapeEdge;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IDegreeOfInterest;
+import org.eclipse.mylar.core.IMylarContextEdge;
+import org.eclipse.mylar.core.IMylarContextNode;
 
 /**
  * TODO: make immutable?
  * 
  * @author Mik Kersten
  */
-public class TaskscapeEdge implements ITaskscapeEdge {
+public class ContextEdge implements IMylarContextEdge {
 
     private DegreeOfInterest interest;
     
     private String structureKind;
     private String relationshipHandle;
-    private ITaskscapeNode source;
-    private ITaskscapeNode target;
+    private IMylarContextNode source;
+    private IMylarContextNode target;
     
-    public TaskscapeEdge(String kind, String edgeKind, ITaskscapeNode source, ITaskscapeNode target, Taskscape taskscape) {
+    public ContextEdge(String kind, String edgeKind, IMylarContextNode source, IMylarContextNode target, Context taskscape) {
         interest = new DegreeOfInterest(taskscape);
         this.structureKind = kind;
         this.relationshipHandle = edgeKind; 
@@ -39,7 +39,7 @@ public class TaskscapeEdge implements ITaskscapeEdge {
         this.source = source;
     }
     
-    public ITaskscapeNode getTarget() {
+    public IMylarContextNode getTarget() {
         return target;
     }
 
@@ -66,7 +66,7 @@ public class TaskscapeEdge implements ITaskscapeEdge {
         return structureKind;
     }
 
-    public ITaskscapeNode getSource() {
+    public IMylarContextNode getSource() {
         return source;
     }
 }

@@ -16,10 +16,10 @@ package org.eclipse.mylar.ui.views;
 import java.util.*;
 
 import org.eclipse.jface.viewers.*;
+import org.eclipse.mylar.core.IMylarContextEdge;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeEdge;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.TaskscapeEdge;
+import org.eclipse.mylar.core.internal.ContextEdge;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewSite;
 
@@ -32,7 +32,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
     private IViewSite site = null;
     private Shell shell = null;
     private boolean landmarkOnlyMode;
-    private List<ITaskscapeNode> topLevelNodes = new ArrayList<ITaskscapeNode>();
+    private List<IMylarContextNode> topLevelNodes = new ArrayList<IMylarContextNode>();
     
     public TaskscapeTreeContentProvider(IViewSite site, boolean landmarkOnlyMode) {
         this.site = site;
@@ -55,7 +55,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
     public Object[] getElements(Object parent) {
         topLevelNodes.clear();
         if (matchesParent(parent)) {
-            List<ITaskscapeNode> nodes;
+            List<IMylarContextNode> nodes;
             if (landmarkOnlyMode) {
                 nodes = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
             } else {
@@ -84,8 +84,8 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
     
     public Object [] getChildren(Object parent) { 
         assert(parent != null);
-        if (parent instanceof ITaskscapeNode) {
-            ITaskscapeNode node = (ITaskscapeNode)parent;
+        if (parent instanceof IMylarContextNode) {
+            IMylarContextNode node = (IMylarContextNode)parent;
             if (topLevelNodes.contains(node)) {
                 topLevelNodes.remove(node);
                 return getAllEdgeTypes(node.getEdges()); 
@@ -93,11 +93,11 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
             	return new Object[0];
             }
         } else {
-            if (parent instanceof TaskscapeEdge) {
-            	ITaskscapeEdge edge = (ITaskscapeEdge)parent;
+            if (parent instanceof ContextEdge) {
+            	IMylarContextEdge edge = (IMylarContextEdge)parent;
             	
-            	ITaskscapeNode source = MylarPlugin.getTaskscapeManager().getNode(
-            			((ITaskscapeEdge)parent).getSource().getElementHandle());
+            	IMylarContextNode source = MylarPlugin.getTaskscapeManager().getNode(
+            			((IMylarContextEdge)parent).getSource().getElementHandle());
             	
             	return getAllTagetsForSource(source, edge.getRelationshipHandle());
             }
@@ -105,10 +105,10 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
         return new Object[0]; 
     } 
     
-    private Object[] getAllTagetsForSource(ITaskscapeNode source, String kind) {
-    	Collection<TaskscapeEdge> edges = source.getEdges();
-    	List<ITaskscapeNode> targets = new ArrayList<ITaskscapeNode>();
-    	for (TaskscapeEdge edge : edges) {
+    private Object[] getAllTagetsForSource(IMylarContextNode source, String kind) {
+    	Collection<ContextEdge> edges = source.getEdges();
+    	List<IMylarContextNode> targets = new ArrayList<IMylarContextNode>();
+    	for (ContextEdge edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {
 				targets.add(edge.getTarget());
 			}
@@ -118,10 +118,10 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
 	}
 
 
-	private Object[] getAllEdgeTypes(Collection<TaskscapeEdge> edges) {
-		Map<String, ITaskscapeEdge> map = new HashMap<String, ITaskscapeEdge>();
-		for (ITaskscapeEdge edge : edges) {
-			ITaskscapeEdge edgeType = map.get(edge.getRelationshipHandle());
+	private Object[] getAllEdgeTypes(Collection<ContextEdge> edges) {
+		Map<String, IMylarContextEdge> map = new HashMap<String, IMylarContextEdge>();
+		for (IMylarContextEdge edge : edges) {
+			IMylarContextEdge edgeType = map.get(edge.getRelationshipHandle());
 			if (edgeType == null) {
 				edgeType = edge;
 				map.put(edge.getRelationshipHandle(), edgeType);
@@ -129,7 +129,7 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
 		}
 		Object[] edgeTypes = new Object[map.size()];
 		int index = 0;
-		for (ITaskscapeEdge value : map.values()) {
+		for (IMylarContextEdge value : map.values()) {
 			edgeTypes[index] = value;
 			index++;
 		}
@@ -138,10 +138,10 @@ public class TaskscapeTreeContentProvider implements IStructuredContentProvider,
 
 	public boolean hasChildren(Object parent) {
         assert(parent != null);
-        if (parent instanceof ITaskscapeNode) {
+        if (parent instanceof IMylarContextNode) {
         	return topLevelNodes.contains(parent)
-              &&((ITaskscapeNode)parent).getEdges().size() > 0;
-        } else if (parent instanceof TaskscapeEdge) {
+              &&((IMylarContextNode)parent).getEdges().size() > 0;
+        } else if (parent instanceof ContextEdge) {
             return true;
         } else {
             return false;

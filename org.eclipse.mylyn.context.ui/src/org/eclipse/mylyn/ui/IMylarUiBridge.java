@@ -18,15 +18,15 @@ import java.util.List;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.ui.IEditorPart;
 
 
 public interface IMylarUiBridge {
 
-    public abstract void open(ITaskscapeNode node);
+    public abstract void open(IMylarContextNode node);
     
-    public abstract void close(ITaskscapeNode node);
+    public abstract void close(IMylarContextNode node);
     
     public abstract ILabelProvider getLabelProvider();
 

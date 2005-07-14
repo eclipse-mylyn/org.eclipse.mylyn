@@ -26,9 +26,9 @@ import org.eclipse.jdt.internal.ui.text.java.MemberProposalInfo;
 import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.mylar.core.internal.ContextManager;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.ui.IEditorPart;
 
@@ -70,10 +70,10 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                             // nothing for now
                         	rest.add(proposal);
                         } else {
-                        	ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(member.getHandleIdentifier()); 
+                        	IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(member.getHandleIdentifier()); 
                             if (node != null) {
                             	float interest = node.getDegreeOfInterest().getValue();
-	                            if (interest > TaskscapeManager.getScalingFactors().getInteresting()) {
+	                            if (interest > ContextManager.getScalingFactors().getInteresting()) {
 	                                interesting.put(-interest, proposal);  // negative to invert sorting order
 	                            } else {
 	                            	rest.add(proposal);

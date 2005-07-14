@@ -21,11 +21,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.core.model.TaskscapeManager;
-import org.eclipse.mylar.core.model.InteractionEvent.Kind;
-import org.eclipse.mylar.core.model.internal.Taskscape;
+import org.eclipse.mylar.core.InteractionEvent.Kind;
+import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.Context;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,19 +34,21 @@ import org.xml.sax.SAXException;
 
 /**
  * @author Mik Kersten
+ * 
+ * TODO: merge into a single externalizer
  */
-public class TaskscapeXmlReader {
+public class ContextReader {
     
 	static int readVersion; 
     
-    public Taskscape readTaskscape(File file) {
+    public Context readTaskscape(File file) {
         if (!file.exists()) return null;
         try {
             Document doc = openAsDOM(file);
             Element root = doc.getDocumentElement();
             readVersion = Integer.parseInt(root.getAttribute("Version"));
             String id = root.getAttribute("Id");
-            Taskscape t = new Taskscape(id, TaskscapeManager.getScalingFactors());
+            Context t = new Context(id, ContextManager.getScalingFactors());
 			NodeList list = root.getChildNodes();
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);

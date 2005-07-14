@@ -11,7 +11,7 @@
 /*
  * Created on May 20, 2005
   */
-package org.eclipse.mylar.core.model.internal;
+package org.eclipse.mylar.core.internal;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,9 +19,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.core.model.IDegreeOfInterest;
-import org.eclipse.mylar.core.model.InteractionEvent;
-import org.eclipse.mylar.core.model.TaskscapeManager;
+import org.eclipse.mylar.core.IDegreeOfInterest;
+import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.dt.MylarInterest;
 
 
@@ -40,10 +39,10 @@ class DegreeOfInterest implements IDegreeOfInterest {
     private float propagatedBias = 0;
     private float manipulationBias = 0;
     
-    private Taskscape taskscape;
+    private Context taskscape;
     private int eventCountOnCreation;
     
-    public DegreeOfInterest(Taskscape taskscape) {
+    public DegreeOfInterest(Context taskscape) {
         this.taskscape = taskscape;
         this.eventCountOnCreation = taskscape.getUserEventCount();
         init();
@@ -53,7 +52,7 @@ class DegreeOfInterest implements IDegreeOfInterest {
      * TODO: lose the reference to TaskManager?
      */
     private void init() {
-        scaling = TaskscapeManager.getScalingFactors();
+        scaling = ContextManager.getScalingFactors();
     }
     
     void addEvent(InteractionEvent event) {

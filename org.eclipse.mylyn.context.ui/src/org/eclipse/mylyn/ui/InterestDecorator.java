@@ -14,10 +14,10 @@
 package org.eclipse.mylar.ui;
 
 import org.eclipse.jface.viewers.*;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
-import org.eclipse.mylar.core.model.internal.TaskscapeEdge;
+import org.eclipse.mylar.core.internal.ContextEdge;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.graphics.*;
 
@@ -33,10 +33,10 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
         super();
     }
 
-    private ITaskscapeNode getNode(Object element) {
-        ITaskscapeNode node = null;
-        if (element instanceof ITaskscapeNode) {
-            node = (ITaskscapeNode)element;
+    private IMylarContextNode getNode(Object element) {
+        IMylarContextNode node = null;
+        if (element instanceof IMylarContextNode) {
+            node = (IMylarContextNode)element;
         } else {
             IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(element);
             node = MylarPlugin.getTaskscapeManager().getNode(adapter.getHandleIdentifier(element));
@@ -69,7 +69,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     }
 
     public Font decorateFont(Object element) {
-        ITaskscapeNode node = getNode(element);
+        IMylarContextNode node = getNode(element);
         if (node != null) {    
             if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
                 return UiUtil.BOLD;
@@ -79,8 +79,8 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     }
 
     public Color decorateForeground(Object element) {
-        ITaskscapeNode node = getNode(element);
-        if (element instanceof TaskscapeEdge) {
+        IMylarContextNode node = getNode(element);
+        if (element instanceof ContextEdge) {
             return MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP;
         } else if (node != null) {
             UiUtil.getBackgroundForElement(node);
@@ -89,7 +89,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     }
 
     public Color decorateBackground(Object element) {
-        ITaskscapeNode node = getNode(element);
+        IMylarContextNode node = getNode(element);
         if (node != null) {
             return UiUtil.getForegroundForElement(node);   
         } else {

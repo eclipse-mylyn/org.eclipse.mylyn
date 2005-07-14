@@ -24,8 +24,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.resources.ResourceSelectionMonitor;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
@@ -83,11 +83,11 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 
     private static final IMylarUiBridge DEFAULT_UI_BRIDGE = new IMylarUiBridge() {
 
-        public void open(ITaskscapeNode node) {
+        public void open(IMylarContextNode node) {
 //            throw new RuntimeException("null adapter: " + node);
         }
 
-        public void close(ITaskscapeNode node) {
+        public void close(IMylarContextNode node) {
 //            throw new RuntimeException("null adapter: " + node);
         }
 

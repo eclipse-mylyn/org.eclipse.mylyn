@@ -8,15 +8,33 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-
+/*
+ * Created on Dec 29, 2004
+ */
 package org.eclipse.mylar.core;
 
-import org.eclipse.jface.action.IAction;
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * @author Mik Kersten
  */
-public interface IActionListener {
-	
-	public void actionObserved(IAction action);
+public interface IMylarContext {
+
+    public abstract List<InteractionEvent> getInteractionHistory();
+    
+    public List<IMylarContextNode> getInteresting();
+    
+    public abstract IMylarContextNode get(String element);
+
+    public abstract List<IMylarContextNode> getLandmarks();
+    
+    public abstract Set<IMylarContextNode> getInterestingResources();
+
+    public abstract IMylarContextNode getActiveNode();
+
+    public abstract void remove(IMylarContextNode node);
+
+    public abstract List<IMylarContextNode> getAllElements();
 }

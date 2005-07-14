@@ -11,7 +11,7 @@
 /*
  * Created on May 18, 2005
   */
-package org.eclipse.mylar.core.model;
+package org.eclipse.mylar.core;
 
 import java.io.Serializable;
 import java.util.*;
@@ -70,15 +70,14 @@ public class InteractionEvent implements Serializable {
         }
     }
 
-    /* TODO: these should be final, XStream on JRockit gets confused bug#102786 */
-    private Kind kind; 
-    private Date date;
-    private Date endDate;
-    private String originId;
-    private String structureKind;
-    private String structureHandle;
-    private String navigation;
-    private String delta;
+    private final Kind kind; 
+    private final Date date;
+    private final Date endDate;
+    private final String originId;
+    private final String structureKind;
+    private final String structureHandle;
+    private final String navigation;
+    private final String delta;
     private float interestContribution;
 
     public InteractionEvent(Kind kind, String structureKind, String handle, String originId) {

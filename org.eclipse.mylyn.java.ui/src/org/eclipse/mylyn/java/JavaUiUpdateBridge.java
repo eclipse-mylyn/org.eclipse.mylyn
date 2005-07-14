@@ -13,26 +13,26 @@ package org.eclipse.mylar.java;
 import java.util.List;
 
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
-import org.eclipse.mylar.core.ITaskscapeListener;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 
 /**
  * @author Mik Kersten
  * @deprecated
  */
-public class JavaUiUpdateBridge implements ITaskscapeListener {
+public class JavaUiUpdateBridge implements IMylarContextListener {
 	
 //    private enum ChangeKind { ADDED, REMOVED, CHANGED }
 
 	private boolean firstExplorerRefresh = true;
     
-    public void taskscapeActivated(ITaskscape taskscape) {
+    public void taskscapeActivated(IMylarContext taskscape) {
 //        refreshPackageExplorer(null);
     }
 
-    public void taskscapeDeactivated(ITaskscape taskscape) {
+    public void taskscapeDeactivated(IMylarContext taskscape) {
 //        refreshPackageExplorer(null);
     }
     
@@ -62,7 +62,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //        }
     }
 
-    public void landmarkAdded(ITaskscapeNode node) {
+    public void landmarkAdded(IMylarContextNode node) {
 //        PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 //        IJavaElement element = JavaCore.create(node.getElementHandle());
 //        if (packageExplorer != null) {
@@ -72,7 +72,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //        }
     } 
 
-    public void landmarkRemoved(ITaskscapeNode node) {
+    public void landmarkRemoved(IMylarContextNode node) {
 //        PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 //        IJavaElement element = JavaCore.create(node.getElementHandle());
 //        if (packageExplorer != null) packageExplorer.getTreeViewer().refresh(element, true);
@@ -83,7 +83,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
      * 
      * TODO: currently punts if there was something temporarily raised
      */
-    public void interestChanged(List<ITaskscapeNode> nodes) {
+    public void interestChanged(List<IMylarContextNode> nodes) {
 //        if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
 //            final IJavaElement raisedElement = JavaCore.create(MylarPlugin.getTaskscapeManager().getTempRaisedHandle());
 //            final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
@@ -136,7 +136,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //    	return lastElement != null && explorer != null && explorer.getTreeViewer().testFindItem(lastElement) != null; // HACK: use more sensible method
 //    }
     
-    public void interestChanged(ITaskscapeNode node) {
+    public void interestChanged(IMylarContextNode node) {
 //        IJavaElement element = JavaCore.create(node.getElementHandle()); 
 //        if(element == null) { 
 //        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
@@ -152,7 +152,7 @@ public class JavaUiUpdateBridge implements ITaskscapeListener {
 //        }
     }
     
-    public void nodeDeleted(ITaskscapeNode node) {
+    public void nodeDeleted(IMylarContextNode node) {
 //        IJavaElement element = JavaCore.create(node.getElementHandle());
 //        fireModelUpdate(element, ChangeKind.REMOVED);
     }

@@ -11,9 +11,10 @@
 /*
  * Created on Oct 22, 2004
   */
-package org.eclipse.mylar.core.model;
+package org.eclipse.mylar.core;
 
 import java.util.Comparator;
+
 
 /**
  * @author Mik Kersten
@@ -21,9 +22,9 @@ import java.util.Comparator;
 public class InterestComparator<T> implements Comparator<T> {
 
     public int compare(T e1, T e2) {
-        if (e1 instanceof ITaskscapeNode && e2 instanceof ITaskscapeNode) {
-            ITaskscapeNode info1 = (ITaskscapeNode)e1;
-            ITaskscapeNode info2 = (ITaskscapeNode)e2;
+        if (e1 instanceof IMylarContextNode && e2 instanceof IMylarContextNode) {
+            IMylarContextNode info1 = (IMylarContextNode)e1;
+            IMylarContextNode info2 = (IMylarContextNode)e2;
             if (info1 != null && info2 != null) {
                 float v1 = info1.getDegreeOfInterest().getValue();
                 float v2 = info2.getDegreeOfInterest().getValue();

@@ -38,10 +38,10 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.core.ITaskscapeListener;
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.model.ITaskscape;
-import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.ui.MylarJavaLabelProvider;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -65,27 +65,27 @@ public class ActiveTypeHierarchyView extends ViewPart {
     
     private TreeViewer viewer;
 	
-	final ITaskscapeListener MODEL_LISTENER = new ITaskscapeListener() { 
+	final IMylarContextListener MODEL_LISTENER = new IMylarContextListener() { 
         
-        public void taskscapeActivated(ITaskscape taskscape) {
+        public void taskscapeActivated(IMylarContext taskscape) {
             refreshHierarchy(); 
         }
 
-        public void taskscapeDeactivated(ITaskscape taskscape) {
+        public void taskscapeDeactivated(IMylarContext taskscape) {
             refreshHierarchy();
         }        
         
-	    public void interestChanged(ITaskscapeNode info) { 
+	    public void interestChanged(IMylarContextNode info) { 
 	    }
         
-        public void interestChanged(List<ITaskscapeNode> nodes) {
+        public void interestChanged(List<IMylarContextNode> nodes) {
         } 
         
-        public void landmarkAdded(ITaskscapeNode element) { 
+        public void landmarkAdded(IMylarContextNode element) { 
             refreshHierarchy();
         }
 
-        public void landmarkRemoved(ITaskscapeNode element) { 
+        public void landmarkRemoved(IMylarContextNode element) { 
             refreshHierarchy();
         }
 
@@ -99,7 +99,7 @@ public class ActiveTypeHierarchyView extends ViewPart {
             refreshHierarchy();
         }
 
-        public void nodeDeleted(ITaskscapeNode node) {
+        public void nodeDeleted(IMylarContextNode node) {
         }
 	};
 
@@ -147,10 +147,10 @@ public class ActiveTypeHierarchyView extends ViewPart {
 	private void refreshHierarchy() {
         try {            
             root.removeAllChildren();
-            List<ITaskscapeNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
+            List<IMylarContextNode> landmarks = MylarPlugin.getTaskscapeManager().getActiveTaskscape().getLandmarks();
             List<TreeParent> previousHierarchy = new ArrayList<TreeParent>();
-            for (Iterator<ITaskscapeNode> it = landmarks.iterator(); it.hasNext();) {
-                ITaskscapeNode node = it.next();
+            for (Iterator<IMylarContextNode> it = landmarks.iterator(); it.hasNext();) {
+                IMylarContextNode node = it.next();
                 IJavaElement element = null;
                 if (node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) {
                     element = JavaCore.create(node.getElementHandle());
@@ -390,14 +390,14 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
     @Override
     public Color getForeground(Object element) {
         IJavaElement javaElement = ((TreeParent)element).getElement();
-        ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
         return UiUtil.getForegroundForElement(node);
     }
 
     @Override
     public Color getBackground(Object element) {
         IJavaElement javaElement = ((TreeParent)element).getElement();
-        ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
         return UiUtil.getBackgroundForElement(node);
     }
 
@@ -413,7 +413,7 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
     
     public Font getFont(Object element) {
         IJavaElement javaElement = ((TreeParent)element).getElement();
-        ITaskscapeNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
+        IMylarContextNode node = MylarPlugin.getTaskscapeManager().getNode(javaElement.getHandleIdentifier());
         if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
             return UiUtil.BOLD;
         }
