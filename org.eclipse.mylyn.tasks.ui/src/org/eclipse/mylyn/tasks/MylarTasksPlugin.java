@@ -94,17 +94,17 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     private static ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
 
         public void taskActivated(ITask task) {
-            MylarPlugin.getTaskscapeManager().taskActivated(task.getHandle(), task.getPath());
+            MylarPlugin.getContextManager().taskActivated(task.getHandle(), task.getPath());
         }
 
         public void tasksActivated(List<ITask> tasks) {
             for (ITask task : tasks) {
-                MylarPlugin.getTaskscapeManager().taskActivated(task.getHandle(), task.getPath());
+                MylarPlugin.getContextManager().taskActivated(task.getHandle(), task.getPath());
             }
         }
 
         public void taskDeactivated(ITask task) {
-            MylarPlugin.getTaskscapeManager().taskDeactivated(task.getHandle(), task.getPath());
+            MylarPlugin.getContextManager().taskDeactivated(task.getHandle(), task.getPath());
         }
 
 		public void taskPropertyChanged(ITask updatedTask, String property) {
@@ -117,7 +117,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
         private void saveState() {
             taskListManager.saveTaskList();
             for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
-                MylarPlugin.getTaskscapeManager().saveTaskscape(task.getHandle(), task.getPath());
+                MylarPlugin.getContextManager().saveTaskscape(task.getHandle(), task.getPath());
             }
         }
         
@@ -144,7 +144,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 			if (event.getProperty().equals(MylarPlugin.MYLAR_DIR)) {				
 				if (event.getOldValue() instanceof String) {
 					String prevDir = (String) event.getOldValue();				
-					MylarPlugin.getTaskscapeManager().updateMylarDirContents(prevDir);
+					MylarPlugin.getContextManager().updateMylarDirContents(prevDir);
 					getTaskListManager().updateTaskscapeReference(prevDir);
 					
 					String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        

@@ -33,7 +33,7 @@ public class MylarBugzillaPlugin extends AbstractUIPlugin implements IStartup {
                 structureBridge = new BugzillaStructureBridge();
             	
                 MylarPlugin.getDefault().addBridge(structureBridge);
-                MylarPlugin.getTaskscapeManager().addListener(referencesProvider);
+                MylarPlugin.getContextManager().addListener(referencesProvider);
                 MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
                 MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
                 
