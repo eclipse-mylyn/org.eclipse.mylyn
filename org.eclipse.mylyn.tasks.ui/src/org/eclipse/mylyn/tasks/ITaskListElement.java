@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks;
 
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -21,12 +21,11 @@ import org.eclipse.swt.widgets.Display;
  */
 public interface ITaskListElement {
 	
-	// TODO: remove hard-coded fonts and colors
-    public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
-    public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
+    public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+    public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
+
     public Color GRAY_VERY_LIGHT  = new Color(Display.getDefault(), 200, 200, 200); // TODO: use theme?
     	
-	
 	public abstract Image getIcon();
 	
 	public abstract Image getStatusIcon();

@@ -21,10 +21,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.internal.TaskListExternalizer;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -40,11 +38,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
     private ITaskListActionContributor contributor; // TODO: use extension points
-    
-    // TODO: remove hard-coded fonts
-    public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
-    public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
-    
+        
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasks.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasks.report.open.external";

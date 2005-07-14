@@ -108,7 +108,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	
 	// TODO: don't use hard-coded font
 	public static final  Font TEXT_FONT = JFaceResources.getDefaultFont();
-	public static final  Font COMMENT_FONT = new Font(null, "Courier New", 9, SWT.NORMAL);
+	public static final  Font COMMENT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
+//		new Font(null, "Courier New", 9, SWT.NORMAL);
 	
 	public static final  Font HEADER_FONT = JFaceResources.getDefaultFont();
 	
@@ -1145,7 +1146,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		generalTitleText.setFont(TEXT_FONT);
 		if(this instanceof ExistingBugEditor){
 			generalTitleText.setUnderlined(true);
-			generalTitleText.setForeground(new Color(Display.getCurrent(), 0, 0, 255));
+			generalTitleText.setForeground(JFaceColors.getHyperlinkText(Display.getCurrent()));
 			generalTitleText.addMouseListener(new MouseListener(){
 	
 				public void mouseDoubleClick(MouseEvent e) {}
