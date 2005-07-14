@@ -35,12 +35,12 @@ public class ContextNode implements IMylarContextNode {
     
     private Map<String/*target handle*/, ContextEdge> edges = new HashMap<String, ContextEdge>();
     
-    public ContextNode(String kind, String elementHandle, Context taskscape) {
+    public ContextNode(String kind, String elementHandle, Context context) {
         if (elementHandle == null) throw new RuntimeException("malformed taskscape: null handle");
-        interest = new DegreeOfInterest(taskscape);
+        interest = new DegreeOfInterest(context);
         this.handle = elementHandle;
         this.kind = kind;
-        this.context = taskscape;
+        this.context = context;
     }
        
     public String getElementHandle() {

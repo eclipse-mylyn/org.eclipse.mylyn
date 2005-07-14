@@ -55,7 +55,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     public static boolean started = false;
     
 	private static MylarPlugin INSTANCE;
-    private static ContextManager taskscapeManager;
+    private static ContextManager contextManager;
     private ResourceBundle resourceBundle;
     public static final String IDENTIFIER = "org.eclipse.mylar.core";
 //    public static boolean DEBUG_MODE = true;
@@ -152,7 +152,7 @@ public class MylarPlugin extends AbstractUIPlugin {
                 MYLAR_DIR, ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
                 + File.separator
                 + MYLAR_DIR_NAME);
-        taskscapeManager = new ContextManager(); 
+        contextManager = new ContextManager(); 
         genericResourceBridge = new ResourceStructureBridge(predictedInterestEnabled);
     }
 
@@ -175,7 +175,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 	
     public static ContextManager getContextManager() {
-        return taskscapeManager;
+        return contextManager;
     }
 
     public List<AbstractSelectionMonitor> getSelectionMonitors() {

@@ -42,9 +42,9 @@ class DegreeOfInterest implements IDegreeOfInterest {
     private Context context;
     private int eventCountOnCreation;
     
-    public DegreeOfInterest(Context taskscape) {
-        this.context = taskscape;
-        this.eventCountOnCreation = taskscape.getUserEventCount();
+    public DegreeOfInterest(Context context) {
+        this.context = context;
+        this.eventCountOnCreation = context.getUserEventCount();
         init();
     }
     

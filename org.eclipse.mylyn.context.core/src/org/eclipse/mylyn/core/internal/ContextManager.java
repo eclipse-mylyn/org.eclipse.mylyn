@@ -45,7 +45,7 @@ public class ContextManager {
     
     private int numInterestingErrors = 0;
     
-    private CompositeContext activeTaskscape = new CompositeContext();
+    private CompositeContext activeContext = new CompositeContext();
 	
     private String taskscapeStoreDirPath;
 	private boolean editorAutoCloseEnabled = false;
@@ -68,8 +68,8 @@ public class ContextManager {
     }
 
     public IMylarContextNode getActiveNode() {
-        if (activeTaskscape != null) {
-            return activeTaskscape.getActiveNode();
+        if (activeContext != null) {
+            return activeContext.getActiveNode();
         } else {
             return null;
         }
@@ -77,7 +77,7 @@ public class ContextManager {
     
 	public void addErrorPredictedInterest(String handle, String kind, boolean notify) { 
         if (numInterestingErrors > scalingFactors.getMaxNumInterestingErrors() 
-            || activeTaskscape.getTaskscapeMap().isEmpty()) return;
+            || activeContext.getTaskscapeMap().isEmpty()) return;
         InteractionEvent errorEvent = new InteractionEvent(
                 InteractionEvent.Kind.PREDICTION, 
                 kind, handle, 
@@ -91,9 +91,9 @@ public class ContextManager {
      * TODO: worry about decay-related change if predicted interest dacays
      */
     public void removeErrorPredictedInterest(String handle, String kind, boolean notify) { 
-        if (activeTaskscape.getTaskscapeMap().isEmpty()) return;
+        if (activeContext.getTaskscapeMap().isEmpty()) return;
         if (handle == null) return;
-        IMylarContextNode node = activeTaskscape.get(handle);
+        IMylarContextNode node = activeContext.get(handle);
         if (node == null) return;
         if (node.getDegreeOfInterest().getValue() >= scalingFactors.getErrorInterest()) { // TODO: hack?
             InteractionEvent errorEvent = new InteractionEvent(
@@ -109,8 +109,8 @@ public class ContextManager {
     } 
 
     public IMylarContextNode getNode(String elementHandle) {
-        if (activeTaskscape != null) {
-            return activeTaskscape.get(elementHandle);
+        if (activeContext != null) {
+            return activeContext.get(elementHandle);
         } else {
             return null;
         }
@@ -125,17 +125,17 @@ public class ContextManager {
      */
     public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
         if (event.getKind() == InteractionEvent.Kind.COMMAND) return null;
-        if (activeTaskscape.getTaskscapeMap().values().size() == 0) return null;
+        if (activeContext.getTaskscapeMap().values().size() == 0) return null;
         if (suppressListenerNotification) return null;
         
-        IMylarContextNode previous = activeTaskscape.get(event.getStructureHandle());
+        IMylarContextNode previous = activeContext.get(event.getStructureHandle());
         float previousInterest = 0;
         float decayOffset = 0;
         if (previous != null) previousInterest = previous.getDegreeOfInterest().getValue();
         if (event.getKind().isUserEvent()) {
         	if (previousInterest < 0) {  // reset interest if not interesting
             	decayOffset = (-1)*(previous.getDegreeOfInterest().getValue());
-        		activeTaskscape.addEvent(new InteractionEvent(
+        		activeContext.addEvent(new InteractionEvent(
                         InteractionEvent.Kind.MANIPULATION, 
                         event.getStructureKind(),
                         event.getStructureHandle(), 
@@ -143,12 +143,12 @@ public class ContextManager {
                         decayOffset));
             }
         }
-        IMylarContextNode node = activeTaskscape.addEvent(event);
+        IMylarContextNode node = activeContext.addEvent(event);
         List<IMylarContextNode> interestDelta = new ArrayList<IMylarContextNode>();
         if (propagateToParents && !event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) {
         	propegateDoiToParents(node, previousInterest, decayOffset, 1, interestDelta); 
         }
-        if (event.getKind().isUserEvent()) activeTaskscape.setActiveElement(node);
+        if (event.getKind().isUserEvent()) activeContext.setActiveElement(node);
 
         interestDelta.add(node); // TODO: check that the order of these is sensible
         for (IMylarContextListener listener : listeners) listener.interestChanged(interestDelta);
@@ -194,9 +194,9 @@ public class ContextManager {
                     SOURCE_ID_MODEL_PROPAGATION,
                     CONTAINMENT_PROPAGATION_ID,
                     propagatedIncrement);
-            IMylarContextNode previous = activeTaskscape.get(propagationEvent.getStructureHandle());
+            IMylarContextNode previous = activeContext.get(propagationEvent.getStructureHandle());
             if (previous != null && previous.getDegreeOfInterest() != null) previousInterest = previous.getDegreeOfInterest().getValue();
-            CompositeContextNode parentNode = (CompositeContextNode)activeTaskscape.addEvent(propagationEvent);
+            CompositeContextNode parentNode = (CompositeContextNode)activeContext.addEvent(propagationEvent);
             elementDelta.add(0, parentNode);
             propegateDoiToParents(parentNode, previousInterest, decayOffset, level, elementDelta);//adapter.getResourceExtension(), adapter.getParentHandle(parentHandle), level, doi, parentChain);    
         }
@@ -205,7 +205,7 @@ public class ContextManager {
     public List<IMylarContextNode> findCompositesForNodes(List<ContextNode> nodes) {
         List<IMylarContextNode> composites = new ArrayList<IMylarContextNode>();
         for (ContextNode node : nodes) {
-            composites.add(activeTaskscape.get(node.getElementHandle()));
+            composites.add(activeContext.get(node.getElementHandle()));
         }
         return composites;
     }
@@ -251,15 +251,15 @@ public class ContextManager {
      * For testing
      */
     public void taskActivated(Context taskscape) {
-        activeTaskscape.getTaskscapeMap().put(taskscape.getId(), taskscape);
+        activeContext.getTaskscapeMap().put(taskscape.getId(), taskscape);
     } 
     
     public void taskActivated(String id, String path) {
 	    suppressListenerNotification = true;
-	    Context taskscape = activeTaskscape.getTaskscapeMap().get(id);
+	    Context taskscape = activeContext.getTaskscapeMap().get(id);
 	    if (taskscape == null) taskscape = loadTaskscape(id, path);
 	    if (taskscape != null) {
-	        activeTaskscape.getTaskscapeMap().put(id, taskscape);
+	        activeContext.getTaskscapeMap().put(id, taskscape);
 	        for (IMylarContextListener listener : listeners) listener.contextActivated(taskscape);
 	    } else {
 	        MylarPlugin.log("Could not load taskscape", this);
@@ -272,16 +272,16 @@ public class ContextManager {
      * @param id
      */
     public void taskDeactivated(String id, String path) {
-        IMylarContext taskscape = activeTaskscape.getTaskscapeMap().get(id);        
+        IMylarContext taskscape = activeContext.getTaskscapeMap().get(id);        
         if (taskscape != null) {
             saveTaskscape(id, path); 
-            activeTaskscape.getTaskscapeMap().remove(id);
+            activeContext.getTaskscapeMap().remove(id);
             for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
         }
     }
 
     public void taskDeleted(String id, String path) {
-        IMylarContext taskscape = activeTaskscape.getTaskscapeMap().get(id);
+        IMylarContext taskscape = activeContext.getTaskscapeMap().get(id);
         if (taskscape != null) {
             for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
         }
@@ -293,9 +293,9 @@ public class ContextManager {
     }
      
     private void eraseTaskscape(String id) {
-        Context taskscape = activeTaskscape.getTaskscapeMap().get(id);
+        Context taskscape = activeContext.getTaskscapeMap().get(id);
         if (taskscape == null) return;
-        activeTaskscape.getTaskscapeMap().remove(taskscape);
+        activeContext.getTaskscapeMap().remove(taskscape);
         // TODO: write out the taskscape 
 //        saveTaskscape(id);
 //        taskscape.reset();
@@ -316,7 +316,7 @@ public class ContextManager {
     }
  
     public void saveTaskscape(String taskId, String path) {
-        Context taskscape = activeTaskscape.getTaskscapeMap().get(taskId);
+        Context taskscape = activeContext.getTaskscapeMap().get(taskId);
         if (taskscape == null) {
             return;
         } else {
@@ -334,7 +334,7 @@ public class ContextManager {
     }
     
     public CompositeContext getActiveContext() {
-        return activeTaskscape;
+        return activeContext;
     }
   
     public List<RelationshipProvider> getRelationshipProviders() {
@@ -366,9 +366,9 @@ public class ContextManager {
     }
     
     public void tempRaiseChildrenForSelected() {
-        if (activeTaskscape.getActiveNode() == null) return;
+        if (activeContext.getActiveNode() == null) return;
             
-        tempRaisedHandle = activeTaskscape.getActiveNode().getElementHandle();
+        tempRaisedHandle = activeContext.getActiveNode().getElementHandle();
         for (IMylarContextListener listnener : listeners) listnener.presentationSettingsChanged(IMylarContextListener.UpdateKind.FILTER);
 //        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(composite.getActiveElement().getKind());
 //        String parentHandle = adapter.getParentHandle(tempRaisedHandle);
@@ -384,7 +384,7 @@ public class ContextManager {
             if (provider.isEnabled()) {
                 MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
             }
-            for (IMylarContextNode node : activeTaskscape.getLandmarks()) provider.landmarkAdded(node);
+            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
         }
     }
 
@@ -392,7 +392,7 @@ public class ContextManager {
         if (!on) {
             MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
         } else {
-            for (IMylarContextNode node : activeTaskscape.getLandmarks()) provider.landmarkAdded(node);
+            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
         }
     }
 
@@ -405,7 +405,7 @@ public class ContextManager {
     }
 
     public void dumpInteractionHistoryForSelected() {
-    	MylarPlugin.log("> interaction history: " + activeTaskscape.getActiveNode().getDegreeOfInterest().getEvents(), this);
+    	MylarPlugin.log("> interaction history: " + activeContext.getActiveNode().getDegreeOfInterest().getEvents(), this);
     }
     
     public void updateMylarDirContents(String prevDir) {    	    	    	

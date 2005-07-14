@@ -29,12 +29,12 @@ import org.eclipse.mylar.core.InteractionEvent;
  */
 public class CompositeContext implements IMylarContext  {
     
-    protected Map<String, Context> taskscapes = new HashMap<String, Context>();
+    protected Map<String, Context> contexts = new HashMap<String, Context>();
     protected IMylarContextNode activeNode = null;
     
     public IMylarContextNode addEvent(InteractionEvent event) {
         Set<ContextNode> nodes = new HashSet<ContextNode>();
-        for (Context taskscape : taskscapes.values()) {
+        for (Context taskscape : contexts.values()) {
             ContextNode info = (ContextNode)taskscape.parseEvent(event); 
             nodes.add(info);
         } 
@@ -43,9 +43,9 @@ public class CompositeContext implements IMylarContext  {
     }
 
     public IMylarContextNode get(String handle) { 
-        if (taskscapes.values().size() == 0) return null;
+        if (contexts.values().size() == 0) return null;
         Set<ContextNode> nodes = new HashSet<ContextNode>();
-        for (Context taskscape : taskscapes.values()) { 
+        for (Context taskscape : contexts.values()) { 
             ContextNode node = (ContextNode)taskscape.get(handle);
             if (node != null) {
                 nodes.add(node);
@@ -57,7 +57,7 @@ public class CompositeContext implements IMylarContext  {
  
     public List<IMylarContextNode> getLandmarks() {
         Set<IMylarContextNode> landmarks = new HashSet<IMylarContextNode>();
-        for (Context taskscape : taskscapes.values()) {
+        for (Context taskscape : contexts.values()) {
             for(IMylarContextNode concreteNode : taskscape.getLandmarks()) {
                if (concreteNode != null) landmarks.add(get(concreteNode.getElementHandle())); 
             }
@@ -67,7 +67,7 @@ public class CompositeContext implements IMylarContext  {
     
     public List<IMylarContextNode> getInteresting() {
         Set<IMylarContextNode> landmarks = new HashSet<IMylarContextNode>();
-        for (Context taskscape : taskscapes.values()) {
+        for (Context taskscape : contexts.values()) {
             for(IMylarContextNode concreteNode : taskscape.getInteresting()) {
                if (concreteNode != null) landmarks.add(get(concreteNode.getElementHandle())); 
             }
@@ -77,7 +77,7 @@ public class CompositeContext implements IMylarContext  {
         
     public Set<IMylarContextNode> getInterestingResources() {
         Set<IMylarContextNode> files = new HashSet<IMylarContextNode>();
-        for (Context taskscape : taskscapes.values()) {
+        for (Context taskscape : contexts.values()) {
             for(IMylarContextNode fileNode : taskscape.getInterestingResources()) {
                if (fileNode != null) files.add(get(fileNode.getElementHandle())); 
             }
@@ -94,28 +94,28 @@ public class CompositeContext implements IMylarContext  {
     }
 
     public void remove(IMylarContextNode node) {
-        for (Context taskscape : taskscapes.values()) {
+        for (Context taskscape : contexts.values()) {
             taskscape.remove(node);
         }
     }
     
     public void clear() {
-        for (Context taskscape : taskscapes.values()) {
+        for (Context taskscape : contexts.values()) {
             taskscape.reset();
         }        
     }
 
     public Collection<Context> getContexts() {
-        return taskscapes.values();
+        return contexts.values();
     }
     
     public Map<String, Context> getTaskscapeMap() {
-        return taskscapes;
+        return contexts;
     }
 
     public List<IMylarContextNode> getAllElements() {
         Set<IMylarContextNode> nodes = new HashSet<IMylarContextNode>();
-        for (Context taskscape : taskscapes.values()) {
+        for (Context taskscape : contexts.values()) {
             for(IMylarContextNode concreteNode : taskscape.getAllElements()) {
                nodes.add(get(concreteNode.getElementHandle()));
             }
@@ -128,7 +128,7 @@ public class CompositeContext implements IMylarContext  {
      */
     public List<InteractionEvent> getInteractionHistory() {
         Set<InteractionEvent> events = new HashSet<InteractionEvent>();
-        for (Context taskscape : taskscapes.values()) events.addAll(taskscape.getInteractionHistory());
+        for (Context taskscape : contexts.values()) events.addAll(taskscape.getInteractionHistory());
         return new ArrayList<InteractionEvent>(events);
     }
 }

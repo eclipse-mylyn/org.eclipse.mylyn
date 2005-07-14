@@ -31,8 +31,8 @@ public class ContextEdge implements IMylarContextEdge {
     private IMylarContextNode source;
     private IMylarContextNode target;
     
-    public ContextEdge(String kind, String edgeKind, IMylarContextNode source, IMylarContextNode target, Context taskscape) {
-        interest = new DegreeOfInterest(taskscape);
+    public ContextEdge(String kind, String edgeKind, IMylarContextNode source, IMylarContextNode target, Context context) {
+        interest = new DegreeOfInterest(context);
         this.structureKind = kind;
         this.relationshipHandle = edgeKind; 
         this.target = target;

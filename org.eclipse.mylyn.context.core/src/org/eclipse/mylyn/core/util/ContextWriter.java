@@ -57,7 +57,7 @@ public class ContextWriter {
 		}
 	}
 	
-	public void writeTaskscapeToStream(Context t) throws IOException{
+	public void writeContextToStream(Context t) throws IOException{
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;

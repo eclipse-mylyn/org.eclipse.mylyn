@@ -48,7 +48,7 @@ public class ContextExternalizer {
         	}
             OutputStream stream = new FileOutputStream(file);
             writer.setOutputStream(stream);
-            writer.writeTaskscapeToStream(taskscape);
+            writer.writeContextToStream(taskscape);
             stream.close();
         } catch (IOException e) {
         	MylarPlugin.log(e, "Could not write: " + file.getName());
@@ -58,7 +58,7 @@ public class ContextExternalizer {
     public Context readXMLTaskscapeFromFile(File file) {
         try {
             if (!file.exists()) return null;
-            return reader.readTaskscape(file);
+            return reader.readContext(file);
         } catch (Exception e) {
         	MylarPlugin.log(e, "Could not read: " + file.getName());
         }

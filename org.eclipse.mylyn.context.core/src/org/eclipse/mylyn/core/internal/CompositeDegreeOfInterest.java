@@ -88,7 +88,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
         return infos;
     }
 
-    public Context getCorrespondingTaskscape() {
+    public Context getCorrespondingContext() {
         return null;
     }
 

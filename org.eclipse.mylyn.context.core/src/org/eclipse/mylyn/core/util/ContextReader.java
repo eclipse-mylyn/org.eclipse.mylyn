@@ -41,7 +41,7 @@ public class ContextReader {
     
 	static int readVersion; 
     
-    public Context readTaskscape(File file) {
+    public Context readContext(File file) {
         if (!file.exists()) return null;
         try {
             Document doc = openAsDOM(file);
