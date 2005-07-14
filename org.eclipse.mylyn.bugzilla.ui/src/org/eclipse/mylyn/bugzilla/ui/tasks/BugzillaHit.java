@@ -12,6 +12,7 @@
 package org.eclipse.mylar.bugzilla.ui.tasks;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.tasks.ITask;
@@ -69,7 +70,11 @@ public class BugzillaHit implements ITaskListElement {
 	}
 
 	public String getDescription(boolean label) {
-		return description;
+		if(label){
+			return HtmlStreamTokenizer.unescape(description);
+		} else {
+			return description;
+		}
 	}
 
 	public String getHandle() {

@@ -14,6 +14,7 @@
 package org.eclipse.mylar.bugzilla.ui.tasks;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 
 
 /**
@@ -48,7 +49,7 @@ public class BugzillaContentProvider {
     	// generate the label
 		if (bugTask.isBugDownloaded()) {
 			BugReport report = bugTask.getBugReport();	
-			return prefix + report.getSummary();
+			return HtmlStreamTokenizer.unescape(prefix + report.getSummary());
 		}
 		else {
 			return prefix + "<Could not find bug>";
