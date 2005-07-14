@@ -59,7 +59,6 @@ import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
-import org.eclipse.mylar.tasks.ui.actions.ClearContextAction;
 import org.eclipse.mylar.tasks.ui.actions.CreateCategoryAction;
 import org.eclipse.mylar.tasks.ui.actions.CreateTaskAction;
 import org.eclipse.mylar.tasks.ui.actions.DeleteAction;
@@ -119,7 +118,6 @@ public class TaskListView extends ViewPart {
     
     private DeleteAction delete;
     private OpenTaskEditorAction doubleClickAction;
-    private ClearContextAction clearSelectedTaskscapeAction;
 
     //private Action toggleIntersectionModeAction = new ToggleIntersectionModeAction();
 //    private Action toggleFilteringAction = new ToggleGlobalInterestFilteringAction();
@@ -870,7 +868,6 @@ public class TaskListView extends ViewPart {
     	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
     	        if (subMenuManager != null) manager.add(subMenuManager);
 			}
-	        manager.add(clearSelectedTaskscapeAction);
         }
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         updateActionEnablement(selectedObject);
@@ -940,7 +937,6 @@ public class TaskListView extends ViewPart {
         completeTask = new MarkTaskCompleteAction(this);
         incompleteTask = new MarkTaskIncompleteAction(this);        
 //        rename = new RenameAction();        
-        clearSelectedTaskscapeAction = new ClearContextAction(this);
 //        moveTaskToRoot = new MoveTaskToRootAction(this);
         doubleClickAction = new OpenTaskEditorAction(this);            
         filterCompleteTask = new FilterCompletedTasksAction(this);        

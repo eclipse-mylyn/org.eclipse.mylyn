@@ -95,7 +95,6 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	public void addHit(BugzillaHit hit) {
 		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(hit.getHandle());
 		hit.setAssociatedTask(task);
-		System.out.println("Task: " + task);
 		hits.add(hit);
 	}
 

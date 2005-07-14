@@ -218,7 +218,7 @@ public class TaskListExternalizer {
 						if (!wasRead && defaultExternalizer.canReadCategory(child)) {
 							defaultExternalizer.readCategory(child, tlist);
 						} else {
-							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
+//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
 						}
 					} else {
 						for (ITaskListExternalizer externalizer : externalizers) {
@@ -237,7 +237,7 @@ public class TaskListExternalizer {
 						if (!wasRead && defaultExternalizer.canReadTask(child)) {
 							tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
 						} else {
-							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
+//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
 						}
 					}
 				}

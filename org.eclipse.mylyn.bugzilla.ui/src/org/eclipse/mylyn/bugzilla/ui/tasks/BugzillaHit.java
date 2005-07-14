@@ -39,7 +39,6 @@ public class BugzillaHit implements ITaskListElement {
 		this.id = id;
 		this.task = task;
 		this.status = status;
-		System.out.println("Task: " + task);
 	}
 	
 	public BugzillaTask getAssociatedTask(){
