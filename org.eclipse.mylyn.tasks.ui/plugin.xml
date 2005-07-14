@@ -2,12 +2,18 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-<!--
-   <extension
-         name="Mylar Tasks startup"
-         point="org.eclipse.ui.startup">
-   </extension>
--->
+     <extension point="org.eclipse.ui.perspectiveExtensions">
+          <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
+               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+               <view id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+                    relative="org.eclipse.ui.views.ContentOutline"
+                    relationship="top"/>
+          </perspectiveExtension>
+		  <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+          </perspectiveExtension>
+	</extension>
+
   <extension point="org.eclipse.ui.views">
 
 	  <view name="Mylar Task List" 
