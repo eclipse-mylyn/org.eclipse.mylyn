@@ -53,6 +53,7 @@ public interface IBugzillaConstants
 	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
 	static final String MOST_RECENT_QUERY = "MOST_RECENT_QUERY";
 	static final String IS_218 = "BUGZILLA_IS_218";
+	static final String REFRESH_QUERY = "REFRESH_QUERY";
     
     
 	// names for the resources used to hold the different attributes of a bug

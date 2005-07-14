@@ -96,11 +96,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
@@ -601,7 +599,7 @@ public class TaskListView extends ViewPart {
     }
     
     @Override
-    public void init(IViewSite site,IMemento memento) throws PartInitException {
+    public void init(IViewSite site, IMemento memento) throws PartInitException {
     	init(site);
     	this.taskListMemento = memento;
     }
@@ -660,8 +658,7 @@ public class TaskListView extends ViewPart {
      * to create the viewer and initialize it.
      */
     @Override
-    public void createPartControl(Composite parent) {   
-    	System.err.println(">>>> creating");
+    public void createPartControl(Composite parent) {
         viewer = new TreeViewer(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
         viewer.getTree().setHeaderVisible(true);
         viewer.getTree().setLinesVisible(true);
@@ -1186,20 +1183,27 @@ public class TaskListView extends ViewPart {
     }
 
 	public void resetToolbarsAndPopups() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
+//		init(getSite());
+//		try {
+//			this.
+//			init(this.getViewSite());
+//		} catch (PartInitException e) {
+//			MylarPlugin.log(e, "Could not reset");
+//		}
+//        final IWorkbench workbench = PlatformUI.getWorkbench();
+//        workbench.getDisplay().asyncExec(new Runnable() {
+//            public void run() {
         		getViewSite().getActionBars().getToolBarManager().removeAll();
         		getViewSite().getActionBars().getMenuManager().removeAll();
                 fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
                 fillContextMenu(getViewSite().getActionBars().getMenuManager());
         		IActionBars bars = getViewSite().getActionBars();
         		bars.updateActionBars();
-        		getViewSite().getActionBars().getMenuManager().update(true);
-        		getViewSite().getActionBars().getToolBarManager().update(true);
-        		viewer.refresh();
-            }
-        });
+//        		getViewSite().getActionBars().getMenuManager().update(true);
+//        		getViewSite().getActionBars().getToolBarManager().update(true);
+//        		viewer.refresh();
+//            }
+//        });
 	}
 }
 

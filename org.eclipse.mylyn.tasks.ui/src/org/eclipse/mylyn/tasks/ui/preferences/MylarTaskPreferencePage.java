@@ -29,8 +29,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class MylarTaskPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
-
-	private Button refreshQueries = null;
+	
 	private Button closeEditors = null;
 	private Button reportEditor = null;
 	private Button reportInternal = null;
@@ -63,10 +62,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		container.setLayout(gl);		
 		closeEditors = new Button(container, SWT.CHECK);
 		closeEditors.setText("Close all editors automatically on task deactivation");
-		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));
-		refreshQueries = new Button(container, SWT.CHECK);
-		refreshQueries.setText("Automatically refresh Bugzilla reports and queries on startup");
-		refreshQueries.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REFRESH_QUERIES));
+		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));		
 	}
 	
 	private void createBugzillaReportOption(Composite parent) {
@@ -87,8 +83,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeEditors.getSelection());
-		getPreferenceStore().setValue(MylarTasksPlugin.REFRESH_QUERIES, refreshQueries.getSelection());
+		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeEditors.getSelection());		
 		getPreferenceStore().setValue(MylarTasksPlugin.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(MylarTasksPlugin.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		getPreferenceStore().setValue(MylarTasksPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
@@ -96,8 +91,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	}
 	@Override
 	public boolean performCancel() {
-		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));
-		refreshQueries.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REFRESH_QUERIES));
+		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));		
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REPORT_OPEN_EXTERNAL));
@@ -106,8 +100,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	
 	public void performDefaults() {
 		super.performDefaults();
-		closeEditors.setSelection(getPreferenceStore().getDefaultBoolean(MylarPlugin.CLOSE_EDITORS));
-		refreshQueries.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REFRESH_QUERIES));
+		closeEditors.setSelection(getPreferenceStore().getDefaultBoolean(MylarPlugin.CLOSE_EDITORS));		
 		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REPORT_OPEN_EXTERNAL));		  

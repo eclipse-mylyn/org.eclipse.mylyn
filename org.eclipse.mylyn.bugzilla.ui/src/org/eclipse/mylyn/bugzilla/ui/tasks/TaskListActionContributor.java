@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
@@ -209,7 +210,7 @@ public class TaskListActionContributor implements ITaskListActionContributor {
 	}
 
 	public void restoreState(TaskListView taskListView) {
-		if (MylarTasksPlugin.getDefault().refreshOnStartUpEnabled()) {
+		if (BugzillaPlugin.getDefault().refreshOnStartUpEnabled()) {
 			RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction(taskListView);
 			refresh.setShowProgress(false);
 			refresh.run();

@@ -336,5 +336,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		BugzillaPlugin.resultEditorMatchAdapter = resultEditorMatchAdapter;
 	}
 	
-	
+	public boolean refreshOnStartUpEnabled() {
+		return getPreferenceStore().getBoolean(IBugzillaConstants.REFRESH_QUERY);
+	}
 }

@@ -76,6 +76,8 @@ public class BugzillaPreferences
 	private StringFieldEditor bugzillaUser;
 
 	private MyStringFieldEditor bugzillaPassword;
+	
+	private BooleanFieldEditor refreshQueries;
 
 	/**
 	 * Constructor for the preferences page
@@ -89,7 +91,7 @@ public class BugzillaPreferences
 
 	@Override
 	public void createControl(Composite parent) {
-		super.createControl(parent);
+		super.createControl(parent);		
 	}
 
 	@Override
@@ -117,16 +119,20 @@ public class BugzillaPreferences
 
 		bugzilla218 = new BooleanFieldEditor(IBugzillaConstants.IS_218, bugzilla218Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
         
+		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY, "Automatically refresh Bugzilla reports and queries on startup", 
+				BooleanFieldEditor.DEFAULT, getFieldEditorParent());
+		
 		// add the field editor to the preferences page
 		addField(bugzillaServer);
 		addField(bugzillaUser);
 		addField(bugzillaPassword);
 		addField(bugzilla218);
+		addField(refreshQueries);
 
 		// put the password and user name values into the field editors
 		getCachedData();
 		bugzillaUser.setStringValue(user);
-		bugzillaPassword.setStringValue(password);
+		bugzillaPassword.setStringValue(password);		
 	}
     
 	/**
@@ -142,6 +148,7 @@ public class BugzillaPreferences
 		store.setDefault(IBugzillaConstants.BUGZILLA_SERVER,IBugzillaConstants.DEFAULT_BUGZILLA_SERVER);
 		store.setDefault(IBugzillaConstants.MOST_RECENT_QUERY, "");
 		store.setDefault(IBugzillaConstants.IS_218, true);
+		store.setDefault(IBugzillaConstants.REFRESH_QUERY, false);
         
 		// set the default query options for the bugzilla search
 		setDefaultQueryOptions();
@@ -230,9 +237,15 @@ public class BugzillaPreferences
 			configFile.toFile().delete();
 		}
 		
+		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY, refreshQueries.getBooleanValue());
 		return true;
 	}
 
+	@Override
+	public boolean performCancel() {
+//		refreshQueries.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REFRESH_QUERIES));
+		return true;
+	}
 	/**
 	 * Determine if the name starts with https:// or http://
 	 * 

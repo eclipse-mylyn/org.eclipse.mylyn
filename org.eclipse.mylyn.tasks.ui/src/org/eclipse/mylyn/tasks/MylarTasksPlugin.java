@@ -45,7 +45,6 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     public static final Font BOLD = new Font(null, "Tahoma", 8, SWT.BOLD);
     public static final Font ITALIC = new Font(null, "Tahoma", 8, SWT.ITALIC);
     
-    public static final String REFRESH_QUERIES = "org.eclipse.mylar.tasks.queries.refresh";
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasks.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasks.report.open.external";
@@ -200,7 +199,6 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     protected void initializeDefaultPreferences(IPreferenceStore store) {
     	store.setDefault(SELECTED_PRIORITY, "P5");
     	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);
-    	store.setDefault(REFRESH_QUERIES, false);
     	store.setDefault(REPORT_OPEN_EDITOR, false);
     	store.setDefault(REPORT_OPEN_INTERNAL, true);
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
@@ -281,10 +279,6 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		} else {
 			return false;
 		}
-	}
-
-	public boolean refreshOnStartUpEnabled() {
-		return getPrefs().getBoolean(REFRESH_QUERIES);
 	}
 	
 	public Report_Open_Mode getReportMode() {
