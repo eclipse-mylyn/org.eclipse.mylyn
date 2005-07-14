@@ -42,13 +42,13 @@ public class ClearContextAction extends Action {
 	public void run() {
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    if (selectedObject != null && selectedObject instanceof ITask) {
-//	    	ITask task = (ITask)selectedObject;
-//    		if (task.isActive() || task.getOrCreateCorrespondingTask().isActive()) {
-//	    		MessageDialog.openError(Workbench.getInstance()
-//						.getActiveWorkbenchWindow().getShell(), "Clear context failed",
-//						"Task must be deactivated before clearing task context.");
-//				return;
-//	    	}
+	    	ITask task = (ITask)selectedObject;
+    		if (task.isActive() || task.getOrCreateCorrespondingTask().isActive()) {
+	    		MessageDialog.openError(Workbench.getInstance()
+						.getActiveWorkbenchWindow().getShell(), "Clear context failed",
+						"Task must be deactivated before clearing task context.");
+				return;
+	    	}
 	    	boolean deleteConfirmed = MessageDialog.openQuestion(
 		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 		            "Confirm clear context", 
