@@ -135,9 +135,9 @@ public class BugzillaTaskListActionContributor implements ITaskListActionContrib
 			}
 		}
 		else if (element instanceof BugzillaQueryCategory){
-	       	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
+			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory)element;
+	       	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(), queryCategory.getUrl());
         	if(sqd.open() == Dialog.OK){
-	        	BugzillaQueryCategory queryCategory = (BugzillaQueryCategory)element;
 	        	queryCategory.setDescription(sqd.getName());
 	        	queryCategory.setUrl(sqd.getUrl());
 	        	

@@ -79,7 +79,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 	private String [] statusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES));
-	private String [] preselectedStatusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES));
+	protected String [] preselectedStatusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES));
 	private String [] resolutionValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES));
 	private String [] severityValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.SEVERITY_VALUES));
 	private String [] priorityValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRIORITY_VALUES));
@@ -350,7 +350,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		return group;
 	}
 	
-	private Text daysText;
+	protected Text daysText;
 	
 	protected Control createLastDays(Composite control)
 	{

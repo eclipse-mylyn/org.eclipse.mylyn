@@ -11,6 +11,10 @@
 package org.eclipse.mylar.bugzilla.ui.tasks;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -43,11 +47,18 @@ public class BugzillaQueryDialog extends Dialog {
 	private String url;
 	private String name;
 	private BugzillaSearchOptionPage searchOptionPage;
+	private String startingUrl = null;
 	
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
 		searchOptionPage = new BugzillaSearchOptionPage();
 		
+	}
+	
+	public BugzillaQueryDialog(Shell parentShell, String startingUrl) {
+		super(parentShell);
+		searchOptionPage = new BugzillaSearchOptionPage();
+		this.startingUrl = startingUrl;
 	}
 
 	public String getName() {
@@ -61,8 +72,17 @@ public class BugzillaQueryDialog extends Dialog {
 	@Override
 	protected Control createContents(Composite parent) {
 		searchOptionPage.createControl(parent);
-		searchOptionPage.setVisible(true); // called to initialize the values
-		return super.createContents(parent);
+		
+		searchOptionPage.setVisible(true);
+		Control c = super.createContents(parent);
+		if(startingUrl != null){
+			try{
+				searchOptionPage.updateDefaults(startingUrl);
+			} catch (UnsupportedEncodingException e){
+				// ignore, should never get this
+			}
+		}
+		return c;
 	}
 
 	@Override
@@ -98,8 +118,11 @@ public class BugzillaQueryDialog extends Dialog {
 	
 	private class BugzillaSearchOptionPage extends BugzillaSearchPage{
 		
-		public BugzillaSearchOptionPage(){
-			scontainer = new ISearchPageContainer(){
+		public BugzillaSearchOptionPage() {
+			
+			preselectedStatusValues = new String[0];
+			
+			scontainer = new ISearchPageContainer() {
 				public ISelection getSelection() {
 					// TODO Auto-generated method stub
 					return null;
@@ -111,7 +134,7 @@ public class BugzillaQueryDialog extends Dialog {
 
 				public void setPerformActionEnabled(boolean state) {
 					Button ok = BugzillaQueryDialog.this.getButton(Dialog.OK);
-					if(ok != null)
+					if (ok != null)
 						ok.setEnabled(state);
 				}
 
@@ -119,7 +142,8 @@ public class BugzillaQueryDialog extends Dialog {
 					return 0;
 				}
 
-				public void setSelectedScope(int scope) {}
+				public void setSelectedScope(int scope) {
+				}
 
 				public boolean hasValidScope() {
 					return true;
@@ -129,9 +153,168 @@ public class BugzillaQueryDialog extends Dialog {
 					return null;
 				}
 
-				public void setSelectedWorkingSets(IWorkingSet[] workingSets) {}
+				public void setSelectedWorkingSets(IWorkingSet[] workingSets) {
+				}
 			};
 		}
+		
+		public void updateDefaults(String startingUrl) throws UnsupportedEncodingException{
+//			String serverName = startingUrl.substring(0, startingUrl.indexOf("?"));
+			startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1);
+			String[] options = startingUrl.split("&");
+			for(String option: options){
+				String key = option.substring(0, option.indexOf("="));
+				String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), "UTF-8");
+				if (key == null)
+					continue;
+				
+				if (key.equals("short_desc")) {
+					summaryPattern.setText(value);
+				} else if(key.equals("short_desc_type")){
+					if(value.equals("allwordssubstr"))
+						value = "all words";
+					else if(value.equals("anywordssubstr"))
+						value = "any word";
+					int index = 0;
+					for(String item: summaryOperation.getItems()){
+						if(item.compareTo(value) == 0)
+							break;
+						index++;
+					}
+					if(index < summaryOperation.getItemCount()){
+						summaryOperation.select(index);
+					}
+				} else if(key.equals("product")){
+					String [] sel = product.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					product.setSelection(selList.toArray(sel));
+				} else if(key.equals("component")){
+					String [] sel = component.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					component.setSelection(selList.toArray(sel));
+				} else if(key.equals("version")){
+					String [] sel = version.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					version.setSelection(selList.toArray(sel));
+				} else if(key.equals("target_milestone")){ //XXX
+					String [] sel = target.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					target.setSelection(selList.toArray(sel));
+				} else if(key.equals("version")){
+					String [] sel = version.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					version.setSelection(selList.toArray(sel));
+				} else if(key.equals("long_desc_type")){
+					if(value.equals("allwordssubstr"))
+						value = "all words";
+					else if(value.equals("anywordssubstr"))
+						value = "any word";
+					int index = 0;
+					for(String item: commentOperation.getItems()){
+						if(item.compareTo(value) == 0)
+							break;
+						index++;
+					}
+					if(index < commentOperation.getItemCount()){
+						commentOperation.select(index);
+					}
+				} else if(key.equals("long_desc")){
+					commentPattern.setText(value);
+				} else if(key.equals("bug_status")){
+					String [] sel = status.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					status.setSelection(selList.toArray(sel));
+				} else if(key.equals("resolution")){
+					String [] sel = resolution.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					resolution.setSelection(selList.toArray(sel));
+				} else if(key.equals("bug_severity")){
+					String [] sel = severity.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					severity.setSelection(selList.toArray(sel));
+				} else if(key.equals("priority")){
+					String [] sel = priority.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					priority.setSelection(selList.toArray(sel));
+				} else if(key.equals("ref_platform")){
+					String [] sel = hardware.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					hardware.setSelection(selList.toArray(sel));
+				} else if(key.equals("op_sys")){
+					String [] sel = os.getSelection();
+					List<String> selList = Arrays.asList(sel);
+					selList = new ArrayList<String>(selList);
+					selList.add(value);
+					sel = new String[selList.size()];
+					os.setSelection(selList.toArray(sel));
+				} else if(key.equals("emailassigned_to1")){ // HACK: email buttons assumed to be in same position
+					if(value.equals("1"))
+						emailButton[0].setSelection(true);
+					else
+						emailButton[0].setSelection(false);
+				} else if(key.equals("emailreporter1")){ // HACK: email buttons assumed to be in same position
+					if(value.equals("1"))
+						emailButton[1].setSelection(true);
+					else
+						emailButton[1].setSelection(false);
+				} else if(key.equals("emailcc1") ){ // HACK: email buttons assumed to be in same position
+					if(value.equals("1"))
+						emailButton[2].setSelection(true);
+					else
+						emailButton[2].setSelection(false);
+				} else if(key.equals("emaillongdesc1")){ // HACK: email buttons assumed to be in same position
+					if(value.equals("1"))
+						emailButton[3].setSelection(true);
+					else
+						emailButton[3].setSelection(false);
+				} else if(key.equals("emailtype1")){
+					int index = 0;
+					for(String item: emailOperation.getItems()){
+						if(item.compareTo(value) == 0)
+							break;
+						index++;
+					}
+					if(index < emailOperation.getItemCount()){
+						emailOperation.select(index);
+					}
+				} else if(key.equals("email1")){
+					emailPattern.setText(value);
+				} else if(key.equals("changedin")){
+					daysText.setText(value);
+				}
+			}
+		}
+				
 		
 		public String getSearchURL() {
 			try{
