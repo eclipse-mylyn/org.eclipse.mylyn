@@ -106,7 +106,6 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
      */
     @Override
     public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
-    	System.err.println(">>>>>>>> " + selection);
         try {
             if (part instanceof ProjectsView) return; // HACK
             IJavaElement selectedElement = null;

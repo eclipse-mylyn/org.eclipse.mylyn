@@ -72,7 +72,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
                 MylarPlugin.getDefault().addBridge(structureBridge); 
-//                MylarPlugin.getTaskscapeManager().addListener(modelUpdateBridge);
                 
                 MylarPlugin.getTaskscapeManager().addListener(new JavaReferencesProvider());
                 MylarPlugin.getTaskscapeManager().addListener(new JavaImplementorsProvider());

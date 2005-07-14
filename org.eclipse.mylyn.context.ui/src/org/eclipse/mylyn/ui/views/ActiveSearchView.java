@@ -184,11 +184,14 @@ public class ActiveSearchView extends ViewPart {
     }
 
     public void resetProviders() {
-        fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
-//        getViewSite().getActionBars().getToolBarManager().update(true);
-        IActionBars bars = getViewSite().getActionBars();
-        bars.updateActionBars();
-        viewer.refresh();
+    	fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
+    	// HACK: there is a wierd timing issue here, allow other plug-ins to get loaded
+    	PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+              public void run() {
+            	  getViewSite().getActionBars().getToolBarManager().update(true);
+            	  viewer.refresh();
+              }
+    	});         
     }
     
     private void fillLocalPullDown(IMenuManager manager) {
@@ -212,7 +215,7 @@ public class ActiveSearchView extends ViewPart {
             relationshipProviderActions.add(action); 
             manager.add(action); 
         }
-        manager.update(true);
+        manager.markDirty();
     }
 
     private void makeActions() { 
