@@ -42,7 +42,8 @@ public class OpenTaskEditorAction extends Action {
 	    Object obj = ((IStructuredSelection)selection).getFirstElement();
 	    if (obj instanceof ITaskListElement) {
 	    	ITaskListElement element = (ITaskListElement)obj;
-	    	if(MylarTasksPlugin.getDefault().getContributor().acceptsItem(element)){
+	    	if(MylarTasksPlugin.getDefault().getContributor() != null &&
+	    			MylarTasksPlugin.getDefault().getContributor().acceptsItem(element)){
 	    		MylarTasksPlugin.getDefault().getContributor().itemOpened(element);
 	    	} else{
 	    		if(element instanceof Task){

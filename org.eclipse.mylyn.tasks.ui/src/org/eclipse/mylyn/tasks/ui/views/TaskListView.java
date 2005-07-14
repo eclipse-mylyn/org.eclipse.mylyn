@@ -784,7 +784,8 @@ public class TaskListView extends ViewPart {
                     viewer.setSelection(null);
                     viewer.refresh();
                     return true;
-                } else if(selectedObject instanceof ITaskListElement && 
+                } else if(selectedObject instanceof ITaskListElement &&
+                		MylarTasksPlugin.getDefault().getContributor() != null &&
                 		MylarTasksPlugin.getDefault().getContributor().acceptsItem((ITaskListElement)selectedObject) && 
                 		getCurrentTarget() instanceof TaskCategory){
                 	
@@ -996,7 +997,8 @@ public class TaskListView extends ViewPart {
 	}
 	
 	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
-		if(MylarTasksPlugin.getDefault().getContributor().acceptsItem(task)){
+		if(MylarTasksPlugin.getDefault().getContributor() != null &&
+				MylarTasksPlugin.getDefault().getContributor().acceptsItem(task)){
         	MylarTasksPlugin.getDefault().getContributor().taskClosed(task, page);
         } else if (task instanceof Task) {
         	IEditorInput input = new TaskEditorInput((Task) task);

@@ -225,7 +225,7 @@ public class TaskListExternalizer {
 							if (externalizer.canReadTask(child)) {
 								// TODO add the tasks properly
 								ITask newTask = externalizer.readTask(child, tlist, null, null);
-							    if(MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
+							    if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
 						    		newTask = MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
 						    	}
 							    tlist.addRootTask(newTask);

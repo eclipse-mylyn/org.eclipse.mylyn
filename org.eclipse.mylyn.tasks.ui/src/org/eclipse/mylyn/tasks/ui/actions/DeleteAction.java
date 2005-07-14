@@ -47,7 +47,8 @@ public class DeleteAction extends Action {
 		Object selectedObject = ((IStructuredSelection) this.view.getViewer()
 				.getSelection()).getFirstElement();
 		if(selectedObject instanceof ITaskListElement &&
-		   MylarTasksPlugin.getDefault().getContributor().acceptsItem((ITaskListElement)selectedObject)){
+				MylarTasksPlugin.getDefault().getContributor() != null &&
+				MylarTasksPlugin.getDefault().getContributor().acceptsItem((ITaskListElement)selectedObject)){
 			MylarTasksPlugin.getDefault().getContributor().itemDeleted((ITaskListElement)selectedObject);
 		}else if (selectedObject instanceof ITask) {
 			ITask task = (ITask) selectedObject;

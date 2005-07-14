@@ -68,7 +68,7 @@ public class CreateBugzillaTaskAction extends Action {
 	    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true);				
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
     	
-	    if(MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
+	    if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
 	    	
     		BugzillaTask newTask2 = (BugzillaTask)MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
     		if(newTask2 == newTask){
