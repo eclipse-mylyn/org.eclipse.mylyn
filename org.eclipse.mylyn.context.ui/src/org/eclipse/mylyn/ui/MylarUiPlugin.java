@@ -28,6 +28,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.model.ITaskscapeNode;
 import org.eclipse.mylar.core.resources.ResourceSelectionMonitor;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
+import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
@@ -36,6 +37,7 @@ import org.eclipse.mylar.ui.internal.ViewerConfigurator;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
 import org.eclipse.mylar.ui.internal.views.ProblemsListInterestFilter;
+import org.eclipse.mylar.ui.internal.views.TaskListHighlighterContributor;
 import org.eclipse.mylar.ui.resources.NavigatorRefreshListener;
 import org.eclipse.mylar.ui.resources.ResourceUiBridge;
 import org.eclipse.mylar.ui.views.ActiveSearchView;
@@ -170,9 +172,10 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         		}
                 
                 MylarPlugin.getTaskscapeManager().addListener(navigatorRefreshListener);
-                MylarUiPlugin.getDefault().addAdapter(ResourceStructureBridge.EXTENSION, new ResourceUiBridge());
-                
                 MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
+                MylarUiPlugin.getDefault().addAdapter(ResourceStructureBridge.EXTENSION, new ResourceUiBridge());
+                MylarTasksPlugin.getDefault().addContributor(new TaskListHighlighterContributor());
+                
                 
                 if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
                 if (ApplyMylarToOutlineAction.getDefault() != null) ApplyMylarToOutlineAction.getDefault().update();

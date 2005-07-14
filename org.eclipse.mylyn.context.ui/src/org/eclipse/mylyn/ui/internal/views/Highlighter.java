@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 6, 2004
- */
+
 package org.eclipse.mylar.ui.internal.views;
 
 import java.util.*;
