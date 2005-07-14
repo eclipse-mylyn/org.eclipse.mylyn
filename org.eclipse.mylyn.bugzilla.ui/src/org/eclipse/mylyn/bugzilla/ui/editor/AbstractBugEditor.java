@@ -163,7 +163,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected Button submitButton;
 	
-	protected Button saveButton;
+//	protected Button saveButton;
 	
 	protected int scrollIncrement;
 
@@ -908,21 +908,22 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			}
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
-		
-		saveButton = new Button(buttonComposite, SWT.NONE);
-		saveButton.setFont(TEXT_FONT);
-		GridData saveButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		saveButtonData.widthHint = 100;
-		saveButtonData.heightHint = 20;
-		saveButton.setText("Save Offline");
-		saveButton.setLayoutData(saveButtonData);
-		saveButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				saveBug();
-				updateEditor();
-			}
-		});
-		saveButton.addListener(SWT.FocusIn, new GenericListener());
+
+// This is not needed anymore since we have the save working properly with ctrl-s and file->save		
+//		saveButton = new Button(buttonComposite, SWT.NONE);
+//		saveButton.setFont(TEXT_FONT);
+//		GridData saveButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		saveButtonData.widthHint = 100;
+//		saveButtonData.heightHint = 20;
+//		saveButton.setText("Save Offline");
+//		saveButton.setLayoutData(saveButtonData);
+//		saveButton.addListener(SWT.Selection, new Listener() {
+//			public void handleEvent(Event e) {
+//				saveBug();
+//				updateEditor();
+//			}
+//		});
+//		saveButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
 	/**
