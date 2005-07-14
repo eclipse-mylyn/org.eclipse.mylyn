@@ -947,20 +947,6 @@ public class TaskListView extends ViewPart {
 //			refreshQuery.setEnabled(false);
 //		}
     }
-    
-    private void fillLocalToolBar(IToolBarManager manager) {
-        manager.add(createTask);
-        manager.add(createCategory);
-        manager.add(new Separator());
-        if (MylarTasksPlugin.getDefault().getContributor() != null) {
-	        for (IAction action : MylarTasksPlugin.getDefault().getContributor().getToolbarActions(this)) {
-				manager.add(action);
-			}
-        }
-        manager.add(new Separator());
-        manager.add(filterCompleteTask);
-        manager.add(filterOnPriority);        
-    }
 
     /**
      * @see org.eclipse.pde.internal.ui.view.HistoryDropDownAction
@@ -1182,28 +1168,31 @@ public class TaskListView extends ViewPart {
 	    }
     }
 
-	public void resetToolbarsAndPopups() {
-//		init(getSite());
-//		try {
-//			this.
-//			init(this.getViewSite());
-//		} catch (PartInitException e) {
-//			MylarPlugin.log(e, "Could not reset");
-//		}
-//        final IWorkbench workbench = PlatformUI.getWorkbench();
-//        workbench.getDisplay().asyncExec(new Runnable() {
-//            public void run() {
-        		getViewSite().getActionBars().getToolBarManager().removeAll();
-        		getViewSite().getActionBars().getMenuManager().removeAll();
-                fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
-                fillContextMenu(getViewSite().getActionBars().getMenuManager());
-        		IActionBars bars = getViewSite().getActionBars();
-        		bars.updateActionBars();
-//        		getViewSite().getActionBars().getMenuManager().update(true);
-//        		getViewSite().getActionBars().getToolBarManager().update(true);
-//        		viewer.refresh();
-//            }
-//        });
+    private void fillLocalToolBar(IToolBarManager manager) {
+    	manager.removeAll();
+
+    	// XXX only adding if there are contributions
+        if (MylarTasksPlugin.getDefault().getContributor() != null) {
+            manager.add(createTask);
+            manager.add(createCategory);
+            manager.add(new Separator());
+            for (IAction action : MylarTasksPlugin.getDefault().getContributor().getToolbarActions(this)) { 
+	        	manager.add(action);
+			}
+            manager.add(new Separator());
+	        manager.add(filterCompleteTask);
+	        manager.add(filterOnPriority);
+        } 
+
+    	manager.markDirty();
+        manager.update(true);
+    }
+    
+	public  void resetToolbarsAndPopups() {
+		getViewSite().getActionBars().getMenuManager().removeAll();
+        fillContextMenu(getViewSite().getActionBars().getMenuManager());
+		fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
+		getViewSite().getActionBars().getToolBarManager().update(true);  
 	}
 }
 
