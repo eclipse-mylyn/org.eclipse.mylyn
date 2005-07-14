@@ -660,7 +660,8 @@ public class TaskListView extends ViewPart {
      * to create the viewer and initialize it.
      */
     @Override
-    public void createPartControl(Composite parent) {    	    	
+    public void createPartControl(Composite parent) {   
+    	System.err.println(">>>> creating");
         viewer = new TreeViewer(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
         viewer.getTree().setHeaderVisible(true);
         viewer.getTree().setLinesVisible(true);
