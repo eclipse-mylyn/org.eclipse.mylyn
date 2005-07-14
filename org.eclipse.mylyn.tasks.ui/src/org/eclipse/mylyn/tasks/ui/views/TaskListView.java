@@ -568,46 +568,31 @@ public class TaskListView extends ViewPart {
         		} else {
         			return -1;
         		}
-        	} else if(o1 instanceof ITask){
+        	} else if(o1 instanceof ITaskListElement){
         		if (o2 instanceof AbstractCategory) {
         			return -1;
-        		} else if(o2 instanceof ITask) {
+        		} else if(o2 instanceof ITaskListElement) {
         			
-        			ITask task1 = (ITask) o1;
-        			ITask task2 = (ITask) o2;
-                    
-                    if (task1.isCompleted()) return 1;
-                    if (task2.isCompleted()) return -1;
-                    if (column == columnNames[1]) {
-                    	// XXX refactored compare
-//                        if (task1 instanceof BugzillaTask && !(task2 instanceof BugzillaTask)) {
-//                            return 1;
-//                        } else {
-//                            return -1;
-//                        }
-                    } else if (column == columnNames[2]) {
-                        return task1.getPriority().compareTo(task2.getPriority());
-                    } else if (column == columnNames[3]) {
-                        return task1.getLabel().compareTo(task2.getLabel());
-                    } else {
-                    	return 0;
-                    }
+	        		ITask task1 = ((ITaskListElement)o1).getCorrespondingActivatableTask();
+	        		ITask task2 = ((ITaskListElement)o2).getCorrespondingActivatableTask();
+	                
+	                if (task1.isCompleted()) return 1;
+	                if (task2.isCompleted()) return -1;
+	                if (column == columnNames[1]) {
+	                	return 0;
+	//                        if (task1 instanceof BugzillaTask && !(task2 instanceof BugzillaTask)) {
+	//                            return 1;
+	//                        } else {
+	//                            return -1;
+	//                        }
+	                } else if (column == columnNames[2]) {
+	                    return task1.getPriority().compareTo(task2.getPriority());
+	                } else if (column == columnNames[3]) {
+	                    return task1.getLabel().compareTo(task2.getLabel());
+	                } else {
+	                	return 0;
+	                }
         		}
-//        	}
-        	// XXX refactored compare
-//        	else if(o1 instanceof BugzillaHit && o2 instanceof BugzillaHit){
-//        		BugzillaHit task1 = (BugzillaHit) o1;
-//        		BugzillaHit task2 = (BugzillaHit) o2;
-//                
-//                if (column == columnNames[1]) {
-//                    return 0;
-//                } else if (column == columnNames[2]) {
-//                    return task1.getPriority().compareTo(task2.getPriority());
-//                } else if (column == columnNames[3]) {
-//                    return task1.getDescription(false).compareTo(task2.getDescription(false));
-//                }  else {
-//                	return 0;
-//                }
         	} else{
         		return 0;
         	}

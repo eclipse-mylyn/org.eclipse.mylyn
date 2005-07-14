@@ -45,8 +45,8 @@ public class TaskListActionContributor implements ITaskListActionContributor {
 
 	public List<IAction> getToolbarActions(TaskListView view) {
 	    List<IAction> actions = new ArrayList<IAction>();
-        actions.add(new CreateBugzillaQueryCategoryAction(view));
         actions.add(new CreateBugzillaTaskAction(view));
+        actions.add(new CreateBugzillaQueryCategoryAction(view));
     	actions.add(new RefreshBugzillaReportsAction(view));
         return actions;
 	}

@@ -182,11 +182,13 @@ public class Task implements ITask {
      */
     public void notifyTaskDataChange() {
     	final Task task = this;
-        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(task);
-            }
-        });
+    	if (Workbench.getInstance() != null && !Workbench.getInstance().getDisplay().isDisposed()) {
+	        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+	            public void run() {
+	                if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(task);
+	            }
+	        });
+    	}
     }
     
 	public String getToolTipText() {
