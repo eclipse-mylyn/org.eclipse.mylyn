@@ -50,6 +50,8 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
+	protected boolean fromDialog = false;
+	
 	/** The model used to store all of the data for the wizard */
 	protected NewBugModel model;
 
@@ -135,7 +137,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			// If the bug report is sent successfully,
 			// then close the wizard and open the bug in an editor
 			if (postBug()) {
-				openBugEditor();
+				if(!fromDialog) openBugEditor();
 				return true;
 			}
 			// If the report was not sent, keep the wizard open
@@ -364,6 +366,10 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		}
 		model.setDescription(newDesc);
 
+	}
+	
+	public String getId() {
+		return id;		
 	}
 	
 	/**

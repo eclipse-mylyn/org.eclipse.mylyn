@@ -37,7 +37,7 @@ public class CreateBugzillaTaskAction extends Action {
 		setText(LABEL);
         setToolTipText(LABEL);
         setId(ID); 
-        setImageDescriptor(BugzillaImages.TASK_BUGZILLA_NEW);
+        setImageDescriptor(BugzillaImages.TASK_BUGZILLA);
 	} 
 	
 	@Override

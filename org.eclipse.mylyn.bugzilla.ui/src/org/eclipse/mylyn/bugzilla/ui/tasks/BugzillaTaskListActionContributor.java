@@ -25,6 +25,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction;
 import org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction;
+import org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -48,6 +49,7 @@ public class BugzillaTaskListActionContributor implements ITaskListActionContrib
 	public List<IAction> getToolbarActions(TaskListView view) {
 	    List<IAction> actions = new ArrayList<IAction>();
         actions.add(new CreateBugzillaTaskAction(view));
+	    actions.add(new CreateNewBugzillaTaskAction(view));
         actions.add(new CreateBugzillaQueryCategoryAction(view));
     	actions.add(new RefreshBugzillaReportsAction(view));
         return actions;

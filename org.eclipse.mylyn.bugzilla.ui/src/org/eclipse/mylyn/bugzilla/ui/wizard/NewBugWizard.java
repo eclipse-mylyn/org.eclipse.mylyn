@@ -33,6 +33,14 @@ public class NewBugWizard extends AbstractBugWizard {
 	/** The wizard page where the attributes are selected and the bug is submitted */
 	WizardAttributesPage attributePage;
 
+	public NewBugWizard(){
+		this(false);
+	}
+	
+	public NewBugWizard(boolean fromDialog){
+		this.fromDialog = fromDialog;
+	}
+	
 	@Override
 	protected void addPagesHelper() throws Exception {
 		// add only the product page for now if there are any products

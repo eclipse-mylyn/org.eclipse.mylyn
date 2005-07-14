@@ -595,7 +595,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		toServerButtonData.horizontalSpan = 4;
 		serverButton.setLayoutData(toServerButtonData);
 		serverButton.setSelection(true);
-
+		
 	    offlineButton = new Button(attributesComposite, SWT.RADIO);
 		offlineButton.setText("Save bug report offline.");
 	    GridData offlineButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -603,6 +603,9 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		offlineButton.setLayoutData(offlineButtonData);
 		offlineButton.setSelection(false);
 
+		if(wizard.fromDialog)
+			offlineButton.setEnabled(false);
+		
 		setControl(attributesComposite);
 		return;
 	}
