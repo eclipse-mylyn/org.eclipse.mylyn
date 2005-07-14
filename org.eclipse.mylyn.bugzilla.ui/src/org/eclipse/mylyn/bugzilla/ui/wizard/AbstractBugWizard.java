@@ -75,6 +75,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		model = new NewBugModel();
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
+		setForcePreviousAndNextButtons(true);
 	}
 
 	/*
@@ -200,6 +201,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 									} else if (key.equalsIgnoreCase("Priority")) {
 										value = a.getValue();
 									} else if (key.equalsIgnoreCase("URL")) {
+										value = a.getValue();
+									} else if (key.equalsIgnoreCase("Assign To")) {
 										value = a.getValue();
 									}
 

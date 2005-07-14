@@ -60,6 +60,9 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 	/** Text field for the summary of the bug */
 	protected Text summaryText;
 	
+	/** Text field for the assignedTo of the bug */
+	protected Text assignedToText;
+	
 	/** Radio button to select when sending the new bug report to the server */
 	protected Button serverButton;
 	
@@ -342,7 +345,10 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 				if (url.equalsIgnoreCase("http://"))
 					url = "";
 				attribute.setValue(url);
-			} else {
+			} else if (key.equals("Assign To")) {
+				String assignTo = assignedToText.getText();
+				attribute.setValue(assignTo);
+			}else {
 				// do nothing
 			}
 		}
@@ -526,7 +532,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 				priExist = true;
 			} else if (key.equals("bug_file_loc")) {
 				url = value;
-			} else {
+			}else {
 				// do nothing if it isn't a standard value to change
 			}
 		}
@@ -552,6 +558,22 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 			urlText.addListener(SWT.FocusOut, this);
 		}
 
+		newLayout(attributesComposite, 1, "Assigned To", PROPERTY);
+		Label l = new Label(attributesComposite, SWT.NONE);
+		l.setText("NOTE: If e-mail incorrect, submit will fail silently");
+		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		summaryTextData.horizontalSpan = 2;
+		l.setLayoutData(summaryTextData);
+		assignedToText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE
+				| SWT.WRAP);
+		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+
+		summaryTextData.horizontalSpan = 1;
+		summaryTextData.widthHint = 200;
+		assignedToText.setLayoutData(summaryTextData);
+		assignedToText.setText("");
+		
+		
 		// add the summary text field
 		newLayout(attributesComposite, 1, "Summary", PROPERTY);
 		summaryText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE
@@ -564,6 +586,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		summaryText.setText(nbm.getSummary());
 		summaryText.addListener(SWT.Modify, this);
 
+		
+		
 		// Description Text
 		Composite descriptionComposite = new Composite(attributesComposite,
 				SWT.NONE);

@@ -38,6 +38,7 @@ public class NewBugWizard extends AbstractBugWizard {
 	}
 	
 	public NewBugWizard(boolean fromDialog){
+		super();
 		this.fromDialog = fromDialog;
 	}
 	

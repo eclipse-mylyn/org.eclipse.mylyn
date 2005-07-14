@@ -161,6 +161,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected Text urlText;
 
 	protected Text summaryText;
+	
+	protected Text assignedTo;
 
 	protected Button submitButton;
 	
@@ -731,6 +733,28 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			else if (key.equals("product")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				newLayout(attributesComposite, 1, value, VALUE).addListener(SWT.FocusIn, new GenericListener());
+				currentCol += 2;
+			} else if(key.equals("assigned_to")){
+				newLayout(attributesComposite, 1, name, PROPERTY);
+				assignedTo = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
+				assignedTo.setFont(TEXT_FONT);
+				assignedTo.setText(value);
+				data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				data.horizontalSpan = 1;
+				assignedTo.setLayoutData(data);
+
+				assignedTo.addListener(SWT.KeyUp, new Listener() {
+					public void handleEvent(Event event) {
+						String sel = assignedTo.getText();
+						Attribute a = getBug().getAttribute("Assign To");
+						if (!(a.getNewValue().equals(sel))) {
+							a.setNewValue(sel);
+							changeDirtyStatus(true);
+						}
+					}
+				});
+				assignedTo.addListener(SWT.FocusIn, new GenericListener());
+				
 				currentCol += 2;
 			}
 			else if (key.equals("component")) {

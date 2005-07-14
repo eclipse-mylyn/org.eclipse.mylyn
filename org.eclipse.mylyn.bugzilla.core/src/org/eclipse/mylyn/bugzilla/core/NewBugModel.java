@@ -47,7 +47,7 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 	
 	/** The description for the bug */
 	protected String description = "";
-
+	
 	/**
 	 * Flag to indicate status of connection to Bugzilla server to identify
 	 * whether ProductConfiguration should be used instead

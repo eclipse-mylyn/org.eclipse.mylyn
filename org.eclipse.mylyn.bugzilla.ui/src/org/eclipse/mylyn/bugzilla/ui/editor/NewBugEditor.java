@@ -183,6 +183,8 @@ public class NewBugEditor extends AbstractBugEditor {
 					value = a.getValue();
 				} else if (key.equalsIgnoreCase("URL")) {
 					value = a.getValue();
+				} else if (key.equalsIgnoreCase("Assign To")) {
+					value = a.getValue();
 				}
 
 				// add the attribute to the bug post
