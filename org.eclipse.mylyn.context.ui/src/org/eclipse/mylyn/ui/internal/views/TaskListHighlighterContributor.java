@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.ui.internal.views;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.actions.ClearContextAction;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -34,13 +36,15 @@ import org.eclipse.ui.IWorkbenchPage;
 public class TaskListHighlighterContributor implements ITaskListActionContributor {
 
 	private static final String CHOOSE_HIGHLIGHTER = "Choose Highlighter";
-
+	
 	public List<IAction> getToolbarActions(TaskListView view) {
 		return Collections.emptyList();
 	}
 
 	public List<IAction> getPopupActions(TaskListView view, ITaskListElement selection) { 
-		return Collections.emptyList();
+		List<IAction> actions = new ArrayList<IAction>();
+		actions.add(new ClearContextAction(view));
+		return actions;
 	}
 	
 	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
