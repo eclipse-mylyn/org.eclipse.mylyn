@@ -16,6 +16,8 @@ import java.util.Iterator;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -28,6 +30,7 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
 import org.eclipse.swt.widgets.Display;
@@ -35,6 +38,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.progress.IProgressService;
 
 
 /**
@@ -147,6 +153,9 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		return false;
 	}
 
+	// Flag to indicate if the bug was successfully sent
+	private boolean sentSuccessfully = false;
+	
 	/**
 	 * Attempts to post the bug on the Bugzilla server. If it fails, an error
 	 * message pops up.
@@ -154,110 +163,122 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	 * @return true if the bug is posted successfully, and false otherwise
 	 */
 	protected boolean postBug() {
+		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+			protected void execute(final IProgressMonitor monitor) throws CoreException {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
+					public void run() {
+						BugPost form = new BugPost();
+						form.setPrefix("Bug ");
+						form.setPostfix1(" posted");
+						form.setPostfix2(" Submitted");
 
-		BugPost form = new BugPost();
-		form.setPrefix("Bug ");
-		form.setPostfix1(" posted");
-		form.setPostfix2(" Submitted");
+						try {
+							setURL(form, "post_bug.cgi");
+							// go through all of the attributes and add them to the bug post
+							Iterator<Attribute> itr = model.getAttributes().iterator();
+							while (itr.hasNext()) {
+								Attribute a = itr.next();
+								if (a != null && a.getParameterName() != null
+										&& a.getParameterName().compareTo("") != 0
+										&& !a.isHidden()) {
+									String key = a.getName();
+									String value = null;
 
-		try {
-			setURL(form, "post_bug.cgi");
-			// go through all of the attributes and add them to the bug post
-			Iterator<Attribute> itr = model.getAttributes().iterator();
-			while (itr.hasNext()) {
-				Attribute a = itr.next();
-				if (a != null && a.getParameterName() != null
-						&& a.getParameterName().compareTo("") != 0
-						&& !a.isHidden()) {
-					String key = a.getName();
-					String value = null;
+									// get the values from the attribute
+									if (key.equalsIgnoreCase("OS")) {
+										value = a.getValue();
+									} else if (key.equalsIgnoreCase("Version")) {
+										value = a.getValue();
+									} else if (key.equalsIgnoreCase("Severity")) {
+										value = a.getValue();
+									} else if (key.equalsIgnoreCase("Platform")) {
+										value = a.getValue();
+									} else if (key.equalsIgnoreCase("Component")) {
+										value = a.getValue();
+									} else if (key.equalsIgnoreCase("Priority")) {
+										value = a.getValue();
+									} else if (key.equalsIgnoreCase("URL")) {
+										value = a.getValue();
+									}
 
-					// get the values from the attribute
-					if (key.equalsIgnoreCase("OS")) {
-						value = a.getValue();
-					} else if (key.equalsIgnoreCase("Version")) {
-						value = a.getValue();
-					} else if (key.equalsIgnoreCase("Severity")) {
-						value = a.getValue();
-					} else if (key.equalsIgnoreCase("Platform")) {
-						value = a.getValue();
-					} else if (key.equalsIgnoreCase("Component")) {
-						value = a.getValue();
-					} else if (key.equalsIgnoreCase("Priority")) {
-						value = a.getValue();
-					} else if (key.equalsIgnoreCase("URL")) {
-						value = a.getValue();
+									// add the attribute to the bug post
+									if (value == null)
+										value = "";
+
+									form.add(a.getParameterName(), value);
+								} else if (a != null && a.getParameterName() != null
+										&& a.getParameterName().compareTo("") != 0
+										&& a.isHidden()) {
+									// we have a hidden attribute, add it to the posting
+									form.add(a.getParameterName(), a.getValue());
+
+								}
+
+							}
+
+							// set the summary, and description
+
+							// add the summary to the bug post
+							form.add("short_desc", model.getSummary());
+
+							// format the description of the bug so that it is roughly in 80
+							// character lines
+							formatDescription();
+
+							if (model.getDescription().length() != 0) {
+								// add the new comment to the bug post if there is some text in
+								// it
+								form.add("comment", model.getDescription());
+							}
+
+							// update the bug on the server
+							try {
+								id = form.post();
+
+								if (id != null) {
+									sentSuccessfully = true;
+								}
+
+							} catch (BugzillaException e) {
+								MessageDialog
+										.openError(
+												null,
+												"I/O Error",
+												"Bugzilla could not post your bug.");
+								BugzillaPlugin.log(e);
+							} catch (LoginException e) {
+								// if we had an error with logging in, display an error
+								MessageDialog
+										.openError(
+												null,
+												"Posting Error",
+												"Bugzilla could not post your bug since your login name or password is incorrect."
+														+ "\nPlease check your settings in the bugzilla preferences. ");
+								sentSuccessfully = false;
+							}
+						} catch (MalformedURLException e) {
+							MessageDialog
+									.openError(
+											null,
+											"Unsupported Protocol",
+											"The server that was specified for Bugzilla is not supported by your JVM."
+													+ "\nPlease make sure that you are using a JDK that supports SSL.");
+							BugzillaPlugin.log(e);
+							sentSuccessfully = false;
+						}
 					}
-
-					// add the attribute to the bug post
-					if (value == null)
-						value = "";
-
-					form.add(a.getParameterName(), value);
-				} else if (a != null && a.getParameterName() != null
-						&& a.getParameterName().compareTo("") != 0
-						&& a.isHidden()) {
-					// we have a hidden attribute, add it to the posting
-					form.add(a.getParameterName(), a.getValue());
-
-				}
-
+					
+				});
 			}
+		};
 
-			// set the summary, and description
-
-			// add the summary to the bug post
-			form.add("short_desc", model.getSummary());
-
-			// format the description of the bug so that it is roughly in 80
-			// character lines
-			formatDescription();
-
-			if (model.getDescription().length() != 0) {
-				// add the new comment to the bug post if there is some text in
-				// it
-				form.add("comment", model.getDescription());
-			}
-
-			// Flag to indicate if the bug was successfully sent
-			boolean sentSuccessfully = false;
-
-			// update the bug on the server
-			try {
-				id = form.post();
-
-				if (id != null) {
-					sentSuccessfully = true;
-				}
-
-			} catch (BugzillaException e) {
-				MessageDialog
-						.openError(
-								null,
-								"I/O Error",
-								"Bugzilla could not post your bug.");
-				BugzillaPlugin.log(e);
-			} catch (LoginException e) {
-				// if we had an error with logging in, display an error
-				MessageDialog
-						.openError(
-								null,
-								"Posting Error",
-								"Bugzilla could not post your bug since your login name or password is incorrect."
-										+ "\nPlease check your settings in the bugzilla preferences. ");
-			}
-
-			return sentSuccessfully;
-		} catch (MalformedURLException e) {
-			MessageDialog
-					.openError(
-							null,
-							"Unsupported Protocol",
-							"The server that was specified for Bugzilla is not supported by your JVM."
-									+ "\nPlease make sure that you are using a JDK that supports SSL.");
-			BugzillaPlugin.log(e);
-			return false; // The report was not sent
-		}
+		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+		try {
+			service.run(false, false, op);
+		} catch (Exception e) {
+			MylarPlugin.log(e, "Unable to submit bug");
+		} 
+		return sentSuccessfully;
 	}
 
 	/**

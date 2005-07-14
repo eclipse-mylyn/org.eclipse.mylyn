@@ -14,6 +14,11 @@ import java.util.Iterator;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -24,8 +29,11 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
+import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -36,6 +44,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 
 /**
@@ -141,7 +151,7 @@ public class NewBugEditor extends AbstractBugEditor {
 	
 	@Override
 	protected void submitBug() {
-		BugPost form = new BugPost();
+		final BugPost form = new BugPost();
 		form.setPrefix("Bug ");
 		form.setPostfix1(" posted");
 		form.setPostfix2(" Submitted");
@@ -205,33 +215,67 @@ public class NewBugEditor extends AbstractBugEditor {
 			form.add("comment", bug.getDescription());
 		}
 
-		// update the bug on the server
-		try {
-			String id = form.post();
+		
+		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+			protected void execute(final IProgressMonitor monitor) throws CoreException {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
+					public void run() {
+//						 update the bug on the server
+						try {
+							String id = form.post();
 
-			// If the bug was successfully sent...
-			if (id != null) {
-				changeDirtyStatus(false);
-				BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(this, false);
-				OfflineView.removeReport(bug);
+							// If the bug was successfully sent...
+							if (id != null && NewBugEditor.this != null && !NewBugEditor.this.isDisposed()) {
+								changeDirtyStatus(false);
+								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(NewBugEditor.this, false);
+							}
+							OfflineView.removeReport(bug);
+						} catch (BugzillaException e) {
+							MessageDialog
+									.openError(
+											null,
+											"I/O Error",
+											"Bugzilla could not post your bug.");
+							BugzillaPlugin.log(e);
+						} catch (LoginException e) {
+							// if we had an error with logging in, display an error
+							MessageDialog
+									.openError(
+											null,
+											"Posting Error",
+											"Bugzilla could not post your bug since your login name or password is incorrect."
+													+ "\nPlease check your settings in the bugzilla preferences. ");
+						}
+					}
+				});
 			}
+		};
+		
+		Job job = new Job("Submitting New Bug"){
 
-		} catch (BugzillaException e) {
-			MessageDialog
-					.openError(
-							null,
-							"I/O Error",
-							"Bugzilla could not post your bug.");
-			BugzillaPlugin.log(e);
-		} catch (LoginException e) {
-			// if we had an error with logging in, display an error
-			MessageDialog
-					.openError(
-							null,
-							"Posting Error",
-							"Bugzilla could not post your bug since your login name or password is incorrect."
-									+ "\nPlease check your settings in the bugzilla preferences. ");
-		}
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try{
+					op.run(monitor);
+				} catch (Exception e){
+					MylarPlugin.log(e, "Failed to submit bug");
+					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR, "Failed to submit bug", e);
+				}
+				
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
+					public void run() {
+						if(TaskListView.getDefault() != null && 
+								TaskListView.getDefault().getViewer() != null){
+							new RefreshBugzillaReportsAction(TaskListView.getDefault()).run();
+						}
+					}
+				});
+				return Status.OK_STATUS;
+			}
+			
+		};
+		
+		job.schedule();
 	}
 
 	@Override

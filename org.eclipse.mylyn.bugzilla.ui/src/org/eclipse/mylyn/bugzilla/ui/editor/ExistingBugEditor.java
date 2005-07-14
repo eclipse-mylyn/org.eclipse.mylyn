@@ -20,6 +20,7 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -45,9 +46,12 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.Operation;
 import org.eclipse.mylar.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
+import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.bugzilla.ui.favorites.actions.AddToFavoritesAction;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionEvent;
@@ -67,6 +71,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.Workbench;
 
 
@@ -265,65 +270,103 @@ public class ExistingBugEditor extends AbstractBugEditor
 
 	@Override
 	protected void submitBug() {
-			BugPost form = new BugPost();
-			
-			// set the url for the bug to be submitted to
-			setURL(form, "process_bug.cgi");
+		final BugPost form = new BugPost();
+		
+		// set the url for the bug to be submitted to
+		setURL(form, "process_bug.cgi");
 
-			// go through all of the attributes and add them to the bug post
-			for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {
-				Attribute a = it.next();
-				if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-					String value = a.getNewValue();
-					
-					// add the attribute to the bug post
-					form.add(a.getParameterName(), checkText(value));
-				}
-				else if(a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && a.isHidden()) {
-					// we have a hidden attribute and we should send it back.
-					form.add(a.getParameterName(), a.getValue());
-				}
-			}
-			
-			// make sure that the comment is broken up into 80 character lines
-			bug.setNewNewComment(formatText(bug.getNewNewComment()));
-					
-			// add the summary to the bug post
-			form.add("short_desc", bug.getAttribute("Summary").getNewValue());
-	
-			// add the operation to the bug post
-			Operation o = bug.getSelectedOperation();
-			if (o == null)
-				form.add("knob", "none");
-			else {
-				form.add("knob", o.getKnobName());
-				if(o.hasOptions()) {
-					String sel = o.getOptionValue(o.getOptionSelection());
-					form.add(o.getOptionName(), sel);
-				}
-			}
-			form.add("form_name", "process_bug");
-			
-	
-			// add the new comment to the bug post if there is some text in it
-			if(bug.getNewNewComment().length() != 0) {
-				form.add("comment", bug.getNewNewComment());
-			}
-			
-			try {
-				form.post();
+		// go through all of the attributes and add them to the bug post
+		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {
+			Attribute a = it.next();
+			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
+				String value = a.getNewValue();
 				
-				changeDirtyStatus(false);
-				BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(this, false);
-				OfflineView.removeReport(bug);
-			} catch (BugzillaException e) {
-			    BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while posting the bug.", "I/O Error");
+				// add the attribute to the bug post
+				form.add(a.getParameterName(), checkText(value));
 			}
-			catch (LoginException e) {
-				MessageDialog.openError(null, "Login Error",
-						"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+			else if(a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && a.isHidden()) {
+				// we have a hidden attribute and we should send it back.
+				form.add(a.getParameterName(), a.getValue());
 			}
 		}
+		
+		// make sure that the comment is broken up into 80 character lines
+		bug.setNewNewComment(formatText(bug.getNewNewComment()));
+				
+		// add the summary to the bug post
+		form.add("short_desc", bug.getAttribute("Summary").getNewValue());
+
+		// add the operation to the bug post
+		Operation o = bug.getSelectedOperation();
+		if (o == null)
+			form.add("knob", "none");
+		else {
+			form.add("knob", o.getKnobName());
+			if(o.hasOptions()) {
+				String sel = o.getOptionValue(o.getOptionSelection());
+				form.add(o.getOptionName(), sel);
+			}
+		}
+		form.add("form_name", "process_bug");
+		
+
+		// add the new comment to the bug post if there is some text in it
+		if(bug.getNewNewComment().length() != 0) {
+			form.add("comment", bug.getNewNewComment());
+		}
+		
+		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+			protected void execute(final IProgressMonitor monitor) throws CoreException {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
+					public void run() {
+						try {
+							form.post();
+							
+							// TODO what do we do if the editor is closed
+							if(ExistingBugEditor.this != null && !ExistingBugEditor.this.isDisposed()){
+								changeDirtyStatus(false);
+								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(ExistingBugEditor.this, true);
+							}
+							OfflineView.removeReport(bug);
+						} catch (BugzillaException e) {
+						    BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while posting the bug.", "I/O Error");
+						}
+						catch (LoginException e) {
+							MessageDialog.openError(null, "Login Error",
+									"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+						}	
+					}
+					
+				});
+			}
+		};
+		
+		Job job = new Job("Submitting Bug"){
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try{
+					op.run(monitor);
+				} catch (Exception e){
+					MylarPlugin.log(e, "Failed to submit bug");
+					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR, "Failed to submit bug", e);
+				}
+				
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
+					public void run() {
+						if(TaskListView.getDefault() != null && 
+								TaskListView.getDefault().getViewer() != null){
+							new RefreshBugzillaReportsAction(TaskListView.getDefault()).run();
+						}
+					}
+				});
+				return Status.OK_STATUS;
+			}
+			
+		};
+		
+		job.schedule();
+	}
 
 	@Override
 	protected void createDescriptionLayout() {
