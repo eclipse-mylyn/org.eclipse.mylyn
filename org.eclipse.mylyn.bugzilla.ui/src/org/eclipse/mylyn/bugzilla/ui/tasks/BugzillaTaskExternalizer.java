@@ -20,6 +20,7 @@ import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.DefaultTaskListExternalizer;
+import org.eclipse.mylar.tasks.internal.MylarExternalizerException;
 import org.eclipse.mylar.tasks.internal.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,7 +66,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 	}
 
 	@Override
-	public void readCategory(Node node, TaskList taskList) {
+	public void readCategory(Node node, TaskList taskList)  throws MylarExternalizerException {
 		Element e = (Element) node;
 		if (e.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
 			readRegistry(node, taskList);
@@ -75,15 +76,22 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		}
 	}
 
-	public void readRegistry(Node node, TaskList taskList) {
-		NodeList list = node.getChildNodes();
+	public void readRegistry(Node node, TaskList taskList)  throws MylarExternalizerException {
+		boolean hasCaughtException = false;
+		NodeList list = node.getChildNodes();		
 		for (int i = 0; i < list.getLength(); i++) {
-			Node child = list.item(i);
-			ITask task = readTask(child, taskList, null, null);
-			if(task instanceof BugzillaTask){
-				BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)task);
+			try {
+				Node child = list.item(i);
+				ITask task = readTask(child, taskList, null, null);
+				if (task instanceof BugzillaTask) {
+					BugzillaUiPlugin.getDefault().getBugzillaTaskListManager()
+							.addToBugzillaTaskRegistry((BugzillaTask) task);
+				}
+			} catch (MylarExternalizerException e) {
+				hasCaughtException = true;
 			}
 		}
+		if (hasCaughtException) throw new MylarExternalizerException("Failed to restore all tasks");
 	}
 	
 	public boolean canCreateElementFor(AbstractCategory category) {
@@ -129,10 +137,20 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 	}
 
 	@Override
-	public ITask readTask(Node node, TaskList tlist, AbstractCategory category, ITask parent) {
+	public ITask readTask(Node node, TaskList tlist, AbstractCategory category, ITask parent)  throws MylarExternalizerException{
 		Element element = (Element) node;
-		String handle = element.getAttribute(HANDLE);		
-		String label = element.getAttribute(LABEL);
+		String handle;
+		String label;
+		if (element.hasAttribute(HANDLE)) {
+			handle = element.getAttribute(HANDLE);
+		} else {
+			throw new MylarExternalizerException("Handle not stored for bug report");
+		}
+		if (element.hasAttribute(LABEL)) {
+			label = element.getAttribute(LABEL);
+		} else {
+			throw new MylarExternalizerException("Description not stored for bug report");
+		}
 		BugzillaTask task = new BugzillaTask(handle, label, true);		
 		readTaskInfo(task, tlist, element, category, parent);
 				
@@ -144,8 +162,12 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		} else {
 			task.setDirty(false);
 		}
-		if (task.readBugReport() == false) {
-			MylarPlugin.log("Failed to read bug report", null);
+		try {
+			if (task.readBugReport() == false) {
+				MylarPlugin.log("Failed to read bug report", null);
+			}
+		} catch(Exception e) {
+			MylarPlugin.log(e, "Failed to read bug report");
 		}
 		
 		if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(task)){

@@ -122,7 +122,8 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getCategoryTagName());
 	}
 	
-	public void readCategory(Node node, TaskList tlist) {
+	public void readCategory(Node node, TaskList tlist)  throws MylarExternalizerException {
+		boolean hasCaughtException = false;
 		Element element = (Element) node;
 		TaskCategory category = new TaskCategory(element.getAttribute("Name"));
 		tlist.addCategory(category);
@@ -130,32 +131,58 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
 			boolean read = false;
-			for (ITaskListExternalizer externalizer : externalizers) {
-				if (externalizer.canReadTask(child)) {
-					category.addTask(externalizer.readTask(child, tlist, category, null));
-					read = true;
+			try {
+				for (ITaskListExternalizer externalizer : externalizers) {
+					if (externalizer.canReadTask(child)) {
+						category.addTask(externalizer.readTask(child, tlist,
+								category, null));
+						read = true;
+					}
 				}
+				if (!read && canReadTask(child)) {
+					category.addTask(readTask(child, tlist, category, null));
+				}
+			} catch (MylarExternalizerException e) {
+				hasCaughtException = true;
 			}
-			if (!read) category.addTask(readTask(child, tlist, category, null));
 		}
+		if (hasCaughtException) throw new MylarExternalizerException("Failed to load all tasks");
 	}
 
 	public boolean canReadTask(Node node) {
 		return node.getNodeName().equals(getTaskTagName());
 	}
 
-	public ITask readTask(Node node, TaskList tlist, AbstractCategory category, ITask parent) {
+	public ITask readTask(Node node, TaskList tlist, AbstractCategory category, ITask parent)  throws MylarExternalizerException {
 		Element element = (Element) node;
-		String handle = element.getAttribute(HANDLE);		
-		String label = element.getAttribute(LABEL);
+		String handle;
+		String label;
+		if (element.hasAttribute(HANDLE)) {
+			handle = element.getAttribute(HANDLE);
+		} else {
+			throw new MylarExternalizerException("Handle not stored for task");			
+		}
+		if (element.hasAttribute(LABEL)) {
+			label = element.getAttribute(LABEL);
+		} else {
+			label = "Description was corrupted in stored tasklist";
+		}
 		Task task = new Task(handle, label);		
 		readTaskInfo(task, tlist, element, category, parent);
 		return task;
 	}
 
-	protected void readTaskInfo(ITask task, TaskList tlist, Element element, AbstractCategory category, ITask parent) {
-		task.setPriority(element.getAttribute(PRIORITY));
-		task.setPath(element.getAttribute(PATH));
+	protected void readTaskInfo(ITask task, TaskList tlist, Element element, AbstractCategory category, ITask parent)  throws MylarExternalizerException{
+		if (element.hasAttribute(PRIORITY)) {
+			task.setPriority(element.getAttribute(PRIORITY));
+		} else {
+			task.setPriority("P3");
+		}
+		if (element.hasAttribute(PATH)) {
+			task.setPath(element.getAttribute(PATH));
+		} else {
+			task.setPath(task.getHandle());
+		}		
 		
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true);

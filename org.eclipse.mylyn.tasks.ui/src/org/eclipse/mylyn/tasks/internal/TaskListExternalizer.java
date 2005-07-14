@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2004 - 2005 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
@@ -12,8 +11,10 @@
 package org.eclipse.mylar.tasks.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class TaskListExternalizer {
 	private DefaultTaskListExternalizer defaultExternalizer = new DefaultTaskListExternalizer();
 	
 	private String readVersion = "";
+	private boolean hasCaughtException = false;
 
 	public void addExternalizer(ITaskListExternalizer externalizer) {
 		externalizers.add(externalizer);
@@ -184,11 +186,17 @@ public class TaskListExternalizer {
 //	}
 	
 	public void readTaskList(TaskList tlist, File inFile) {
+		hasCaughtException = false;
 		try {
 			// parse file
 			//
+			if (!inFile.exists())
+				return;
 			Document doc = openAsDOM(inFile);
-
+			if (doc == null) {
+				handleException(inFile, null, new MylarExternalizerException("Tasklist was not well formed XML"));
+				return;
+			}
 			// read root node to get version number
 			//
 			Element root = doc.getDocumentElement();
@@ -207,46 +215,53 @@ public class TaskListExternalizer {
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					boolean wasRead = false;
-					if (child.getNodeName().endsWith(DefaultTaskListExternalizer.TAG_CATEGORY)) {
-						for (ITaskListExternalizer externalizer : externalizers) {
-							if (externalizer.canReadCategory(child)) {
-								externalizer.readCategory(child, tlist);
-								wasRead = true;
-								break;
+					try {
+						if (child.getNodeName().endsWith(DefaultTaskListExternalizer.TAG_CATEGORY)) {													
+							for (ITaskListExternalizer externalizer : externalizers) {
+								if (externalizer.canReadCategory(child)) {
+									externalizer.readCategory(child, tlist);
+									wasRead = true;
+									break;
+								}
+							}
+							if (!wasRead && defaultExternalizer.canReadCategory(child)) {
+								defaultExternalizer.readCategory(child, tlist);
+							} else {
+								// MylarPlugin.log("Did not read: " +
+								// child.getNodeName(), this);
+							}						
+						} else {
+							for (ITaskListExternalizer externalizer : externalizers) {
+								if (externalizer.canReadTask(child)) {
+									// TODO add the tasks properly
+									ITask newTask = externalizer.readTask(child, tlist, null, null);
+								    if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
+							    		newTask = MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
+							    	}
+								    tlist.addRootTask(newTask);
+									
+									wasRead = true;
+									break;
+								}
+							}
+							if (!wasRead && defaultExternalizer.canReadTask(child)) {
+								tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+							} else {
+	//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
 							}
 						}
-						if (!wasRead && defaultExternalizer.canReadCategory(child)) {
-							defaultExternalizer.readCategory(child, tlist);
-						} else {
-//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
-						}
-					} else {
-						for (ITaskListExternalizer externalizer : externalizers) {
-							if (externalizer.canReadTask(child)) {
-								// TODO add the tasks properly
-								ITask newTask = externalizer.readTask(child, tlist, null, null);
-							    if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
-						    		newTask = MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
-						    	}
-							    tlist.addRootTask(newTask);
-								
-								wasRead = true;
-								break;
-							}
-						}
-						if (!wasRead && defaultExternalizer.canReadTask(child)) {
-							tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
-						} else {
-//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
-						}
+					} catch (Exception e) {
+						handleException(inFile, child, e);
 					}
 				}
 			}
 		} catch (Exception e) {
-			String name = inFile.getAbsolutePath();
-			name = name.substring(0, name.lastIndexOf('.')) + "-save.xml";
-			inFile.renameTo(new File(name));
-			MylarPlugin.log(e, "Could not read task list");
+			handleException(inFile, null, e);
+		}
+		if (hasCaughtException) {
+			// if exception was caught, write out the new task file, so that it doesn't happen again.
+			// this is OK, since the original (corrupt) tasklist is saved.
+			writeTaskList(tlist, inFile);
 		}
 	}
 
@@ -287,8 +302,48 @@ public class TaskListExternalizer {
 		}
 		return document;
 	}
+	
+	private void handleException(File inFile, Node child, Exception e) {
+		hasCaughtException = true;
+		String name = inFile.getAbsolutePath();
+		name = name.substring(0, name.lastIndexOf('.')) + "-save1.xml";
+		File save = new File(name);
+		int i = 2;
+		while(save.exists()) {			
+			name = name.substring(0, name.lastIndexOf('.')-1) + i + ".xml";
+			save = new File(name);
+			i++;
+		}
+		if (!copy(inFile, save)) {
+			inFile.renameTo(new File(name));
+		}			
+		if (child == null) {
+			MylarPlugin.log(e, "Could not read task list");
+		} else {
+			MylarPlugin.log(e, "Tasks may have been lost from " + child.getNodeName());
+		}		
+	}
+    private boolean copy(File src, File dst) {
+		try {
+			InputStream in = new FileInputStream(src);
+			OutputStream out = new FileOutputStream(dst);
 
-//	private static ITask readTaskAndSubTasks(Node node, ITask root, TaskList tlist) {
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			return true;
+		} catch (IOException ioe) {
+			return false;
+		}
+    }
+
+// private static ITask readTaskAndSubTasks(Node node, ITask root, TaskList
+// tlist) {
 //		//extract node and create new sub task
 //		//
 //		Element e = (Element) node;

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.tasks;
 
+import org.eclipse.mylar.tasks.internal.MylarExternalizerException;
 import org.eclipse.mylar.tasks.internal.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,9 +50,9 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadCategory(Node node);
 	
-	public abstract void readCategory(Node node, TaskList tlist);
+	public abstract void readCategory(Node node, TaskList tlist) throws MylarExternalizerException;
 	
 	public abstract boolean canReadTask(Node node);
 	
-	public abstract ITask readTask(Node node, TaskList tlist, AbstractCategory category, ITask parent);
+	public abstract ITask readTask(Node node, TaskList tlist, AbstractCategory category, ITask parent) throws MylarExternalizerException;
 }
