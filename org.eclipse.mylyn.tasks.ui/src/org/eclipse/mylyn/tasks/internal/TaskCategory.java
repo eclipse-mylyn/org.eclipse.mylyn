@@ -43,8 +43,11 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 	}
     
 
-	public String getPriority() {
+	public String getPriority() {		
 		String highestPriority = "P5";
+		if (tasks.isEmpty()) {
+			return "P1";
+		}
 		for (ITask task : tasks) {
 			if (highestPriority.compareTo(task.getPriority()) > 0) {
 				highestPriority = task.getPriority();
@@ -76,7 +79,7 @@ public class TaskCategory extends AbstractCategory implements Serializable {
         }
     }
 
-	public ITask getCorrespondingActivatableTask() {
+	public ITask getOrCreateCorrespondingTask() {
 		return null;
 	}
 	public boolean hasCorrespondingActivatableTask() {

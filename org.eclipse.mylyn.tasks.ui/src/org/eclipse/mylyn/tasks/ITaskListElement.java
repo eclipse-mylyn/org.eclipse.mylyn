@@ -39,7 +39,7 @@ public interface ITaskListElement {
     /**
      * Used for wrapping bugzilla hits
      */
-    public ITask getCorrespondingActivatableTask();
+    public ITask getOrCreateCorrespondingTask();
 
 	public abstract boolean hasCorrespondingActivatableTask();
 	

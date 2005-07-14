@@ -395,7 +395,7 @@ public class Task implements ITask {
 		return true;
 	}
 
-	public ITask getCorrespondingActivatableTask() {
+	public ITask getOrCreateCorrespondingTask() {
 		return this;
 	}
 	

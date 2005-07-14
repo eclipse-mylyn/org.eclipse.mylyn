@@ -277,7 +277,7 @@ public class TaskListView extends ViewPart {
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (element instanceof ITaskListElement) {
 				if(element instanceof ITask && ((ITaskListElement)element).hasCorrespondingActivatableTask()){
-					ITask task = ((ITaskListElement)element).getCorrespondingActivatableTask();
+					ITask task = ((ITaskListElement)element).getOrCreateCorrespondingTask();
 					if(task != null){
 						return !task.isCompleted();
 					} else {
@@ -445,7 +445,7 @@ public class TaskListView extends ViewPart {
 	            	final ITaskListElement taskListElement = (ITaskListElement)element;
 					ITask task = null;
 					if(taskListElement.hasCorrespondingActivatableTask()){
-						task = taskListElement.getCorrespondingActivatableTask();
+						task = taskListElement.getOrCreateCorrespondingTask();
 					}
 					switch (columnIndex) {
 					case 0:
@@ -505,11 +505,11 @@ public class TaskListView extends ViewPart {
 					final ITaskListElement taskListElement = (ITaskListElement) ((TreeItem) element).getData();
 					ITask task = null;
 					if(taskListElement.hasCorrespondingActivatableTask()){
-						task = taskListElement.getCorrespondingActivatableTask();
+						task = taskListElement.getOrCreateCorrespondingTask();
 					}
 					switch (columnIndex) {
 					case 0:
-						task = taskListElement.getCorrespondingActivatableTask();
+						task = taskListElement.getOrCreateCorrespondingTask();
 						if (task != null) {
 							if (task.isActive()) {
 								new TaskDeactivateAction(task, INSTANCE).run();
@@ -571,23 +571,22 @@ public class TaskListView extends ViewPart {
         		if (o2 instanceof AbstractCategory) {
         			return -1;
         		} else if(o2 instanceof ITaskListElement) {
-        			
-	        		ITask task1 = ((ITaskListElement)o1).getCorrespondingActivatableTask();
-	        		ITask task2 = ((ITaskListElement)o2).getCorrespondingActivatableTask();
-	                
-	                if (task1.isCompleted()) return 1;
-	                if (task2.isCompleted()) return -1;
+        			ITaskListElement element1 = (ITaskListElement) o1;
+        			ITaskListElement element2 = (ITaskListElement) o2;
+        		
+        			if (element1.hasCorrespondingActivatableTask() && element2.hasCorrespondingActivatableTask()) {
+        				ITask task1 = element1.getOrCreateCorrespondingTask();
+        				ITask task2 = element2.getOrCreateCorrespondingTask();
+        				
+    	                if (task1.isCompleted()) return 1;
+    	                if (task2.isCompleted()) return -1;
+        			}        			
 	                if (column == columnNames[1]) {
 	                	return 0;
-	//                        if (task1 instanceof BugzillaTask && !(task2 instanceof BugzillaTask)) {
-	//                            return 1;
-	//                        } else {
-	//                            return -1;
-	//                        }
 	                } else if (column == columnNames[2]) {
-	                    return task1.getPriority().compareTo(task2.getPriority());
+	                    return element1.getPriority().compareTo(element2.getPriority());
 	                } else if (column == columnNames[3]) {
-	                    return task1.getLabel().compareTo(task2.getLabel());
+	                    return element1.getDescription(true).compareTo(element2.getDescription(true));
 	                } else {
 	                	return 0;
 	                }

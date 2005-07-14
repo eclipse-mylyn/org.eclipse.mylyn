@@ -39,6 +39,7 @@ public class BugzillaHit implements ITaskListElement {
 		this.id = id;
 		this.task = task;
 		this.status = status;
+		System.out.println("Task: " + task);
 	}
 	
 	public BugzillaTask getAssociatedTask(){
@@ -105,7 +106,7 @@ public class BugzillaHit implements ITaskListElement {
 		return false;
 	}
 
-	public ITask getCorrespondingActivatableTask() {
+	public ITask getOrCreateCorrespondingTask() {
 		if(task == null){
 			task = new BugzillaTask(this);
 			BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry(task);

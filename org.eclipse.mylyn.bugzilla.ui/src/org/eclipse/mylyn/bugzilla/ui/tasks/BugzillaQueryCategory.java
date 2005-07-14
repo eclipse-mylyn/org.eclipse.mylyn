@@ -95,6 +95,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	public void addHit(BugzillaHit hit) {
 		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(hit.getHandle());
 		hit.setAssociatedTask(task);
+		System.out.println("Task: " + task);
 		hits.add(hit);
 	}
 
@@ -159,6 +160,9 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	
 	public String getPriority() {
 		String highestPriority = "P5";
+		if (hits.isEmpty()) {
+			return "P1";
+		}
 		for (BugzillaHit hit : hits) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
@@ -167,7 +171,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		return highestPriority;
 	}
 
-	public ITask getCorrespondingActivatableTask() {
+	public ITask getOrCreateCorrespondingTask() {
 		return null;
 	}
 	

@@ -104,6 +104,7 @@ public class BugzillaTask extends Task {
 	
     public BugzillaTask(BugzillaHit hit) {
     	this(hit.getHandle(), hit.getDescription(false));
+    	setPriority(hit.getPriority());
 	}
 
 	@Override
