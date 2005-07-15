@@ -25,12 +25,12 @@ import org.eclipse.mylar.core.MylarPlugin;
  * @author Mik Kersten
  */
 public class CompositeContextNode implements IMylarContextNode {
-    private Set<ContextNode> nodes = null;//new HashSet<ITaskscapeNode>();
+    private Set<MylarContextNode> nodes = null;//new HashSet<ITaskscapeNode>();
     
     private String handle = "<no handle>";
 //    private String name = "";
     
-    public CompositeContextNode(String handle, Set<ContextNode> nodes) {
+    public CompositeContextNode(String handle, Set<MylarContextNode> nodes) {
         assert(handle != null);
         this.nodes = nodes;
         this.handle = handle;
@@ -68,7 +68,7 @@ public class CompositeContextNode implements IMylarContextNode {
     	// can't set a handle on this
     }
 
-    public Set<ContextNode> getNodes() {
+    public Set<MylarContextNode> getNodes() {
         return nodes;
     }
     
@@ -92,8 +92,8 @@ public class CompositeContextNode implements IMylarContextNode {
     /**
      * TODO: need composite edges here
      */
-    public ContextEdge getEdge(String targetHandle) {
-        Set<ContextEdge> edges = new HashSet<ContextEdge>();
+    public MylarContextEdge getEdge(String targetHandle) {
+        Set<MylarContextEdge> edges = new HashSet<MylarContextEdge>();
         for (IMylarContextNode node : nodes) edges.add(node.getEdge(targetHandle));
         if (edges.size() == 0) {
             return null;
@@ -103,8 +103,8 @@ public class CompositeContextNode implements IMylarContextNode {
         return edges.iterator().next();
     }
     
-    public Collection<ContextEdge> getEdges() {
-        Set<ContextEdge> edges = new HashSet<ContextEdge>();
+    public Collection<MylarContextEdge> getEdges() {
+        Set<MylarContextEdge> edges = new HashSet<MylarContextEdge>();
         
         for (IMylarContextNode node : nodes) edges.addAll(node.getEdges());
         return edges;

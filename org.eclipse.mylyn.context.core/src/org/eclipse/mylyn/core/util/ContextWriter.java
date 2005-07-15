@@ -31,7 +31,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -57,7 +57,7 @@ public class ContextWriter {
 		}
 	}
 	
-	public void writeContextToStream(Context t) throws IOException{
+	public void writeContextToStream(MylarContext t) throws IOException{
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;

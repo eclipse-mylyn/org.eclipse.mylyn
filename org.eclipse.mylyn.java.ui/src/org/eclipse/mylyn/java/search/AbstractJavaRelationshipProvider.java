@@ -14,6 +14,7 @@
 package org.eclipse.mylar.java.search;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,7 @@ import org.eclipse.jdt.internal.ui.search.JavaSearchQuery;
 import org.eclipse.jdt.internal.ui.search.JavaSearchResult;
 import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -57,6 +59,12 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
     protected AbstractJavaRelationshipProvider(String structureKind, String id) {
         super(structureKind, id);
     }
+    
+	@Override
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
@@ -247,18 +255,20 @@ public abstract class AbstractJavaRelationshipProvider extends RelationshipProvi
                     }
                     notifySearchCompleted(l);
                 }
-            return s;
-            } catch (NullPointerException npe) {
-                // search manager not initalized?
-            	IStatus status =new Status(IStatus.WARNING,
-                        MylarPlugin.IDENTIFIER,
-                        IStatus.OK,
-                        "could not run Java search",
-                        npe); 
-            	MylarPlugin.log(npe, "java search failed");
-            	notifySearchCompleted(null);
-                return status;
-            }
+                return s;
+            } catch (ConcurrentModificationException cme) {
+            	MylarPlugin.log(cme, "java search failed");
+            } catch (Throwable t) {
+            	MylarPlugin.log(t, "java search failed");
+            } 
+//            	 search manager not initalized?
+        	IStatus status =new Status(IStatus.WARNING,
+                    MylarPlugin.IDENTIFIER,
+                    IStatus.OK,
+                    "could not run Java search",
+                    null); 
+        	notifySearchCompleted(null);
+            return status;
         }
         /**
          * Constructor

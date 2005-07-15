@@ -74,7 +74,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	        action.setChecked(on);
 	        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
 	
-	        StructuredViewer viewer = getViewer();
+	        final StructuredViewer viewer = getViewer();
 	        if (viewer != null) {
 				if (on) {
 					installInterestFilter(getViewer());
@@ -86,7 +86,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				refreshViewer();
 				if (on && viewer instanceof TreeViewer) {
 					((TreeViewer)viewer).expandAll();
-				}
+				}		            
 	        } else {
 	        	// ignore, failure to install is ok if there is no outline when attempted
 	        }

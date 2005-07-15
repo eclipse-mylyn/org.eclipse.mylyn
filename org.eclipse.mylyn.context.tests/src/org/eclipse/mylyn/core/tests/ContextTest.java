@@ -19,19 +19,19 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.internal.Context;
-import org.eclipse.mylar.core.internal.ContextExternalizer;
+import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.internal.MylarContextExternalizer;
 
 
-public class TaskscapeTest extends AbstractTaskscapeTest {
+public class ContextTest extends AbstractTaskscapeTest {
 
-    private Context taskscape;
+    private MylarContext taskscape;
     private ScalingFactors scaling;
     
     @Override
     protected void setUp() throws Exception {
         scaling = new ScalingFactors();
-        taskscape = new Context("0", scaling);
+        taskscape = new MylarContext("0", scaling);
     }
 
     @Override
@@ -81,8 +81,8 @@ public class TaskscapeTest extends AbstractTaskscapeTest {
     }
    
     public void testExternalization() {
-        ContextExternalizer externalizer = new ContextExternalizer();
-        String path = "test-taskscape.xml";
+        MylarContextExternalizer externalizer = new MylarContextExternalizer();
+        String path = "test-tTaskscape.xml";
         File file = new File(path);
         file.deleteOnExit();   
         

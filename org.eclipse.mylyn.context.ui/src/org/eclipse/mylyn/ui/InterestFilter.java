@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 
 
 /**
@@ -45,7 +45,7 @@ public class InterestFilter extends ViewerFilter {
                 if (MylarPlugin.getContextManager().isTempRaised(parentHandle)) return true;
             }
             if (node != null) {
-                return node.getDegreeOfInterest().getValue() > ContextManager.getScalingFactors().getInteresting();
+                return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
             } else {
                 return false;
             }

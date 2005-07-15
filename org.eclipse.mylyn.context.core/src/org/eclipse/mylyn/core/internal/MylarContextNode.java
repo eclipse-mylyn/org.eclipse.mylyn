@@ -26,16 +26,16 @@ import org.eclipse.mylar.core.IMylarContextNode;
  * 
  * @author Mik Kersten
  */
-public class ContextNode implements IMylarContextNode {
+public class MylarContextNode implements IMylarContextNode {
     
     private String handle;
     private String kind;
     private DegreeOfInterest interest;
-    private Context context;
+    private MylarContext context;
     
-    private Map<String/*target handle*/, ContextEdge> edges = new HashMap<String, ContextEdge>();
+    private Map<String/*target handle*/, MylarContextEdge> edges = new HashMap<String, MylarContextEdge>();
     
-    public ContextNode(String kind, String elementHandle, Context context) {
+    public MylarContextNode(String kind, String elementHandle, MylarContext context) {
         if (elementHandle == null) throw new RuntimeException("malformed taskscape: null handle");
         interest = new DegreeOfInterest(context);
         this.handle = elementHandle;
@@ -56,15 +56,15 @@ public class ContextNode implements IMylarContextNode {
         this.kind = kind;
     }
 
-    public Collection<ContextEdge> getEdges() {
+    public Collection<MylarContextEdge> getEdges() {
         return edges.values();
     }
 
-    public ContextEdge getEdge(String targetHandle) {
+    public MylarContextEdge getEdge(String targetHandle) {
         return edges.get(targetHandle);
     }
     
-    public void addEdge(ContextEdge edge) {
+    public void addEdge(MylarContextEdge edge) {
         edges.put(edge.getTarget().getElementHandle(), edge);
     }
     
@@ -72,8 +72,8 @@ public class ContextNode implements IMylarContextNode {
     public boolean equals(Object obj) { 
         if (obj == null) return false;
         if (this.getElementHandle() == null) return false;
-        if (obj instanceof ContextNode) {
-            ContextNode node = (ContextNode)obj;
+        if (obj instanceof MylarContextNode) {
+            MylarContextNode node = (MylarContextNode)obj;
             return this.getElementHandle().equals(node.getElementHandle());
         }
         return false;
@@ -92,7 +92,7 @@ public class ContextNode implements IMylarContextNode {
         return interest;
     }
 
-    public Context getContext() {
+    public MylarContext getContext() {
         return context;
     }
     

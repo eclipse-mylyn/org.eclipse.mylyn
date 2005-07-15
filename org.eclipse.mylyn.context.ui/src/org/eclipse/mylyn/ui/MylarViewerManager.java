@@ -107,12 +107,12 @@ public class MylarViewerManager implements IMylarContextListener {
     }
     
     protected void refreshViewers(final List<IMylarContextNode> nodes, final boolean updateLabels) {
-    	// HACK: improve laziness and update
-        if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
-    	
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
             	try {
+            		// HACK: improve laziness and update
+                    if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
+                	            		
             		List<IMylarContextNode> nodesToRefresh = new ArrayList<IMylarContextNode>();
 			    	boolean showChildrenRequested = false;
             		if (MylarPlugin.getContextManager().getTempRaisedHandle() != null) {

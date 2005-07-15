@@ -33,7 +33,7 @@ import org.eclipse.mylar.core.util.ContextWriter;
  * 
  * TODO: stop using java.io ?
  */
-public class ContextExternalizer {
+public class MylarContextExternalizer {
 
     public static final String INTERACTION_EVENT_ID = "interactionEvent";
     public static final String TASKSCAPE_ID = "taskMemory";
@@ -41,7 +41,7 @@ public class ContextExternalizer {
     private ContextReader reader = new ContextReader();
     private ContextWriter writer = new ContextWriter();
     
-    public void writeXMLTaskscapeToFile(Context taskscape, File file) { 
+    public void writeXMLTaskscapeToFile(MylarContext taskscape, File file) { 
         try {
         	if (!file.exists()) {        		
         		file.createNewFile();
@@ -55,7 +55,7 @@ public class ContextExternalizer {
         }
     }
     
-    public Context readXMLTaskscapeFromFile(File file) {
+    public MylarContext readXMLTaskscapeFromFile(File file) {
         try {
             if (!file.exists()) return null;
             return reader.readContext(file);
@@ -66,7 +66,7 @@ public class ContextExternalizer {
     }
     
     @Deprecated
-    public Context readTaskscapeFromFile(String sourcePath) {
+    public MylarContext readTaskscapeFromFile(String sourcePath) {
         //Taskscape loadedTaskscape;
         File file = new File(sourcePath);
         try {
@@ -75,7 +75,7 @@ public class ContextExternalizer {
             } else {
                 FileInputStream fileStream = new FileInputStream(file);
                 ObjectInputStream stream = new ObjectInputStream(fileStream);
-                Context taskscape =  (Context)stream.readObject();
+                MylarContext taskscape =  (MylarContext)stream.readObject();
                 fileStream.close();
                 return taskscape;
             }

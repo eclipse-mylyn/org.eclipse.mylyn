@@ -19,7 +19,7 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.core.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(AbstractTaskscapeTest.class);
-		suite.addTestSuite(TaskscapeTest.class);
+		suite.addTestSuite(ContextTest.class);
 		//$JUnit-END$
 		return suite;
 	}

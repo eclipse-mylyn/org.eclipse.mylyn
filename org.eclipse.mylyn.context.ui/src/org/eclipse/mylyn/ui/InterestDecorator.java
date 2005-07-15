@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextEdge;
+import org.eclipse.mylar.core.internal.MylarContextEdge;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.graphics.*;
 
@@ -80,7 +80,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 
     public Color decorateForeground(Object element) {
         IMylarContextNode node = getNode(element);
-        if (element instanceof ContextEdge) {
+        if (element instanceof MylarContextEdge) {
             return MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP;
         } else if (node != null) {
             UiUtil.getBackgroundForElement(node);

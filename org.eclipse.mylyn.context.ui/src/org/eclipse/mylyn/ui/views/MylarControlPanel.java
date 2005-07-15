@@ -15,7 +15,7 @@ package org.eclipse.mylar.ui.views;
 
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
@@ -92,7 +92,7 @@ public class MylarControlPanel extends Composite {
         doiScale.setMaximum(12);
         doiScale.addSelectionListener(new SelectionListener() {
             public void widgetSelected(SelectionEvent e) {
-                ContextManager.getScalingFactors().setInteresting(scaleDoiSelection(doiScale.getSelection()));
+                MylarContextManager.getScalingFactors().setInteresting(scaleDoiSelection(doiScale.getSelection()));
                 MylarPlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.SCALING);
             } 
             public void widgetDefaultSelected(SelectionEvent e) { 
@@ -107,7 +107,7 @@ public class MylarControlPanel extends Composite {
             	// don't care about mouse down
             }
             public void mouseUp(MouseEvent e) {
-                ContextManager.getScalingFactors().setInteresting(scaleDoiSelection(doiScale.getSelection()));
+                MylarContextManager.getScalingFactors().setInteresting(scaleDoiSelection(doiScale.getSelection()));
                 MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.SCALING);
             }
         });
@@ -151,7 +151,7 @@ public class MylarControlPanel extends Composite {
             	// don't care about mouse down
             }
             public void mouseUp(MouseEvent e) {
-                ContextManager.getScalingFactors().setDegreeOfSeparation(
+                MylarContextManager.getScalingFactors().setDegreeOfSeparation(
                         dosScale.getSelection());
                 MylarPlugin.getContextManager().refreshRelatedElements();
             }

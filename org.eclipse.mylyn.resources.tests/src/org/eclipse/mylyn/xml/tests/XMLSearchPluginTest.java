@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
-import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
@@ -75,7 +75,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	tocNoRefs = WorkspaceSetupHelper.getFile(jp1, "toc-no-refs.xml");
     	plugin2 = WorkspaceSetupHelper.getFile(jp2, "plugin.xml");
     	
-    	Context t = WorkspaceSetupHelper.getTaskscape();
+    	MylarContext t = WorkspaceSetupHelper.getTaskscape();
     	MylarPlugin.getContextManager().taskActivated(t.getId(), t.getId());
     	helper = new SearchPluginTestHelper(this);
     }

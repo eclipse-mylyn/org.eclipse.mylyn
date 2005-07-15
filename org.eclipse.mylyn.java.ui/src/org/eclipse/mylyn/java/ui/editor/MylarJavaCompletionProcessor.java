@@ -28,7 +28,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.ui.IEditorPart;
 
@@ -74,7 +74,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                         	IMylarContextNode node = MylarPlugin.getContextManager().getNode(member.getHandleIdentifier()); 
                             if (node != null) {
                             	float interest = node.getDegreeOfInterest().getValue();
-	                            if (interest > ContextManager.getScalingFactors().getInteresting()) {
+	                            if (interest > MylarContextManager.getScalingFactors().getInteresting()) {
 	                                interesting.put(-interest, proposal);  // negative to invert sorting order
 	                            } else {
 	                            	rest.add(proposal);

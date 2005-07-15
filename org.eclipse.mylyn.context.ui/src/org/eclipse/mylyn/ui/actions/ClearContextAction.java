@@ -16,8 +16,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.Task;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.ui.internal.Workbench;
 
@@ -42,13 +42,13 @@ public class ClearContextAction extends Action {
 	public void run() {
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    if (selectedObject != null && selectedObject instanceof ITask) {
-	    	ITask task = ((ITask)selectedObject).getOrCreateCorrespondingTask();
-    		if (task.isActive()) {
-	    		MessageDialog.openError(Workbench.getInstance()
-						.getActiveWorkbenchWindow().getShell(), "Clear context failed",
-						"Task must be deactivated before clearing task context.");
-				return;
-	    	}
+//	    	ITask task = ((ITask)selectedObject).getOrCreateCorrespondingTask();
+//    		if (task.isActive()) {
+//	    		MessageDialog.openError(Workbench.getInstance()
+//						.getActiveWorkbenchWindow().getShell(), "Clear context failed",
+//						"Task must be deactivated before clearing task context.");
+//				return;
+//	    	}
 	    	boolean deleteConfirmed = MessageDialog.openQuestion(
 		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 		            "Confirm clear context", 

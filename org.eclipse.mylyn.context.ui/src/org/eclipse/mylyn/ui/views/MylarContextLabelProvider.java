@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.core.internal.ContextEdge;
+import org.eclipse.mylar.core.internal.MylarContextEdge;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -30,7 +30,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author Mik Kersten
  */
-public class TaskscapeNodeLabelProvider implements ILabelProvider {
+public class MylarContextLabelProvider implements ILabelProvider {
 
     public Image getImage(Object element) {
         if (element instanceof IMylarContextNode) {
@@ -41,7 +41,7 @@ public class TaskscapeNodeLabelProvider implements ILabelProvider {
             } else {
                 return null;
             }
-        } else if (element instanceof ContextEdge) {
+        } else if (element instanceof MylarContextEdge) {
             IMylarContextEdge edge = (IMylarContextEdge)element;
             IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(edge.getStructureKind());
             ImageDescriptor descriptor = bridge.getIconForRelationship(edge.getRelationshipHandle());

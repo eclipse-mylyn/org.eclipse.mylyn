@@ -24,9 +24,9 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
@@ -39,7 +39,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class JavaStructureTest extends AbstractTaskscapeTest {
     
-    private ContextManager manager = MylarPlugin.getContextManager();
+    private MylarContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
     
@@ -49,7 +49,7 @@ public class JavaStructureTest extends AbstractTaskscapeTest {
     private IType typeFoo;
     private IMethod caller;
     private IMethod callee;
-    private Context taskscape;
+    private MylarContext taskscape;
     private ScalingFactors scaling = new ScalingFactors();
     
     @Override
@@ -60,7 +60,7 @@ public class JavaStructureTest extends AbstractTaskscapeTest {
         caller = typeFoo.createMethod("void caller() { callee(); }", null, true, null);
         callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
-        taskscape = new Context("1", scaling);
+        taskscape = new MylarContext("1", scaling);
         manager.taskActivated(taskscape);
     }
     

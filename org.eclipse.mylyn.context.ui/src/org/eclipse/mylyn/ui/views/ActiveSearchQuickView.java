@@ -186,10 +186,10 @@ public class ActiveSearchQuickView {
 //        XReferenceContentProvider contentProvider = new XReferenceContentProvider();
 //        viewer.setContentProvider(contentProvider);
         
-        viewer.setContentProvider(new TaskscapeTreeContentProvider(dialogShell, true)); 
+        viewer.setContentProvider(new MylarContextContentProvider(dialogShell, true)); 
 //        viewer.setLabelProvider(new TaskscapeNodeLabelProvider());
         viewer.setLabelProvider(new DecoratingLabelProvider(
-                new TaskscapeNodeLabelProvider(),
+                new MylarContextLabelProvider(),
                 PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 //        viewer.setLabelProvider(new MylarAppearanceAwareLabelProvider(viewer)); 
         

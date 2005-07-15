@@ -39,10 +39,10 @@ class DegreeOfInterest implements IDegreeOfInterest {
     private float propagatedBias = 0;
     private float manipulationBias = 0;
     
-    private Context context;
+    private MylarContext context;
     private int eventCountOnCreation;
     
-    public DegreeOfInterest(Context context) {
+    public DegreeOfInterest(MylarContext context) {
         this.context = context;
         this.eventCountOnCreation = context.getUserEventCount();
         init();
@@ -52,7 +52,7 @@ class DegreeOfInterest implements IDegreeOfInterest {
      * TODO: lose the reference to TaskManager?
      */
     private void init() {
-        scaling = ContextManager.getScalingFactors();
+        scaling = MylarContextManager.getScalingFactors();
     }
     
     void addEvent(InteractionEvent event) {

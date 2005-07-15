@@ -15,12 +15,13 @@ package org.eclipse.mylar.core.search;
 
 import java.util.List;
 
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 
 
 /**
@@ -39,7 +40,6 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     public String getId() {
         return id;
     }
-
     
     public RelationshipProvider(String structureKind, String id) {
         this.id = id;
@@ -60,7 +60,7 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     }
     
     public void landmarkAdded(IMylarContextNode node) { 
-        if (enabled) findRelated(node, ContextManager.getScalingFactors().getDegreeOfSeparation());
+        if (enabled) findRelated(node, MylarContextManager.getScalingFactors().getDegreeOfSeparation());
   } 
     
     public void landmarkRemoved(IMylarContextNode node) {
@@ -75,17 +75,16 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     
     protected abstract String getSourceId();
 
-//    protected void addResultsAsRelationships(ITaskscapeNode node, String edgeKind, List<ITaskscapeNode> nodes) {
-//        MylarPlugin.getTaskscapeManager().addEdge(node, edgeKind, nodes);
-//    } 
-    
     public boolean isEnabled() {
         return enabled;
     }
+    
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
    
+    public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
+    
     public void presentationSettingsChanging(UpdateKind kind) { 
     	// we don't care about this event
     }

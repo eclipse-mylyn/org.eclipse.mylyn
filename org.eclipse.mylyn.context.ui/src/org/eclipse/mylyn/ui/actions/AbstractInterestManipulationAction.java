@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -45,10 +45,10 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
             	if (originalValue >=0) changeValue = (-1 * originalValue)-1;
             }
         } else {
-            if (originalValue >  ContextManager.getScalingFactors().getLandmark()) {
+            if (originalValue >  MylarContextManager.getScalingFactors().getLandmark()) {
                 changeValue = 0;
             } else {
-                changeValue = ContextManager.getScalingFactors().getLandmark() - originalValue + 1;
+                changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
             } 
         }
         if (changeValue != 0) {

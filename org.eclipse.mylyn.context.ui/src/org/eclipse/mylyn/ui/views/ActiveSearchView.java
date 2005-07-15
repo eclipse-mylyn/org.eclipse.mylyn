@@ -148,9 +148,9 @@ public class ActiveSearchView extends ViewPart {
     public void createPartControl(Composite parent) {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         //drillDownAdapter = new DrillDownAdapter(viewer);
-        viewer.setContentProvider(new TaskscapeTreeContentProvider(this.getViewSite(), true));
+        viewer.setContentProvider(new MylarContextContentProvider(this.getViewSite(), true));
         viewer.setLabelProvider(new DecoratingLabelProvider(
-                new TaskscapeNodeLabelProvider(),
+                new MylarContextLabelProvider(),
                 PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 //        viewer.setLabelProvider(new MylarAppearanceAwareLabelProvider(viewer));
         viewer.setSorter(new DoiOrderSorter()); 

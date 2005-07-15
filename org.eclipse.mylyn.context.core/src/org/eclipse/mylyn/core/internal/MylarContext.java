@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarInterest;
@@ -32,35 +33,35 @@ import org.eclipse.mylar.dt.MylarInterest;
 /**
  * @author Mik Kersten
  */
-public class Context implements IMylarContext, Serializable {
+public class MylarContext implements IMylarContext, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private String id;
     private List<InteractionEvent> interactionHistory = new ArrayList<InteractionEvent>();
  
-    protected transient Map<String, ContextNode> nodes = new HashMap<String, ContextNode>();
+    protected transient Map<String, MylarContextNode> nodes = new HashMap<String, MylarContextNode>();
     protected transient IMylarContextNode activeNode = null;
     protected transient List tempRaised = new ArrayList();
     protected transient Map<String, IMylarContextNode> landmarks;
     protected transient ScalingFactors scaling;
     private transient InteractionEvent lastEdgeEvent = null;
-    private transient ContextNode lastEdgeNode = null;
+    private transient MylarContextNode lastEdgeNode = null;
     private transient int numUserEvents = 0;
     
-    public Context() { 
+    public MylarContext() { 
     	// only needed for serialization
     }
     
     void parseInteractionHistory() {
-        nodes = new HashMap<String, ContextNode>();
+        nodes = new HashMap<String, MylarContextNode>();
         landmarks = new HashMap<String, IMylarContextNode>();
         for (InteractionEvent event : interactionHistory) parseInteractionEvent(event);
         updateLandmarks();
         activeNode = lastEdgeNode;
     }
 
-    public Context(String id, ScalingFactors scaling) { 
+    public MylarContext(String id, ScalingFactors scaling) { 
         this.id = id;
         this.scaling = scaling;
         parseInteractionHistory();
@@ -74,18 +75,18 @@ public class Context implements IMylarContext, Serializable {
     @MylarInterest(level=MylarInterest.Level.LANDMARK)
     private IMylarContextNode parseInteractionEvent(InteractionEvent event) {
     	if (event.getKind().isUserEvent()) numUserEvents++;
-        ContextNode node = nodes.get(event.getStructureHandle());
+        MylarContextNode node = nodes.get(event.getStructureHandle());
         if (node == null) {
-            node = new ContextNode(event.getStructureKind(), event.getStructureHandle(), this);
+            node = new MylarContextNode(event.getStructureKind(), event.getStructureHandle(), this);
             nodes.put(event.getStructureHandle(), node);
         }
         if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null && lastEdgeNode != null
             && event.getKind() != InteractionEvent.Kind.PROPAGATION) {
             IMylarContextNode navigationSource = nodes.get(lastEdgeEvent.getStructureHandle());
             if (navigationSource != null) {
-               ContextEdge edge = lastEdgeNode.getEdge(event.getStructureHandle());
+               MylarContextEdge edge = lastEdgeNode.getEdge(event.getStructureHandle());
                if (edge == null) {
-                    edge = new ContextEdge(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node, this);
+                    edge = new MylarContextEdge(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node, this);
                     lastEdgeNode.addEdge(edge);
                 }
                 DegreeOfInterest doi = (DegreeOfInterest)edge.getDegreeOfInterest();
@@ -95,9 +96,12 @@ public class Context implements IMylarContext, Serializable {
         DegreeOfInterest doi = (DegreeOfInterest)node.getDegreeOfInterest();
         doi.addEvent(event); 
         if (doi.isLandmark()) {
-            landmarks.put(node.getElementHandle(), node);
+        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+            if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
+        		landmarks.put(node.getElementHandle(), node);
+        	}
         } else {
-            landmarks.remove(node.getElementHandle());
+            landmarks.remove(node.getElementHandle()); // TODO: redundant
         }
         if (event.getKind().isUserEvent()) {
             lastEdgeEvent = event;
@@ -109,7 +113,7 @@ public class Context implements IMylarContext, Serializable {
 
     private void updateLandmarks() {
 //        landmarks = new HashMap<String, ITaskscapeNode>();
-        for (ContextNode node : nodes.values()) {
+        for (MylarContextNode node : nodes.values()) {
             if (node.getDegreeOfInterest().isLandmark()) landmarks.put(node.getElementHandle(), node);
         }
     }
@@ -121,7 +125,7 @@ public class Context implements IMylarContext, Serializable {
     public List<IMylarContextNode> getInteresting() {
         List<IMylarContextNode> elements = new ArrayList<IMylarContextNode>();
         for (String key : nodes.keySet()) {
-            ContextNode info = nodes.get(key);
+            MylarContextNode info = nodes.get(key);
             if (info.getDegreeOfInterest().isInteresting()) {
                 elements.add(info);  
             }
@@ -191,12 +195,12 @@ public class Context implements IMylarContext, Serializable {
     }
 
 	public void collapse() {
-		for (ContextNode node : nodes.values()) {
+		for (MylarContextNode node : nodes.values()) {
 			interactionHistory.add(0, new InteractionEvent(
 	                InteractionEvent.Kind.MANIPULATION, 
 	                node.getStructureKind(),
 	                node.getElementHandle(), 
-	                ContextManager.SOURCE_ID_DECAY,
+	                MylarContextManager.SOURCE_ID_DECAY,
 	                -node.getDegreeOfInterest().getDecayValue()));
 		}
 	}

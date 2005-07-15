@@ -17,8 +17,8 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
-import org.eclipse.mylar.core.internal.ContextManager;
-import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 
@@ -56,13 +56,13 @@ public class SearchTaskscapeNotifier extends AbstractTaskscapeTest {
 	
 	public IMylarContextNode getElement(String handle, String kind) {
 		IMylarContextNode node = taskscape.addEvent(mockSelection(handle, kind, source));
-		taskscape.addEvent(mockUserEvent(handle, kind, source, (1/ContextManager.getScalingFactors().getLandmark()) * -2));
+		taskscape.addEvent(mockUserEvent(handle, kind, source, (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
 		return node;
 	}
 	
 	public void clearTaskscape() throws IOException, CoreException{
 		WorkspaceSetupHelper.clearDoiModel();
-		Context task = WorkspaceSetupHelper.getTaskscape();
+		MylarContext task = WorkspaceSetupHelper.getTaskscape();
     	MylarPlugin.getContextManager().taskActivated(task.getId(), task.getId());
     	taskscape = MylarPlugin.getContextManager().getActiveContext();
 	}
@@ -72,7 +72,7 @@ public class SearchTaskscapeNotifier extends AbstractTaskscapeTest {
     }
 	
 	private InteractionEvent mockUserEvent(String handle, String kind, String origin, float scale) {
-        InteractionEvent e = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, origin, scale * ContextManager.getScalingFactors().getLandmark());
+        InteractionEvent e = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, origin, scale * MylarContextManager.getScalingFactors().getLandmark());
         e.getInterestContribution();
         return e;
 	}

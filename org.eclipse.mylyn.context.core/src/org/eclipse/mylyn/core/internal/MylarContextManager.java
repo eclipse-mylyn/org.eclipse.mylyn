@@ -29,7 +29,7 @@ import org.eclipse.mylar.core.search.RelationshipProvider;
 /**
  * @author Mik Kersten
  */
-public class ContextManager {
+public class MylarContextManager {
     
     public static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylar.core.model.interest.propagation";
     public static final String SOURCE_ID_DECAY = "org.eclipse.mylar.core.model.interest.decay";
@@ -55,12 +55,12 @@ public class ContextManager {
 	private String tempRaisedHandle = null;
     private boolean suppressListenerNotification = false;
     
-    private ContextExternalizer externalizer = new ContextExternalizer();
+    private MylarContextExternalizer externalizer = new MylarContextExternalizer();
 	private boolean nextEventIsRaiseChildren;
     
     private static ScalingFactors scalingFactors = new ScalingFactors();
     
-    public ContextManager() {
+    public MylarContextManager() {
         taskscapeStoreDirPath = MylarPlugin.getDefault().getUserDataDirectory();
         
         File storeDir = new File(taskscapeStoreDirPath);
@@ -154,12 +154,7 @@ public class ContextManager {
         for (IMylarContextListener listener : listeners) listener.interestChanged(interestDelta);
         tempRaisedHandle = null;
          
-        // TODO: don't call interestChanged if it's a landmark?
-        if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
-            for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
-        } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
-            for (IMylarContextListener listener : listeners) listener.landmarkAdded(node);
-        }
+        checkForLandmarkDelta(previousInterest, node);
         
         if (nextEventIsRaiseChildren && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
         	tempRaiseChildrenForSelected();
@@ -168,16 +163,23 @@ public class ContextManager {
         
         return node;
     }
+
+	private void checkForLandmarkDelta(float previousInterest, IMylarContextNode node) {
+		// TODO: don't call interestChanged if it's a landmark?
+    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+        if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
+            if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
+                for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
+            } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
+                for (IMylarContextListener listener : listeners) listener.landmarkAdded(node);
+            }        	
+        }
+	}
     
     private void propegateDoiToParents(IMylarContextNode node, float previousInterest, float decayOffset, int level, List<IMylarContextNode> elementDelta) {
         if (level > MAX_PROPAGATION || node == null || node.getDegreeOfInterest().getValue() <= 0) return;// || "/".equals(node.getElementHandle())) return;         
         
-        // TODO: move this above?
-        if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
-            for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
-        } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
-            for (IMylarContextListener listener : listeners) listener.landmarkAdded(node);
-        }
+        checkForLandmarkDelta(previousInterest, node);
         
         level++; // original is 1st level
         float propagatedIncrement = node.getDegreeOfInterest().getValue() - previousInterest + decayOffset;
@@ -202,9 +204,9 @@ public class ContextManager {
         }
     }
 
-    public List<IMylarContextNode> findCompositesForNodes(List<ContextNode> nodes) {
+    public List<IMylarContextNode> findCompositesForNodes(List<MylarContextNode> nodes) {
         List<IMylarContextNode> composites = new ArrayList<IMylarContextNode>();
-        for (ContextNode node : nodes) {
+        for (MylarContextNode node : nodes) {
             composites.add(activeContext.get(node.getElementHandle()));
         }
         return composites;
@@ -250,13 +252,13 @@ public class ContextManager {
     /**
      * For testing
      */
-    public void taskActivated(Context taskscape) {
+    public void taskActivated(MylarContext taskscape) {
         activeContext.getTaskscapeMap().put(taskscape.getId(), taskscape);
     } 
     
     public void taskActivated(String id, String path) {
 	    suppressListenerNotification = true;
-	    Context taskscape = activeContext.getTaskscapeMap().get(id);
+	    MylarContext taskscape = activeContext.getTaskscapeMap().get(id);
 	    if (taskscape == null) taskscape = loadTaskscape(id, path);
 	    if (taskscape != null) {
 	        activeContext.getTaskscapeMap().put(id, taskscape);
@@ -293,7 +295,7 @@ public class ContextManager {
     }
      
     private void eraseTaskscape(String id) {
-        Context taskscape = activeContext.getTaskscapeMap().get(id);
+        MylarContext taskscape = activeContext.getTaskscapeMap().get(id);
         if (taskscape == null) return;
         activeContext.getTaskscapeMap().remove(taskscape);
         // TODO: write out the taskscape 
@@ -306,17 +308,17 @@ public class ContextManager {
      /**
        * @return false if the map could not be read for any reason
        */
-    public Context loadTaskscape(String taskId, String path) {
-        Context loadedTaskscape = externalizer.readXMLTaskscapeFromFile(getFileForTaskscape(path));
+    public MylarContext loadTaskscape(String taskId, String path) {
+        MylarContext loadedTaskscape = externalizer.readXMLTaskscapeFromFile(getFileForTaskscape(path));
         if (loadedTaskscape == null) {
-            return new Context(taskId, ContextManager.getScalingFactors());
+            return new MylarContext(taskId, MylarContextManager.getScalingFactors());
         } else {
             return loadedTaskscape;
         }
     }
  
     public void saveTaskscape(String taskId, String path) {
-        Context taskscape = activeContext.getTaskscapeMap().get(taskId);
+        MylarContext taskscape = activeContext.getTaskscapeMap().get(taskId);
         if (taskscape == null) {
             return;
         } else {
@@ -401,7 +403,7 @@ public class ContextManager {
     }
 
     public static ScalingFactors getScalingFactors() {
-        return ContextManager.scalingFactors;
+        return MylarContextManager.scalingFactors;
     }
 
     public void dumpInteractionHistoryForSelected() {

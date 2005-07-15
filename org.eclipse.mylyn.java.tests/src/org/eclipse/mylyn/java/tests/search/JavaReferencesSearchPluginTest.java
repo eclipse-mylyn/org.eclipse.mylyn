@@ -23,7 +23,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
-import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
@@ -56,7 +56,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
     	type2 = WorkspaceSetupHelper.getType(jp2, "org.eclipse.mylar.tests.project2.builder.ToggleNatureAction");
     	plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
     	
-    	Context t = WorkspaceSetupHelper.getTaskscape();
+    	MylarContext t = WorkspaceSetupHelper.getTaskscape();
     	MylarPlugin.getContextManager().taskActivated(t.getId(), t.getId());
     	helper = new SearchPluginTestHelper(this);
     }

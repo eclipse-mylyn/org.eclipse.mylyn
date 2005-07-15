@@ -30,9 +30,9 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
@@ -44,9 +44,9 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class TaskscapeManagerTest extends AbstractTaskscapeTest {
+public class ContextManagerTest extends AbstractTaskscapeTest {
  
-    private ContextManager manager = MylarPlugin.getContextManager();
+    private MylarContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     
     private TestProject project;
@@ -59,7 +59,7 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
 //    private StructuredSelection selectionBar;
 //    private StructuredSelection selectionBaz;
     private String taskId = "123";
-    private Context taskscape;
+    private MylarContext taskscape;
     private ScalingFactors scaling = new ScalingFactors();
     
     @Override
@@ -73,7 +73,7 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
 //        selectionFoo = new StructuredSelection(typeFoo);
 //        selectionBar = new StructuredSelection(typeBar);
 //        selectionBaz = new StructuredSelection(typeBaz);
-        taskscape = new Context("1", scaling);
+        taskscape = new MylarContext("1", scaling);
         manager.taskActivated(taskscape);
         assertNotNull(MylarJavaPlugin.getDefault());
     }
@@ -186,8 +186,19 @@ public class TaskscapeManagerTest extends AbstractTaskscapeTest {
         monitor.selectionChanged(part, sm1);
         manager.handleInteractionEvent(mockInterestContribution(
                 m1.getHandleIdentifier(), scaling.getLandmark()));
+        // packages can't be landmarks
+        manager.handleInteractionEvent(mockInterestContribution(
+                m1.getCompilationUnit().getParent().getHandleIdentifier(), scaling.getLandmark()));        
+        // source folders can't be landmarks
+        manager.handleInteractionEvent(mockInterestContribution(
+                m1.getCompilationUnit().getParent().getParent().getHandleIdentifier(), scaling.getLandmark()));        
+        // projects can't be landmarks
+        manager.handleInteractionEvent(mockInterestContribution(
+                m1.getCompilationUnit().getParent().getParent().getParent().getHandleIdentifier(), scaling.getLandmark()));        
+                
+        assertEquals(1, MylarPlugin.getContextManager().getActiveContext().getLandmarks().size());
         assertEquals(1, listener.numAdditions);
-        
+
         manager.handleInteractionEvent(mockInterestContribution(
                 m1.getHandleIdentifier(), -scaling.getLandmark()));
         assertEquals(1, listener.numDeletions);

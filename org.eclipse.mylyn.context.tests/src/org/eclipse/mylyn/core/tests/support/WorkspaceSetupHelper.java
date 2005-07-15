@@ -24,14 +24,14 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.internal.Context;
+import org.eclipse.mylar.core.internal.MylarContext;
 
 
 public class WorkspaceSetupHelper {
 
 	private static boolean isSetup = false;
 	
-	private static Context taskscape;
+	private static MylarContext taskscape;
 	
 	private static IJavaProject project1;
 	private static IJavaProject project2;
@@ -43,7 +43,7 @@ public class WorkspaceSetupHelper {
 			clearDoiModel();
 			return workspaceRoot;
 		}
-		taskscape = new Context("1", new ScalingFactors());
+		taskscape = new MylarContext("1", new ScalingFactors());
 		
 		workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		
@@ -65,10 +65,10 @@ public class WorkspaceSetupHelper {
 	
 	public static void clearDoiModel(){
 		MylarPlugin.getContextManager().taskDeleted("1", "1");
-		taskscape = new Context("1", new ScalingFactors());
+		taskscape = new MylarContext("1", new ScalingFactors());
 	}
 	
-	public static Context getTaskscape()throws CoreException, IOException{
+	public static MylarContext getTaskscape()throws CoreException, IOException{
 		if(!isSetup)
 			setupWorkspace();
 		return taskscape;

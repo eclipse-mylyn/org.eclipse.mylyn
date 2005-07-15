@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
@@ -184,7 +184,7 @@ public class JavaUiBridge implements IMylarUiBridge {
             return JavaWriteAccessProvider.NAME; 
         } else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
             return JavaReadAccessProvider.NAME; 
-        } else if (relationshipHandle.equals(ContextManager.CONTAINMENT_PROPAGATION_ID)) {
+        } else if (relationshipHandle.equals(MylarContextManager.CONTAINMENT_PROPAGATION_ID)) {
             return "Containment"; // TODO: make this generic? 
         } else {
             return null;

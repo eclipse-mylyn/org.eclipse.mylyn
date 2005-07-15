@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.mylar.core.internal.ContextManager;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.ui.internal.Workbench;
@@ -55,7 +55,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     public static boolean started = false;
     
 	private static MylarPlugin INSTANCE;
-    private static ContextManager contextManager;
+    private static MylarContextManager contextManager;
     private ResourceBundle resourceBundle;
     public static final String IDENTIFIER = "org.eclipse.mylar.core";
 //    public static boolean DEBUG_MODE = true;
@@ -152,7 +152,7 @@ public class MylarPlugin extends AbstractUIPlugin {
                 MYLAR_DIR, ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
                 + File.separator
                 + MYLAR_DIR_NAME);
-        contextManager = new ContextManager(); 
+        contextManager = new MylarContextManager(); 
         genericResourceBridge = new ResourceStructureBridge(predictedInterestEnabled);
     }
 
@@ -174,7 +174,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		return INSTANCE;
 	}
 	
-    public static ContextManager getContextManager() {
+    public static MylarContextManager getContextManager() {
         return contextManager;
     }
 

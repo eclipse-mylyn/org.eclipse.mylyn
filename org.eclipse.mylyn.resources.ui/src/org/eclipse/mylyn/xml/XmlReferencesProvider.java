@@ -34,6 +34,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -362,4 +363,10 @@ public class XmlReferencesProvider extends RelationshipProvider {
     public String getName() {
         return NAME;
     }
+
+	@Override
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

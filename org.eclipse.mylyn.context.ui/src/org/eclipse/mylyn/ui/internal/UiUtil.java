@@ -16,8 +16,8 @@ package org.eclipse.mylar.ui.internal;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.internal.CompositeContextNode;
-import org.eclipse.mylar.core.internal.Context;
-import org.eclipse.mylar.core.internal.ContextNode;
+import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.internal.MylarContextNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
@@ -82,13 +82,13 @@ public class UiUtil {
                     dominantNode = concreteNode;
                 }
             }
-        } else if (node instanceof ContextNode) {
+        } else if (node instanceof MylarContextNode) {
             dominantNode = node;
         }
         
         if (dominantNode != null) { 
             Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(
-                  ((Context)dominantNode.getContext()).getId());
+                  ((MylarContext)dominantNode.getContext()).getId());
             if (highlighter == null) {
                 return null;
             } else if (MylarUiPlugin.getDefault().isIntersectionMode()) {
