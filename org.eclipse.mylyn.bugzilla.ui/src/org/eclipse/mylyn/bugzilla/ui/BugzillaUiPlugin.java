@@ -1,10 +1,15 @@
 package org.eclipse.mylar.bugzilla.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListActionContributor;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
@@ -57,6 +62,11 @@ public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
+		List<Job> list = new ArrayList<Job>();
+		list.addAll(BugzillaTask.REFRESH_JOBS.keySet());
+		for(Job j: list){
+			j.cancel();
+		}
 	}
 
 	/**

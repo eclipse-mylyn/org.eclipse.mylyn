@@ -127,7 +127,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		} else {
 			node.setAttribute(DIRTY, FALSE);
 		}
-		bt.saveBugReport(false);
+//		bt.saveBugReport(false); // XXX don't think that this needs to be done, should be handled already
 		return node;
 	}
 

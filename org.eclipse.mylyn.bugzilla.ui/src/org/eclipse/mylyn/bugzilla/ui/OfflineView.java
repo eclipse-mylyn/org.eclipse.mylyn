@@ -596,7 +596,7 @@ public class OfflineView extends ViewPart {
 	}
 	
 	public static void refresh() {
-		if(viewer != null)
+		if(viewer != null && !viewer.getTable().isDisposed())
 			viewer.refresh();
 	}
 	

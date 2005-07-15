@@ -21,9 +21,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 
 
 /**
@@ -62,7 +64,7 @@ public class OfflineReportsFile
      * @throws ClassNotFoundException
      *             Error deserializing objects from the offline reports file
      */
-    public OfflineReportsFile(File file) throws ClassNotFoundException, IOException {
+    public OfflineReportsFile(File file) throws IOException {
 		this.file = file;
 		if (file.exists()) {
 			readFile();
@@ -135,8 +137,13 @@ public class OfflineReportsFile
 			
 			// write each element in the array list
 			for (int i = 0; i < list.size(); i++) {
-				Object item = list.get(i);
-				out.writeObject(item);
+				IBugzillaBug item = list.get(i);
+				try{
+					out.writeObject(item);
+				}catch (IOException e) {
+					// put up a message and log the error if there is a problem writing to the file
+					BugzillaPlugin.log(new Status(Status.WARNING, IBugzillaConstants.PLUGIN_ID, Status.WARNING, "Unable to write bug object: " + item.getId(), e));
+				}
 			}
 			out.close();
 		}
@@ -157,7 +164,7 @@ public class OfflineReportsFile
      * @throws ClassNotFoundException
      *             Error deserializing objects from the offline reports file
 	 */
-	private void readFile() throws ClassNotFoundException, IOException {
+	private void readFile() throws IOException {
 		ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
 
         // get the number of offline reports in the file
@@ -168,9 +175,14 @@ public class OfflineReportsFile
 
         // read in each of the offline reports in the file
         for (int nX = 0; nX < size; nX++) {
-            IBugzillaBug item = (IBugzillaBug) in.readObject();
-            // add the offline report to the offlineReports list
-            list.add(item);
+        	try {
+	            IBugzillaBug item = (IBugzillaBug) in.readObject();
+	            // add the offline report to the offlineReports list
+	            list.add(item);
+        	} catch (ClassNotFoundException e){
+        		// ignore this since we can't do anything
+        		BugzillaPlugin.log(new Status(Status.ERROR, IBugzillaConstants.PLUGIN_ID, Status.ERROR, "Unable to read bug object", e));
+        	}
         }
         in.close();
 		

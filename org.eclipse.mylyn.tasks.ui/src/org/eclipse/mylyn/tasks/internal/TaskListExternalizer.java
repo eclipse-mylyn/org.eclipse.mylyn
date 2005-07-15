@@ -99,7 +99,7 @@ public class TaskListExternalizer {
 			}
 			if (element == null && defaultExternalizer.canCreateElementFor(category)) {
 				defaultExternalizer.createCategoryElement(category, doc, root);		
-			} else {
+			} else if(element == null){
 				MylarPlugin.log("Did not externalize: " + category, this);
 			}
 		}
@@ -111,7 +111,7 @@ public class TaskListExternalizer {
 				}
 				if (element == null && defaultExternalizer.canCreateElementFor(task)) {
 					defaultExternalizer.createTaskElement(task, doc, root);
-				} else {
+				} else if(element == null){
 					MylarPlugin.log("Did not externalize: " + task, this);
 				}
 			}catch (Exception e) {

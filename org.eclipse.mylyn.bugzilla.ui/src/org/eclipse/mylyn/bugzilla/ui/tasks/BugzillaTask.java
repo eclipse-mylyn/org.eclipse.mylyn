@@ -16,7 +16,9 @@ package org.eclipse.mylar.bugzilla.ui.tasks;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -65,6 +67,9 @@ public class BugzillaTask extends Task {
 	public enum BugTaskState {FREE, WAITING, DOWNLOADING, COMPARING, OPENING}
 	private transient BugTaskState state;
 
+	public static Map<Job, String>REFRESH_JOBS = new HashMap<Job, String>();
+	
+	
 	/**
 	 * The bug report for this BugzillaTask. This is <code>null</code> if the
 	 * bug report with the specified ID was unable to download.
@@ -192,9 +197,12 @@ public class BugzillaTask extends Task {
 	 *         downloaded.
 	 */
 	public BugReport downloadReport() {
-//			BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(this);
 		try {
 			// XXX make sure to send in the server name if there are multiple repositories
+			if(BugzillaPlugin.getDefault() == null){
+				MylarPlugin.log("Bugreport download failed for: " + getBugId(getHandle()) + " due to bugzilla core not existing", this);
+				return null;
+			}
 			return BugzillaRepository.getInstance().getBug(getBugId(getHandle()));
 		} catch (LoginException e) {
 			MylarPlugin.log(e, "download failed");
@@ -335,12 +343,17 @@ public class BugzillaTask extends Task {
 			updateTaskDetails();
 			notifyTaskDataChange();
 			saveBugReport(true);
+			REFRESH_JOBS.remove(this);
 			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 		}	
 	}
 	
 	public void updateTaskDetails() {
 		try {
+			if(bugReport == null)
+				downloadReport();
+			if(bugReport == null)
+				return;
 			setPriority(bugReport.getAttribute("Priority").getValue());
 			String status = bugReport.getAttribute("Status").getValue();
 			if (status.equals("RESOLVED") || status.equals("CLOSED") || status.equals("VERIFIED")) {
@@ -348,7 +361,7 @@ public class BugzillaTask extends Task {
 			}
 			this.setLabel(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandle()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
-			// TODO: handle this better
+			MylarPlugin.log(npe, "Task details update failed");
 		}
 	}
 	
@@ -388,6 +401,7 @@ public class BugzillaTask extends Task {
 			return;
 		}
 		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
+		REFRESH_JOBS.put(job, getHandle());
 		job.schedule();
 	}
 
@@ -467,6 +481,8 @@ public class BugzillaTask extends Task {
     }
     
     public void removeReport() {
+    	// XXX do we really want to do this???
+    	// XXX remove from registry too??
     	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
     	int location = offlineReports.find(getBugId(getHandle()));
     	if(location != -1){
