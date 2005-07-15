@@ -36,7 +36,6 @@ public class MylarContextManager {
     public static final String SOURCE_ID_DECAY_CORRECTION = "org.eclipse.mylar.core.model.interest.decay.correction";
     
     public static final String SOURCE_ID_MODEL_ERROR = "org.eclipse.mylar.core.model.interest.propagation";
-        
     public static final String CONTAINMENT_PROPAGATION_ID = "org.eclipse.mylar.core.model.edges.containment";
     
 	public static final String FILE_EXTENSION = ".xml";
@@ -95,7 +94,7 @@ public class MylarContextManager {
         if (handle == null) return;
         IMylarContextNode node = activeContext.get(handle);
         if (node == null) return;
-        if (node.getDegreeOfInterest().getValue() >= scalingFactors.getErrorInterest()) { // TODO: hack?
+//        if (node.getDegreeOfInterest().getValue() >= scalingFactors.getErrorInterest()) { // TODO: hack?
             InteractionEvent errorEvent = new InteractionEvent(
                     InteractionEvent.Kind.MANIPULATION, 
                     kind, handle, 
@@ -105,7 +104,7 @@ public class MylarContextManager {
             numInterestingErrors--;
             // TODO: this will results in double-notification
             if (notify) for (IMylarContextListener listener : listeners) listener.interestChanged(node);
-        }
+//        }
     } 
 
     public IMylarContextNode getNode(String elementHandle) {

@@ -149,14 +149,17 @@ public class MylarViewerManager implements IMylarContextListener {
 										}
 									}
 								}		 	
-								InteractionEvent lastInteraction = lastNode.getDegreeOfInterest().getEvents().get(lastNode.getDegreeOfInterest().getEvents().size()-1);
-								if (showChildrenRequested && viewer instanceof TreeViewer) {
-									((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
-								} else if (objectToRefresh != null 
-										&& lastInteraction.getKind().isUserEvent()
-										&& isSelectableViewer(viewer)) { // ignore outlines since they're synched
-									StructuredSelection selection = new StructuredSelection(objectToRefresh);
-									if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
+								List<InteractionEvent> events = lastNode.getDegreeOfInterest().getEvents();
+								if (!events.isEmpty()) {
+								InteractionEvent lastInteraction = events.get(events.size()-1);
+									if (showChildrenRequested && viewer instanceof TreeViewer) {
+										((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
+									} else if (objectToRefresh != null 
+											&& lastInteraction.getKind().isUserEvent()
+											&& isSelectableViewer(viewer)) { // ignore outlines since they're synched
+										StructuredSelection selection = new StructuredSelection(objectToRefresh);
+										if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
+									}
 								}
 							}
 						}

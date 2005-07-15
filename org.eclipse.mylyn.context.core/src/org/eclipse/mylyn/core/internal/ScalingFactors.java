@@ -41,10 +41,8 @@ public class ScalingFactors implements Serializable {
 
 	private int degreeOfSeparationScale = 3;
 
-	// misc
-	// XXX never used
-	// private int maxParentPropagationdDistance = 7;
-	private float errorInterest = 1.234f;
+	// TODO: parametrize
+	private float errorInterest = .3f;
 
 	private int maxNumInterestingErrors = 20;
 
