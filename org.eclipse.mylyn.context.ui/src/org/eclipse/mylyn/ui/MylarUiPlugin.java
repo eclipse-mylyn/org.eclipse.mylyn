@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -41,6 +42,7 @@ import org.eclipse.mylar.ui.internal.views.TaskListHighlighterContributor;
 import org.eclipse.mylar.ui.resources.NavigatorRefreshListener;
 import org.eclipse.mylar.ui.resources.ResourceUiBridge;
 import org.eclipse.mylar.ui.views.ActiveSearchView;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IStartup;
@@ -80,6 +82,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     protected MylarViewerManager uiUpdateManager = new MylarViewerManager();
     private ViewerConfigurator viewerConfigurator = new ViewerConfigurator();
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
+	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
+	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
     private static final IMylarUiBridge DEFAULT_UI_BRIDGE = new IMylarUiBridge() {
 

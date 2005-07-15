@@ -415,7 +415,7 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
         IJavaElement javaElement = ((TreeParent)element).getElement();
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
         if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
-            return UiUtil.BOLD;
+            return MylarUiPlugin.BOLD;
         }
         return null;
     }

@@ -16,6 +16,7 @@ package org.eclipse.mylar.ui.internal.views;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
@@ -39,7 +40,7 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
             IMylarContextNode node = MylarPlugin.getContextManager().getNode(handle);
             if (node != null) {    
                 if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
-                    return UiUtil.BOLD;
+                    return MylarUiPlugin.BOLD;
                 } 
             } 
         } 

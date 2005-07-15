@@ -72,7 +72,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
         IMylarContextNode node = getNode(element);
         if (node != null) {    
             if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
-                return UiUtil.BOLD;
+                return MylarUiPlugin.BOLD;
             } 
         } 
         return null;

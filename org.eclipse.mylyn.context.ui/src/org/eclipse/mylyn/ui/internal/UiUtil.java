@@ -8,12 +8,9 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 26, 2004
- */
+
 package org.eclipse.mylar.ui.internal;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.internal.CompositeContextNode;
 import org.eclipse.mylar.core.internal.MylarContext;
@@ -21,7 +18,6 @@ import org.eclipse.mylar.core.internal.MylarContextNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 
  
 /**
@@ -29,44 +25,6 @@ import org.eclipse.swt.graphics.Font;
  */
 public class UiUtil {
 
-    public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
-    public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
-
-	
-//    public static void refreshProblemsView() {
-//        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//            public void run() { 
-//                TableViewer problemsTableView = UiUtil.getProblemViewFromActivePerspective();
-//                if (problemsTableView != null && problemsTableView.getTable().isVisible() && !problemsTableView.getTable().isDisposed()) {
-//                    problemsTableView.refresh();
-//                } 
-//            }
-//        });   
-//    }
-    
-//    public static String getFilterStatisticsDecoration(IParent parent) {
-//        IJavaElement[] children;
-//        String text = "";
-//        try {
-//            children = parent.getChildren();
-////            int numFiltered = 0;
-//            int numVisible = 0;
-//            int numTotal = children.length;
-//            for (int i = 0; i < children.length; i++) {
-//                ITaskscapeNode childInfo = MylarPlugin.getTaskscapeManager().getDoi(children[i].getHandleIdentifier());
-//                if (childInfo != null && childInfo.getDegreeOfInterest().getDegreeOfInterest().isInteresting()) {
-//                    numVisible++;
-//                } 
-//            }  
-//            if (children.length > 0) 
-//                text += "   |" + numVisible + ".." + numTotal + "|";
-//        } catch (JavaModelException e) {
-//            MylarPlugin.fail(e, e.toString(), false);
-//        }
-//
-//	    return text;
-//    }
-    
     public static Color getBackgroundForElement(IMylarContextNode node) {
         if (node == null || node.getDegreeOfInterest().isPredicted()) return null;
         IMylarContextNode dominantNode = null;

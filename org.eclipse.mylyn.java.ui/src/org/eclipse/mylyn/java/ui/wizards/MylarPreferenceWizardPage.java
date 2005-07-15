@@ -11,7 +11,7 @@
 package org.eclipse.mylar.java.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.ui.internal.UiUtil;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -169,7 +169,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		spacer.setText(" ");
 		label = new Label(buttonComposite, SWT.NONE);
 		label.setText(FIRST_USE);
-		label.setFont(UiUtil.BOLD);
+		label.setFont(MylarUiPlugin.BOLD);
 		gd = new GridData();
 		label.setLayoutData(gd);
 		setControl(buttonComposite);
