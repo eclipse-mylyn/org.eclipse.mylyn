@@ -276,6 +276,9 @@ public class TaskListView extends ViewPart {
 			if (element instanceof ITaskListElement) {
 				if(element instanceof ITask && ((ITaskListElement)element).hasCorrespondingActivatableTask()){
 					ITask task = ((ITaskListElement)element).getOrCreateCorrespondingTask();
+					if (task.isActive()) {
+						return true;
+					}
 					if(task != null){
 						return !task.isCompleted();
 					} else {
@@ -347,7 +350,10 @@ public class TaskListView extends ViewPart {
 			}
 		}
 		private boolean checkTask(ITaskListElement task) {
-			for (String filter : priorities) {
+			if (task instanceof ITask && ((ITask)task).isActive()) {
+				return true;
+			}
+			for (String filter : priorities) {				
 				if (task.getPriority().equals(filter)) {
 					return true;
 				}

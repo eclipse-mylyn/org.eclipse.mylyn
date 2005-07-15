@@ -4,6 +4,7 @@
 <toc label="Mylar User Guide"> 
 	<topic label="Overview" href="user/overview.html"/>
 	<topic label="New &amp; Noteworthy" href="user/newnoteworthy.html"/>
+	<topic label="Task List" href="user/tasklist.html"/>
 	<topic label="Known Limitations" href="user/limitations.html"/>
 </toc>
 

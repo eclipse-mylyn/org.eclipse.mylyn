@@ -261,6 +261,9 @@ public class TaskListExternalizer {
 		if (hasCaughtException) {
 			// if exception was caught, write out the new task file, so that it doesn't happen again.
 			// this is OK, since the original (corrupt) tasklist is saved.
+			// TODO: The problem with this is that if the orignal tasklist has tasks and bug reports, but a 
+			// task is corrupted, the new tasklist that is written will not include the bug reports (since the
+			// bugzilla externalizer is not loaded. So there is a potentila that we can lose bug reports.
 			writeTaskList(tlist, inFile);
 		}
 	}

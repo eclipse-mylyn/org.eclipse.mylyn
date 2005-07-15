@@ -195,8 +195,8 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     protected void initializeDefaultPreferences(IPreferenceStore store) {
     	store.setDefault(SELECTED_PRIORITY, "P5");
     	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);
-    	store.setDefault(REPORT_OPEN_EDITOR, false);
-    	store.setDefault(REPORT_OPEN_INTERNAL, true);
+    	store.setDefault(REPORT_OPEN_EDITOR, true);
+    	store.setDefault(REPORT_OPEN_INTERNAL, false);
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     }
 
