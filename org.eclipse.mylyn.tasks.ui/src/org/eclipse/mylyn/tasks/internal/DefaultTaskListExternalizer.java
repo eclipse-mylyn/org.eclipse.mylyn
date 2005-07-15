@@ -19,6 +19,7 @@ import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.Task;
+import org.eclipse.mylar.tasks.ui.actions.TaskActivateAction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -187,6 +188,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true);
 			tlist.setActive(task, true);
+			new TaskActivateAction(task).run();
 		} else {
 			task.setActive(false);
 		}
