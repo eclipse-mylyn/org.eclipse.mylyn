@@ -85,6 +85,10 @@ public abstract class RelationshipProvider implements IMylarContextListener {
    
     public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
     
+    public int getCurrentDegreeOfSeparation(){
+    	return degreeOfSeparation;
+    }
+    
     public void presentationSettingsChanging(UpdateKind kind) { 
     	// we don't care about this event
     }

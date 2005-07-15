@@ -382,17 +382,18 @@ public class MylarContextManager {
     public void refreshRelatedElements() {
 //        throw new RuntimeException("unimplemented");
         for (RelationshipProvider provider : getRelationshipProviders()) {
-            if (provider.isEnabled()) {
-                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
-            }
-            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
+        	updateSearchKindEnabled(provider, provider.getCurrentDegreeOfSeparation());
+//            if (provider.isEnabled()) {
+//                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
+//            }
+//            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
         }
     }
 
     public void updateSearchKindEnabled(RelationshipProvider provider, int degreeOfSeparation) {
+        MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
         if (degreeOfSeparation <= 0) {
         	provider.setEnabled(false);
-            MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId()); // XXX remove them
         } else {
         	provider.setEnabled(true);
         	provider.setDegreeOfSeparation(degreeOfSeparation);

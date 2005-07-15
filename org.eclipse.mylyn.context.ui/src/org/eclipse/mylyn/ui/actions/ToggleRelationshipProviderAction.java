@@ -20,8 +20,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.search.RelationshipProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 
 /**
@@ -52,7 +54,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	 
 	@Override
 	public void run() {
-		this.setChecked(isChecked());
+		MylarPlugin.getContextManager().updateSearchKindEnabled(provider, degreeOfSeparation);
 //		valueChanged(isChecked(), true);
 	}
 //	
@@ -92,8 +94,15 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	private int degreeOfSeparation = 0;
 	
 	public void addActionsToMenu() {
-		for(IDegreeOfSeparation separation: provider.getDegreesOfSeparation()){
+
+		MenuItem menuItem = new MenuItem(dropDownMenu, SWT.NONE);
+		menuItem.setText("Degree Of Separation");
+		menuItem.setEnabled(false);
 		
+		menuItem = new MenuItem(dropDownMenu, SWT.SEPARATOR);
+		
+		for(IDegreeOfSeparation separation: provider.getDegreesOfSeparation()){
+								
 			Action degreeOfSeparationSelectionAction = new Action(separation.getDegree() + ": " + separation.getLabel(), AS_CHECK_BOX) {	    		
 	    		@Override
 				public void run() {
@@ -111,7 +120,10 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 			ActionContributionItem item= new ActionContributionItem(degreeOfSeparationSelectionAction);
 			item.fill(dropDownMenu, -1);
 			
-			if (degreeOfSeparation >= separation.getDegree()) {
+			degreeOfSeparationSelectionAction.setChecked(false);
+			if(degreeOfSeparation == 0 && separation.getDegree() == 0){
+				degreeOfSeparationSelectionAction.setChecked(true);
+			}else if (degreeOfSeparation != 0 && separation.getDegree() != 0 && degreeOfSeparation >= separation.getDegree()) {
 				degreeOfSeparationSelectionAction.setChecked(true);
 			}
 		}
