@@ -12,12 +12,18 @@
 package org.eclipse.mylar.ui.internal;
 
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContextNode;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.texteditor.ITextEditor;
 
  
 /**
@@ -91,5 +97,20 @@ public class UiUtil {
         } else {
             return null;
         }
+    }
+    
+    public static void closeAllEditors() {
+        try {
+            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+            if (page != null) {
+                IEditorReference[] references = page.getEditorReferences();
+                for (int i = 0; i < references.length; i++) {
+                    IEditorPart part = references[i].getEditor(false); 
+                    if (part instanceof ITextEditor) ((ITextEditor)part).close(true);
+                }
+            }
+        } catch (Throwable t) {
+            MylarPlugin.fail(t, "Could not auto close editor.", false);
+        } 
     }
 }

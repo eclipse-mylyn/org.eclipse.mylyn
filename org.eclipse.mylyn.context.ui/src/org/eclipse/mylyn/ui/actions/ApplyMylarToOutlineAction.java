@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.ui.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;

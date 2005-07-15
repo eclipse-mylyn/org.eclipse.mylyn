@@ -33,6 +33,7 @@ import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
+import org.eclipse.mylar.ui.internal.ColorMap;
 import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
 import org.eclipse.mylar.ui.internal.ViewerConfigurator;
 import org.eclipse.mylar.ui.internal.views.Highlighter;

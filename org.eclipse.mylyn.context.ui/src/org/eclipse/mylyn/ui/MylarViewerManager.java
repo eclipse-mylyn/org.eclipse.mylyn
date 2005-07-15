@@ -28,6 +28,7 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
+import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -79,10 +80,14 @@ public class MylarViewerManager implements IMylarContextListener {
 
     public void contextDeactivated(IMylarContext taskscape) {
     	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
-        if (confirmed && MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.CLOSE_EDITORS)) {
-	    	for (IMylarContextNode node : taskscape.getInterestingResources()) {
-	            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
-	        }
+        if (confirmed) {
+        	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.CLOSE_EDITORS)) {
+        		UiUtil.closeAllEditors();
+        	} else {
+		    	for (IMylarContextNode node : taskscape.getInterestingResources()) {
+		            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
+		        }       		
+        	}
         }
         refreshViewers();
     }

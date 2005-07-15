@@ -50,8 +50,6 @@ public class MylarPlugin extends AbstractUIPlugin {
     private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
     
     public static final String USER_ID = "org.eclipse.mylar.user.id";
-    public static final String CLOSE_EDITORS = "org.eclipse.mylar.close.editors";
-    
     public static boolean started = false;
     
 	private static MylarPlugin INSTANCE;
@@ -61,6 +59,8 @@ public class MylarPlugin extends AbstractUIPlugin {
 //    public static boolean DEBUG_MODE = true;
     public static final String LOG_FILE_NAME = "mylar-log.txt";
     private PrintStream logStream = null;
+
+	public static final String CLOSE_EDITORS = "org.eclipse.mylar.tasks.activation.editors.close.all";
     
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";

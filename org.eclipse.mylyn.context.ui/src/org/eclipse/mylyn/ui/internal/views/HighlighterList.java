@@ -13,6 +13,7 @@ package org.eclipse.mylar.ui.internal.views;
 import java.util.*;
 
 import org.eclipse.mylar.ui.*;
+import org.eclipse.mylar.ui.internal.ColorMap;
 
 
 /**

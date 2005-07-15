@@ -11,7 +11,7 @@
 /*
  * Created on Dec 28, 2004
   */
-package org.eclipse.mylar.ui;
+package org.eclipse.mylar.ui.internal;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;

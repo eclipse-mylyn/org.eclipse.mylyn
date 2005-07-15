@@ -15,8 +15,8 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.ui.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.InterestFilter;
+import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 
 /**
  * @author Mik Kersten

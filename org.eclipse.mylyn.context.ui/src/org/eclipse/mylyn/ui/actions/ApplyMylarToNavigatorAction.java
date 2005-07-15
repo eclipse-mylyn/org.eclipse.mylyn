@@ -13,7 +13,6 @@ package org.eclipse.mylar.ui.actions;
 
 
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.ui.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.resources.NavigatorRefreshListener;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
