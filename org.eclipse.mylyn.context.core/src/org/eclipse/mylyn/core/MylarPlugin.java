@@ -345,4 +345,8 @@ public class MylarPlugin extends AbstractUIPlugin {
     		return commandLineArgs.contains("-pdelaunch");
     	}
 	}
+
+	public void setPredictedInterestEnabled(boolean predictedInterestEnabled) {
+		this.predictedInterestEnabled = predictedInterestEnabled;
+	}
 }
