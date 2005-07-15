@@ -42,9 +42,9 @@ public class TaskList implements Serializable {
     
     public void setActive(ITask task, boolean active) {
         task.setActive(active);
-        if (active) {
+        if (active && !activeTasks.contains(task)) {
             activeTasks.add(task);
-        } else {
+        } else if(!active){
             activeTasks.remove(task);
         }
     }

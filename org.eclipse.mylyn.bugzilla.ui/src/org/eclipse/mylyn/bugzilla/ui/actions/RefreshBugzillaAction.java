@@ -16,12 +16,15 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
@@ -43,6 +46,11 @@ public class RefreshBugzillaAction extends Action {
 	}
 	@Override
 	public void run() {
+		if(MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks().size() > 0){
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cannot Perform Refresh", "Please deactivate all tasks before attempting to perform a refresh since the task may disapear.");
+			return;
+		}
+		
 		ISelection selection = this.view.getViewer().getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		if (obj instanceof BugzillaQueryCategory) {

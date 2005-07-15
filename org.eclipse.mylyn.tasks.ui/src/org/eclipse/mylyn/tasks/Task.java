@@ -199,7 +199,7 @@ public class Task implements ITask {
     @Override
     public boolean equals(Object obj) {
        if (obj instanceof Task && obj != null) {
-           return this.getHandle() == ((Task)obj).getHandle();
+           return this.getHandle().compareTo(((Task)obj).getHandle()) == 0;
        } else {
            return false;
        }
