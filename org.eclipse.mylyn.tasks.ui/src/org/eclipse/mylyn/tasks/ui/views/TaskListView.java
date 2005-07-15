@@ -848,9 +848,7 @@ public class TaskListView extends ViewPart {
 
     private void fillLocalPullDown(IMenuManager manager) {
     	drillDownAdapter.addNavigationActions(manager);
-//        manager.add(createCategory);
-//        manager.add(new Separator());
-//        manager.add(createTask);
+    	manager.add(new Separator());
     }
 
     void fillContextMenu(IMenuManager manager) {
@@ -1173,6 +1171,7 @@ public class TaskListView extends ViewPart {
     
 	public  void resetToolbarsAndPopups() {
 		getViewSite().getActionBars().getMenuManager().removeAll();
+        fillLocalPullDown(getViewSite().getActionBars().getMenuManager());
         fillContextMenu(getViewSite().getActionBars().getMenuManager());
 		fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
 		getViewSite().getActionBars().getToolBarManager().update(true);  
