@@ -14,44 +14,107 @@
 package org.eclipse.mylar.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.search.RelationshipProvider;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 
 
 /**
  * @author Mik Kersten
  */
-public class ToggleRelationshipProviderAction extends Action {
+public class ToggleRelationshipProviderAction extends Action implements IMenuCreator{
 
-    private final String PREFIX = "org.eclipse.mylar.ui.relatedElements.providers";
-    private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
+//    private final String PREFIX = "org.eclipse.mylar.ui.relatedElements.providers";
+//    private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
     
     private RelationshipProvider provider;
-    
+    private Menu dropDownMenu = null;
+        
 	public ToggleRelationshipProviderAction(RelationshipProvider provider, ImageDescriptor image) {
 		super();
         this.provider = provider;
-        this.prefId = PREFIX + '.' + provider.getId().toString();
+//        this.prefId = PREFIX + '.' + provider.getId().toString();
         
 		setText(provider.getId().toString());
         setToolTipText(provider.getId().toString());
 		setImageDescriptor(image);
+
+		setMenuCreator(this);	
 		
-		boolean checked= MylarUiPlugin.getPrefs().getBoolean(prefId); 
-		valueChanged(checked, true); 
+//		boolean checked= MylarUiPlugin.getPrefs().getBoolean(prefId); 
+//		valueChanged(checked, true); 
 	}   
 	 
 	@Override
 	public void run() {
-		valueChanged(isChecked(), true);
+		this.setChecked(isChecked());
+//		valueChanged(isChecked(), true);
 	}
+//	
+//	private void valueChanged(final boolean on, boolean store) {
+//		setChecked(on);
+//		if (store) MylarUiPlugin.getPrefs().setValue(prefId, on); //$NON-NLS-1$
+//		provider.setEnabled(on);
+//        MylarPlugin.getContextManager().updateSearchKindEnabled(provider, on, degreeOfSeparation);
+//	}
 	
-	private void valueChanged(final boolean on, boolean store) {
-		setChecked(on);
-		if (store) MylarUiPlugin.getPrefs().setValue(prefId, on); //$NON-NLS-1$
-		provider.setEnabled(on);
-        MylarPlugin.getContextManager().updateSearchKindEnabled(provider, on);
+	
+	public void dispose() {			
+		if (dropDownMenu != null) {
+			dropDownMenu.dispose();
+			dropDownMenu = null;
+		}
+	}
+
+	public Menu getMenu(Control parent) {			
+		if (dropDownMenu != null) {
+			dropDownMenu.dispose();
+		}
+		dropDownMenu = new Menu(parent);
+		addActionsToMenu();
+		return dropDownMenu;
+	}
+
+	public Menu getMenu(Menu parent) {
+		if (dropDownMenu != null) {
+			dropDownMenu.dispose();
+		}
+		dropDownMenu = new Menu(parent);
+		addActionsToMenu();
+		return dropDownMenu;
+	}    
+	
+	private int degreeOfSeparation = 0;
+	
+	public void addActionsToMenu() {
+		for(IDegreeOfSeparation separation: provider.getDegreesOfSeparation()){
+		
+			Action degreeOfSeparationSelectionAction = new Action(separation.getDegree() + ": " + separation.getLabel(), AS_CHECK_BOX) {	    		
+	    		@Override
+				public void run() {
+	    			try{
+		    			degreeOfSeparation = Integer.parseInt(getId());
+		    			MylarPlugin.getContextManager().updateSearchKindEnabled(provider, degreeOfSeparation);
+	    			} catch (NumberFormatException e){
+	    				// ignore this for now
+	    			}
+				}
+			};  
+			degreeOfSeparationSelectionAction.setId(""+separation.getDegree());
+			degreeOfSeparationSelectionAction.setEnabled(true);
+			degreeOfSeparationSelectionAction.setToolTipText(separation.getLabel());
+			ActionContributionItem item= new ActionContributionItem(degreeOfSeparationSelectionAction);
+			item.fill(dropDownMenu, -1);
+			
+			if (degreeOfSeparation >= separation.getDegree()) {
+				degreeOfSeparationSelectionAction.setChecked(true);
+			}
+		}
 	}
 }
+

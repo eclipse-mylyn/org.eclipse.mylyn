@@ -38,6 +38,7 @@ import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.search.RelationshipProvider;
@@ -366,7 +367,14 @@ public class XmlReferencesProvider extends RelationshipProvider {
 
 	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		// TODO Auto-generated method stub
-		return null;
+		List <IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		separations.add(new DegreeOfSeparation("disabled", 0));
+		separations.add(new DegreeOfSeparation("landmark files", 1));
+		separations.add(new DegreeOfSeparation("interesting files", 2));
+		separations.add(new DegreeOfSeparation("interesting project", 3));
+		separations.add(new DegreeOfSeparation("project dependancies", 4));
+		separations.add(new DegreeOfSeparation("entire workspace", 5));
+
+		return separations;
 	}
 }

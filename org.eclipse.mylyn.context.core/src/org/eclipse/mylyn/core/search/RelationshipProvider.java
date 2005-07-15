@@ -21,7 +21,6 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextManager;
 
 
 /**
@@ -32,6 +31,7 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     private boolean enabled = false;
     private String id;
     private String structureKind;
+    private int degreeOfSeparation;
     
     public void nodeDeleted(IMylarContextNode node) {
     	// we don't care when this happens
@@ -60,7 +60,7 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     }
     
     public void landmarkAdded(IMylarContextNode node) { 
-        if (enabled) findRelated(node, MylarContextManager.getScalingFactors().getDegreeOfSeparation());
+        if (enabled) findRelated(node, degreeOfSeparation);
   } 
     
     public void landmarkRemoved(IMylarContextNode node) {
@@ -121,4 +121,8 @@ public abstract class RelationshipProvider implements IMylarContextListener {
     public String getStructureKind() {
         return structureKind;
     }
+
+	public void setDegreeOfSeparation(int degreeOfSeparation){
+		this.degreeOfSeparation = degreeOfSeparation;
+	}
 }

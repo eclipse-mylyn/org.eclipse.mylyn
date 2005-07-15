@@ -389,10 +389,13 @@ public class MylarContextManager {
         }
     }
 
-    public void updateSearchKindEnabled(RelationshipProvider provider, boolean on) {
-        if (!on) {
-            MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
+    public void updateSearchKindEnabled(RelationshipProvider provider, int degreeOfSeparation) {
+        if (degreeOfSeparation <= 0) {
+        	provider.setEnabled(false);
+            MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId()); // XXX remove them
         } else {
+        	provider.setEnabled(true);
+        	provider.setDegreeOfSeparation(degreeOfSeparation);
             for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
         }
     }

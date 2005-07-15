@@ -8,16 +8,29 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+package org.eclipse.mylar.core.internal;
 
-package org.eclipse.mylar.core;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 
 /**
- * @author Mik Kersten and Shawn Minto
+ * @author Shawn Minto
  */
-public interface IDegreeOfSeparation {
+public class DegreeOfSeparation implements IDegreeOfSeparation {
 
-	public abstract String getLabel();
+	private String label;
+	private int degree;
 	
-	public abstract int getDegree();
-	
+	public DegreeOfSeparation(String label, int degree){
+		this.label = label;
+		this.degree = degree;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public int getDegree() {
+		return degree;
+	}
+
 }
