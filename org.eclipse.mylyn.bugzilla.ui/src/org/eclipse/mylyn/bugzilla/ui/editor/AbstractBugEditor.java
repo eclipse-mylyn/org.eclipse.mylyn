@@ -201,7 +201,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected Composite infoArea;
 
-	protected Hyperlink generalTitleText;
+	protected Hyperlink linkToBug;
+	
+	protected StyledText generalTitleText;
 	
 	private List<IBugzillaAttributeListener> attributesListeners = new ArrayList<IBugzillaAttributeListener>();
 	
@@ -1130,7 +1132,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			new GridData(GridData.FILL_HORIZONTAL));
 		generalTitleGroup.setLayoutData(data);
 		GridLayout generalTitleLayout = new GridLayout();
-		generalTitleLayout.numColumns = 2;
+		generalTitleLayout.numColumns = 3;
 		generalTitleLayout.marginWidth = 0;
 		generalTitleLayout.marginHeight = 9;
 		generalTitleGroup.setLayout(generalTitleLayout);
@@ -1141,20 +1143,43 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		image.setImage(
 			WorkbenchImages.getImage(
 					IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
-
+		
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
 		image.setLayoutData(gd);
-		generalTitleText =
-			new Hyperlink(generalTitleGroup, SWT.MULTI | SWT.READ_ONLY);
-		setGeneralTitleText();
-		generalTitleText.setBackground(background);
 
+		generalTitleText =
+			new StyledText(generalTitleGroup, SWT.MULTI | SWT.READ_ONLY);
+		generalTitleText.setBackground(background);
+		generalTitleText.getCaret().setVisible(false);
+		generalTitleText.setEditable(false);
+		generalTitleText.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				StyledText c = (StyledText) e.widget;
+				if (c != null && c.getSelectionCount() > 0) {
+					if (currentSelectedText != null) {
+						if (!c.equals(currentSelectedText)) {
+							currentSelectedText.setSelectionRange(0, 0);
+						}
+					}
+				}
+				currentSelectedText = c;
+			}
+		});
 		// create context menu
-//		 generalTitleGroup.setMenu(
-//			 contextMenuManager.createContextMenu(generalTitleGroup));
-//		 generalTitleText.setMenu(
-//			 contextMenuManager.createContextMenu(generalTitleText));
+		 generalTitleGroup.setMenu(
+			 contextMenuManager.createContextMenu(generalTitleGroup));
+		 generalTitleText.setMenu(
+			 contextMenuManager.createContextMenu(generalTitleText));		
+		
+		linkToBug =
+			new Hyperlink(generalTitleGroup, SWT.MULTI | SWT.READ_ONLY);
+		linkToBug.setBackground(background);
+
+		setGeneralTitleText();
+
 		 image.setMenu(
 			 contextMenuManager.createContextMenu(image));
 		composite.setMenu(contextMenuManager.createContextMenu(composite));
@@ -1165,13 +1190,13 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * elements which can change).
 	 */
 	protected void setGeneralTitleText() {
-		String text = getTitleString();
-		generalTitleText.setText(text);
-		generalTitleText.setFont(TEXT_FONT);
+		String text = "Open in browser";
+		linkToBug.setText(text);
+		linkToBug.setFont(TEXT_FONT);
 		if(this instanceof ExistingBugEditor){
-			generalTitleText.setUnderlined(true);
-			generalTitleText.setForeground(JFaceColors.getHyperlinkText(Display.getCurrent()));
-			generalTitleText.addMouseListener(new MouseListener(){
+			linkToBug.setUnderlined(true);
+			linkToBug.setForeground(JFaceColors.getHyperlinkText(Display.getCurrent()));
+			linkToBug.addMouseListener(new MouseListener(){
 	
 				public void mouseDoubleClick(MouseEvent e) {}
 				public void mouseUp(MouseEvent e) {}
@@ -1181,8 +1206,25 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				}
 			});
 		} else{
-			generalTitleText.setEnabled(false);
+			linkToBug.setEnabled(false);
 		}
+		linkToBug.addListener(SWT.FocusIn, new GenericListener());
+		
+		// Resize the composite, in case the new summary is longer than the
+		// previous one.
+		// Then redraw it to show the changes.
+		linkToBug.getParent().pack(true);
+		linkToBug.redraw();
+		
+		text = getTitleString();
+		generalTitleText.setText(text);
+		StyleRange sr = new StyleRange(
+				generalTitleText.getOffsetAtLine(0),
+				text.length(),
+				foreground,
+				background,
+				SWT.BOLD);
+		generalTitleText.setStyleRange(sr);
 		generalTitleText.addListener(SWT.FocusIn, new GenericListener());
 		
 		// Resize the composite, in case the new summary is longer than the
