@@ -21,8 +21,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
+import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -76,6 +79,17 @@ public class RefreshBugzillaAction extends Action {
 				// Handle the wrapped exception
 				MylarPlugin.log(e, e.getMessage());
 			}
-		} 
+		} else if (obj instanceof TaskCategory) {
+			TaskCategory cat = (TaskCategory) obj;
+			for (ITask task : cat.getChildren()) {
+				if (task instanceof BugzillaTask) {
+					((BugzillaTask)task).refresh();
+				}
+			}
+			view.getViewer().refresh();
+		} else if (obj instanceof BugzillaTask) {
+			((BugzillaTask)obj).refresh();
+			view.getViewer().refresh();
+		}
 	}
 }
