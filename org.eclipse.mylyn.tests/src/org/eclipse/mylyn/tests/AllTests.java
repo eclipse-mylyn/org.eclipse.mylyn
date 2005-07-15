@@ -16,9 +16,9 @@ package org.eclipse.mylar.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylar.core.tests.TaskscapeTest;
+import org.eclipse.mylar.core.tests.ContextTest;
 import org.eclipse.mylar.java.tests.JavaStructureTest;
-import org.eclipse.mylar.java.tests.TaskscapeManagerTest;
+import org.eclipse.mylar.java.tests.ContextManagerTest;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
@@ -37,7 +37,7 @@ public class AllTests {
         //$JUnit-BEGIN$
 
         // Java Tests
-        suite.addTestSuite(TaskscapeManagerTest.class);
+        suite.addTestSuite(ContextManagerTest.class);
         suite.addTestSuite(JavaStructureTest.class);
         suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
         suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
@@ -57,7 +57,7 @@ public class AllTests {
 //        suite.addTestSuite(XStreamUsageTest.class);
 
         // Core Tests
-        suite.addTestSuite(TaskscapeTest.class);
+        suite.addTestSuite(ContextTest.class);
 //        suite.addTestSuite(InteractionEventExternalizationTest.class);
 //        suite.addTestSuite(ManualUiTest.class);
         suite.addTestSuite(TaskListUiTest.class);
