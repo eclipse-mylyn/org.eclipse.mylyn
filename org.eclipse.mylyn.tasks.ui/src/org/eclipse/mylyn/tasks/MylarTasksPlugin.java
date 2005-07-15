@@ -11,6 +11,11 @@
 package org.eclipse.mylar.tasks;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -179,8 +184,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
                 MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
             
             }
-        });
-        
+        });               
 		super.start(context);
 	}
 
@@ -189,6 +193,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
+		createFileBackup();
 	}
 
     @Override
@@ -308,4 +313,30 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		contributors.add(contributor);
 		if (TaskListView.getDefault() != null) TaskListView.getDefault().resetToolbarsAndPopups();
 	}
+	
+	private void createFileBackup() {
+		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
+		File taskListFile = new File(path);
+		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
+		copy(taskListFile, new File(backup));
+	}
+    
+    private boolean copy(File src, File dst) {
+		try {
+			InputStream in = new FileInputStream(src);
+			OutputStream out = new FileOutputStream(dst);
+
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			return true;
+		} catch (IOException ioe) {
+			return false;
+		}
+    }
 }
