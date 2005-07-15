@@ -61,7 +61,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		GridLayout gl = new GridLayout(1, false);
 		container.setLayout(gl);		
 		closeEditors = new Button(container, SWT.CHECK);
-		closeEditors.setText("Close all editors automatically on task deactivation");
+		closeEditors.setText("Close all editors on task deactivation (defaults to close only editors of interesting resources)");
 		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));		
 	}
 	
