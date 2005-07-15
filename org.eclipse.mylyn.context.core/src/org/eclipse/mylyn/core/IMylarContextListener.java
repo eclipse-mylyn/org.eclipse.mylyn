@@ -15,11 +15,10 @@ package org.eclipse.mylar.core;
 
 import java.util.List;
 
-
-
-
 /**
  * @author Mik Kersten
+ * 
+ * TODO: refactor this interface, it's too cumbersome
  */
 public interface IMylarContextListener {
 

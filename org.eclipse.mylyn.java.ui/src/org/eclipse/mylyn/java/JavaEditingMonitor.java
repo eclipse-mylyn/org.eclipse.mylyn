@@ -26,7 +26,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
-import org.eclipse.jdt.internal.ui.browsing.ProjectsView;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
 import org.eclipse.jface.text.TextSelection;
@@ -106,12 +105,11 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
      */
     @Override
     public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
-        try {
-            if (part instanceof ProjectsView) return; // HACK
+    	try {
             IJavaElement selectedElement = null;
             if (selection instanceof StructuredSelection) {
                 StructuredSelection structuredSelection = (StructuredSelection)selection;
-             
+            	
                 if (structuredSelection.equals(currentSelection)) return;
                 currentSelection = structuredSelection;
               
@@ -124,11 +122,11 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                         selectedElement = checkedElement; 
                     }
                 } 
+//            	System.err.println(">>> " + selectedElement.getHandleIdentifier());
                 if (selectedElement != null) super.handleElementSelection(part, selectedElement);
             } else {
                 if (selection instanceof TextSelection && part instanceof JavaEditor) {
                     currentEditor = (JavaEditor)part;
-//                    registerEditor(currentEditor);
                     TextSelection textSelection = (TextSelection)selection;
                     selectedElement = SelectionConverter.resolveEnclosingElement(currentEditor, textSelection);
                     if (selectedElement instanceof IPackageDeclaration) return; // HACK: ignoring these selections
@@ -164,7 +162,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                     if (selectedElement != null) {
                         if (!selectionResolved && selectedElement.equals(lastSelectedElement))  {
                             super.handleElementEdit(part, selectedElement);
-                        } else {
+                        } else if (!selectedElement.equals(lastSelectedElement)){
                             super.handleElementSelection(part, selectedElement);
                         }
                     }

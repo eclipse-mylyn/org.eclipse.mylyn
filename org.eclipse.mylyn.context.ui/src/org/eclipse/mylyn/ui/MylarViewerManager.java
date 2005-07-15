@@ -18,13 +18,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
@@ -35,7 +34,6 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author Mik Kersten
@@ -156,14 +154,14 @@ public class MylarViewerManager implements IMylarContextListener {
 								}		 	
 								List<InteractionEvent> events = lastNode.getDegreeOfInterest().getEvents();
 								if (!events.isEmpty()) {
-								InteractionEvent lastInteraction = events.get(events.size()-1);
+//								InteractionEvent lastInteraction = events.get(events.size()-1);
 									if (showChildrenRequested && viewer instanceof TreeViewer) {
 										((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
-									} else if (objectToRefresh != null 
-											&& lastInteraction.getKind().isUserEvent()
-											&& isSelectableViewer(viewer)) { // ignore outlines since they're synched
-										StructuredSelection selection = new StructuredSelection(objectToRefresh);
-										if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
+//									} else if (objectToRefresh != null 
+//											&& lastInteraction.getKind().isUserEvent()
+//											&& isSelectableViewer(viewer)) { // ignore outlines since they're synched
+//										StructuredSelection selection = new StructuredSelection(objectToRefresh);
+//										if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
 									}
 								}
 							}
@@ -176,15 +174,15 @@ public class MylarViewerManager implements IMylarContextListener {
         });
     }
     
-    private boolean isSelectableViewer(StructuredViewer viewer) {
-    	if (viewer instanceof IContentOutlinePage) {
-    		return false;
-    	} else if (viewer.getClass().getEnclosingClass() != null
-    		&& IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass())) {
-    		return false;
-    	} 
-    	return true;
-	}
+//    private boolean isSelectableViewer(StructuredViewer viewer) {
+//    	if (viewer instanceof IContentOutlinePage) {
+//    		return false;
+//    	} else if (viewer.getClass().getEnclosingClass() != null
+//    		&& IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass())) {
+//    		return false;
+//    	} 
+//    	return true;
+//	}
 
 	public void interestChanged(final List<IMylarContextNode> nodes) {
     	refreshViewers(nodes, false);

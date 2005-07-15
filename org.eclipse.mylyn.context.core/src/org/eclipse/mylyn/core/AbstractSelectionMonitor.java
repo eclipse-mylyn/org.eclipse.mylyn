@@ -29,6 +29,8 @@ import org.eclipse.ui.internal.Workbench;
  */
 public abstract class AbstractSelectionMonitor implements ISelectionListener {
  
+	private Object lastSelectedElement = null;
+	
     /**
      * Requires workbench to be active.
      */
@@ -68,6 +70,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
      */
     protected void handleElementSelection(IWorkbenchPart part, Object selectedElement) {
         if (selectedElement == null) return;
+        if (selectedElement.equals(lastSelectedElement)) return;
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
         InteractionEvent selectionEvent = new InteractionEvent(
                 InteractionEvent.Kind.SELECTION,

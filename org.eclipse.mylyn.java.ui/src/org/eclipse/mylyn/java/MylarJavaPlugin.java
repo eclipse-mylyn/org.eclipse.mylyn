@@ -79,6 +79,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
                 MylarPlugin.getContextManager().addListener(new JavaWriteAccessProvider()); 
                 MylarPlugin.getContextManager().addListener(new JUnitReferencesProvider());
                 
+                MylarPlugin.getContextManager().addListener(new PackageExplorerSelectionUpdater());
+
                 MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
                 MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
                 MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);

@@ -12,17 +12,22 @@ package org.eclipse.mylar.java;
 
 import java.util.List;
 
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 
 /**
  * @author Mik Kersten
- * @deprecated
+ * 
+ * TODO: get rid of the old delta-based code
  */
-public class JavaUiUpdateBridge implements IMylarContextListener {
+public class PackageExplorerSelectionUpdater implements IMylarContextListener {
 	
 //    private enum ChangeKind { ADDED, REMOVED, CHANGED }
 
@@ -84,6 +89,8 @@ public class JavaUiUpdateBridge implements IMylarContextListener {
      * TODO: currently punts if there was something temporarily raised
      */
     public void interestChanged(List<IMylarContextNode> nodes) {
+    	IMylarContextNode lastNode = nodes.get(nodes.size()-1);
+    	interestChanged(lastNode);
 //        if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
 //            final IJavaElement raisedElement = JavaCore.create(MylarPlugin.getTaskscapeManager().getTempRaisedHandle());
 //            final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
@@ -137,6 +144,14 @@ public class JavaUiUpdateBridge implements IMylarContextListener {
 //    }
     
     public void interestChanged(IMylarContextNode node) {
+    	if (MylarPlugin.getContextManager().hasActiveContext()
+    		&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
+	    	IJavaElement lastElement = JavaCore.create(node.getElementHandle()); 
+			PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+			if (packageExplorer != null) {
+				packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement));
+			}
+    	}
 //        IJavaElement element = JavaCore.create(node.getElementHandle()); 
 //        if(element == null) { 
 //        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());

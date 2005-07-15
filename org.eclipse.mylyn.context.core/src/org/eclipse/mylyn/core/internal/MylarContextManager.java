@@ -76,7 +76,7 @@ public class MylarContextManager {
     
 	public void addErrorPredictedInterest(String handle, String kind, boolean notify) { 
         if (numInterestingErrors > scalingFactors.getMaxNumInterestingErrors() 
-            || activeContext.getTaskscapeMap().isEmpty()) return;
+            || activeContext.getContextMap().isEmpty()) return;
         InteractionEvent errorEvent = new InteractionEvent(
                 InteractionEvent.Kind.PREDICTION, 
                 kind, handle, 
@@ -90,7 +90,7 @@ public class MylarContextManager {
      * TODO: worry about decay-related change if predicted interest dacays
      */
     public void removeErrorPredictedInterest(String handle, String kind, boolean notify) { 
-        if (activeContext.getTaskscapeMap().isEmpty()) return;
+        if (activeContext.getContextMap().isEmpty()) return;
         if (handle == null) return;
         IMylarContextNode node = activeContext.get(handle);
         if (node == null) return;
@@ -124,7 +124,7 @@ public class MylarContextManager {
      */
     public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
         if (event.getKind() == InteractionEvent.Kind.COMMAND) return null;
-        if (activeContext.getTaskscapeMap().values().size() == 0) return null;
+        if (activeContext.getContextMap().values().size() == 0) return null;
         if (suppressListenerNotification) return null;
         
         IMylarContextNode previous = activeContext.get(event.getStructureHandle());
@@ -252,15 +252,15 @@ public class MylarContextManager {
      * For testing
      */
     public void taskActivated(MylarContext taskscape) {
-        activeContext.getTaskscapeMap().put(taskscape.getId(), taskscape);
+        activeContext.getContextMap().put(taskscape.getId(), taskscape);
     } 
     
     public void taskActivated(String id, String path) {
 	    suppressListenerNotification = true;
-	    MylarContext taskscape = activeContext.getTaskscapeMap().get(id);
+	    MylarContext taskscape = activeContext.getContextMap().get(id);
 	    if (taskscape == null) taskscape = loadTaskscape(id, path);
 	    if (taskscape != null) {
-	        activeContext.getTaskscapeMap().put(id, taskscape);
+	        activeContext.getContextMap().put(id, taskscape);
 	        for (IMylarContextListener listener : listeners) listener.contextActivated(taskscape);
 	    } else {
 	        MylarPlugin.log("Could not load taskscape", this);
@@ -273,16 +273,16 @@ public class MylarContextManager {
      * @param id
      */
     public void taskDeactivated(String id, String path) {
-        IMylarContext taskscape = activeContext.getTaskscapeMap().get(id);        
+        IMylarContext taskscape = activeContext.getContextMap().get(id);        
         if (taskscape != null) {
             saveTaskscape(id, path); 
-            activeContext.getTaskscapeMap().remove(id);
+            activeContext.getContextMap().remove(id);
             for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
         }
     }
 
     public void taskDeleted(String id, String path) {
-        IMylarContext taskscape = activeContext.getTaskscapeMap().get(id);
+        IMylarContext taskscape = activeContext.getContextMap().get(id);
         if (taskscape != null) {
             for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
         }
@@ -294,9 +294,9 @@ public class MylarContextManager {
     }
      
     private void eraseTaskscape(String id) {
-        MylarContext taskscape = activeContext.getTaskscapeMap().get(id);
+        MylarContext taskscape = activeContext.getContextMap().get(id);
         if (taskscape == null) return;
-        activeContext.getTaskscapeMap().remove(taskscape);
+        activeContext.getContextMap().remove(taskscape);
         // TODO: write out the taskscape 
 //        saveTaskscape(id);
 //        taskscape.reset();
@@ -317,7 +317,7 @@ public class MylarContextManager {
     }
  
     public void saveTaskscape(String taskId, String path) {
-        MylarContext taskscape = activeContext.getTaskscapeMap().get(taskId);
+        MylarContext taskscape = activeContext.getContextMap().get(taskId);
         if (taskscape == null) {
             return;
         } else {
@@ -432,5 +432,9 @@ public class MylarContextManager {
 
 	public void setNextEventIsRaiseChildren() {
 		nextEventIsRaiseChildren = true;
+	}
+
+	public boolean hasActiveContext() {
+		return activeContext.getContextMap().values().size() > 0;
 	}
 }

@@ -732,7 +732,7 @@ public class MylarPreferencePage extends PreferencePage implements
 		
 		
 		browse = createButton(taskDirComposite, "Browse...");
-		if (MylarPlugin.getContextManager().getActiveContext().getTaskscapeMap().values().size() == 0) {
+		if (!MylarPlugin.getContextManager().hasActiveContext()) {
 			browse.setEnabled(true);
 		} else {
 			browse.setEnabled(false);

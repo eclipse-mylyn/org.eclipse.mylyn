@@ -191,7 +191,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         StringBuffer buffer = new StringBuffer();
         buffer.append("[");
         buffer.append(DateUtil.getFormattedDate());
-        buffer.append(", ");
+        buffer.append(", "); 
         buffer.append(DateUtil.getFormattedTime());
         buffer.append("] ");
         buffer.append(status.toString());

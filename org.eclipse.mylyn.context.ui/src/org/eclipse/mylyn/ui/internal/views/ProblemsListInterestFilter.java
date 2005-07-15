@@ -32,7 +32,7 @@ public class ProblemsListInterestFilter extends InterestFilter {
          if (marker.getSeverity() == IMarker.SEVERITY_ERROR) {
              return true;
          } else {
-        	 if (MylarPlugin.getContextManager().getActiveContext().getTaskscapeMap().values().size() == 0) {
+        	 if (!MylarPlugin.getContextManager().hasActiveContext()) {
         		 return false;
         	 }
              String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension()).getHandleForMarker(marker);

@@ -109,7 +109,7 @@ public class CompositeContext implements IMylarContext  {
         return contexts.values();
     }
     
-    public Map<String, MylarContext> getTaskscapeMap() {
+    Map<String, MylarContext> getContextMap() {
         return contexts;
     }
 
