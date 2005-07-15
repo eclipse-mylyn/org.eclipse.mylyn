@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.bugzilla.MylarBugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
@@ -138,6 +139,12 @@ public class BugzillaReferencesProvider extends RelationshipProvider {
 
 	public Collection<? extends String> getCachedHandles() {
 		return reports.keySet();
+	}
+
+	@Override
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
