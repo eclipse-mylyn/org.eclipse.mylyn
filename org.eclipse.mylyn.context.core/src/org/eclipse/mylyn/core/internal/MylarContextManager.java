@@ -256,29 +256,37 @@ public class MylarContextManager {
     } 
     
     public void taskActivated(String id, String path) {
-	    suppressListenerNotification = true;
-	    MylarContext taskscape = activeContext.getContextMap().get(id);
-	    if (taskscape == null) taskscape = loadTaskscape(id, path);
-	    if (taskscape != null) {
-	        activeContext.getContextMap().put(id, taskscape);
-	        for (IMylarContextListener listener : listeners) listener.contextActivated(taskscape);
-	    } else {
-	        MylarPlugin.log("Could not load taskscape", this);
-	    }
-	    suppressListenerNotification = false;
-	    listeners.addAll(waitingListeners);
+    	try {
+		    suppressListenerNotification = true;
+		    MylarContext taskscape = activeContext.getContextMap().get(id);
+		    if (taskscape == null) taskscape = loadTaskscape(id, path);
+		    if (taskscape != null) {
+		        activeContext.getContextMap().put(id, taskscape);
+		        for (IMylarContextListener listener : listeners) listener.contextActivated(taskscape);
+		    } else {
+		        MylarPlugin.log("Could not load taskscape", this);
+		    }
+		    suppressListenerNotification = false;
+		    listeners.addAll(waitingListeners);
+    	} catch (Throwable t) {
+    		MylarPlugin.log(t, "Could not activate context");
+    	}
     }
 
     /**
      * @param id
      */
     public void taskDeactivated(String id, String path) {
-        IMylarContext taskscape = activeContext.getContextMap().get(id);        
-        if (taskscape != null) {
-            saveTaskscape(id, path); 
-            activeContext.getContextMap().remove(id);
-            for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
-        }
+    	try {
+	        IMylarContext taskscape = activeContext.getContextMap().get(id);        
+	        if (taskscape != null) {
+	            saveTaskscape(id, path); 
+	            activeContext.getContextMap().remove(id);
+	            for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
+	        }
+    	} catch (Throwable t) {
+    		MylarPlugin.log(t, "Could not deactivate context");
+    	}
     }
 
     public void taskDeleted(String id, String path) {

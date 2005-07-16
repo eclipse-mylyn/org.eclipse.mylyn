@@ -27,14 +27,21 @@ import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
  * 
  * TODO: get rid of the old delta-based code
  */
-public class PackageExplorerSelectionUpdater implements IMylarContextListener {
+public class PackageExplorerManager implements IMylarContextListener {
 	
 //    private enum ChangeKind { ADDED, REMOVED, CHANGED }
 
 	private boolean firstExplorerRefresh = true;
     
     public void contextActivated(IMylarContext taskscape) {
-//        refreshPackageExplorer(null);
+    	if (MylarPlugin.getContextManager().hasActiveContext()
+    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
+        	&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
+    			PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+    			if (packageExplorer != null) { 
+    				packageExplorer.getTreeViewer().expandAll();
+    			}
+        	}	
     }
 
     public void contextDeactivated(IMylarContext taskscape) {
@@ -145,6 +152,7 @@ public class PackageExplorerSelectionUpdater implements IMylarContextListener {
     
     public void interestChanged(IMylarContextNode node) {
     	if (MylarPlugin.getContextManager().hasActiveContext()
+    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
     		&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
 	    	IJavaElement lastElement = JavaCore.create(node.getElementHandle()); 
 			PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
