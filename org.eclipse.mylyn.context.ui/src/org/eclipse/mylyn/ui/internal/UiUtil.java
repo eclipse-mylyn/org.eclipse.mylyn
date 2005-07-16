@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -107,6 +108,7 @@ public class UiUtil {
                 for (int i = 0; i < references.length; i++) {
                     IEditorPart part = references[i].getEditor(false); 
                     if (part instanceof ITextEditor) ((ITextEditor)part).close(true);
+                    if (part instanceof FormEditor) ((FormEditor)part).close(true);
                 }
             }
         } catch (Throwable t) {
