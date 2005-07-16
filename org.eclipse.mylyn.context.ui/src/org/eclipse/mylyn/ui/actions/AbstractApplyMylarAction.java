@@ -74,6 +74,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
     
     protected void valueChanged(IAction action, final boolean on, boolean store) {
     	try {
+    		setChecked(on);
 	        action.setChecked(on);
 	        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
 	

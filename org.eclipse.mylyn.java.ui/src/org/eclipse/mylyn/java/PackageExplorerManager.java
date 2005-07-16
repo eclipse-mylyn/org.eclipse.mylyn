@@ -156,8 +156,8 @@ public class PackageExplorerManager implements IMylarContextListener {
     		&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
 	    	IJavaElement lastElement = JavaCore.create(node.getElementHandle()); 
 			PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-			if (packageExplorer != null) {
-				packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement));
+			if (packageExplorer != null) { 
+				packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement), true);
 			}
     	}
 //        IJavaElement element = JavaCore.create(node.getElementHandle()); 
