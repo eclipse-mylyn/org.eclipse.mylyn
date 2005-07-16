@@ -21,10 +21,12 @@ import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 
  
 /**
@@ -101,18 +103,26 @@ public class UiUtil {
     }
     
     public static void closeAllEditors() {
-        try {
-            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-            if (page != null) {
-                IEditorReference[] references = page.getEditorReferences();
-                for (int i = 0; i < references.length; i++) {
-                    IEditorPart part = references[i].getEditor(false); 
-                    if (part instanceof ITextEditor) ((ITextEditor)part).close(true);
-                    if (part instanceof FormEditor) ((FormEditor)part).close(true);
-                }
+    	IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+		        try {
+		            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		            if (page != null) {
+		                IEditorReference[] references = page.getEditorReferences();
+		                for (int i = 0; i < references.length; i++) {
+		                	IEditorPart part = references[i].getEditor(false); 
+		                    if (part instanceof AbstractTextEditor) {
+		                    	((AbstractTextEditor)part).close(true);
+		                    } else if (part instanceof FormEditor) {
+		                    	((FormEditor)part).close(true);
+		                    } 
+		                }
+		            }
+		        } catch (Throwable t) {
+		            MylarPlugin.fail(t, "Could not auto close editor.", false);
+		        } 
             }
-        } catch (Throwable t) {
-            MylarPlugin.fail(t, "Could not auto close editor.", false);
-        } 
+        });
     }
 }
