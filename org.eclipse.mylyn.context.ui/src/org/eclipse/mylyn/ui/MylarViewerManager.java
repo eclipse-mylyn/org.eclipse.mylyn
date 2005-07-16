@@ -129,8 +129,8 @@ public class MylarViewerManager implements IMylarContextListener {
             		for (StructuredViewer viewer : managedViewers) {
 						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
 							if (nodes == null || nodes.isEmpty()) {
-					            viewer.getControl().setRedraw(false); // TODO: does this really help?
-								viewer.refresh();
+					            viewer.getControl().setRedraw(false); 
+					            viewer.refresh();
 								viewer.getControl().setRedraw(true);
 							} else {
 								Object objectToRefresh = null;
@@ -142,9 +142,12 @@ public class MylarViewerManager implements IMylarContextListener {
 										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
 										if (node.getDegreeOfInterest().getValue() <= 0) {
 											objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
-										}										
-										if (objectToRefresh != null) {
-											viewer.refresh(objectToRefresh, updateLabels);
+										}
+										if (objectToRefresh != null && !node.getElementHandle().equals("")) {
+											viewer.getControl().setRedraw(false); 
+								            viewer.refresh(objectToRefresh, updateLabels);
+								            viewer.getControl().setRedraw(true); 
+								            
 											// also refresh the current outline
 											IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 											IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
