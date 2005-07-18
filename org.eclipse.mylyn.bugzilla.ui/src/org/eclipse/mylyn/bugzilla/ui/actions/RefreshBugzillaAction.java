@@ -46,7 +46,7 @@ public class RefreshBugzillaAction extends Action {
 	
 	public RefreshBugzillaAction(TaskListView view) {
 		this.view = view;
-		setText("Bugzilla Rrefresh");
+		setText("Bugzilla Refresh");
         setToolTipText("Bugzilla Refresh");
         setId(ID);
         setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
@@ -56,7 +56,7 @@ public class RefreshBugzillaAction extends Action {
 		assert(cat != null);
 		this.view = view;
 		this.cat =  cat;
-		setText("Bugzilla Rrefresh");
+		setText("Bugzilla Refresh");
         setToolTipText("Bugzilla Refresh");
         setId(ID);
         setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);

@@ -45,8 +45,8 @@ public class RefreshBugzillaReportsAction extends Action {
 
 	public RefreshBugzillaReportsAction(TaskListView view) {
 		this.view = view;
-		setText("Refresh Bugzilla reports");
-		setToolTipText("Refresh Bugzilla reports");
+		setText("Refresh Non-Resolved Bugzilla reports");
+		setToolTipText("Refresh Non-Resolved Bugzilla reports");
 		setId(ID);
 		setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
@@ -134,7 +134,7 @@ public class RefreshBugzillaReportsAction extends Action {
 		List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
 
 		for (ITask task : tasks) {
-			if (task instanceof BugzillaTask) {
+			if (task instanceof BugzillaTask && !task.isCompleted()) {
 				((BugzillaTask) task).refresh();
 			}
 		}
@@ -142,13 +142,13 @@ public class RefreshBugzillaReportsAction extends Action {
 				.getTaskListManager().getTaskList().getCategories()) {
 			if (cat instanceof TaskCategory) {
 				for (ITask task : ((TaskCategory) cat).getChildren()) {
-					if (task instanceof BugzillaTask) {
+					if (task instanceof BugzillaTask && !task.isCompleted()) {
 						((BugzillaTask) task).refresh();
 					}
 				}
 				if (((TaskCategory) cat).getChildren() != null) {
 		            for (ITask child : ((TaskCategory) cat).getChildren()) {
-						if (child instanceof BugzillaTask) {
+						if (child instanceof BugzillaTask && !child.isCompleted()) {
 							((BugzillaTask)child).refresh();
 						}
 					}
@@ -161,7 +161,10 @@ public class RefreshBugzillaReportsAction extends Action {
 							bqc.refreshBugs();
 							for(BugzillaHit hit: bqc.getChildren()){
 								if(hit.hasCorrespondingActivatableTask()){
-									((BugzillaTask)hit.getOrCreateCorrespondingTask()).refresh();
+									BugzillaTask task = ((BugzillaTask)hit.getOrCreateCorrespondingTask());
+									if(!task.isCompleted()){
+										task.refresh();
+									}
 								}
 							}
 							RefreshBugzillaReportsAction.this.view.getViewer().refresh();
