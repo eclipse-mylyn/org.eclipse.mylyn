@@ -57,10 +57,7 @@ public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup {
     public void earlyStartup() {
         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
             public void run() {
-                
-              //generic
-              MylarPlugin.getContextManager().addListener(new XmlReferencesProvider());
-                
+             
               pdeStructureBridge = new PdeStructureBridge(MylarPlugin.getDefault().getGenericResourceBridge());
               antStructureBridge = new AntStructureBridge(MylarPlugin.getDefault().getGenericResourceBridge());
               

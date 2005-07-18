@@ -40,11 +40,9 @@ import org.eclipse.jdt.internal.ui.search.JavaSearchResult;
 import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
-import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.java.JavaStructureBridge;
@@ -57,22 +55,16 @@ import org.eclipse.search.ui.ISearchResult;
  */
 public abstract class AbstractJavaRelationshipProvider extends AbstractRelationshipProvider {
 
+	public static final String ID_GENERIC = "org.eclipse.mylar.java.relation";
+    public static final String NAME = "Java relationships";	
+	
+    public String getGenericId(){
+    	return ID_GENERIC;
+    }
+    
 	protected AbstractJavaRelationshipProvider(String structureKind, String id) {
         super(structureKind, id);
     }
-    
-	@Override
-	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		List <IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
-		separations.add(new DegreeOfSeparation("disabled", 0));
-		separations.add(new DegreeOfSeparation("landmark files", 1));
-		separations.add(new DegreeOfSeparation("interesting files", 2));
-		separations.add(new DegreeOfSeparation("interesting project", 3));
-		separations.add(new DegreeOfSeparation("project dependancies", 4));
-		separations.add(new DegreeOfSeparation("entire workspace", 5));
-
-		return separations;
-	}
     
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {

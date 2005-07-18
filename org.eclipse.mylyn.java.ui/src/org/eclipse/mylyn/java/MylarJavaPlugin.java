@@ -18,11 +18,6 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.java.search.JUnitReferencesProvider;
-import org.eclipse.mylar.java.search.JavaImplementorsProvider;
-import org.eclipse.mylar.java.search.JavaReadAccessProvider;
-import org.eclipse.mylar.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.java.ui.JavaUiBridge;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
@@ -71,12 +66,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
                 MylarPlugin.getDefault().addBridge(structureBridge); 
-                
-                MylarPlugin.getContextManager().addListener(new JavaReferencesProvider());
-                MylarPlugin.getContextManager().addListener(new JavaImplementorsProvider());
-                MylarPlugin.getContextManager().addListener(new JavaReadAccessProvider());
-                MylarPlugin.getContextManager().addListener(new JavaWriteAccessProvider()); 
-                MylarPlugin.getContextManager().addListener(new JUnitReferencesProvider());
                 
                 MylarPlugin.getContextManager().addListener(new PackageExplorerManager());
 

@@ -12,13 +12,13 @@ package org.eclipse.mylar.ui.views;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -27,10 +27,9 @@ import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -206,12 +205,15 @@ public class ActiveSearchView extends ViewPart {
     
     private void fillLocalToolBar(IToolBarManager manager) {
         manager.removeAll();
-        for (AbstractRelationshipProvider provider : MylarPlugin.getContextManager().getRelationshipProviders()) {
-            IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(provider.getStructureKind());
-            ImageDescriptor image = bridge.getIconForRelationship(provider.getId());
-            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(provider, image);
-            relationshipProviderActions.add(action); 
-            manager.add(action); 
+        Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
+        for (String extension : bridges.keySet()) {
+            IMylarStructureBridge bridge = bridges.get(extension);
+            List<AbstractRelationshipProvider> providers = bridge.getProviders(); 
+            if(providers != null && providers.size() > 0){
+	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
+	            relationshipProviderActions.add(action); 
+	            manager.add(action); 
+            }
         }
         manager.markDirty();
     }

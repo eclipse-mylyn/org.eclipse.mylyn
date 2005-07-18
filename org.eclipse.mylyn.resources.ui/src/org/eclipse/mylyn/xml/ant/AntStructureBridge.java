@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.xml.XmlNodeHelper;
@@ -284,8 +285,14 @@ public class AntStructureBridge implements IMylarStructureBridge {
 		return null;
 	}
 
+	/**
+	 * TODO: weird that there is none
+	 */
 	public List<AbstractRelationshipProvider> getProviders() {
-		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		return null;
 	}
 }

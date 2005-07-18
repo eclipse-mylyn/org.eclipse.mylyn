@@ -24,7 +24,7 @@ import org.eclipse.mylar.java.JavaStructureBridge;
  */
 public class JavaReferencesProvider extends AbstractJavaRelationshipProvider {
 
-    public static final String ID = "org.eclipse.mylar.java.search.references";
+	public static final String ID = ID_GENERIC + ".references";
     public static final String NAME = "Java references";
         
     public JavaReferencesProvider() {

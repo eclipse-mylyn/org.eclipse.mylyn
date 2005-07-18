@@ -33,6 +33,7 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.java.search.AbstractJavaRelationshipProvider;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReadAccessProvider;
@@ -158,7 +159,9 @@ public class JavaUiBridge implements IMylarUiBridge {
     }
 
     public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-        if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
+    	if (relationshipHandle.equals(AbstractJavaRelationshipProvider.ID_GENERIC)) {
+            return MylarImages.EDGE_REF_JAVA; 
+        } else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
             return MylarImages.EDGE_REF_JAVA; 
         } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
             return MylarImages.EDGE_INHERITANCE; 
@@ -174,7 +177,9 @@ public class JavaUiBridge implements IMylarUiBridge {
     }
     
     public String getNameForRelationship(String relationshipHandle) {
-        if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
+    	if (relationshipHandle.equals(AbstractJavaRelationshipProvider.ID_GENERIC)) {
+            return AbstractJavaRelationshipProvider.NAME; 
+        } else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
             return JavaReferencesProvider.NAME; 
         } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
             return JavaImplementorsProvider.NAME; 

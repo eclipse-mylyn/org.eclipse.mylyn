@@ -19,6 +19,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
@@ -130,8 +131,14 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
         return getResourceExtension();
     }
 
+    /**
+     * These methods aren't needed since there is no generic active search
+     */
 	public List<AbstractRelationshipProvider> getProviders() {
-		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		return null;
 	}
 }

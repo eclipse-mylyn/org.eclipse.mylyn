@@ -64,7 +64,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 	
 	@Override
     protected void setUp() throws Exception {
-    	MylarPlugin.getContextManager().getRelationshipProviders().clear();
+    	//TODO: clear the relationship providers?
     	WorkspaceSetupHelper.setupWorkspace();
     	jp1 = WorkspaceSetupHelper.getProject1();
     	jp2 = WorkspaceSetupHelper.getProject2();

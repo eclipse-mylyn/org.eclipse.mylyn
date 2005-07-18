@@ -137,7 +137,10 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
 
 		public List<AbstractRelationshipProvider> getProviders() {
-			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 			return null;
 		}
     };
@@ -250,6 +253,10 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
     }
 
+    public Map<String, IMylarStructureBridge> getStructureBridges() {
+			return bridges;
+	}
+    
     /**
      * TODO: performance issue?
      */
@@ -293,6 +300,11 @@ public class MylarPlugin extends AbstractUIPlugin {
     }
 
     public void addBridge(IMylarStructureBridge bridge) {
+    	if(bridge.getProviders() != null){
+    		for(AbstractRelationshipProvider provider: bridge.getProviders()){
+    			getContextManager().addListener(provider);
+    		}
+    	}
         this.bridges.put(bridge.getResourceExtension(), bridge);
     }
     

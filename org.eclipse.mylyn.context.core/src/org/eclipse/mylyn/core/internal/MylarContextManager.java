@@ -345,15 +345,7 @@ public class MylarContextManager {
     public CompositeContext getActiveContext() {
         return activeContext;
     }
-  
-    public List<AbstractRelationshipProvider> getRelationshipProviders() {
-        List<AbstractRelationshipProvider> providers = new ArrayList<AbstractRelationshipProvider>();
-        for (IMylarContextListener listener : listeners) {
-            if (listener instanceof AbstractRelationshipProvider) providers.add((AbstractRelationshipProvider)listener);
-        }
-        return providers;
-    }
- 
+   
     /**
      * @param kind
      */
@@ -389,23 +381,31 @@ public class MylarContextManager {
 
     public void refreshRelatedElements() {
 //        throw new RuntimeException("unimplemented");
-        for (AbstractRelationshipProvider provider : getRelationshipProviders()) {
-        	updateSearchKindEnabled(provider, provider.getCurrentDegreeOfSeparation());
-//            if (provider.isEnabled()) {
-//                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
-//            }
-//            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
-        }
+    	for(IMylarStructureBridge bridge: MylarPlugin.getDefault().getStructureBridges().values()){
+    		if(bridge.getProviders() != null){
+		        for (AbstractRelationshipProvider provider : bridge.getProviders()) {
+		        	List<AbstractRelationshipProvider> providerList = new ArrayList<AbstractRelationshipProvider>();
+		        	providerList.add(provider);
+		        	updateSearchKindEnabled(providerList, provider.getCurrentDegreeOfSeparation());
+		//            if (provider.isEnabled()) {
+		//                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
+		//            }
+		//            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
+		        }
+    		}
+    	}
     }
 
-    public void updateSearchKindEnabled(AbstractRelationshipProvider provider, int degreeOfSeparation) {
-        MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
-        if (degreeOfSeparation <= 0) {
-        	provider.setEnabled(false);
-        } else {
-        	provider.setEnabled(true);
-        	provider.setDegreeOfSeparation(degreeOfSeparation);
-            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
+    public void updateSearchKindEnabled(List<AbstractRelationshipProvider> providers, int degreeOfSeparation) {
+    	for(AbstractRelationshipProvider provider: providers){
+	        MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
+	        if (degreeOfSeparation <= 0) {
+	        	provider.setEnabled(false);
+	        } else {
+	        	provider.setEnabled(true);
+	        	provider.setDegreeOfSeparation(degreeOfSeparation);
+	            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
+	        }
         }
     }
 

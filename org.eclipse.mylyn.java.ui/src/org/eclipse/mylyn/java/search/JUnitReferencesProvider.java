@@ -27,7 +27,7 @@ import org.eclipse.mylar.java.JavaStructureBridge;
  */
 public class JUnitReferencesProvider extends AbstractJavaRelationshipProvider {
 
-    public static final String ID = "org.eclipse.mylar.java.search.junitreferences";
+	public static final String ID = ID_GENERIC + ".junitreferences";
     public static final String NAME = "JUnit test references";
         
     public JUnitReferencesProvider() {

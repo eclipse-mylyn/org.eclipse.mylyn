@@ -47,8 +47,8 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 	
 	@Override
     protected void setUp() throws Exception {
-    	MylarPlugin.getContextManager().getRelationshipProviders().clear();
-    	WorkspaceSetupHelper.setupWorkspace();
+		// TODO: clear the relationship providers?
+		WorkspaceSetupHelper.setupWorkspace();
     	jp1 = WorkspaceSetupHelper.getProject1();
     	jp2 = WorkspaceSetupHelper.getProject2();
     	type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.views.SampleView");

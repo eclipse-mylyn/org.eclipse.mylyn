@@ -24,7 +24,7 @@ import org.eclipse.mylar.core.search.IMylarSearchOperation;
  * TODO: should probably turn into an interface
  */
 public abstract class AbstractRelationshipProvider implements IMylarContextListener {
-
+	
     private boolean enabled = false;
     private String id;
     private String structureKind;
@@ -41,6 +41,7 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     public AbstractRelationshipProvider(String structureKind, String id) {
         this.id = id;
         this.structureKind = structureKind;
+        degreeOfSeparation = MylarPlugin.getDefault().getPreferenceStore().getInt(getGenericId());
     }
    
     protected abstract void findRelated(final IMylarContextNode node, int degreeOfSeparation);
@@ -79,8 +80,6 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-   
-    public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
     
     public int getCurrentDegreeOfSeparation(){
     	return degreeOfSeparation;
@@ -125,5 +124,8 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
 
 	public void setDegreeOfSeparation(int degreeOfSeparation){
 		this.degreeOfSeparation = degreeOfSeparation;
+		MylarPlugin.getDefault().getPreferenceStore().setValue(getGenericId(), degreeOfSeparation);
 	}
+
+	public abstract String getGenericId();
 }

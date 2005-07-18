@@ -19,7 +19,9 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
+import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -34,14 +36,18 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 //    private final String PREFIX = "org.eclipse.mylar.ui.relatedElements.providers";
 //    private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
     
-    private AbstractRelationshipProvider provider;
+    IMylarStructureBridge bridge;
     private Menu dropDownMenu = null;
         
-	public ToggleRelationshipProviderAction(AbstractRelationshipProvider provider, ImageDescriptor image) {
+	public ToggleRelationshipProviderAction(IMylarStructureBridge bridge) {
 		super();
-        this.provider = provider;
+		
+        this.bridge = bridge;
 //        this.prefId = PREFIX + '.' + provider.getId().toString();
         
+        //HACK:
+        AbstractRelationshipProvider provider = bridge.getProviders().get(0);
+        ImageDescriptor image = MylarUiPlugin.getDefault().getUiBridge(provider.getStructureKind()).getIconForRelationship(provider.getGenericId());
 		setText(provider.getId().toString());
         setToolTipText(provider.getId().toString());
 		setImageDescriptor(image);
@@ -54,7 +60,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	 
 	@Override
 	public void run() {
-		MylarPlugin.getContextManager().updateSearchKindEnabled(provider, degreeOfSeparation);
+		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), degreeOfSeparation);
 //		valueChanged(isChecked(), true);
 	}
 //	
@@ -95,20 +101,23 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	
 	public void addActionsToMenu() {
 
+		// HACK: if there are multiple providers, all store the same current DOS
+		degreeOfSeparation = bridge.getProviders().get(0).getCurrentDegreeOfSeparation();
+		
 		MenuItem menuItem = new MenuItem(dropDownMenu, SWT.NONE);
 		menuItem.setText("Degree Of Separation");
 		menuItem.setEnabled(false);
 		
 		menuItem = new MenuItem(dropDownMenu, SWT.SEPARATOR);
 		
-		for(IDegreeOfSeparation separation: provider.getDegreesOfSeparation()){
+		for(IDegreeOfSeparation separation: bridge.getDegreesOfSeparation()){
 								
 			Action degreeOfSeparationSelectionAction = new Action(separation.getDegree() + ": " + separation.getLabel(), AS_CHECK_BOX) {	    		
 	    		@Override
 				public void run() {
 	    			try{
 		    			degreeOfSeparation = Integer.parseInt(getId());
-		    			MylarPlugin.getContextManager().updateSearchKindEnabled(provider, degreeOfSeparation);
+		    			MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), degreeOfSeparation);
 	    			} catch (NumberFormatException e){
 	    				// ignore this for now
 	    			}

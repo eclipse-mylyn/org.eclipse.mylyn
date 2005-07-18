@@ -13,6 +13,7 @@
   */
 package org.eclipse.mylar.java;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -33,9 +34,16 @@ import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.DegreeOfSeparation;
+import org.eclipse.mylar.java.search.JUnitReferencesProvider;
+import org.eclipse.mylar.java.search.JavaImplementorsProvider;
+import org.eclipse.mylar.java.search.JavaReadAccessProvider;
+import org.eclipse.mylar.java.search.JavaReferencesProvider;
+import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
 
@@ -45,6 +53,17 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 public class JavaStructureBridge implements IMylarStructureBridge {
 
     public final static String EXTENSION = "java";
+    
+    public List<AbstractRelationshipProvider> providers;
+    
+    public JavaStructureBridge(){
+    	providers = new ArrayList<AbstractRelationshipProvider>();
+    	providers.add(new JavaReferencesProvider());
+    	providers.add(new JavaImplementorsProvider());
+    	providers.add(new JavaReadAccessProvider());
+    	providers.add(new JavaWriteAccessProvider()); 
+    	providers.add(new JUnitReferencesProvider());
+    }
     
     public String getResourceExtension() {
         return EXTENSION;
@@ -181,7 +200,18 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     }
 
 	public List<AbstractRelationshipProvider> getProviders() {
-		// TODO Auto-generated method stub
-		return null;
+		return providers;
+	}
+	
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		List <IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		separations.add(new DegreeOfSeparation("disabled", 0));
+		separations.add(new DegreeOfSeparation("landmark files", 1));
+		separations.add(new DegreeOfSeparation("interesting files", 2));
+		separations.add(new DegreeOfSeparation("interesting project", 3));
+		separations.add(new DegreeOfSeparation("project dependancies", 4));
+		separations.add(new DegreeOfSeparation("entire workspace", 5));
+
+		return separations;
 	}
 }
