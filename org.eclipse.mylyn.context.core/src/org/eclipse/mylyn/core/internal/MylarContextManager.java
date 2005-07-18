@@ -17,13 +17,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.search.RelationshipProvider;
 
 
 /**
@@ -346,10 +346,10 @@ public class MylarContextManager {
         return activeContext;
     }
   
-    public List<RelationshipProvider> getRelationshipProviders() {
-        List<RelationshipProvider> providers = new ArrayList<RelationshipProvider>();
+    public List<AbstractRelationshipProvider> getRelationshipProviders() {
+        List<AbstractRelationshipProvider> providers = new ArrayList<AbstractRelationshipProvider>();
         for (IMylarContextListener listener : listeners) {
-            if (listener instanceof RelationshipProvider) providers.add((RelationshipProvider)listener);
+            if (listener instanceof AbstractRelationshipProvider) providers.add((AbstractRelationshipProvider)listener);
         }
         return providers;
     }
@@ -389,7 +389,7 @@ public class MylarContextManager {
 
     public void refreshRelatedElements() {
 //        throw new RuntimeException("unimplemented");
-        for (RelationshipProvider provider : getRelationshipProviders()) {
+        for (AbstractRelationshipProvider provider : getRelationshipProviders()) {
         	updateSearchKindEnabled(provider, provider.getCurrentDegreeOfSeparation());
 //            if (provider.isEnabled()) {
 //                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
@@ -398,7 +398,7 @@ public class MylarContextManager {
         }
     }
 
-    public void updateSearchKindEnabled(RelationshipProvider provider, int degreeOfSeparation) {
+    public void updateSearchKindEnabled(AbstractRelationshipProvider provider, int degreeOfSeparation) {
         MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
         if (degreeOfSeparation <= 0) {
         	provider.setEnabled(false);

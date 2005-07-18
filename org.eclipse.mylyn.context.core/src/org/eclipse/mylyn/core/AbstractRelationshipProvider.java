@@ -11,22 +11,19 @@
 /*
  * Created on Jan 31, 2005
   */
-package org.eclipse.mylar.core.search;
+package org.eclipse.mylar.core;
 
 import java.util.List;
 
-import org.eclipse.mylar.core.IDegreeOfSeparation;
-import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.search.IMylarSearchOperation;
 
 
 /**
  * @author Mik Kersten
+ * 
+ * TODO: should probably turn into an interface
  */
-public abstract class RelationshipProvider implements IMylarContextListener {
+public abstract class AbstractRelationshipProvider implements IMylarContextListener {
 
     private boolean enabled = false;
     private String id;
@@ -41,7 +38,7 @@ public abstract class RelationshipProvider implements IMylarContextListener {
         return id;
     }
     
-    public RelationshipProvider(String structureKind, String id) {
+    public AbstractRelationshipProvider(String structureKind, String id) {
         this.id = id;
         this.structureKind = structureKind;
     }

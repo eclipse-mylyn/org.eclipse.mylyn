@@ -34,6 +34,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -41,7 +42,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.core.search.RelationshipProvider;
 import org.eclipse.mylar.xml.ant.AntStructureBridge;
 import org.eclipse.mylar.xml.pde.PdeStructureBridge;
 import org.eclipse.search.internal.core.SearchScope;
@@ -55,7 +55,7 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * @author Shawn Minto
  */
-public class XmlReferencesProvider extends RelationshipProvider {
+public class XmlReferencesProvider extends AbstractRelationshipProvider {
 
     public static final String SOURCE_ID = "org.eclipse.mylar.xml.search.references";
     public static final String NAME = "Xml references";
@@ -66,7 +66,7 @@ public class XmlReferencesProvider extends RelationshipProvider {
     }
 
     /**
-     * @see org.eclipse.mylar.core.search.RelationshipProvider#findRelated(org.eclipse.mylar.core.IMylarContextNode, int)
+     * @see org.eclipse.mylar.core.AbstractRelationshipProvider#findRelated(org.eclipse.mylar.core.IMylarContextNode, int)
      */
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {

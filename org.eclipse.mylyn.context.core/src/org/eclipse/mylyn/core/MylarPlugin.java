@@ -135,6 +135,11 @@ public class MylarPlugin extends AbstractUIPlugin {
         public String getResourceExtension(String elementHandle) {
             return getResourceExtension();
         }
+
+		public List<AbstractRelationshipProvider> getProviders() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     };
     
     public MylarPlugin() {  

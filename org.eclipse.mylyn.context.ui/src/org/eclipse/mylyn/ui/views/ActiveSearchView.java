@@ -23,12 +23,12 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.search.RelationshipProvider;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
@@ -206,7 +206,7 @@ public class ActiveSearchView extends ViewPart {
     
     private void fillLocalToolBar(IToolBarManager manager) {
         manager.removeAll();
-        for (RelationshipProvider provider : MylarPlugin.getContextManager().getRelationshipProviders()) {
+        for (AbstractRelationshipProvider provider : MylarPlugin.getContextManager().getRelationshipProviders()) {
             IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(provider.getStructureKind());
             ImageDescriptor image = bridge.getIconForRelationship(provider.getId());
             ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(provider, image);

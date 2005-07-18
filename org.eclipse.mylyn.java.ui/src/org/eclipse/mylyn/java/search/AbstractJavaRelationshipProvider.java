@@ -39,6 +39,7 @@ import org.eclipse.jdt.internal.ui.search.JavaSearchQuery;
 import org.eclipse.jdt.internal.ui.search.JavaSearchResult;
 import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -46,7 +47,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.core.search.RelationshipProvider;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.search.ui.ISearchResult;
 
@@ -55,7 +55,7 @@ import org.eclipse.search.ui.ISearchResult;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractJavaRelationshipProvider extends RelationshipProvider {
+public abstract class AbstractJavaRelationshipProvider extends AbstractRelationshipProvider {
 
 	protected AbstractJavaRelationshipProvider(String structureKind, String id) {
         super(structureKind, id);

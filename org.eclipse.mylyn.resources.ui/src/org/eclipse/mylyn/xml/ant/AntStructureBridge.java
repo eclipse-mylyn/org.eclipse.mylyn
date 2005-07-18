@@ -13,6 +13,8 @@
   */
 package org.eclipse.mylar.xml.ant;
 
+import java.util.List;
+
 import org.eclipse.ant.internal.ui.editor.text.AntAnnotationModel;
 import org.eclipse.ant.internal.ui.model.AntElementNode;
 import org.eclipse.ant.internal.ui.model.AntModel;
@@ -28,6 +30,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.xml.XmlNodeHelper;
@@ -278,6 +281,11 @@ public class AntStructureBridge implements IMylarStructureBridge {
     	if(object instanceof IFile && acceptsObject(object)){
     		return((IFile)object).getProject();
     	}
+		return null;
+	}
+
+	public List<AbstractRelationshipProvider> getProviders() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

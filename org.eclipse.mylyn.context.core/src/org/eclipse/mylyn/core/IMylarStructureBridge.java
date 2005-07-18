@@ -13,6 +13,8 @@
   */
 package org.eclipse.mylar.core;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
@@ -64,4 +66,6 @@ public interface IMylarStructureBridge {
      * Used for switching kinds based on parent handles
      */
     public abstract String getResourceExtension(String elementHandle);
+ 
+    public abstract List<AbstractRelationshipProvider> getProviders();
 }

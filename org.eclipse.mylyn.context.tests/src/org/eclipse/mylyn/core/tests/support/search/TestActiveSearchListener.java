@@ -14,17 +14,17 @@ package org.eclipse.mylar.core.tests.support.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
-import org.eclipse.mylar.core.search.RelationshipProvider;
 
 
 public class TestActiveSearchListener implements IActiveSearchListener {
 
-	private RelationshipProvider prov = null;
+	private AbstractRelationshipProvider prov = null;
 	
 	private List<?> results = null;
 	
-	public TestActiveSearchListener(RelationshipProvider prov){
+	public TestActiveSearchListener(AbstractRelationshipProvider prov){
 		this. prov = prov;
 	}
 	

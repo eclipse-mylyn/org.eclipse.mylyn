@@ -13,6 +13,8 @@
   */
 package org.eclipse.mylar.xml.pde;
 
+import java.util.List;
+
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
@@ -23,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.xml.XmlNodeHelper;
@@ -277,6 +280,11 @@ public class PdeStructureBridge implements IMylarStructureBridge {
     	if(object instanceof IFile && acceptsObject(object)){
     		return((IFile)object).getProject();
     	}
+		return null;
+	}
+
+	public List<AbstractRelationshipProvider> getProviders() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -13,6 +13,8 @@
   */
 package org.eclipse.mylar.java;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -30,6 +32,7 @@ import org.eclipse.jdt.internal.core.JarEntryFile;
 import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -176,4 +179,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     public String getResourceExtension(String elementHandle) {
         return getResourceExtension();
     }
+
+	public List<AbstractRelationshipProvider> getProviders() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

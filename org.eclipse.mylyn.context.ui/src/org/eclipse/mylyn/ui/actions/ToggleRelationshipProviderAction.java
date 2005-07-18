@@ -17,9 +17,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.search.RelationshipProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -34,10 +34,10 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 //    private final String PREFIX = "org.eclipse.mylar.ui.relatedElements.providers";
 //    private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
     
-    private RelationshipProvider provider;
+    private AbstractRelationshipProvider provider;
     private Menu dropDownMenu = null;
         
-	public ToggleRelationshipProviderAction(RelationshipProvider provider, ImageDescriptor image) {
+	public ToggleRelationshipProviderAction(AbstractRelationshipProvider provider, ImageDescriptor image) {
 		super();
         this.provider = provider;
 //        this.prefId = PREFIX + '.' + provider.getId().toString();

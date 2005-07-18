@@ -304,6 +304,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         }
     }
 
+    /**
+     * HACK: reset to get search buttons to show up properly
+     */
     public void addAdapter(String extension, IMylarUiBridge adapter) {
         this.bridges.put(extension, adapter);
         final ActiveSearchView activeSearchView = ActiveSearchView.getFromActivePerspective();

@@ -13,9 +13,12 @@
   */
 package org.eclipse.mylar.core.resources;
 
+import java.util.List;
+
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
@@ -126,4 +129,9 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     public String getResourceExtension(String elementHandle) {
         return getResourceExtension();
     }
+
+	public List<AbstractRelationshipProvider> getProviders() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

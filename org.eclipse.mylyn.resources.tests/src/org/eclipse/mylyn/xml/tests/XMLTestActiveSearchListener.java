@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.internal.resources.File;
-import org.eclipse.mylar.core.search.RelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
@@ -27,7 +27,7 @@ public class XMLTestActiveSearchListener extends TestActiveSearchListener {
 
 	private List<?> results = null;
 	
-	public XMLTestActiveSearchListener(RelationshipProvider prov){
+	public XMLTestActiveSearchListener(AbstractRelationshipProvider prov){
 		super(prov);
 	}
 	
