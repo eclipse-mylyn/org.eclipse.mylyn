@@ -60,5 +60,5 @@ public abstract class AbstractCategory implements ITaskListElement {
 		return null;
 	}
 	
-	public abstract List<?> getChildren();
+	public abstract List<? extends ITaskListElement> getChildren();
 }

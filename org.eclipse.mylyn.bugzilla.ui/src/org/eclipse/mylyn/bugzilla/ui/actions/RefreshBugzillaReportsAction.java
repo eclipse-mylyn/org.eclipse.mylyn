@@ -56,11 +56,7 @@ public class RefreshBugzillaReportsAction extends Action {
 
 	@Override
 	public void run() {
-		if(MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks().size() > 0){
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cannot Perform Refresh", "Please deactivate all tasks before attempting to perform a refresh since the task may disapear.");
-			return;
-		}
-		
+				
 //		MylarPlugin.getDefault().actionObserved(this);
 		// TODO background?
 		// perform the update in an operation so that we get a progress monitor
@@ -71,6 +67,19 @@ public class RefreshBugzillaReportsAction extends Action {
 		} else {
 			refreshTasksAndQueries();
 		}
+		
+		for(ITask task: MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks()){
+			if(task instanceof BugzillaTask){
+				ITask found = MylarTasksPlugin.getTaskListManager().getTaskList().getTaskForHandle(task.getHandle());
+				if(found == null){
+					MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(task);
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
+							BugzillaTask.getBugId(task.getHandle()) + 
+							" has been moved to the root since it is activated and has disappeared from a query.");
+				}
+			}
+		}
+		view.getViewer().refresh();
 	}
 
 	private void runWithProgressBar() {

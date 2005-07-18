@@ -40,6 +40,9 @@ public class RefreshBugzillaAction extends Action {
 	public static final String ID = "org.eclipse.mylar.tasks.actions.refresh.bugzilla";
 	
 	private final TaskListView view;
+	
+	private BugzillaQueryCategory cat = null;
+	
 	public RefreshBugzillaAction(TaskListView view) {
 		this.view = view;
 		setText("Bugzilla Rrefresh");
@@ -47,15 +50,24 @@ public class RefreshBugzillaAction extends Action {
         setId(ID);
         setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
+	
+	public RefreshBugzillaAction(TaskListView view, BugzillaQueryCategory cat) {
+		assert(cat != null);
+		this.view = view;
+		this.cat =  cat;
+		setText("Bugzilla Rrefresh");
+        setToolTipText("Bugzilla Refresh");
+        setId(ID);
+        setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
+	}
+	
 	@Override
 	public void run() {
-		if(MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks().size() > 0){
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Cannot Perform Refresh", "Please deactivate all tasks before attempting to perform a refresh since the task may disapear.");
-			return;
+		Object obj = cat;
+		if(cat == null){
+			ISelection selection = this.view.getViewer().getSelection();
+			obj = ((IStructuredSelection) selection).getFirstElement();
 		}
-		
-		ISelection selection = this.view.getViewer().getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		if (obj instanceof BugzillaQueryCategory) {
 			final BugzillaQueryCategory cat = (BugzillaQueryCategory) obj;
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
@@ -86,10 +98,20 @@ public class RefreshBugzillaAction extends Action {
 					((BugzillaTask)task).refresh();
 				}
 			}
-			view.getViewer().refresh();
 		} else if (obj instanceof BugzillaTask) {
 			((BugzillaTask)obj).refresh();
-			view.getViewer().refresh();
 		}
+		for(ITask task: MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks()){
+			if(task instanceof BugzillaTask){
+				ITask found = MylarTasksPlugin.getTaskListManager().getTaskList().getTaskForHandle(task.getHandle());
+				if(found == null){
+					MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(task);
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
+							BugzillaTask.getBugId(task.getHandle()) + 
+							" has been moved to the root since it is activated and has disappeared from a query.");
+				}
+			}
+		}
+		view.getViewer().refresh();
 	}
 }

@@ -45,7 +45,7 @@ import org.eclipse.ui.IWorkingSet;
 public class BugzillaQueryDialog extends Dialog {
 
 	private String url;
-	private String name;
+	private String name = "";
 	private BugzillaSearchOptionPage searchOptionPage;
 	private String startingUrl = null;
 	
@@ -55,10 +55,11 @@ public class BugzillaQueryDialog extends Dialog {
 		
 	}
 	
-	public BugzillaQueryDialog(Shell parentShell, String startingUrl) {
+	public BugzillaQueryDialog(Shell parentShell, String startingUrl, String name) {
 		super(parentShell);
 		searchOptionPage = new BugzillaSearchOptionPage();
 		this.startingUrl = startingUrl;
+		this.name = name;
 	}
 
 	public String getName() {
@@ -95,7 +96,7 @@ public class BugzillaQueryDialog extends Dialog {
 			 */
 			return;
 		}
-		InputDialog getNameDialog = new InputDialog(Display.getCurrent().getActiveShell(), "Bugzilla Query Category Name", "Please enter a name for the bugzilla query category","", new IInputValidator(){
+		InputDialog getNameDialog = new InputDialog(Display.getCurrent().getActiveShell(), "Bugzilla Query Category Name", "Please enter a name for the bugzilla query category",name, new IInputValidator(){
 
 			public String isValid(String newText) {
 				if(newText != null && !newText.equals("")){

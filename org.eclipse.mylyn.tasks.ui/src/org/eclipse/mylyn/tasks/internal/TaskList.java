@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListElement;
 
  
 /**
@@ -80,24 +81,27 @@ public class TaskList implements Serializable {
     /**
      * TODO: make data structure handle this traversal
      */
-    public ITask getTaskForId(String id) {
+    public ITask getTaskForHandle(String handle) {
     	ITask t = null;
-    	for (TaskCategory cat : getTaskCategories()) {
-			if ((t = findTaskHelper(cat.getChildren(), id)) != null) {
+    	for (AbstractCategory cat : categories) {
+			if ((t = findTaskHelper(cat.getChildren(), handle)) != null) {
 				return t;
 			}
 		}
-        return findTaskHelper(rootTasks, id);
+        return findTaskHelper(rootTasks, handle);
     } 
     
-    private ITask findTaskHelper(List<ITask> tasks, String id) {
-        for (ITask task : tasks) {
-            if (task.getHandle() == id) {
-                return task;
+    private ITask findTaskHelper(List<? extends ITaskListElement> elements, String handle) {
+        for (ITaskListElement element : elements) {
+            if (element.getHandle() == handle && element.hasCorrespondingActivatableTask()) {
+                return element.getOrCreateCorrespondingTask();
             }
-            ITask t = findTaskHelper(task.getChildren(), id);
-            if (t != null) {
-            	return t;
+            if(element instanceof ITask){
+            	ITask searchTask = (ITask)element; 
+	            ITask t = findTaskHelper(searchTask.getChildren(), handle);
+	            if (t != null) {
+	            	return t;
+	            }
             }
         }
         return null;
