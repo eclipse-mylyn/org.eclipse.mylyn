@@ -16,6 +16,7 @@ package org.eclipse.mylar.bugzilla;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaCacheFile;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -275,5 +277,10 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 
 	public BugReport getCached(String handle) {
 		return cache.get(handle);
+	}
+
+	public List<AbstractRelationshipProvider> getProviders() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

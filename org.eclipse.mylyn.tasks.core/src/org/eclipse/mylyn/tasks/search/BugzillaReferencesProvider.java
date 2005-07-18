@@ -28,18 +28,18 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.bugzilla.MylarBugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.core.search.RelationshipProvider;
 
 
 /**
  * @author Shawn Minto
  */
-public class BugzillaReferencesProvider extends RelationshipProvider {
+public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 
     public static final String ID = "org.eclipse.mylar.bugzilla.search.references";
     public static final String NAME = "Bugilla report references";
