@@ -47,7 +47,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 
     protected boolean acceptElement(IJavaElement javaElement) {
         return javaElement != null 
-            && (javaElement instanceof IMember || javaElement instanceof IType);
+            && (javaElement instanceof IMember || javaElement instanceof IType) && javaElement.exists();
     }
     
     /**
@@ -61,8 +61,6 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
             return; 
         }
         runJob(node,   degreeOfSeparation);
-
-        //XXX what if degreeOfSeparation is 5?
     }
 
 	@Override
