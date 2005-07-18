@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaHit;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.AbstractCategory;
@@ -158,6 +159,11 @@ public class RefreshBugzillaReportsAction extends Action {
 					new Runnable() {
 						public void run() {
 							bqc.refreshBugs();
+							for(BugzillaHit hit: bqc.getChildren()){
+								if(hit.hasCorrespondingActivatableTask()){
+									((BugzillaTask)hit.getOrCreateCorrespondingTask()).refresh();
+								}
+							}
 							RefreshBugzillaReportsAction.this.view.getViewer().refresh();
 						}
 					});

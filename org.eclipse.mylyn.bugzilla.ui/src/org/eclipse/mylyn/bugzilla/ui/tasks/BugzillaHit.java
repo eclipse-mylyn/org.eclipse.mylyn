@@ -40,7 +40,7 @@ public class BugzillaHit implements ITaskListElement {
 		this.task = task;
 		this.status = status;
 	}
-	
+		
 	public BugzillaTask getAssociatedTask(){
 		return task;
 	}
@@ -66,27 +66,38 @@ public class BugzillaHit implements ITaskListElement {
 	}
 
 	public String getPriority() {
-		return priority;
+		if(hasCorrespondingActivatableTask()){
+			return task.getPriority();
+		} else {
+			return priority;
+		}
 	}
 
 	public String getDescription(boolean label) {
 		if(label){
-			return HtmlStreamTokenizer.unescape(description);
+			if(hasCorrespondingActivatableTask()){
+				return task.getDescription(label);
+			} else {
+				return HtmlStreamTokenizer.unescape(description);
+			}
 		} else {
-			return description;
+			if(hasCorrespondingActivatableTask()){
+				return task.getDescription(label);
+			} else {
+				return description;
+			}
 		}
 	}
 
 	public String getHandle() {
 		return getServerName()+"-"+getID();
 	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+
 	public String getServerName() {
 		// TODO need the right server name - get from the handle
 		return "Bugzilla";
 	}
+	
 	public int getID() {
 		
 		return id;
@@ -114,7 +125,7 @@ public class BugzillaHit implements ITaskListElement {
 	}
 	
 	public boolean hasCorrespondingActivatableTask() {
-		return getAssociatedTask() != null;
+		return task != null;
 	}
 
 	public boolean isActivatable() {
@@ -134,9 +145,8 @@ public class BugzillaHit implements ITaskListElement {
 	}
 	
 	public Font getFont(){
-		BugzillaTask task = getAssociatedTask(); 
-    	if(task != null){
-            if (task.isActive()) return BOLD;        
+    	if(hasCorrespondingActivatableTask()){
+            return task.getFont();        
     	}
     	return null;
 	}

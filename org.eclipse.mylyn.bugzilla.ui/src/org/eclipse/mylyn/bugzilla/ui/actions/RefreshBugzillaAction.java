@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaHit;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -75,6 +76,11 @@ public class RefreshBugzillaAction extends Action {
 					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 						public void run() {
 							cat.refreshBugs();
+							for(BugzillaHit hit: cat.getChildren()){
+								if(hit.hasCorrespondingActivatableTask()){
+									((BugzillaTask)hit.getOrCreateCorrespondingTask()).refresh();
+								}
+							}
 							RefreshBugzillaAction.this.view.getViewer().refresh();
 						}
 					});
@@ -100,6 +106,11 @@ public class RefreshBugzillaAction extends Action {
 			}
 		} else if (obj instanceof BugzillaTask) {
 			((BugzillaTask)obj).refresh();
+		} else if(obj instanceof BugzillaHit){
+			BugzillaHit hit = (BugzillaHit)obj;
+			if(hit.hasCorrespondingActivatableTask()){
+				hit.getAssociatedTask().refresh();
+			}
 		}
 		for(ITask task: MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks()){
 			if(task instanceof BugzillaTask){
