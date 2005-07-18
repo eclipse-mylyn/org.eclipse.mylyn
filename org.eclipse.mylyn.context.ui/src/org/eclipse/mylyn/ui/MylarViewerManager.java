@@ -109,6 +109,9 @@ public class MylarViewerManager implements IMylarContextListener {
     	refreshViewers(toRefresh, updateLabels);
     }
     
+    /**
+     * TODO: clean up
+     */
     protected void refreshViewers(final List<IMylarContextNode> nodes, final boolean updateLabels) {
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
@@ -128,10 +131,9 @@ public class MylarViewerManager implements IMylarContextListener {
             		}
             		for (StructuredViewer viewer : managedViewers) {
 						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
+							viewer.getControl().setRedraw(false); 
 							if (nodes == null || nodes.isEmpty()) {
-					            viewer.getControl().setRedraw(false); 
 					            viewer.refresh();
-								viewer.getControl().setRedraw(true);
 							} else {
 								Object objectToRefresh = null;
 								IMylarContextNode lastNode = null;
@@ -143,10 +145,8 @@ public class MylarViewerManager implements IMylarContextListener {
 										if (node.getDegreeOfInterest().getValue() <= 0) {
 											objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
 										}
-										if (objectToRefresh != null && !node.getElementHandle().equals("")) {
-											viewer.getControl().setRedraw(false); 
+										if (objectToRefresh != null && !node.getElementHandle().equals("")) { // root
 								            viewer.refresh(objectToRefresh, updateLabels);
-								            viewer.getControl().setRedraw(true); 
 								            
 											// also refresh the current outline
 											IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -168,6 +168,7 @@ public class MylarViewerManager implements IMylarContextListener {
 									}
 								}
 							}
+				            viewer.getControl().setRedraw(true); 
 						}
 					}
             	} catch (Throwable t) {
