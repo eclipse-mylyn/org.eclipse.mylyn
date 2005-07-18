@@ -71,17 +71,17 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
         
         if (!node.getStructureKind().equals("java")) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
-        if (javaElement == null || javaElement instanceof ICompilationUnit) return;
+        if (javaElement == null || javaElement instanceof ICompilationUnit || !javaElement.exists()) return;
         if (!acceptElement(javaElement)) {
             return; 
         }
         
-        SearchScope scope = createTextSearchScope(javaElement, degreeOfSeparation);
+        SearchScope scope = createTextSearchScope(degreeOfSeparation);
         if (scope != null) runJob(node, javaElement, degreeOfSeparation, getId());
     }
     
     
-    protected SearchScope createTextSearchScope(IJavaElement javaElement, int degreeOfSeparation){    
+    protected SearchScope createTextSearchScope(int degreeOfSeparation){    
         
         List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveContext().getLandmarks();
         
@@ -244,7 +244,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     @Override
 	public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation) {    	
     	IJavaElement javaElement = JavaCore.create(node.getElementHandle());
-    	SearchScope scope = createTextSearchScope(javaElement, degreeOfSeparation);
+    	SearchScope scope = createTextSearchScope(degreeOfSeparation);
     	if(scope == null) return null;
     	
     	String fullyQualifiedName = getFullyQualifiedName(javaElement);

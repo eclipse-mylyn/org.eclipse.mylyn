@@ -71,7 +71,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
         if (node == null) return;
         if (!node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
-        if (!acceptElement(javaElement)) {
+        if (!acceptElement(javaElement) || !javaElement.exists()) {
             return; 
         }
         
@@ -89,12 +89,14 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getStructureKind());
             	Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
             	if(o instanceof IJavaElement){
-	                IJavaElement landmarkElement = (IJavaElement)o;
-	                if (landmarkElement instanceof IMember && !landmark.getDegreeOfInterest().isPredicted()) {
-	                    searchElements.add(((IMember)landmarkElement).getCompilationUnit());
-	                } else if (landmarkElement instanceof ICompilationUnit) {
-	                    searchElements.add(landmarkElement);
-	                }
+            		IJavaElement landmarkElement = (IJavaElement)o;
+            		if(landmarkElement.exists()){
+		                if (landmarkElement instanceof IMember && !landmark.getDegreeOfInterest().isPredicted()) {
+		                    searchElements.add(((IMember)landmarkElement).getCompilationUnit());
+		                } else if (landmarkElement instanceof ICompilationUnit) {
+		                    searchElements.add(landmarkElement);
+		                }
+            		}
             	}
             } 
         } else if (degreeOfSeparation == 2) {
@@ -103,10 +105,12 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
             	if(o instanceof IJavaElement){
 	                IJavaElement interestingElement = (IJavaElement)o;
-	                if (interestingElement instanceof IMember && !interesting.getDegreeOfInterest().isPredicted()) {
-	                    searchElements.add(((IMember)interestingElement).getCompilationUnit());
-	                } else if (interestingElement instanceof ICompilationUnit) {
-	                    searchElements.add(interestingElement);
+	                if(interestingElement.exists()){
+		                if (interestingElement instanceof IMember && !interesting.getDegreeOfInterest().isPredicted()) {
+		                    searchElements.add(((IMember)interestingElement).getCompilationUnit());
+		                } else if (interestingElement instanceof ICompilationUnit) {
+		                    searchElements.add(interestingElement);
+		                }
 	                }
             	}
             }  
@@ -116,9 +120,9 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
             	IProject project = sbridge.getProjectForObject(o);// TODO what to do when the element is not a java element, how determine if a javaProject?
             	
-            	if(project != null && JavaProject.hasJavaNature(project)){
+            	if(project != null && JavaProject.hasJavaNature(project) && project.exists()){
             		IJavaProject javaProject = JavaCore.create(project);//((IJavaElement)o).getJavaProject();
-            		if (javaProject != null) searchElements.add(javaProject);
+            		if (javaProject != null && javaProject.exists()) searchElements.add(javaProject);
             	}
             }   
             if (degreeOfSeparation == 4) {
@@ -203,7 +207,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     @Override
     public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation){
     	IJavaElement javaElement = JavaCore.create(node.getElementHandle());
-    	if(javaElement == null)
+    	if(javaElement == null  || javaElement.exists())
     		return null;
     	
         IJavaSearchScope scope = createJavaSearchScope(javaElement, degreeOfSeparation);
@@ -234,7 +238,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
          */
         @Override
         protected IStatus run(IProgressMonitor monitor) {
-            return op.run(monitor);
+        		return op.run(monitor);
         }
         
     }
