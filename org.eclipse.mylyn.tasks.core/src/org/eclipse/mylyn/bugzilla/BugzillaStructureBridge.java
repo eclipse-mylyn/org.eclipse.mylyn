@@ -36,8 +36,10 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaCacheFile;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -49,6 +51,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 
     public final static String EXTENSION = "bugzilla";
     
+    public List<AbstractRelationshipProvider> providers;
+    
     public String getResourceExtension() {
         return EXTENSION;
     }
@@ -56,6 +60,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
     public BugzillaStructureBridge() {
         super();
 		readCacheFile();
+		providers = new ArrayList<AbstractRelationshipProvider>();
+    	providers.add(MylarBugzillaPlugin.getReferenceProvider());
     }
 
     /**
@@ -280,7 +286,17 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	}
 
 	public List<AbstractRelationshipProvider> getProviders() {
-		// TODO Auto-generated method stub
-		return null;
+		return providers;
+	}
+	
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		List <IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		separations.add(new DegreeOfSeparation("disabled", 0));
+		separations.add(new DegreeOfSeparation("local, fully qualified matches", 1));
+		separations.add(new DegreeOfSeparation("local, unqualified matches", 2));
+		separations.add(new DegreeOfSeparation("server, fully quaified matches", 3));
+		separations.add(new DegreeOfSeparation("server, unqualified matches", 4));
+
+		return separations;
 	}
 }

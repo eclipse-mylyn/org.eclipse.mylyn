@@ -17,9 +17,8 @@ import org.osgi.framework.BundleContext;
 public class MylarBugzillaPlugin extends AbstractUIPlugin implements IStartup {
 
     private static BugzillaMylarBridge bridge = null;
-    private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
     private BugzillaStructureBridge structureBridge;
-    
+    private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
 	private static MylarBugzillaPlugin plugin;
 
 	public MylarBugzillaPlugin() {
@@ -33,7 +32,6 @@ public class MylarBugzillaPlugin extends AbstractUIPlugin implements IStartup {
                 structureBridge = new BugzillaStructureBridge();
             	
                 MylarPlugin.getDefault().addBridge(structureBridge);
-                MylarPlugin.getContextManager().addListener(referencesProvider);
                 MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
                 MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
                 
