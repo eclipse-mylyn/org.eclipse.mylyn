@@ -14,7 +14,6 @@ package org.eclipse.mylar.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskListImages;
@@ -41,9 +40,8 @@ public class MarkTaskCompleteAction extends Action {
 //        MylarPlugin.getDefault().actionObserved(this);
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    if(selectedObject instanceof ITask &&
-	    		MylarTasksPlugin.getDefault().getContributor() != null &&
-	 		   	MylarTasksPlugin.getDefault().getContributor().acceptsItem((ITaskListElement)selectedObject)){
-	    	 MylarTasksPlugin.getDefault().getContributor().taskCompleted((ITask)selectedObject);
+	    		MylarTasksPlugin.getDefault().getContributorForElement((ITask)selectedObject) != null) {
+	    	 MylarTasksPlugin.getDefault().getContributorForElement((ITask)selectedObject).taskCompleted((ITask)selectedObject);
 	 	}else if (selectedObject instanceof Task){ 
 	    	((Task)selectedObject).setCompleted(true);
 	    	

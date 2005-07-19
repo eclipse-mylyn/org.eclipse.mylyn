@@ -7,20 +7,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListActionContributor;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
+public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	private BugzillaTaskListManager bugzillaTaskListManager;
     private static BugzillaUiPlugin plugin;
@@ -32,28 +26,14 @@ public class BugzillaUiPlugin extends AbstractUIPlugin implements IStartup {
 	public BugzillaUiPlugin() {
 		plugin = this;
 	}
-
-    public void earlyStartup() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-        		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
-        		bugzillaTaskListManager = new BugzillaTaskListManager();
-        		MylarTasksPlugin.getDefault().addPrimaryContributor(new BugzillaTaskListActionContributor());
-        		
-        		MylarTasksPlugin.getDefault().getTaskListExternalizer().addExternalizer(
-        			new BugzillaTaskExternalizer()
-        		);   
-        		
-            }
-        });
-    }
 	
 	/**
 	 * This method is called upon plug-in activation
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
+		bugzillaTaskListManager = new BugzillaTaskListManager();
 	}
 
 	/**

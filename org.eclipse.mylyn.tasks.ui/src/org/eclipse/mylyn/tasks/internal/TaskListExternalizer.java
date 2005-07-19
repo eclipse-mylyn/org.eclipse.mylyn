@@ -32,12 +32,18 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListActionContributor;
 import org.eclipse.mylar.tasks.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,24 +61,61 @@ public class TaskListExternalizer {
 	private String readVersion = "";
 	private boolean hasCaughtException = false;
 
-	public void addExternalizer(ITaskListExternalizer externalizer) {
-		externalizers.add(externalizer);
-		defaultExternalizer.setExternalizers(externalizers);
-		MylarTasksPlugin.getTaskListManager().getTaskList().clear();
-		readTaskList(MylarTasksPlugin.getTaskListManager().getTaskList(), MylarTasksPlugin.getTaskListManager().getTaskListFile());
-		if(MylarTasksPlugin.getDefault().getContributor() != null){
-			MylarTasksPlugin.getDefault().getContributor().restoreState(TaskListView.getDefault());
-			if (TaskListView.getDefault() != null) {
-				TaskListView.getDefault().getViewer().refresh();
+	private boolean externalizersInitialized = false;
+	
+	// read the extensions and load the required plugins
+	private void initExtensions() {
+		// code from "contributing to eclipse" with modifications for deprecated code
+		if(!externalizersInitialized){
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarTasksPlugin.TASK_CONTRIBUTER_ID);
+			IExtension[] extensions = extensionPoint.getExtensions();
+			for(int i = 0; i < extensions.length; i++){
+				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+				for(int j = 0; j < elements.length; j++){
+					try{
+						Object externalizer = elements[j].createExecutableExtension(MylarTasksPlugin.EXTERNALIZER_CLASS_ID);
+						if (externalizer instanceof ITaskListExternalizer) {
+							externalizers.add((ITaskListExternalizer) externalizer);
+						} else {
+							MylarPlugin.log("Could not load externalizer: " + externalizer.getClass().getCanonicalName() + " must implement " + ITaskListExternalizer.class.getCanonicalName(), this);	
+						}
+						
+						Object contributor = elements[j].createExecutableExtension(MylarTasksPlugin.ACTION_CONTRIBUTER_CLASS_ID);
+						if (contributor instanceof ITaskListActionContributor) {
+							MylarTasksPlugin.getDefault().addContributor((ITaskListActionContributor) contributor);
+							
+						}else {
+							MylarPlugin.log("Could not load contributor: " + contributor.getClass().getCanonicalName() + " must implement " + ITaskListActionContributor.class.getCanonicalName(), this);	
+						}
+					} catch (CoreException e){
+						MylarPlugin.log(e, "Could not load extension for externalizer");
+					}
+				}
 			}
+			externalizersInitialized = true;
 		}
 	}
+	
+//	public void addExternalizer(ITaskListExternalizer externalizer) {
+//		externalizers.add(externalizer);
+//		defaultExternalizer.setExternalizers(externalizers);
+//		MylarTasksPlugin.getTaskListManager().getTaskList().clear();
+//		readTaskList(MylarTasksPlugin.getTaskListManager().getTaskList(), MylarTasksPlugin.getTaskListManager().getTaskListFile());
+//		if(MylarTasksPlugin.getDefault().getContributor() != null){
+//			MylarTasksPlugin.getDefault().getContributor().restoreState(TaskListView.getDefault());
+//			if (TaskListView.getDefault() != null) {
+//				TaskListView.getDefault().getViewer().refresh();
+//			}
+//		}
+//	}
 	
 	public void removeExternalizer(ITaskListExternalizer externalizer) {
 		externalizers.remove(externalizer);
 	}
 	
 	public void writeTaskList(TaskList tlist, File outFile) {
+		initExtensions();
     	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc = null;
@@ -122,7 +165,7 @@ public class TaskListExternalizer {
 		writeDOMtoFile(doc, outFile);
 		return;
 	}
-	
+
 	/**
 	 * Writes an XML file from a DOM.
 	 * 
@@ -186,6 +229,7 @@ public class TaskListExternalizer {
 //	}
 	
 	public void readTaskList(TaskList tlist, File inFile) {
+		initExtensions();
 		hasCaughtException = false;
 		try {
 			// parse file
@@ -235,8 +279,9 @@ public class TaskListExternalizer {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-								    if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
-							    		newTask = MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
+									ITaskListActionContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
+								    if(contributor != null){
+							    		newTask = contributor.taskAdded(newTask);
 							    	}
 								    tlist.addRootTask(newTask);
 									

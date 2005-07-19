@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.tasks.ITaskListActionContributor;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
@@ -42,9 +43,9 @@ public class OpenTaskEditorAction extends Action {
 	    Object obj = ((IStructuredSelection)selection).getFirstElement();
 	    if (obj instanceof ITaskListElement) {
 	    	ITaskListElement element = (ITaskListElement)obj;
-	    	if(MylarTasksPlugin.getDefault().getContributor() != null &&
-	    			MylarTasksPlugin.getDefault().getContributor().acceptsItem(element)){
-	    		MylarTasksPlugin.getDefault().getContributor().itemOpened(element);
+	    	ITaskListActionContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(element);
+		    if(contributor != null){
+	    		contributor.itemOpened(element);
 	    	} else{
 	    		if(element instanceof Task){
 	    			((Task)element).openTaskInEditor();	

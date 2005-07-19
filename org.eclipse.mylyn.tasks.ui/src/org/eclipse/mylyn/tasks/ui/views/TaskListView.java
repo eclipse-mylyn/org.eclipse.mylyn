@@ -789,11 +789,10 @@ public class TaskListView extends ViewPart {
                     viewer.refresh();
                     return true;
                 } else if(selectedObject instanceof ITaskListElement &&
-                		MylarTasksPlugin.getDefault().getContributor() != null &&
-                		MylarTasksPlugin.getDefault().getContributor().acceptsItem((ITaskListElement)selectedObject) && 
+                		MylarTasksPlugin.getDefault().getContributorForElement((ITaskListElement)selectedObject) != null &&
                 		getCurrentTarget() instanceof TaskCategory){
                 	
-                	MylarTasksPlugin.getDefault().getContributor().dropItem((ITaskListElement)selectedObject, (TaskCategory)getCurrentTarget());
+                	MylarTasksPlugin.getDefault().getContributorForElement((ITaskListElement)selectedObject).dropItem((ITaskListElement)selectedObject, (TaskCategory)getCurrentTarget());
                 		viewer.setSelection(null);
                 		viewer.refresh();
                         return true;
@@ -976,9 +975,9 @@ public class TaskListView extends ViewPart {
 	}
 	
 	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
-		if(MylarTasksPlugin.getDefault().getContributor() != null &&
-				MylarTasksPlugin.getDefault().getContributor().acceptsItem(task)){
-        	MylarTasksPlugin.getDefault().getContributor().taskClosed(task, page);
+		ITaskListActionContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(task);
+	    if(contributor != null){
+        	contributor.taskClosed(task, page);
         } else if (task instanceof Task) {
         	IEditorInput input = new TaskEditorInput((Task) task);
 
@@ -1153,29 +1152,30 @@ public class TaskListView extends ViewPart {
     	manager.removeAll();
 
     	// XXX only adding if there are contributions
-        if (MylarTasksPlugin.getDefault().getContributor() != null) {
-            manager.add(createTask);
-            manager.add(createCategory);
-            manager.add(new Separator());
-            for (IAction action : MylarTasksPlugin.getDefault().getContributor().getToolbarActions(this)) { 
+    	List<ITaskListActionContributor> contributors = MylarTasksPlugin.getDefault().getContributors();
+    	manager.add(createTask);
+        manager.add(createCategory);
+        manager.add(new Separator());
+        for(ITaskListActionContributor contributor: contributors){
+            for (IAction action : contributor.getToolbarActions(this)) { 
 	        	manager.add(action);
 			}
             manager.add(new Separator());
-	        manager.add(filterCompleteTask);
-	        manager.add(filterOnPriority);
-        } 
+        }
+	    manager.add(filterCompleteTask);
+	    manager.add(filterOnPriority);
 
     	manager.markDirty();
         manager.update(true);
     }
     
-	public  void resetToolbarsAndPopups() {
-		getViewSite().getActionBars().getMenuManager().removeAll();
-        fillLocalPullDown(getViewSite().getActionBars().getMenuManager());
-        fillContextMenu(getViewSite().getActionBars().getMenuManager());
-		fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
-		getViewSite().getActionBars().getToolBarManager().update(true);  
-	}
+//	public  void resetToolbarsAndPopups() {
+//		getViewSite().getActionBars().getMenuManager().removeAll();
+//        fillLocalPullDown(getViewSite().getActionBars().getMenuManager());
+//        fillContextMenu(getViewSite().getActionBars().getMenuManager());
+//		fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
+//		getViewSite().getActionBars().getToolBarManager().update(true);  
+//	}
 }
 
 //TextTransfer textTransfer = TextTransfer.getInstance();

@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.internal.TaskListExternalizer;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.IWorkbench;
@@ -44,7 +43,11 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
     private List<ITaskListActionContributor> contributors = new ArrayList<ITaskListActionContributor>(); // TODO: use extension points
-        
+    
+    public static final String TASK_CONTRIBUTER_ID = "org.eclipse.mylar.tasks.taskListContributor";
+    public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
+    public static final String ACTION_CONTRIBUTER_CLASS_ID = "actionContributorClass";
+    
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasks.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasks.report.open.external";
@@ -58,7 +61,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasks.filter.incomplete";
     
 	private ResourceBundle resourceBundle;
-	private ITaskListActionContributor primaryContributor;
+//	private ITaskListActionContributor primaryContributor;
 	public enum Report_Open_Mode {
 		EDITOR,
 		INTERNAL_BROWSER,
@@ -298,18 +301,16 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		return contributors;
 	}
 
-	public ITaskListActionContributor getContributor() {
-		return primaryContributor;
-	}
-	
-	public void addPrimaryContributor(ITaskListActionContributor contributor) {
-		this.primaryContributor = contributor;
-		addContributor(contributor);
+	public ITaskListActionContributor getContributorForElement(ITaskListElement element){
+		for(ITaskListActionContributor contributer: contributors){
+			if(contributer.acceptsItem(element)) return contributer;
+		}
+		return null;
 	}
 	
 	public void addContributor(ITaskListActionContributor contributor) {
 		contributors.add(contributor);
-		if (TaskListView.getDefault() != null) TaskListView.getDefault().resetToolbarsAndPopups();
+//		if (TaskListView.getDefault() != null) TaskListView.getDefault().resetToolbarsAndPopups();
 	}
 	
 	private void createFileBackup() {

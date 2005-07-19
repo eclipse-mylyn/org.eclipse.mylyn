@@ -20,6 +20,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskListActionContributor;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -78,13 +79,17 @@ public class CreateNewBugzillaTaskAction extends Action {
 		    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true);				
 		    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    	
-		    if(MylarTasksPlugin.getDefault().getContributor() != null && MylarTasksPlugin.getDefault().getContributor().acceptsItem(newTask)){
-		    	BugzillaTask newTask2 = (BugzillaTask)MylarTasksPlugin.getDefault().getContributor().taskAdded(newTask);
-	    		if(newTask2 == newTask){
-	    			((BugzillaTask)newTask).scheduleDownloadReport();
-	    		} else {
-	    			newTask = newTask2;
-	    		}
+		    ITaskListActionContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
+		    if(contributor != null){
+		    	ITask addedTask = contributor.taskAdded(newTask);
+		    	if(addedTask instanceof BugzillaTask){
+			    	BugzillaTask newTask2 = (BugzillaTask)addedTask;
+		    		if(newTask2 == newTask){
+		    			((BugzillaTask)newTask).scheduleDownloadReport();
+		    		} else {
+		    			newTask = newTask2;
+		    		}
+		    	}
 	    	} else {
 	    		((BugzillaTask)newTask).scheduleDownloadReport();
 	    	}

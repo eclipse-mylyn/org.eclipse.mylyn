@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
-<plugin>
-   
-   <extension
-         name="Bugzilla startup"
-         point="org.eclipse.ui.startup">
-   </extension>
-      
+<plugin>     
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <newWizardShortcut id="org.eclipse.mylar.bugzilla.bugWizard"/>
@@ -110,6 +104,15 @@
             class="org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView"
             searchResultClass="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
+   </extension>
+   <extension
+         point="org.eclipse.mylar.tasks.taskListContributor">
+      <taskListContributor
+            actionContributorClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListActionContributor"
+            externalizerClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer"
+            id="org.eclipse.mylar.bugzilla.ui.tasklist"
+            name="Bugzilla Contributer">
+      </taskListContributor>
    </extension>
 
 </plugin>
