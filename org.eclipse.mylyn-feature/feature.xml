@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar_feature"
       label="org.eclipse.mylar-feature"
-      version="0.3.2.0"
+      version="0.3.2.2"
       provider-name="University of British Columbia"
       plugin="org.eclipse.mylar">
 
@@ -250,49 +250,49 @@ litigation.
          id="org.eclipse.mylar.doc"
          download-size="0"
          install-size="0"
-         version="0.3.2.0"
+         version="0.3.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.java"
          download-size="0"
          install-size="0"
-         version="0.3.2.0"
+         version="0.3.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.ui"
          download-size="0"
          install-size="0"
-         version="0.3.2.0"
+         version="0.3.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.xml"
          download-size="0"
          install-size="0"
-         version="0.3.2.0"
+         version="0.3.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks"
          download-size="0"
          install-size="0"
-         version="0.3.2.0"
+         version="0.3.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar"
          download-size="0"
          install-size="0"
-         version="0.3.2.0"
+         version="0.3.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla"
          download-size="0"
          install-size="0"
-         version="0.3.2.0"
+         version="0.3.2.2"
          unpack="false"/>
 
 </feature>
