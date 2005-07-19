@@ -34,6 +34,8 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 
 	public static ApplyMylarToBrowsingPerspectiveAction INSTANCE;
 	
+	private String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
+	
 	private String[] viewNames = { 	"org.eclipse.jdt.ui.MembersView",
 									"org.eclipse.jdt.ui.PackagesView",
 									"org.eclipse.jdt.ui.TypesView"
@@ -85,7 +87,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
         	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
         	if(viewer != null){
     			viewer.refresh();
-    		} else System.out.println("TESTOMG");
+    		} else MylarPlugin.log("Couldn't refresh viewer: " + viewNames[i], this);
         }
 	}
 
@@ -107,9 +109,23 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
         	            Class clazz = sub.getSuperclass();
         	            Method method= clazz.getDeclaredMethod("getViewer", new Class[] { });
         	            method.setAccessible(true);
-        	            return (StructuredViewer)method.invoke(sub.cast(view), new Object[] { });
+        	            
+        	            // TODO: weird since the packagesView uses a viewer that wraps another viewer
+        	            if(id.compareTo("org.eclipse.jdt.ui.PackagesView") != 0){
+        	            	return (StructuredViewer)method.invoke(sub.cast(view), new Object[] { });
+        	            } else {
+        	            	StructuredViewer viewer = (StructuredViewer)method.invoke(sub.cast(view), new Object[] { });
+        	            	if(viewer != null && viewer.getClass().getCanonicalName().compareTo(packageViewerWrapperClassName) == 0){
+        	            		clazz = viewer.getClass();
+        	            		method= clazz.getDeclaredMethod("getViewer", new Class[] { });
+                	            method.setAccessible(true);
+                	            return (StructuredViewer)method.invoke(viewer, new Object[] { });	
+        	            	} else {
+        	            		return viewer;
+        	            	}
+        	            }
         	        } catch (Exception e) {
-        	        	MylarPlugin.log(e, "couldn't get members view tree viewer");
+        	        	MylarPlugin.log(e, "couldn't get " + id + " view tree viewer");
         	            return null;
         	        }
         		} else {
