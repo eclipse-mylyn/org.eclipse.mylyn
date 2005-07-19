@@ -53,6 +53,7 @@ import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
+import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -122,6 +123,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected Color foreground;
 
 	protected AbstractBugEditorInput bugzillaInput;
+	
+	private BugzillaTaskEditor parentEditor = null;
 
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
@@ -1370,7 +1373,12 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 */
 	public void changeDirtyStatus(boolean newDirtyStatus) {
 		isDirty = newDirtyStatus;
-		firePropertyChange(PROP_DIRTY);
+		if (parentEditor == null) {
+			firePropertyChange(PROP_DIRTY);
+		} else {
+			parentEditor.updatePartName();
+		}
+			
 	}
 	
 	
@@ -1632,5 +1640,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
     
     public void removeAttributeListener(IBugzillaAttributeListener listener) {
     	attributesListeners.remove(listener);
+    }
+    
+    public void setParentEditor(BugzillaTaskEditor editor) {
+    	parentEditor = editor;
     }
 }

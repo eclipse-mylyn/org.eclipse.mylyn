@@ -51,6 +51,7 @@ public class TaskListManager {
     }
     
     public boolean readTaskList() {
+    	MylarTasksPlugin.getDefault().getTaskListExternalizer().initExtensions();
         try { 
         	if (taskListFile.exists()) {
         		MylarTasksPlugin.getDefault().getTaskListExternalizer().readTaskList(taskList, taskListFile);

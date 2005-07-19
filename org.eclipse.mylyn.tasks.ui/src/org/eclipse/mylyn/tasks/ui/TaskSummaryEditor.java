@@ -43,15 +43,15 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.ITaskActivityListener;
-import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.RelatedLinks;
+import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.internal.RelativePathUtil;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -122,6 +123,11 @@ public class TaskSummaryEditor extends EditorPart {
 	private Action add;
     private Action delete;
     private Text description;
+    private Text notes;
+    private Text estimated; 
+    
+    private boolean isDirty = false;
+    private TaskEditor parentEditor = null;
 
     private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
         public void taskActivated(ITask activeTask) {    
@@ -200,7 +206,25 @@ public class TaskSummaryEditor extends EditorPart {
 	}
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// don't support saving
+		String label = description.getText();
+		task.setLabel(label);
+		String note = notes.getText();
+		task.setNotes(note);		
+		String estimate = estimated.getText();
+		task.setEstimatedTime(estimate);
+		links.clear();		
+		TableItem[] items = table.getItems();
+		for (int i = 0; i < items.length; i++) {
+			if (items[i].getData() instanceof String) {
+				links.add((String)items[i].getData());
+			}			
+		}
+		//"<MylarDir>/" + res + ".xml"
+		String path = pathText.getText();		
+		path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));		
+		task.setPath(path);
+		refreshTaskListView(task);
+		markDirty(false);
 	}
 	@Override
 	public void doSaveAs() {
@@ -218,8 +242,9 @@ public class TaskSummaryEditor extends EditorPart {
 	}
 	@Override
 	public boolean isDirty() {
-		return false;
+		return isDirty;
 	}
+	
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
@@ -227,9 +252,6 @@ public class TaskSummaryEditor extends EditorPart {
 	
 	@Override
 	public void createPartControl(Composite parent) {
-//		ManagedForm form = new ManagedForm(parent);
-//		FormToolkit toolkit = form.getToolkit();
-//		editorComposite = form.getForm();
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		sform = toolkit.createScrolledForm(parent);
 		sform.getBody().setLayout(new TableWrapLayout());
@@ -250,18 +272,12 @@ public class TaskSummaryEditor extends EditorPart {
 		
 		// Put the info onto the editor
 		createContent(editorComposite, toolkit);
+		sform.setFocus();
 	}
 
 	@Override
 	public void setFocus() {
-		// don't care when the focus is set
-	}
-
-	/**
-	 * @return Returns the editorComposite.
-	 */
-	public Composite getEditorComposite() {
-		return editorComposite;
+		sform.setFocus();
 	}
 
 	public Control getControl() {
@@ -324,33 +340,14 @@ public class TaskSummaryEditor extends EditorPart {
         if (task.canEditDescription()) {
         	description.setEnabled(false);
         } else {
-        	description.addFocusListener(new FocusListener() {
-    			public void focusGained(FocusEvent e) {
-    				// don't care about focus gained
-    			}
-
-    			public void focusLost(FocusEvent e) {
-    				String label = description.getText();
-    				task.setLabel(label);
-    				refreshTaskListView(task);
+        	description.addModifyListener(new ModifyListener() {
+    			public void modifyText(ModifyEvent e) {
+    				markDirty(true);
     			}			
     		});
         }        
 	}	
-	
-//	private String formatPath(String path) {
-//		if (path == null) return "";
-//		StringBuffer result = new StringBuffer(path.length() + 10);		
-//		for (int i = 0; i < path.length(); i++) {
-//			if (path.charAt(i) == '\\'){
-//				result.append('/');
-//			} else {
-//				result.append(path.charAt(i));
-//			}
-//		}
-//		
-//		return result.toString();
-//	}	
+
 	
 	private void createNotesSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
@@ -372,20 +369,24 @@ public class TaskSummaryEditor extends EditorPart {
 		layout.numColumns = 2;					
 		container.setLayout(layout);
 		
-		final Text text = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI);
+		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI);
 		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
 		tablewrap.heightHint = 100;
-		text.setLayoutData(tablewrap);
-		text.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-				// don't care about focus gained
-			}
-
-			public void focusLost(FocusEvent e) {
-				String notes = text.getText();
-				task.setNotes(notes);
+		notes.setLayoutData(tablewrap);
+		notes.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				markDirty(true);
 			}			
 		});
+//		notes.addKeyListener(new KeyListener() {
+//			public void keyPressed(KeyEvent e) {								
+//			}
+//
+//			public void keyReleased(KeyEvent e) {
+//				if (e.)
+//				markDirty(true);
+//			}			
+//		});
 	}
 	
 	private void createPlanningGameSection(Composite parent, FormToolkit toolkit) {
@@ -410,19 +411,14 @@ public class TaskSummaryEditor extends EditorPart {
 		
 		Label l = toolkit.createLabel(container, "Estimated Time:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		final Text text = toolkit.createText(container,task.getEstimatedTime(), SWT.BORDER);	        
-        text.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		estimated = toolkit.createText(container,task.getEstimatedTime(), SWT.BORDER);	        
+        estimated.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
         
-        text.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-				// don't care about focus gained
-			}
-
-			public void focusLost(FocusEvent e) {
-				String estimate = text.getText();
-				task.setEstimatedTime(estimate);
+        estimated.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				markDirty(true);
 			}			
-		});
+		});     
 		
 		l = toolkit.createLabel(container, "Elapsed Time:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -533,7 +529,7 @@ public class TaskSummaryEditor extends EditorPart {
 		addButton.addSelectionListener(new SelectionAdapter() {			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				addLink();	
+				addLinkToTable();	
 			}
 		});
 
@@ -544,7 +540,7 @@ public class TaskSummaryEditor extends EditorPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				removeLink();
+				removeLinkFromTable();				
 			}
 		});
 	}	
@@ -619,7 +615,8 @@ public class TaskSummaryEditor extends EditorPart {
 						res = res.replaceAll("\\\\", "/");
 						res = RelativePathUtil.findRelativePath(mylarDir, res);
 						pathText.setText("<MylarDir>/" + res + ".xml");
-						task.setPath(res);
+//						task.setPath(res);
+						markDirty(true);
 					}
 				}
 			}
@@ -762,7 +759,7 @@ public class TaskSummaryEditor extends EditorPart {
 		}
 	}
 	
-	private void addLink() {
+	private void addLinkToTable() {
 		InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), "New related link", 
 				"Enter new related link for this task", "", null);
 		dialog.open();
@@ -772,24 +769,24 @@ public class TaskSummaryEditor extends EditorPart {
 			url = "http://" + link;					
 		} else {
 			url = link;
-		}
-		links.add(url);
+		}		
 		tableViewer.add(url);	
+		markDirty(true);
 	}
 	
-	private void removeLink() {
+	private void removeLinkFromTable() {
 		String url = (String) ((IStructuredSelection) tableViewer
 				.getSelection()).getFirstElement();
-		if (url != null) {
-			links.remove(url);
+		if (url != null) {			
 			tableViewer.remove(url);
+			markDirty(true);
 		}
 	}
 	private void defineActions() {		  
         delete = new Action() {
 			@Override
 			public void run() {
-				removeLink();
+				removeLinkFromTable();
 			}
 		};
         delete.setText("Delete");
@@ -799,7 +796,7 @@ public class TaskSummaryEditor extends EditorPart {
         add = new Action() {
 			@Override
 			public void run() {
-				addLink();
+				addLinkToTable();
 			}
 		};
 		add.setText("Add");
@@ -821,6 +818,16 @@ public class TaskSummaryEditor extends EditorPart {
         //getSite().registerContextMenu(menuMgr, tableViewer);
     }
 	
+	private void markDirty(boolean dirty) {
+		isDirty = dirty;
+		if (parentEditor != null) {
+			parentEditor.updatePartName();			
+		}				
+		return;
+	}
+	public void setParentEditor(TaskEditor parentEditor) {
+		this.parentEditor = parentEditor;
+	}
 	
 
 	

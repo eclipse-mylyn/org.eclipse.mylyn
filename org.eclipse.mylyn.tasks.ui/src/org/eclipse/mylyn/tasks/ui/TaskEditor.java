@@ -56,8 +56,9 @@ public class TaskEditor extends MultiPageEditorPart {
 	 */
 	private void createTaskSummaryPage() {
 		taskSummaryEditor.createPartControl(getContainer());
+		taskSummaryEditor.setParentEditor(this);
 		int index = addPage(taskSummaryEditor.getControl());
-		setPageText(index, "Summary");
+		setPageText(index, "Summary");		
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class TaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		getEditor(0).doSave(monitor);
+		taskSummaryEditor.doSave(monitor);
 	}
 
 	/**
@@ -91,9 +92,9 @@ public class TaskEditor extends MultiPageEditorPart {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 
-		if (!(input instanceof TaskEditorInput))
-			throw new PartInitException("Invalid Input: Must be TaskEditorInput");
-		taskEditorInput = (TaskEditorInput)input;
+//		if (!(input instanceof TaskEditorInput))
+//			throw new PartInitException("Invalid Input: Must be TaskEditorInput");
+			taskEditorInput = (TaskEditorInput)input;
 		super.init(site, input);
 
 		/*
@@ -117,6 +118,10 @@ public class TaskEditor extends MultiPageEditorPart {
 		return false;
 	}
 
+	@Override
+	public boolean isDirty() {
+		return taskSummaryEditor.isDirty();
+	}
 	/**
 	 * Class to listen for editor events
 	 */
@@ -157,5 +162,14 @@ public class TaskEditor extends MultiPageEditorPart {
 		public void partOpened(IWorkbenchPart part) {
 			// don't care about this event
 		}
+	}
+	
+	public void updatePartName() {
+		firePropertyChange(PROP_DIRTY);
+		return;
+	}
+	@Override
+	public void setFocus() {
+//		taskSummaryEditor.setFocus();
 	}
 }

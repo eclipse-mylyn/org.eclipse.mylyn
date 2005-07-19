@@ -34,4 +34,7 @@ public class RelatedLinks {
 	public void remove(String link) {
 		links.remove(link);
 	}
+	public void clear() {
+		links.clear();
+	}
 }

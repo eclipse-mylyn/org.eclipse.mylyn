@@ -21,32 +21,22 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
-import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.TaskListImages;
+import org.eclipse.mylar.tasks.ui.TaskEditor;
 import org.eclipse.mylar.tasks.ui.TaskEditorInput;
-import org.eclipse.mylar.tasks.ui.TaskSummaryEditor;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author Eric Booth
  */
-public class BugzillaTaskEditor extends MultiPageEditorPart {
+public class BugzillaTaskEditor extends TaskEditor {
 
 	/** The task that created this editor */
 	protected BugzillaTask bugTask;
@@ -58,7 +48,7 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 
 	private BugzillaTaskEditorInput bugzillaEditorInput;
 	
-    private TaskSummaryEditor taskSummaryEditor = new TaskSummaryEditor();
+//    private TaskSummaryEditor taskSummaryEditor = new TaskSummaryEditor();
     
 	protected IContentOutlinePage outlinePage = null;
 	
@@ -76,24 +66,26 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 		super();
 
 		// get the workbench page and add a listener so we can detect when it closes
-		IWorkbench wb = MylarTasksPlugin.getDefault().getWorkbench();
-		IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
-		IWorkbenchPage ap = aw.getActivePage();
-		BugzillaTaskEditorListener listener = new BugzillaTaskEditorListener();
-		ap.addPartListener(listener);
+//		IWorkbench wb = MylarTasksPlugin.getDefault().getWorkbench();
+//		IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
+//		IWorkbenchPage ap = aw.getActivePage();
+//		BugzillaTaskEditorListener listener = new BugzillaTaskEditorListener();
+//		ap.addPartListener(listener);
 		
 		bugzillaEditor = new ExistingBugEditor();
+		bugzillaEditor.setParentEditor(this);
 		bugzillaEditor.addAttributeListener(ATTRIBUTE_LISTENER);
-        taskSummaryEditor = new TaskSummaryEditor();
+//        taskSummaryEditor = new TaskSummaryEditor();
+//        taskSummaryEditor.setParentEditor(this);
 	}
 
     public AbstractBugEditor getBugzillaEditor(){
         return bugzillaEditor;
     }
     
-    public TaskSummaryEditor getTaskEditor(){
-        return taskSummaryEditor;
-    }
+//    public TaskSummaryEditor getTaskEditor(){
+//        return taskSummaryEditor;
+//    }
     
     
 	public void gotoMarker(IMarker marker) {
@@ -112,14 +104,14 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 	}
     
     
-    private void createSummaryPage() {
-        try{
-            int index = addPage(taskSummaryEditor, new TaskEditorInput(bugTask));
-            setPageText(index, "Summary");         
-        }catch(Exception e){
-        	MylarPlugin.log(e, "summary failed");
-        }
-    }
+//    private void createSummaryPage() {
+//        try{
+//            int index = addPage(taskSummaryEditor, new TaskEditorInput(bugTask));
+//            setPageText(index, "Summary");         
+//        }catch(Exception e){
+//        	MylarPlugin.log(e, "summary failed");
+//        }
+//    }
 	
 	/**
 	 * Creates the pages of the multi-page editor.
@@ -127,7 +119,8 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
     @Override
 	protected void createPages() {	
 		createBugzillaSubmitPage();
-        createSummaryPage();
+		super.createPages();
+//        createSummaryPage();
 	}
 	
 	/**
@@ -135,31 +128,33 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 	 */
     @Override
 	public void doSave(IProgressMonitor monitor) {
-		getEditor(0).doSave(monitor);
+    	super.doSave(monitor);
+//    	if(taskSummaryEditor.isDirty())
+//    		taskSummaryEditor.doSave(monitor);
+    	if(bugzillaEditor.isDirty())
+    		bugzillaEditor.doSave(monitor);
+    	
+		// TODO save both editors if needed
 	}
 	
-	/**
-	 * Saves the multi-page editor's document as another file.
-	 * Also updates the text for page 0's tab, and updates this multi-page editor's input
-	 * to correspond to the nested editor's.
-	 */
-    @Override
-	public void doSaveAs() {
-		IEditorPart editor = getEditor(0);
-		editor.doSaveAs();
-		setPageText(0, editor.getTitle());
-		setInput(editor.getEditorInput());
-	}
+    public boolean isDirty(){
+    	return bugzillaEditor.isDirty() || super.isDirty();
+    }
 	
+	public void changeDirtyStatus(boolean newDirtyStatus) {
+		firePropertyChange(PROP_DIRTY);
+	}
+    
 	@Override
 	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
 		if (!(editorInput instanceof BugzillaTaskEditorInput))
-			throw new PartInitException("Invalid Input: Must be BugzillaTaskEditorInput");
+			throw new PartInitException("Invalid Input: Must be BugzillaTaskEditorInput");		
+		super.init(site, (IEditorInput)new TaskEditorInput(((BugzillaTaskEditorInput)editorInput).getBugTask()));
 		bugzillaEditorInput = (BugzillaTaskEditorInput) editorInput;
 		bugTask = bugzillaEditorInput.getBugTask();
 
 		offlineBug = bugzillaEditorInput.getOfflineBug();
-		super.init(site, editorInput);
+		
 		super.setSite(site);
 		super.setInput(editorInput);
 		
@@ -223,50 +218,50 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
 		setPartName(prefix + "Bug #" + bugzillaEditorInput.getBugId());
 	}
 	
-	/**
-	 * Class to listen for editor events
-	 */
-	private class BugzillaTaskEditorListener implements IPartListener
-	{
-
-		public void partActivated(IWorkbenchPart part) {
-			// don't care about this event
-		}
-
-		public void partBroughtToTop(IWorkbenchPart part) {
-			// don't care about this event
-		}
-
-		public void partClosed(IWorkbenchPart part) {
-
-			// if we are closing a bug editor
-			if (part instanceof BugzillaTaskEditor) {
-				BugzillaTaskEditor taskEditor = (BugzillaTaskEditor)part;
-				
-				// check if it needs to be saved
-				if (taskEditor.bugzillaEditor.isDirty) {
-					// ask the user whether they want to save it or not and perform the appropriate action
-					taskEditor.bugzillaEditor.changeDirtyStatus(false);
-					boolean response = MessageDialog.openQuestion(null, "Save Changes", 
-							"You have made some changes to the bug, do you want to save them?");
-					if (response) {
-						taskEditor.bugzillaEditor.saveBug();
-					} else {
-						ExistingBugEditorInput input = (ExistingBugEditorInput)taskEditor.bugzillaEditor.getEditorInput();
-						bugTask.setPriority(input.getBug().getAttribute("Priority").getValue());
-					}
-				}
-			}
-		}
-
-		public void partDeactivated(IWorkbenchPart part) {
-			// don't care about this event
-		}
-
-		public void partOpened(IWorkbenchPart part) {
-			// don't care about this event
-		}
-	}
+//	/**
+//	 * Class to listen for editor events
+//	 */
+//	private class BugzillaTaskEditorListener implements IPartListener
+//	{
+//
+//		public void partActivated(IWorkbenchPart part) {
+//			// don't care about this event
+//		}
+//
+//		public void partBroughtToTop(IWorkbenchPart part) {
+//			// don't care about this event
+//		}
+//
+//		public void partClosed(IWorkbenchPart part) {
+//
+//			// if we are closing a bug editor
+//			if (part instanceof BugzillaTaskEditor) {
+//				BugzillaTaskEditor taskEditor = (BugzillaTaskEditor)part;
+//				
+//				// check if it needs to be saved
+//				if (taskEditor.bugzillaEditor.isDirty) {
+//					// ask the user whether they want to save it or not and perform the appropriate action
+//					taskEditor.bugzillaEditor.changeDirtyStatus(false);
+//					boolean response = MessageDialog.openQuestion(null, "Save Changes", 
+//							"You have made some changes to the bug, do you want to save them?");
+//					if (response) {
+//						taskEditor.bugzillaEditor.saveBug();
+//					} else {
+//						ExistingBugEditorInput input = (ExistingBugEditorInput)taskEditor.bugzillaEditor.getEditorInput();
+//						bugTask.setPriority(input.getBug().getAttribute("Priority").getValue());
+//					}
+//				}
+//			}
+//		}
+//
+//		public void partDeactivated(IWorkbenchPart part) {
+//			// don't care about this event
+//		}
+//
+//		public void partOpened(IWorkbenchPart part) {
+//			// don't care about this event
+//		}
+//	}
 
 	public void makeNewPage(BugReport serverBug, String newCommentText) {
 		if (serverBug == null) {
@@ -290,4 +285,9 @@ public class BugzillaTaskEditor extends MultiPageEditorPart {
             }
         });
     }
+
+	@Override
+	public void doSaveAs() {
+		// do nothing here
+	}	
 }

@@ -64,7 +64,7 @@ public class TaskListExternalizer {
 	private boolean externalizersInitialized = false;
 	
 	// read the extensions and load the required plugins
-	private void initExtensions() {
+	public void initExtensions() {
 		// code from "contributing to eclipse" with modifications for deprecated code
 		if(!externalizersInitialized){
 			IExtensionRegistry registry = Platform.getExtensionRegistry();

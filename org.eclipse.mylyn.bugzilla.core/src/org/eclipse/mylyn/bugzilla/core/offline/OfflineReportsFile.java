@@ -303,10 +303,12 @@ public class OfflineReportsFile
 		}
 		// If this bug has not been saved offline before, add it to the file.
 		else {
+			int index = -1;
 			// If there is already an offline report with the same id, don't save this report.
-			if (file.find(bug.getId()) >= 0) {
-				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
-				return;
+			if ((index = file.find(bug.getId())) >= 0) {
+				removeReport(getOfflineBugs().get(index));
+//				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
+//				return;
 			}
 			file.add(bug);
 			bug.setOfflineState(true);
