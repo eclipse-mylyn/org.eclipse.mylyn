@@ -93,6 +93,7 @@ public class TaskListExternalizer {
 					}
 				}
 			}
+			defaultExternalizer.setExternalizers(externalizers);
 			externalizersInitialized = true;
 		}
 	}
