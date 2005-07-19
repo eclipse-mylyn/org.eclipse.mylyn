@@ -95,7 +95,7 @@ public class MylarContext implements IMylarContext, Serializable {
         } 
         DegreeOfInterest doi = (DegreeOfInterest)node.getDegreeOfInterest();
         doi.addEvent(event); 
-        if (doi.isLandmark()) {
+        if (doi.isLandmark() && MylarPlugin.getDefault() != null) {
         	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
             if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
         		landmarks.put(node.getElementHandle(), node);

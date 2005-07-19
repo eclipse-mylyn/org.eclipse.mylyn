@@ -69,7 +69,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     }
     
     public Object getObjectForHandle(String handle) {
-        IPath path = new Path(handle);
+    	IPath path = new Path(handle);
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         if (path.segmentCount() == 1) {
             String projectName = handle.substring(1);
