@@ -11,43 +11,28 @@
 
 package org.eclipse.mylar.ui.internal.views;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListActionContributor;
+import org.eclipse.mylar.tasks.ITaskContributor;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.actions.ClearContextAction;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
-public class TaskListHighlighterContributor implements ITaskListActionContributor {
+public class TaskListHighlighterContributor implements ITaskContributor {
 
 	private static final String CHOOSE_HIGHLIGHTER = "Choose Highlighter";
-	
-	public List<IAction> getToolbarActions(TaskListView view) {
-		return Collections.emptyList();
-	}
-
-	public List<IAction> getPopupActions(TaskListView view, ITaskListElement selection) { 
-		List<IAction> actions = new ArrayList<IAction>();
-		actions.add(new ClearContextAction(view));
-		return actions;
-	}
 	
 	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
 		final ITaskListElement selectedElement = selection;
@@ -116,7 +101,6 @@ public class TaskListHighlighterContributor implements ITaskListActionContributo
 	}
 
 	public boolean acceptsItem(ITaskListElement element) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

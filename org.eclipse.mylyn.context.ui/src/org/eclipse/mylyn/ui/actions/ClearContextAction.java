@@ -12,26 +12,27 @@
 package org.eclipse.mylar.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class ClearContextAction extends Action {
+public class ClearContextAction extends Action implements IViewActionDelegate{
 
 	public static final String ID = "org.eclipse.mylar.tasks.actions.context.clear";
 	
-	private final TaskListView view;
-	
-	public ClearContextAction(TaskListView view) {
-		this.view = view;
+	public ClearContextAction() {
 		setText("Clear Task Context");
         setToolTipText("Clear Task Context");
         setId(ID);
@@ -40,7 +41,9 @@ public class ClearContextAction extends Action {
 	
 	@Override
 	public void run() {
-	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
+		if(TaskListView.getDefault() == null)
+			return;
+	    Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
 	    if (selectedObject != null && selectedObject instanceof ITask) {
 //	    	ITask task = ((ITask)selectedObject).getOrCreateCorrespondingTask();
 //    		if (task.isActive()) {
@@ -57,9 +60,10 @@ public class ClearContextAction extends Action {
 				return;
 			
 	    	MylarPlugin.getContextManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
-	    	this.view.getViewer().refresh();
-	    } 
-//	    else if (selectedObject != null && selectedObject instanceof BugzillaHit) {
+	    	TaskListView.getDefault().getViewer().refresh();
+	    }
+	    // TODO add this back in
+//	    else if (selectedObject != null && selectedObject instanceof BugzillaHit && ((BugzillaHit)selectedObject).hasAssociatedActivatibleTask()) {
 //	    	BugzillaTask task = ((BugzillaHit)selectedObject).getAssociatedTask();
 //	    	if(task != null){
 //	    		if (task.isActive()) {
@@ -74,9 +78,21 @@ public class ClearContextAction extends Action {
 //			            "Clear context for the selected task?");
 //				if (!deleteConfirmed) 
 //					return;
-//	    		MylarPlugin.getTaskscapeManager().taskDeleted(task.getHandle(), task.getPath());
+//	    		MylarPlugin.getContextManager().taskDeleted(task.getHandle(), task.getPath());
 //	    	}
-//	    	this.view.getViewer().refresh();
+//	    	TaskListView.getDefault().getViewer().refresh();
 //	    }
+	}
+
+	public void init(IViewPart view) {
+		
+	}
+
+	public void run(IAction action) {
+		run();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		
 	}
 }
