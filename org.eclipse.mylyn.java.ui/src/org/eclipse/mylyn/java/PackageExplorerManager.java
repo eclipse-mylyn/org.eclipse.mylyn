@@ -30,18 +30,21 @@ import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 public class PackageExplorerManager implements IMylarContextListener {
 	
 //    private enum ChangeKind { ADDED, REMOVED, CHANGED }
-
-	private boolean firstExplorerRefresh = true;
+//	private boolean firstExplorerRefresh = true;
     
     public void contextActivated(IMylarContext taskscape) {
-    	if (MylarPlugin.getContextManager().hasActiveContext()
-    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
-        	&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
-    			PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-    			if (packageExplorer != null) { 
-    				packageExplorer.getTreeViewer().expandAll();
-    			}
-        	}	
+    	try {
+	    	if (MylarPlugin.getContextManager().hasActiveContext()
+	    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
+	        	&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
+				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+				if (packageExplorer != null) { 
+					packageExplorer.getTreeViewer().expandAll();
+				}
+	    	}	
+    	} catch (Throwable t) {
+    		MylarPlugin.log(t, "Could not update package explorer");
+    	}
     }
 
     public void contextDeactivated(IMylarContext taskscape) {
@@ -96,6 +99,7 @@ public class PackageExplorerManager implements IMylarContextListener {
      * TODO: currently punts if there was something temporarily raised
      */
     public void interestChanged(List<IMylarContextNode> nodes) {
+    	if (nodes.size() == 0) return;
     	IMylarContextNode lastNode = nodes.get(nodes.size()-1);
     	interestChanged(lastNode);
 //        if (MylarPlugin.getTaskscapeManager().getTempRaisedHandle() != null) {
@@ -151,15 +155,19 @@ public class PackageExplorerManager implements IMylarContextListener {
 //    }
     
     public void interestChanged(IMylarContextNode node) {
-    	if (MylarPlugin.getContextManager().hasActiveContext()
-    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
-    		&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
-	    	IJavaElement lastElement = JavaCore.create(node.getElementHandle()); 
-			PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-			if (packageExplorer != null) { 
-				packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement), true);
-			}
-    	}
+	    try {
+    		if (MylarPlugin.getContextManager().hasActiveContext()
+	    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
+	    		&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
+		    	IJavaElement lastElement = JavaCore.create(node.getElementHandle()); 
+				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+				if (packageExplorer != null) { 
+					packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement), true);
+				}
+	    	}
+	    } catch (Throwable t) {
+			MylarPlugin.log(t, "Could not update package explorer");
+		}
 //        IJavaElement element = JavaCore.create(node.getElementHandle()); 
 //        if(element == null) { 
 //        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
@@ -236,22 +244,22 @@ public class PackageExplorerManager implements IMylarContextListener {
     	// don't care when the relationships are changed
     }
     
-    public void refreshPackageExplorer(Object element) {         
-        final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
-        if (packageExplorer != null && packageExplorer.getTreeViewer() != null) {
-            if (firstExplorerRefresh) {
-//            	installExplorerListeners(packageExplorer);
-            	firstExplorerRefresh = false;
-            }
-        	if (element == null) {
-                packageExplorer.getTreeViewer().setInput(packageExplorer.getTreeViewer().getInput()); 
-                packageExplorer.getTreeViewer().refresh();
-                if (ApplyMylarToPackageExplorerAction.getDefault() != null && ApplyMylarToPackageExplorerAction.getDefault().isChecked()) packageExplorer.getTreeViewer().expandAll();
-            } else {
-                packageExplorer.getTreeViewer().refresh(element);
-            }
-        }
-    }
+//    public void refreshPackageExplorer(Object element) {         
+//        final PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+//        if (packageExplorer != null && packageExplorer.getTreeViewer() != null) {
+//            if (firstExplorerRefresh) {
+////            	installExplorerListeners(packageExplorer);
+//            	firstExplorerRefresh = false;
+//            }
+//        	if (element == null) {
+//                packageExplorer.getTreeViewer().setInput(packageExplorer.getTreeViewer().getInput()); 
+//                packageExplorer.getTreeViewer().refresh();
+//                if (ApplyMylarToPackageExplorerAction.getDefault() != null && ApplyMylarToPackageExplorerAction.getDefault().isChecked()) packageExplorer.getTreeViewer().expandAll();
+//            } else {
+//                packageExplorer.getTreeViewer().refresh(element);
+//            }
+//        }
+//    }
 }
 
 //public void tryToReveal(List<IJavaElement> elements) {
