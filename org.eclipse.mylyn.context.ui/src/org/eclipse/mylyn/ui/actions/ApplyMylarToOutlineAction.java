@@ -44,7 +44,6 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
         if (viewers.size() > 0) {
         	return viewers.get(0);
         } else {
-//        	MylarPlugin.log("Could not find outline", this);
         	return null;
         }
 	}

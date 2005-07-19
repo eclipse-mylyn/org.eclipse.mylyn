@@ -12,6 +12,7 @@
 package org.eclipse.mylar.java;
 
 import org.eclipse.core.internal.resources.ResourceException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ElementChangedEvent;
@@ -49,9 +50,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
   
     public JavaEditingMonitor() {
         super();
-        if (MylarPlugin.getDefault().isPredictedInterestEnabled()) {
-        	JavaPlugin.getDefault().getProblemMarkerManager().addListener(PROBLEM_LISTENER);
-        }
+        JavaPlugin.getDefault().getProblemMarkerManager().addListener(PROBLEM_LISTENER);
     	JavaCore.addElementChangedListener(new IElementChangedListener() {
             public void elementChanged(ElementChangedEvent event) {
             	// TODO: implement interest move
@@ -62,10 +61,12 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
     }
     
     private final IProblemChangedListener PROBLEM_LISTENER = new IProblemChangedListener() {
-        public void problemsChanged(IResource[] changedResources,
-                boolean isMarkerChange) {
+        public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
             try {
-                if (MylarPlugin.getContextManager().getActiveContext() == null)
+            	if (!MylarPlugin.getDefault().isPredictedInterestEnabled()) {
+            		return;
+            	}
+            	if (MylarPlugin.getContextManager().getActiveContext() == null)
                     return;
                 for (int i = 0; i < changedResources.length; i++) {
                     IResource resource = changedResources[i];
@@ -81,7 +82,8 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                                 hasError = true;
                             } 
                         }
-                        if (element != null) {
+                        if (element != null && resource instanceof IFile && !resource.getFileExtension().equals("class")) {
+//                        	System.err.println(">> " + resource.get);
                             if (!hasError) {
                                 MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
                             } else {

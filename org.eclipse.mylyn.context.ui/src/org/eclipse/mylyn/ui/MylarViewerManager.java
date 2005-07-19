@@ -145,10 +145,10 @@ public class MylarViewerManager implements IMylarContextListener {
 										if (node.getDegreeOfInterest().getValue() <= 0) {
 											objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
 										}
-										if (objectToRefresh != null && !node.getElementHandle().equals("")) { // root
+										if (objectToRefresh != null) {// && !node.getElementHandle().equals("")) { // root
 								            viewer.refresh(objectToRefresh, updateLabels);
 								            
-											// also refresh the current outline
+											// TODO: make outline refresh consistent
 											IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 											IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 											bridge.refreshOutline(objectToRefresh, updateLabels);
