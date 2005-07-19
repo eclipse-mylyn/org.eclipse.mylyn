@@ -15,7 +15,11 @@ package org.eclipse.mylar.core.resources;
 
 import java.util.List;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
@@ -23,7 +27,6 @@ import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
-
 
 /**
  * @author Mik Kersten
@@ -87,7 +90,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     }
 
     public boolean canBeLandmark(Object element) {
-        return true;
+    	return element instanceof IFile;
     }
 
     public boolean acceptsObject(Object object) {

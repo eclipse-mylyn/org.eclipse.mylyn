@@ -82,7 +82,7 @@ public class MylarContextManager {
                 kind, handle, 
                 SOURCE_ID_MODEL_ERROR,
                 scalingFactors.getErrorInterest());
-        handleInteractionEvent(errorEvent, false);
+        handleInteractionEvent(errorEvent, true);
         numInterestingErrors++;
     }
 
@@ -93,14 +93,14 @@ public class MylarContextManager {
         if (activeContext.getContextMap().isEmpty()) return;
         if (handle == null) return;
         IMylarContextNode node = activeContext.get(handle);
-        if (node == null) return;
+        if (node == null || !node.getDegreeOfInterest().isInteresting()) return;
 //        if (node.getDegreeOfInterest().getValue() >= scalingFactors.getErrorInterest()) { // TODO: hack?
             InteractionEvent errorEvent = new InteractionEvent(
                     InteractionEvent.Kind.MANIPULATION, 
                     kind, handle, 
                     SOURCE_ID_MODEL_ERROR,
                     -scalingFactors.getErrorInterest());
-            handleInteractionEvent(errorEvent, false);
+            handleInteractionEvent(errorEvent, true);
             numInterestingErrors--;
             // TODO: this will results in double-notification
             if (notify) for (IMylarContextListener listener : listeners) listener.interestChanged(node);
