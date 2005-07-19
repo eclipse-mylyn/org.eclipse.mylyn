@@ -105,15 +105,99 @@
             searchResultClass="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>
+   
    <extension
          point="org.eclipse.mylar.tasks.taskListContributor">
       <taskListContributor
-            actionContributorClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListActionContributor"
+            actionContributorClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskContributor"
             externalizerClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer"
             id="org.eclipse.mylar.bugzilla.ui.tasklist"
             name="Bugzilla Contributer">
       </taskListContributor>
    </extension>
-
+   
+   <extension point="org.eclipse.ui.viewActions"> 
+		<viewContribution 
+			id="org.eclipse.mylar.bugzilla.ui.tasks.actions" 
+	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+  			<action
+	            class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction"
+	            enablesFor="*"
+	            icon="icons/etool16/task-bug-refresh.gif"
+	            id="org.eclipse.mylar.bugzilla.tasks.refresh"
+	            label="Refresh Non-Resolved Bugzilla reports"
+	            style="push"
+	            toolbarPath="mylar"
+	            tooltip="Refresh Non-Resolved Bugzilla reports"> 
+  			</action>
+  			<action
+	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction"
+	            enablesFor="*"
+	            icon="icons/etool16/category-query-new.gif"
+	            id="org.eclipse.mylar.bugzilla.tasks.addQuery"
+	            label="Add Bugzilla Query"
+	            style="push"
+	            toolbarPath="mylar"
+	            tooltip="Add Bugzilla Query"> 
+  			</action>
+  			<action
+	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
+	            enablesFor="*"
+	            icon="icons/etool16/task-bug-new.gif"
+	            id="org.eclipse.mylar.bugzilla.tasks.addNew"
+	            label="Create and Add New Bugzilla Report"
+	            style="push"
+	            toolbarPath="mylar"
+	            tooltip="Create and Add New Bugzilla Report"> 
+  			</action>
+    		<action
+	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
+	            enablesFor="*"
+	            icon="icons/etool16/task-bug.gif"
+	            id="org.eclipse.mylar.bugzilla.tasks.addExisting"
+	            label="Add Existing Bugzilla Report"
+	            style="push"
+	            toolbarPath="mylar"
+	            tooltip="Add Existing Bugzilla Report"> 
+  			</action>
+	    </viewContribution> 
+	</extension>
+	
+	   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="org.eclipse.mylar.bugzilla.ui.viewerContribution1"
+            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+         <action
+               class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
+               enablesFor="*"
+               icon="icons/etool16/task-bug.gif"
+               id="org.eclipse.mylar.bugzilla.ui.popup.addExisting"
+               label="Add Existing Bugzilla Report"
+               menubarPath="mylar"
+               tooltip="Add Existing Bugzilla Report">
+            <enablement>
+               <objectClass name="org.eclipse.mylar.tasks.internal.TaskCategory"/>
+            </enablement>
+         </action>
+         <action
+               class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction"
+               enablesFor="*"
+               icon="icons/etool16/task-bug-refresh.gif"
+               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
+               label="Bugzilla Refresh"
+               menubarPath="mylar"
+               tooltip="Bugzilla Refresh">
+            <enablement>
+               <or>
+                    <objectClass name="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask"/>
+					<objectClass name="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory"/>
+               		<objectClass name="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaHit"/>
+               </or>
+            </enablement>
+         </action>
+      </viewerContribution>
+      
+   </extension>
 </plugin>
 

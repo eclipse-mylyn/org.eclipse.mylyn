@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,6 +30,8 @@ import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
@@ -36,25 +39,21 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Ken Sueda
  */
-public class RefreshBugzillaAction extends Action {
+public class RefreshBugzillaAction extends Action implements IViewActionDelegate{
 	
 	public static final String ID = "org.eclipse.mylar.tasks.actions.refresh.bugzilla";
 	
-	private final TaskListView view;
-	
 	private BugzillaQueryCategory cat = null;
 	
-	public RefreshBugzillaAction(TaskListView view) {
-		this.view = view;
+	public RefreshBugzillaAction() {
 		setText("Bugzilla Refresh");
         setToolTipText("Bugzilla Refresh");
         setId(ID);
         setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
 	
-	public RefreshBugzillaAction(TaskListView view, BugzillaQueryCategory cat) {
+	public RefreshBugzillaAction(BugzillaQueryCategory cat) {
 		assert(cat != null);
-		this.view = view;
 		this.cat =  cat;
 		setText("Bugzilla Refresh");
         setToolTipText("Bugzilla Refresh");
@@ -65,8 +64,8 @@ public class RefreshBugzillaAction extends Action {
 	@Override
 	public void run() {
 		Object obj = cat;
-		if(cat == null){
-			ISelection selection = this.view.getViewer().getSelection();
+		if(cat == null && TaskListView.getDefault() != null){
+			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 			obj = ((IStructuredSelection) selection).getFirstElement();
 		}
 		if (obj instanceof BugzillaQueryCategory) {
@@ -81,7 +80,8 @@ public class RefreshBugzillaAction extends Action {
 									((BugzillaTask)hit.getOrCreateCorrespondingTask()).refresh();
 								}
 							}
-							RefreshBugzillaAction.this.view.getViewer().refresh();
+						    if(TaskListView.getDefault() != null)
+								TaskListView.getDefault().getViewer().refresh();
 						}
 					});
 				}
@@ -123,6 +123,19 @@ public class RefreshBugzillaAction extends Action {
 				}
 			}
 		}
-		view.getViewer().refresh();
+	    if(TaskListView.getDefault() != null)
+			TaskListView.getDefault().getViewer().refresh();
+	}
+
+	public void init(IViewPart view) {
+		
+	}
+
+	public void run(IAction action) {
+		run();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		
 	}
 }

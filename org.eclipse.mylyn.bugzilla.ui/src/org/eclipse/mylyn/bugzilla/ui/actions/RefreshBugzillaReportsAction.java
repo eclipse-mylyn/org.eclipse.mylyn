@@ -17,7 +17,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaHit;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
@@ -28,6 +30,8 @@ import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
@@ -35,16 +39,13 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class RefreshBugzillaReportsAction extends Action {
+public class RefreshBugzillaReportsAction extends Action implements IViewActionDelegate{
 
 	public static final String ID = "org.eclipse.mylar.tasks.actions.refresh.bugdb";
 
-	private final TaskListView view;
-
 	private boolean showProgress = true;
 
-	public RefreshBugzillaReportsAction(TaskListView view) {
-		this.view = view;
+	public RefreshBugzillaReportsAction() {
 		setText("Refresh Non-Resolved Bugzilla reports");
 		setToolTipText("Refresh Non-Resolved Bugzilla reports");
 		setId(ID);
@@ -80,7 +81,8 @@ public class RefreshBugzillaReportsAction extends Action {
 				}
 			}
 		}
-		view.getViewer().refresh();
+		if(TaskListView.getDefault() != null)
+			TaskListView.getDefault().getViewer().refresh();
 	}
 
 	private void runWithProgressBar() {
@@ -114,7 +116,8 @@ public class RefreshBugzillaReportsAction extends Action {
 //					monitor.worked(1);
 //				}
 //				monitor.done();
-				RefreshBugzillaReportsAction.this.view.getViewer().refresh();
+				if(TaskListView.getDefault() != null)
+					TaskListView.getDefault().getViewer().refresh();
 			}
 		};
 
@@ -167,11 +170,25 @@ public class RefreshBugzillaReportsAction extends Action {
 									}
 								}
 							}
-							RefreshBugzillaReportsAction.this.view.getViewer().refresh();
+							if(TaskListView.getDefault() != null)
+								TaskListView.getDefault().getViewer().refresh();
 						}
 					});
 			}
 		}		
-		RefreshBugzillaReportsAction.this.view.getViewer().refresh();
+		if(TaskListView.getDefault() != null)
+			TaskListView.getDefault().getViewer().refresh();
+	}
+
+	public void init(IViewPart view) {
+		
+	}
+
+	public void run(IAction action) {
+		run();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		System.out.println("sel changed");		
 	}
 }

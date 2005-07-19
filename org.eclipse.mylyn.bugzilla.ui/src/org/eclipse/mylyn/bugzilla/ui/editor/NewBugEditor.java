@@ -268,7 +268,7 @@ public class NewBugEditor extends AbstractBugEditor {
 					public void run() {
 						if(TaskListView.getDefault() != null && 
 								TaskListView.getDefault().getViewer() != null){
-							new RefreshBugzillaReportsAction(TaskListView.getDefault()).run();
+							new RefreshBugzillaReportsAction().run();
 						}
 					}
 				});

@@ -14,7 +14,6 @@ package org.eclipse.mylar.bugzilla.ui.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -23,14 +22,11 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
-import org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction;
-import org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction;
-import org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListActionContributor;
+import org.eclipse.mylar.tasks.ITaskContributor;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
@@ -44,23 +40,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class BugzillaTaskListActionContributor implements ITaskListActionContributor {
-
-	public List<IAction> getToolbarActions(TaskListView view) {
-	    List<IAction> actions = new ArrayList<IAction>();
-        actions.add(new CreateBugzillaTaskAction(view));
-	    actions.add(new CreateNewBugzillaTaskAction(view));
-        actions.add(new CreateBugzillaQueryCategoryAction(view));
-    	actions.add(new RefreshBugzillaReportsAction(view));
-        return actions;
-	}
-
-	public List<IAction> getPopupActions(TaskListView view, ITaskListElement selection) {
-	    List<IAction> actions = new ArrayList<IAction>();
-        actions.add(new CreateBugzillaTaskAction(view));
-        actions.add(new RefreshBugzillaAction(view));
-        return actions;
-	}
+public class BugzillaTaskContributor implements ITaskContributor {
 
 	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
 		return null;
@@ -143,7 +123,7 @@ public class BugzillaTaskListActionContributor implements ITaskListActionContrib
 	        	queryCategory.setDescription(sqd.getName());
 	        	queryCategory.setUrl(sqd.getUrl());
 	        	
-	        	new RefreshBugzillaAction(TaskListView.getDefault(), queryCategory).run();
+	        	new RefreshBugzillaAction(queryCategory).run();
         	}
 	    } else if(element instanceof BugzillaHit){
 	    	BugzillaHit hit = (BugzillaHit)element;
@@ -217,7 +197,7 @@ public class BugzillaTaskListActionContributor implements ITaskListActionContrib
 
 	public void restoreState(TaskListView taskListView) {
 		if (BugzillaPlugin.getDefault().refreshOnStartUpEnabled()) {
-			RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction(taskListView);
+			RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction();
 			refresh.setShowProgress(false);
 			refresh.run();
 			refresh.setShowProgress(true);

@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.tasks;
 
-import java.util.List;
-
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -24,12 +21,8 @@ import org.eclipse.ui.IWorkbenchPage;
  * 
  * TODO: this should use extension points
  */
-public interface ITaskListActionContributor {
-	
-	public abstract List<IAction> getToolbarActions(TaskListView view);
+public interface ITaskContributor {
 
-	public abstract List<IAction> getPopupActions(TaskListView view, ITaskListElement selection);
-	
 	public abstract MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection);
 	
 	public abstract void taskActivated(ITask task);
@@ -42,7 +35,7 @@ public interface ITaskListActionContributor {
 
 	public abstract void itemOpened(ITaskListElement element);
 	
-	public void taskClosed(ITask element, IWorkbenchPage page);
+	public abstract void taskClosed(ITask element, IWorkbenchPage page);
 	
 	public abstract boolean acceptsItem(ITaskListElement element);
 

@@ -12,29 +12,30 @@
 package org.eclipse.mylar.bugzilla.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListActionContributor;
+import org.eclipse.mylar.tasks.ITaskContributor;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class CreateBugzillaTaskAction extends Action {
+public class CreateBugzillaTaskAction extends Action implements IViewActionDelegate{
 	
 	private static final String LABEL = "Add Existing Bugzilla Report";
 
 	public static final String ID = "org.eclipse.mylar.tasks.actions.create.bug";
 		
-	private final TaskListView view;
-	
-	public CreateBugzillaTaskAction(TaskListView view) {
-		this.view = view;
+	public CreateBugzillaTaskAction() {
 		setText(LABEL);
         setToolTipText(LABEL);
         setId(ID); 
@@ -44,7 +45,10 @@ public class CreateBugzillaTaskAction extends Action {
 	@Override
 	public void run() {
 //        MylarPlugin.getDefault().actionObserved(this);
-	    String bugIdString = this.view.getBugIdFromUser();
+		if(TaskListView.getDefault() == null)
+			return;
+
+	    String bugIdString = TaskListView.getDefault().getBugIdFromUser();
 	    int bugId = -1;
 	    try {
 	    	if (bugIdString != null) {
@@ -53,7 +57,7 @@ public class CreateBugzillaTaskAction extends Action {
 	    		return;
 	    	}
 	    } catch (NumberFormatException nfe) {
-	        this.view.showMessage("Please enter a valid report number");
+	        TaskListView.getDefault().showMessage("Please enter a valid report number");
 	        return;
 	    }
 		
@@ -69,9 +73,9 @@ public class CreateBugzillaTaskAction extends Action {
 //			}
 	
 	    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true);				
-	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
+	    Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
     	
-	    ITaskListActionContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
+	    ITaskContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
 	    if(contributor != null){
 	    	ITask addedTask = contributor.taskAdded(newTask);
 	    	if(addedTask instanceof BugzillaTask){
@@ -104,6 +108,18 @@ public class CreateBugzillaTaskAction extends Action {
 //	    } else { 
 //	        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask((ITask)bugTask);
 //	    }
-	    this.view.getViewer().refresh();
+	    if(TaskListView.getDefault() != null)
+			TaskListView.getDefault().getViewer().refresh();
+	}
+
+	public void init(IViewPart view) {
+	}
+
+	public void run(IAction action) {
+		run();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		
 	}
 }

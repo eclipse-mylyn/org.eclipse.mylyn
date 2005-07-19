@@ -12,7 +12,9 @@
 package org.eclipse.mylar.bugzilla.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
@@ -20,24 +22,23 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListActionContributor;
+import org.eclipse.mylar.tasks.ITaskContributor;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class CreateNewBugzillaTaskAction extends Action {
+public class CreateNewBugzillaTaskAction extends Action implements IViewActionDelegate{
 	
 	public static final String ID = "org.eclipse.mylar.tasks.actions.create.bug";
 		
-	private final TaskListView view;
-	
-	public CreateNewBugzillaTaskAction(TaskListView view) {
-		this.view = view;
+	public CreateNewBugzillaTaskAction() {
 		setText("Create and Add Bugzilla Report");
         setToolTipText("Create and Add Bugzilla Report");
         setId(ID); 
@@ -75,11 +76,13 @@ public class CreateNewBugzillaTaskAction extends Action {
 		        return;
 		    }
 		
-	
+		    
 		    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true);				
-		    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
+		    Object selectedObject = null;
+		    if(TaskListView.getDefault() != null)
+		    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
 	    	
-		    ITaskListActionContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
+		    ITaskContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
 		    if(contributor != null){
 		    	ITask addedTask = contributor.taskAdded(newTask);
 		    	if(addedTask instanceof BugzillaTask){
@@ -100,9 +103,22 @@ public class CreateNewBugzillaTaskAction extends Action {
 		    }
 		    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 
-		    this.view.getViewer().refresh();
+		    if(TaskListView.getDefault() != null)
+				TaskListView.getDefault().getViewer().refresh();
 		} else {
 			// TODO handle not good
 		}
+	}
+
+	public void init(IViewPart view) {
+		
+	}
+
+	public void run(IAction action) {
+		run();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		
 	}
 }

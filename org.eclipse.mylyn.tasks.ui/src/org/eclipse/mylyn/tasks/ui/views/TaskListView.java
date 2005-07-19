@@ -20,7 +20,6 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -52,7 +51,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListActionContributor;
+import org.eclipse.mylar.tasks.ITaskContributor;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
@@ -856,17 +855,12 @@ public class TaskListView extends ViewPart {
         manager.add(delete);
         manager.add(new Separator());
         manager.add(createTask);
-//        manager.add(new Separator());   
+        manager.add(new Separator("mylar"));   
         
         final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
         if (selectedObject instanceof ITaskListElement) {
-        	for (ITaskListActionContributor contributor : MylarTasksPlugin.getDefault().getContributors()) {
-		        for (IAction action : contributor.getPopupActions(this, null)) {
-					manager.add(action);
-				}				
-			}
-
-        	for (ITaskListActionContributor contributor : MylarTasksPlugin.getDefault().getContributors()) {
+        	
+        	for (ITaskContributor contributor : MylarTasksPlugin.getDefault().getContributors()) {
     	        manager.add(new Separator());
     	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
     	        if (subMenuManager != null) manager.add(subMenuManager);
@@ -975,7 +969,7 @@ public class TaskListView extends ViewPart {
 	}
 	
 	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
-		ITaskListActionContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(task);
+		ITaskContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(task);
 	    if(contributor != null){
         	contributor.taskClosed(task, page);
         } else if (task instanceof Task) {
@@ -1151,17 +1145,11 @@ public class TaskListView extends ViewPart {
     private void fillLocalToolBar(IToolBarManager manager) {
     	manager.removeAll();
 
-    	// XXX only adding if there are contributions
-    	List<ITaskListActionContributor> contributors = MylarTasksPlugin.getDefault().getContributors();
     	manager.add(createTask);
         manager.add(createCategory);
+        manager.add(new Separator("mylar"));
+
         manager.add(new Separator());
-        for(ITaskListActionContributor contributor: contributors){
-            for (IAction action : contributor.getToolbarActions(this)) { 
-	        	manager.add(action);
-			}
-            manager.add(new Separator());
-        }
 	    manager.add(filterCompleteTask);
 	    manager.add(filterOnPriority);
 
