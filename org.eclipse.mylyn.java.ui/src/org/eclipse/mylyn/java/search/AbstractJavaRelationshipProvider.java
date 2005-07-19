@@ -68,7 +68,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
-        if (node == null) return;
+    	if (node == null) return;
         if (!node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
         if (!acceptElement(javaElement) || !javaElement.exists()) {
@@ -158,7 +158,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             final IMylarContextNode node, 
             final int degreeOfSeparation, 
             final String kind) {
-        
+    	
         int limitTo = 0;
         if (kind.equals(JavaReferencesProvider.ID)) {
             limitTo = IJavaSearchConstants.REFERENCES;
@@ -184,13 +184,14 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     			return gathered;
     		} 
         	
-           public void searchCompleted(List l) {
+           public void searchCompleted(List l) {               
                if (l == null) return;
                 List<IJavaElement> relatedHandles = new ArrayList<IJavaElement>();
                 Object[] elements = l.toArray();
                 for (int i = 0; i < elements.length; i++) {
                     if (elements[i] instanceof IJavaElement) relatedHandles.add((IJavaElement)elements[i]);
                 } 
+
                 for(IJavaElement element : relatedHandles) {
                     if (!acceptResultElement(element)) continue;
 
@@ -207,7 +208,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     @Override
     public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation){
     	IJavaElement javaElement = JavaCore.create(node.getElementHandle());
-    	if(javaElement == null  || javaElement.exists())
+    	if(javaElement == null || !javaElement.exists())
     		return null;
     	
         IJavaSearchScope scope = createJavaSearchScope(javaElement, degreeOfSeparation);
