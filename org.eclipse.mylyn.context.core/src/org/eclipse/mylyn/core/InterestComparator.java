@@ -15,7 +15,6 @@ package org.eclipse.mylar.core;
 
 import java.util.Comparator;
 
-
 /**
  * @author Mik Kersten
  */

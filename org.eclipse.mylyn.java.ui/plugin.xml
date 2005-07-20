@@ -17,7 +17,7 @@
 	         style="toggle"
 	         label="Apply Mylar" 
 	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Filter"
+	         tooltip="Apply Mylar"
 	      	 toolbarPath="mylar"
 	         class="org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction"
 	         enablesFor="*"> 

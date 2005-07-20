@@ -40,7 +40,7 @@ public class InteractionEvent implements Serializable {
          * TODO: add PREFERENCE?
          */
         public boolean isUserEvent() {
-        	return this == SELECTION || this == EDIT || this == COMMAND;
+        	return this == SELECTION || this == EDIT || this == COMMAND || this == PREFERENCE;
         }
         
         @Override

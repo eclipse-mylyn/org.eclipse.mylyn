@@ -259,7 +259,7 @@
 	         style="toggle"
 	         label="Apply Mylar" 
 	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Appl Mylar"
+	         tooltip="Apply Mylar"
 	      	 toolbarPath="mylar"
 	         class="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
 	         enablesFor="*"> 
@@ -280,13 +280,13 @@
   		</action> 
       </viewContribution> 
       <viewContribution 
-		id="org.eclipse.mylar.java.problems.contribution" 
+		id="org.eclipse.mylar.problems.contribution" 
    		targetID="org.eclipse.ui.views.ProblemView">
     	<action
            class="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
-           id="org.eclipse.mylar.ui.actions.FilterProblemsAction"
+           id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
            label="Apply Mylar"
            style="toggle"
            toolbarPath="mylar"
