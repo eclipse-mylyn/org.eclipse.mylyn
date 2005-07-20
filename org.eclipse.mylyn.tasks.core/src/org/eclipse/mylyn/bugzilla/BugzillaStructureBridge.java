@@ -111,9 +111,13 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
             	return findNode(node, commentNumber);
             }
 
+            BugzillaReportNode reportNode = MylarBugzillaPlugin.getReferenceProvider().getCached(handle);
+            
             // try to get from the cache, if it doesn't exist, startup an operation to get it
             result = getFromCache(bugHandle);
-            if(result == null){
+            if(result == null && reportNode != null){
+            	return reportNode;
+            } else if(result == null && reportNode == null){
             	WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
                 	protected void execute(IProgressMonitor monitor) throws CoreException {
                 		monitor.beginTask("Downloading Bug# " + id, IProgressMonitor.UNKNOWN);
@@ -137,7 +141,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
             	if(result != null)
             		cache(bugHandle, result);
             }
-           
+
             BugzillaOutlineNode node = BugzillaOutlineNode.parseBugReport(result);
             return findNode(node, commentNumber);
         }

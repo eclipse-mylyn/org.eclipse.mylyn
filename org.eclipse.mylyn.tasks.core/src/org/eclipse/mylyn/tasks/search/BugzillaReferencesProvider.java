@@ -31,6 +31,7 @@ import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
+import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -85,12 +86,17 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
                     Object o = itr.next();
                     if(o instanceof BugzillaReportNode){
                         BugzillaReportNode bugzillaNode = (BugzillaReportNode)o;
-                        String handle = bugzillaNode.getElementHandle();
+                        final String handle = bugzillaNode.getElementHandle();
                         if(bridge.getCached(handle) == null)
                         	cache(handle, bugzillaNode);
-                        incrementInterest(degreeOfSeparation, BugzillaStructureBridge.EXTENSION, handle);
-                        }
+                        
+                        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){
+							public void run() {
+								incrementInterest(degreeOfSeparation, BugzillaStructureBridge.EXTENSION, handle);
+							}
+                        });
                     }
+                }
                 gathered = true;
             }
 
