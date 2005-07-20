@@ -42,7 +42,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     private static MylarTasksPlugin plugin;
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
-    private List<ITaskContributor> contributors = new ArrayList<ITaskContributor>(); // TODO: use extension points
+    private List<ITaskListListener> contributors = new ArrayList<ITaskListListener>(); // TODO: use extension points
     
     public static final String TASK_CONTRIBUTER_ID = "org.eclipse.mylar.tasks.taskListContributor";
     public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
@@ -297,18 +297,18 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		return externalizer;
 	}
 
-	public List<ITaskContributor> getContributors() {
+	public List<ITaskListListener> getContributors() {
 		return contributors;
 	}
 
-	public ITaskContributor getContributorForElement(ITaskListElement element){
-		for(ITaskContributor contributer: contributors){
+	public ITaskListListener getContributorForElement(ITaskListElement element){
+		for(ITaskListListener contributer: contributors){
 			if(contributer.acceptsItem(element)) return contributer;
 		}
 		return null;
 	}
 	
-	public void addContributor(ITaskContributor contributor) {
+	public void addContributor(ITaskListListener contributor) {
 		contributors.add(contributor);
 //		if (TaskListView.getDefault() != null) TaskListView.getDefault().resetToolbarsAndPopups();
 	}

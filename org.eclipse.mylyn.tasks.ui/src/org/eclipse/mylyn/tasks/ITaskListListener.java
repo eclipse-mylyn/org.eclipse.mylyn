@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * 
  * TODO: this should use extension points
  */
-public interface ITaskContributor {
+public interface ITaskListListener {
 
 	public abstract MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection);
 	

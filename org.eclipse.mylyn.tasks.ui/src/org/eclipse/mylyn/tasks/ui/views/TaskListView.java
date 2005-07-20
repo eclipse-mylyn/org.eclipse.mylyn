@@ -51,7 +51,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskContributor;
+import org.eclipse.mylar.tasks.ITaskListListener;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
@@ -860,7 +860,7 @@ public class TaskListView extends ViewPart {
         final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
         if (selectedObject instanceof ITaskListElement) {
         	
-        	for (ITaskContributor contributor : MylarTasksPlugin.getDefault().getContributors()) {
+        	for (ITaskListListener contributor : MylarTasksPlugin.getDefault().getContributors()) {
     	        manager.add(new Separator());
     	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
     	        if (subMenuManager != null) manager.add(subMenuManager);
@@ -969,7 +969,7 @@ public class TaskListView extends ViewPart {
 	}
 	
 	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
-		ITaskContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(task);
+		ITaskListListener contributor = MylarTasksPlugin.getDefault().getContributorForElement(task);
 	    if(contributor != null){
         	contributor.taskClosed(task, page);
         } else if (task instanceof Task) {

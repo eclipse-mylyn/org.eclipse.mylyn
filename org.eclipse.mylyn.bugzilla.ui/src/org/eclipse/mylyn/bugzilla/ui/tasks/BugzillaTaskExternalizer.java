@@ -18,7 +18,7 @@ import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskContributor;
+import org.eclipse.mylar.tasks.ITaskListListener;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.DefaultTaskListExternalizer;
 import org.eclipse.mylar.tasks.internal.MylarExternalizerException;
@@ -171,7 +171,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 			MylarPlugin.log(e, "Failed to read bug report");
 		}
 		
-		ITaskContributor contributor = MylarTasksPlugin.getDefault().getContributorForElement(task);
+		ITaskListListener contributor = MylarTasksPlugin.getDefault().getContributorForElement(task);
 	    if(contributor != null){
     		ITask addedTask = contributor.taskAdded(task);
     		if(addedTask instanceof BugzillaTask) task = (BugzillaTask)addedTask;
