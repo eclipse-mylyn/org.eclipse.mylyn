@@ -17,16 +17,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarInterest;
 
 
@@ -95,11 +91,8 @@ public class MylarContext implements IMylarContext, Serializable {
         } 
         DegreeOfInterest doi = (DegreeOfInterest)node.getDegreeOfInterest();
         doi.addEvent(event); 
-        if (doi.isLandmark() && MylarPlugin.getDefault() != null) {
-        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-            if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
-        		landmarks.put(node.getElementHandle(), node);
-        	}
+        if (doi.isLandmark()) {
+        	landmarks.put(node.getElementHandle(), node);
         } else {
             landmarks.remove(node.getElementHandle()); // TODO: redundant
         }
@@ -136,21 +129,6 @@ public class MylarContext implements IMylarContext, Serializable {
     public List<IMylarContextNode> getLandmarks() {
         return Collections.unmodifiableList(new ArrayList<IMylarContextNode>(landmarks.values()));
     }
-
-    /**
-     * TODO: should this really call out to the plugin?
-     */
-    public Set<IMylarContextNode> getInterestingResources() {
-        Set<IMylarContextNode> interestingFiles = new HashSet<IMylarContextNode>();
-        List<IMylarContextNode> allIntersting = getInteresting();
-        for (IMylarContextNode node : allIntersting) {
-            if (MylarPlugin.getDefault().getStructureBridge(node.getStructureKind()).isDocument(node.getElementHandle())) {       
-                interestingFiles.add(node);
-            }
-        }
-        return interestingFiles;
-    }
-
 
     public IMylarContextNode getActiveNode() {
         return activeNode;

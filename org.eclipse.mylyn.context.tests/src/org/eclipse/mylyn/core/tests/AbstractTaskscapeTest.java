@@ -23,8 +23,12 @@ import junit.framework.TestCase;
  */
 public class AbstractTaskscapeTest extends TestCase {
 
-    protected InteractionEvent mockSelection(String handle) {
-        return new InteractionEvent(InteractionEvent.Kind.SELECTION, "<mock-kind>", handle, "<mock-origin>");
+    private static final String MOCK_PROVIDER = "<mock-provider>";
+	private static final String MOCK_ORIGIN = "<mock-origin>";
+	private static final String MOCK_KIND = "java";
+
+	protected InteractionEvent mockSelection(String handle) {
+        return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, handle, MOCK_ORIGIN);
     }
     
     protected InteractionEvent mockSelection() {
@@ -32,20 +36,23 @@ public class AbstractTaskscapeTest extends TestCase {
     }
     
     protected InteractionEvent mockNavigation(String toHandle) {
-        return new InteractionEvent(InteractionEvent.Kind.SELECTION, "<mock-kind>", toHandle, "<mock-origin>", "<mock-provider>");
+        return new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", toHandle, MOCK_ORIGIN, MOCK_PROVIDER);
     }
-        
-    protected InteractionEvent mockInterestContribution(String handle, float value) {
-        InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, "<mock-kind>", handle, "<mock-origin>", value);
+
+    protected InteractionEvent mockInterestContribution(String handle, String kind, float value) {
+        InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, MOCK_ORIGIN, value);
         return event;
+    }
+    
+    protected InteractionEvent mockInterestContribution(String handle, float value) {
+    	return mockInterestContribution(handle, MOCK_KIND, value);
     }
 
     protected InteractionEvent mockPreferenceChange(String handle) {
-        return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "<mock-kind>", handle, "<mock-origin>");
+        return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, MOCK_KIND, handle, MOCK_ORIGIN);
     }
     
     protected boolean compareTaskscapeEquality(IMylarContext t1, IMylarContext t2) {
-//        List<ITaskscapeNode> nodes1 = t1.get
         return false;
     }
     

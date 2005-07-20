@@ -17,28 +17,30 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
-import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 
-
+/**
+ * @author Shawn Minto
+ */
 public class SearchTaskscapeNotifier extends AbstractTaskscapeTest {
 
-	private CompositeContext taskscape; 
+	private CompositeContext context; 
 	private String source;
 	
-	public SearchTaskscapeNotifier(CompositeContext taskscape, String source){
-		this.taskscape = taskscape;
+	public SearchTaskscapeNotifier(CompositeContext context, String source){
+		this.context = context;
 		this.source = source;
 	}
 	
 	public IMylarContextNode mockLowerInterest(IMylarContextNode node) {
-		return taskscape.addEvent(mockUserEvent(node.getElementHandle(), node.getStructureKind(), source, -3));
+		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getStructureKind(), source, -3));
     }
 	
 	public IMylarContextNode mockRaiseInterest(IMylarContextNode node) {
-		return taskscape.addEvent(mockUserEvent(node.getElementHandle(), node.getStructureKind(), source, 2));
+		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getStructureKind(), source, 2));
     }
 	
 	public IMylarContextNode mockLowerInterest(String handle, String kind) {
@@ -50,13 +52,13 @@ public class SearchTaskscapeNotifier extends AbstractTaskscapeTest {
     }
 
 	public IMylarContextNode mockEditorSelection(String handle, String kind) {
-		taskscape.addEvent(mockSelection(handle, kind, source));
-		return taskscape.addEvent(mockSelection(handle, kind, source));
+		context.addEvent(mockSelection(handle, kind, source));
+		return context.addEvent(mockSelection(handle, kind, source));
 	}
 	
 	public IMylarContextNode getElement(String handle, String kind) {
-		IMylarContextNode node = taskscape.addEvent(mockSelection(handle, kind, source));
-		taskscape.addEvent(mockUserEvent(handle, kind, source, (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
+		IMylarContextNode node = context.addEvent(mockSelection(handle, kind, source));
+		context.addEvent(mockUserEvent(handle, kind, source, (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
 		return node;
 	}
 	
@@ -64,7 +66,7 @@ public class SearchTaskscapeNotifier extends AbstractTaskscapeTest {
 		WorkspaceSetupHelper.clearDoiModel();
 		MylarContext task = WorkspaceSetupHelper.getTaskscape();
     	MylarPlugin.getContextManager().taskActivated(task.getId(), task.getId());
-    	taskscape = MylarPlugin.getContextManager().getActiveContext();
+    	context = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 	}
 	
 	private InteractionEvent mockSelection(String handle, String kind, String origin) {

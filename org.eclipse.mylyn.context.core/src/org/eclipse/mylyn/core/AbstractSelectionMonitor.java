@@ -15,12 +15,10 @@ package org.eclipse.mylar.core;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.InteractionEvent.Kind;
-import org.eclipse.mylar.core.internal.CompositeContext;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
-
 
 /**
  * Self-registering on construction.
@@ -54,9 +52,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
     
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection == null || selection.isEmpty()) return;
-
-        CompositeContext compositeContext = MylarPlugin.getContextManager().getActiveContext();
-        if (compositeContext.getContexts().size() == 0) {
+        if (!MylarPlugin.getContextManager().hasActiveContext()) {
             return;
         } else {
             handleWorkbenchPartSelection(part, selection);

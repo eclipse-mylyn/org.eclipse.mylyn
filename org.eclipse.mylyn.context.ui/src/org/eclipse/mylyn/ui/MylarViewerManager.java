@@ -76,13 +76,13 @@ public class MylarViewerManager implements IMylarContextListener {
         refreshViewers();
     }
 
-    public void contextDeactivated(IMylarContext taskscape) {
+    public void contextDeactivated(IMylarContext context) {
     	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
         if (confirmed) {
         	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.CLOSE_EDITORS)) {
         		UiUtil.closeAllEditors();
         	} else {
-		    	for (IMylarContextNode node : taskscape.getInterestingResources()) {
+		    	for (IMylarContextNode node : MylarPlugin.getContextManager().getInterestingResources(context)) {
 		            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
 		        }       		
         	}

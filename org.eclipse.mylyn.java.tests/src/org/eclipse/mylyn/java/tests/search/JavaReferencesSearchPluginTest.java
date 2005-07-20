@@ -70,7 +70,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
 		int dos = 1;
     	
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 
@@ -117,7 +117,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException{
 		int dos = 2;
 		
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
@@ -179,7 +179,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 	public void testJavaReferencesSearchDOS3() throws Exception{
 		int dos = 3;
     	
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
@@ -239,7 +239,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
 		int dos = 4;
     	
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
@@ -297,7 +297,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 	public void testJavaReferencesSearchDOS5() throws IOException, CoreException{
 		int dos = 5;
 		
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	

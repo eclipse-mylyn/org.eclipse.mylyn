@@ -90,7 +90,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	int dos = 1;
     	
     	
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
     	
@@ -148,7 +148,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 
 		int dos = 2;
 		
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 		
@@ -210,7 +210,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
 		int dos = 3;
 		
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+		CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 		
@@ -251,7 +251,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
 		int dos = 4;
 		
-        CompositeContext t = MylarPlugin.getContextManager().getActiveContext();
+        CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
 		

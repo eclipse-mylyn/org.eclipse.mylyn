@@ -75,15 +75,15 @@ public class CompositeContext implements IMylarContext  {
         return new ArrayList<IMylarContextNode>(landmarks);
     }
         
-    public Set<IMylarContextNode> getInterestingResources() {
-        Set<IMylarContextNode> files = new HashSet<IMylarContextNode>();
-        for (MylarContext taskscape : contexts.values()) {
-            for(IMylarContextNode fileNode : taskscape.getInterestingResources()) {
-               if (fileNode != null) files.add(get(fileNode.getElementHandle())); 
-            }
-        }
-        return Collections.unmodifiableSet(files);
-    }
+//    public Set<IMylarContextNode> getInterestingResources() {
+//        Set<IMylarContextNode> files = new HashSet<IMylarContextNode>();
+//        for (MylarContext taskscape : contexts.values()) {
+//            for(IMylarContextNode fileNode : taskscape.getActiveContextResources()) {
+//               if (fileNode != null) files.add(get(fileNode.getElementHandle())); 
+//            }
+//        }
+//        return Collections.unmodifiableSet(files);
+//    }
 
     public void setActiveElement(IMylarContextNode activeElement) {
         this.activeNode = activeElement;

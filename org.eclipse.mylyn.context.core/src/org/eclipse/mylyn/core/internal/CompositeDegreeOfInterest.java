@@ -72,7 +72,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
     }
         
     public boolean isLandmark() {
-        return getValue() > MylarContextManager.getScalingFactors().getLandmark();
+        return getValue() >= MylarContextManager.getScalingFactors().getLandmark();
     }
     
     @Override

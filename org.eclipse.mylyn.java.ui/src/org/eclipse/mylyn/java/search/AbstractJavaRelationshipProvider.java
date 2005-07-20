@@ -80,7 +80,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     }
 
     private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
-        List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveContext().getLandmarks();
+        List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
         List<IMylarContextNode> interestingElements = MylarPlugin.getContextManager().getActiveContext().getInteresting();
         Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
         int includeMask = IJavaSearchScope.SOURCES;

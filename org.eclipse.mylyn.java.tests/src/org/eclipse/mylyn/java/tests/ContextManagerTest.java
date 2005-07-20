@@ -131,6 +131,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         monitor.selectionChanged(part, sm1);
         
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
+//        System.err.println(">>>> " + node.getDegreeOfInterest());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
         IMylarContextNode parent = MylarPlugin.getContextManager().getNode(bridge.getParentHandle(node.getElementHandle()));
@@ -196,7 +197,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         manager.handleInteractionEvent(mockInterestContribution(
                 m1.getCompilationUnit().getParent().getParent().getParent().getHandleIdentifier(), scaling.getLandmark()));        
                 
-        assertEquals(1, MylarPlugin.getContextManager().getActiveContext().getLandmarks().size());
+        assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
         assertEquals(1, listener.numAdditions);
 
         manager.handleInteractionEvent(mockInterestContribution(
@@ -213,6 +214,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         monitor.selectionChanged(part, sm1);
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
         assertFalse(node.getDegreeOfInterest().isLandmark());
+        assertTrue(MylarPlugin.getContextManager().getActiveNode() != null);
         action.changeInterestForSelected(true);
         assertTrue(node.getDegreeOfInterest().isLandmark());
         action.changeInterestForSelected(true);

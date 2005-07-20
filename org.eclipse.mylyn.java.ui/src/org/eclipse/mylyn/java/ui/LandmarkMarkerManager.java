@@ -59,7 +59,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
             landmarkRemoved(node);
         }
         markerMap.clear();
-        for (IMylarContextNode node : MylarPlugin.getContextManager().getActiveContext().getLandmarks()) {
+        for (IMylarContextNode node : MylarPlugin.getContextManager().getActiveLandmarks()) {
             landmarkAdded(node);
         }
     } 

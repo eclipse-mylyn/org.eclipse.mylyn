@@ -147,7 +147,7 @@ public class ActiveTypeHierarchyView extends ViewPart {
 	private void refreshHierarchy() {
         try {            
             root.removeAllChildren();
-            List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveContext().getLandmarks();
+            List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
             List<TreeParent> previousHierarchy = new ArrayList<TreeParent>();
             for (Iterator<IMylarContextNode> it = landmarks.iterator(); it.hasNext();) {
                 IMylarContextNode node = it.next();

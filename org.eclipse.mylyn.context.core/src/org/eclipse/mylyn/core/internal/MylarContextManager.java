@@ -15,13 +15,15 @@ package org.eclipse.mylar.core.internal;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 
@@ -166,13 +168,13 @@ public class MylarContextManager {
 	private void checkForLandmarkDelta(float previousInterest, IMylarContextNode node) {
 		// TODO: don't call interestChanged if it's a landmark?
     	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-        if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
-            if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
-                for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
+    	if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
+    		if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
+    			for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
             } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
-                for (IMylarContextListener listener : listeners) listener.landmarkAdded(node);
+            	for (IMylarContextListener listener : listeners) listener.landmarkAdded(node);
             }        	
-        }
+        } 
 	}
     
     private void propegateDoiToParents(IMylarContextNode node, float previousInterest, float decayOffset, int level, List<IMylarContextNode> elementDelta) {
@@ -342,7 +344,7 @@ public class MylarContextManager {
         return "" + taskscapeStoreDirPath;
     }
     
-    public CompositeContext getActiveContext() {
+    public IMylarContext getActiveContext() {
         return activeContext;
     }
    
@@ -445,4 +447,31 @@ public class MylarContextManager {
 	public boolean hasActiveContext() {
 		return activeContext.getContextMap().values().size() > 0;
 	}
+
+	public List<IMylarContextNode> getActiveLandmarks() {
+		List<IMylarContextNode> allLandmarks = activeContext.getLandmarks();
+		List<IMylarContextNode> acceptedLandmarks = new ArrayList<IMylarContextNode>();
+		for (IMylarContextNode node : allLandmarks) {
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+            if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
+            	acceptedLandmarks.add(node);
+        	}
+        } 
+		return acceptedLandmarks;
+	}
+	
+    public Set<IMylarContextNode> getInterestingResources(IMylarContext context) {
+        Set<IMylarContextNode> interestingFiles = new HashSet<IMylarContextNode>();
+        List<IMylarContextNode> allIntersting = context.getInteresting();
+        for (IMylarContextNode node : allIntersting) {
+            if (MylarPlugin.getDefault().getStructureBridge(node.getStructureKind()).isDocument(node.getElementHandle())) {       
+                interestingFiles.add(node);
+            }
+        }
+        return interestingFiles;
+    }
+	
+	public Set<IMylarContextNode> getActiveContextResources() {
+		return getInterestingResources(activeContext);
+    }
 }

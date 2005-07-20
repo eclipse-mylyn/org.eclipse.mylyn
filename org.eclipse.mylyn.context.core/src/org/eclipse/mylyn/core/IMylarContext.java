@@ -14,8 +14,6 @@
 package org.eclipse.mylar.core;
 
 import java.util.List;
-import java.util.Set;
-
 
 /**
  * @author Mik Kersten
@@ -28,13 +26,14 @@ public interface IMylarContext {
     
     public abstract IMylarContextNode get(String element);
 
-    public abstract List<IMylarContextNode> getLandmarks();
-    
-    public abstract Set<IMylarContextNode> getInterestingResources();
-
     public abstract IMylarContextNode getActiveNode();
 
     public abstract void remove(IMylarContextNode node);
 
     public abstract List<IMylarContextNode> getAllElements();
+
+//  public abstract Set<IMylarContextNode> getInterestingResources();
+    
+//  public abstract List<IMylarContextNode> getLandmarks();
+
 }

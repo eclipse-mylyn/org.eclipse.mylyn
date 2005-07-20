@@ -99,7 +99,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     }
     
     public boolean canBeLandmark(Object element) {
-        if (element instanceof IMember || element instanceof IType) {
+    	if (element instanceof IMember || element instanceof IType) {
             return true;
         } else {
             return false;
