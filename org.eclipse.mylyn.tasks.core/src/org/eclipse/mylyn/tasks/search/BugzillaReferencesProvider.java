@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.mylar.bugzilla.BugzillaMylarBridge;
 import org.eclipse.mylar.bugzilla.BugzillaStructureBridge;
 import org.eclipse.mylar.bugzilla.MylarBugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
@@ -147,5 +148,11 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 
 	public Collection<? extends String> getCachedHandles() {
 		return reports.keySet();
+	}
+
+	@Override
+	public void stopAllRunningJobs() {
+		BugzillaMylarBridge.cancelAllRunningJobs();
+		
 	}
 }

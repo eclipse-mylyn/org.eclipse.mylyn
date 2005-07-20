@@ -13,6 +13,8 @@
  */
 package org.eclipse.mylar.bugzilla;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,17 +33,17 @@ import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaReportNode;
 public class BugzillaMylarBridge { 
 
     /** The hash of all of the landmarks and their related search hits */
-    private HashMap<String, Map<Integer, List<BugzillaReportNode>>> landmarksHash;
+    private Map<String, Map<Integer, List<BugzillaReportNode>>> landmarksHash;
 	/**
 	 * The currently running search jobs so that we can cancel it if necessary <br> KEY: IMember VALUE: Job
 	 */
-	public static HashMap<String, Job> runningJobs = new HashMap<String, Job>();
+	static Map<String, Job> runningJobs = Collections.synchronizedMap(new HashMap<String, Job>());
 
     /**
      * Constructor
      */
     public BugzillaMylarBridge() {
-        landmarksHash = new HashMap<String, Map<Integer, List<BugzillaReportNode>>>();
+    	landmarksHash = Collections.synchronizedMap(new HashMap<String, Map<Integer, List<BugzillaReportNode>>>());
     }
 
     
@@ -139,5 +141,13 @@ public class BugzillaMylarBridge {
 	 */
 	public static void addJob(String handle, Job searchJob) {
 		runningJobs.put(handle, searchJob);
+	}
+	
+	public static void cancelAllRunningJobs(){
+		Collection<Job> jobs = runningJobs.values();
+		for(Job j: jobs){
+			j.cancel();
+		}
+		runningJobs.clear();
 	}
 }
