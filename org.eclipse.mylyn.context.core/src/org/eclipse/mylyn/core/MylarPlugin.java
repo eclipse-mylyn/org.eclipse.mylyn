@@ -172,6 +172,17 @@ public class MylarPlugin extends AbstractUIPlugin {
         super.stop(context);
         INSTANCE = null;
         resourceBundle = null;
+        
+        // Stop all running jobs when we exit if the plugin didn't do it
+        Map<String, IMylarStructureBridge> bridges = getStructureBridges();
+        for (String extension : bridges.keySet()) {
+            IMylarStructureBridge bridge = bridges.get(extension);
+            List<AbstractRelationshipProvider> providers = bridge.getProviders();
+            if(providers == null) continue;
+            for(AbstractRelationshipProvider provider: providers){
+            	provider.stopAllRunningJobs();
+            }
+        }
     }
     
     public String getUserDataDirectory() {

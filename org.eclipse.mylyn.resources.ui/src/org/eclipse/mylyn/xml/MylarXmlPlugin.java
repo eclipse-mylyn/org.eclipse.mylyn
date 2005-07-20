@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylar.xml;
 
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.xml.ant.AntEditingMonitor;
@@ -103,6 +105,13 @@ public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
+		
+		List<AbstractRelationshipProvider> providers = pdeStructureBridge.getProviders();
+        if(providers != null){
+	        for(AbstractRelationshipProvider provider: providers){
+	        	provider.stopAllRunningJobs();
+	        }
+        }
 	}
 
 	/**

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.java;
 
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -17,6 +18,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.ui.JavaUiBridge;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
@@ -112,6 +114,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
+		
+		List<AbstractRelationshipProvider> providers = structureBridge.getProviders();
+        if(providers != null){
+	        for(AbstractRelationshipProvider provider: providers){
+	        	provider.stopAllRunningJobs();
+	        }
+        }
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {
