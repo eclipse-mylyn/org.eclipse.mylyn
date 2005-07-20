@@ -105,7 +105,9 @@ public class BugzillaTask extends Task {
         isDirty = false;
         if (!noDownload) {
             scheduleDownloadReport();
-        }        
+        } else {
+        	state = BugTaskState.FREE;
+        }
     }
 	
     public BugzillaTask(BugzillaHit hit) {

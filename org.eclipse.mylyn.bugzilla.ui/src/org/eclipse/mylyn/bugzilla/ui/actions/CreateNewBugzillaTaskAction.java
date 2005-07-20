@@ -77,7 +77,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    }
 		
 		    
-		    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true);				
+		    BugzillaTask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true);				
 		    Object selectedObject = null;
 		    if(TaskListView.getDefault() != null)
 		    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
@@ -87,21 +87,22 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    	ITask addedTask = taskHandler.taskAdded(newTask);
 		    	if(addedTask instanceof BugzillaTask){
 			    	BugzillaTask newTask2 = (BugzillaTask)addedTask;
-		    		if(newTask2 == newTask){
-		    			((BugzillaTask)newTask).scheduleDownloadReport();
-		    		} else {
+		    		if(newTask2 != newTask){
 		    			newTask = newTask2;
 		    		}
 		    	}
-	    	} else {
-	    		((BugzillaTask)newTask).scheduleDownloadReport();
 	    	}
+		    
 		    if (selectedObject instanceof TaskCategory){
 		        ((TaskCategory)selectedObject).addTask(newTask);
 		    } else { 
 		        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
 		    }
 		    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
+		    newTask.openTaskInEditor();
+		    
+		    if(!newTask.isBugDownloaded())
+		    	newTask.scheduleDownloadReport();
 
 		    if(TaskListView.getDefault() != null)
 				TaskListView.getDefault().getViewer().refresh();
