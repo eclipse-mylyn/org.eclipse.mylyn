@@ -59,7 +59,7 @@ public class CreateTaskAction extends Action {
 //            	t.addSubTask(newTask);
 //            }
         else {            	
-            MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);                
+            MylarTasksPlugin.getTaskListManager().addRootTask(newTask);                
         }  
 //        MylarUiPlugin.getDefault().setHighlighterMapping(
 //                newTask.getHandle(), 

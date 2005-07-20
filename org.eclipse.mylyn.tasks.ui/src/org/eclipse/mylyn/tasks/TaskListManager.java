@@ -41,8 +41,9 @@ public class TaskListManager {
         	nextTaskId = 1;
         }
     }    
-    
+        
     public TaskList createNewTaskList() {
+    	taskList = new TaskList();
         return taskList;
     } 
 
@@ -85,6 +86,14 @@ public class TaskListManager {
         this.taskList = taskList;
     }
 
+    public void addRootTask(ITask task) {
+    	taskList.addRootTask(task);
+    }
+    
+    public void addCategory(AbstractCategory cat) {
+    	taskList.addCategory(cat);
+    }
+    
     public void deleteTask(ITask task) {
         taskList.setActive(task, false);        
         taskList.deleteTask(task);
@@ -157,8 +166,8 @@ public class TaskListManager {
     	}
     	this.taskListFile = f;
     }
-
-	public File getTaskListFile() {
-		return taskListFile;
-	}
+    
+    public ITask getTaskForHandle(String handle) {
+    	return taskList.getTaskForHandle(handle);
+    }
 }

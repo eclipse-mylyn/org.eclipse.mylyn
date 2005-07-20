@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasks.ui.views;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,6 +50,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
+import org.eclipse.mylar.tasks.ITaskFilter;
 import org.eclipse.mylar.tasks.ITaskHandler;
 import org.eclipse.mylar.tasks.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasks.ITaskListElement;
@@ -131,6 +133,7 @@ public class TaskListView extends ViewPart {
 //    private PriorityFilter priorityFilter = new PriorityFilter();
     private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
     private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
+    private List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description" };
     protected int[] columnWidths = new int[] { 70, 20, 20, 120 };
@@ -373,7 +376,8 @@ public class TaskListView extends ViewPart {
         }
         public Object[] getElements(Object parent) {
             if (parent.equals(getViewSite())) {
-            	return MylarTasksPlugin.getTaskListManager().getTaskList().getRoots().toArray();            	          
+            	return applyFilter(MylarTasksPlugin.getTaskListManager().getTaskList().getRoots()).toArray();
+//            	return MylarTasksPlugin.getTaskListManager().getTaskList().getRoots().toArray();            	          
             }
             return getChildren(parent);
         }
@@ -389,7 +393,7 @@ public class TaskListView extends ViewPart {
             return null;
         }
         public Object [] getChildren(Object parent) {
-        	return MylarTasksPlugin.getTaskListManager().getTaskList().getFilteredChildrenFor(parent).toArray();
+        	return getFilteredChildrenFor(parent).toArray();
         }
         public boolean hasChildren(Object parent) {  
             if (parent instanceof AbstractCategory) {
@@ -400,6 +404,65 @@ public class TaskListView extends ViewPart {
             	return t.getChildren() != null && t.getChildren().size() > 0;
             } 
             return false;
+        }
+        private List<Object> applyFilter(List<Object> list) {
+        	List<Object> filteredRoots = new ArrayList<Object>();
+        	for (int i = 0; i < list.size(); i++) {
+        		if (list.get(i) instanceof ITask) {
+        			if (!filter(list.get(i))) {
+        				filteredRoots.add(list.get(i));
+        			}
+        		} else if (list.get(i) instanceof AbstractCategory) {
+        			if (selectCategory((AbstractCategory)list.get(i))) {
+        				filteredRoots.add(list.get(i));
+        			}
+        		}
+        	}
+        	return filteredRoots;
+        }
+        
+        private boolean selectCategory(AbstractCategory cat) {
+        	List<? extends ITaskListElement> list = cat.getChildren();
+        	if (list.size() == 0) {
+        		return true;
+        	}
+        	for (int i = 0; i < list.size(); i++) {
+        		if (!filter(list.get(i))) {
+        			return true;
+        		}    		
+        	}
+        	return false;
+        }
+        
+        private List<Object> getFilteredChildrenFor(Object parent) {
+        	List<Object> children = new ArrayList<Object>();
+        	if (parent instanceof AbstractCategory) {
+        		List<? extends ITaskListElement> list = ((AbstractCategory)parent).getChildren();
+        		for (int i = 0; i < list.size(); i++) {
+            		if (!filter(list.get(i))) {
+            			children.add(list.get(i));
+            		}    		
+            	}
+        		return children;
+        	} else if (parent instanceof Task) {
+        		List<ITask> subTasks = ((Task)parent).getChildren();
+        		for (ITask t : subTasks) {
+        			if (!filter(t)) {
+        				children.add(t);
+        			}
+        		}
+        		return children;
+        	}
+        	return new ArrayList<Object>();
+        }
+        
+        private boolean filter(Object obj){
+        	for (ITaskFilter filter : filters) {
+    			if (!filter.select(obj)) {
+    				return true;
+    			}
+    		} 
+        	return false;
         }
     }
 
@@ -651,11 +714,11 @@ public class TaskListView extends ViewPart {
 			}
 			viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
 		}
-        MylarTasksPlugin.getTaskListManager().getTaskList().addFilter(PRIORITY_FILTER);
+        addFilter(PRIORITY_FILTER);
 //        if (MylarTasksPlugin.getDefault().isFilterInCompleteMode()) 
 //        	MylarTasksPlugin.getTaskListManager().getTaskList().addFilter(inCompleteFilter);
         if (MylarTasksPlugin.getDefault().isFilterCompleteMode()) 
-        	MylarTasksPlugin.getTaskListManager().getTaskList().addFilter(COMPLETE_FILTER);
+        	addFilter(COMPLETE_FILTER);
         
         viewer.refresh();
     }
@@ -957,19 +1020,20 @@ public class TaskListView extends ViewPart {
 	 *         children
 	 */
     protected boolean lookForId(String taskId) {
-    	for (ITask task : MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks()) {
-    		if (task.getHandle().equals(taskId)) {
-    			return true;
-    		}
-    	}
-    	for (TaskCategory cat : MylarTasksPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
-    		for (ITask task : cat.getChildren()) {
-        		if (task.getHandle().equals(taskId)) {
-        			return true;
-        		}
-        	}
-    	}
-		return false;
+    	return (MylarTasksPlugin.getTaskListManager().getTaskForHandle(taskId) == null);
+//    	for (ITask task : MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks()) {
+//    		if (task.getHandle().equals(taskId)) {
+//    			return true;
+//    		}
+//    	}
+//    	for (TaskCategory cat : MylarTasksPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
+//    		for (ITask task : cat.getChildren()) {
+//        		if (task.getHandle().equals(taskId)) {
+//        			return true;
+//        		}
+//        	}
+//    	}
+//		return false;
 	}
 	
 	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException{
@@ -1081,6 +1145,7 @@ public class TaskListView extends ViewPart {
     public TaskPriorityFilter getPriorityFilter() {
     	return PRIORITY_FILTER;
     }
+    
     public class TaskInputDialog extends Dialog {
     	private String taskName = "";
     	private String priority = "P3";
@@ -1161,6 +1226,17 @@ public class TaskListView extends ViewPart {
         manager.update(true);
     }
     
+    public void addFilter(ITaskFilter filter) {
+		if (!filters.contains(filter)) filters.add(filter);		
+	}
+	
+	public void removeFilter(ITaskFilter filter) {
+		filters.remove(filter);
+	}	
+		
+	public TaskListContentProvider getContentProvider() {
+		return new TaskListContentProvider();
+	}
 //	public  void resetToolbarsAndPopups() {
 //		getViewSite().getActionBars().getMenuManager().removeAll();
 //        fillLocalPullDown(getViewSite().getActionBars().getMenuManager());

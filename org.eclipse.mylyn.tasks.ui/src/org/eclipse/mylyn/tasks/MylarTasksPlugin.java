@@ -56,6 +56,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasks.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasks.report.open.external";
+    public static final String MULTIPLE_ACTIVE_TASKS = "org.eclipse.mylar.tasks.active.multipe";
     
     public static final String FILE_EXTENSION = ".xml";
     public static final String TASK_ID = "org.eclipse.mylar.tasks.userid";
@@ -209,6 +210,7 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     	store.setDefault(REPORT_OPEN_EDITOR, true);
     	store.setDefault(REPORT_OPEN_INTERNAL, false);
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
+    	store.setDefault(MULTIPLE_ACTIVE_TASKS, false);
     }
 
     
@@ -361,5 +363,9 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		} catch (IOException ioe) {
 			return false;
 		}
+    }
+    
+    public boolean isMultipleMode() {
+    	return getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS);
     }
 }

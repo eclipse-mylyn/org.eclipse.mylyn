@@ -34,6 +34,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	private Button reportEditor = null;
 	private Button reportInternal = null;
 	private Button reportExternal = null;
+	private Button multipleActive = null;
 	
 	public MylarTaskPreferencePage() {
 		super();
@@ -62,7 +63,11 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		container.setLayout(gl);		
 		closeEditors = new Button(container, SWT.CHECK);
 		closeEditors.setText("Close all editors on task deactivation (defaults to close only editors of interesting resources)");
-		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));		
+		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));
+		
+		multipleActive = new Button(container, SWT.CHECK);
+		multipleActive.setText("Enable multiple task contexts to be active");
+		multipleActive.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.MULTIPLE_ACTIVE_TASKS));
 	}
 	
 	private void createBugzillaReportOption(Composite parent) {
@@ -87,6 +92,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		getPreferenceStore().setValue(MylarTasksPlugin.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(MylarTasksPlugin.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		getPreferenceStore().setValue(MylarTasksPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
+		getPreferenceStore().setValue(MylarTasksPlugin.MULTIPLE_ACTIVE_TASKS, multipleActive.getSelection());
 		return true;
 	}
 	@Override
@@ -95,6 +101,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REPORT_OPEN_EXTERNAL));
+		multipleActive.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.MULTIPLE_ACTIVE_TASKS));
 		return true;
 	}
 	
@@ -103,6 +110,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		closeEditors.setSelection(getPreferenceStore().getDefaultBoolean(MylarPlugin.CLOSE_EDITORS));		
 		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REPORT_OPEN_INTERNAL));
-		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REPORT_OPEN_EXTERNAL));		  
+		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.REPORT_OPEN_EXTERNAL));
+		multipleActive.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasksPlugin.MULTIPLE_ACTIVE_TASKS));
 	}
 }

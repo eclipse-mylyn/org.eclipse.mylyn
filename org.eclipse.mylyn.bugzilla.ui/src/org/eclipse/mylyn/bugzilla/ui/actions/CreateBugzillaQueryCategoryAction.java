@@ -53,7 +53,7 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
     	if(sqd.open() == Dialog.OK){
         	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl());
         	
-            MylarTasksPlugin.getTaskListManager().getTaskList().addCategory(queryCategory);
+            MylarTasksPlugin.getTaskListManager().addCategory(queryCategory);
             WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
             	protected void execute(IProgressMonitor monitor) throws CoreException {
 	            	queryCategory.refreshBugs();

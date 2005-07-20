@@ -19,9 +19,7 @@ import java.util.List;
 
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskFilter;
 import org.eclipse.mylar.tasks.ITaskListElement;
-import org.eclipse.mylar.tasks.Task;
 
  
 /**
@@ -34,10 +32,9 @@ public class TaskList implements Serializable {
     private List<ITask> rootTasks = new ArrayList<ITask>();
     private List<AbstractCategory> categories = new ArrayList<AbstractCategory>();
     private transient List<ITask> activeTasks = new ArrayList<ITask>();
-    private List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
     
     public void addRootTask(ITask task) {
-    		rootTasks.add(task);
+    	rootTasks.add(task);
     }
     
     public void addCategory(AbstractCategory cat) {
@@ -52,7 +49,7 @@ public class TaskList implements Serializable {
             activeTasks.remove(task);
         }
     }
-    
+        
     public void deleteTask(ITask task) {
     	boolean deleted = deleteTaskHelper(rootTasks, task);
     	if (!deleted) {
@@ -81,9 +78,7 @@ public class TaskList implements Serializable {
     public void deleteCategory(AbstractCategory category) {
     	categories.remove(category);
     }
-    /**
-     * TODO: make data structure handle this traversal
-     */
+    
     public ITask getTaskForHandle(String handle) {
     	ITask t = null;
     	for (AbstractCategory cat : categories) {
@@ -150,65 +145,9 @@ public class TaskList implements Serializable {
     
     public List<Object> getRoots() {
     	List<Object> roots = new ArrayList<Object>();
-    	for (ITask t : rootTasks) {
-    		if (!filter(t)) {
-    			roots.add(t);   			
-    		}   		
-    	}
-    	for (AbstractCategory cat : categories) {
-    		if (selectCategory(cat)) {
-    			roots.add(cat);
-    		}    		
-    	}
+    	for (ITask t : rootTasks) roots.add(t);   			
+    	for (AbstractCategory cat : categories) roots.add(cat);
     	return roots;
-    }
-    
-    private boolean selectCategory(AbstractCategory cat) {
-    	List<? extends ITaskListElement> list = cat.getChildren();
-    	if (list.size() == 0) {
-    		return true;
-    	}
-    	for (int i = 0; i < list.size(); i++) {
-    		if (!filter(list.get(i))) {
-    			return true;
-    		}    		
-    	}
-    	return false;
-    }
-    
-    public List<Object> getFilteredChildrenFor(Object parent) {
-    	List<Object> children = new ArrayList<Object>();
-    	if (parent instanceof AbstractCategory) {
-    		List<? extends ITaskListElement> list = ((AbstractCategory)parent).getChildren();
-    		for (int i = 0; i < list.size(); i++) {
-        		if (!filter(list.get(i))) {
-        			children.add(list.get(i));
-        		}    		
-        	}
-    		return children;
-    	} else if (parent instanceof Task) {
-    		List<ITask> subTasks = ((Task)parent).getChildren();
-    		for (ITask t : subTasks) {
-    			if (!filter(t)) {
-    				children.add(t);
-    			}
-    		}
-    		return children;
-    	}
-    	return new ArrayList<Object>();
-    }
-    
-    private boolean filter(Object obj){
-    	for (ITaskFilter filter : filters) {
-			if (!filter.select(obj)) {
-				return true;
-			}
-		} 
-    	return false;
-    }
-    public void createCategory(String description) {
-    	TaskCategory c = new TaskCategory(description);
-    	categories.add(c);
     }
     
     public List<TaskCategory> getTaskCategories() {
@@ -225,13 +164,5 @@ public class TaskList implements Serializable {
 		activeTasks.clear();
 		categories.clear();
 		rootTasks.clear();
-	}
-	
-	public void addFilter(ITaskFilter filter) {
-		if (!filters.contains(filter)) filters.add(filter);		
-	}
-	
-	public void removeFilter(ITaskFilter filter) {
-		filters.remove(filter);
-	}
+	}	
 }

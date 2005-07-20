@@ -11,20 +11,14 @@
 
 package org.eclipse.mylar.tasks.tests;
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.tasks.ITask;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskListManager;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
-import org.eclipse.mylar.tasks.internal.TaskList;
 import org.eclipse.mylar.tasks.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.TreeItem;
@@ -36,7 +30,7 @@ import org.eclipse.ui.PartInitException;
  *
  */
 public class TaskListUiTest extends TestCase {	
-	private TaskList tlist = null;
+//	private TaskList tlist = null;
 	private TaskCategory cat1 = null;
 	private Task cat1task1 = null;
 	private Task cat1task2 = null;
@@ -58,11 +52,12 @@ public class TaskListUiTest extends TestCase {
 	private final static int CHECK_INCOMPLETE_FILTER = 2;
 	private final static int CHECK_PRIORITY_FILTER = 3;
 	
-	public void setUp() throws PartInitException{		
+	public void setUp() throws PartInitException{
+		try {
 		MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.mylar.tasks.ui.views.TaskListView");
-		File file = new File("foo" + MylarTasksPlugin.FILE_EXTENSION);
-        TaskListManager manager = new TaskListManager(file);        
-        tlist = manager.createNewTaskList();        
+//		File file = new File("foo" + MylarTasksPlugin.FILE_EXTENSION);
+        TaskListManager manager = MylarTasksPlugin.getTaskListManager();        
+//        tlist = manager.getTaskList();        
         cat1 = new TaskCategory("First Category");
         
         cat1task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
@@ -99,7 +94,7 @@ public class TaskListUiTest extends TestCase {
 		cat1task5.setCategory(cat1);
 		cat1.addTask(cat1task5);
 		
-		tlist.addCategory(cat1);
+		manager.addCategory(cat1);
 		assertEquals(cat1.getChildren().size(), 5);
 		
 		cat2 = new TaskCategory("Second Category");
@@ -136,8 +131,11 @@ public class TaskListUiTest extends TestCase {
 		cat2task5.setCategory(cat2);
 		cat2.addTask(cat2task5);
 		
-		tlist.addCategory(cat2);
+		manager.addCategory(cat2);
 		manager.saveTaskList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void tearDown() {
@@ -145,16 +143,17 @@ public class TaskListUiTest extends TestCase {
 	}
 	
 	public void testUiFilter() {
+		try {
 		assertNotNull(TaskListView.getDefault());  
 		TreeViewer viewer = TaskListView.getDefault().getViewer();
-		viewer.setContentProvider(new ContentProvider());
+		viewer.setContentProvider(TaskListView.getDefault().getContentProvider());
 		viewer.refresh();
-		MylarTasksPlugin.getTaskListManager().getTaskList().addFilter(TaskListView.getDefault().getCompleteFilter());
+		TaskListView.getDefault().addFilter(TaskListView.getDefault().getCompleteFilter());
 		viewer.refresh();
 		viewer.expandAll();
 		TreeItem[] items = viewer.getTree().getItems();
 		assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
-		MylarTasksPlugin.getTaskListManager().getTaskList().removeFilter(TaskListView.getDefault().getCompleteFilter());
+		TaskListView.getDefault().removeFilter(TaskListView.getDefault().getCompleteFilter());
 		
 		
 //		MylarTasksPlugin.getTaskListManager().getTaskList().addFilter(TaskListView.getDefault().getInCompleteFilter());
@@ -168,13 +167,16 @@ public class TaskListUiTest extends TestCase {
 		
 		TaskPriorityFilter filter = (TaskPriorityFilter)TaskListView.getDefault().getPriorityFilter();
 		filter.displayPrioritiesAbove("P2");
-		MylarTasksPlugin.getTaskListManager().getTaskList().addFilter(filter);
+		TaskListView.getDefault().addFilter(filter);
 		viewer.refresh();
 		viewer.expandAll();
 		items = viewer.getTree().getItems();
 		
 		// check priority tasks
-		assertTrue(checkFilter(CHECK_PRIORITY_FILTER, items));		
+		assertTrue(checkFilter(CHECK_PRIORITY_FILTER, items));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean checkFilter(int type, TreeItem[] items) {
@@ -187,7 +189,7 @@ public class TaskListUiTest extends TestCase {
 	}
 	
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
-		assertTrue(items.length == 2);
+		assertEquals(2, items.length);
 		int count = 0;
 		for (int i = 0; i < items.length; i++) {
 			assertTrue(items[i].getData() instanceof TaskCategory);
@@ -230,31 +232,98 @@ public class TaskListUiTest extends TestCase {
 		return true;
 	}
 	
-	class ContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-        public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-        	// don't care if the input changes
-        }
-        public void dispose() {
-        	// don't care if we are disposed
-        }
-        public Object[] getElements(Object parent) {
-            return tlist.getRoots().toArray();            	          
-        }
-        public Object getParent(Object child) {
-            if (child instanceof TaskCategory) {
-                return ((Task)child).getCategory();
-            }
-            return null;
-        }
-        public Object [] getChildren(Object parent) {
-        	return MylarTasksPlugin.getTaskListManager().getTaskList().getFilteredChildrenFor(parent).toArray();
-        }
-        public boolean hasChildren(Object parent) {  
-            if (parent instanceof TaskCategory) {
-            	TaskCategory cat = (TaskCategory)parent;
-                return cat.getChildren() != null && cat.getChildren().size() > 0;
-            } 
-            return false;
-        }
-    }
+//	class ContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+//		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+//        	// don't care if the input changes
+//        }
+//        public void dispose() {
+//        	// don't care if we are disposed
+//        }
+//        public Object[] getElements(Object parent) {
+//            return applyFilter(MylarTasksPlugin.getTaskListManager().getTaskList().getRoots()).toArray();
+//        }
+//        public Object getParent(Object child) {
+//            if (child instanceof ITask) {
+//            	if (((ITask)child).getParent() != null) {
+//            		return ((ITask)child).getParent();
+//            	} else {
+//            		return ((ITask)child).getCategory();
+//            	}
+//                
+//            }
+//            return null;
+//        }
+//        public Object [] getChildren(Object parent) {
+//        	return getFilteredChildrenFor(parent).toArray();
+//        }
+//        public boolean hasChildren(Object parent) {  
+//            if (parent instanceof AbstractCategory) {
+//            	AbstractCategory cat = (AbstractCategory)parent;
+//                return cat.getChildren() != null && cat.getChildren().size() > 0;
+//            }  else if (parent instanceof Task) {
+//            	Task t = (Task) parent;
+//            	return t.getChildren() != null && t.getChildren().size() > 0;
+//            } 
+//            return false;
+//        }
+//        private List<Object> applyFilter(List<Object> list) {
+//        	List<Object> filteredRoots = new ArrayList<Object>();
+//        	for (int i = 0; i < list.size(); i++) {
+//        		if (list.get(i) instanceof ITask) {
+//        			if (!filter(list.get(i))) {
+//        				filteredRoots.add(list.get(i));
+//        			}
+//        		} else if (list.get(i) instanceof AbstractCategory) {
+//        			if (selectCategory((AbstractCategory)list.get(i))) {
+//        				filteredRoots.add(list.get(i));
+//        			}
+//        		}
+//        	}
+//        	return filteredRoots;
+//        }
+//        
+//        private boolean selectCategory(AbstractCategory cat) {
+//        	List<? extends ITaskListElement> list = cat.getChildren();
+//        	if (list.size() == 0) {
+//        		return true;
+//        	}
+//        	for (int i = 0; i < list.size(); i++) {
+//        		if (!filter(list.get(i))) {
+//        			return true;
+//        		}    		
+//        	}
+//        	return false;
+//        }
+//        
+//        private List<Object> getFilteredChildrenFor(Object parent) {
+//        	List<Object> children = new ArrayList<Object>();
+//        	if (parent instanceof AbstractCategory) {
+//        		List<? extends ITaskListElement> list = ((AbstractCategory)parent).getChildren();
+//        		for (int i = 0; i < list.size(); i++) {
+//            		if (!filter(list.get(i))) {
+//            			children.add(list.get(i));
+//            		}    		
+//            	}
+//        		return children;
+//        	} else if (parent instanceof Task) {
+//        		List<ITask> subTasks = ((Task)parent).getChildren();
+//        		for (ITask t : subTasks) {
+//        			if (!filter(t)) {
+//        				children.add(t);
+//        			}
+//        		}
+//        		return children;
+//        	}
+//        	return new ArrayList<Object>();
+//        }
+//        
+//        private boolean filter(Object obj){
+//        	for (ITaskFilter filter : filters) {
+//    			if (!filter.select(obj)) {
+//    				return true;
+//    			}
+//    		} 
+//        	return false;
+//        }
+//    }
 }

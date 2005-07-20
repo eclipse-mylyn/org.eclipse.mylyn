@@ -93,7 +93,7 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 	    if (selectedObject instanceof TaskCategory){
 	        ((TaskCategory)selectedObject).addTask(newTask);
 	    } else { 
-	        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
+	        MylarTasksPlugin.getTaskListManager().addRootTask(newTask);
 	    }
 	    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 //	    

@@ -96,7 +96,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    if (selectedObject instanceof TaskCategory){
 		        ((TaskCategory)selectedObject).addTask(newTask);
 		    } else { 
-		        MylarTasksPlugin.getTaskListManager().getTaskList().addRootTask(newTask);
+		        MylarTasksPlugin.getTaskListManager().addRootTask(newTask);
 		    }
 		    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 		    newTask.openTaskInEditor();

@@ -42,7 +42,7 @@ public class CreateCategoryAction extends Action {
         String label = input[0];
         if(label == null) return;
         TaskCategory cat = new TaskCategory(label);
-        MylarTasksPlugin.getTaskListManager().getTaskList().addCategory(cat);
+        MylarTasksPlugin.getTaskListManager().addCategory(cat);
         this.view.getViewer().refresh();
     }
 }

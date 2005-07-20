@@ -38,11 +38,11 @@ public class FilterCompletedTasksAction extends Action {
 //        MylarPlugin.getDefault().actionObserved(this);
 		MylarTasksPlugin.getDefault().setFilterCompleteMode(isChecked());
 		if (isChecked()) {
-			MylarTasksPlugin.getTaskListManager().getTaskList().addFilter(this.view.getCompleteFilter());
+			view.addFilter(this.view.getCompleteFilter());
 //				filterInCompleteTask.setChecked(false);
 //				viewer.removeFilter(inCompleteFilter);
 		} else {
-			MylarTasksPlugin.getTaskListManager().getTaskList().removeFilter(this.view.getCompleteFilter());        			
+			view.removeFilter(this.view.getCompleteFilter());        			
 		}
 	    this.view.getViewer().refresh();
 	}

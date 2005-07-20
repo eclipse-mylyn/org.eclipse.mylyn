@@ -36,17 +36,17 @@ public class TaskListManagerTest extends TestCase {
         file.deleteOnExit();
         TaskListManager manager = new TaskListManager(file);
         
-        TaskList tlist = manager.getTaskList();
+//        TaskList tlist = manager.getTaskList();
         Task task1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
-        tlist.addRootTask(task1);
+        manager.addRootTask(task1);
         Task sub1 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub 1");
         task1.addSubTask(sub1);    
         sub1.setParent(task1);
         Task task2 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 2");
-        tlist.addRootTask(task2);
+        manager.addRootTask(task2);
 
         TaskCategory cat1 = new TaskCategory("Category 1");
-        tlist.addCategory(cat1);
+        manager.addCategory(cat1);
         Task task3 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 3");
         cat1.addTask(task3);
         Task sub2 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "sub 2");
@@ -56,7 +56,7 @@ public class TaskListManagerTest extends TestCase {
         cat1.addTask(task4);
         
         TaskCategory cat2 = new TaskCategory("Category 2");
-        tlist.addCategory(cat2);
+        manager.addCategory(cat2);
         Task task5 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 5");
         cat2.addTask(task5);
         Task task6 = new Task(MylarTasksPlugin.getTaskListManager().genUniqueTaskId(), "task 6");
@@ -66,7 +66,7 @@ public class TaskListManagerTest extends TestCase {
         cat2.addTask(report);
 
         BugzillaTask report2 = new BugzillaTask("124", "label 124", true);
-        tlist.addRootTask(report2);
+        manager.addRootTask(report2);
         
         assertEquals(manager.getTaskList().getRoots().size(), 5);
 
