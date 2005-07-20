@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.ui.actions;
 
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 
 /**
@@ -38,13 +39,13 @@ public class DeleteOfflineReportAction extends AbstractOfflineReportsAction
 		{
 			setToolTipText("Remove all offline reports");
 			setText("Remove all");
-			setIcon("icons/remove-all.gif");
+			setImageDescriptor(BugzillaImages.REMOVE_ALL);
 		}
 		else 
 		{
 			setToolTipText( "Remove selected offline reports" );
 			setText( "Remove" );
-			setIcon( "icons/remove.gif" );
+			setImageDescriptor(BugzillaImages.REMOVE);
 		}
 		
 		view = offlineReportsView;

@@ -478,7 +478,7 @@ public class FavoritesView extends ViewPart {
 		public SelectAllAction() {
 			setToolTipText("Select all favorites");
 			setText("Select all");
-			setIcon("icons/selectAll.gif");
+			setImageDescriptor(BugzillaImages.SELECT_ALL);
 		}
 		
 		@Override

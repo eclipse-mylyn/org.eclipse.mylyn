@@ -18,6 +18,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.bugzilla.ui.editor.NewBugEditorInput;
@@ -42,7 +43,7 @@ public class ViewOfflineReportAction extends AbstractOfflineReportsAction
 	{
 		setToolTipText( "View selected offline reports" );
 		setText( "View selected" );
-		setIcon( "icons/openresult.gif" );
+		setImageDescriptor(BugzillaImages.OPEN);
 		view = resultsView;
 	}
 	

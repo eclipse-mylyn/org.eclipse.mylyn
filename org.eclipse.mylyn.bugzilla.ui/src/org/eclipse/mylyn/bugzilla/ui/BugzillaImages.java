@@ -70,6 +70,13 @@ public class BugzillaImages {
     public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
     public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
     
+    public static final ImageDescriptor REMOVE_ALL = create("", "remove-all.gif");
+    public static final ImageDescriptor REMOVE = create("", "remove.gif");
+    public static final ImageDescriptor SELECT_ALL = create("", "selectAll.gif");
+    public static final ImageDescriptor OPEN = create("", "openresult.gif");
+    
+    
+    
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
@@ -83,7 +90,8 @@ public class BugzillaImages {
 			throw new MalformedURLException();
 			
 		StringBuffer buffer= new StringBuffer(prefix);
-		buffer.append('/');
+		if(prefix != "")
+			buffer.append('/');
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());
 	}	

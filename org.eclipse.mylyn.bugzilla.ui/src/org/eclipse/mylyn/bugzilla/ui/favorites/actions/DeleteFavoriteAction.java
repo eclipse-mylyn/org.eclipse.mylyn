@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.ui.favorites.actions;
 
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.FavoritesView;
 
 /**
@@ -38,13 +39,13 @@ public class DeleteFavoriteAction extends AbstractFavoritesAction
 		{
 			setToolTipText("Remove all favorites");
 			setText("Remove all");
-			setIcon("icons/remove-all.gif");
+			setImageDescriptor(BugzillaImages.REMOVE_ALL);
 		}
 		else 
 		{
 			setToolTipText( "Remove selected favorites" );
 			setText( "Remove" );
-			setIcon( "icons/remove.gif" );
+			setImageDescriptor(BugzillaImages.REMOVE);
 		}
 		
 		view = favoritesView;

@@ -12,6 +12,7 @@ package org.eclipse.mylar.bugzilla.ui.favorites.actions;
 
 import java.util.List;
 
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.FavoritesView;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
@@ -34,7 +35,7 @@ public class ViewFavoriteAction extends AbstractFavoritesAction
 	{
 		setToolTipText( "View selected favorites" );
 		setText( "View selected" );
-		setIcon( "icons/openresult.gif" );
+		setImageDescriptor(BugzillaImages.OPEN);
 		view = resultsView;
 	}
 	

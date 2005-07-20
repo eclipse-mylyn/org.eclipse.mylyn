@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.favorites.Favorite;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.FavoritesView;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView;
 
@@ -45,7 +46,7 @@ public class AddFavoriteAction extends AbstractFavoritesAction {
 	 */
 	public AddFavoriteAction(String text, BugzillaSearchResultView resultView) {
 		setText(text);
-		setIcon("icons/elcl16/bug-favorite.gif");
+		setImageDescriptor(BugzillaImages.IMG_TOOL_ADD_TO_FAVORITES);
 		this.resultView = resultView;
 		selected = null;
 	}

@@ -553,7 +553,7 @@ public class OfflineView extends ViewPart {
 		public SelectAllAction() {
 			setToolTipText("Select all offline Bugzilla reports");
 			setText("Select all");
-			setIcon("icons/selectAll.gif");
+			setImageDescriptor(BugzillaImages.SELECT_ALL);
 		}
 		
 		@Override
