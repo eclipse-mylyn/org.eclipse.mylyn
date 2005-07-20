@@ -22,7 +22,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListListener;
+import org.eclipse.mylar.tasks.ITaskHandler;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -82,9 +82,9 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    if(TaskListView.getDefault() != null)
 		    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
 	    	
-		    ITaskListListener contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
-		    if(contributor != null){
-		    	ITask addedTask = contributor.taskAdded(newTask);
+		    ITaskHandler taskHandler = MylarTasksPlugin.getDefault().getTaskHandlerForElement(newTask);
+		    if(taskHandler != null){
+		    	ITask addedTask = taskHandler.taskAdded(newTask);
 		    	if(addedTask instanceof BugzillaTask){
 			    	BugzillaTask newTask2 = (BugzillaTask)addedTask;
 		    		if(newTask2 == newTask){

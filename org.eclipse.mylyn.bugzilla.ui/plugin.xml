@@ -108,12 +108,12 @@
    
    <extension
          point="org.eclipse.mylar.tasks.taskListContributor">
-      <taskListContributor
-            actionContributorClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskContributor"
+      <taskHandler
+            taskHandlerClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskHandler"
             externalizerClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer"
             id="org.eclipse.mylar.bugzilla.ui.tasklist"
             name="Bugzilla Contributer">
-      </taskListContributor>
+      </taskHandler>
    </extension>
    
    <extension point="org.eclipse.ui.viewActions"> 

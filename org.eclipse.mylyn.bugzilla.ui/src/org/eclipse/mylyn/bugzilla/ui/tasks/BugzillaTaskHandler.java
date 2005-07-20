@@ -14,7 +14,6 @@ package org.eclipse.mylar.bugzilla.ui.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
@@ -26,7 +25,7 @@ import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListListener;
+import org.eclipse.mylar.tasks.ITaskHandler;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
@@ -40,21 +39,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class BugzillaTaskContributor implements ITaskListListener {
-
-	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
-		return null;
-	}
-		
-	public void taskActivated(ITask task) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void taskDeactivated(ITask task) {
-		// TODO Auto-generated method stub
-		
-	}
+public class BugzillaTaskHandler implements ITaskHandler {
 
 	public void itemDeleted(ITaskListElement element) {
 		if (element instanceof BugzillaQueryCategory) {

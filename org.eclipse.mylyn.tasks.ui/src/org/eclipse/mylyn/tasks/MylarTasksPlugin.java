@@ -42,12 +42,17 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
     private static MylarTasksPlugin plugin;
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
-    private List<ITaskListListener> contributors = new ArrayList<ITaskListListener>(); // TODO: use extension points
+    private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
     
-    public static final String TASK_CONTRIBUTER_ID = "org.eclipse.mylar.tasks.taskListContributor";
-    public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
-    public static final String ACTION_CONTRIBUTER_CLASS_ID = "actionContributorClass";
-    
+    public static final String TASK_CONTRIBUTER_EXTENSION_POINT_ID = "org.eclipse.mylar.tasks.taskListContributor";
+    	public static final String TASK_HANDLER_ELEMENT = "taskHandler";
+    		public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
+    		public static final String ACTION_CONTRIBUTER_CLASS_ID = "taskHandlerClass";
+    	public static final String TASK_LISTENER_ELEMENT = "taskListener";
+    		public static final String TASK_LISTENER_CLASS_ID = "class";
+    	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
+    		public static final String DYNAMIC_POPUP_CLASS_ID = "class";
+    		
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasks.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasks.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasks.report.open.external";
@@ -297,22 +302,41 @@ public class MylarTasksPlugin extends AbstractUIPlugin {
 		return externalizer;
 	}
 
-	public List<ITaskListListener> getContributors() {
-		return contributors;
+	public List<ITaskHandler> getTaskHandlers() {
+		return taskHandlers;
 	}
 
-	public ITaskListListener getContributorForElement(ITaskListElement element){
-		for(ITaskListListener contributer: contributors){
-			if(contributer.acceptsItem(element)) return contributer;
+	public ITaskHandler getTaskHandlerForElement(ITaskListElement element){
+		for(ITaskHandler taskHandler: taskHandlers){
+			if(taskHandler.acceptsItem(element)) return taskHandler;
 		}
 		return null;
 	}
 	
-	public void addContributor(ITaskListListener contributor) {
-		contributors.add(contributor);
-//		if (TaskListView.getDefault() != null) TaskListView.getDefault().resetToolbarsAndPopups();
+	public void addTaskHandler(ITaskHandler taskHandler) {
+		taskHandlers.add(taskHandler);
+	}
+
+	private List<ITaskListDynamicSubMenuContributor> menuContributors = new ArrayList<ITaskListDynamicSubMenuContributor>();
+	
+	public List<ITaskListDynamicSubMenuContributor> getDynamicMenuContributers() {
+		return menuContributors;
 	}
 	
+	public void addDynamicPopupContributor(ITaskListDynamicSubMenuContributor contributor) {
+		menuContributors.add(contributor);
+	}
+	
+	private List<ITaskListener> taskListListeners = new ArrayList<ITaskListener>();
+	
+	public List<ITaskListener> getTaskListListeners() {
+		return taskListListeners;
+	}
+	
+	public void addTaskListListener(ITaskListener taskListListner) {
+		taskListListeners.add(taskListListner);
+	}
+		
 	private void createFileBackup() {
 		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		File taskListFile = new File(path);

@@ -32,16 +32,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.AbstractCategory;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListListener;
+import org.eclipse.mylar.tasks.ITaskHandler;
 import org.eclipse.mylar.tasks.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.w3c.dom.Document;
@@ -60,42 +54,9 @@ public class TaskListExternalizer {
 	
 	private String readVersion = "";
 	private boolean hasCaughtException = false;
-
-	private boolean externalizersInitialized = false;
 	
-	// read the extensions and load the required plugins
 	public void initExtensions() {
-		// code from "contributing to eclipse" with modifications for deprecated code
-		if(!externalizersInitialized){
-			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarTasksPlugin.TASK_CONTRIBUTER_ID);
-			IExtension[] extensions = extensionPoint.getExtensions();
-			for(int i = 0; i < extensions.length; i++){
-				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-				for(int j = 0; j < elements.length; j++){
-					try{
-						Object externalizer = elements[j].createExecutableExtension(MylarTasksPlugin.EXTERNALIZER_CLASS_ID);
-						if (externalizer instanceof ITaskListExternalizer) {
-							externalizers.add((ITaskListExternalizer) externalizer);
-						} else {
-							MylarPlugin.log("Could not load externalizer: " + externalizer.getClass().getCanonicalName() + " must implement " + ITaskListExternalizer.class.getCanonicalName(), this);	
-						}
-						
-						Object contributor = elements[j].createExecutableExtension(MylarTasksPlugin.ACTION_CONTRIBUTER_CLASS_ID);
-						if (contributor instanceof ITaskListListener) {
-							MylarTasksPlugin.getDefault().addContributor((ITaskListListener) contributor);
-							
-						}else {
-							MylarPlugin.log("Could not load contributor: " + contributor.getClass().getCanonicalName() + " must implement " + ITaskListListener.class.getCanonicalName(), this);	
-						}
-					} catch (CoreException e){
-						MylarPlugin.log(e, "Could not load extensions");
-					}
-				}
-			}
-			defaultExternalizer.setExternalizers(externalizers);
-			externalizersInitialized = true;
-		}
+		TaskListExtensionReader.initExtensions(externalizers, defaultExternalizer);
 	}
 	
 //	public void addExternalizer(ITaskListExternalizer externalizer) {
@@ -280,9 +241,9 @@ public class TaskListExternalizer {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-									ITaskListListener contributor = MylarTasksPlugin.getDefault().getContributorForElement(newTask);
-								    if(contributor != null){
-							    		newTask = contributor.taskAdded(newTask);
+									ITaskHandler taskHandler = MylarTasksPlugin.getDefault().getTaskHandlerForElement(newTask);
+								    if(taskHandler != null){
+							    		newTask = taskHandler.taskAdded(newTask);
 							    	}
 								    tlist.addRootTask(newTask);
 									

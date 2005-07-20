@@ -13,7 +13,9 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="taskListContributor" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="taskHandler" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="taskListener" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="dynamicPopupMenu" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +44,7 @@
       </complexType>
    </element>
 
-   <element name="taskListContributor">
+   <element name="taskHandler">
       <complexType>
          <attribute name="externalizerClass" type="string" use="required">
             <annotation>
@@ -54,7 +56,71 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="actionContributorClass" type="string" use="required">
+         <attribute name="taskHandlerClass" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="taskListener">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dynamicPopupMenu">
+      <complexType>
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
