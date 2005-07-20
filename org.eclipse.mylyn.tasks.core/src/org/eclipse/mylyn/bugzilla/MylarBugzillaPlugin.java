@@ -1,6 +1,9 @@
 package org.eclipse.mylar.bugzilla;
 
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.search.BugzillaReferencesProvider;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -57,6 +60,13 @@ public class MylarBugzillaPlugin extends AbstractUIPlugin implements IStartup {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
+
+        List<AbstractRelationshipProvider> providers = structureBridge.getProviders();
+        if(providers != null){
+	        for(AbstractRelationshipProvider provider: providers){
+	        	provider.stopAllRunningJobs();
+	        }
+        }
 	}
 
 	/**

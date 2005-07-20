@@ -284,7 +284,6 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 		    // check the status so that we don't keep searching if there
 		    // is a problem
 		    if (status.getCode() == IStatus.CANCEL) {
-		        MylarPlugin.log("search cancelled", this);
 		        return null;
 		    } else if (!status.isOK()) {
 		        MylarPlugin.log("search error", this);

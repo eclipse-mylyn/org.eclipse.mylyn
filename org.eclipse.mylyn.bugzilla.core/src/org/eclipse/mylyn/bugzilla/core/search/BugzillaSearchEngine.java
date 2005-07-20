@@ -152,11 +152,23 @@ public class BugzillaSearchEngine {
 				throw new BugzillaException(msg);
 			}
 			
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException("Search cancelled");
+			}
+			
 			in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
 
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException("Search cancelled");
+			}
+			
 			Match match = new Match();
 			String line;
 			while ((line = in.readLine()) != null) {
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException("Search cancelled");
+				}
+				
 				// create regular expressions that can be mathced to check if we have 
 				// bad login information
 				RegularExpression loginRe = new RegularExpression("<title>.*login.*</title>.*");
@@ -199,7 +211,13 @@ public class BugzillaSearchEngine {
 					String state = null;
 					String result = null;
 					for (int i = 0; i < 6; i++) {
+						if (monitor.isCanceled()) {
+							throw new OperationCanceledException("Search cancelled");
+						}
 						do {
+							if (monitor.isCanceled()) {
+								throw new OperationCanceledException("Search cancelled");
+							}
 							line = in.readLine().trim();
 							if (line == null) break;
 							line = line.trim();
@@ -254,6 +272,7 @@ public class BugzillaSearchEngine {
 			BugzillaPlugin.log(status);
 		} 
 		catch (OperationCanceledException e) {
+			e.printStackTrace();
 		    status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID, 
 		            IStatus.CANCEL, "", null);
 		}catch (Exception e) {

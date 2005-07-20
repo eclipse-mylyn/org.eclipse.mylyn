@@ -81,6 +81,9 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
             public void searchCompleted(List<?> nodes) {
                 Iterator<?> itr = nodes.iterator();
 
+                if(MylarBugzillaPlugin.getDefault() == null)
+                	return;
+                	
                 BugzillaStructureBridge bridge = MylarBugzillaPlugin.getDefault().getStructureBridge();
                 
                 while(itr.hasNext()) {
