@@ -165,4 +165,10 @@ public class TaskList implements Serializable {
 		categories.clear();
 		rootTasks.clear();
 	}	
+	public void clearActiveTasks() {
+		for (ITask task : activeTasks) {
+			task.setActive(false);
+		}
+		activeTasks.clear();
+	}
 }
