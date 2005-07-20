@@ -467,6 +467,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 						bug.setNewNewComment(sel);
 						changeDirtyStatus(true);
 					}
+					validateInput();
 				}
 			});
 			addCommentsText.addListener(SWT.FocusIn, new NewCommentListener());
@@ -725,11 +726,17 @@ public class ExistingBugEditor extends AbstractBugEditor
 		            ExistingBugEditor.this.changeDirtyStatus(true);
 				}
 			}
-			if(addCommentsText.getText() == null || addCommentsText.getText().equals("")){
-				addCommentsText.setText("Resolved.");
-			}
+			validateInput();
 		}
-		
+	}
+
+	private void validateInput() {
+		Operation o = bug.getSelectedOperation();
+		if(o != null && o.getKnobName().compareTo("resolve") == 0 && (addCommentsText.getText() == null || addCommentsText.getText().equals(""))){
+			submitButton.setEnabled(false);
+		} else{
+			submitButton.setEnabled(true);
+		}
 	}
 	
 	@Override
