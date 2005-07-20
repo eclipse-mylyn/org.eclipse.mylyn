@@ -109,4 +109,7 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 		}
 		return null;
 	}
+	public boolean isCompleted(){
+		return false;
+	}
 }

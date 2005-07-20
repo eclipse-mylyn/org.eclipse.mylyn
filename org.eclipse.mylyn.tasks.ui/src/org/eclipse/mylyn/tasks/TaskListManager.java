@@ -31,7 +31,7 @@ public class TaskListManager {
     private File taskListFile;
     private TaskList taskList = new TaskList();
     private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
-    private int nextTaskId;
+    private int nextTaskId;    
     
     public TaskListManager(File file) {
         this.taskListFile = file;
@@ -40,7 +40,7 @@ public class TaskListManager {
         } else {
         	nextTaskId = 1;
         }
-    }
+    }    
     
     public TaskList createNewTaskList() {
         return taskList;

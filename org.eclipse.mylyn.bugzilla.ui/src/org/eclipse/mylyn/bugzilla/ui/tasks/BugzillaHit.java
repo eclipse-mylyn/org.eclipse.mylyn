@@ -150,4 +150,11 @@ public class BugzillaHit implements ITaskListElement {
     	}
     	return null;
 	}
+
+	public boolean isCompleted() {
+		if (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI")) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -206,4 +206,8 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		}
 		return null;
 	}
+
+	public boolean isCompleted() {
+		return false;
+	}
 }

@@ -52,4 +52,6 @@ public interface ITaskListElement {
 	public abstract Color getForeground();
 
 	public abstract Font getFont();
+	
+	public abstract boolean isCompleted();
 }
