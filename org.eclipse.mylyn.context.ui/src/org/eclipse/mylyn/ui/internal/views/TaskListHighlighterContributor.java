@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskContributor;
+import org.eclipse.mylar.tasks.ITaskListListener;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
@@ -30,7 +30,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class TaskListHighlighterContributor implements ITaskContributor {
+public class TaskListHighlighterContributor implements ITaskListListener {
 
 	private static final String CHOOSE_HIGHLIGHTER = "Choose Highlighter";
 	
