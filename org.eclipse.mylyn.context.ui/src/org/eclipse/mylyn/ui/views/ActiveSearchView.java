@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -30,6 +32,7 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -41,7 +44,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.ViewPart;
-
 
 /**
  * @author Mik Kersten
@@ -215,6 +217,26 @@ public class ActiveSearchView extends ViewPart {
 	            manager.add(action); 
             }
         }
+        IAction stopAction = new Action(){
+
+			@Override
+			public void run() {
+				Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
+		        for (String extension : bridges.keySet()) {
+		            IMylarStructureBridge bridge = bridges.get(extension);
+		            List<AbstractRelationshipProvider> providers = bridge.getProviders();
+		            if(providers == null) continue;
+		            for(AbstractRelationshipProvider provider: providers){
+		            	provider.stopAllRunningJobs();
+		            }
+		        }
+			}
+        	
+        };
+        stopAction.setToolTipText("Stop all active search jobs");
+        stopAction.setText("Stop all active search jobs");
+        stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
+        manager.add(stopAction);
         manager.markDirty();
     }
 

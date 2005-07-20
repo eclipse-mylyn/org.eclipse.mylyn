@@ -128,4 +128,6 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
 	}
 
 	public abstract String getGenericId();
+	
+	public abstract void stopAllRunningJobs();
 }

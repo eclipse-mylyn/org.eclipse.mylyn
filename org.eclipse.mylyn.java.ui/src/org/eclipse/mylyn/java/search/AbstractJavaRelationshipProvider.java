@@ -54,7 +54,8 @@ import org.eclipse.search.ui.ISearchResult;
  * @author Mik Kersten
  */
 public abstract class AbstractJavaRelationshipProvider extends AbstractRelationshipProvider {
-
+	public static List<Job> runningJobs = new ArrayList<Job>();
+    
 	public static final String ID_GENERIC = "org.eclipse.mylar.java.relation";
     public static final String NAME = "Java relationships";	
 	
@@ -202,6 +203,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
 
 		
         });
+        runningJobs.add(job);
         job.schedule();
     }
 
@@ -327,5 +329,13 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
         }
         
     }
+
+    @Override
+	public void stopAllRunningJobs() {
+		for(Job j: runningJobs){
+			j.cancel();
+		}
+		runningJobs.clear();
+	}
 }
  

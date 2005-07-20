@@ -57,7 +57,9 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
 
     public static final String SOURCE_ID = "org.eclipse.mylar.xml.search.references";
     public static final String NAME = "Xml references";
-        
+    
+    public static List<Job> runningJobs = new ArrayList<Job>();
+    
     public XmlReferencesProvider() {
         // TODO: should this be a generic XML extension?
         super(PdeStructureBridge.EXTENSION, SOURCE_ID);
@@ -236,7 +238,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
 	   				return gathered;
 	   			}
             });
-        
+            runningJobs.add(job);
             job.schedule();
         }
 	}
@@ -367,4 +369,12 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     public String getName() {
         return NAME;
     }
+
+	@Override
+	public void stopAllRunningJobs() {
+		for(Job j: runningJobs){
+			j.cancel();
+		}
+		runningJobs.clear();
+	}
 }
