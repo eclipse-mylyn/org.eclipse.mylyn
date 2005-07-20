@@ -183,7 +183,7 @@ public class NewBugEditor extends AbstractBugEditor {
 					value = a.getValue();
 				} else if (key.equalsIgnoreCase("URL")) {
 					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Assign To")) {
+				} else if (key.equalsIgnoreCase("Assign To") || key.equalsIgnoreCase("Assigned To")) {
 					value = a.getValue();
 				}
 

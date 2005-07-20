@@ -202,7 +202,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 										value = a.getValue();
 									} else if (key.equalsIgnoreCase("URL")) {
 										value = a.getValue();
-									} else if (key.equalsIgnoreCase("Assign To")) {
+									} else if (key.equalsIgnoreCase("Assign To") || key.equalsIgnoreCase("Assigned To")) {
 										value = a.getValue();
 									}
 
