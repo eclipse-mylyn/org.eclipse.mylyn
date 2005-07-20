@@ -24,7 +24,6 @@ public class TaskPriorityFilter implements ITaskFilter {
 
 	public TaskPriorityFilter() {
 		displayPrioritiesAbove(MylarTasksPlugin.getPriorityLevel());
-//		System.out.println("Priority: " + priorityLevel);
 	}
 	
 	public void displayPrioritiesAbove(String p) {

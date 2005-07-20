@@ -189,6 +189,6 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		System.out.println("sel changed");		
+		// ignore
 	}
 }
