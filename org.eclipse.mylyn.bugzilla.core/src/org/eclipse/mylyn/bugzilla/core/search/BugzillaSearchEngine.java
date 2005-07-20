@@ -272,7 +272,6 @@ public class BugzillaSearchEngine {
 			BugzillaPlugin.log(status);
 		} 
 		catch (OperationCanceledException e) {
-			e.printStackTrace();
 		    status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID, 
 		            IStatus.CANCEL, "", null);
 		}catch (Exception e) {
