@@ -45,7 +45,7 @@ public class AllTests {
         suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
         suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 
-        // Bugzilla Tests - XXX FAIL
+        // Bugzilla Tests 
         suite.addTestSuite(BugzillaSearchPluginTest.class);
         suite.addTestSuite(BugzillaStackTraceTest.class);
         
@@ -54,12 +54,9 @@ public class AllTests {
         
         // Tasklist Tests
         suite.addTestSuite(TaskListManagerTest.class);
-//        suite.addTestSuite(XStreamUsageTest.class);
 
         // Core Tests
         suite.addTestSuite(ContextTest.class);
-//        suite.addTestSuite(InteractionEventExternalizationTest.class);
-//        suite.addTestSuite(ManualUiTest.class);
         suite.addTestSuite(TaskListUiTest.class);
         //$JUnit-END$
         return suite;
