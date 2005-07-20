@@ -54,6 +54,12 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 		setMenuCreator(this);	
 		
+		// HACK: if there are multiple providers, all store the same current DOS
+		degreeOfSeparation = bridge.getProviders().get(0).getCurrentDegreeOfSeparation();
+		
+		if(degreeOfSeparation > 0)
+			run();
+		
 //		boolean checked= MylarUiPlugin.getPrefs().getBoolean(prefId); 
 //		valueChanged(checked, true); 
 	}   

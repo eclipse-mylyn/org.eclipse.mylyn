@@ -403,6 +403,7 @@ public class MylarContextManager {
 	        MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
 	        if (degreeOfSeparation <= 0) {
 	        	provider.setEnabled(false);
+	        	provider.setDegreeOfSeparation(degreeOfSeparation);
 	        } else {
 	        	provider.setEnabled(true);
 	        	provider.setDegreeOfSeparation(degreeOfSeparation);
