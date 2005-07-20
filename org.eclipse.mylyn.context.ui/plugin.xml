@@ -294,6 +294,10 @@
   		</action>  
       </viewContribution> 
    </extension>
+ <extension
+       point="org.eclipse.mylar.tasks.taskListContributor">
+    <dynamicPopupMenu class="org.eclipse.mylar.ui.internal.views.TaskListHighlighterMenuContributor"/>
+ </extension>
 </plugin>
 
 	    <!--

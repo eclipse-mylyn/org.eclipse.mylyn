@@ -19,18 +19,16 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListListener;
+import org.eclipse.mylar.tasks.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasks.ITaskListElement;
-import org.eclipse.mylar.tasks.internal.TaskCategory;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
-public class TaskListHighlighterContributor implements ITaskListListener {
+public class TaskListHighlighterMenuContributor implements ITaskListDynamicSubMenuContributor {
 
 	private static final String CHOOSE_HIGHLIGHTER = "Choose Highlighter";
 	
@@ -69,54 +67,4 @@ public class TaskListHighlighterContributor implements ITaskListListener {
 		} 
 		return subMenuManager;
   	}
-
-	public void taskActivated(ITask task) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void taskDeactivated(ITask task) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void itemDeleted(ITaskListElement element) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void taskCompleted(ITask task) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void itemOpened(ITaskListElement element) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void taskClosed(ITask element, IWorkbenchPage page) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public boolean acceptsItem(ITaskListElement element) {
-		return false;
-	}
-
-	public void dropItem(ITaskListElement element, TaskCategory category) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public ITask taskAdded(ITask newTask) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void restoreState(TaskListView taskListView) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
