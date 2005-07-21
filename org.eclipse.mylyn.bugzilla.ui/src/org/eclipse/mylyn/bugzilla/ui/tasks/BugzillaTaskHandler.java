@@ -14,6 +14,7 @@ package org.eclipse.mylar.bugzilla.ui.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
@@ -29,6 +30,7 @@ import org.eclipse.mylar.tasks.ITaskHandler;
 import org.eclipse.mylar.tasks.ITaskListElement;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
 import org.eclipse.mylar.tasks.internal.TaskCategory;
+import org.eclipse.mylar.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -187,5 +189,21 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			refresh.run();
 			refresh.setShowProgress(true);
 		}		
+	}
+
+	public boolean enableAction(Action action, ITaskListElement element) {
+
+		if(element instanceof BugzillaHit){
+			return false;
+		} else if(element instanceof BugzillaTask){
+			if(action instanceof DeleteAction){
+				return true;
+			} else {
+				return false;
+			}
+		} else if(element instanceof BugzillaQueryCategory){
+			return false;
+		}
+		return false;
 	} 
 }

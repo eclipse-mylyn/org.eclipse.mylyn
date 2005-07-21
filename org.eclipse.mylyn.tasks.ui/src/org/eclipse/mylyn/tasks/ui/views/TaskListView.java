@@ -917,78 +917,82 @@ public class TaskListView extends ViewPart {
     }
 
     void fillContextMenu(IMenuManager manager) {
-        manager.add(completeTask);
-        manager.add(incompleteTask);
-        manager.add(delete);
-        manager.add(new Separator());
-        manager.add(createTask);
-        manager.add(new Separator("mylar"));   
-        
+    	ITaskListElement element = null;;
         final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
         if (selectedObject instanceof ITaskListElement) {
-        	
-        	for (ITaskListDynamicSubMenuContributor contributor : MylarTasksPlugin.getDefault().getDynamicMenuContributers()) {
-    	        manager.add(new Separator());
-    	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
-    	        if (subMenuManager != null) manager.add(subMenuManager);
-			}
+        	element = (ITaskListElement) selectedObject;
         }
+        
+        addAction(completeTask, manager, element);
+        addAction(incompleteTask, manager, element);
+        addAction(delete, manager, element);
+        manager.add(new Separator());
+        addAction(createTask, manager, element);
+        manager.add(new Separator("mylar"));   
+        	
+    	for (ITaskListDynamicSubMenuContributor contributor : MylarTasksPlugin.getDefault().getDynamicMenuContributers()) {
+	        manager.add(new Separator());
+	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
+	        if (subMenuManager != null) addMenuManager(subMenuManager, manager, element);
+		}
+    	
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        updateActionEnablement(selectedObject);
     }
     
-    private void updateActionEnablement(Object sel) {
-//    	XXX use enables for part of contribution
-//    	if(sel != null && sel instanceof ITaskListElement){
-//	    	if(sel instanceof BugzillaHit){
-//				BugzillaTask task = ((BugzillaHit)sel).getAssociatedTask();
-//				if(task == null){
-//					clearSelectedTaskscapeAction.setEnabled(false);
-//				} else {
-//					clearSelectedTaskscapeAction.setEnabled(true);
-//				}
-//				completeTask.setEnabled(false);
-//				incompleteTask.setEnabled(false);
-//				moveTaskToRoot.setEnabled(false);
-//				delete.setEnabled(false);
-//				refreshQuery.setEnabled(false);
-//			} else if(sel instanceof BugzillaTask){
-//				clearSelectedTaskscapeAction.setEnabled(true);
-//				completeTask.setEnabled(false);
-//				incompleteTask.setEnabled(false);
-//				moveTaskToRoot.setEnabled(true);
-//				delete.setEnabled(true);
-//				refreshQuery.setEnabled(false);
-//			} else if(sel instanceof AbstractCategory){
-//				clearSelectedTaskscapeAction.setEnabled(false);
-//				completeTask.setEnabled(false);
-//				incompleteTask.setEnabled(false);
-//				moveTaskToRoot.setEnabled(false);
-//				delete.setEnabled(true);
-//				if (sel instanceof BugzillaQueryCategory) {
-//					refreshQuery.setEnabled(true);
-//				} else {
-//					refreshQuery.setEnabled(false);
-//				}
-//				//delete.setEnabled(true);
-//			} else {
-//				clearSelectedTaskscapeAction.setEnabled(true);
-//				completeTask.setEnabled(true);
-//				incompleteTask.setEnabled(true);
-//				moveTaskToRoot.setEnabled(true);
-//				delete.setEnabled(true);
-//				refreshQuery.setEnabled(false);
-//			}			
-//		} else {
-//			clearSelectedTaskscapeAction.setEnabled(false);
-//			completeTask.setEnabled(false);
-//			incompleteTask.setEnabled(false);
-//			moveTaskToRoot.setEnabled(false);
-//			delete.setEnabled(false);
-//			refreshQuery.setEnabled(false);
-//		}
+    private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskListElement element) {
+    	if(element != null && element instanceof ITask){
+        	manager.add(menuToAdd);
+    	}
     }
-
+    
+    
+    private void addAction(Action action, IMenuManager manager, ITaskListElement element) {
+    	manager.add(action);
+    	if(element != null){
+    		ITaskHandler handler = MylarTasksPlugin.getDefault().getTaskHandlerForElement(element);
+    		if(handler != null){
+    			action.setEnabled(handler.enableAction(action, element));
+    		} else {
+    			updateActionEnablement(action, element);
+    		}
+    	}
+    }
+    
+    private void updateActionEnablement(Action action, ITaskListElement element){
+    
+		if(element instanceof Task){
+			if(action instanceof MarkTaskCompleteAction){
+				if(element.isCompleted()){
+					action.setEnabled(false);
+				} else {
+					action.setEnabled(true);
+				}
+			} else if(action instanceof MarkTaskIncompleteAction){
+				if(element.isCompleted()){
+					action.setEnabled(true);
+				} else {
+					action.setEnabled(false);
+				}
+			} else if(action instanceof DeleteAction){
+				action.setEnabled(true);
+			} else if(action instanceof CreateTaskAction){
+				action.setEnabled(false);
+			}
+		} else if(element instanceof TaskCategory) {
+			if(action instanceof MarkTaskCompleteAction){
+				action.setEnabled(false);
+			} else if(action instanceof MarkTaskIncompleteAction){
+					action.setEnabled(false);
+			} else if(action instanceof DeleteAction){
+				action.setEnabled(true);
+			} else if(action instanceof CreateTaskAction){
+				action.setEnabled(true);
+			}
+		} else {
+			action.setEnabled(true);
+		}
+    }
+    
     /**
      * @see org.eclipse.pde.internal.ui.view.HistoryDropDownAction
      *
