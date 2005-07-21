@@ -100,6 +100,10 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		return offlineBug;
 	}
 
+	public void setOfflineBug(BugReport offlineBug){
+		this.offlineBug = offlineBug;
+	}
+	
 	/**
 	 * Gets the bug page input stream
 	 */

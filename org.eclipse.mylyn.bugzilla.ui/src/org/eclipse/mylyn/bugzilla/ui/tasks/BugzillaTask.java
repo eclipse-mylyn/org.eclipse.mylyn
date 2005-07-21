@@ -25,11 +25,8 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
@@ -37,6 +34,7 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasks.MylarTasksPlugin;
@@ -44,10 +42,8 @@ import org.eclipse.mylar.tasks.Task;
 import org.eclipse.mylar.tasks.TaskListImages;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
@@ -105,9 +101,7 @@ public class BugzillaTask extends Task {
         isDirty = false;
         if (!noDownload) {
             scheduleDownloadReport();
-        } else {
-        	state = BugTaskState.FREE;
-        }
+        } 
     }
 	
     public BugzillaTask(BugzillaHit hit) {
@@ -224,41 +218,40 @@ public class BugzillaTask extends Task {
      * @param commentNumber The comment number to reveal
 	 */
 	public void openTask(int commentNumber) {
-		if (state != BugTaskState.FREE) {
-			return;
-		}
-		
-		state = BugTaskState.OPENING;
-		notifyTaskDataChange();
+//		if (state != BugTaskState.FREE) {
+//			return;
+//		}
+//		
+//		state = BugTaskState.OPENING;
+//		notifyTaskDataChange();
 		OpenBugTaskJob job = new OpenBugTaskJob("Opening Bugzilla task in editor...", this);
 		job.schedule();
-		job.addJobChangeListener(new IJobChangeListener(){
-
-			public void aboutToRun(IJobChangeEvent event) {
-				// don't care about this event
-			}
-
-			public void awake(IJobChangeEvent event) {
-				// don't care about this event
-			}
-
-			public void done(IJobChangeEvent event) {
-				state = BugTaskState.FREE;
-				notifyTaskDataChange();	
-			}
-
-			public void running(IJobChangeEvent event) {
-				// don't care about this event
-			}
-
-			public void scheduled(IJobChangeEvent event) {
-				// don't care about this event
-			}
-
-			public void sleeping(IJobChangeEvent event) {
-				// don't care about this event
-			}
-		});
+//		job.addJobChangeListener(new IJobChangeListener(){
+//
+//			public void aboutToRun(IJobChangeEvent event) {
+//				// don't care about this event
+//			}
+//
+//			public void awake(IJobChangeEvent event) {
+//				// don't care about this event
+//			}
+//			public void done(IJobChangeEvent event) {
+//				state = BugTaskState.FREE;
+//				notifyTaskDataChange();	
+//			}
+//
+//			public void running(IJobChangeEvent event) {
+//				// don't care about this event
+//			}
+//
+//			public void scheduled(IJobChangeEvent event) {
+//				// don't care about this event
+//			}
+//
+//			public void sleeping(IJobChangeEvent event) {
+//				// don't care about this event
+//			}
+//		});
    }
 	
 	/**
@@ -274,40 +267,45 @@ public class BugzillaTask extends Task {
 		return "bugzilla report id: " + getHandle();
 	}
 
-	protected void openTaskEditor(final IEditorInput input) {
-		if (isBugDownloaded()) {
-			
+	/**
+	 * We should be able to open the task at any point, meaning that if it isn't downloaded
+	 * attempt to get it from the server to open it
+	 */
+	protected void openTaskEditor(final BugzillaTaskEditorInput input) {
+	
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					// get the active workbench page
-					IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					
-					// if we couldn't get the page, get out of here
-					if (page == null)
-						return;
+					MylarTasksPlugin.Report_Open_Mode mode = MylarTasksPlugin.getDefault().getReportMode();
+					if (mode == MylarTasksPlugin.Report_Open_Mode.EDITOR) {
 						
-					try {
-						// try to open an editor on the input bug
-						//page.openEditor(input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
-						page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasks.bugzillaTaskEditor");
-					} 
-					catch (PartInitException ex) {
-						MylarPlugin.log(ex, "couldn't open");
-						return;
+						try{
+							if(!isBugDownloaded()){
+								input.getBugTask().downloadReport();
+								input.setOfflineBug(input.getBugTask().getBugReport());
+							}
+							
+							// get the active workbench page
+							IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+							
+							// if we couldn't get the page, get out of here
+							if (page == null)
+								return;
+							
+							// try to open an editor on the input bug
+							//page.openEditor(input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
+							page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasks.bugzillaTaskEditor");
+						} 
+						catch (Exception ex) {
+							MylarPlugin.log(ex, "couldn't open bugzilla task");
+							return;
+						}
+					} else if (mode == MylarTasksPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
+						BugzillaUITools.openUrl(getBugUrl());	    			
 					}
 				}
 			});
 		}
-		else {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openInformation(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-							"Could not open bug.", "Bug #" + getHandle()
-											+ " could not be read from the server.  Try refreshing the bug task.");
-				}
-			});
-		}
-	}
 	
 	/**
 	 * @return Returns the last time this task's bug report was downloaded from
@@ -379,13 +377,13 @@ public class BugzillaTask extends Task {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try{
-				final IEditorInput input = new BugzillaTaskEditorInput(bugTask);
-				state = BugTaskState.OPENING;
-				notifyTaskDataChange();
+				final BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugTask);
+//				state = BugTaskState.OPENING;
+//				notifyTaskDataChange();
 				openTaskEditor(input);
 				
-				state = BugTaskState.FREE;
-				notifyTaskDataChange();
+//				state = BugTaskState.FREE;
+//				notifyTaskDataChange();
 				return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 			}catch(Exception e){
 				MylarPlugin.log(e, "couldn't open");
