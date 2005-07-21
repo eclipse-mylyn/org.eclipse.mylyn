@@ -87,11 +87,11 @@ public class ContextReader {
 			String kind = e.getAttribute("Kind");
 			String startDate = e.getAttribute("StartDate");
 			String endDate = e.getAttribute("EndDate");
-			String originId = checkStringFormat(e.getAttribute("OriginId"));
-			String structureKind = checkStringFormat(e.getAttribute("StructureKind"));
-			String structureHandle = checkStringFormat(e.getAttribute("StructureHandle"));
-			String navigation = checkStringFormat(e.getAttribute("Navigation"));
-			String delta = checkStringFormat(e.getAttribute("Delta"));
+			String originId = XmlStringConverter.convertXmlToString(e.getAttribute("OriginId"));
+			String structureKind = XmlStringConverter.convertXmlToString(e.getAttribute("StructureKind"));
+			String structureHandle = XmlStringConverter.convertXmlToString(e.getAttribute("StructureHandle"));
+			String navigation = XmlStringConverter.convertXmlToString(e.getAttribute("Navigation"));
+			String delta = XmlStringConverter.convertXmlToString(e.getAttribute("Delta"));
 			String interest = e.getAttribute("Interest");
 			
 			String formatString = "yyyy-MM-dd HH:mm:ss.S z";
@@ -106,50 +106,4 @@ public class ContextReader {
 		}
     	return null;
     }
-    
-    private String checkStringFormat(String string) {
-    	StringBuffer result = new StringBuffer(string.length() + 10);
-		for (int i = 0; i < string.length(); ++i) {
-			char xChar = string.charAt(i);
-			if (xChar == '&') {
-				i++;
-				StringBuffer escapeChar = new StringBuffer(10);
-				boolean flag = true;
-				while(flag) {		
-					xChar = string.charAt(i++);
-					if (xChar == ';') {
-						flag = false;
-						i--;
-					} else {
-						escapeChar.append(xChar);
-					}					
-				}
-				result.append(getReplacement(escapeChar.toString()));
-			} else {
-				result.append(xChar);
-			}
-		}
-		return result.toString();
-    }    
-    
-    static char getReplacement(String s) {
-    	if (s.equals("lt")) {
-    		return '<';
-    	} else if (s.equals("gt")){
-    		return '>';
-    	} else if (s.equals("quot")){
-    		return '"';
-    	} else if (s.equals("apos")){
-     		return '\'';
-     	} else if (s.equals("amp")){
-    		return '&';
-    	} else if (s.equals("x0D")){
-    		return '\r';
-    	} else if (s.equals("x0A")){
-    		return '\n';
-    	} else if (s.equals("x09")){
-    		return '\u0009';
-    	} 
-    	return 0;
-	}
 }

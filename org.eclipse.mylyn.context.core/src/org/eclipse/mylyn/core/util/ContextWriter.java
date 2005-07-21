@@ -99,11 +99,11 @@ public class ContextWriter {
     	node.setAttribute("Kind", e.getKind().toString());
     	node.setAttribute("StartDate", format.format(e.getDate()));
     	node.setAttribute("EndDate", format.format(e.getEndDate()));
-    	node.setAttribute("OriginId", checkStringFormat(e.getOriginId()));
-    	node.setAttribute("StructureKind", checkStringFormat(e.getStructureKind()));
-		node.setAttribute("StructureHandle", checkStringFormat(e.getStructureHandle()));
-		node.setAttribute("Navigation", checkStringFormat(e.getNavigation()));
-		node.setAttribute("Delta", checkStringFormat(e.getDelta()));
+    	node.setAttribute("OriginId", XmlStringConverter.convertToXmlString(e.getOriginId()));
+    	node.setAttribute("StructureKind", XmlStringConverter.convertToXmlString(e.getStructureKind()));
+		node.setAttribute("StructureHandle", XmlStringConverter.convertToXmlString(e.getStructureHandle()));
+		node.setAttribute("Navigation", XmlStringConverter.convertToXmlString(e.getNavigation()));
+		node.setAttribute("Delta", XmlStringConverter.convertToXmlString(e.getDelta()));
 		node.setAttribute("Interest", "" + e.getInterestContribution());
 		root.appendChild(node);
     }
@@ -121,55 +121,14 @@ public class ContextWriter {
     	root.setAttribute("Kind", e.getKind().toString());
     	root.setAttribute("StartDate", format.format(e.getDate()));
     	root.setAttribute("EndDate", format.format(e.getEndDate()));
-    	root.setAttribute("OriginId", checkStringFormat(e.getOriginId()));
-    	root.setAttribute("StructureKind", checkStringFormat(e.getStructureKind()));
-    	root.setAttribute("StructureHandle", checkStringFormat(e.getStructureHandle()));
-    	root.setAttribute("Navigation", checkStringFormat(e.getNavigation()));
-    	root.setAttribute("Delta", checkStringFormat(e.getDelta()));
+    	root.setAttribute("OriginId", XmlStringConverter.convertToXmlString(e.getOriginId()));
+    	root.setAttribute("StructureKind", XmlStringConverter.convertToXmlString(e.getStructureKind()));
+    	root.setAttribute("StructureHandle", XmlStringConverter.convertToXmlString(e.getStructureHandle()));
+    	root.setAttribute("Navigation", XmlStringConverter.convertToXmlString(e.getNavigation()));
+    	root.setAttribute("Delta", XmlStringConverter.convertToXmlString(e.getDelta()));
     	root.setAttribute("Interest", "" + e.getInterestContribution());
     	writeDOMtoStream(doc);
     }
-    
-    private String checkStringFormat(String s) {
-    	if (s == null) return "";
-    	StringBuffer res = new StringBuffer(s.length() + 20);
-		for (int i = 0; i < s.length(); ++i)
-			appendEscapedChar(res, s.charAt(i));
-		return res.toString();
-    }
-    
-    private void appendEscapedChar(StringBuffer buffer, char c) {
-		String replacement = getReplacement(c);
-		if (replacement != null) {
-			buffer.append('&');
-			buffer.append(replacement);
-			buffer.append(';');
-		} else {
-			buffer.append(c);
-		}
-	}	
-    
-    private  String getReplacement(char c) {
-		switch (c) {
-			case '<' :
-				return "lt"; //$NON-NLS-1$
-			case '>' :
-				return "gt"; //$NON-NLS-1$
-			case '"' :
-				return "quot"; //$NON-NLS-1$
-			case '\'' :
-				return "apos"; //$NON-NLS-1$
-			case '&' :
-				return "amp"; //$NON-NLS-1$
-			case '\r':
-				return "#x0D"; //$NON-NLS-1$
-			case '\n':
-				return "#x0A"; //$NON-NLS-1$
-			case '\u0009':
-				return "#x09"; //$NON-NLS-1$
-		}
-		return null;
-	}
     
     private void clearDocument() {
     	try {
