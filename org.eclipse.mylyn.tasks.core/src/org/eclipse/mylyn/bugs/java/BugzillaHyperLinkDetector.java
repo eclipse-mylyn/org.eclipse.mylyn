@@ -1,6 +1,8 @@
 package org.eclipse.mylar.bugs.java;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -86,14 +88,29 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 		int startOffset= region.getOffset();
 		int endOffset= startOffset + region.getLength();
 
-		if(comment.toLowerCase().indexOf("bug") != -1){
+		Pattern p = Pattern.compile("^.*bug\\s+\\d+.*");
+		Matcher m = p.matcher(comment.toLowerCase().trim());
+		boolean b = m.matches();
+		
+		p = Pattern.compile("^.*bug#\\s+\\d+.*");
+		m = p.matcher(comment.toLowerCase().trim());
+		boolean b2 = m.matches();
+		
+		if(b || b2){
 	
 			int start = comment.toLowerCase().indexOf("bug");
-			int end = comment.indexOf(" ", start + 4);
+			int ahead = 4;
+			if(b2)
+				ahead = 5;
+			String endComment = comment.substring(start+ahead, comment.length());
+			endComment = endComment.trim();
+			int endCommentStart = comment.indexOf(endComment);
+
+			int end = comment.indexOf(" ", endCommentStart);
 			if(end == -1)
 				end = comment.length();
 
-			int bugId = Integer.parseInt(comment.substring(start+4, end).trim());
+			int bugId = Integer.parseInt(comment.substring(endCommentStart, end).trim());
 			
 			start += commentStart;
 			end += commentStart;
