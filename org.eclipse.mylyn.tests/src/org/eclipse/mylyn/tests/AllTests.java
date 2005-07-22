@@ -17,17 +17,17 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylar.core.tests.ContextTest;
-import org.eclipse.mylar.java.tests.JavaStructureTest;
 import org.eclipse.mylar.java.tests.ContextManagerTest;
+import org.eclipse.mylar.java.tests.JavaStructureTest;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
-import org.eclipse.mylar.tasks.bugzilla.tests.BugzillaSearchPluginTest;
-import org.eclipse.mylar.tasks.bugzilla.tests.BugzillaStackTraceTest;
-import org.eclipse.mylar.tasks.tests.TaskListManagerTest;
-import org.eclipse.mylar.tasks.tests.TaskListUiTest;
+import org.eclipse.mylar.tasklist.bugzilla.tests.BugzillaSearchPluginTest;
+import org.eclipse.mylar.tasklist.bugzilla.tests.BugzillaStackTraceTest;
+import org.eclipse.mylar.tasklist.tests.TaskListManagerTest;
+import org.eclipse.mylar.tasklist.tests.TaskListUiTest;
 import org.eclipse.mylar.xml.tests.XMLSearchPluginTest;
 	
 public class AllTests {
