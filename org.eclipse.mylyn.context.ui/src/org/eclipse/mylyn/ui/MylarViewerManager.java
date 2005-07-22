@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
@@ -28,7 +27,6 @@ import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.mylar.ui.internal.BrowseFilteredListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -63,16 +61,16 @@ public class MylarViewerManager implements IMylarContextListener {
     }
 
     public void contextDeactivated(IMylarContext context) {
-    	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
-        if (confirmed) {
+//    	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
+//        if (confirmed) {
         	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.CLOSE_EDITORS)) {
-        		UiUtil.closeAllEditors();
+        		UiUtil.closeAllEditors(true);
         	} else {
 		    	for (IMylarContextNode node : MylarPlugin.getContextManager().getInterestingResources(context)) {
 		            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
 		        }       		
         	}
-        }
+//        }
         refreshViewers();
     }
 
