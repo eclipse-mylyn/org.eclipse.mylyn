@@ -327,6 +327,7 @@ public class Task implements ITask {
 	}
 	
 	public String getElapsedTimeForDisplay() {
+		calculateElapsedTime();
 		long seconds = elapsed / 1000;
 		long minutes = 0;
 		long hours = 0;
@@ -349,7 +350,7 @@ public class Task implements ITask {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
 				min = minutes + " minute ";
-			} else if (minutes > 1) {
+			} else if (minutes != 1) {
 				min = minutes + " minutes ";
 			}
 //			seconds -= minutes * MIN;
@@ -363,7 +364,7 @@ public class Task implements ITask {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
 				min = minutes + " minute ";
-			} else if (minutes > 1) {
+			} else if (minutes != 1) {
 				min = minutes + " minutes ";
 			}
 //			seconds -= minutes * MIN;
@@ -379,7 +380,7 @@ public class Task implements ITask {
 //			} else if (seconds > 1) {
 //				sec = seconds + " seconds";
 //			}
-			return sec;
+			return "0 minutes";
 		}
 	}
 	

@@ -337,7 +337,7 @@ public class TaskSummaryEditor extends EditorPart {
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.colspan = 2;
         description.setLayoutData(td);
-        if (task.canEditDescription()) {
+        if (!task.canEditDescription()) {
         	description.setEnabled(false);
         } else {
         	description.addModifyListener(new ModifyListener() {
