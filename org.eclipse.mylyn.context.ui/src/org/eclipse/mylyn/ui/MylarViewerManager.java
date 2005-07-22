@@ -8,29 +8,25 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/**
- * 
- */
+
 package org.eclipse.mylar.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
+import org.eclipse.mylar.ui.internal.BrowseFilteredListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
@@ -41,31 +37,21 @@ import org.eclipse.ui.internal.Workbench;
 public class MylarViewerManager implements IMylarContextListener {
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
-
-	private static final MouseListener EXPANSION_REQUEST_LISTENER = new MouseListener() {
-		public void mouseDown(MouseEvent e) {
-			if ((e.stateMask & SWT.ALT) != 0) {
-				MylarPlugin.getContextManager().setNextEventIsRaiseChildren();
-			}
-		}
-
-		public void mouseUp(MouseEvent e) { }
-
-		public void mouseDoubleClick(MouseEvent e) { }
-	};
-
+	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
+	
 	public void addManagedViewer(StructuredViewer viewer) {
 		managedViewers.add(viewer);
-		if (viewer instanceof TreeViewer) { 
-			((TreeViewer)viewer).getTree().addMouseListener(EXPANSION_REQUEST_LISTENER);
-		}
+		BrowseFilteredListener listener = new BrowseFilteredListener(viewer);
+		listenerMap.put(viewer, listener);
+		viewer.getControl().addMouseListener(listener);
 	}
 	
 	public void removeManagedViewer(StructuredViewer viewer) {
 		managedViewers.remove(viewer);
-		if (viewer instanceof TreeViewer) { 
-			((TreeViewer)viewer).getTree().removeMouseListener(EXPANSION_REQUEST_LISTENER);
-		}
+		BrowseFilteredListener listener = listenerMap.get(viewer);
+		if (listener != null) {
+			viewer.getControl().removeMouseListener(listener);
+		}  
 	}
 	
 	public void contextActivated(IMylarContext taskscape) {
@@ -109,37 +95,30 @@ public class MylarViewerManager implements IMylarContextListener {
     	refreshViewers(toRefresh, updateLabels);
     }
     
-    /**
-     * TODO: clean up
-     */
-    protected void refreshViewers(final List<IMylarContextNode> nodes, final boolean updateLabels) {
+	public void interestChanged(final List<IMylarContextNode> nodes) {
+    	refreshViewers(nodes, false);
+    }
+    
+    public void interestChanged(IMylarContextNode node) {
+    	refreshViewers(node, false);
+    } 
+    
+    protected void refreshViewers(final List<IMylarContextNode> nodesToRefresh, final boolean updateLabels) {
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
             	try {
-            		// HACK: improve laziness and update
+            		// TODO: improve laziness and update
                     if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
-                	            		
-            		List<IMylarContextNode> nodesToRefresh = new ArrayList<IMylarContextNode>();
-			    	boolean showChildrenRequested = false;
-            		if (MylarPlugin.getContextManager().getTempRaisedHandle() != null) {
-			    		String raisedElementHandle = MylarPlugin.getContextManager().getTempRaisedHandle();
-			            nodesToRefresh = new ArrayList<IMylarContextNode>(); // override refresh nodes
-			            nodesToRefresh.add(MylarPlugin.getContextManager().getNode(raisedElementHandle));
-			            showChildrenRequested = true;
-            		} else if (nodes != null) {
-			    		nodesToRefresh.addAll(nodes);
-            		}
+
             		for (StructuredViewer viewer : managedViewers) {
-						if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
+            			if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
 							viewer.getControl().setRedraw(false); 
-							if (nodes == null || nodes.isEmpty()) {
+							if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 					            viewer.refresh();
 							} else {
 								Object objectToRefresh = null;
-								IMylarContextNode lastNode = null;
 								for (IMylarContextNode node : nodesToRefresh) {
 									if (node != null) {
-										lastNode = node;
 										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
 										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
 										if (node.getDegreeOfInterest().getValue() <= 0) {
@@ -155,18 +134,6 @@ public class MylarViewerManager implements IMylarContextListener {
 										}
 									}
 								}		 	
-								List<InteractionEvent> events = lastNode.getDegreeOfInterest().getEvents();
-								if (!events.isEmpty()) {
-//								InteractionEvent lastInteraction = events.get(events.size()-1);
-									if (showChildrenRequested && viewer instanceof TreeViewer) {
-										((TreeViewer)viewer).expandToLevel(objectToRefresh, 1);
-//									} else if (objectToRefresh != null 
-//											&& lastInteraction.getKind().isUserEvent()
-//											&& isSelectableViewer(viewer)) { // ignore outlines since they're synched
-//										StructuredSelection selection = new StructuredSelection(objectToRefresh);
-//										if (!selection.equals(viewer.getSelection())) viewer.setSelection(selection);
-									}
-								}
 							}
 				            viewer.getControl().setRedraw(true); 
 						}
@@ -176,33 +143,7 @@ public class MylarViewerManager implements IMylarContextListener {
             	}
 			} 
         });
-    }
-    
-//    private boolean isSelectableViewer(StructuredViewer viewer) {
-//    	if (viewer instanceof IContentOutlinePage) {
-//    		return false;
-//    	} else if (viewer.getClass().getEnclosingClass() != null
-//    		&& IContentOutlinePage.class.isAssignableFrom(viewer.getClass().getEnclosingClass())) {
-//    		return false;
-//    	} 
-//    	return true;
-//	}
-
-	public void interestChanged(final List<IMylarContextNode> nodes) {
-    	refreshViewers(nodes, false);
-    }
-    
-    /**
-     * TODO: it would be better if this didn't explicitly refresh views
-     */
-    public void interestChanged(IMylarContextNode node) {
-//        if (FilterOutlineAction.getDefault() != null) FilterOutlineAction.getDefault().refreshViewer();
-        if (MylarPlugin.getContextManager().getTempRaisedHandle() != null) {
-        	refreshViewers();
-        } else {
-        	refreshViewers(node, false);
-        }
-    }  
+    } 
 
     public void nodeDeleted(IMylarContextNode node) {
     	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());

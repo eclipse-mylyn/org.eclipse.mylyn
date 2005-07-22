@@ -23,15 +23,23 @@ import org.eclipse.mylar.core.internal.MylarContextManager;
 
 
 /**
+ * This is a generic workbench filter that can be applied to any StructuredViewer.
+ * It figures out whether an object is interesting by getting it's handle from the 
+ * corresponding structure bridge.
+ * 
  * @author Mik Kersten
  */
 public class InterestFilter extends ViewerFilter {
 
+	private Object temporarilyUnfiltered = null;
+	
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {
         try {
         	if (!(viewer instanceof StructuredViewer)) return true;
         	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
+        	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
+        	
             IMylarContextNode node = null;
             if (element instanceof IMylarContextNode) {
                 node = (IMylarContextNode)element;
@@ -40,9 +48,10 @@ public class InterestFilter extends ViewerFilter {
                 if (bridge == null) return false;
                 if (!bridge.canFilter(element)) return true;                
                 String handle = bridge.getHandleIdentifier(element);
+         
                 node = MylarPlugin.getContextManager().getNode(handle);
-                String parentHandle = bridge.getParentHandle(handle);
-                if (MylarPlugin.getContextManager().isTempRaised(parentHandle)) return true;
+//                String parentHandle = bridge.getParentHandle(handle);
+//                if (MylarPlugin.getContextManager().isTempRaised(parentHandle)) return true;
             }
             if (node != null) {
                 return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
@@ -62,5 +71,17 @@ public class InterestFilter extends ViewerFilter {
 			if (filter instanceof InterestFilter) found = true;
 		}
 		return found;
+	}
+
+	public void setTemporarilyUnfiltered(Object temprarilyUnfiltered) {
+		this.temporarilyUnfiltered = temprarilyUnfiltered;
+	}
+	
+	public void resetTemporarilyUnfiltered() {
+		this.temporarilyUnfiltered = null;
+	}
+
+	public Object getTemporarilyUnfiltered() {
+		return temporarilyUnfiltered;
 	}
 }

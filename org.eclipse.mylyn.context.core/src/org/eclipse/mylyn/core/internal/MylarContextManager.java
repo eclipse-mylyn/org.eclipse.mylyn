@@ -53,7 +53,6 @@ public class MylarContextManager {
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
 
-	private String tempRaisedHandle = null;
     private boolean suppressListenerNotification = false;
     
     private MylarContextExternalizer externalizer = new MylarContextExternalizer();
@@ -153,14 +152,13 @@ public class MylarContextManager {
 
         interestDelta.add(node); // TODO: check that the order of these is sensible
         for (IMylarContextListener listener : listeners) listener.interestChanged(interestDelta);
-        tempRaisedHandle = null;
          
         checkForLandmarkDelta(previousInterest, node);
         
-        if (nextEventIsRaiseChildren && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
-        	tempRaiseChildrenForSelected();
-    		nextEventIsRaiseChildren = false;
-    	} 
+//        if (nextEventIsRaiseChildren && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
+//        	tempRaiseChildrenForSelected();
+//    		nextEventIsRaiseChildren = false;
+//    	} 
         
         return node;
     }
@@ -359,28 +357,6 @@ public class MylarContextManager {
 //        for (ITaskscapeListener listener : listeners) listener.relationshipsChanged();
     }
 
-    public boolean isTempRaised(String handleIdentifier) {
-        if (handleIdentifier == null) return false;
-        if (handleIdentifier.equals(tempRaisedHandle)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    public void tempRaiseChildrenForSelected() {
-        if (activeContext.getActiveNode() == null) return;
-            
-        tempRaisedHandle = activeContext.getActiveNode().getElementHandle();
-        for (IMylarContextListener listnener : listeners) listnener.presentationSettingsChanged(IMylarContextListener.UpdateKind.FILTER);
-//        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(composite.getActiveElement().getKind());
-//        String parentHandle = adapter.getParentHandle(tempRaisedHandle);
-//        ITaskscapeNode parentNode = getNode(parentHandle);
-//        if (parentNode != null)  {
-//            for (ITaskscapeListener listnener : listeners) listnener.interestChanged(parentNode);
-//        }
-    }
-
     public void refreshRelatedElements() {
 //        throw new RuntimeException("unimplemented");
     	for(IMylarStructureBridge bridge: MylarPlugin.getDefault().getStructureBridges().values()){
@@ -410,10 +386,6 @@ public class MylarContextManager {
 	            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
 	        }
         }
-    }
-
-    public String getTempRaisedHandle() {
-        return tempRaisedHandle;
     }
 
     public static ScalingFactors getScalingFactors() {
