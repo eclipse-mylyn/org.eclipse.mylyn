@@ -96,6 +96,7 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 		m = p.matcher(comment.toLowerCase().trim());
 		boolean b2 = m.matches();
 		
+		// XXX walk forward from where we are
 		if(b || b2){
 	
 			int start = comment.toLowerCase().indexOf("bug");
@@ -110,14 +111,19 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 			if(end == -1)
 				end = comment.length();
 
-			int bugId = Integer.parseInt(comment.substring(endCommentStart, end).trim());
+			try{
+				int bugId = Integer.parseInt(comment.substring(endCommentStart, end).trim());
+				
 			
-			start += commentStart;
-			end += commentStart;
-		
-			if(startOffset >= start && endOffset <= end){
+				start += commentStart;
+				end += commentStart;
+			
+				if(startOffset >= start && endOffset <= end){
 				IRegion sregion= new Region(start, end-start);
-				return new IHyperlink[] {new BugzillaHyperLink(sregion, bugId)};
+					return new IHyperlink[] {new BugzillaHyperLink(sregion, bugId)};
+				}
+			} catch (NumberFormatException e){
+				return null;
 			}
 		}
 		return null;
