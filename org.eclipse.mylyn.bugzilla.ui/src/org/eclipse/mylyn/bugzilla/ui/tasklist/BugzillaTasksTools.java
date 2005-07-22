@@ -11,7 +11,7 @@
 /*
  * Created on Jan 13, 2005
   */
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;

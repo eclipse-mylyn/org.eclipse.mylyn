@@ -21,14 +21,14 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaHit;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
-import org.eclipse.mylar.tasks.AbstractCategory;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.internal.TaskCategory;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaHit;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -41,7 +41,7 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class RefreshBugzillaReportsAction extends Action implements IViewActionDelegate{
 
-	public static final String ID = "org.eclipse.mylar.tasks.actions.refresh.bugdb";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.refresh.bugdb";
 
 	private boolean showProgress = true;
 
@@ -70,11 +70,11 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 			refreshTasksAndQueries();
 		}
 		
-		for(ITask task: MylarTasksPlugin.getTaskListManager().getTaskList().getActiveTasks()){
+		for(ITask task: MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks()){
 			if(task instanceof BugzillaTask){
-				ITask found = MylarTasksPlugin.getTaskListManager().getTaskForHandle(task.getHandle());
+				ITask found = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle());
 				if(found == null){
-					MylarTasksPlugin.getTaskListManager().addRootTask(task);
+					MylarTasklistPlugin.getTaskListManager().addRootTask(task);
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
 							BugzillaTask.getBugId(task.getHandle()) + 
 							" has been moved to the root since it is activated and has disappeared from a query.");
@@ -134,14 +134,14 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 	}
 
 	private void refreshTasksAndQueries() {
-		List<ITask> tasks = MylarTasksPlugin.getTaskListManager().getTaskList().getRootTasks();
+		List<ITask> tasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getRootTasks();
 
 		for (ITask task : tasks) {
 			if (task instanceof BugzillaTask && !task.isCompleted()) {
 				((BugzillaTask) task).refresh();
 			}
 		}
-		for (AbstractCategory cat : MylarTasksPlugin
+		for (AbstractCategory cat : MylarTasklistPlugin
 				.getTaskListManager().getTaskList().getCategories()) {
 			if (cat instanceof TaskCategory) {
 				for (ITask task : ((TaskCategory) cat).getChildren()) {

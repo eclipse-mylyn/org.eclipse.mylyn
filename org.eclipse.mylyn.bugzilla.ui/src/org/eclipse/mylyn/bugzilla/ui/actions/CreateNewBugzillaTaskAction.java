@@ -19,13 +19,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskHandler;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.internal.TaskCategory;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -36,7 +36,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class CreateNewBugzillaTaskAction extends Action implements IViewActionDelegate{
 	
-	public static final String ID = "org.eclipse.mylar.tasks.actions.create.bug";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.bug";
 		
 	public CreateNewBugzillaTaskAction() {
 		setText("Create and Add Bugzilla Report");
@@ -82,7 +82,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    if(TaskListView.getDefault() != null)
 		    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
 	    	
-		    ITaskHandler taskHandler = MylarTasksPlugin.getDefault().getTaskHandlerForElement(newTask);
+		    ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(newTask);
 		    if(taskHandler != null){
 		    	ITask addedTask = taskHandler.taskAdded(newTask);
 		    	if(addedTask instanceof BugzillaTask){
@@ -96,7 +96,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    if (selectedObject instanceof TaskCategory){
 		        ((TaskCategory)selectedObject).addTask(newTask);
 		    } else { 
-		        MylarTasksPlugin.getTaskListManager().addRootTask(newTask);
+		        MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);
 		    }
 		    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 		    newTask.openTaskInEditor();

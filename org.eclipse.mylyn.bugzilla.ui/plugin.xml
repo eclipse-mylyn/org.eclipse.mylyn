@@ -86,8 +86,8 @@
            <editor
            icon="icons/elcl16/bug.gif"
            name="Bugzilla task viewer"
-           class="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskEditor"
-           id="org.eclipse.mylar.bugzilla.ui.tasks.bugzillaTaskEditor"/>
+           class="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor"
+           id="org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor"/>
    </extension>   
    <extension
          id="org.eclipse.mylar.bugzilla.help.context"
@@ -107,10 +107,10 @@
    </extension>
    
    <extension
-         point="org.eclipse.mylar.tasks.taskListContributor">
+         point="org.eclipse.mylar.tasklist.taskListContributor">
       <taskHandler
-            taskHandlerClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskHandler"
-            externalizerClass="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskExternalizer"
+            taskHandlerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskHandler"
+            externalizerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
             id="org.eclipse.mylar.bugzilla.ui.tasklist"
             name="Bugzilla Contributer">
       </taskHandler>
@@ -118,13 +118,13 @@
    
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
-			id="org.eclipse.mylar.bugzilla.ui.tasks.actions" 
-	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+			id="org.eclipse.mylar.bugzilla.ui.tasklist.actions" 
+	   		targetID="org.eclipse.mylar.tasklist.ui.views.TaskListView">
   			<action
 	            class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction"
 	            enablesFor="*"
 	            icon="icons/etool16/task-bug-refresh.gif"
-	            id="org.eclipse.mylar.bugzilla.tasks.refresh"
+	            id="org.eclipse.mylar.bugzilla.tasklist.refresh"
 	            label="Refresh Non-Resolved Bugzilla reports"
 	            style="push"
 	            toolbarPath="mylar"
@@ -134,7 +134,7 @@
 	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction"
 	            enablesFor="*"
 	            icon="icons/etool16/category-query-new.gif"
-	            id="org.eclipse.mylar.bugzilla.tasks.addQuery"
+	            id="org.eclipse.mylar.bugzilla.tasklist.addQuery"
 	            label="Add Bugzilla Query"
 	            style="push"
 	            toolbarPath="mylar"
@@ -144,7 +144,7 @@
 	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
 	            enablesFor="*"
 	            icon="icons/etool16/task-bug-new.gif"
-	            id="org.eclipse.mylar.bugzilla.tasks.addNew"
+	            id="org.eclipse.mylar.bugzilla.tasklist.addNew"
 	            label="Create and Add New Bugzilla Report"
 	            style="push"
 	            toolbarPath="mylar"
@@ -154,7 +154,7 @@
 	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
 	            enablesFor="*"
 	            icon="icons/etool16/task-bug.gif"
-	            id="org.eclipse.mylar.bugzilla.tasks.addExisting"
+	            id="org.eclipse.mylar.bugzilla.tasklist.addExisting"
 	            label="Add Existing Bugzilla Report"
 	            style="push"
 	            toolbarPath="mylar"
@@ -167,7 +167,7 @@
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution1"
-            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+            targetID="org.eclipse.mylar.tasklist.ui.views.TaskListView">
          <action
                class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
                enablesFor="*"
@@ -177,7 +177,7 @@
                menubarPath="mylar"
                tooltip="Add Existing Bugzilla Report">
             <enablement>
-               <objectClass name="org.eclipse.mylar.tasks.internal.TaskCategory"/>
+               <objectClass name="org.eclipse.mylar.tasklist.internal.TaskCategory"/>
             </enablement>
          </action>
          <action
@@ -190,9 +190,9 @@
                tooltip="Bugzilla Refresh">
             <enablement>
                <or>
-                    <objectClass name="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask"/>
-					<objectClass name="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory"/>
-               		<objectClass name="org.eclipse.mylar.bugzilla.ui.tasks.BugzillaHit"/>
+                    <objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask"/>
+					<objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory"/>
+               		<objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaHit"/>
                </or>
             </enablement>
          </action>

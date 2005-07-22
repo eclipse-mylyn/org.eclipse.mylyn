@@ -6,8 +6,8 @@ import java.util.List;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskListManager;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskListManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 

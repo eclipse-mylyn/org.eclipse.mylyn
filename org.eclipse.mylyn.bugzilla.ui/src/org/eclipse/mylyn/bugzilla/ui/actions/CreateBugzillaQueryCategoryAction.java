@@ -18,11 +18,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryCategory;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaQueryDialog;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -35,7 +35,7 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class CreateBugzillaQueryCategoryAction extends Action implements IViewActionDelegate {
     
-	public static final String ID = "org.eclipse.mylar.tasks.actions.create.bug.query";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.bug.query";
 	
 	public CreateBugzillaQueryCategoryAction() {
 		setText("Add Bugzilla Query");
@@ -53,7 +53,7 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
     	if(sqd.open() == Dialog.OK){
         	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl());
         	
-            MylarTasksPlugin.getTaskListManager().addCategory(queryCategory);
+            MylarTasklistPlugin.getTaskListManager().addCategory(queryCategory);
             WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
             	protected void execute(IProgressMonitor monitor) throws CoreException {
 	            	queryCategory.refreshBugs();

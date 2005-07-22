@@ -275,7 +275,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylar.tasks"
+         id="org.eclipse.mylar.tasklist"
          download-size="0"
          install-size="0"
          version="0.3.2.2"
@@ -289,7 +289,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylar.bugzilla"
+         id="org.eclipse.mylar.bugs"
          download-size="0"
          install-size="0"
          version="0.3.2.2"

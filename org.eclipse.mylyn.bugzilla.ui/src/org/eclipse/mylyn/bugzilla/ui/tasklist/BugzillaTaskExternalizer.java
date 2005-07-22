@@ -9,20 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.util.Date;
 
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTask.BugTaskState;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.AbstractCategory;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskHandler;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.internal.DefaultTaskListExternalizer;
-import org.eclipse.mylar.tasks.internal.MylarExternalizerException;
-import org.eclipse.mylar.tasks.internal.TaskList;
+import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.internal.DefaultTaskListExternalizer;
+import org.eclipse.mylar.tasklist.internal.MylarExternalizerException;
+import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -171,7 +171,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 			MylarPlugin.log(e, "Failed to read bug report");
 		}
 		
-		ITaskHandler taskHandler = MylarTasksPlugin.getDefault().getTaskHandlerForElement(task);
+		ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(task);
 	    if(taskHandler != null){
     		ITask addedTask = taskHandler.taskAdded(task);
     		if(addedTask instanceof BugzillaTask) task = (BugzillaTask)addedTask;

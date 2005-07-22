@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

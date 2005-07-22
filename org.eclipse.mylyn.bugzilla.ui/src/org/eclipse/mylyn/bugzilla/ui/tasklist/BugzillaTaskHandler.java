@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,13 @@ import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskHandler;
-import org.eclipse.mylar.tasks.ITaskListElement;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.internal.TaskCategory;
-import org.eclipse.mylar.tasks.ui.actions.DeleteAction;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -52,7 +52,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			if (!deleteConfirmed) 
 				return;
 			BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
-			MylarTasksPlugin.getTaskListManager().deleteCategory(cat);
+			MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
 		} else if (element instanceof BugzillaTask) {
 			BugzillaTask task = (BugzillaTask) element;
 			if (task.isActive()) {
@@ -70,9 +70,9 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				return;
 									
 			task.removeReport();
-			MylarTasksPlugin.getTaskListManager().deleteTask(task);
+			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
 			MylarPlugin.getContextManager().taskDeleted(task.getHandle(), task.getPath());
-			IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			// if we couldn't get the page, get out of here
 			if (page == null)
@@ -94,10 +94,10 @@ public class BugzillaTaskHandler implements ITaskHandler {
 
 		if (element instanceof BugzillaTask) {
 			BugzillaTask t = (BugzillaTask) element;
-			MylarTasksPlugin.Report_Open_Mode mode = MylarTasksPlugin.getDefault().getReportMode();
-			if (mode == MylarTasksPlugin.Report_Open_Mode.EDITOR) {
+			MylarTasklistPlugin.Report_Open_Mode mode = MylarTasklistPlugin.getDefault().getReportMode();
+			if (mode == MylarTasklistPlugin.Report_Open_Mode.EDITOR) {
 				t.openTaskInEditor();
-			} else if (mode == MylarTasksPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
+			} else if (mode == MylarTasklistPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
 				BugzillaUITools.openUrl(t.getBugUrl());	    			
 			} else {
 				// not supported
@@ -114,8 +114,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
         	}
 	    } else if(element instanceof BugzillaHit){
 	    	BugzillaHit hit = (BugzillaHit)element;
-	    	MylarTasksPlugin.Report_Open_Mode mode = MylarTasksPlugin.getDefault().getReportMode();
-	    	if (mode == MylarTasksPlugin.Report_Open_Mode.EDITOR) {
+	    	MylarTasklistPlugin.Report_Open_Mode mode = MylarTasklistPlugin.getDefault().getReportMode();
+	    	if (mode == MylarTasklistPlugin.Report_Open_Mode.EDITOR) {
 	    		if(hit.hasCorrespondingActivatableTask()){
 		    		hit.getAssociatedTask().openTaskInEditor();
 		    	} else {
@@ -125,7 +125,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			    	ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
 					viewBugs.schedule();
 		    	}
-    		} else if (mode == MylarTasksPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
+    		} else if (mode == MylarTasklistPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
     			BugzillaUITools.openUrl(hit.getBugUrl());  			
     		} else {
     			// not supported

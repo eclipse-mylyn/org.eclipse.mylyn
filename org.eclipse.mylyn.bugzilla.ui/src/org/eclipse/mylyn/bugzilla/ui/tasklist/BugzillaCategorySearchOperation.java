@@ -11,7 +11,7 @@
 /*
  * Created on Oct 14, 2004
  */
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.util.ArrayList;
 import java.util.List;

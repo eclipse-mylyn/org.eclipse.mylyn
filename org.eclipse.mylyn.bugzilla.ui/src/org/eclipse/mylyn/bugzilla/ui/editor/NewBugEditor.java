@@ -33,7 +33,7 @@ import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

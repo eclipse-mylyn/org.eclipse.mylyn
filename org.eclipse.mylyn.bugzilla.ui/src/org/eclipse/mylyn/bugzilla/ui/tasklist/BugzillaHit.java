@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListElement;
-import org.eclipse.mylar.tasks.TaskListImages;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;

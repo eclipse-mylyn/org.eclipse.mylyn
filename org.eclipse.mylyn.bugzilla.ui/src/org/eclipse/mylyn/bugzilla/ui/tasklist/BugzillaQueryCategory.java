@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +28,11 @@ import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaCategorySearchOperation.ICategorySearchListener;
-import org.eclipse.mylar.tasks.AbstractCategory;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.ITaskListElement;
-import org.eclipse.mylar.tasks.TaskListImages;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
+import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;

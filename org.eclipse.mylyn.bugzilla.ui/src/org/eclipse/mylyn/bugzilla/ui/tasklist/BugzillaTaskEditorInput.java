@@ -11,7 +11,7 @@
 /*
  * Created on 1-Feb-2005
  */
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.io.IOException;
 

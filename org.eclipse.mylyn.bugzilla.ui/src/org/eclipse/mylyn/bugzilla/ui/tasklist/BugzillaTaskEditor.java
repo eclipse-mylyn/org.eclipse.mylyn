@@ -11,7 +11,7 @@
 /*
  * Created on 31-Jan-2005
  */
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,10 +21,10 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
-import org.eclipse.mylar.tasks.TaskListImages;
-import org.eclipse.mylar.tasks.ui.TaskEditor;
-import org.eclipse.mylar.tasks.ui.TaskEditorInput;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.ui.TaskEditor;
+import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;

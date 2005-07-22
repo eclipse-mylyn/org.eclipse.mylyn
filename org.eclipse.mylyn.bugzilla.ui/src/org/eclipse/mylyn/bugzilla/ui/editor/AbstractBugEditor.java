@@ -53,7 +53,7 @@ import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
-import org.eclipse.mylar.bugzilla.ui.tasks.BugzillaTaskEditor;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;

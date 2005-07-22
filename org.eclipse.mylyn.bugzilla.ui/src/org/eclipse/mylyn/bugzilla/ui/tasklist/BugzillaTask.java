@@ -11,7 +11,7 @@
 /*
  * Created on 14-Jan-2005
  */
-package org.eclipse.mylar.bugzilla.ui.tasks;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,9 +37,9 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.MylarTasksPlugin;
-import org.eclipse.mylar.tasks.Task;
-import org.eclipse.mylar.tasks.TaskListImages;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbench;
@@ -276,8 +276,8 @@ public class BugzillaTask extends Task {
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					
-					MylarTasksPlugin.Report_Open_Mode mode = MylarTasksPlugin.getDefault().getReportMode();
-					if (mode == MylarTasksPlugin.Report_Open_Mode.EDITOR) {
+					MylarTasklistPlugin.Report_Open_Mode mode = MylarTasklistPlugin.getDefault().getReportMode();
+					if (mode == MylarTasklistPlugin.Report_Open_Mode.EDITOR) {
 						
 						try{
 							if(!isBugDownloaded()){
@@ -286,7 +286,7 @@ public class BugzillaTask extends Task {
 							}
 							
 							// get the active workbench page
-							IWorkbenchPage page = MylarTasksPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+							IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 							
 							// if we couldn't get the page, get out of here
 							if (page == null)
@@ -300,7 +300,7 @@ public class BugzillaTask extends Task {
 							MylarPlugin.log(ex, "couldn't open bugzilla task");
 							return;
 						}
-					} else if (mode == MylarTasksPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
+					} else if (mode == MylarTasklistPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
 						BugzillaUITools.openUrl(getBugUrl());	    			
 					}
 				}
