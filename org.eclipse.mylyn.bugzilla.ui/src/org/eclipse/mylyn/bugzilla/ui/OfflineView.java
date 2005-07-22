@@ -22,7 +22,6 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -470,9 +469,11 @@ public class OfflineView extends ViewPart {
 		// If this bug has not been saved offline before, add it to the file.
 		else {
 			// If there is already an offline report with the same id, don't save this report.
-			if (file.find(bug.getId()) >= 0) {
-				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
-				return;
+			int index = -1;
+			if ((index = file.find(bug.getId())) >= 0) {
+				removeReport(getOfflineBugs().get(index));
+//				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
+//				return;
 			}
 			file.add(bug);
 			bug.setOfflineState(true);
