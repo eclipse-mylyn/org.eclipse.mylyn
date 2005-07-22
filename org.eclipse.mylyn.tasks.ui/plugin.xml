@@ -21,7 +21,7 @@
 	  	icon="icons/eview16/task-list.gif" 
 	  	category="org.eclipse.mylar" 
 	  	class="org.eclipse.mylar.tasklist.ui.views.TaskListView" 
-	  	id="org.eclipse.mylar.tasklist.ui.views.TaskListView" /> 
+	  	id="org.eclipse.mylar.tasks.ui.views.TaskListView" /> 
   </extension>
   <extension
         point="org.eclipse.ui.editors">
