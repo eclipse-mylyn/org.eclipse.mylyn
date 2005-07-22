@@ -219,7 +219,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
      * @see org.eclipse.mylar.core.IMylarStructureBridge#canBeLandmark(Object)
      */
     public boolean canBeLandmark(Object element) {
-        return true;
+        return false;
     }
 
     /**

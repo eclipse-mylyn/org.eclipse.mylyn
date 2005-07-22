@@ -20,6 +20,9 @@ import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Tree;
 
 /**
  * @author Mik Kersten
@@ -33,23 +36,40 @@ public class BrowseFilteredListener implements MouseListener {
 	}
 	
 	public void mouseDown(MouseEvent event) {
-		InterestFilter filter = getFilter(viewer);
+		final InterestFilter filter = getFilter(viewer);
+		
 		if (filter == null) return;
 		if (mouseInteractionAccepted(event)) {
 			if (viewer instanceof TreeViewer) {
-				TreeViewer treeViewer = (TreeViewer)viewer;
+				final TreeViewer treeViewer = (TreeViewer)viewer;
 				ISelection selection = treeViewer.getSelection();
 				if (selection instanceof IStructuredSelection) {
-					Object selectedObject = ((IStructuredSelection)selection).getFirstElement();
-					filter.setTemporarilyUnfiltered(selectedObject);
-					treeViewer.refresh(selectedObject, true);
-					treeViewer.expandToLevel(selectedObject, 2);
-				}
+					Object targetObject = null;
+					if (getClickedItem(event) != null) {
+						targetObject = ((IStructuredSelection)selection).getFirstElement();
+					} else if (treeViewer.getTree().getTopItem() != null) {
+						targetObject = treeViewer.getTree().getTopItem().getData();
+					}
+					if (targetObject != null) {
+						filter.setTemporarilyUnfiltered(targetObject);
+						treeViewer.refresh(targetObject, true);
+						treeViewer.expandToLevel(targetObject, 2);
+					}
+				} 
 			} 
 		} else {
 			filter.resetTemporarilyUnfiltered();
 		}
     }
+
+	private Object getClickedItem(MouseEvent event) {
+		if (event.getSource() instanceof Table) {
+			return ((Table)event.getSource()).getItem(new Point(event.x, event.y));
+		} else if (event.getSource() instanceof Tree) {
+			return ((Tree)event.getSource()).getItem(new Point(event.x, event.y));
+		}
+		return null;		
+	}
 
 	private boolean mouseInteractionAccepted(MouseEvent event) {
 		return (event.stateMask & SWT.ALT) != 0;
