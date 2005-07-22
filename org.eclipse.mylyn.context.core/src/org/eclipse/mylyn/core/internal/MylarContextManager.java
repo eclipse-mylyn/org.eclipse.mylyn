@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -350,10 +351,18 @@ public class MylarContextManager {
      */
     public void resetLandmarkRelationshipsOfKind(String reltationKind) {
 //        throw new RuntimeException("unimplemented");
-//        for (ITaskscapeNode landmark : composite.getLandmarks()) {
-//            landmark.removeEdge(kind);
-//        }
-//        for (ITaskscapeListener listener : listeners) listener.relationshipsChanged();
+        for (IMylarContextNode landmark : activeContext.getLandmarks()) {
+        	
+        	for (IMylarContextEdge edge : landmark.getEdges()) {
+        		if (edge.getRelationshipHandle().equals(reltationKind)) {
+        			landmark.getEdges().clear(); // XXX: should go via MylarContext
+        		}
+//				System.err.println(">> " + reltationKind + "::::" + edge.getRelationshipHandle());
+			}
+//        	landmark.getEdges().
+//        	landmark.removeEdge(reltationKind);
+        }
+        for (IMylarContextListener listener : listeners) listener.relationshipsChanged();
     }
 
     public void refreshRelatedElements() {

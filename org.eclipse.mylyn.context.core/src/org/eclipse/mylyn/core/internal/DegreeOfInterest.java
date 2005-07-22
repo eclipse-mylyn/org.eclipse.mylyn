@@ -26,8 +26,10 @@ import org.eclipse.mylar.dt.MylarInterest;
 
 /**
  * @author Mik Kersten
+ * 
+ * TODO: make package-visible
  */
-class DegreeOfInterest implements IDegreeOfInterest {
+public class DegreeOfInterest implements IDegreeOfInterest {
     
     private List<InteractionEvent> events = new ArrayList<InteractionEvent>();
     protected transient ScalingFactors scaling;
@@ -55,7 +57,10 @@ class DegreeOfInterest implements IDegreeOfInterest {
         scaling = MylarContextManager.getScalingFactors();
     }
     
-    void addEvent(InteractionEvent event) {
+    /**
+     * TODO: make package-visible
+     */
+    public void addEvent(InteractionEvent event) {
         events.add(0, event);
         updateEventState(event);
     }

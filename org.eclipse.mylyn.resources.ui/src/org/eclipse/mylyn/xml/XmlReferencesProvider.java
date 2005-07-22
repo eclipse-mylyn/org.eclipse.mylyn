@@ -228,7 +228,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     
                    for(String handle : nodes.keySet()) {
                        
-                       incrementInterest(degreeOfSeparation, PdeStructureBridge.EXTENSION, handle);
+                       incrementInterest(node, PdeStructureBridge.EXTENSION, handle, degreeOfSeparation);
                    }
                    gathered = true;
                 }

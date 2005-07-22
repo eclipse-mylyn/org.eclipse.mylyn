@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylar.core.IDegreeOfInterest;
+import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 
 
@@ -46,12 +47,15 @@ public class MylarContextNode implements IMylarContextNode {
     public String getElementHandle() {
         return handle;
     }
+    
     public void setElementHandle(String elementHandle) {
         this.handle = elementHandle;
     }
+    
     public String getStructureKind() {
         return kind;
     }
+    
     public void setKind(String kind) {
         this.kind = kind;
     }
@@ -64,8 +68,12 @@ public class MylarContextNode implements IMylarContextNode {
         return edges.get(targetHandle);
     }
     
-    public void addEdge(MylarContextEdge edge) {
+    void addEdge(MylarContextEdge edge) {
         edges.put(edge.getTarget().getElementHandle(), edge);
+    }
+    
+    void removeEdge(IMylarContextEdge edge) {
+    	edges.remove(edge.getTarget().getElementHandle());
     }
     
     @Override
@@ -101,7 +109,4 @@ public class MylarContextNode implements IMylarContextNode {
         return handle;
     }
 
-    public void removeEdge(String kindToRemove) {
-        throw new RuntimeException("unimplemented");
-    }
 }

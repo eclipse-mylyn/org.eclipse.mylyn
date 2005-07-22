@@ -196,7 +196,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
                 for(IJavaElement element : relatedHandles) {
                     if (!acceptResultElement(element)) continue;
 
-                        incrementInterest(degreeOfSeparation, JavaStructureBridge.EXTENSION, element.getHandleIdentifier());
+                        incrementInterest(node, JavaStructureBridge.EXTENSION, element.getHandleIdentifier(), degreeOfSeparation);
                 } 
                 gathered = true;
             }

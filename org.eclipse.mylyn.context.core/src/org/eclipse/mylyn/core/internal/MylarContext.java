@@ -64,7 +64,9 @@ public class MylarContext implements IMylarContext, Serializable {
     }
 
     public IMylarContextNode parseEvent(InteractionEvent event) {
-        interactionHistory.add(event);
+//    	if (!event.getKind().equals(InteractionEvent.Kind.PREDICTION)) { // TODO: remove this condition
+    		interactionHistory.add(event);
+//    	}
         return parseInteractionEvent(event);
     }
 
@@ -76,6 +78,7 @@ public class MylarContext implements IMylarContext, Serializable {
             node = new MylarContextNode(event.getStructureKind(), event.getStructureHandle(), this);
             nodes.put(event.getStructureHandle(), node);
         }
+//        boolean addToInteractionHistory = true;
         if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null && lastEdgeNode != null
             && event.getKind() != InteractionEvent.Kind.PROPAGATION) {
             IMylarContextNode navigationSource = nodes.get(lastEdgeEvent.getStructureHandle());
@@ -84,12 +87,15 @@ public class MylarContext implements IMylarContext, Serializable {
                if (edge == null) {
                     edge = new MylarContextEdge(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node, this);
                     lastEdgeNode.addEdge(edge);
+//                    suppressExternalization = false;
                 }
+//               System.err.println(">>>>> " + edge);
                 DegreeOfInterest doi = (DegreeOfInterest)edge.getDegreeOfInterest();
                 doi.addEvent(event); 
             }
         } 
         DegreeOfInterest doi = (DegreeOfInterest)node.getDegreeOfInterest();
+        
         doi.addEvent(event); 
         if (doi.isLandmark()) {
         	landmarks.put(node.getElementHandle(), node);

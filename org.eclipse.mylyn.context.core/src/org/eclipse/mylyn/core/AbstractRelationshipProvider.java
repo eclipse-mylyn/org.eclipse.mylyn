@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 
-
 /**
  * @author Mik Kersten
  * 
@@ -65,10 +64,33 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
 //        MylarPlugin.getTaskscapeManager().removeEdge(element, id);
     }
      
-    protected void incrementInterest(int degreeOfSeparation, String elementKind, String elementHandle) {
+    /** 
+     * TODO: plug this stuff into the persistent context properly
+     * @param sourceNode TODO
+     */
+    protected void incrementInterest(IMylarContextNode node, String elementKind, String elementHandle, int degreeOfSeparation) {
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
+//    	((DegreeOfInterest)targetNode.getDegreeOfInterest()).addEvent(
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
         MylarPlugin.getContextManager().handleInteractionEvent(event);
+        
+//        CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(elementHandle);
+//        MylarContextNode concreteTargetNode = null;
+//        if (targetNode.getNodes().size() != 1) {
+//        	return;
+//        } else {
+//        	concreteTargetNode = targetNode.getNodes().iterator().next();
+//        }
+//        if (concreteTargetNode != null) {
+//	        for (MylarContextNode sourceNode : ((CompositeContextNode)node).getNodes()) {
+//	        	
+//	        	MylarContextEdge edge = new MylarContextEdge(elementKind, getId(), sourceNode, concreteTargetNode, sourceNode.getContext());
+//	        	sourceNode.addEdge(edge);
+//
+//			}
+//        }
+//        InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
+//        MylarPlugin.getContextManager().handleInteractionEvent(event);
     }
     
     protected abstract String getSourceId();
