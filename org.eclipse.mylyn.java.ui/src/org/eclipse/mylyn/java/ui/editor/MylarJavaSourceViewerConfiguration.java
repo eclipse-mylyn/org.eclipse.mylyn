@@ -134,7 +134,7 @@ public class MylarJavaSourceViewerConfiguration extends
 
     private List<AbstractMylarHyperlinkDetector> hyperlinkDetectors;
 
-    private static boolean extensionsRead = false;
+    private boolean extensionsRead = false;
 
     public static final String JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.java.javaEditorContributor";
     	public static final String JAVA_HYPERLINK_DETECTOR_ELEMENT = "hyperlinkDetector";
