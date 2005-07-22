@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
@@ -386,6 +387,7 @@ public class BugzillaTask extends Task {
 //				notifyTaskDataChange();
 				return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 			}catch(Exception e){
+				MessageDialog.openError(null, "Error Opening Bug", "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()));
 				MylarPlugin.log(e, "couldn't open");
 			}
 			return Status.CANCEL_STATUS;
