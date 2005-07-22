@@ -294,7 +294,7 @@ public class BugzillaTask extends Task {
 							
 							// try to open an editor on the input bug
 							//page.openEditor(input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
-							page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasks.bugzillaTaskEditor");
+							page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor");
 						} 
 						catch (Exception ex) {
 							MylarPlugin.log(ex, "couldn't open bugzilla task");
