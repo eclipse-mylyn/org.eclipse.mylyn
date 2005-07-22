@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="javaEditorContributor" name="Mylar Java Editor Contributor" schema="schema/javaEditorContributor.exsd"/>
 
    <extension
          name="Mylar Java startup"
