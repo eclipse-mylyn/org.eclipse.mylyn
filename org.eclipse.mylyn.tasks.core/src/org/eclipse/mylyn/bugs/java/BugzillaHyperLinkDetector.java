@@ -116,7 +116,7 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 			end += commentStart;
 		
 			if(startOffset >= start && endOffset <= end){
-				IRegion sregion= new Region(start, end);
+				IRegion sregion= new Region(start, end-start);
 				return new IHyperlink[] {new BugzillaHyperLink(sregion, bugId)};
 			}
 		}

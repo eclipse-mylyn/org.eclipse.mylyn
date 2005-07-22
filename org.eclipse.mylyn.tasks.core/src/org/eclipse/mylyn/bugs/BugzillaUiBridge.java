@@ -25,11 +25,8 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.ui.IEditorPart;
@@ -64,15 +61,15 @@ public class BugzillaUiBridge implements IMylarUiBridge {
         List<BugzillaOpenStructure> l = new ArrayList<BugzillaOpenStructure>(1);
         l.add(new BugzillaOpenStructure(server, bugId, commentNumer));
         
-        ITask task= MylarTasklistPlugin.getTaskListManager().getTaskForHandle(bugHandle);
-        if (task != null && task instanceof BugzillaTask) {
-            BugzillaTask bugzillaTask = (BugzillaTask)task;
-            bugzillaTask.openTask(commentNumer);
-        } else {
+//        ITask task= MylarTasklistPlugin.getTaskListManager().getTaskForHandle(bugHandle);
+//        if (task != null && task instanceof BugzillaTask) {
+//            BugzillaTask bugzillaTask = (BugzillaTask)task;
+//            bugzillaTask.openTask(commentNumer);
+//        } else {
             // open the bug in the editor
             ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", l);
             viewBugs.schedule();
-        }
+//        }
     }
     
     public ILabelProvider getLabelProvider() {
