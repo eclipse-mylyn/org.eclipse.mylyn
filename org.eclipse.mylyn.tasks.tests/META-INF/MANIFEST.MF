@@ -1,23 +1,23 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tasklist Tests Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.tasks.tests
+Bundle-SymbolicName: org.eclipse.mylar.tasklist.tests
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylar.tasks.tests.MylarTasksTestsPlugin
+Bundle-Activator: org.eclipse.mylar.tasklist.tests.MylarTasksTestsPlugin
 Bundle-Vendor: University of British Columbia
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.mylar.core,
  org.eclipse.mylar.core.tests,
- org.eclipse.mylar.tasks,
  org.eclipse.jdt.core,
  org.eclipse.core.resources,
  org.eclipse.ui,
  org.eclipse.mylar.bugzilla.core,
  org.eclipse.mylar.bugzilla.ui,
- org.eclipse.mylar.bugzilla
+ org.eclipse.mylar.bugs,
+ org.eclipse.mylar.tasklist
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-tasklist-tests.jar
-Export-Package: org.eclipse.mylar.tasks.bugzilla.tests,
- org.eclipse.mylar.tasks.tests
+Export-Package: org.eclipse.mylar.tasklist.bugzilla.tests,
+ org.eclipse.mylar.tasklist.tests

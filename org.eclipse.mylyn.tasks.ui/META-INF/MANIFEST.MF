@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Task Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.tasks; singleton:=true
+Bundle-Name: Mylar TaskList Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.tasklist; singleton:=true
 Bundle-Version: 0.3.2.2
-Bundle-Activator: org.eclipse.mylar.tasks.MylarTasksPlugin
+Bundle-Activator: org.eclipse.mylar.tasklist.MylarTasklistPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -21,9 +21,9 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: mylar-tasklist.jar
-Export-Package: org.eclipse.mylar.tasks,
- org.eclipse.mylar.tasks.internal,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.tasks.ui.actions,
- org.eclipse.mylar.tasks.ui.preferences,
- org.eclipse.mylar.tasks.ui.views
+Export-Package: org.eclipse.mylar.tasklist,
+ org.eclipse.mylar.tasklist.internal,
+ org.eclipse.mylar.tasklist.ui,
+ org.eclipse.mylar.tasklist.ui.actions,
+ org.eclipse.mylar.tasklist.ui.preferences,
+ org.eclipse.mylar.tasklist.ui.views

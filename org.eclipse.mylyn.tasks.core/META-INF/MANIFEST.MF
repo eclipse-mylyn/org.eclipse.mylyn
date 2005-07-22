@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Bugzilla Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.bugzilla;singleton:=true
+Bundle-Name: Mylar Bugs Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.bugs; singleton:=true
 Bundle-Version: 0.3.2.2
-Bundle-Activator: org.eclipse.mylar.bugzilla.MylarBugzillaPlugin
+Bundle-Activator: org.eclipse.mylar.bugs.MylarBugzillaPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.eclipse.ui.ide,
  org.eclipse.core.resources,
- org.eclipse.mylar.tasks
+ org.eclipse.mylar.tasklist
 Eclipse-AutoStart: true
-Export-Package: org.eclipse.mylar.bugzilla,
- org.eclipse.mylar.tasks.search
+Export-Package: org.eclipse.mylar.bugs,
+ org.eclipse.mylar.bugs.search

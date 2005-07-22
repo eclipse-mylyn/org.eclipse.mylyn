@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="taskListContributor" name="test" schema="schema/taskListContributor.exsd"/>
+   <extension-point id="taskListContributor" name="TaskList Contributor" schema="schema/taskListContributor.exsd"/>
 
     <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
-               <view id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+               <viewShortcut id="org.eclipse.mylar.tasklist.ui.views.TaskListView"/>
+               <view id="org.eclipse.mylar.tasklist.ui.views.TaskListView"
                     relative="org.eclipse.ui.views.ContentOutline"
                     relationship="top"/>
           </perspectiveExtension>
 		  <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
-               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+               <viewShortcut id="org.eclipse.mylar.tasklist.ui.views.TaskListView"/>
           </perspectiveExtension>
 	</extension>
 
@@ -20,16 +20,16 @@
 	  <view name="Mylar Task List" 
 	  	icon="icons/eview16/task-list.gif" 
 	  	category="org.eclipse.mylar" 
-	  	class="org.eclipse.mylar.tasks.ui.views.TaskListView" 
-	  	id="org.eclipse.mylar.tasks.ui.views.TaskListView" /> 
+	  	class="org.eclipse.mylar.tasklist.ui.views.TaskListView" 
+	  	id="org.eclipse.mylar.tasklist.ui.views.TaskListView" /> 
   </extension>
   <extension
         point="org.eclipse.ui.editors">
      <editor
            icon="icons/eview16/task.gif"
-           class="org.eclipse.mylar.tasks.ui.TaskEditor"
+           class="org.eclipse.mylar.tasklist.ui.TaskEditor"
            name="Task Viewer"
-           id="org.eclipse.mylar.tasks.ui.taskEditor"/>
+           id="org.eclipse.mylar.tasklist.ui.taskEditor"/>
   </extension>
   
   <extension point="org.eclipse.ui.commands">
@@ -37,8 +37,8 @@
   <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Task List"
-         class="org.eclipse.mylar.tasks.ui.preferences.MylarTaskPreferencePage"
-         id="org.eclipse.mylar.tasks.ui.preferences"
+         class="org.eclipse.mylar.tasklist.ui.preferences.MylarTaskPreferencePage"
+         id="org.eclipse.mylar.tasklist.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
       </page>  
    </extension>

@@ -66,7 +66,7 @@ public class BugzillaTaskEditor extends TaskEditor {
 		super();
 
 		// get the workbench page and add a listener so we can detect when it closes
-//		IWorkbench wb = MylarTasksPlugin.getDefault().getWorkbench();
+//		IWorkbench wb = MylarTasklistPlugin.getDefault().getWorkbench();
 //		IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
 //		IWorkbenchPage ap = aw.getActivePage();
 //		BugzillaTaskEditorListener listener = new BugzillaTaskEditorListener();

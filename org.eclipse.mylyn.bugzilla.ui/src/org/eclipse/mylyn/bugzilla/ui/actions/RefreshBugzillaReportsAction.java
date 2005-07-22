@@ -95,11 +95,11 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 // XXX refactored active search
 				// clear the caches
 //				Set<String> cachedHandles = new HashSet<String>();
-//				cachedHandles.addAll(MylarTasksPlugin.getDefault().getStructureBridge().getCachedHandles());
-//				cachedHandles.addAll(MylarTasksPlugin.getReferenceProvider().getCachedHandles());
-//				MylarTasksPlugin.getDefault().getStructureBridge().clearCache();
-//				MylarTasksPlugin.getReferenceProvider().clearCachedReports();
-//				BugzillaStructureBridge bridge = MylarTasksPlugin.getDefault().getStructureBridge();
+//				cachedHandles.addAll(MylarTasklistPlugin.getDefault().getStructureBridge().getCachedHandles());
+//				cachedHandles.addAll(MylarTasklistPlugin.getReferenceProvider().getCachedHandles());
+//				MylarTasklistPlugin.getDefault().getStructureBridge().clearCache();
+//				MylarTasklistPlugin.getReferenceProvider().clearCachedReports();
+//				BugzillaStructureBridge bridge = MylarTasklistPlugin.getDefault().getStructureBridge();
 				
 //				monitor.beginTask("Downloading Bugs", cachedHandles.size());
 //				for (String key : cachedHandles) {
