@@ -5,5 +5,9 @@
    <extension
          name="Mylar Bugzilla startup"
          point="org.eclipse.ui.startup">
+   </extension>
+   <extension
+         point="org.eclipse.mylar.java.javaEditorContributor">
+      <hyperlinkDetector class="org.eclipse.mylar.bugs.java.BugzillaHyperLinkDetector"/>
    </extension> 
 </plugin>
