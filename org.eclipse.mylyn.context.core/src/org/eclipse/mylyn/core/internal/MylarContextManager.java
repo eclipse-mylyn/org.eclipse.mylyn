@@ -56,7 +56,6 @@ public class MylarContextManager {
     private boolean suppressListenerNotification = false;
     
     private MylarContextExternalizer externalizer = new MylarContextExternalizer();
-	private boolean nextEventIsRaiseChildren;
     
     private static ScalingFactors scalingFactors = new ScalingFactors();
     
@@ -413,9 +412,6 @@ public class MylarContextManager {
 		}		
 	}
 
-	public void setNextEventIsRaiseChildren() {
-		nextEventIsRaiseChildren = true;
-	}
 
 	public boolean hasActiveContext() {
 		return activeContext.getContextMap().values().size() > 0;

@@ -64,10 +64,10 @@
          	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
       	</action> 
         <action
-               definitionId="org.eclipse.mylar.java.ui.search.taskscape"
+               definitionId="org.eclipse.mylar.java.ui.search.context"
                label="Search the current task context"
                class="org.eclipse.mylar.java.ui.actions.FindReferencesInTaskscapeAction"
-               id="org.eclipse.mylar.java.ui.search.taskscape">
+               id="org.eclipse.mylar.java.ui.search.context">
          </action>
     </actionSet>
   </extension>
@@ -190,7 +190,7 @@
 	  <command
          categoryId="org.eclipse.mylar.ui"
          description="Search the current task context"
-         id="org.eclipse.mylar.java.ui.search.taskscape"
+         id="org.eclipse.mylar.java.ui.search.context"
          name="Search Task Context">
       </command>
    </extension>
@@ -199,7 +199,7 @@
 	  <key
             sequence="M2+M3+G"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.java.ui.search.taskscape"
+            commandId="org.eclipse.mylar.java.ui.search.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key> 
    </extension> 

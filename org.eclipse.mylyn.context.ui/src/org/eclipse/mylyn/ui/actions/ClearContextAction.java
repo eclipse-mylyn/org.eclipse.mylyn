@@ -17,10 +17,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasks.ITask;
-import org.eclipse.mylar.tasks.Task;
-import org.eclipse.mylar.tasks.TaskListImages;
-import org.eclipse.mylar.tasks.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.Workbench;
@@ -30,7 +30,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class ClearContextAction extends Action implements IViewActionDelegate{
 
-	public static final String ID = "org.eclipse.mylar.tasks.actions.context.clear";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.clear";
 	
 	public ClearContextAction() {
 		setText("Clear Task Context");

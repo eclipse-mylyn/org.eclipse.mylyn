@@ -52,7 +52,7 @@
 	 
      <viewerContribution
            id="org.eclipse.mylar.ui.tasklist.contribution"
-           targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+           targetID="org.eclipse.mylar.tasklist.ui.views.TaskListView">
         <action
               class="org.eclipse.mylar.ui.actions.ClearContextAction"
               enablesFor="*"
@@ -63,7 +63,7 @@
               tooltip="Clear Task Context">
            <enablement>
               <or>
-                 <objectClass name="org.eclipse.mylar.tasks.ITask"/>
+                 <objectClass name="org.eclipse.mylar.tasklist.ITask"/>
               </or>
            </enablement>
         </action>
@@ -295,7 +295,7 @@
       </viewContribution> 
    </extension>
  <extension
-       point="org.eclipse.mylar.tasks.taskListContributor">
+       point="org.eclipse.mylar.tasklist.taskListContributor">
     <dynamicPopupMenu class="org.eclipse.mylar.ui.internal.views.TaskListHighlighterMenuContributor"/>
  </extension>
 </plugin>
