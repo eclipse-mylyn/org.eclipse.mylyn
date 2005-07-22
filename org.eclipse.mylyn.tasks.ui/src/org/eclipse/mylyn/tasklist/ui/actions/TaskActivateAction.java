@@ -29,7 +29,7 @@ public class TaskActivateAction extends Action {
 		setId(ID);
 	}
 	
-	public void run() {		
+	public void run() {	
 		MylarTasklistPlugin.getTaskListManager().activateTask(task);
 	}
 }

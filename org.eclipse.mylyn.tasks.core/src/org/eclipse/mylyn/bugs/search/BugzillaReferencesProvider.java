@@ -96,7 +96,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
                         
                         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){
 							public void run() {
-								incrementInterest(degreeOfSeparation, BugzillaStructureBridge.EXTENSION, handle);
+								incrementInterest(node, BugzillaStructureBridge.EXTENSION, handle, degreeOfSeparation);
 							}
                         });
                     }
