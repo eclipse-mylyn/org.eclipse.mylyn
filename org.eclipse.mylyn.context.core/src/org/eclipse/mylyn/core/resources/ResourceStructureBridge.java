@@ -93,7 +93,6 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     public boolean canBeLandmark(Object element) {
     	return element instanceof IFile;
 //    	if (element instanceof IFile) {
-//    		System.err.println(((IFile)element).getType() == IResource.FOLDER);
 //    		return ((IFile)element).getType() == IResource.FILE;
 //    	}
 //    	return false;

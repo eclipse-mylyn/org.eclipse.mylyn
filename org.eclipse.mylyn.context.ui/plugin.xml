@@ -52,7 +52,7 @@
 	 
      <viewerContribution
            id="org.eclipse.mylar.ui.tasklist.contribution"
-           targetID="org.eclipse.mylar.tasklist.ui.views.TaskListView">
+           targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
         <action
               class="org.eclipse.mylar.ui.actions.ClearContextAction"
               enablesFor="*"
@@ -294,7 +294,7 @@
   		</action>  
       </viewContribution> 
    </extension>
- <extension
+   <extension
        point="org.eclipse.mylar.tasklist.taskListContributor">
     <dynamicPopupMenu class="org.eclipse.mylar.ui.internal.views.TaskListHighlighterMenuContributor"/>
  </extension>

@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 12, 2004
-  */
+
 package org.eclipse.mylar.core.internal;
 
 import java.io.File;
@@ -19,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextEdge;
@@ -54,6 +53,9 @@ public class MylarContextManager {
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
 
+	// TODO: move
+	private List<IActionExecutionListener> actionExecutionListeners = new ArrayList<IActionExecutionListener>();
+	
     private boolean suppressListenerNotification = false;
     
     private MylarContextExternalizer externalizer = new MylarContextExternalizer();
@@ -357,7 +359,6 @@ public class MylarContextManager {
         		if (edge.getRelationshipHandle().equals(reltationKind)) {
         			landmark.getEdges().clear(); // XXX: should go via MylarContext
         		}
-//				System.err.println(">> " + reltationKind + "::::" + edge.getRelationshipHandle());
 			}
 //        	landmark.getEdges().
 //        	landmark.removeEdge(reltationKind);
@@ -421,7 +422,6 @@ public class MylarContextManager {
 		}		
 	}
 
-
 	public boolean hasActiveContext() {
 		return activeContext.getContextMap().values().size() > 0;
 	}
@@ -452,4 +452,14 @@ public class MylarContextManager {
 	public Set<IMylarContextNode> getActiveContextResources() {
 		return getInterestingResources(activeContext);
     }
+
+	public void actionObserved(IAction action, String info) {
+		for (IActionExecutionListener listener : actionExecutionListeners) {
+			listener.actionObserved(action);
+		}
+	}
+
+	public List<IActionExecutionListener> getActionExecutionListeners() {
+		return actionExecutionListeners;
+	}
 }

@@ -89,7 +89,6 @@ public class MylarContext implements IMylarContext, Serializable {
                     lastEdgeNode.addEdge(edge);
 //                    suppressExternalization = false;
                 }
-//               System.err.println(">>>>> " + edge);
                 DegreeOfInterest doi = (DegreeOfInterest)edge.getDegreeOfInterest();
                 doi.addEvent(event); 
             }
@@ -188,6 +187,7 @@ public class MylarContext implements IMylarContext, Serializable {
 	                -node.getDegreeOfInterest().getDecayValue()));
 		}
 	}
+
 }
 
 //private void writeObject(ObjectOutputStream stream) throws IOException {
