@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="taskListContributor" name="TaskList Contributor" schema="schema/taskListContributor.exsd"/>
+    <extension-point id="taskListContributor" name="TaskList Contributor" schema="schema/taskListContributor.exsd"/>
 
     <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-               <viewShortcut id="org.eclipse.mylar.tasklist.ui.views.TaskListView"/>
-               <view id="org.eclipse.mylar.tasklist.ui.views.TaskListView"
+               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+               <view id="org.eclipse.mylar.tasks.ui.views.TaskListView"
                     relative="org.eclipse.ui.views.ContentOutline"
                     relationship="top"/>
           </perspectiveExtension>
 		  <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
-               <viewShortcut id="org.eclipse.mylar.tasklist.ui.views.TaskListView"/>
+               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
           </perspectiveExtension>
 	</extension>
 

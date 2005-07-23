@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 
@@ -30,6 +31,7 @@ public class TaskActivateAction extends Action {
 	}
 	
 	public void run() {	
+		MylarPlugin.getContextManager().actionObserved(this, Boolean.TRUE.toString());
 		MylarTasklistPlugin.getTaskListManager().activateTask(task);
 	}
 }

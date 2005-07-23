@@ -35,7 +35,7 @@ public class TaskDeactivateAction extends Action {
 	}
 	
 	public void run() {
-//        MylarPlugin.getDefault().actionObserved(this);
+		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
         MylarTasklistPlugin.getTaskListManager().deactivateTask(task);
         IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 

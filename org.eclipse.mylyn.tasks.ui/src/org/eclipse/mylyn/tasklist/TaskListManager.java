@@ -139,6 +139,7 @@ public class TaskListManager {
     	updateTaskscapeReferenceHelper(rootTasks, prevDir);
     	
     }
+
     public void updateTaskscapeReferenceHelper(List<ITask> list, String prevDir) {
     	for (ITask task : list) {
 			if (!task.getPath().startsWith("task-")) {
@@ -166,6 +167,7 @@ public class TaskListManager {
 //			updateTaskscapeReferenceHelper(task.getChildren(), prevDir);
     	}
     }
+    
     public void setTaskListFile(File f) {
     	if (this.taskListFile.exists()) {
     		this.taskListFile.delete();
