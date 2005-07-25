@@ -44,6 +44,7 @@ import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.Operation;
+import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
@@ -330,8 +331,15 @@ public class ExistingBugEditor extends AbstractBugEditor
 							OfflineView.removeReport(bug);
 						} catch (BugzillaException e) {
 						    BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while posting the bug.", "I/O Error");
-						}
-						catch (LoginException e) {
+						}catch (PossibleBugzillaFailureException e) {
+							// XXX add link to 
+							MessageDialog
+							.openError(
+									null,
+									"Possible Bugzilla Failure",
+									"Bugzilla may not have posted your bug.\n" + e.getMessage());
+							BugzillaPlugin.log(e);
+						} catch (LoginException e) {
 							MessageDialog.openError(null, "Login Error",
 									"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
 						}	

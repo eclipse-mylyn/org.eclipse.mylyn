@@ -85,8 +85,9 @@ public class BugPost {
 	 * Post the bug to the bugzilla server
 	 * @return The result of the responses
 	 * @throws BugzillaException
+	 * @throws PossibleBugzillaFailureException 
 	 */	
-	public String post() throws BugzillaException, LoginException {
+	public String post() throws BugzillaException, LoginException, PossibleBugzillaFailureException {
 		return post(false);
 	}
 	
@@ -95,8 +96,9 @@ public class BugPost {
  	 * @param isDebug Whether we are debugging or not - if it is debug, we get the respose printed to std out
 	 * @throws BugzillaException
 	 * @throws LoginException
+	 * @throws PossibleBugzillaFailureException 
 	 */	
-	public String post(boolean isDebug) throws BugzillaException, LoginException {
+	public String post(boolean isDebug) throws BugzillaException, LoginException, PossibleBugzillaFailureException {
 		BufferedOutputStream out = null;
 		BufferedReader in = null;
 		
@@ -146,6 +148,7 @@ public class BugPost {
 				System.out.println("RECEIVING:");
 			String aString = in.readLine();
 			
+			boolean possibleFailure = true;
 			
 			while (aString != null) {
 				if (isDebug)
@@ -155,6 +158,8 @@ public class BugPost {
 				if(result == null && (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf("error") != -1))
 				{
 					throw new LoginException("Bugzilla login information incorrect");
+				} else if( aString.toLowerCase().matches(".*bug\\s+processed.*")){
+					possibleFailure = false;
 				}
 				
 				// get the bug number if it is required
@@ -167,6 +172,7 @@ public class BugPost {
 							stopIndex = aString.toLowerCase().indexOf(postfix2.toLowerCase(), startIndex);
 						if (stopIndex > -1) {
 							result = (aString.substring(startIndex, stopIndex)).trim();
+							possibleFailure = false;
 							if (!isDebug) {
 								break;
 							}
@@ -174,6 +180,12 @@ public class BugPost {
 					}
 				}
 				aString = in.readLine();	
+			}
+			
+			if((result == null || result.compareTo("") == 0) && (prefix != null && postfix1 != null && postfix2 != null)){
+				throw new PossibleBugzillaFailureException("Could not find bug number for new bug.");
+			} else if(possibleFailure) {
+				throw new PossibleBugzillaFailureException("Could not find \"Bug Processed\".");
 			}
 			
 			// return the bug number

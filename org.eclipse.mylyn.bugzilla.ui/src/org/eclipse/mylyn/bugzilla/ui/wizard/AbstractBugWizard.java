@@ -28,6 +28,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -135,6 +136,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		if (getWizardDataPage().serverSelected()) {
+			getWizardDataPage().saveDataToModel();
 			// If the bug report is sent successfully,
 			// then close the wizard and open the bug in an editor
 			if (postBug()) {
@@ -250,6 +252,14 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 												null,
 												"I/O Error",
 												"Bugzilla could not post your bug.");
+								BugzillaPlugin.log(e);
+							} catch (PossibleBugzillaFailureException e) {
+								// XXX add link to 
+								MessageDialog
+								.openError(
+										null,
+										"Possible Bugzilla Failure",
+										"Bugzilla may not have posted your bug.\n" + e.getMessage());
 								BugzillaPlugin.log(e);
 							} catch (LoginException e) {
 								// if we had an error with logging in, display an error

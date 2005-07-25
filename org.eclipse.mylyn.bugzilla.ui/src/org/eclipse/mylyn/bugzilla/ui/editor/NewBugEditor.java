@@ -28,6 +28,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
@@ -239,7 +240,15 @@ public class NewBugEditor extends AbstractBugEditor {
 											"I/O Error",
 											"Bugzilla could not post your bug.");
 							BugzillaPlugin.log(e);
-						} catch (LoginException e) {
+						} catch (PossibleBugzillaFailureException e) {
+							// XXX add link to 
+							MessageDialog
+							.openError(
+									null,
+									"Possible Bugzilla Failure",
+									"Bugzilla may not have posted your bug.\n" + e.getMessage());
+							BugzillaPlugin.log(e);
+						}catch (LoginException e) {
 							// if we had an error with logging in, display an error
 							MessageDialog
 									.openError(

@@ -299,7 +299,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 	/**
 	 * Save the data obtained from this point in the wizard to the model.
 	 */
-	protected void saveDataToModel() {
+	public void saveDataToModel() {
 		// get the model that we are using
 		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
 		NewBugModel nbm = wizard.model;
