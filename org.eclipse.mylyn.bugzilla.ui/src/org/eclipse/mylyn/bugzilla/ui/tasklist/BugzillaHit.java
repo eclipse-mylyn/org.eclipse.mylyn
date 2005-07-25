@@ -109,7 +109,7 @@ public class BugzillaHit implements ITaskListElement {
 	}
 
 	public String getBugUrl() {
-		return BugzillaRepository.getBugUrl(id);
+		return BugzillaRepository.getBugUrlWithoutLogin(id);
 	}
 	
 	public boolean isDirectlyModifiable() {

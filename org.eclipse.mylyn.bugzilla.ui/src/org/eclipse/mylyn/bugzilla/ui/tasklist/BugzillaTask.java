@@ -518,7 +518,8 @@ public class BugzillaTask extends Task {
 	}
 	
 	public String getBugUrl() {
-		return BugzillaRepository.getBugUrl(getBugId(handle));
+		// fix for bug 103537 - should login automatically, but dont want to show the login info in the query string
+		return BugzillaRepository.getBugUrlWithoutLogin(getBugId(handle));
 	}
 	
 	@Override
