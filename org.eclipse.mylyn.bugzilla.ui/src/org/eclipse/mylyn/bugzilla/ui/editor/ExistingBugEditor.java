@@ -47,6 +47,7 @@ import org.eclipse.mylar.bugzilla.core.Operation;
 import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
+import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.bugzilla.ui.favorites.actions.AddToFavoritesAction;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
@@ -55,6 +56,8 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -62,6 +65,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
@@ -86,7 +90,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 	protected BugzillaCompareInput compareInput;
 	protected Button compareButton;
 	protected Button[] radios;
-	protected Combo[] radioOptions;
+	protected Control[] radioOptions;
 	protected List keyWordsList;
 	protected Text keywordsText;
 	protected Text addCommentsText;
@@ -167,13 +171,13 @@ public class ExistingBugEditor extends AbstractBugEditor
 		int i = 0;
 		Button selected = null;
 		radios = new Button[bug.getOperations().size()];
-		radioOptions = new Combo[bug.getAttributes().size()];
+		radioOptions = new Control[bug.getOperations().size()];
 		for (Iterator<Operation> it = bug.getOperations().iterator(); it.hasNext(); ) {
 			Operation o = it.next();
 			radios[i] = new Button(buttonComposite, SWT.RADIO);
 			radios[i].setFont(TEXT_FONT);
 			GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			if (!o.hasOptions())
+			if (!o.hasOptions() && !o.isInput())
 				radioData.horizontalSpan = 4;
 			else
 				radioData.horizontalSpan = 3;
@@ -191,7 +195,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
-				radioData.widthHint = 80;
+				radioData.widthHint = 100;
 				radioOptions[i] = new Combo(
 						buttonComposite,
 						SWT.NO_BACKGROUND
@@ -205,10 +209,22 @@ public class ExistingBugEditor extends AbstractBugEditor
 				Object [] a = o.getOptionNames().toArray();
 				Arrays.sort(a);
 				for (int j = 0; j < a.length; j++) {
-					radioOptions[i].add((String) a[j]);
+					((Combo)radioOptions[i]).add((String) a[j]);
 				}
-				radioOptions[i].select(0);
-				radioOptions[i].addSelectionListener(new RadioButtonListener());
+				((Combo)radioOptions[i]).select(0);
+				((Combo)radioOptions[i]).addSelectionListener(new RadioButtonListener());
+			} else if(o.isInput()){
+				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				radioData.horizontalSpan = 1;
+				radioData.widthHint = 120;
+				radioOptions[i] = new Text(
+						buttonComposite,
+						SWT.BORDER | SWT.SINGLE);
+				radioOptions[i].setFont(TEXT_FONT);
+				radioOptions[i].setLayoutData(radioData);
+				radioOptions[i].setBackground(background);
+				((Text)radioOptions[i]).setText(o.getInputValue());
+				((Text)radioOptions[i]).addModifyListener(new RadioButtonListener());
 			}
 			
 			if (i == 0 || o.isChecked()) {
@@ -218,16 +234,16 @@ public class ExistingBugEditor extends AbstractBugEditor
 				radios[i].setSelection(true);
 				if(o.hasOptions() && o.getOptionSelection() != null){
 					int j = 0;
-					for(String s: radioOptions[i].getItems()){
+					for(String s: ((Combo)radioOptions[i]).getItems()){
 						if(s.compareTo(o.getOptionSelection()) == 0){
-							radioOptions[i].select(j);
+							((Combo)radioOptions[i]).select(j);
 						}
 						j++;
 					}
 				}
 				bug.setSelectedOperation(o);
 			}
-			
+		
 			i++;
 		}
 	}
@@ -306,6 +322,9 @@ public class ExistingBugEditor extends AbstractBugEditor
 			if(o.hasOptions()) {
 				String sel = o.getOptionValue(o.getOptionSelection());
 				form.add(o.getOptionName(), sel);
+			} else if (o.isInput()){
+				String sel = o.getInputValue();
+				form.add(o.getInputName(), sel);
 			}
 		}
 		form.add("form_name", "process_bug");
@@ -332,12 +351,11 @@ public class ExistingBugEditor extends AbstractBugEditor
 						} catch (BugzillaException e) {
 						    BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while posting the bug.", "I/O Error");
 						}catch (PossibleBugzillaFailureException e) {
-							// XXX add link to 
-							MessageDialog
-							.openError(
+							WebBrowserDialog
+							.openAcceptAgreement(
 									null,
 									"Possible Bugzilla Failure",
-									"Bugzilla may not have posted your bug.\n" + e.getMessage());
+									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
 							BugzillaPlugin.log(e);
 						} catch (LoginException e) {
 							MessageDialog.openError(null, "Login Error",
@@ -695,7 +713,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 	/**
 	 * Class to handle the selection change of the radio buttons.
 	 */
-	protected class RadioButtonListener implements SelectionListener {
+	protected class RadioButtonListener implements SelectionListener, ModifyListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 			widgetSelected(e);
@@ -720,7 +738,43 @@ public class ExistingBugEditor extends AbstractBugEditor
 				}
 				else if(e.widget == radioOptions[i]) {
 					Operation o = bug.getOperation(radios[i].getText());
-					o.setOptionSelection(radioOptions[i].getItem(radioOptions[i].getSelectionIndex()));
+					o.setOptionSelection(((Combo)radioOptions[i]).getItem(((Combo)radioOptions[i]).getSelectionIndex()));
+					
+					if(bug.getSelectedOperation() != null)
+						bug.getSelectedOperation().setChecked(false);
+					o.setChecked(true);
+					
+					bug.setSelectedOperation(o);
+					radios[i].setSelection(true);
+		            if(selected != null && selected != radios[i]){
+		                selected.setSelection(false);
+		            }
+		            ExistingBugEditor.this.changeDirtyStatus(true);
+				}
+			}
+			validateInput();
+		}
+
+		public void modifyText(ModifyEvent e) {
+			Button selected = null;
+			for (int i = 0; i < radios.length; i++) {
+				if (radios[i].getSelection())
+					selected = radios[i];
+			}
+			// determine the operation to do to the bug
+			for (int i = 0; i < radios.length; i++) {
+				if (radios[i] != e.widget && radios[i] != selected){
+					radios[i].setSelection(false);
+				}
+				
+				if (e.widget == radios[i]) {
+					Operation o = bug.getOperation(radios[i].getText());
+					bug.setSelectedOperation(o);
+					ExistingBugEditor.this.changeDirtyStatus(true);
+				}
+				else if(e.widget == radioOptions[i]) {
+					Operation o = bug.getOperation(radios[i].getText());
+					o.setInputValue(((Text)radioOptions[i]).getText());
 					
 					if(bug.getSelectedOperation() != null)
 						bug.getSelectedOperation().setChecked(false);

@@ -83,7 +83,6 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				MylarPlugin.log(e, " deletion failed");
 			}
 		}
-		// XXX inform can't delete hits???
 	}
 
 	public void taskCompleted(ITask task) {
@@ -202,7 +201,11 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				return false;
 			}
 		} else if(element instanceof BugzillaQueryCategory){
-			return false;
+			if(action instanceof DeleteAction){
+				return true;
+			} else {
+				return false;
+			}
 		}
 		return false;
 	} 

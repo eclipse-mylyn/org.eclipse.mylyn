@@ -30,6 +30,7 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.search.internal.ui.SearchMessages;
@@ -254,12 +255,11 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 												"Bugzilla could not post your bug.");
 								BugzillaPlugin.log(e);
 							} catch (PossibleBugzillaFailureException e) {
-								// XXX add link to 
-								MessageDialog
-								.openError(
+								WebBrowserDialog
+								.openAcceptAgreement(
 										null,
 										"Possible Bugzilla Failure",
-										"Bugzilla may not have posted your bug.\n" + e.getMessage());
+										"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
 								BugzillaPlugin.log(e);
 							} catch (LoginException e) {
 								// if we had an error with logging in, display an error

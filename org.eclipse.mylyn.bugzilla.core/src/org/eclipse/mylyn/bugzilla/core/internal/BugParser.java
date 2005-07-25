@@ -757,7 +757,8 @@ public class BugParser
 				tokenizer.pushback(lastTag);
 				if(tag.getTagType() == HtmlTag.Type.INPUT && !("radio".equalsIgnoreCase(tag.getAttribute("type")) && "knob".equalsIgnoreCase(tag.getAttribute("name"))))
 				{
-					return;
+					o.setInputName(((HtmlTag)lastTag.getValue()).getAttribute("name"));
+					o.setInputValue(((HtmlTag)lastTag.getValue()).getAttribute("value"));
 				}
 			}
 			else

@@ -51,6 +51,12 @@ public class Operation implements Serializable
 	/** Whether this is to be checked or not */
 	private boolean isChecked = false;
 	
+	private boolean isInput = false;
+	
+	private String inputName = null;
+	
+	private String inputValue = "";
+	
 	/**
 	 * Constructor
 	 * @param knobName The name of the value for the knob attribute
@@ -173,6 +179,27 @@ public class Operation implements Serializable
 	public String getOptionValue(String option)
 	{
 		return options.get(option);
+	}
+
+	public boolean isInput() {
+		return isInput;
+	}
+
+	public String getInputName() {
+		return inputName;
+	}
+
+	public void setInputName(String inputName) {
+		isInput = true;
+		this.inputName = inputName;
+	}
+
+	public String getInputValue() {
+		return inputValue == null?"":inputValue;
+	}
+
+	public void setInputValue(String inputValue) {
+		this.inputValue = inputValue;
 	}
 
 }

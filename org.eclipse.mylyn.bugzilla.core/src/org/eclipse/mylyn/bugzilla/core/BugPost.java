@@ -15,6 +15,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -31,6 +32,9 @@ import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlTag;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 
 
 /**
@@ -55,6 +59,8 @@ public class BugPost {
 
 	/** An alternate postfix for how to find the bug number from the return */	
 	String postfix2;
+	
+	String error = null;
 	
 	/**
 	 * Add a value to be posted to the bug
@@ -149,10 +155,12 @@ public class BugPost {
 			String aString = in.readLine();
 			
 			boolean possibleFailure = true;
+			error = "";
 			
 			while (aString != null) {
 				if (isDebug)
 					System.out.println(aString);
+				error += aString==null?"":aString + "\n";
 					
 				// check if we have run into an error
 				if(result == null && (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf("error") != -1))
@@ -173,9 +181,10 @@ public class BugPost {
 						if (stopIndex > -1) {
 							result = (aString.substring(startIndex, stopIndex)).trim();
 							possibleFailure = false;
-							if (!isDebug) {
-								break;
-							}
+							// need this to get the whole error message
+//							if (!isDebug) {
+//								break;
+//							}
 						}
 					}
 				}
@@ -187,6 +196,9 @@ public class BugPost {
 			} else if(possibleFailure) {
 				throw new PossibleBugzillaFailureException("Could not find \"Bug Processed\".");
 			}
+			
+			// set the error to null if we dont think that there was one
+			error = null;
 			
 			// return the bug number
 			return result;
@@ -279,6 +291,42 @@ public class BugPost {
 	 */
 	public void setPostfix2(String postfix) {
 		this.postfix2 = postfix;
+	}
+
+	public String getError() {
+		return parseError();
+	}
+
+	/**
+	 * remove all of the hyperlinks and erroneous info
+	 * @return
+	 */
+	private String parseError() {
+		String newError = "";
+		try{
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new StringReader(error), null);
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+				if(token.getType() == Token.TAG && ((HtmlTag)(token.getValue())).getTagType() == HtmlTag.Type.A){
+					
+				} else if(token.getType() == Token.TAG && ((HtmlTag)(token.getValue())).getTagType() == HtmlTag.Type.FORM ){
+					for (Token token2 = tokenizer.nextToken(); token2.getType() != Token.EOF; token2 = tokenizer.nextToken()) 
+					{
+						if(token2.getType() == Token.TAG)
+						{
+							HtmlTag tag = (HtmlTag)token2.getValue();
+							if(tag.getTagType() == HtmlTag.Type.FORM && tag.isEndTag())
+								break;
+					
+						}
+					}
+				} else {
+					newError += token.getWhitespace().toString() + token.getValue();
+				}
+			}
+		} catch(Exception e){
+			newError = error;
+		}
+		return newError;
 	}
 }
 
