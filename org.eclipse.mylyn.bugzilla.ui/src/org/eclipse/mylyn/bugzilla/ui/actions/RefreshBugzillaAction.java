@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaHit;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
@@ -77,7 +78,7 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 							cat.refreshBugs();
 							for(BugzillaHit hit: cat.getChildren()){
 								if(hit.hasCorrespondingActivatableTask()){
-									((BugzillaTask)hit.getOrCreateCorrespondingTask()).refresh();
+									BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)hit.getOrCreateCorrespondingTask());
 								}
 							}
 						    if(TaskListView.getDefault() != null)
@@ -101,15 +102,15 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 			TaskCategory cat = (TaskCategory) obj;
 			for (ITask task : cat.getChildren()) {
 				if (task instanceof BugzillaTask) {
-					((BugzillaTask)task).refresh();
+					BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
 				}
 			}
 		} else if (obj instanceof BugzillaTask) {
-			((BugzillaTask)obj).refresh();
+			BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)obj);
 		} else if(obj instanceof BugzillaHit){
 			BugzillaHit hit = (BugzillaHit)obj;
 			if(hit.hasCorrespondingActivatableTask()){
-				hit.getAssociatedTask().refresh();
+				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed(hit.getAssociatedTask());
 			}
 		}
 		for(ITask task: MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks()){

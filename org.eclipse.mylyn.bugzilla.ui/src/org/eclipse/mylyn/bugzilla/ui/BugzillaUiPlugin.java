@@ -1,12 +1,8 @@
 package org.eclipse.mylar.bugzilla.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaRefreshManager;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskListManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -17,6 +13,7 @@ import org.osgi.framework.BundleContext;
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	private BugzillaTaskListManager bugzillaTaskListManager;
+	private BugzillaRefreshManager bugzillaRefreshManager;
     private static BugzillaUiPlugin plugin;
 		
 	
@@ -34,6 +31,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		super.start(context);
 		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
 		bugzillaTaskListManager = new BugzillaTaskListManager();
+		bugzillaRefreshManager = new BugzillaRefreshManager();
 	}
 
 	/**
@@ -42,11 +40,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-		List<Job> list = new ArrayList<Job>();
-		list.addAll(BugzillaTask.REFRESH_JOBS.keySet());
-		for(Job j: list){
-			j.cancel();
-		}
+		bugzillaRefreshManager.clearAllRefreshes();
 	}
 
 	/**
@@ -69,5 +63,9 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	
 	public BugzillaTaskListManager getBugzillaTaskListManager() {
 		return bugzillaTaskListManager;
+	}
+	
+	public BugzillaRefreshManager getBugzillaRefreshManager() {
+		return bugzillaRefreshManager;
 	}
 }

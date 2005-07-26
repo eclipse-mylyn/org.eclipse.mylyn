@@ -16,9 +16,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -36,6 +34,7 @@ import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
+import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
@@ -64,9 +63,6 @@ public class BugzillaTask extends Task {
 	public enum BugTaskState {FREE, WAITING, DOWNLOADING, COMPARING, OPENING}
 	private transient BugTaskState state;
 
-	public static Map<Job, String>REFRESH_JOBS = new HashMap<Job, String>();
-	
-	
 	/**
 	 * The bug report for this BugzillaTask. This is <code>null</code> if the
 	 * bug report with the specified ID was unable to download.
@@ -344,7 +340,7 @@ public class BugzillaTask extends Task {
 			updateTaskDetails();
 			notifyTaskDataChange();
 			saveBugReport(true);
-			REFRESH_JOBS.remove(this);
+			BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
 			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 		}	
 	}
@@ -394,18 +390,18 @@ public class BugzillaTask extends Task {
 		}
 	}
 
-	/**
-	 * Refreshes the bug report with the Bugzilla server.
-	 */
-	public void refresh() {
-		// The bug report must be untouched, and this task must not be busy.
-		if (isDirty() || (state != BugTaskState.FREE)) {
-			return;
-		}
-		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
-		REFRESH_JOBS.put(job, getHandle());
-		job.schedule();
-	}
+//	/**
+//	 * Refreshes the bug report with the Bugzilla server.
+//	 */
+//	public void refresh() {
+//		// The bug report must be untouched, and this task must not be busy.
+//		if (isDirty() || (state != BugTaskState.FREE)) {
+//			return;
+//		}
+//		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
+////		REFRESH_JOBS.put(job, getHandle());
+//		job.schedule();
+//	}
 
 	@Override
 	public String getToolTipText() {
@@ -556,5 +552,13 @@ public class BugzillaTask extends Task {
 	public void scheduleDownloadReport() {
 		GetBugReportJob job = new GetBugReportJob("Downloading from Bugzilla server...");
         job.schedule();
+	}
+
+	public Job getRefreshJob() {
+		if (isDirty() || (state != BugTaskState.FREE)) {
+			return null;
+		}
+		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
+		return job;
 	}
 }
