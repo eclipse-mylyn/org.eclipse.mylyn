@@ -89,6 +89,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 
 	protected BugzillaCompareInput compareInput;
 	protected Button compareButton;
+	
 	protected Button[] radios;
 	protected Control[] radioOptions;
 	protected List keyWordsList;
@@ -266,8 +267,23 @@ public class ExistingBugEditor extends AbstractBugEditor
 			}
 		});
 		compareButton.addListener(SWT.FocusIn, new GenericListener());
+		
+//		TODO used for spell checking.  Add back when we want to support this
+//		checkSpellingButton = new Button(buttonComposite, SWT.NONE);
+//		checkSpellingButton.setFont(TEXT_FONT);
+//		compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		compareButtonData.widthHint = 100;
+//		compareButtonData.heightHint = 20;
+//		checkSpellingButton.setText("CheckSpelling");
+//		checkSpellingButton.setLayoutData(compareButtonData);
+//		checkSpellingButton.addListener(SWT.Selection, new Listener() {
+//			public void handleEvent(Event e) {
+//				checkSpelling();
+//			}
+//		});
+//		checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
 	}
-
+	
 	/**
 	 * @return Returns the compareInput.
 	 */
@@ -810,4 +826,60 @@ public class ExistingBugEditor extends AbstractBugEditor
 			changeDirtyStatus(true);
 		}
 	}
+	
+//	TODO used for spell checking.  Add back when we want to support this
+//	protected Button checkSpellingButton;
+//	
+//	private void checkSpelling() {
+//		SpellingContext context= new SpellingContext();
+//		context.setContentType(Platform.getContentTypeManager().getContentType(IContentTypeManager.CT_TEXT));
+//		IDocument document = new Document(addCommentsTextBox.getText());
+//		ISpellingProblemCollector collector= new SpellingProblemCollector(document);
+//		EditorsUI.getSpellingService().check(document, context, collector, new NullProgressMonitor());	
+//	}
+//	
+//	private class SpellingProblemCollector implements ISpellingProblemCollector {
+//
+//		private IDocument document;
+//		
+//		private SpellingDialog spellingDialog;
+//		
+//		public SpellingProblemCollector(IDocument document){
+//			this.document = document;
+//			spellingDialog = new SpellingDialog(Display.getCurrent().getActiveShell(), "Spell Checking", document);
+//		}
+//		
+//		/*
+//		 * @see org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#accept(org.eclipse.ui.texteditor.spelling.SpellingProblem)
+//		 */
+//		public void accept(SpellingProblem problem) {
+//			try {
+//				int line= document.getLineOfOffset(problem.getOffset()) + 1;
+//				String word= document.get(problem.getOffset(), problem.getLength());
+//				System.out.println(word);
+//				for(ICompletionProposal proposal : problem.getProposals()){
+//					System.out.println(">>>" + proposal.getDisplayString());
+//				}
+//				
+//				spellingDialog.open(word, problem.getProposals());
+//				
+//			} catch (BadLocationException x) {
+//				// drop this SpellingProblem
+//			}
+//		}
+//
+//		/*
+//		 * @see org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#beginCollecting()
+//		 */
+//		public void beginCollecting() {
+//			
+//		}
+//
+//		/*
+//		 * @see org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#endCollecting()
+//		 */
+//		public void endCollecting() {
+//			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Spell Checking Finished", "The spell check has finished");
+//		}
+//	}
 }
