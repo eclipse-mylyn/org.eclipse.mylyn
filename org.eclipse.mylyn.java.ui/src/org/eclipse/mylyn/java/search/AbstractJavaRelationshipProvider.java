@@ -47,6 +47,7 @@ import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.search.ui.ISearchResult;
+import org.eclipse.search2.internal.ui.InternalSearchUI;
 
 
 
@@ -203,6 +204,8 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
 
 		
         });
+    	InternalSearchUI.getInstance();
+        
         runningJobs.add(job);
         job.schedule();
     }
