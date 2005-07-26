@@ -51,4 +51,61 @@ public class DateUtil {
             c.get(Calendar.MINUTE) + "-" + 
             c.get(Calendar.SECOND);
     }
+    
+    public static String getFormattedDuration(long duration) {
+    	long seconds = duration / 1000;
+		long minutes = 0;
+		long hours = 0;
+//		final long SECOND = 1000;
+		final long MIN = 60;
+		final long HOUR = MIN * 60;
+		
+		String hour = "";
+		String min = "";
+		String sec = "";
+		if (seconds >= HOUR) {
+			hours = seconds / HOUR;
+			if (hours == 1) {
+				hour = hours + " hour ";
+			} else if (hours > 1) {
+				hour = hours + " hours ";
+			}
+			seconds -= hours * HOUR;
+			
+			minutes = seconds / MIN;
+			if (minutes == 1) {
+				min = minutes + " minute ";
+			} else if (minutes != 1) {
+				min = minutes + " minutes ";
+			}
+//			seconds -= minutes * MIN;
+//			if (seconds == 1) {
+//				sec = seconds + " second";
+//			} else if (seconds > 1) {
+//				sec = seconds + " seconds";
+//			}
+			return hour + min + sec;
+		} else if (seconds >= MIN) {
+			minutes = seconds / MIN;
+			if (minutes == 1) {
+				min = minutes + " minute ";
+			} else if (minutes != 1) {
+				min = minutes + " minutes ";
+			}
+//			seconds -= minutes * MIN;
+//			if (seconds == 1) {
+//				sec = seconds + " second";
+//			} else if (seconds > 1) {
+//				sec = seconds + " seconds";
+//			}
+			return min + sec;
+		} else {
+//			if (seconds == 1) {
+//				sec = seconds + " second";
+//			} else if (seconds > 1) {
+//				sec = seconds + " seconds";
+//			}
+			return "0 minutes";
+		}
+    }
 }
