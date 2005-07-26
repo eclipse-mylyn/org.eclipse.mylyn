@@ -48,6 +48,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public static final String FALSE = "false";
 	public static final String TRUE = "true";
 	public static final String NAME = "Name";
+	public static final String END_DATE = "EndDate";
 
 	private List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 	
@@ -105,6 +106,8 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, task.getElapsedTime());
 		node.setAttribute(ESTIMATED, task.getEstimatedTime());
+		node.setAttribute(END_DATE, task.getEndDateString());		
+		
 		List<String> rl = task.getRelatedLinks().getLinks();
 		int i = 0;
 		for (String link : rl) {
@@ -191,12 +194,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			new TaskActivateAction(task).run();
 		} else {
 			task.setActive(false);
-		}
-		if (element.getAttribute(COMPLETE).compareTo(TRUE) == 0) {
-			task.setCompleted(true);
-		} else {
-			task.setCompleted(false);
-		}		
+		}			
 		if (element.hasAttribute(NOTES)) {
 			task.setNotes(element.getAttribute(NOTES));
 		} else {
@@ -212,6 +210,17 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		} else {
 			task.setEstimatedTime("");
 		}
+		// NOTE: do not change the order of complete and end date!!
+		if (element.getAttribute(COMPLETE).compareTo(TRUE) == 0) {
+			task.setCompleted(true);
+		} else {
+			task.setCompleted(false);
+		}
+		if (element.hasAttribute(END_DATE)) {
+			task.setEndDate(element.getAttribute(END_DATE));
+		} else {
+			task.setEndDate("");
+		}		
 		int i = 0;
 		while (element.hasAttribute(LINK+i)) {
 			task.getRelatedLinks().add(element.getAttribute(LINK+i));

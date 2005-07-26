@@ -13,11 +13,15 @@
   */
 package org.eclipse.mylar.tasklist;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -56,6 +60,7 @@ public class Task implements ITask {
     private TaskCategory parentCategory = null;
     
     private Date timeActivated = null;
+    private Date endDate = null;
     private long elapsed;
     /**
      * null if root
@@ -213,6 +218,9 @@ public class Task implements ITask {
     	return completed;
     }
     public void setCompleted(boolean completed) {
+    	if (completed) {  
+    		endDate = new Date();
+    	}
         this.completed = completed;
     }
 
@@ -271,6 +279,12 @@ public class Task implements ITask {
 		return "" + elapsed;
 	}
 
+	public long getElapsedTimeLong() {
+		if (isActive()) {
+			calculateElapsedTime();			
+		}
+		return elapsed; 
+	}
 	public void setElapsedTime(String elapsedString) {
 		if (elapsedString.equals("")) {
 			elapsed = 0;
@@ -328,60 +342,7 @@ public class Task implements ITask {
 	
 	public String getElapsedTimeForDisplay() {
 		calculateElapsedTime();
-		long seconds = elapsed / 1000;
-		long minutes = 0;
-		long hours = 0;
-//		final long SECOND = 1000;
-		final long MIN = 60;
-		final long HOUR = MIN * 60;
-		
-		String hour = "";
-		String min = "";
-		String sec = "";
-		if (seconds >= HOUR) {
-			hours = seconds / HOUR;
-			if (hours == 1) {
-				hour = hours + " hour ";
-			} else if (hours > 1) {
-				hour = hours + " hours ";
-			}
-			seconds -= hours * HOUR;
-			
-			minutes = seconds / MIN;
-			if (minutes == 1) {
-				min = minutes + " minute ";
-			} else if (minutes != 1) {
-				min = minutes + " minutes ";
-			}
-//			seconds -= minutes * MIN;
-//			if (seconds == 1) {
-//				sec = seconds + " second";
-//			} else if (seconds > 1) {
-//				sec = seconds + " seconds";
-//			}
-			return hour + min + sec;
-		} else if (seconds >= MIN) {
-			minutes = seconds / MIN;
-			if (minutes == 1) {
-				min = minutes + " minute ";
-			} else if (minutes != 1) {
-				min = minutes + " minutes ";
-			}
-//			seconds -= minutes * MIN;
-//			if (seconds == 1) {
-//				sec = seconds + " second";
-//			} else if (seconds > 1) {
-//				sec = seconds + " seconds";
-//			}
-			return min + sec;
-		} else {
-//			if (seconds == 1) {
-//				sec = seconds + " second";
-//			} else if (seconds > 1) {
-//				sec = seconds + " seconds";
-//			}
-			return "0 minutes";
-		}
+		return DateUtil.getFormattedDuration(elapsed);		
 	}
 	
     public boolean canEditDescription() {
@@ -431,5 +392,36 @@ public class Task implements ITask {
 				return BOLD;
 		}
         return null;
+	}
+	
+	public Date getEndDate() {
+		return endDate;
+	}	
+	
+	public String getEndDateString() {
+		if (endDate != null) {
+			String f = "yyyy-MM-dd HH:mm:ss.S z";
+	    	SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+	    	return format.format(endDate);
+		} else {
+			return "";
+		}		
+	}
+	
+	public void setEndDate(String date) {
+		if (!date.equals("")) {
+			String formatString = "yyyy-MM-dd HH:mm:ss.S z";
+			SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+			try {
+				endDate = format.parse(date);
+			} catch (ParseException e) {
+				MylarPlugin.log(e, "Could not parse end date");
+				endDate = null;
+			}
+		} else {
+			if (isCompleted()) {
+				endDate = new Date(0);
+			}
+		}
 	}
 }

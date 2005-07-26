@@ -45,13 +45,16 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
     private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
     
     public static final String TASK_CONTRIBUTER_EXTENSION_POINT_ID = "org.eclipse.mylar.tasklist.taskListContributor";
-    	public static final String TASK_HANDLER_ELEMENT = "taskHandler";
-    		public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
-    		public static final String ACTION_CONTRIBUTER_CLASS_ID = "taskHandlerClass";
-    	public static final String TASK_LISTENER_ELEMENT = "taskListener";
-    		public static final String TASK_LISTENER_CLASS_ID = "class";
-    	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
-    		public static final String DYNAMIC_POPUP_CLASS_ID = "class";
+
+    public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.report.ui.planningGameWizard";
+    public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.report.ui.planning";
+	public static final String TASK_HANDLER_ELEMENT = "taskHandler";
+	public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
+	public static final String ACTION_CONTRIBUTER_CLASS_ID = "taskHandlerClass";
+	public static final String TASK_LISTENER_ELEMENT = "taskListener";
+	public static final String TASK_LISTENER_CLASS_ID = "class";
+	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
+	public static final String DYNAMIC_POPUP_CLASS_ID = "class";
     		
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasklist.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasklist.report.open.internal";

@@ -14,6 +14,7 @@
 package org.eclipse.mylar.tasklist;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -66,6 +67,8 @@ public interface ITask extends Serializable, ITaskListElement {
     
     public abstract String getElapsedTime();
     
+    public abstract long getElapsedTimeLong();
+    
     public abstract void setElapsedTime(String elapsed);
     
     public abstract String getEstimatedTime();
@@ -95,4 +98,10 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract String getElapsedTimeForDisplay();
 
 	public abstract boolean participatesInTaskHandles();
+	
+	public abstract Date getEndDate();
+	
+	public abstract void setEndDate(String date);
+	
+	public abstract String getEndDateString();
 }
