@@ -13,6 +13,7 @@
  */
 package org.eclipse.mylar.xml;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -286,6 +287,26 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     
     public class XMLSearchOperation extends FileSearchQuery implements IMylarSearchOperation{
 
+    	@Override
+    	public ISearchResult getSearchResult() {
+    		try {
+                // get the current page of the outline
+                Class clazz = FileSearchQuery.class;
+                Field field = clazz.getDeclaredField("fResult");
+                field.setAccessible(true);
+                FileSearchResult fResult = (FileSearchResult)field.get(this);
+				if (fResult == null) {
+					fResult= new FileSearchResult(this);
+					field.set(this, fResult);
+					new XmlActiveSearchUpdater(fResult);
+				}
+	    		return fResult;
+    		 } catch (Exception e) {
+                 MylarPlugin.log(e.getMessage(), this);
+             }
+    		 return super.getSearchResult();
+    	}
+    	
     	@Override
         public IStatus run(IProgressMonitor monitor) {
             try {

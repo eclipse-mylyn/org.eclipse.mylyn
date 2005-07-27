@@ -250,7 +250,15 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     }
     
     public class JavaSearchOperation extends JavaSearchQuery implements IMylarSearchOperation{
-
+    	private ISearchResult result = null;
+    	@Override
+    	public ISearchResult getSearchResult() {
+    		if(result == null)
+    			result = new JavaSearchResult(this);
+    		new JavaActiveSearchResultUpdater((JavaSearchResult) result);
+    		return result;
+    	}
+    	
         @Override
         public IStatus run(IProgressMonitor monitor) {
             try {
@@ -259,6 +267,8 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
                 if(result instanceof JavaSearchResult){
                     //TODO make better
                     Object[] objs = ((JavaSearchResult)result).getElements();
+                    if(objs == null)
+                    	notifySearchCompleted(null);	
                     List<Object> l = new ArrayList<Object>();
                     for(int i = 0; i < objs.length; i++){
                         l.add(objs[i]);
