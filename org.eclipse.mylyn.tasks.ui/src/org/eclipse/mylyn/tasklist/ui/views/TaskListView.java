@@ -59,6 +59,7 @@ import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskCompleteFilter;
+import org.eclipse.mylar.tasklist.internal.TaskListPatternFilter;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
@@ -102,6 +103,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.dialogs.FilteredTree;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
@@ -111,8 +113,8 @@ import org.eclipse.ui.part.ViewPart;
 public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
-		
-	TreeViewer viewer;
+	
+	private FilteredTree tree;
     private DrillDownAdapter drillDownAdapter;
     
     private CreateTaskAction createTask;
@@ -187,7 +189,7 @@ public class TaskListView extends ViewPart {
 				public void run() {
 	    			MylarTasklistPlugin.setPriorityLevel(MylarTasklistPlugin.PriorityLevel.P1);
 	    			PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[0]);	    			
-	    			viewer.refresh();
+	    			getViewer().refresh();
 				}
 			};  
 			P1.setEnabled(true);
@@ -200,7 +202,7 @@ public class TaskListView extends ViewPart {
 				public void run() {
 	    			MylarTasklistPlugin.setPriorityLevel(MylarTasklistPlugin.PriorityLevel.P2);
 	    			PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[1]);	    			
-	    			viewer.refresh();
+	    			getViewer().refresh();
 				}
 			};  
 			P2.setEnabled(true);			
@@ -213,7 +215,7 @@ public class TaskListView extends ViewPart {
 				public void run() { 
 	    			MylarTasklistPlugin.setPriorityLevel(MylarTasklistPlugin.PriorityLevel.P3);
 	    			PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[2]);	    			
-	    			viewer.refresh();
+	    			getViewer().refresh();
 				}
 			};
 			P3.setEnabled(true);			
@@ -226,7 +228,7 @@ public class TaskListView extends ViewPart {
 				public void run() {
 	    			MylarTasklistPlugin.setPriorityLevel(MylarTasklistPlugin.PriorityLevel.P4);
 	    			PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[3]);	    			
-	    			viewer.refresh();
+	    			getViewer().refresh();
 				}
 			};
 			P4.setEnabled(true);			
@@ -239,7 +241,7 @@ public class TaskListView extends ViewPart {
 				public void run() { 
 	    			MylarTasklistPlugin.setPriorityLevel(MylarTasklistPlugin.PriorityLevel.P5);
 	    			PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[4]);	    			
-	    			viewer.refresh();
+	    			getViewer().refresh();
 	    		}
 			};  
 			P5.setEnabled(true);
@@ -406,19 +408,23 @@ public class TaskListView extends ViewPart {
             return false;
         }
         private List<Object> applyFilter(List<Object> list) {
-        	List<Object> filteredRoots = new ArrayList<Object>();
-        	for (int i = 0; i < list.size(); i++) {
-        		if (list.get(i) instanceof ITask) {
-        			if (!filter(list.get(i))) {
-        				filteredRoots.add(list.get(i));
-        			}
-        		} else if (list.get(i) instanceof AbstractCategory) {
-        			if (selectCategory((AbstractCategory)list.get(i))) {
-        				filteredRoots.add(list.get(i));
-        			}
-        		}
-        	}
-        	return filteredRoots;
+        	if (((Text)tree.getFilterControl()).getText() == "") {
+        		List<Object> filteredRoots = new ArrayList<Object>();
+            	for (int i = 0; i < list.size(); i++) {
+            		if (list.get(i) instanceof ITask) {
+            			if (!filter(list.get(i))) {
+            				filteredRoots.add(list.get(i));
+            			}
+            		} else if (list.get(i) instanceof AbstractCategory) {
+            			if (selectCategory((AbstractCategory)list.get(i))) {
+            				filteredRoots.add(list.get(i));
+            			}
+            		}
+            	}
+            	return filteredRoots;	
+        	} else {
+        		return list;
+        	}        	
         }
         
         private boolean selectCategory(AbstractCategory cat) {
@@ -435,23 +441,35 @@ public class TaskListView extends ViewPart {
         }
         
         private List<Object> getFilteredChildrenFor(Object parent) {
-        	List<Object> children = new ArrayList<Object>();
-        	if (parent instanceof AbstractCategory) {
-        		List<? extends ITaskListElement> list = ((AbstractCategory)parent).getChildren();
-        		for (int i = 0; i < list.size(); i++) {
-            		if (!filter(list.get(i))) {
-            			children.add(list.get(i));
-            		}    		
-            	}
-        		return children;
-        	} else if (parent instanceof Task) {
-        		List<ITask> subTasks = ((Task)parent).getChildren();
-        		for (ITask t : subTasks) {
-        			if (!filter(t)) {
-        				children.add(t);
-        			}
-        		}
-        		return children;
+        	if (((Text) tree.getFilterControl()).getText() == "") {
+				List<Object> children = new ArrayList<Object>();
+				if (parent instanceof AbstractCategory) {
+					List<? extends ITaskListElement> list = ((AbstractCategory) parent)
+							.getChildren();
+					for (int i = 0; i < list.size(); i++) {
+						if (!filter(list.get(i))) {
+							children.add(list.get(i));
+						}
+					}
+					return children;
+				} else if (parent instanceof Task) {
+					List<ITask> subTasks = ((Task) parent).getChildren();
+					for (ITask t : subTasks) {
+						if (!filter(t)) {
+							children.add(t);
+						}
+					}
+					return children;
+				}
+			} else {
+				List<Object> children = new ArrayList<Object>();
+				if (parent instanceof AbstractCategory) {
+					children.addAll(((AbstractCategory) parent).getChildren());
+					return children;					
+				} else if (parent instanceof Task) {
+					children.addAll(((Task) parent).getChildren());
+					return children;	
+				}
         	}
         	return new ArrayList<Object>();
         }
@@ -553,7 +571,7 @@ public class TaskListView extends ViewPart {
 					AbstractCategory cat = (AbstractCategory)((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:						
-						viewer.setSelection(null);
+						getViewer().setSelection(null);
 						break;
 					case 1:
 						break;
@@ -561,7 +579,7 @@ public class TaskListView extends ViewPart {
 						break;
 					case 3:
 						cat.setDescription(((String) value).trim());
-						viewer.setSelection(null);
+						getViewer().setSelection(null);
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
@@ -580,7 +598,7 @@ public class TaskListView extends ViewPart {
 							} else {
 								new TaskActivateAction(task).run();
 							}
-							viewer.setSelection(null);
+							getViewer().setSelection(null);
 						}
 						break;
 					case 1:
@@ -589,7 +607,7 @@ public class TaskListView extends ViewPart {
 						if (task.isDirectlyModifiable()) {
 							Integer intVal = (Integer) value;
 							task.setPriority("P" + (intVal + 1));
-							viewer.setSelection(null);
+							getViewer().setSelection(null);
 						}  
 						break;
 					case 3: 
@@ -597,12 +615,12 @@ public class TaskListView extends ViewPart {
 							task.setLabel(((String) value).trim());
 							MylarTasklistPlugin.getTaskListManager()
 									.taskPropertyChanged(task, columnNames[3]);
-							viewer.setSelection(null);
+							getViewer().setSelection(null);
 						}
 						break;
 					}
 				} 
-				viewer.refresh();
+				getViewer().refresh();
 			} catch (Exception e) {
 				MylarPlugin.log(e, e.getMessage());
 			}
@@ -712,7 +730,7 @@ public class TaskListView extends ViewPart {
 			} else {
 				sortIndex = 2; // default priority
 			}
-			viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+			getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
 		}
         addFilter(PRIORITY_FILTER);
 //        if (MylarTasklistPlugin.getDefault().isFilterInCompleteMode()) 
@@ -720,7 +738,7 @@ public class TaskListView extends ViewPart {
         if (MylarTasklistPlugin.getDefault().isFilterCompleteMode()) 
         	addFilter(COMPLETE_FILTER);
         
-        viewer.refresh();
+        getViewer().refresh();
     }
             
     /** 
@@ -728,16 +746,16 @@ public class TaskListView extends ViewPart {
      * to create the viewer and initialize it.
      */
     @Override
-    public void createPartControl(Composite parent) {
-        viewer = new TreeViewer(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
-        viewer.getTree().setHeaderVisible(true);
-        viewer.getTree().setLinesVisible(true);
-        viewer.setColumnProperties(columnNames);
-        viewer.setUseHashlookup(true);    
+    public void createPartControl(Composite parent) {    	
+    	tree = new FilteredTree(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
+    	getViewer().getTree().setHeaderVisible(true);
+    	getViewer().getTree().setLinesVisible(true);
+    	getViewer().setColumnProperties(columnNames);
+    	getViewer().setUseHashlookup(true);    
                 
         columns = new TreeColumn[columnNames.length];
         for (int i = 0; i < columnNames.length; i++) {
-            columns[i] = new TreeColumn(viewer.getTree(), 0); // SWT.LEFT
+            columns[i] = new TreeColumn(getViewer().getTree(), 0); // SWT.LEFT
             columns[i].setText(columnNames[i]);
             columns[i].setWidth(columnWidths[i]);
             final int index = i;
@@ -746,7 +764,7 @@ public class TaskListView extends ViewPart {
             	@Override
                 public void widgetSelected(SelectionEvent e) {
             		sortIndex = index;
-                    viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+            		getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
                 }
             });
             columns[i].addControlListener(new ControlListener () {
@@ -764,29 +782,29 @@ public class TaskListView extends ViewPart {
         }
          
         CellEditor[] editors = new CellEditor[columnNames.length];
-        TextCellEditor textEditor = new TextCellEditor(viewer.getTree());
+        TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
         ((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
         editors[0] = new CheckboxCellEditor();
         editors[1] = textEditor;
-        editors[2] = new ComboBoxCellEditor(viewer.getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);
+        editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);
         editors[3] = textEditor;
-        viewer.setCellEditors(editors);   
-        viewer.setCellModifier(new TaskListCellModifier());
-        viewer.setSorter(new TaskListTableSorter(columnNames[sortIndex]));
+        getViewer().setCellEditors(editors);   
+        getViewer().setCellModifier(new TaskListCellModifier());
+        getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
         
-        drillDownAdapter = new DrillDownAdapter(viewer);
-        viewer.setContentProvider(new TaskListContentProvider());
+        drillDownAdapter = new DrillDownAdapter(getViewer());
+        getViewer().setContentProvider(new TaskListContentProvider());
         TaskListLabelProvider lp = new TaskListLabelProvider();
         lp.setBackgroundColor(parent.getBackground());
-        viewer.setLabelProvider(lp);
-        viewer.setInput(getViewSite());
+        getViewer().setLabelProvider(lp);
+        getViewer().setInput(getViewSite());
         
         makeActions();
         hookContextMenu();
         hookDoubleClickAction();
         contributeToActionBars();       
-        ToolTipHandler toolTipHandler = new ToolTipHandler(viewer.getControl().getShell());
-        toolTipHandler.activateHoverHelp(viewer.getControl());
+        ToolTipHandler toolTipHandler = new ToolTipHandler(getViewer().getControl().getShell());
+        toolTipHandler.activateHoverHelp(getViewer().getControl());
         
         initDragAndDrop(parent);
         expandToActiveTasks();
@@ -797,16 +815,16 @@ public class TaskListView extends ViewPart {
     private void initDragAndDrop(Composite parent) {
         Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 
-        viewer.addDragSupport(DND.DROP_MOVE, types, new DragSourceListener() {
+        getViewer().addDragSupport(DND.DROP_MOVE, types, new DragSourceListener() {
 
             public void dragStart(DragSourceEvent event) {
-                if (((StructuredSelection) viewer.getSelection()).isEmpty()) {
+                if (((StructuredSelection) getViewer().getSelection()).isEmpty()) {
                     event.doit = false;
                 }
             }
 
             public void dragSetData(DragSourceEvent event) {
-                StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+                StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
                 if (selection.getFirstElement() instanceof ITaskListElement) {
                 	ITaskListElement element = (ITaskListElement)selection.getFirstElement();
                 	
@@ -823,7 +841,7 @@ public class TaskListView extends ViewPart {
             }
         });
 
-        viewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(viewer) {
+        getViewer().addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(getViewer()) {
             {
                 setFeedbackEnabled(false);
             }
@@ -851,16 +869,16 @@ public class TaskListView extends ViewPart {
                     	target.addSubTask(source);                    	
                     	source.setParent(target);
                     }           
-                    viewer.setSelection(null);
-                    viewer.refresh();
+                    getViewer().setSelection(null);
+                    getViewer().refresh();
                     return true;
                 } else if(selectedObject instanceof ITaskListElement &&
                 		MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null &&
                 		getCurrentTarget() instanceof TaskCategory){
                 	
                 	MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject).dropItem((ITaskListElement)selectedObject, (TaskCategory)getCurrentTarget());
-                		viewer.setSelection(null);
-                		viewer.refresh();
+					getViewer().setSelection(null);
+                	getViewer().refresh();
                         return true;
                 }
                 return false;
@@ -888,7 +906,7 @@ public class TaskListView extends ViewPart {
     private void expandToActiveTasks() {
     	List<ITask> activeTasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks();
     	for (ITask t : activeTasks) {
-    		viewer.expandToLevel(t, 0);
+    		getViewer().expandToLevel(t, 0);
     	}
     }
 
@@ -900,9 +918,9 @@ public class TaskListView extends ViewPart {
                 TaskListView.this.fillContextMenu(manager);
             }
         });
-        Menu menu = menuMgr.createContextMenu(viewer.getControl());
-        viewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, viewer);
+        Menu menu = menuMgr.createContextMenu(getViewer().getControl());
+        getViewer().getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, getViewer());
     }
 
     private void contributeToActionBars() {
@@ -918,7 +936,7 @@ public class TaskListView extends ViewPart {
 
     void fillContextMenu(IMenuManager manager) {
     	ITaskListElement element = null;;
-        final Object selectedObject = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
+        final Object selectedObject = ((IStructuredSelection)getViewer().getSelection()).getFirstElement();
         if (selectedObject instanceof ITaskListElement) {
         	element = (ITaskListElement) selectedObject;
         }
@@ -1056,7 +1074,7 @@ public class TaskListView extends ViewPart {
 	}
 	
 	private void hookDoubleClickAction() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
+		getViewer().addDoubleClickListener(new IDoubleClickListener() {
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
             }
@@ -1065,7 +1083,7 @@ public class TaskListView extends ViewPart {
     
 	public void showMessage(String message) {
         MessageDialog.openInformation(
-            viewer.getControl().getShell(),
+			getViewer().getControl().getShell(),
             "Tasklist Message",
             message);
     }
@@ -1075,7 +1093,7 @@ public class TaskListView extends ViewPart {
      */
     @Override
     public void setFocus() {
-        viewer.getControl().setFocus();
+		getViewer().getControl().setFocus();
         //TODO: foo
     }
 
@@ -1125,8 +1143,8 @@ public class TaskListView extends ViewPart {
     }
     
     public void notifyTaskDataChanged(ITask task) {
-        if (viewer.getTree() != null && !viewer.getTree().isDisposed()) { 
-        	viewer.refresh();
+        if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) { 
+        	getViewer().refresh();
         }
     }
     
@@ -1135,12 +1153,12 @@ public class TaskListView extends ViewPart {
     }
     
     public TreeViewer getViewer() {
-    	return viewer;
+    	return tree.getViewer();
     }
     
     public TaskCompleteFilter getCompleteFilter() {
     	return COMPLETE_FILTER;
-    }
+    }    
     
 //    public ViewerFilter getInCompleteFilter() {
 //    	return inCompleteFilter;
@@ -1217,7 +1235,7 @@ public class TaskListView extends ViewPart {
 
     private void fillLocalToolBar(IToolBarManager manager) {
     	manager.removeAll();
-
+	    
     	manager.add(createTask);
         manager.add(createCategory);
         manager.add(new Separator("mylar"));
@@ -1225,7 +1243,8 @@ public class TaskListView extends ViewPart {
         manager.add(new Separator());
 	    manager.add(filterCompleteTask);
 	    manager.add(filterOnPriority);
-
+	    
+	    
     	manager.markDirty();
         manager.update(true);
     }
