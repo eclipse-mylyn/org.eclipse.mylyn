@@ -30,7 +30,12 @@ import org.eclipse.swt.graphics.Image;
 public class TaskListLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider, IFontProvider {
 
 	private Color backgroundColor = null;
-	    
+	
+	@Override
+	public String getText(Object obj){
+		return getColumnText(obj, 3);
+	}
+	
     public String getColumnText(Object obj, int columnIndex) {
     	if (obj instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) obj;
