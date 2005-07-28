@@ -68,7 +68,9 @@ import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
+import org.eclipse.mylar.tasklist.ui.actions.NextTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.swt.SWT;
@@ -122,6 +124,8 @@ public class TaskListView extends ViewPart {
     
     private DeleteAction delete;
     private OpenTaskEditorAction doubleClickAction;
+    private PreviousTaskAction previousTaskAction;
+    private NextTaskAction nextTaskAction;
 
     //private Action toggleIntersectionModeAction = new ToggleIntersectionModeAction();
 //    private Action toggleFilteringAction = new ToggleGlobalInterestFilteringAction();
@@ -145,7 +149,9 @@ public class TaskListView extends ViewPart {
     public static final String tableSortIdentifier = "org.eclipse.mylar.tasklist.ui.views.tasklist.sortIndex";
     private int sortIndex = 2;
     
-    private static String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };    
+    private static String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
+    
+    private TaskActivationHistory taskHistory = new TaskActivationHistory();
     
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
@@ -597,6 +603,7 @@ public class TaskListView extends ViewPart {
 								new TaskDeactivateAction(task, INSTANCE).run();
 							} else {
 								new TaskActivateAction(task).run();
+								addTaskToHistory(task);
 							}
 							getViewer().setSelection(null);
 						}
@@ -625,6 +632,18 @@ public class TaskListView extends ViewPart {
 				MylarPlugin.log(e, e.getMessage());
 			}
 		}                
+    }
+    
+    public void addTaskToHistory(ITask task) {
+    	if (!MylarTasklistPlugin.getDefault().isMultipleMode()) {
+    		taskHistory.addTask(task);
+    		nextTaskAction.setEnabled(taskHistory.hasNext());
+    		previousTaskAction.setEnabled(taskHistory.hasPrevious());
+    	}
+    }
+    
+    public void clearTaskHistory() {
+    	taskHistory.clear();
     }
     
     private class TaskListTableSorter extends ViewerSorter {
@@ -737,6 +756,10 @@ public class TaskListView extends ViewPart {
 //        	MylarTasklistPlugin.getTaskListManager().getTaskList().addFilter(inCompleteFilter);
         if (MylarTasklistPlugin.getDefault().isFilterCompleteMode()) 
         	addFilter(COMPLETE_FILTER);
+        if (MylarTasklistPlugin.getDefault().isMultipleMode()) {
+        	togglePreviousAction(false);
+        	toggleNextAction(false);
+        }
         
         getViewer().refresh();
     }
@@ -932,8 +955,10 @@ public class TaskListView extends ViewPart {
     private void fillLocalPullDown(IMenuManager manager) {
     	drillDownAdapter.addNavigationActions(manager);
     	manager.add(new Separator());
-    }
-
+    	manager.add(previousTaskAction);
+    	manager.add(nextTaskAction);
+    }    
+    
     void fillContextMenu(IMenuManager manager) {
     	ITaskListElement element = null;;
         final Object selectedObject = ((IStructuredSelection)getViewer().getSelection()).getFirstElement();
@@ -1028,8 +1053,26 @@ public class TaskListView extends ViewPart {
         filterCompleteTask = new FilterCompletedTasksAction(this);        
 //        filterInCompleteTask = new FilterIncompleteTasksAction();                        
         filterOnPriority = new PriorityDropDownAction();
+        previousTaskAction = new PreviousTaskAction(this, taskHistory);
+        nextTaskAction = new NextTaskAction(this, taskHistory);
     }
 
+    
+    public void toggleNextAction(boolean enable) {
+    	nextTaskAction.setEnabled(enable);
+    }
+    
+    public void togglePreviousAction(boolean enable) {
+    	previousTaskAction.setEnabled(enable);
+    }
+    
+    public NextTaskAction getNextTaskAction() {
+    	return nextTaskAction;
+    }
+    
+    public PreviousTaskAction getPreviousTaskAction() {
+    	return previousTaskAction;
+    }
     /**
 	 * Recursive function that checks for the occurrence of a certain task id.
 	 * All children of the supplied node will be checked.

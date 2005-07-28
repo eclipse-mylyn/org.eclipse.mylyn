@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskListExternalizer;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.IWorkbench;
@@ -227,6 +228,10 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
 					String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
 					getTaskListManager().setTaskListFile(new File(path));
 				}
+			} else if (event.getProperty().equals(MULTIPLE_ACTIVE_TASKS)) {
+				TaskListView.getDefault().togglePreviousAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
+				TaskListView.getDefault().toggleNextAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
+				TaskListView.getDefault().clearTaskHistory();
 			} else {
 			}
 		}        
