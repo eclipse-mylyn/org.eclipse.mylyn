@@ -10,10 +10,17 @@
  *******************************************************************************/
 package org.eclipse.mylar.ui.internal.views;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import org.eclipse.mylar.ui.*;
+import org.eclipse.mylar.core.IMylarContextListener;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.internal.ColorCoordinatesChange;
 import org.eclipse.mylar.ui.internal.ColorMap;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -67,6 +74,8 @@ public class HighlighterList {
 		intersectionHighlighter.setIntersection(true);
 		MylarUiPlugin.getDefault().setIntersectionHighlighter(
 				intersectionHighlighter);
+		
+		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
 //		MylarUiPlugin.getDefault().setDefaultHighlighter(
 //				highlighters.get(0));
 	}
@@ -129,6 +138,49 @@ public class HighlighterList {
 				Highlighter hl = new Highlighter(data[i]);
 				this.highlighters.add(hl);
 			}
+		}
+	}
+	
+	public void updateHighlighterWithGamma(ColorMap.GammaSetting prev, ColorMap.GammaSetting curr) {
+		int res = ColorMap.GammaSetting.compare(prev, curr);		
+		if (res < 0) {
+			lightenAllColors(Math.abs(res));
+			
+		} else if (res > 0) {
+			darkenAllColors(Math.abs(res));
+		} 
+		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
+	}
+	
+	private void darkenAllColors(int degree) {
+		for (Highlighter hl : highlighters) {
+			Color c = hl.getCore();
+			double[] HSV = ColorCoordinatesChange.RGBToHSV(c.getRed(), c.getGreen(), c.getBlue());
+			if (degree != 2) {
+				HSV[1] *= 2;
+			} else {
+				HSV[1] *= 3;
+			}
+			if (HSV[1] > 1) HSV[1] = 1;
+			
+			int[] newRGB = ColorCoordinatesChange.HSVtoRGB(HSV[0], HSV[1], HSV[2]);
+			Color rgb = new Color(Display.getDefault(), newRGB[0], newRGB[1], newRGB[2]);
+			hl.setCore(rgb);
+		}
+	}
+	
+	private void lightenAllColors(int degree) {
+		for (Highlighter hl : highlighters) {
+			Color c = hl.getCore();
+			double[] HSV = ColorCoordinatesChange.RGBToHSV(c.getRed(), c.getGreen(), c.getBlue());
+			if (degree != 2) {
+				HSV[1] *= 0.5;
+			} else {
+				HSV[1] *= 0.333;
+			}			
+			int[] newRGB = ColorCoordinatesChange.HSVtoRGB(HSV[0], HSV[1], HSV[2]);
+			Color rgb = new Color(Display.getDefault(), newRGB[0], newRGB[1], newRGB[2]);
+			hl.setCore(rgb);
 		}
 	}
 }

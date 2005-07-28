@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.internal.ColorMap;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -45,6 +46,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -85,9 +87,9 @@ public class MylarPreferencePage extends PreferencePage implements
 	private HighlighterContentProvider contentProvider = null;
 	
 	// Buttons for gamma setting
-//	private Button lightened;
-//	private Button darkened;
-//	private Button standard;
+	private Button lightened;
+	private Button darkened;
+	private Button standard;
 
 	
 	// Button for browsing file system
@@ -129,7 +131,7 @@ public class MylarPreferencePage extends PreferencePage implements
 		tableViewer.setContentProvider(contentProvider);
 		tableViewer.setLabelProvider(new HighlighterLabelProvider());
 		tableViewer.setInput(MylarUiPlugin.getDefault().getHighlighterList());
-//		createGammaSettingControl(entryTable);				        		
+		createGammaSettingControl(entryTable);				        		
 		return entryTable;
 	}
 
@@ -170,25 +172,25 @@ public class MylarPreferencePage extends PreferencePage implements
 	public boolean performOk() {        
 		getPreferenceStore().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX, MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
         		
-//		ColorMap.GammaSetting gm = null;
-//		if (standard.getSelection()) {
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,true);
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
-//			gm = ColorMap.GammaSetting.STANDARD;
-//		} else if (lightened.getSelection()) {
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,true);
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
-//			gm = ColorMap.GammaSetting.LIGHTEN;
-//		} else if (darkened.getSelection()) {
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
-//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,true);
-//			gm = ColorMap.GammaSetting.DARKEN;
-//		}
-//		// update gamma setting
-//		MylarUiPlugin.getDefault().getColorMap().setGammaSetting(gm);
+		ColorMap.GammaSetting gm = null;
+		if (standard.getSelection()) {
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,true);
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
+			gm = ColorMap.GammaSetting.STANDARD;
+		} else if (lightened.getSelection()) {
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,true);
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
+			gm = ColorMap.GammaSetting.LIGHTEN;
+		} else if (darkened.getSelection()) {
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
+			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,true);
+			gm = ColorMap.GammaSetting.DARKEN;
+		}
+		// update gamma setting
+		MylarUiPlugin.getDefault().updateGammaSetting(gm);
 		
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");		
@@ -208,12 +210,12 @@ public class MylarPreferencePage extends PreferencePage implements
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		
-//		lightened.setSelection(getPreferenceStore().getBoolean(
-//				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
-//		standard.setSelection(getPreferenceStore().getBoolean(
-//				MylarUiPlugin.GAMMA_SETTING_STANDARD));
-//		darkened.setSelection(getPreferenceStore().getBoolean(
-//				MylarUiPlugin.GAMMA_SETTING_DARKENED));
+		lightened.setSelection(getPreferenceStore().getBoolean(
+				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+		standard.setSelection(getPreferenceStore().getBoolean(
+				MylarUiPlugin.GAMMA_SETTING_STANDARD));
+		darkened.setSelection(getPreferenceStore().getBoolean(
+				MylarUiPlugin.GAMMA_SETTING_DARKENED));
 		
 		return true;
 	}
@@ -227,20 +229,21 @@ public class MylarPreferencePage extends PreferencePage implements
 	public void performDefaults() {
 		super.performDefaults();     
 		
-		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();				
+					
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		
-//		standard.setSelection(getPreferenceStore().getDefaultBoolean(
-//				MylarUiPlugin.GAMMA_SETTING_STANDARD));
-//		lightened.setSelection(getPreferenceStore().getDefaultBoolean(
-//				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
-//		darkened.setSelection(getPreferenceStore().getDefaultBoolean(
-//				MylarUiPlugin.GAMMA_SETTING_DARKENED));
+		standard.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarUiPlugin.GAMMA_SETTING_STANDARD));
+		lightened.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+		darkened.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarUiPlugin.GAMMA_SETTING_DARKENED));
 //		
 		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 		String taskDirectory = rootPath.toString() + "/" +MylarPlugin.MYLAR_DIR_NAME;
 		taskDirectoryText.setText(taskDirectory);
+		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();
 		return;
 	}
 
@@ -701,22 +704,22 @@ public class MylarPreferencePage extends PreferencePage implements
 		});
 	}	
 
-//	private void createGammaSettingControl(Composite parent) {
-//		Group gammaSettingComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);
-//		
-//		gammaSettingComposite.setLayout(new RowLayout());
-//		gammaSettingComposite.setText("Gamma Setting");
-//		lightened = new Button(gammaSettingComposite, SWT.RADIO);
-//		lightened.setText("Lightened");
-//		lightened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
-//		standard = new Button(gammaSettingComposite, SWT.RADIO);
-//		standard.setText("Standard");
-//		standard.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_STANDARD));
-//		darkened = new Button(gammaSettingComposite, SWT.RADIO);
-//		darkened.setText("Darkened");
-//		darkened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_DARKENED));		
-//		return;
-//	}
+	private void createGammaSettingControl(Composite parent) {
+		Group gammaSettingComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);
+		
+		gammaSettingComposite.setLayout(new RowLayout());
+		gammaSettingComposite.setText("Gamma Setting");
+		lightened = new Button(gammaSettingComposite, SWT.RADIO);
+		lightened.setText("Lightened");
+		lightened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+		standard = new Button(gammaSettingComposite, SWT.RADIO);
+		standard.setText("Standard");
+		standard.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_STANDARD));
+		darkened = new Button(gammaSettingComposite, SWT.RADIO);
+		darkened.setText("Darkened");
+		darkened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_DARKENED));		
+		return;
+	}
 	
 	private void createTaskDirectoryControl(Composite parent) {
 		Group taskDirComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);

@@ -315,6 +315,12 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         }
     }
 
+    public void updateGammaSetting(ColorMap.GammaSetting setting) {
+    	if (colorMap.getGammaSetting() != setting) {
+    		highlighters.updateHighlighterWithGamma(colorMap.getGammaSetting(), setting);
+    		colorMap.setGammaSetting(setting);
+    	}
+    }
     public ColorMap getColorMap() {
         return colorMap;
     }

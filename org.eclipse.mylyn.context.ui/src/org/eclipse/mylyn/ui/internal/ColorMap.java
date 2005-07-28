@@ -24,7 +24,35 @@ public class ColorMap {
     public enum GammaSetting {
         LIGHTEN,
         DARKEN,
-        STANDARD
+        STANDARD;
+        
+        public static int compare(GammaSetting gs1, GammaSetting gs2) {
+        	if (gs1 == LIGHTEN) {
+        		if (gs2 == STANDARD) {
+        			return 1;
+        		} else if (gs2 == DARKEN) {
+        			return 2;        			
+        		} else {
+        			return 0;
+        		}
+        	} else if (gs1 == STANDARD) {
+        		if (gs2 == LIGHTEN) {
+        			return -1;
+        		} else if (gs2 == DARKEN){
+        			return 1;
+        		} else {
+        			return 0;
+        		}
+        	} else {
+        		if (gs2 == LIGHTEN) {
+        			return -2;
+        		} else if (gs2 == STANDARD) {
+        			return -1;        			
+        		} else {
+        			return 0;
+        		}
+        	}
+        }
     }
     
     private GammaSetting gammaSetting = GammaSetting.STANDARD;
