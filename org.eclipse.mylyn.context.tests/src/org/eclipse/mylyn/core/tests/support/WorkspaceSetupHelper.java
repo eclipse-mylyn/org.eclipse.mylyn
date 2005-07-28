@@ -37,7 +37,13 @@ public class WorkspaceSetupHelper {
 	private static IJavaProject project2;
 	private static TestProject jdtCoreDomProject;
     private static IWorkspaceRoot workspaceRoot;
-	    
+	
+    public static void clearWorkspace() throws CoreException, IOException{
+    	isSetup = false;
+    	ResourcesPlugin.getWorkspace().getRoot().delete(true, true, new NullProgressMonitor());
+    	clearDoiModel();
+    }
+    
 	public static IWorkspaceRoot setupWorkspace() throws CoreException, IOException{
 		if(isSetup){
 			clearDoiModel();

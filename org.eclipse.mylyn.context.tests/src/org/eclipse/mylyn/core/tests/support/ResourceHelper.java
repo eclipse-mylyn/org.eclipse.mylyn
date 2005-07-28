@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -28,6 +29,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.MylarCoreTestsPlugin;
 import org.eclipse.pde.internal.PDE;
 import org.eclipse.pde.internal.PluginProject;
@@ -39,7 +41,40 @@ import org.eclipse.pde.internal.PluginProject;
 public class ResourceHelper {
 	
 	private final static IProgressMonitor NULL_MONITOR= new NullProgressMonitor();
+	private static final int MAX_RETRY= 10;
+	
+	public static void deleteProject(String projectName) throws CoreException {
+		IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
+		IProject project= root.getProject(projectName);
+		if (project.exists())
+			delete(project);
+	}
+	
+	public static void delete(final IResource resource) throws CoreException {
+		IWorkspaceRunnable runnable= new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				for (int i= 0; i < MAX_RETRY; i++) {
+					try {
+						resource.delete(true, null);
+						i= MAX_RETRY;
+					} catch (CoreException e) {
+						if (i == MAX_RETRY - 1) {
+							MylarPlugin.log(e.getStatus());
+							throw e;
+						}
+						System.gc(); // help windows to really close file locks
+						try {
+							Thread.sleep(1000); // sleep a second
+						} catch (InterruptedException e1) {
+						} 
+					}
+				}
+			}
+		};
+		ResourcesPlugin.getWorkspace().run(runnable, null);	
 		
+	}
+	
 	private static IProject createProject(String projectName) throws CoreException {
 		
 		IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
