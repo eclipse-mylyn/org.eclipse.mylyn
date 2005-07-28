@@ -3,6 +3,16 @@
 <plugin>
     <extension-point id="taskListContributor" name="TaskList Contributor" schema="schema/taskListContributor.exsd"/>
 
+	<extension
+         id="org.eclipse.mylar.helpDocs"
+         name="Mylar Help"
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="false">
+      </toc>
+   </extension>
+
     <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
