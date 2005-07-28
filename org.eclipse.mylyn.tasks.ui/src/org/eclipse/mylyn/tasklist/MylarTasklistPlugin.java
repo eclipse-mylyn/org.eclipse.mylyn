@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -68,9 +69,47 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
     public static final String SELECTED_PRIORITY = "org.eclipse.mylar.tasklist.filter.priority";
     public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.complete";
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";
+    public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylar.tasklist.save.mode";
+    public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
     
 	private ResourceBundle resourceBundle;
+	private static Date lastSave = null;
 //	private ITaskListActionContributor primaryContributor;
+	public enum TaskListSaveMode {
+		ONE_HOUR,
+		THREE_HOURS,
+		DAY;
+		 @Override
+        public String toString() {
+            switch(this) {
+                case ONE_HOUR: return "1 hour";
+                case THREE_HOURS: return "3 hours";
+                case DAY: return "1 day";
+                default: return "3 hours";
+            }
+        }
+        public static TaskListSaveMode fromString(String string) {
+            if (string == null) return null;
+            if (string.equals("1 hour")) return ONE_HOUR;
+            if (string.equals("3 hours")) return THREE_HOURS;
+            if (string.equals("1 day")) return DAY;
+            return null;
+        }
+        public static long fromStringToLong(String string) {
+        	long hour = 3600*1000;
+        	switch(fromString(string)) {
+        		case ONE_HOUR:
+        			return hour;
+        		case THREE_HOURS:
+        			return hour * 3;
+        		case DAY:
+        			return hour * 24;
+        		default:
+        			return hour * 3;
+        	}
+        }
+	}
+	
 	public enum Report_Open_Mode {
 		EDITOR,
 		INTERNAL_BROWSER,
@@ -133,6 +172,28 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
             for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
                 MylarPlugin.getContextManager().saveTaskscape(task.getHandle(), task.getPath());
             }
+            lastSave = new Date();
+			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+        }
+        
+        private void checkTaskListSave() {
+        	if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
+    			lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
+    		} else {
+    			lastSave = new Date();
+    			getPrefs().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+    		}
+        	Date currentTime = new Date();        	
+        	if (currentTime.getTime() > lastSave.getTime() + TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
+        		taskListManager.saveTaskList();
+        		lastSave = new Date();
+    			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+        	} else {        		
+//        		System.out.println("Tasklist not saved auto yet");
+//        		System.out.println("Save time: " + new Date(
+//        				lastSave.getTime() + 
+//        				TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))).toString());
+        	}
         }
         
         public void shellClosed(ShellEvent arg0) {
@@ -142,7 +203,9 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
         public void shellDeactivated(ShellEvent arg0) { 
         	// bug 1002249: too slow to save state here
         }
-        public void shellActivated(ShellEvent arg0) { }
+        public void shellActivated(ShellEvent arg0) { 
+        	checkTaskListSave();
+        }
         
         public void shellDeiconified(ShellEvent arg0) { }
         
@@ -207,15 +270,14 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
 
     @Override
     protected void initializeDefaultPreferences(IPreferenceStore store) {
-       	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);
-    	
+       	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);    	
     	store.setDefault(SELECTED_PRIORITY, "P5");
     	store.setDefault(REPORT_OPEN_EDITOR, true);
     	store.setDefault(REPORT_OPEN_INTERNAL, false);
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     	store.setDefault(MULTIPLE_ACTIVE_TASKS, false);
-    }
-
+    	store.setDefault(SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
+    }    
     
     public static TaskListManager getTaskListManager() {
         return taskListManager;
@@ -370,5 +432,12 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
     
     public boolean isMultipleMode() {
     	return getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS);
+    }
+    
+    public String[] getSaveOptions() {
+    	String[] options = {TaskListSaveMode.ONE_HOUR.toString(),
+    			TaskListSaveMode.THREE_HOURS.toString(),
+    			TaskListSaveMode.DAY.toString()};
+    	return options;
     }
 }
