@@ -48,31 +48,14 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 								Match[] matches = fResult.getMatches(res);
 								fResult.removeMatches(matches);
 	
-//								// change the file into a document
-//								FileEditorInput fei = new FileEditorInput(
-//										(IFile) res);
-//	
-//								for (int j = 0; j < matches.length; j++) {
+								
+								
+								for (int j = 0; j < matches.length; j++) {
 //									Match m = matches[j];
-//									try {
-//										XmlNodeHelper xnode = new XmlNodeHelper(
-//												fei, m.getOffset()); // need to find the node without the file
-//										IMylarStructureBridge bridge = MylarPlugin
-//												.getDefault().getStructureBridge(
-//														((IFile)res).getName());
-//										String handle = xnode.getHandle();
-//										Object o = bridge
-//												.getObjectForHandle(handle);
-//										String name = bridge.getName(o);
-//										if (o != null) {
-//											// XXX remove the node and the reference
-//											System.out.println("REMOVED RES: " + handle);
-//										}
-//										System.out.println("REMOVED RES: " + handle);
-//									} catch (Exception e) {
-//										MylarPlugin.log(e, "search failed");
-//									}
-//								}
+//									XmlNodeHelper xnode = XmlReferencesProvider.nodeMap.remove(m);
+//									System.out.println("REMOVED RES: " + xnode.getHandle());
+//									System.out.println(XmlReferencesProvider.nodeMap);
+								}
 							}
 							break;
 						case IResourceDelta.CHANGED :

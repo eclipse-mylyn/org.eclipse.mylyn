@@ -60,6 +60,8 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     public static final String NAME = "Xml references";
     
     public static List<Job> runningJobs = new ArrayList<Job>();
+
+    public static Map<Match, XmlNodeHelper> nodeMap = new HashMap<Match, XmlNodeHelper>();
     
     public XmlReferencesProvider() {
         // TODO: should this be a generic XML extension?
@@ -211,6 +213,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
                                    Match m = mar[j];
                                    try{
                                        XmlNodeHelper xnode = new XmlNodeHelper(fei, m.getOffset());
+                                       nodeMap.put(m, xnode);
                                        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
                                        String handle = xnode.getHandle();
                                        Object o = bridge.getObjectForHandle(handle);
