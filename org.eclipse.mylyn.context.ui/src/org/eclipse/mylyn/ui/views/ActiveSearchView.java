@@ -111,7 +111,9 @@ public class ActiveSearchView extends ViewPart {
         }
 
         public void presentationSettingsChanged(UpdateKind kind) {
-            if (kind == IMylarContextListener.UpdateKind.HIGHLIGHTER) viewer.refresh(); 
+        	if(viewer != null && !viewer.getTree().isDisposed()){
+        		if (kind == IMylarContextListener.UpdateKind.HIGHLIGHTER) viewer.refresh();
+        	}
         }
 
         public void nodeDeleted(IMylarContextNode node) {
