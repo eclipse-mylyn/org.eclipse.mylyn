@@ -35,6 +35,8 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
     public void decorate(Object element, IDecoration decoration) {
     	IMylarStructureBridge adapter = null;
     	try {
+    		if(MylarPlugin.getDefault() == null)
+    			return;
     		adapter = MylarPlugin.getDefault().getStructureBridge(element);
 	    } catch (ConcurrentModificationException cme) {
 	    	// ignored, because we can add structure bridges during decoration
