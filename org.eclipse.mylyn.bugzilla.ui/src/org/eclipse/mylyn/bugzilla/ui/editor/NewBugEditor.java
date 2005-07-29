@@ -345,5 +345,10 @@ public class NewBugEditor extends AbstractBugEditor {
 			changeDirtyStatus(true);
 		}
 	}
+
+	@Override
+	protected void addCCList(String value, Composite attributesComposite) {
+		// do nothing here right now
+	}
 	
 }

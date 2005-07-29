@@ -257,7 +257,7 @@ public class BugParser
 		if (attributeName.toLowerCase().startsWith("cc")) {
 			for (Iterator<String> it = a.getOptionValues().keySet().iterator(); it.hasNext(); ) {
 				String email = it.next();
-				bug.addCC(email);
+				bug.addCC(HtmlStreamTokenizer.unescape(email));
 			}
 		}
 		else {
@@ -280,21 +280,21 @@ public class BugParser
 
 		Attribute a = new Attribute(attributeName);
 		a.setParameterName(tag.getAttribute("name"));
+		String name = tag.getAttribute("name");
 		String value = tag.getAttribute("value");
 		if (value == null) value = "";
-
+		
 		// if we found the summary, add it to the bug report
-		if (attributeName.equalsIgnoreCase("summary")) {
+		if (name.equalsIgnoreCase("short_desc")) {
 			bug.setSummary(value);
 		}
-		else if (attributeName.equalsIgnoreCase("Attachments")) {
-			// do nothing - not a problem after 2.14
+		else if (name.equalsIgnoreCase("bug_file_loc")) {
+			a.setValue(value);
+			bug.addAttribute(a);
 		}
-		else if (attributeName.equalsIgnoreCase("add cc")) {
-			// do nothing
-		}
-		else if (attributeName.toLowerCase().startsWith("cc")) {
-			// do nothing cc's are options not inputs
+		else if (name.equalsIgnoreCase("newcc")) {
+			a.setValue(value);
+			bug.addAttribute(a);
 		}
 		else {
 			// otherwise just add the attribute

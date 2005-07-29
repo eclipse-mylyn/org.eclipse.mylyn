@@ -13,7 +13,9 @@ package org.eclipse.mylar.bugzilla.ui.editor;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.security.auth.login.LoginException;
@@ -46,6 +48,7 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.Operation;
 import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.core.compare.BugzillaCompareInput;
+import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
@@ -87,6 +90,7 @@ import org.eclipse.ui.internal.Workbench;
 public class ExistingBugEditor extends AbstractBugEditor
 {
 
+	protected Set<String> removeCC = new HashSet<String>();
 	protected BugzillaCompareInput compareInput;
 	protected Button compareButton;
 	
@@ -94,6 +98,8 @@ public class ExistingBugEditor extends AbstractBugEditor
 	protected Control[] radioOptions;
 	protected List keyWordsList;
 	protected Text keywordsText;
+	protected List ccList;
+	protected Text ccText;
 	protected Text addCommentsText;
 	protected BugReport bug;
 
@@ -301,6 +307,17 @@ public class ExistingBugEditor extends AbstractBugEditor
 		return bug.getLabel() + ": " + checkText(bug.getAttribute("Summary").getNewValue());
 	}
 
+	private String toCommaSeparatedList(String[] strings) {
+		StringBuffer buffer = new StringBuffer();
+		for(int i = 0; i < strings.length; i++) {
+			buffer.append(strings[i]);
+			if (i != strings.length - 1) {
+				buffer.append(",");
+			}
+		}
+		return buffer.toString();
+	}
+	
 	@Override
 	protected void submitBug() {
 		final BugPost form = new BugPost();
@@ -329,6 +346,12 @@ public class ExistingBugEditor extends AbstractBugEditor
 		// add the summary to the bug post
 		form.add("short_desc", bug.getAttribute("Summary").getNewValue());
 
+		if(removeCC != null && removeCC.size() > 0){
+			String[] s = new String[removeCC.size()];	
+			form.add("cc", toCommaSeparatedList(removeCC.toArray(s)));
+			form.add("removecc", "true");
+		}
+		
 		// add the operation to the bug post
 		Operation o = bug.getSelectedOperation();
 		if (o == null)
@@ -575,6 +598,72 @@ public class ExistingBugEditor extends AbstractBugEditor
 	}
 
 	@Override
+	protected void addCCList(String ccValue, Composite attributesComposite) {
+		newLayout(attributesComposite, 1, "Add CC:", PROPERTY);
+		ccText = new Text(attributesComposite, SWT.BORDER);
+		ccText.setFont(TEXT_FONT);
+		ccText.setEditable(true);
+		ccText.setForeground(foreground);
+		ccText.setBackground(background);
+		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		ccData.horizontalSpan = 1;
+		ccData.widthHint = 200;
+		ccText.setLayoutData(ccData);
+		ccText.setText(ccValue);
+		ccText.addListener(SWT.FocusIn, new GenericListener());
+		ccText.addModifyListener(new ModifyListener(){
+
+			public void modifyText(ModifyEvent e) {
+				changeDirtyStatus(true);
+				Attribute a = bug.getAttributeForKnobName("newcc");
+				if(a != null){
+					a.setNewValue(ccText.getText());
+				}
+			}
+			
+		});
+		
+		newLayout(attributesComposite, 1, "CC: (Select to remove)", PROPERTY);
+		
+		ccList = new List(attributesComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		ccList.setFont(TEXT_FONT);
+		GridData ccListData =
+			new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		ccListData.horizontalSpan = 1;
+		ccListData.widthHint = 125;
+		ccListData.heightHint = 40;
+		ccList.setLayoutData(ccListData);
+		
+		// initialize the keywords list with valid values
+		Set<String> ccs = bug.getCC();
+		if (ccs != null) {
+			for (Iterator<String> it = ccs.iterator(); it.hasNext(); ) {
+				String cc = it.next();
+				ccList.add(HtmlStreamTokenizer.unescape(cc));
+			}
+		}
+		
+		ccList.addSelectionListener(new SelectionListener(){
+
+			public void widgetSelected(SelectionEvent e) {
+				changeDirtyStatus(true);
+				
+				for(String cc: ccList.getItems()){
+					int index = ccList.indexOf(cc);
+					if(ccList.isSelected(index)){
+						removeCC.add(cc);
+					} else {
+						removeCC.remove(cc);
+					}
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {}			
+		});
+		ccList.addListener(SWT.FocusIn, new GenericListener());
+	}
+
+	@Override
 	protected void updateBug() {
 			
 		// go through all of the attributes and update the main values to the new ones
@@ -641,7 +730,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 			}
 		
 		}
-	
+		
 	/**
 	 * Class to handle the selection change of the keywords.
 	 */

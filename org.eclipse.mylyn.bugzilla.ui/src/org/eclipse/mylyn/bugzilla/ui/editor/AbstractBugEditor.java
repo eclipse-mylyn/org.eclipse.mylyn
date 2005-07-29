@@ -567,6 +567,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		bugzillaInput.setToolTipText(title);
 		int currentCol = 1;
 		
+		String ccValue = null;
+		
 		//	Populate Attributes
 		for (Iterator<Attribute> it = getBug().getAttributes().iterator(); it.hasNext();) {
 			Attribute attribute = it.next();
@@ -593,9 +595,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				keywords = value;
 			}
 			else if (key.equals("newcc")) {
-				// we don't do anything with the cc yet
-				// add add an editable field as well as a table with the other cc's in it
-				// problem is is that we don't want to handle the error when the e-mail addr is incorrect - add a note saying that if wrong, no changes submitted
+				ccValue = value;
+				if(value == null)
+					ccValue = "";
 			}
 			else if (key.equals("bug_file_loc")) {
 				url = value;
@@ -815,6 +817,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		
 		// keywords text field (not editable)
 		addKeywordsList(keywords, attributesComposite);
+		if(ccValue != null){
+			addCCList(ccValue, attributesComposite);
+		}
 		addSummaryText(attributesComposite);
 		// End URL, Keywords, Summary Text Fields
 	}
@@ -861,6 +866,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 */
 	protected abstract void addKeywordsList(String keywords, Composite attributesComposite);
 
+	protected abstract void addCCList(String value, Composite attributesComposite);
+	
 	/**
 	 * Adds a text field to display and edit the bug's summary.
 	 * 

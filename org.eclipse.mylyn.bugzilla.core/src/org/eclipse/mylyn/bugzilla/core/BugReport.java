@@ -183,6 +183,20 @@ public class BugReport implements Serializable, IBugzillaBug {
 		// return the list of attributes for the bug
 		return attributeEntries;
 	}
+	
+	public Attribute getAttributeForKnobName(String knobName){
+		for (Iterator<String> it = attributeKeys.iterator(); it.hasNext();) {
+			String key = it.next();
+
+			Attribute attribute = attributes.get(key);
+			if(attribute != null && attribute.getParameterName() != null && attribute.getParameterName().compareTo(knobName) == 0){
+				return attribute;
+			}
+		}
+
+		return null;
+	}
+	
 
 	/**
 	 * Add an attribute to the bug
