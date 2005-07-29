@@ -115,11 +115,12 @@ import org.eclipse.ui.part.ViewPart;
 public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
-	
+		
 	private FilteredTree tree;
     private DrillDownAdapter drillDownAdapter;
     
     private CreateTaskAction createTask;
+    private CreateTaskAction createTaskToolbar;
     private CreateCategoryAction createCategory;
     
     private DeleteAction delete;
@@ -416,21 +417,21 @@ public class TaskListView extends ViewPart {
         private List<Object> applyFilter(List<Object> list) {
         	if (((Text)tree.getFilterControl()).getText() == "") {
         		List<Object> filteredRoots = new ArrayList<Object>();
-            	for (int i = 0; i < list.size(); i++) {
-            		if (list.get(i) instanceof ITask) {
-            			if (!filter(list.get(i))) {
-            				filteredRoots.add(list.get(i));
-            			}
-            		} else if (list.get(i) instanceof AbstractCategory) {
-            			if (selectCategory((AbstractCategory)list.get(i))) {
-            				filteredRoots.add(list.get(i));
-            			}
-            		}
-            	}
-            	return filteredRoots;	
+        		for (int i = 0; i < list.size(); i++) {
+        			if (list.get(i) instanceof ITask) {
+        				if (!filter(list.get(i))) {
+        					filteredRoots.add(list.get(i));
+        				}
+        			} else if (list.get(i) instanceof AbstractCategory) {
+        				if (selectCategory((AbstractCategory)list.get(i))) {
+        					filteredRoots.add(list.get(i));
+        				}
+        			}
+	        	}
+        		return filteredRoots;
         	} else {
         		return list;
-        	}        	
+        	}
         }
         
         private boolean selectCategory(AbstractCategory cat) {
@@ -448,25 +449,25 @@ public class TaskListView extends ViewPart {
         
         private List<Object> getFilteredChildrenFor(Object parent) {
         	if (((Text) tree.getFilterControl()).getText() == "") {
-				List<Object> children = new ArrayList<Object>();
-				if (parent instanceof AbstractCategory) {
+        		List<Object> children = new ArrayList<Object>();
+	        	if (parent instanceof AbstractCategory) {
 					List<? extends ITaskListElement> list = ((AbstractCategory) parent)
 							.getChildren();
-					for (int i = 0; i < list.size(); i++) {
-						if (!filter(list.get(i))) {
-							children.add(list.get(i));
-						}
-					}
-					return children;
-				} else if (parent instanceof Task) {
-					List<ITask> subTasks = ((Task) parent).getChildren();
-					for (ITask t : subTasks) {
-						if (!filter(t)) {
-							children.add(t);
-						}
-					}
-					return children;
-				}
+        			for (int i = 0; i < list.size(); i++) {
+            			if (!filter(list.get(i))) {
+            				children.add(list.get(i));
+	            		}    		
+    	        	}
+        			return children;
+        		} else if (parent instanceof Task) {
+        			List<ITask> subTasks = ((Task)parent).getChildren();
+	        		for (ITask t : subTasks) {
+    	    			if (!filter(t)) {
+        					children.add(t);
+        				}
+        			}
+	        		return children;
+    	    	}
 			} else {
 				List<Object> children = new ArrayList<Object>();
 				if (parent instanceof AbstractCategory) {
@@ -769,8 +770,9 @@ public class TaskListView extends ViewPart {
      * to create the viewer and initialize it.
      */
     @Override
-    public void createPartControl(Composite parent) {    	
+    public void createPartControl(Composite parent) {
     	tree = new FilteredTree(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
+    	((Text)tree.getFilterControl()).setText("type filter text here");
     	getViewer().getTree().setHeaderVisible(true);
     	getViewer().getTree().setLinesVisible(true);
     	getViewer().setColumnProperties(columnNames);
@@ -1041,7 +1043,8 @@ public class TaskListView extends ViewPart {
      *
      */
     private void makeActions() {
-    	createTask = new CreateTaskAction(this);        
+    	createTask = new CreateTaskAction(this);
+    	createTaskToolbar = new CreateTaskAction(this);   
         createCategory = new CreateCategoryAction(this);
          
         delete = new DeleteAction(this);
@@ -1201,7 +1204,7 @@ public class TaskListView extends ViewPart {
     
     public TaskCompleteFilter getCompleteFilter() {
     	return COMPLETE_FILTER;
-    }    
+    }
     
 //    public ViewerFilter getInCompleteFilter() {
 //    	return inCompleteFilter;
@@ -1278,16 +1281,15 @@ public class TaskListView extends ViewPart {
 
     private void fillLocalToolBar(IToolBarManager manager) {
     	manager.removeAll();
-	    
-    	manager.add(createTask);
+
+    	manager.add(createTaskToolbar);
         manager.add(createCategory);
         manager.add(new Separator("mylar"));
 
         manager.add(new Separator());
 	    manager.add(filterCompleteTask);
 	    manager.add(filterOnPriority);
-	    
-	    
+
     	manager.markDirty();
         manager.update(true);
     }
