@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -351,6 +354,190 @@ public class TaskListExternalizer {
 			return false;
 		}
     }
+
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private Document openAsDOM(String input) throws IOException {
+
+		// A factory API that enables applications to obtain a parser 
+		// that produces DOM object trees from XML documents
+		//
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+		// Using DocumentBuilder, obtain a Document from XML file.
+		//
+		DocumentBuilder builder = null;
+		Document document = null;
+		try {
+			// create new instance of DocumentBuilder
+			//
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException pce) {
+			MylarPlugin.log(pce, "Failed to load XML file");
+		}
+		try {
+			// Parse the content of the given file as an XML document 
+			// and return a new DOM Document object. Also throws IOException
+			StringReader s = new StringReader(input);
+			InputSource in = new InputSource(s);
+			document = builder.parse(in);
+		} catch (SAXException se) {
+			MylarPlugin.log(se, "Failed to parse XML file");
+		}
+		return document;
+	}
+    
+    public void readTaskList(TaskList tlist, String input) {
+		initExtensions();
+		try {
+
+			Document doc = openAsDOM(input);
+			if (doc == null) {
+				return;
+			}
+			// read root node to get version number
+			//
+			Element root = doc.getDocumentElement();
+			readVersion = root.getAttribute("Version");
+
+			if (readVersion.equals("1.0.0")) {
+				MylarPlugin.log("version: " + readVersion + " not supported", this);
+//				NodeList list = root.getChildNodes();
+//				for (int i = 0; i < list.getLength(); i++) {
+//					Node child = list.item(i);
+//					readTasksToNewFormat(child, tlist);
+//					//tlist.addRootTask(readTaskAndSubTasks(child, null, tlist));
+//				}
+			} else {
+				NodeList list = root.getChildNodes();
+				for (int i = 0; i < list.getLength(); i++) {
+					Node child = list.item(i);
+					boolean wasRead = false;
+					try {
+						if (child.getNodeName().endsWith(DefaultTaskListExternalizer.TAG_CATEGORY)) {													
+							for (ITaskListExternalizer externalizer : externalizers) {
+								if (externalizer.canReadCategory(child)) {
+									externalizer.readCategory(child, tlist);
+									wasRead = true;
+									break;
+								}
+							}
+							if (!wasRead && defaultExternalizer.canReadCategory(child)) {
+								defaultExternalizer.readCategory(child, tlist);
+							} else {
+								// MylarPlugin.log("Did not read: " +
+								// child.getNodeName(), this);
+							}						
+						} else {
+							for (ITaskListExternalizer externalizer : externalizers) {
+								if (externalizer.canReadTask(child)) {
+									// TODO add the tasks properly
+									ITask newTask = externalizer.readTask(child, tlist, null, null);
+									ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(newTask);
+								    if(taskHandler != null){
+							    		newTask = taskHandler.taskAdded(newTask);
+							    	}
+								    tlist.addRootTask(newTask);
+									
+									wasRead = true;
+									break;
+								}
+							}
+							if (!wasRead && defaultExternalizer.canReadTask(child)) {
+								tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+							} else {
+	//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
+							}
+						}
+					} catch (Exception e) {
+						MylarPlugin.log(e, "can't read xml string");
+					}
+				}
+			}
+		} catch (Exception e) {
+			MylarPlugin.log(e, "can't read xml string");
+		}
+	}
+    
+    public String getTaskListXml(TaskList tlist) {
+		// TODO make this and writeTaskList use the same base code
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;
+		Document doc = null;
+
+		try {
+			db = dbf.newDocumentBuilder();
+			doc = db.newDocument();
+		} catch (ParserConfigurationException e) {
+			MylarPlugin.log(e, "could not create document");
+			e.printStackTrace();
+		}
+
+		Element root = doc.createElement("TaskList");
+		root.setAttribute("Version", "1.0.1");
+
+		for (ITaskListExternalizer externalizer : externalizers) {
+			externalizer.createRegistry(doc, root);
+		}		
+
+		for (AbstractCategory category : tlist.getCategories()) {
+			Element element = null;
+			for (ITaskListExternalizer externalizer : externalizers) {
+				if (externalizer.canCreateElementFor(category)) element = externalizer.createCategoryElement(category, doc, root);
+			}
+			if (element == null && defaultExternalizer.canCreateElementFor(category)) {
+				defaultExternalizer.createCategoryElement(category, doc, root);		
+			} else if(element == null){
+				MylarPlugin.log("Did not externalize: " + category, this);
+			}
+		}
+		for (ITask task : tlist.getRootTasks()) {
+			try {
+				Element element = null;
+				for (ITaskListExternalizer externalizer : externalizers) {
+					if (externalizer.canCreateElementFor(task)) element = externalizer.createTaskElement(task, doc, root);
+				}
+				if (element == null && defaultExternalizer.canCreateElementFor(task)) {
+					defaultExternalizer.createTaskElement(task, doc, root);
+				} else if(element == null){
+					MylarPlugin.log("Did not externalize: " + task, this);
+				}
+			}catch (Exception e) {
+				MylarPlugin.log(e, e.getMessage());
+			}			
+		}
+		doc.appendChild(root);
+		StringWriter sw = new StringWriter();
+		
+		Source source = new DOMSource(doc);
+ 
+		Result result = new StreamResult(sw);
+
+		Transformer xformer = null;
+		try {
+			xformer = TransformerFactory.newInstance().newTransformer();
+			//Transform the XML Source to a Result
+			//
+			xformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return sw.toString();
+	}
+    
 
 // private static ITask readTaskAndSubTasks(Node node, ITask root, TaskList
 // tlist) {
