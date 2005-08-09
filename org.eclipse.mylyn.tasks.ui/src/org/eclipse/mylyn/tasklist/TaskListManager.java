@@ -178,4 +178,13 @@ public class TaskListManager {
     public ITask getTaskForHandle(String handle) {
     	return taskList.getTaskForHandle(handle);
     }
+
+	public String toXmlString() {
+		try {   
+        	return MylarTasklistPlugin.getDefault().getTaskListExternalizer().getTaskListXml(taskList);
+        } catch (Exception e) {
+            MylarPlugin.fail(e, "Could not save task list", true);
+        }
+        return null;
+	}
 }
