@@ -75,7 +75,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";
     public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylar.tasklist.save.mode";
     public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
-    public static final String REMINDER_CHECK = "org.eclipse.mylar.tasklist.reminder.check";
+//    public static final String REMINDER_CHECK = "org.eclipse.mylar.tasklist.reminder.check";
     
 	private ResourceBundle resourceBundle;
 	private static Date lastSave = null;
@@ -115,11 +115,12 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
         }
 	}
 	
-	public enum Report_Open_Mode {
+	public enum ReportOpenMode {
 		EDITOR,
 		INTERNAL_BROWSER,
 		EXTERNAL_BROWSER;
 	}
+	
 	public enum PriorityLevel {
         P1,
         P2,
@@ -202,8 +203,8 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
         }
         
         private void checkReminders() {
-        	if (getPrefs().getBoolean(REMINDER_CHECK)) {
-        		getPrefs().setValue(REMINDER_CHECK, false);
+//        	if (getPrefs().getBoolean(REMINDER_CHECK)) {
+//        		getPrefs().setValue(REMINDER_CHECK, false);
         		final TaskReportGenerator parser = new TaskReportGenerator(MylarTasklistPlugin.getTaskListManager().getTaskList());
         		parser.addCollector(new ReminderRequiredCollector());
         		parser.checkTasks();
@@ -216,7 +217,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
         				}
         			});
         		}
-        	}
+//        	}
         }
         
         public void shellClosed(ShellEvent arg0) {
@@ -294,7 +295,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
 		plugin = null;
 		resourceBundle = null;
 		createFileBackup();
-		getPrefs().setValue(REMINDER_CHECK, true);
+//		getPrefs().setValue(REMINDER_CHECK, true);
 	}
 
     @Override
@@ -306,7 +307,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     	store.setDefault(MULTIPLE_ACTIVE_TASKS, false);
     	store.setDefault(SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
-    	store.setDefault(REMINDER_CHECK, true);
+//    	store.setDefault(REMINDER_CHECK, true);
     	
     }    
     
@@ -386,13 +387,13 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
 		}
 	}
 	
-	public Report_Open_Mode getReportMode() {
+	public ReportOpenMode getReportMode() {
 		if (getPrefs().getBoolean(REPORT_OPEN_EDITOR)) {
-			return Report_Open_Mode.EDITOR;
+			return ReportOpenMode.EDITOR;
 		} else if (getPrefs().getBoolean(REPORT_OPEN_INTERNAL)) {
-			return Report_Open_Mode.INTERNAL_BROWSER;
+			return ReportOpenMode.INTERNAL_BROWSER;
 		} else {
-			return Report_Open_Mode.EXTERNAL_BROWSER;
+			return ReportOpenMode.EXTERNAL_BROWSER;
 		} 
 	}
 

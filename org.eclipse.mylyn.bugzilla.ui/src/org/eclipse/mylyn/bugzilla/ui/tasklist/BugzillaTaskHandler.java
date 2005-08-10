@@ -93,10 +93,10 @@ public class BugzillaTaskHandler implements ITaskHandler {
 
 		if (element instanceof BugzillaTask) {
 			BugzillaTask t = (BugzillaTask) element;
-			MylarTasklistPlugin.Report_Open_Mode mode = MylarTasklistPlugin.getDefault().getReportMode();
-			if (mode == MylarTasklistPlugin.Report_Open_Mode.EDITOR) {
+			MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
+			if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
 				t.openTaskInEditor();
-			} else if (mode == MylarTasklistPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
+			} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
 				BugzillaUITools.openUrl(t.getBugUrl());	    			
 			} else {
 				// not supported
@@ -113,8 +113,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
         	}
 	    } else if(element instanceof BugzillaHit){
 	    	BugzillaHit hit = (BugzillaHit)element;
-	    	MylarTasklistPlugin.Report_Open_Mode mode = MylarTasklistPlugin.getDefault().getReportMode();
-	    	if (mode == MylarTasklistPlugin.Report_Open_Mode.EDITOR) {
+	    	MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
+	    	if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
 	    		if(hit.hasCorrespondingActivatableTask()){
 		    		hit.getAssociatedTask().openTaskInEditor();
 		    	} else {
@@ -124,7 +124,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			    	ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
 					viewBugs.schedule();
 		    	}
-    		} else if (mode == MylarTasklistPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
+    		} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
     			BugzillaUITools.openUrl(hit.getBugUrl());  			
     		} else {
     			// not supported

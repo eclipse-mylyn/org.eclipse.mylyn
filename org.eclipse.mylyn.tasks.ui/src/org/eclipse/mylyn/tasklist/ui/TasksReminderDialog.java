@@ -54,6 +54,7 @@ public class TasksReminderDialog extends Dialog {
 	public TasksReminderDialog(Shell parentShell, List<ITask> remTasks) {
 		super(parentShell);		
 		tasks = remTasks;		
+		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.MODELESS | SWT.BORDER | SWT.TITLE);
 	}
 	
 	@Override

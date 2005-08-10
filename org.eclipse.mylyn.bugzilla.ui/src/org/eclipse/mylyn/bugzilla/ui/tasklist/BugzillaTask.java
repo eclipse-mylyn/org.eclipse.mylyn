@@ -273,8 +273,8 @@ public class BugzillaTask extends Task {
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					
-					MylarTasklistPlugin.Report_Open_Mode mode = MylarTasklistPlugin.getDefault().getReportMode();
-					if (mode == MylarTasklistPlugin.Report_Open_Mode.EDITOR) {
+					MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
+					if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
 						
 						try{
 							if(!isBugDownloaded()){
@@ -297,7 +297,7 @@ public class BugzillaTask extends Task {
 							MylarPlugin.log(ex, "couldn't open bugzilla task");
 							return;
 						}
-					} else if (mode == MylarTasklistPlugin.Report_Open_Mode.INTERNAL_BROWSER) {
+					} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
 						BugzillaUITools.openUrl(getBugUrl());	    			
 					}
 				}
