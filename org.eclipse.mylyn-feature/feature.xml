@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar_feature"
-      label="org.eclipse.mylar-feature"
+      label="Mylar IDE"
       version="0.3.3.1"
       provider-name="University of British Columbia"
       plugin="org.eclipse.mylar">
