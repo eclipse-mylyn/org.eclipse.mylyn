@@ -25,6 +25,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -47,6 +48,7 @@ import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.RelatedLinks;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.internal.RelativePathUtil;
+import org.eclipse.mylar.tasklist.ui.views.DateChooserDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -88,6 +90,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
@@ -100,6 +103,8 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class TaskSummaryEditor extends EditorPart {
 	
+	private static final String DESCRIPTION_OVERVIEW = "Task Summary";
+
 	/**
 	 * TODO: use workbench theme
 	 */
@@ -301,9 +306,9 @@ public class TaskSummaryEditor extends EditorPart {
 		}		
         
 		try {
-			createTaskSection(parent, toolkit);		
-			createNotesSection(parent, toolkit);
+			createOverviewSection(parent, toolkit);	
 			createPlanningGameSection(parent, toolkit);
+			createNotesSection(parent, toolkit);
 	        createRelatedLinksSection(parent, toolkit);
 	        createDetailsSection(parent, toolkit);
         } catch (SWTException e) {
@@ -312,9 +317,9 @@ public class TaskSummaryEditor extends EditorPart {
 		return null;
 	}
 	
-	private void createTaskSection(Composite parent, FormToolkit toolkit) {
+	private void createOverviewSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.setText("Mylar Task Description");
+		section.setText(DESCRIPTION_OVERVIEW);
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
@@ -350,7 +355,7 @@ public class TaskSummaryEditor extends EditorPart {
         }
         l = toolkit.createLabel(container, "Reminder:");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
-        Text reminderDate = toolkit.createText(container,task.getReminderDateString(true), SWT.BORDER);        
+        final Text reminderDate = toolkit.createText(container,task.getReminderDateString(true), SWT.BORDER);        
         reminderDate.setLayoutData(layout);
         td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
@@ -363,7 +368,12 @@ public class TaskSummaryEditor extends EditorPart {
 //        dateSelect.setLayoutData(td);
         dateSelect.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				// TODO: open Date Chooser				
+				ITask task = ((TaskEditorInput)getEditorInput()).getTask();
+				DateChooserDialog dialog = new DateChooserDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());	    		   	
+				if (dialog.open() == Dialog.OK && dialog.getReminderDate() != null) {
+					task.setReminderDate(dialog.getReminderDate().getTime());
+					reminderDate.setText(task.getReminderDateString(true));
+				}	
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
@@ -413,7 +423,7 @@ public class TaskSummaryEditor extends EditorPart {
 	}
 	
 	private void createPlanningGameSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText("Planning Game");			
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));

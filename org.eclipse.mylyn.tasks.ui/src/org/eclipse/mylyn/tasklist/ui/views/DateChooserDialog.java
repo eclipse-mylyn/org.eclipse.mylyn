@@ -11,9 +11,17 @@
 
 package org.eclipse.mylar.tasklist.ui.views;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.mylar.tasklist.contribution.DatePicker;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -21,34 +29,49 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class DateChooserDialog extends Dialog {
 
-//	private DatePicker picker = null;
-	private Date reminderDate = null;
-	
+	private DatePicker picker = null;
+	private Calendar reminderDate = null;
+		
 	public DateChooserDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
-//	protected Control createDialogArea(Composite parent) {
-//		Composite composite = (Composite) super.createDialogArea(parent);
-//		GridLayout gl = new GridLayout(1, false);
-//		composite.setLayout(gl);
-//		GridData data = new GridData(GridData.FILL_BOTH);
-//		
-//		picker = new DatePicker(composite, SWT.NONE);
-//		data.heightHint = 90; // HACK
-//		picker.setLayoutData(data);
-//		return composite;
-//	}
-//	
-//	protected void buttonPressed(int buttonId) {
-//		if (buttonId == IDialogConstants.OK_ID) {
-//			reminderDate = picker.getDate();
-//		} else {
-//		}
-//		super.buttonPressed(buttonId);
-//	}
+	public DateChooserDialog(Shell parentShell, Date reminderDate) {
+		super(parentShell);
+		this.reminderDate = Calendar.getInstance();
+		this.reminderDate.setTime(reminderDate);
+	}
 	
-	public Date getReminderDate() {
+	protected Control createDialogArea(Composite parent) {
+		Composite composite = (Composite) super.createDialogArea(parent);
+		GridLayout gl = new GridLayout(1, false);
+		composite.setLayout(gl);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		
+		picker = new DatePicker(composite, SWT.NONE);
+//		picker.setDate()
+		
+		data.heightHint = 90; // HACK
+		picker.setLayoutData(data);
+		return composite;
+	}
+
+
+	protected void buttonPressed(int buttonId) {
+		if (buttonId == IDialogConstants.OK_ID) {
+			reminderDate = picker.getDate();
+		} else {
+		}
+		super.buttonPressed(buttonId);
+	}
+	
+	public Calendar getReminderDate() {
 		return reminderDate;
+	}
+
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Select date");
 	}
 }

@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Ken Sueda
@@ -78,9 +79,10 @@ public class TaskInputDialog extends Dialog {
 		button.setText("Remind me");
 		button.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-//				DateChooserDialog dialog = new DateChooserDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());	    		    	
-//				dialog.open();		
-//				reminderDate = dialog.getReminderDate();
+				DateChooserDialog dialog = new DateChooserDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());	    		    	
+				if (dialog.open() == Dialog.OK && dialog.getReminderDate() != null) {
+					reminderDate = dialog.getReminderDate().getTime();
+				} 
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
