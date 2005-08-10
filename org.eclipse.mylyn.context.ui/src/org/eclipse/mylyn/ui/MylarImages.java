@@ -33,7 +33,9 @@ public class MylarImages {
 	private static final URL baseURL = MylarUiPlugin.getDefault().getBundle().getEntry("/icons/");
 	
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
-		
+	public static final ImageDescriptor MYLAR_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
+
+	
 	public static final ImageDescriptor DECORATE_INTEREST = create(T_ELCL, "refresh.gif");
 	public static final ImageDescriptor SYNCHED = create(T_ELCL, "synched.gif");
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
