@@ -43,6 +43,7 @@ public class Task implements ITask {
     private boolean active = false;
     protected String handle = "-1";
     private boolean category = false;
+    private boolean hasReminded = false;
     
     
     /**
@@ -61,6 +62,7 @@ public class Task implements ITask {
     
     private Date timeActivated = null;
     private Date endDate = null;
+    private Date reminderDate=null;
     private long elapsed;
     /**
      * null if root
@@ -423,5 +425,63 @@ public class Task implements ITask {
 				endDate = new Date(0);
 			}
 		}
+	}
+
+	public void setReminderDate(Date date) {		
+		reminderDate = date;		
+	}
+
+	public void setReminderDate(String date) {
+		if (!date.equals("")) {
+			String formatString = "yyyy-MM-dd HH:mm:ss.S z";
+			SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+			try {
+				reminderDate = format.parse(date);
+			} catch (ParseException e) {
+				MylarPlugin.log(e, "Could not parse end date");
+				reminderDate = null;
+			}
+		} else {
+			reminderDate = null;
+		}
+		
+	}
+
+	public Date getReminderDate() {
+		return reminderDate;
+	}
+	
+	public String getReminderDateString(boolean forDisplay) {
+		if (reminderDate != null) {
+			String f = "";
+			if (forDisplay) {
+				f = "EEE, yyyy-MM-dd";
+			} else {
+				f = "yyyy-MM-dd HH:mm:ss.S z";
+			}			
+	    	SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+	    	return format.format(reminderDate);
+		} else {
+			return "";
+		}	
+	}
+
+	public boolean hasBeenReminded() {
+		return hasReminded;
+	}
+
+	public void setReminded(boolean reminded) {
+		this.hasReminded = reminded;	
+	}
+
+	public String getReminderDateForDisplay() {
+		if (reminderDate != null) {
+			
+			String f = "EEE, yyyy-MM-dd";
+	    	SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+	    	return format.format(reminderDate);
+		} else {
+			return "";
+		}	
 	}
 }

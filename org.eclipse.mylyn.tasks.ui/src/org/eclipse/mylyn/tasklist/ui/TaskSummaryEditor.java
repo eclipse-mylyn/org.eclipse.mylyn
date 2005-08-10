@@ -56,6 +56,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
@@ -330,6 +331,7 @@ public class TaskSummaryEditor extends EditorPart {
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 3;						
 		container.setLayout(layout);
+		container.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
         Label l = toolkit.createLabel(container, "Description:");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
@@ -345,7 +347,28 @@ public class TaskSummaryEditor extends EditorPart {
     				markDirty(true);
     			}			
     		});
-        }        
+        }
+        l = toolkit.createLabel(container, "Reminder:");
+        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
+        Text reminderDate = toolkit.createText(container,task.getReminderDateString(true), SWT.BORDER);        
+        reminderDate.setLayoutData(layout);
+        td = new TableWrapData(TableWrapData.FILL_GRAB);
+        td.grabHorizontal = true;
+        td.colspan = 1;
+        reminderDate.setLayoutData(td);
+        reminderDate.setEnabled(false);
+        
+        Button dateSelect = toolkit.createButton(container, "Select", SWT.PUSH);
+//        td = new TableWrapData(TableWrapData.RIGHT);
+//        dateSelect.setLayoutData(td);
+        dateSelect.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				// TODO: open Date Chooser				
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}        	
+        });
 	}	
 
 	

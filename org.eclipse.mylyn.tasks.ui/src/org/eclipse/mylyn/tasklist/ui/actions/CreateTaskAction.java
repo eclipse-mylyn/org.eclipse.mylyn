@@ -13,11 +13,14 @@ package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.views.TaskInputDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -38,32 +41,27 @@ public class CreateTaskAction extends Action {
 	
     @Override
     public void run() {
-//        MylarPlugin.getDefault().actionObserved(this);
-        String[] input = this.view.getLabelPriorityFromUser("task");
-        if (input == null) return;
-        String label = input[0];
-        String priority = input[1];
-        if(label == null) return;
-        Task newTask = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), label);
-        if (priority != null) {
-        	newTask.setPriority(priority);
-        }        
-        Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
-        if (selectedObject instanceof TaskCategory){
-        	newTask.setCategory((TaskCategory)selectedObject);
-            ((TaskCategory)selectedObject).addTask(newTask);
-        } 
-//            else if (selectedObject instanceof Task) {
-//            	ITask t = (ITask) selectedObject;
-//            	newTask.setParent(t);
-//            	t.addSubTask(newTask);
-//            }
-        else {            	
-            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
-        }  
-//        MylarUiPlugin.getDefault().setHighlighterMapping(
-//                newTask.getHandle(), 
-//                MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
-        this.view.getViewer().refresh();
+		TaskInputDialog dialog = new TaskInputDialog(Workbench.getInstance()
+				.getActiveWorkbenchWindow().getShell());
+		int dialogResult = dialog.open();
+		if (dialogResult == Window.OK) {
+			Task newTask = new Task(MylarTasklistPlugin.getTaskListManager()
+					.genUniqueTaskId(), dialog.getTaskname());
+			newTask.setPriority(dialog.getSelectedPriority());
+			newTask.setReminderDate(dialog.getReminderDate());
+			
+			Object selectedObject = ((IStructuredSelection) this.view
+					.getViewer().getSelection()).getFirstElement();
+			if (selectedObject instanceof TaskCategory) {
+				newTask.setCategory((TaskCategory) selectedObject);
+				((TaskCategory) selectedObject).addTask(newTask);
+			} else {            	
+	            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
+	        }
+//			MylarUiPlugin.getDefault().setHighlighterMapping(
+//	                newTask.getHandle(), 
+//	                MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
+			this.view.getViewer().refresh();
+		}
     }
 }

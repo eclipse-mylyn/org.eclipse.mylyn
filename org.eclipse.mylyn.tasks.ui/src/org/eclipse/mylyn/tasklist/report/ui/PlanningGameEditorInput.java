@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.internal.TaskList;
+import org.eclipse.mylar.tasklist.report.internal.CompletedTaskCollector;
 import org.eclipse.mylar.tasklist.report.internal.TaskReportGenerator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -28,7 +29,9 @@ public class PlanningGameEditorInput implements IEditorInput {
 	private TaskReportGenerator parser = null;
 	
 	public PlanningGameEditorInput(int prevDays, TaskList tlist) {
-		parser = new TaskReportGenerator(tlist, prevDays);
+		parser = new TaskReportGenerator(tlist);
+		parser.addCollector(new CompletedTaskCollector(prevDays));
+		parser.checkTasks();
 		completedTasks = parser.getTasks();
 	}
 	

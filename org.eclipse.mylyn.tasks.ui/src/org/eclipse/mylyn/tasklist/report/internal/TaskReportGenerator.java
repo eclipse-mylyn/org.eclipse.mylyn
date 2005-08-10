@@ -29,10 +29,12 @@ public class TaskReportGenerator {
 	private List<ITask> tasks = new ArrayList<ITask>();
 	private TaskList tasklist = null;
 	
-	public TaskReportGenerator(TaskList tlist, int prevDays) {
-		tasklist = tlist;
-		collectors.add(new CompletedTaskCollector(prevDays));
-		getTasksForReport();
+	public TaskReportGenerator(TaskList tlist) {
+		tasklist = tlist;		
+	}
+	
+	public void addCollector(ITasksCollector collector) {
+		collectors.add(collector);		
 	}
 	
 	private void getTasksForReport() {
@@ -59,6 +61,10 @@ public class TaskReportGenerator {
 		for (ITasksCollector collector : collectors) {
 			tasks.addAll(collector.getTasks());
 		}
+	}
+	
+	public void checkTasks() {
+		getTasksForReport();
 	}
 	
 	public List<ITask> getTasks() {		

@@ -104,4 +104,16 @@ public interface ITask extends Serializable, ITaskListElement {
 	public abstract void setEndDate(String date);
 	
 	public abstract String getEndDateString();
+	
+	public abstract void setReminderDate(Date date);
+	
+	public abstract void setReminderDate(String date);
+	
+	public abstract Date getReminderDate();
+	
+	public abstract String getReminderDateString(boolean forDisplay);
+	
+	public abstract boolean hasBeenReminded();
+	
+	public abstract void setReminded(boolean reminded);
 }

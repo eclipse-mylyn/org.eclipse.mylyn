@@ -49,6 +49,8 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public static final String TRUE = "true";
 	public static final String NAME = "Name";
 	public static final String END_DATE = "EndDate";
+	public static final String REMINDER_DATE = "ReminderDate";
+	public static final String REMINDED = "Reminded";
 
 	private List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 	
@@ -107,7 +109,12 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		node.setAttribute(ELAPSED, task.getElapsedTime());
 		node.setAttribute(ESTIMATED, task.getEstimatedTime());
 		node.setAttribute(END_DATE, task.getEndDateString());		
-		
+		node.setAttribute(REMINDER_DATE, task.getReminderDateString(false));
+		if (task.hasBeenReminded()) {
+			node.setAttribute(REMINDED, TRUE);
+		} else {
+			node.setAttribute(REMINDED, FALSE);
+		}
 		List<String> rl = task.getRelatedLinks().getLinks();
 		int i = 0;
 		for (String link : rl) {
@@ -220,7 +227,17 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			task.setEndDate(element.getAttribute(END_DATE));
 		} else {
 			task.setEndDate("");
-		}		
+		}	
+		if (element.hasAttribute(REMINDER_DATE)) {
+			task.setReminderDate(element.getAttribute(REMINDER_DATE));
+		} else {
+			task.setReminderDate("");
+		}	
+		if (element.hasAttribute(REMINDED) && element.getAttribute(REMINDED).compareTo(TRUE) == 0) {
+			task.setReminded(true);
+		} else {
+			task.setReminded(false);
+		}	
 		int i = 0;
 		while (element.hasAttribute(LINK+i)) {
 			task.getRelatedLinks().add(element.getAttribute(LINK+i));

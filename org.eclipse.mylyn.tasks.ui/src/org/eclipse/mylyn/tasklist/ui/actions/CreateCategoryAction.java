@@ -12,10 +12,13 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -36,13 +39,17 @@ public class CreateCategoryAction extends Action {
     
     @Override
     public void run() {
-//        MylarPlugin.getDefault().actionObserved(this);
-        String[] input = this.view.getLabelPriorityFromUser("Category");
-        if (input == null) return;
-        String label = input[0];
-        if(label == null) return;
-        TaskCategory cat = new TaskCategory(label);
-        MylarTasklistPlugin.getTaskListManager().addCategory(cat);
-        this.view.getViewer().refresh();
+    	InputDialog dialog = new InputDialog(
+				Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
+	            "Enter name", 
+	            "Enter a name for the Category: ", 
+	            "", 
+	            null);
+    	int dialogResult = dialog.open();
+    	if (dialogResult == Window.OK) {
+    		TaskCategory cat = new TaskCategory(dialog.getValue());
+    		MylarTasklistPlugin.getTaskListManager().addCategory(cat);
+            this.view.getViewer().refresh();
+        }
     }
 }

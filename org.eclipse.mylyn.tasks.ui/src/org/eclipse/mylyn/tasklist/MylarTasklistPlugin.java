@@ -27,6 +27,9 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskListExternalizer;
+import org.eclipse.mylar.tasklist.report.internal.ReminderRequiredCollector;
+import org.eclipse.mylar.tasklist.report.internal.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
@@ -72,6 +75,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";
     public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylar.tasklist.save.mode";
     public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
+    public static final String REMINDER_CHECK = "org.eclipse.mylar.tasklist.reminder.check";
     
 	private ResourceBundle resourceBundle;
 	private static Date lastSave = null;
@@ -197,6 +201,24 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
         	}
         }
         
+        private void checkReminders() {
+        	if (getPrefs().getBoolean(REMINDER_CHECK)) {
+        		getPrefs().setValue(REMINDER_CHECK, false);
+        		final TaskReportGenerator parser = new TaskReportGenerator(MylarTasklistPlugin.getTaskListManager().getTaskList());
+        		parser.addCollector(new ReminderRequiredCollector());
+        		parser.checkTasks();
+        		if (!parser.getTasks().isEmpty()) {
+        			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+        				public void run() {
+        					TasksReminderDialog dialog = new TasksReminderDialog(Workbench.getInstance().getDisplay().getActiveShell(), parser.getTasks());
+        					dialog.setBlockOnOpen(false);
+        					dialog.open();
+        				}
+        			});
+        		}
+        	}
+        }
+        
         public void shellClosed(ShellEvent arg0) {
             saveState();
         }  
@@ -206,6 +228,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
         }
         public void shellActivated(ShellEvent arg0) { 
         	checkTaskListSave();
+        	checkReminders();
         }
         
         public void shellDeiconified(ShellEvent arg0) { }
@@ -261,16 +284,17 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
                 MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
             
             }
-        });               
+        });      
 		super.start(context);
 	}
-
+    
     @Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
 		createFileBackup();
+		getPrefs().setValue(REMINDER_CHECK, true);
 	}
 
     @Override
@@ -282,6 +306,8 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     	store.setDefault(MULTIPLE_ACTIVE_TASKS, false);
     	store.setDefault(SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
+    	store.setDefault(REMINDER_CHECK, true);
+    	
     }    
     
     public static TaskListManager getTaskListManager() {

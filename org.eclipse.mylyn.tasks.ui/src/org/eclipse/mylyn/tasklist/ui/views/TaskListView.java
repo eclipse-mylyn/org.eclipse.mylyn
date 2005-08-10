@@ -26,8 +26,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -84,15 +82,9 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -150,7 +142,7 @@ public class TaskListView extends ViewPart {
     public static final String tableSortIdentifier = "org.eclipse.mylar.tasklist.ui.views.tasklist.sortIndex";
     private int sortIndex = 2;
     
-    private static String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
+    public static String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
     
     private TaskActivationHistory taskHistory = new TaskActivationHistory();
     
@@ -448,7 +440,8 @@ public class TaskListView extends ViewPart {
         }
         
         private List<Object> getFilteredChildrenFor(Object parent) {
-        	if (((Text) tree.getFilterControl()).getText() == "") {
+        	if (((Text) tree.getFilterControl()).getText() == ""  
+        			|| ((Text) tree.getFilterControl()).getText().startsWith("type filter")) {
         		List<Object> children = new ArrayList<Object>();
 	        	if (parent instanceof AbstractCategory) {
 					List<? extends ITaskListElement> list = ((AbstractCategory) parent)
@@ -772,7 +765,7 @@ public class TaskListView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
     	tree = new FilteredTree(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
-    	((Text)tree.getFilterControl()).setText("type filter text here");
+    	((Text)tree.getFilterControl()).setText("<filter>");
     	getViewer().getTree().setHeaderVisible(true);
     	getViewer().getTree().setLinesVisible(true);
     	getViewer().setColumnProperties(columnNames);
@@ -1158,35 +1151,35 @@ public class TaskListView extends ViewPart {
         }
     }
     
-    public String[] getLabelPriorityFromUser(String kind) {
-    	String[] result = new String[2];
-    	Dialog dialog = null;
-    	boolean isTask = kind.equals("task");
-    	if (isTask) {
-    		dialog = new TaskInputDialog(
-    	            Workbench.getInstance().getActiveWorkbenchWindow().getShell());
-    	} else {
-    		dialog = new InputDialog(
-    				Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
-    	            "Enter name", 
-    	            "Enter a name for the " + kind + ": ", 
-    	            "", 
-    	            null);
-    	}
-    	
-        int dialogResult = dialog.open();
-        if (dialogResult == Window.OK) {
-        	if (isTask) {
-        		result[0] = ((TaskInputDialog)dialog).getTaskname();
-        		result[1] = ((TaskInputDialog)dialog).getSelectedPriority();
-        	} else {
-        		result[0] = ((InputDialog)dialog).getValue();
-        	}
-        	return result;
-        } else {
-            return null;
-        }
-    }
+//    public String[] getLabelPriorityFromUser(String kind) {
+//    	String[] result = new String[2];
+//    	Dialog dialog = null;
+//    	boolean isTask = kind.equals("task");
+//    	if (isTask) {
+//    		dialog = new TaskInputDialog(
+//    	            Workbench.getInstance().getActiveWorkbenchWindow().getShell());
+//    	} else {
+//    		dialog = new InputDialog(
+//    				Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
+//    	            "Enter name", 
+//    	            "Enter a name for the " + kind + ": ", 
+//    	            "", 
+//    	            null);
+//    	}
+//    	
+//        int dialogResult = dialog.open();
+//        if (dialogResult == Window.OK) {
+//        	if (isTask) {
+//        		result[0] = ((TaskInputDialog)dialog).getTaskname();
+//        		result[1] = ((TaskInputDialog)dialog).getSelectedPriority();
+//        	} else {
+//        		result[0] = ((InputDialog)dialog).getValue();
+//        	}
+//        	return result;
+//        } else {
+//            return null;
+//        }
+//    }
     
     public void notifyTaskDataChanged(ITask task) {
         if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) { 
@@ -1214,70 +1207,70 @@ public class TaskListView extends ViewPart {
     	return PRIORITY_FILTER;
     }
     
-    public class TaskInputDialog extends Dialog {
-    	private String taskName = "";
-    	private String priority = "P3";
-    	private Text text;
-		public TaskInputDialog(Shell parentShell) {
-			super(parentShell);
-		}
-		protected Control createDialogArea(Composite parent) {			
-			Composite composite = (Composite)super.createDialogArea(parent);
-			GridLayout gl = new GridLayout(3, false);
-			composite.setLayout(gl);
-			GridData data = new GridData(GridData.GRAB_HORIZONTAL
-                    | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
-                    | GridData.VERTICAL_ALIGN_CENTER);
-            data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
-            composite.setLayoutData(data);
-			
-			
-			Label label = new Label(composite, SWT.WRAP);
-            label.setText("Task name:");            
-            label.setFont(parent.getFont());
-            
-            text = new Text(composite, SWT.SINGLE | SWT.BORDER);
-            text.setLayoutData(data);
-            text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-                | GridData.HORIZONTAL_ALIGN_FILL));
-
-			
-			final Combo c = new Combo(composite, SWT.NO_BACKGROUND
-						| SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY | SWT.DROP_DOWN);
-			c.setItems(PRIORITY_LEVELS);
-			c.setText(priority);
-			c.addSelectionListener(new SelectionListener() {
-
-				public void widgetSelected(SelectionEvent e) {
-					priority = c.getText();
-				}
-
-				public void widgetDefaultSelected(SelectionEvent e) {	
-					widgetSelected(e);
-				}				
-			});			
-			label = new Label(composite, SWT.NONE);
-			return composite;
-		}
-		public String getSelectedPriority() {
-			return priority;
-		}
-		public String getTaskname() {
-			return taskName;
-		}
-		protected void buttonPressed(int buttonId) {
-	        if (buttonId == IDialogConstants.OK_ID) {
-	        	taskName = text.getText();
-	        } else {
-	        	taskName = null;
-	        }
-	        super.buttonPressed(buttonId);
-	    }
-		protected void configureShell(Shell shell) {
-	        super.configureShell(shell);
-	        shell.setText("Enter Task Name");
-	    }
-    }
+//    public class TaskInputDialog extends Dialog {
+//    	private String taskName = "";
+//    	private String priority = "P3";
+//    	private Text text;
+//		public TaskInputDialog(Shell parentShell) {
+//			super(parentShell);
+//		}
+//		protected Control createDialogArea(Composite parent) {			
+//			Composite composite = (Composite)super.createDialogArea(parent);
+//			GridLayout gl = new GridLayout(3, false);
+//			composite.setLayout(gl);
+//			GridData data = new GridData(GridData.GRAB_HORIZONTAL
+//                    | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
+//                    | GridData.VERTICAL_ALIGN_CENTER);
+//            data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
+//            composite.setLayoutData(data);
+//			
+//			
+//			Label label = new Label(composite, SWT.WRAP);
+//            label.setText("Task name:");            
+//            label.setFont(parent.getFont());
+//            
+//            text = new Text(composite, SWT.SINGLE | SWT.BORDER);
+//            text.setLayoutData(data);
+//            text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
+//                | GridData.HORIZONTAL_ALIGN_FILL));
+//
+//			
+//			final Combo c = new Combo(composite, SWT.NO_BACKGROUND
+//						| SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY | SWT.DROP_DOWN);
+//			c.setItems(PRIORITY_LEVELS);
+//			c.setText(priority);
+//			c.addSelectionListener(new SelectionListener() {
+//
+//				public void widgetSelected(SelectionEvent e) {
+//					priority = c.getText();
+//				}
+//
+//				public void widgetDefaultSelected(SelectionEvent e) {	
+//					widgetSelected(e);
+//				}				
+//			});			
+//			label = new Label(composite, SWT.NONE);
+//			return composite;
+//		}
+//		public String getSelectedPriority() {
+//			return priority;
+//		}
+//		public String getTaskname() {
+//			return taskName;
+//		}
+//		protected void buttonPressed(int buttonId) {
+//	        if (buttonId == IDialogConstants.OK_ID) {
+//	        	taskName = text.getText();
+//	        } else {
+//	        	taskName = null;
+//	        }
+//	        super.buttonPressed(buttonId);
+//	    }
+//		protected void configureShell(Shell shell) {
+//	        super.configureShell(shell);
+//	        shell.setText("Enter Task Name");
+//	    }
+//    }
 
     private void fillLocalToolBar(IToolBarManager manager) {
     	manager.removeAll();
