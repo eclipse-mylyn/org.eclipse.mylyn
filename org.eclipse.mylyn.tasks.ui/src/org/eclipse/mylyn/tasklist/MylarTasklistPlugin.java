@@ -33,6 +33,7 @@ import org.eclipse.mylar.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
+import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -42,7 +43,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarTasklistPlugin extends AbstractUIPlugin {
+public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     
     private static MylarTasklistPlugin plugin;
     private static TaskListManager taskListManager;
@@ -150,7 +151,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
         }
     }
 	
-    private static ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
+    private static ITaskActivityListener CONTEXT_MANAGER_TASK_LISTENER = new ITaskActivityListener() {
 
         public void taskActivated(ITask task) {
             MylarPlugin.getContextManager().taskActivated(task.getHandle(), task.getPath());
@@ -264,29 +265,31 @@ public class MylarTasklistPlugin extends AbstractUIPlugin {
 	public MylarTasklistPlugin() {
 		super();
 		plugin = this;
-	}
-
-    @Override
-	public void start(BundleContext context) throws Exception {
 		initializeDefaultPreferences(getPrefs());
         externalizer = new TaskListExternalizer();  
     	
         String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
         File taskListFile = new File(path);
         taskListManager = new TaskListManager(taskListFile);
-        taskListManager.addListener(TASK_LIST_LISTENER);
-        taskListManager.readTaskList();
-        if (taskListManager.getTaskList() == null) taskListManager.createNewTaskList();
-    	
+        taskListManager.addListener(CONTEXT_MANAGER_TASK_LISTENER);
+	}
+
+	public void earlyStartup() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-        		Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+            	taskListManager.readTaskList();
+                if (taskListManager.getTaskList() == null) taskListManager.createNewTaskList(); 
+            	
+            	Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
                 MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-            
             }
-        });      
-		super.start(context);
+        }); 
+	}
+	
+    @Override
+	public void start(BundleContext context) throws Exception {
+    	super.start(context);
 	}
     
     @Override

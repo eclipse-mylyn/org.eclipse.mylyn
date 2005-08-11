@@ -3,6 +3,11 @@
 <plugin>
     <extension-point id="taskListContributor" name="TaskList Contributor" schema="schema/taskListContributor.exsd"/>
 
+   <extension
+         name="Mylar Task List Startup"
+         point="org.eclipse.ui.startup">
+   </extension>
+
 	<extension
          id="org.eclipse.mylar.helpDocs"
          name="Mylar Help"

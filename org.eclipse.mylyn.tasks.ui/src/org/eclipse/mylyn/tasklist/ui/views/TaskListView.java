@@ -93,9 +93,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.dialogs.FilteredTree;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -133,6 +135,8 @@ public class TaskListView extends ViewPart {
     private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
     private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
     private List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
+    
+    private static final String FILTER_LABEL = "<filter>";
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description" };
     protected int[] columnWidths = new int[] { 70, 20, 20, 120 };
@@ -369,15 +373,21 @@ public class TaskListView extends ViewPart {
 //    };
     
     class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-        public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+
+		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
         	// don't care if the input changes
+			expandToActiveTasks();
         }
         public void dispose() {
         	// don't care if we are disposed
         }
         public Object[] getElements(Object parent) {
             if (parent.equals(getViewSite())) {
-            	return applyFilter(MylarTasklistPlugin.getTaskListManager().getTaskList().getRoots()).toArray();
+//            	if (MylarTasklistPlugin.getTaskListManager() != null) {
+            		return applyFilter(MylarTasklistPlugin.getTaskListManager().getTaskList().getRoots()).toArray();
+//            	} else {
+//            		return new Object[0];
+//            	}
 //            	return MylarTasklistPlugin.getTaskListManager().getTaskList().getRoots().toArray();            	          
             }
             return getChildren(parent);
@@ -441,7 +451,7 @@ public class TaskListView extends ViewPart {
         
         private List<Object> getFilteredChildrenFor(Object parent) {
         	if (((Text) tree.getFilterControl()).getText() == ""  
-        			|| ((Text) tree.getFilterControl()).getText().startsWith("type filter")) {
+        			|| ((Text) tree.getFilterControl()).getText().startsWith(FILTER_LABEL)) {
         		List<Object> children = new ArrayList<Object>();
 	        	if (parent instanceof AbstractCategory) {
 					List<? extends ITaskListElement> list = ((AbstractCategory) parent)
@@ -450,7 +460,7 @@ public class TaskListView extends ViewPart {
             			if (!filter(list.get(i))) {
             				children.add(list.get(i));
 	            		}    		
-    	        	}
+    	        	} 
         			return children;
         		} else if (parent instanceof Task) {
         			List<ITask> subTasks = ((Task)parent).getChildren();
@@ -765,7 +775,7 @@ public class TaskListView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
     	tree = new FilteredTree(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
-    	((Text)tree.getFilterControl()).setText("<filter>");
+    	((Text)tree.getFilterControl()).setText(FILTER_LABEL);
     	getViewer().getTree().setHeaderVisible(true);
     	getViewer().getTree().setLinesVisible(true);
     	getViewer().setColumnProperties(columnNames);
@@ -922,10 +932,15 @@ public class TaskListView extends ViewPart {
     }
     
     private void expandToActiveTasks() {
-    	List<ITask> activeTasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks();
-    	for (ITask t : activeTasks) {
-    		getViewer().expandToLevel(t, 0);
-    	}
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+		    	List<ITask> activeTasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks();
+		    	for (ITask t : activeTasks) {
+		    		getViewer().expandToLevel(t, 0);
+		    	}
+            }
+        });
     }
 
     private void hookContextMenu() {
@@ -1184,6 +1199,7 @@ public class TaskListView extends ViewPart {
     public void notifyTaskDataChanged(ITask task) {
         if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) { 
         	getViewer().refresh();
+        	expandToActiveTasks();
         }
     }
     
@@ -1305,6 +1321,11 @@ public class TaskListView extends ViewPart {
 //		fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
 //		getViewSite().getActionBars().getToolBarManager().update(true);  
 //	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 }
 
 //TextTransfer textTransfer = TextTransfer.getInstance();
