@@ -54,7 +54,7 @@ public class Task implements ITask {
     private String label;
     private String priority = "P3";
     private String notes = "";
-    private String estimatedTime = "";
+    private int estimatedTime = 0;
 //    private String elapsedTime = "";
     private boolean completed;
     private RelatedLinks links = new RelatedLinks();
@@ -295,14 +295,19 @@ public class Task implements ITask {
 		}
 	}
 
-	public String getEstimatedTime() {
-		if (estimatedTime == null) {
-			estimatedTime = "";
-		}
+//	public String getEstimatedTimeForDisplay() {
+//		if (estimatedTime == 0) {
+//			return "";
+//		} else {
+//			return "" + estimatedTime * 10;
+//		}		
+//	}
+
+	public int getEstimateTime() {
 		return estimatedTime;
 	}
-
-	public void setEstimatedTime(String estimated) {
+	
+	public void setEstimatedTime(int estimated) {
 		this.estimatedTime = estimated;
 	}	
 	

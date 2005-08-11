@@ -70,6 +70,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -130,7 +131,7 @@ public class TaskSummaryEditor extends EditorPart {
     private Action delete;
     private Text description;
     private Text notes;
-    private Text estimated; 
+    private Spinner estimated;
     
     private boolean isDirty = false;
     private TaskEditor parentEditor = null;
@@ -216,8 +217,7 @@ public class TaskSummaryEditor extends EditorPart {
 		task.setLabel(label);
 		String note = notes.getText();
 		task.setNotes(note);		
-		String estimate = estimated.getText();
-		task.setEstimatedTime(estimate);
+		task.setEstimatedTime(estimated.getSelection());
 		links.clear();		
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
@@ -439,24 +439,32 @@ public class TaskSummaryEditor extends EditorPart {
 		Composite container = toolkit.createComposite(section);			
 		section.setClient(container);		
 		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;					
+		layout.numColumns = 3;					
 		container.setLayout(layout);
 		
 		Label l = toolkit.createLabel(container, "Estimated Time:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		estimated = toolkit.createText(container,task.getEstimatedTime(), SWT.BORDER);	        
-        estimated.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        
-        estimated.addModifyListener(new ModifyListener() {
+		estimated = new Spinner(container, SWT.BORDER);
+		estimated.setSelection(task.getEstimateTime());		
+		estimated.setDigits(1);
+		estimated.setMaximum(100);
+		estimated.setMinimum(0);
+		estimated.setIncrement(5);
+		estimated.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				markDirty(true);
 			}			
-		});     
+		});  
+		l = toolkit.createLabel(container, " hours");		
+		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		
 		l = toolkit.createLabel(container, "Elapsed Time:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		Text text2 = toolkit.createText(container,task.getElapsedTimeForDisplay(), SWT.BORDER);	        
-        text2.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		Text text2 = toolkit.createText(container,task.getElapsedTimeForDisplay(), SWT.BORDER);
+		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+        td.grabHorizontal = true;
+        td.colspan = 2;
+        text2.setLayoutData(td);
         text2.setEditable(false);
         text2.setEnabled(false);
         //text2.setForeground(background);

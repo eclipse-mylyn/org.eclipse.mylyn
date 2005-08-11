@@ -107,7 +107,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, task.getElapsedTime());
-		node.setAttribute(ESTIMATED, task.getEstimatedTime());
+		node.setAttribute(ESTIMATED, ""+task.getEstimateTime());
 		node.setAttribute(END_DATE, task.getEndDateString());		
 		node.setAttribute(REMINDER_DATE, task.getReminderDateString(false));
 		if (task.hasBeenReminded()) {
@@ -213,9 +213,15 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			task.setElapsedTime("");
 		}
 		if (element.hasAttribute(ESTIMATED)) {
-			task.setEstimatedTime(element.getAttribute(ESTIMATED));			
+			String est = element.getAttribute(ESTIMATED);
+			try {
+				int estimate = Integer.parseInt(est);
+				task.setEstimatedTime(estimate);
+			} catch (Exception e) {
+				task.setEstimatedTime(0);
+			}					
 		} else {
-			task.setEstimatedTime("");
+			task.setEstimatedTime(0);
 		}
 		// NOTE: do not change the order of complete and end date!!
 		if (element.getAttribute(COMPLETE).compareTo(TRUE) == 0) {
