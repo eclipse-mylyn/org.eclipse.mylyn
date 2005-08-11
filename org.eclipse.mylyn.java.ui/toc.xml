@@ -2,9 +2,9 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc link_to="../org.eclipse.mylar.doc/toc.xml#javaUi" label="Mylar"> 
-	<topic label="Overview" href="user/overview.html"/>
-	<topic label="What's New" href="user/new.html"/>
-	<topic label="Known Limitations" href="user/limitations.html"/>
+	<topic label="Overview" href="doc/overview.html"/>
+	<topic label="New &amp; Noteworthy" href="doc/new.html"/>
+	<topic label="Limitations" href="doc/limitations.html"/>
 </toc>
 
 	
