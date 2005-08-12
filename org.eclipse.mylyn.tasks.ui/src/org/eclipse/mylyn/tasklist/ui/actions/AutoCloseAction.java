@@ -26,7 +26,6 @@ public class AutoCloseAction extends Action {
 		setText("Close files on task deactivation");
 		setId(ID);
 		setChecked(MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
-//        setImageDescriptor(TaskListImages.REMOVE);
 	}
 	
 	@Override

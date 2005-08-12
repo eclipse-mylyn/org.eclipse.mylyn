@@ -971,6 +971,7 @@ public class TaskListView extends ViewPart {
     	drillDownAdapter.addNavigationActions(manager);
         manager.add(new Separator());
         manager.add(autoClose);
+        autoClose.setEnabled(true);
     }    
     
     void fillContextMenu(IMenuManager manager) {
