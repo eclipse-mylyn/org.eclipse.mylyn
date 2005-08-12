@@ -303,7 +303,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 
     @Override
     protected void initializeDefaultPreferences(IPreferenceStore store) {
-       	store.setDefault(MylarPlugin.CLOSE_EDITORS, true);    	
+       	store.setDefault(MylarPlugin.TASKLIST_EDITORS_CLOSE, true);    	
     	store.setDefault(SELECTED_PRIORITY, "P5");
     	store.setDefault(REPORT_OPEN_EDITOR, true);
     	store.setDefault(REPORT_OPEN_INTERNAL, false);

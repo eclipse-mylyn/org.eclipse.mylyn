@@ -11,26 +11,27 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
  * @author Ken Sueda
  */
-public class PreviousTaskAction extends Action {
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.tas.previous";
+public class NavigatePreviousAction extends Action {
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.navigate.previous";
 	
 	private final TaskListView view;
 	private TaskActivationHistory taskHistory;
 
-	public PreviousTaskAction(TaskListView view, TaskActivationHistory history) {
+	public NavigatePreviousAction(TaskListView view, TaskActivationHistory history) {
     	this.view = view;
     	taskHistory = history;
 		setText("Previous Task");
         setToolTipText("Previous Task");
         setId(ID);
         setEnabled(false);
-//        setImageDescriptor(TaskListImages.CATEGORY_NEW);
+        setImageDescriptor(TaskListImages.NAVIGATE_PREVIOUS);
     }
 	
 	@Override

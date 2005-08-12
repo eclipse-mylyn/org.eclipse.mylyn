@@ -60,6 +60,7 @@ import org.eclipse.mylar.tasklist.internal.TaskCompleteFilter;
 import org.eclipse.mylar.tasklist.internal.TaskListPatternFilter;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
+import org.eclipse.mylar.tasklist.ui.actions.AutoCloseAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
@@ -68,7 +69,7 @@ import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
-import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskAction;
+import org.eclipse.mylar.tasklist.ui.actions.NavigatePreviousAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.swt.SWT;
@@ -118,8 +119,9 @@ public class TaskListView extends ViewPart {
     private CreateCategoryAction createCategory;
     
     private DeleteAction delete;
+    private AutoCloseAction autoClose;
     private OpenTaskEditorAction doubleClickAction;
-    private PreviousTaskAction previousTaskAction;
+    private NavigatePreviousAction previousTaskAction;
     private NextTaskAction nextTaskAction;
 
     //private Action toggleIntersectionModeAction = new ToggleIntersectionModeAction();
@@ -963,10 +965,12 @@ public class TaskListView extends ViewPart {
     }
 
     private void fillLocalPullDown(IMenuManager manager) {
-    	drillDownAdapter.addNavigationActions(manager);
-    	manager.add(new Separator());
     	manager.add(previousTaskAction);
     	manager.add(nextTaskAction);
+    	manager.add(new Separator());
+    	drillDownAdapter.addNavigationActions(manager);
+        manager.add(new Separator());
+        manager.add(autoClose);
     }    
     
     void fillContextMenu(IMenuManager manager) {
@@ -975,7 +979,8 @@ public class TaskListView extends ViewPart {
         if (selectedObject instanceof ITaskListElement) {
         	element = (ITaskListElement) selectedObject;
         }
-        
+        addAction(autoClose, manager, element);
+        manager.add(new Separator());
         addAction(completeTask, manager, element);
         addAction(incompleteTask, manager, element);
         addAction(delete, manager, element);
@@ -1056,6 +1061,7 @@ public class TaskListView extends ViewPart {
         createCategory = new CreateCategoryAction(this);
          
         delete = new DeleteAction(this);
+        autoClose = new AutoCloseAction();
         completeTask = new MarkTaskCompleteAction(this);
         incompleteTask = new MarkTaskIncompleteAction(this);        
 //        rename = new RenameAction();        
@@ -1064,7 +1070,7 @@ public class TaskListView extends ViewPart {
         filterCompleteTask = new FilterCompletedTasksAction(this);        
 //        filterInCompleteTask = new FilterIncompleteTasksAction();                        
         filterOnPriority = new PriorityDropDownAction();
-        previousTaskAction = new PreviousTaskAction(this, taskHistory);
+        previousTaskAction = new NavigatePreviousAction(this, taskHistory);
         nextTaskAction = new NextTaskAction(this, taskHistory);
     }
 
@@ -1081,7 +1087,7 @@ public class TaskListView extends ViewPart {
     	return nextTaskAction;
     }
     
-    public PreviousTaskAction getPreviousTaskAction() {
+    public NavigatePreviousAction getPreviousTaskAction() {
     	return previousTaskAction;
     }
     /**

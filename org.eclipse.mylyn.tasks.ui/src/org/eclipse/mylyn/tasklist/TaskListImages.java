@@ -45,6 +45,9 @@ public class TaskListImages {
     public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif"); 
     public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");
     
+    public static final ImageDescriptor NAVIGATE_PREVIOUS = create(T_TOOL, "navigate-previous.gif");
+    public static final ImageDescriptor NAVIGATE_NEXT = create(T_TOOL, "navigate-next.gif"); 
+        
     public static final ImageDescriptor TASK_ACTIVE = create(T_TOOL, "task-active.gif");
     public static final ImageDescriptor TASK_INACTIVE = create(T_TOOL, "task-inactive.gif");
     public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");

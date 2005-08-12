@@ -11,7 +11,6 @@
 package org.eclipse.mylar.tasklist.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -27,12 +26,12 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
- * @author Ken Sueda
+ * @author Ken Sueda and Mik Kersten
  */
 public class MylarTaskPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 	
-	private Button closeEditors = null;
+//	private Button closeEditors = null;
 	private Button reportEditor = null;
 	private Button reportInternal = null;
 	private Button reportExternal = null;
@@ -65,9 +64,9 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		container.setLayoutData(gridData);
 		GridLayout gl = new GridLayout(1, false);
 		container.setLayout(gl);		
-		closeEditors = new Button(container, SWT.CHECK);
-		closeEditors.setText("Close all editors on task deactivation (defaults to close only editors of interesting resources)");
-		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));
+//		closeEditors = new Button(container, SWT.CHECK);
+//		closeEditors.setText("Close all editors on task deactivation (defaults to close only editors of interesting resources)");
+//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
 		
 		multipleActive = new Button(container, SWT.CHECK);
 		multipleActive.setText("Enable multiple task contexts to be active");
@@ -105,7 +104,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	}
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarPlugin.CLOSE_EDITORS, closeEditors.getSelection());		
+//		getPreferenceStore().setValue(MylarPlugin.TASKLIST_EDITORS_CLOSE, closeEditors.getSelection());		
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
@@ -115,7 +114,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	}
 	@Override
 	public boolean performCancel() {
-		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.CLOSE_EDITORS));		
+//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));		
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
@@ -126,7 +125,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	
 	public void performDefaults() {
 		super.performDefaults();
-		closeEditors.setSelection(getPreferenceStore().getDefaultBoolean(MylarPlugin.CLOSE_EDITORS));		
+//		closeEditors.setSelection(getPreferenceStore().getDefaultBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));		
 		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));

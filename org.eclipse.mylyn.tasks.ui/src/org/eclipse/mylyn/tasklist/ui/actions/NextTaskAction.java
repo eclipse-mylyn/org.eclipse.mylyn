@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
@@ -20,7 +21,7 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
  */
 public class NextTaskAction extends Action {
 	
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.task.next";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.navigate.next";
 	
 	private final TaskListView view;
 	private TaskActivationHistory taskHistory;
@@ -32,7 +33,7 @@ public class NextTaskAction extends Action {
         setToolTipText("Next Task");
         setId(ID);
         setEnabled(false);
-//        setImageDescriptor(TaskListImages.CATEGORY_NEW);
+        setImageDescriptor(TaskListImages.NAVIGATE_NEXT);
     }
 	
 	@Override
