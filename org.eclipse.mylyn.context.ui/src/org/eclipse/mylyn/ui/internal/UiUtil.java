@@ -106,15 +106,6 @@ public class UiUtil {
 		            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
 		            if (page != null) {
 		            	page.closeAllEditors(save);
-//		                IEditorReference[] references = page.getEditorReferences();
-//		                for (int i = 0; i < references.length; i++) {
-//		                	IEditorPart part = references[i].getEditor(false); 
-//		                    if (part instanceof AbstractTextEditor) {
-//		                    	((AbstractTextEditor)part).close(true);
-//		                    } else if (part instanceof FormEditor) {
-//		                    	((FormEditor)part).close(true);
-//		                    } 
-//		                }
 		            }
 		        } catch (Throwable t) {
 		            MylarPlugin.fail(t, "Could not auto close editor.", false);

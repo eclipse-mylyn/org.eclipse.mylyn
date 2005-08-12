@@ -79,9 +79,9 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard{
 		}
 		
 		if(preferencePage.closeEditors()){
-			MylarUiPlugin.getPrefs().setValue(MylarPlugin.CLOSE_EDITORS, true); //$NON-NLS-1$
+			MylarUiPlugin.getPrefs().setValue(MylarPlugin.TASKLIST_EDITORS_CLOSE, true); //$NON-NLS-1$
 		} else {
-			MylarUiPlugin.getPrefs().setValue(MylarPlugin.CLOSE_EDITORS, false); //$NON-NLS-1$
+			MylarUiPlugin.getPrefs().setValue(MylarPlugin.TASKLIST_EDITORS_CLOSE, false); //$NON-NLS-1$
 		}
 		
 		if(preferencePage.isWorkingSet()){
