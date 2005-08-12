@@ -980,8 +980,6 @@ public class TaskListView extends ViewPart {
         if (selectedObject instanceof ITaskListElement) {
         	element = (ITaskListElement) selectedObject;
         }
-        addAction(autoClose, manager, element);
-        manager.add(new Separator());
         addAction(completeTask, manager, element);
         addAction(incompleteTask, manager, element);
         addAction(delete, manager, element);
