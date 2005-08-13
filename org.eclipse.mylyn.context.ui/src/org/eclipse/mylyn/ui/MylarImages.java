@@ -34,7 +34,6 @@ public class MylarImages {
 	
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
 	public static final ImageDescriptor MYLAR_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
-
 	
 	public static final ImageDescriptor DECORATE_INTEREST = create(T_ELCL, "refresh.gif");
 	public static final ImageDescriptor SYNCHED = create(T_ELCL, "synched.gif");
