@@ -423,13 +423,16 @@ public class BugzillaTask extends Task {
 		timeDifference /= 24;
 		
 		// Gradually generate the tooltip string...
-		String toolTip;
-		if (bugReport == null) {
-			toolTip = "Last attempted download ";
-		}
-		else {
-			toolTip = "Last downloaded ";
-		}
+		String toolTip =
+			getDescription(true) +
+			"\n-------------------\n";
+		
+//		if (bugReport == null) {
+//			toolTip += "Last attempted download ";
+//		}
+//		else {
+		toolTip += "Last synchronized with server: ";
+//		}
 		
 		if (timeDifference > 0) {
 			toolTip += timeDifference + ((timeDifference == 1) ? " day " : " days ");
@@ -438,7 +441,7 @@ public class BugzillaTask extends Task {
 			toolTip += hours + ((hours == 1) ? " hour " : " hours ");
 		}
 		toolTip += minutes + ((minutes == 1) ? " minute " : " minutes ") + "ago";
-		
+				
 		return toolTip;
 	}
 	

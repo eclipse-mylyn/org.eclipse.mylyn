@@ -199,8 +199,7 @@ public class Task implements ITask {
     }
     
 	public String getToolTipText() {
-		// No tool-tip used for a general task as of yet.
-		return null;
+		return getDescription(true);
 	}
 
     @Override

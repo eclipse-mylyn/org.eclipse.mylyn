@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Widget;
 
-
 public class ToolTipHandler {
    private Shell parentShell;
 

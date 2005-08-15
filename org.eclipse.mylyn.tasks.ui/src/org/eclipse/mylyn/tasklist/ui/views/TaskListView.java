@@ -67,9 +67,9 @@ import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
+import org.eclipse.mylar.tasklist.ui.actions.NavigatePreviousAction;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
-import org.eclipse.mylar.tasklist.ui.actions.NavigatePreviousAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.swt.SWT;
@@ -105,7 +105,7 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 /**
- * @author Mik Kersten
+ * @author Mik Kersten and Ken Sueda
  */
 public class TaskListView extends ViewPart {
 
@@ -124,16 +124,10 @@ public class TaskListView extends ViewPart {
     private NavigatePreviousAction previousTaskAction;
     private NextTaskAction nextTaskAction;
 
-    //private Action toggleIntersectionModeAction = new ToggleIntersectionModeAction();
-//    private Action toggleFilteringAction = new ToggleGlobalInterestFilteringAction();
-
     private MarkTaskCompleteAction completeTask;
     private MarkTaskIncompleteAction incompleteTask;
     private FilterCompletedTasksAction filterCompleteTask;
-//    private FilterIncompleteTasksAction filterInCompleteTask;
     private PriorityDropDownAction filterOnPriority;
-//    private Action moveTaskToRoot;   
-//    private PriorityFilter priorityFilter = new PriorityFilter();
     private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
     private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
     private List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
@@ -282,106 +276,13 @@ public class TaskListView extends ViewPart {
 		}
     }
     
-//    private ViewerFilter completeFilter = new ViewerFilter(){
-//		@Override
-//		public boolean select(Viewer viewer, Object parentElement, Object element) {
-//			if (element instanceof ITaskListElement) {
-//				if(element instanceof ITask && ((ITaskListElement)element).hasCorrespondingActivatableTask()){
-//					ITask task = ((ITaskListElement)element).getOrCreateCorrespondingTask();
-//					if (task.isActive()) {
-//						return true;
-//					}
-//					if(task != null){
-//						return !task.isCompleted();
-//					} else {
-//						return true;
-//					}
-//				} else {
-//					return true;
-//				}
-//			} 
-//			return false;
-//		}    			
-//    };
-//    
-//    private ViewerFilter inCompleteFilter = new ViewerFilter(){
-//		@Override
-//		public boolean select(Viewer viewer, Object parentElement, Object element) {
-//			if (element instanceof ITask) {
-//				return ((ITask)element).isCompleted();
-//			} else {
-//				return true;
-//			} 
-//		}    			
-//    };
-//    
-//    public class PriorityFilter extends ViewerFilter {
-//    	private List<String> priorities = new ArrayList<String>();
-//    	
-//    	public PriorityFilter() {    		
-//    		displayPrioritiesAbove(MylarTasklistPlugin.getPriorityLevel());
-//    	}
-//    	
-//    	public void displayPrioritiesAbove(String p) {
-//    		priorities.clear();    		
-//    		if (p.equals(PRIORITY_LEVELS[0])) {
-//    			priorities.add(PRIORITY_LEVELS[0]);
-//    		}
-//    		if (p.equals(PRIORITY_LEVELS[1])) {
-//    			priorities.add(PRIORITY_LEVELS[0]);
-//    			priorities.add(PRIORITY_LEVELS[1]);
-//    		} else if (p.equals(PRIORITY_LEVELS[2])) {
-//    			priorities.add(PRIORITY_LEVELS[0]);
-//    			priorities.add(PRIORITY_LEVELS[1]);
-//    			priorities.add(PRIORITY_LEVELS[2]);
-//    		} else if (p.equals(PRIORITY_LEVELS[3])) {
-//    			priorities.add(PRIORITY_LEVELS[0]);
-//    			priorities.add(PRIORITY_LEVELS[1]);
-//    			priorities.add(PRIORITY_LEVELS[2]);
-//    			priorities.add(PRIORITY_LEVELS[3]);
-//    		} else if (p.equals(PRIORITY_LEVELS[4])) {
-//    			priorities.add(PRIORITY_LEVELS[0]);
-//    			priorities.add(PRIORITY_LEVELS[1]);
-//    			priorities.add(PRIORITY_LEVELS[2]);
-//    			priorities.add(PRIORITY_LEVELS[3]);
-//    			priorities.add(PRIORITY_LEVELS[4]);
-//    		}
-//    	}
-//    	
-//		@Override
-//		public boolean select(Viewer viewer, Object parentElement, Object element) {
-//			if (element instanceof ITaskListElement) {
-//				ITaskListElement task = (ITaskListElement) element;
-//				if (priorities.size() == PRIORITY_LEVELS.length) {
-//					return true;
-//				} else {
-//					return checkTask(task);
-//				}								
-//			} else {
-//				return true;
-//			}
-//		}
-//		private boolean checkTask(ITaskListElement task) {
-//			if (task instanceof ITask && ((ITask)task).isActive()) {
-//				return true;
-//			}
-//			for (String filter : priorities) {				
-//				if (task.getPriority().equals(filter)) {
-//					return true;
-//				}
-//			}
-//			return false;
-//		}
-//    };
-    
     class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-        	// don't care if the input changes
 			expandToActiveTasks();
         }
         public void dispose() {
-        	// don't care if we are disposed
+        	// ignore
         }
         public Object[] getElements(Object parent) {
             if (parent.equals(getViewSite())) {
@@ -777,6 +678,8 @@ public class TaskListView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
     	tree = new FilteredTree(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
+//    	addToolTipHandler();
+    	
     	((Text)tree.getFilterControl()).setText(FILTER_LABEL);
     	getViewer().getTree().setHeaderVisible(true);
     	getViewer().getTree().setLinesVisible(true);
@@ -839,9 +742,9 @@ public class TaskListView extends ViewPart {
         initDragAndDrop(parent);
         expandToActiveTasks();
         restoreState();
-   }
+    }
 
-    @MylarWebRef(name="Drag and drop article", url="http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
+	@MylarWebRef(name="Drag and drop article", url="http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
     private void initDragAndDrop(Composite parent) {
         Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 
@@ -1514,3 +1417,96 @@ public class TaskListView extends ViewPart {
 //            }
 //
 //        });
+
+
+//private ViewerFilter completeFilter = new ViewerFilter(){
+//@Override
+//public boolean select(Viewer viewer, Object parentElement, Object element) {
+//	if (element instanceof ITaskListElement) {
+//		if(element instanceof ITask && ((ITaskListElement)element).hasCorrespondingActivatableTask()){
+//			ITask task = ((ITaskListElement)element).getOrCreateCorrespondingTask();
+//			if (task.isActive()) {
+//				return true;
+//			}
+//			if(task != null){
+//				return !task.isCompleted();
+//			} else {
+//				return true;
+//			}
+//		} else {
+//			return true;
+//		}
+//	} 
+//	return false;
+//}    			
+//};
+//
+//private ViewerFilter inCompleteFilter = new ViewerFilter(){
+//@Override
+//public boolean select(Viewer viewer, Object parentElement, Object element) {
+//	if (element instanceof ITask) {
+//		return ((ITask)element).isCompleted();
+//	} else {
+//		return true;
+//	} 
+//}    			
+//};
+//
+//public class PriorityFilter extends ViewerFilter {
+//private List<String> priorities = new ArrayList<String>();
+//
+//public PriorityFilter() {    		
+//	displayPrioritiesAbove(MylarTasklistPlugin.getPriorityLevel());
+//}
+//
+//public void displayPrioritiesAbove(String p) {
+//	priorities.clear();    		
+//	if (p.equals(PRIORITY_LEVELS[0])) {
+//		priorities.add(PRIORITY_LEVELS[0]);
+//	}
+//	if (p.equals(PRIORITY_LEVELS[1])) {
+//		priorities.add(PRIORITY_LEVELS[0]);
+//		priorities.add(PRIORITY_LEVELS[1]);
+//	} else if (p.equals(PRIORITY_LEVELS[2])) {
+//		priorities.add(PRIORITY_LEVELS[0]);
+//		priorities.add(PRIORITY_LEVELS[1]);
+//		priorities.add(PRIORITY_LEVELS[2]);
+//	} else if (p.equals(PRIORITY_LEVELS[3])) {
+//		priorities.add(PRIORITY_LEVELS[0]);
+//		priorities.add(PRIORITY_LEVELS[1]);
+//		priorities.add(PRIORITY_LEVELS[2]);
+//		priorities.add(PRIORITY_LEVELS[3]);
+//	} else if (p.equals(PRIORITY_LEVELS[4])) {
+//		priorities.add(PRIORITY_LEVELS[0]);
+//		priorities.add(PRIORITY_LEVELS[1]);
+//		priorities.add(PRIORITY_LEVELS[2]);
+//		priorities.add(PRIORITY_LEVELS[3]);
+//		priorities.add(PRIORITY_LEVELS[4]);
+//	}
+//}
+//
+//@Override
+//public boolean select(Viewer viewer, Object parentElement, Object element) {
+//	if (element instanceof ITaskListElement) {
+//		ITaskListElement task = (ITaskListElement) element;
+//		if (priorities.size() == PRIORITY_LEVELS.length) {
+//			return true;
+//		} else {
+//			return checkTask(task);
+//		}								
+//	} else {
+//		return true;
+//	}
+//}
+//private boolean checkTask(ITaskListElement task) {
+//	if (task instanceof ITask && ((ITask)task).isActive()) {
+//		return true;
+//	}
+//	for (String filter : priorities) {				
+//		if (task.getPriority().equals(filter)) {
+//			return true;
+//		}
+//	}
+//	return false;
+//}
+//};
