@@ -130,7 +130,8 @@ public class ActiveSearchView extends ViewPart {
     }
 
     public static ActiveSearchView getFromActivePerspective() {
-        IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+    	if (Workbench.getInstance() == null) return null;
+    	IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (activePage == null)
             return null;
         IViewPart view= activePage.findView(VIEW_ID);
