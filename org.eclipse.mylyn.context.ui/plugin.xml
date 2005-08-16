@@ -19,7 +19,7 @@
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
 	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
-	  		enablesFor="1"/>
+	  		enablesFor="*"/>
 	    <action  
   		  	label="Mylar: Make Landmark" 
 	  		tooltip="Make selected element a landmark"
@@ -27,7 +27,7 @@
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
 	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
-	  		enablesFor="1"/>
+	  		enablesFor="*"/>
 	 </objectContribution>
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
@@ -39,7 +39,7 @@
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
 	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
-	  		enablesFor="1"/>
+	  		enablesFor="*"/>
 	    <action  
   		  	label="Mylar: Make Landmark" 
 	  		tooltip="Make selected element a landmark"
@@ -47,7 +47,7 @@
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
 	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
-	  		enablesFor="1"/>
+	  		enablesFor="*"/>
 	 </objectContribution>
 	 
      <viewerContribution
