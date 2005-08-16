@@ -34,7 +34,7 @@ public class TaskListExtensionReader {
 		// code from "contributing to eclipse" with modifications for deprecated code
 		if(!extensionsRead){
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarTasklistPlugin.TASK_CONTRIBUTER_EXTENSION_POINT_ID);
+			IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarTasklistPlugin.TASK_CONTRIBUTOR_EXTENSION_POINT_ID);
 			IExtension[] extensions = extensionPoint.getExtensions();
 			for(int i = 0; i < extensions.length; i++){
 				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
@@ -88,7 +88,7 @@ public class TaskListExtensionReader {
 				MylarPlugin.log("Could not load externalizer: " + externalizer.getClass().getCanonicalName() + " must implement " + ITaskListExternalizer.class.getCanonicalName(), thisReader);	
 			}
 			
-			Object taskHandler = element.createExecutableExtension(MylarTasklistPlugin.ACTION_CONTRIBUTER_CLASS_ID);
+			Object taskHandler = element.createExecutableExtension(MylarTasklistPlugin.ACTION_CONTRIBUTOR_CLASS_ID);
 			if (taskHandler instanceof ITaskHandler) {
 				MylarTasklistPlugin.getDefault().addTaskHandler((ITaskHandler) taskHandler);
 				
