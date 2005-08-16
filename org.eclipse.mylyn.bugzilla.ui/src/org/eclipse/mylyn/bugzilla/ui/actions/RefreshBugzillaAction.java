@@ -47,8 +47,8 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 	private BugzillaQueryCategory cat = null;
 	
 	public RefreshBugzillaAction() {
-		setText("Bugzilla Refresh");
-        setToolTipText("Bugzilla Refresh");
+		setText("Synchronize Bugzilla");
+        setToolTipText("Synchronize Bugzilla");
         setId(ID);
         setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
@@ -56,8 +56,8 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 	public RefreshBugzillaAction(BugzillaQueryCategory cat) {
 		assert(cat != null);
 		this.cat =  cat;
-		setText("Bugzilla Refresh");
-        setToolTipText("Bugzilla Refresh");
+		setText("Synchronize Bugzilla");
+        setToolTipText("Synchronize Bugzilla");
         setId(ID);
         setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}

@@ -126,10 +126,10 @@
 	            enablesFor="*"
 	            icon="icons/etool16/task-bug-refresh.gif"
 	            id="org.eclipse.mylar.bugzilla.tasklist.refresh"
-	            label="Refresh Non-Resolved Bugzilla reports"
+	            label="Synchronized Unresolved Bugzilla Reports"
 	            style="push"
 	            toolbarPath="mylar"
-	            tooltip="Refresh Non-Resolved Bugzilla reports"> 
+	            tooltip="Synchronized Unresolved Bugzilla Reports"> 
   			</action>
   			<action
 	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction"
@@ -186,9 +186,9 @@
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Bugzilla Refresh"
+               label="Synchronize Bugzilla"
                menubarPath="mylar"
-               tooltip="Bugzilla Refresh">
+               tooltip="Synchronize Bugzilla">
             <enablement>
                <or>
                     <objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask"/>

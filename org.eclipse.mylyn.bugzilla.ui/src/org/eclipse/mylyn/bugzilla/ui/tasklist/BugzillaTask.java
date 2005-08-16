@@ -431,14 +431,14 @@ public class BugzillaTask extends Task {
 //			toolTip += "Last attempted download ";
 //		}
 //		else {
-		toolTip += "Last synchronized with server: ";
+		toolTip += "Last synchronized: ";
 //		}
 		
 		if (timeDifference > 0) {
-			toolTip += timeDifference + ((timeDifference == 1) ? " day " : " days ");
+			toolTip += timeDifference + ((timeDifference == 1) ? " day, " : " days, ");
 		}
 		if (hours > 0 || timeDifference > 0) {
-			toolTip += hours + ((hours == 1) ? " hour " : " hours ");
+			toolTip += hours + ((hours == 1) ? " hour, " : " hours, ");
 		}
 		toolTip += minutes + ((minutes == 1) ? " minute " : " minutes ") + "ago";
 				
