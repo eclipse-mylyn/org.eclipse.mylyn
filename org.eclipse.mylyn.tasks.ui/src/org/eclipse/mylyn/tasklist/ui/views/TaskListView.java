@@ -890,7 +890,7 @@ public class TaskListView extends ViewPart {
         addAction(createTask, manager, element);
         manager.add(new Separator("mylar"));   
         	
-    	for (ITaskListDynamicSubMenuContributor contributor : MylarTasklistPlugin.getDefault().getDynamicMenuContributors()) {
+    	for (ITaskListDynamicSubMenuContributor contributor : MylarTasklistPlugin.getDefault().getDynamicMenuContributers()) {
 	        manager.add(new Separator());
 	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
 	        if (subMenuManager != null) addMenuManager(subMenuManager, manager, element);
