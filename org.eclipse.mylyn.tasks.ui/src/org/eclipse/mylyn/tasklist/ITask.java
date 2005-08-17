@@ -26,9 +26,6 @@ import org.eclipse.mylar.tasklist.internal.TaskCategory;
  */
 public interface ITask extends Serializable, ITaskListElement {
     
-    @Override
-    public abstract String toString();
-
     public abstract String getPath();
 
     public abstract void setPath(String path);
