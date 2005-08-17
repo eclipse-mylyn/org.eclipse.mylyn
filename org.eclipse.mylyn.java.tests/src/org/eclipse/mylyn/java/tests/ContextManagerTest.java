@@ -74,14 +74,14 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
 //        selectionBar = new StructuredSelection(typeBar);
 //        selectionBaz = new StructuredSelection(typeBaz);
         taskscape = new MylarContext("1", scaling);
-        manager.taskActivated(taskscape);
+        manager.contextActivated(taskscape);
         assertNotNull(MylarJavaPlugin.getDefault());
     }
     
     @Override
     protected void tearDown() throws Exception {
         project.dispose();
-        manager.taskDeleted(taskId, taskId);
+        manager.contextDeleted(taskId, taskId);
     }
     
     class LandmarksModelListener implements IMylarContextListener {

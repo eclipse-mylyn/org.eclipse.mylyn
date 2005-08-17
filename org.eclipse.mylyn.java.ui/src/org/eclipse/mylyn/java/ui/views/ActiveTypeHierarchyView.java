@@ -199,7 +199,6 @@ public class ActiveTypeHierarchyView extends ViewPart {
 				    try { 
                         if (viewer != null && !viewer.getTree().isDisposed()) {
                             viewer.refresh();
-//                            viewer.expandToLevel(6);
 					        viewer.expandAll();
                         }
 				    } catch (Throwable t) {

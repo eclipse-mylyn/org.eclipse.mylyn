@@ -76,7 +76,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	plugin2 = WorkspaceSetupHelper.getFile(jp2, "plugin.xml");
     	
     	MylarContext t = WorkspaceSetupHelper.getTaskscape();
-    	MylarPlugin.getContextManager().taskActivated(t.getId(), t.getId());
+    	MylarPlugin.getContextManager().contextActivated(t.getId(), t.getId());
     	helper = new SearchPluginTestHelper(this);
     }
     

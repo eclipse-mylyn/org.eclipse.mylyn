@@ -41,7 +41,7 @@ public class MylarContextExternalizer {
     private ContextReader reader = new ContextReader();
     private ContextWriter writer = new ContextWriter();
     
-    public void writeXMLTaskscapeToFile(MylarContext taskscape, File file) { 
+    public void writeContextToXML(MylarContext taskscape, File file) { 
         try {
         	if (!file.exists()) {        		
         		file.createNewFile();
@@ -55,7 +55,7 @@ public class MylarContextExternalizer {
         }
     }
     
-    public MylarContext readXMLTaskscapeFromFile(File file) {
+    public MylarContext readContextFromXML(File file) {
         try {
             if (!file.exists()) return null;
             return reader.readContext(file);

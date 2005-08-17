@@ -48,7 +48,7 @@ public class MylarContextManager {
     
     private CompositeContext activeContext = new CompositeContext();
 	
-    private String taskscapeStoreDirPath;
+    private String contextStoreDirPath;
 	private boolean editorAutoCloseEnabled = false;
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
@@ -63,9 +63,9 @@ public class MylarContextManager {
     private static ScalingFactors scalingFactors = new ScalingFactors();
     
     public MylarContextManager() {
-        taskscapeStoreDirPath = MylarPlugin.getDefault().getUserDataDirectory();
+        contextStoreDirPath = MylarPlugin.getDefault().getUserDataDirectory();
         
-        File storeDir = new File(taskscapeStoreDirPath);
+        File storeDir = new File(contextStoreDirPath);
         storeDir.mkdirs();
     }
 
@@ -123,7 +123,7 @@ public class MylarContextManager {
     }
     
     /**
-     * TODO: consider moving this into the taskscape?
+     * TODO: consider moving this into the context?
      */
     public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
         if (event.getKind() == InteractionEvent.Kind.COMMAND) return null;
@@ -253,20 +253,20 @@ public class MylarContextManager {
     /**
      * For testing
      */
-    public void taskActivated(MylarContext taskscape) {
-        activeContext.getContextMap().put(taskscape.getId(), taskscape);
+    public void contextActivated(MylarContext context) {
+        activeContext.getContextMap().put(context.getId(), context);
     } 
     
-    public void taskActivated(String id, String path) {
+    public void contextActivated(String id, String path) {
     	try {
 		    suppressListenerNotification = true;
-		    MylarContext taskscape = activeContext.getContextMap().get(id);
-		    if (taskscape == null) taskscape = loadTaskscape(id, path);
-		    if (taskscape != null) {
-		        activeContext.getContextMap().put(id, taskscape);
-		        for (IMylarContextListener listener : listeners) listener.contextActivated(taskscape);
+		    MylarContext context = activeContext.getContextMap().get(id);
+		    if (context == null) context = loadContext(id, path);
+		    if (context != null) {
+		        activeContext.getContextMap().put(id, context);
+		        for (IMylarContextListener listener : listeners) listener.contextActivated(context);
 		    } else {
-		        MylarPlugin.log("Could not load taskscape", this);
+		        MylarPlugin.log("Could not load context", this);
 		    }
 		    suppressListenerNotification = false;
 		    listeners.addAll(waitingListeners);
@@ -278,70 +278,71 @@ public class MylarContextManager {
     /**
      * @param id
      */
-    public void taskDeactivated(String id, String path) {
+    public void contextDeactivated(String id, String path) {
     	try {
-	        IMylarContext taskscape = activeContext.getContextMap().get(id);        
-	        if (taskscape != null) {
-	            saveTaskscape(id, path); 
+	        IMylarContext context = activeContext.getContextMap().get(id);        
+	        if (context != null) {
+	            saveContext(id, path); 
 	            activeContext.getContextMap().remove(id);
-	            for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
+	            for (IMylarContextListener listener : listeners) listener.contextDeactivated(context);
 	        }
     	} catch (Throwable t) {
     		MylarPlugin.log(t, "Could not deactivate context");
     	}
     }
 
-    public void taskDeleted(String id, String path) {
-        IMylarContext taskscape = activeContext.getContextMap().get(id);
-        if (taskscape != null) {
-            for (IMylarContextListener listener : listeners) listener.contextDeactivated(taskscape);
+    public void contextDeleted(String id, String path) {
+        IMylarContext context = activeContext.getContextMap().get(id);
+        eraseContext(id);
+        if (context != null) {
+            for (IMylarContextListener listener : listeners) listener.contextDeactivated(context);
         }
-        File f = getFileForTaskscape(path);
-        if (f.exists()) {
-        	f.delete();
-        }
-        eraseTaskscape(id);
+        try {
+	        File f = getFileForContext(path);
+	        if (f.exists()) {
+	        	f.delete();
+	        }
+		} catch (SecurityException e) {
+			MylarPlugin.fail(e, "Could not delete context file", false);
+		}
     }
      
-    private void eraseTaskscape(String id) {
-        MylarContext taskscape = activeContext.getContextMap().get(id);
-        if (taskscape == null) return;
-        activeContext.getContextMap().remove(taskscape);
-        // TODO: write out the taskscape 
-//        saveTaskscape(id);
-//        taskscape.reset();
-        taskscape.reset();
+    private void eraseContext(String id) {
+        MylarContext context = activeContext.getContextMap().get(id);
+        if (context == null) return;
+        activeContext.getContextMap().remove(context);
+        context.reset();
         for (IMylarContextListener listener : listeners) listener.presentationSettingsChanging(IMylarContextListener.UpdateKind.UPDATE);
     }
     
      /**
        * @return false if the map could not be read for any reason
        */
-    public MylarContext loadTaskscape(String taskId, String path) {
-        MylarContext loadedTaskscape = externalizer.readXMLTaskscapeFromFile(getFileForTaskscape(path));
-        if (loadedTaskscape == null) {
-            return new MylarContext(taskId, MylarContextManager.getScalingFactors());
+    public MylarContext loadContext(String id, String path) {
+        MylarContext loadedContext = externalizer.readContextFromXML(getFileForContext(path));
+        if (loadedContext == null) {
+            return new MylarContext(id, MylarContextManager.getScalingFactors());
         } else {
-            return loadedTaskscape;
+            return loadedContext;
         }
     }
  
-    public void saveTaskscape(String taskId, String path) {
-        MylarContext taskscape = activeContext.getContextMap().get(taskId);
-        if (taskscape == null) {
+    public void saveContext(String id, String path) {
+        MylarContext context = activeContext.getContextMap().get(id);
+        if (context == null) {
             return;
         } else {
-        	taskscape.collapse();
-            externalizer.writeXMLTaskscapeToFile(taskscape, getFileForTaskscape(path));
+        	context.collapse();
+            externalizer.writeContextToXML(context, getFileForContext(path));
         }
     }
 
-    public File getFileForTaskscape(String path) {
-        return new File(taskscapeStoreDirPath + File.separator + path + FILE_EXTENSION);
+    public File getFileForContext(String path) {
+        return new File(contextStoreDirPath + File.separator + path + FILE_EXTENSION);
     }
     
     public String getMylarDir() {
-        return "" + taskscapeStoreDirPath;
+        return "" + contextStoreDirPath;
     }
     
     public IMylarContext getActiveContext() {
@@ -406,15 +407,15 @@ public class MylarContextManager {
     }
     
     public void updateMylarDirContents(String prevDir) {    	    	    	
-    	this.taskscapeStoreDirPath = MylarPlugin.getDefault().getUserDataDirectory();
+    	this.contextStoreDirPath = MylarPlugin.getDefault().getUserDataDirectory();
 		File prev = new File(prevDir);
 		if (!prev.isDirectory()) {
 			return;
 		}
 		File[] contents = prev.listFiles();
-		File curr = new File(taskscapeStoreDirPath);
-
-		for (File f : contents) {			
+		File curr = new File(contextStoreDirPath);
+		for (File f : contents) {
+			// XXX: remove hack below
 			if ( (f.getName().endsWith(".xml") && f.getName().startsWith("task")) || f.getName().startsWith("mylar")) {
 				String name = curr.getAbsolutePath() + "/" + f.getName();				
 				f.renameTo(new File(name));

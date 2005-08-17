@@ -61,13 +61,13 @@ public class JavaStructureTest extends AbstractTaskscapeTest {
         callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
         taskscape = new MylarContext("1", scaling);
-        manager.taskActivated(taskscape);
+        manager.contextActivated(taskscape);
     }
     
     @Override
     protected void tearDown() throws Exception {
         manager.removeAllListeners();
-        manager.taskDeactivated("1", "1");
+        manager.contextDeactivated("1", "1");
         project.dispose();
     }
     

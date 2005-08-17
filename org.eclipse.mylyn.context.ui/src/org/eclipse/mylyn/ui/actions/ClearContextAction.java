@@ -59,7 +59,7 @@ public class ClearContextAction extends Action implements IViewActionDelegate{
 			if (!deleteConfirmed) 
 				return;
 			
-	    	MylarPlugin.getContextManager().taskDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
+	    	MylarPlugin.getContextManager().contextDeleted(((ITask)selectedObject).getHandle(), ((Task)selectedObject).getPath());
 	    	TaskListView.getDefault().getViewer().refresh();
 	    }
 	    // TODO add this back in

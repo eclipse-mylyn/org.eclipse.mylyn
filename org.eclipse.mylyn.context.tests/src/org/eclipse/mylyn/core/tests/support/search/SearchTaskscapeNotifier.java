@@ -65,7 +65,7 @@ public class SearchTaskscapeNotifier extends AbstractTaskscapeTest {
 	public void clearTaskscape() throws IOException, CoreException{
 		WorkspaceSetupHelper.clearDoiModel();
 		MylarContext task = WorkspaceSetupHelper.getTaskscape();
-    	MylarPlugin.getContextManager().taskActivated(task.getId(), task.getId());
+    	MylarPlugin.getContextManager().contextActivated(task.getId(), task.getId());
     	context = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 	}
 	

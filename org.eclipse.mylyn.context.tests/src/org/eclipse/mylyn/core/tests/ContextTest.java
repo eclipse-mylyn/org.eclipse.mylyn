@@ -98,8 +98,8 @@ public class ContextTest extends AbstractTaskscapeTest {
         assertNotNull(context.getLandmarks());
         assertEquals("2", context.getActiveNode().getElementHandle()); // "3" not a user event
         
-        externalizer.writeXMLTaskscapeToFile(context, file);
-        MylarContext loaded = externalizer.readXMLTaskscapeFromFile(file);
+        externalizer.writeContextToXML(context, file);
+        MylarContext loaded = externalizer.readContextFromXML(file);
         assertNotNull(loaded);
         assertEquals(3, loaded.getInteractionHistory().size());
         IMylarContextNode loadedNode = loaded.get("1");
