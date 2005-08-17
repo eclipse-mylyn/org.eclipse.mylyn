@@ -42,6 +42,8 @@ import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
+ * 
+ * TODO: this class is in serious need of refactoring
  */
 public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     
@@ -172,71 +174,29 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		}
         
     };
-    
+
     private static ShellListener SHELL_LISTENER = new ShellListener() {
-        private void saveState() {
-            taskListManager.saveTaskList();
-            for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
-                MylarPlugin.getContextManager().saveContext(task.getHandle(), task.getPath());
-            }
-            lastSave = new Date();
-			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
-        }
-        
-        private void checkTaskListSave() {
-        	if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
-    			lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
-    		} else {
-    			lastSave = new Date();
-    			getPrefs().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
-    		}
-        	Date currentTime = new Date();        	
-        	if (currentTime.getTime() > lastSave.getTime() + TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
-        		taskListManager.saveTaskList();
-        		lastSave = new Date();
-    			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
-        	} else {        		
-//        		System.out.println("Tasklist not saved auto yet");
-//        		System.out.println("Save time: " + new Date(
-//        				lastSave.getTime() + 
-//        				TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))).toString());
-        	}
-        }
-        
-        private void checkReminders() {
-//        	if (getPrefs().getBoolean(REMINDER_CHECK)) {
-//        		getPrefs().setValue(REMINDER_CHECK, false);
-        		final TaskReportGenerator parser = new TaskReportGenerator(MylarTasklistPlugin.getTaskListManager().getTaskList());
-        		parser.addCollector(new ReminderRequiredCollector());
-        		parser.checkTasks();
-        		if (!parser.getTasks().isEmpty()) {
-        			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-        				public void run() {
-        					TasksReminderDialog dialog = new TasksReminderDialog(Workbench.getInstance().getDisplay().getActiveShell(), parser.getTasks());
-        					dialog.setBlockOnOpen(false);
-        					dialog.open();
-        				}
-        			});
-        		}
-//        	}
-        }
         
         public void shellClosed(ShellEvent arg0) {
-            saveState();
+        	getDefault().saveState();
         }  
         
+        /**
+         * bug 1002249: too slow to save state here
+         */
         public void shellDeactivated(ShellEvent arg0) { 
-        	// bug 1002249: too slow to save state here
+        	// 
         }
+        
         public void shellActivated(ShellEvent arg0) { 
-        	checkTaskListSave();
-        	checkReminders();
+        	getDefault().checkTaskListSave();
+        	getDefault().checkReminders();
         }
         
         public void shellDeiconified(ShellEvent arg0) { }
         
         public void shellIconified(ShellEvent arg0) { 
-        	saveState();
+        	getDefault().saveState();
         }
     };
     
@@ -298,6 +258,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
+		saveState();
 		createFileBackup();
 //		getPrefs().setValue(REMINDER_CHECK, true);
 	}
@@ -355,6 +316,48 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	public static IPreferenceStore getPrefs() {
 		return MylarPlugin.getDefault().getPreferenceStore();
 	}
+	
+    private void saveState() {
+        taskListManager.saveTaskList();
+        for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
+            MylarPlugin.getContextManager().saveContext(task.getHandle(), task.getPath());
+        }
+        lastSave = new Date();
+		plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+    } 
+    
+    private void checkTaskListSave() {
+    	if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
+			lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
+		} else {
+			lastSave = new Date();
+			getPrefs().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+		}
+    	Date currentTime = new Date();        	
+    	if (currentTime.getTime() > lastSave.getTime() + TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
+    		taskListManager.saveTaskList();
+    		lastSave = new Date();
+			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+    	}
+    }
+
+    private void checkReminders() {
+//    	if (getPrefs().getBoolean(REMINDER_CHECK)) {
+//    		getPrefs().setValue(REMINDER_CHECK, false);
+    		final TaskReportGenerator parser = new TaskReportGenerator(MylarTasklistPlugin.getTaskListManager().getTaskList());
+    		parser.addCollector(new ReminderRequiredCollector());
+    		parser.checkTasks();
+    		if (!parser.getTasks().isEmpty()) {
+    			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+    				public void run() {
+    					TasksReminderDialog dialog = new TasksReminderDialog(Workbench.getInstance().getDisplay().getActiveShell(), parser.getTasks());
+    					dialog.setBlockOnOpen(false);
+    					dialog.open();
+    				}
+    			});
+    		}
+//    	}
+    }
 	
 	public static void setPriorityLevel(PriorityLevel pl) {
 		getPrefs().setValue(SELECTED_PRIORITY, pl.toString());
