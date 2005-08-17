@@ -122,7 +122,6 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 			if(b2 || b3 || b4){
 				int pound = comment.toLowerCase().indexOf("#", start);
 				ahead = pound - start + 1;
-				System.out.println(ahead);
 			}
 			String endComment = comment.substring(start+ahead, comment.length());
 			endComment = endComment.trim();
