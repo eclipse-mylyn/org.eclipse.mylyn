@@ -61,6 +61,7 @@ import org.eclipse.mylar.tasklist.internal.TaskListPatternFilter;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.actions.AutoCloseAction;
+import org.eclipse.mylar.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
@@ -118,6 +119,7 @@ public class TaskListView extends ViewPart {
     private CreateTaskAction createTaskToolbar;
     private CreateCategoryAction createCategory;
     
+    private CollapseAllAction collapseAll;
     private DeleteAction delete;
     private AutoCloseAction autoClose;
     private OpenTaskEditorAction doubleClickAction;
@@ -868,6 +870,8 @@ public class TaskListView extends ViewPart {
     }
 
     private void fillLocalPullDown(IMenuManager manager) {
+    	manager.add(collapseAll);
+    	manager.add(new Separator());
     	manager.add(previousTaskAction);
     	manager.add(nextTaskAction);
     	manager.add(new Separator());
@@ -963,14 +967,12 @@ public class TaskListView extends ViewPart {
         createCategory = new CreateCategoryAction(this);
          
         delete = new DeleteAction(this);
+        collapseAll = new CollapseAllAction(this);
         autoClose = new AutoCloseAction();
         completeTask = new MarkTaskCompleteAction(this);
         incompleteTask = new MarkTaskIncompleteAction(this);        
-//        rename = new RenameAction();        
-//        moveTaskToRoot = new MoveTaskToRootAction(this);
         doubleClickAction = new OpenTaskEditorAction(this);            
-        filterCompleteTask = new FilterCompletedTasksAction(this);        
-//        filterInCompleteTask = new FilterIncompleteTasksAction();                        
+        filterCompleteTask = new FilterCompletedTasksAction(this);                       
         filterOnPriority = new PriorityDropDownAction();
         previousTaskAction = new NavigatePreviousAction(this, taskHistory);
         nextTaskAction = new NextTaskAction(this, taskHistory);
