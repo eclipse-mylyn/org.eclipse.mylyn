@@ -31,6 +31,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfigurationFactory;
@@ -71,11 +72,15 @@ public class BugzillaPreferences
 
     private static final String bugzilla218Label = "Using Bugzilla 2.18 (default is 2.16)";
     
+    private static final String bugzillaMaxResultsLabel = "Maximum returned results: ";
+    
     private BooleanFieldEditor bugzilla218;
     
 	private StringFieldEditor bugzillaUser;
 
 	private MyStringFieldEditor bugzillaPassword;
+	
+	private IntegerFieldEditor maxResults;
 	
 	private BooleanFieldEditor refreshQueries;
 
@@ -117,6 +122,8 @@ public class BugzillaPreferences
 				StringFieldEditor.UNLIMITED, getFieldEditorParent());
 		bugzillaPassword.getTextControl().setEchoChar('*');
 
+		maxResults = new IntegerFieldEditor(IBugzillaConstants.MAX_RESULTS, bugzillaMaxResultsLabel, getFieldEditorParent());
+		
 		bugzilla218 = new BooleanFieldEditor(IBugzillaConstants.IS_218, bugzilla218Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
         
 		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY, "Automatically refresh Bugzilla reports and queries on startup", 
@@ -126,13 +133,15 @@ public class BugzillaPreferences
 		addField(bugzillaServer);
 		addField(bugzillaUser);
 		addField(bugzillaPassword);
+		addField(maxResults);
 		addField(bugzilla218);
 		addField(refreshQueries);
+		
 
 		// put the password and user name values into the field editors
 		getCachedData();
 		bugzillaUser.setStringValue(user);
-		bugzillaPassword.setStringValue(password);		
+		bugzillaPassword.setStringValue(password);
 	}
     
 	/**
@@ -149,6 +158,7 @@ public class BugzillaPreferences
 		store.setDefault(IBugzillaConstants.MOST_RECENT_QUERY, "");
 		store.setDefault(IBugzillaConstants.IS_218, true);
 		store.setDefault(IBugzillaConstants.REFRESH_QUERY, false);
+		store.setDefault(IBugzillaConstants.MAX_RESULTS, 100);
         
 		// set the default query options for the bugzilla search
 		setDefaultQueryOptions();
@@ -170,6 +180,8 @@ public class BugzillaPreferences
 	@Override
 	public boolean performOk() {
 	    BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.IS_218, bugzilla218.getBooleanValue());
+	    BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY, refreshQueries.getBooleanValue());
+	    BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS, maxResults.getIntValue());
 		String oldBugzillaServer = BugzillaPlugin.getDefault().getServerName();
 		ProductConfiguration configuration = null;
 		
@@ -236,8 +248,6 @@ public class BugzillaPreferences
 		else {
 			configFile.toFile().delete();
 		}
-		
-		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY, refreshQueries.getBooleanValue());
 		return true;
 	}
 

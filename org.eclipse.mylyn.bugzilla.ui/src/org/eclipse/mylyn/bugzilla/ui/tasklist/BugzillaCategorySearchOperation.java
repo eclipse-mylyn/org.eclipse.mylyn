@@ -53,6 +53,8 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation
     
     private String url;
     
+    private boolean isMaxReached;
+    
     /**
      * Constructor
      * 
@@ -102,6 +104,7 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation
 		        MylarPlugin.log(status);
 		        return null;
 		    }
+		    isMaxReached = engine.isMaxReached();
 		    return collector;
         } catch (LoginException e) {
             //save this exception to throw later
@@ -139,5 +142,9 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation
 
 	public String getName() {
 		return null;
+	}
+
+	public boolean isMaxReached() {
+		return isMaxReached;
 	}
 }

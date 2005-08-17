@@ -52,7 +52,8 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  */
 public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
         implements IBugzillaSearchOperation {
-    /** The IMember we are doing the search for */
+
+	/** The IMember we are doing the search for */
     private IMember javaElement;
 
     /** The bugzilla collector for the search */

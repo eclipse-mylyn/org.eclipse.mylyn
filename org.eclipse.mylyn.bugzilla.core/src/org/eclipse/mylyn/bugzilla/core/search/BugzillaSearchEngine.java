@@ -53,6 +53,8 @@ public class BugzillaSearchEngine {
 	protected static final RegularExpression reOld = new RegularExpression("<a href=\"show_bug.cgi\\?id=(\\d+)\">\\d+</a>\\s*<td class=severity><nobr>([^>]+)</nobr><td class=priority><nobr>([^>]+)</nobr><td class=platform><nobr>([^>]*)</nobr><td class=owner><nobr>([^>]*)</nobr><td class=status><nobr>([^>]*)</nobr><td class=resolution><nobr>([^>]*)</nobr><td class=summary>(.*)$", "i");
 	
 	private String urlString;
+
+	private boolean maxReached = false;
 	
 	public BugzillaSearchEngine(String url) {
 		this.urlString = url;
@@ -77,7 +79,17 @@ public class BugzillaSearchEngine {
  	 */
 	public IStatus search(IBugzillaSearchResultCollector collector) throws LoginException 
 	{
-		return this.search(collector, 0);
+		return this.search(collector, 0, -1);
+	}
+	
+	/**
+	 * Wrapper for search
+	 * @param collector - The collector for the results to go into
+	 * @param startMatches - The number of matches to start with for the progress monitor
+ 	 */
+	public IStatus search(IBugzillaSearchResultCollector collector, int startMatches) throws LoginException 
+	{
+		return this.search(collector, startMatches, BugzillaPlugin.getDefault().getMaxResults());
 	}
 	
 	/**
@@ -116,8 +128,9 @@ public class BugzillaSearchEngine {
 	 * </pre>
 	 * @param collector - The collector for the search results
 	 * @param startMatches - The number of matches to start with for the progress monitor
+	 * @param maxMatches - the maximum number of matches to return or -1 for unlimited
 	 */
-	public IStatus search(IBugzillaSearchResultCollector collector, int startMatches) throws LoginException {
+	private IStatus search(IBugzillaSearchResultCollector collector, int startMatches, int maxMatches) throws LoginException {
 		IProgressMonitor monitor = collector.getProgressMonitor();
 
 		IStatus status = null; 
@@ -165,6 +178,13 @@ public class BugzillaSearchEngine {
 			Match match = new Match();
 			String line;
 			while ((line = in.readLine()) != null) {
+				
+				
+				if(numCollected != -1 && numCollected >= maxMatches){
+					maxReached  = true;
+					break;
+				}
+				
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException("Search cancelled");
 				}
@@ -306,5 +326,9 @@ public class BugzillaSearchEngine {
 			return new Status(IStatus.OK, NewSearchUI.PLUGIN_ID, IStatus.OK, "", null);
 		else
 			return status;
+	}
+
+	public boolean isMaxReached() {
+		return maxReached;
 	}
 }

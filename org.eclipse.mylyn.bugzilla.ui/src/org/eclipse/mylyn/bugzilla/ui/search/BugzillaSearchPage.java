@@ -768,6 +768,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	protected String getQueryURL(StringBuffer params) {
 		StringBuffer url = new StringBuffer(getQueryURLStart().toString());
 		url.append(params);
+		
+		// HACK make sure that the searches come back sorted by priority.  This should be a search opetion though
+		url.append("&order=Importance");
 		return url.toString();
 	}
 	

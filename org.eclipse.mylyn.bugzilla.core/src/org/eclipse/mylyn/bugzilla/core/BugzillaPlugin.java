@@ -339,4 +339,8 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	public boolean refreshOnStartUpEnabled() {
 		return getPreferenceStore().getBoolean(IBugzillaConstants.REFRESH_QUERY);
 	}
+	
+	public int getMaxResults() {
+		return getPreferenceStore().getInt(IBugzillaConstants.MAX_RESULTS);
+	}
 }

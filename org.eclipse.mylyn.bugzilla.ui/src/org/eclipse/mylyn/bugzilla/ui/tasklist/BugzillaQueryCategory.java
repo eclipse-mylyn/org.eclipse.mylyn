@@ -66,6 +66,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	}	
 	
 	private ICategorySearchListener listener = new BugzillaQueryCategorySearchListener();
+	private boolean isMaxReached = false;
 	
 	public BugzillaQueryCategory(String label, String url) {
 		super(label);
@@ -74,7 +75,11 @@ public class BugzillaQueryCategory extends AbstractCategory {
 
 	public String getDescription(boolean label) {
 		if (hits.size() > 0 || !label) {
-			return super.getDescription(label);
+			if(isMaxReached && label){
+				return super.getDescription(label) + " <first "+ BugzillaPlugin.getDefault().getMaxResults() +" hits>";
+			} else {
+				return super.getDescription(label);
+			}
 		} else if (!hasBeenRefreshed) {
 			return super.getDescription(label) + " <needs refresh>";
 		} else {
@@ -115,6 +120,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		try {
 			// execute the search operation
 			catSearch.execute(new NullProgressMonitor());
+			isMaxReached = catSearch.isMaxReached();
 			hasBeenRefreshed = true;
 			lastRefresh = new Date();
 
