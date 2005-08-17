@@ -89,6 +89,8 @@ public class OfflineView extends ViewPart {
 	
 	private static TableViewer viewer;
 	
+	private static OfflineReportsViewContentProvider contentProvider = new OfflineReportsViewContentProvider();
+	
 	private String[] columnHeaders = {
 		"Bug",
 		"Summary",
@@ -142,7 +144,7 @@ public class OfflineView extends ViewPart {
 		gd.verticalSpan = 20;
 		viewer.getTable().setLayoutData(gd);
 	
-		viewer.setContentProvider(new OfflineReportsViewContentProvider());
+		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new OfflineReportsViewLabelProvider());
 		viewer.setInput(BugzillaPlugin.getDefault().getOfflineReports().elements());
 		
@@ -428,9 +430,14 @@ public class OfflineView extends ViewPart {
 	/**
 	 * Refreshes the view.
 	 */
-	public static void add() {
-		if (viewer != null)
+	public static void refreshView() {
+		if(viewer != null && !viewer.getControl().isDisposed()){
+			if(viewer.getContentProvider() == null)
+				viewer.setContentProvider(contentProvider);
+			if(viewer.getContentProvider() == null)
+				return;
 			viewer.setInput(viewer.getInput());
+		}
 	}
 	
 	/**
@@ -480,7 +487,7 @@ public class OfflineView extends ViewPart {
 			file.sort(OfflineReportsFile.lastSel);
 		}
 		OfflineView.checkWindow();
-		OfflineView.add();
+		OfflineView.refreshView();
 	}
 	
 	public static List<IBugzillaBug> getOfflineBugs(){
@@ -498,8 +505,14 @@ public class OfflineView extends ViewPart {
 		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
 		bugList.add(bug);
 		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
-		if(viewer != null)
+		
+		if(viewer != null && !viewer.getControl().isDisposed()){
+			if(viewer.getContentProvider() == null)
+				viewer.setContentProvider(contentProvider);
+			if(viewer.getContentProvider() == null)
+				return;
 			viewer.setInput(viewer.getInput());
+		}
 	}
 	
 	/**
@@ -601,7 +614,7 @@ public class OfflineView extends ViewPart {
 			viewer.refresh();
 	}
 	
-	private class OfflineReportsViewContentProvider implements IStructuredContentProvider {
+	private static class OfflineReportsViewContentProvider implements IStructuredContentProvider {
 
 		private List results;
 	

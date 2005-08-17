@@ -225,7 +225,7 @@ public class BugzillaUITools {
 		}
 	}
 	
-	public static void openUrl(String url) {
+	public static void openUrl(String title, String tooltip, String url) {
 		try {
 			IWebBrowser b = null;
 			int flags = 0;
@@ -241,8 +241,8 @@ public class BugzillaUITools {
 						| WorkbenchBrowserSupport.NAVIGATION_BAR;
 			}
 			b = WorkbenchBrowserSupport.getInstance().createBrowser(
-					flags, "org.eclipse.mylar.tasklist", "Task",
-					"tasktooltip");
+					flags, "org.eclipse.mylar.tasklist", title,
+					tooltip);
 			b.openURL(new URL(url));
 		} catch (PartInitException e) {
 			MessageDialog.openError( Display.getDefault().getActiveShell(), 

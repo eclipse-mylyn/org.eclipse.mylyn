@@ -97,7 +97,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
 				t.openTaskInEditor();
 			} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
-				BugzillaUITools.openUrl(t.getBugUrl());	    			
+				String title = "Bug #" + BugzillaTask.getBugId(t.getHandle());
+				BugzillaUITools.openUrl(title, title, t.getBugUrl());	    			
 			} else {
 				// not supported
 			}
@@ -125,7 +126,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 					viewBugs.schedule();
 		    	}
     		} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
-    			BugzillaUITools.openUrl(hit.getBugUrl());  			
+    			String title = "Bug #" + BugzillaTask.getBugId(hit.getHandle());
+    			BugzillaUITools.openUrl(title, title, hit.getBugUrl());  			
     		} else {
     			// not supported
     		}

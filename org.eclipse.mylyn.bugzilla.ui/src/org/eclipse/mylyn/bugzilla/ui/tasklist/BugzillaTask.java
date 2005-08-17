@@ -336,7 +336,8 @@ public class BugzillaTask extends Task {
 							return;
 						}
 					} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
-						BugzillaUITools.openUrl(getBugUrl());	    			
+						String title = "Bug #" + BugzillaTask.getBugId(getHandle());
+						BugzillaUITools.openUrl(title, title, getBugUrl());	    			
 					}
 				}
 			});

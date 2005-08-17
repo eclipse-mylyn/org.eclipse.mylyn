@@ -1212,7 +1212,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				public void mouseUp(MouseEvent e) {}
 	
 				public void mouseDown(MouseEvent e) {
-					BugzillaUITools.openUrl(BugzillaRepository.getBugUrlWithoutLogin(bugzillaInput.getBug().getId()));
+					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepository.getBugUrlWithoutLogin(bugzillaInput.getBug().getId()));
 				}
 			});
 		} else{
@@ -1279,7 +1279,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		changeDirtyStatus(false);
 		OfflineView.saveOffline(getBug());
 		OfflineView.checkWindow();
-		OfflineView.add();
+		OfflineView.refreshView();
 	}
 	
 	/**
@@ -1586,6 +1586,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
             // get the position of the text in the composite
             pos = 0;
             Control s = selectionComposite;
+            if(s.isDisposed())
+            	return;
             s.setEnabled(true);
             s.setFocus();
             s.forceFocus();
