@@ -106,13 +106,24 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 		m = p.matcher(comment.toLowerCase().trim());
 		boolean b2 = m.matches();
 		
+		p = Pattern.compile("^.*bug\\s#\\d+.*");
+		m = p.matcher(comment.toLowerCase().trim());
+		boolean b3 = m.matches();
+		
+		p = Pattern.compile("^.*bug#\\d+.*");
+		m = p.matcher(comment.toLowerCase().trim());
+		boolean b4 = m.matches();
+		
 		// XXX walk forward from where we are
-		if(b || b2){
+		if(b || b2 || b3 || b4){
 	
 			int start = comment.toLowerCase().indexOf("bug");
 			int ahead = 4;
-			if(b2)
-				ahead = 5;
+			if(b2 || b3 || b4){
+				int pound = comment.toLowerCase().indexOf("#", start);
+				ahead = pound - start + 1;
+				System.out.println(ahead);
+			}
 			String endComment = comment.substring(start+ahead, comment.length());
 			endComment = endComment.trim();
 			int endCommentStart = comment.indexOf(endComment);
