@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
@@ -42,6 +43,7 @@ import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -216,14 +218,26 @@ public class BugzillaTask extends Task {
 		try {
 			// XXX make sure to send in the server name if there are multiple repositories
 			if(BugzillaPlugin.getDefault() == null){
-				MylarPlugin.log("Bugreport download failed for: " + getBugId(getHandle()) + " due to bugzilla core not existing", this);
+				MylarPlugin.log("Bug Beport download failed for: " + getBugId(getHandle()) + " due to bugzilla core not existing", this);
 				return null;
 			}
 			return BugzillaRepository.getInstance().getBug(getBugId(getHandle()));
 		} catch (LoginException e) {
-			MylarPlugin.log(e, "download failed");
+			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed", "The bugzilla report failed to be downloaded since your username or password is incorrect.");					
+				}
+			});
 		} catch (IOException e) {
-			MylarPlugin.log(e, "download failed");
+			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					((ApplicationWindow)BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()).setStatus("Download of bug "
+								+ getBugId(getHandle())
+								+ " failed due to I/O exception");
+				}
+			});
+//			MylarPlugin.log(e, "download failed due to I/O exception");
 		}
 		return null;
 	}
@@ -300,6 +314,7 @@ public class BugzillaTask extends Task {
 					if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
 						
 						try{
+							// if we can reach the server, get the latest for the bug
 							if(!isBugDownloaded()){
 								input.getBugTask().downloadReport();
 								input.setOfflineBug(input.getBugTask().getBugReport());
@@ -539,7 +554,7 @@ public class BugzillaTask extends Task {
 		Font f = super.getFont();
 		if(f != null) return f;
 		
-    	if (getState() != BugzillaTask.BugTaskState.FREE) {
+    	if (getState() != BugzillaTask.BugTaskState.FREE || bugReport == null) {
     		return ITALIC;
     	}
     	return null;
