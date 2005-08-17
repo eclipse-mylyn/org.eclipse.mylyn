@@ -82,9 +82,10 @@ public class BugzillaTask extends Task {
 	 * TODO: Move
 	 */
 	public static String getLastRefreshTime(Date lastRefresh) {
-		String toolTip = "\n-------------------\n"
+		String toolTip = "\n---------------\n"
 			+ "Last synchronized: ";
 		Date timeNow = new Date();
+		if (lastRefresh == null) lastRefresh = new Date();
 		long timeDifference = (timeNow.getTime() - lastRefresh.getTime())/60000;
 		long minutes = timeDifference % 60;
 		timeDifference /= 60;
