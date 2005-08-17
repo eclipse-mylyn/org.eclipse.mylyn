@@ -78,6 +78,28 @@ public class BugzillaTask extends Task {
 	/** The last time this task's bug report was downloaded from the server. */
 	protected Date lastRefresh;
 	
+	/**
+	 * TODO: Move
+	 */
+	public static String getLastRefreshTime(Date lastRefresh) {
+		String toolTip = "\n-------------------\n"
+			+ "Last synchronized: ";
+		Date timeNow = new Date();
+		long timeDifference = (timeNow.getTime() - lastRefresh.getTime())/60000;
+		long minutes = timeDifference % 60;
+		timeDifference /= 60;
+		long hours = timeDifference % 24;
+		timeDifference /= 24;
+		if (timeDifference > 0) {
+			toolTip += timeDifference + ((timeDifference == 1) ? " day, " : " days, ");
+		}
+		if (hours > 0 || timeDifference > 0) {
+			toolTip += hours + ((hours == 1) ? " hour, " : " hours, ");
+		}
+		toolTip += minutes + ((minutes == 1) ? " minute " : " minutes ") + "ago";
+		return toolTip;
+	}
+	
 	public static final ISchedulingRule rule = new ISchedulingRule() {
 		public boolean isConflicting(ISchedulingRule schedulingRule) {
 			return schedulingRule == this;
@@ -405,46 +427,16 @@ public class BugzillaTask extends Task {
 
 	@Override
 	public String getToolTipText() {
-		if(lastRefresh == null)
-			return "";
-		// Get the current time.
-		Date timeNow = new Date();
+		if(lastRefresh == null) return "";
+
+		String toolTip = getDescription(true);
+
 		
-		// Get the number of minutes between the current time
-		// and the last time the bug report was downloaded
-		long timeDifference = (timeNow.getTime() - lastRefresh.getTime())/60000;
-		
-		// Calculate the number of minutes and hours.
-		// The amount left in "timeDifference" is the 
-		// days' difference.
-		long minutes = timeDifference % 60;
-		timeDifference /= 60;
-		long hours = timeDifference % 24;
-		timeDifference /= 24;
-		
-		// Gradually generate the tooltip string...
-		String toolTip =
-			getDescription(true) +
-			"\n-------------------\n";
-		
-//		if (bugReport == null) {
-//			toolTip += "Last attempted download ";
-//		}
-//		else {
-		toolTip += "Last synchronized: ";
-//		}
-		
-		if (timeDifference > 0) {
-			toolTip += timeDifference + ((timeDifference == 1) ? " day, " : " days, ");
-		}
-		if (hours > 0 || timeDifference > 0) {
-			toolTip += hours + ((hours == 1) ? " hour, " : " hours, ");
-		}
-		toolTip += minutes + ((minutes == 1) ? " minute " : " minutes ") + "ago";
+		toolTip += getLastRefreshTime(lastRefresh);
 				
 		return toolTip;
 	}
-	
+
     public boolean readBugReport() {
     	// XXX server name needs to be with the bug report
     	int location = BugzillaPlugin.getDefault().getOfflineReports().find(getBugId(getHandle()));

@@ -112,4 +112,12 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 	public boolean isCompleted(){
 		return false;
 	}
+
+	public String getToolTipText() {
+		if (tasks.size() == 1) {
+			return "1 task";
+		} else {
+			return tasks.size() + " tasks";
+		}
+	}
 }

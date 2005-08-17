@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,8 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	private String url;
 	private List<BugzillaHit> hits = new ArrayList<BugzillaHit>();
 	private boolean hasBeenRefreshed = false;
+	
+	protected Date lastRefresh;
 	
 	public class BugzillaQueryCategorySearchListener implements ICategorySearchListener { 
 
@@ -113,6 +116,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 			// execute the search operation
 			catSearch.execute(new NullProgressMonitor());
 			hasBeenRefreshed = true;
+			lastRefresh = new Date();
 
 			// get the status of the search operation
 			status[0] = catSearch.getStatus();
@@ -209,5 +213,16 @@ public class BugzillaQueryCategory extends AbstractCategory {
 
 	public boolean isCompleted() {
 		return false;
+	}
+
+	public String getToolTipText() {
+		String tooltip = "";
+		if (hits.size() == 1) {
+			tooltip += "1 hit";
+		} else {
+			tooltip += hits.size() + " hits";
+		}
+		tooltip += BugzillaTask.getLastRefreshTime(lastRefresh);
+		return tooltip;
 	}
 }

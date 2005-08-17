@@ -53,5 +53,7 @@ public interface ITaskListElement {
 
 	public abstract Font getFont();
 	
+	public abstract String getToolTipText();
+	
 	public abstract boolean isCompleted();
 }

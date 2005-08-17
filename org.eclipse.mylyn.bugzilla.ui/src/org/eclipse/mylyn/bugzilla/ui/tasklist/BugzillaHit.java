@@ -157,4 +157,12 @@ public class BugzillaHit implements ITaskListElement {
 		}
 		return false;
 	}
+
+	public String getToolTipText() {
+		if(hasCorrespondingActivatableTask()) {
+			return task.getToolTipText();
+		} else {
+			return null;
+		}
+	}
 }

@@ -15,7 +15,7 @@
 package org.eclipse.mylar.tasklist.ui.views;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
@@ -92,25 +92,24 @@ public class ToolTipHandler {
 		tipLabelText.setLayoutData(textGridData);
 	}
 
-   private ITask getTask(Object hoverObject) {
+   private ITaskListElement getTask(Object hoverObject) {
 		if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
 			if (data != null) {
-				if (data instanceof ITask) {
-					return (ITask) data;
+				if (data instanceof ITaskListElement) {
+					return (ITaskListElement) data;
 				} else if (data instanceof IAdaptable) {
-					return (ITask) ((IAdaptable) data).getAdapter(ITask.class);
-				}
-
+					return (ITaskListElement) ((IAdaptable) data).getAdapter(ITaskListElement.class);
+				} 
 			}
 		}
 		return null;
 	}
    
    protected String getToolTipText(Object object) {
-		ITask task = getTask(object);
-		if (task != null) {
-			return task.getToolTipText();
+	   ITaskListElement element = getTask(object);
+		if (element != null) {
+			return element.getToolTipText();
 		}
 
 		if (object instanceof Control) {
@@ -120,7 +119,7 @@ public class ToolTipHandler {
 	}
 
    protected Image getToolTipImage(Object object) {
-		ITask projectNode = getTask(object);
+	   ITaskListElement projectNode = getTask(object);
 		if (projectNode != null) {
 			// TODO Code for determining image
 		}
