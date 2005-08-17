@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.mylar.tasklist.AbstractCategory;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -58,6 +59,9 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 	
     public void addTask(ITask task) {
     	tasks.add(task);
+    	if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
     }
     
     public void removeTask(ITask task) {

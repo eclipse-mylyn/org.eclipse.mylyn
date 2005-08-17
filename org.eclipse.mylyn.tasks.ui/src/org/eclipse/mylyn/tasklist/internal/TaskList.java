@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.mylar.tasklist.AbstractCategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 
  
 /**
@@ -35,10 +36,16 @@ public class TaskList implements Serializable {
     
     public void addRootTask(ITask task) {
     	rootTasks.add(task);
+    	if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
     }
     
     public void addCategory(AbstractCategory cat) {
     	categories.add(cat);
+    	if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
     }
     
     public void setActive(ITask task, boolean active) {

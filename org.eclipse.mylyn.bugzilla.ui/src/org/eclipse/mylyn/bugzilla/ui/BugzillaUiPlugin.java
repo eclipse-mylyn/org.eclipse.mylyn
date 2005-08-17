@@ -14,6 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaRefreshManager;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskListManager;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -48,6 +49,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
+		if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
+		
 		super.stop(context);
 		plugin = null;
 		bugzillaRefreshManager.clearAllRefreshes();

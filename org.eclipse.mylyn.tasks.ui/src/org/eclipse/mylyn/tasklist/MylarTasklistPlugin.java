@@ -255,12 +255,11 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     
     @Override
 	public void stop(BundleContext context) throws Exception {
+		createFileBackup();
+
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
-		saveState();
-		createFileBackup();
-//		getPrefs().setValue(REMINDER_CHECK, true);
 	}
 
     @Override
@@ -272,8 +271,6 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     	store.setDefault(MULTIPLE_ACTIVE_TASKS, false);
     	store.setDefault(SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
-//    	store.setDefault(REMINDER_CHECK, true);
-    	
     }    
     
     public static TaskListManager getTaskListManager() {
@@ -317,7 +314,10 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		return MylarPlugin.getDefault().getPreferenceStore();
 	}
 	
-    private void saveState() {
+	/**
+	 * TODO: make private
+	 */
+    public void saveState() {
         taskListManager.saveTaskList();
         for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
             MylarPlugin.getContextManager().saveContext(task.getHandle(), task.getPath());
