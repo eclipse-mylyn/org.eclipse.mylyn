@@ -56,7 +56,7 @@ public class PlanningGameEditorPart extends EditorPart {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setSite(site);
-		setInputWithNotify(input);
+		setInput(input);
 		editorInput = (PlanningGameEditorInput)input;
 		setPartName(editorInput.getName());
 		setTitleToolTip(editorInput.getToolTipText());

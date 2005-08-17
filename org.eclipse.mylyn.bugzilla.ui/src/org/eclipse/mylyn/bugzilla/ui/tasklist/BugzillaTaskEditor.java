@@ -156,7 +156,7 @@ public class BugzillaTaskEditor extends TaskEditor {
 		offlineBug = bugzillaEditorInput.getOfflineBug();
 		
 		super.setSite(site);
-		super.setInputWithNotify(editorInput);
+		super.setInput(editorInput);
 		
 		try {
 			bugzillaEditor.init(this.getEditorSite(), this.getEditorInput());

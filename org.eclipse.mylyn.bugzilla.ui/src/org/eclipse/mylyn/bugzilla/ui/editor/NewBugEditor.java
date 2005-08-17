@@ -317,7 +317,7 @@ public class NewBugEditor extends AbstractBugEditor {
 			throw new PartInitException("Invalid Input: Must be NewBugEditorInput");
 		NewBugEditorInput ei = (NewBugEditorInput) input;
 		setSite(site);
-		setInputWithNotify(input);
+		setInput(input);
 		bugzillaInput = ei;
 		model = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
 		bug = ei.getBug();

@@ -242,7 +242,7 @@ public class TaskSummaryEditor extends EditorPart {
 			throw new PartInitException("Invalid Input: Must be TaskEditorInput");
 		}
 		setSite(site);
-		setInputWithNotify(input);
+		setInput(input);
 		editorInput = (TaskEditorInput)input;
 		setPartName(editorInput.getLabel());
 	}
