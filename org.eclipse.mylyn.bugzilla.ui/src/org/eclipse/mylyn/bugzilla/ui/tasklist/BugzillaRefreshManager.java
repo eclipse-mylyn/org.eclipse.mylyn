@@ -68,7 +68,8 @@ public class BugzillaRefreshManager {
 		List<Job> l = new ArrayList<Job>();
 		l.addAll(currentlyRefreshing.values());
 		for(Job j : l){
-			j.cancel();
+			if(j != null)
+				j.cancel();
 		}
 		currentlyRefreshing.clear();
 	}
