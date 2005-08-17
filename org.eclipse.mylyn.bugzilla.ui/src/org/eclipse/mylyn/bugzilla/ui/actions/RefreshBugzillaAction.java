@@ -38,7 +38,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
- * @author Ken Sueda
+ * @author Ken Sueda and Mik Kersten
  */
 public class RefreshBugzillaAction extends Action implements IViewActionDelegate{
 	
@@ -47,19 +47,16 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 	private BugzillaQueryCategory cat = null;
 	
 	public RefreshBugzillaAction() {
-		setText("Synchronize Bugzilla");
+		setText("Refresh Refresh");
         setToolTipText("Synchronize Bugzilla");
         setId(ID);
         setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
 	
 	public RefreshBugzillaAction(BugzillaQueryCategory cat) {
+		this();
 		assert(cat != null);
 		this.cat =  cat;
-		setText("Synchronize Bugzilla");
-        setToolTipText("Synchronize Bugzilla");
-        setId(ID);
-        setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}
 	
 	@Override

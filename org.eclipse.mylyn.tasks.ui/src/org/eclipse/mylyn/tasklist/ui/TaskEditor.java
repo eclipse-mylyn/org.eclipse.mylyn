@@ -86,7 +86,7 @@ public class TaskEditor extends MultiPageEditorPart {
 		IEditorPart editor = getEditor(0);
 		editor.doSaveAs();
 		setPageText(0, editor.getTitle());
-		setInput(editor.getEditorInput());
+		setInputWithNotify(editor.getEditorInput());
 	}
 
 	@Override

@@ -186,9 +186,9 @@
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize Bugzilla"
+               label="Bugzilla Refresh"
                menubarPath="mylar"
-               tooltip="Synchronize Bugzilla">
+               tooltip="Bugzilla Refresh">
             <enablement>
                <or>
                     <objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask"/>
