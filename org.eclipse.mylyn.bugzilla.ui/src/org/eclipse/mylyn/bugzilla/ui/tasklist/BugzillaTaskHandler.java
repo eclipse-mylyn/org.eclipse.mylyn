@@ -71,7 +71,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 									
 			task.removeReport();
 			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
-			MylarPlugin.getContextManager().taskDeleted(task.getHandle(), task.getPath());
+			MylarPlugin.getContextManager().contextDeleted(task.getHandle(), task.getPath());
 			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			// if we couldn't get the page, get out of here

@@ -66,7 +66,7 @@ public class DeleteAction extends Action {
 				return;
 									
 			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
-			MylarPlugin.getContextManager().taskDeleted(task.getHandle(), task.getPath());
+			MylarPlugin.getContextManager().contextDeleted(task.getHandle(), task.getPath());
 			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			// if we couldn't get the page, get out of here
@@ -87,7 +87,7 @@ public class DeleteAction extends Action {
 			
 			TaskCategory cat = (TaskCategory) selectedObject;
 			for (ITask task : cat.getChildren()) {
-				MylarPlugin.getContextManager().taskDeleted(task.getHandle(), task.getPath());
+				MylarPlugin.getContextManager().contextDeleted(task.getHandle(), task.getPath());
 				IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (page != null) {
 					try {

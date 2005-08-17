@@ -154,17 +154,17 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private static ITaskActivityListener CONTEXT_MANAGER_TASK_LISTENER = new ITaskActivityListener() {
 
         public void taskActivated(ITask task) {
-            MylarPlugin.getContextManager().taskActivated(task.getHandle(), task.getPath());
+            MylarPlugin.getContextManager().contextActivated(task.getHandle(), task.getPath());
         }
 
         public void tasksActivated(List<ITask> tasks) {
             for (ITask task : tasks) {
-                MylarPlugin.getContextManager().taskActivated(task.getHandle(), task.getPath());
+                MylarPlugin.getContextManager().contextActivated(task.getHandle(), task.getPath());
             }
         }
 
         public void taskDeactivated(ITask task) {
-            MylarPlugin.getContextManager().taskDeactivated(task.getHandle(), task.getPath());
+            MylarPlugin.getContextManager().contextDeactivated(task.getHandle(), task.getPath());
         }
 
 		public void taskPropertyChanged(ITask updatedTask, String property) {
@@ -177,7 +177,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
         private void saveState() {
             taskListManager.saveTaskList();
             for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
-                MylarPlugin.getContextManager().saveTaskscape(task.getHandle(), task.getPath());
+                MylarPlugin.getContextManager().saveContext(task.getHandle(), task.getPath());
             }
             lastSave = new Date();
 			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
