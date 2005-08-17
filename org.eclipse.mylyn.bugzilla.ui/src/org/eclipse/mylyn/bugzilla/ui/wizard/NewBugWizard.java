@@ -90,26 +90,33 @@ public class NewBugWizard extends AbstractBugWizard {
 			}
 		}
 
-		if (WizardProductPage.products.size() != 0
-				&& BugzillaPlugin.getDefault().getProductConfiguration()
-						.getProducts().length > 1) {
-			productPage = new WizardProductPage(workbenchInstance, this);
-			addPage(productPage);
-		} else {
-			// There wasn't a list of products so there must only be 1
-			if (!model.hasParsedAttributes()) {
-				if (model.isConnected())
-					BugzillaRepository.getInstance().getnewBugAttributes(model,
-							true);
-				else
-					BugzillaRepository.getInstance().getProdConfigAttributes(
-							model);
-				model.setParsedAttributesStatus(true);
+		try {
+			if (WizardProductPage.products.size() != 0
+					&& BugzillaPlugin.getDefault().getProductConfiguration()
+							.getProducts().length > 1) {
+				productPage = new WizardProductPage(workbenchInstance, this);
+				addPage(productPage);
+			} else {
+				// There wasn't a list of products so there must only be 1
+				if (!model.hasParsedAttributes()) {
+					if (model.isConnected())
+						BugzillaRepository.getInstance().getnewBugAttributes(model,
+								true);
+					else
+						BugzillaRepository.getInstance().getProdConfigAttributes(
+								model);
+					model.setParsedAttributesStatus(true);
+				}
+	
+				// add the attributes page to the wizard
+				attributePage = new WizardAttributesPage(workbenchInstance);
+				addPage(attributePage);
 			}
-
-			// add the attributes page to the wizard
-			attributePage = new WizardAttributesPage(workbenchInstance);
-			addPage(attributePage);
+		} catch (NullPointerException e){
+			// TODO add better error message here
+			MessageDialog.openError(null, "Bugzilla Error",
+					"Unable to get the products.");
+			super.getShell().close();
 		}
 	}
 
