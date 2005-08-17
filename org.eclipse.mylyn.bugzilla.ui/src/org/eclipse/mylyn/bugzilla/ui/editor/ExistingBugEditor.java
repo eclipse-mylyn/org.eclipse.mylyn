@@ -125,6 +125,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 		compareInput = new BugzillaCompareInput(config);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof ExistingBugEditorInput))

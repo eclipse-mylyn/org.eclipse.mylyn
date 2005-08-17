@@ -81,6 +81,7 @@ public class TaskEditor extends MultiPageEditorPart {
 	 * 
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void doSaveAs() {
 		IEditorPart editor = getEditor(0);

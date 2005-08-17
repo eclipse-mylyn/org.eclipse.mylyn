@@ -311,6 +311,7 @@ public class NewBugEditor extends AbstractBugEditor {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof NewBugEditorInput))

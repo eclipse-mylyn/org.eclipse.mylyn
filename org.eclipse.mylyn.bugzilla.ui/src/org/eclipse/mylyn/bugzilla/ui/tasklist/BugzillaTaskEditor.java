@@ -145,6 +145,7 @@ public class BugzillaTaskEditor extends TaskEditor {
 		firePropertyChange(PROP_DIRTY);
 	}
     
+	@SuppressWarnings({"deprecation","deprecation"})
 	@Override
 	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
 		if (!(editorInput instanceof BugzillaTaskEditorInput))

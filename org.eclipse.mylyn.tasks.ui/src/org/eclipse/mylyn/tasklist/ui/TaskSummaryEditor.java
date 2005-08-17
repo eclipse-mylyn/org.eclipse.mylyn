@@ -236,6 +236,7 @@ public class TaskSummaryEditor extends EditorPart {
 	public void doSaveAs() {
 		// don't support saving
 	}
+	@SuppressWarnings("deprecation")
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof TaskEditorInput)) {
