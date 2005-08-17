@@ -419,6 +419,12 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	public void addTaskHandler(ITaskHandler taskHandler) {
 		taskHandlers.add(taskHandler);
 	}
+	
+	public void restoreTaskHandlerState(){
+		for(ITaskHandler handler: taskHandlers){
+			handler.restoreState(TaskListView.getDefault());
+		}
+	}
 
 	private List<ITaskListDynamicSubMenuContributor> menuContributors = new ArrayList<ITaskListDynamicSubMenuContributor>();
 	

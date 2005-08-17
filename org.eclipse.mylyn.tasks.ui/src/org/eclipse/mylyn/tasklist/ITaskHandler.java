@@ -32,6 +32,9 @@ public interface ITaskHandler {
 
 	public abstract ITask taskAdded(ITask newTask);
 
+	/**
+	 *  This is called both before and after the tasklist is read
+	 */
 	public abstract void restoreState(TaskListView taskListView);
 
 	public abstract boolean enableAction(Action action, ITaskListElement element);
