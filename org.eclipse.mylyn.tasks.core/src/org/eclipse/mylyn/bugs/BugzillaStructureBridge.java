@@ -303,4 +303,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 
 		return separations;
 	}
+
+	public String getHandleForOffsetInObject(Object resource, int offset) {
+		return null;
+	}
 }
