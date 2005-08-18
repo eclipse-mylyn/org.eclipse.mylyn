@@ -38,7 +38,6 @@ import org.eclipse.pde.internal.ui.model.build.BuildEntry;
 import org.eclipse.pde.internal.ui.model.plugin.PluginObjectNode;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
 
@@ -135,15 +134,15 @@ public class PdeStructureBridge implements IMylarStructureBridge {
             // get the start line for the element
             int start = Integer.parseInt(handle.substring(first + 1));
             
-            // get the content and the document so that we can get the offset
-            String content = XmlNodeHelper.getContents(f.getContents());
-            IDocument d = new Document(content);
+//            // get the content and the document so that we can get the offset
+//            String content = XmlNodeHelper.getContents(f.getContents());
+//            IDocument d = new Document(content);
             
             // get the offsets for the element
             // make sure that we are on a character and not whitespace
-            int offset = d.getLineOffset(start);
-            while(d.getChar(offset) == ' ')
-                offset++;
+//            int offset = d.getLineOffset(start);
+//            while(d.getChar(offset) == ' ')
+//                offset++;
             
             // get the current editor which should be the ManifestEditor so that we can get the element that we want
             IEditorPart editorPart = null;
@@ -153,11 +152,13 @@ public class PdeStructureBridge implements IMylarStructureBridge {
                 // do nothing, this just means that there is no active page
             }
             if(editorPart != null && editorPart instanceof ManifestEditor){
-                PluginObjectNode node = PdeEditingMonitor.getNode((ManifestEditor)editorPart, offset);
+                PluginObjectNode node = PdeEditingMonitor.getNode((ManifestEditor)editorPart, start, true);
                 // get the element based on the offset
                 return node;
             }else{
-                PluginObjectNode node = PdeEditingMonitor.getNode(d, f, offset);
+				String content = XmlNodeHelper.getContents(f.getContents());
+				IDocument d = new Document(content);
+                PluginObjectNode node = PdeEditingMonitor.getNode(d, f, start, true);
                 return node;
             }
         }catch(Exception e){
@@ -183,7 +184,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
             	}
                 IPath path = new Path(node.getModel().getUnderlyingResource().getFullPath().toString());
                 IFile file = (IFile)((Workspace)ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
-                String handle = new XmlNodeHelper(new FileEditorInput(file), node.getOffset()).getHandle();
+                String handle = new XmlNodeHelper(file.getFullPath().toString(), PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
                 return handle;
             }catch(Exception e){
             	MylarPlugin.log(e, "pde handle failed");
@@ -308,5 +309,10 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		separations.add(new DegreeOfSeparation("entire workspace", 5));
 
 		return separations;
+	}
+
+	public String getHandleForOffsetInObject(Object resource, int offset) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

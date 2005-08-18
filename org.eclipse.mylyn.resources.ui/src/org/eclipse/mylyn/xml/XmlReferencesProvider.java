@@ -209,22 +209,23 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
                                // change the file into a document
                                FileEditorInput fei = new FileEditorInput(f);
                         
-                               for(int j = 0; j < mar.length; j++){
-                                   Match m = mar[j];
-                                   try{
-                                       XmlNodeHelper xnode = new XmlNodeHelper(fei, m.getOffset());
-                                       nodeMap.put(m, xnode);
-                                       IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
-                                       String handle = xnode.getHandle();
-                                       Object o = bridge.getObjectForHandle(handle);
-                                       String name = bridge.getName(o);
-                                       if(o != null){
-                                           nodes.put(handle, name);
-                                       }
-                                   } catch(Exception e){
-                                	   MylarPlugin.log(e, "search failed");
-                                   }
-                               }
+//                               XXX add this back in soon
+//                               for(int j = 0; j < mar.length; j++){
+//                                   Match m = mar[j];
+//                                   try{
+//                                       XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), m.getOffset());
+//                                       nodeMap.put(m, xnode);
+//                                       IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
+//                                       String handle = xnode.getHandle();
+//                                       Object o = bridge.getObjectForHandle(handle);
+//                                       String name = bridge.getName(o);
+//                                       if(o != null){
+//                                           nodes.put(handle, name);
+//                                       }
+//                                   } catch(Exception e){
+//                                	   MylarPlugin.log(e, "search failed");
+//                                   }
+//                               }
                            }
                        }
                    }

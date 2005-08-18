@@ -150,8 +150,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
         return element instanceof ICompilationUnit || element instanceof IClassFile;
     }
 
-    public String getHandleForMarker(ProblemMarker marker) {
-        if (marker == null) return null;
+	public String getHandleForOffsetInObject(Object resource, int offset) {
+        if (resource == null || !(resource instanceof ProblemMarker)) return null;
+    	ProblemMarker marker = (ProblemMarker)resource;
         try {
             IResource res= marker.getResource();
             ICompilationUnit compilationUnit = null;

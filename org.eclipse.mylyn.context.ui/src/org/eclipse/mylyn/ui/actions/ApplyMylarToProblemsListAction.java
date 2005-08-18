@@ -147,8 +147,8 @@ class ProblemsListDoiSorter extends TableSorter {
 	        } else {
 	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
 	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension());
-		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForMarker((ProblemMarker)obj1));
-		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForMarker((ProblemMarker)obj1));
+		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
+		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
 		            return comparator.compare(node1, node2);
 	       	 	}
 	        }
@@ -165,8 +165,8 @@ class ProblemsListDoiSorter extends TableSorter {
 	        } else {
 	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
 	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension());
-		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForMarker((ProblemMarker)obj1));
-		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForMarker((ProblemMarker)obj1));
+		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
+		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
 		            return comparator.compare(node1, node2);
 	       	 	}
 	        }

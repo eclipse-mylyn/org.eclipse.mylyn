@@ -35,7 +35,7 @@ public class ProblemsListInterestFilter extends InterestFilter {
         	 if (!MylarPlugin.getContextManager().hasActiveContext()) {
         		 return false;
         	 }
-             String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension()).getHandleForMarker(marker);
+             String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension()).getHandleForOffsetInObject(marker, 0);
              if (handle == null) {
                  return false;
              } else {

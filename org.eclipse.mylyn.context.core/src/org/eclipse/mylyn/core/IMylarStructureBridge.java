@@ -16,8 +16,6 @@ package org.eclipse.mylar.core;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.views.markers.internal.ProblemMarker;
-
 
 /**
  * @author Mik Kersten
@@ -53,7 +51,16 @@ public interface IMylarStructureBridge {
      */
     public abstract boolean isDocument(String handle);
     
-    public abstract String getHandleForMarker(ProblemMarker marker);
+    /**
+     * @param resource	can be anything that has an element accessible
+     * 					via an offset, e.g. a file with a character offset
+     */
+    public abstract String getHandleForOffsetInObject(Object resource, int offset);
+    
+    /**
+     * TODO: get rid of this method.
+     */
+//    public abstract String getHandleForMarker(ProblemMarker marker);
     
     /**
      * TODO Should this really be here??

@@ -18,11 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.ui.part.FileEditorInput;
 
 
 /**
@@ -35,48 +31,58 @@ public class XmlNodeHelper {
     private String filename;
 
     /** The start line of the node */
-    private int startLine;
+    private String end;
 
+	  /**
+	  * Constructor
+	  * @param filename The filename
+	  * @param startOffset The start line for the node
+	  */
+	  public XmlNodeHelper(String filename, int s) {
+	      this.filename = filename;
+	      this.end = ""+s;
+	  }
+    
     /**
      * Constructor
      * @param filename The filename
-     * @param startLine The start line for the node
+     * @param startOffset The start line for the node
      */
-    public XmlNodeHelper(String filename, int startLine) {
+    public XmlNodeHelper(String filename, String s) {
         this.filename = filename;
-        this.startLine = startLine;
+        this.end = s;
     }
 
-    /**
-     * Constructor
-     * @param fei The FileEditorInput for the editor the node is in
-     * @param offset The offset of the node
-     * @throws CoreException
-     * @throws BadLocationException
-     */
-    public XmlNodeHelper(FileEditorInput fei, int offset) throws CoreException {
-
-    	this.filename = fei.getFile().getFullPath().toString();
-        InputStream i = fei.getFile().getContents();
-        String contents = getContents(i);
-        Document d = new Document(contents);
-        try{
-        	startLine = d.getLineOfOffset(offset - 1);
-        } catch (BadLocationException e){
-        	// SHAWNTODO this happens when the document has not been saved and selections 
-        	// are made to new nodes
-        	startLine = 0;
-        	MylarPlugin.log(e, "Unable to get start line from the editor: " + filename + ":" + offset);
-        }
-    }
+//    /**
+//     * Constructor
+//     * @param fei The FileEditorInput for the editor the node is in
+//     * @param offset The offset of the node
+//     * @throws CoreException
+//     * @throws BadLocationException
+//     */
+//    public XmlNodeHelper(FileEditorInput fei, int offset) throws CoreException {
+//
+//    	this.filename = fei.getFile().getFullPath().toString();
+//        InputStream i = fei.getFile().getContents();
+//        String contents = getContents(i);
+//        Document d = new Document(contents);
+//        try{
+//        	startOffset = d.getLineOfOffset(offset - 1);
+//        } catch (BadLocationException e){
+//        	// SHAWNTODO this happens when the document has not been saved and selections 
+//        	// are made to new nodes
+//        	startOffset = 0;
+//        	MylarPlugin.log(e, "Unable to get start line from the editor: " + filename + ":" + offset);
+//        }
+//    }
 
     /**
      * Get the handle for the node
-     * Format: filename;startLine
+     * Format: filename;startOffset
      * @return The to the node handle in String form
      */
     public String getHandle() {
-        return filename + ";" + getStartLine();
+        return filename + ";" + getValue();
     }
 
     public String getFilename() {
@@ -85,8 +91,8 @@ public class XmlNodeHelper {
         return filename;
     }
 
-    public int getStartLine() {
-        return startLine;
+    public String getValue() {
+        return end;
     }
     
     public boolean equals(Object e){
@@ -188,7 +194,7 @@ public class XmlNodeHelper {
     // String s = file + ": " + getTagName();
     // if(getName() != null)
     // s += " \"" + getName() + "\"";
-    // s += " : " + startLine;
+    // s += " : " + startOffset;
     // return s;
     // }
     //
@@ -224,8 +230,8 @@ public class XmlNodeHelper {
 
     //    
     //
-    //    public void setStartLine(int startLine) {
-    //        this.startLine = startLine;
+    //    public void setStartLine(int startOffset) {
+    //        this.startLine = startOffset;
     //    }
 
 }

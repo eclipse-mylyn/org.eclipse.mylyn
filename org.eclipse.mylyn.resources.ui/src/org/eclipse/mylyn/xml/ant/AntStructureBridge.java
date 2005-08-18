@@ -13,8 +13,10 @@
   */
 package org.eclipse.mylar.xml.ant;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
+import org.eclipse.ant.internal.ui.editor.AntEditor;
 import org.eclipse.ant.internal.ui.editor.text.AntAnnotationModel;
 import org.eclipse.ant.internal.ui.model.AntElementNode;
 import org.eclipse.ant.internal.ui.model.AntModel;
@@ -35,6 +37,8 @@ import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.xml.XmlNodeHelper;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
@@ -128,39 +132,40 @@ public class AntStructureBridge implements IMylarStructureBridge {
             FileEditorInput fei = new FileEditorInput(f);
             
             // get the line number that the element is on
-            int start = Integer.parseInt(handle.substring(first + 1));
+            String elementPath = handle.substring(first + 1);
             
-            if(start == -1){
+            if(elementPath == ""){
                 return f;
             }
             
             // get the contents of the file and create a document so that we can get the offset
-            String content = XmlNodeHelper.getContents(f.getContents());
-            IDocument d = new Document(content);
+
             
             // get the offsets for the element and make sure that we are on something other than whitespace
-            int startOffset = d.getLineOffset(start);
-            while(d.getChar(startOffset) == ' ')
-                startOffset++;
+//            int startOffset = d.getLineOffset(start);
+//            while(d.getChar(startOffset) == ' ')
+//                startOffset++;
             
 //XXX needed if the editor is the only way to get the model
 //            get the active editor, which should be the ant editor so we can get the AntModel
-//            IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//            if(editorPart instanceof AntEditor){
-//                AntModel am = ((AntEditor)editorPart).getAntModel(); 
-//                if(am != null)
-//                    
-//                    // from the AntModel, get the node that we want
-//                    return am.getNode(startOffset + 1, false);    
-//            }else{
+            IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            if(editorPart instanceof AntEditor){
+                AntModel am = ((AntEditor)editorPart).getAntModel(); 
+                if(am != null)
+                    
+                    // from the AntModel, get the node that we want
+                    return AntEditingMonitor.getNode(am, elementPath);    
+            }else{
             
-            // create the ant model and get the element from it 
-            IProblemRequestor p = new AntAnnotationModel(f);
-            AntModel am = new AntModel(d, p, new LocationProvider(fei));
-            am.reconcile();
-            return am.getNode(startOffset + 1, false);
-//            }
-//            return null;
+                String content = XmlNodeHelper.getContents(f.getContents());
+                IDocument d = new Document(content);
+	            // create the ant model and get the element from it 
+	            IProblemRequestor p = new AntAnnotationModel(f);
+	            AntModel am = new AntModel(d, p, new LocationProvider(fei));
+	            am.reconcile();
+	            return AntEditingMonitor.getNode(am, elementPath);
+            }
+            return null;
             
         }catch(Exception e){
         	MylarPlugin.log(e, "handle failed");
@@ -180,7 +185,12 @@ public class AntStructureBridge implements IMylarStructureBridge {
             AntElementNode node = (AntElementNode)object;
             try{
                 // get the handle for the AntElementNode from the helper
-                String handle = new XmlNodeHelper(new FileEditorInput(node.getIFile()), node.getOffset()).getHandle();
+            	Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] { } );
+                method.setAccessible(true);
+            	String path = (String)method.invoke(node, new Object[] { });
+                if(path == null)
+                	return null;
+                String handle = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path).getHandle();
                 return handle;
             }catch(Exception e){
             	MylarPlugin.log(e, "couldn't get handle");
@@ -293,6 +303,11 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		return null;
+	}
+
+	public String getHandleForOffsetInObject(Object resource, int offset) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

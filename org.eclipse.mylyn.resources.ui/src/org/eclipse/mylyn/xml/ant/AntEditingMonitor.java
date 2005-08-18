@@ -13,8 +13,13 @@
  */
 package org.eclipse.mylar.xml.ant;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.eclipse.ant.internal.ui.editor.AntEditor;
 import org.eclipse.ant.internal.ui.model.AntElementNode;
+import org.eclipse.ant.internal.ui.model.AntModel;
+import org.eclipse.ant.internal.ui.model.AntProjectNode;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.AbstractSelectionMonitor;
@@ -59,8 +64,14 @@ public class AntEditingMonitor extends AbstractSelectionMonitor {
                     }
                     
                     FileEditorInput fei = (FileEditorInput)in;
-                    
-                    XmlNodeHelper xnode = new XmlNodeHelper(fei, node.getOffset());
+                 
+                    Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] { } );
+                    method.setAccessible(true);
+
+                    String path = (String)method.invoke(node, new Object[] { });
+                    if(path == null)
+                    	return;
+                    XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
                     super.handleElementSelection(part, xnode);
                 } catch (Exception e) {
                 	MylarPlugin.log(e, "selection resolve failed");
@@ -69,4 +80,47 @@ public class AntEditingMonitor extends AbstractSelectionMonitor {
         }     
         return;
     }
+
+	public static AntElementNode getNode(AntModel am, String elementPath) {
+		System.out.println(elementPath);
+		AntProjectNode topNode = am.getProjectNode();
+		try {
+			return getNode(topNode, elementPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private static AntElementNode getNode(AntElementNode topNode, String elementPath) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		if(topNode == null)
+			return null;
+		
+		Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] { } );
+        method.setAccessible(true);
+        
+		String path = (String)method.invoke(topNode, new Object[] { });
+		if(path.compareTo(elementPath) == 0){
+			return topNode;
+		}
+        
+		if(topNode.getChildNodes() == null)
+			return null;
+		
+		for(Object obj: topNode.getChildNodes()){
+			if(obj instanceof AntElementNode){
+				AntElementNode node = (AntElementNode)obj;
+				path = (String)method.invoke(node, new Object[] { });
+				
+				if(path.compareTo(elementPath) == 0){
+					return node;
+				}
+				AntElementNode node2 = getNode(node, elementPath);
+				if(node2 != null){
+					return node2;
+				}
+			}
+		}
+		return null;
+	}
 }

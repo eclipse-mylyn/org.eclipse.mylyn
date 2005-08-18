@@ -25,12 +25,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
@@ -40,7 +36,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
-import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.mylar.xml.XmlReferencesProvider;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
 import org.eclipse.pde.internal.ui.editor.ISortableContentOutlinePage;
@@ -100,22 +95,22 @@ public class PdeUiBridge implements IMylarUiBridge {
             
             // get the contents and create a new document so that we can get
             // the offsets to highlight
-            String content = XmlNodeHelper.getContents(f.getContents());
-            
-            IDocument d = new Document(content);
+//            String content = XmlNodeHelper.getContents(f.getContents());
+//            
+//            IDocument d = new Document(content);
 
-            if(first != -1){
-                int start = Integer.parseInt(handle.substring(first + 1));
-                
-                // get the offsets for the element
-                int startOffset = d.getLineOffset(start);
-                int length = 0;
-                
-                // set the selection if the selection provider is not null
-                ISelectionProvider selectionProvider = editor.getEditorSite().getSelectionProvider();
-                if(selectionProvider != null)
-                    selectionProvider.setSelection(new TextSelection(startOffset, length));
-            }
+//            if(first != -1){
+//                int start = Integer.parseInt(handle.substring(first + 1));
+//                
+//                // get the offsets for the element
+//                int startOffset = d.getLineOffset(start);
+//                int length = 0;
+//                
+//                // set the selection if the selection provider is not null
+//                ISelectionProvider selectionProvider = editor.getEditorSite().getSelectionProvider();
+//                if(selectionProvider != null)
+//                    selectionProvider.setSelection(new TextSelection(startOffset, length));
+//            }
             
 
         } catch(Exception e){

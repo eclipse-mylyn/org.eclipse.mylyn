@@ -110,8 +110,10 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
         return getObjectForHandle(handle) instanceof IFile;
     }
 
-    public String getHandleForMarker(ProblemMarker marker) {
-        // we can only get a handle for a marker with the resource plugin.xml
+	public String getHandleForOffsetInObject(Object resource, int offset) {
+        if (resource == null || !(resource instanceof ProblemMarker)) return null;
+    	ProblemMarker marker = (ProblemMarker)resource;
+		// we can only get a handle for a marker with the resource plugin.xml
         if (marker == null) return null;
         try {
             IResource res= marker.getResource();

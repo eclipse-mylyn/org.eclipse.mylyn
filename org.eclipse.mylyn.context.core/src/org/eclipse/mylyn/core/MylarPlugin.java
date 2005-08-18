@@ -31,7 +31,6 @@ import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.views.markers.internal.ProblemMarker;
 import org.osgi.framework.BundleContext;
 
  
@@ -64,9 +63,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";
     private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
-    	
-
-        /**
+    	/**
          * Used to check for the null adapter
          */
         public String getResourceExtension() {
@@ -119,13 +116,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 //            return false;
             throw new RuntimeException("null adapter for handle: " + handle);
         }
-
-        public String getHandleForMarker(ProblemMarker marker) {
-            MylarPlugin.log("null bridge for marker: " + marker.getClass(), this);
-            return null;
-//            throw new RuntimeException("null adapter");
-        }
-
+        
 		public IProject getProjectForObject(Object object) {
 //			return null;
             throw new RuntimeException("null brige for object: " + object);
@@ -141,6 +132,11 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 		public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 			return null;
+		}
+
+		public String getHandleForOffsetInObject(Object resource, int offset) {
+            MylarPlugin.log("null bridge for marker: " + resource.getClass(), this);
+            return null;
 		}
     };
     
