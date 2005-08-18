@@ -1213,6 +1213,11 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	
 				public void mouseDown(MouseEvent e) {
 					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepository.getBugUrlWithoutLogin(bugzillaInput.getBug().getId()));
+					if(e.stateMask == SWT.MOD3){
+						// XXX come back to look at this ui
+						close();
+					}
+					
 				}
 			});
 		} else{

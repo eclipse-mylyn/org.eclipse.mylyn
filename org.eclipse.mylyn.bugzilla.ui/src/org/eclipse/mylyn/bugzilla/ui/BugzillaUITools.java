@@ -241,7 +241,7 @@ public class BugzillaUITools {
 						| WorkbenchBrowserSupport.NAVIGATION_BAR;
 			}
 			b = WorkbenchBrowserSupport.getInstance().createBrowser(
-					flags, "org.eclipse.mylar.tasklist", title,
+					flags, "org.eclipse.mylar.tasklist." + title, title,
 					tooltip);
 			b.openURL(new URL(url));
 		} catch (PartInitException e) {
