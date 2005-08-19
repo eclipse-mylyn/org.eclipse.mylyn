@@ -98,7 +98,8 @@ public class JavaStructureBridge implements IMylarStructureBridge {
         }
     }
     
-    public boolean canBeLandmark(Object element) {
+    public boolean canBeLandmark(String handle) {
+    	Object element = getObjectForHandle(handle);
     	if (element instanceof IMember || element instanceof IType) {
             return true;
         } else {

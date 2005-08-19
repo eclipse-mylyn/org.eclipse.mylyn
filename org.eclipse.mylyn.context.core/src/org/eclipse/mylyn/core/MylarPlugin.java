@@ -96,7 +96,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         /**
          * TODO: this behavir is depended on, move?
          */
-        public boolean canBeLandmark(Object element) {
+        public boolean canBeLandmark(String handle) {
         	return false;
 //            return false;
 //            throw new RuntimeException("null bridge: " + element);

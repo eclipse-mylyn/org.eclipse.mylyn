@@ -168,7 +168,7 @@ public class MylarContextManager {
 	private void checkForLandmarkDelta(float previousInterest, IMylarContextNode node) {
 		// TODO: don't call interestChanged if it's a landmark?
     	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-    	if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
+    	if (bridge.canBeLandmark(node.getElementHandle())) {
     		if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
     			for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
             } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
@@ -432,7 +432,8 @@ public class MylarContextManager {
 		List<IMylarContextNode> acceptedLandmarks = new ArrayList<IMylarContextNode>();
 		for (IMylarContextNode node : allLandmarks) {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
-            if (bridge.canBeLandmark(bridge.getObjectForHandle(node.getElementHandle()))) {
+			// XXX very very very expensive
+            if (bridge.canBeLandmark(node.getElementHandle())) {
             	acceptedLandmarks.add(node);
         	}
         } 

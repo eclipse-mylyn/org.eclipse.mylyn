@@ -224,7 +224,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
     /**
      * @see org.eclipse.mylar.core.IMylarStructureBridge#canBeLandmark(Object)
      */
-    public boolean canBeLandmark(Object element) {
+    public boolean canBeLandmark(String handle) {
         return false;
     }
 

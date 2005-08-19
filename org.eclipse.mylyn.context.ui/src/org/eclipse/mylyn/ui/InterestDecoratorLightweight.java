@@ -55,7 +55,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
             if (node != null) {
                 decoration.setBackgroundColor(UiUtil.getBackgroundForElement(node));
                 decoration.setForegroundColor(UiUtil.getForegroundForElement(node));      
-                if (adapter != null && adapter.canBeLandmark(element) 
+                if (adapter != null && adapter.canBeLandmark(node.getElementHandle()) 
                     && node.getDegreeOfInterest().isLandmark() 
                     && !node.getDegreeOfInterest().isPredicted()) {
                     decoration.setFont(MylarUiPlugin.BOLD);

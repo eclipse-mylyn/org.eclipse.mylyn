@@ -76,7 +76,6 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
             return workspace.getRoot().getProject(projectName);
         } else if (path.segmentCount() > 1) {
         	return workspace.getRoot().findMember(path);
-//            return workspace.getRoot().getFile(path);
         } else {
             return null;
         }
@@ -90,12 +89,9 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
         }
     }
 
-    public boolean canBeLandmark(Object element) {
+    public boolean canBeLandmark(String handle) {
+    	Object element = getObjectForHandle(handle);
     	return element instanceof IFile;
-//    	if (element instanceof IFile) {
-//    		return ((IFile)element).getType() == IResource.FILE;
-//    	}
-//    	return false;
     }
 
     public boolean acceptsObject(Object object) {
