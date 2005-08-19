@@ -47,6 +47,8 @@ public class MylarImages {
     public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
     public static final ImageDescriptor FILTER_PRIORITY = create(T_ELCL, "filter-priority.gif");
     
+    public static final ImageDescriptor COPY = create(T_ELCL, "copy.png");
+        
     public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
     public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
     

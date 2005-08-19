@@ -53,6 +53,7 @@ public class HighlighterList {
 	
 	public void setToDefaultList() {
 		this.highlighters.clear();
+		highlighters.add(DEFAULT_HIGHLIGHTER);
 		highlighters.add(new Highlighter("yellow", MylarUiPlugin.getDefault()
 				.getColorMap().HIGHLIGHTER_YELLOW, false));
 		highlighters.add(new Highlighter("rose", MylarUiPlugin.getDefault()
@@ -63,7 +64,6 @@ public class HighlighterList {
 				.getColorMap().PANTONE_PASTEL_BLUE, false));
 		highlighters.add(new Highlighter("green", MylarUiPlugin.getDefault()
 				.getColorMap().PANTONE_PASTERL_GREEN, false));
-		highlighters.add(DEFAULT_HIGHLIGHTER);
 		highlighters.add(new Highlighter("blue gradient", MylarUiPlugin.getDefault().getColorMap().HIGLIGHTER_BLUE_GRADIENT, true));
 		highlighters.add(new Highlighter("orange gradient", MylarUiPlugin.getDefault().getColorMap().HIGHLIGHTER_ORANGE_GRADIENT, true));
 
