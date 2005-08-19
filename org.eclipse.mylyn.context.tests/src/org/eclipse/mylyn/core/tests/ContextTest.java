@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on May 22, 2005
-  */
+
 package org.eclipse.mylar.core.tests;
 
 import java.io.File;

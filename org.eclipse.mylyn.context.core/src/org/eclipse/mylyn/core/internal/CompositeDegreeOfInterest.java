@@ -66,8 +66,9 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
      * @return true if all are predicted
      */
     public boolean isPredicted() {
+    	if (infos.isEmpty()) return false;
         boolean allPredicted = true;
-        for (IDegreeOfInterest info : infos)  if (!info.isPredicted()) allPredicted = false;
+        for (IDegreeOfInterest info : infos) if (!info.isPredicted()) allPredicted = false;
         return allPredicted;
     }
         

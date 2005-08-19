@@ -36,6 +36,7 @@ public class UiUtil {
         boolean isMultiple = false;
         if (node instanceof CompositeContextNode) {
             CompositeContextNode compositeNode = (CompositeContextNode)node;
+            if (compositeNode.getNodes().isEmpty()) return null;
             dominantNode = (IMylarContextNode)compositeNode.getNodes().toArray()[0];
             if (compositeNode.getNodes().size() > 1) isMultiple = true;
                 

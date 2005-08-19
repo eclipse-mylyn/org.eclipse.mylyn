@@ -87,7 +87,9 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
         	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
         	if(viewer != null){
     			viewer.refresh();
-    		} else MylarPlugin.log("Couldn't refresh viewer: " + viewNames[i], this);
+    		} else {
+    			MylarPlugin.log("Couldn't refresh null viewer: " + viewNames[i], this);
+    		}
         }
 	}
 

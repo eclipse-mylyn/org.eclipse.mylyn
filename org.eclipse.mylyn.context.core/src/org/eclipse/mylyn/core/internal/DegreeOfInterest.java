@@ -93,7 +93,6 @@ public class DegreeOfInterest implements IDegreeOfInterest {
         float value = getEncodedValue(); 
         value += predictedBias; 
         value += propagatedBias; 
-//        value -= getDecayValue();
         return value;
     }
 
@@ -104,7 +103,6 @@ public class DegreeOfInterest implements IDegreeOfInterest {
         value += commands * scaling.get(InteractionEvent.Kind.COMMAND).getValue();
         value += manipulationBias; 
         value -= getDecayValue();
-//      return Math.max(0, value);   
         return value;
     }
     
@@ -113,7 +111,6 @@ public class DegreeOfInterest implements IDegreeOfInterest {
      * of this interest object
      */
     public float getDecayValue() {
-//    	if (isPredicted()) return 0;
         if (context != null) {
             return (context.getUserEventCount() - eventCountOnCreation) * scaling.getDecay().getValue();
         } else {
@@ -125,8 +122,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
      * Sums predicted and propagated values
      */
     public boolean isPredicted() {
-//        return getEncodedValue() == 0 && predictedBias + propagatedBias >= 0;
-        return getEncodedValue() <= 0 && predictedBias + propagatedBias >= 0;
+        return getEncodedValue() <= 0 && predictedBias + propagatedBias > 0;
 
     }
 

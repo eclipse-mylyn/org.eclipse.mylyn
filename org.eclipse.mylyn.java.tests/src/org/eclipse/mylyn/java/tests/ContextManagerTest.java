@@ -123,7 +123,13 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         	// don't care about this event
         }
     }
-            
+    
+    public void testPredictedInterest() {
+    	IMylarContextNode node = MylarPlugin.getContextManager().getNode("doesn't exist");
+    	assertFalse(node.getDegreeOfInterest().isInteresting());
+    	assertFalse(node.getDegreeOfInterest().isPredicted());
+    }
+
     public void testParentInterestAfterDecay() throws JavaModelException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
         IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);
@@ -131,11 +137,11 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         monitor.selectionChanged(part, sm1);
         
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
-//        System.err.println(">>>> " + node.getDegreeOfInterest());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
         IMylarContextNode parent = MylarPlugin.getContextManager().getNode(bridge.getParentHandle(node.getElementHandle()));
-        assertTrue(parent.getDegreeOfInterest().isPredicted());
+        assertTrue(parent.getDegreeOfInterest().isInteresting());
+        assertTrue(parent.getDegreeOfInterest().isPredicted()); 
         
         for (int i = 0; i < 1/(scaling.getDecay().getValue())*3; i++) {
             MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());            
@@ -239,6 +245,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
 		}
 	};
 
+}
 //    public void testDoiSelectionAndDecay() throws Exception {
 //        listener.selectionChanged(explorer, selectionFoo);
 //        
@@ -317,4 +324,3 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
 //	    UsageSession merged = usage.getGlobalMergedSession(); 
 //	    assertEquals(3, merged.getCardinalStatistic(UsageSession.NUM_SELECTIONS_PATHFINDER).getCount());
 //	}
-}

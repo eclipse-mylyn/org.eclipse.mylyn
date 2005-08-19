@@ -92,11 +92,17 @@ public class InteractionEvent implements Serializable {
         this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); // default contribution
     } 
 
-    public static InteractionEvent commandObserved(String originId, String delta) {
+    /**
+     * Factory method.
+     */
+    public static InteractionEvent makeCommand(String originId, String delta) {
         return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1); 
     }
     
-    public static InteractionEvent preferenceObserved(String originId, String delta) {
+    /**
+     * Factory method.
+     */
+    public static InteractionEvent makePreference(String originId, String delta) {
         return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default contribution
     }
     
