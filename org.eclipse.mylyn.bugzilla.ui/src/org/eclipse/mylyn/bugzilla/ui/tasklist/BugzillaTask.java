@@ -397,7 +397,7 @@ public class BugzillaTask extends Task {
 			}
 			this.setLabel(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandle()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
-			MylarPlugin.log(npe, "Task details update failed");
+			MylarPlugin.fail(npe, "Task details update failed", false);
 		}
 	}
 	
