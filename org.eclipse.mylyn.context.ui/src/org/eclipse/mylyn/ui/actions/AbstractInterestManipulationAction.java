@@ -29,8 +29,10 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
     public static final String SOURCE_ID = "org.eclipse.mylar.ui.interest.user";
 	
+    protected IViewPart view;
+    
     public void init(IViewPart view) {
-    	// don't need to do anything
+    	this.view = view;
     }
 
     protected void changeInterestForSelected(boolean increment) {

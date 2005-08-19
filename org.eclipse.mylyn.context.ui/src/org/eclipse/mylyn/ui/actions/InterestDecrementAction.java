@@ -20,9 +20,6 @@ import org.eclipse.jface.action.IAction;
  */
 public class InterestDecrementAction extends AbstractInterestManipulationAction {
 
-    /**
-     * Does nothing, since thi is handled by command monitor
-     */
     public void run(IAction action) {
     	super.changeInterestForSelected(false);
     }
