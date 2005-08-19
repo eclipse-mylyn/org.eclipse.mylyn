@@ -22,17 +22,16 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
@@ -237,11 +236,15 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
     }
     
 	class InterestManipulationAction extends AbstractInterestManipulationAction {
-		public void run(IAction action) { }
-
+		
 		@Override
+		protected boolean isIncrement() {
+			return true;
+		}
+
 		public void changeInterestForSelected(boolean increment) {
-			super.changeInterestForSelected(increment);
+			super.manipulateInterestForNode(MylarPlugin.getContextManager().getActiveNode(), increment);
+			
 		}
 	};
 

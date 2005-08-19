@@ -45,7 +45,6 @@ public class InterestFilter extends ViewerFilter {
                 node = (IMylarContextNode)element;
             } else { 
                 IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-                if (bridge == null) return false;
                 if (!bridge.canFilter(element)) return true;                
                 String handle = bridge.getHandleIdentifier(element);
          

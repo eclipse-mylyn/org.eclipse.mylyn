@@ -13,15 +13,15 @@
   */
 package org.eclipse.mylar.ui.actions;
 
-import org.eclipse.jface.action.IAction;
 
 /**
  * @author Mik Kersten
  */
 public class InterestDecrementAction extends AbstractInterestManipulationAction {
 
-    public void run(IAction action) {
-    	super.changeInterestForSelected(false);
-    }
+	@Override
+	protected boolean isIncrement() {
+		return false;
+	}
 }
 
