@@ -193,6 +193,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 			offlineReportsFile = new OfflineReportsFile(offlineReportsPath.toFile());
 		} catch (Exception e) {
 		    logAndShowExceptionDetailsDialog(e, "occurred while restoring saved offline Bugzilla reports.", "Bugzilla Offline Reports Error");
+		    offlineReportsPath.toFile().delete();
 		}
 	}
 

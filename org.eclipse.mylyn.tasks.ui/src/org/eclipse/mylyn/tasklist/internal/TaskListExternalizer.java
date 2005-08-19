@@ -249,14 +249,14 @@ public class TaskListExternalizer {
 								    if(taskHandler != null){
 							    		newTask = taskHandler.taskAdded(newTask);
 							    	}
-								    tlist.addRootTask(newTask);
+								    tlist.internalAddRootTask(newTask);
 									
 									wasRead = true;
 									break;
 								}
 							}
 							if (!wasRead && defaultExternalizer.canReadTask(child)) {
-								tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+								tlist.internalAddRootTask(defaultExternalizer.readTask(child, tlist, null, null));
 							} else {
 	//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
 							}
@@ -452,14 +452,14 @@ public class TaskListExternalizer {
 								    if(taskHandler != null){
 							    		newTask = taskHandler.taskAdded(newTask);
 							    	}
-								    tlist.addRootTask(newTask);
+								    tlist.internalAddRootTask(newTask);
 									
 									wasRead = true;
 									break;
 								}
 							}
 							if (!wasRead && defaultExternalizer.canReadTask(child)) {
-								tlist.addRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+								tlist.internalAddRootTask(defaultExternalizer.readTask(child, tlist, null, null));
 							} else {
 	//							MylarPlugin.log("Did not read: " + child.getNodeName(), this);
 							}

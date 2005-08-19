@@ -64,8 +64,15 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 		}
     }
     
+	void internalAddTask(ITask task) {
+    	tasks.add(task);
+    }
+	
     public void removeTask(ITask task) {
         tasks.remove(task);
+        if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
     }
     
     public List<ITask> getChildren() {

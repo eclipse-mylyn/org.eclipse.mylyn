@@ -630,6 +630,10 @@ public class TaskListView extends ViewPart {
 		IMemento sorter = memento.createChild(tableSortIdentifier);
 		IMemento m = sorter.createChild("sorter");
 		m.putInteger("sortIndex", sortIndex);
+		
+		if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
 	}
     
     private void restoreState() {
@@ -806,6 +810,9 @@ public class TaskListView extends ViewPart {
                     }           
                     getViewer().setSelection(null);
                     getViewer().refresh();
+                    if (MylarTasklistPlugin.getDefault() != null) {
+            			MylarTasklistPlugin.getDefault().saveState();
+            		}
                     return true;
                 } else if(selectedObject instanceof ITaskListElement &&
                 		MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null &&
@@ -814,7 +821,10 @@ public class TaskListView extends ViewPart {
                 	MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject).dropItem((ITaskListElement)selectedObject, (TaskCategory)getCurrentTarget());
 					getViewer().setSelection(null);
                 	getViewer().refresh();
-                        return true;
+                	if (MylarTasklistPlugin.getDefault() != null) {
+            			MylarTasklistPlugin.getDefault().saveState();
+            		}
+                    return true;
                 }
                 return false;
             }

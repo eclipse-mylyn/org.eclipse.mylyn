@@ -178,7 +178,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private static ShellListener SHELL_LISTENER = new ShellListener() {
         
         public void shellClosed(ShellEvent arg0) {
-        	getDefault().saveState();
+//        	getDefault().saveState();
         }  
         
         /**
@@ -196,7 +196,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
         public void shellDeiconified(ShellEvent arg0) { }
         
         public void shellIconified(ShellEvent arg0) { 
-        	getDefault().saveState();
+//        	getDefault().saveState();
         }
     };
     

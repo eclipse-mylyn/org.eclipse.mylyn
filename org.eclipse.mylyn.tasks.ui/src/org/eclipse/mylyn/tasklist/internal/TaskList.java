@@ -41,11 +41,22 @@ public class TaskList implements Serializable {
 		}
     }
     
+    void internalAddRootTask(ITask task) {
+    	rootTasks.add(task);
+    }
+    
     public void addCategory(AbstractCategory cat) {
     	categories.add(cat);
     	if (MylarTasklistPlugin.getDefault() != null) {
 			MylarTasklistPlugin.getDefault().saveState();
 		}
+    }
+    
+    /**
+     * XXX Only public so that other externalizers can use it
+     */
+    public void internalAddCategory(AbstractCategory cat) {
+    	categories.add(cat);
     }
     
     public void setActive(ITask task, boolean active) {
@@ -67,6 +78,9 @@ public class TaskList implements Serializable {
 				}
 			}
     	}
+    	if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
 	}
     
     private boolean deleteTaskHelper(List<ITask> tasks, ITask t) {
@@ -84,6 +98,9 @@ public class TaskList implements Serializable {
     
     public void deleteCategory(AbstractCategory category) {
     	categories.remove(category);
+    	if (MylarTasklistPlugin.getDefault() != null) {
+			MylarTasklistPlugin.getDefault().saveState();
+		}
     }
     
     public ITask getTaskForHandle(String handle) {

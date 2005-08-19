@@ -137,7 +137,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
 		TaskCategory category = new TaskCategory(element.getAttribute("Name"));
-		tlist.addCategory(category);
+		tlist.internalAddCategory(category);
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
@@ -145,13 +145,13 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			try {
 				for (ITaskListExternalizer externalizer : externalizers) {
 					if (externalizer.canReadTask(child)) {
-						category.addTask(externalizer.readTask(child, tlist,
+						category.internalAddTask(externalizer.readTask(child, tlist,
 								category, null));
 						read = true;
 					}
 				}
 				if (!read && canReadTask(child)) {
-					category.addTask(readTask(child, tlist, category, null));
+					category.internalAddTask(readTask(child, tlist, category, null));
 				}
 			} catch (MylarExternalizerException e) {
 				hasCaughtException = true;
@@ -250,9 +250,9 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			i++;
 		}
 		if (category != null) {
-			task.setCategory((TaskCategory) category);
+			task.internalSetCategory((TaskCategory) category);
 		} else {
-			task.setCategory(null);
+			task.internalSetCategory(null);
 		}
 		task.setParent(parent);
 		NodeList list = element.getChildNodes();

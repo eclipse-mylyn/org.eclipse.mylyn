@@ -185,8 +185,6 @@ public class OfflineReportsFile
         	}
         }
         in.close();
-		
-		sort(lastSel);
 	}
 	
 	/**

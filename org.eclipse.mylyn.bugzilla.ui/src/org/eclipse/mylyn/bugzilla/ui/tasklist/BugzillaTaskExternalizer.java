@@ -74,7 +74,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 			readRegistry(node, taskList);
 		} else {
 			BugzillaQueryCategory cat = new BugzillaQueryCategory(e.getAttribute(DESCRIPTION), e.getAttribute(URL), e.getAttribute(MAX_HITS));
-			taskList.addCategory(cat);
+			taskList.internalAddCategory(cat);
 		}
 	}
 

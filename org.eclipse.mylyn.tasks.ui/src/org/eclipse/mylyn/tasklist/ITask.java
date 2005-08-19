@@ -115,4 +115,6 @@ public interface ITask extends Serializable, ITaskListElement {
 	public abstract boolean hasBeenReminded();
 	
 	public abstract void setReminded(boolean reminded);
+
+	abstract void internalSetCategory(TaskCategory category);
 }
