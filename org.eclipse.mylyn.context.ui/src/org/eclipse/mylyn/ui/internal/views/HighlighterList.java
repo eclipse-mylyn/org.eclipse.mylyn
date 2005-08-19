@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
 public class HighlighterList {
 
     public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter(
-            "white", MylarUiPlugin.getDefault().getColorMap().WHITE, false);
+            "white (default)", MylarUiPlugin.getDefault().getColorMap().WHITE, false);
     
 	private List<Highlighter> highlighters;
 

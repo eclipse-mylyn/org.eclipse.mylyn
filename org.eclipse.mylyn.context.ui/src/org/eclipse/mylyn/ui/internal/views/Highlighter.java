@@ -48,13 +48,21 @@ public class Highlighter {
         this.isGradient = isGradient;
         initializeGradients();
         initializeHighlight();
-        initializeLandmark();
+        if (!isGradient) {
+        	this.landmarkColor = coreColor;
+        } else {
+        	initializeLandmark();
+        }
     }
 	public Highlighter(String attributes) {
 		this.initializeFromString(attributes);
 		initializeGradients();
         initializeHighlight();
-        initializeLandmark();
+        if (!isGradient) {
+        	this.landmarkColor = highlightColor;
+        } else {
+        	initializeLandmark();
+        }
 	}
     
     public Color getHighlightColor() {

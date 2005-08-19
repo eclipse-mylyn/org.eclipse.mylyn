@@ -59,7 +59,7 @@ public class TaskListHighlighterMenuContributor implements ITaskListDynamicSubMe
               if (highlighter.isGradient()) {
                   action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter.getLandmarkColor()));
               } else {
-                  action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter.getLandmarkColor()));
+            	  action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter.getLandmarkColor()));
               }
               action.setText(highlighter.toString());
               subMenuManager.add(action);
