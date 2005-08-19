@@ -168,6 +168,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
     }
     
     /**
+     * Handle is filename;hashcodeOfElementAndAttributes
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
      */
     public String getHandleIdentifier(Object object) {
@@ -256,26 +257,44 @@ public class PdeStructureBridge implements IMylarStructureBridge {
     /**
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleForMarker(org.eclipse.ui.views.markers.internal.ProblemMarker)
      */
-    public String getHandleForMarker(ProblemMarker marker) {
-        // we can only get a handle for a marker with the resource plugin.xml
-        if (marker == null) return null;
-        try {
-            IResource res= marker.getResource();
+    public String getHandleForOffsetInObject(Object resource, int offset) {
+    	if (resource == null) return null;
+    	if(resource instanceof ProblemMarker) {
+    		ProblemMarker marker = (ProblemMarker)resource;
 
-            if (res instanceof IFile) {
-                IFile file = (IFile)res; 
-                if (file.getFullPath().toString().endsWith("plugin.xml")) { 
-                    return file.getFullPath().toString();
-                } else {
-                    return null;
-                }
-            }
-            return null;
-        }
-        catch (Throwable t) {
-            MylarPlugin.log(t, "Could not find element for: " + marker);
-            return null;
-        }
+	        // we can only get a handle for a marker with the resource plugin.xml
+	        try {
+	            IResource res= marker.getResource();
+	
+	            if (res instanceof IFile) {
+	                IFile file = (IFile)res; 
+	                if (file.getFullPath().toString().endsWith("plugin.xml")) { 
+	                    return file.getFullPath().toString();
+	                } else {
+	                    return null;
+	                }
+	            }
+	            return null;
+	        }
+	        catch (Throwable t) {
+	            MylarPlugin.log(t, "Could not find element for: " + marker);
+	            return null;
+	        }
+    	} else if(resource instanceof IFile){
+    		try {
+	            IFile file = (IFile)resource; 
+	            if (file.getFullPath().toString().endsWith("plugin.xml")) {
+	                String content = XmlNodeHelper.getContents(file.getContents());
+					IDocument d = new Document(content);
+	                PluginObjectNode node = PdeEditingMonitor.getNode(d, file, offset, false);
+	                String handle = new XmlNodeHelper(file.getFullPath().toString(), PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
+	                return handle;
+	            }
+    		} catch(Exception e){
+    			MylarPlugin.log(e, "Unable to get handle for offset in object");
+    		}
+    	}
+    	return null;
     }
     
 	public IProject getProjectForObject(Object object) {
@@ -309,10 +328,5 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		separations.add(new DegreeOfSeparation("entire workspace", 5));
 
 		return separations;
-	}
-
-	public String getHandleForOffsetInObject(Object resource, int offset) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

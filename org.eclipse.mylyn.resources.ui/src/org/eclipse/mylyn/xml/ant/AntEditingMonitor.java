@@ -82,12 +82,10 @@ public class AntEditingMonitor extends AbstractSelectionMonitor {
     }
 
 	public static AntElementNode getNode(AntModel am, String elementPath) {
-		System.out.println(elementPath);
 		AntProjectNode topNode = am.getProjectNode();
 		try {
 			return getNode(topNode, elementPath);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

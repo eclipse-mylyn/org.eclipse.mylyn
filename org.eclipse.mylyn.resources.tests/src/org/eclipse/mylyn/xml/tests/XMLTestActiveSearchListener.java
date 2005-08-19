@@ -16,11 +16,12 @@ import java.util.List;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.IMylarStructureBridge;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.text.Match;
-import org.eclipse.ui.part.FileEditorInput;
 
 
 public class XMLTestActiveSearchListener extends TestActiveSearchListener {
@@ -47,7 +48,7 @@ public class XMLTestActiveSearchListener extends TestActiveSearchListener {
        
        if (l.get(0) instanceof FileSearchResult){
            FileSearchResult fsr = (FileSearchResult) l.get(0);
-   		   List<XmlNodeHelper> nodes = new ArrayList<XmlNodeHelper>();
+   		   List<Object> nodes = new ArrayList<Object>();
            Object[] far = fsr.getElements();
            for(int i = 0; i < far.length; i++){
                Match[] mar = fsr.getMatches(far[i]);
@@ -55,18 +56,21 @@ public class XMLTestActiveSearchListener extends TestActiveSearchListener {
                if(far[i] instanceof File){
                    File f = (File)far[i];
                    
-                   // change the file into a document
-                   FileEditorInput fei = new FileEditorInput(f);
-            
                    for(int j = 0; j < mar.length; j++){
                        Match m = mar[j];
                        try{
-                           XmlNodeHelper xnode = new XmlNodeHelper(fei, m.getOffset());
-                           if(xnode != null){
-                               nodes.add(xnode);
+
+                           IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
+                           
+                           String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
+
+                           XmlNodeHelper node = new XmlNodeHelper(handle);
+                           if(node != null){
+                               nodes.add(node);
                            }
                        } catch(Exception e){
-                    	   // don't care about this exception
+                    	   e.printStackTrace();
+                    	   // don't care
                        }
                    }
                }

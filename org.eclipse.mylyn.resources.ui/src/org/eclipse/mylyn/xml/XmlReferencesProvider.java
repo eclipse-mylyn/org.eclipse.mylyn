@@ -48,7 +48,6 @@ import org.eclipse.search.internal.ui.text.FileSearchQuery;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.text.Match;
-import org.eclipse.ui.part.FileEditorInput;
 
 
 /**
@@ -207,25 +206,29 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
                                File f = (File)far[i];
                                
                                // change the file into a document
-                               FileEditorInput fei = new FileEditorInput(f);
+//                               FileEditorInput fei = new FileEditorInput(f);
                         
-//                               XXX add this back in soon
-//                               for(int j = 0; j < mar.length; j++){
-//                                   Match m = mar[j];
-//                                   try{
-//                                       XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), m.getOffset());
-//                                       nodeMap.put(m, xnode);
-//                                       IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
-//                                       String handle = xnode.getHandle();
-//                                       Object o = bridge.getObjectForHandle(handle);
-//                                       String name = bridge.getName(o);
-//                                       if(o != null){
-//                                           nodes.put(handle, name);
-//                                       }
-//                                   } catch(Exception e){
-//                                	   MylarPlugin.log(e, "search failed");
-//                                   }
-//                               }
+                               for(int j = 0; j < mar.length; j++){
+                                   Match m = mar[j];
+                                   try{
+
+                                       IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
+                                       
+                                       String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
+
+                                       String second = handle.substring(handle.indexOf(";"));
+                                       
+                                	   XmlNodeHelper xnode = new XmlNodeHelper(f.getFullPath().toString(), second);
+                                       nodeMap.put(m, xnode);
+                                       Object o = bridge.getObjectForHandle(handle);
+                                       String name = bridge.getName(o);
+                                       if(o != null){
+                                           nodes.put(handle, name);
+                                       }
+                                   } catch(Exception e){
+                                	   MylarPlugin.log(e, "search failed - unable to create match");
+                                   }
+                               }
                            }
                        }
                    }

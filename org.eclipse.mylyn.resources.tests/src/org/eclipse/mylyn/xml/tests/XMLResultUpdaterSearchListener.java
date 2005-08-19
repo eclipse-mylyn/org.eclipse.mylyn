@@ -71,7 +71,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 					for (int j = 0; j < mar.length; j++) {
 						Match m = mar[j];
 						try {
-							XmlNodeHelper xnode = new XmlNodeHelper(fei, m
+							XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), m
 									.getOffset());
 							IMylarStructureBridge bridge = MylarPlugin
 									.getDefault().getStructureBridge(

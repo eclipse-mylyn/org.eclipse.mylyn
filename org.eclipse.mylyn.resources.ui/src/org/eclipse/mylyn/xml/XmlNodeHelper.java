@@ -33,21 +33,36 @@ public class XmlNodeHelper {
     /** The start line of the node */
     private String end;
 
-	  /**
-	  * Constructor
-	  * @param filename The filename
-	  * @param startOffset The start line for the node
-	  */
-	  public XmlNodeHelper(String filename, int s) {
-	      this.filename = filename;
-	      this.end = ""+s;
-	  }
+    public XmlNodeHelper(String handle){
+    	int first = handle.indexOf(";");
+        if(first == -1){
+        	filename = handle;
+        	end = "";
+        }
+        else{
+            filename = handle.substring(0, first);
+            end = handle.substring(first + 1);
+        }
+    }
     
-    /**
-     * Constructor
-     * @param filename The filename
-     * @param startOffset The start line for the node
-     */
+	/**
+	 * Constructor - used for pde
+	 * @param filename The filename
+	 * @param startOffset The start line for the node
+	 */
+	public XmlNodeHelper(String filename, int s) {
+		this.filename = filename;
+		this.end = "" + s;
+	}
+
+	/**
+	 * Constructor - used for ant
+	 * 
+	 * @param filename
+	 *            The filename
+	 * @param startOffset
+	 *            The start line for the node
+	 */
     public XmlNodeHelper(String filename, String s) {
         this.filename = filename;
         this.end = s;

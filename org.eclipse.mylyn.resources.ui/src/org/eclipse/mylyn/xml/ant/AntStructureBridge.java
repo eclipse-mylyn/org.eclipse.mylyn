@@ -174,6 +174,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
     }
     
     /**
+     * Handle is filename;XPath
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
      */
     public String getHandleIdentifier(Object object) {
@@ -258,28 +259,57 @@ public class AntStructureBridge implements IMylarStructureBridge {
     }
 
     /**
-     * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleForMarker(org.eclipse.ui.views.markers.internal.ProblemMarker)
+     * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleForOffsetInObject(Object, int)
      */
-    public String getHandleForMarker(ProblemMarker marker) {
-        // we can only return a handle if the resource is build.xml
-        if (marker == null) return null;
-        try {
-            IResource res= marker.getResource();
-            
-            if (res instanceof IFile) {
-                IFile file = (IFile)res; 
-                if (file.getFullPath().toString().endsWith("build.xml")) { 
-                    return file.getFullPath().toString();
-                } else {
-                    return null;
-                }
-            }
-            return null;
-        }
-        catch (Throwable t) {
-            MylarPlugin.fail(t, "Could not find element for: " + marker, false);
-            return null;
-        }
+    public String getHandleForOffsetInObject(Object resource, int offset) {
+    	if (resource == null) return null;
+    	if(resource instanceof ProblemMarker){
+    		ProblemMarker marker = (ProblemMarker)resource;
+    		
+	    	// we can only return a handle if the resource is build.xml
+	        try {
+	            IResource res= marker.getResource();
+	            
+	            if (res instanceof IFile) {
+	                IFile file = (IFile)res; 
+	                if (file.getFullPath().toString().endsWith("build.xml")) { 
+	                    return file.getFullPath().toString();
+	                } else {
+	                    return null;
+	                }
+	            }
+	            return null;
+	        }
+	        catch (Throwable t) {
+	            MylarPlugin.fail(t, "Could not find element for: " + marker, false);
+	            return null;
+	        }
+    	} else if(resource instanceof IFile){
+    		try {
+	            IFile file = (IFile)resource; 
+	            if (file.getFullPath().toString().endsWith("build.xml")) {
+	            	FileEditorInput fei = new FileEditorInput(file);
+	            	String content = XmlNodeHelper.getContents(file.getContents());
+	                IDocument d = new Document(content);
+		            // create the ant model and get the element from it 
+		            IProblemRequestor p = new AntAnnotationModel(file);
+		            AntModel am = new AntModel(d, p, new LocationProvider(fei));
+		            am.reconcile();
+		            
+		            AntElementNode node = am.getNode(offset, false);
+		            Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] { } );
+	                method.setAccessible(true);
+	            	String path = (String)method.invoke(node, new Object[] { });
+	                if(path == null)
+	                	return null;
+	                String handle = new XmlNodeHelper(file.getFullPath().toString(), path).getHandle();
+	                return handle;
+	            }
+    		} catch(Exception e){
+    			MylarPlugin.log(e, "Unable to get handle for offset in object");
+    		}
+    	}
+    	return null;
     }
 
 	public IProject getProjectForObject(Object object) {
@@ -303,11 +333,6 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return null;
-	}
-
-	public String getHandleForOffsetInObject(Object resource, int offset) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
