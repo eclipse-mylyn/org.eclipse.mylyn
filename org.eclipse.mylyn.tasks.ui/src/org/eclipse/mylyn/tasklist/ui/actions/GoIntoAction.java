@@ -7,13 +7,16 @@ import org.eclipse.ui.part.DrillDownAdapter;
 
 public class GoIntoAction extends Action {
 
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.into";
+		
 	private DrillDownAdapter drillDownAdapter;
 	
 	public GoIntoAction(DrillDownAdapter drillDownAdapter) {
 		this.drillDownAdapter = drillDownAdapter;
 		
-		setText("Go Into");
-		setToolTipText("Go into category");
+		setId(ID);
+		setText("Go Into Category");
+		setToolTipText("Go Into Category");
 		setImageDescriptor(TaskListImages.GO_INTO);
 	}
 

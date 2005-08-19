@@ -11,12 +11,15 @@ import org.eclipse.swt.custom.StyledText;
 
 public class CopyDescriptionAction extends Action {
 
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
+	
 	private TaskListView view;
 	
 	public CopyDescriptionAction(TaskListView view) {
 		this.view = view;
 		setText("Copy Description");
 		setToolTipText("Copy Description");
+		setId(ID);
 		setImageDescriptor(TaskListImages.COPY);
 	}
 
