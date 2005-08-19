@@ -206,7 +206,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
         return "";
     }
 
-    public boolean canBeLandmark(Object element) {
+    public boolean canBeLandmark(String handle) {
         return false;
     }
 
