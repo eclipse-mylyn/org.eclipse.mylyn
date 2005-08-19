@@ -48,6 +48,7 @@ public class TaskListImages {
     public static final ImageDescriptor NAVIGATE_PREVIOUS = create(T_TOOL, "navigate-previous.gif");
     public static final ImageDescriptor NAVIGATE_NEXT = create(T_TOOL, "navigate-next.gif"); 
     
+    public static final ImageDescriptor COPY = create(T_TOOL, "copy.png");
     public static final ImageDescriptor GO_UP = create(T_TOOL, "go-up.gif");
     public static final ImageDescriptor GO_INTO = create(T_TOOL, "go-into.gif"); 
         

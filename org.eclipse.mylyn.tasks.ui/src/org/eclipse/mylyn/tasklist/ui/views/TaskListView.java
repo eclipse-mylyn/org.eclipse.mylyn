@@ -62,10 +62,13 @@ import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.actions.AutoCloseAction;
 import org.eclipse.mylar.tasklist.ui.actions.CollapseAllAction;
+import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.FilterCompletedTasksAction;
+import org.eclipse.mylar.tasklist.ui.actions.GoUpAction;
+import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.NavigatePreviousAction;
@@ -115,6 +118,12 @@ public class TaskListView extends ViewPart {
 	private FilteredTree tree;
     private DrillDownAdapter drillDownAdapter;
     
+    private GoIntoAction goIntoAction;
+    private GoUpAction goBackAction;
+    
+    private CopyDescriptionAction copyAction;
+    private OpenTaskEditorAction openAction;
+    
     private CreateTaskAction createTask;
     private CreateTaskAction createTaskToolbar;
     private CreateCategoryAction createCategory;
@@ -147,6 +156,8 @@ public class TaskListView extends ViewPart {
     public static String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
     
     private TaskActivationHistory taskHistory = new TaskActivationHistory();
+
+	private boolean canEnableGoInto = false;
     
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
@@ -880,26 +891,35 @@ public class TaskListView extends ViewPart {
     }
 
     private void fillLocalPullDown(IMenuManager manager) {
+    	updateDrillDownActions();
     	manager.add(collapseAll);
     	manager.add(new Separator());
     	manager.add(previousTaskAction);
     	manager.add(nextTaskAction);
     	manager.add(new Separator());
-    	drillDownAdapter.addNavigationActions(manager);
+    	manager.add(goBackAction);
+//    	drillDownAdapter.addNavigationActions(manager);
         manager.add(new Separator());
         manager.add(autoClose);
         autoClose.setEnabled(true);
     }    
     
     void fillContextMenu(IMenuManager manager) {
+    	updateDrillDownActions();
+    	
     	ITaskListElement element = null;;
         final Object selectedObject = ((IStructuredSelection)getViewer().getSelection()).getFirstElement();
         if (selectedObject instanceof ITaskListElement) {
         	element = (ITaskListElement) selectedObject;
         }
+        
+        addAction(openAction, manager, element);
+        addAction(goIntoAction, manager, element);        
+        manager.add(new Separator());
         addAction(completeTask, manager, element);
         addAction(incompleteTask, manager, element);
         addAction(delete, manager, element);
+        addAction(copyAction, manager, element);
         manager.add(new Separator());
         addAction(createTask, manager, element);
         manager.add(new Separator("mylar"));   
@@ -951,6 +971,10 @@ public class TaskListView extends ViewPart {
 				action.setEnabled(true);
 			} else if(action instanceof CreateTaskAction){
 				action.setEnabled(false);
+			}else if(action instanceof OpenTaskEditorAction){
+				action.setEnabled(true);
+			} else if(action instanceof CopyDescriptionAction){
+				action.setEnabled(true);
 			}
 		} else if(element instanceof TaskCategory) {
 			if(action instanceof MarkTaskCompleteAction){
@@ -961,9 +985,24 @@ public class TaskListView extends ViewPart {
 				action.setEnabled(true);
 			} else if(action instanceof CreateTaskAction){
 				action.setEnabled(true);
+			} else if(action instanceof GoIntoAction){
+				TaskCategory cat = (TaskCategory) element;
+				if(cat.getChildren().size() > 0){
+					action.setEnabled(true);
+				} else {
+					action.setEnabled(false);
+				}
+			}else if(action instanceof OpenTaskEditorAction){
+				action.setEnabled(false);
+			} else if(action instanceof CopyDescriptionAction){
+				action.setEnabled(true);
 			}
 		} else {
 			action.setEnabled(true);
+		}
+		
+		if(!canEnableGoInto){
+			goIntoAction.setEnabled(false);
 		}
     }
     
@@ -972,6 +1011,13 @@ public class TaskListView extends ViewPart {
      *
      */
     private void makeActions() {
+    	
+    	copyAction = new CopyDescriptionAction(this);
+    	openAction = new OpenTaskEditorAction(this); 
+    	
+    	goIntoAction = new GoIntoAction(drillDownAdapter);
+    	goBackAction = new GoUpAction(drillDownAdapter);
+    	
     	createTask = new CreateTaskAction(this);
     	createTaskToolbar = new CreateTaskAction(this);   
         createCategory = new CreateCategoryAction(this);
@@ -1245,6 +1291,28 @@ public class TaskListView extends ViewPart {
 	@Override
 	public void dispose() {
 		super.dispose();
+	}
+
+	public void updateDrillDownActions() {
+		if(drillDownAdapter.canGoBack()){
+			goBackAction.setEnabled(true);
+		} else {
+			goBackAction.setEnabled(false);
+		}
+		
+		if(drillDownAdapter.canGoInto()){
+			canEnableGoInto = true;
+		} else {
+			canEnableGoInto  = false;
+		}
+	}
+
+	/**
+	 * HACK: This is used for the copy action 
+	 * @return
+	 */
+	public Composite getFakeComposite() {
+		return tree;
 	}
 }
 

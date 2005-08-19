@@ -30,7 +30,10 @@ import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
+import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
+import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -198,14 +201,19 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		if(element instanceof BugzillaHit){
 			return false;
 		} else if(element instanceof BugzillaTask){
-			if(action instanceof DeleteAction){
+			if(action instanceof DeleteAction || action instanceof CopyDescriptionAction || action instanceof OpenTaskEditorAction){
 				return true;
 			} else {
 				return false;
 			}
 		} else if(element instanceof BugzillaQueryCategory){
-			if(action instanceof DeleteAction){
+			if(action instanceof DeleteAction || action instanceof CopyDescriptionAction || action instanceof OpenTaskEditorAction){
 				return true;
+			} else if(action instanceof GoIntoAction){
+				BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
+				if(cat.getChildren().size() > 0){
+					return true;
+				}
 			} else {
 				return false;
 			}

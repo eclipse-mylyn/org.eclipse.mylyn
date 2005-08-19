@@ -34,6 +34,8 @@ public class OpenTaskEditorAction extends Action {
 	 */
 	public OpenTaskEditorAction(TaskListView view) {
 		this.view = view;
+		setText("Open");
+		setToolTipText("Open tasklist element");
 		setId(ID);
 	}
 

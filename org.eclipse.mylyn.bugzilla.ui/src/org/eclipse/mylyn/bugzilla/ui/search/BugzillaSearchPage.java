@@ -439,7 +439,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 						maxHitss = maxHitss.substring(0, i);
 					}
 				}
-				maxHitsText.setText(maxHitss);
+
 				BugzillaSearchPage.this.maxHits = maxHitss;
 			}
 		});
@@ -447,7 +447,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		gd.widthHint = 20;
 		maxHitsText.setLayoutData(gd);
 		label = new Label(group, SWT.LEFT);
-		label.setText(" Hits.");
+		label.setText(" Hits. (-1 means all hits are returned)");
 
 		maxHits = "100";
 		maxHitsText.setText(maxHits);
