@@ -17,6 +17,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylar.core.tests.ContextTest;
+import org.eclipse.mylar.core.tests.DegreeOfInterestTest;
 import org.eclipse.mylar.java.tests.ContextManagerTest;
 import org.eclipse.mylar.java.tests.JavaStructureTest;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
@@ -58,6 +59,7 @@ public class AllTests {
         // Core Tests
         suite.addTestSuite(ContextTest.class);
         suite.addTestSuite(TaskListUiTest.class);
+        suite.addTestSuite(DegreeOfInterestTest.class);
         //$JUnit-END$
         return suite;
     }
