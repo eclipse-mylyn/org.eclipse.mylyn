@@ -41,6 +41,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 	private static final String DIRTY = "Dirty";
 	private static final String URL = "URL";
 	private static final String DESCRIPTION = "Description";
+	private static final String MAX_HITS = "MaxHits";
 
 	private static final String BUGZILLA_TASK_REGISTRY = "BugzillaTaskRegistry" + TAG_CATEGORY;
 	private static final String TAG_BUGZILLA_CATEGORY = "BugzillaQuery" + TAG_CATEGORY;
@@ -72,7 +73,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		if (e.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
 			readRegistry(node, taskList);
 		} else {
-			BugzillaQueryCategory cat = new BugzillaQueryCategory(e.getAttribute(DESCRIPTION), e.getAttribute(URL));
+			BugzillaQueryCategory cat = new BugzillaQueryCategory(e.getAttribute(DESCRIPTION), e.getAttribute(URL), e.getAttribute(MAX_HITS));
 			taskList.addCategory(cat);
 		}
 	}
@@ -104,6 +105,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		Element node = doc.createElement(getCategoryTagName());
 		node.setAttribute(DESCRIPTION, queryCategory.getDescription(false));
 		node.setAttribute(URL, queryCategory.getUrl());
+		node.setAttribute(MAX_HITS, ""+queryCategory.getMaxHits());
 		parent.appendChild(node);
 		return node;
 	}

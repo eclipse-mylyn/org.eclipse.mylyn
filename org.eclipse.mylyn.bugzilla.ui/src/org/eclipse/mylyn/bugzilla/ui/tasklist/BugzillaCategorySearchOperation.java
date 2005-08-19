@@ -52,7 +52,7 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation
     private LoginException loginException = null;
     
     private String url;
-    
+    private int maxHits;
     private boolean isMaxReached;
     
     /**
@@ -61,8 +61,9 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation
      * @param m
      *            The member that we are doing the search for
      */
-    public BugzillaCategorySearchOperation(String url) {
+    public BugzillaCategorySearchOperation(String url, int maxHits) {
         this.url = url;
+        this.maxHits = maxHits;
     }
 
     @Override
@@ -92,7 +93,7 @@ public class BugzillaCategorySearchOperation extends WorkspaceModifyOperation
 		try {
 		
 		    // perform the search
-		    status = engine.search(collector, matches);
+		    status = engine.search(collector, matches, maxHits);
 		
 		    // check the status so that we don't keep searching if there
 		    // is a problem

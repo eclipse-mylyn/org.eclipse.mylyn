@@ -130,6 +130,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		createLastDays(control);
 		createEmail(control);
 		createSaveQuery(control);
+		createMaxHits(control);
 		input = new SavedQueryFile(BugzillaPlugin.getDefault().getStateLocation().toString(), "/queries");
 		createUpdate(control);
 		
@@ -398,6 +399,68 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		return group;
 	}
 	
+	protected Text maxHitsText; 
+	
+	protected Control createMaxHits(Composite control)
+	{
+		GridLayout layout;
+		GridData gd;
+
+		Group group = new Group(control, SWT.NONE);
+		layout = new GridLayout(3, false);
+		group.setLayout(layout);
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		group.setLayoutData(gd);
+
+		Label label = new Label(group, SWT.LEFT);
+		label.setText("Show a maximum of ");
+
+		// operation combo
+		maxHitsText = new Text(group, SWT.BORDER);
+		maxHitsText.setTextLimit(5);
+		maxHitsText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String maxHitss = maxHitsText.getText();
+				if (maxHitss.length() == 0)
+					return;
+				for (int i = maxHitss.length() - 1; i >= 0; i--) {
+					try {
+						if (maxHitss.equals("") || Integer.parseInt(maxHitss) > -1) {
+							if (i == maxHitss.length() - 1){
+								maxHits = maxHitss;
+								return;
+							} else {
+								break;
+							}
+						}
+					} catch (NumberFormatException ex) {
+						maxHitss = maxHitss.substring(0, i);
+					}
+				}
+				maxHitsText.setText(maxHitss);
+				BugzillaSearchPage.this.maxHits = maxHitss;
+			}
+		});
+		gd = new GridData();
+		gd.widthHint = 20;
+		maxHitsText.setLayoutData(gd);
+		label = new Label(group, SWT.LEFT);
+		label.setText(" Hits.");
+
+		maxHits = "100";
+		maxHitsText.setText(maxHits);
+
+		return group;
+	}
+	
+	protected String maxHits;
+	
+	public String getMaxHits(){
+		return maxHits;
+	}
+	
 	private static final String [] emailText = {"bug owner", "reporter", "CC list", "commenter"};
 	protected Control createEmail(Composite control) {
 		GridLayout layout;
@@ -661,7 +724,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		IBugzillaSearchResultCollector collector= new BugzillaSearchResultCollector();
 		
 		IBugzillaSearchOperation op= new BugzillaSearchOperation(
-			url, collector);
+			url, collector, maxHits);
 			
 		BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(op);
 		NewSearchUI.runQueryInBackground(searchQuery);

@@ -130,7 +130,7 @@ public class BugzillaSearchEngine {
 	 * @param startMatches - The number of matches to start with for the progress monitor
 	 * @param maxMatches - the maximum number of matches to return or -1 for unlimited
 	 */
-	private IStatus search(IBugzillaSearchResultCollector collector, int startMatches, int maxMatches) throws LoginException {
+	public IStatus search(IBugzillaSearchResultCollector collector, int startMatches, int maxMatches) throws LoginException {
 		IProgressMonitor monitor = collector.getProgressMonitor();
 
 		IStatus status = null; 
@@ -180,7 +180,7 @@ public class BugzillaSearchEngine {
 			while ((line = in.readLine()) != null) {
 				
 				
-				if(numCollected != -1 && numCollected >= maxMatches){
+				if(maxMatches != -1 && numCollected >= maxMatches){
 					maxReached  = true;
 					break;
 				}

@@ -105,10 +105,11 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		}
 		else if (element instanceof BugzillaQueryCategory){
 			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory)element;
-	       	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(), queryCategory.getUrl(), queryCategory.getDescription(false));
+	       	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(), queryCategory.getUrl(), queryCategory.getDescription(false), queryCategory.getMaxHits()+"");
         	if(sqd.open() == Dialog.OK){
 	        	queryCategory.setDescription(sqd.getName());
 	        	queryCategory.setUrl(sqd.getUrl());
+	        	queryCategory.setMaxHits(sqd.getMaxHits());
 	        	
 	        	new RefreshBugzillaAction(queryCategory).run();
         	}

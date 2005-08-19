@@ -51,7 +51,8 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
 //        MylarPlugin.getDefault().actionObserved(this);
     	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
     	if(sqd.open() == Dialog.OK){
-        	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl());
+    		// TODO make this work properly
+        	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
         	
             MylarTasklistPlugin.getTaskListManager().addCategory(queryCategory);
             WorkspaceModifyOperation op = new WorkspaceModifyOperation() {

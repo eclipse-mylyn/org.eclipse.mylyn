@@ -37,16 +37,23 @@ public class BugzillaSearchOperation extends WorkspaceModifyOperation implements
 	/** The LoginException that was thrown when trying to do the search */
 	private LoginException loginException = null;
 	
+	private int maxHits;
+	
 	/**
 	 * Constructor
 	 * @param url The url of the bugzilla server
 	 * @param collector The bugzilla search collector to use for this search
 	 */
-	public BugzillaSearchOperation(String url, IBugzillaSearchResultCollector collector) 
+	public BugzillaSearchOperation(String url, IBugzillaSearchResultCollector collector, String maxHits) 
 	{
 		this.url = url;
 		this.collector = collector;
 		collector.setOperation(this);
+		try{
+			this.maxHits = Integer.parseInt(maxHits);
+		} catch (Exception e){
+			this.maxHits = -1;
+		}
 	}
 
 	@Override
@@ -56,7 +63,7 @@ public class BugzillaSearchOperation extends WorkspaceModifyOperation implements
 		BugzillaSearchEngine engine = new BugzillaSearchEngine(url);
 		try
 		{
-			status = engine.search(collector);
+			status = engine.search(collector, 0 , maxHits);
 		}
 		catch(LoginException e) {
 			//save this exception to throw later

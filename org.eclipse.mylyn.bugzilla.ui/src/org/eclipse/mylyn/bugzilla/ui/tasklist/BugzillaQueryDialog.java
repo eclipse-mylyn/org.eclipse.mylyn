@@ -48,6 +48,7 @@ public class BugzillaQueryDialog extends Dialog {
 	private String name = "";
 	private BugzillaSearchOptionPage searchOptionPage;
 	private String startingUrl = null;
+	private String maxHits;
 	
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
@@ -55,10 +56,11 @@ public class BugzillaQueryDialog extends Dialog {
 		
 	}
 	
-	public BugzillaQueryDialog(Shell parentShell, String startingUrl, String name) {
+	public BugzillaQueryDialog(Shell parentShell, String startingUrl, String name, String maxHits) {
 		super(parentShell);
 		searchOptionPage = new BugzillaSearchOptionPage();
 		this.startingUrl = startingUrl;
+		this.maxHits = maxHits;
 		this.name = name;
 	}
 
@@ -70,6 +72,10 @@ public class BugzillaQueryDialog extends Dialog {
 		return url;
 	}
 	
+	public String getMaxHits(){
+		return maxHits;
+	}
+	
 	@Override
 	protected Control createContents(Composite parent) {
 		searchOptionPage.createControl(parent);
@@ -78,7 +84,7 @@ public class BugzillaQueryDialog extends Dialog {
 		Control c = super.createContents(parent);
 		if(startingUrl != null){
 			try{
-				searchOptionPage.updateDefaults(startingUrl);
+				searchOptionPage.updateDefaults(startingUrl, maxHits);
 			} catch (UnsupportedEncodingException e){
 				// ignore, should never get this
 			}
@@ -96,6 +102,7 @@ public class BugzillaQueryDialog extends Dialog {
 			 */
 			return;
 		}
+		maxHits = searchOptionPage.getMaxHits();
 		InputDialog getNameDialog = new InputDialog(Display.getCurrent().getActiveShell(), "Bugzilla Query Category Name", "Please enter a name for the bugzilla query category",name, new IInputValidator(){
 
 			public String isValid(String newText) {
@@ -159,7 +166,7 @@ public class BugzillaQueryDialog extends Dialog {
 			};
 		}
 		
-		public void updateDefaults(String startingUrl) throws UnsupportedEncodingException{
+		public void updateDefaults(String startingUrl, String maxHits) throws UnsupportedEncodingException{
 //			String serverName = startingUrl.substring(0, startingUrl.indexOf("?"));
 			startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1);
 			String[] options = startingUrl.split("&");
@@ -314,6 +321,8 @@ public class BugzillaQueryDialog extends Dialog {
 					daysText.setText(value);
 				}
 			}
+			this.maxHits = maxHits;
+			maxHitsText.setText(maxHits);
 		}
 				
 		

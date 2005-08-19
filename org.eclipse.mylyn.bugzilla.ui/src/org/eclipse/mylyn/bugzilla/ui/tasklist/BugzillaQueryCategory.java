@@ -46,6 +46,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	
 	private static final long serialVersionUID = 5517146402031743253L;	
 	private String url;
+	private int maxHits;
 	private List<BugzillaHit> hits = new ArrayList<BugzillaHit>();
 	private boolean hasBeenRefreshed = false;
 	
@@ -68,15 +69,20 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	private ICategorySearchListener listener = new BugzillaQueryCategorySearchListener();
 	private boolean isMaxReached = false;
 	
-	public BugzillaQueryCategory(String label, String url) {
+	public BugzillaQueryCategory(String label, String url, String maxHits) {
 		super(label);
 		this.url = url;
+		try{
+			this.maxHits = Integer.parseInt(maxHits);
+		} catch (Exception e){
+			this.maxHits = -1;
+		}
 	}
 
 	public String getDescription(boolean label) {
 		if (hits.size() > 0 || !label) {
 			if(isMaxReached && label){
-				return super.getDescription(label) + " <first "+ BugzillaPlugin.getDefault().getMaxResults() +" hits>";
+				return super.getDescription(label) + " <first "+ maxHits +" hits>";
 			} else {
 				return super.getDescription(label);
 			}
@@ -113,7 +119,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	public void refreshBugs() {
 		hits.clear();
 		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(
-				getUrl());
+				getUrl(), maxHits);
 		catSearch.addResultsListener(listener);
 		final IStatus[] status = new IStatus[1];
 
@@ -230,5 +236,17 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		}
 		tooltip += BugzillaTask.getLastRefreshTime(lastRefresh);
 		return tooltip;
+	}
+
+	public int getMaxHits() {
+		return maxHits;
+	}
+
+	public void setMaxHits(String maxHits) {
+		try{
+			this.maxHits = Integer.parseInt(maxHits);
+		} catch (Exception e){
+			this.maxHits = -1;
+		}
 	}
 }
