@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="Mylar Bugzilla Client"
-      version="0.3.4"
+      version="0.3.5"
       provider-name="University of British Columbia"
       plugin="org.eclipse.mylar.bugzilla.core">
 
@@ -233,28 +233,28 @@ litigation.
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.3.4"
+         version="0.3.5"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.3.4"
+         version="0.3.5"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.core"
          download-size="0"
          install-size="0"
-         version="0.3.4"
+         version="0.3.5"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasklist"
          download-size="0"
          install-size="0"
-         version="0.3.4"
+         version="0.3.5"
          unpack="false"/>
 
 </feature>
