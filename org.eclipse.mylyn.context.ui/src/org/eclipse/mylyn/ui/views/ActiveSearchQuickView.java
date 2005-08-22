@@ -11,23 +11,66 @@
 
 package org.eclipse.mylar.ui.views;
 
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.util.Geometry;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.views.ActiveSearchView.DoiOrderSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Monitor;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Tracker;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.ide.StringMatcher;
 
 
 public class ActiveSearchQuickView {  
@@ -57,7 +100,7 @@ public class ActiveSearchQuickView {
      * Fields for text matching and filtering
      */
     private Text filterText; 
-    private StringMatcher stringMatcher;
+//    private StringMatcher stringMatcher;
     private Font statusTextFont;
 
     /**
@@ -643,41 +686,41 @@ public class ActiveSearchQuickView {
                 if (length > 0 && text.charAt(length - 1) != '*') {//$NON-NLS-1$
                     text = text + '*';//$NON-NLS-1$
                 }
-                setMatcherString(text);
+//                setMatcherString(text);
             }
         });
     }
 
-    private void setMatcherString(String pattern) {
-        if (pattern.length() == 0) {
-            stringMatcher = null;
-        } else {
-            boolean ignoreCase = pattern.toLowerCase().equals(pattern);
-            stringMatcher = new StringMatcher(pattern, ignoreCase, false);
-        }
-        stringMatcherUpdated();
-    }
+//    private void setMatcherString(String pattern) {
+//        if (pattern.length() == 0) {
+//            stringMatcher = null;
+//        } else {
+//            boolean ignoreCase = pattern.toLowerCase().equals(pattern);
+//            stringMatcher = new StringMatcher(pattern, ignoreCase, false);
+//        }
+//        stringMatcherUpdated();
+//    }
 
-    private void stringMatcherUpdated() {
-        // refresh viewer to refilter
-        viewer.getControl().setRedraw(false);
-        viewer.refresh();
-        viewer.expandAll();
-        selectFirstMatch();
-        viewer.getControl().setRedraw(true);
-    }
+//    private void stringMatcherUpdated() {
+//        // refresh viewer to refilter
+//        viewer.getControl().setRedraw(false);
+//        viewer.refresh();
+//        viewer.expandAll();
+//        selectFirstMatch();
+//        viewer.getControl().setRedraw(true);
+//    }
 
-    private void selectFirstMatch() {
-        Tree tree = viewer.getTree();
-        Object element = findElement(tree.getItems());
-        if (element != null)
-            viewer.setSelection(new StructuredSelection(element), true);
-        else
-            viewer.setSelection(StructuredSelection.EMPTY);
-    }
+//    private void selectFirstMatch() {
+//        Tree tree = viewer.getTree();
+//        Object element = findElement(tree.getItems());
+//        if (element != null)
+//            viewer.setSelection(new StructuredSelection(element), true);
+//        else
+//            viewer.setSelection(StructuredSelection.EMPTY);
+//    }
 
-    private Object findElement(TreeItem[] items) {
-        for (int i = 0; i < items.length; i++) {
+//    private Object findElement(TreeItem[] items) {
+//        for (int i = 0; i < items.length; i++) {
 //            Object o = items[i].getData();
 //            TreeParent treeParent = null;
 //            TreeObject treeObject = null;
@@ -704,9 +747,9 @@ public class ActiveSearchQuickView {
 //            element = findElement(items[i].getItems());
 //            if (element != null)
 //                return element;
-        }
-        return null;
-    }
+//        }
+//        return null;
+//    }
 
     protected class NamePatternFilter extends ViewerFilter {
 
@@ -717,15 +760,15 @@ public class ActiveSearchQuickView {
         @Override
         public boolean select(Viewer selectedViewer, Object parentElement,
                 Object element) {
-            StringMatcher matcher = getMatcher();
-            if (matcher == null || !(selectedViewer instanceof TreeViewer))
-                return true;
+//            StringMatcher matcher = getMatcher();
+//            if (matcher == null || !(selectedViewer instanceof TreeViewer))
+//                return true;
             TreeViewer treeViewer = (TreeViewer) selectedViewer;
 
-            String matchName = ((ILabelProvider) treeViewer.getLabelProvider())
-                    .getText(element);
-            if (matchName != null && matcher.match(matchName))
-                return true;
+//            String matchName = ((ILabelProvider) treeViewer.getLabelProvider())
+//                    .getText(element);
+//            if (matchName != null && matcher.match(matchName))
+//                return true;
 
             return hasUnfilteredChild(treeViewer, element);
         }
@@ -742,9 +785,9 @@ public class ActiveSearchQuickView {
         }
     }
 
-    private StringMatcher getMatcher() {
-        return stringMatcher;
-    }
+//    private StringMatcher getMatcher() {
+//        return stringMatcher;
+//    }
 
     /**
      * Static inner class which sets the layout for the inplace view. Without

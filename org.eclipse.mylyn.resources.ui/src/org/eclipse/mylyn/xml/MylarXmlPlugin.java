@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.xml.ant.AntEditingMonitor;
 import org.eclipse.mylar.xml.ant.AntStructureBridge;
@@ -60,8 +61,8 @@ public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup {
         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
             public void run() {
              
-              pdeStructureBridge = new PdeStructureBridge(MylarPlugin.getDefault().getGenericResourceBridge());
-              antStructureBridge = new AntStructureBridge(MylarPlugin.getDefault().getGenericResourceBridge());
+              pdeStructureBridge = new PdeStructureBridge(MylarIdePlugin.getDefault().getGenericResourceBridge());
+              antStructureBridge = new AntStructureBridge(MylarIdePlugin.getDefault().getGenericResourceBridge());
               
               antUiBridge = new AntUiBridge(); 
               pdeUiBridge = new PdeUiBridge(); 

@@ -29,26 +29,6 @@
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>
-     <objectContribution
-        id="org.eclipse.mylar.ui.interest"
-        objectClass="org.eclipse.core.resources.IResource">
-     	<action  
-  		  	label="Mylar: Make Less Interesting" 
-	  		tooltip="Mark selected element as uninteresting"
-	  		menubarPath="mylar" 
-	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
-	  		icon="icons/elcl16/interest-decrease.gif"
-	  		enablesFor="*"/>
-	    <action  
-  		  	label="Mylar: Make Landmark" 
-	  		tooltip="Make selected element a landmark"
-	  		menubarPath="mylar" 
-	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
-	  		icon="icons/elcl16/interest-increase.gif"
-	  		enablesFor="*"/>
-	 </objectContribution>
 	 
      <viewerContribution
            id="org.eclipse.mylar.ui.tasklist.contribution"
@@ -265,34 +245,6 @@
 	         enablesFor="*"> 
   		</action> 
   		</viewContribution>
-  	  <viewContribution 
-		id="org.eclipse.mylar.ui.resource.navigator.filter" 
-   		targetID="org.eclipse.ui.views.ResourceNavigator">
-    	<action
-	         id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction" 
-   	         style="toggle"
-	         label="Apply Mylar" 
-	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Apply Mylar"
-	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.ui.actions.ApplyMylarToNavigatorAction"
-	         enablesFor="*"> 
-  		</action> 
-      </viewContribution> 
-      <viewContribution 
-		id="org.eclipse.mylar.problems.contribution" 
-   		targetID="org.eclipse.ui.views.ProblemView">
-    	<action
-           class="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
-           enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
-           id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
-           label="Apply Mylar"
-           style="toggle"
-           toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
-  		</action>  
-      </viewContribution> 
    </extension>
    <extension
        point="org.eclipse.mylar.tasklist.taskListContributor">

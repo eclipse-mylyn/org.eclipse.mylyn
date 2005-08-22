@@ -23,7 +23,6 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.mylar.ui.internal.BrowseFilteredListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.ui.IEditorPart;
@@ -106,7 +105,7 @@ public class MylarViewerManager implements IMylarContextListener {
             public void run() {
             	try {
             		// TODO: improve laziness and update
-                    if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
+//                    if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
 
             		for (StructuredViewer viewer : managedViewers) {
             			if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {

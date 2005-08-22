@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.resources.ResourceStructureBridge;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -38,13 +37,11 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  */
 public class MylarPlugin extends AbstractUIPlugin {
-    
-	private boolean predictedInterestEnabled = false;
-	
+    	
     private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
-    
-    private ResourceStructureBridge genericResourceBridge;
         
+    private IMylarStructureBridge defaultBridge = null;
+    
     private List<AbstractSelectionMonitor> selectionMonitors = new ArrayList<AbstractSelectionMonitor>();
     private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
     
@@ -139,6 +136,8 @@ public class MylarPlugin extends AbstractUIPlugin {
             return null;
 		}
     };
+
+	private boolean predictedInterestEnabled = false;
     
     public MylarPlugin() {  
 		INSTANCE = this;  
@@ -156,7 +155,6 @@ public class MylarPlugin extends AbstractUIPlugin {
                 + File.separator
                 + MYLAR_DIR_NAME);
         contextManager = new MylarContextManager(); 
-        genericResourceBridge = new ResourceStructureBridge(predictedInterestEnabled);
     }
 
     /**
@@ -270,14 +268,16 @@ public class MylarPlugin extends AbstractUIPlugin {
         IMylarStructureBridge adapter = bridges.get(extension);
         if (adapter != null) {
             return adapter;
+        } else if (defaultBridge != null) {
+            return defaultBridge;
         } else {
-            return genericResourceBridge;
+        	return DEFAULT_BRIDGE;
+        }
 //            if (genericResourceBridge.acceptsObject(getObjectForHandle(handle))) {
 //                return genericResourceBridge;
 //            } else {
 //                return NULL_BRIDGE;
 //            }
-        }
     }
 
     /**
@@ -297,8 +297,8 @@ public class MylarPlugin extends AbstractUIPlugin {
         if (bridge != null) {
             return bridge;
         } else {
-            if (genericResourceBridge.acceptsObject(object)) {
-                return genericResourceBridge;
+            if (defaultBridge != null && defaultBridge.acceptsObject(object)) {
+                return defaultBridge;
             } else {
                 return DEFAULT_BRIDGE;
             }
@@ -343,10 +343,6 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
         return resourceBundle;
     }   
-    
-    public ResourceStructureBridge getGenericResourceBridge() {
-        return genericResourceBridge;
-    }
 
 	public void setLogStream(PrintStream logStream) {
 		this.logStream = logStream;
@@ -371,5 +367,9 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public void setPredictedInterestEnabled(boolean predictedInterestEnabled) {
 		this.predictedInterestEnabled = predictedInterestEnabled;
+	}
+
+	public void setDefaultBridge(IMylarStructureBridge defaultBridge) {
+		this.defaultBridge = defaultBridge;
 	}
 }
