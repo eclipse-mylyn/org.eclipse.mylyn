@@ -42,10 +42,12 @@ public class MylarCompilationUnitEditor extends CompilationUnitEditor {
         super.createPartControl(parent);
         
         JavaElementImageProvider prov = new JavaElementImageProvider();
-        Image image = prov.getJavaImageDescriptor(super.getInputJavaElement(), 0).createImage(); 
-        Point size= JavaElementImageProvider.SMALL_SIZE;
-		MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image, MylarImages.MYLAR_OVERLAY, size);
-		setTitleImage(MylarImages.getImage(desc));
+        if (super.getInputJavaElement() != null) {
+	        Image image = prov.getJavaImageDescriptor(super.getInputJavaElement(), 0).createImage(); 
+	        Point size= JavaElementImageProvider.SMALL_SIZE;
+			MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image, MylarImages.MYLAR_OVERLAY, size);
+			setTitleImage(MylarImages.getImage(desc));
+        }
     }
 
 	@Override
