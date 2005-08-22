@@ -34,9 +34,11 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -67,13 +69,14 @@ import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.FilterCompletedTasksAction;
-import org.eclipse.mylar.tasklist.ui.actions.GoUpAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
+import org.eclipse.mylar.tasklist.ui.actions.GoUpAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.NavigatePreviousAction;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.swt.SWT;
@@ -85,12 +88,18 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
@@ -127,6 +136,8 @@ public class TaskListView extends ViewPart {
     private CreateTaskAction createTask;
     private CreateTaskAction createTaskToolbar;
     private CreateCategoryAction createCategory;
+    
+    private RenameAction rename;
     
     private CollapseAllAction collapseAll;
     private DeleteAction delete;
@@ -417,29 +428,35 @@ public class TaskListView extends ViewPart {
     class TaskListCellModifier implements ICellModifier {
 
         public boolean canModify(Object element, String property) {
-            int columnIndex = Arrays.asList(columnNames).indexOf(property);
-            if (element instanceof ITask) {
-            	ITask task = (ITask)element;
-                switch (columnIndex) {
-                case 0: return true;
-                case 1: return false;
-                case 2: return task.isDirectlyModifiable();
-                case 3: return task.isDirectlyModifiable();
-                }
-            } else if (element instanceof AbstractCategory) {
-                switch (columnIndex) {
-                case 0:
-                case 1: 
-                case 2:
-                	return false;
-                case 3: return ((AbstractCategory)element).isDirectlyModifiable();
-                } 
-            } else if(element instanceof ITaskListElement){
+        	int columnIndex = Arrays.asList(columnNames).indexOf(property);
+            if(columnIndex == 0 && element instanceof ITaskListElement){
+            	return ((ITaskListElement)element).isActivatable();
+            } else if(columnIndex == 2 && element instanceof ITask){
+            	return ((ITask)element).isDirectlyModifiable();
+            }
+//            int columnIndex = Arrays.asList(columnNames).indexOf(property);
+//            if (element instanceof ITask) {
+//            	ITask task = (ITask)element;
+//                switch (columnIndex) {
+//                case 0: return true;
+//                case 1: return false;
+//                case 2: return task.isDirectlyModifiable();
+//                case 3: return task.isDirectlyModifiable();
+//                }
+//            } else if (element instanceof AbstractCategory) {
+//                switch (columnIndex) {
+//                case 0:
+//                case 1: 
+//                case 2:
+//                	return false;
+//                case 3: return ((AbstractCategory)element).isDirectlyModifiable();
+//                } 
+            else if(element instanceof ITaskListElement && isInRenameAction){
             	ITaskListElement taskListElement = (ITaskListElement)element;
             	switch (columnIndex) {
-            	case 0: return taskListElement.isActivatable();
-            	case 1: return false;
-            	case 2: return taskListElement.isDirectlyModifiable();
+//            	case 0: return taskListElement.isActivatable();
+//            	case 1: return false;
+//            	case 2: return taskListElement.isDirectlyModifiable();
             	case 3: return taskListElement.isDirectlyModifiable();
             	}
             } 
@@ -497,7 +514,7 @@ public class TaskListView extends ViewPart {
 					AbstractCategory cat = (AbstractCategory)((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:						
-						getViewer().setSelection(null);
+//						getViewer().setSelection(null);
 						break;
 					case 1:
 						break;
@@ -505,7 +522,7 @@ public class TaskListView extends ViewPart {
 						break;
 					case 3:
 						cat.setDescription(((String) value).trim());
-						getViewer().setSelection(null);
+//						getViewer().setSelection(null);
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
@@ -525,7 +542,7 @@ public class TaskListView extends ViewPart {
 								new TaskActivateAction(task).run();
 								addTaskToHistory(task);
 							}
-							getViewer().setSelection(null);
+//							getViewer().setSelection(null);
 						}
 						break;
 					case 1:
@@ -534,7 +551,7 @@ public class TaskListView extends ViewPart {
 						if (task.isDirectlyModifiable()) {
 							Integer intVal = (Integer) value;
 							task.setPriority("P" + (intVal + 1));
-							getViewer().setSelection(null);
+//							getViewer().setSelection(null);
 						}  
 						break;
 					case 3: 
@@ -542,7 +559,7 @@ public class TaskListView extends ViewPart {
 							task.setLabel(((String) value).trim());
 							MylarTasklistPlugin.getTaskListManager()
 									.taskPropertyChanged(task, columnNames[3]);
-							getViewer().setSelection(null);
+//							getViewer().setSelection(null);
 						}
 						break;
 					}
@@ -741,13 +758,59 @@ public class TaskListView extends ViewPart {
         getViewer().setCellEditors(editors);   
         getViewer().setCellModifier(new TaskListCellModifier());
         getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
-        
+      
         drillDownAdapter = new DrillDownAdapter(getViewer());
         getViewer().setContentProvider(new TaskListContentProvider());
         TaskListLabelProvider lp = new TaskListLabelProvider();
         lp.setBackgroundColor(parent.getBackground());
         getViewer().setLabelProvider(lp);
         getViewer().setInput(getViewSite());
+        
+        getViewer().getTree().addKeyListener(new KeyListener(){
+
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.F2 && e.stateMask == 0){
+					if(rename.isEnabled()){
+						rename.run();
+					}
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {}
+        	
+        });
+        
+        // HACK to support right click anywhere to select an item
+        getViewer().getTree().addMouseListener(new MouseListener(){
+
+			public void mouseDoubleClick(MouseEvent e) {}
+
+			public void mouseDown(MouseEvent e) {
+				Tree t = getViewer().getTree();
+				TreeItem item = t.getItem(new Point(e.x, e.y));
+				if(e.button == 3 && item != null){
+					TreeItem[] items = {item};
+					t.setSelection(items);
+				} else if(item == null){
+					TreeItem[] items = {};
+					t.setSelection(items);
+				}
+				
+			}
+
+			public void mouseUp(MouseEvent e) {}
+        });
+        
+        getViewer().addSelectionChangedListener(new ISelectionChangedListener(){
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				Object selectedObject = ((IStructuredSelection)getViewer().getSelection()).getFirstElement();
+				if(selectedObject instanceof ITaskListElement){
+					updateActionEnablement(rename, (ITaskListElement)selectedObject);
+				}
+			}
+        	
+        });
         
         makeActions();
         hookContextMenu();
@@ -819,7 +882,7 @@ public class TaskListView extends ViewPart {
                     	target.addSubTask(source);                    	
                     	source.setParent(target);
                     }           
-                    getViewer().setSelection(null);
+//                    getViewer().setSelection(null);
                     getViewer().refresh();
                     if (MylarTasklistPlugin.getDefault() != null) {
             			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
@@ -830,7 +893,7 @@ public class TaskListView extends ViewPart {
                 		getCurrentTarget() instanceof TaskCategory){
                 	
                 	MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject).dropItem((ITaskListElement)selectedObject, (TaskCategory)getCurrentTarget());
-					getViewer().setSelection(null);
+//					getViewer().setSelection(null);
                 	getViewer().refresh();
                 	if (MylarTasklistPlugin.getDefault() != null) {
             			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
@@ -920,6 +983,7 @@ public class TaskListView extends ViewPart {
         addAction(incompleteTask, manager, element);
         addAction(delete, manager, element);
         addAction(copyAction, manager, element);
+        addAction(rename, manager, element);
         manager.add(new Separator());
         addAction(createTask, manager, element);
         manager.add(new Separator("mylar"));   
@@ -975,6 +1039,8 @@ public class TaskListView extends ViewPart {
 				action.setEnabled(true);
 			} else if(action instanceof CopyDescriptionAction){
 				action.setEnabled(true);
+			} else if(action instanceof RenameAction){
+				action.setEnabled(true);
 			}
 		} else if(element instanceof TaskCategory) {
 			if(action instanceof MarkTaskCompleteAction){
@@ -995,6 +1061,8 @@ public class TaskListView extends ViewPart {
 			}else if(action instanceof OpenTaskEditorAction){
 				action.setEnabled(false);
 			} else if(action instanceof CopyDescriptionAction){
+				action.setEnabled(true);
+			} else if(action instanceof RenameAction){
 				action.setEnabled(true);
 			}
 		} else {
@@ -1021,7 +1089,9 @@ public class TaskListView extends ViewPart {
     	createTask = new CreateTaskAction(this);
     	createTaskToolbar = new CreateTaskAction(this);   
         createCategory = new CreateCategoryAction(this);
-         
+        
+        rename = new RenameAction(this);
+        
         delete = new DeleteAction(this);
         collapseAll = new CollapseAllAction(this);
         autoClose = new AutoCloseAction();
@@ -1114,7 +1184,6 @@ public class TaskListView extends ViewPart {
     @Override
     public void setFocus() {
 		getViewer().getControl().setFocus();
-        //TODO: foo
     }
 
     public String getBugIdFromUser() {
@@ -1313,6 +1382,12 @@ public class TaskListView extends ViewPart {
 	 */
 	public Composite getFakeComposite() {
 		return tree;
+	}
+
+	private boolean isInRenameAction = false;
+	
+	public void setInRenameAction(boolean b) {
+		isInRenameAction = b;
 	}
 }
 

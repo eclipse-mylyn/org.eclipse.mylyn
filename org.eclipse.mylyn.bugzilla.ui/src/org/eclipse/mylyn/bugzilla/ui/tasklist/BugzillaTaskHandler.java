@@ -34,6 +34,7 @@ import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -207,7 +208,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				return false;
 			}
 		} else if(element instanceof BugzillaQueryCategory){
-			if(action instanceof DeleteAction || action instanceof CopyDescriptionAction || action instanceof OpenTaskEditorAction){
+			if(action instanceof DeleteAction || action instanceof CopyDescriptionAction || action instanceof OpenTaskEditorAction || action instanceof RenameAction){
 				return true;
 			} else if(action instanceof GoIntoAction){
 				BugzillaQueryCategory cat = (BugzillaQueryCategory) element;

@@ -195,7 +195,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	}
 
 	public boolean isDirectlyModifiable() {
-		return false;
+		return true;
 	}
 	
 	public boolean isActivatable() {
