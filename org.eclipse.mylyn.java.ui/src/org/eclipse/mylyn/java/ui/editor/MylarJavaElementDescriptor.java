@@ -35,8 +35,7 @@ public class MylarJavaElementDescriptor extends CompositeImageDescriptor {
 
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		
-		
+		if (baseImage == null) return;
 		ImageData bg= baseImage.getImageData();
 		
 		drawImage(bg, 0, 0);
