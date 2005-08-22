@@ -130,7 +130,7 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 			int end = comment.indexOf(" ", endCommentStart);
 			int end2 = comment.indexOf(":", endCommentStart);
 			
-			if(end2 < end || (end == -1 && end2 != -1)){
+			if((end2 < end && end2 != -1) || (end == -1 && end2 != -1)){
 				end = end2;
 			}
 			
