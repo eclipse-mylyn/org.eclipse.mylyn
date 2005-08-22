@@ -128,6 +128,12 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 			int endCommentStart = comment.indexOf(endComment);
 
 			int end = comment.indexOf(" ", endCommentStart);
+			int end2 = comment.indexOf(":", endCommentStart);
+			
+			if(end2 < end || (end == -1 && end2 != -1)){
+				end = end2;
+			}
+			
 			if(end == -1)
 				end = comment.length();
 
