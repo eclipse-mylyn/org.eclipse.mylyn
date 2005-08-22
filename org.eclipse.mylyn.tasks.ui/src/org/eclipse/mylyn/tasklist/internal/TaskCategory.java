@@ -60,7 +60,7 @@ public class TaskCategory extends AbstractCategory implements Serializable {
     public void addTask(ITask task) {
     	tasks.add(task);
     	if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
     }
     
@@ -71,7 +71,7 @@ public class TaskCategory extends AbstractCategory implements Serializable {
     public void removeTask(ITask task) {
         tasks.remove(task);
         if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
     }
     

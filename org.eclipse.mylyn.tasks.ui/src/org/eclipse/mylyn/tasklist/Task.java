@@ -317,21 +317,21 @@ public class Task implements ITask {
 	public void addSubTask(ITask t) {
 		children.add(t);
 		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
 	
 	public void removeSubTask(ITask t) {
 		children.remove(t);
 		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
 	
 	public void setCategory(TaskCategory cat) {
 		this.parentCategory = cat;
 		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
 	

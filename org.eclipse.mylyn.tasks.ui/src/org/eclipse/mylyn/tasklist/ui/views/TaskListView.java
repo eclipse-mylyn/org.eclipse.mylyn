@@ -643,7 +643,7 @@ public class TaskListView extends ViewPart {
 		m.putInteger("sortIndex", sortIndex);
 		
 		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
     
@@ -822,7 +822,7 @@ public class TaskListView extends ViewPart {
                     getViewer().setSelection(null);
                     getViewer().refresh();
                     if (MylarTasklistPlugin.getDefault() != null) {
-            			MylarTasklistPlugin.getDefault().saveState();
+            			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
             		}
                     return true;
                 } else if(selectedObject instanceof ITaskListElement &&
@@ -833,7 +833,7 @@ public class TaskListView extends ViewPart {
 					getViewer().setSelection(null);
                 	getViewer().refresh();
                 	if (MylarTasklistPlugin.getDefault() != null) {
-            			MylarTasklistPlugin.getDefault().saveState();
+            			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
             		}
                     return true;
                 }

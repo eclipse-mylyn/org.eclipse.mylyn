@@ -31,6 +31,8 @@ import org.eclipse.mylar.tasklist.report.internal.ReminderRequiredCollector;
 import org.eclipse.mylar.tasklist.report.internal.TaskReportGenerator;
 import org.eclipse.mylar.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.IStartup;
@@ -78,7 +80,6 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";
     public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylar.tasklist.save.mode";
     public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
-//    public static final String REMINDER_CHECK = "org.eclipse.mylar.tasklist.reminder.check";
     
 	private ResourceBundle resourceBundle;
 	private static Date lastSave = null;
@@ -175,28 +176,33 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
         
     };
 
+    /**
+     * TODO: move into reminder mechanims
+     */
     private static ShellListener SHELL_LISTENER = new ShellListener() {
         
         public void shellClosed(ShellEvent arg0) {
-//        	getDefault().saveState();
+        	// ignore
         }  
         
         /**
          * bug 1002249: too slow to save state here
          */
         public void shellDeactivated(ShellEvent arg0) { 
-        	// 
+        	// ignore
         }
         
         public void shellActivated(ShellEvent arg0) { 
-        	getDefault().checkTaskListSave();
+//        	getDefault().checkTaskListSave();
         	getDefault().checkReminders();
         }
         
-        public void shellDeiconified(ShellEvent arg0) { }
+        public void shellDeiconified(ShellEvent arg0) { 
+        	// ingore
+        }
         
         public void shellIconified(ShellEvent arg0) { 
-//        	getDefault().saveState();
+        	// ignore
         }
     };
     
@@ -240,6 +246,11 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().syncExec(new Runnable() {
             public void run() {
             	Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+            	Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						getDefault().saveTaskListAndContexts();
+					}            		
+            	});
                 MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
             	
             	taskListManager.readTaskList();
@@ -317,7 +328,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	/**
 	 * TODO: make private
 	 */
-    public void saveState() {
+    public void saveTaskListAndContexts() {
         taskListManager.saveTaskList();
         for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
             MylarPlugin.getContextManager().saveContext(task.getHandle(), task.getPath());
@@ -326,20 +337,20 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
     } 
     
-    private void checkTaskListSave() {
-    	if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
-			lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
-		} else {
-			lastSave = new Date();
-			getPrefs().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
-		}
-    	Date currentTime = new Date();        	
-    	if (currentTime.getTime() > lastSave.getTime() + TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
-    		taskListManager.saveTaskList();
-    		lastSave = new Date();
-			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
-    	}
-    }
+//    private void checkTaskListSave() {
+//    	if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
+//			lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
+//		} else {
+//			lastSave = new Date();
+//			getPrefs().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+//		}
+//    	Date currentTime = new Date();        	
+//    	if (currentTime.getTime() > lastSave.getTime() + TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
+//    		taskListManager.saveTaskList();
+//    		lastSave = new Date();
+//			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+//    	}
+//    }
 
     private void checkReminders() {
 //    	if (getPrefs().getBoolean(REMINDER_CHECK)) {

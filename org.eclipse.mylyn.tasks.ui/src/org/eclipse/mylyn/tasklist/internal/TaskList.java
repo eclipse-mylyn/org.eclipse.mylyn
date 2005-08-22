@@ -37,7 +37,7 @@ public class TaskList implements Serializable {
     public void addRootTask(ITask task) {
     	rootTasks.add(task);
     	if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
     }
     
@@ -48,7 +48,7 @@ public class TaskList implements Serializable {
     public void addCategory(AbstractCategory cat) {
     	categories.add(cat);
     	if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
     }
     
@@ -79,7 +79,7 @@ public class TaskList implements Serializable {
 			}
     	}
     	if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
     
@@ -99,7 +99,7 @@ public class TaskList implements Serializable {
     public void deleteCategory(AbstractCategory category) {
     	categories.remove(category);
     	if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveState();
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
     }
     

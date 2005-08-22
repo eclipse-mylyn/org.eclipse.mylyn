@@ -17,11 +17,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -36,7 +34,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	private Button reportInternal = null;
 	private Button reportExternal = null;
 	private Button multipleActive = null;
-	private Combo saveCombo = null;
+//	private Combo saveCombo = null;
 	
 	public MylarTaskPreferencePage() {
 		super();
@@ -96,11 +94,11 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		GridLayout gl = new GridLayout(2, false);
 		container.setLayout(gl);		
 		
-		Label l = new Label(container, SWT.NONE);
-		l.setText("Automatically save task list every:");
-		saveCombo = new Combo(container, SWT.DROP_DOWN);
-		saveCombo.setItems(MylarTasklistPlugin.getDefault().getSaveOptions());
-		saveCombo.setText(getPreferenceStore().getString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
+//		Label l = new Label(container, SWT.NONE);
+//		l.setText("Automatically save task list every:");
+//		saveCombo = new Combo(container, SWT.DROP_DOWN);
+//		saveCombo.setItems(MylarTasklistPlugin.getDefault().getSaveOptions());
+//		saveCombo.setText(getPreferenceStore().getString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
 	}
 	@Override
 	public boolean performOk() {
@@ -109,7 +107,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS, multipleActive.getSelection());
-		getPreferenceStore().setValue(MylarTasklistPlugin.SAVE_TASKLIST_MODE, saveCombo.getText());
+//		getPreferenceStore().setValue(MylarTasklistPlugin.SAVE_TASKLIST_MODE, saveCombo.getText());
 		return true;
 	}
 	@Override
@@ -119,7 +117,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
 		multipleActive.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS));
-		saveCombo.setText(getPreferenceStore().getString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
+//		saveCombo.setText(getPreferenceStore().getString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
 		return true;
 	}
 	
@@ -130,6 +128,6 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
 		multipleActive.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS));
-		saveCombo.setText(getPreferenceStore().getDefaultString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
+//		saveCombo.setText(getPreferenceStore().getDefaultString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
 	}
 }
