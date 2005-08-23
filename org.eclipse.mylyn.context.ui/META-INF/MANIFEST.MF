@@ -7,16 +7,8 @@ Bundle-Activator: org.eclipse.mylar.ui.MylarUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.ui.views,
- org.eclipse.ui.forms,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.jface.text,
- org.eclipse.ui.editors,
- org.eclipse.search,
- org.eclipse.ui.console,
  org.eclipse.mylar.core,
- org.eclipse.mylar.tasklist,
- org.eclipse.core.resources
+ org.eclipse.mylar.tasklist
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: mylar-ui.jar

@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.ide.ui.actions;
 
-
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ui.InterestFilter;

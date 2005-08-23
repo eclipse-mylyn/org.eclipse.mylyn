@@ -63,7 +63,7 @@ public interface IMylarStructureBridge {
 //    public abstract String getHandleForMarker(ProblemMarker marker);
     
     /**
-     * TODO Should this really be here??
+     * TODO remove coupling to projects
      * 
      * @return The IProject that contains the object, or null if there is no project
      */

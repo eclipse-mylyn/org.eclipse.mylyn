@@ -34,7 +34,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
-
 /**
  * @author Mik Kersten
  */

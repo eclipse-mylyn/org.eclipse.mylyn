@@ -13,7 +13,6 @@
   */
 package org.eclipse.mylar.ide.ui;
 
-
 import java.util.List;
 
 import org.eclipse.mylar.core.IMylarContext;
@@ -24,7 +23,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
-
 
 /**
  * @author Mik Kersten

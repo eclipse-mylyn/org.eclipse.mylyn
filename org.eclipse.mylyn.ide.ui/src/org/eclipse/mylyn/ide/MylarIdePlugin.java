@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylar.ide;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -14,9 +24,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The main plugin class to be used in the desktop.
- */
 public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
 
     private ResourceStructureBridge genericResourceBridge;
@@ -24,12 +31,8 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();    
     
-	//The shared instance.
 	private static MylarIdePlugin plugin;
 	
-	/**
-	 * The constructor.
-	 */
 	public MylarIdePlugin() {
 		plugin = this;
 	}
@@ -48,26 +51,17 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
         });
     }
 	
-	/**
-	 * This method is called upon plug-in activation
-	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
         genericResourceBridge = new ResourceStructureBridge(MylarPlugin.getDefault().isPredictedInterestEnabled());
         MylarPlugin.getDefault().setDefaultBridge(genericResourceBridge);
 	}
 
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
 	}
 
-	/**
-	 * Returns the shared instance.
-	 */
 	public static MylarIdePlugin getDefault() {
 		return plugin;
 	}

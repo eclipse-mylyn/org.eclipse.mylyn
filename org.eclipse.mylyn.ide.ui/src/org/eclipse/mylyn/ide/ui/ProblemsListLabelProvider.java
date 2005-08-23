@@ -22,7 +22,6 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
-
 /**
  * @author Mik Kersten
  */

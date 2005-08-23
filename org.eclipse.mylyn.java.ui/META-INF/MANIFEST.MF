@@ -16,15 +16,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.search,
  org.eclipse.ui.views,
  org.eclipse.ui.ide,
- org.eclipse.ui.console,
  org.eclipse.mylar.core,
  org.eclipse.mylar.ui,
  org.eclipse.jdt.debug.ui,
- org.eclipse.debug.ui,
- org.eclipse.mylar.bugzilla.core,
- org.eclipse.mylar.bugzilla.ui,
  org.eclipse.jdt.ui,
- org.eclipse.team.cvs.ui
+ org.eclipse.team.cvs.ui,
+ org.eclipse.debug.ui
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Export-Package: org.eclipse.mylar.java,

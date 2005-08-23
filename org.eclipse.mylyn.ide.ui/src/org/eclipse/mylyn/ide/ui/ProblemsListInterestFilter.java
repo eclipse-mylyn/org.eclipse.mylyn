@@ -19,7 +19,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
-
 /**
  * @author Mik Kersten
  */

@@ -25,7 +25,6 @@ import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * @author Mik Kersten
  */

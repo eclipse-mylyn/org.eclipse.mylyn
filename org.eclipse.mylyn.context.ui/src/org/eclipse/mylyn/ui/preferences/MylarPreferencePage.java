@@ -16,8 +16,6 @@ package org.eclipse.mylar.ui.preferences;
 
 import java.util.Arrays;
 
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
@@ -50,10 +48,8 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -91,11 +87,6 @@ public class MylarPreferencePage extends PreferencePage implements
 	private Button darkened;
 	private Button standard;
 
-	
-	// Button for browsing file system
-	private Button browse;
-	private Text taskDirectoryText;
-		
 	// Set the table column property names
 	private static final String LABEL_COLUMN = "Label";
 	private static final String COLOR_COLUMN = "Color";
@@ -123,15 +114,19 @@ public class MylarPreferencePage extends PreferencePage implements
 		GridLayout layout = new GridLayout(1, false);
 		layout.verticalSpacing = 4;
 		entryTable.setLayout (layout);
-		
-		createTaskDirectoryControl(entryTable);		         
+			         
 		createTable(entryTable);
 		createTableViewer();
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		tableViewer.setLabelProvider(new HighlighterLabelProvider());
 		tableViewer.setInput(MylarUiPlugin.getDefault().getHighlighterList());
-		createGammaSettingControl(entryTable);				        		
+		createGammaSettingControl(entryTable);	
+		
+		lightened.setEnabled(false);
+		darkened.setEnabled(false);
+		standard.setEnabled(false);
+		
 		return entryTable;
 	}
 
@@ -192,9 +187,6 @@ public class MylarPreferencePage extends PreferencePage implements
 		// update gamma setting
 		MylarUiPlugin.getDefault().updateGammaSetting(gm);
 		
-		String taskDirectory = taskDirectoryText.getText();
-		taskDirectory = taskDirectory.replaceAll("\\\\", "/");		
-		getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
 		return true;
 	}
 
@@ -240,9 +232,6 @@ public class MylarPreferencePage extends PreferencePage implements
 		darkened.setSelection(getPreferenceStore().getDefaultBoolean(
 				MylarUiPlugin.GAMMA_SETTING_DARKENED));
 //		
-		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-		String taskDirectory = rootPath.toString() + "/" +MylarPlugin.MYLAR_DIR_NAME;
-		taskDirectoryText.setText(taskDirectory);
 		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();
 		return;
 	}
@@ -645,24 +634,6 @@ public class MylarPreferencePage extends PreferencePage implements
 		tableViewer.setCellEditors(editors);
 		tableViewer.setCellModifier(new HighlighterCellModifier());
 	}
-	
-	private Button createButton(Composite parent, String text) {
-		Button button = new Button(parent, SWT.TRAIL);
-		button.setText(text);
-		button.setVisible(true);
-		button.addSelectionListener(this);
-		return button;
-	}
-
-	private Label createLabel(Composite parent, String text) {
-		Label label = new Label(parent, SWT.LEFT);
-		label.setText(text);
-		GridData data = new GridData();
-		data.horizontalSpan = 2;
-		data.horizontalAlignment = GridData.BEGINNING;
-		label.setLayoutData(data);
-		return label;
-	}
 
 	private void createAddRemoveButtons(Composite parent) {
 
@@ -720,44 +691,4 @@ public class MylarPreferencePage extends PreferencePage implements
 		darkened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_DARKENED));		
 		return;
 	}
-	
-	private void createTaskDirectoryControl(Composite parent) {
-		Group taskDirComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);
-		taskDirComposite.setText("Task Directory");
-		taskDirComposite.setLayout(new GridLayout(2, false));
-		taskDirComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		String taskDirectory = getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
-		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
-		taskDirectoryText = new Text(taskDirComposite, SWT.BORDER);		
-		taskDirectoryText.setText(taskDirectory);
-		taskDirectoryText.setEditable(false);
-		taskDirectoryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		
-		browse = createButton(taskDirComposite, "Browse...");
-		if (!MylarPlugin.getContextManager().hasActiveContext()) {
-			browse.setEnabled(true);
-		} else {
-			browse.setEnabled(false);
-			createLabel(taskDirComposite, "NOTE: you have an task active, deactivate it before changing directories");
-		}
-		browse.addSelectionListener(new SelectionAdapter() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setText("Folder Selection");
-				dialog.setMessage("Specify the folder for tasks");
-				String dir = taskDirectoryText.getText();
-				dir = dir.replaceAll("\\\\", "/");
-				dialog.setFilterPath(dir);
-
-				dir = dialog.open();
-				if(dir == null || dir.equals(""))
-					return;
-				taskDirectoryText.setText(dir);
-			}
-		});        
-
-	}	
 }

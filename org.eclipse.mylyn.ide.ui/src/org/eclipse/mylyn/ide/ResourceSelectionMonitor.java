@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractSelectionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
-
 /**
  * @author Mik Kersten
  */
