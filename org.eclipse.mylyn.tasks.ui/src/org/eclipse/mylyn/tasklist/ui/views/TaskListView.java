@@ -789,13 +789,10 @@ public class TaskListView extends ViewPart {
 				Tree t = getViewer().getTree();
 				TreeItem item = t.getItem(new Point(e.x, e.y));
 				if(e.button == 3 && item != null){
-					TreeItem[] items = {item};
-					t.setSelection(items);
+					getViewer().setSelection(new StructuredSelection(item.getData()));
 				} else if(item == null){
-					TreeItem[] items = {};
-					t.setSelection(items);
+					getViewer().setSelection(new StructuredSelection());
 				}
-				
 			}
 
 			public void mouseUp(MouseEvent e) {}
@@ -1015,7 +1012,7 @@ public class TaskListView extends ViewPart {
     		}
     	}
     }
-    
+
     private void updateActionEnablement(Action action, ITaskListElement element){
     
 		if(element instanceof Task){
