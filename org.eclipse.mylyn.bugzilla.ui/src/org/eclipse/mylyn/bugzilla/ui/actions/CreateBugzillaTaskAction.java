@@ -72,7 +72,7 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 //		        return;
 //			}
 	
-	    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true);				
+	    ITask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true, true);				
 	    Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
     	
 	    ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(newTask);

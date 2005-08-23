@@ -25,8 +25,9 @@ public class PlanningGameSorter extends ViewerSorter {
 	 */
 	public final static int DESCRIPTION = 1;
 	public final static int PRIORITY = 2;
-	public final static int DATE = 3;
-	public final static int DURATION = 4;
+	public final static int CREATION_DATE = 3;
+	public final static int COMPLETED_DATE = 4;
+	public final static int DURATION = 5;
 
 	// Criteria that the instance uses 
 	private int criteria;
@@ -52,8 +53,10 @@ public class PlanningGameSorter extends ViewerSorter {
 				return compareDescription(t1, t2);
 			case PRIORITY:
 				return comparePriority(t1, t2);
-			case DATE:
-				return compareDate(t1, t2);
+			case CREATION_DATE:
+				return compareCreationDate(t1, t2);
+			case COMPLETED_DATE:
+				return compareCompletedDate(t1, t2);
 			case DURATION:
 				return compareDuration(t1, t2);
 			default:
@@ -69,8 +72,12 @@ public class PlanningGameSorter extends ViewerSorter {
 		return task1.getPriority().compareTo(task2.getPriority());
 	}
 	
-	private int compareDate(ITask task1, ITask task2) {
+	private int compareCompletedDate(ITask task1, ITask task2) {
 		return task2.getEndDate().compareTo(task1.getEndDate());
+	}
+
+	private int compareCreationDate(ITask task1, ITask task2) {
+		return task2.getCreationDate().compareTo(task1.getCreationDate());
 	}
 	
 	private int compareDuration(ITask task1, ITask task2) {

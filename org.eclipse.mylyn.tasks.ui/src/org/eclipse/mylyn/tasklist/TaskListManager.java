@@ -15,7 +15,9 @@ package org.eclipse.mylar.tasklist;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.internal.RelativePathUtil;
@@ -28,6 +30,12 @@ import org.eclipse.mylar.tasklist.internal.TaskList;
  */
 public class TaskListManager {
     
+	public static final int INACTIVITY_TIME = 5; // in minutes 
+
+	public static final long INACTIVITY_TIME_MILLIS = INACTIVITY_TIME * 1000 * 60;
+	
+	private Map<ITask, TaskActiveTimerListener> listenerMap = new HashMap<ITask, TaskActiveTimerListener>(); 
+	
     private File taskListFile;
     private TaskList taskList = new TaskList();
     private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
@@ -95,7 +103,10 @@ public class TaskListManager {
     }
     
     public void deleteTask(ITask task) {
-        taskList.setActive(task, false);        
+        TaskActiveTimerListener activeListener = listenerMap.remove(task);
+        if(activeListener != null)
+        	activeListener.stopTimer();
+        taskList.setActive(task, false, false);        
         taskList.deleteTask(task);
     }
     
@@ -118,12 +129,17 @@ public class TaskListManager {
     		}
     		taskList.clearActiveTasks();
     	}
-		taskList.setActive(task, true);
+		taskList.setActive(task, true, false);
+		TaskActiveTimerListener activeListener = new TaskActiveTimerListener(task); 
+		listenerMap.put(task, activeListener);
 		for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
 	}
 
     public void deactivateTask(ITask task) {
-		taskList.setActive(task, false);
+    	TaskActiveTimerListener activeListener = listenerMap.remove(task);
+    	if(activeListener != null)
+        	activeListener.stopTimer();
+    	taskList.setActive(task, false, false);
 		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
 	}
     

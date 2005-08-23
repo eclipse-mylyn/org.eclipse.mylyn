@@ -154,7 +154,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		} else {
 			throw new MylarExternalizerException("Description not stored for bug report");
 		}
-		BugzillaTask task = new BugzillaTask(handle, label, true);		
+		BugzillaTask task = new BugzillaTask(handle, label, true, false);		
 		readTaskInfo(task, tlist, element, category, parent);
 				
 		task.setState(BugTaskState.FREE);

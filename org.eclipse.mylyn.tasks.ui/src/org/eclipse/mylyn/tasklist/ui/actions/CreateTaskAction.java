@@ -46,7 +46,7 @@ public class CreateTaskAction extends Action {
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			Task newTask = new Task(MylarTasklistPlugin.getTaskListManager()
-					.genUniqueTaskId(), dialog.getTaskname());
+					.genUniqueTaskId(), dialog.getTaskname(), true);
 			newTask.setPriority(dialog.getSelectedPriority());
 			newTask.setReminderDate(dialog.getReminderDate());
 			

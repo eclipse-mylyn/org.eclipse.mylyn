@@ -118,7 +118,7 @@ public class BugzillaHit implements ITaskListElement {
 
 	public ITask getOrCreateCorrespondingTask() {
 		if(task == null){
-			task = new BugzillaTask(this);
+			task = new BugzillaTask(this, true);
 			BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry(task);
 		} 
 		return task;

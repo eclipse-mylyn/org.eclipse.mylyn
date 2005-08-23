@@ -112,22 +112,22 @@ public class BugzillaTask extends Task {
 		}
 	};
 
-	public BugzillaTask(String id, String label) {
-		super(id, label);
+	public BugzillaTask(String id, String label, boolean newTask) {
+		super(id, label, newTask);
 		isDirty = false;
 		scheduleDownloadReport();
 	}    
     
-	public BugzillaTask(String id, String label, boolean noDownload) {
-        super(id, label);
+	public BugzillaTask(String id, String label, boolean noDownload, boolean newTask) {
+        super(id, label, newTask);
         isDirty = false;
         if (!noDownload) {
             scheduleDownloadReport();
         } 
     }
 	
-    public BugzillaTask(BugzillaHit hit) {
-    	this(hit.getHandle(), hit.getDescription(false));
+    public BugzillaTask(BugzillaHit hit, boolean newTask) {
+    	this(hit.getHandle(), hit.getDescription(false), newTask);
     	setPriority(hit.getPriority());
 	}
 

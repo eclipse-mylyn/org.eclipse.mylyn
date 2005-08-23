@@ -468,6 +468,27 @@ public class TaskSummaryEditor extends EditorPart {
         text2.setLayoutData(td);
         text2.setEditable(false);
         text2.setEnabled(false);
+        
+        l = toolkit.createLabel(container, "Task Creation Date:");		
+		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		Text creationDate = toolkit.createText(container,task.getCreationDateString(), SWT.BORDER);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+        td.grabHorizontal = true;
+        td.colspan = 2;
+        creationDate.setLayoutData(td);
+        creationDate.setEditable(false);
+        creationDate.setEnabled(false);
+        
+        l = toolkit.createLabel(container, "Task Completed Date:");		
+		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		Text endDate = toolkit.createText(container,task.getEndDateString(), SWT.BORDER);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+        td.grabHorizontal = true;
+        td.colspan = 2;
+        endDate.setLayoutData(td);
+        endDate.setEditable(false);
+        endDate.setEnabled(false);
+        
         //text2.setForeground(background);
 	}
 	

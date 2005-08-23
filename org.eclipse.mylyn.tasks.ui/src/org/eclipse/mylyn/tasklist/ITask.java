@@ -44,7 +44,7 @@ public interface ITask extends Serializable, ITaskListElement {
 
     public abstract boolean isActive();
     
-    public abstract void setActive(boolean active);
+    public abstract void setActive(boolean active, boolean isStalled);
     
     public abstract boolean isCompleted();
     
@@ -103,6 +103,14 @@ public interface ITask extends Serializable, ITaskListElement {
 	public abstract void setEndDate(String date);
 	
 	public abstract String getEndDateString();
+	
+	
+	public abstract Date getCreationDate();
+	
+	public abstract void setCreationDate(String date);
+	
+	public abstract String getCreationDateString();
+	
 	
 	public abstract void setReminderDate(Date date);
 	

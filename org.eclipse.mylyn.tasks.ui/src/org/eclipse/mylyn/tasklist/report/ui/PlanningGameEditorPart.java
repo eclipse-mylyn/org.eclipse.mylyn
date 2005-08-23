@@ -42,7 +42,7 @@ public class PlanningGameEditorPart extends EditorPart {
 	private PlanningGameEditorInput editorInput = null;
 	private Table table;
 	private TableViewer tableViewer;
-	private String[] columnNames = new String[] { "Description", "Priority", "Date Completed", "Duration"};
+	private String[] columnNames = new String[] { "Description", "Priority", "Date Created", "Date Completed", "Duration"};
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -143,6 +143,7 @@ public class PlanningGameEditorPart extends EditorPart {
 				
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
+		table.setEnabled(true);
 
 		TableColumn column = new TableColumn(table, SWT.LEFT, 0);
 		column.setText(columnNames[0]);
@@ -167,17 +168,27 @@ public class PlanningGameEditorPart extends EditorPart {
 
 		column = new TableColumn(table, SWT.LEFT, 2);
 		column.setText(columnNames[2]);
-		column.setWidth(200);
+		column.setWidth(170);
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new PlanningGameSorter(PlanningGameSorter.DATE));
+				tableViewer.setSorter(new PlanningGameSorter(PlanningGameSorter.CREATION_DATE));
+			}
+		});
+		
+		column = new TableColumn(table, SWT.LEFT, 3);
+		column.setText(columnNames[3]);
+		column.setWidth(170);
+		column.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableViewer.setSorter(new PlanningGameSorter(PlanningGameSorter.COMPLETED_DATE));
 			}
 		});
 
 		
-		column = new TableColumn(table, SWT.LEFT, 3);
-		column.setText(columnNames[3]);
+		column = new TableColumn(table, SWT.LEFT, 4);
+		column.setText(columnNames[4]);
 		column.setWidth(100);
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -49,6 +49,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public static final String TRUE = "true";
 	public static final String NAME = "Name";
 	public static final String END_DATE = "EndDate";
+	public static final String CREATION_DATE = "CreationDate";
 	public static final String REMINDER_DATE = "ReminderDate";
 	public static final String REMINDED = "Reminded";
 
@@ -108,7 +109,8 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, task.getElapsedTime());
 		node.setAttribute(ESTIMATED, ""+task.getEstimateTime());
-		node.setAttribute(END_DATE, task.getEndDateString());		
+		node.setAttribute(END_DATE, task.getEndDateString());
+		node.setAttribute(CREATION_DATE, task.getCreationDateString());
 		node.setAttribute(REMINDER_DATE, task.getReminderDateString(false));
 		if (task.hasBeenReminded()) {
 			node.setAttribute(REMINDED, TRUE);
@@ -178,7 +180,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		} else {
 			label = "Description was corrupted in stored tasklist";
 		}
-		Task task = new Task(handle, label);		
+		Task task = new Task(handle, label, false);		
 		readTaskInfo(task, tlist, element, category, parent);
 		return task;
 	}
@@ -196,11 +198,11 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		}		
 		
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
-			task.setActive(true);
-			tlist.setActive(task, true);
+			task.setActive(true, false);
+			tlist.setActive(task, true, false);
 			new TaskActivateAction(task).run();
 		} else {
-			task.setActive(false);
+			task.setActive(false, false);
 		}			
 		if (element.hasAttribute(NOTES)) {
 			task.setNotes(element.getAttribute(NOTES));
@@ -234,6 +236,11 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		} else {
 			task.setEndDate("");
 		}	
+		if (element.hasAttribute(CREATION_DATE)) {
+			task.setCreationDate(element.getAttribute(CREATION_DATE));
+		} else {
+			task.setCreationDate("");
+		}
 		if (element.hasAttribute(REMINDER_DATE)) {
 			task.setReminderDate(element.getAttribute(REMINDER_DATE));
 		} else {

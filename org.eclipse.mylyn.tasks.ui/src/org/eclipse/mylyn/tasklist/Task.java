@@ -62,6 +62,7 @@ public class Task implements ITask {
     
     private Date timeActivated = null;
     private Date endDate = null;
+    private Date creationDate = null;
     private Date reminderDate=null;
     private long elapsed;
     /**
@@ -88,11 +89,14 @@ public class Task implements ITask {
     		this.path = path;
     	}
     }
-    
-    public Task(String handle, String label) {
+        
+    public Task(String handle, String label, boolean newTask) {
         this.handle = handle;
         this.label = label;     
         this.path = handle;
+        if(newTask){
+        	creationDate = new Date();
+        }
     } 
     
     public String getHandle() {
@@ -118,24 +122,27 @@ public class Task implements ITask {
     public Object getAdapter(Class adapter) {
         return null;
     }    
-
+    
     /**
      * Package visible in order to prevent sets that don't update the index.
      */
-    public void setActive(boolean active) {
+    public void setActive(boolean active, boolean isStalled) {
     	this.active = active;
-    	if (active) {
+    	if (active && !isStalled) {
     		timeActivated = new Date();
     	} else {    		
-    		calculateElapsedTime();
+    		calculateElapsedTime(isStalled);
     		timeActivated = null;
     	}    	        
     }
     
-    private void calculateElapsedTime() {
+    private void calculateElapsedTime(boolean isStalled) {
     	if (timeActivated == null) 
     		return;
     	elapsed += new Date().getTime() - timeActivated.getTime();
+    	if(isStalled){
+    		elapsed-=TaskListManager.INACTIVITY_TIME_MILLIS;
+    	}
     	if (isActive()) {
     		timeActivated = new Date();
     	} else {
@@ -275,14 +282,14 @@ public class Task implements ITask {
 
 	public String getElapsedTime() {
 		if (isActive()) {
-			calculateElapsedTime();			
+			calculateElapsedTime(false);			
 		}
 		return "" + elapsed;
 	}
 
 	public long getElapsedTimeLong() {
 		if (isActive()) {
-			calculateElapsedTime();			
+			calculateElapsedTime(false);			
 		}
 		return elapsed; 
 	}
@@ -360,7 +367,7 @@ public class Task implements ITask {
 	}
 	
 	public String getElapsedTimeForDisplay() {
-		calculateElapsedTime();
+		calculateElapsedTime(false);
 		return DateUtil.getFormattedDuration(elapsed);		
 	}
 	
@@ -500,5 +507,35 @@ public class Task implements ITask {
 		} else {
 			return "";
 		}	
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	
+	public void setCreationDate(String date) {
+		if (!date.equals("")) {
+			String formatString = "yyyy-MM-dd HH:mm:ss.S z";
+			SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+			try {
+				creationDate = format.parse(date);
+			} catch (ParseException e) {
+				MylarPlugin.log(e, "Could not parse end date");
+				creationDate = null;
+			}
+		} else {
+			
+		}
+	}
+
+	
+	public String getCreationDateString() {
+		if (creationDate != null) {
+			String f = "yyyy-MM-dd HH:mm:ss.S z";
+	    	SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+	    	return format.format(creationDate);
+		} else {
+			return "";
+		}
 	}
 }

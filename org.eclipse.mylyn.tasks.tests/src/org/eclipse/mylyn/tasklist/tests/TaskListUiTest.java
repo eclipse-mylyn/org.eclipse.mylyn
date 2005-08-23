@@ -60,35 +60,35 @@ public class TaskListUiTest extends TestCase {
 //        tlist = manager.getTaskList();        
         cat1 = new TaskCategory("First Category");
         
-        cat1task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
+        cat1task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
         cat1task1.setPriority("P1");
         cat1task1.setCompleted(true);
         cat1task1.setCategory(cat1);
 		cat1.addTask(cat1task1);
 		
-		cat1task1sub1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1");
+		cat1task1sub1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1", true);
 		cat1task1sub1.setPriority("P1");
 		cat1task1sub1.setCompleted(true);
 		cat1task1sub1.setParent(cat1task1);
         cat1task1.addSubTask(cat1task1sub1);
 		
-		cat1task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2");
+		cat1task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);
 		cat1task2.setPriority("P2");
 		cat1task2.setCategory(cat1);
 		cat1.addTask(cat1task2);		
 		
-		cat1task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3");
+		cat1task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3", true);
 		cat1task3.setPriority("P3");
 		cat1task3.setCompleted(true);
 		cat1task3.setCategory(cat1);
 		cat1.addTask(cat1task3);
 		
-		cat1task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4");
+		cat1task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4", true);
 		cat1task4.setPriority("P4");
 		cat1task4.setCategory(cat1);
 		cat1.addTask(cat1task4);
 		
-		cat1task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5");
+		cat1task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5", true);
 		cat1task5.setPriority("P5");
 		cat1task5.setCompleted(true);
 		cat1task5.setCategory(cat1);
@@ -99,34 +99,34 @@ public class TaskListUiTest extends TestCase {
 		
 		cat2 = new TaskCategory("Second Category");
         
-        cat2task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
+        cat2task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
         cat2task1.setPriority("P1");
         cat2task1.setCategory(cat2);
 		cat2.addTask(cat2task1);
 		
-		cat2task1sub1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1");
+		cat2task1sub1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub task 1", true);
 		cat2task1sub1.setPriority("P1");
 		cat2task1sub1.setParent(cat2task1);
 		cat2task1.addSubTask(cat2task1sub1);
 		
-		cat2task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2");
+		cat2task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);
 		cat2task2.setPriority("P2");
 		cat2task2.setCompleted(true);
 		cat2task2.setCategory(cat2);
 		cat2.addTask(cat2task2);
 		
-		cat2task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3");
+		cat2task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3", true);
 		cat2task3.setPriority("P3");
 		cat2task3.setCategory(cat2);
 		cat2.addTask(cat2task3);
 		
-		cat2task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4");
+		cat2task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4", true);
 		cat2task4.setPriority("P4");
 		cat2task4.setCompleted(true);
 		cat2task4.setCategory(cat2);
 		cat2.addTask(cat2task4);
 		
-		cat2task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5");
+		cat2task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5", true);
 		cat2task5.setPriority("P5");
 		cat2task5.setCategory(cat2);
 		cat2.addTask(cat2task5);

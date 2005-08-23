@@ -36,8 +36,10 @@ public class PlanningGameLabelProvider extends LabelProvider implements
 			case 1:
 				return task.getPriority();
 			case 2:
-				return task.getEndDateString();
+				return task.getCreationDateString();
 			case 3:
+				return task.getEndDateString();
+			case 4:
 				return task.getElapsedTimeForDisplay();
 			}	
 		}		

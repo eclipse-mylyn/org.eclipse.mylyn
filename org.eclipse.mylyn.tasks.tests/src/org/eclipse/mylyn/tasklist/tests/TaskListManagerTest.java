@@ -37,29 +37,29 @@ public class TaskListManagerTest extends TestCase {
         TaskListManager manager = new TaskListManager(file);
         
 //        TaskList tlist = manager.getTaskList();
-        Task task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1");
+        Task task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
         manager.addRootTask(task1);
-        Task sub1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub 1");
+        Task sub1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub 1", true);
         task1.addSubTask(sub1);    
         sub1.setParent(task1);
-        Task task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2");
+        Task task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);
         manager.addRootTask(task2);
 
         TaskCategory cat1 = new TaskCategory("Category 1");
         manager.addCategory(cat1);
-        Task task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3");
+        Task task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3", true);
         cat1.addTask(task3);
-        Task sub2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub 2");
+        Task sub2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub 2", true);
         task3.addSubTask(sub2);
         sub2.setParent(task3);
-        Task task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4");
+        Task task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4", true);
         cat1.addTask(task4);
         
         TaskCategory cat2 = new TaskCategory("Category 2");
         manager.addCategory(cat2);
-        Task task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5");
+        Task task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5", true);
         cat2.addTask(task5);
-        Task task6 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 6");
+        Task task6 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 6", true);
         cat2.addTask(task6);    
         
         BugzillaTask report = new BugzillaTask("123", "label 123", true);

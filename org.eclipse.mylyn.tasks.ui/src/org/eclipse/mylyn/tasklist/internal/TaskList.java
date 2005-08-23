@@ -59,13 +59,14 @@ public class TaskList implements Serializable {
     	categories.add(cat);
     }
     
-    public void setActive(ITask task, boolean active) {
-        task.setActive(active);
+    public void setActive(ITask task, boolean active, boolean isStalled) {
+        task.setActive(active, isStalled);
         if (active && !activeTasks.contains(task)) {
             activeTasks.add(task);
         } else if(!active){
             activeTasks.remove(task);
         }
+
     }
         
     public void deleteTask(ITask task) {
@@ -191,7 +192,7 @@ public class TaskList implements Serializable {
 	}	
 	public void clearActiveTasks() {
 		for (ITask task : activeTasks) {
-			task.setActive(false);
+			task.setActive(false, false);
 		}
 		activeTasks.clear();
 	}

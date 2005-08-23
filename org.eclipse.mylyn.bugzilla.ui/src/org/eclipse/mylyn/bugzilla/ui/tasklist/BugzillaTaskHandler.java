@@ -151,7 +151,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
         		bh.getAssociatedTask().setCategory(cat);
         		cat.addTask(bh.getAssociatedTask());
         	} else {
-        		BugzillaTask bt = new BugzillaTask(bh);
+        		BugzillaTask bt = new BugzillaTask(bh, true);
         		bh.setAssociatedTask(bt);
         		bt.setCategory(cat);
         		cat.addTask(bt);

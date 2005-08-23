@@ -58,6 +58,7 @@ public class TaskReportGenerator {
 				}
 			}
 		}
+		// TODO need to support handling things in the bugzilla registry
 		for (ITasksCollector collector : collectors) {
 			tasks.addAll(collector.getTasks());
 		}
