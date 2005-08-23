@@ -162,7 +162,7 @@ public class BugzillaHit implements ITaskListElement {
 		if(hasCorrespondingActivatableTask()) {
 			return task.getToolTipText();
 		} else {
-			return null;
+			return getDescription(true);
 		}
 	}
 }
