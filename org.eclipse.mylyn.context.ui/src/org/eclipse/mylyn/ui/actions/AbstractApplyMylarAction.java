@@ -69,7 +69,14 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
      * This operation is expensive.
      */
     public void update() {
-    	valueChanged(initAction, MylarPlugin.getDefault().getPreferenceStore().getBoolean(prefId), false);
+    	update(MylarPlugin.getDefault().getPreferenceStore().getBoolean(prefId));
+    }
+
+    /**
+     * This operation is expensive.
+     */
+    public void update(boolean on) {
+    	valueChanged(initAction, on, false);
     }
     
     protected void valueChanged(IAction action, final boolean on, boolean store) {
@@ -147,6 +154,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	public void setViewerIsSelfManaged(boolean isSelfManaged) {
 		this.isSelfManaged = isSelfManaged;
+	}
+
+	public String getPrefId() {
+		return prefId;
 	}
 }
 
