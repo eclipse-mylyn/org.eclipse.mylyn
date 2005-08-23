@@ -10,16 +10,25 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.ui.preferences;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -27,15 +36,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * @author Ken Sueda and Mik Kersten
  */
 public class MylarTaskPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+		IWorkbenchPreferencePage, SelectionListener {
 	
-//	private Button closeEditors = null;
+	private Text taskDirectoryText;
+	private Button browse;
+	
 	private Button reportEditor = null;
 	private Button reportInternal = null;
 	private Button reportExternal = null;
 	private Button multipleActive = null;
-//	private Combo saveCombo = null;
-	
+
 	public MylarTaskPreferencePage() {
 		super();
 		setPreferenceStore(MylarTasklistPlugin.getPrefs());	
@@ -46,9 +56,9 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout (layout);
 		
-		createUserbooleanControl(container);
+		createTaskDirectoryControl(container);	
 		createBugzillaReportOption(container);
-		createSaveTaskListSection(container);
+		createUserbooleanControl(container);
 		return container;
 	}
 
@@ -86,28 +96,18 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
 		reportExternal.setEnabled(false);
 	}
-	
-	private void createSaveTaskListSection(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		container.setLayoutData(gridData);
-		GridLayout gl = new GridLayout(2, false);
-		container.setLayout(gl);		
-		
-//		Label l = new Label(container, SWT.NONE);
-//		l.setText("Automatically save task list every:");
-//		saveCombo = new Combo(container, SWT.DROP_DOWN);
-//		saveCombo.setItems(MylarTasklistPlugin.getDefault().getSaveOptions());
-//		saveCombo.setText(getPreferenceStore().getString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
-	}
+
 	@Override
 	public boolean performOk() {
-//		getPreferenceStore().setValue(MylarPlugin.TASKLIST_EDITORS_CLOSE, closeEditors.getSelection());		
+		String taskDirectory = taskDirectoryText.getText();
+		taskDirectory = taskDirectory.replaceAll("\\\\", "/");		
+		getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
+		
+		
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS, multipleActive.getSelection());
-//		getPreferenceStore().setValue(MylarTasklistPlugin.SAVE_TASKLIST_MODE, saveCombo.getText());
 		return true;
 	}
 	@Override
@@ -123,11 +123,85 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 	
 	public void performDefaults() {
 		super.performDefaults();
-//		closeEditors.setSelection(getPreferenceStore().getDefaultBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));		
+
+		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		String taskDirectory = rootPath.toString() + "/" +MylarPlugin.MYLAR_DIR_NAME;
+		taskDirectoryText.setText(taskDirectory);
+				
 		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
 		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
 		multipleActive.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS));
-//		saveCombo.setText(getPreferenceStore().getDefaultString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
+	}
+
+	private Label createLabel(Composite parent, String text) {
+		Label label = new Label(parent, SWT.LEFT);
+		label.setText(text);
+		GridData data = new GridData();
+		data.horizontalSpan = 2;
+		data.horizontalAlignment = GridData.BEGINNING;
+		label.setLayoutData(data);
+		return label;
+	}
+	
+	private void createTaskDirectoryControl(Composite parent) {
+		Group taskDirComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);
+		taskDirComposite.setText("Task Directory");
+		taskDirComposite.setLayout(new GridLayout(2, false));
+		taskDirComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		String taskDirectory = getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
+		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
+		taskDirectoryText = new Text(taskDirComposite, SWT.BORDER);		
+		taskDirectoryText.setText(taskDirectory);
+		taskDirectoryText.setEditable(false);
+		taskDirectoryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		
+		browse = createButton(taskDirComposite, "Browse...");
+		if (!MylarPlugin.getContextManager().hasActiveContext()) {
+			browse.setEnabled(true);
+		} else {
+			browse.setEnabled(false);
+			createLabel(taskDirComposite, "NOTE: you have an task active, deactivate it before changing directories");
+		}
+		browse.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dialog = new DirectoryDialog(getShell());
+				dialog.setText("Folder Selection");
+				dialog.setMessage("Specify the folder for tasks");
+				String dir = taskDirectoryText.getText();
+				dir = dir.replaceAll("\\\\", "/");
+				dialog.setFilterPath(dir);
+
+				dir = dialog.open();
+				if(dir == null || dir.equals(""))
+					return;
+				taskDirectoryText.setText(dir);
+			}
+		});        
+	}	
+	
+	private Button createButton(Composite parent, String text) {
+		Button button = new Button(parent, SWT.TRAIL);
+		button.setText(text);
+		button.setVisible(true);
+		button.addSelectionListener(this);
+		return button;
+	}
+	
+	/**
+	 * Handle selection of an item in the menu.
+	 */
+	public void widgetDefaultSelected(SelectionEvent se) {
+		widgetSelected(se);
+	}
+
+	/**
+	 * Handle selection of an item in the menu.
+	 */
+	public void widgetSelected(SelectionEvent se) {
+		// don't care when the widget is selected
 	}
 }

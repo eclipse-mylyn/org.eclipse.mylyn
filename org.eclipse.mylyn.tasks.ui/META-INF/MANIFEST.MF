@@ -8,16 +8,10 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.ui.views,
  org.eclipse.ui.forms,
- org.eclipse.ui.ide,
- org.eclipse.osgi.util,
- org.eclipse.osgi.services,
- org.eclipse.search,
  org.eclipse.jdt.ui,
  org.eclipse.pde.ui,
- org.eclipse.mylar.core,
- org.eclipse.jdt.core
+ org.eclipse.mylar.core
 Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Bundle-ClassPath: mylar-tasklist.jar
