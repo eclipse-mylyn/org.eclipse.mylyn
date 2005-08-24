@@ -14,14 +14,19 @@
 package org.eclipse.mylar.java.tests;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
@@ -35,8 +40,10 @@ import org.eclipse.mylar.core.internal.ScalingFactors;
 import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
+import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
 
@@ -48,30 +55,18 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
     private MylarContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     
-    private TestProject project;
-    private IPackageFragment pkg;
-    private IType typeFoo;
-//  XXX never used
-//    private IType typeBar;
-//    private IType typeBaz;
-//    private StructuredSelection selectionFoo;
-//    private StructuredSelection selectionBar;
-//    private StructuredSelection selectionBaz;
+    private TestProject project1;
+    private IPackageFragment p1;
+    private IType type1;
     private String taskId = "123";
     private MylarContext taskscape;
     private ScalingFactors scaling = new ScalingFactors();
     
     @Override
     protected void setUp() throws Exception {
-        project = new TestProject(this.getClass().getName());
-        pkg = project.createPackage("pkg1");
-        typeFoo = project.createType(pkg, "Foo.java", "public class Foo { }" );
-//      XXX never used
-//        typeBar = project.createType(pkg, "Bar.java", "public class Bar { }" );
-//        typeBaz = project.createType(pkg, "Baz.java", "public class Baz { }" );
-//        selectionFoo = new StructuredSelection(typeFoo);
-//        selectionBar = new StructuredSelection(typeBar);
-//        selectionBaz = new StructuredSelection(typeBaz);
+        project1 = new TestProject("project1");
+        p1 = project1.createPackage("p1");
+        type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
         taskscape = new MylarContext("1", scaling);
         manager.contextActivated(taskscape);
         assertNotNull(MylarJavaPlugin.getDefault());
@@ -79,7 +74,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
     
     @Override
     protected void tearDown() throws Exception {
-        project.dispose();
+        project1.dispose();
         manager.contextDeleted(taskId, taskId);
     }
     
@@ -96,7 +91,6 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         public void landmarkRemoved(IMylarContextNode element) { 
             numDeletions++;
         } 
-       
         public void modelUpdated() { 
         	// don't care about this event
         }
@@ -129,9 +123,48 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
     	assertFalse(node.getDegreeOfInterest().isPredicted());
     }
 
+    public void testErrorInterest() throws CoreException, InterruptedException, InvocationTargetException {
+    	assertNotNull(MylarJavaPlugin.getDefault());
+    	IViewPart problemsPart = JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
+    	assertNotNull(problemsPart);
+    	
+        IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
+        IPackageFragment p2 = project1.createPackage("p2");
+        
+        IType type2 = project1.createType(p2, "Type2.java", "public class Type2 { }" );
+        IMethod m2 = type2.createMethod("void m2() { new p1.Type1().m1(); }", null, true, null);
+                
+        assertTrue(m1.exists());
+        assertEquals(1, type1.getMethods().length);
+        
+        monitor.selectionChanged(part, new StructuredSelection(m1));
+        IMylarContextNode m1Node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
+        assertTrue(m1Node.getDegreeOfInterest().isInteresting()); 
+        
+        // delete method to cause error
+        m1.delete(true, null);
+        assertEquals(0, type1.getMethods().length);
+        project1.build();
+
+        IMarker[] markers = type2.getResource().findMarkers(
+                IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
+                false, IResource.DEPTH_INFINITE);
+        assertEquals(1, markers.length);
+        
+        String resourceHandle = new JavaStructureBridge().getHandleIdentifier(m2.getCompilationUnit());
+        assertTrue(MylarPlugin.getContextManager().getNode(resourceHandle).getDegreeOfInterest().isInteresting());
+
+        // put it back
+        type1.createMethod("public void m1() { }", null, true, null); 
+        project1.build();
+        assertFalse(MylarPlugin.getContextManager().getNode(resourceHandle).getDegreeOfInterest().isInteresting());
+
+    }
+    
     public void testParentInterestAfterDecay() throws JavaModelException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);
+        IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
         
@@ -153,13 +186,8 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
     
     public void testIncremenOfParentDoi() throws JavaModelException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);
+        IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
         StructuredSelection sm1 = new StructuredSelection(m1);
-        
-//        XXX never used
-//        IMethod m2 = typeFoo.createMethod("void m2() { }", null, true, null);
-//        StructuredSelection sm2 = new StructuredSelection(m2);
-        
         monitor.selectionChanged(part, sm1);
         
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
@@ -186,7 +214,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         manager.addListener(listener);
         
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);     
+        IMethod m1 = type1.createMethod("void m1() { }", null, true, null);     
         
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
@@ -214,7 +242,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
     	InterestManipulationAction action = new InterestManipulationAction();
     	
     	IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IMethod m1 = typeFoo.createMethod("void m1() { }", null, true, null);     
+        IMethod m1 = type1.createMethod("void m1() { }", null, true, null);     
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());

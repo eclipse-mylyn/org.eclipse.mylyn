@@ -74,7 +74,7 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                     try {
                         IMarker[] markers = resource.findMarkers(
                                 IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
-                                false, IResource.DEPTH_INFINITE);
+                                true, IResource.DEPTH_INFINITE);
                         IJavaElement element = (IJavaElement)resource.getAdapter(IJavaElement.class);
                         boolean hasError = false; 
                         for (int j = 0; j < markers.length; j++) {

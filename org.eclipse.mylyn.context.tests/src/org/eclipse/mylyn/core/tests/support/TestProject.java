@@ -14,6 +14,7 @@
 package org.eclipse.mylar.core.tests.support;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -21,9 +22,11 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
@@ -41,6 +44,9 @@ import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.TypeNameRequestor;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * From Erich Gamma's "Contributing to Eclipse" book.
@@ -70,6 +76,22 @@ public class TestProject {
     public IJavaProject getJavaProject() { 	
         return javaProject;
     }
+
+        
+	public void build() throws CoreException, InvocationTargetException, InterruptedException {
+		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+			protected void execute(IProgressMonitor monitor)
+					throws CoreException {
+				project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+			};
+		};
+
+		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+		service.run(true, true, op);
+//		BuildAction buildAction = new BuildAction(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), 
+//      		  IncrementalProjectBuilder.FULL_BUILD);
+//        buildAction.run();
+	}
     
     public IPackageFragment createPackage(String name)
     	throws CoreException {
@@ -99,7 +121,6 @@ public class TestProject {
         return binFolder;
     }
     
-
     private void setJavaNature() throws CoreException { 
         IProjectDescription description= project.getDescription(); 
         description.setNatureIds(new String[] { JavaCore.NATURE_ID });

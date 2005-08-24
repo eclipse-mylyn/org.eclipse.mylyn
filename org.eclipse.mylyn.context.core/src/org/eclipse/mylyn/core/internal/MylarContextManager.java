@@ -81,12 +81,12 @@ public class MylarContextManager {
         if (numInterestingErrors > scalingFactors.getMaxNumInterestingErrors() 
             || activeContext.getContextMap().isEmpty()) return;
         InteractionEvent errorEvent = new InteractionEvent(
-                InteractionEvent.Kind.PREDICTION, 
+                InteractionEvent.Kind.PROPAGATION, 
                 kind, handle, 
                 SOURCE_ID_MODEL_ERROR,
                 scalingFactors.getErrorInterest());
         handleInteractionEvent(errorEvent, true);
-        numInterestingErrors++;
+        numInterestingErrors++; 
     }
 
     /**
