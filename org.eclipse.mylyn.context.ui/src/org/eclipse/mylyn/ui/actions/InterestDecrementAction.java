@@ -13,7 +13,6 @@
   */
 package org.eclipse.mylar.ui.actions;
 
-
 /**
  * @author Mik Kersten
  */

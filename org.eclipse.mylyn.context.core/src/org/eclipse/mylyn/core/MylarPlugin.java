@@ -12,6 +12,8 @@ package org.eclipse.mylar.core;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +40,11 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarPlugin extends AbstractUIPlugin {
     	
-    private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
+    private static final String ERROR_MESSAGE = "Please report the following error by following the link at:\n"
+    	+ "https://eclipse.org/mylar\n\n"
+    	+ "For details on this error please open the PDE Runtime -> Error Log view"; 
+
+	private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
         
     private IMylarStructureBridge defaultBridge = null;
     
@@ -209,11 +215,18 @@ public class MylarPlugin extends AbstractUIPlugin {
         buffer.append(status.toString());
         if (status.getException() != null) {
         	buffer.append(", exception: ");
-        	buffer.append(status.getException().getStackTrace()[0]);
+        	buffer.append(printStrackTrace(status.getException()));
+//        	buffer.append(status.getException().getStackTrace()[0]);
         }
-     
+        
         MylarPlugin.getDefault().getLog().log(status);
         if (getDefault().logStream != null) getDefault().logStream.println(buffer.toString());
+    }
+    
+    private static String printStrackTrace(Throwable t) {
+    	StringWriter writer = new StringWriter();
+    	t.printStackTrace(new PrintWriter(writer));
+    	return writer.toString();
     }
 
     public static void log(String message, Object source) {
@@ -234,23 +247,25 @@ public class MylarPlugin extends AbstractUIPlugin {
          */
     public static void fail(Throwable throwable, String message, boolean informUser) {
         if (message == null) message = "no message";
- 
+        message += "\n";
+//        message += printStrackTrace(throwable);
+//        final String messageToUser = message + "\n" + printStrackTrace(throwable);
+        
         final Status status= new Status(
                 Status.ERROR,
                 MylarPlugin.IDENTIFIER, 
                 IStatus.OK,
                 message,
                 throwable);
-
         log(status);
         
         if (informUser) {
           Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-              public void run() {
+              public void run() { 
                   ErrorDialog.openError(
                           Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
                           "Mylar error",
-                          "Please report the following error",
+                          ERROR_MESSAGE,
                           status);
               }
           });
