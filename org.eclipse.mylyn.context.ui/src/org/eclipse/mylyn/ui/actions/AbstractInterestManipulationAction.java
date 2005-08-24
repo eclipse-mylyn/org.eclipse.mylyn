@@ -39,7 +39,6 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     }
     
     public void init(IViewPart view) {
-    	System.err.println(">>>> " + view);
     	this.view = view;
     }
 
@@ -58,6 +57,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
         	        if (node != null) manipulateInterestForNode(node, increment);
     			}
     		}
+    	} else {
+    		IMylarContextNode node = MylarPlugin.getContextManager().getActiveNode();
+    		if (node != null) manipulateInterestForNode(node, increment);
     	}
     }
     
@@ -79,7 +81,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
         }
         if (changeValue != 0) {
             InteractionEvent interactionEvent = new InteractionEvent(
-                    InteractionEvent.Kind.MANIPULATION, 
+                    InteractionEvent.Kind.MANIPULATION,  
                     node.getStructureKind(), 
                     node.getElementHandle(), 
                     SOURCE_ID,

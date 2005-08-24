@@ -13,6 +13,7 @@
   */
 package org.eclipse.mylar.ui.actions;
 
+
 /**
  * @author Mik Kersten
  */
@@ -23,4 +24,5 @@ public class InterestDecrementAction extends AbstractInterestManipulationAction 
 		return false;
 	}
 }
+
 

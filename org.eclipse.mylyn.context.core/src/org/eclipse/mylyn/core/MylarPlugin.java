@@ -31,6 +31,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -212,11 +213,15 @@ public class MylarPlugin extends AbstractUIPlugin {
         buffer.append(", "); 
         buffer.append(DateUtil.getFormattedTime());
         buffer.append("] ");
-        buffer.append(status.toString());
+//        buffer.append(status.toString() + ", ");
+        
+        if (WorkbenchPlugin.getDefault() != null) {
+        	buffer.append(" version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
+        }
+        
         if (status.getException() != null) {
-        	buffer.append(", exception: ");
+        	buffer.append("exception: ");
         	buffer.append(printStrackTrace(status.getException()));
-//        	buffer.append(status.getException().getStackTrace()[0]);
         }
         
         MylarPlugin.getDefault().getLog().log(status);
