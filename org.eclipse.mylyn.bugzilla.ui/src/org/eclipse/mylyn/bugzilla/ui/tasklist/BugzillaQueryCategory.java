@@ -84,7 +84,9 @@ public class BugzillaQueryCategory implements IQuery {
 
 	public String getDescription(boolean label) {
 		if (hits.size() > 0 || !label) {
-			if(isMaxReached && label){
+			if(!hasBeenRefreshed){
+				return description + " <needs refresh>";	
+			}else if(isMaxReached && label){
 				return description + " <first "+ maxHits +" hits>";
 			} else {
 				return description;
@@ -111,7 +113,7 @@ public class BugzillaQueryCategory implements IQuery {
 		return hits;
 	}
 	
-	public void addHit(BugzillaHit hit) {
+	public void addHit(IQueryHit hit) {
 		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(hit.getHandle());
 		hit.setAssociatedTask(task);
 		hits.add(hit);

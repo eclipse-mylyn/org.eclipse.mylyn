@@ -159,7 +159,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 					if (task instanceof BugzillaTask && !task.isCompleted()) {
 						if(BugzillaTask.getLastRefreshTimeInMinutes(((BugzillaTask)task).getLastRefresh()) > 2){
 							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
-						} else System.out.println("skipped " + task.getHandle());
+						}
 //						((BugzillaTask) task).refresh();
 					}
 				}

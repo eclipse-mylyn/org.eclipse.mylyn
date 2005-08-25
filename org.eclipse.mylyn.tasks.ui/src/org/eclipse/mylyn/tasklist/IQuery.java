@@ -13,4 +13,6 @@ public interface IQuery extends ITaskListElement{
 	public int getMaxHits();
 	
 	public void setMaxHits(int maxHits);
+	
+	public void addHit(IQueryHit hit);
 }

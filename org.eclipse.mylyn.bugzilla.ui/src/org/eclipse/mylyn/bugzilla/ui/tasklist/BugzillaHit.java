@@ -45,7 +45,12 @@ public class BugzillaHit implements IQueryHit {
 		return task;
 	}
 	
-	public void setAssociatedTask(BugzillaTask task){
+	public void setAssociatedTask(ITask task){
+		if(task instanceof BugzillaTask)
+			setAssociatedTask((BugzillaTask)task);
+	}
+	
+	private void setAssociatedTask(BugzillaTask task){
 		this.task = task;
 	}
 	
@@ -137,7 +142,7 @@ public class BugzillaHit implements IQueryHit {
 	}
 
 	public Color getForeground() {
-        if ((task != null && task.isCompleted()) || status.startsWith("RESO")){
+        if ((task != null && task.isCompleted()) || isCompleted()){
         	return GRAY_VERY_LIGHT;
         } else {
         	return null;

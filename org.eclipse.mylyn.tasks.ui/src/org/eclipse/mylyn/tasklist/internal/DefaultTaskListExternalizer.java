@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.Task;
@@ -32,6 +33,7 @@ import org.w3c.dom.NodeList;
 public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 
 	public static final String TAG_QUERY = "Query";
+	public static final String TAG_QUERY_HIT = "QueryHit";
 	public static final String MAX_HITS = "MaxHits";
 	public static final String QUERY_STRING = "QueryString";
 	
@@ -298,6 +300,17 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		node.setAttribute(NAME, query.getDescription(false));
 		node.setAttribute(MAX_HITS, query.getMaxHits()+"");
 		node.setAttribute(QUERY_STRING, query.getQueryString());
+		for(IQueryHit hit: query.getChildren()){
+			try {
+				Element element = null;
+				for (ITaskListExternalizer externalizer : externalizers) {
+					if (externalizer.canCreateElementFor(hit)) element = externalizer.createQueryHitElement(hit, doc, node);
+				}
+				if (element == null) createQueryHitElement(hit, doc, node);
+			} catch (Exception e) {
+				MylarPlugin.log(e, e.getMessage());
+			}
+		}
 		parent.appendChild(node);
 		return node;
 	}
@@ -313,5 +326,35 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 
 	public String getQueryTagNameForElement(IQuery query) {
 		return "";
+	}
+
+	public String getQueryHitTagName() {
+		return TAG_QUERY_HIT;
+	}
+
+	public boolean canCreateElementFor(IQueryHit queryHit) {
+		return true;
+	}
+
+	public Element createQueryHitElement(IQueryHit queryHit, Document doc, Element parent) {
+		Element node = doc.createElement(getQueryHitTagName());
+		node.setAttribute(NAME, queryHit.getDescription(false));
+		node.setAttribute(HANDLE, queryHit.getHandle());
+		node.setAttribute(PRIORITY, queryHit.getPriority());
+		if (queryHit.isCompleted()) {
+			node.setAttribute(COMPLETE, TRUE);
+		} else {
+			node.setAttribute(COMPLETE, FALSE);
+		}
+		parent.appendChild(node);
+		return null;
+	}
+
+	public boolean canReadQueryHit(Node node) {
+		return false;
+	}
+
+	public void readQueryHit(Node node, TaskList tlist, IQuery query) throws MylarExternalizerException {
+		// doesn't know how to read a query hit		
 	}
 }
