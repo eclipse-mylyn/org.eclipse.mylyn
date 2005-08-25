@@ -38,6 +38,7 @@ import org.w3c.dom.NodeList;
  */
 public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 
+	public static final String BUGZILLA_ARCHIVE_LABEL = "Archived Reports <automatic>";
 	private static final String BUGZILLA = "Bugzilla";
 	private static final String LAST_DATE = "LastDate";
 	private static final String DIRTY = "Dirty";
@@ -112,7 +113,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 	public void readRegistry(Node node, TaskList taskList)  throws MylarExternalizerException {
 		boolean hasCaughtException = false;
 		NodeList list = node.getChildNodes();
-		TaskCategory cat = new TaskCategory("Bugzilla Archive");
+		TaskCategory cat = new TaskCategory(BUGZILLA_ARCHIVE_LABEL);
 		cat.setIsArchive(true);
 		taskList.internalAddCategory(cat);
 		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().setTaskRegistyCategory(cat);

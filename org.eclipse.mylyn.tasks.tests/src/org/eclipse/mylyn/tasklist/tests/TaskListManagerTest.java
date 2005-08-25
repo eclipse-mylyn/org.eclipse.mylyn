@@ -19,6 +19,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
@@ -85,9 +86,8 @@ public class TaskListManagerTest extends TestCase {
     	assertTrue(readList.get(1).getDescription(true).equals("task 2"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
     	
-    	
     	List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
-    	assertTrue(readCats.get(0).getDescription(true).equals("Bugzilla Archive"));
+    	assertTrue(readCats.get(0).getDescription(true).equals(BugzillaTaskExternalizer.BUGZILLA_ARCHIVE_LABEL));
     	
     	readList = readCats.get(1).getChildren();
     	assertTrue(readList.get(0).getDescription(true).equals("task 3"));
