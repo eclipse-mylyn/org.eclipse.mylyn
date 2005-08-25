@@ -58,6 +58,12 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     public boolean acceptResultElement(Object element){
     	return true;
     }
+        
+    public void contextActivated(IMylarContext taskscape) { 
+    	if (enabled) { 
+    		MylarPlugin.getContextManager().updateSearchKindEnabled(this, degreeOfSeparation);
+    	}
+    }
     
     public void landmarkAdded(IMylarContextNode node) { 
         if (enabled) findRelated(node, degreeOfSeparation);
@@ -67,10 +73,6 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
 //        MylarPlugin.getTaskscapeManager().removeEdge(element, id);
     }
      
-    /** 
-     * TODO: plug this stuff into the persistent context properly
-     * @param sourceNode TODO
-     */
     protected void incrementInterest(IMylarContextNode node, String elementKind, String elementHandle, int degreeOfSeparation) {
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 //    	((DegreeOfInterest)targetNode.getDegreeOfInterest()).addEvent(
@@ -118,10 +120,6 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     }
     
     public void presentationSettingsChanged(UpdateKind kind) { 
-    	// we don't care about this event
-    }
-    
-    public void contextActivated(IMylarContext taskscape) { 
     	// we don't care about this event
     }
 

@@ -379,18 +379,22 @@ public class MylarContextManager {
     	}
     }
 
-    public void updateSearchKindEnabled(List<AbstractRelationshipProvider> providers, int degreeOfSeparation) {
-    	for(AbstractRelationshipProvider provider: providers){
-	        MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
-	        if (degreeOfSeparation <= 0) {
-	        	provider.setEnabled(false);
-	        	provider.setDegreeOfSeparation(degreeOfSeparation);
-	        } else {
-	        	provider.setEnabled(true);
-	        	provider.setDegreeOfSeparation(degreeOfSeparation);
-	            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
-	        }
+    public void updateSearchKindEnabled(AbstractRelationshipProvider provider, int degreeOfSeparation) {
+        MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
+        if (degreeOfSeparation <= 0) {
+        	provider.setEnabled(false);
+        	provider.setDegreeOfSeparation(degreeOfSeparation);
+        } else {
+        	provider.setEnabled(true);
+        	provider.setDegreeOfSeparation(degreeOfSeparation);
+            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
         }
+    }
+    
+    public void updateSearchKindEnabled(List<AbstractRelationshipProvider> providers, int degreeOfSeparation) {
+    	for(AbstractRelationshipProvider provider: providers) {
+    		updateSearchKindEnabled(provider, degreeOfSeparation);
+    	}
     }
 
     public static ScalingFactors getScalingFactors() {
