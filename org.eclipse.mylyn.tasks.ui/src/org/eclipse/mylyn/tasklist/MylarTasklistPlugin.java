@@ -266,8 +266,6 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     
     @Override
 	public void stop(BundleContext context) throws Exception {
-		createFileBackup();
-
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
@@ -460,7 +458,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		taskListListeners.add(taskListListner);
 	}
 		
-	private void createFileBackup() {
+	public void createFileBackup() {
 		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";

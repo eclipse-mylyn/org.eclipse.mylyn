@@ -743,6 +743,8 @@ public class TaskListView extends ViewPart {
 		IMemento m = sorter.createChild("sorter");
 		m.putInteger("sortIndex", sortIndex);
 		
+		MylarTasklistPlugin.getDefault().createFileBackup();
+		
 		if (MylarTasklistPlugin.getDefault() != null) {
 			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
