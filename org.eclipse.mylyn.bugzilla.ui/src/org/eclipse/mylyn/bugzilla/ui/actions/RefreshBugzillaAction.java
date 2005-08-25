@@ -11,10 +11,10 @@
 
 package org.eclipse.mylar.bugzilla.ui.actions;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -34,9 +34,6 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Ken Sueda and Mik Kersten
@@ -76,33 +73,52 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 		}
 		if (obj instanceof BugzillaQueryCategory) {
 			final BugzillaQueryCategory cat = (BugzillaQueryCategory) obj;
-			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-				protected void execute(IProgressMonitor monitor) throws CoreException {
-					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+//			final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//				protected void execute(IProgressMonitor monitor) throws CoreException {
+//					
+//				}
+//			};
+			
+			Job j = new Job("Bugzilla Category Refresh"){
+
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					cat.refreshBugs();
+					for(IQueryHit hit: cat.getChildren()){
+						if(hit.hasCorrespondingActivatableTask() && hit instanceof BugzillaHit){
+							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)hit.getOrCreateCorrespondingTask());
+						}
+					}
+					Display.getDefault().asyncExec(new Runnable(){
 						public void run() {
-							cat.refreshBugs();
-							for(IQueryHit hit: cat.getChildren()){
-								if(hit.hasCorrespondingActivatableTask() && hit instanceof BugzillaHit){
-									BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)hit.getOrCreateCorrespondingTask());
-								}
-							}
-						    if(TaskListView.getDefault() != null)
+							if(TaskListView.getDefault() != null)
 								TaskListView.getDefault().getViewer().refresh();
 						}
 					});
+//					try {
+//						op.run(monitor);
+//					} catch (InvocationTargetException e) {
+//						MylarPlugin.log(e, e.getMessage());
+//					} catch (InterruptedException e) {
+//						MylarPlugin.log(e, e.getMessage());
+//					}
+					return Status.OK_STATUS;
 				}
+				
 			};
-			// Use the progess service to execute the runnable
-			IProgressService service = PlatformUI.getWorkbench().getProgressService();
-			try {
-				service.run(true, false, op);
-			} catch (InvocationTargetException e) {
-				// Operation was canceled
-				MylarPlugin.log(e, e.getMessage());
-			} catch (InterruptedException e) {
-				// Handle the wrapped exception
-				MylarPlugin.log(e, e.getMessage());
-			}
+			
+			j.schedule();
+//			// Use the progess service to execute the runnable
+//			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//			try {
+//				service.run(true, false, op);
+//			} catch (InvocationTargetException e) {
+//				// Operation was canceled
+//				MylarPlugin.log(e, e.getMessage());
+//			} catch (InterruptedException e) {
+//				// Handle the wrapped exception
+//				MylarPlugin.log(e, e.getMessage());
+//			}
 		} else if (obj instanceof TaskCategory) {
 			TaskCategory cat = (TaskCategory) obj;
 			for (ITask task : cat.getChildren()) {
@@ -129,8 +145,12 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 				}
 			}
 		}
-	    if(TaskListView.getDefault() != null)
-			TaskListView.getDefault().getViewer().refresh();
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run() {
+				if(TaskListView.getDefault() != null)
+					TaskListView.getDefault().getViewer().refresh();
+			}
+		});
 	}
 
 	public void init(IViewPart view) {

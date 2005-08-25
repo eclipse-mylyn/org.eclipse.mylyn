@@ -84,7 +84,7 @@ public class BugzillaQueryCategory implements IQuery {
 
 	public String getDescription(boolean label) {
 		if (hits.size() > 0 || !label) {
-			if(!hasBeenRefreshed){
+			if(!hasBeenRefreshed && label){
 				return description + " <needs refresh>";	
 			}else if(isMaxReached && label){
 				return description + " <first "+ maxHits +" hits>";

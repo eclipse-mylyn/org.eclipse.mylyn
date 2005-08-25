@@ -11,11 +11,12 @@
 
 package org.eclipse.mylar.bugzilla.ui.actions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -35,9 +36,6 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -88,56 +86,71 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				}
 			}
 		}
-		if(TaskListView.getDefault() != null)
-			TaskListView.getDefault().getViewer().refresh();
+//		if(TaskListView.getDefault() != null)
+//			TaskListView.getDefault().getViewer().refresh();
 	}
 
 	private void runWithProgressBar() {
-		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor)
-					throws CoreException {
-
-				refreshTasksAndQueries();
-
-// XXX refactored active search
-				// clear the caches
-//				Set<String> cachedHandles = new HashSet<String>();
-//				cachedHandles.addAll(MylarTasklistPlugin.getDefault().getStructureBridge().getCachedHandles());
-//				cachedHandles.addAll(MylarTasklistPlugin.getReferenceProvider().getCachedHandles());
-//				MylarTasklistPlugin.getDefault().getStructureBridge().clearCache();
-//				MylarTasklistPlugin.getReferenceProvider().clearCachedReports();
-//				BugzillaStructureBridge bridge = MylarTasklistPlugin.getDefault().getStructureBridge();
-				
-//				monitor.beginTask("Downloading Bugs", cachedHandles.size());
-//				for (String key : cachedHandles) {
-//					try {
-//						String[] parts = key.split(";");
-//						final int id = Integer.parseInt(parts[1]);
-//						BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
-//						if (bug != null) {
-//							bridge.cache(key, bug);
-//						}							
-//					} catch (Exception e) {
-//					}
+//		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//			protected void execute(IProgressMonitor monitor)
+//					throws CoreException {
 //
-//					monitor.worked(1);
-//				}
-//				monitor.done();
-				if(TaskListView.getDefault() != null)
-					TaskListView.getDefault().getViewer().refresh();
-			}
-		};
+//				refreshTasksAndQueries();
+//
+//// XXX refactored active search
+//				// clear the caches
+////				Set<String> cachedHandles = new HashSet<String>();
+////				cachedHandles.addAll(MylarTasklistPlugin.getDefault().getStructureBridge().getCachedHandles());
+////				cachedHandles.addAll(MylarTasklistPlugin.getReferenceProvider().getCachedHandles());
+////				MylarTasklistPlugin.getDefault().getStructureBridge().clearCache();
+////				MylarTasklistPlugin.getReferenceProvider().clearCachedReports();
+////				BugzillaStructureBridge bridge = MylarTasklistPlugin.getDefault().getStructureBridge();
+//				
+////				monitor.beginTask("Downloading Bugs", cachedHandles.size());
+////				for (String key : cachedHandles) {
+////					try {
+////						String[] parts = key.split(";");
+////						final int id = Integer.parseInt(parts[1]);
+////						BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
+////						if (bug != null) {
+////							bridge.cache(key, bug);
+////						}							
+////					} catch (Exception e) {
+////					}
+////
+////					monitor.worked(1);
+////				}
+////				monitor.done();
+//			}
+//		};
 
-		// Use the progess service to execute the runnable
-		IProgressService service = PlatformUI.getWorkbench()
-				.getProgressService();
-		try {
-			service.run(true, false, op);
-		} catch (InvocationTargetException e) {
-			// Operation was canceled
-		} catch (InterruptedException e) {
-			// Handle the wrapped exception
-		}
+		Job j = new Job("Bugzilla Category Refresh"){
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+//				try {
+					refreshTasksAndQueries();
+//				} catch (InvocationTargetException e) {
+//					MylarPlugin.log(e, e.getMessage());
+//				} catch (InterruptedException e) {
+//					MylarPlugin.log(e, e.getMessage());
+//				}
+				return Status.OK_STATUS;
+			}
+			
+		};
+		
+		j.schedule();
+//		// Use the progess service to execute the runnable
+//		IProgressService service = PlatformUI.getWorkbench()
+//				.getProgressService();
+//		try {
+//			service.run(true, false, op);
+//		} catch (InvocationTargetException e) {
+//			// Operation was canceled
+//		} catch (InterruptedException e) {
+//			// Handle the wrapped exception
+//		}
 	}
 
 	private void refreshTasksAndQueries() {
@@ -179,27 +192,25 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				continue;
 			}
 				
-			final BugzillaQueryCategory bqc = (BugzillaQueryCategory) query;
-			PlatformUI.getWorkbench().getDisplay().syncExec(
-				new Runnable() {
-					public void run() {
-						bqc.refreshBugs();
-						for(IQueryHit hit: bqc.getChildren()){
-							if(hit.hasCorrespondingActivatableTask()){
-								BugzillaTask task = ((BugzillaTask)hit.getOrCreateCorrespondingTask());
-								if(!task.isCompleted()){
-									BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed(task);
+			BugzillaQueryCategory bqc = (BugzillaQueryCategory) query;
+			bqc.refreshBugs();
+			for(IQueryHit hit: bqc.getChildren()){
+				if(hit.hasCorrespondingActivatableTask()){
+					BugzillaTask task = ((BugzillaTask)hit.getOrCreateCorrespondingTask());
+					if(!task.isCompleted()){
+						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed(task);
 //									task.refresh();
-								}
-							}
-						}
-						if(TaskListView.getDefault() != null)
-							TaskListView.getDefault().getViewer().refresh();
 					}
-				});
+				}
+			}
 		}
-		if(TaskListView.getDefault() != null)
-			TaskListView.getDefault().getViewer().refresh();
+		
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run() {
+				if(TaskListView.getDefault() != null)
+					TaskListView.getDefault().getViewer().refresh();
+			}
+		});
 	}
 
 	public void init(IViewPart view) {
