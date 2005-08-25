@@ -14,6 +14,7 @@ package org.eclipse.mylar.bugzilla.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -21,6 +22,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
@@ -47,6 +49,12 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 	
 	@Override
 	public void run() {
+		
+		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		if(offline){
+			MessageDialog.openInformation(null, "Unable to create bug report", "Unable to create a new bug report since you are currently offline");
+			return;
+		}
 //        MylarPlugin.getDefault().actionObserved(this);
 		
 		NewBugWizard wizard= new NewBugWizard(true);
@@ -99,7 +107,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		        MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);
 		    }
 		    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
-		    newTask.openTaskInEditor();
+		    newTask.openTaskInEditor(false);
 		    
 		    if(!newTask.isBugDownloaded())
 		    	newTask.scheduleDownloadReport();

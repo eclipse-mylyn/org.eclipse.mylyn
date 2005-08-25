@@ -49,7 +49,17 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput
 		this.bugId = bugId;
 		
 		// get the bug from the server if it exists
-		bug = BugzillaRepository.getInstance().getCurrentBug(bugId);
+		bug = BugzillaRepository.getInstance().getBug(bugId);
+	}
+	
+	public ExistingBugEditorInput(int bugId, boolean offline) throws LoginException, IOException {
+		this.bugId = bugId;
+		
+		if(!offline){
+			bug = BugzillaRepository.getInstance().getBug(bugId);
+		} else {
+			bug = BugzillaRepository.getInstance().getCurrentBug(bugId);
+		}
 	}
 
 	/*

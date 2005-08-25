@@ -148,7 +148,7 @@ public class Task implements ITask {
         return active;
     }
     
-    public void openTaskInEditor() {
+    public void openTaskInEditor(boolean offline) {
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				openTaskEditor();

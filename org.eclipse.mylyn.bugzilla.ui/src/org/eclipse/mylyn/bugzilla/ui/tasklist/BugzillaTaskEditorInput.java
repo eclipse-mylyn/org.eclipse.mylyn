@@ -34,13 +34,16 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	private BugReport offlineBug;
 	
 	private BugzillaTask bugTask;
+	
+	private boolean offline;
 
-	public BugzillaTaskEditorInput(BugzillaTask bugTask) throws LoginException, IOException {
-        super(BugzillaTask.getBugId(bugTask.getHandle()));
+	public BugzillaTaskEditorInput(BugzillaTask bugTask, boolean offline) throws LoginException, IOException {
+        super(BugzillaTask.getBugId(bugTask.getHandle()), offline);
 		this.bugTask = bugTask;
 		offlineBug = bugTask.getBugReport();
 		bugId = BugzillaTask.getBugId(bugTask.getHandle());
 		bugTitle = "";
+		this.offline = offline;
 	}
 
 	protected void setBugTitle(String str) {
@@ -97,7 +100,10 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	 * Returns the offline bug for this input's Bugzilla task
 	 */
 	public BugReport getOfflineBug() {
-		return offlineBug;
+		if(offline)
+			return offlineBug;
+		else
+			return super.getBug();
 	}
 
 	public void setOfflineBug(BugReport offlineBug){

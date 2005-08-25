@@ -62,6 +62,13 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 	
 	@Override
 	public void run() {
+		
+		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		if(offline){
+			MessageDialog.openInformation(null, "Unable to refresh query", "Unable to refresh the query since you are currently offline");
+			return;
+		}
+		
 		Object obj = cat;
 		if(cat == null && TaskListView.getDefault() != null){
 			ISelection selection = TaskListView.getDefault().getViewer().getSelection();

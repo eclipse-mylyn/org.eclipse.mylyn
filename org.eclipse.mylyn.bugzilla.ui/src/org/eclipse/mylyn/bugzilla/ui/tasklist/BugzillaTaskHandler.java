@@ -95,12 +95,18 @@ public class BugzillaTaskHandler implements ITaskHandler {
 
 	public void itemOpened(ITaskListElement element) {
 
+		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		
 		if (element instanceof BugzillaTask) {
 			BugzillaTask t = (BugzillaTask) element;
 			MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
 			if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
-				t.openTaskInEditor();
+				t.openTaskInEditor(offline);
 			} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+				if(offline){
+					MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla task since you are currently offline");
+	    			return;
+	    		}
 				String title = "Bug #" + BugzillaTask.getBugId(t.getHandle());
 				BugzillaUITools.openUrl(title, title, t.getBugUrl());	    			
 			} else {
@@ -139,8 +145,12 @@ public class BugzillaTaskHandler implements ITaskHandler {
 	    	MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
 	    	if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
 	    		if(hit.hasCorrespondingActivatableTask()){
-		    		hit.getAssociatedTask().openTaskInEditor();
+		    		hit.getAssociatedTask().openTaskInEditor(offline);
 		    	} else {
+		    		if(offline){
+		    			MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla report since you are currently offline");
+		    			return;
+		    		}
 			    	BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaHit)element).getServerName(), ((BugzillaHit)element).getID(),-1);
 			    	List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
 			    	selectedBugs.add(open);
@@ -148,6 +158,10 @@ public class BugzillaTaskHandler implements ITaskHandler {
 					viewBugs.schedule();
 		    	}
     		} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+    			if(offline){
+    				MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla report since you are currently offline");
+	    			return;
+	    		}
     			String title = "Bug #" + BugzillaTask.getBugId(hit.getHandle());
     			BugzillaUITools.openUrl(title, title, hit.getBugUrl());  			
     		} else {
@@ -181,7 +195,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		try{
 			IEditorInput input = null;		
 			if (element instanceof BugzillaTask) {
-				input = new BugzillaTaskEditorInput((BugzillaTask)element);
+				input = new BugzillaTaskEditorInput((BugzillaTask)element, true);
 			}
 			IEditorPart editor = page.findEditor(input);
 	

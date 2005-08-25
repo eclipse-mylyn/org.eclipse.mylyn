@@ -24,6 +24,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
@@ -60,7 +61,11 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 
 	@Override
 	public void run() {
-				
+		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		if(offline){
+			MessageDialog.openInformation(null, "Unable to refresh query", "Unable to refresh the query since you are currently offline");
+			return;
+		}
 //		MylarPlugin.getDefault().actionObserved(this);
 		// TODO background?
 		// perform the update in an operation so that we get a progress monitor

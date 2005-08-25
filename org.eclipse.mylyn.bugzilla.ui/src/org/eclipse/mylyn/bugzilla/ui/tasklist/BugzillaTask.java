@@ -243,22 +243,22 @@ public class BugzillaTask extends Task {
 	}
 	
     @Override
-    public void openTaskInEditor(){
-        openTask(-1);
+    public void openTaskInEditor(boolean offline){
+        openTask(-1, offline);
     }
     
 	/**
 	 * Opens this task's bug report in an editor revealing the selected comment.
      * @param commentNumber The comment number to reveal
 	 */
-	public void openTask(int commentNumber) {
+	public void openTask(int commentNumber, boolean offline) {
 //		if (state != BugTaskState.FREE) {
 //			return;
 //		}
 //		
 //		state = BugTaskState.OPENING;
 //		notifyTaskDataChange();
-		OpenBugTaskJob job = new OpenBugTaskJob("Opening Bugzilla task in editor...", this);
+		OpenBugTaskJob job = new OpenBugTaskJob("Opening Bugzilla task in editor...", this, offline);
 		job.schedule();
 //		job.addJobChangeListener(new IJobChangeListener(){
 //
@@ -305,7 +305,7 @@ public class BugzillaTask extends Task {
 	 * We should be able to open the task at any point, meaning that if it isn't downloaded
 	 * attempt to get it from the server to open it
 	 */
-	protected void openTaskEditor(final BugzillaTaskEditorInput input) {
+	protected void openTaskEditor(final BugzillaTaskEditorInput input, final boolean offline) {
 	
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -315,7 +315,10 @@ public class BugzillaTask extends Task {
 						
 						try{
 							// if we can reach the server, get the latest for the bug
-							if(!isBugDownloaded()){
+							if(!isBugDownloaded() && offline){
+								MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla task since you are currently offline");
+								return;
+							}else if(!isBugDownloaded()) {
 								input.getBugTask().downloadReport();
 								input.setOfflineBug(input.getBugTask().getBugReport());
 							}
@@ -396,19 +399,21 @@ public class BugzillaTask extends Task {
 	private class OpenBugTaskJob extends Job {
 		
 		protected BugzillaTask bugTask;
+		private boolean offline;
 		
-		public OpenBugTaskJob(String name, BugzillaTask bugTask) {
+		public OpenBugTaskJob(String name, BugzillaTask bugTask, boolean offline) {
 			super(name);
 			this.bugTask = bugTask;
+			this.offline = offline;
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try{
-				final BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugTask);
+				final BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugTask, offline);
 //				state = BugTaskState.OPENING;
 //				notifyTaskDataChange();
-				openTaskEditor(input);
+				openTaskEditor(input, offline);
 				
 //				state = BugTaskState.FREE;
 //				notifyTaskDataChange();

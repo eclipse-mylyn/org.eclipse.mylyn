@@ -59,20 +59,22 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
         	} else {
         		queryCategory = new BugzillaCustomQuery(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
         	}
-        	
-            MylarTasklistPlugin.getTaskListManager().addQuery(queryCategory);
-            WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-            	protected void execute(IProgressMonitor monitor) throws CoreException {
-	            	queryCategory.refreshBugs();
-            	}
-            };
-            
-            IProgressService service = PlatformUI.getWorkbench().getProgressService();
-            try {
-            	service.run(true, true, op);
-            } catch (Exception e) {
-            	MylarPlugin.log(e, "There was a problem executing the query refresh");
-            }  
+    		MylarTasklistPlugin.getTaskListManager().addQuery(queryCategory);
+        	boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+    		if(!offline){
+	            WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+	            	protected void execute(IProgressMonitor monitor) throws CoreException {
+		            	queryCategory.refreshBugs();
+	            	}
+	            };
+	            
+	            IProgressService service = PlatformUI.getWorkbench().getProgressService();
+	            try {
+	            	service.run(true, true, op);
+	            } catch (Exception e) {
+	            	MylarPlugin.log(e, "There was a problem executing the query refresh");
+	            }  
+    		}
             if(TaskListView.getDefault() != null)
     			TaskListView.getDefault().getViewer().refresh();
     	}

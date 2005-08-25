@@ -50,7 +50,7 @@ public class OpenTaskEditorAction extends Action {
 	    		taskHandler.itemOpened(element);
 	    	} else{
 	    		if(element instanceof Task){
-	    			((Task)element).openTaskInEditor();	
+	    			((Task)element).openTaskInEditor(false);	
 	    		}
 	    	}
 	    }

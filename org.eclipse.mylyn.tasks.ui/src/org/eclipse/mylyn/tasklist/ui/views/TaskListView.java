@@ -81,6 +81,7 @@ import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylar.tasklist.ui.actions.WorkOfflineAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -131,6 +132,8 @@ public class TaskListView extends ViewPart {
     
     private GoIntoAction goIntoAction;
     private GoUpAction goBackAction;
+    
+    private WorkOfflineAction workOffline;
     
     private CopyDescriptionAction copyAction;
     private OpenTaskEditorAction openAction;
@@ -1048,6 +1051,8 @@ public class TaskListView extends ViewPart {
         manager.add(new Separator());
         manager.add(autoClose);
         autoClose.setEnabled(true);
+        manager.add(workOffline);
+        workOffline.setEnabled(true);
     }    
     
     void fillContextMenu(IMenuManager manager) {
@@ -1174,6 +1179,8 @@ public class TaskListView extends ViewPart {
     	
     	copyAction = new CopyDescriptionAction(this);
     	openAction = new OpenTaskEditorAction(this); 
+    	
+    	workOffline = new WorkOfflineAction();
     	
     	goIntoAction = new GoIntoAction(drillDownAdapter);
     	goBackAction = new GoUpAction(drillDownAdapter);
