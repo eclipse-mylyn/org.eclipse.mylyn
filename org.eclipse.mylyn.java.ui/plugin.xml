@@ -19,7 +19,7 @@
          point="org.eclipse.ui.startup">
    </extension>
   
-  <extension point="org.eclipse.ui.viewActions"> 
+   <extension point="org.eclipse.ui.viewActions"> 
 	<viewContribution 
 		id="org.eclipse.mylar.java.explorer.contribution" 
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
@@ -108,6 +108,15 @@
          <part id="org.eclipse.jdt.ui.TypesView"/>
     </actionSetPartAssociation>
   </extension>
+
+  <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="Java"
+         class="org.eclipse.mylar.java.ui.preferences.MylarJavaPreferencePage"
+         id="org.eclipse.mylar.java.ui.preferences"
+         category="org.eclipse.mylar.ui.preferences">
+      </page>  
+   </extension>
 
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension 

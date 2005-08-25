@@ -13,26 +13,35 @@ package org.eclipse.mylar.java.ui.actions;
 
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction {
+public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction implements IPropertyChangeListener {
 
 	public static ApplyMylarToPackageExplorerAction INSTANCE;
 	
 	public void init(IAction action) {
 		super.init(action);
-
 	}
 	
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
+		configureAction();
+	}
+	
+	@Override
+	public void update() {
+		super.update();
 	}
 	
 	@Override
@@ -54,5 +63,23 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	public static ApplyMylarToPackageExplorerAction getDefault() {
 		return INSTANCE;
 	}
-	
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE.equals(event.getProperty())) {
+			configureAction();
+		}
+	}
+
+	private void configureAction() {
+		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
+			MylarUiPlugin.getDefault().getUiUpdateManager().addManagedAction(this);
+		} else {
+			MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedAction(this);
+		}
+	}
+
+	public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {
+
+	}
 }
+

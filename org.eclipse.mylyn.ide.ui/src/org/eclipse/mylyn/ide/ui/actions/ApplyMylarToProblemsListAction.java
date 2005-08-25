@@ -14,6 +14,7 @@ package org.eclipse.mylar.ide.ui.actions;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -103,6 +104,11 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
                     (TableViewLabelProvider)viewer.getLabelProvider()));
             viewer.setSorter(new ProblemsListDoiSorter());
         }
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

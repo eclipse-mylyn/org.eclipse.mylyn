@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.ide.ui.actions;
 
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ui.InterestFilter;
@@ -47,5 +48,10 @@ public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 
 	public static ApplyMylarToNavigatorAction getDefault() {
 		return INSTANCE;
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }

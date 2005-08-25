@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.ui.actions;
 
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -32,7 +33,7 @@ import org.eclipse.ui.IViewPart;
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2 {
+public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2, IPropertyChangeListener {
 
     private static final String ACTION_LABEL = "Apply Mylar";
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";

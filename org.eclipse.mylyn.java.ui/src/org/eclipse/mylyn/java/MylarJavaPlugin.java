@@ -57,6 +57,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 
     public static final String PLUGIN_ID = "org.eclipse.mylar.java";
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
+    public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
     
 	public MylarJavaPlugin() {
 		super();
@@ -79,6 +80,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
             
             	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
             		ApplyMylarToPackageExplorerAction.getDefault().update();
+            		getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
             	}
             	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
             		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
@@ -106,6 +108,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 		}
 		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
 		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+		getPreferenceStore().setDefault(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
+		
 		savePluginPreferences();
 	}
 

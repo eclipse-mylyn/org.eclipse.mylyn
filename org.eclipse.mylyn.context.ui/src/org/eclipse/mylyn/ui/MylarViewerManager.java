@@ -23,6 +23,7 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.internal.BrowseFilteredListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.ui.IEditorPart;
@@ -34,7 +35,16 @@ import org.eclipse.ui.internal.Workbench;
 public class MylarViewerManager implements IMylarContextListener {
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
+	private List<AbstractApplyMylarAction> managedActions = new ArrayList<AbstractApplyMylarAction>();
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
+	
+	public void addManagedAction(AbstractApplyMylarAction action) {
+		managedActions.add(action);
+	}
+	
+	public void removeManagedAction(AbstractApplyMylarAction action) {
+		managedActions.remove(action);
+	}
 	
 	public void addManagedViewer(StructuredViewer viewer) {
 		managedViewers.add(viewer);
@@ -52,6 +62,7 @@ public class MylarViewerManager implements IMylarContextListener {
 	}
 	
 	public void contextActivated(IMylarContext taskscape) {
+		for (AbstractApplyMylarAction action : managedActions) action.update(true);
         IMylarContextNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
@@ -60,6 +71,7 @@ public class MylarViewerManager implements IMylarContextListener {
     }
 
     public void contextDeactivated(IMylarContext context) {
+    	for (AbstractApplyMylarAction action : managedActions) action.update(false);
         refreshViewers();
 //    	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
 //      if (confirmed) {

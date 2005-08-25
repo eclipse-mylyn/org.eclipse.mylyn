@@ -33,6 +33,7 @@ public class PackageExplorerManager implements IMylarContextListener {
 	    	if (MylarPlugin.getContextManager().hasActiveContext()
 	    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
 	        	&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
+	    		
 				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 				if (packageExplorer != null) { 
 					packageExplorer.getTreeViewer().expandAll();
@@ -43,6 +44,13 @@ public class PackageExplorerManager implements IMylarContextListener {
     	}
     }
 
+    public void contextDeactivated(IMylarContext taskscape) {
+		PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
+		if (packageExplorer != null) { 
+			packageExplorer.getTreeViewer().collapseAll();
+		}
+    }
+    
    public void interestChanged(List<IMylarContextNode> nodes) {
     	if (nodes.size() == 0) return;
     	IMylarContextNode lastNode = nodes.get(nodes.size()-1);
@@ -71,10 +79,6 @@ public class PackageExplorerManager implements IMylarContextListener {
 	    } catch (Throwable t) {
 			MylarPlugin.log(t, "Could not update package explorer");
 		}
-    }
-    
-    public void contextDeactivated(IMylarContext taskscape) {
-    	// ignore
     }
     
     public void revealInteresting() {

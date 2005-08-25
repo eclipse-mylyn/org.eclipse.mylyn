@@ -13,6 +13,7 @@ package org.eclipse.mylar.java.ui.actions;
 
 import java.lang.reflect.Method;
 
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -142,5 +143,10 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
     }
 	
 	public void init(IWorkbenchWindow window) {}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -14,6 +14,7 @@ package org.eclipse.mylar.ui.actions;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.ui.InterestFilter;
@@ -59,5 +60,10 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 
 	public static ApplyMylarToOutlineAction getDefault() {
 		return INSTANCE;
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }
