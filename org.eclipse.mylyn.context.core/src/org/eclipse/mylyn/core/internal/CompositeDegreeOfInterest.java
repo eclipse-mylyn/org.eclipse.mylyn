@@ -65,13 +65,20 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
     /**
      * @return true if all are predicted
      */
+    public boolean isPropagated() {
+    	if (infos.isEmpty()) return false;
+        boolean allPropagated = true;
+        for (IDegreeOfInterest info : infos) if (!info.isPropagated()) allPropagated = false;
+        return allPropagated;
+    }
+
     public boolean isPredicted() {
     	if (infos.isEmpty()) return false;
         boolean allPredicted = true;
         for (IDegreeOfInterest info : infos) if (!info.isPredicted()) allPredicted = false;
         return allPredicted;
     }
-        
+    
     public boolean isLandmark() {
         return getValue() >= MylarContextManager.getScalingFactors().getLandmark();
     }

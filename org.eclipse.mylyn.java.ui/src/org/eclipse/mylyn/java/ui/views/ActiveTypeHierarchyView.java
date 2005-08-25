@@ -413,7 +413,7 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
     public Font getFont(Object element) {
         IJavaElement javaElement = ((TreeParent)element).getElement();
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
-        if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
+        if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPropagated()) {
             return MylarUiPlugin.BOLD;
         }
         return null;

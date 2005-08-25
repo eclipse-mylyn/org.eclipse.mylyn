@@ -93,7 +93,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             	if(o instanceof IJavaElement){
             		IJavaElement landmarkElement = (IJavaElement)o;
             		if(landmarkElement.exists()){
-		                if (landmarkElement instanceof IMember && !landmark.getDegreeOfInterest().isPredicted()) {
+		                if (landmarkElement instanceof IMember && !landmark.getDegreeOfInterest().isPropagated()) {
 		                    searchElements.add(((IMember)landmarkElement).getCompilationUnit());
 		                } else if (landmarkElement instanceof ICompilationUnit) {
 		                    searchElements.add(landmarkElement);
@@ -108,7 +108,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             	if(o instanceof IJavaElement){
 	                IJavaElement interestingElement = (IJavaElement)o;
 	                if(interestingElement.exists()){
-		                if (interestingElement instanceof IMember && !interesting.getDegreeOfInterest().isPredicted()) {
+		                if (interestingElement instanceof IMember && !interesting.getDegreeOfInterest().isPropagated()) {
 		                    searchElements.add(((IMember)interestingElement).getCompilationUnit());
 		                } else if (interestingElement instanceof ICompilationUnit) {
 		                    searchElements.add(interestingElement);

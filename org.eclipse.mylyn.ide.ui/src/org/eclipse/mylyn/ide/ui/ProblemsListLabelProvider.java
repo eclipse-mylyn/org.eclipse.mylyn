@@ -38,7 +38,7 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
             String handle = MylarPlugin.getDefault().getStructureBridge(((ProblemMarker)element).getResource().getFileExtension()).getHandleForOffsetInObject(((ProblemMarker)element), 0);
             IMylarContextNode node = MylarPlugin.getContextManager().getNode(handle);
             if (node != null) {    
-                if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
+                if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPropagated()) {
                     return MylarUiPlugin.BOLD;
                 } 
             } 

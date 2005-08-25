@@ -13,6 +13,7 @@ package org.eclipse.mylar.core.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.internal.DegreeOfInterest;
 import org.eclipse.mylar.core.internal.MylarContext;
 
@@ -32,12 +33,34 @@ public class DegreeOfInterestTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-	
+
 	public void testPredictedInterest() {
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext);
+		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, "kind", "handle", "source-id", "id", null, 1);
+        doi.addEvent(event);
+
+    	assertTrue(doi.isInteresting());
+    	assertFalse(doi.isLandmark());
+    	assertFalse(doi.isPropagated());
+    	assertTrue(doi.isPredicted());
+	} 
+    
+	public void testPropagatedInterest() {
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext);
+		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id", "id", null, 1);
+        doi.addEvent(event);
+
+    	assertTrue(doi.isInteresting());
+    	assertFalse(doi.isLandmark());
+    	assertTrue(doi.isPropagated());
+    	assertFalse(doi.isPredicted());
+	}
+    
+	public void testCreation() {
     	DegreeOfInterest doi = new DegreeOfInterest(mockContext);
     	assertFalse(doi.isInteresting());
     	assertFalse(doi.isLandmark());
+    	assertFalse(doi.isPropagated());
     	assertFalse(doi.isPredicted());
     }
-	
 }

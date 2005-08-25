@@ -71,7 +71,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     public Font decorateFont(Object element) {
         IMylarContextNode node = getNode(element);
         if (node != null) {    
-            if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPredicted()) {
+            if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPropagated()) {
                 return MylarUiPlugin.BOLD;
             } 
         } 
@@ -83,7 +83,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
         if (element instanceof MylarContextEdge) {
             return MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP;
         } else if (node != null) {
-            UiUtil.getBackgroundForElement(node);
+            UiUtil.getForegroundForElement(node);
         }
         return null;
     }
@@ -91,7 +91,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     public Color decorateBackground(Object element) {
         IMylarContextNode node = getNode(element);
         if (node != null) {
-            return UiUtil.getForegroundForElement(node);   
+            return UiUtil.getBackgroundForElement(node);   
         } else {
             return null;
         }

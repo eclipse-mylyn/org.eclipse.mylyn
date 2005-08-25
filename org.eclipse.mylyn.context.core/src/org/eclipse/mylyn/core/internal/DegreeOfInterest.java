@@ -121,11 +121,14 @@ public class DegreeOfInterest implements IDegreeOfInterest {
     /**
      * Sums predicted and propagated values
      */
-    public boolean isPredicted() {
-        return getEncodedValue() <= 0 && predictedBias + propagatedBias > 0;
-
+    public boolean isPropagated() {
+        return getEncodedValue() <= 0 && propagatedBias > 0;
     }
 
+    public boolean isPredicted() {
+        return getEncodedValue() <= 0 && predictedBias > 0;
+    }
+    
     public boolean isLandmark() {
         return getValue() >= scaling.getLandmark();
     }

@@ -49,16 +49,16 @@ public class InterestFilter extends ViewerFilter {
                 String handle = bridge.getHandleIdentifier(element);
          
                 node = MylarPlugin.getContextManager().getNode(handle);
-//                String parentHandle = bridge.getParentHandle(handle);
-//                if (MylarPlugin.getContextManager().isTempRaised(parentHandle)) return true;
             }
             if (node != null) {
-                return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
-            } else {
-                return false;
+            	if (node.getDegreeOfInterest().isPredicted()) {
+            		return false;
+            	} else {
+            		return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+            	}
             }
-        } catch (Exception e) {
-        	MylarPlugin.log(e, "filter failed");
+        } catch (Throwable t) {
+        	MylarPlugin.log(t, "interest filter failed");
         }
         return false;
     }   

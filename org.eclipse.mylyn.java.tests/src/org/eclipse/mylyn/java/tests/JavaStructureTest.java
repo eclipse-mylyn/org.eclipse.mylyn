@@ -27,7 +27,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
 import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
+import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.ui.IWorkbenchPart;
@@ -37,7 +37,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class JavaStructureTest extends AbstractTaskscapeTest {
+public class JavaStructureTest extends AbstractContextTest {
     
     private MylarContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();

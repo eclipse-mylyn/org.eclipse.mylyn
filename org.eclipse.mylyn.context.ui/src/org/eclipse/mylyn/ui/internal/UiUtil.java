@@ -31,7 +31,7 @@ import org.eclipse.ui.internal.Workbench;
 public class UiUtil {
 
     public static Color getBackgroundForElement(IMylarContextNode node) {
-        if (node == null || node.getDegreeOfInterest().isPredicted()) return null;
+        if (node == null || node.getDegreeOfInterest().isPropagated()) return null;
         IMylarContextNode dominantNode = null;
         boolean isMultiple = false;
         if (node instanceof CompositeContextNode) {
@@ -86,7 +86,7 @@ public class UiUtil {
  
     public static Color getForegroundForElement(IMylarContextNode node) {
         if (node == null) return null; 
-        if (node.getDegreeOfInterest().isPredicted()) { 
+        if (node.getDegreeOfInterest().isPredicted() || node.getDegreeOfInterest().isPropagated()) { 
             if (node.getDegreeOfInterest().getValue() >= 20) { // HACK: parametrize
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_DARK; 
             } else if (node.getDegreeOfInterest().getValue() >= 10) {

@@ -72,7 +72,7 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 //    	((DegreeOfInterest)targetNode.getDegreeOfInterest()).addEvent(
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
-        MylarPlugin.getContextManager().handleInteractionEvent(event);
+        MylarPlugin.getContextManager().handleInteractionEvent(event, false);
         
 //        CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(elementHandle);
 //        MylarContextNode concreteTargetNode = null;

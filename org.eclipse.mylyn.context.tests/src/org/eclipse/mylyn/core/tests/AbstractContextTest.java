@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 /**
  * @author Mik Kersten
  */
-public class AbstractTaskscapeTest extends TestCase {
+public class AbstractContextTest extends TestCase {
 
     private static final String MOCK_PROVIDER = "<mock-provider>";
 	private static final String MOCK_ORIGIN = "<mock-origin>";

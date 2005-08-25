@@ -19,13 +19,13 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
+import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 
 /**
  * @author Shawn Minto
  */
-public class SearchTaskscapeNotifier extends AbstractTaskscapeTest {
+public class SearchTaskscapeNotifier extends AbstractContextTest {
 
 	private CompositeContext context; 
 	private String source;

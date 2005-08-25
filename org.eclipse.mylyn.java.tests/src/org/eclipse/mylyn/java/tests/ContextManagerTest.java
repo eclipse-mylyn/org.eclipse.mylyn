@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 13, 2004
-  */
+
 package org.eclipse.mylar.java.tests;
 
 import java.io.IOException;
@@ -37,7 +35,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.tests.AbstractTaskscapeTest;
+import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
@@ -47,24 +45,26 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
 
+
 /**
  * @author Mik Kersten
  */
-public class ContextManagerTest extends AbstractTaskscapeTest {
+public class ContextManagerTest extends AbstractContextTest {
  
-    private MylarContextManager manager = MylarPlugin.getContextManager();
-    private JavaEditingMonitor monitor = new JavaEditingMonitor();
+	protected MylarContextManager manager = MylarPlugin.getContextManager();
+    protected JavaEditingMonitor monitor = new JavaEditingMonitor();
     
-    private TestProject project1;
-    private IPackageFragment p1;
-    private IType type1;
-    private String taskId = "123";
-    private MylarContext taskscape;
-    private ScalingFactors scaling = new ScalingFactors();
+    protected TestProject project1;
+    protected IPackageFragment p1;
+    protected IType type1;
+    protected String taskId = "123";
+    protected MylarContext taskscape;
+    protected ScalingFactors scaling = new ScalingFactors();
     
     @Override
     protected void setUp() throws Exception {
-        project1 = new TestProject("project1");
+    	assertNotNull(MylarJavaPlugin.getDefault());
+    	project1 = new TestProject("project1");
         p1 = project1.createPackage("p1");
         type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
         taskscape = new MylarContext("1", scaling);
@@ -120,11 +120,10 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
     public void testPredictedInterest() {
     	IMylarContextNode node = MylarPlugin.getContextManager().getNode("doesn't exist");
     	assertFalse(node.getDegreeOfInterest().isInteresting());
-    	assertFalse(node.getDegreeOfInterest().isPredicted());
+    	assertFalse(node.getDegreeOfInterest().isPropagated());
     }
 
     public void testErrorInterest() throws CoreException, InterruptedException, InvocationTargetException {
-    	assertNotNull(MylarJavaPlugin.getDefault());
     	IViewPart problemsPart = JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
     	assertNotNull(problemsPart);
     	
@@ -159,7 +158,6 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         type1.createMethod("public void m1() { }", null, true, null); 
         project1.build();
         assertFalse(MylarPlugin.getContextManager().getNode(resourceHandle).getDegreeOfInterest().isInteresting());
-
     }
     
     public void testParentInterestAfterDecay() throws JavaModelException {
@@ -173,7 +171,7 @@ public class ContextManagerTest extends AbstractTaskscapeTest {
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
         IMylarContextNode parent = MylarPlugin.getContextManager().getNode(bridge.getParentHandle(node.getElementHandle()));
         assertTrue(parent.getDegreeOfInterest().isInteresting());
-        assertTrue(parent.getDegreeOfInterest().isPredicted()); 
+        assertTrue(parent.getDegreeOfInterest().isPropagated()); 
         
         for (int i = 0; i < 1/(scaling.getDecay().getValue())*3; i++) {
             MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());            

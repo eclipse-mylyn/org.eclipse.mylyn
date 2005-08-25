@@ -353,6 +353,7 @@ public class MylarContextManager {
      * @param kind
      */
     public void resetLandmarkRelationshipsOfKind(String reltationKind) {
+//    	System.err.println(">> clearing");
 //        throw new RuntimeException("unimplemented");
         for (IMylarContextNode landmark : activeContext.getLandmarks()) {
         	

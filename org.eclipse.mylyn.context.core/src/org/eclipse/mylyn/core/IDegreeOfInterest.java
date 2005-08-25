@@ -15,16 +15,14 @@ package org.eclipse.mylar.core;
 
 import java.util.List;
 
-
-
 /**
  * @author Mik Kersten
  */
 public interface IDegreeOfInterest {
 
-//    public abstract void addEvent(InteractionEvent event);
-        
-    public abstract boolean isPredicted();
+    public abstract boolean isPropagated();
+    
+    public boolean isPredicted();
     
     public abstract boolean isLandmark();
     
