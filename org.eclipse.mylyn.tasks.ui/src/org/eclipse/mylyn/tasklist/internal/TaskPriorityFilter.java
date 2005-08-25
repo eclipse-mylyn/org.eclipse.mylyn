@@ -35,6 +35,9 @@ public class TaskPriorityFilter implements ITaskFilter {
 			if (element instanceof ITask && ((ITask)element).isActive()) {
 				return true;
 			}
+			if (!((ITaskListElement)element).getPriority().startsWith("P")) {
+				return true;
+			}
 			if (priorityLevel.compareTo(((ITaskListElement)element).getPriority()) >= 0) {
 				return true;
 			}

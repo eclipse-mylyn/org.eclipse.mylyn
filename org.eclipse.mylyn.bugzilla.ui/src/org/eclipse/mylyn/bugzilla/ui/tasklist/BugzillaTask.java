@@ -131,10 +131,10 @@ public class BugzillaTask extends Task {
     	setPriority(hit.getPriority());
 	}
 
-	@Override
-	public String getLabel() {
-		if (this.isBugDownloaded() || !super.getLabel().startsWith("<")) {
-			return super.getLabel();
+    @Override
+	public String getDescription(boolean isLabel) {
+		if (this.isBugDownloaded() || !super.getDescription(isLabel).startsWith("<")) {
+			return super.getDescription(isLabel);
 		} else {
 			if (getState() == BugzillaTask.BugTaskState.FREE) {
 				return BugzillaTask.getBugId(getHandle()) + ": <Could not find bug>";
@@ -344,14 +344,6 @@ public class BugzillaTask extends Task {
 		}
 	
 	/**
-	 * @return Returns the last time this task's bug report was downloaded from
-	 *         the server.
-	 */
-	public Date getLastRefreshTime() {
-		return lastRefresh;
-	}
-	
-	/**
 	 * @return The number of seconds ago that this task's bug report was
 	 *         downloaded from the server.
 	 */
@@ -395,7 +387,7 @@ public class BugzillaTask extends Task {
 			if (status.equals("RESOLVED") || status.equals("CLOSED") || status.equals("VERIFIED")) {
 				setCompleted(true);
 			}
-			this.setLabel(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandle()) + ": " + bugReport.getSummary()));
+			this.setDescription(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandle()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
 			MylarPlugin.fail(npe, "Task details update failed", false);
 		}
@@ -572,5 +564,16 @@ public class BugzillaTask extends Task {
 		}
 		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
 		return job;
+	}
+	
+	public String getStringForSortingDescription() {
+		return getBugId(getHandle())+"";
+	}
+
+	public static long getLastRefreshTimeInMinutes(Date lastRefresh) {
+		Date timeNow = new Date();
+		if (lastRefresh == null) lastRefresh = new Date();
+		long timeDifference = (timeNow.getTime() - lastRefresh.getTime())/60000;
+		return timeDifference;
 	}
 }

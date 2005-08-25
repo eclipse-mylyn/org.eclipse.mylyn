@@ -18,6 +18,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCustomQuery;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryDialog;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -51,10 +52,15 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
 //        MylarPlugin.getDefault().actionObserved(this);
     	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
     	if(sqd.open() == Dialog.OK){
-    		// TODO make this work properly
-        	final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
+    		
+        	final BugzillaQueryCategory queryCategory;
+        	if(!sqd.isCustom()){
+        		queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
+        	} else {
+        		queryCategory = new BugzillaCustomQuery(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
+        	}
         	
-            MylarTasklistPlugin.getTaskListManager().addCategory(queryCategory);
+            MylarTasklistPlugin.getTaskListManager().addQuery(queryCategory);
             WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
             	protected void execute(IProgressMonitor monitor) throws CoreException {
 	            	queryCategory.refreshBugs();

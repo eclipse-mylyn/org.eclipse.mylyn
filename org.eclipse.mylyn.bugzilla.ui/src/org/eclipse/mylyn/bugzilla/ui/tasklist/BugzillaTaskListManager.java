@@ -14,6 +14,8 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.mylar.tasklist.internal.TaskCategory;
+
 /**
  * @author Mik Kersten and Ken Sueda
  */
@@ -21,11 +23,16 @@ public class BugzillaTaskListManager {
 
     private Map<String, BugzillaTask> bugzillaTaskRegistry = new HashMap<String, BugzillaTask>();
 	
+    private TaskCategory cat = null;
+    
     // XXX we never delete anything from this registry
     
     public void addToBugzillaTaskRegistry(BugzillaTask task){
     	if(bugzillaTaskRegistry.get(task.getHandle()) == null){
     		bugzillaTaskRegistry.put(task.getHandle(), task);
+    		if(cat != null){
+        		cat.internalAddTask(task);
+        	}
     	}
     }
     
@@ -36,5 +43,9 @@ public class BugzillaTaskListManager {
     public Map<String, BugzillaTask> getBugzillaTaskRegistry(){
     	return bugzillaTaskRegistry;
     }
+
+	public void setTaskRegistyCategory(TaskCategory cat) {
+		this.cat = cat;		
+	}
     
 }

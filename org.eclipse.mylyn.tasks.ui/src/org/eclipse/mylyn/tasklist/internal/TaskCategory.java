@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.TaskListImages;
@@ -29,16 +29,54 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskCategory extends AbstractCategory implements Serializable {
+public class TaskCategory implements ICategory, Serializable {
 
     private static final long serialVersionUID = 3834024740813027380L;
     
     private List<ITask> tasks = new ArrayList<ITask>();
     
-    public TaskCategory(String description) {
-    	super(description);
+	protected String description = "";
+	private String handle = "";
+	private boolean isArchive = false;
+	public TaskCategory(String description) {
+    	this.description = description;
     }
-    
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.mylar.tasklist.ICategory#getDescription(boolean)
+	 */
+	public String getDescription(boolean label) {
+		return description;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.mylar.tasklist.ICategory#getHandle()
+	 */
+	public String getHandle() {
+		return handle;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.mylar.tasklist.ICategory#setDescription(java.lang.String)
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.mylar.tasklist.ICategory#setHandle(java.lang.String)
+	 */
+	public void setHandle(String handle) {
+		this.handle = handle;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.mylar.tasklist.ICategory#getStatusIcon()
+	 */
+	public Image getStatusIcon() {
+		return null;
+	}
+        
 	public Image getIcon() {
 		return TaskListImages.getImage(TaskListImages.CATEGORY);
 	}
@@ -64,7 +102,10 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 		}
     }
     
-	void internalAddTask(ITask task) {
+    /**
+     * So it can be used by other externalizers
+     */
+	public void internalAddTask(ITask task) {
     	tasks.add(task);
     }
 	
@@ -130,5 +171,17 @@ public class TaskCategory extends AbstractCategory implements Serializable {
 		} else {
 			return tasks.size() + " tasks";
 		}
+	}
+
+	public boolean isArchive() {
+		return isArchive;
+	}
+	
+	public void setIsArchive(boolean isArchive) {
+		this.isArchive = isArchive;;
+	}
+
+	public String getStringForSortingDescription() {
+		return getDescription(true);
 	}
 }

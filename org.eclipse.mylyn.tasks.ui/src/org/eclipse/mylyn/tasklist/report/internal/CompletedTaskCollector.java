@@ -11,9 +11,10 @@
 
 package org.eclipse.mylar.tasklist.report.internal;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.mylar.tasklist.ITask;
 
@@ -22,7 +23,7 @@ import org.eclipse.mylar.tasklist.ITask;
  */
 public class CompletedTaskCollector implements ITasksCollector {
 
-	private List<ITask> completedTasks = new ArrayList<ITask>();
+	private Map<String, ITask> completedTasks = new HashMap<String, ITask>();
 	private Date cutOffDate = null;
 	private long DAY = 24*3600*1000;
 	
@@ -35,12 +36,12 @@ public class CompletedTaskCollector implements ITasksCollector {
 	}
 
 	public void consumeTask(ITask task) {
-		if (task.isCompleted() && task.getEndDate() != null && task.getEndDate().compareTo(cutOffDate) > 0) {
-			completedTasks.add(task);
+		if (task.isCompleted() && task.getEndDate() != null && task.getEndDate().compareTo(cutOffDate) > 0 && !completedTasks.containsKey(task.getHandle())) {
+			completedTasks.put(task.getHandle(), task);
 		}
 	}
 	
-	public List<ITask> getTasks() {
-		return completedTasks;
+	public Collection<ITask> getTasks() {
+		return completedTasks.values();
 	}
 }

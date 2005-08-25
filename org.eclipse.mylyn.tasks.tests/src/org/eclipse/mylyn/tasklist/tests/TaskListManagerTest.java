@@ -80,19 +80,19 @@ public class TaskListManagerTest extends TestCase {
         assertEquals(2, manager.getTaskList().getCategories().size());
 
     	List<ITask> readList = manager.getTaskList().getRootTasks();
-    	assertTrue(readList.get(0).getLabel().equals("task 1"));
-    	assertTrue(readList.get(0).getChildren().get(0).getLabel().equals("sub 1"));
-    	assertTrue(readList.get(1).getLabel().equals("task 2"));
+    	assertTrue(readList.get(0).getDescription(true).equals("task 1"));
+    	assertTrue(readList.get(0).getChildren().get(0).getDescription(true).equals("sub 1"));
+    	assertTrue(readList.get(1).getDescription(true).equals("task 2"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
     	
     	List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
     	readList = readCats.get(0).getChildren();
-    	assertTrue(readList.get(0).getLabel().equals("task 3"));
-    	assertTrue(readList.get(0).getChildren().get(0).getLabel().equals("sub 2"));
-    	assertTrue(readList.get(1).getLabel().equals("task 4"));
+    	assertTrue(readList.get(0).getDescription(true).equals("task 3"));
+    	assertTrue(readList.get(0).getChildren().get(0).getDescription(true).equals("sub 2"));
+    	assertTrue(readList.get(1).getDescription(true).equals("task 4"));
     	readList = readCats.get(1).getChildren();
-    	assertTrue(readList.get(0).getLabel().equals("task 5"));
-    	assertTrue(readList.get(1).getLabel().equals("task 6"));
+    	assertTrue(readList.get(0).getDescription(true).equals("task 5"));
+    	assertTrue(readList.get(1).getDescription(true).equals("task 6"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
     }
 

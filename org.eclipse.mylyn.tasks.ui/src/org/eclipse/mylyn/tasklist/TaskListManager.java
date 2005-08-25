@@ -98,8 +98,12 @@ public class TaskListManager {
     	taskList.addRootTask(task);
     }
     
-    public void addCategory(AbstractCategory cat) {
+    public void addCategory(ICategory cat) {
     	taskList.addCategory(cat);
+    }
+    
+    public void addQuery(IQuery cat) {
+    	taskList.addQuery(cat);
     }
     
     public void deleteTask(ITask task) {
@@ -110,8 +114,12 @@ public class TaskListManager {
         taskList.deleteTask(task);
     }
     
-    public void deleteCategory(AbstractCategory cat) {
+    public void deleteCategory(ICategory cat) {
     	taskList.deleteCategory(cat);
+    }
+    
+    public void deleteQuery(IQuery query) {
+    	taskList.deleteQuery(query);
     }
     
     public void addListener(ITaskActivityListener listener) {

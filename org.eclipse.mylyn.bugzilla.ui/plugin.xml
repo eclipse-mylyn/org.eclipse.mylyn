@@ -141,6 +141,7 @@
 	            toolbarPath="mylar"
 	            tooltip="Add Bugzilla Query"> 
   			</action>
+  			  			
   			<action
 	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
 	            enablesFor="*"

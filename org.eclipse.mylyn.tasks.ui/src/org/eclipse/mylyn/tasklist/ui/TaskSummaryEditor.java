@@ -158,7 +158,7 @@ public class TaskSummaryEditor extends EditorPart {
 		public void taskPropertyChanged(ITask updatedTask, String property) {
 			if (task != null && updatedTask.getHandle().equals(task.getHandle())) {
         		if (property.equals("Description") && !description.isDisposed()) {
-        			description.setText(task.getLabel());
+        			description.setText(task.getDescription(false));
         		} else if (property.equals("Path") && !pathText.isDisposed()) {
         			pathText.setText("<Mylar_Dir>/" + task.getPath());
         		}
@@ -214,7 +214,7 @@ public class TaskSummaryEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		String label = description.getText();
-		task.setLabel(label);
+		task.setDescription(label);
 		String note = notes.getText();
 		task.setNotes(note);		
 		task.setEstimatedTime(estimated.getSelection());
@@ -341,11 +341,11 @@ public class TaskSummaryEditor extends EditorPart {
 		
         Label l = toolkit.createLabel(container, "Description:");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
-        description = toolkit.createText(container,task.getLabel(), SWT.BORDER);
+        description = toolkit.createText(container, task.getDescription(true), SWT.BORDER);
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.colspan = 2;
         description.setLayoutData(td);
-        if (!task.canEditDescription()) {
+        if (!task.isDirectlyModifiable()) {
         	description.setEnabled(false);
         } else {
         	description.addModifyListener(new ModifyListener() {

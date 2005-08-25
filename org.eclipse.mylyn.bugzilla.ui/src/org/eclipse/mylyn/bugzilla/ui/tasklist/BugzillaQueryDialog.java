@@ -29,6 +29,7 @@ import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -36,7 +37,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkingSet;
 
 /**
@@ -50,8 +53,18 @@ public class BugzillaQueryDialog extends Dialog {
 	private String startingUrl = null;
 	private String maxHits;
 	
+	private Text queryText;
+	private Button customButton; 
+	private boolean isCustom = false;
+	
+	private boolean isNew = false;
+	
+	private boolean enabled = true;
+	
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
+		isNew = true;
+		isCustom = false;
 		searchOptionPage = new BugzillaSearchOptionPage();
 		
 	}
@@ -62,6 +75,7 @@ public class BugzillaQueryDialog extends Dialog {
 		this.startingUrl = startingUrl;
 		this.maxHits = maxHits;
 		this.name = name;
+		isNew = false;
 	}
 
 	public String getName() {
@@ -76,11 +90,50 @@ public class BugzillaQueryDialog extends Dialog {
 		return maxHits;
 	}
 	
+	public boolean isCustom(){
+		return isCustom;
+	}
+	
 	@Override
 	protected Control createContents(Composite parent) {
+		if(isNew){
+			Group custom = new Group(parent, SWT.NONE);
+			GridLayout gl = new GridLayout(2, false);
+			custom.setLayout(gl);
+			
+			customButton = new Button(custom, SWT.CHECK);
+			customButton.setText("Custom Query");
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			customButton.setLayoutData(gd);
+			
+			Label l = new Label(custom, SWT.NONE);
+
+			l = new Label(custom, SWT.NONE);
+			l.setText("Query URL");
+			
+			queryText = new Text(custom, SWT.BORDER | SWT.SINGLE);
+			if(startingUrl != null)
+				queryText.setText(startingUrl);
+		}
 		searchOptionPage.createControl(parent);
 		
+		if(isNew){
+			customButton.addSelectionListener(new SelectionListener(){
+				
+				public void widgetSelected(SelectionEvent e) {
+					enabled = !enabled;
+					searchOptionPage.setControlsEnabled(enabled);
+					queryText.setEnabled(!enabled);
+					isCustom = customButton.getSelection();
+				}
+	
+				
+				public void widgetDefaultSelected(SelectionEvent e) {}
+			});
+		}
+		
 		searchOptionPage.setVisible(true);
+						
 		Control c = super.createContents(parent);
 		if(startingUrl != null){
 			try{
@@ -89,12 +142,27 @@ public class BugzillaQueryDialog extends Dialog {
 				// ignore, should never get this
 			}
 		}
+		
+		if(isNew){
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.widthHint = 450;
+			queryText.setLayoutData(gd);
+			
+			customButton.setSelection(!enabled);
+			queryText.setEnabled(!enabled);
+			searchOptionPage.setControlsEnabled(enabled);
+		}
+		
 		return c;
 	}
 
 	@Override
 	protected void okPressed(){
-		url = searchOptionPage.getSearchURL();
+		if(customButton != null && customButton.getSelection()){
+			url = queryText.getText();
+		} else {
+			url = searchOptionPage.getSearchURL();
+		}
 		if(url == null || url.equals("")){
 			/*
 			 * Should never get here. Every implementation of the Java platform is required
@@ -324,7 +392,33 @@ public class BugzillaQueryDialog extends Dialog {
 			this.maxHits = maxHits;
 			maxHitsText.setText(maxHits);
 		}
-				
+		
+		public void setControlsEnabled(boolean enabled){
+			summaryOperation.setEnabled(enabled);
+			product.setEnabled(enabled);
+			os.setEnabled(enabled);
+			hardware.setEnabled(enabled);
+			priority.setEnabled(enabled);
+			severity.setEnabled(enabled);
+			resolution.setEnabled(enabled);
+			status.setEnabled(enabled);
+			commentOperation.setEnabled(enabled);
+			commentPattern.setEnabled(enabled);
+			component.setEnabled(enabled);
+			version.setEnabled(enabled);
+			target.setEnabled(enabled);
+			emailOperation.setEnabled(enabled);
+			emailPattern.setEnabled(enabled);
+			for(Button b: emailButton){
+				b.setEnabled(enabled);
+			}
+			saveButton.setEnabled(enabled);
+			loadButton.setEnabled(enabled);
+			updateButton.setEnabled(enabled);
+			summaryPattern.setEnabled(enabled);
+			daysText.setEnabled(enabled);
+			
+		}
 		
 		public String getSearchURL() {
 			try{

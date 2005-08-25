@@ -17,7 +17,8 @@ import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.swt.graphics.Color;
@@ -45,7 +46,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 			case 1:
 				return "";
 			case 2:
-				if (element instanceof AbstractCategory) {
+				if (element instanceof ICategory || element instanceof IQuery) {
 					return "";
 				}
 				return element.getPriority();
@@ -69,13 +70,13 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
         	return null;
         }
         if (columnIndex == 0) {
-        	if (element instanceof AbstractCategory) {
+        	if (element instanceof ICategory || element instanceof IQuery) {
         		return ((ITaskListElement)element).getIcon(); 
         	} else {
         		return ((ITaskListElement)element).getStatusIcon();
         	}        	
         } else if (columnIndex == 1) {
-        	if (element instanceof AbstractCategory) {
+        	if (element instanceof ICategory || element instanceof IQuery) {
         		return null;
         	}
         	return ((ITaskListElement)element).getIcon();
@@ -98,7 +99,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 //		          Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
 //		          if (highlighter != null) return highlighter.getHighlightColor();
 //			  }
-		  } else if (element instanceof AbstractCategory) {
+		  } else if (element instanceof ICategory || element instanceof IQuery) {
 			  return backgroundColor;
 		  }
 		  return null;

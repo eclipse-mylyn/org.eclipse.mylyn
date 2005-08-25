@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.Task;
@@ -30,6 +31,10 @@ import org.w3c.dom.NodeList;
  */
 public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 
+	public static final String TAG_QUERY = "Query";
+	public static final String MAX_HITS = "MaxHits";
+	public static final String QUERY_STRING = "QueryString";
+	
 	public static final String LABEL = "Label";
 	public static final String HANDLE = "Handle";
 	public static final String TAG_CATEGORY = "Category";
@@ -59,14 +64,16 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		this.externalizers = externalizers;
 	}
 	
-	public boolean canCreateElementFor(AbstractCategory category) {
+	public boolean canCreateElementFor(ICategory category) {
 		return category instanceof TaskCategory;
 	}
 	
-	public Element createCategoryElement(AbstractCategory category, Document doc, Element parent) {
+	public Element createCategoryElement(ICategory category, Document doc, Element parent) {
+		if(category.isArchive())
+			return parent;
 		Element node = doc.createElement(getCategoryTagName());
 		node.setAttribute(NAME, category.getDescription(false));
-		
+				
 		for (ITask task : ((TaskCategory)category).getChildren()) {
 			try {
 				Element element = null;
@@ -90,7 +97,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(getTaskTagName());
 		node.setAttribute(PATH, task.getPath());
-		node.setAttribute(LABEL, task.getLabel());
+		node.setAttribute(LABEL, task.getDescription(false));
 		node.setAttribute(HANDLE, task.getHandle());
 		node.setAttribute(PRIORITY, task.getPriority());
 		
@@ -166,7 +173,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getTaskTagName());
 	}
 
-	public ITask readTask(Node node, TaskList tlist, AbstractCategory category, ITask parent)  throws MylarExternalizerException {
+	public ITask readTask(Node node, TaskList tlist, ICategory category, ITask parent)  throws MylarExternalizerException {
 		Element element = (Element) node;
 		String handle;
 		String label;
@@ -185,7 +192,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		return task;
 	}
 
-	protected void readTaskInfo(ITask task, TaskList tlist, Element element, AbstractCategory category, ITask parent)  throws MylarExternalizerException{
+	protected void readTaskInfo(ITask task, TaskList tlist, Element element, ICategory category, ITask parent)  throws MylarExternalizerException{
 		if (element.hasAttribute(PRIORITY)) {
 			task.setPriority(element.getAttribute(PRIORITY));
 		} else {
@@ -279,5 +286,32 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 
 	public void createRegistry(Document doc, Node parent) {
 		// nothing to do
+	}
+
+	
+	public boolean canCreateElementFor(IQuery category) {
+		return true;
+	}
+
+	public Element createQueryElement(IQuery query, Document doc, Element parent) {
+		Element node = doc.createElement(getQueryTagNameForElement(query));
+		node.setAttribute(NAME, query.getDescription(false));
+		node.setAttribute(MAX_HITS, query.getMaxHits()+"");
+		node.setAttribute(QUERY_STRING, query.getQueryString());
+		parent.appendChild(node);
+		return node;
+	}
+
+	public boolean canReadQuery(Node node) {
+		return false;
+	}
+
+	public void readQuery(Node node, TaskList tlist) throws MylarExternalizerException {
+		// doesn't know how to read any queries
+		
+	}
+
+	public String getQueryTagNameForElement(IQuery query) {
+		return "";
 	}
 }

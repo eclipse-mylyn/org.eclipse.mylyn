@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.internal;
 
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskFilter;
 import org.eclipse.mylar.tasklist.ITaskListElement;
@@ -20,16 +21,24 @@ import org.eclipse.mylar.tasklist.ITaskListElement;
 public class TaskCompleteFilter implements ITaskFilter {
 
 	public boolean select(Object element) {
-		if (element instanceof ITaskListElement) {
-//			if(element instanceof ITask && ((ITaskListElement)element).hasCorrespondingActivatableTask()){
-			if(((ITaskListElement)element).hasCorrespondingActivatableTask()){
-				ITask task = ((ITaskListElement)element).getOrCreateCorrespondingTask();
+		if (element instanceof ITask) {
+			ITask task = (ITask)element;
+			if (task.isActive()) {
+				return true;
+			}
+			return !task.isCompleted();
+		} else if(element instanceof IQueryHit){
+			if(((IQueryHit)element).hasCorrespondingActivatableTask()){
+				ITask task = ((IQueryHit)element).getOrCreateCorrespondingTask();
 				if (task.isActive()) {
 					return true;
 				}
 			}
-			ITaskListElement t = (ITaskListElement)element;
-			return !t.isCompleted();
+			IQueryHit hit = (IQueryHit)element;
+			return !hit.isCompleted();
+		} else if(element instanceof ITaskListElement){
+			ITaskListElement taskElement = (ITaskListElement)element;
+			return !taskElement.isCompleted();
 		} 
 		return false;
 	}

@@ -15,8 +15,8 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -25,7 +25,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Ken Sueda
  */
-public class BugzillaHit implements ITaskListElement {
+public class BugzillaHit implements IQueryHit {
 
 	private String description;
 	private String priority;
@@ -164,5 +164,17 @@ public class BugzillaHit implements ITaskListElement {
 		} else {
 			return getDescription(true);
 		}
+	}
+
+	public void setDescription(String description) {
+		// can't set the description to anything
+	}
+
+	public String getStringForSortingDescription() {
+		return getID()+"";
+	}
+
+	public void setHandle(String id) {
+		// can't change the handle
 	}
 }

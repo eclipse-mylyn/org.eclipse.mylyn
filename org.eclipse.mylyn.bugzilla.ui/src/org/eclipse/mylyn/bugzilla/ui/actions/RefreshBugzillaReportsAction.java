@@ -22,10 +22,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaHit;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -143,12 +144,17 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
 			}
 		}
-		for (AbstractCategory cat : MylarTasklistPlugin
+		for (ICategory cat : MylarTasklistPlugin
 				.getTaskListManager().getTaskList().getCategories()) {
+//			if(cat.isArchive())
+//				continue;
+			
 			if (cat instanceof TaskCategory) {
 				for (ITask task : ((TaskCategory) cat).getChildren()) {
 					if (task instanceof BugzillaTask && !task.isCompleted()) {
-						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
+						if(BugzillaTask.getLastRefreshTimeInMinutes(((BugzillaTask)task).getLastRefresh()) > 2){
+							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
+						} else System.out.println("skipped " + task.getHandle());
 //						((BugzillaTask) task).refresh();
 					}
 				}
@@ -160,27 +166,33 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 						}
 					}
 				}
-			} else if (cat instanceof BugzillaQueryCategory) {
-				final BugzillaQueryCategory bqc = (BugzillaQueryCategory) cat;
-				PlatformUI.getWorkbench().getDisplay().syncExec(
-					new Runnable() {
-						public void run() {
-							bqc.refreshBugs();
-							for(BugzillaHit hit: bqc.getChildren()){
-								if(hit.hasCorrespondingActivatableTask()){
-									BugzillaTask task = ((BugzillaTask)hit.getOrCreateCorrespondingTask());
-									if(!task.isCompleted()){
-										BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed(task);
-//										task.refresh();
-									}
+			}
+		}	
+		for(IQuery query: MylarTasklistPlugin
+				.getTaskListManager().getTaskList().getQueries()){
+			if(!(query instanceof BugzillaQueryCategory)){
+				continue;
+			}
+				
+			final BugzillaQueryCategory bqc = (BugzillaQueryCategory) query;
+			PlatformUI.getWorkbench().getDisplay().syncExec(
+				new Runnable() {
+					public void run() {
+						bqc.refreshBugs();
+						for(IQueryHit hit: bqc.getChildren()){
+							if(hit.hasCorrespondingActivatableTask()){
+								BugzillaTask task = ((BugzillaTask)hit.getOrCreateCorrespondingTask());
+								if(!task.isCompleted()){
+									BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed(task);
+//									task.refresh();
 								}
 							}
-							if(TaskListView.getDefault() != null)
-								TaskListView.getDefault().getViewer().refresh();
 						}
-					});
-			}
-		}		
+						if(TaskListView.getDefault() != null)
+							TaskListView.getDefault().getViewer().refresh();
+					}
+				});
+		}
 		if(TaskListView.getDefault() != null)
 			TaskListView.getDefault().getViewer().refresh();
 	}

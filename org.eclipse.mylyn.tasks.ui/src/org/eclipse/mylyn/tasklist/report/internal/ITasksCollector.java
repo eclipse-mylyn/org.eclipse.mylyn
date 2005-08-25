@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tasklist.report.internal;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.mylar.tasklist.ITask;
 
@@ -22,5 +22,5 @@ public interface ITasksCollector {
 	
 	public abstract void consumeTask(ITask task);
 	
-	public abstract List<ITask> getTasks();
+	public abstract Collection<ITask> getTasks();
 }

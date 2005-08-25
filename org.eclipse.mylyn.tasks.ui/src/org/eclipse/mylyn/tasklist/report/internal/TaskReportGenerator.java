@@ -48,16 +48,15 @@ public class TaskReportGenerator {
 		for (TaskCategory cat : tasklist.getTaskCategories()) {
 			List<? extends ITaskListElement> sub = cat.getChildren();
 			for (int j = 0; j < sub.size(); j++) {
-				if (sub.get(j) instanceof ITaskListElement) {					
-					ITaskListElement element = (ITaskListElement) sub.get(j);
-					if (element.hasCorrespondingActivatableTask()) {
-						for (ITasksCollector collector : collectors) {
-							collector.consumeTask(element.getOrCreateCorrespondingTask());
-						}
-					}					
+				if (sub.get(j) instanceof ITask) {					
+					ITask element = (ITask) sub.get(j);
+					for (ITasksCollector collector : collectors) {
+						collector.consumeTask(element);
+					}
 				}
 			}
 		}
+				
 		// TODO need to support handling things in the bugzilla registry
 		for (ITasksCollector collector : collectors) {
 			tasks.addAll(collector.getTasks());

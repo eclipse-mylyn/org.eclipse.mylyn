@@ -48,7 +48,9 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
-import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskFilter;
 import org.eclipse.mylar.tasklist.ITaskHandler;
@@ -334,11 +336,14 @@ public class TaskListView extends ViewPart {
         	return getFilteredChildrenFor(parent).toArray();
         }
         public boolean hasChildren(Object parent) {  
-            if (parent instanceof AbstractCategory) {
-            	AbstractCategory cat = (AbstractCategory)parent;
+            if (parent instanceof ICategory) {
+            	ICategory cat = (ICategory)parent;
                 return cat.getChildren() != null && cat.getChildren().size() > 0;
             }  else if (parent instanceof Task) {
             	Task t = (Task) parent;
+            	return t.getChildren() != null && t.getChildren().size() > 0;
+            } else if (parent instanceof IQuery) {
+            	IQuery t = (IQuery) parent;
             	return t.getChildren() != null && t.getChildren().size() > 0;
             } 
             return false;
@@ -351,8 +356,14 @@ public class TaskListView extends ViewPart {
         				if (!filter(list.get(i))) {
         					filteredRoots.add(list.get(i));
         				}
-        			} else if (list.get(i) instanceof AbstractCategory) {
-        				if (selectCategory((AbstractCategory)list.get(i))) {
+        			} else if (list.get(i) instanceof ICategory) {
+        				if(((ICategory)list.get(i)).isArchive())
+        					continue;
+        				if (selectCategory((ICategory)list.get(i))) {
+        					filteredRoots.add(list.get(i));
+        				}
+        			} else if (list.get(i) instanceof IQuery) {
+        				if (selectQuery((IQuery)list.get(i))) {
         					filteredRoots.add(list.get(i));
         				}
         			}
@@ -363,7 +374,22 @@ public class TaskListView extends ViewPart {
         	}
         }
         
-        private boolean selectCategory(AbstractCategory cat) {
+        private boolean selectQuery(IQuery cat) {
+        	List<? extends ITaskListElement> list = cat.getChildren();
+        	if (list.size() == 0) {
+        		return true;
+        	}
+        	for (int i = 0; i < list.size(); i++) {
+        		if (!filter(list.get(i))) {
+        			return true;
+        		}    		
+        	}
+        	return false;
+        }
+        
+        private boolean selectCategory(ICategory cat) {
+        	if(cat.isArchive())
+        		return false;
         	List<? extends ITaskListElement> list = cat.getChildren();
         	if (list.size() == 0) {
         		return true;
@@ -380,8 +406,10 @@ public class TaskListView extends ViewPart {
         	if (((Text) tree.getFilterControl()).getText() == ""  
         			|| ((Text) tree.getFilterControl()).getText().startsWith(FILTER_LABEL)) {
         		List<Object> children = new ArrayList<Object>();
-	        	if (parent instanceof AbstractCategory) {
-					List<? extends ITaskListElement> list = ((AbstractCategory) parent)
+	        	if (parent instanceof ICategory) {
+	        		if(((ICategory)parent).isArchive())
+    					return children;
+	        		List<? extends ITaskListElement> list = ((ICategory) parent)
 							.getChildren();
         			for (int i = 0; i < list.size(); i++) {
             			if (!filter(list.get(i))) {
@@ -389,7 +417,16 @@ public class TaskListView extends ViewPart {
 	            		}    		
     	        	} 
         			return children;
-        		} else if (parent instanceof Task) {
+        		} else if (parent instanceof IQuery) {
+					List<? extends ITaskListElement> list = ((IQuery) parent)
+							.getChildren();
+					for (int i = 0; i < list.size(); i++) {
+						if (!filter(list.get(i))) {
+							children.add(list.get(i));
+						}
+					}
+					return children;
+				}else if (parent instanceof Task) {
         			List<ITask> subTasks = ((Task)parent).getChildren();
 	        		for (ITask t : subTasks) {
     	    			if (!filter(t)) {
@@ -400,10 +437,13 @@ public class TaskListView extends ViewPart {
     	    	}
 			} else {
 				List<Object> children = new ArrayList<Object>();
-				if (parent instanceof AbstractCategory) {
-					children.addAll(((AbstractCategory) parent).getChildren());
+				if (parent instanceof ICategory) {
+					children.addAll(((ICategory) parent).getChildren());
 					return children;					
-				} else if (parent instanceof Task) {
+				} else if (parent instanceof IQuery) {
+					children.addAll(((IQuery) parent).getChildren());
+					return children;					
+				}else if (parent instanceof Task) {
 					children.addAll(((Task) parent).getChildren());
 					return children;	
 				}
@@ -469,8 +509,12 @@ public class TaskListView extends ViewPart {
 	            if (element instanceof ITaskListElement) {
 	            	final ITaskListElement taskListElement = (ITaskListElement)element;
 					ITask task = null;
-					if(taskListElement.hasCorrespondingActivatableTask()){
-						task = taskListElement.getOrCreateCorrespondingTask();
+					if(taskListElement instanceof ITask){
+						task = (ITask) taskListElement;
+					} else if(taskListElement instanceof IQueryHit){
+						if(((IQueryHit)taskListElement).hasCorrespondingActivatableTask()){
+							task = ((IQueryHit)taskListElement).getOrCreateCorrespondingTask();
+						}
 					}
 					switch (columnIndex) {
 					case 0:
@@ -487,8 +531,20 @@ public class TaskListView extends ViewPart {
 					case 3:
 						return taskListElement.getDescription(true);
 					}
-				} else if (element instanceof AbstractCategory) {
-					AbstractCategory cat = (AbstractCategory) element;
+				} else if (element instanceof ICategory) {
+					ICategory cat = (ICategory) element;
+					switch (columnIndex) {
+					case 0:
+						return new Boolean(false);
+					case 1:
+						return "";
+					case 2:
+						return "";
+					case 3:
+						return cat.getDescription(true);
+					}
+				}else if (element instanceof IQuery) {
+					IQuery cat = (IQuery) element;
 					switch (columnIndex) {
 					case 0:
 						return new Boolean(false);
@@ -510,8 +566,23 @@ public class TaskListView extends ViewPart {
 			int columnIndex = -1;
 			try {
 				columnIndex = Arrays.asList(columnNames).indexOf(property);
-				if (((TreeItem) element).getData() instanceof AbstractCategory) {
-					AbstractCategory cat = (AbstractCategory)((TreeItem) element).getData();
+				if (((TreeItem) element).getData() instanceof ICategory) {
+					ICategory cat = (ICategory)((TreeItem) element).getData();
+					switch (columnIndex) {
+					case 0:						
+//						getViewer().setSelection(null);
+						break;
+					case 1:
+						break;
+					case 2:
+						break;
+					case 3:
+						cat.setDescription(((String) value).trim());
+//						getViewer().setSelection(null);
+						break;
+					}
+				} else if (((TreeItem) element).getData() instanceof IQuery) {
+					IQuery cat = (IQuery)((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:						
 //						getViewer().setSelection(null);
@@ -529,12 +600,18 @@ public class TaskListView extends ViewPart {
 
 					final ITaskListElement taskListElement = (ITaskListElement) ((TreeItem) element).getData();
 					ITask task = null;
-					if(taskListElement.hasCorrespondingActivatableTask()){
-						task = taskListElement.getOrCreateCorrespondingTask();
+					if(taskListElement instanceof ITask){
+						task = (ITask) taskListElement;
+					} else if(taskListElement instanceof IQueryHit){
+						if(((IQueryHit)taskListElement).hasCorrespondingActivatableTask()){
+							task = ((IQueryHit)taskListElement).getOrCreateCorrespondingTask();
+						}
 					}
 					switch (columnIndex) {
 					case 0:
-						task = taskListElement.getOrCreateCorrespondingTask();
+						if(taskListElement instanceof IQueryHit){
+							task = ((IQueryHit)taskListElement).getOrCreateCorrespondingTask();
+						}
 						if (task != null) {
 							if (task.isActive()) {
 								new TaskDeactivateAction(task, INSTANCE).run();
@@ -556,7 +633,7 @@ public class TaskListView extends ViewPart {
 						break;
 					case 3: 
 						if (task.isDirectlyModifiable()) {
-							task.setLabel(((String) value).trim());
+							task.setDescription(((String) value).trim());
 							MylarTasklistPlugin.getTaskListManager()
 									.taskPropertyChanged(task, columnNames[3]);
 //							getViewer().setSelection(null);
@@ -598,24 +675,24 @@ public class TaskListView extends ViewPart {
 		 */
         @Override
         public int compare(Viewer compareViewer, Object o1, Object o2) {
-        	if (o1 instanceof AbstractCategory) {
-        		if (o2 instanceof AbstractCategory) {
-        			return ((AbstractCategory)o1).getDescription(false).compareTo(
-        					((AbstractCategory)o2).getDescription(false));
+        	if (o1 instanceof ICategory || o1 instanceof IQuery) {
+        		if (o2 instanceof ICategory|| o2 instanceof IQuery) {
+        			return ((ITaskListElement)o1).getDescription(false).compareTo(
+        					((ITaskListElement)o2).getDescription(false));
         		} else {
         			return -1;
         		}
         	} else if(o1 instanceof ITaskListElement){
-        		if (o2 instanceof AbstractCategory) {
+        		if (o2 instanceof ICategory || o2 instanceof IQuery) {
         			return -1;
         		} else if(o2 instanceof ITaskListElement) {
         			ITaskListElement element1 = (ITaskListElement) o1;
         			ITaskListElement element2 = (ITaskListElement) o2;
-        			if (element1.isCompleted() && element2.isCompleted()) {
-        				return element1.getPriority().compareTo(element2.getPriority());
-        			}
-        			if (element1.isCompleted()) return 1;
-	                if (element2.isCompleted()) return -1;
+//        			if (element1.isCompleted() && element2.isCompleted()) {
+//        				return element1.getPriority().compareTo(element2.getPriority());
+//        			}
+//        			if (element1.isCompleted()) return 1;
+//	                if (element2.isCompleted()) return -1;
 //        			if (element1.hasCorrespondingActivatableTask() && element2.hasCorrespondingActivatableTask()) {
 //        				ITask task1 = element1.getOrCreateCorrespondingTask();
 //        				ITask task2 = element2.getOrCreateCorrespondingTask();
@@ -628,7 +705,14 @@ public class TaskListView extends ViewPart {
 	                } else if (column == columnNames[2]) {
 	                    return element1.getPriority().compareTo(element2.getPriority());
 	                } else if (column == columnNames[3]) {
-	                    return element1.getDescription(true).compareTo(element2.getDescription(true));
+	                	String c1 = element1.getStringForSortingDescription();
+	                	String c2 = element2.getStringForSortingDescription();
+	                	try{
+	                		return new Integer(c1).compareTo(new Integer(c2));
+	                	} catch (Exception e){}
+	                	
+	                	return c1.compareTo(c2);
+	                		                	
 	                } else {
 	                	return 0;
 	                }
@@ -1015,7 +1099,7 @@ public class TaskListView extends ViewPart {
 
     private void updateActionEnablement(Action action, ITaskListElement element){
     
-		if(element instanceof Task){
+		if(element instanceof ITask){
 			if(action instanceof MarkTaskCompleteAction){
 				if(element.isCompleted()){
 					action.setEnabled(false);
@@ -1039,15 +1123,21 @@ public class TaskListView extends ViewPart {
 			} else if(action instanceof RenameAction){
 				action.setEnabled(true);
 			}
-		} else if(element instanceof TaskCategory) {
+		} else if(element instanceof ICategory) {
 			if(action instanceof MarkTaskCompleteAction){
 				action.setEnabled(false);
 			} else if(action instanceof MarkTaskIncompleteAction){
 					action.setEnabled(false);
 			} else if(action instanceof DeleteAction){
-				action.setEnabled(true);
+				if(((ICategory)element).isArchive())
+					action.setEnabled(false);
+				else
+					action.setEnabled(true);
 			} else if(action instanceof CreateTaskAction){
-				action.setEnabled(true);
+				if(((ICategory)element).isArchive())
+					action.setEnabled(false);
+				else
+					action.setEnabled(true);
 			} else if(action instanceof GoIntoAction){
 				TaskCategory cat = (TaskCategory) element;
 				if(cat.getChildren().size() > 0){
@@ -1060,7 +1150,10 @@ public class TaskListView extends ViewPart {
 			} else if(action instanceof CopyDescriptionAction){
 				action.setEnabled(true);
 			} else if(action instanceof RenameAction){
-				action.setEnabled(true);
+				if(((ICategory)element).isArchive())
+					action.setEnabled(false);
+				else
+					action.setEnabled(true);
 			}
 		} else {
 			action.setEnabled(true);

@@ -35,7 +35,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.AbstractCategory;
+import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
@@ -62,19 +63,6 @@ public class TaskListExternalizer {
 		TaskListExtensionReader.initExtensions(externalizers, defaultExternalizer);
 	}
 	
-//	public void addExternalizer(ITaskListExternalizer externalizer) {
-//		externalizers.add(externalizer);
-//		defaultExternalizer.setExternalizers(externalizers);
-//		MylarTasklistPlugin.getTaskListManager().getTaskList().clear();
-//		readTaskList(MylarTasklistPlugin.getTaskListManager().getTaskList(), MylarTasklistPlugin.getTaskListManager().getTaskListFile());
-//		if(MylarTasklistPlugin.getDefault().getContributor() != null){
-//			MylarTasklistPlugin.getDefault().getContributor().restoreState(TaskListView.getDefault());
-//			if (TaskListView.getDefault() != null) {
-//				TaskListView.getDefault().getViewer().refresh();
-//			}
-//		}
-//	}
-	
 	public void removeExternalizer(ITaskListExternalizer externalizer) {
 		externalizers.remove(externalizer);
 	}
@@ -100,10 +88,11 @@ public class TaskListExternalizer {
 			externalizer.createRegistry(doc, root);
 		}		
 
-		for (AbstractCategory category : tlist.getCategories()) {
+		for (ICategory category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
-				if (externalizer.canCreateElementFor(category)) element = externalizer.createCategoryElement(category, doc, root);
+				if (externalizer.canCreateElementFor(category)) 
+					element = externalizer.createCategoryElement(category, doc, root);
 			}
 			if (element == null && defaultExternalizer.canCreateElementFor(category)) {
 				defaultExternalizer.createCategoryElement(category, doc, root);		
@@ -111,6 +100,19 @@ public class TaskListExternalizer {
 				MylarPlugin.log("Did not externalize: " + category, this);
 			}
 		}
+		
+		for (IQuery query: tlist.getQueries()) {
+			Element element = null;
+			for (ITaskListExternalizer externalizer : externalizers) {
+				if (externalizer.canCreateElementFor(query)) element = externalizer.createQueryElement(query, doc, root);
+			}
+			if (element == null && defaultExternalizer.canCreateElementFor(query)) {
+				defaultExternalizer.createQueryElement(query, doc, root);		
+			} else if(element == null){
+				MylarPlugin.log("Did not externalize: " + query, this);
+			}
+		}
+		
 		for (ITask task : tlist.getRootTasks()) {
 			try {
 				Element element = null;
@@ -189,10 +191,6 @@ public class TaskListExternalizer {
 		}
 	}
 	
-//	private void writeTask(ITask task, Document doc, Element parent) {
-//
-//	}
-	
 	public void readTaskList(TaskList tlist, File inFile) {
 		initExtensions();
 		MylarTasklistPlugin.getDefault().restoreTaskHandlerState();
@@ -240,7 +238,21 @@ public class TaskListExternalizer {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
 							}						
-						} else {
+						} else if (child.getNodeName().endsWith(DefaultTaskListExternalizer.TAG_QUERY)) {													
+							for (ITaskListExternalizer externalizer : externalizers) {
+								if (externalizer.canReadQuery(child)) {
+									externalizer.readQuery(child, tlist);
+									wasRead = true;
+									break;
+								}
+							}
+							if (!wasRead && defaultExternalizer.canReadCategory(child)) {
+								defaultExternalizer.readQuery(child, tlist);
+							} else {
+								// MylarPlugin.log("Did not read: " +
+								// child.getNodeName(), this);
+							}						
+						}else {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
@@ -364,7 +376,42 @@ public class TaskListExternalizer {
     
     
     
-    
+    /*
+     *
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
     
     
     
@@ -495,7 +542,7 @@ public class TaskListExternalizer {
 			externalizer.createRegistry(doc, root);
 		}		
 
-		for (AbstractCategory category : tlist.getCategories()) {
+		for (ICategory category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category)) element = externalizer.createCategoryElement(category, doc, root);

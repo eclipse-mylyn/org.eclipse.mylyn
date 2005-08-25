@@ -34,14 +34,11 @@ public interface ITaskListElement {
     
     public abstract String getDescription(boolean label);
     
+    public abstract void setDescription(String description);
+    
     public abstract String getHandle();
     
-    /**
-     * Used for wrapping bugzilla hits
-     */
-    public ITask getOrCreateCorrespondingTask();
-
-	public abstract boolean hasCorrespondingActivatableTask();
+    public abstract void setHandle(String id);
 	
     public abstract boolean isDirectlyModifiable();
     
@@ -56,4 +53,6 @@ public interface ITaskListElement {
 	public abstract String getToolTipText();
 	
 	public abstract boolean isCompleted();
+
+	public abstract String getStringForSortingDescription();
 }

@@ -65,7 +65,7 @@ public class PlanningGameSorter extends ViewerSorter {
 	}
 	
 	private int compareDescription(ITask task1, ITask task2) {
-		return task1.getLabel().compareTo(task2.getLabel());
+		return task1.getDescription(false).compareTo(task2.getDescription(false));
 	}
 	
 	private int comparePriority(ITask task1, ITask task2) {
@@ -77,7 +77,12 @@ public class PlanningGameSorter extends ViewerSorter {
 	}
 
 	private int compareCreationDate(ITask task1, ITask task2) {
-		return task2.getCreationDate().compareTo(task1.getCreationDate());
+		if(task1.getCreationDate() == null)
+			return 1;
+		else if(task2.getCreationDate() == null)
+			return -1;
+		else
+			return task2.getCreationDate().compareTo(task1.getCreationDate());
 	}
 	
 	private int compareDuration(ITask task1, ITask task2) {

@@ -55,8 +55,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		            "Delete the selected query and all contained tasks?");
 			if (!deleteConfirmed) 
 				return;
-			BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
-			MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
+			BugzillaQueryCategory query = (BugzillaQueryCategory) element;
+			MylarTasklistPlugin.getTaskListManager().deleteQuery(query);
 		} else if (element instanceof BugzillaTask) {
 			BugzillaTask task = (BugzillaTask) element;
 			if (task.isActive()) {
@@ -106,14 +106,31 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			} else {
 				// not supported
 			}
-		}
-		else if (element instanceof BugzillaQueryCategory){
-			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory)element;
-	       	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(), queryCategory.getUrl(), queryCategory.getDescription(false), queryCategory.getMaxHits()+"");
+		} else if(element instanceof BugzillaCustomQuery){
+			BugzillaCustomQuery queryCategory = (BugzillaCustomQuery)element;
+	       	BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(), queryCategory.getQueryString(), queryCategory.getDescription(false), queryCategory.getMaxHits()+"");
         	if(sqd.open() == Dialog.OK){
 	        	queryCategory.setDescription(sqd.getName());
-	        	queryCategory.setUrl(sqd.getUrl());
-	        	queryCategory.setMaxHits(sqd.getMaxHits());
+	        	queryCategory.setQueryString(sqd.getUrl());
+	        	int maxHits = -1;
+	        	try{
+	        		maxHits = Integer.parseInt(sqd.getMaxHits());
+	        	} catch(Exception e){}
+	        	queryCategory.setMaxHits(maxHits);
+	        	
+	        	new RefreshBugzillaAction(queryCategory).run();
+        	}
+		}else if (element instanceof BugzillaQueryCategory){
+			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory)element;
+	       	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(), queryCategory.getQueryString(), queryCategory.getDescription(false), queryCategory.getMaxHits()+"");
+        	if(sqd.open() == Dialog.OK){
+	        	queryCategory.setDescription(sqd.getName());
+	        	queryCategory.setQueryString(sqd.getUrl());
+	        	int maxHits = -1;
+	        	try{
+	        		maxHits = Integer.parseInt(sqd.getMaxHits());
+	        	} catch(Exception e){}
+	        	queryCategory.setMaxHits(maxHits);
 	        	
 	        	new RefreshBugzillaAction(queryCategory).run();
         	}

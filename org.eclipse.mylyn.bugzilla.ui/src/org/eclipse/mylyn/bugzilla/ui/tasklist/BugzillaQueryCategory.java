@@ -30,8 +30,8 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
-import org.eclipse.mylar.tasklist.AbstractCategory;
-import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Color;
@@ -42,15 +42,21 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Shawn Minto
  */
-public class BugzillaQueryCategory extends AbstractCategory {
+public class BugzillaQueryCategory implements IQuery {
 	
 	private static final long serialVersionUID = 5517146402031743253L;	
-	private String url;
+	private String queryString;
 	private int maxHits;
-	private List<BugzillaHit> hits = new ArrayList<BugzillaHit>();
+	private List<IQueryHit> hits = new ArrayList<IQueryHit>();
 	private boolean hasBeenRefreshed = false;
 	
 	protected Date lastRefresh;
+	
+	protected String description = "";
+	private String handle = "";
+	
+	private ICategorySearchListener listener = new BugzillaQueryCategorySearchListener();
+	private boolean isMaxReached = false;
 	
 	public class BugzillaQueryCategorySearchListener implements ICategorySearchListener { 
 
@@ -65,13 +71,10 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		}
 
 	}	
-	
-	private ICategorySearchListener listener = new BugzillaQueryCategorySearchListener();
-	private boolean isMaxReached = false;
-	
+		
 	public BugzillaQueryCategory(String label, String url, String maxHits) {
-		super(label);
-		this.url = url;
+		this.description = label;
+		this.queryString = url;
 		try{
 			this.maxHits = Integer.parseInt(maxHits);
 		} catch (Exception e){
@@ -82,14 +85,14 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	public String getDescription(boolean label) {
 		if (hits.size() > 0 || !label) {
 			if(isMaxReached && label){
-				return super.getDescription(label) + " <first "+ maxHits +" hits>";
+				return description + " <first "+ maxHits +" hits>";
 			} else {
-				return super.getDescription(label);
+				return description;
 			}
 		} else if (!hasBeenRefreshed) {
-			return super.getDescription(label) + " <needs refresh>";
+			return description + " <needs refresh>";
 		} else {
-			return super.getDescription(label) + " <no hits>";
+			return description + " <no hits>";
 		}
 	}
 	
@@ -98,11 +101,13 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		return TaskListImages.getImage(BugzillaImages.CATEGORY_QUERY);
 	}
 	
-	public String getUrl() {
-		return url;
+	public String getQueryString() {
+		return queryString;
 	}
 	
-	public List<BugzillaHit> getChildren() {
+	
+	
+	public List<IQueryHit> getChildren() {
 		return hits;
 	}
 	
@@ -119,7 +124,7 @@ public class BugzillaQueryCategory extends AbstractCategory {
 	public void refreshBugs() {
 		hits.clear();
 		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(
-				getUrl(), maxHits);
+				getQueryString(), maxHits);
 		catSearch.addResultsListener(listener);
 		final IStatus[] status = new IStatus[1];
 
@@ -169,8 +174,8 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		return;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setQueryString(String url) {
+		this.queryString = url;
 	}
 	
 	public String getPriority() {
@@ -178,20 +183,12 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		if (hits.isEmpty()) {
 			return "P1";
 		}
-		for (BugzillaHit hit : hits) {
+		for (IQueryHit hit : hits) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
 			}
 		}
 		return highestPriority;
-	}
-
-	public ITask getOrCreateCorrespondingTask() {
-		return null;
-	}
-	
-	public boolean hasCorrespondingActivatableTask() {
-		return false;
 	}
 
 	public boolean isDirectlyModifiable() {
@@ -242,11 +239,27 @@ public class BugzillaQueryCategory extends AbstractCategory {
 		return maxHits;
 	}
 
-	public void setMaxHits(String maxHits) {
-		try{
-			this.maxHits = Integer.parseInt(maxHits);
-		} catch (Exception e){
-			this.maxHits = -1;
-		}
+	public void setMaxHits(int maxHits) {
+		this.maxHits = maxHits;
+	}
+
+	public Image getStatusIcon() {
+		return null;
+	}
+
+	public String getHandle() {
+		return handle;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;		
+	}
+
+	public String getStringForSortingDescription() {
+		return getDescription(true);
+	}
+
+	public void setHandle(String id) {
+		this.handle = id;
 	}
 }

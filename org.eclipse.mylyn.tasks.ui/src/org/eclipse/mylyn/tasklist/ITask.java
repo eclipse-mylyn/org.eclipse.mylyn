@@ -29,14 +29,6 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract String getPath();
 
     public abstract void setPath(String path);
-
-    public abstract String getHandle();
-
-    public abstract void setHandle(String id);
-
-    public abstract String getLabel();
-
-    public abstract void setLabel(String label);
     
     public abstract ITask getParent(); 
     
@@ -45,9 +37,7 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract boolean isActive();
     
     public abstract void setActive(boolean active, boolean isStalled);
-    
-    public abstract boolean isCompleted();
-    
+        
     public abstract void setCompleted(boolean completed);
     
     public abstract RelatedLinks getRelatedLinks();
@@ -67,9 +57,7 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract long getElapsedTimeLong();
     
     public abstract void setElapsedTime(String elapsed);
-    
-//    public abstract String getEstimatedTimeForDisplay();
-    
+        
     public abstract int getEstimateTime();
     
     public abstract void setEstimatedTime(int estimated);
@@ -79,24 +67,16 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract void addSubTask(ITask t);
 
     public abstract void removeSubTask(ITask t);
-        	
-	public abstract String getToolTipText();
-
-    public abstract String getPriority();
-    
-    public abstract boolean canEditDescription();
     
     public abstract String getDeleteConfirmationMessage();
     
     public abstract void setPriority(String priority);
     
-    public abstract void setCategory(TaskCategory cat);
+    public abstract void setCategory(ICategory cat);
     
-    public abstract TaskCategory getCategory();
+    public abstract ICategory getCategory();
     
     public abstract String getElapsedTimeForDisplay();
-
-	public abstract boolean participatesInTaskHandles();
 	
 	public abstract Date getEndDate();
 	
@@ -125,4 +105,6 @@ public interface ITask extends Serializable, ITaskListElement {
 	public abstract void setReminded(boolean reminded);
 
 	abstract void internalSetCategory(TaskCategory category);
+
+	public abstract boolean participatesInTaskHandles();
 }

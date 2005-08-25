@@ -26,6 +26,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaHit;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -73,8 +74,8 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 						public void run() {
 							cat.refreshBugs();
-							for(BugzillaHit hit: cat.getChildren()){
-								if(hit.hasCorrespondingActivatableTask()){
+							for(IQueryHit hit: cat.getChildren()){
+								if(hit.hasCorrespondingActivatableTask() && hit instanceof BugzillaHit){
 									BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)hit.getOrCreateCorrespondingTask());
 								}
 							}

@@ -55,16 +55,16 @@ public class Task implements ITask {
     private String priority = "P3";
     private String notes = "";
     private int estimatedTime = 0;
-//    private String elapsedTime = "";
     private boolean completed;
     private RelatedLinks links = new RelatedLinks();
-    private TaskCategory parentCategory = null;
+    private ICategory parentCategory = null;
     
     private Date timeActivated = null;
     private Date endDate = null;
     private Date creationDate = null;
     private Date reminderDate=null;
     private long elapsed;
+
     /**
      * null if root
      */
@@ -105,13 +105,7 @@ public class Task implements ITask {
     public void setHandle(String id) {
         this.handle = id;
     }
-    public String getLabel() {
-        return label;
-    }
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
+    
     public ITask getParent() {
         return parent;
     }
@@ -335,7 +329,7 @@ public class Task implements ITask {
 		}
 	}
 	
-	public void setCategory(TaskCategory cat) {
+	public void setCategory(ICategory cat) {
 		this.parentCategory = cat;
 		if (MylarTasklistPlugin.getDefault() != null) {
 			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
@@ -346,7 +340,7 @@ public class Task implements ITask {
 		this.parentCategory = cat;
 	}
     
-    public TaskCategory getCategory() {
+    public ICategory getCategory() {
     	return parentCategory;
     }
 
@@ -355,7 +349,7 @@ public class Task implements ITask {
 	}
 
 	public String getDescription(boolean label) {
-		return getLabel();
+		return this.label;
 	}
 
 	public Image getStatusIcon() {
@@ -378,16 +372,8 @@ public class Task implements ITask {
     public String getDeleteConfirmationMessage() {
     	return "Delete the selected task and discard task context?";
     }
-
+    
 	public boolean isDirectlyModifiable() {
-		return true;
-	}
-
-	public ITask getOrCreateCorrespondingTask() {
-		return this;
-	}
-	
-	public boolean hasCorrespondingActivatableTask() {
 		return true;
 	}
 	
@@ -537,5 +523,13 @@ public class Task implements ITask {
 		} else {
 			return "";
 		}
+	}
+
+	public void setDescription(String description) {
+		this.label = description;
+	}
+
+	public String getStringForSortingDescription() {
+		return getDescription(true);
 	}
 }
