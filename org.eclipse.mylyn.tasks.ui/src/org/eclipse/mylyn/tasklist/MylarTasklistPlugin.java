@@ -82,7 +82,8 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
     
 	private ResourceBundle resourceBundle;
-	private static Date lastSave = null;
+	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1*3600*1000; // every hour
+	private static Date lastBackup = new Date();
 //	private ITaskListActionContributor primaryContributor;
 	public enum TaskListSaveMode {
 		ONE_HOUR,
@@ -193,7 +194,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
         }
         
         public void shellActivated(ShellEvent arg0) { 
-//        	getDefault().checkTaskListSave();
+        	getDefault().checkTaskListBackup();
         	getDefault().checkReminders();
         }
         
@@ -331,24 +332,24 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
         for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
             MylarPlugin.getContextManager().saveContext(task.getHandle(), task.getPath());
         }
-        lastSave = new Date();
-		plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+//        lastSave = new Date();
+//		plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
     } 
     
-//    private void checkTaskListSave() {
+    private void checkTaskListBackup() {
 //    	if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
 //			lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
 //		} else {
 //			lastSave = new Date();
 //			getPrefs().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
 //		}
-//    	Date currentTime = new Date();        	
-//    	if (currentTime.getTime() > lastSave.getTime() + TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
-//    		taskListManager.saveTaskList();
-//    		lastSave = new Date();
+    	Date currentTime = new Date();        	
+    	if (currentTime.getTime() > lastBackup.getTime() + AUTOMATIC_BACKUP_SAVE_INTERVAL ) {//TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
+    		MylarTasklistPlugin.getDefault().createTaskListBackupFile();
+    		lastBackup = new Date();
 //			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
-//    	}
-//    }
+    	}
+    }
 
     private void checkReminders() {
 //    	if (getPrefs().getBoolean(REMINDER_CHECK)) {
@@ -458,7 +459,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		taskListListeners.add(taskListListner);
 	}
 		
-	public void createFileBackup() {
+	public void createTaskListBackupFile() {
 		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
