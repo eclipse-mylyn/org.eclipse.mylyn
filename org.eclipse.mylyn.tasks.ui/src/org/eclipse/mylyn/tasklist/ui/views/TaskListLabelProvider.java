@@ -108,7 +108,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 					  return new Color(Display.getCurrent(), 
 							  Math.max(0, backgroundColor.getRed()-30),
 							  Math.max(0, backgroundColor.getGreen()-30),
-							  255);
+							  200);
 				  } else {
 					  return backgroundColor;
 				  }
