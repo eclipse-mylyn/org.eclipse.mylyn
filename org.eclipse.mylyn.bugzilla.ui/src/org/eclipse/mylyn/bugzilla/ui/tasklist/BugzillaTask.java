@@ -414,8 +414,8 @@ public class BugzillaTask extends Task {
 //				notifyTaskDataChange();
 				return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 			}catch(Exception e){
-				MessageDialog.openError(null, "Error Opening Bug", "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()));
-				MylarPlugin.log(e, "couldn't open");
+//				MessageDialog.openError(null, "Error Opening Bug", "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()));
+				MylarPlugin.fail(e, "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()), true);
 			}
 			return Status.CANCEL_STATUS;
 		}
