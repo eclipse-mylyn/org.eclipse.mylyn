@@ -77,7 +77,7 @@ public class TaskListManagerTest extends TestCase {
         manager.readTaskList();
         assertNotNull(manager.getTaskList());
         assertEquals(3, manager.getTaskList().getRootTasks().size());
-        assertEquals(2, manager.getTaskList().getCategories().size());
+        assertEquals(3, manager.getTaskList().getCategories().size());
 
     	List<ITask> readList = manager.getTaskList().getRootTasks();
     	assertTrue(readList.get(0).getDescription(true).equals("task 1"));
@@ -85,12 +85,15 @@ public class TaskListManagerTest extends TestCase {
     	assertTrue(readList.get(1).getDescription(true).equals("task 2"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
     	
+    	
     	List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
-    	readList = readCats.get(0).getChildren();
+    	assertTrue(readCats.get(0).getDescription(true).equals("Bugzilla Archive"));
+    	
+    	readList = readCats.get(1).getChildren();
     	assertTrue(readList.get(0).getDescription(true).equals("task 3"));
     	assertTrue(readList.get(0).getChildren().get(0).getDescription(true).equals("sub 2"));
     	assertTrue(readList.get(1).getDescription(true).equals("task 4"));
-    	readList = readCats.get(1).getChildren();
+    	readList = readCats.get(2).getChildren();
     	assertTrue(readList.get(0).getDescription(true).equals("task 5"));
     	assertTrue(readList.get(1).getDescription(true).equals("task 6"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
