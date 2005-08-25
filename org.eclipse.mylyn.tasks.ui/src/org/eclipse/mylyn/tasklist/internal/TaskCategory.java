@@ -78,7 +78,11 @@ public class TaskCategory implements ICategory, Serializable {
 	}
         
 	public Image getIcon() {
-		return TaskListImages.getImage(TaskListImages.CATEGORY);
+		if(isArchive()){
+			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
+		} else {
+			return TaskListImages.getImage(TaskListImages.CATEGORY);
+		}
 	}
     
 
