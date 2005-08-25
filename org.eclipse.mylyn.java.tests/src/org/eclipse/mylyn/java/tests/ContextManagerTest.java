@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
@@ -116,6 +117,37 @@ public class ContextManagerTest extends AbstractContextTest {
         	// don't care about this event
         }
     }
+    
+	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
+        IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
+        IPackageFragment p2 = project1.createPackage("p2");
+        
+        IType type2 = project1.createType(p2, "Type2.java", "public class Type2 { }" );
+        IMethod m2 = type2.createMethod("void m2() { }", null, true, null);
+                
+        assertTrue(m1.exists());
+        assertEquals(1, type1.getMethods().length);
+        
+        monitor.selectionChanged(part, new StructuredSelection(m1));
+        IMylarContextNode m1Node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
+        assertTrue(m1Node.getDegreeOfInterest().isInteresting()); 
+        monitor.selectionChanged(part, new StructuredSelection(m2));
+        IMylarContextNode m2Node = MylarPlugin.getContextManager().getNode(m2.getHandleIdentifier());
+        manager.handleInteractionEvent(mockInterestContribution(
+                m2.getHandleIdentifier(), scaling.getLandmark()));
+        assertTrue(m2Node.getDegreeOfInterest().isLandmark()); 
+        
+        
+        AbstractRelationshipProvider provider = MylarJavaPlugin.getStructureBridge().getProviders().get(0);
+        provider.createEdge(m2Node, m1Node.getStructureKind(), m2.getHandleIdentifier());
+        
+        assertEquals(1, m2Node.getEdges().size());
+        
+        manager.resetLandmarkRelationshipsOfKind(provider.getId());
+        
+        assertEquals(0, m2Node.getEdges().size());
+	}
     
     public void testPredictedInterest() {
     	IMylarContextNode node = MylarPlugin.getContextManager().getNode("doesn't exist");

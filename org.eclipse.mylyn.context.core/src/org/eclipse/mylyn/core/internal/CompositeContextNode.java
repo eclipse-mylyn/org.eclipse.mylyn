@@ -89,6 +89,7 @@ public class CompositeContextNode implements IMylarContextNode {
         }
     }
 
+    
     /**
      * TODO: need composite edges here
      */
@@ -106,9 +107,13 @@ public class CompositeContextNode implements IMylarContextNode {
     public Collection<MylarContextEdge> getEdges() {
         Set<MylarContextEdge> edges = new HashSet<MylarContextEdge>();
         
-        for (IMylarContextNode node : nodes) edges.addAll(node.getEdges());
+        for (MylarContextNode node : nodes) edges.addAll(node.getEdges());
         return edges;
     }
+    
+    public void clearEdges() {
+    	for (MylarContextNode node : nodes) node.clearEdges();
+	}
     
     @Override
     public boolean equals(Object obj) { 

@@ -68,9 +68,16 @@ public class MylarContextNode implements IMylarContextNode {
         return edges.get(targetHandle);
     }
     
-    void addEdge(MylarContextEdge edge) {
+    /**
+     * TODO: reduce visibility
+     */
+    public void addEdge(MylarContextEdge edge) {
         edges.put(edge.getTarget().getElementHandle(), edge);
     }
+    
+    public void clearEdges() {
+		edges.clear();
+	}
     
     void removeEdge(IMylarContextEdge edge) {
     	edges.remove(edge.getTarget().getElementHandle());

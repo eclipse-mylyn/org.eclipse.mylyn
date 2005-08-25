@@ -32,6 +32,8 @@ public interface IMylarContextNode {
     public abstract IMylarContext getContext();
     
     public abstract Collection<MylarContextEdge> getEdges();
-    
+        
     public abstract MylarContextEdge getEdge(String targetHandle);
+
+    public abstract void clearEdges();
 }

@@ -15,6 +15,9 @@ package org.eclipse.mylar.core;
 
 import java.util.List;
 
+import org.eclipse.mylar.core.internal.CompositeContextNode;
+import org.eclipse.mylar.core.internal.MylarContextEdge;
+import org.eclipse.mylar.core.internal.MylarContextNode;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 
 /**
@@ -74,24 +77,27 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
         MylarPlugin.getContextManager().handleInteractionEvent(event, false);
         
-//        CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(elementHandle);
-//        MylarContextNode concreteTargetNode = null;
-//        if (targetNode.getNodes().size() != 1) {
-//        	return;
-//        } else {
-//        	concreteTargetNode = targetNode.getNodes().iterator().next();
-//        }
-//        if (concreteTargetNode != null) {
-//	        for (MylarContextNode sourceNode : ((CompositeContextNode)node).getNodes()) {
-//	        	
-//	        	MylarContextEdge edge = new MylarContextEdge(elementKind, getId(), sourceNode, concreteTargetNode, sourceNode.getContext());
-//	        	sourceNode.addEdge(edge);
-//
-//			}
-//        }
-//        InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
-//        MylarPlugin.getContextManager().handleInteractionEvent(event);
+        createEdge(node, elementKind, elementHandle);
     }
+
+    /**
+     * For testing
+     */
+	public void createEdge(IMylarContextNode toNode, String elementKind, String targetHandle) {
+		CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(targetHandle);
+        MylarContextNode concreteTargetNode = null;
+        if (targetNode.getNodes().size() != 1) {
+        	return;
+        } else {
+        	concreteTargetNode = targetNode.getNodes().iterator().next();
+        }
+        if (concreteTargetNode != null) {
+	        for (MylarContextNode sourceNode : ((CompositeContextNode)toNode).getNodes()) {
+	        	MylarContextEdge edge = new MylarContextEdge(elementKind, getId(), sourceNode, concreteTargetNode, sourceNode.getContext());
+	        	sourceNode.addEdge(edge);
+			}
+        }
+	}
     
     protected abstract String getSourceId();
 

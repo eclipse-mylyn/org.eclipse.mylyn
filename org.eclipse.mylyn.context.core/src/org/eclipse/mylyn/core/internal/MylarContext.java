@@ -70,6 +70,9 @@ public class MylarContext implements IMylarContext, Serializable {
         return parseInteractionEvent(event);
     }
 
+    /**
+     * Propagations and predictions are not addes as edges
+     */
     @MylarInterest(level=MylarInterest.Level.LANDMARK)
     private IMylarContextNode parseInteractionEvent(InteractionEvent event) {
     	if (event.getKind().isUserEvent()) numUserEvents++;
@@ -78,16 +81,16 @@ public class MylarContext implements IMylarContext, Serializable {
             node = new MylarContextNode(event.getStructureKind(), event.getStructureHandle(), this);
             nodes.put(event.getStructureHandle(), node);
         }
-//        boolean addToInteractionHistory = true;
+
         if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null && lastEdgeNode != null
-            && event.getKind() != InteractionEvent.Kind.PROPAGATION) {
+            && event.getKind() != InteractionEvent.Kind.PROPAGATION 
+            && event.getKind() != InteractionEvent.Kind.PREDICTION) {
             IMylarContextNode navigationSource = nodes.get(lastEdgeEvent.getStructureHandle());
             if (navigationSource != null) {
                MylarContextEdge edge = lastEdgeNode.getEdge(event.getStructureHandle());
                if (edge == null) {
                     edge = new MylarContextEdge(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node, this);
                     lastEdgeNode.addEdge(edge);
-//                    suppressExternalization = false;
                 }
                 DegreeOfInterest doi = (DegreeOfInterest)edge.getDegreeOfInterest();
                 doi.addEvent(event); 
