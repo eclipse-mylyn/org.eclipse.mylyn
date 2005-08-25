@@ -18,6 +18,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListElement;
@@ -42,8 +43,18 @@ public class TaskListHighlighterMenuContributor implements ITaskListDynamicSubMe
           if (selectedElement instanceof ITaskListElement) {
         	  Action action = new Action() {
             	  @Override
-              		public void run() { 
-            		  	ITask task = ((ITaskListElement)selectedElement).getOrCreateCorrespondingTask(); 
+              		public void run() {
+            		  	ITask task = null;
+						if (selectedElement instanceof ITask) {
+							task = (ITask) selectedElement;
+						} else if (selectedElement instanceof IQueryHit) {
+							if (((IQueryHit) selectedElement)
+									.hasCorrespondingActivatableTask()) {
+								task = ((IQueryHit) selectedElement)
+										.getOrCreateCorrespondingTask();
+							}
+						}
+
             		  	if (!task.isActive()) {
 	        	    		MessageDialog.openError(Workbench.getInstance()
 	        						.getActiveWorkbenchWindow().getShell(), "Mylar Highlighting",
