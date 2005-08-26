@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.DateUtil;
+import org.eclipse.mylar.core.util.IInteractionEventListener;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -52,6 +53,13 @@ public class MylarPlugin extends AbstractUIPlugin {
     private List<AbstractSelectionMonitor> selectionMonitors = new ArrayList<AbstractSelectionMonitor>();
     private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
     
+    /**
+     * TODO: this could be merged with context interaction events rather than
+     * requiring update from the monitor.
+     */
+    private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
+	  
+    
     public static final String USER_ID = "org.eclipse.mylar.user.id";
     public static boolean started = false;
     
@@ -64,7 +72,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public static final String TASKLIST_EDITORS_CLOSE = "org.eclipse.mylar.tasklist.activation.editors.close.all";
 	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
-
     
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";
@@ -393,5 +400,23 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public void setDefaultBridge(IMylarStructureBridge defaultBridge) {
 		this.defaultBridge = defaultBridge;
+	}
+	
+	public void addInteractionListener(IInteractionEventListener listener) {
+		interactionListeners.add(listener);
+	}
+	
+	public void removeInteractionListener(IInteractionEventListener listener) {
+		interactionListeners.remove(listener);
+	}
+
+    public void notifyInteractionObserved(InteractionEvent interactionEvent) {
+		for (IInteractionEventListener listener : interactionListeners) {
+			listener.interactionObserved(interactionEvent);
+		}
+    }
+	
+	public List<IInteractionEventListener> getInteractionListeners() {
+		return interactionListeners;
 	}
 }
