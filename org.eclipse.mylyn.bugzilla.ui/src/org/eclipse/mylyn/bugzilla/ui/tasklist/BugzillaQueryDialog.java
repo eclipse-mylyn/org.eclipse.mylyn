@@ -61,14 +61,22 @@ public class BugzillaQueryDialog extends Dialog {
 	
 	private boolean enabled = true;
 	
+	private String title;
+	
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
 		isNew = true;
 		isCustom = false;
 		searchOptionPage = new BugzillaSearchOptionPage();
-		
+		title = "New Bugzilla Query"; 
 	}
 	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText(title);
+	}
+
 	public BugzillaQueryDialog(Shell parentShell, String startingUrl, String name, String maxHits) {
 		super(parentShell);
 		searchOptionPage = new BugzillaSearchOptionPage();
@@ -76,6 +84,7 @@ public class BugzillaQueryDialog extends Dialog {
 		this.maxHits = maxHits;
 		this.name = name;
 		isNew = false;
+		title = "Edit Bugzilla Query"; 
 	}
 
 	public String getName() {
