@@ -131,11 +131,11 @@ public class ContextManagerTest extends AbstractContextTest {
         monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
         assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
         
-        filter.setExcludedMatches("*.java");
-        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-
-        filter.setExcludedMatches("foo");
-        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
+//        filter.setExcludedMatches("*.java");
+//        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
+//
+//        filter.setExcludedMatches("foo");
+//        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
 	}
     
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
