@@ -162,7 +162,8 @@ public class PdeStructureBridge implements IMylarStructureBridge {
                 return node;
             }
         }catch(Exception e){
-        	MylarPlugin.log(e, "handle failed");
+        	// ignore, means file doesn't exist
+//        	MylarPlugin.log(e, "handle failed");
         }
         return null;
     }

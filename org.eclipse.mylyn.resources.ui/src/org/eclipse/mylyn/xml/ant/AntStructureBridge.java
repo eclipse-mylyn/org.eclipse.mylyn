@@ -110,6 +110,8 @@ public class AntStructureBridge implements IMylarStructureBridge {
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getObjectForHandle(java.lang.String)
      */
     public Object getObjectForHandle(String handle) {
+    	if(handle == null)
+    		return null;
         int first = handle.indexOf(";");
         String filename = "";
         if(first == -1){
@@ -168,7 +170,8 @@ public class AntStructureBridge implements IMylarStructureBridge {
             return null;
             
         }catch(Exception e){
-        	MylarPlugin.log(e, "handle failed");
+        	// ignore this  Means that the file doesn't exist
+//        	MylarPlugin.log(e, "handle failed");
         }
         return null;
     }

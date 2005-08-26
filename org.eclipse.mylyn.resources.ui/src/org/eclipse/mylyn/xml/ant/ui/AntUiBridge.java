@@ -117,10 +117,14 @@ public class AntUiBridge implements IMylarUiBridge {
     private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
         if (file != null) {
             IWorkbenchPage p= MylarXmlPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            if (p != null) {
-                IEditorPart editorPart= IDE.openEditor(p, file, activate);
+            if (p != null && file.exists()) {
+            	try{
+            		IEditorPart editorPart= IDE.openEditor(p, file, activate);
+            		return editorPart;
+            	} catch (Exception e){
+            		// ignore this
+            	}
 //                initializeHighlightRange(editorPart);
-                return editorPart;
             }
         }
         return null;

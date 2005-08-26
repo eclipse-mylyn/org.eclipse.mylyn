@@ -114,7 +114,7 @@ public class PdeUiBridge implements IMylarUiBridge {
             
 
         } catch(Exception e){
-            MylarPlugin.log(e, "ERROR OPENING XML EDITOR\n" + e.getMessage());
+//            MylarPlugin.log(e, "ERROR OPENING XML EDITOR\n" + e.getMessage());
         }
     }
     
@@ -128,7 +128,7 @@ public class PdeUiBridge implements IMylarUiBridge {
     private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
         if (file != null) {
             IWorkbenchPage p= MylarXmlPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            if (p != null) {
+            if (p != null && file.exists()) {
                 IEditorPart editorPart= IDE.openEditor(p, file, activate);
 //                initializeHighlightRange(editorPart);
                 return editorPart;
