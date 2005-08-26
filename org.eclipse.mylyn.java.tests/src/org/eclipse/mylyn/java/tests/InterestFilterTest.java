@@ -69,7 +69,7 @@ public class InterestFilterTest extends TestCase {
         manager.contextDeleted(taskId, taskId);
     }
     
-	public void testPatternMatch() {
+	public void testSelection() {
 		assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
 		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
         manager.contextActivated(taskscape);
@@ -77,10 +77,10 @@ public class InterestFilterTest extends TestCase {
         monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
         assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
         
-        filter.setExcludedMatches("*.java");
-        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-
-        filter.setExcludedMatches("foo");
-        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
+//        filter.setExcludedMatches("*Type*");
+//        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
+//
+//        filter.setExcludedMatches("foo");
+//        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
 	}
 }
