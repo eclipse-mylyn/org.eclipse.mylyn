@@ -58,6 +58,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";
     
     private static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters.task.";
+    public static final String INTEREST_FILTER_EXCLUSION = "org.eclipse.mylar.ui.interest.filter.exclusion";
     public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
     public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylar.ui.gamma.darkened";
     public static final String GAMMA_SETTING_STANDARD = "org.eclipse.mylar.ui.gamma.standard";

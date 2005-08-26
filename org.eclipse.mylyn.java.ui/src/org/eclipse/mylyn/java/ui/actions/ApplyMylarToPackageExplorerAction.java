@@ -79,7 +79,7 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	}
 
 	public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {
-
+		// ignore
 	}
 }
 

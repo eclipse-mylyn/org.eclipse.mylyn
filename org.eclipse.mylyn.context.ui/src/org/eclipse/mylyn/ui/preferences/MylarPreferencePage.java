@@ -17,6 +17,7 @@ package org.eclipse.mylar.ui.preferences;
 import java.util.Arrays;
 
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -50,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -63,23 +65,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * and gamma settings.
  * 
  * @author Ken Sueda
+ * @author Mik Kersten
  */
 public class MylarPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage, SelectionListener, ICellEditorListener {
 
-	// Table
+	private StringFieldEditor exclusionFieldEditor;
 	private Table table;
-
-	// Table viewer
 	private TableViewer tableViewer;
-
-	// Color dialog for 2nd cell
 	private ColorCellEditor colorDialogEditor;
-
-	// stores the current selection by user
 	private Highlighter selection = null;
-	
-	// content provider for the TableViewer
 	private HighlighterContentProvider contentProvider = null;
 	
 	// Buttons for gamma setting
@@ -122,6 +117,7 @@ public class MylarPreferencePage extends PreferencePage implements
 		tableViewer.setLabelProvider(new HighlighterLabelProvider());
 		tableViewer.setInput(MylarUiPlugin.getDefault().getHighlighterList());
 		createGammaSettingControl(entryTable);	
+		createExclusionFilterControl(entryTable);
 		
 		lightened.setEnabled(false);
 		darkened.setEnabled(false);
@@ -166,6 +162,8 @@ public class MylarPreferencePage extends PreferencePage implements
 	@Override
 	public boolean performOk() {        
 		getPreferenceStore().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX, MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
+        
+		getPreferenceStore().setValue(MylarUiPlugin.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
         		
 		ColorMap.GammaSetting gm = null;
 		if (standard.getSelection()) {
@@ -675,6 +673,21 @@ public class MylarPreferencePage extends PreferencePage implements
 		});
 	}	
 
+	private void createExclusionFilterControl(Composite parent) {
+		Group exclusionControl = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		
+		exclusionControl.setLayout(new RowLayout());
+		exclusionControl.setText("Interest filter exclusion");	
+
+		Label label = new Label(exclusionControl, SWT.LEFT);
+		label.setText("Resources matching the following pattern will always be interesting:");
+		
+		exclusionFieldEditor = new StringFieldEditor("", "",
+				StringFieldEditor.UNLIMITED, exclusionControl);
+//		createLabel(exclusionControl, );
+		return; 
+	}
+	
 	private void createGammaSettingControl(Composite parent) {
 		Group gammaSettingComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);
 		

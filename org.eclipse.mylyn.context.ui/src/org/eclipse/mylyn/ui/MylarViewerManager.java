@@ -62,7 +62,9 @@ public class MylarViewerManager implements IMylarContextListener {
 	}
 	
 	public void contextActivated(IMylarContext taskscape) {
-		for (AbstractApplyMylarAction action : managedActions) action.update(true);
+		if (taskscape.getActiveNode() != null) {
+			for (AbstractApplyMylarAction action : managedActions) action.update(true);
+		}
         IMylarContextNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);

@@ -33,6 +33,8 @@ public class InterestFilter extends ViewerFilter {
 
 	private Object temporarilyUnfiltered = null;
 	
+	private String excludedMatches;
+	
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {
         try {
@@ -82,5 +84,17 @@ public class InterestFilter extends ViewerFilter {
 
 	public Object getTemporarilyUnfiltered() {
 		return temporarilyUnfiltered;
+	}
+
+
+
+	public String getExcludedMatches() {
+		return excludedMatches;
+	}
+
+
+
+	public void setExcludedMatches(String excludedMatches) {
+		this.excludedMatches = excludedMatches;
 	}
 }

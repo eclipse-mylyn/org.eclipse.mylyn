@@ -41,7 +41,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
     protected IAction initAction = null;
     private boolean isSelfManaged = false;
     
-    protected ViewerFilter interestFilter;
+    protected InterestFilter interestFilter;
     
     public AbstractApplyMylarAction(InterestFilter interestFilter) {
         super();
@@ -159,6 +159,14 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	public String getPrefId() {
 		return prefId;
+	}
+
+	
+	/**
+	 * For testing.
+	 */
+	public InterestFilter getInterestFilter() {
+		return interestFilter;
 	}
 }
 

@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jun 6, 2005
-  */
+
 package org.eclipse.mylar.java.tests;
 
 import org.eclipse.jdt.core.IMethod;

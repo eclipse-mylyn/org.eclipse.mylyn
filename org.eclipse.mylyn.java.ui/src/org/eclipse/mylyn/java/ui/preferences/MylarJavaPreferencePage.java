@@ -61,7 +61,7 @@ public class MylarJavaPreferencePage extends PreferencePage implements
 		group.setText("Package Explorer");
 		
 		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
-		autoEnableExplorerFilter.setText("Automatically toggle interest filter on task activation/deactivation");
+		autoEnableExplorerFilter.setText("Automatically toggle interest filter on task activation/deactivation.");
 		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));
 	}
 	
