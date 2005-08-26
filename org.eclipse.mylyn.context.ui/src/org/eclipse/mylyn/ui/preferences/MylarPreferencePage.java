@@ -162,8 +162,7 @@ public class MylarPreferencePage extends PreferencePage implements
 	@Override
 	public boolean performOk() {        
 		getPreferenceStore().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX, MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
-        
-		getPreferenceStore().setValue(MylarUiPlugin.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
+        getPreferenceStore().setValue(MylarUiPlugin.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
         		
 		ColorMap.GammaSetting gm = null;
 		if (standard.getSelection()) {
@@ -684,6 +683,10 @@ public class MylarPreferencePage extends PreferencePage implements
 		
 		exclusionFieldEditor = new StringFieldEditor("", "",
 				StringFieldEditor.UNLIMITED, exclusionControl);
+		
+		String text = getPreferenceStore().getString(MylarUiPlugin.INTEREST_FILTER_EXCLUSION);
+		if (text != null) exclusionFieldEditor.setStringValue(text);
+        
 //		createLabel(exclusionControl, );
 		return; 
 	}

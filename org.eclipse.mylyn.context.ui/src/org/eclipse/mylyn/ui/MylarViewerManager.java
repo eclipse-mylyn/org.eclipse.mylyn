@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
@@ -32,11 +34,15 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class MylarViewerManager implements IMylarContextListener {
+public class MylarViewerManager implements IMylarContextListener, IPropertyChangeListener {
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 	private List<AbstractApplyMylarAction> managedActions = new ArrayList<AbstractApplyMylarAction>();
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
+	
+	public MylarViewerManager() {
+		MylarUiPlugin.getPrefs().addPropertyChangeListener(this);
+	}
 	
 	public void addManagedAction(AbstractApplyMylarAction action) {
 		managedActions.add(action);
@@ -176,4 +182,10 @@ public class MylarViewerManager implements IMylarContextListener {
     public void relationshipsChanged() {
     	// ignore
     }
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (MylarUiPlugin.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())) {
+			refreshViewers();
+		}
+	}
 }

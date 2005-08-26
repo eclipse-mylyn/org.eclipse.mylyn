@@ -11,11 +11,8 @@
 
 package org.eclipse.mylar.java.tests;
 
-import java.lang.reflect.InvocationTargetException;
-
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
@@ -73,11 +70,6 @@ public class InterestFilterTest extends TestCase {
     }
     
 	public void testPatternMatch() {
-//		String exclusion = 
-//		filter.setExcludedMatches()
-	}
-    
-	public void testSelections() throws CoreException, InvocationTargetException, InterruptedException {
 		assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
 		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
         manager.contextActivated(taskscape);
@@ -87,8 +79,8 @@ public class InterestFilterTest extends TestCase {
         
         filter.setExcludedMatches("*.java");
         assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-		        
-//        monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-//        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
+
+        filter.setExcludedMatches("foo");
+        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
 	}
 }

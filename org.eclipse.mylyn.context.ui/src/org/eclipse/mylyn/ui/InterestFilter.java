@@ -13,6 +13,8 @@
   */
 package org.eclipse.mylar.ui;
 
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -29,11 +31,15 @@ import org.eclipse.mylar.core.internal.MylarContextManager;
  * 
  * @author Mik Kersten
  */
-public class InterestFilter extends ViewerFilter {
+public class InterestFilter extends ViewerFilter implements IPropertyChangeListener {
 
 	private Object temporarilyUnfiltered = null;
 	
-	private String excludedMatches;
+	private String excludedMatches = null;
+	
+	public InterestFilter() {
+		MylarUiPlugin.getPrefs().addPropertyChangeListener(this);
+	}
 	
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {
@@ -47,7 +53,9 @@ public class InterestFilter extends ViewerFilter {
                 node = (IMylarContextNode)element;
             } else { 
                 IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-                if (!bridge.canFilter(element)) return true;                
+                if (!bridge.canFilter(element)) return true;    
+                if (matchesExclusion(element, bridge)) return true;
+                
                 String handle = bridge.getHandleIdentifier(element);
          
                 node = MylarPlugin.getContextManager().getNode(handle);
@@ -65,6 +73,17 @@ public class InterestFilter extends ViewerFilter {
         return false;
     }   
 	
+	private boolean matchesExclusion(Object element, IMylarStructureBridge bridge) {
+		if (excludedMatches == null) return false;
+		if (excludedMatches.equals("*")) return false;
+		try {
+			String name = bridge.getName(element);
+			return name.matches(excludedMatches.replaceAll("\\*", ".*").replaceAll("\\.", "\\."));
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
 	private boolean containsMylarInterestFilter(StructuredViewer viewer) {
 		boolean found = false;
 		for (int i = 0; i < viewer.getFilters().length; i++) {
@@ -92,5 +111,13 @@ public class InterestFilter extends ViewerFilter {
 
 	public void setExcludedMatches(String excludedMatches) {
 		this.excludedMatches = excludedMatches;
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (MylarUiPlugin.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
+			&& event.getNewValue() instanceof String) {
+
+			excludedMatches = (String)event.getNewValue();
+		}
 	}
 }
