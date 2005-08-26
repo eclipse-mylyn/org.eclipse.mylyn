@@ -61,7 +61,7 @@ public class InterestFilter extends ViewerFilter {
             }
         } catch (Throwable t) {
         	MylarPlugin.log(t, "interest filter failed");
-        }
+        } 
         return false;
     }   
 	
@@ -86,13 +86,9 @@ public class InterestFilter extends ViewerFilter {
 		return temporarilyUnfiltered;
 	}
 
-
-
 	public String getExcludedMatches() {
 		return excludedMatches;
 	}
-
-
 
 	public void setExcludedMatches(String excludedMatches) {
 		this.excludedMatches = excludedMatches;

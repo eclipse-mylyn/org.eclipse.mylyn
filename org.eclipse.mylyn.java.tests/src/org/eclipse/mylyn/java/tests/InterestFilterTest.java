@@ -50,7 +50,7 @@ public class InterestFilterTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
     	assertNotNull(MylarJavaPlugin.getDefault());
-    	project1 = new TestProject("project-" + this.getClass().getName());
+    	project1 = new TestProject("project-filter");
         p1 = project1.createPackage("p1");
         type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
         taskscape = new MylarContext("1", scaling);
@@ -58,29 +58,37 @@ public class InterestFilterTest extends TestCase {
 
 		explorer = PackageExplorerPart.openInActivePerspective();
     	assertNotNull(explorer);
-        
+    	
+		ApplyMylarToPackageExplorerAction.getDefault().update(true);
         filter = ApplyMylarToPackageExplorerAction.getDefault().getInterestFilter();
         assertNotNull(filter);
 
 		project1.build();
     }
 	
+    @Override
+    protected void tearDown() throws Exception {
+        project1.dispose();
+        manager.contextDeleted(taskId, taskId);
+    }
+    
 	public void testPatternMatch() {
-		
+//		String exclusion = 
+//		filter.setExcludedMatches()
 	}
     
 	public void testSelections() throws CoreException, InvocationTargetException, InterruptedException {
 		assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-		manager.contextActivated(taskscape);
-		assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-		
+		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
+        manager.contextActivated(taskscape);
+
         monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
         assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
+        
+        filter.setExcludedMatches("*.java");
+        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
+		        
+//        monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
+//        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
 	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-	
 }

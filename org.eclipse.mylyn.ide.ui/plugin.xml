@@ -12,14 +12,15 @@
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action
-	         id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction" 
-   	         style="toggle"
-	         label="Apply Mylar" 
-	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Apply Mylar"
-	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction"
-	         enablesFor="*"> 
+           class="org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction"
+           enablesFor="*"
+           icon="icons/elcl16/interest-filtering.gif"
+           id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
+           label="Apply Mylar"
+           menubarPath="mylar"
+           style="toggle"
+           toolbarPath="mylar"
+           tooltip="Apply Mylar"> 
   		</action> 
       </viewContribution> 
       <viewContribution 
@@ -31,6 +32,7 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
            label="Apply Mylar"
+           menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
            tooltip="Apply Mylar"> 

@@ -235,14 +235,15 @@
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
-	         id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction" 
-	         style="toggle"
-	         label="Apply Mylar" 
-	         icon="icons/elcl16/interest-filtering.gif"
-	         tooltip="Apply Mylar"
-	      	 toolbarPath="mylar"
-	         class="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
-	         enablesFor="*"> 
+           class="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
+           enablesFor="*"
+           icon="icons/elcl16/interest-filtering.gif"
+           id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
+           label="Apply Mylar"
+           menubarPath="mylar"
+           style="toggle"
+           toolbarPath="mylar"
+           tooltip="Apply Mylar"> 
   		</action> 
   		</viewContribution>
    </extension>
