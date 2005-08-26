@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Oct 21, 2004
-  */
+
 package org.eclipse.mylar.java.ui.views;
 
 import java.util.ArrayList;
@@ -59,7 +57,7 @@ import org.eclipse.ui.part.ViewPart;
 /**
  * @author Mik Kersten
  */
-public class ActiveTypeHierarchyView extends ViewPart {
+public class ActiveHierarchyView extends ViewPart {
 	
     private TreeParent root = new TreeParent("<no hierarchy>");
     
@@ -139,7 +137,7 @@ public class ActiveTypeHierarchyView extends ViewPart {
 //		}
 	}
 
-	public ActiveTypeHierarchyView() {
+	public ActiveHierarchyView() {
 	    MylarPlugin.getContextManager().addListener(MODEL_LISTENER);
 	    refreshHierarchy();
 	}
@@ -268,7 +266,7 @@ public class ActiveTypeHierarchyView extends ViewPart {
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				ActiveTypeHierarchyView.this.fillContextMenu(manager);
+				ActiveHierarchyView.this.fillContextMenu(manager);
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
@@ -334,16 +332,20 @@ class TreeParent implements IAdaptable {
 	public String getName() {
 		return element.getElementName();
 	}
+	
 	public void setParent(TreeParent parent) {
 		this.parent = parent;
 	}
+	
 	public TreeParent getParent() {
 		return parent;
 	}
+	
 	public Object getAdapter(Class key) {
 		return null;
 	}
-    public IJavaElement getElement() {
+    
+	public IJavaElement getElement() {
         return element;
     }
  
@@ -367,9 +369,11 @@ class TreeParent implements IAdaptable {
 		children.remove(child);
 		child.setParent(null);
 	}
+	
 	public TreeParent [] getChildren() {
 		return children.toArray(new TreeParent[children.size()]);
 	}
+	
 	public boolean hasChildren() {
 		return children.size() > 0;
 	}
