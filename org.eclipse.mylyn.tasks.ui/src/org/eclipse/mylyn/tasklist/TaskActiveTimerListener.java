@@ -1,10 +1,10 @@
 package org.eclipse.mylar.tasklist;
 
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.monitor.IInteractionEventListener;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.monitor.planning.ActiveTimerThread;
-import org.eclipse.mylar.monitor.planning.IActiveTimerListener;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ActiveTimerThread;
+import org.eclipse.mylar.core.util.IActiveTimerListener;
+import org.eclipse.mylar.core.util.IInteractionEventListener;
 
 public class TaskActiveTimerListener implements IActiveTimerListener, IInteractionEventListener {
 
@@ -18,7 +18,7 @@ public class TaskActiveTimerListener implements IActiveTimerListener, IInteracti
 		this.task = task;
 		timer = new ActiveTimerThread(TaskListManager.INACTIVITY_TIME, this);
 		timer.start();
-		MylarMonitorPlugin.getDefault().addListener(this);
+		MylarPlugin.getDefault().addInteractionListener(this);
 	}
 	
 	public void fireTimedOut() {
@@ -40,7 +40,7 @@ public class TaskActiveTimerListener implements IActiveTimerListener, IInteracti
 
 	public void stopTimer() {
 		timer.killThread();
-		MylarMonitorPlugin.getDefault().removeListener(this);
+		MylarPlugin.getDefault().removeInteractionListener(this);
 	}
 
 	public void stop() {}
