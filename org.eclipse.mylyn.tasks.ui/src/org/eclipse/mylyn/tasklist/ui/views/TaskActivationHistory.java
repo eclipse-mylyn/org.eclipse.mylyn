@@ -37,14 +37,18 @@ public class TaskActivationHistory {
 	
 	public ITask getPreviousTask() {
 		if (hasPrevious()) {
-			return history.get(--currentIndex);
+			if((currentIndex == 0 && !history.get(currentIndex).isActive())){
+				return history.get(currentIndex);
+			} else {
+				return history.get(--currentIndex);
+			}
 		} else {
 			return null;
 		}		
 	}
 	
 	public boolean hasPrevious() {
-		return currentIndex > 0;			
+		return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;			
 	}
 	
 	public ITask getNextTask() {

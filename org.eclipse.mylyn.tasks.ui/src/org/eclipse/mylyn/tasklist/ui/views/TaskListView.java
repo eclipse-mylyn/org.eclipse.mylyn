@@ -618,6 +618,8 @@ public class TaskListView extends ViewPart {
 						if (task != null) {
 							if (task.isActive()) {
 								new TaskDeactivateAction(task, INSTANCE).run();
+								nextTaskAction.setEnabled(taskHistory.hasNext());
+					    		previousTaskAction.setEnabled(taskHistory.hasPrevious());
 							} else {
 								new TaskActivateAction(task).run();
 								addTaskToHistory(task);
