@@ -34,9 +34,11 @@ import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -125,6 +127,13 @@ public class BugzillaQueryCategory implements IQuery {
 	
 	public void refreshBugs() {
 		hits.clear();
+		// refresh the view to show that the results are gone
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run() {
+				if(TaskListView.getDefault() != null)
+					TaskListView.getDefault().getViewer().refresh();
+			}
+		});
 		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(
 				getQueryString(), maxHits);
 		catSearch.addResultsListener(listener);
