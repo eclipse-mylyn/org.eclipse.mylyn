@@ -1233,7 +1233,7 @@ public class TaskListView extends ViewPart {
 	 *         children
 	 */
     protected boolean lookForId(String taskId) {
-    	return (MylarTasklistPlugin.getTaskListManager().getTaskForHandle(taskId) == null);
+    	return (MylarTasklistPlugin.getTaskListManager().getTaskForHandle(taskId, true) == null);
 //    	for (ITask task : MylarTasklistPlugin.getTaskListManager().getTaskList().getRootTasks()) {
 //    		if (task.getHandle().equals(taskId)) {
 //    			return true;

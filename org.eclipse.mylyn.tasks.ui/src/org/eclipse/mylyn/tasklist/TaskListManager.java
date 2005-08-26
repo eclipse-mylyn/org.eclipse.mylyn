@@ -199,8 +199,8 @@ public class TaskListManager {
     	this.taskListFile = f;
     }
     
-    public ITask getTaskForHandle(String handle) {
-    	return taskList.getTaskForHandle(handle);
+    public ITask getTaskForHandle(String handle, boolean lookInArchives) {
+    	return taskList.getTaskForHandle(handle, lookInArchives);
     }
 
 	public String toXmlString() {

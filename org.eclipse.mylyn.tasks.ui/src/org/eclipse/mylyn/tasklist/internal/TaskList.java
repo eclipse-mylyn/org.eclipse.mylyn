@@ -128,9 +128,11 @@ public class TaskList implements Serializable {
 		}
     }
     
-    public ITask getTaskForHandle(String handle) {
+    public ITask getTaskForHandle(String handle, boolean lookInArchives) {
     	ITask t = null;
     	for (ICategory cat : categories) {
+    		if(!lookInArchives && cat.isArchive())
+    			continue;
 			if ((t = findTaskHelper(cat.getChildren(), handle)) != null) {
 				return t;
 			}

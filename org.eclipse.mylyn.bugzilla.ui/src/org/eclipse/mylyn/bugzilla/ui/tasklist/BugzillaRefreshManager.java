@@ -58,8 +58,10 @@ public class BugzillaRefreshManager {
 		if(currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0){
 			BugzillaTask t = toBeRefreshed.remove(0);
 			Job j = t.getRefreshJob();
-			currentlyRefreshing.put(t, j);
-			j.schedule();
+			if(j != null){
+				currentlyRefreshing.put(t, j);	
+				j.schedule();
+			}
 		}
 	}
 

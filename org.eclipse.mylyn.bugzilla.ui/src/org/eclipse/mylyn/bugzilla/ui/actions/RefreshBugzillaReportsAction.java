@@ -69,15 +69,9 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 		// perform the update in an operation so that we get a progress monitor
 		// update the structure bridge cache with the reference provider cached
 		// bugs
-		if (showProgress) {
-			runWithProgressBar();
-		} else {
-			refreshTasksAndQueries();
-		}
-		
 		for(ITask task: MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks()){
 			if(task instanceof BugzillaTask){
-				ITask found = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle());
+				ITask found = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
 				if(found == null){
 					MylarTasklistPlugin.getTaskListManager().addRootTask(task);
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
@@ -86,6 +80,12 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				}
 			}
 		}
+		if (showProgress) {
+			runWithProgressBar();
+		} else {
+			refreshTasksAndQueries();
+		}
+		
 //		if(TaskListView.getDefault() != null)
 //			TaskListView.getDefault().getViewer().refresh();
 	}
