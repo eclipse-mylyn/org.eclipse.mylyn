@@ -153,7 +153,7 @@ public class ActiveHierarchyView extends ViewPart {
                 if (node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) {
                     element = JavaCore.create(node.getElementHandle());
                 }
-                if (element != null && element instanceof IType) {	
+                if (element != null && element instanceof IType && element.exists()) {	
                     IType type = (IType)element;
                     ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
                     IType[] supertypes = hierarchy.getAllSuperclasses(type);

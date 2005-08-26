@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
@@ -124,13 +125,10 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() {
             	try {
-            		// TODO: improve laziness and update
-//                    if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().refreshViewer();
-
             		for (StructuredViewer viewer : managedViewers) {
             			if (viewer != null && !viewer.getControl().isDisposed() && viewer.getControl().isVisible()) {
 							viewer.getControl().setRedraw(false); 
-							if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
+							if (nodesToRefresh == null || nodesToRefresh.isEmpty() || viewer instanceof TableViewer) {
 					            viewer.refresh();
 							} else {
 								Object objectToRefresh = null;

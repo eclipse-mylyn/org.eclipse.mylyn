@@ -676,10 +676,10 @@ public class MylarPreferencePage extends PreferencePage implements
 		Group exclusionControl = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		
 		exclusionControl.setLayout(new RowLayout());
-		exclusionControl.setText("Interest filter exclusion");	
+		exclusionControl.setText("Interest filter exclusion pattern");	
 
 		Label label = new Label(exclusionControl, SWT.LEFT);
-		label.setText("Resources matching the following pattern will always be interesting:");
+		label.setText("Matching elements will always be shown (* = any string):");
 		
 		exclusionFieldEditor = new StringFieldEditor("", "",
 				StringFieldEditor.UNLIMITED, exclusionControl);

@@ -39,7 +39,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";
     protected String prefId;
     protected IAction initAction = null;
-    private boolean isSelfManaged = false;
+//    private boolean isSelfManaged = false;
     
     protected InterestFilter interestFilter;
     
@@ -90,10 +90,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	        if (viewer != null) {
 				if (on) {
 					installInterestFilter(getViewer());
-					if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
+					MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
 				} else {
 					uninstallInterestFilter(getViewer());
-					if (!isSelfManaged) MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
+					MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
 				}
 				refreshViewer();
 				if (on && viewer instanceof TreeViewer) {
@@ -153,9 +153,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		run(action);
 	}
 
-	public void setViewerIsSelfManaged(boolean isSelfManaged) {
-		this.isSelfManaged = isSelfManaged;
-	}
+//	public void setViewerIsSelfManaged(boolean isSelfManaged) {
+//		this.isSelfManaged = isSelfManaged;
+//	}
 
 	public String getPrefId() {
 		return prefId;
