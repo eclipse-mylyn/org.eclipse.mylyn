@@ -25,7 +25,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
@@ -42,7 +41,6 @@ import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
-import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -56,9 +54,6 @@ public class ContextManagerTest extends AbstractContextTest {
  
 	protected MylarContextManager manager = MylarPlugin.getContextManager();
     protected JavaEditingMonitor monitor = new JavaEditingMonitor();
-    
-	private InterestFilter filter;
-	private PackageExplorerPart explorer;
     
     protected TestProject project1;
     protected IPackageFragment p1;
@@ -122,21 +117,6 @@ public class ContextManagerTest extends AbstractContextTest {
         	// don't care about this event
         }
     }
-    
-	public void testPatternMatch() {
-		assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-        manager.contextActivated(taskscape);
-
-        monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
-        
-//        filter.setExcludedMatches("*.java");
-//        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-//
-//        filter.setExcludedMatches("foo");
-//        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
-	}
     
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
