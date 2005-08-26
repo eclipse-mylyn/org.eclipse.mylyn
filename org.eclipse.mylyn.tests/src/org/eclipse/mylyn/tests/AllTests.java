@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylar.core.tests.ContextTest;
 import org.eclipse.mylar.core.tests.DegreeOfInterestTest;
 import org.eclipse.mylar.java.tests.ContextManagerTest;
+import org.eclipse.mylar.java.tests.InterestFilterTest;
 import org.eclipse.mylar.java.tests.JavaStructureTest;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
@@ -38,6 +39,7 @@ public class AllTests {
         //$JUnit-BEGIN$
 
         // Java Tests
+        suite.addTestSuite(InterestFilterTest.class);
         suite.addTestSuite(ContextManagerTest.class);
         suite.addTestSuite(JavaStructureTest.class);
         suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
