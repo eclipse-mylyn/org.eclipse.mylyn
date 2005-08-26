@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
@@ -27,7 +29,9 @@ import org.eclipse.swt.graphics.Image;
 public class TaskListImages {
 
     private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
-     
+      
+    public static Color ARCHIVE_BACKGROUND = new Color(Display.getDefault(), 190, 210, 238);
+    
 	private static final String T_ELCL = "elcl16";
 	private static final String T_TOOL = "etool16";
 	private static final URL baseURL = MylarTasklistPlugin.getDefault().getBundle().getEntry("/icons/");

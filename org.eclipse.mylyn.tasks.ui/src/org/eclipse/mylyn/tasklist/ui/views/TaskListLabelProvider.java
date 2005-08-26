@@ -22,6 +22,7 @@ import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -105,10 +106,11 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 			  } else if (element instanceof ICategory) {
 				  ICategory category = (ICategory)element;
 				  if (category.isArchive()) {
-					  return new Color(Display.getCurrent(), 
-							  Math.max(0, backgroundColor.getRed()-30),
-							  Math.max(0, backgroundColor.getGreen()-30),
-							  200);
+					  return TaskListImages.ARCHIVE_BACKGROUND;
+//					  return new Color(Display.getCurrent(), 
+//							  Math.max(0, backgroundColor.getRed()-30),
+//							  Math.max(0, backgroundColor.getGreen()-30),
+//							  200);
 				  } else {
 					  return backgroundColor;
 				  }

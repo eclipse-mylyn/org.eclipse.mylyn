@@ -162,7 +162,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 			browse.setEnabled(true);
 		} else {
 			browse.setEnabled(false);
-			createLabel(taskDirComposite, "NOTE: you have an task active, deactivate it before changing directories");
+			createLabel(taskDirComposite, "NOTE: if you have a task active, deactivate it before changing directories");
 		}
 		browse.addSelectionListener(new SelectionAdapter() {
 			
@@ -205,3 +205,4 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		// don't care when the widget is selected
 	}
 }
+
