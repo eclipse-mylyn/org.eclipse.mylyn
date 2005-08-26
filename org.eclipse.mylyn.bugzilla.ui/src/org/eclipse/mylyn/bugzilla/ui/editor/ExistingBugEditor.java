@@ -321,6 +321,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 	
 	@Override
 	protected void submitBug() {
+		ExistingBugEditor.this.showBusy(true);
 		final BugPost form = new BugPost();
 		
 		// set the url for the bug to be submitted to
@@ -376,34 +377,56 @@ public class ExistingBugEditor extends AbstractBugEditor
 		}
 		
 		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(final IProgressMonitor monitor) throws CoreException {
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
-					public void run() {
-						try {
-							form.post();
-							
+			protected void execute(final IProgressMonitor monitor)
+					throws CoreException {
+				try {
+					form.post();
+
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){
+						public void run() {
 							// TODO what do we do if the editor is closed
-							if(ExistingBugEditor.this != null && !ExistingBugEditor.this.isDisposed()){
+							if (ExistingBugEditor.this != null
+									&& !ExistingBugEditor.this.isDisposed()) {
 								changeDirtyStatus(false);
-								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(ExistingBugEditor.this, true);
+								BugzillaPlugin.getDefault().getWorkbench()
+										.getActiveWorkbenchWindow().getActivePage()
+										.closeEditor(ExistingBugEditor.this, true);
 							}
 							OfflineView.removeReport(bug);
-						} catch (BugzillaException e) {
-						    BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while posting the bug.", "I/O Error");
-						}catch (PossibleBugzillaFailureException e) {
-							WebBrowserDialog
-							.openAcceptAgreement(
-									null,
+						}
+					});
+				} catch (final BugzillaException e) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(
+											e,
+											"occurred while posting the bug.",
+											"I/O Error");
+						}
+					});
+					ExistingBugEditor.this.showBusy(false);
+				} catch (final PossibleBugzillaFailureException e) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							WebBrowserDialog.openAcceptAgreement(null,
 									"Possible Bugzilla Failure",
-									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
+									"Bugzilla may not have posted your bug.\n" + e.getMessage(), 
+									form.getError());
 							BugzillaPlugin.log(e);
-						} catch (LoginException e) {
-							MessageDialog.openError(null, "Login Error",
-									"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-						}	
-					}
-					
-				});
+						}
+					});
+					ExistingBugEditor.this.showBusy(false);
+				} catch (final LoginException e) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							MessageDialog.openError(null,
+											"Login Error",
+											"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+						}
+					});
+					ExistingBugEditor.this.showBusy(false);
+				}
+
 			}
 		};
 		
