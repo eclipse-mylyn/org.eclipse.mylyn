@@ -222,11 +222,12 @@ public class MylarPlugin extends AbstractUIPlugin {
         buffer.append(", "); 
         buffer.append(DateUtil.getFormattedTime());
         buffer.append("] ");
-//        buffer.append(status.toString() + ", ");
         
         if (WorkbenchPlugin.getDefault() != null) {
         	buffer.append(" version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
         }
+
+        buffer.append(status.toString() + ", ");
         
         if (status.getException() != null) {
         	buffer.append("exception: ");

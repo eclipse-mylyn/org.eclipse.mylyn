@@ -76,13 +76,13 @@ public class ActiveSearchView extends ViewPart {
         }
         
         public void landmarkAdded(IMylarContextNode element) { 
-//            viewer.refresh(element, true);
-            refresh(null);
+            viewer.refresh(element, true);
+//            refresh(null);
         }
 
         public void landmarkRemoved(IMylarContextNode element) { 
-//            viewer.refresh(element, true);
-            refresh(null);
+            viewer.refresh(element, true);
+//            refresh(null);
         }
 
         public void relationshipsChanged() {
@@ -92,7 +92,7 @@ public class ActiveSearchView extends ViewPart {
         private void refresh(final IMylarContextNode node) {
             Workbench.getInstance().getDisplay().syncExec(new Runnable() {
                 public void run() {
-                    try { 
+                    try {  
                         if (viewer != null && !viewer.getTree().isDisposed()) {
                         	//TODO add back in for lazy refreshes
 //                            if (node != null) {

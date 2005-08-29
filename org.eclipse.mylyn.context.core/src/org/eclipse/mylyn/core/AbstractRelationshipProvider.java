@@ -31,10 +31,6 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     private String id;
     private String structureKind;
     private int degreeOfSeparation;
-    
-    public void nodeDeleted(IMylarContextNode node) {
-    	// we don't care when this happens
-    }
 
     public String getId() {
         return id;
@@ -61,7 +57,7 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
         
     public void contextActivated(IMylarContext taskscape) { 
     	if (enabled) { 
-    		MylarPlugin.getContextManager().updateSearchKindEnabled(this, degreeOfSeparation);
+//    		MylarPlugin.getContextManager().updateSearchKindEnabled(this, degreeOfSeparation);
     	}
     }
     
@@ -113,6 +109,10 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     
     public int getCurrentDegreeOfSeparation(){
     	return degreeOfSeparation;
+    }
+    
+    public void nodeDeleted(IMylarContextNode node) {
+    	// we don't care when this happens
     }
     
     public void presentationSettingsChanging(UpdateKind kind) { 
