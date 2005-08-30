@@ -54,6 +54,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
     
             TreeMap<Float, ICompletionProposal> interesting = new TreeMap<Float, ICompletionProposal>();
             List<ICompletionProposal> rest = new ArrayList<ICompletionProposal>();
+            int unresolvedProposals = 0;
             for (int i = 0; i < proposals.length; i++) {
                 ICompletionProposal proposal = proposals[i];
                 ProposalInfo info = null;
@@ -80,13 +81,20 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 	                            	rest.add(proposal);
 	                            }
                             }
-                        }
+                        } 
                         added = true;
                     }
                 } catch (Exception e) {
                 	MylarPlugin.log(e, "proposals problem");
                 } 
-                if (!added) rest.add(proposal);
+                if (!added) {
+                	if (proposal instanceof JavaCompletionProposal) {
+                		unresolvedProposals++;
+                		interesting.put((float)unresolvedProposals - 100000, proposal); // HACK: should be parametrized
+                	} else {
+                		rest.add(proposal);
+                	}
+                }
             }
             if (interesting.keySet().size() == 0) {
                 return proposals;
