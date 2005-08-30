@@ -89,7 +89,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
         	if(viewer != null){
     			viewer.refresh();
     		} else {
-    			MylarPlugin.log("Couldn't refresh null viewer: " + viewNames[i], this);
+//    			MylarPlugin.log("Couldn't refresh null viewer: " + viewNames[i], this);
     		}
         }
 	}
