@@ -337,25 +337,7 @@ public class BugzillaTask extends Task {
 							// try to open an editor on the input bug
 							//page.openEditor(input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
 							page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor");
-							if(syncState == BugReportSyncState.INCOMMING){
-								syncState = BugReportSyncState.OK;
-								Display.getDefault().asyncExec(new Runnable(){
-									public void run() {
-										if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
-											TaskListView.getDefault().getViewer().refresh();
-										}	
-									}
-								});
-							} else if(syncState == BugReportSyncState.CONFLICT){
-								syncState = BugReportSyncState.OUTGOING;
-								Display.getDefault().asyncExec(new Runnable(){
-									public void run() {
-										if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
-											TaskListView.getDefault().getViewer().refresh();
-										}	
-									}
-								});
-							}
+							
 						} 
 						catch (Exception ex) {
 							MylarPlugin.log(ex, "couldn't open bugzilla task");
@@ -364,6 +346,25 @@ public class BugzillaTask extends Task {
 					} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
 						String title = "Bug #" + BugzillaTask.getBugId(getHandle());
 						BugzillaUITools.openUrl(title, title, getBugUrl());	    			
+					}
+					if(syncState == BugReportSyncState.INCOMMING){
+						syncState = BugReportSyncState.OK;
+						Display.getDefault().asyncExec(new Runnable(){
+							public void run() {
+								if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
+									TaskListView.getDefault().getViewer().refresh();
+								}	
+							}
+						});
+					} else if(syncState == BugReportSyncState.CONFLICT){
+						syncState = BugReportSyncState.OUTGOING;
+						Display.getDefault().asyncExec(new Runnable(){
+							public void run() {
+								if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
+									TaskListView.getDefault().getViewer().refresh();
+								}	
+							}
+						});
 					}
 				}
 			});
@@ -614,7 +615,6 @@ public class BugzillaTask extends Task {
 
 	public Job getRefreshJob() {
 		if (isDirty() || (state != BugTaskState.FREE)) {
-			System.out.println("didn't get job for " + getHandle());
 			return null;
 		}
 		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
