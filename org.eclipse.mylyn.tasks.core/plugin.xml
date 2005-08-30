@@ -3,11 +3,13 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         name="Mylar Bugzilla startup"
-         point="org.eclipse.ui.startup">
-   </extension>
-   <extension
          point="org.eclipse.mylar.java.javaEditorContributor">
       <hyperlinkDetector class="org.eclipse.mylar.bugs.java.BugzillaHyperLinkDetector"/>
+   </extension>
+   <extension
+         point="org.eclipse.mylar.core.context">
+      <structureBridge
+            class="org.eclipse.mylar.bugs.BugzillaStructureBridge"
+            name="Bugzilla Structure Bridge"/>
    </extension> 
 </plugin>

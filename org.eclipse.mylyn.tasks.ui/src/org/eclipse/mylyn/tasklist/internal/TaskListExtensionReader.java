@@ -25,6 +25,9 @@ import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.ITaskListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 
+/**
+ * @author Shawn Minto
+ */
 public class TaskListExtensionReader {
 	private static boolean extensionsRead = false;
 	private static TaskListExtensionReader thisReader = new TaskListExtensionReader();

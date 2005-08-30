@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.mylar.bugs.MylarBugzillaPlugin;
+import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugs.search.BugzillaMylarSearch;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
@@ -127,7 +127,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		
 		// display the time it took for the search
 //		System.err.println("Search Took About " + time + " seconds");
-    	MylarBugzillaPlugin.getBridge().removeFromLandmarksHash(astNodeType);
+    	MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
 	 }
  
  	/**
@@ -163,7 +163,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		// display the time it took for the search and the results returned
 //		System.err.println("Search Took About " + time + " seconds");
 //		System.err.println(c);
-		MylarBugzillaPlugin.getBridge().removeFromLandmarksHash(astNodeType);
+		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
 
 	}
 	
@@ -200,12 +200,12 @@ public class BugzillaSearchPluginTest extends TestCase{
 		assertTrue("Results not the right size", c.size() > 0); // TODO should be assertEquals on expected size
 		
 		// check that the search has been saved
-		List<BugzillaReportNode> saved = MylarBugzillaPlugin.getBridge().getFromLandmarksHash(astNodeType, BugzillaMylarSearch.UNQUAL);
+		List<BugzillaReportNode> saved = MylarBugsPlugin.getBridge().getFromLandmarksHash(astNodeType, BugzillaMylarSearch.UNQUAL);
 		assertTrue("Results not cached", saved != null);
 		assertTrue("Results not the right size", saved.size() > 0); // TODO should be assertEquals on expected size
 		
 		assertTrue(c.containsAll(saved) && saved.containsAll(c));
-		MylarBugzillaPlugin.getBridge().removeFromLandmarksHash(astNodeType);
+		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
 	}
 	
 	public void testLocalBugUnqual() throws InterruptedException {
@@ -265,7 +265,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		List<?> c = lists.get(0);
 		assertEquals("Results not the right size", 3, c.size());
 		
-		MylarBugzillaPlugin.getBridge().removeFromLandmarksHash(astNodeType);
+		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
         MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
 	}
 	
@@ -324,7 +324,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		List<?> c = lists.get(0);
 		assertEquals("Results not the right size", 1, c.size());
 		
-		MylarBugzillaPlugin.getBridge().removeFromLandmarksHash(astNodeType);
+		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
         MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
 	}
 	

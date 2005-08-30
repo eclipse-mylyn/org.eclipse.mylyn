@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarStructureBridge;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -38,14 +40,16 @@ public class BugzillaNodeLabelProvider implements ILabelProvider {
         
         // try to get from the cache before downloading
         Object report;
-    	BugzillaReportNode reportNode = MylarBugzillaPlugin.getReferenceProvider().getCached(node.getElementHandle());
-    	BugReport cachedReport = MylarBugzillaPlugin.getDefault().getStructureBridge().getCached(node.getElementHandle());
+    	BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getElementHandle());
+    	BugReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getElementHandle());
+    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(BugzillaStructureBridge.EXTENSION);
+		
     	if(reportNode != null && cachedReport == null){
     		report = reportNode;
     	} else{
-    		report = MylarBugzillaPlugin.getDefault().getStructureBridge().getObjectForHandle(node.getElementHandle());
+     		report = bridge.getObjectForHandle(node.getElementHandle());
     	}
-        return MylarBugzillaPlugin.getDefault().getStructureBridge().getName(report);
+        return bridge.getName(report);
     }
 
     public void addListener(ILabelProviderListener listener) {

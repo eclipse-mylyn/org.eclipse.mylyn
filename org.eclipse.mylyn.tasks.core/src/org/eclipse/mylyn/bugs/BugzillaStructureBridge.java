@@ -8,37 +8,27 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on May 2, 2005
-  */
+
 package org.eclipse.mylar.bugs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.BugzillaTools;
-import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCacheFile;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -59,9 +49,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
     
     public BugzillaStructureBridge() {
         super();
-		readCacheFile();
 		providers = new ArrayList<AbstractRelationshipProvider>();
-    	providers.add(MylarBugzillaPlugin.getReferenceProvider());
+    	providers.add(MylarBugsPlugin.getReferenceProvider());
     }
 
     /**
@@ -111,10 +100,10 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
             	return findNode(node, commentNumber);
             }
 
-            BugzillaReportNode reportNode = MylarBugzillaPlugin.getReferenceProvider().getCached(handle);
+            BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(handle);
             
             // try to get from the cache, if it doesn't exist, startup an operation to get it
-            result = getFromCache(bugHandle);
+            result = MylarBugsPlugin.getDefault().getCache().getFromCache(bugHandle);
             if(result == null && reportNode != null){
             	return reportNode;
             } else if(result == null && reportNode == null){
@@ -139,7 +128,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
                     }
                 	
             	if(result != null)
-            		cache(bugHandle, result);
+            		MylarBugsPlugin.getDefault().getCache().cache(bugHandle, result);
             }
 
             BugzillaOutlineNode node = BugzillaOutlineNode.parseBugReport(result);
@@ -235,60 +224,6 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
         return getResourceExtension();
     }
 
-	/*
-	 *
-	 * STUFF FOR CACHING BUG REPORTS
-	 * 
-	 */
-    
-    // bug report cache
-	private Map<String, BugReport> cache = new HashMap<String, BugReport>();
-
-    public void cache(String handle, BugReport report) {
-		cache.put(handle, report);
-		cacheFile.add(report);
-	}
-    
-    public void clearCache(){
-    	cache.clear();
-    	cacheFile.removeAll();
-    }
-
-	private BugReport getFromCache(String bugHandle) {
-		return cache.get(bugHandle);
-	}
-    
-    public Set<String> getCachedHandles(){
-    	return cache.keySet();
-    }
-
-    private BugzillaCacheFile cacheFile;
-	
-	private IPath getCacheFile() {
-		IPath stateLocation = Platform.getPluginStateLocation(MylarBugzillaPlugin.getDefault());
-		IPath configFile = stateLocation.append("offlineReports");
-		return configFile;
-	}
-	
-	private void readCacheFile() {
-		IPath cachPath = getCacheFile();
-
-		try {
-			cacheFile = new BugzillaCacheFile(cachPath.toFile());
-			ArrayList<IBugzillaBug> cached = cacheFile.elements();
-			for(IBugzillaBug bug: cached){
-				if(bug instanceof BugReport)
-					cache.put(BugzillaTools.getHandle(bug), (BugReport)bug);
-			}
-		} catch (Exception e) {
-		    MylarPlugin.log(e, "occurred while restoring saved offline Bugzilla reports.");
-		}
-	}
-
-	public BugReport getCached(String handle) {
-		return cache.get(handle);
-	}
-
 	public List<AbstractRelationshipProvider> getProviders() {
 		return providers;
 	}
@@ -306,5 +241,9 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		return null;
+	}
+
+	public void setParentBridge(IMylarStructureBridge bridge) {
+		// ignore
 	}
 }

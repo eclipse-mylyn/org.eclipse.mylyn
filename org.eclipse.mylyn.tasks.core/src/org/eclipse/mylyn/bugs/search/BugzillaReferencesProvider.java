@@ -26,7 +26,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.bugs.BugzillaMylarBridge;
 import org.eclipse.mylar.bugs.BugzillaStructureBridge;
-import org.eclipse.mylar.bugs.MylarBugzillaPlugin;
+import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
@@ -81,17 +81,15 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
             public void searchCompleted(List<?> nodes) {
                 Iterator<?> itr = nodes.iterator();
 
-                if(MylarBugzillaPlugin.getDefault() == null)
+                if(MylarBugsPlugin.getDefault() == null)
                 	return;
-                	
-                BugzillaStructureBridge bridge = MylarBugzillaPlugin.getDefault().getStructureBridge();
                 
                 while(itr.hasNext()) {
                     Object o = itr.next();
                     if(o instanceof BugzillaReportNode){
                         BugzillaReportNode bugzillaNode = (BugzillaReportNode)o;
                         final String handle = bugzillaNode.getElementHandle();
-                        if(bridge.getCached(handle) == null)
+                        if(MylarBugsPlugin.getDefault().getCache().getCached(handle) == null)
                         	cache(handle, bugzillaNode);
                         
                         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){

@@ -27,7 +27,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.bugs.MylarBugzillaPlugin;
+import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchEngine;
@@ -135,7 +135,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
         
         // we completed the search, so notify all of the listeners
         // that the search has been completed
-        MylarBugzillaPlugin.getBridge().addToLandmarksHash(doiList, javaElement, scope);
+        MylarBugsPlugin.getBridge().addToLandmarksHash(doiList, javaElement, scope);
         search.notifySearchCompleted(
                 doiList);
         // MIK: commmented out logging

@@ -10,15 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugs;
 
-import java.util.List;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -27,41 +22,35 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class MylarBugzillaPlugin extends AbstractUIPlugin implements IStartup {
+public class MylarBugsPlugin extends AbstractUIPlugin {
 
     private static BugzillaMylarBridge bridge = null;
-    private BugzillaStructureBridge structureBridge;
+//    private BugzillaStructureBridge structureBridge;
     private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
-	private static MylarBugzillaPlugin plugin;
-
-	public MylarBugzillaPlugin() {
+	private static MylarBugsPlugin plugin;
+	private BugzillaReportCache cache;
+	
+	
+	public MylarBugsPlugin() {
 		plugin = this;
 	}
 
-    public void earlyStartup() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                structureBridge = new BugzillaStructureBridge();
-            	
-                MylarPlugin.getDefault().addBridge(structureBridge);
-                MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
-                MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
-                
-                IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-                if (window != null) {
-                    // create a new bridge and initialize it
-                    bridge = new BugzillaMylarBridge();
-                }
-            }
-        });
-    }
-	
 	/**
 	 * This method is called upon plug-in activation
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		cache = new BugzillaReportCache();
+		cache.readCacheFile();
+
+        MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
+        MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
+        
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (window != null) {
+            // create a new bridge and initialize it
+            bridge = new BugzillaMylarBridge();
+        }
 	}
 
 	/**
@@ -71,18 +60,18 @@ public class MylarBugzillaPlugin extends AbstractUIPlugin implements IStartup {
 		super.stop(context);
 		plugin = null;
 
-        List<AbstractRelationshipProvider> providers = structureBridge.getProviders();
-        if(providers != null){
-	        for(AbstractRelationshipProvider provider: providers){
-	        	provider.stopAllRunningJobs();
-	        }
-        }
+//        List<AbstractRelationshipProvider> providers = structureBridge.getProviders();
+//        if(providers != null){
+//	        for(AbstractRelationshipProvider provider: providers){
+//	        	provider.stopAllRunningJobs();
+//	        }
+//        }
 	}
 
 	/**
 	 * Returns the shared instance.
 	 */
-	public static MylarBugzillaPlugin getDefault() {
+	public static MylarBugsPlugin getDefault() {
 		return plugin;
 	}
 
@@ -106,12 +95,16 @@ public class MylarBugzillaPlugin extends AbstractUIPlugin implements IStartup {
     }
     
     
-    public BugzillaStructureBridge getStructureBridge() {
-        return structureBridge;
-    }
+//    public BugzillaStructureBridge getStructureBridge() {
+//        return structureBridge;
+//    }
 
 	public static BugzillaReferencesProvider getReferenceProvider() {
 		return referencesProvider;
 		
+	}
+
+	public BugzillaReportCache getCache() {
+		return cache;
 	}
 }
