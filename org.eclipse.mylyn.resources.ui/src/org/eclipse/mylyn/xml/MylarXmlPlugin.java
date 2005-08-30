@@ -10,14 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylar.xml;
 
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.xml.ant.AntEditingMonitor;
 import org.eclipse.mylar.xml.ant.AntStructureBridge;
@@ -25,21 +22,19 @@ import org.eclipse.mylar.xml.ant.ui.AntUiBridge;
 import org.eclipse.mylar.xml.pde.PdeEditingMonitor;
 import org.eclipse.mylar.xml.pde.PdeStructureBridge;
 import org.eclipse.mylar.xml.pde.ui.PdeUiBridge;
-import org.eclipse.ui.IStartup;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup { 
+public class MylarXmlPlugin extends AbstractUIPlugin { 
 
 	private static MylarXmlPlugin plugin;
 	private ResourceBundle resourceBundle;
 	
-    private static PdeStructureBridge pdeStructureBridge;
-    private static AntStructureBridge antStructureBridge;
+//    private static PdeStructureBridge pdeStructureBridge;
+//    private static AntStructureBridge antStructureBridge;
     
     private static PdeUiBridge pdeUiBridge;
     private static AntUiBridge antUiBridge;
@@ -51,44 +46,6 @@ public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup {
 		super();
 		plugin = this;
 	}
-
-    /**
-     * Used to start plugin on startup -> entry in plugin.xml to invoke this
-     * 
-     * @see org.eclipse.ui.IStartup#earlyStartup()
-     */
-    public void earlyStartup() {
-        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-            public void run() {
-             
-              pdeStructureBridge = new PdeStructureBridge(MylarIdePlugin.getDefault().getGenericResourceBridge());
-              antStructureBridge = new AntStructureBridge(MylarIdePlugin.getDefault().getGenericResourceBridge());
-              
-              antUiBridge = new AntUiBridge(); 
-              pdeUiBridge = new PdeUiBridge(); 
-              
-                //PDE
-              MylarPlugin.getDefault().addBridge(pdeStructureBridge);
-              MylarPlugin.getDefault().getSelectionMonitors().add(new PdeEditingMonitor());
-              MylarUiPlugin.getDefault().addAdapter(PdeStructureBridge.EXTENSION, pdeUiBridge);
-              
-              //ANT
-              MylarPlugin.getDefault().addBridge(antStructureBridge);
-              MylarPlugin.getDefault().getSelectionMonitors().add(new AntEditingMonitor());
-              MylarUiPlugin.getDefault().addAdapter(AntStructureBridge.EXTENSION,antUiBridge);
-              
-// code for testing whether selections are being sent or not
-//              Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService().addPostSelectionListener(new ISelectionListener() {
-//                public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-//                }  
-//              });
-//              Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService().addSelectionListener(new ISelectionListener() {
-//                  public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-//                  }  
-//              });
-            }
-        });
-    }
         
 	/**
 	 * This method is called upon plug-in activation
@@ -96,6 +53,19 @@ public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup {
     @Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		antUiBridge = new AntUiBridge(); 
+        pdeUiBridge = new PdeUiBridge(); 
+        
+          //PDE
+//        MylarPlugin.getDefault().addBridge(pdeStructureBridge);
+        MylarPlugin.getDefault().getSelectionMonitors().add(new PdeEditingMonitor());
+        MylarUiPlugin.getDefault().addAdapter(PdeStructureBridge.EXTENSION, pdeUiBridge);
+        
+        //ANT
+//        MylarPlugin.getDefault().addBridge(antStructureBridge);
+        MylarPlugin.getDefault().getSelectionMonitors().add(new AntEditingMonitor());
+        MylarUiPlugin.getDefault().addAdapter(AntStructureBridge.EXTENSION,antUiBridge);
 	}
 
 	/**
@@ -106,13 +76,6 @@ public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
-		
-		List<AbstractRelationshipProvider> providers = pdeStructureBridge.getProviders();
-        if(providers != null){
-	        for(AbstractRelationshipProvider provider: providers){
-	        	provider.stopAllRunningJobs();
-	        }
-        }
 	}
 
 	/**
@@ -158,14 +121,6 @@ public class MylarXmlPlugin extends AbstractUIPlugin implements IStartup {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.xml", path);
 	}
-
-    public static AntStructureBridge getAntStructureBridge() {
-        return antStructureBridge;
-    }
-
-    public static PdeStructureBridge getPdeStructureBridge() {
-        return pdeStructureBridge;
-    }
     
     public static AntUiBridge getAntUiBridge() {
         return antUiBridge;

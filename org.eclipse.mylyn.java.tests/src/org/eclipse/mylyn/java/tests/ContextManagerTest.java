@@ -139,7 +139,7 @@ public class ContextManagerTest extends AbstractContextTest {
         assertTrue(m2Node.getDegreeOfInterest().isLandmark()); 
         
         
-        AbstractRelationshipProvider provider = MylarJavaPlugin.getStructureBridge().getProviders().get(0);
+        AbstractRelationshipProvider provider = new JavaStructureBridge().getProviders().get(0);
         provider.createEdge(m2Node, m1Node.getStructureKind(), m2.getHandleIdentifier());
         
         assertEquals(1, m2Node.getEdges().size());

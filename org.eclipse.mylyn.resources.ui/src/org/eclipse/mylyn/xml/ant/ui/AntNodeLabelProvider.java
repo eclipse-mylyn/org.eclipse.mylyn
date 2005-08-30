@@ -16,8 +16,10 @@ package org.eclipse.mylar.xml.ant.ui;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarStructureBridge;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.xml.MylarXmlPlugin;
+import org.eclipse.mylar.xml.ant.AntStructureBridge;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -34,8 +36,10 @@ public class AntNodeLabelProvider implements ILabelProvider {
      */
     public String getText(Object element) {
         IMylarContextNode node = (IMylarContextNode)element;
-        String name = MylarXmlPlugin.getAntStructureBridge().getName(
-                MylarXmlPlugin.getAntStructureBridge().getObjectForHandle(node.getElementHandle())
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.EXTENSION);
+		
+        String name = bridge.getName(
+        		bridge.getObjectForHandle(node.getElementHandle())
         );
         return name;
     }

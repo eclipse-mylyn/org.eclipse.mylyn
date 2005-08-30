@@ -187,21 +187,15 @@ public class ActiveSearchView extends ViewPart {
 
     public void resetProviders() {
     	fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
-    	// XXX horrible hack, fix via plugin contributions
-    	if (getViewSite().getActionBars().getToolBarManager().getItems().length > 2) {
-			getViewSite().getActionBars().getToolBarManager().update(true);
-			viewer.refresh();     
-    	}
+		getViewSite().getActionBars().getToolBarManager().update(true);
+		viewer.refresh();     
     }
     
     private void fillLocalPullDown(IMenuManager manager) {
-//        manager.add(createCategory);
-//        manager.add(new Separator());
-//        manager.add(createTask);
+
     }
 
     void fillContextMenu(IMenuManager manager) {
-//        manager.add(createTask);
         manager.add(new Separator());
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }

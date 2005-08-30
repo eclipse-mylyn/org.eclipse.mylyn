@@ -51,12 +51,8 @@ public class AntStructureBridge implements IMylarStructureBridge {
 
     public final static String EXTENSION = "build.xml";
     
-    private final IMylarStructureBridge parentBridge;
-    
-    public AntStructureBridge(IMylarStructureBridge parentBridge) {
-        this.parentBridge = parentBridge;
-    }
-    
+    private IMylarStructureBridge parentBridge;
+
     /**
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getResourceExtension()
      */
@@ -337,5 +333,9 @@ public class AntStructureBridge implements IMylarStructureBridge {
 
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		return null;
+	}
+
+	public void setParentBridge(IMylarStructureBridge bridge) {
+		parentBridge = bridge;
 	}
 }

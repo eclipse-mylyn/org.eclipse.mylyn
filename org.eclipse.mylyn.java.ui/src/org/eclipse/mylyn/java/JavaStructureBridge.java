@@ -216,4 +216,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 
 		return separations;
 	}
+
+	public void setParentBridge(IMylarStructureBridge bridge) {
+		// TODO Auto-generated method stub
+		
+	}
 }

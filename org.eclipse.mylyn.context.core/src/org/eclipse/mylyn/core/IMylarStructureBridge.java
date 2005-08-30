@@ -22,6 +22,12 @@ import org.eclipse.core.resources.IProject;
  */
 public interface IMylarStructureBridge {
 
+	/**
+	 * Used for delagating to when the parent of an element is known
+	 * by another bridge.
+	 */
+    public abstract void setParentBridge(IMylarStructureBridge bridge);
+	
     public abstract String getResourceExtension();
     
     public abstract String getHandleIdentifier(Object object);
@@ -56,12 +62,7 @@ public interface IMylarStructureBridge {
      * 					via an offset, e.g. a file with a character offset
      */
     public abstract String getHandleForOffsetInObject(Object resource, int offset);
-    
-    /**
-     * TODO: get rid of this method.
-     */
-//    public abstract String getHandleForMarker(ProblemMarker marker);
-    
+        
     /**
      * TODO remove coupling to projects
      * 

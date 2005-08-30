@@ -35,8 +35,8 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 
     public final static String EXTENSION = "*";
 
-    public ResourceStructureBridge(boolean predictedInterestEnabled) {
-    	if (predictedInterestEnabled) {
+    public ResourceStructureBridge() {
+    	if (false) {
     		IWorkspace workspace = ResourcesPlugin.getWorkspace();
    	   		workspace.addResourceChangeListener(new ResourceMarkerListener());
     	}
@@ -146,5 +146,10 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		return null;
+	}
+
+	public void setParentBridge(IMylarStructureBridge bridge) {
+		// TODO Auto-generated method stub
+		
 	}
 }

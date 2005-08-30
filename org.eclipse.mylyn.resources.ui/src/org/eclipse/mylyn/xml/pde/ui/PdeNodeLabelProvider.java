@@ -16,8 +16,10 @@ package org.eclipse.mylar.xml.pde.ui;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarStructureBridge;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.xml.MylarXmlPlugin;
+import org.eclipse.mylar.xml.pde.PdeStructureBridge;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -34,8 +36,10 @@ public class PdeNodeLabelProvider implements ILabelProvider {
      */
     public String getText(Object element) {
         IMylarContextNode node = (IMylarContextNode)element;
-        String name = MylarXmlPlugin.getPdeStructureBridge().getName(
-                MylarXmlPlugin.getPdeStructureBridge().getObjectForHandle(node.getElementHandle())
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(PdeStructureBridge.EXTENSION);
+		
+        String name = bridge.getName(
+                bridge.getObjectForHandle(node.getElementHandle())
         );
         return name;
     }

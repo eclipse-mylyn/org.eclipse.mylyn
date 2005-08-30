@@ -28,9 +28,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.mylar.core.internal.ContextExtensionPointReader;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
+import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -40,8 +44,13 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarPlugin extends AbstractUIPlugin {
-    	
+public class MylarPlugin extends AbstractUIPlugin implements IStartup {
+
+	public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.core.context";
+	public static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
+	public static final String ELEMENT_STRUCTURE_BRIDGE_CLASS = "class";
+	public static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
+		
     private static final String ERROR_MESSAGE = "Please report the following error by following the link at:\n"
     	+ "https://eclipse.org/mylar\n\n"
     	+ "For details on this error please open the PDE Runtime -> Error Log view"; 
@@ -75,6 +84,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";
+    
     private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
     	/**
          * Used to check for the null adapter
@@ -151,6 +161,11 @@ public class MylarPlugin extends AbstractUIPlugin {
             MylarPlugin.log("null bridge for marker: " + resource.getClass(), this);
             return null;
 		}
+
+		public void setParentBridge(IMylarStructureBridge bridge) {
+			// TODO Auto-generated method stub
+			
+		}
     };
 
 	private boolean predictedInterestEnabled = false;
@@ -159,18 +174,29 @@ public class MylarPlugin extends AbstractUIPlugin {
 		INSTANCE = this;  
 	}
     
+    public void earlyStartup() {
+    	final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+
+            }
+        });
+	}
+    
     /**
      * This method is called upon plug-in activation
      */
 	@Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
-
         getPreferenceStore().setDefault(
                 MYLAR_DIR, ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
                 + File.separator
                 + MYLAR_DIR_NAME);
-        contextManager = new MylarContextManager(); 
+        
+
+    	if (contextManager == null) contextManager = new MylarContextManager();
+        ContextExtensionPointReader.initExtensions();
     }
 
     /**
@@ -203,6 +229,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 	
     public static MylarContextManager getContextManager() {
+    	if (contextManager == null) contextManager = new MylarContextManager();
         return contextManager;
     }
 
@@ -335,7 +362,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
     }
 
-    public void addBridge(IMylarStructureBridge bridge) {
+    public void internalAddBridge(IMylarStructureBridge bridge) {
     	if(bridge.getProviders() != null){
     		for(AbstractRelationshipProvider provider: bridge.getProviders()){
     			getContextManager().addListener(provider);
@@ -399,6 +426,9 @@ public class MylarPlugin extends AbstractUIPlugin {
 		this.predictedInterestEnabled = predictedInterestEnabled;
 	}
 
+	/**
+	 * TODO: remove
+	 */
 	public void setDefaultBridge(IMylarStructureBridge defaultBridge) {
 		this.defaultBridge = defaultBridge;
 	}

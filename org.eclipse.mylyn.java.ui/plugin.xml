@@ -13,11 +13,6 @@
             primary="false">
       </toc>
    </extension>
-
-   <extension
-         name="Mylar Java startup"
-         point="org.eclipse.ui.startup">
-   </extension>
   
    <extension point="org.eclipse.ui.viewActions"> 
 	<viewContribution 
@@ -264,6 +259,13 @@
          </action>
       </editorContribution>
    </extension>
+   
+         <extension
+               point="org.eclipse.mylar.core.context">
+            <structureBridge
+                  class="org.eclipse.mylar.java.JavaStructureBridge"
+                  name="Java Structure Bridge"/>
+         </extension>
    <!-- end from -->
    
 </plugin>

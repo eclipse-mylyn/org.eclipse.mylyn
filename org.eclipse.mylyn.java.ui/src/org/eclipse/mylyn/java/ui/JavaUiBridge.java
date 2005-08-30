@@ -32,7 +32,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.search.AbstractJavaRelationshipProvider;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
@@ -73,8 +72,7 @@ public class JavaUiBridge implements IMylarUiBridge {
     }
 
     /**
-     * TODO: is there an easier way?  Is this slow?
-     * XXX: could close the wrong editor
+     * TODO: implement if needed
      */
     public void close(IMylarContextNode node) {
         try {
@@ -84,10 +82,10 @@ public class JavaUiBridge implements IMylarUiBridge {
                 for (int i = 0; i < references.length; i++) {
                     IEditorPart part = references[i].getEditor(false);
                     if (part != null  && part instanceof JavaEditor) {
-                        JavaEditor editor = (JavaEditor)part;
-                        String name = MylarJavaPlugin.getStructureBridge().getName(
-                                MylarJavaPlugin.getStructureBridge().getObjectForHandle(node.getElementHandle()));
-                        if (editor.getTitle().equals(name)) editor.close(true);
+//                        JavaEditor editor = (JavaEditor)part;
+//                        String name = MylarJavaPlugin.getStructureBridge().getName(
+//                                MylarJavaPlugin.getStructureBridge().getObjectForHandle(node.getElementHandle()));
+//                        if (editor.getTitle().equals(name)) editor.close(true);
                     } 
                 }
             }

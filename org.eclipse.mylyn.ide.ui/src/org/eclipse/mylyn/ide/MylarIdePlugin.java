@@ -53,7 +53,7 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
 	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-        genericResourceBridge = new ResourceStructureBridge(MylarPlugin.getDefault().isPredictedInterestEnabled());
+        genericResourceBridge = new ResourceStructureBridge();//MylarPlugin.getDefault().isPredictedInterestEnabled());
         MylarPlugin.getDefault().setDefaultBridge(genericResourceBridge);
 	}
 

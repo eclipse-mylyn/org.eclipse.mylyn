@@ -32,7 +32,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IFileEditorMapping;
-import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -47,7 +46,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
+public class MylarJavaPlugin extends AbstractUIPlugin {
 	private static MylarJavaPlugin plugin;
 	private ResourceBundle resourceBundle;
     private static JavaStructureBridge structureBridge = new JavaStructureBridge();
@@ -63,34 +62,26 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
 		plugin = this;
     }
 
-    public void earlyStartup() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                MylarPlugin.getDefault().addBridge(structureBridge); 
-                
-                MylarPlugin.getContextManager().addListener(new PackageExplorerManager());
-
-                MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
-                MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
-                MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
-                
-            	installEditorTracker(workbench);
-            
-            	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-            		ApplyMylarToPackageExplorerAction.getDefault().update();
-            		getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
-            	}
-            	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-            		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-            	}
-            }
-        });
-    }
-
     @Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+        MylarPlugin.getContextManager().addListener(new PackageExplorerManager());
+
+        MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
+        MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
+        MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
+        
+    	installEditorTracker(PlatformUI.getWorkbench());
+    
+    	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+    		ApplyMylarToPackageExplorerAction.getDefault().update();
+    		getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+    	}
+    	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+    		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+    	}
+		
 		if(!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 	        workbench.getDisplay().asyncExec(new Runnable() {
@@ -202,9 +193,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin implements IStartup {
         return uiBridge;
     }
 
-    public static JavaStructureBridge getStructureBridge() {
-        return structureBridge;
-    }
+//    public static JavaStructureBridge getStructureBridge() {
+//        return structureBridge;
+//    }
     
     public static boolean isMylarEditorDefault() {
 		IEditorRegistry editorRegistry = WorkbenchPlugin.getDefault()

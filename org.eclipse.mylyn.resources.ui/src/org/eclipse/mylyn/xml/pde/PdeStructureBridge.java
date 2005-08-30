@@ -49,10 +49,9 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 
     public final static String EXTENSION = "plugin.xml";
     private List<AbstractRelationshipProvider> providers;
-    private final IMylarStructureBridge parentBridge;
+    private IMylarStructureBridge parentBridge;
     
-    public PdeStructureBridge(IMylarStructureBridge parentBridge) {
-        this.parentBridge = parentBridge;
+    public PdeStructureBridge() {
         providers = new ArrayList<AbstractRelationshipProvider>();
         providers.add(new XmlReferencesProvider());
         
@@ -329,5 +328,9 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		separations.add(new DegreeOfSeparation("entire workspace", 5));
 
 		return separations;
+	}
+
+	public void setParentBridge(IMylarStructureBridge bridge) {
+		parentBridge = bridge;
 	}
 }

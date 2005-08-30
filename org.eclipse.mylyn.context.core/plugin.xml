@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<!-- these should be in UI but the monitor depends on them -->
+   <extension-point id="context" name="context" schema="schema/context.exsd"/>
 	
+   <extension
+         name="Mylar Startup"
+         point="org.eclipse.ui.startup">
+   </extension>
+	
+	<!-- these should be in UI but the monitor depends on them -->
      <extension point="org.eclipse.ui.views">
      	<category name="Mylar" id="org.eclipse.mylar"/>
      </extension>

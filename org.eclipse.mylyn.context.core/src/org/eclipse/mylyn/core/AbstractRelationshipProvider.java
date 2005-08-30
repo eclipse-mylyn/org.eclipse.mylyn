@@ -22,8 +22,6 @@ import org.eclipse.mylar.core.search.IMylarSearchOperation;
 
 /**
  * @author Mik Kersten
- * 
- * TODO: should probably turn into an interface
  */
 public abstract class AbstractRelationshipProvider implements IMylarContextListener {
 	
