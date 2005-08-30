@@ -58,7 +58,11 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
 		this.element = element;
 	}
 
-	public IStatus run(IProgressMonitor monitor) {
+	public IStatus run(IProgressMonitor monitor){
+		return run(monitor, Job.DECORATE);
+	}
+	
+	public IStatus run(IProgressMonitor monitor, int priority) {
         handle = element.getHandleIdentifier() + " " + scope;
         List<IJavaElement> landmarks = new ArrayList<IJavaElement>();
         landmarks.add(element);
@@ -95,6 +99,7 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
                                 + op.getSearchMemberName(), op);
 
                 // schedule the new search job
+                searchJob.setPriority(priority);
                 searchJob.schedule();
 
                 // save this searchJobs handle so that we can cancel it if need be

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
@@ -107,7 +108,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 			}
             
         });
-        search.run(new NullProgressMonitor());
+        search.run(new NullProgressMonitor(), Job.DECORATE);
 	}
 
 	@Override
