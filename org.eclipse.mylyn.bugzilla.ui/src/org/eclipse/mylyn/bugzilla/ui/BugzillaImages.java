@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.tasklist.TaskListImages.MylarTasklistOverlayDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -64,11 +65,18 @@ public class BugzillaImages {
 	public static final ImageDescriptor IMG_TOOL_ADD_TO_FAVORITES = create(T_ELCL, "bug-favorite.gif");
     public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
     public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
-    public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
-    public static final ImageDescriptor TASK_BUGZILLA_INCOMMING = create(T_TOOL, "task-bug-in.gif");;
-	public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = create(T_TOOL, "task-bug-con.gif");;
-	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = create(T_TOOL, "task-bug-out.gif");;
+    public static final ImageDescriptor TASK_BUG = create(T_TOOL, "task-bug.gif");
     
+    public static final ImageDescriptor OVERLAY_INCOMMING = create(T_ELCL, "overlay-incoming.gif");
+	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_ELCL, "overlay-outgoing.gif");
+	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_ELCL, "overlay-conflicting.gif");
+	
+	public static final ImageDescriptor TASK_BUGZILLA = createWithOverlay(TASK_BUG, null);
+    public static final ImageDescriptor TASK_BUGZILLA_INCOMMING = createWithOverlay(TASK_BUGZILLA, OVERLAY_INCOMMING);
+	public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = createWithOverlay(TASK_BUGZILLA, OVERLAY_CONFLICT);
+	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = createWithOverlay(TASK_BUGZILLA, OVERLAY_OUTGOING);
+	public static final ImageDescriptor BUGZILLA_HIT = createWithOverlay(BUG, null);
+	
     public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
     public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif"); 
     public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
@@ -78,6 +86,8 @@ public class BugzillaImages {
     public static final ImageDescriptor REMOVE = create("", "remove.gif");
     public static final ImageDescriptor SELECT_ALL = create("", "selectAll.gif");
     public static final ImageDescriptor OPEN = create("", "openresult.gif");
+
+	
  
     
     
@@ -89,6 +99,10 @@ public class BugzillaImages {
 		}
 	}
 	
+	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay) { 
+		return new MylarTasklistOverlayDescriptor(base, overlay);
+	}
+
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
 		if (baseURL == null)
 			throw new MalformedURLException();
@@ -111,5 +125,4 @@ public class BugzillaImages {
 	    }
 	    return image;
 	}
-	
 }

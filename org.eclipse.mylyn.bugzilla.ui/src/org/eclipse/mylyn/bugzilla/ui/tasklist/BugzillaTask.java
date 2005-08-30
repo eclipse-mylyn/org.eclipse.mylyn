@@ -320,10 +320,10 @@ public class BugzillaTask extends Task {
 							if(!isBugDownloaded() && offline){
 								MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla task since you are currently offline");
 								return;
-							}else if(!isBugDownloaded() && syncState != BugReportSyncState.OUTGOING) {
+							}else if(!isBugDownloaded() && syncState != BugReportSyncState.OUTGOING && syncState != BugReportSyncState.CONFLICT) {
 								input.getBugTask().downloadReport();
 								input.setOfflineBug(input.getBugTask().getBugReport());
-							} else if(syncState == BugReportSyncState.OUTGOING){
+							} else if(syncState == BugReportSyncState.OUTGOING || syncState == BugReportSyncState.CONFLICT){
 								input.setOfflineBug(bugReport);
 							}
 							
@@ -438,7 +438,7 @@ public class BugzillaTask extends Task {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try{
-				boolean isLikeOffline = offline || syncState == BugReportSyncState.OUTGOING;
+				boolean isLikeOffline = offline || syncState == BugReportSyncState.OUTGOING || syncState == BugReportSyncState.CONFLICT;
 				final BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugTask, isLikeOffline);
 //				state = BugTaskState.OPENING;
 //				notifyTaskDataChange();

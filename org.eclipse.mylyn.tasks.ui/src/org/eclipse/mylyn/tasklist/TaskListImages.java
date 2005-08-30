@@ -18,9 +18,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -44,7 +48,9 @@ public class TaskListImages {
     
     public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
     
-    public static final ImageDescriptor TASK = create(T_TOOL, "task.gif"); 
+    public static final ImageDescriptor TASK2 = create(T_TOOL, "task.gif");
+    public static final ImageDescriptor TASK = createWithOverlay(TASK2, null); 
+    
     public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif"); 
     public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif"); 
     public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");
@@ -72,6 +78,10 @@ public class TaskListImages {
 		}
 	}
 	
+	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay) { 
+		return new MylarTasklistOverlayDescriptor(base, overlay);
+	}
+	
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
 		if (baseURL == null)
 			throw new MalformedURLException();
@@ -92,5 +102,54 @@ public class TaskListImages {
 	        imageMap.put(imageDescriptor, image);
 	    }
 	    return image;
+	}
+	
+	
+	public static class MylarTasklistOverlayDescriptor extends CompositeImageDescriptor {
+
+		private ImageData base;
+		private ImageData overlay;
+		private Point fSize;
+		
+		public MylarTasklistOverlayDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc) {
+			this.base = getImageData(baseDesc);
+			if(overlayDesc != null)
+				this.overlay = getImageData(overlayDesc);
+			Point size = new Point(base.width, base.height); 
+			setImageSize(size);
+		}
+
+		@Override
+		protected void drawCompositeImage(int width, int height) {
+			drawImage(base, 0, 0);
+			if(overlay != null)
+				drawImage(overlay, base.width - overlay.width, 0);
+		}
+
+		private ImageData getImageData(ImageDescriptor descriptor) {
+			ImageData data= descriptor.getImageData(); // see bug 51965: getImageData can return null
+			if (data == null) {
+				data= DEFAULT_IMAGE_DATA;
+			}
+			return data;
+		}
+		
+		/**
+		 * Sets the size of the image created by calling <code>createImage()</code>.
+		 * 
+		 * @param size the size of the image returned from calling <code>createImage()</code>
+		 * @see ImageDescriptor#createImage()
+		 */
+		public void setImageSize(Point size) {
+			Assert.isNotNull(size);
+			Assert.isTrue(size.x >= 0 && size.y >= 0);
+			fSize= size;
+		}
+		
+		@Override
+		protected Point getSize() {
+			return new Point(fSize.x, fSize.y);
+		}
+		
 	}
 }

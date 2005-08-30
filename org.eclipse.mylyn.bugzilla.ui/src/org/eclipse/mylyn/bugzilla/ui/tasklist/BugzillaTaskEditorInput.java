@@ -101,7 +101,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	 * Returns the offline bug for this input's Bugzilla task
 	 */
 	public BugReport getOfflineBug() {
-		if(offline || bugTask.getSyncState() == BugReportSyncState.OUTGOING)
+		if(offline || bugTask.getSyncState() == BugReportSyncState.OUTGOING || bugTask.getSyncState() == BugReportSyncState.CONFLICT)
 			return offlineBug;
 		else
 			return super.getBug();
