@@ -20,6 +20,7 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.ui.IPersistableElement;
 
 
@@ -100,7 +101,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	 * Returns the offline bug for this input's Bugzilla task
 	 */
 	public BugReport getOfflineBug() {
-		if(offline)
+		if(offline || bugTask.getSyncState() == BugReportSyncState.OUTGOING)
 			return offlineBug;
 		else
 			return super.getBug();

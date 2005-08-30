@@ -48,6 +48,7 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.IBugzillaReportSelection;
+import org.eclipse.mylar.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
@@ -447,6 +448,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		infoArea.setLayout(infoLayout);
 		infoArea.setBackground(background);
 		if (getBug() == null) {
+			close();
 			MessageDialog.openError(infoArea.getShell(), "No such bug",
 					"No bug exists with this id");
 			return null;
@@ -1281,8 +1283,17 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 */
 	public void saveBug() {
 		updateBug();
+		
+		IBugzillaBug bug = getBug();
+		
+		if(bug.hasChanges()){
+			BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
+		} else {
+			BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
+		}
+		
 		changeDirtyStatus(false);
-		OfflineView.saveOffline(getBug());
+		OfflineView.saveOffline(getBug(), true);
 		OfflineView.checkWindow();
 		OfflineView.refreshView();
 	}

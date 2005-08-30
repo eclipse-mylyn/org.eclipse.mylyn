@@ -24,6 +24,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	private BugzillaTaskListManager bugzillaTaskListManager;
 	private BugzillaRefreshManager bugzillaRefreshManager;
+	
     private static BugzillaUiPlugin plugin;
 		
 	
@@ -42,6 +43,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
 		bugzillaTaskListManager = new BugzillaTaskListManager();
 		bugzillaRefreshManager = new BugzillaRefreshManager();
+		BugzillaPlugin.getDefault().addOfflineStatusListener(bugzillaTaskListManager);
 	}
 
 	/**

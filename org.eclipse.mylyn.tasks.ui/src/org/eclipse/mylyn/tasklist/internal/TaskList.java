@@ -148,11 +148,11 @@ public class TaskList implements Serializable {
     private ITask findTaskHelper(List<? extends ITaskListElement> elements, String handle) {
         for (ITaskListElement element : elements) {
         	if(element instanceof ITask){
-        		if(element.getHandle() == handle)
+        		if(element.getHandle().compareTo(handle) == 0)
         			return (ITask)element;
         	} else if(element instanceof IQueryHit){
         		IQueryHit hit = (IQueryHit)element;
-	            if (hit.getHandle() == handle && hit.hasCorrespondingActivatableTask()) {
+	            if (hit.getHandle().compareTo(handle) == 0 && hit.hasCorrespondingActivatableTask()) {
 	                return hit.getOrCreateCorrespondingTask();
 	            }
         	}

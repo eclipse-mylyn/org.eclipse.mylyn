@@ -19,6 +19,7 @@ import java.net.URLConnection;
 import java.net.Proxy.Type;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -32,11 +33,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.mylar.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
 import org.eclipse.mylar.bugzilla.core.favorites.FavoritesFile;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.core.UpdateCore;
 import org.eclipse.update.internal.ui.UpdateUI;
@@ -62,6 +65,8 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	
 	/** The file that contains all of the offline bug reports */
 	private OfflineReportsFile offlineReportsFile;
+	
+	private List<IOfflineBugListener> listeners = new ArrayList<IOfflineBugListener>();
 	
 	/** Product configuration for the current server */
 	private ProductConfiguration productConfiguration;
@@ -343,5 +348,29 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	
 	public int getMaxResults() {
 		return getPreferenceStore().getInt(IBugzillaConstants.MAX_RESULTS);
+	}
+	
+	public void addOfflineStatusListener(IOfflineBugListener listener){
+		if(!listeners.contains(listener)){
+			listeners.add(listener);
+		}
+	}
+	
+	public void removeOfflineStatusListener(IOfflineBugListener listener){
+		listeners.remove(listener);
+	}
+	
+	public List<IOfflineBugListener> getOfflineStatusListeners(){
+		return listeners;
+	}
+	
+	public void fireOfflineStatusChanged(final IBugzillaBug bug, final BugzillaOfflineStaus status){
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run() {
+				for (IOfflineBugListener listener: listeners) {
+					listener.offlineStatusChange(bug, status);
+				}				
+			}
+		});
 	}
 }

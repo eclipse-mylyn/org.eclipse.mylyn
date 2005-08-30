@@ -14,12 +14,18 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
+import org.eclipse.mylar.bugzilla.core.IOfflineBugListener;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class BugzillaTaskListManager {
+public class BugzillaTaskListManager implements IOfflineBugListener {
 
     private Map<String, BugzillaTask> bugzillaTaskRegistry = new HashMap<String, BugzillaTask>();
 	
@@ -46,6 +52,33 @@ public class BugzillaTaskListManager {
 
 	public void setTaskRegistyCategory(TaskCategory cat) {
 		this.cat = cat;		
+	}
+
+	public void offlineStatusChange(IBugzillaBug bug, BugzillaOfflineStaus status) {
+		BugReportSyncState state = null;
+		if(status == BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES){
+			state = BugReportSyncState.OUTGOING;
+		} else if(status == BugzillaOfflineStaus.SAVED){
+			state = BugReportSyncState.OK;
+		}else if(status == BugzillaOfflineStaus.SAVED_WITH_INCOMMING_CHANGES){
+			state = BugReportSyncState.INCOMMING;
+		}else if(status == BugzillaOfflineStaus.CONFLICT){
+			state = BugReportSyncState.CONFLICT;
+		}
+		if(state == null){
+			// this means that we got a status that we didn't understand
+			return;
+		}
+		
+		String handle = BugzillaTask.getHandle(bug);
+		ITask task = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(handle, true);
+		if(task != null && task instanceof BugzillaTask){
+			BugzillaTask bugTask = (BugzillaTask) task;
+			bugTask.setSyncState(state);
+			if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
+				TaskListView.getDefault().getViewer().refresh();
+			}
+		}
 	}
     
 }

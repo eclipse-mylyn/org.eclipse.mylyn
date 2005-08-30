@@ -193,4 +193,8 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 	public void setOfflineState(boolean newOfflineState) {
 		savedOffline = newOfflineState;
 	}
+
+	public boolean hasChanges() {
+		return true;
+	}
 }

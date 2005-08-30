@@ -693,16 +693,27 @@ public class ExistingBugEditor extends AbstractBugEditor
 		// go through all of the attributes and update the main values to the new ones
 		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {
 			Attribute a = it.next();
+			if(a.getNewValue().compareTo(a.getValue()) != 0){
+				bug.setHasChanged(true);
+			}
 			a.setValue(a.getNewValue());
+			
 		}
-				
+		if(bug.getNewComment().compareTo(bug.getNewNewComment()) != 0){
+			bug.setHasChanged(true);
+		}
+		
 		// Update some other fields as well.
 		bug.setNewComment(bug.getNewNewComment());
+		
 			
 	}
 
 	@Override
 	protected void restoreBug() {
+		
+		if(bug == null)
+			return;
 		
 		// go through all of the attributes and restore the new values to the main ones
 		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {

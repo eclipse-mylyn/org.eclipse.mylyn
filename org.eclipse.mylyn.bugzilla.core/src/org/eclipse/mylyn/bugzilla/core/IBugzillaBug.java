@@ -83,4 +83,6 @@ public interface IBugzillaBug extends Serializable {
 	 * @param newOfflineState <code>true</code> if this bug is saved offline
 	 */
 	public void setOfflineState(boolean newOfflineState);
+
+	public boolean hasChanges();
 }

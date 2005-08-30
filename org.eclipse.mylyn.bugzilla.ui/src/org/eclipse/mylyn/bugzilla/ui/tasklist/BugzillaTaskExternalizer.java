@@ -14,6 +14,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 import java.util.Date;
 
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ICategory;
@@ -42,6 +43,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 	private static final String BUGZILLA = "Bugzilla";
 	private static final String LAST_DATE = "LastDate";
 	private static final String DIRTY = "Dirty";
+	private static final String SYNC_STATE = "offlineSyncState";
 	private static final String DESCRIPTION = "Description";
 	private static final String URL = "URL";
 
@@ -164,6 +166,8 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 			node.setAttribute(LAST_DATE, new Long(new Date().getTime()).toString());
 		}
 		
+		node.setAttribute(SYNC_STATE, bt.getSyncState().toString());
+		
 		if (bt.isDirty()) {
 			node.setAttribute(DIRTY, TRUE);
 		} else {
@@ -199,6 +203,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		task.setState(BugTaskState.FREE);
 		task.setLastRefresh(new Date(new Long(element.getAttribute("LastDate"))
 				.longValue()));
+				
 		if (element.getAttribute("Dirty").compareTo("true") == 0) {
 			task.setDirty(true);
 		} else {
@@ -210,6 +215,19 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 			}
 		} catch(Exception e) {
 			MylarPlugin.log(e, "Failed to read bug report");
+		}
+		
+		if (element.hasAttribute(SYNC_STATE)) {
+			String syncState = element.getAttribute(SYNC_STATE);
+			if(syncState.compareTo(BugReportSyncState.OK.toString()) == 0){
+				task.setSyncState(BugReportSyncState.OK);
+			} else if(syncState.compareTo(BugReportSyncState.INCOMMING.toString()) == 0){
+				task.setSyncState(BugReportSyncState.INCOMMING);
+			} else if(syncState.compareTo(BugReportSyncState.OUTGOING.toString()) == 0){
+				task.setSyncState(BugReportSyncState.OUTGOING);
+			} else if(syncState.compareTo(BugReportSyncState.CONFLICT.toString()) == 0){
+				task.setSyncState(BugReportSyncState.CONFLICT);
+			}
 		}
 		
 		ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(task);

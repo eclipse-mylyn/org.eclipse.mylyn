@@ -65,6 +65,10 @@ public class BugzillaImages {
     public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
     public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
     public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
+    public static final ImageDescriptor TASK_BUGZILLA_INCOMMING = create(T_TOOL, "task-bug-in.gif");;
+	public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = create(T_TOOL, "task-bug-con.gif");;
+	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = create(T_TOOL, "task-bug-out.gif");;
+    
     public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
     public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif"); 
     public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
@@ -74,7 +78,7 @@ public class BugzillaImages {
     public static final ImageDescriptor REMOVE = create("", "remove.gif");
     public static final ImageDescriptor SELECT_ALL = create("", "selectAll.gif");
     public static final ImageDescriptor OPEN = create("", "openresult.gif");
-    
+ 
     
     
 	private static ImageDescriptor create(String prefix, String name) {

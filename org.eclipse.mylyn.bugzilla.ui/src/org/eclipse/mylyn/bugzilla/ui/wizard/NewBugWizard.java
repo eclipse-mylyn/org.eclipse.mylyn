@@ -129,7 +129,7 @@ public class NewBugWizard extends AbstractBugWizard {
 	protected void saveBugOffline() {
 		// Since the bug report is new, it just needs to be added to the
 		// existing list of reports in the offline file.
-		OfflineView.saveOffline(model);
+		OfflineView.saveOffline(model, true);
 	}
 
 	@Override

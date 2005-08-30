@@ -74,6 +74,8 @@ public class BugReport implements Serializable, IBugzillaBug {
 	/** Whether or not this bug report is saved offline. */
 	protected boolean savedOffline = false;
 
+	protected boolean hasChanges = false;
+	
 	/**
 	 * Constructor
 	 * @param id The id of the bug
@@ -406,5 +408,13 @@ public class BugReport implements Serializable, IBugzillaBug {
 	
 	public void setOfflineState(boolean newOfflineState) {
 		savedOffline = newOfflineState;
+	}
+
+	public boolean hasChanges() {
+		return hasChanges;
+	}
+
+	public void setHasChanged(boolean b) {
+		hasChanges = b;
 	}
 }

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -37,6 +36,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
 import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.actions.AbstractOfflineReportsAction;
 import org.eclipse.mylar.bugzilla.ui.actions.DeleteOfflineReportAction;
@@ -51,6 +51,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -213,13 +214,13 @@ public class OfflineView extends ViewPart {
 		toolbar.add(selectAll);
 	
 		// create actions to handle the sorting of the OfflineReports
-		sortByIDAction = new SortByAction(OfflineReportsFile.ID_SORT);
-		sortByIDAction.setText("by &Bug ID");
-		sortByIDAction.setToolTipText("Sorts by Bug number");
-		
-		sortByTypeAction = new SortByAction(OfflineReportsFile.TYPE_SORT);
-		sortByTypeAction.setText("by &Bug Type");
-		sortByTypeAction.setToolTipText("Sorts by locally created/from server status");
+//		sortByIDAction = new SortByAction(OfflineReportsFile.ID_SORT);
+//		sortByIDAction.setText("by &Bug ID");
+//		sortByIDAction.setToolTipText("Sorts by Bug number");
+//		
+//		sortByTypeAction = new SortByAction(OfflineReportsFile.TYPE_SORT);
+//		sortByTypeAction.setText("by &Bug Type");
+//		sortByTypeAction.setToolTipText("Sorts by locally created/from server status");
 		
 		// get the menu manager and create a submenu to contain sorting
 		IMenuManager menu = actionBars.getMenuManager();
@@ -227,51 +228,51 @@ public class OfflineView extends ViewPart {
 
 		// add the sorting actions to the menu bar
 		menu.add(submenu);
-		submenu.add(sortByIDAction);
-		submenu.add(sortByTypeAction);
+//		submenu.add(sortByIDAction);
+//		submenu.add(sortByTypeAction);
 	
-		updateSortingState();
+//		updateSortingState();
 	}
 	
-	/**
-	 * Function to make sure that the appropriate sort is checked
-	 */
-	void updateSortingState() {
-		int curCriterion = OfflineReportsFile.lastSel;
-		
-		sortByIDAction.setChecked(curCriterion == OfflineReportsFile.ID_SORT);
-		sortByTypeAction.setChecked(curCriterion == OfflineReportsFile.TYPE_SORT);
-		viewer.setInput(viewer.getInput());
-	}
+//	/**
+//	 * Function to make sure that the appropriate sort is checked
+//	 */
+//	void updateSortingState() {
+//		int curCriterion = OfflineReportsFile.lastSel;
+//		
+//		sortByIDAction.setChecked(curCriterion == OfflineReportsFile.ID_SORT);
+//		sortByTypeAction.setChecked(curCriterion == OfflineReportsFile.TYPE_SORT);
+//		viewer.setInput(viewer.getInput());
+//	}
+//	
+//	// Sorting actions for the OfflineReports view
+//	SortByAction sortByIDAction, sortByTypeAction/*, sortBySeverityAction, sortByPriorityAction, sortByStatusAction*/;
 	
-	// Sorting actions for the OfflineReports view
-	SortByAction sortByIDAction, sortByTypeAction/*, sortBySeverityAction, sortByPriorityAction, sortByStatusAction*/;
-	
-	/**
-	 * Inner class to handle sorting
-	 * @author Shawn Minto
-	 */
-	class SortByAction extends Action {
-		/** The criteria to sort the OfflineReports menu based on */
-		private int criterion;
-		
-		/**
-		 * Constructor
-		 * @param criteria The criteria to sort the OfflineReports menu based on
-		 */
-		public SortByAction(int criteria) {
-			this.criterion = criteria;
-		}
-
-		/**
-		 * Perform the sort
-		 */
-		@Override
-		public void run() {
-			BugzillaPlugin.getDefault().getOfflineReports().sort(criterion);
-			updateSortingState();
-		}
-	}
+//	/**
+//	 * Inner class to handle sorting
+//	 * @author Shawn Minto
+//	 */
+//	class SortByAction extends Action {
+//		/** The criteria to sort the OfflineReports menu based on */
+//		private int criterion;
+//		
+//		/**
+//		 * Constructor
+//		 * @param criteria The criteria to sort the OfflineReports menu based on
+//		 */
+//		public SortByAction(int criteria) {
+//			this.criterion = criteria;
+//		}
+//
+//		/**
+//		 * Perform the sort
+//		 */
+//		@Override
+//		public void run() {
+//			BugzillaPlugin.getDefault().getOfflineReports().sort(criterion);
+//			updateSortingState();
+//		}
+//	}
 	
 	/**
 	 * Create context menu.
@@ -445,9 +446,11 @@ public class OfflineView extends ViewPart {
 	 */
     @SuppressWarnings("unchecked")
 	public void deleteSelectedOfflineReports() {
-		List<IBugzillaBug> selection = ((IStructuredSelection)viewer.getSelection()).toList();
+    	List<IBugzillaBug> selection = ((IStructuredSelection)viewer.getSelection()).toList();
 		closeOfflineReports(selection);
-		BugzillaPlugin.getDefault().getOfflineReports().remove(selection);
+    	for (IBugzillaBug bug : selection) {
+			removeReport(bug);
+		}
 		viewer.setInput(viewer.getInput());
 	}
 	
@@ -456,7 +459,10 @@ public class OfflineView extends ViewPart {
 	 */
 	public void deleteAllOfflineReports() {
 		closeOfflineReports(BugzillaPlugin.getDefault().getOfflineReports().elements());
-		BugzillaPlugin.getDefault().getOfflineReports().removeAll();
+		List<IBugzillaBug> reports =  new ArrayList<IBugzillaBug>(OfflineReportsFile.getOfflineBugs());
+		for (IBugzillaBug bug : reports) {
+			removeReport(bug);
+		}
 		viewer.setInput(viewer.getInput());
 	}	
 		
@@ -466,28 +472,35 @@ public class OfflineView extends ViewPart {
 	 * 
 	 * @param bug
 	 *            The bug to add/update.
+	 * @param saveChosen
+	 * 			  This is used to determine a refresh from a user save
 	 */
-	public static void saveOffline(IBugzillaBug bug) {
-		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
-		// If there is already an offline report for this bug, update the file.
-		if (bug.isSavedOffline()) {
-			file.update();
-		}
-		// If this bug has not been saved offline before, add it to the file.
-		else {
-			// If there is already an offline report with the same id, don't save this report.
-			int index = -1;
-			if ((index = file.find(bug.getId())) >= 0) {
-				removeReport(getOfflineBugs().get(index));
-//				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
-//				return;
+	public static void saveOffline(final IBugzillaBug bug, final boolean saveChosen) {
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run() {
+			
+				OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+				// If there is already an offline report for this bug, update the file.
+				if (bug.isSavedOffline()) {
+					file.update();
+				}
+				// If this bug has not been saved offline before, add it to the file.
+				else {
+					// If there is already an offline report with the same id, don't save this report.
+		//			int index = -1;
+		//			if ((index = file.find(bug.getId())) >= 0) {
+		//				removeReport(getOfflineBugs().get(index));
+		//				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
+		//				return;
+		//			}
+					file.add(bug, saveChosen);
+					bug.setOfflineState(true);
+		//			file.sort(OfflineReportsFile.lastSel);
+				}
+				OfflineView.checkWindow();
+				OfflineView.refreshView();
 			}
-			file.add(bug);
-			bug.setOfflineState(true);
-			file.sort(OfflineReportsFile.lastSel);
-		}
-		OfflineView.checkWindow();
-		OfflineView.refreshView();
+		});
 	}
 	
 	public static List<IBugzillaBug> getOfflineBugs(){
@@ -502,6 +515,8 @@ public class OfflineView extends ViewPart {
 	 *            The report to remove.
 	 */
 	public static void removeReport(IBugzillaBug bug) {
+		BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.DELETED);
+		
 		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
 		bugList.add(bug);
 		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
@@ -514,6 +529,15 @@ public class OfflineView extends ViewPart {
 			viewer.setInput(viewer.getInput());
 		}
 	}
+	
+	public static IBugzillaBug find(int bugId) {
+		int location = BugzillaPlugin.getDefault().getOfflineReports().find(bugId);
+		if(location != -1){
+			return BugzillaPlugin.getDefault().getOfflineReports().elements().get(location);
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * @see SelectionListener#widgetSelected(SelectionEvent)

@@ -197,7 +197,8 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
 		for (Iterator<Attribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
 			Attribute attribute = iter.next();
-			
+			if(attribute.getName().compareTo("delta_ts") == 0 || attribute.getName().compareTo("Last Modified") == 0 || attribute.getName().compareTo("longdesclength") == 0)
+				continue;
 			// Since the bug report may not be saved offline, get the attribute's new
 			// value, which is what is in the submit viewer.
 			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getNewValue(), attributeImage));

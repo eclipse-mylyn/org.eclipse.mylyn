@@ -16,16 +16,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.structuremergeviewer.DiffNode;
+import org.eclipse.compare.structuremergeviewer.Differencer;
+import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
+import org.eclipse.mylar.bugzilla.core.compare.BugzillaCompareInput;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -75,10 +83,74 @@ public class OfflineReportsFile
 	 * Add an offline report to the offline reports list
 	 * @param entry The bug to add
 	 */
-	public void add(IBugzillaBug entry) {
-		// add the entry to the list and write the file to disk
-		list.add(entry);
-		writeFile();
+	public boolean add(IBugzillaBug entry, boolean saveChosen) {
+		try{
+			BugzillaOfflineStaus status = BugzillaOfflineStaus.SAVED;
+			// check for bug and do a compare
+			int index = -1;
+			if ((index = find(entry.getId())) >= 0) {
+				IBugzillaBug oldBug = list.get(index);
+				if(oldBug instanceof BugReport && entry instanceof BugReport && !saveChosen){
+					CompareConfiguration config = new CompareConfiguration();
+					config.setLeftEditable(false);
+					config.setRightEditable(false);
+					config.setLeftLabel("Local Bug Report");
+					config.setRightLabel("Remote Bug Report");
+					config.setLeftImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
+					config.setRightImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
+					final BugzillaCompareInput in = new BugzillaCompareInput(config);
+					in.setLeft((BugReport)oldBug);
+					in.setRight((BugReport)entry);
+					in.setTitle("Bug #" + oldBug.getId());
+					PlatformUI.getWorkbench().getProgressService().run(true, true, in);
+					if(in.getCompareResult() == null){
+						return true;
+					} else if(oldBug.hasChanges()){
+						if(!MessageDialog.openQuestion(null, "Update Local Copy", "Local copy of Bug# " + entry.getId() + " Has Changes.\nYour added comment will be saved, but all other changes will be lost .\nDo you want to continue?")){
+							return false;
+						}
+						((BugReport)entry).setNewComment(((BugReport)oldBug).getNewComment());
+						((BugReport)entry).setHasChanged(true);
+						status = BugzillaOfflineStaus.CONFLICT;
+					} else {
+						DiffNode node = (DiffNode)in.getCompareResult();
+						IDiffElement[] children = node.getChildren();
+						if(children.length != 0){
+							for (IDiffElement element : children) {
+								if(((DiffNode)element).getKind() == Differencer.CHANGE){
+									status = BugzillaOfflineStaus.SAVED_WITH_INCOMMING_CHANGES;
+									break;
+								}
+							}
+						} else {
+							return true;
+						}
+
+					}
+	//				Display.getDefault().asyncExec(new Runnable(){
+	//					public void run() {
+	//						
+	//						CompareUI.openCompareDialog(in);	
+	//					}
+	//				});
+				}
+				list.remove(index);
+			}
+			if(entry.hasChanges() && status != BugzillaOfflineStaus.CONFLICT){
+				status = BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES;
+			}
+			// add the entry to the list and write the file to disk
+			list.add(entry);
+			writeFile();
+			BugzillaPlugin.getDefault().fireOfflineStatusChanged(entry, status);
+			return true;
+		} catch (InterruptedException x) {
+			// cancelled by user		
+		} catch (InvocationTargetException x) {
+			BugzillaPlugin.log(x);
+			MessageDialog.openError(null, "Compare Failed", x.getTargetException().getMessage());
+		}
+		return false;
 	}
 	
 	/**
@@ -86,6 +158,7 @@ public class OfflineReportsFile
 	 * Used when existing offline reports are modified and saved.
 	 */
 	public void update() {
+		// check for bug and do a compare
 		writeFile();
 	}
 	
@@ -208,83 +281,83 @@ public class OfflineReportsFile
 		writeFile();
 	}
 
-	/**
-	 * Function to sort the offline reports list
-	 * @param sortOrder The way to sort the bugs in the offline reports list
-	 */
-	public void sort(int sortOrder) {
-		IBugzillaBug[] a = list.toArray(new IBugzillaBug[list.size()]);
-		
-		// decide which sorting method to use and sort the offline reports
-		switch(sortOrder) {
-			case ID_SORT:
-				Arrays.sort(a, new SortID());
-				lastSel = ID_SORT;
-				break;
-			case TYPE_SORT:
-				Arrays.sort(a, new SortType());
-				lastSel = TYPE_SORT;
-				break;
-		}
-		
-		// remove all of the elements from the list so that we can re-add
-		// them in a sorted order
-		list.clear();
-		
-		// add the sorted elements to the list and the table
-		for (int j = 0; j < a.length; j++) {
-			add(a[j]);
-		}
-	}
+//	/**
+//	 * Function to sort the offline reports list
+//	 * @param sortOrder The way to sort the bugs in the offline reports list
+//	 */
+//	public void sort(int sortOrder) {
+//		IBugzillaBug[] a = list.toArray(new IBugzillaBug[list.size()]);
+//		
+//		// decide which sorting method to use and sort the offline reports
+//		switch(sortOrder) {
+//			case ID_SORT:
+//				Arrays.sort(a, new SortID());
+//				lastSel = ID_SORT;
+//				break;
+//			case TYPE_SORT:
+//				Arrays.sort(a, new SortType());
+//				lastSel = TYPE_SORT;
+//				break;
+//		}
+//		
+//		// remove all of the elements from the list so that we can re-add
+//		// them in a sorted order
+//		list.clear();
+//		
+//		// add the sorted elements to the list and the table
+//		for (int j = 0; j < a.length; j++) {
+//			add(a[j]);
+//		}
+//	}
 	
-	/**
-	 * Inner class to sort by bug id
-	 */
-	private class SortID implements Comparator<IBugzillaBug> {
-		public int compare(IBugzillaBug f1, IBugzillaBug f2) {
-			Integer id1 = f1.getId();
-			Integer id2 = f2.getId();
-
-			if(id1 != null && id2 != null)
-				return id1.compareTo(id2);
-			else if(id1 == null && id2 != null)
-				return -1;
-			else if(id1 != null && id2 == null)
-				return 1;
-			else
-				return 0;
-		}
-	}
-
-	/**
-	 * Inner class to sort by bug type (locally created or from the server)
-	 */
-	private class SortType implements Comparator<IBugzillaBug> {
-		public int compare(IBugzillaBug f1, IBugzillaBug f2) {
-			boolean isLocal1 = f1.isLocallyCreated();
-			boolean isLocal2 = f2.isLocallyCreated();
-			
-			if (isLocal1 && !isLocal2) {
-				return -1;
-			}
-			else if (!isLocal1 && isLocal2) {
-				return 1;
-			}
-			
-			// If they are both the same type, sort by ID
-			Integer id1 = f1.getId();
-			Integer id2 = f2.getId();
-
-			if(id1 != null && id2 != null)
-				return id1.compareTo(id2);
-			else if(id1 == null && id2 != null)
-				return -1;
-			else if(id1 != null && id2 == null)
-				return 1;
-			else
-				return 0;
-		}
-	}
+//	/**
+//	 * Inner class to sort by bug id
+//	 */
+//	private class SortID implements Comparator<IBugzillaBug> {
+//		public int compare(IBugzillaBug f1, IBugzillaBug f2) {
+//			Integer id1 = f1.getId();
+//			Integer id2 = f2.getId();
+//
+//			if(id1 != null && id2 != null)
+//				return id1.compareTo(id2);
+//			else if(id1 == null && id2 != null)
+//				return -1;
+//			else if(id1 != null && id2 == null)
+//				return 1;
+//			else
+//				return 0;
+//		}
+//	}
+//
+//	/**
+//	 * Inner class to sort by bug type (locally created or from the server)
+//	 */
+//	private class SortType implements Comparator<IBugzillaBug> {
+//		public int compare(IBugzillaBug f1, IBugzillaBug f2) {
+//			boolean isLocal1 = f1.isLocallyCreated();
+//			boolean isLocal2 = f2.isLocallyCreated();
+//			
+//			if (isLocal1 && !isLocal2) {
+//				return -1;
+//			}
+//			else if (!isLocal1 && isLocal2) {
+//				return 1;
+//			}
+//			
+//			// If they are both the same type, sort by ID
+//			Integer id1 = f1.getId();
+//			Integer id2 = f2.getId();
+//
+//			if(id1 != null && id2 != null)
+//				return id1.compareTo(id2);
+//			else if(id1 == null && id2 != null)
+//				return -1;
+//			else if(id1 != null && id2 == null)
+//				return 1;
+//			else
+//				return 0;
+//		}
+//	}
 
 	/**
 	 * Saves the given report to the offlineReportsFile, or, if it already
@@ -293,7 +366,7 @@ public class OfflineReportsFile
 	 * @param bug
 	 *            The bug to add/update.
 	 */
-	public static void saveOffline(IBugzillaBug bug) {
+	public static void saveOffline(IBugzillaBug bug, boolean saveChosen) {
 		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
 		// If there is already an offline report for this bug, update the file.
 		if (bug.isSavedOffline()) {
@@ -308,9 +381,9 @@ public class OfflineReportsFile
 //				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
 //				return;
 			}
-			file.add(bug);
+			file.add(bug, saveChosen);
 			bug.setOfflineState(true);
-			file.sort(OfflineReportsFile.lastSel);
+//			file.sort(OfflineReportsFile.lastSel);
 		}
 	}
 	

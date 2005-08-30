@@ -14,9 +14,7 @@
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
@@ -32,7 +30,6 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
-import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
@@ -41,6 +38,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -55,6 +53,10 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class BugzillaTask extends Task {
 	
+	public enum BugReportSyncState {
+		OUTGOING, OK, INCOMMING, CONFLICT
+
+	}
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -318,9 +320,11 @@ public class BugzillaTask extends Task {
 							if(!isBugDownloaded() && offline){
 								MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla task since you are currently offline");
 								return;
-							}else if(!isBugDownloaded()) {
+							}else if(!isBugDownloaded() && syncState != BugReportSyncState.OUTGOING) {
 								input.getBugTask().downloadReport();
 								input.setOfflineBug(input.getBugTask().getBugReport());
+							} else if(syncState == BugReportSyncState.OUTGOING){
+								input.setOfflineBug(bugReport);
 							}
 							
 							// get the active workbench page
@@ -333,6 +337,25 @@ public class BugzillaTask extends Task {
 							// try to open an editor on the input bug
 							//page.openEditor(input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
 							page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor");
+							if(syncState == BugReportSyncState.INCOMMING){
+								syncState = BugReportSyncState.OK;
+								Display.getDefault().asyncExec(new Runnable(){
+									public void run() {
+										if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
+											TaskListView.getDefault().getViewer().refresh();
+										}	
+									}
+								});
+							} else if(syncState == BugReportSyncState.CONFLICT){
+								syncState = BugReportSyncState.OUTGOING;
+								Display.getDefault().asyncExec(new Runnable(){
+									public void run() {
+										if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
+											TaskListView.getDefault().getViewer().refresh();
+										}	
+									}
+								});
+							}
 						} 
 						catch (Exception ex) {
 							MylarPlugin.log(ex, "couldn't open bugzilla task");
@@ -365,15 +388,20 @@ public class BugzillaTask extends Task {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			state = BugTaskState.DOWNLOADING;
-			notifyTaskDataChange();
-			// Update time this bugtask was last downloaded.
-			lastRefresh = new Date();
-			bugReport = downloadReport();			
-			state = BugTaskState.FREE;			
-			updateTaskDetails();
-			notifyTaskDataChange();
-			saveBugReport(true);
+			try{
+				state = BugTaskState.DOWNLOADING;
+				notifyTaskDataChange();
+				// Update time this bugtask was last downloaded.
+				lastRefresh = new Date();
+				bugReport = downloadReport();			
+				state = BugTaskState.FREE;			
+				updateTaskDetails();
+				notifyTaskDataChange();
+				saveBugReport(true);
+			} catch (Exception e){
+				e.printStackTrace();
+				// ignore
+			}
 			BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
 			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 		}	
@@ -382,7 +410,7 @@ public class BugzillaTask extends Task {
 	public void updateTaskDetails() {
 		try {
 			if(bugReport == null)
-				downloadReport();
+				bugReport = downloadReport();
 			if(bugReport == null)
 				return;
 			setPriority(bugReport.getAttribute("Priority").getValue());
@@ -410,7 +438,8 @@ public class BugzillaTask extends Task {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try{
-				final BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugTask, offline);
+				boolean isLikeOffline = offline || syncState == BugReportSyncState.OUTGOING;
+				final BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugTask, isLikeOffline);
 //				state = BugTaskState.OPENING;
 //				notifyTaskDataChange();
 				openTaskEditor(input, offline);
@@ -453,12 +482,15 @@ public class BugzillaTask extends Task {
 
     public boolean readBugReport() {
     	// XXX server name needs to be with the bug report
-    	int location = BugzillaPlugin.getDefault().getOfflineReports().find(getBugId(getHandle()));
-    	if(location == -1){
+    	IBugzillaBug tempBug = OfflineView.find(getBugId(getHandle()));
+    	if(tempBug == null){
     		bugReport = null;
     		return true;
     	}
-    	bugReport = (BugReport)BugzillaPlugin.getDefault().getOfflineReports().elements().get(location);
+    	bugReport = (BugReport)tempBug;
+    	
+    	if(bugReport.hasChanges())
+    		syncState = BugReportSyncState.OUTGOING;
     	return true;
     }
 
@@ -467,16 +499,20 @@ public class BugzillaTask extends Task {
     		return;
 
     	// XXX use the server name for multiple repositories
-    	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
-    	int location = offlineReports.find(getBugId(getHandle()));
-    	if(location != -1){
-	    	IBugzillaBug tmpBugReport = offlineReports.elements().get(location);
-	    	List<IBugzillaBug> l = new ArrayList<IBugzillaBug>(1);
-	    	l.add(tmpBugReport);
-	    	offlineReports.remove(l);
-    	}
-	    offlineReports.add(bugReport);
+//    	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
+//    	IBugzillaBug tempBug = OfflineView.find(getBugId(getHandle()));
+//    	OfflineView.re
+//    	if(location != -1){
+//	    	IBugzillaBug tmpBugReport = offlineReports.elements().get(location);
+//	    	List<IBugzillaBug> l = new ArrayList<IBugzillaBug>(1);
+//	    	l.add(tmpBugReport);
+//	    	offlineReports.remove(l);
+//    	}
+//    	OfflineView.removeReport(tempBug);
+	    OfflineView.saveOffline(bugReport, false);
 
+	    
+	    
 	    final IWorkbench workbench = PlatformUI.getWorkbench();
 	    if (refresh && !workbench.getDisplay().isDisposed()) {
 	        workbench.getDisplay().asyncExec(new Runnable() {
@@ -490,14 +526,16 @@ public class BugzillaTask extends Task {
     public void removeReport() {
     	// XXX do we really want to do this???
     	// XXX remove from registry too??
-    	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
-    	int location = offlineReports.find(getBugId(getHandle()));
-    	if(location != -1){
-	    	IBugzillaBug tmpBugReport = offlineReports.elements().get(location);
-	    	List<IBugzillaBug> l = new ArrayList<IBugzillaBug>(1);
-	    	l.add(tmpBugReport);
-	    	offlineReports.remove(l);
-    	}
+    	IBugzillaBug tempBug = OfflineView.find(getBugId(getHandle()));
+    	OfflineView.removeReport(tempBug);
+//    	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
+//    	int location = offlineReports.find(getBugId(getHandle()));
+//    	if(location != -1){
+//	    	IBugzillaBug tmpBugReport = offlineReports.elements().get(location);
+//	    	List<IBugzillaBug> l = new ArrayList<IBugzillaBug>(1);
+//	    	l.add(tmpBugReport);
+//	    	offlineReports.remove(l);
+//    	}
     }
 
     public static String getServerName(String handle) {
@@ -519,7 +557,18 @@ public class BugzillaTask extends Task {
 	
 	@Override
 	public Image getIcon() {
-		return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
+		if(syncState == BugReportSyncState.OK){
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
+		}else if(syncState == BugReportSyncState.OUTGOING){
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_OUTGOING);
+		} else if(syncState == BugReportSyncState.INCOMMING){
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_INCOMMING);
+		} else if(syncState == BugReportSyncState.CONFLICT){
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_CONFLICT);
+		} else {
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
+		}
+		
 	}
 	
 	public String getBugUrl() {
@@ -565,6 +614,7 @@ public class BugzillaTask extends Task {
 
 	public Job getRefreshJob() {
 		if (isDirty() || (state != BugTaskState.FREE)) {
+			System.out.println("didn't get job for " + getHandle());
 			return null;
 		}
 		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
@@ -580,5 +630,20 @@ public class BugzillaTask extends Task {
 		if (lastRefresh == null) lastRefresh = new Date();
 		long timeDifference = (timeNow.getTime() - lastRefresh.getTime())/60000;
 		return timeDifference;
+	}
+
+	private BugReportSyncState syncState = BugReportSyncState.OK; 
+	
+	public void setSyncState(BugReportSyncState syncState) {
+		if((this.syncState != BugReportSyncState.INCOMMING && syncState != BugReportSyncState.OK))
+			this.syncState = syncState;
+	}
+
+	public static String getHandle(IBugzillaBug bug) {
+		return "Bugzilla-"+bug.getId();
+	}
+
+	public BugReportSyncState getSyncState() {
+		return syncState;
 	}
 }
