@@ -207,6 +207,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     	InternalSearchUI.getInstance();
         
         runningJobs.add(job);
+        job.setPriority(Job.DECORATE);
         job.schedule();
     }
 
