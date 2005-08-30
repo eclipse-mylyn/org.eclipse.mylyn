@@ -34,6 +34,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.IQuery;
@@ -324,8 +325,17 @@ public class TaskListExternalizer {
 			// and return a new DOM Document object. Also throws IOException
 			document = builder.parse(inputFile);
 		} catch (SAXException se) {
-			inputFile.renameTo(new File(inputFile.getName() + "save.xml"));
-			MylarPlugin.log(se, "Failed to parse XML file");
+			File backup = new File(MylarTasklistPlugin.getDefault().getBackupFilePath());
+			String message = "Restoring the tasklist failed.  Would you like to attempt to restore from the backup?\n\nTasklist XML File location: " + inputFile.getAbsolutePath() + "\n\nBackup tasklist XML file location: " + backup.getAbsolutePath();
+			if(backup.exists() && MessageDialog.openQuestion(null, "Restore From Backup", message)){
+				try {
+					document = builder.parse(backup);
+					MylarTasklistPlugin.getDefault().reverseBackup();
+				} catch (SAXException s) {
+					inputFile.renameTo(new File(inputFile.getName() + "save.xml"));
+					MylarPlugin.log(s, "Failed to recover from backup restore");		
+				}
+			}
 		}
 		return document;
 	}

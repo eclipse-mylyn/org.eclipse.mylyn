@@ -465,7 +465,18 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
 		copy(taskListFile, new File(backup));
 	}
-    
+	
+	public String getBackupFilePath(){
+		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
+		return path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
+	}
+	public void reverseBackup() {
+		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
+		File taskListFile = new File(path);
+		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
+		copy(new File(backup), taskListFile);
+	}
+	
     private boolean copy(File src, File dst) {
 		try {
 			InputStream in = new FileInputStream(src);
