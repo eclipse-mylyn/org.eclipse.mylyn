@@ -66,14 +66,14 @@ public class ContextManagerTest extends AbstractContextTest {
     protected String taskId = this.getClass().getCanonicalName();
     protected MylarContext context;
     protected ScalingFactors scaling = new ScalingFactors();
-    
+     
     @Override
     protected void setUp() throws Exception {
     	assertNotNull(MylarJavaPlugin.getDefault());
     	project1 = new TestProject("project-context");
         p1 = project1.createPackage("p1");
         type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
-        context = new MylarContext(this.getClass().getCanonicalName(), scaling);
+        context = new MylarContext(taskId, scaling);
         manager.contextActivated(context);
         assertNotNull(MylarJavaPlugin.getDefault());
 
@@ -84,6 +84,7 @@ public class ContextManagerTest extends AbstractContextTest {
     @Override
     protected void tearDown() throws Exception {
         context.reset(); 
+        manager.getFileForContext(taskId).delete();
         manager.contextDeleted(taskId, taskId);
         project1.dispose();
     }

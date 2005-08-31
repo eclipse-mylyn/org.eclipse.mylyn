@@ -293,8 +293,8 @@ public class MylarContextManager {
 
     public void contextDeleted(String id, String path) {
         IMylarContext context = activeContext.getContextMap().get(id);
-        eraseContext(id);
-        if (context != null) {
+        eraseContext(id, false);
+        if (context != null) { // TODO: this notification is redundant with eraseContext's
             for (IMylarContextListener listener : listeners) listener.contextDeactivated(context);
         }
         try {
@@ -305,14 +305,16 @@ public class MylarContextManager {
 		} catch (SecurityException e) {
 			MylarPlugin.fail(e, "Could not delete context file", false);
 		}
-    }
+    } 
      
-    private void eraseContext(String id) {
+    private void eraseContext(String id, boolean notify) {
         MylarContext context = activeContext.getContextMap().get(id);
         if (context == null) return;
         activeContext.getContextMap().remove(context);
         context.reset();
-        for (IMylarContextListener listener : listeners) listener.presentationSettingsChanging(IMylarContextListener.UpdateKind.UPDATE);
+        if (notify) {
+        	for (IMylarContextListener listener : listeners) listener.presentationSettingsChanging(IMylarContextListener.UpdateKind.UPDATE);
+        }
     }
     
      /**
