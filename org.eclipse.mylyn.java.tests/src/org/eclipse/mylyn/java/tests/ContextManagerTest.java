@@ -85,6 +85,7 @@ public class ContextManagerTest extends AbstractContextTest {
     protected void tearDown() throws Exception {
         context.reset(); 
         manager.getFileForContext(taskId).delete();
+        manager.contextDeactivated(taskId, taskId);
         manager.contextDeleted(taskId, taskId);
         project1.dispose();
     }
