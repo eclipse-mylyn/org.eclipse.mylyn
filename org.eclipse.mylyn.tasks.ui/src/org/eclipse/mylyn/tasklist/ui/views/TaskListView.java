@@ -121,7 +121,8 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
+ * @author Ken Sueda
  */
 public class TaskListView extends ViewPart {
 

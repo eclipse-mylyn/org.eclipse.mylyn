@@ -13,7 +13,6 @@ package org.eclipse.mylar.bugs;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -43,7 +42,7 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 		cache = new BugzillaReportCache();
 		cache.readCacheFile();
 
-        MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
+//        MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
         MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
         
         IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();

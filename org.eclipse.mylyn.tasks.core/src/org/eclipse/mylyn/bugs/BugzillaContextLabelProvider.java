@@ -13,31 +13,37 @@
   */
 package org.eclipse.mylar.bugs;
 
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
+import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
  */
-public class BugzillaNodeLabelProvider implements ILabelProvider {
+public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
+	
+	@Override
+	protected Image getImage(IMylarContextNode node) {
+		return MylarImages.getImage(MylarImages.BUG); 
+	}
 
-    public Image getImage(Object element) {
-        return MylarImages.getImage(MylarImages.BUG); 
-    }
+	@Override
+	protected Image getImage(IMylarContextEdge edge) {
+		return MylarImages.getImage(MylarImages.EDGE_REF_BUGZILLA); 
+	}
 
     /**
      * TODO: slow?
      */
-    public String getText(Object element) {
-        IMylarContextNode node = (IMylarContextNode)element;
-        
+	@Override
+	protected String getText(IMylarContextNode node) {        
         // try to get from the cache before downloading
         Object report;
     	BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getElementHandle());
@@ -50,21 +56,10 @@ public class BugzillaNodeLabelProvider implements ILabelProvider {
      		report = bridge.getObjectForHandle(node.getElementHandle());
     	}
         return bridge.getName(report);
-    }
+	}
 
-    public void addListener(ILabelProviderListener listener) {
-    	// don't need to worry about listeners
-    }
-
-    public void dispose() {
-    	// don't care about dispose
-    }
-
-    public boolean isLabelProperty(Object element, String property) {
-        return false; 
-    }
-
-    public void removeListener(ILabelProviderListener listener) {
-    	// don't need to worry about listeners 
-    }
+	@Override
+	protected String getText(IMylarContextEdge edge) {
+		return BugzillaReferencesProvider.NAME;  
+	}
 } 

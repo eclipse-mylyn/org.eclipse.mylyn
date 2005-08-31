@@ -23,6 +23,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.internal.RelativePathUtil;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 
 /**
@@ -70,6 +71,7 @@ public class TaskListManager {
         		}
                 for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
         	}
+        	TaskListView.getDefault().getViewer().refresh();
             return true;
         } catch (Exception e) { 
         	MylarPlugin.log(e, "Could not read task list");

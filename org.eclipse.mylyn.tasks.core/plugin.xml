@@ -11,5 +11,11 @@
       <structureBridge
             class="org.eclipse.mylar.bugs.BugzillaStructureBridge"
             name="Bugzilla Structure Bridge"/>
+   </extension>
+   <extension
+         point="org.eclipse.mylar.ui.context">
+      <uiBridge
+            class="org.eclipse.mylar.bugs.BugzillaUiBridge"
+            contentType="bugzilla"/>
    </extension> 
 </plugin>

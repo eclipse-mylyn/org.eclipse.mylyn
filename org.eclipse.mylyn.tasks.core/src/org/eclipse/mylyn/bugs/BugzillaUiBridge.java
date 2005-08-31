@@ -17,10 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
 import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
@@ -28,7 +26,6 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,7 +34,7 @@ import org.eclipse.ui.internal.Workbench;
 
 public class BugzillaUiBridge implements IMylarUiBridge {
 
-    protected BugzillaNodeLabelProvider labelProvider = new BugzillaNodeLabelProvider();
+    protected BugzillaContextLabelProvider labelProvider = new BugzillaContextLabelProvider();
     
     public void open(IMylarContextNode node) {
         String handle = node.getElementHandle();
@@ -125,14 +122,5 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 
             treeViewer.expandAll();
         }
-    }
-
-    public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-        return MylarImages.EDGE_REF_BUGZILLA; 
-        
-    }
-
-    public String getNameForRelationship(String relationshipHandle) {
-        return BugzillaReferencesProvider.NAME;        
     }
 }
