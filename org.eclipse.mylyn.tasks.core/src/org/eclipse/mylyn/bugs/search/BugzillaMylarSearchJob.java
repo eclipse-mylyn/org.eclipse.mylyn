@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.bugs.BugzillaMylarBridge;
+import org.eclipse.mylar.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.ui.PlatformUI;
@@ -70,7 +70,7 @@ public class BugzillaMylarSearchJob extends Job {
                 status[0] = Status.OK_STATUS;
 
                 // make sure that we know this job is not running anymore
-                BugzillaMylarBridge.removeSearchJob(operation.getSearchMember().getHandleIdentifier()+" "+operation.getScope());//runningJobs.remove(operation.getSearchMember());
+                BugzillaSearchManager.removeSearchJob(operation.getSearchMember().getHandleIdentifier()+" "+operation.getScope());//runningJobs.remove(operation.getSearchMember());
                 return status[0];
             } else if (!status[0].isOK()) {
                 // there was an error, so display an error message
@@ -85,7 +85,7 @@ public class BugzillaMylarSearchJob extends Job {
                 status[0] = Status.OK_STATUS;
 
                 // make sure we know that this job is not running anymore
-                BugzillaMylarBridge.removeSearchJob(operation.getSearchMember().getHandleIdentifier()+" "+operation.getScope());//runningJobs.remove(operation.getSearchMember());
+                BugzillaSearchManager.removeSearchJob(operation.getSearchMember().getHandleIdentifier()+" "+operation.getScope());//runningJobs.remove(operation.getSearchMember());
                 return status[0];
             }
         } catch (LoginException e) {
@@ -101,7 +101,7 @@ public class BugzillaMylarSearchJob extends Job {
                     IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));
         } finally {
             // make sure that we know that this job is not running anymore
-        	BugzillaMylarBridge.removeSearchJob(operation.getSearchMember().getHandleIdentifier()+" "+operation.getScope());//.runningJobs.remove(operation.getSearchMember());
+        	BugzillaSearchManager.removeSearchJob(operation.getSearchMember().getHandleIdentifier()+" "+operation.getScope());//.runningJobs.remove(operation.getSearchMember());
         }
 
         return status[0];

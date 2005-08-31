@@ -48,7 +48,7 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
         Object report;
     	BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getElementHandle());
     	BugReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getElementHandle());
-    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(BugzillaStructureBridge.EXTENSION);
+    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(BugzillaStructureBridge.CONTENT_TYPE);
 		
     	if(reportNode != null && cachedReport == null){
     		report = reportNode;

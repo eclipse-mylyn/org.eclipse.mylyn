@@ -20,16 +20,17 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
+ * 
+ * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class MylarBugsPlugin extends AbstractUIPlugin {
 
-    private static BugzillaMylarBridge bridge = null;
-//    private BugzillaStructureBridge structureBridge;
+    private static BugzillaSearchManager bridge = null;
     private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
 	private static MylarBugsPlugin plugin;
 	private BugzillaReportCache cache;
-	
-	
+		
 	public MylarBugsPlugin() {
 		plugin = this;
 	}
@@ -42,13 +43,12 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 		cache = new BugzillaReportCache();
 		cache.readCacheFile();
 
-//        MylarUiPlugin.getDefault().addAdapter(BugzillaStructureBridge.EXTENSION, new BugzillaUiBridge());
         MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
         
         IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (window != null) {
             // create a new bridge and initialize it
-            bridge = new BugzillaMylarBridge();
+            bridge = new BugzillaSearchManager();
         }
 	}
 
@@ -85,10 +85,10 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugs.bridge", path);
 	}
 	
-    public static BugzillaMylarBridge getBridge() {
+    public static BugzillaSearchManager getBridge() {
         // make sure that the bridge initialized, if not, make a new one
         if (bridge == null) {
-            bridge = new BugzillaMylarBridge();
+            bridge = new BugzillaSearchManager();
         }
         return bridge;
     }

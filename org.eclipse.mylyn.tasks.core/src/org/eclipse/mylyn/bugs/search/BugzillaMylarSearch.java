@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.mylar.bugs.BugzillaMylarBridge;
+import org.eclipse.mylar.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
@@ -67,7 +67,7 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
         List<IJavaElement> landmarks = new ArrayList<IJavaElement>();
         landmarks.add(element);
 
-        if (!BugzillaMylarBridge.doesJobExist(handle)) {
+        if (!BugzillaSearchManager.doesJobExist(handle)) {
 
         	// perform the bugzilla search
         	// get only the useful landmarks (IMember)
@@ -103,7 +103,7 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
                 searchJob.schedule();
 
                 // save this searchJobs handle so that we can cancel it if need be
-                BugzillaMylarBridge.addJob(handle, searchJob);
+                BugzillaSearchManager.addJob(handle, searchJob);
             }
         }
 		return Status.OK_STATUS;
@@ -145,7 +145,7 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
     public void notifySearchCompleted(List<BugzillaReportNode> doiList) {
         // go through all of the listeners and call searchCompleted(colelctor,
         // member)
-        BugzillaMylarBridge.removeSearchJob(handle);
+        BugzillaSearchManager.removeSearchJob(handle);
         for (IActiveSearchListener listener : listeners) {
             listener.searchCompleted(doiList);
         }

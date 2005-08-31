@@ -39,12 +39,12 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
 public class BugzillaStructureBridge implements IMylarStructureBridge {
 
-    public final static String EXTENSION = "bugzilla";
+    public final static String CONTENT_TYPE = "bugzilla";
     
     public List<AbstractRelationshipProvider> providers;
     
     public String getResourceExtension() {
-        return EXTENSION;
+        return CONTENT_TYPE;
     }
     
     public BugzillaStructureBridge() {

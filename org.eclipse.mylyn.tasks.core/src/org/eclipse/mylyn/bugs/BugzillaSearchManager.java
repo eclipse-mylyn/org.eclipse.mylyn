@@ -24,13 +24,12 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 
-
 /**
  * Class to handle the bridge between mylar and bugzilla
  * 
  * @author Shawn Minto
  */
-public class BugzillaMylarBridge { 
+public class BugzillaSearchManager { 
 
     /** The hash of all of the landmarks and their related search hits */
     private Map<String, Map<Integer, List<BugzillaReportNode>>> landmarksHash;
@@ -42,7 +41,7 @@ public class BugzillaMylarBridge {
     /**
      * Constructor
      */
-    public BugzillaMylarBridge() {
+    public BugzillaSearchManager() {
     	landmarksHash = Collections.synchronizedMap(new HashMap<String, Map<Integer, List<BugzillaReportNode>>>());
     }
 

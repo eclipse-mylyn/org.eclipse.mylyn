@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.mylar.bugs.BugzillaMylarBridge;
+import org.eclipse.mylar.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.bugs.BugzillaStructureBridge;
 import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
@@ -45,7 +45,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
     public static final String NAME = "Bugilla report references";
     
     public BugzillaReferencesProvider() {
-        super(BugzillaStructureBridge.EXTENSION, ID);
+        super(BugzillaStructureBridge.CONTENT_TYPE, ID);
     }
 
     protected boolean acceptElement(IJavaElement javaElement) {
@@ -95,7 +95,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
                         
                         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable(){
 							public void run() {
-								incrementInterest(node, BugzillaStructureBridge.EXTENSION, handle, degreeOfSeparation);
+								incrementInterest(node, BugzillaStructureBridge.CONTENT_TYPE, handle, degreeOfSeparation);
 							}
                         });
                     }
@@ -154,7 +154,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 
 	@Override
 	public void stopAllRunningJobs() {
-		BugzillaMylarBridge.cancelAllRunningJobs();
+		BugzillaSearchManager.cancelAllRunningJobs();
 		
 	}
 }
