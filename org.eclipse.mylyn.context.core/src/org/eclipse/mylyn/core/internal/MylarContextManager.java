@@ -433,7 +433,7 @@ public class MylarContextManager {
 		List<IMylarContextNode> acceptedLandmarks = new ArrayList<IMylarContextNode>();
 		for (IMylarContextNode node : allLandmarks) {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
-			// XXX very very very expensive
+
             if (bridge.canBeLandmark(node.getElementHandle())) {
             	acceptedLandmarks.add(node);
         	}

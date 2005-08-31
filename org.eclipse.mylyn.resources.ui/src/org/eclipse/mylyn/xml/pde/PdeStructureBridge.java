@@ -219,9 +219,11 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 
     /**
      * @see org.eclipse.mylar.core.IMylarStructureBridge#canBeLandmark(Object)
+     * 
+     * TODO: make a non-handle based test
      */
     public boolean canBeLandmark(String handle) {
-        return false;
+        return handle.indexOf(';') == -1;
     }
 
     /**

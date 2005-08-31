@@ -86,7 +86,6 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     
     
     protected SearchScope createTextSearchScope(int degreeOfSeparation){    
-        
         List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
         
         switch(degreeOfSeparation){
