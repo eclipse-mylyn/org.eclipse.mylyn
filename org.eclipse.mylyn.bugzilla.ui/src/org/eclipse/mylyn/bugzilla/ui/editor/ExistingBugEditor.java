@@ -321,6 +321,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 	
 	@Override
 	protected void submitBug() {
+		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
 		final BugPost form = new BugPost();
 		
@@ -404,6 +405,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 											"I/O Error");
 						}
 					});
+					submitButton.setEnabled(true);
 					ExistingBugEditor.this.showBusy(false);
 				} catch (final PossibleBugzillaFailureException e) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -415,6 +417,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 							BugzillaPlugin.log(e);
 						}
 					});
+					submitButton.setEnabled(true);
 					ExistingBugEditor.this.showBusy(false);
 				} catch (final LoginException e) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -424,6 +427,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 											"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
 						}
 					});
+					submitButton.setEnabled(true);
 					ExistingBugEditor.this.showBusy(false);
 				}
 
