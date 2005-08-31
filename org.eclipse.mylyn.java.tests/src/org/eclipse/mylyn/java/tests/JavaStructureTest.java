@@ -58,14 +58,14 @@ public class JavaStructureTest extends AbstractContextTest {
         caller = typeFoo.createMethod("void caller() { callee(); }", null, true, null);
         callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
-        taskscape = new MylarContext("1", scaling);
+        taskscape = new MylarContext("12312", scaling);
         manager.contextActivated(taskscape);
     }
     
     @Override
     protected void tearDown() throws Exception {
         manager.removeAllListeners();
-        manager.contextDeactivated("1", "1");
+        manager.contextDeactivated("12312", "12312");
         project.dispose();
     }
     

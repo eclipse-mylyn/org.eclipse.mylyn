@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
@@ -41,11 +42,12 @@ import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
+import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
-
 
 /**
  * @author Mik Kersten
@@ -55,21 +57,24 @@ public class ContextManagerTest extends AbstractContextTest {
 	protected MylarContextManager manager = MylarPlugin.getContextManager();
     protected JavaEditingMonitor monitor = new JavaEditingMonitor();
     
+	private InterestFilter filter;
+	private PackageExplorerPart explorer;
+    
     protected TestProject project1;
     protected IPackageFragment p1;
     protected IType type1;
-    protected String taskId = "123";
-    protected MylarContext taskscape;
+    protected String taskId = this.getClass().getCanonicalName();
+    protected MylarContext context;
     protected ScalingFactors scaling = new ScalingFactors();
     
     @Override
     protected void setUp() throws Exception {
     	assertNotNull(MylarJavaPlugin.getDefault());
-    	project1 = new TestProject("project1");
+    	project1 = new TestProject("project-context");
         p1 = project1.createPackage("p1");
         type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
-        taskscape = new MylarContext("1", scaling);
-        manager.contextActivated(taskscape);
+        context = new MylarContext(this.getClass().getCanonicalName(), scaling);
+        manager.contextActivated(context);
         assertNotNull(MylarJavaPlugin.getDefault());
 
         assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(
@@ -78,8 +83,9 @@ public class ContextManagerTest extends AbstractContextTest {
     
     @Override
     protected void tearDown() throws Exception {
-        project1.dispose();
+        context.reset(); 
         manager.contextDeleted(taskId, taskId);
+        project1.dispose();
     }
     
     class LandmarksModelListener implements IMylarContextListener {
@@ -120,6 +126,29 @@ public class ContextManagerTest extends AbstractContextTest {
         	// don't care about this event
         }
     }
+    
+	public void testInterestFilter() throws JavaModelException {
+		explorer = PackageExplorerPart.openInActivePerspective();
+    	assertNotNull(explorer);
+    	
+		ApplyMylarToPackageExplorerAction.getDefault().update(true);
+        filter = ApplyMylarToPackageExplorerAction.getDefault().getInterestFilter();
+        assertNotNull(filter);
+        
+        IMethod m1 = type1.createMethod("public void m10() { }", null, true, null);
+        
+        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
+		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
+        manager.contextActivated(context);
+
+        monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
+        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
+
+        assertFalse(filter.select(explorer.getTreeViewer(), null, m1));
+        
+        filter.setExcludedMatches("*1*");
+        assertTrue(filter.select(explorer.getTreeViewer(), null, m1));
+	}
     
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();

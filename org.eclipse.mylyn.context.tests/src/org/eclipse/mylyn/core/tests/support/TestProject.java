@@ -56,8 +56,9 @@ public class TestProject {
     public IJavaProject javaProject;
     private IPackageFragmentRoot sourceFolder;
 
-    public TestProject(String names) throws CoreException {
-	    IWorkspaceRoot root= ResourcesPlugin.getWorkspace() .getRoot(); project= root.getProject("Project-l");
+    public TestProject(String name) throws CoreException {
+	    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
+	    project= root.getProject(name);
 	    project.create(null) ;
 	    project.open(null) ;
 	
@@ -80,8 +81,7 @@ public class TestProject {
         
 	public void build() throws CoreException, InvocationTargetException, InterruptedException {
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor)
-					throws CoreException {
+			protected void execute(IProgressMonitor monitor) throws CoreException {
 				project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 			};
 		};
@@ -110,9 +110,9 @@ public class TestProject {
 	    return cu.getTypes() [0];
     }
     
-    public void dispose() throws CoreException { 
-        waitForIndexer() ;
+    public synchronized void dispose() throws CoreException { 
         project.delete(true, true, null);
+        waitForIndexer();
     }
     
     private IFolder createBinFolder() throws CoreException { 
