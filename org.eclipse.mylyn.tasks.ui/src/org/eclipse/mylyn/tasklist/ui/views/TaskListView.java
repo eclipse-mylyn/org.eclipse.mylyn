@@ -361,8 +361,8 @@ public class TaskListView extends ViewPart {
         					filteredRoots.add(list.get(i));
         				}
         			} else if (list.get(i) instanceof ICategory) {
-        				if(((ICategory)list.get(i)).isArchive())
-        					continue;
+//        				if(((ICategory)list.get(i)).isArchive())
+//        					continue;
         				if (selectCategory((ICategory)list.get(i))) {
         					filteredRoots.add(list.get(i));
         				}
@@ -392,8 +392,16 @@ public class TaskListView extends ViewPart {
         }
         
         private boolean selectCategory(ICategory cat) {
-        	if(cat.isArchive())
+        	if(cat.isArchive()){
+        		for (ITask task: cat.getChildren()) {
+					if(task.isActive()){
+						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
+						if(t == null)
+							return true;
+					}
+				}
         		return false;
+        	}
         	List<? extends ITaskListElement> list = cat.getChildren();
         	if (list.size() == 0) {
         		return true;
@@ -411,8 +419,16 @@ public class TaskListView extends ViewPart {
         			|| ((Text) tree.getFilterControl()).getText().startsWith(FILTER_LABEL)) {
         		List<Object> children = new ArrayList<Object>();
 	        	if (parent instanceof ICategory) {
-	        		if(((ICategory)parent).isArchive())
-    					return children;
+	        		if(((ICategory)parent).isArchive()){
+	        			for (ITask task: ((ICategory)parent).getChildren()) {
+	    					if(task.isActive()){
+	    						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
+	    						if(t == null)
+	    							children.add(task);
+	    					}
+	    				} 
+	        			return children;
+	        		}
 	        		List<? extends ITaskListElement> list = ((ICategory) parent)
 							.getChildren();
         			for (int i = 0; i < list.size(); i++) {
