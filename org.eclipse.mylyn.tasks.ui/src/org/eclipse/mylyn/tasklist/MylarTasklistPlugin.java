@@ -249,7 +249,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
             	Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
             	Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(new DisposeListener() {
 					public void widgetDisposed(DisposeEvent e) {
-						getDefault().saveTaskListAndContexts();
+						if (getDefault() != null) getDefault().saveTaskListAndContexts();
 					}            		
             	});
                 MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
