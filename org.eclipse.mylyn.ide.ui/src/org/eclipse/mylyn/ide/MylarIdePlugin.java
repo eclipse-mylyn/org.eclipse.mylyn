@@ -24,8 +24,7 @@ import org.osgi.framework.BundleContext;
 
 public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
 
-    private ResourceStructureBridge genericResourceBridge;
-    
+//    private ResourceStructureBridge genericResourceBridge;
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();    
     
@@ -41,7 +40,6 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
                 MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
                 MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
-//                MylarUiPlugin.getDefault().addAdapter(ResourceStructureBridge.EXTENSION, new ResourceUiBridge());
                 
                 if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
                 if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
@@ -51,8 +49,8 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
 	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-        genericResourceBridge = new ResourceStructureBridge();//MylarPlugin.getDefault().isPredictedInterestEnabled());
-        MylarPlugin.getDefault().setDefaultBridge(genericResourceBridge);
+//        genericResourceBridge = new ResourceStructureBridge();//MylarPlugin.getDefault().isPredictedInterestEnabled());
+//        MylarPlugin.getDefault().setDefaultBridge(genericResourceBridge);
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -64,9 +62,9 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
 		return plugin;
 	}
 
-    public ResourceStructureBridge getGenericResourceBridge() {
-        return genericResourceBridge;
-    }
+//    public ResourceStructureBridge getGenericResourceBridge() {
+//        return genericResourceBridge;
+//    }
 	
 	/**
 	 * Returns an image descriptor for the image file at the given

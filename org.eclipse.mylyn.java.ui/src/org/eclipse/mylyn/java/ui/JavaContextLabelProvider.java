@@ -48,7 +48,7 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
         if (object instanceof IMylarContextNode) { 
             IMylarContextNode node = (IMylarContextNode)object;
             if (node == null) return "<missing info>";
-            if (JavaStructureBridge.EXTENSION.equals(node.getContentKind())) {
+            if (JavaStructureBridge.CONTENT_TYPE.equals(node.getContentKind())) {
                 IJavaElement element = JavaCore.create(node.getElementHandle());
                 if (element == null) {
                     return "<missing element>";                     
@@ -67,7 +67,7 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
         if (object instanceof IMylarContextNode) {
             IMylarContextNode node = (IMylarContextNode)object;
             if (node == null) return null;
-            if (node.getContentKind().equals(JavaStructureBridge.EXTENSION)) {
+            if (node.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
                 return super.getImage(JavaCore.create(node.getElementHandle()));
             } 
         } else if (object instanceof IMylarContextEdge) {

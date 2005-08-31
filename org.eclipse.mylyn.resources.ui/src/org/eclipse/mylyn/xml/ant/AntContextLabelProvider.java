@@ -39,7 +39,7 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getText(IMylarContextNode node) {
-        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.EXTENSION);
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
         String name = bridge.getName(bridge.getObjectForHandle(node.getElementHandle()));
         return name;
 	}

@@ -84,9 +84,9 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
                         }
                         if (element != null && resource instanceof IFile && !resource.getFileExtension().equals("class")) {
                             if (!hasError) {
-                                MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
+                                MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
                             } else {
-                                MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.EXTENSION, true);
+                                MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
                             }
                         }
                     } catch (ResourceException e) {

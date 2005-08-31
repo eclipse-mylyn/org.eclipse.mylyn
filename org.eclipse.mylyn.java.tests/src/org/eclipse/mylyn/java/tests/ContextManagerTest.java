@@ -71,9 +71,9 @@ public class ContextManagerTest extends AbstractContextTest {
         taskscape = new MylarContext("1", scaling);
         manager.contextActivated(taskscape);
         assertNotNull(MylarJavaPlugin.getDefault());
+
         assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(
     		JavaStructureBridge.class.getCanonicalName()) != -1);
-//        System.err.println(">>> " + MylarPlugin.getDefault().getStructureBridges());
     }
     
     @Override

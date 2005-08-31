@@ -19,7 +19,6 @@ import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.mylar.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.ui.MylarImages;
@@ -31,9 +30,9 @@ import org.eclipse.swt.graphics.Image;
 public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
     public Image getImage(IMylarContextNode node) {
-        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.EXTENSION);
-        if (adapter != null) {
-            Object object = adapter.getObjectForHandle(node.getElementHandle());
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
+        if (bridge != null) {
+            Object object = bridge.getObjectForHandle(node.getElementHandle());
             if (object instanceof IFile) {
                 return MylarImages.getImage(MylarImages.FILE_GENERIC); 
             } else if (object instanceof IContainer) {
@@ -47,8 +46,10 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
      * TODO: slow?
      */
     public String getText(IMylarContextNode node) {
-        String name = MylarIdePlugin.getDefault().getGenericResourceBridge().getName(
-        		MylarIdePlugin.getDefault().getGenericResourceBridge().getObjectForHandle(node.getElementHandle())
+    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
+        
+    	String name = bridge.getName(
+        		bridge.getObjectForHandle(node.getElementHandle())
         );
         return name;
     }

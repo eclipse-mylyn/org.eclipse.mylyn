@@ -66,11 +66,11 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
 		// we should get all results since we are searching the entire workspace
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, searchNode, dos, 3);
 		//
 		//
@@ -89,11 +89,11 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
 		// we should get all results since we are searching the entire workspace
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, searchNode, dos, 3);
 		//
 		//

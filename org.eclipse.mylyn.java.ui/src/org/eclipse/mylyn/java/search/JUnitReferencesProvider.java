@@ -31,7 +31,7 @@ public class JUnitReferencesProvider extends AbstractJavaRelationshipProvider {
     public static final String NAME = "JUnit test references";
         
     public JUnitReferencesProvider() {
-        super(JavaStructureBridge.EXTENSION, ID);
+        super(JavaStructureBridge.CONTENT_TYPE, ID);
     }  
     
     @Override

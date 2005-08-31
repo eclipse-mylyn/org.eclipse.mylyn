@@ -37,7 +37,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getText(IMylarContextNode node) {
-        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(PdeStructureBridge.EXTENSION);
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
 		String name = bridge.getName(bridge.getObjectForHandle(node.getElementHandle()));
         return name;
 	}

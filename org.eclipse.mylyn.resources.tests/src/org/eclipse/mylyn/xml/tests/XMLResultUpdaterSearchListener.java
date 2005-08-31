@@ -92,7 +92,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 		}
 
 		for (String handle : nodes.keySet()) {
-			incrementInterest(node, PdeStructureBridge.EXTENSION, handle,
+			incrementInterest(node, PdeStructureBridge.CONTENT_TYPE, handle,
 					degreeOfSeparation);
 		}
 		gathered = true;

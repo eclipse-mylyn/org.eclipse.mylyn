@@ -41,7 +41,6 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
- 
 /**
  * @author Mik Kersten
  */
@@ -51,6 +50,8 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 	public static final String ELEMENT_STRUCTURE_BRIDGE_CLASS = "class";
 	public static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
+	
+	public static final String CONTENT_TYPE_ANY = "*";
 		
     private static final String ERROR_MESSAGE = "Please report the following error by following the link at:\n"
     	+ "https://eclipse.org/mylar\n\n"
@@ -70,8 +71,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
      * requiring update from the monitor.
      */
     private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
-	  
-    
+	      
     public static final String USER_ID = "org.eclipse.mylar.user.id";
     public static boolean started = false;
     
@@ -89,9 +89,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     public static final String MYLAR_DIR_NAME = ".mylar";
     
     private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
-    	/**
-         * Used to check for the null adapter
-         */
+
         public String getResourceExtension() {
             return null;
         }
@@ -181,7 +179,12 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     	final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-
+                getPreferenceStore().setDefault(
+                        MYLAR_DIR, ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
+                        + File.separator
+                        + MYLAR_DIR_NAME);
+                if (contextManager == null) contextManager = new MylarContextManager();
+            	CoreExtensionPointReader.initExtensions();
             }
         });
 	}
@@ -192,14 +195,6 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
-        getPreferenceStore().setDefault(
-                MYLAR_DIR, ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
-                + File.separator
-                + MYLAR_DIR_NAME);
-        
-
-    	if (contextManager == null) contextManager = new MylarContextManager();
-        CoreExtensionPointReader.initExtensions();
     }
 
     /**
@@ -324,8 +319,8 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     /**
      * TODO: performance issue?
      */
-    public IMylarStructureBridge getStructureBridge(String extension) {
-        IMylarStructureBridge adapter = bridges.get(extension);
+    public IMylarStructureBridge getStructureBridge(String contentType) {
+        IMylarStructureBridge adapter = bridges.get(contentType);
         if (adapter != null) {
             return adapter;
         } else if (defaultBridge != null) {
@@ -372,6 +367,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     		}
     	}
         this.bridges.put(bridge.getResourceExtension(), bridge);
+        if (bridge.getResourceExtension().equals(CONTENT_TYPE_ANY)) defaultBridge = bridge;
     }
     
     public List<AbstractCommandMonitor> getCommandMonitors() {

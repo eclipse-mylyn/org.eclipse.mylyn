@@ -28,7 +28,7 @@ public class JavaReferencesProvider extends AbstractJavaRelationshipProvider {
     public static final String NAME = "Java references";
         
     public JavaReferencesProvider() {
-        super(JavaStructureBridge.EXTENSION, ID);
+        super(JavaStructureBridge.CONTENT_TYPE, ID);
     }  
     
     @Override

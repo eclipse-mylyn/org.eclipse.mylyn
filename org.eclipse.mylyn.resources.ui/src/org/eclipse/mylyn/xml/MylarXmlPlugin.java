@@ -16,9 +16,7 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.xml.ant.AntEditingMonitor;
-import org.eclipse.mylar.xml.ant.AntUiBridge;
 import org.eclipse.mylar.xml.pde.PdeEditingMonitor;
-import org.eclipse.mylar.xml.pde.PdeUiBridge;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -30,12 +28,6 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 	private static MylarXmlPlugin plugin;
 	private ResourceBundle resourceBundle;
 	
-//    private static PdeStructureBridge pdeStructureBridge;
-//    private static AntStructureBridge antStructureBridge;
-    
-    private static PdeUiBridge pdeUiBridge;
-    private static AntUiBridge antUiBridge;
-    
 	/**
 	 * The constructor.
 	 */
@@ -50,10 +42,7 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
     @Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
-		antUiBridge = new AntUiBridge(); 
-        pdeUiBridge = new PdeUiBridge(); 
-        
+		        
           //PDE
 //        MylarPlugin.getDefault().addBridge(pdeStructureBridge);
         MylarPlugin.getDefault().getSelectionMonitors().add(new PdeEditingMonitor());
@@ -118,14 +107,6 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.xml", path);
 	}
-    
-    public static AntUiBridge getAntUiBridge() {
-        return antUiBridge;
-    }
-
-    public static PdeUiBridge getPdeUiBridge() {
-        return pdeUiBridge;
-    }
 }
 
 

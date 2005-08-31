@@ -72,7 +72,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
     	
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
     	//
     	// results should be null since the scope would be null.
@@ -84,32 +84,32 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		//
     	// results should be not null, but have no references since the landmark
 		// is an element in a different project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
     	// results should be not null, but have no references since the landmark
 		// is an element in the same project, but there are no references in it 
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
     	// results should be not null, but have no references
 		// This file type should never affect the scope
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos);
 		//
 		//
 		
 		//
     	// results should be not null, and there should be 1 reference since we are searching
 		// the file with the element in it
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 	}
@@ -119,7 +119,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
     	
     	
     	//
@@ -132,37 +132,37 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		//
     	// results should be not null, but have no references since the landmark
 		// is an element in a different project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
     	// results should be not null, but have no references since the interesting element
 		// is an element in the same project, but no references in it
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
     	// results should be not null, but have no references
 		// This file type should never affect the scope
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos);
 		//
 		//
 		
 		//
     	// results should be not null, and we should get 1 result back
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 		
 		//
     	// results should be null, since we have nothing to search 
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNull(notifier, searchNode, dos);
 		
 		//
@@ -170,8 +170,8 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
 		//
     	// results should be not null, and we should get 1 result back
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 	}
@@ -181,7 +181,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
     	
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
     	
     	//
     	// results should be null since the scope would be null.
@@ -193,43 +193,43 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		//
     	// results should be not null, but have no references since the landmark
 		// is an element in a different project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
     	// results should be not null, and have 1 reference since the project is the same
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 		
 		// 
     	// results should be not null, and have 1 reference
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 		
 		//
     	// results should be not null, and we should get 1 result back
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 		
 		//
     	// results should be null, since we have nothing to search 
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNull(notifier, searchNode, dos);
 		//
 		//
 		
 		//
     	// results should be not null, and we should get 1 result back
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 	}
@@ -241,7 +241,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
     	
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
     	
     	//
     	// results should be null since the scope would be null.
@@ -253,43 +253,43 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		//
     	// results should be not null, but have no references since the landmark
 		// is an element in a different project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
     	// results should be not null, and have 1 reference since the project is the same
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 		
 		// 
     	// results should be not null, and have 1 reference
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 		
 		//
     	// results should be not null, and we should get 1 result back
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 		
 		//
     	// results should be null, since we have nothing to search 
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNull(notifier, searchNode, dos);
 		//
 		//
 		
 		//
     	// results should be not null, and we should get 1 result back
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 1);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		//
 		//
 	}
@@ -299,7 +299,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
     	
     	//
     	// we should have 1 result since we are searching the entire workspace
@@ -309,7 +309,7 @@ public class JavaReferencesSearchPluginTest extends TestCase implements ISearchP
 		
 		//
     	// we should have no results since there are no java references in the workspace
-		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, searchNode, dos, 0);
 		//
 		//

@@ -18,7 +18,9 @@ import java.util.List;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.ide.MylarIdePlugin;
+import org.eclipse.mylar.core.IMylarStructureBridge;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
@@ -45,7 +47,8 @@ public class NavigatorRefreshListener implements IMylarContextListener {
         if (navigator == null || navigator.getTreeViewer() == null) return;
         
         if (node != null) {
-            Object object = MylarIdePlugin.getDefault().getGenericResourceBridge().getObjectForHandle(node.getElementHandle());
+        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
+            Object object = bridge.getObjectForHandle(node.getElementHandle());
             getResourceNavigator().getTreeViewer().refresh(object);
         } else {
             getResourceNavigator().getTreeViewer().refresh();

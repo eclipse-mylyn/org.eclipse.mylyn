@@ -64,7 +64,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     
     public XmlReferencesProvider() {
         // TODO: should this be a generic XML extension?
-        super(PdeStructureBridge.EXTENSION, SOURCE_ID);
+        super(PdeStructureBridge.CONTENT_TYPE, SOURCE_ID);
     }
 
     /**
@@ -95,7 +95,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
                 // create a search scope for the projects of landmarks
                 List<IResource> l = new ArrayList<IResource>();
                 for (IMylarContextNode landmark : landmarks) {
-                    if (landmark.getContentKind().equals(PdeStructureBridge.EXTENSION) || landmark.getContentKind().equals(AntStructureBridge.EXTENSION)) {
+                    if (landmark.getContentKind().equals(PdeStructureBridge.CONTENT_TYPE) || landmark.getContentKind().equals(AntStructureBridge.CONTENT_TYPE)) {
                         String handle = landmark.getElementHandle();
                         IResource element = null;
                         int first = handle.indexOf(";");
@@ -164,8 +164,8 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     }
     
     private void addFilenamePatterns(SearchScope scope){
-    	scope.addFileNamePattern(PdeStructureBridge.EXTENSION);
-    	scope.addFileNamePattern(AntStructureBridge.EXTENSION);
+    	scope.addFileNamePattern(PdeStructureBridge.CONTENT_TYPE);
+    	scope.addFileNamePattern(AntStructureBridge.CONTENT_TYPE);
     }
     
     protected boolean acceptElement(IJavaElement javaElement) {
@@ -236,7 +236,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     
                    for(String handle : nodes.keySet()) {
                        
-                       incrementInterest(node, PdeStructureBridge.EXTENSION, handle, degreeOfSeparation);
+                       incrementInterest(node, PdeStructureBridge.CONTENT_TYPE, handle, degreeOfSeparation);
                    }
                    gathered = true;
                 }

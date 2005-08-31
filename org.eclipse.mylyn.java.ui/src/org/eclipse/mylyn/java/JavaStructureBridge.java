@@ -52,11 +52,11 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
  */
 public class JavaStructureBridge implements IMylarStructureBridge {
 
-    public final static String EXTENSION = "java";
+    public final static String CONTENT_TYPE = "java";
     
     public List<AbstractRelationshipProvider> providers;
     
-    public JavaStructureBridge(){
+    public JavaStructureBridge() {
     	providers = new ArrayList<AbstractRelationshipProvider>();
     	providers.add(new JavaReferencesProvider());
     	providers.add(new JavaImplementorsProvider());
@@ -66,7 +66,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     }
     
     public String getResourceExtension() {
-        return EXTENSION;
+        return CONTENT_TYPE;
     }
     
     public String getParentHandle(String handle) {

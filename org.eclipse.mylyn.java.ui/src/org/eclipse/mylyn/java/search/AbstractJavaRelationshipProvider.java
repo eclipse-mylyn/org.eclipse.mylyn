@@ -71,7 +71,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
     	if (node == null) return;
-        if (!node.getContentKind().equals(JavaStructureBridge.EXTENSION)) return;
+        if (!node.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
         if (!acceptElement(javaElement) || !javaElement.exists()) {
             return; 
@@ -197,7 +197,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
                 for(IJavaElement element : relatedHandles) {
                     if (!acceptResultElement(element)) continue;
 
-                        incrementInterest(node, JavaStructureBridge.EXTENSION, element.getHandleIdentifier(), degreeOfSeparation);
+                        incrementInterest(node, JavaStructureBridge.CONTENT_TYPE, element.getHandleIdentifier(), degreeOfSeparation);
                 } 
                 gathered = true;
             }

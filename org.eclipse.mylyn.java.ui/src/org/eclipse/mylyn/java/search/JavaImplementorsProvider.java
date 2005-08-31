@@ -27,7 +27,7 @@ public class JavaImplementorsProvider extends AbstractJavaRelationshipProvider {
     public static final String NAME = "Java implementors";
     
     public JavaImplementorsProvider() {
-        super(JavaStructureBridge.EXTENSION, ID);
+        super(JavaStructureBridge.CONTENT_TYPE, ID);
     }
 
     @Override

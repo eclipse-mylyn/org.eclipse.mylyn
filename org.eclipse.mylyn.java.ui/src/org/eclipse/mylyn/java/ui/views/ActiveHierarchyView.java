@@ -150,7 +150,7 @@ public class ActiveHierarchyView extends ViewPart {
             for (Iterator<IMylarContextNode> it = landmarks.iterator(); it.hasNext();) {
                 IMylarContextNode node = it.next();
                 IJavaElement element = null;
-                if (node.getContentKind().equals(JavaStructureBridge.EXTENSION)) {
+                if (node.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
                     element = JavaCore.create(node.getElementHandle());
                 }
                 if (element != null && element instanceof IType && element.exists()) {	

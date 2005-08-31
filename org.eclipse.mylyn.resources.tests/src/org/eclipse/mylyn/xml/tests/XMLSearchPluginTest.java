@@ -92,7 +92,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
     	
     	//
     	// results should be null since the scope would be null.
@@ -104,8 +104,8 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		//
 		// add an element to the taskscape, results should still be null
 		// There is a landmark, but not one that is an xml file that we care about
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNull(notifier, type1.getHandleIdentifier(), ResourceStructureBridge.EXTENSION, searchNode, dos);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNull(notifier, type1.getHandleIdentifier(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos);
 		
 		//
 		//
@@ -113,16 +113,16 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		//
 		// add an element to the taskscape, results should still be null
 		// There is a landmark that has references in it, but not one that is an xml file that we care about
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos);
 		//
 		//
 		
 		//
 		// add an element to the taskscape, results should still be null
 		// There is a landmark, but not one that is an xml file that we care about
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos);
 		//
 		//
 		
@@ -130,16 +130,16 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		// add the plugin.xml from a different project to the taskscape, should have non null results, but 0 size
 		// There is a lanmark that can be added to create a scope with the proper xml file type
 		// but it is in the wrong project and shouldn't have any references
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, plugin2.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, plugin2.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
 		// add the plugin.xml to the taskscape, should have results now
 		// We should get the results now since we have the proper xml file as the landmark now
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
     }
@@ -150,12 +150,12 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
     	// results should be null since the scope would be null.
     	// There are no landmarks and therefore no projects to search over
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNull(notifier, searchNode, dos);
 		//
 		//
@@ -164,44 +164,44 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		// add an element to the taskscape, results should not be null
 		// There is a landmark with references in it, but not one that is an xml file that we care about
 		// therefore, we still only get 3 references - landmark is in the same project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 		
 		//
 		// add an element to the taskscape, results should not be null, but only 3
 		// There is a landmark, but not one that is an xml file that we care about - landmark is in the same project
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 		
 		//
 		// add the plugin.xml from a different project to the taskscape, should have non null results, but 0 size
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, plugin2.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, plugin2.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
 		// add java element from the same project, should get result since we are looking at the projects
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 		
 		//
 		// add a java element from a different project, should get non null result, but 0 size
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION, searchNode, dos, 0);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		//
 		//
 		
 		//
 		// add the plugin.xml from the same project to the taskscape, should have results
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 	}
@@ -212,35 +212,35 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
 		CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
 		// add an element to the taskscape, results should not be null
 		// There is a landmark with references in it, but not one that is an xml file that we care about
 		// therefore, we still only get 3 references
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 		
 		//
 		// add an element to the taskscape, results should still be null
 		// There is a landmark, but not one that is an xml file that we care about
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 		
 		//
 		// we should get all results since we are searching the entire workspace
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, searchNode, dos, 3);
 		//
 		//
 
 		//
 		// we should get 0 results since there should be no references to the type we are looking at
-		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, searchNode, dos, 0);
 		//
 		//
@@ -253,35 +253,35 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
 		// add an element to the taskscape, results should not be null
 		// There is a landmark with references in it, but not one that is an xml file that we care about
 		// therefore, we still only get 3 references
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, tocRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 		
 		//
 		// add an element to the taskscape, results should still be null
 		// There is a landmark, but not one that is an xml file that we care about
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
-		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.EXTENSION, searchNode, dos, 3);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		helper.searchResultsNotNull(notifier, tocNoRefs.getFullPath().toString(), ResourceStructureBridge.CONTENT_TYPE, searchNode, dos, 3);
 		//
 		//
 		
 		//
 		// we should get all results since we are searching the entire workspace
-		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, searchNode, dos, 3);
 		//
 		//
 
 		//
 		// we should get 0 results since there should be no references to the type we are looking at
-		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.EXTENSION);
+		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, searchNode, dos, 0);
 		//
 		//

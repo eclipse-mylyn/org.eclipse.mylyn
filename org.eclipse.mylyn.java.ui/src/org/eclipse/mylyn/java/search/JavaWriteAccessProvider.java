@@ -27,7 +27,7 @@ public class JavaWriteAccessProvider extends AbstractJavaRelationshipProvider {
     public static final String NAME = "Java write access";
         
     public JavaWriteAccessProvider() {
-        super(JavaStructureBridge.EXTENSION, ID);
+        super(JavaStructureBridge.CONTENT_TYPE, ID);
     }
 
     @Override

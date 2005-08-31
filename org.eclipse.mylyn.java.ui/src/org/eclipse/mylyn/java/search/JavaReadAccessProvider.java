@@ -27,7 +27,7 @@ public class JavaReadAccessProvider extends AbstractJavaRelationshipProvider {
     public static final String NAME = "Java read access";
         
     public JavaReadAccessProvider() {
-        super(JavaStructureBridge.EXTENSION, ID);
+        super(JavaStructureBridge.CONTENT_TYPE, ID);
     }
 
     @Override

@@ -33,7 +33,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
  */
 public class ResourceStructureBridge implements IMylarStructureBridge {
 
-    public final static String EXTENSION = "*";
+    public final static String CONTENT_TYPE = MylarPlugin.CONTENT_TYPE_ANY;
 
     public ResourceStructureBridge() {
     	if (false) {
@@ -43,7 +43,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     }
     
     public String getResourceExtension() {
-        return EXTENSION;
+        return CONTENT_TYPE;
     }
     
     public String getParentHandle(String handle) {

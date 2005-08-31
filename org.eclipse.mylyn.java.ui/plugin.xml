@@ -3,6 +3,22 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="javaEditorContributor" name="Mylar Java Editor Contributor" schema="schema/javaEditorContributor.exsd"/>
+         <extension
+               point="org.eclipse.mylar.core.context">
+            <structureBridge
+                  class="org.eclipse.mylar.java.JavaStructureBridge"
+                  name="Java Structure Bridge"/>
+         </extension>
+   
+         <extension
+               point="org.eclipse.mylar.ui.context">
+            <uiBridge
+                  class="org.eclipse.mylar.java.ui.JavaUiBridge"
+                  contentType="java"/>
+            <labelProvider
+                  class="org.eclipse.mylar.java.ui.JavaContextLabelProvider"
+                  contentType="java"/>
+         </extension>
 
 	<extension
          id="org.eclipse.mylar.helpDocs"
@@ -259,22 +275,6 @@
          </action>
       </editorContribution>
    </extension>
-   
-         <extension
-               point="org.eclipse.mylar.core.context">
-            <structureBridge
-                  class="org.eclipse.mylar.java.JavaStructureBridge"
-                  name="Java Structure Bridge"/>
-         </extension>
-         <extension
-               point="org.eclipse.mylar.ui.context">
-            <uiBridge
-                  class="org.eclipse.mylar.java.ui.JavaUiBridge"
-                  contentType="java"/>
-            <labelProvider
-                  class="org.eclipse.mylar.java.ui.JavaContextLabelProvider"
-                  contentType="java"/>
-         </extension>
    <!-- end from -->
    
 </plugin>

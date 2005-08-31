@@ -49,7 +49,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
  */
 public class AntStructureBridge implements IMylarStructureBridge {
 
-    public final static String EXTENSION = "build.xml";
+    public final static String CONTENT_TYPE = "build.xml";
     
     private IMylarStructureBridge parentBridge;
 
@@ -57,14 +57,14 @@ public class AntStructureBridge implements IMylarStructureBridge {
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getResourceExtension()
      */
     public String getResourceExtension() {
-        return EXTENSION;
+        return CONTENT_TYPE;
     }
     
     public String getResourceExtension(String elementHandle) {
         if (elementHandle.endsWith(".xml")) {
             return parentBridge.getResourceExtension();
         } else {
-            return EXTENSION;
+            return CONTENT_TYPE;
         }
     }
     

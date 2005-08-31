@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.java;
 
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -18,9 +17,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.java.ui.JavaUiBridge;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
@@ -46,10 +43,9 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  */
 public class MylarJavaPlugin extends AbstractUIPlugin {
+	
 	private static MylarJavaPlugin plugin;
 	private ResourceBundle resourceBundle;
-    private static JavaStructureBridge structureBridge = new JavaStructureBridge();
-    private static JavaUiBridge uiBridge = new JavaUiBridge();
 	private JavaEditorTracker editorTracker;
     
     public static final String PLUGIN_ID = "org.eclipse.mylar.java";
@@ -69,7 +65,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
         MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
         MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
-//        MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
         
     	installEditorTracker(PlatformUI.getWorkbench());
     
@@ -107,13 +102,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
-		
-		List<AbstractRelationshipProvider> providers = structureBridge.getProviders();
-        if(providers != null){
-	        for(AbstractRelationshipProvider provider: providers){
-	        	provider.stopAllRunningJobs();
-	        }
-        }
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {
@@ -188,14 +176,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.java", path);
 	}
 
-    public static JavaUiBridge getUiBridge() {
-        return uiBridge;
-    }
-
-//    public static JavaStructureBridge getStructureBridge() {
-//        return structureBridge;
-//    }
-    
     public static boolean isMylarEditorDefault() {
 		IEditorRegistry editorRegistry = WorkbenchPlugin.getDefault()
 				.getEditorRegistry();
