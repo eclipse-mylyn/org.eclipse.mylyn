@@ -106,12 +106,15 @@ public class OfflineReportsFile
 					if(in.getCompareResult() == null){
 						return true;
 					} else if(oldBug.hasChanges()){
-						if(!MessageDialog.openQuestion(null, "Update Local Copy", "Local copy of Bug# " + entry.getId() + " Has Changes.\nYour added comment will be saved, but all other changes will be lost .\nDo you want to continue?")){
-							return false;
+						if(!MessageDialog.openQuestion(null, "Update Local Copy", "Local copy of Bug# " + entry.getId() + " Has Changes.\nWould you like to override local changes? Note: if you select No, your added comment will be saved with the updated bug, but all other changes will be lost.")){
+							((BugReport)entry).setNewComment(((BugReport)oldBug).getNewComment());
+							((BugReport)entry).setHasChanged(true);
+							status = BugzillaOfflineStaus.CONFLICT;
+						} else {
+							((BugReport)entry).setHasChanged(false);
+							status = BugzillaOfflineStaus.SAVED;
 						}
-						((BugReport)entry).setNewComment(((BugReport)oldBug).getNewComment());
-						((BugReport)entry).setHasChanged(true);
-						status = BugzillaOfflineStaus.CONFLICT;
+						
 					} else {
 						DiffNode node = (DiffNode)in.getCompareResult();
 						IDiffElement[] children = node.getChildren();
