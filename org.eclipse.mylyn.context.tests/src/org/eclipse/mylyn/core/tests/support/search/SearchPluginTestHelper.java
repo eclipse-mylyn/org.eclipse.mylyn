@@ -23,7 +23,7 @@ import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 
 
-public class SearchPluginTestHelper extends TestCase{
+public class SearchPluginTestHelper extends TestCase {
 	
 	private ISearchPluginTest test;
 	/**

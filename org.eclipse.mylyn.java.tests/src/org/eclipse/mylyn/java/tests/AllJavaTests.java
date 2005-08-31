@@ -14,6 +14,12 @@ package org.eclipse.mylar.java.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
+import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
+import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
+import org.eclipse.mylar.java.tests.search.JavaReferencesSearchPluginTest;
+import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
+
 /**
  * @author Mik Kersten
  */
@@ -24,14 +30,13 @@ public class AllJavaTests {
 		//$JUnit-BEGIN$
 //        suite.addTestSuite(InterestFilterTest.class);
         suite.addTestSuite(ContextManagerTest.class);
-//        suite.addTestSuite(JavaStructureTest.class);
-//        suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
-//        suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
-//        suite.addTestSuite(JavaReferencesSearchPluginTest.class);
-//        suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
-//        suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
+        suite.addTestSuite(JavaStructureTest.class);
+        suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
+        suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
+        suite.addTestSuite(JavaReferencesSearchPluginTest.class);
+        suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
+        suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 		//$JUnit-END$
 		return suite;
-	}
-
+	} 
 }
