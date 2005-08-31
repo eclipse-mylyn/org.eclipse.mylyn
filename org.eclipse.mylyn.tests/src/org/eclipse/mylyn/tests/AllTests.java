@@ -37,8 +37,12 @@ public class AllTests {
         TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
         //$JUnit-BEGIN$
 
+        // Core Tests
+        suite.addTestSuite(ContextTest.class);
+        suite.addTestSuite(TaskListUiTest.class);
+        suite.addTestSuite(DegreeOfInterestTest.class);
+        
         // Java Tests
-//        suite.addTestSuite(InterestFilterTest.class);
         suite.addTestSuite(ContextManagerTest.class);
         suite.addTestSuite(JavaStructureTest.class);
         suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
@@ -57,10 +61,6 @@ public class AllTests {
         // Tasklist Tests
         suite.addTestSuite(TaskListManagerTest.class);
 
-        // Core Tests
-        suite.addTestSuite(ContextTest.class);
-        suite.addTestSuite(TaskListUiTest.class);
-        suite.addTestSuite(DegreeOfInterestTest.class);
         //$JUnit-END$
         return suite;
     }
