@@ -57,7 +57,6 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
                 if (matchesExclusion(element, bridge)) return true;
                 
                 String handle = bridge.getHandleIdentifier(element);
-         
                 node = MylarPlugin.getContextManager().getNode(handle);
             }
             if (node != null) {
