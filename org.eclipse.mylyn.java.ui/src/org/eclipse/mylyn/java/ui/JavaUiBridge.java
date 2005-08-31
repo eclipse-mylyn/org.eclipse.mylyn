@@ -24,22 +24,11 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
-import org.eclipse.jdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.java.search.AbstractJavaRelationshipProvider;
-import org.eclipse.mylar.java.search.JUnitReferencesProvider;
-import org.eclipse.mylar.java.search.JavaImplementorsProvider;
-import org.eclipse.mylar.java.search.JavaReadAccessProvider;
-import org.eclipse.mylar.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,13 +39,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class JavaUiBridge implements IMylarUiBridge {
  
-    protected DecoratingJavaLabelProvider labelProvider;
-    
-    public JavaUiBridge() {
-        labelProvider = new DecoratingJavaLabelProvider(new MylarJavaLabelProvider(), true);
-//        labelProvider.setLabelDecorator(new DegreeOfInterestDecorator());
-    }
-    
     public void open(IMylarContextNode node) {
         //get the element and open it in an editor
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
@@ -92,10 +74,6 @@ public class JavaUiBridge implements IMylarUiBridge {
         } catch (Throwable t) {
             MylarPlugin.fail(t, "Could not auto close editor.", false);
         } 
-    }
-    
-    public ILabelProvider getLabelProvider() {
-        return labelProvider;
     }
 
     public boolean acceptsEditor(IEditorPart editorPart) {
@@ -154,43 +132,5 @@ public class JavaUiBridge implements IMylarUiBridge {
                 }
             }
         });  
-    }
-
-    public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-    	if (relationshipHandle.equals(AbstractJavaRelationshipProvider.ID_GENERIC)) {
-            return MylarImages.EDGE_REF_JAVA; 
-        } else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
-            return MylarImages.EDGE_REF_JAVA; 
-        } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
-            return MylarImages.EDGE_INHERITANCE; 
-        } else if (relationshipHandle.equals(JUnitReferencesProvider.ID)) {
-            return MylarImages.EDGE_REF_JUNIT; 
-        } else if (relationshipHandle.equals(JavaWriteAccessProvider.ID)) {
-            return MylarImages.EDGE_WRITE; 
-        } else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
-            return MylarImages.EDGE_READ; 
-        } else {
-            return null;
-        }
-    }
-    
-    public String getNameForRelationship(String relationshipHandle) {
-    	if (relationshipHandle.equals(AbstractJavaRelationshipProvider.ID_GENERIC)) {
-            return AbstractJavaRelationshipProvider.NAME; 
-        } else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
-            return JavaReferencesProvider.NAME; 
-        } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
-            return JavaImplementorsProvider.NAME; 
-        } else if (relationshipHandle.equals(JUnitReferencesProvider.ID)) {
-            return JUnitReferencesProvider.NAME; 
-        } else if (relationshipHandle.equals(JavaWriteAccessProvider.ID)) {
-            return JavaWriteAccessProvider.NAME; 
-        } else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
-            return JavaReadAccessProvider.NAME; 
-        } else if (relationshipHandle.equals(MylarContextManager.CONTAINMENT_PROPAGATION_ID)) {
-            return "Containment"; // TODO: make this generic? 
-        } else {
-            return null;
-        }
     }
 }

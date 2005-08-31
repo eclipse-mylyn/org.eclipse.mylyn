@@ -11,7 +11,7 @@
 /*
  * Created on Apr 6, 2005
   */
-package org.eclipse.mylar.xml.ant.ui;
+package org.eclipse.mylar.xml.ant;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -27,16 +27,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
-import org.eclipse.mylar.xml.XmlReferencesProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
@@ -51,8 +47,6 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class AntUiBridge implements IMylarUiBridge {
-
-    protected AntNodeLabelProvider labelProvider = new AntNodeLabelProvider();
     
     /**
      * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarContextNode)
@@ -130,9 +124,6 @@ public class AntUiBridge implements IMylarUiBridge {
         return null;
     }
 
-    public ILabelProvider getLabelProvider() {
-        return labelProvider;
-    }
 
     public void close(IMylarContextNode node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
@@ -202,13 +193,5 @@ public class AntUiBridge implements IMylarUiBridge {
                     treeViewer.setSelection(new StructuredSelection(element));
             }
         }
-    }
-    
-    public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-        return MylarImages.EDGE_REF_XML;
-    }
-
-    public String getNameForRelationship(String relationshipHandle) {
-        return XmlReferencesProvider.NAME;        
     }
 }

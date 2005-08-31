@@ -41,7 +41,7 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.JavaStructureBridge;
-import org.eclipse.mylar.java.ui.MylarJavaLabelProvider;
+import org.eclipse.mylar.java.ui.JavaContextLabelProvider;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.SWT;
@@ -150,7 +150,7 @@ public class ActiveHierarchyView extends ViewPart {
             for (Iterator<IMylarContextNode> it = landmarks.iterator(); it.hasNext();) {
                 IMylarContextNode node = it.next();
                 IJavaElement element = null;
-                if (node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) {
+                if (node.getContentKind().equals(JavaStructureBridge.EXTENSION)) {
                     element = JavaCore.create(node.getElementHandle());
                 }
                 if (element != null && element instanceof IType && element.exists()) {	
@@ -231,7 +231,7 @@ public class ActiveHierarchyView extends ViewPart {
 		    viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 //			drillDownAdapter = new DrillDownAdapter(viewer);
 			viewer.setContentProvider(new ViewContentProvider());
-			viewer.setLabelProvider(new HierarchyLabelProvider(new MylarJavaLabelProvider()));
+			viewer.setLabelProvider(new HierarchyLabelProvider(JavaContextLabelProvider.createJavaUiLabelProvider()));
 //			viewer.setSorter(new NameSorter());
 			viewer.setInput(getViewSite());
 //            viewer.addOpenListener(new TaskscapeNodeClickListener(viewer));

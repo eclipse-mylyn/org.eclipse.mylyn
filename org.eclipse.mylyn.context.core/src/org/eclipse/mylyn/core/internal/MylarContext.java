@@ -184,7 +184,7 @@ public class MylarContext implements IMylarContext, Serializable {
 		for (MylarContextNode node : nodes.values()) {
 			interactionHistory.add(0, new InteractionEvent(
 	                InteractionEvent.Kind.MANIPULATION, 
-	                node.getStructureKind(),
+	                node.getContentKind(),
 	                node.getElementHandle(), 
 	                MylarContextManager.SOURCE_ID_DECAY,
 	                -node.getDegreeOfInterest().getDecayValue()));

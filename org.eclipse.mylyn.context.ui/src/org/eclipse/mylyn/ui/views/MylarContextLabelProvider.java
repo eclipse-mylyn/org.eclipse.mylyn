@@ -13,14 +13,9 @@
   */
 package org.eclipse.mylar.ui.views;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.core.IMylarContextEdge;
-import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.core.internal.MylarContextEdge;
-import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.mylar.core.IMylarContextElement;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
@@ -33,42 +28,49 @@ import org.eclipse.swt.graphics.Image;
 public class MylarContextLabelProvider implements ILabelProvider {
 
     public Image getImage(Object element) {
-        if (element instanceof IMylarContextNode) {
-            IMylarContextNode node = (IMylarContextNode)element;
-            IMylarUiBridge adapter = MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind());
-            if (adapter != null) {
-                return adapter.getLabelProvider().getImage(element);
-            } else {
-                return null;
-            }
-        } else if (element instanceof MylarContextEdge) {
-            IMylarContextEdge edge = (IMylarContextEdge)element;
-            IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(edge.getStructureKind());
-            ImageDescriptor descriptor = bridge.getIconForRelationship(edge.getRelationshipHandle());
-            if (descriptor != null) return MylarImages.getImage(descriptor);
+    	
+    	if (element instanceof IMylarContextElement) {
+    		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(
+    				((IMylarContextElement)element).getContentKind());
+            return provider.getImage(element);
+        }  else {
+        	return null;
         }
-        return null;
+//    	else if (element instanceof MylarContextEdge) {
+//            IMylarContextEdge edge = (IMylarContextEdge)element;
+//            return provider.getImage(edge);
+//            IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(edge.getStructureKind());
+//            ImageDescriptor descriptor = bridge.getIconForRelationship(edge.getRelationshipHandle());
+//            if (descriptor != null) return MylarImages.getImage(descriptor);
+//        }
     }
 
     public String getText(Object object) {
-        assert(object != null);
-        if (object instanceof IMylarContextNode) {
-            IMylarContextNode node = (IMylarContextNode)object;
-            IMylarUiBridge adapter = MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind());
+    	if (object instanceof IMylarContextElement) {
+    		IMylarContextElement element = (IMylarContextElement)object;
+    		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(
+    				element.getContentKind());
             if (MylarUiPlugin.getDefault().isDecorateInterestMode()) {
-                return adapter.getLabelProvider().getText(object) + " [" + node.getDegreeOfInterest().getValue() + "]";     
+                return provider.getText(element) + " [" + element.getDegreeOfInterest().getValue() + "]";     
             } else {
-                return adapter.getLabelProvider().getText(object);
+                return provider.getText(element);
             }
-        } else if (object instanceof IMylarContextEdge) {
-            IMylarContextEdge edge = (IMylarContextEdge)object;
-            String interestDecoration = "";
-            if (MylarUiPlugin.getDefault().isDecorateInterestMode()) interestDecoration = " [" + edge.getDegreeOfInterest().getValue() + "]";     
-            
-            IMylarUiBridge adapter = MylarUiPlugin.getDefault().getUiBridge(edge.getStructureKind());
-            return adapter.getNameForRelationship(edge.getRelationshipHandle()) + interestDecoration; 
+        }  else {
+        	return "" + object;
         }
-        return "" + object;
+//    	if (object instanceof IMylarContextNode) {
+//            IMylarContextNode node = (IMylarContextNode)object;
+//            ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(node.getContentKind());
+//
+//        } else if (object instanceof IMylarContextEdge) {
+//            IMylarContextEdge edge = (IMylarContextEdge)object;
+//            String interestDecoration = "";
+//            if (MylarUiPlugin.getDefault().isDecorateInterestMode()) interestDecoration = " [" + edge.getDegreeOfInterest().getValue() + "]";     
+//            
+//            IMylarUiBridge adapter = MylarUiPlugin.getDefault().getUiBridge(edge.getContentKind());
+//            return adapter.getNameForRelationship(edge.getRelationshipHandle()) + interestDecoration; 
+//        }
+//        return "" + object;
     }
 
     public boolean isLabelProperty(Object element, String property) {

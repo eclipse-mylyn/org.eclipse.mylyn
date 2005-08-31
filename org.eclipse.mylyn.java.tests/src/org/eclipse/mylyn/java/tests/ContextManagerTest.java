@@ -71,6 +71,9 @@ public class ContextManagerTest extends AbstractContextTest {
         taskscape = new MylarContext("1", scaling);
         manager.contextActivated(taskscape);
         assertNotNull(MylarJavaPlugin.getDefault());
+        assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(
+    		JavaStructureBridge.class.getCanonicalName()) != -1);
+//        System.err.println(">>> " + MylarPlugin.getDefault().getStructureBridges());
     }
     
     @Override
@@ -140,7 +143,7 @@ public class ContextManagerTest extends AbstractContextTest {
         
         
         AbstractRelationshipProvider provider = new JavaStructureBridge().getProviders().get(0);
-        provider.createEdge(m2Node, m1Node.getStructureKind(), m2.getHandleIdentifier());
+        provider.createEdge(m2Node, m1Node.getContentKind(), m2.getHandleIdentifier());
         
         assertEquals(1, m2Node.getEdges().size());
         
@@ -200,7 +203,7 @@ public class ContextManagerTest extends AbstractContextTest {
         
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
-        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
         IMylarContextNode parent = MylarPlugin.getContextManager().getNode(bridge.getParentHandle(node.getElementHandle()));
         assertTrue(parent.getDegreeOfInterest().isInteresting());
         assertTrue(parent.getDegreeOfInterest().isPropagated()); 
@@ -221,6 +224,7 @@ public class ContextManagerTest extends AbstractContextTest {
         monitor.selectionChanged(part, sm1);
         
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
+        
         assertTrue(node.getDegreeOfInterest().isInteresting());
 
         IJavaElement parent = m1.getParent();
@@ -277,7 +281,7 @@ public class ContextManagerTest extends AbstractContextTest {
         monitor.selectionChanged(part, sm1);
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
         assertFalse(node.getDegreeOfInterest().isLandmark());
-        assertTrue(MylarPlugin.getContextManager().getActiveNode() != null);
+        assertNotNull(MylarPlugin.getContextManager().getActiveNode());
         action.changeInterestForSelected(true);
         assertTrue(node.getDegreeOfInterest().isLandmark());
         action.changeInterestForSelected(true);

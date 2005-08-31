@@ -52,7 +52,7 @@ public class MylarContextNode implements IMylarContextNode {
         this.handle = elementHandle;
     }
     
-    public String getStructureKind() {
+    public String getContentKind() {
         return kind;
     }
     

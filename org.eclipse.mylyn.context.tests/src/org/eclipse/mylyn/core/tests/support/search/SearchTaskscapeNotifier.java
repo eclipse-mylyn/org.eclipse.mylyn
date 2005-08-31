@@ -36,11 +36,11 @@ public class SearchTaskscapeNotifier extends AbstractContextTest {
 	}
 	
 	public IMylarContextNode mockLowerInterest(IMylarContextNode node) {
-		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getStructureKind(), source, -3));
+		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getContentKind(), source, -3));
     }
 	
 	public IMylarContextNode mockRaiseInterest(IMylarContextNode node) {
-		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getStructureKind(), source, 2));
+		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getContentKind(), source, 2));
     }
 	
 	public IMylarContextNode mockLowerInterest(String handle, String kind) {

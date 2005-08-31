@@ -18,8 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -38,11 +36,9 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * @author Mik Kersten
  */
 public class ResourceUiBridge implements IMylarUiBridge {
-
-    private ILabelProvider labelProvider = new ResourceLabelProvider();
-    
+ 
     public void open(IMylarContextNode node) {
-        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
         if (adapter == null) return;
         IResource resource = (IResource)adapter.getObjectForHandle(node.getElementHandle());
         if (resource != null && resource.exists()) {
@@ -55,10 +51,6 @@ public class ResourceUiBridge implements IMylarUiBridge {
 	            }
 	        }
         }
-    }
-
-    public ILabelProvider getLabelProvider() {
-        return labelProvider;
     }
 
     public void close(IMylarContextNode node) {
@@ -89,13 +81,5 @@ public class ResourceUiBridge implements IMylarUiBridge {
     public void refreshOutline(Object element, boolean updateLabels) {
     	// no outline to refresh
         
-    }
-
-    public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-        return null;
-    }
-
-    public String getNameForRelationship(String relationshipHandle) {
-        return null;        
     }
 }

@@ -62,7 +62,7 @@ public class MylarContextEdge implements IMylarContextEdge {
         return relationshipHandle;
     }
 
-    public String getStructureKind() {
+    public String getContentKind() {
         return structureKind;
     }
 

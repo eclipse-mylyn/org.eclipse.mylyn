@@ -23,8 +23,8 @@ import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -47,7 +47,7 @@ public class FindReferencesInTaskscapeAction extends Action implements IWorkbenc
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
 					IJavaElement element = resolved[0];
 					
-					MylarWorkingSetUpdater updater = MylarUiPlugin.getDefault().getWorkingSetUpdater();
+					MylarWorkingSetUpdater updater = MylarPlugin.getDefault().getWorkingSetUpdater();
 					if(updater != null && updater.getWorkingSet() != null) {
 						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(updater.getWorkingSet(), false);
 						JavaSearchQuery query = new JavaSearchQuery(new ElementQuerySpecification(element, IJavaSearchConstants.REFERENCES, scope, "Mylar Current Task Context"));

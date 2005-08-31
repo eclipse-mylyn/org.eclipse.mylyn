@@ -25,7 +25,6 @@ import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
@@ -70,7 +69,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
         MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
         MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
-        MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
+//        MylarUiPlugin.getDefault().addAdapter(structureBridge.getResourceExtension(), uiBridge);
         
     	installEditorTracker(PlatformUI.getWorkbench());
     

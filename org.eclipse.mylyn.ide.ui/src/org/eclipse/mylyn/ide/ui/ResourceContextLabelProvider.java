@@ -15,23 +15,22 @@ package org.eclipse.mylar.ide.ui;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
+import org.eclipse.mylar.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
  */
-public class ResourceLabelProvider implements ILabelProvider {
+public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
-    public Image getImage(Object element) {
-        IMylarContextNode node = (IMylarContextNode)element;
+    public Image getImage(IMylarContextNode node) {
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.EXTENSION);
         if (adapter != null) {
             Object object = adapter.getObjectForHandle(node.getElementHandle());
@@ -47,27 +46,20 @@ public class ResourceLabelProvider implements ILabelProvider {
     /**
      * TODO: slow?
      */
-    public String getText(Object element) {
-        IMylarContextNode node = (IMylarContextNode)element;
+    public String getText(IMylarContextNode node) {
         String name = MylarIdePlugin.getDefault().getGenericResourceBridge().getName(
         		MylarIdePlugin.getDefault().getGenericResourceBridge().getObjectForHandle(node.getElementHandle())
         );
         return name;
     }
 
-    public void addListener(ILabelProviderListener listener) {
-    	// don't care about listeners
-    }
+	@Override
+	protected Image getImage(IMylarContextEdge edge) {
+		return null;
+	}
 
-    public void dispose() {
-    	// don't care when we are disposed
-    }
-
-    public boolean isLabelProperty(Object element, String property) {
-        return false;
-    }
-
-    public void removeListener(ILabelProviderListener listener) {
-    	// don't care about listeners
-    }
+	@Override
+	protected String getText(IMylarContextEdge edge) {
+		return null;
+	}
 } 

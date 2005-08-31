@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.ui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,20 +19,18 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.ui.internal.ColorMap;
-import org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater;
+import org.eclipse.mylar.ui.internal.UiExtensionPointReader;
 import org.eclipse.mylar.ui.internal.ViewerConfigurator;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
-import org.eclipse.mylar.ui.views.ActiveSearchView;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
@@ -43,21 +40,22 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-
+import org.osgi.framework.BundleContext;
 
 /**
  * @author Mik Kersten
  */
 public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 
-    private Map<String, IMylarUiBridge> bridges = new HashMap<String, IMylarUiBridge>();
-    private static MylarUiPlugin plugin;
 	public static final String PLUGIN_ID = "org.eclipse.mylar.ui";
-	private ResourceBundle resourceBundle;
-    private boolean decorateInterestMode = false;
+	public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.ui.context";
+	public static final String ELEMENT_UI_BRIDGE = "uiBridge";
+	public static final String ELEMENT_UI_CLASS = "class";
+	public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider";	
+	public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType";
+
     public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";
-    
-    private static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters.task.";
+    public static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters.task.";
     public static final String INTEREST_FILTER_EXCLUSION = "org.eclipse.mylar.ui.interest.filter.exclusion";
     public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
     public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylar.ui.gamma.darkened";
@@ -65,29 +63,55 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     public static final String GAMMA_SETTING_LIGHTENED = "org.eclipse.mylar.ui.gamma.lightened";
     public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.interest.filter.global";
     public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.interest.intersection";    
+	
+    private Map<String, IMylarUiBridge> bridges = new HashMap<String, IMylarUiBridge>();
+    private Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
+    
+    private static MylarUiPlugin plugin;
+	private ResourceBundle resourceBundle;
+    private boolean decorateInterestMode = false;
     
     private HighlighterList highlighters = null;
     private Highlighter intersectionHighlighter;
     private ColorMap colorMap = new ColorMap(); 
     
-    private List<MylarWorkingSetUpdater> workingSetUpdaters = null; 
     protected MylarViewerManager uiUpdateManager = new MylarViewerManager();
     private ViewerConfigurator viewerConfigurator = new ViewerConfigurator();
     public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
+    private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
+
+		@Override
+		protected Image getImage(IMylarContextNode node) {
+			return null;
+		}
+
+		@Override
+		protected Image getImage(IMylarContextEdge edge) {
+			return null;
+		}
+
+		@Override
+		protected String getText(IMylarContextNode node) {
+			return "" + node;
+		}
+
+		@Override
+		protected String getText(IMylarContextEdge edge) {
+			return "" + edge;
+		}
+    	
+    };
+	
     private static final IMylarUiBridge DEFAULT_UI_BRIDGE = new IMylarUiBridge() {
 
         public void open(IMylarContextNode node) {
-//            throw new RuntimeException("null adapter: " + node);
+        	// ignore
         }
 
         public void close(IMylarContextNode node) {
-//            throw new RuntimeException("null adapter: " + node);
-        }
-
-        public ILabelProvider getLabelProvider() {
-            return NULL_LABEL_PROVIDER;
+        	// ignore
         }
 
         public boolean acceptsEditor(IEditorPart editorPart) {
@@ -101,38 +125,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         public void refreshOutline(Object element, boolean updateLabels) {
         }
 
-        public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-            return null;
-        }
-        
-        public String getNameForRelationship(String relationshipHandle) { 
-            return null;
-        }
-    };
-    
-    private static final ILabelProvider NULL_LABEL_PROVIDER = new ILabelProvider() {
-
-        public Image getImage(Object element) {
-            return null;
-        }
-
-        public String getText(Object element) {
-            return "" + element;
-        }
-
-        public void addListener(ILabelProviderListener listener) {
-        }
-
-        public void dispose() {
-        }
-
-        public boolean isLabelProperty(Object element, String property) {
-            return false;
-        }
-
-        public void removeListener(ILabelProviderListener listener) {
-        }
-        
     };
         
     public MylarUiPlugin() {
@@ -154,7 +146,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-                MylarPlugin.getContextManager().addListener(uiUpdateManager);
+            	UiExtensionPointReader.initExtensions();
+            	MylarPlugin.getContextManager().addListener(uiUpdateManager);
                 
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerConfigurator);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
@@ -168,6 +161,19 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
                 if (ApplyMylarToOutlineAction.getDefault() != null) ApplyMylarToOutlineAction.getDefault().update();
             }
         });
+    }
+    
+	@Override
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+    }
+
+    /**
+     * This method is called when the plug-in is stopped
+     */
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        super.stop(context);
     }
     
     private void initializeActions() {
@@ -285,27 +291,38 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         }
     }
 
-    /**
-     * HACK: reset to get search buttons to show up properly
-     */
-    public void addAdapter(String extension, IMylarUiBridge adapter) {
-        this.bridges.put(extension, adapter);
-        final ActiveSearchView activeSearchView = ActiveSearchView.getFromActivePerspective();
-        if (activeSearchView != null) {
-            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-                public void run() { 
-                    activeSearchView.resetProviders();
-                }
-            });   
-        }
+    public void internalAddBridge(String extension, IMylarUiBridge bridge) {
+        this.bridges.put(extension, bridge);
+//        final ActiveSearchView activeSearchView = ActiveSearchView.getFromActivePerspective();
+//        if (activeSearchView != null) {
+//            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//                public void run() { 
+//                    activeSearchView.resetProviders();
+//                }
+//            });   
+//        }
     }
 
+    public ILabelProvider getContextLabelProvider(String extension) {
+    	ILabelProvider provider = contextLabelProviders.get(extension);
+        if (provider != null) {
+            return provider;
+        } else {
+            return DEFAULT_LABEL_PROVIDER;
+        }
+    }
+    
+    public void internalAddContextLabelProvider(String extension, ILabelProvider provider) {
+        this.contextLabelProviders.put(extension, provider);
+    }
+    
     public void updateGammaSetting(ColorMap.GammaSetting setting) {
     	if (colorMap.getGammaSetting() != setting) {
     		highlighters.updateHighlighterWithGamma(colorMap.getGammaSetting(), setting);
     		colorMap.setGammaSetting(setting);
     	}
     }
+   
     public ColorMap getColorMap() {
         return colorMap;
     }
@@ -356,14 +373,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         this.intersectionHighlighter = intersectionHighlighter;
     }
 
-//    /**
-//     * TODO: refactor
-//     */
-//    public boolean isGlobalFilteringEnabled() {
-//    	return true;
-////        return getPrefs().getBoolean(GLOBAL_FILTERING);
-//    }
-
     public boolean isGlobalFoldingEnabled() {
         return getPrefs().getBoolean(GLOBAL_FILTERING);
     }
@@ -379,20 +388,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     public void setIntersectionMode(boolean isIntersectionMode) {
         getPrefs().setValue(INTERSECTION_MODE, isIntersectionMode);
     }
-
-	public void addWorkingSetUpdater(MylarWorkingSetUpdater updater) {
-		if(workingSetUpdaters == null)
-			workingSetUpdaters = new ArrayList<MylarWorkingSetUpdater>();
-		workingSetUpdaters.add(updater);
-		MylarPlugin.getContextManager().addListener(updater);
-	}
-
-	public MylarWorkingSetUpdater getWorkingSetUpdater() {
-		if(workingSetUpdaters == null)
-			return null;
-		else
-			return workingSetUpdaters.get(0);
-	}
 
 	public MylarViewerManager getUiUpdateManager() {
 		return uiUpdateManager;

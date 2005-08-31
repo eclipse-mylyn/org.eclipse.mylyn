@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="context" name="context" schema="schema/context.exsd"/>
 
    <extension
          name="Mylar UI startup"
@@ -217,17 +218,6 @@
       </decorator>
    </extension>
 
-    <extension point="org.eclipse.ui.workingSets">
-        <workingSet
-            id="org.eclipse.mylar.workingSetPage"
-            name="Mylar Task Context"
-            icon="icons/elcl16/interest-working-set.gif"
-            pageClass="org.eclipse.mylar.ui.internal.MylarWorkingSetPage"
-            updaterClass="org.eclipse.mylar.ui.internal.MylarWorkingSetUpdater">
-        </workingSet>
-    </extension>
-
-
 <!-- filtering actions -->
 
  <extension point="org.eclipse.ui.viewActions"> 
@@ -251,6 +241,16 @@
        point="org.eclipse.mylar.tasklist.taskListContributor">
     <dynamicPopupMenu class="org.eclipse.mylar.ui.internal.views.TaskListHighlighterMenuContributor"/>
  </extension>
+ 
+      <extension point="org.eclipse.ui.workingSets">
+        <workingSet
+            id="org.eclipse.mylar.workingSetPage"
+            name="Mylar Task Context"
+            icon="icons/elcl16/interest-working-set.gif"
+            pageClass="org.eclipse.mylar.ui.internal.MylarWorkingSetPage"
+            updaterClass="org.eclipse.mylar.core.search.MylarWorkingSetUpdater">
+        </workingSet>
+    </extension>
 </plugin>
 
 	    <!--

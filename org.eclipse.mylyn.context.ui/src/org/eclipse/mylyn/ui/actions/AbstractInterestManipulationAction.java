@@ -82,7 +82,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
         if (changeValue != 0) {
             InteractionEvent interactionEvent = new InteractionEvent(
                     InteractionEvent.Kind.MANIPULATION,  
-                    node.getStructureKind(), 
+                    node.getContentKind(), 
                     node.getElementHandle(), 
                     SOURCE_ID,
                     changeValue);

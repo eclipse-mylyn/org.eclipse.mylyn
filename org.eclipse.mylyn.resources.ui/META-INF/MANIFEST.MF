@@ -26,7 +26,5 @@ Eclipse-AutoStart: true
 Bundle-Vendor: University of British Columbia
 Export-Package: org.eclipse.mylar.xml,
  org.eclipse.mylar.xml.ant,
- org.eclipse.mylar.xml.ant.ui,
- org.eclipse.mylar.xml.pde,
- org.eclipse.mylar.xml.pde.ui
+ org.eclipse.mylar.xml.pde
 Bundle-ClassPath: mylar-xml.jar

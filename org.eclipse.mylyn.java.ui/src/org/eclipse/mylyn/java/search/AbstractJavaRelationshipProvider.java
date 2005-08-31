@@ -71,7 +71,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
     	if (node == null) return;
-        if (!node.getStructureKind().equals(JavaStructureBridge.EXTENSION)) return;
+        if (!node.getContentKind().equals(JavaStructureBridge.EXTENSION)) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
         if (!acceptElement(javaElement) || !javaElement.exists()) {
             return; 
@@ -88,7 +88,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
         int includeMask = IJavaSearchScope.SOURCES;
         if (degreeOfSeparation == 1) {
             for (IMylarContextNode landmark : landmarks) {
-            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getStructureKind());
+            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentKind());
             	Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
             	if(o instanceof IJavaElement){
             		IJavaElement landmarkElement = (IJavaElement)o;
@@ -103,7 +103,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             } 
         } else if (degreeOfSeparation == 2) {
             for (IMylarContextNode interesting : interestingElements) {
-            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getStructureKind());
+            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
             	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
             	if(o instanceof IJavaElement){
 	                IJavaElement interestingElement = (IJavaElement)o;
@@ -118,7 +118,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             }  
         } else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
             for (IMylarContextNode interesting : interestingElements) {
-            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getStructureKind());
+            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
             	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
             	IProject project = sbridge.getProjectForObject(o);// TODO what to do when the element is not a java element, how determine if a javaProject?
             	

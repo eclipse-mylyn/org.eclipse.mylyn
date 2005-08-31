@@ -75,11 +75,11 @@ public class CompositeContextNode implements IMylarContextNode {
     /**
      * @return null if all kinds aren't equal
      */
-    public String getStructureKind() {
+    public String getContentKind() {
         Set<String> kinds = new HashSet<String>();
         String lastKind = null;
         for (IMylarContextNode node : nodes) {
-            lastKind = node.getStructureKind();
+            lastKind = node.getContentKind();
             kinds.add(lastKind);
         }
         if (kinds.size() == 1) {

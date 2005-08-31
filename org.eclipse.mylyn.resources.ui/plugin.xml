@@ -2,16 +2,29 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   
-            <extension
-               point="org.eclipse.mylar.core.context">
-            <structureBridge
-                  class="org.eclipse.mylar.xml.ant.AntStructureBridge"
-                  name="Ant Structure Bridge"
-                  parent="org.eclipse.mylar.ide.ResourceStructureBridge"/>
-            <structureBridge
-                  class="org.eclipse.mylar.xml.pde.PdeStructureBridge"
-                  name="PDE Structure Bridge"
-                  parent="org.eclipse.mylar.ide.ResourceStructureBridge"/>
-         </extension>
+	<extension point="org.eclipse.mylar.core.context">
+		<structureBridge
+		      class="org.eclipse.mylar.xml.ant.AntStructureBridge"
+		      name="Ant Structure Bridge"
+		      parent="org.eclipse.mylar.ide.ResourceStructureBridge"/>
+		<structureBridge
+		      class="org.eclipse.mylar.xml.pde.PdeStructureBridge"
+		      name="PDE Structure Bridge"
+		      parent="org.eclipse.mylar.ide.ResourceStructureBridge"/>
+	</extension>
+
+   <extension point="org.eclipse.mylar.ui.context">
+    <uiBridge
+          class="org.eclipse.mylar.xml.pde.PdeUiBridge"
+          contentType="plugin.xml"/>
+    <labelProvider
+          class="org.eclipse.mylar.xml.pde.PdeContextLabelProvider"
+          contentType="plugin.xml"/>
+    <uiBridge
+          class="org.eclipse.mylar.xml.ant.AntUiBridge"
+          contentType="build.xml"/>
+    <labelProvider
+          class="org.eclipse.mylar.xml.ant.AntContextLabelProvider"
+          contentType="build.xml"/>
+ </extension>
 </plugin>

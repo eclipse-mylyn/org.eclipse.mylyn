@@ -16,12 +16,10 @@ package org.eclipse.mylar.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -47,10 +45,10 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
         
         //HACK:
         AbstractRelationshipProvider provider = bridge.getProviders().get(0);
-        ImageDescriptor image = MylarUiPlugin.getDefault().getUiBridge(provider.getStructureKind()).getIconForRelationship(provider.getGenericId());
+//        ImageDescriptor image = MylarUiPlugin.getDefault().getContextLabelProvider(provider.getStructureKind()).getImage(provider);
 		setText(provider.getId().toString());
         setToolTipText(provider.getId().toString());
-		setImageDescriptor(image);
+//		setImageDescriptor(image);
 
 		setMenuCreator(this);	
 		

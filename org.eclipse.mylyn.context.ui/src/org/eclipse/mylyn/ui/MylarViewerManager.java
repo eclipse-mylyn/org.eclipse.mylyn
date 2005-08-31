@@ -74,7 +74,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		}
         IMylarContextNode activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
-            MylarUiPlugin.getDefault().getUiBridge(activeNode.getStructureKind()).open(activeNode);
+            MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentKind()).open(activeNode);
         }
         refreshViewers();
     }
@@ -134,7 +134,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 								Object objectToRefresh = null;
 								for (IMylarContextNode node : nodesToRefresh) {
 									if (node != null) {
-										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
 										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle());
 										if (node.getDegreeOfInterest().getValue() <= 0) {
 											objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
@@ -161,7 +161,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     } 
 
     public void nodeDeleted(IMylarContextNode node) {
-    	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+    	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
 		IMylarContextNode parent = MylarPlugin.getContextManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
     	ArrayList<IMylarContextNode> toRefresh = new ArrayList<IMylarContextNode>();
     	

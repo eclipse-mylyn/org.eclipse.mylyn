@@ -17,17 +17,13 @@ package org.eclipse.mylar.core;
 /**
  * @author Mik Kersten
  */
-public interface IMylarContextEdge {
-
-    public abstract IMylarContextNode getTarget();
-
-    public abstract IDegreeOfInterest getDegreeOfInterest();
+public interface IMylarContextEdge extends IMylarContextElement {
 
     public abstract String getLabel();
-
+    
     public abstract String getRelationshipHandle();
-
-    public abstract String getStructureKind();
+    
+    public abstract IMylarContextNode getTarget();
 
     public abstract IMylarContextNode getSource();
 

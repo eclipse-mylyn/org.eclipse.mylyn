@@ -23,9 +23,10 @@ import org.eclipse.mylar.core.MylarPlugin;
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ContextExtensionPointReader {
+public class CoreExtensionPointReader {
+	
 	private static boolean extensionsRead = false;
-	private static ContextExtensionPointReader thisReader = new ContextExtensionPointReader();
+	private static CoreExtensionPointReader thisReader = new CoreExtensionPointReader();
 	
 	// read the extensions and load the required plugins
 	public static void initExtensions() {

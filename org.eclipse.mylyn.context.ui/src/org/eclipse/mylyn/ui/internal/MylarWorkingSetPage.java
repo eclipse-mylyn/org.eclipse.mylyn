@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

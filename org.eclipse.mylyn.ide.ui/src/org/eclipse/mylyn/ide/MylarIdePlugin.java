@@ -14,10 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
-import org.eclipse.mylar.ide.ui.ResourceUiBridge;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -43,7 +41,7 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
             public void run() {
                 MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
                 MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
-                MylarUiPlugin.getDefault().addAdapter(ResourceStructureBridge.EXTENSION, new ResourceUiBridge());
+//                MylarUiPlugin.getDefault().addAdapter(ResourceStructureBridge.EXTENSION, new ResourceUiBridge());
                 
                 if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
                 if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();

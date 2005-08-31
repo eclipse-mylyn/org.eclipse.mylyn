@@ -11,7 +11,7 @@
 /*
  * Created on Apr 6, 2005
   */
-package org.eclipse.mylar.xml.pde.ui;
+package org.eclipse.mylar.xml.pde;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -24,8 +24,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -34,9 +32,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
-import org.eclipse.mylar.xml.XmlReferencesProvider;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
 import org.eclipse.pde.internal.ui.editor.ISortableContentOutlinePage;
 import org.eclipse.pde.internal.ui.editor.PDEFormEditor;
@@ -57,9 +53,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 public class PdeUiBridge implements IMylarUiBridge {
 
-    protected PdeNodeLabelProvider labelProvider = new PdeNodeLabelProvider();
-    
-    private TreeViewerListener treeSelectionChangedListener;
+	private TreeViewerListener treeSelectionChangedListener;
     
     public PdeUiBridge(){
     	treeSelectionChangedListener = new TreeViewerListener();
@@ -135,10 +129,6 @@ public class PdeUiBridge implements IMylarUiBridge {
             }
         }
         return null;
-    }
-
-    public ILabelProvider getLabelProvider() {
-        return labelProvider;
     }
 
     public void close(IMylarContextNode node) {
@@ -259,14 +249,6 @@ public class PdeUiBridge implements IMylarUiBridge {
         
     }
 
-    public ImageDescriptor getIconForRelationship(String relationshipHandle) {
-        return MylarImages.EDGE_REF_XML;
-    }
-
-    public String getNameForRelationship(String relationshipHandle) {
-        return XmlReferencesProvider.NAME;        
-    }
-    
     /**
      * Class to listen to the tree views to attempt to refresh them more
      * frequently to keep the ui model consistant with the user selections

@@ -28,8 +28,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.mylar.core.internal.ContextExtensionPointReader;
+import org.eclipse.mylar.core.internal.CoreExtensionPointReader;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
 import org.eclipse.ui.IStartup;
@@ -61,6 +62,8 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     
     private List<AbstractSelectionMonitor> selectionMonitors = new ArrayList<AbstractSelectionMonitor>();
     private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
+    
+    private List<MylarWorkingSetUpdater> workingSetUpdaters = null; 
     
     /**
      * TODO: this could be merged with context interaction events rather than
@@ -196,7 +199,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
         
 
     	if (contextManager == null) contextManager = new MylarContextManager();
-        ContextExtensionPointReader.initExtensions();
+        CoreExtensionPointReader.initExtensions();
     }
 
     /**
@@ -449,5 +452,19 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	
 	public List<IInteractionEventListener> getInteractionListeners() {
 		return interactionListeners;
+	}
+	
+	public void addWorkingSetUpdater(MylarWorkingSetUpdater updater) {
+		if(workingSetUpdaters == null)
+			workingSetUpdaters = new ArrayList<MylarWorkingSetUpdater>();
+		workingSetUpdaters.add(updater);
+		MylarPlugin.getContextManager().addListener(updater);
+	}
+
+	public MylarWorkingSetUpdater getWorkingSetUpdater() {
+		if(workingSetUpdaters == null)
+			return null;
+		else
+			return workingSetUpdaters.get(0);
 	}
 }

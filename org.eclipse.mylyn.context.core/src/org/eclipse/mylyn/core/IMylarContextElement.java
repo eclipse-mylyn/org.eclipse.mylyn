@@ -11,25 +11,13 @@
 
 package org.eclipse.mylar.core;
 
-import java.util.Collection;
-
-import org.eclipse.mylar.core.internal.MylarContextEdge;
-
-
 /**
  * @author Mik Kersten
  */
-public interface IMylarContextNode extends IMylarContextElement {
-       
-    public abstract String getElementHandle();
-    
-    public abstract void setElementHandle(String elementHandle);
-   
-    public abstract IMylarContext getContext();
-    
-    public abstract Collection<MylarContextEdge> getEdges();
-        
-    public abstract MylarContextEdge getEdge(String targetHandle);
+public interface IMylarContextElement {
 
-    public abstract void clearEdges();
+    public abstract IDegreeOfInterest getDegreeOfInterest();
+
+    public abstract String getContentKind();
+	
 }

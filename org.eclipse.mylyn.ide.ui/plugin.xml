@@ -63,4 +63,13 @@
 	  		enablesFor="*"/>
 	 </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.mylar.ui.context">
+      <uiBridge
+            class="org.eclipse.mylar.ide.ui.ResourceUiBridge"
+            contentType="*"/>
+      <labelProvider
+            class="org.eclipse.mylar.ide.ui.ResourceContextLabelProvider"
+            contentType="*"/>
+   </extension>
 </plugin>

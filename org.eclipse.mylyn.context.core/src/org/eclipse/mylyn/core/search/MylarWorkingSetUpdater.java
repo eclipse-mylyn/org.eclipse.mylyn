@@ -8,18 +8,17 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.ui.internal;
+package org.eclipse.mylar.core.search;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -34,7 +33,7 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
 	
 	public MylarWorkingSetUpdater(){
-		MylarUiPlugin.getDefault().addWorkingSetUpdater(this);
+		MylarPlugin.getDefault().addWorkingSetUpdater(this);
 	}
 	
 	public void add(IWorkingSet workingSet) {
@@ -119,7 +118,7 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 //		IMylarContext t = MylarPlugin.getContextManager().getActiveContext();
 		for(IMylarContextNode node: MylarPlugin.getContextManager().getActiveContextResources()){
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
 
 			// HACK comparing extension to string
 			// No need to add bugzilla resources to the taskscape search...really slow and eclipese doesn't know about them

@@ -167,7 +167,7 @@ public class MylarContextManager {
 
 	private void checkForLandmarkDelta(float previousInterest, IMylarContextNode node) {
 		// TODO: don't call interestChanged if it's a landmark?
-    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
     	if (bridge.canBeLandmark(node.getElementHandle())) {
     		if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
     			for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
@@ -186,7 +186,7 @@ public class MylarContextManager {
         float propagatedIncrement = node.getDegreeOfInterest().getValue() - previousInterest + decayOffset;
 //        float propagatedIncrement = scalingFactors.getParentPropagationIncrement(level);
       
-        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
                 
         String parentHandle = adapter.getParentHandle(node.getElementHandle());
         if (parentHandle != null) {
@@ -430,7 +430,7 @@ public class MylarContextManager {
 		List<IMylarContextNode> allLandmarks = activeContext.getLandmarks();
 		List<IMylarContextNode> acceptedLandmarks = new ArrayList<IMylarContextNode>();
 		for (IMylarContextNode node : allLandmarks) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getStructureKind());
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
 			// XXX very very very expensive
             if (bridge.canBeLandmark(node.getElementHandle())) {
             	acceptedLandmarks.add(node);
@@ -443,7 +443,7 @@ public class MylarContextManager {
         Set<IMylarContextNode> interestingFiles = new HashSet<IMylarContextNode>();
         List<IMylarContextNode> allIntersting = context.getInteresting();
         for (IMylarContextNode node : allIntersting) {
-            if (MylarPlugin.getDefault().getStructureBridge(node.getStructureKind()).isDocument(node.getElementHandle())) {       
+            if (MylarPlugin.getDefault().getStructureBridge(node.getContentKind()).isDocument(node.getElementHandle())) {       
                 interestingFiles.add(node);
             }
         }
