@@ -101,6 +101,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
                     }
                 }
                 gathered = true;
+                BugzillaReferencesProvider.this.searchCompleted(node);
             }
 
 			public boolean resultsGathered() {
