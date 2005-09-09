@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-
 /**
  * @author Mik Kersten
  */
@@ -39,16 +38,13 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
         
 	public ToggleRelationshipProviderAction(IMylarStructureBridge bridge) {
 		super();
-		
         this.bridge = bridge;
-//        this.prefId = PREFIX + '.' + provider.getId().toString();
-        
-        //HACK:
+    
+        // HACK:
         AbstractRelationshipProvider provider = bridge.getProviders().get(0);
-//        ImageDescriptor image = MylarUiPlugin.getDefault().getContextLabelProvider(provider.getStructureKind()).getImage(provider);
 		setText(provider.getId().toString());
         setToolTipText(provider.getId().toString());
-//		setImageDescriptor(image);
+        setImageDescriptor(MylarPlugin.getDefault().getActiveSearchIcon(bridge));
 
 		setMenuCreator(this);	
 		
@@ -57,9 +53,6 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 		
 		if(degreeOfSeparation > 0)
 			run();
-		
-//		boolean checked= MylarUiPlugin.getPrefs().getBoolean(prefId); 
-//		valueChanged(checked, true); 
 	}   
 	 
 	@Override

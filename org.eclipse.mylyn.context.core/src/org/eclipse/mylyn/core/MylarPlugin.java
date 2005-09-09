@@ -24,11 +24,16 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.mylar.core.internal.CoreExtensionPointReader;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.core.util.DateUtil;
@@ -50,6 +55,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 	public static final String ELEMENT_STRUCTURE_BRIDGE_CLASS = "class";
 	public static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
+	public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon";
 	
 	public static final String CONTENT_TYPE_ANY = "*";
 		
@@ -58,7 +64,8 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     	+ "For details on this error please open the PDE Runtime -> Error Log view"; 
 
 	private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
-        
+    private Map<IMylarStructureBridge, ImageDescriptor> activeSearchIcons = new HashMap<IMylarStructureBridge, ImageDescriptor>();
+	
     private IMylarStructureBridge defaultBridge = null;
     
     private List<AbstractSelectionMonitor> selectionMonitors = new ArrayList<AbstractSelectionMonitor>();
@@ -184,7 +191,6 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
                         + File.separator
                         + MYLAR_DIR_NAME);
                 if (contextManager == null) contextManager = new MylarContextManager();
-            	CoreExtensionPointReader.initExtensions();
             }
         });
 	}
@@ -195,6 +201,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+    	CoreExtensionPointReader.initExtensions();
     }
 
     /**
@@ -313,7 +320,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     }
 
     public Map<String, IMylarStructureBridge> getStructureBridges() {
-			return bridges;
+		return bridges;
 	}
     
     /**
@@ -335,6 +342,14 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 //            }
     }
 
+    private void setActiveSearchIcon(IMylarStructureBridge bridge, ImageDescriptor descriptor) {
+    	activeSearchIcons.put(bridge, descriptor);
+    }
+    
+    public ImageDescriptor getActiveSearchIcon(IMylarStructureBridge bridge) {
+    	return activeSearchIcons.get(bridge);
+    }
+    
     /**
      * TODO: cache this to improve performance?
      * 
@@ -360,13 +375,13 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
         }
     }
 
-    public void internalAddBridge(IMylarStructureBridge bridge) {
+    private void addBridge(IMylarStructureBridge bridge) {
     	if(bridge.getProviders() != null){
     		for(AbstractRelationshipProvider provider: bridge.getProviders()){
     			getContextManager().addListener(provider);
     		}
     	}
-        this.bridges.put(bridge.getResourceExtension(), bridge);
+        bridges.put(bridge.getResourceExtension(), bridge);
         if (bridge.getResourceExtension().equals(CONTENT_TYPE_ANY)) defaultBridge = bridge;
     }
     
@@ -462,5 +477,62 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 			return null;
 		else
 			return workingSetUpdaters.get(0);
+	}
+	
+	static class CoreExtensionPointReader {
+		
+		private static boolean extensionsRead = false;
+		private static CoreExtensionPointReader thisReader = new CoreExtensionPointReader();
+		
+		// read the extensions and load the required plugins
+		public static void initExtensions() {
+			// code from "contributing to eclipse" with modifications for deprecated code
+			if(!extensionsRead){
+				IExtensionRegistry registry = Platform.getExtensionRegistry();
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarPlugin.EXTENSION_ID_CONTEXT);
+				IExtension[] extensions = extensionPoint.getExtensions();
+				for(int i = 0; i < extensions.length; i++) {
+					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+					for(int j = 0; j < elements.length; j++){
+						if(elements[j].getName().compareTo(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE) == 0){
+							readBridge(elements[j]);
+						} 
+					}
+				}
+				extensionsRead = true;
+			}
+		}
+
+		private static void readBridge(IConfigurationElement element) {
+			try{
+				Object object = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_CLASS);
+				if (object instanceof IMylarStructureBridge) {
+					IMylarStructureBridge bridge = (IMylarStructureBridge)object;
+					MylarPlugin.getDefault().addBridge(bridge);
+					if (element.getAttribute(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
+						Object parent = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_PARENT);
+						if (parent instanceof IMylarStructureBridge) {
+							((IMylarStructureBridge)bridge).setParentBridge(((IMylarStructureBridge)parent));
+						} else {
+							MylarPlugin.log("Could not load parent bridge: " + parent.getClass().getCanonicalName() + " must implement " + IMylarStructureBridge.class.getCanonicalName(), thisReader);	
+						}
+					}
+//					Object icon = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
+					String iconPath = element.getAttribute(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
+					if (iconPath != null) {
+						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getNamespace(), iconPath);
+						if (descriptor != null) {
+							MylarPlugin.getDefault().setActiveSearchIcon(bridge, descriptor);
+						}
+//						System.err.println(">>> " + );
+//						System.err.println(">>>>>>>>" + icon);
+					}
+				} else {
+					MylarPlugin.log("Could not load bridge: " + object.getClass().getCanonicalName() + " must implement " + IMylarStructureBridge.class.getCanonicalName(), thisReader);	
+				}
+			} catch (CoreException e){
+				MylarPlugin.log(e, "Could not load bridge extension");
+			}
+		}
 	}
 }

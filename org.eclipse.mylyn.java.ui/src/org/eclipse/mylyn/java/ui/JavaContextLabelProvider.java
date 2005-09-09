@@ -25,6 +25,7 @@ import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.JavaStructureBridge;
+import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.search.AbstractJavaRelationshipProvider;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
@@ -78,17 +79,17 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
 	
     private ImageDescriptor getIconForRelationship(String relationshipHandle) {
     	if (relationshipHandle.equals(AbstractJavaRelationshipProvider.ID_GENERIC)) {
-            return MylarImages.EDGE_REF_JAVA; 
+            return MylarImages.EDGE_REFERENCE; 
         } else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
-            return MylarImages.EDGE_REF_JAVA; 
+            return MylarImages.EDGE_REFERENCE; 
         } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
             return MylarImages.EDGE_INHERITANCE; 
         } else if (relationshipHandle.equals(JUnitReferencesProvider.ID)) {
-            return MylarImages.EDGE_REF_JUNIT; 
+            return MylarJavaPlugin.EDGE_REF_JUNIT; 
         } else if (relationshipHandle.equals(JavaWriteAccessProvider.ID)) {
-            return MylarImages.EDGE_WRITE; 
+            return MylarImages.EDGE_ACCESS_WRITE; 
         } else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
-            return MylarImages.EDGE_READ; 
+            return MylarImages.EDGE_ACCESS_READ; 
         } else {
             return null;
         }

@@ -185,11 +185,11 @@ public class ActiveSearchView extends ViewPart {
         fillLocalToolBar(bars.getToolBarManager());
     }
 
-    public void resetProviders() {
-    	fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
-		getViewSite().getActionBars().getToolBarManager().update(true);
-		viewer.refresh();     
-    }
+//    public void resetProviders() {
+//    	fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
+//		getViewSite().getActionBars().getToolBarManager().update(true);
+//		viewer.refresh();     
+//    }
     
     private void fillLocalPullDown(IMenuManager manager) {
 
@@ -213,7 +213,6 @@ public class ActiveSearchView extends ViewPart {
             }
         }
         IAction stopAction = new Action(){
-
 			@Override
 			public void run() {
 				Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();

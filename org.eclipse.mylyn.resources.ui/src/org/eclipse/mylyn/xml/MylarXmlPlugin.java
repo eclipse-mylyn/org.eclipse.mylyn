@@ -25,6 +25,8 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarXmlPlugin extends AbstractUIPlugin { 
 
+	public static ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
+	
 	private static MylarXmlPlugin plugin;
 	private ResourceBundle resourceBundle;
 	

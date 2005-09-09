@@ -52,6 +52,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
     public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
     
+	public static ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
+    
 	public MylarJavaPlugin() {
 		super();
 		plugin = this;

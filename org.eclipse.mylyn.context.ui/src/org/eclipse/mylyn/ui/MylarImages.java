@@ -28,8 +28,8 @@ public class MylarImages {
 
     private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
      
-	private static final String T_ELCL = "elcl16";
-	private static final String T_TOOL = "etool16";
+	public static final String T_ELCL = "elcl16";
+	public static final String T_TOOL = "etool16";
 	private static final URL baseURL = MylarUiPlugin.getDefault().getBundle().getEntry("/icons/");
 	
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
@@ -69,27 +69,30 @@ public class MylarImages {
     public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
 	    
     public static ImageDescriptor EDGE_INHERITANCE = create(T_ELCL, "edge-inheritance.gif"); 
-    public static ImageDescriptor EDGE_REF_JAVA = create(T_ELCL, "edge-ref-java.gif"); 
-    public static ImageDescriptor EDGE_READ = create(T_ELCL, "edge-read.gif");
-    public static ImageDescriptor EDGE_WRITE = create(T_ELCL, "edge-write.gif");
-    public static ImageDescriptor EDGE_REF_BUGZILLA = create(T_ELCL, "edge-ref-bug.gif"); 
-    public static ImageDescriptor EDGE_REF_XML = create(T_ELCL, "edge-ref-xml.gif"); 
-    public static ImageDescriptor EDGE_REF_JUNIT = create(T_ELCL, "edge-ref-junit.gif"); 
+    public static ImageDescriptor EDGE_REFERENCE = create(T_ELCL, "edge-reference.gif"); 
+    public static ImageDescriptor EDGE_ACCESS_READ = create(T_ELCL, "edge-read.gif");
+    public static ImageDescriptor EDGE_ACCESS_WRITE = create(T_ELCL, "edge-write.gif");
+//    public static ImageDescriptor EDGE_REF_XML = create(T_ELCL, "edge-ref-xml.gif"); 
+//    public static ImageDescriptor EDGE_REF_JUNIT = create(T_ELCL, "edge-ref-junit.gif"); 
 
     public static final ImageDescriptor IMPORT_ZIP = create(T_ELCL, "import-zip.gif");
     public static final ImageDescriptor FILE_XML = create(T_ELCL, "file-xml.gif");
     public static final ImageDescriptor FILE_GENERIC = create(T_ELCL, "file_obj.gif");
     public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif");
-   
-	private static ImageDescriptor create(String prefix, String name) {
+
+	public static ImageDescriptor create(String prefix, String name) {
+		return create(prefix, name, baseURL);
+	}
+    
+	public static ImageDescriptor create(String prefix, String name, URL baseURL) {
 		try {
-			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
+			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name, baseURL));
 		} catch (MalformedURLException e) {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
 	}
 	
-	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
+	private static URL makeIconFileURL(String prefix, String name, URL baseURL) throws MalformedURLException {
 		if (baseURL == null)
 			throw new MalformedURLException();
 			

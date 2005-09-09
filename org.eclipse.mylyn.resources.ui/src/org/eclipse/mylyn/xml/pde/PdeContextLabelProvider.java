@@ -17,6 +17,7 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.mylar.xml.MylarXmlPlugin;
 import org.eclipse.mylar.xml.XmlReferencesProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -32,7 +33,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImage(IMylarContextEdge edge) {
-		return MylarImages.getImage(MylarImages.EDGE_REF_XML);
+		return MylarImages.getImage(MylarXmlPlugin.EDGE_REF_XML);
 	}
 
 	@Override
