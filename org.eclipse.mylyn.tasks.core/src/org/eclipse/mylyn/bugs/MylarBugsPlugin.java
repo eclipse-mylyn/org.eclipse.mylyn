@@ -26,11 +26,12 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarBugsPlugin extends AbstractUIPlugin {
 
+	public static ImageDescriptor EDGE_REF_BUGZILLA = getImageDescriptor("icons/elcl16/edge-ref-bug.gif");
     private static BugzillaSearchManager bridge = null;
     private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
 	private static MylarBugsPlugin plugin;
 	private BugzillaReportCache cache;
-		
+	
 	public MylarBugsPlugin() {
 		plugin = this;
 	}
@@ -92,11 +93,6 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
         }
         return bridge;
     }
-    
-    
-//    public BugzillaStructureBridge getStructureBridge() {
-//        return structureBridge;
-//    }
 
 	public static BugzillaReferencesProvider getReferenceProvider() {
 		return referencesProvider;

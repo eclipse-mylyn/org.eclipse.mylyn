@@ -5,6 +5,7 @@
    <extension
          point="org.eclipse.mylar.core.context">
       <structureBridge
+            activeSearchIcon="icons/elcl16/edge-ref-bug.gif"
             class="org.eclipse.mylar.bugs.BugzillaStructureBridge"
             name="Bugzilla Structure Bridge"/>
    </extension>

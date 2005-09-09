@@ -36,7 +36,7 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImage(IMylarContextEdge edge) {
-		return MylarImages.getImage(MylarImages.EDGE_REF_BUGZILLA); 
+		return MylarImages.getImage(MylarBugsPlugin.EDGE_REF_BUGZILLA); 
 	}
 
     /**
