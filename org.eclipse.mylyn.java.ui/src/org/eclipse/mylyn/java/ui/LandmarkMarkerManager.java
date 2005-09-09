@@ -138,7 +138,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
         }
     }
 
-    public void relationshipsChanged() {
+    public void edgesChanged(IMylarContextNode node) {
     	// don't care when the relationships changed
     }
 

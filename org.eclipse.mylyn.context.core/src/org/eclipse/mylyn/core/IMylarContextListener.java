@@ -70,5 +70,5 @@ public interface IMylarContextListener {
      */
     public void landmarkRemoved(IMylarContextNode node);    
     
-    public void relationshipsChanged();
+    public void edgesChanged(IMylarContextNode node);
 }

@@ -106,7 +106,7 @@ public class ContextManagerTest extends AbstractContextTest {
         public void modelUpdated() { 
         	// don't care about this event
         }
-        public void relationshipsChanged() {
+        public void edgesChanged(IMylarContextNode node) {
         	// don't care about this event
         }
         public void presentationSettingsChanging(UpdateKind kind) {

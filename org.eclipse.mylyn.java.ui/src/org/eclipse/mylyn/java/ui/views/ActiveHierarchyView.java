@@ -87,7 +87,7 @@ public class ActiveHierarchyView extends ViewPart {
             refreshHierarchy();
         }
 
-        public void relationshipsChanged() {
+        public void edgesChanged(IMylarContextNode node) {
         }
  
         public void presentationSettingsChanging(UpdateKind kind) {

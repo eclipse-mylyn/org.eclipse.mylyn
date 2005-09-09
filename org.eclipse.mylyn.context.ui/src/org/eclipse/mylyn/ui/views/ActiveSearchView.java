@@ -56,11 +56,11 @@ public class ActiveSearchView extends ViewPart {
     
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
-            refresh(node);
+//            refresh(node);
         }
         
         public void interestChanged(List<IMylarContextNode> nodes) {
-//            refresh(nodes.get(nodes.size()-1));
+            refresh(nodes.get(nodes.size()-1));
         }
 
         public void contextActivated(IMylarContext taskscape) {
@@ -75,36 +75,39 @@ public class ActiveSearchView extends ViewPart {
             refresh(null);
         }
         
-        public void landmarkAdded(IMylarContextNode element) { 
-            viewer.refresh(element, true);
-//            refresh(null);
+        public void landmarkAdded(IMylarContextNode node) { 
+            refresh(node);
         }
 
-        public void landmarkRemoved(IMylarContextNode element) { 
-            viewer.refresh(element, true);
-//            refresh(null);
+        public void landmarkRemoved(IMylarContextNode node) { 
+            refresh(node);
         }
 
-        public void relationshipsChanged() {
-            refresh(null);
+        public void edgesChanged(IMylarContextNode node) {
+            refresh(node);
         }
 
+        public void nodeDeleted(IMylarContextNode node) {
+        	refresh(null);
+        }
+        
         private void refresh(final IMylarContextNode node) {
+//        	System.err.println(">>> refreshing: " + node);
             Workbench.getInstance().getDisplay().syncExec(new Runnable() {
                 public void run() {
                     try {  
                         if (viewer != null && !viewer.getTree().isDisposed()) {
-                        	//TODO add back in for lazy refreshes
-//                            if (node != null) {
-//                                viewer.refresh(node);
-//                            } else {
-//                                viewer.refresh(); 
-//                            }
-                            viewer.refresh();
+                        	// TODO: make lazy
+                        	viewer.refresh();
+//                        	if (node != null) {
+//                        		viewer.refresh(node);
+//                        	} else {
+//                        		viewer.refresh();
+//                        	}
                             viewer.expandAll();
                         }
                     } catch (Throwable t) {
-                    	MylarPlugin.log(t, "refresh failed");
+                    	MylarPlugin.log(t, "active searchrefresh failed");
                     }
                 }
             });
@@ -114,9 +117,6 @@ public class ActiveSearchView extends ViewPart {
         	if(viewer != null && !viewer.getTree().isDisposed()){
         		if (kind == IMylarContextListener.UpdateKind.HIGHLIGHTER) viewer.refresh();
         	}
-        }
-
-        public void nodeDeleted(IMylarContextNode node) {
         }
     };
     
@@ -151,6 +151,7 @@ public class ActiveSearchView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        viewer.setUseHashlookup(true);
         viewer.setContentProvider(new MylarContextContentProvider(this.getViewSite(), true));
         viewer.setLabelProvider(new DecoratingLabelProvider(
                 new MylarContextLabelProvider(),

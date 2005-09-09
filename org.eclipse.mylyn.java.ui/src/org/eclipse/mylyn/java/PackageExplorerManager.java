@@ -105,7 +105,7 @@ public class PackageExplorerManager implements IMylarContextListener {
     	// ignore
     }
       
-    public void relationshipsChanged() {
+    public void edgesChanged(IMylarContextNode node) {
     	// ignore
     }
 }

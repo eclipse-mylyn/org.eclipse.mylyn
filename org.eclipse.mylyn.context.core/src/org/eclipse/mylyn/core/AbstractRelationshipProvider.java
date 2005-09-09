@@ -67,6 +67,10 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
 //        MylarPlugin.getTaskscapeManager().removeEdge(element, id);
     }
      
+    protected void searchCompleted(IMylarContextNode landmark) {
+    	MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
+    }
+    
     protected void incrementInterest(IMylarContextNode node, String elementKind, String elementHandle, int degreeOfSeparation) {
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 //    	((DegreeOfInterest)targetNode.getDegreeOfInterest()).addEvent(
@@ -77,7 +81,7 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     }
 
     /**
-     * For testing
+     * Public for testing
      */
 	public void createEdge(IMylarContextNode toNode, String elementKind, String targetHandle) {
 		CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(targetHandle);
@@ -133,7 +137,7 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     	// we don't care about this event
     }
 
-    public void relationshipsChanged() { 
+    public void edgesChanged(IMylarContextNode node) { 
     	// we don't care about this event
     }
     

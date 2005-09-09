@@ -90,7 +90,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
     	// don't are when a landmark is removed
     }
 
-    public void relationshipsChanged() { 
+    public void edgesChanged(IMylarContextNode node) { 
     	// don't care when relationships change
     }
 

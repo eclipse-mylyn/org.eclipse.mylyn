@@ -228,7 +228,6 @@ public class MylarContextManager {
 	public void removeListener(IMylarContextListener listener) {
 		listeners.remove(listener);
 	}
-
     
     public void removeAllListeners() {
         listeners.clear();
@@ -361,11 +360,14 @@ public class MylarContextManager {
         			landmark.clearEdges();         		}
 			}
         }
-        for (IMylarContextListener listener : listeners) listener.relationshipsChanged();
+        for (IMylarContextListener listener : listeners) listener.edgesChanged(null);
     }
 
+	public void notifyRelationshipsChanged(IMylarContextNode node) {
+		for (IMylarContextListener listener : listeners) listener.edgesChanged(node);
+	}
+    
     public void refreshRelatedElements() {
-//        throw new RuntimeException("unimplemented");
     	for(IMylarStructureBridge bridge: MylarPlugin.getDefault().getStructureBridges().values()){
     		if(bridge.getProviders() != null){
 		        for (AbstractRelationshipProvider provider : bridge.getProviders()) {

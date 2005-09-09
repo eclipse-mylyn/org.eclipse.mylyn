@@ -96,7 +96,7 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 		
 	}
 
-	public void relationshipsChanged() {
+	public void edgesChanged(IMylarContextNode node) {
 		// don't care about this relationship
 		
 	}

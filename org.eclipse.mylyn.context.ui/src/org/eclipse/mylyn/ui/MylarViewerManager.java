@@ -177,7 +177,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     	refreshViewers(node, true);
     }
 
-    public void relationshipsChanged() {
+    public void edgesChanged(IMylarContextNode node) {
     	// ignore
     }
 

@@ -92,7 +92,7 @@ public class NavigatorRefreshListener implements IMylarContextListener {
         refresh(node);
     }
 
-    public void relationshipsChanged() {
+    public void edgesChanged(IMylarContextNode node) {
         refresh(null);
     }
 }

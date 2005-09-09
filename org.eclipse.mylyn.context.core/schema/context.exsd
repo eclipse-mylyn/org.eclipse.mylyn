@@ -81,7 +81,7 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="activeSearchIcon" type="string" use="required">
+         <attribute name="activeSearchIcon" type="string">
             <annotation>
                <documentation>
                   

@@ -238,6 +238,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
                        incrementInterest(node, PdeStructureBridge.CONTENT_TYPE, handle, degreeOfSeparation);
                    }
                    gathered = true;
+                   XmlReferencesProvider.this.searchCompleted(node);
                 }
                
 

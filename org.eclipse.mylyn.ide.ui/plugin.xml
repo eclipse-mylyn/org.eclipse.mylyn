@@ -65,7 +65,7 @@
    </extension>
    <extension
          point="org.eclipse.mylar.core.context">
-      <structureBridge class="org.eclipse.mylar.ide.ResourceStructureBridge"/>
+      <structureBridge class="org.eclipse.mylar.ide.ResourceStructureBridge"/> 
    </extension>
    <extension
          point="org.eclipse.mylar.ui.context">

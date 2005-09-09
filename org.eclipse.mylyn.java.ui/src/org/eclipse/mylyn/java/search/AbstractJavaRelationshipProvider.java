@@ -200,6 +200,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
                         incrementInterest(node, JavaStructureBridge.CONTENT_TYPE, element.getHandleIdentifier(), degreeOfSeparation);
                 } 
                 gathered = true;
+                AbstractJavaRelationshipProvider.this.searchCompleted(node);
             }
 
 		
