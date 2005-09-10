@@ -16,13 +16,10 @@ import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction;
-import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
+public class MylarIdePlugin extends AbstractUIPlugin {
 
 //    private ResourceStructureBridge genericResourceBridge;
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
@@ -34,21 +31,22 @@ public class MylarIdePlugin extends AbstractUIPlugin implements IStartup {
 		plugin = this;
 	}
 
-    public void earlyStartup() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
-                MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
-                
-                if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
-                if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
-            }
-        });
-    }
+//    public void earlyStartup() {
+//        final IWorkbench workbench = PlatformUI.getWorkbench();
+//        workbench.getDisplay().asyncExec(new Runnable() {
+//            public void run() {
+//              
+//            }
+//        });
+//    }
 	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		  MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
+          MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
+          
+          if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
+          if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
 //        genericResourceBridge = new ResourceStructureBridge();//MylarPlugin.getDefault().isPredictedInterestEnabled());
 //        MylarPlugin.getDefault().setDefaultBridge(genericResourceBridge);
 	}

@@ -68,8 +68,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
         MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
         MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
         
-    	installEditorTracker(PlatformUI.getWorkbench());
-    
     	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
     		ApplyMylarToPackageExplorerAction.getDefault().update();
     		getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
@@ -82,6 +80,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 	        workbench.getDisplay().asyncExec(new Runnable() {
 	            public void run() {
+	            	installEditorTracker(PlatformUI.getWorkbench());
+	            	
 	            	MylarPreferenceWizard wizard= new MylarPreferenceWizard();
         			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 	        		if (wizard != null && shell != null && !shell.isDisposed()) { 

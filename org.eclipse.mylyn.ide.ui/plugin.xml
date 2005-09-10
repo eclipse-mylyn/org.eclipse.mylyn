@@ -2,10 +2,6 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension
-         name="Mylar IDE startup"
-         point="org.eclipse.ui.startup">
-   </extension> 
    
     <extension point="org.eclipse.ui.viewActions"> 
 	    	  <viewContribution 

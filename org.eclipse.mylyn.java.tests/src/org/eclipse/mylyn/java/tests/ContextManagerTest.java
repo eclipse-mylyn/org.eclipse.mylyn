@@ -70,7 +70,7 @@ public class ContextManagerTest extends AbstractContextTest {
     @Override
     protected void setUp() throws Exception {
     	assertNotNull(MylarJavaPlugin.getDefault());
-    	project1 = new TestProject("project-context");
+    	project1 = new TestProject(this.getClass().getSimpleName());
         p1 = project1.createPackage("p1");
         type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
         context = new MylarContext(taskId, scaling);
@@ -83,11 +83,11 @@ public class ContextManagerTest extends AbstractContextTest {
     
     @Override
     protected void tearDown() throws Exception {
+    	project1.dispose();
         context.reset(); 
         manager.getFileForContext(taskId).delete();
         manager.contextDeactivated(taskId, taskId);
         manager.contextDeleted(taskId, taskId);
-        project1.dispose();
     }
     
     class LandmarksModelListener implements IMylarContextListener {

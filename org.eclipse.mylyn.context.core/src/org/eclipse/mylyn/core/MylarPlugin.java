@@ -39,8 +39,6 @@ import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -183,26 +181,31 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	}
     
     public void earlyStartup() {
-    	final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                getPreferenceStore().setDefault(
-                        MYLAR_DIR, ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
-                        + File.separator
-                        + MYLAR_DIR_NAME);
-                if (contextManager == null) contextManager = new MylarContextManager();
-            }
-        });
+//    	final IWorkbench workbench = PlatformUI.getWorkbench();
+//        workbench.getDisplay().asyncExec(new Runnable() {
+//            public void run() {
+//                
+//            }
+//        });
 	}
     
     /**
-     * This method is called upon plug-in activation
+     * Initialization order is critical.
      */
 	@Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+        getPreferenceStore().setDefault(MYLAR_DIR, getDefaultStoreDirectory());
+       
+        if (contextManager == null) contextManager = new MylarContextManager();
     	CoreExtensionPointReader.initExtensions();
-    }
+	}
+
+	private String getDefaultStoreDirectory() {
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString()
+		+ File.separator
+		+ MYLAR_DIR_NAME;
+	}
 
     /**
      * This method is called when the plug-in is stopped
@@ -212,7 +215,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
         super.stop(context);
         INSTANCE = null;
         resourceBundle = null;
-        
+
         // Stop all running jobs when we exit if the plugin didn't do it
         Map<String, IMylarStructureBridge> bridges = getStructureBridges();
         for (String extension : bridges.keySet()) {
@@ -234,7 +237,10 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	}
 	
     public static MylarContextManager getContextManager() {
-    	if (contextManager == null) contextManager = new MylarContextManager();
+//    	if (INSTANCE == null) {
+//    		Thread.dumpStack();
+//    	}
+//    	if (contextManager == null) contextManager = new MylarContextManager();
         return contextManager;
     }
 
@@ -524,8 +530,6 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 						if (descriptor != null) {
 							MylarPlugin.getDefault().setActiveSearchIcon(bridge, descriptor);
 						}
-//						System.err.println(">>> " + );
-//						System.err.println(">>>>>>>>" + icon);
 					}
 				} else {
 					MylarPlugin.log("Could not load bridge: " + object.getClass().getCanonicalName() + " must implement " + IMylarStructureBridge.class.getCanonicalName(), thisReader);	

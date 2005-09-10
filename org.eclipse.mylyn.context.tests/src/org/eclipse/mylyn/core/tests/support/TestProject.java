@@ -111,8 +111,8 @@ public class TestProject {
     }
     
     public synchronized void dispose() throws CoreException { 
-        waitForIndexer();
     	project.delete(true, true, null);
+    	waitForIndexer();
     }
     
     private IFolder createBinFolder() throws CoreException { 
