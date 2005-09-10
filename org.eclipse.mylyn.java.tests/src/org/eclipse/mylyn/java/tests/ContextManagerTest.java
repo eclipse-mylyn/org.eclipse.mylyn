@@ -25,7 +25,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
@@ -34,16 +33,7 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.core.tests.support.TestProject;
-import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
-import org.eclipse.mylar.java.MylarJavaPlugin;
-import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
-import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -52,44 +42,8 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class ContextManagerTest extends AbstractContextTest {
- 
-	protected MylarContextManager manager = MylarPlugin.getContextManager();
-    protected JavaEditingMonitor monitor = new JavaEditingMonitor();
-    
-	private InterestFilter filter;
-	private PackageExplorerPart explorer;
-    
-    protected TestProject project1;
-    protected IPackageFragment p1;
-    protected IType type1;
-    protected String taskId = this.getClass().getCanonicalName();
-    protected MylarContext context;
-    protected ScalingFactors scaling = new ScalingFactors();
-     
-    @Override
-    protected void setUp() throws Exception {
-    	assertNotNull(MylarJavaPlugin.getDefault());
-    	project1 = new TestProject(this.getClass().getSimpleName());
-        p1 = project1.createPackage("p1");
-        type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
-        context = new MylarContext(taskId, scaling);
-        manager.contextActivated(context);
-        assertNotNull(MylarJavaPlugin.getDefault());
-
-        assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(
-    		JavaStructureBridge.class.getCanonicalName()) != -1);
-    }
-    
-    @Override
-    protected void tearDown() throws Exception {
-    	project1.dispose();
-        context.reset(); 
-        manager.getFileForContext(taskId).delete();
-        manager.contextDeactivated(taskId, taskId);
-        manager.contextDeleted(taskId, taskId);
-    }
-    
+public class ContextManagerTest extends AbstractJavaContextTest {
+ 	
     class LandmarksModelListener implements IMylarContextListener {
         public int numAdditions = 0;
         public int numDeletions = 0;
@@ -129,28 +83,6 @@ public class ContextManagerTest extends AbstractContextTest {
         }
     }
     
-	public void testInterestFilter() throws JavaModelException {
-		explorer = PackageExplorerPart.openInActivePerspective();
-    	assertNotNull(explorer);
-    	
-		ApplyMylarToPackageExplorerAction.getDefault().update(true);
-        filter = ApplyMylarToPackageExplorerAction.getDefault().getInterestFilter();
-        assertNotNull(filter);
-        
-        IMethod m1 = type1.createMethod("public void m10() { }", null, true, null);
-        
-        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
-		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-        manager.contextActivated(context);
-
-        monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
-
-        assertFalse(filter.select(explorer.getTreeViewer(), null, m1));
-        
-        filter.setExcludedMatches("*1*");
-        assertTrue(filter.select(explorer.getTreeViewer(), null, m1));
-	}
     
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
@@ -342,81 +274,4 @@ public class ContextManagerTest extends AbstractContextTest {
 	};
 
 }
-//    public void testDoiSelectionAndDecay() throws Exception {
-//        listener.selectionChanged(explorer, selectionFoo);
-//        
-//        DoiInfo info = model.getDoi(typeFoo);
-//        assertNotNull(info);
-//        assertEquals(
-//                TaskscapeManager.INCREMENT_SELECTION - TaskscapeManager.DECREMENET_DECAY, 
-//                model.getDoi(typeFoo).getValue(),
-//                .1f);
-//        
-//        listener.selectionChanged(explorer, selectionFoo);
-//        assertEquals(
-//                TaskscapeManager.INCREMENT_SELECTION - TaskscapeManager.DECREMENET_DECAY, 
-//                model.getDoi(typeFoo).getValue(),
-//                .1f);
-//        
-//        listener.selectionChanged(explorer, selectionBar);
-//        assertEquals(
-//                TaskscapeManager.INCREMENT_SELECTION - TaskscapeManager.DECREMENET_DECAY, 
-//                model.getDoi(typeBar).getValue(),
-//                .1f);
-//        
-//        
-//        listener.selectionChanged(explorer, selectionFoo);
-//        assertEquals(
-//                (2 * TaskscapeManager.INCREMENT_SELECTION) - (3 * TaskscapeManager.DECREMENET_DECAY), 
-//                model.getDoi(typeFoo).getValue(),
-//                .1f);
-//    }
-    
-//    public void testDoiElementPurge() {
-//        listener.selectionChanged(explorer, selectionBar); // reset last selection
-//        listener.selectionChanged(explorer, selectionBaz);  
-//        for (int i = 0; i < -1 * (TaskscapeManager.THRESHOLD_PURGE/TaskscapeManager.DECREMENET_DECAY); i += TaskscapeManager.INCREMENT_SELECTION) {
-//            listener.selectionChanged(explorer, selectionFoo);           
-//            listener.selectionChanged(explorer, selectionBar);
-//            assertNotNull(model.getDoi(typeFoo));
-//        }
-//        assertNull(model.getDoi(typeBaz));
-//    }
-    
-//	public void testSessions() throws IOException, FileNotFoundException {
-//	    usage.clearUsageDataAndStore();
-//	    UsageStore store = usage.getStore();
-//	    store.getUsageFile().delete();
-//	    
-//	    UsageSession session = new UsageSession();	    
-//	    session.getCardinalStatistic(UsageSession.NUM_SELECTIONS_PATHFINDER).increment();
-//	    session.getCardinalStatistic(UsageSession.NUM_SELECTIONS_PATHFINDER).increment();
-//	    
-//	    String startTime = session.getTemporalStatistic(UsageSession.START_TIME).getTime();
-//	    store.saveUsageData(session);
-//	    
-//	    List sessions = store.readUsageFile(store.getUsageFile());
-//	    assertEquals(1, sessions.size()); 
-//	    assertEquals(startTime, ((UsageSession)sessions.get(0)).getTemporalStatistic(UsageSession.START_TIME).getTime());
-//	    assertEquals(2, ((UsageSession)sessions.get(0)).getCardinalStatistic(UsageSession.NUM_SELECTIONS_PATHFINDER).getCount());
-//
-//	    
-//	    try {  
-//            Thread.sleep(1000);  // to ensure that time is 1s off
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//	    
-//	    UsageSession session2 = new UsageSession();
-//	    session2.getCardinalStatistic(UsageSession.NUM_SELECTIONS_PATHFINDER).increment();
-//	    String startTime2 = session2.getTemporalStatistic(UsageSession.START_TIME).getTime();
-//	    store.saveUsageData(session2);
-//	    
-//	    List bothSessions = store.readUsageFile(store.getUsageFile());
-//	    assertEquals(2, bothSessions.size());
-//	    assertEquals(((UsageSession)bothSessions.get(1)).getTemporalStatistic(UsageSession.START_TIME).getTime(), startTime2);
-//	     
-//	    TaskscapeManager manager = new TaskscapeManager();
-//	    UsageSession merged = usage.getGlobalMergedSession(); 
-//	    assertEquals(3, merged.getCardinalStatistic(UsageSession.NUM_SELECTIONS_PATHFINDER).getCount());
-//	}
+

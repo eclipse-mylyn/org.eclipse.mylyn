@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
@@ -48,6 +48,8 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	public static ApplyMylarToProblemsListAction INSTANCE;
     public TableViewer cachedProblemsTableViewer = null;
 	
+    private ViewerSorter defaultSorter = null;
+    
 	public ApplyMylarToProblemsListAction() {
 		super(new ProblemsListInterestFilter());
 		INSTANCE = this;
@@ -95,20 +97,31 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	}
 
 	@Override
-	public void update() {
+	public void update() {	
 		super.update();
 		cachedProblemsTableViewer = null;
         TableViewer viewer = (TableViewer)getViewer();
         if (viewer != null) {
             viewer.setLabelProvider(new ProblemsListLabelProvider(
                     (TableViewLabelProvider)viewer.getLabelProvider()));
-            viewer.setSorter(new ProblemsListDoiSorter());
         }
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+		// ignore
+	}
+
+	@Override
+	protected void installInterestFilter(StructuredViewer viewer) {
+		super.installInterestFilter(viewer);
+		defaultSorter = viewer.getSorter();
+		viewer.setSorter(new ProblemsListDoiSorter());
+	}
+
+	@Override
+	protected void uninstallInterestFilter(StructuredViewer viewer) {
+		super.uninstallInterestFilter(viewer);
+		viewer.setSorter(defaultSorter);
 	}
 }
 
@@ -148,36 +161,49 @@ class ProblemsListDoiSorter extends TableSorter {
     @Override
     protected int compare(Object obj1, Object obj2, int depth) {
         if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) { 
-        	ProblemMarker marker = (ProblemMarker)obj1;
-	        if (marker.getSeverity() == IMarker.SEVERITY_ERROR) {
-	            return super.compare(obj1, obj2, depth);
+        	ProblemMarker marker1 = (ProblemMarker)obj1;
+        	ProblemMarker marker2 = (ProblemMarker)obj1;
+	        if (marker1.getSeverity() == IMarker.SEVERITY_ERROR) {
+	        	return -1;
+	        } else if (marker2.getSeverity() < IMarker.SEVERITY_ERROR) {
+	        	return 1;
 	        } else {
-	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
-	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension());
-		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-		            return comparator.compare(node1, node2);
-	       	 	}
+	        	return 0;
 	        }
+//	        else if (marker2.getSeverity() == IMarker.SEVERITY_ERROR) {
+//	        	return 1;
+//	        }
+//	        	|| marker2.getSeverity() == IMarker.SEVERITY_ERROR) {
+//	        	System.err.println(">>> " + marker1);
+//	            return super.compare(obj1, obj2, depth);
+//	        } else {
+//	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
+//	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker1.getResource().getFileExtension());
+//		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
+//		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
+//		            return comparator.compare(node1, node2);
+//	       	 	}
+//	        }
         }
         return super.compare(obj1, obj2, depth);
     }
 
     @Override
     public int compare(Viewer viewer, Object obj1, Object obj2) {
-        if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) { 
-        	ProblemMarker marker = (ProblemMarker)obj1;
-	        if (marker.getSeverity() == IMarker.SEVERITY_ERROR) {
-	            return super.compare(viewer, obj1, obj2);
-	        } else {
-	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
-	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension());
-		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-		            return comparator.compare(node1, node2);
-	       	 	}
-	        }
-        }
-        return super.compare(viewer, obj1, obj2);
+    	return compare(obj1, obj2, 1);
+//        if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) { 
+//        	ProblemMarker marker = (ProblemMarker)obj1;
+//	        if (marker.getSeverity() == IMarker.SEVERITY_ERROR) {
+//	            return super.compare(viewer, obj1, obj2);
+//	        } else {
+//	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
+//	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension());
+//		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
+//		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
+//		            return comparator.compare(node1, node2);
+//	       	 	}
+//	        }
+//        }
+//        return super.compare(viewer, obj1, obj2);
     }
 }
