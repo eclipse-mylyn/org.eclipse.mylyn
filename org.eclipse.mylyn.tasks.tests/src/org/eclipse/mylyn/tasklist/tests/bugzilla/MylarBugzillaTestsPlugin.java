@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist.bugzilla.tests;
+package org.eclipse.mylar.tasklist.tests.bugzilla;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

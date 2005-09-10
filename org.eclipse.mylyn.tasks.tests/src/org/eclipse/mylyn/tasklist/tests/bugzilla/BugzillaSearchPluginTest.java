@@ -11,7 +11,7 @@
 /*
  * Created on Nov 19, 2004
  */
-package org.eclipse.mylar.tasklist.bugzilla.tests;
+package org.eclipse.mylar.tasklist.tests.bugzilla;
 
 import java.util.ArrayList;
 import java.util.List;

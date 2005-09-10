@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 ////Created on Oct 12, 2004
-package org.eclipse.mylar.tasklist.bugzilla.tests;
+package org.eclipse.mylar.tasklist.tests.bugzilla;
 
 import java.io.File;
 import java.io.FileReader;
