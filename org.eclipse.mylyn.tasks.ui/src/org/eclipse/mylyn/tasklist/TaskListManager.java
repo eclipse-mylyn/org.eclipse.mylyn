@@ -71,7 +71,9 @@ public class TaskListManager {
         		}
                 for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
         	}
-        	TaskListView.getDefault().getViewer().refresh();
+        	if (TaskListView.getDefault() != null) {
+        		TaskListView.getDefault().getViewer().refresh();
+        	}
             return true;
         } catch (Exception e) { 
         	MylarPlugin.log(e, "Could not read task list");
