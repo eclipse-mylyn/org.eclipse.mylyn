@@ -233,7 +233,7 @@
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar"> 
+           tooltip="Apply Mylar (interest filtering)"> 
   		</action> 
   		</viewContribution>
    </extension>

@@ -13,14 +13,10 @@ package org.eclipse.mylar.ide.ui.actions;
 
 import java.lang.reflect.Method;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.core.IMylarContextNode;
-import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
 import org.eclipse.mylar.ide.ui.ProblemsListLabelProvider;
@@ -28,15 +24,7 @@ import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.views.markers.internal.FieldFolder;
-import org.eclipse.ui.views.markers.internal.FieldLineNumber;
-import org.eclipse.ui.views.markers.internal.FieldMessage;
-import org.eclipse.ui.views.markers.internal.FieldResource;
-import org.eclipse.ui.views.markers.internal.FieldSeverity;
-import org.eclipse.ui.views.markers.internal.IField;
-import org.eclipse.ui.views.markers.internal.ProblemMarker;
 import org.eclipse.ui.views.markers.internal.ProblemView;
-import org.eclipse.ui.views.markers.internal.TableSorter;
 import org.eclipse.ui.views.markers.internal.TableView;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
@@ -49,17 +37,28 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
     public TableViewer cachedProblemsTableViewer = null;
 	
     private ViewerSorter defaultSorter = null;
+//    private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
     
 	public ApplyMylarToProblemsListAction() {
 		super(new ProblemsListInterestFilter());
 		INSTANCE = this;
+
+//		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+//		workspace.addResourceChangeListener(new IResourceChangeListener() {
+//	    	public void resourceChanged(IResourceChangeEvent event) {
+//	    		if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+//					ApplyMylarToProblemsListAction.this.verifySorterInstalled(
+//						ApplyMylarToProblemsListAction.this.cachedProblemsTableViewer);
+//	    		};
+//	    	}
+//		});
 	}
 	
     /**
      * HACK: changing accessibility
      */
 	@Override
-	protected StructuredViewer getViewer() {
+	public StructuredViewer getViewer() {
 		if (cachedProblemsTableViewer != null) return cachedProblemsTableViewer;
         try {
         	ProblemView view = getProblemView();
@@ -115,95 +114,18 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	protected void installInterestFilter(StructuredViewer viewer) {
 		super.installInterestFilter(viewer);
 		defaultSorter = viewer.getSorter();
-		viewer.setSorter(new ProblemsListDoiSorter());
+//		verifySorterInstalled(viewer);
 	}
 
+//	protected void verifySorterInstalled(StructuredViewer viewer) {
+//		if (viewer != null && viewer.getSorter() != interestSorter) {
+//			viewer.setSorter(interestSorter);
+//		}
+//	}
+	
 	@Override
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
 		super.uninstallInterestFilter(viewer);
 		viewer.setSorter(defaultSorter);
 	}
-}
-
-/**
- * TODO: refactor, not used
- */
-class ProblemsListDoiSorter extends TableSorter { 
-
-    // COPIED: from ProblemView
-    private final static int ASCENDING = TableSorter.ASCENDING;
-    private final static int DESCENDING = TableSorter.DESCENDING;
-    private final static int SEVERITY = 0;
-    private final static int DOI = 1;
-    private final static int DESCRIPTION = 2;
-    private final static int RESOURCE = 3;
-    private final static int[] DEFAULT_PRIORITIES = { 
-        SEVERITY, 
-        DOI, 
-        DESCRIPTION,
-        RESOURCE };
-    private final static int[] DEFAULT_DIRECTIONS = { 
-        DESCENDING, // severity
-        ASCENDING, // folder
-        ASCENDING, // resource
-        ASCENDING}; // location
-    private final static IField[] VISIBLE_FIELDS = { new FieldSeverity(),
-            new FieldMessage(), new FieldResource(), new FieldFolder(),
-            new FieldLineNumber() };
-    // END COPY
-    
-    public ProblemsListDoiSorter() {
-        super(VISIBLE_FIELDS, DEFAULT_PRIORITIES, DEFAULT_DIRECTIONS);
-    } 
-
-    protected InterestComparator<IMylarContextNode> comparator = new InterestComparator<IMylarContextNode>();
-    
-    @Override
-    protected int compare(Object obj1, Object obj2, int depth) {
-        if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) { 
-        	ProblemMarker marker1 = (ProblemMarker)obj1;
-        	ProblemMarker marker2 = (ProblemMarker)obj1;
-	        if (marker1.getSeverity() == IMarker.SEVERITY_ERROR) {
-	        	return -1;
-	        } else if (marker2.getSeverity() < IMarker.SEVERITY_ERROR) {
-	        	return 1;
-	        } else {
-	        	return 0;
-	        }
-//	        else if (marker2.getSeverity() == IMarker.SEVERITY_ERROR) {
-//	        	return 1;
-//	        }
-//	        	|| marker2.getSeverity() == IMarker.SEVERITY_ERROR) {
-//	        	System.err.println(">>> " + marker1);
-//	            return super.compare(obj1, obj2, depth);
-//	        } else {
-//	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
-//	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker1.getResource().getFileExtension());
-//		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-//		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-//		            return comparator.compare(node1, node2);
-//	       	 	}
-//	        }
-        }
-        return super.compare(obj1, obj2, depth);
-    }
-
-    @Override
-    public int compare(Viewer viewer, Object obj1, Object obj2) {
-    	return compare(obj1, obj2, 1);
-//        if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) { 
-//        	ProblemMarker marker = (ProblemMarker)obj1;
-//	        if (marker.getSeverity() == IMarker.SEVERITY_ERROR) {
-//	            return super.compare(viewer, obj1, obj2);
-//	        } else {
-//	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
-//	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension());
-//		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-//		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject((ProblemMarker)obj1, 0));
-//		            return comparator.compare(node1, node2);
-//	       	 	}
-//	        }
-//        }
-//        return super.compare(viewer, obj1, obj2);
-    }
 }

@@ -88,7 +88,6 @@ public class ResourceMarkerListener implements IResourceChangeListener {
 			rootDelta.accept(visitor);
 		} catch (CoreException e) {
 			MylarPlugin.log(e, "could not accet marker visitor");
-		}
-		
+		}	
 	}
 }

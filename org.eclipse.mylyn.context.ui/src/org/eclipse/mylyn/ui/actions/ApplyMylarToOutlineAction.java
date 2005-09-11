@@ -38,7 +38,7 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	 * TODO: a bit wierd how it gets the first viewer
 	 */
 	@Override
-	protected StructuredViewer getViewer() {
+	public StructuredViewer getViewer() {
 		if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
 		IEditorPart activeEditorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         List<TreeViewer> viewers = MylarUiPlugin.getDefault().getUiBridgeForEditor(activeEditorPart).getTreeViewers(activeEditorPart);

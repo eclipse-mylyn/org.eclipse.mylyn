@@ -31,7 +31,7 @@ public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 	}
 	
 	@Override
-	protected StructuredViewer getViewer() {
+	public StructuredViewer getViewer() {
 		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
         if (navigator != null) {
 			return navigator.getTreeViewer();

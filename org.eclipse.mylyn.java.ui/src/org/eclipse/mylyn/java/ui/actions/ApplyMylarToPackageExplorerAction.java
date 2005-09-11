@@ -45,7 +45,7 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	}
 	
 	@Override
-	protected StructuredViewer getViewer() {
+	public StructuredViewer getViewer() {
 		PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
 		if (part != null) {
 			return part.getTreeViewer();

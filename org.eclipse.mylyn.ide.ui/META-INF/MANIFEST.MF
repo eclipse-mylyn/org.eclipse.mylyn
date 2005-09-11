@@ -16,5 +16,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.ide,
- org.eclipse.mylar.ide.ui
+ org.eclipse.mylar.ide.ui,
+ org.eclipse.mylar.ide.ui.actions
 Bundle-ClassPath: mylar-ide.jar

@@ -14,6 +14,9 @@ package org.eclipse.mylar.xml.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+/**
+ * @author Mik Kersten
+ */
 public class AllXmlTests {
 
 	public static Test suite() {

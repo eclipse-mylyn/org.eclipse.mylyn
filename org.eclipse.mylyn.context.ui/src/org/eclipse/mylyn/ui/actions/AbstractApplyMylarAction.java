@@ -107,7 +107,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
     	}
 	}
 	
-	protected abstract StructuredViewer getViewer() ;
+    /**
+     * Public for testing
+     */
+	public abstract StructuredViewer getViewer() ;
 	
 	public abstract void refreshViewer();
 

@@ -78,7 +78,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 	}
 	
 	@Override
-	protected StructuredViewer getViewer() {
+	public StructuredViewer getViewer() {
 		return null;
 	}
 

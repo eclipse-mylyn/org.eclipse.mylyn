@@ -81,8 +81,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         public void contextDeactivated(IMylarContext taskscapeDeactivated) {
         	// don't care about this event
         }
-    }
-    
+    }    
     
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
