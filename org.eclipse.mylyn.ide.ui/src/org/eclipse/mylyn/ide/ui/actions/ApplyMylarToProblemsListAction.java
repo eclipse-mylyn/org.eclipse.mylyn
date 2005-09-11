@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.ui.ProblemsListDoiSorter;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
