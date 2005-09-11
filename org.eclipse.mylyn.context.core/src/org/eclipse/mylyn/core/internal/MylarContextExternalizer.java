@@ -27,7 +27,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ContextReader;
 import org.eclipse.mylar.core.util.ContextWriter;
 
-
 /**
  * @author Mik Kersten
  * 
@@ -51,7 +50,7 @@ public class MylarContextExternalizer {
             writer.writeContextToStream(taskscape);
             stream.close();
         } catch (IOException e) {
-        	MylarPlugin.log(e, "Could not write: " + file.getName());
+        	MylarPlugin.fail(e, "Could not write: " + file.getAbsolutePath(), true);
         }
     }
     
@@ -60,7 +59,7 @@ public class MylarContextExternalizer {
             if (!file.exists()) return null;
             return reader.readContext(file);
         } catch (Exception e) {
-        	MylarPlugin.log(e, "Could not read: " + file.getName());
+        	MylarPlugin.fail(e, "Could not read: " + file.getAbsolutePath(), true);
         }
         return null;
     }

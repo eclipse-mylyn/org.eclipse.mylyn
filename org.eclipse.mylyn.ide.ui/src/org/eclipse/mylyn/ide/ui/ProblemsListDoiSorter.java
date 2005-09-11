@@ -61,6 +61,7 @@ public class ProblemsListDoiSorter extends TableSorter {
     
     @Override
     protected int compare(Object obj1, Object obj2, int depth) {
+    	System.err.println(">>>>  " + obj1);
         if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) { 
         	ProblemMarker marker1 = (ProblemMarker)obj1;
         	ProblemMarker marker2 = (ProblemMarker)obj2;

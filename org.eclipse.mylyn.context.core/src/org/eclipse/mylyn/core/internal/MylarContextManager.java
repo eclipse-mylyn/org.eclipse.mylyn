@@ -48,7 +48,7 @@ public class MylarContextManager {
     
     private CompositeContext activeContext = new CompositeContext();
 	
-    private String contextStoreDirPath;
+//    private String contextStoreDirPath;
 	private boolean editorAutoCloseEnabled = false;
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
@@ -63,7 +63,7 @@ public class MylarContextManager {
     private static ScalingFactors scalingFactors = new ScalingFactors();
     
     public MylarContextManager() {
-        File storeDir = new File(MylarPlugin.getDefault().getUserDataDirectory());
+        File storeDir = new File(MylarPlugin.getDefault().getMylarDataDirectory());
         storeDir.mkdirs();
     }
 
@@ -337,11 +337,7 @@ public class MylarContextManager {
     }
 
     public File getFileForContext(String path) {
-        return new File(contextStoreDirPath + File.separator + path + FILE_EXTENSION);
-    }
-    
-    public String getMylarDir() {
-        return "" + contextStoreDirPath;
+        return new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + path + FILE_EXTENSION);
     }
     
     public IMylarContext getActiveContext() {
@@ -407,14 +403,13 @@ public class MylarContextManager {
     	MylarPlugin.log("> interaction history: " + activeContext.getActiveNode().getDegreeOfInterest().getEvents(), this);
     }
     
-    public void updateMylarDirContents(String prevDir) {    	    	    	
-    	this.contextStoreDirPath = MylarPlugin.getDefault().getUserDataDirectory();
+    public void updateMylarDirContents(String prevDir) { 
 		File prev = new File(prevDir);
 		if (!prev.isDirectory()) {
 			return;
 		}
 		File[] contents = prev.listFiles();
-		File curr = new File(contextStoreDirPath);
+		File curr = new File(MylarPlugin.getDefault().getMylarDataDirectory());
 		for (File f : contents) {
 			// XXX: remove hack below
 			if ( (f.getName().endsWith(".xml") && f.getName().startsWith("task")) || f.getName().startsWith("mylar")) {
