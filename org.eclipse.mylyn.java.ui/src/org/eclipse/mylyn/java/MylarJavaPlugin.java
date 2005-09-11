@@ -80,8 +80,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 	        workbench.getDisplay().asyncExec(new Runnable() {
 	            public void run() {
-	            	installEditorTracker(PlatformUI.getWorkbench());
-	            	
 	            	MylarPreferenceWizard wizard= new MylarPreferenceWizard();
         			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 	        		if (wizard != null && shell != null && !shell.isDisposed()) { 
@@ -95,6 +93,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
 		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
 		getPreferenceStore().setDefault(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
+		
+		installEditorTracker(PlatformUI.getWorkbench());
 		
 		savePluginPreferences();
 	}
@@ -118,7 +118,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			}
 		}
 		
-		// update editos that are already opene
+		// update editos that are already opened
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();
