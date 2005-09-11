@@ -666,8 +666,7 @@ public class TaskSummaryEditor extends EditorPart {
 					String[] ext = { "*.xml" };
 					dialog.setFilterExtensions(ext);
 
-					String mylarDir = MylarPlugin.getContextManager()
-							.getMylarDir()
+					String mylarDir = MylarPlugin.getDefault().getMylarDataDirectory()
 							+ "/";
 					mylarDir = mylarDir.replaceAll("\\\\", "/");
 					// mylarDir = formatPath(mylarDir);

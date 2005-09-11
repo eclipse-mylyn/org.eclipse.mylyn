@@ -217,7 +217,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 					MylarPlugin.getContextManager().updateMylarDirContents(prevDir);
 					getTaskListManager().updateTaskscapeReference(prevDir);
 					
-					String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
+					String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
 					getTaskListManager().setTaskListFile(new File(path));
 				}
 			} else if (event.getProperty().equals(MULTIPLE_ACTIVE_TASKS)) {
@@ -235,7 +235,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		initializeDefaultPreferences(getPrefs());
         externalizer = new TaskListExternalizer();  
     	
-        String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
+        String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
         File taskListFile = new File(path);
         taskListManager = new TaskListManager(taskListFile);
         taskListManager.addListener(CONTEXT_MANAGER_TASK_LISTENER);
@@ -460,18 +460,18 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	}
 		
 	public void createTaskListBackupFile() {
-		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
+		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
 		copy(taskListFile, new File(backup));
 	}
 	
 	public String getBackupFilePath(){
-		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
+		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		return path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
 	}
 	public void reverseBackup() {
-		String path = MylarPlugin.getDefault().getUserDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
+		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
 		copy(new File(backup), taskListFile);

@@ -181,13 +181,13 @@ public class TaskListManager {
 					
 					String absPath = d.getPath() + "/" + path + MylarTasklistPlugin.FILE_EXTENSION;
 					absPath = absPath.replaceAll("\\\\", "/");
-					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getUserDataDirectory() + "/", absPath);										
+					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getMylarDataDirectory() + "/", absPath);										
 					task.setPath(rel);
 					taskPropertyChanged(task, "Path");
 				} else {
 					String absPath = prevDir + "/" + task.getPath() + MylarTasklistPlugin.FILE_EXTENSION;
 					absPath = absPath.replaceAll("\\\\", "/");
-					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getUserDataDirectory(), absPath);
+					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getMylarDataDirectory(), absPath);
 					task.setPath(rel);
 					taskPropertyChanged(task, "Path");
 				}
