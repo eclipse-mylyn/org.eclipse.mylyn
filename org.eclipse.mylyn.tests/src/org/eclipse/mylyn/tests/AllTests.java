@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jun 10, 2005
-  */
+
 package org.eclipse.mylar.tests;
 
 import junit.framework.Test;
@@ -21,6 +19,9 @@ import org.eclipse.mylar.java.tests.AllJavaTests;
 import org.eclipse.mylar.tasklist.tests.AllTasklistTests;
 import org.eclipse.mylar.xml.tests.AllXmlTests;
 	
+/**
+ * @author Mik Kersten
+ */
 public class AllTests {
 
     public static Test suite() {
