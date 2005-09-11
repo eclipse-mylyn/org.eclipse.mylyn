@@ -40,7 +40,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	public static ApplyMylarToProblemsListAction INSTANCE;
     public TableViewer cachedProblemsTableViewer = null;
     private MarkerFilter defaultFilter = null;	
-    private ViewerSorter defaultSorter = null;
+//    private ViewerSorter defaultSorter = null;
     private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
     
 	public ApplyMylarToProblemsListAction() {
@@ -51,8 +51,16 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 //		workspace.addResourceChangeListener(new IResourceChangeListener() {
 //	    	public void resourceChanged(IResourceChangeEvent event) {
 //	    		if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
-//					ApplyMylarToProblemsListAction.this.verifySorterInstalled(
-//						ApplyMylarToProblemsListAction.this.cachedProblemsTableViewer);
+//	    			IWorkbench workbench = PlatformUI.getWorkbench();
+//	    			workbench.getDisplay().asyncExec(new Runnable() {
+//	    	            public void run() {
+//	    	            	StructuredViewer viewer = getViewer();
+//	    	            	verifySorterInstalled(viewer);
+//	    	            	if (viewer != null && viewer.getSorter() != null) {
+//	    	            		getViewer().getSorter().sort(getViewer(), ((TableViewer)getViewer()).getTable().getItems());
+//	    	            	}
+//	    	            }
+//	    	        });
 //	    		};
 //	    	}
 //		});
@@ -126,8 +134,8 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 
 	@Override
 	protected void installInterestFilter(StructuredViewer viewer) {
-		defaultSorter = viewer.getSorter();
-		viewer.setSorter(interestSorter);
+//		defaultSorter = viewer.getSorter();
+//		viewer.setSorter(interestSorter);
 		super.installInterestFilter(viewer); 
 //		verifySorterInstalled(viewer);
 		toggleMarkerFilter(false); 
@@ -136,7 +144,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	@Override
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
 		super.uninstallInterestFilter(viewer);
-		viewer.setSorter(defaultSorter);
+//		viewer.setSorter(defaultSorter);
 		toggleMarkerFilter(true);
 	}
 	
