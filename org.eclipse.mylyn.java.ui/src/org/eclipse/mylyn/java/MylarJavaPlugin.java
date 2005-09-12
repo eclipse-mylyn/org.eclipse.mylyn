@@ -95,6 +95,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
             	
                 MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
         		installEditorTracker(workbench);
+        		
+//        		 needed because Mylar source viewer configuration does not get initialized properly
+//        		resetActiveEditor();
             }
         });
 		savePluginPreferences();
@@ -107,6 +110,20 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		resourceBundle = null;
 	}
 
+//	private void resetActiveEditor() {
+//		IEditorPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//		if (part instanceof MylarCompilationUnitEditor) {
+//			MylarCompilationUnitEditor editor = (MylarCompilationUnitEditor)part;
+//			IJavaElement inputElement = editor.getInputJavaElement();
+//			editor.close(true);
+//			try {
+//				JavaUI.openInEditor(inputElement);
+//			} catch (Exception e) {
+//				MylarPlugin.fail(e, "Could not reset active editor", false);
+//			}
+//		}
+//	}
+    
 	private void installEditorTracker(IWorkbench workbench) {
 		editorTracker = new JavaEditorTracker();
 		workbench.addWindowListener(editorTracker);

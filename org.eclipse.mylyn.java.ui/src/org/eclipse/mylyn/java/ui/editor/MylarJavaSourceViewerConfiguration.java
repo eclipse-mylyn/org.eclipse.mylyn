@@ -42,16 +42,16 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class MylarJavaSourceViewerConfiguration extends
-        JavaSourceViewerConfiguration {
+/**
+ * @author Mik Kersten
+ */
+public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfiguration {
 
     public MylarJavaSourceViewerConfiguration(IColorManager colorManager,
             IPreferenceStore preferenceStore, ITextEditor editor,
             String partitioning) {
         super(colorManager, preferenceStore, editor, partitioning);
-        
     }
-
     
     /*
      * Copied from: @see JavaSourceViewerConfiguration#getContentAssistant(ISourceViewer)
@@ -59,7 +59,6 @@ public class MylarJavaSourceViewerConfiguration extends
     @Override
     public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
         if (getEditor() != null) {
-            
             ContentAssistant assistant= new ContentAssistant();
             assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
             

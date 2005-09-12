@@ -14,6 +14,7 @@
 package org.eclipse.mylar.java.ui.editor;
 
 
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
@@ -35,11 +36,15 @@ public class MylarCompilationUnitEditor extends CompilationUnitEditor {
                 JavaPlugin.getDefault().getJavaTextTools().getColorManager(), 
                 getPreferenceStore(), this, IJavaPartitions.JAVA_PARTITIONING));
     }
+
+    public IJavaElement getInputJavaElement() {
+    	return super.getInputJavaElement();
+    }
     
     @Override
     public void createPartControl(Composite parent) {
-        initializeEditor(); 
-        super.createPartControl(parent);
+    	initializeEditor(); 
+    	super.createPartControl(parent);
         
         JavaElementImageProvider prov = new JavaElementImageProvider();
         if (super.getInputJavaElement() != null) {
@@ -55,6 +60,5 @@ public class MylarCompilationUnitEditor extends CompilationUnitEditor {
 		Point size= JavaElementImageProvider.SMALL_SIZE;
 		MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image, MylarImages.MYLAR_OVERLAY, size);
 		setTitleImage(MylarImages.getImage(desc));
-
 	} 
 }

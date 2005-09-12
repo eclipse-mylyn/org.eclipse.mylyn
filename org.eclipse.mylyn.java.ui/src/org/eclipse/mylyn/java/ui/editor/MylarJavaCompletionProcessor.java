@@ -32,7 +32,6 @@ import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.ui.IEditorPart;
 
-
 /**
  * @author Mik Kersten
  * 
@@ -129,11 +128,4 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
         return null;
     } 
 }
-
-//M6 way of doing it:
-//info.getInfo(); // causes getMember() to be called;
-//Class infoClass = info.getClass();
-//Field field = infoClass.getDeclaredField("fMember");
-//field.setAccessible(true);   
-//member = (IMember)field.get(info);
 

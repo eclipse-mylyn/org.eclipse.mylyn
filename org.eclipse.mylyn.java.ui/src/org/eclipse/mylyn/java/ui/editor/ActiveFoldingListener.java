@@ -14,7 +14,6 @@
 package org.eclipse.mylar.java.ui.editor;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -30,7 +29,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.internal.Workbench;
-
 
 /**
  * @author Mik Kersten
