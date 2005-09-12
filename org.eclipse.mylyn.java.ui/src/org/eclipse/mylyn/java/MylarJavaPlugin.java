@@ -59,43 +59,44 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		plugin = this;
     }
 
+	/**
+	 * Startup order is critical.
+	 */
     @Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
         MylarPlugin.getContextManager().addListener(new PackageExplorerManager());
-
-        MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
         MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
-        
-    	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-    		ApplyMylarToPackageExplorerAction.getDefault().update();
-    		getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
-    	}
-    	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-    		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-    	}
-		
-		if(!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
-			final IWorkbench workbench = PlatformUI.getWorkbench();
-	        workbench.getDisplay().asyncExec(new Runnable() {
-	            public void run() {
-	            	MylarPreferenceWizard wizard= new MylarPreferenceWizard();
-        			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+
+		getPreferenceStore().setDefault(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
+        		
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+            	if(!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
+            		MylarPreferenceWizard wizard= new MylarPreferenceWizard();
+	    			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 	        		if (wizard != null && shell != null && !shell.isDisposed()) { 
 	        			WizardDialog dialog = new WizardDialog(shell, wizard);
 	        			dialog.create();
 	        			dialog.open();
+	        			getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
 	        		}
-	            }
-	        });
-		}
-		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
-		getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
-		getPreferenceStore().setDefault(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
-		
-		installEditorTracker(PlatformUI.getWorkbench());
-		
+            	}
+        		
+            	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+            		ApplyMylarToPackageExplorerAction.getDefault().update();
+            		getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+            	}
+            	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+            		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+            	}
+            	
+                MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
+        		installEditorTracker(workbench);
+            }
+        });
 		savePluginPreferences();
 	}
 

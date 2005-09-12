@@ -196,8 +196,8 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         getPreferenceStore().setDefault(MYLAR_DIR, getDefaultStoreDirectory());
-       
         if (contextManager == null) contextManager = new MylarContextManager();
+        
     	CoreExtensionPointReader.initExtensions();
 	}
 

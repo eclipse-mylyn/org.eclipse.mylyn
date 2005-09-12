@@ -77,7 +77,6 @@ public class TestProject {
     public IJavaProject getJavaProject() { 	
         return javaProject;
     }
-
         
 	public void build() throws CoreException, InvocationTargetException, InterruptedException {
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {

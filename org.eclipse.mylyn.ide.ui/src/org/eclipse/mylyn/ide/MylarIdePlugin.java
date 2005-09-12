@@ -16,6 +16,8 @@ import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -43,12 +45,16 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		  MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
-          MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
           
-          if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
-          if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
-//        genericResourceBridge = new ResourceStructureBridge();//MylarPlugin.getDefault().isPredictedInterestEnabled());
-//        MylarPlugin.getDefault().setDefaultBridge(genericResourceBridge);
+  		final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+                MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
+            	
+            	if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
+                if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
+            }
+        });
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -59,10 +65,6 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public static MylarIdePlugin getDefault() {
 		return plugin;
 	}
-
-//    public ResourceStructureBridge getGenericResourceBridge() {
-//        return genericResourceBridge;
-//    }
 	
 	/**
 	 * Returns an image descriptor for the image file at the given

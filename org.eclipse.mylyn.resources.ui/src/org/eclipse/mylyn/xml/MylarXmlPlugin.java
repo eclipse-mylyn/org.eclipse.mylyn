@@ -17,6 +17,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.xml.ant.AntEditingMonitor;
 import org.eclipse.mylar.xml.pde.PdeEditingMonitor;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -45,15 +47,13 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		        
-          //PDE
-//        MylarPlugin.getDefault().addBridge(pdeStructureBridge);
-        MylarPlugin.getDefault().getSelectionMonitors().add(new PdeEditingMonitor());
-//        MylarUiPlugin.getDefault().addAdapter(PdeStructureBridge.EXTENSION, pdeUiBridge);
-        
-        //ANT
-//        MylarPlugin.getDefault().addBridge(antStructureBridge);
-        MylarPlugin.getDefault().getSelectionMonitors().add(new AntEditingMonitor());
-//        MylarUiPlugin.getDefault().addAdapter(AntStructureBridge.EXTENSION,antUiBridge);
+  		final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+              MylarPlugin.getDefault().getSelectionMonitors().add(new PdeEditingMonitor());
+              MylarPlugin.getDefault().getSelectionMonitors().add(new AntEditingMonitor());            
+            }
+        });
 	}
 
 	/**

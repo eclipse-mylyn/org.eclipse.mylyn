@@ -121,7 +121,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 		super.update();
 		cachedProblemsTableViewer = null;
         TableViewer viewer = (TableViewer)getViewer();
-        if (viewer != null) {
+        if (viewer != null && !(viewer.getLabelProvider() instanceof ProblemsListLabelProvider)) {
             viewer.setLabelProvider(new ProblemsListLabelProvider(
                     (TableViewLabelProvider)viewer.getLabelProvider()));
         }
