@@ -2,7 +2,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <!--<toc label="Bugzilla Client" topic="docs/html/book.html"> -->
-<toc link_to="../org.eclipse.mylar.doc/toc.xml#moreTools" label="Bugzilla Client"> 
+<toc link_to="../org.eclipse.mylar.doc/toc.xml#tools" label="Bugzilla Client"> 
 	<topic label="Bugzilla Client" href="docs/html/book.html">
 	    <topic label="Server Configuration" href="docs/html/start/setup.html"/>
 		<topic label="New Bug Wizard" href="docs/html/start/bugWizard.html"/>

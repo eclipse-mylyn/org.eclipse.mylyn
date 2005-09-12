@@ -3,8 +3,9 @@
 
 <toc label="Mylar"> 
 	<anchor id="javaUi"/>
-	<anchor id="tasklist"/>
-	<anchor id="moreTools"/>
+	<topic label="Mylar Tools" href="doc/tools.html">
+		<anchor id="tools"/>
+	</topic>
 </toc>
 
 	
