@@ -70,7 +70,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     }
     
     public String getParentHandle(String handle) {
-        IJavaElement javaElement = JavaCore.create(handle);
+        IJavaElement javaElement = (IJavaElement)getObjectForHandle(handle);
         if (javaElement != null && javaElement.getParent() != null) {            
             return getHandleIdentifier(javaElement.getParent());
         } else {
@@ -79,7 +79,12 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     }
 
     public Object getObjectForHandle(String handle) {
-        return JavaCore.create(handle);
+    	try {
+    		return JavaCore.create(handle);
+    	} catch (Throwable t) {
+    		MylarPlugin.log("Could not create java element for handle: " + handle, this);
+    		return null;
+    	}
     }
     
     /**

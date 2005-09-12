@@ -262,7 +262,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
         buffer.append("] ");
         
         if (WorkbenchPlugin.getDefault() != null) {
-        	buffer.append(" version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
+        	buffer.append("version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
         }
 
         buffer.append(status.toString() + ", ");
