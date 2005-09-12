@@ -58,7 +58,7 @@ public class BugzillaHit implements IQueryHit {
 		if(hasCorrespondingActivatableTask()){
 			return task.getIcon();
 		} else {
-			return BugzillaImages.getImage(BugzillaImages.BUGZILLA_HIT);
+			return BugzillaImages.getImage(BugzillaImages.BUGZILLA_HIT_INCOMMING);
 		}
 	}
 

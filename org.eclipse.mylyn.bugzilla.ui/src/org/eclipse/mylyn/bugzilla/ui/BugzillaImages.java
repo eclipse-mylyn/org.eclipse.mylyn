@@ -64,6 +64,7 @@ public class BugzillaImages {
 	
 	public static final ImageDescriptor IMG_TOOL_ADD_TO_FAVORITES = create(T_ELCL, "bug-favorite.gif");
     public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
+    public static final ImageDescriptor BUG_HIT = create(T_ELCL, "bug-small.gif");
     public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
     public static final ImageDescriptor TASK_BUG = create(T_TOOL, "task-bug.gif");
     
@@ -73,10 +74,11 @@ public class BugzillaImages {
 	
 	public static final ImageDescriptor TASK_BUGZILLA = createWithOverlay(TASK_BUG, null);
     public static final ImageDescriptor TASK_BUGZILLA_INCOMMING = createWithOverlay(TASK_BUGZILLA, OVERLAY_INCOMMING);
-	public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = createWithOverlay(TASK_BUGZILLA, OVERLAY_CONFLICT);
+    public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = createWithOverlay(TASK_BUGZILLA, OVERLAY_CONFLICT);
 	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = createWithOverlay(TASK_BUGZILLA, OVERLAY_OUTGOING);
-	public static final ImageDescriptor BUGZILLA_HIT = createWithOverlay(BUG, null);
-	
+	public static final ImageDescriptor BUGZILLA_HIT = createWithOverlay(BUG_HIT, null);
+	public static final ImageDescriptor BUGZILLA_HIT_INCOMMING = createWithOverlay(BUGZILLA_HIT, OVERLAY_INCOMMING);
+    	
     public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
     public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif"); 
     public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
@@ -86,10 +88,6 @@ public class BugzillaImages {
     public static final ImageDescriptor REMOVE = create("", "remove.gif");
     public static final ImageDescriptor SELECT_ALL = create("", "selectAll.gif");
     public static final ImageDescriptor OPEN = create("", "openresult.gif");
-
-	
- 
-    
     
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
