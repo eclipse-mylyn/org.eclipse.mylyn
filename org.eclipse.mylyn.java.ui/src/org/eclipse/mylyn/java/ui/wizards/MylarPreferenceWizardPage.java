@@ -11,8 +11,8 @@
 package org.eclipse.mylar.java.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -27,7 +27,14 @@ import org.eclipse.swt.widgets.Label;
  */
 public class MylarPreferenceWizardPage extends WizardPage {
 
-	private static final String FIRST_USE = "If this is your first time using Mylar see:  Help -> Help Contents -> Mylar -> Overview";
+	private static final String FIRST_USE = 
+		"<html><body bgcolor=\"#ffffff\">" +
+		"<p>If this is your first time using Mylar <b>make sure to watch the </b>\n" +
+		"<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-03.html\">\n" +
+		"<b>5 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n" +
+		"Help-&gt;Help Contents.</p>" +
+		"</body></html>";
+	
 	private static final  String AUTO_FOLDING = "Turn interest-based automatic Java editor folding on";
 	private static final  String AUTO_CLOSE = "Close all editors automatically on task deactivation";
 	private static final  String WORKING_SET = "Add the \"active task context\" working set";
@@ -56,31 +63,14 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	public void createControl(Composite parent) {
 
-		Composite buttonComposite = new Composite(parent, SWT.NULL);
+		Composite containerComposite = new Composite(parent, SWT.NULL);
+		containerComposite.setLayout(new GridLayout());
+		
+		Composite buttonComposite = new Composite(containerComposite, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.makeColumnsEqualWidth = false;
 		buttonComposite.setLayout(layout);
-		
-//		removeInPlace = new Button(buttonComposite, SWT.CHECK);
-//		GridData gd = new GridData();
-//		removeInPlace.setLayoutData(gd);
-//		removeInPlace.setSelection(true);
-//		removeInPlace.addSelectionListener(new SelectionListener(){
-//
-//			public void widgetSelected(SelectionEvent e) {
-//				inPlace = removeInPlace.getSelection();
-//			}
-//
-//			public void widgetDefaultSelected(SelectionEvent e) {
-//				// don't care about this event
-//			}
-//		});
-//		
-//		Label label = new Label(buttonComposite, SWT.NONE);
-//		label.setText("Remove the mylar filter from the in-place outline view");
-//		gd = new GridData();
-//		label.setLayoutData(gd);
 		
 		setMylarEditorDefault = new Button(buttonComposite, SWT.CHECK);
 		GridData gd = new GridData();
@@ -167,12 +157,18 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		spacer = new Label(buttonComposite, SWT.NONE);
 		spacer = new Label(buttonComposite, SWT.NONE);
 		spacer.setText(" ");
-		label = new Label(buttonComposite, SWT.NONE);
-		label.setText(FIRST_USE);
-		label.setFont(MylarUiPlugin.BOLD);
-		gd = new GridData();
-		label.setLayoutData(gd);
-		setControl(buttonComposite);
+		
+		Composite browserComposite = new Composite(containerComposite, SWT.NULL);
+		browserComposite.setLayout(new GridLayout());
+		
+		Browser browser = new Browser(browserComposite, SWT.NONE);
+		browser.setText(FIRST_USE);
+        GridData browserLayout = new GridData(GridData.FILL_HORIZONTAL);
+        browserLayout.heightHint = 90;
+        browserLayout.widthHint = 600;
+        browser.setLayoutData(browserLayout);
+		
+		setControl(containerComposite);
 	}
 
 	public boolean isAutoFolding() {
