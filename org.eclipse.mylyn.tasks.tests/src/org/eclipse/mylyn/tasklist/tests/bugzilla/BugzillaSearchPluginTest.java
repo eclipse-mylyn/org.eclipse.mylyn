@@ -126,7 +126,6 @@ public class BugzillaSearchPluginTest extends TestCase{
 		assertTrue("listener was not added", lists.size() == 1);
 		
 		// display the time it took for the search
-//		System.err.println("Search Took About " + time + " seconds");
     	MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
 	 }
  
@@ -161,8 +160,6 @@ public class BugzillaSearchPluginTest extends TestCase{
 		assertTrue("Results not the right size", c.size() > 0); // TODO should be assertEquals on expected size
 		
 		// display the time it took for the search and the results returned
-//		System.err.println("Search Took About " + time + " seconds");
-//		System.err.println(c);
 		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
 
 	}
@@ -192,7 +189,6 @@ public class BugzillaSearchPluginTest extends TestCase{
 		
 		// perform the search
 		SearchPluginTestHelper.search(s, l);
-//		System.err.println("Search Took About " + time + " seconds");
 		
 		// do an inital search
 		assertTrue("No collectors returned", lists.size() != 0);
@@ -258,7 +254,6 @@ public class BugzillaSearchPluginTest extends TestCase{
 		
 		// perform the search
 		SearchPluginTestHelper.search(s, l);
-//		System.err.println("Search Took About " + time + " seconds");
 		
 		// do an inital search
 		assertTrue("No collectors returned", lists.size() != 0);
@@ -317,7 +312,6 @@ public class BugzillaSearchPluginTest extends TestCase{
 		
 		// perform the search
 		SearchPluginTestHelper.search(s, l);
-//		System.err.println("Search Took About " + time + " seconds");
 		
 		// do an inital search
 		assertTrue("No collectors returned", lists.size() != 0);
