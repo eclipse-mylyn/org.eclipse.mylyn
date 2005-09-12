@@ -92,7 +92,6 @@ public class ActiveSearchView extends ViewPart {
         }
         
         private void refresh(final IMylarContextNode node) {
-//        	System.err.println(">>> refreshing: " + node);
             Workbench.getInstance().getDisplay().syncExec(new Runnable() {
                 public void run() {
                     try {  

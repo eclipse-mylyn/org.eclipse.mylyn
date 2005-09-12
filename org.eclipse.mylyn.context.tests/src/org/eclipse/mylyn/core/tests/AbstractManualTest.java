@@ -42,7 +42,7 @@ public abstract class AbstractManualTest extends TestCase {
 						"JUnit Verification",
 						finalMsg);
 				} catch (Throwable t) {
-					System.err.println(t);
+					t.printStackTrace();
 				}
 			}
 		});

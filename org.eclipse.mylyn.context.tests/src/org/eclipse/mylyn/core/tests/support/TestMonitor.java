@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.AbstractSelectionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
-
 /**
  * @author Mik Kersten
  */
@@ -36,7 +35,6 @@ public class TestMonitor extends AbstractSelectionMonitor {
 
     public void handleElementSelection(IJavaElement selected) {
         selections.add(selected);
-        System.err.println("> got java element selection: " + selected);
     }
 
     protected void handleUnknownSelection(Object selectedObject) {
