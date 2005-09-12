@@ -497,7 +497,7 @@ public class OfflineView extends ViewPart {
 					bug.setOfflineState(true);
 		//			file.sort(OfflineReportsFile.lastSel);
 				}
-				OfflineView.checkWindow();
+//				OfflineView.checkWindow();
 				OfflineView.refreshView();
 			}
 		});
