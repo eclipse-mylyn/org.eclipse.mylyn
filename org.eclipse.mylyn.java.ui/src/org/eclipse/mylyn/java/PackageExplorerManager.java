@@ -10,17 +10,21 @@
  *******************************************************************************/
 package org.eclipse.mylar.java;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.java.ui.MembersFilter;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 
 /**
@@ -68,11 +72,22 @@ public class PackageExplorerManager implements IMylarContextListener {
 				if (packageExplorer != null && lastElement != null) { 
 					ISelection selection = packageExplorer.getTreeViewer().getSelection();
 					boolean suppressSelection = false;
+					boolean membersFilteredMode = false;
 					if (selection instanceof StructuredSelection) {
 						if (((StructuredSelection)selection).size() > 1) suppressSelection = true;
 					}
-					if (!suppressSelection) {
-						packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement), true);
+					for (ViewerFilter filter : Arrays.asList(packageExplorer.getTreeViewer().getFilters())) {
+						if (filter instanceof MembersFilter) membersFilteredMode = true;
+					}
+					if (!suppressSelection) { 
+						if (membersFilteredMode) {
+							if (lastElement instanceof IMember) {
+								packageExplorer.getTreeViewer().setSelection(new StructuredSelection(
+									((IMember)lastElement).getCompilationUnit()), true);
+							}
+						} else {
+							packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement), true);
+						}
 					}
 				}
     		}
