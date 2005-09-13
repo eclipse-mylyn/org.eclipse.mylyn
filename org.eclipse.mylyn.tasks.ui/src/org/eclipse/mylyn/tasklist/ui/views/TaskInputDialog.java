@@ -15,19 +15,18 @@ import java.util.Date;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.mylar.tasklist.contribution.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Ken Sueda
@@ -74,19 +73,17 @@ public class TaskInputDialog extends Dialog {
 				widgetSelected(e);
 			}
 		});
-			
-		Button button = new Button(composite, SWT.PUSH);
-		button.setText("Remind me");
-		button.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				DateChooserDialog dialog = new DateChooserDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());	    		    	
-				if (dialog.open() == Dialog.OK && dialog.getReminderDate() != null) {
-					reminderDate = dialog.getReminderDate().getTime();
-				} 
+			        
+        final DatePicker datePicker = new DatePicker(composite, SWT.NULL);	
+        datePicker.setDateText("<reminder>");
+		datePicker.addPickerSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent arg0) {
+				reminderDate = datePicker.getDate().getTime();
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}			
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// ignore
+			}
 		});
 		return composite;
 	}

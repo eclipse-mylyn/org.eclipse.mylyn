@@ -18,6 +18,7 @@ package org.eclipse.mylar.tasklist.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,7 +26,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -47,8 +47,8 @@ import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.RelatedLinks;
 import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.contribution.DatePicker;
 import org.eclipse.mylar.tasklist.internal.RelativePathUtil;
-import org.eclipse.mylar.tasklist.ui.views.DateChooserDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -91,7 +91,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
@@ -100,7 +99,9 @@ import org.eclipse.ui.part.EditorPart;
 /**
  * For details on forms, go to:
  * 	http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/pde-ui-home/working/EclipseForms/EclipseForms.html
+ *
  * @author Ken Sueda
+ * @author Mik Kersten
  */
 public class TaskSummaryEditor extends EditorPart {
 	
@@ -111,6 +112,7 @@ public class TaskSummaryEditor extends EditorPart {
 	 */
 	public static final Color HYPERLINK  = new Color(Display.getDefault(), 0, 0, 255);
 	
+	private DatePicker datePicker;
 	private ITask task;
 	private TaskEditorInput editorInput;
 	private Composite editorComposite;
@@ -165,9 +167,7 @@ public class TaskSummaryEditor extends EditorPart {
         	}
 		}        
     };    
-	/**
-	 * 
-	 */
+
 	public TaskSummaryEditor() {
 		super();
 
@@ -229,6 +229,7 @@ public class TaskSummaryEditor extends EditorPart {
 		String path = pathText.getText();		
 		path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));		
 		task.setPath(path);
+		task.setReminderDate(datePicker.getDate().getTime());
 		refreshTaskListView(task);
 		markDirty(false);
 	}
@@ -308,9 +309,9 @@ public class TaskSummaryEditor extends EditorPart {
         
 		try {
 			createOverviewSection(parent, toolkit);	
-			createPlanningGameSection(parent, toolkit);
-			createNotesSection(parent, toolkit);
-	        createRelatedLinksSection(parent, toolkit);
+			createPlanningSection(parent, toolkit);
+			createDocumentationSection(parent, toolkit);
+//	        createRelatedLinksSection(parent, toolkit);
 	        createDetailsSection(parent, toolkit);
         } catch (SWTException e) {
         	MylarPlugin.log(e, "content failed");
@@ -354,38 +355,12 @@ public class TaskSummaryEditor extends EditorPart {
     			}			
     		});
         }
-        l = toolkit.createLabel(container, "Reminder:");
-        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
-        final Text reminderDate = toolkit.createText(container,task.getReminderDateString(true), SWT.BORDER);        
-        reminderDate.setLayoutData(layout);
-        td = new TableWrapData(TableWrapData.FILL_GRAB);
-        td.grabHorizontal = true;
-        td.colspan = 1;
-        reminderDate.setLayoutData(td);
-        reminderDate.setEnabled(false);
-        
-        Button dateSelect = toolkit.createButton(container, "Select", SWT.PUSH);
-//        td = new TableWrapData(TableWrapData.RIGHT);
-//        dateSelect.setLayoutData(td);
-        dateSelect.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				ITask task = ((TaskEditorInput)getEditorInput()).getTask();
-				DateChooserDialog dialog = new DateChooserDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());	    		   	
-				if (dialog.open() == Dialog.OK && dialog.getReminderDate() != null) {
-					task.setReminderDate(dialog.getReminderDate().getTime());
-					reminderDate.setText(task.getReminderDateString(true));
-				}	
-			}
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}        	
-        });
 	}	
 
 	
-	private void createNotesSection(Composite parent, FormToolkit toolkit) {
+	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.setText("Notes");			
+		section.setText("Documentation");			
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
@@ -400,7 +375,7 @@ public class TaskSummaryEditor extends EditorPart {
 		Composite container = toolkit.createComposite(section);			
 		section.setClient(container);		
 		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;					
+		layout.numColumns = 1;					
 		container.setLayout(layout);
 		
 		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI);
@@ -412,6 +387,15 @@ public class TaskSummaryEditor extends EditorPart {
 				markDirty(true);
 			}			
 		});
+		
+//		Label l = toolkit.createLabel(container, "Hyperlinks:");
+//		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		toolkit.createLabel(container, "");
+		
+		createTable(container, toolkit);
+		createTableViewer(container, toolkit);		
+		toolkit.paintBordersFor(container);
+		createAddDeleteButtons(container, toolkit);
 //		notes.addKeyListener(new KeyListener() {
 //			public void keyPressed(KeyEvent e) {								
 //			}
@@ -423,9 +407,9 @@ public class TaskSummaryEditor extends EditorPart {
 //		});
 	}
 	
-	private void createPlanningGameSection(Composite parent, FormToolkit toolkit) {
+	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.setText("Planning Game");			
+		section.setText("Planning");			
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
@@ -443,7 +427,31 @@ public class TaskSummaryEditor extends EditorPart {
 		layout.numColumns = 3;					
 		container.setLayout(layout);
 		
-		Label l = toolkit.createLabel(container, "Estimated Time:");		
+		Label l = toolkit.createLabel(container, "Reminder:");
+        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
+        datePicker = new DatePicker(container, SWT.NULL);	
+        TableWrapData td = new TableWrapData(TableWrapData.LEFT);
+        datePicker.setLayoutData(td);
+        Calendar calendar = Calendar.getInstance();
+        if (task.getReminderDate() != null) {
+        	calendar.setTime(task.getReminderDate());
+        	datePicker.setDate(calendar);
+        }
+		datePicker.setBackground(new Color(Display.getDefault(), 255, 255, 255));
+		datePicker.addPickerSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent arg0) {
+				TaskSummaryEditor.this.markDirty(true);
+			}
+
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// ignore
+			}
+		});
+        l = toolkit.createLabel(container, " ");
+        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	
+        
+		
+		l = toolkit.createLabel(container, "Estimated time:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		estimated = new Spinner(container, SWT.BORDER);
 		estimated.setSelection(task.getEstimateTime());		
@@ -453,23 +461,23 @@ public class TaskSummaryEditor extends EditorPart {
 		estimated.setIncrement(5);
 		estimated.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				markDirty(true);
+				TaskSummaryEditor.this.markDirty(true);
 			}			
 		});  
-		l = toolkit.createLabel(container, " hours");		
+		l = toolkit.createLabel(container, "hours ");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		
-		l = toolkit.createLabel(container, "Elapsed Time:");		
+		l = toolkit.createLabel(container, "Elapsed time:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		Text text2 = toolkit.createText(container,task.getElapsedTimeForDisplay(), SWT.BORDER);
-		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
         td.colspan = 2;
         text2.setLayoutData(td);
         text2.setEditable(false);
         text2.setEnabled(false);
         
-        l = toolkit.createLabel(container, "Task Creation Date:");		
+        l = toolkit.createLabel(container, "Creation date:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		Text creationDate = toolkit.createText(container,task.getCreationDateString(), SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -479,7 +487,7 @@ public class TaskSummaryEditor extends EditorPart {
         creationDate.setEditable(false);
         creationDate.setEnabled(false);
         
-        l = toolkit.createLabel(container, "Task Completed Date:");		
+        l = toolkit.createLabel(container, "Completion date:");		
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		Text endDate = toolkit.createText(container,task.getEndDateString(), SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -488,39 +496,28 @@ public class TaskSummaryEditor extends EditorPart {
         endDate.setLayoutData(td);
         endDate.setEditable(false);
         endDate.setEnabled(false);
-        
-        //text2.setForeground(background);
 	}
 	
-	private void createRelatedLinksSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText("Related Links");			
-		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				sform.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				sform.reflow(true);
-			}			
-		});
-		Composite container = toolkit.createComposite(section);			
-		section.setClient(container);		
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;					
-		container.setLayout(layout);			
-		
-		Label l = toolkit.createLabel(container, "Related Links:");
-		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		toolkit.createLabel(container, "");
-		
-		createTable(container, toolkit);
-		createTableViewer(container, toolkit);		
-		toolkit.paintBordersFor(container);
-		createAddDeleteButtons(container, toolkit);
-	}
+//	private void createRelatedLinksSection(Composite parent, FormToolkit toolkit) {
+//		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+//		section.setText("Related Links");			
+//		section.setLayout(new TableWrapLayout());
+//		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+//		section.addExpansionListener(new IExpansionListener() {
+//			public void expansionStateChanging(ExpansionEvent e) {
+//				sform.reflow(true);
+//			}
+//
+//			public void expansionStateChanged(ExpansionEvent e) {
+//				sform.reflow(true);
+//			}			
+//		});
+//		Composite container = toolkit.createComposite(section);			
+//		section.setClient(container);		
+//		TableWrapLayout layout = new TableWrapLayout();
+//		layout.numColumns = 2;					
+//		container.setLayout(layout);			
+//	}
 
 	private void createTable(Composite parent, FormToolkit toolkit) {	
 		table = toolkit.createTable(parent, SWT.NONE );		
@@ -529,7 +526,7 @@ public class TaskSummaryEditor extends EditorPart {
 		tlayout.addColumnData(new ColumnWeightData(0,0,false));
 		table.setLayout(tlayout);
 		TableWrapData wd = new TableWrapData(TableWrapData.FILL_GRAB);
-		wd.heightHint = 100;
+		wd.heightHint = 60;
 		wd.grabVertical = true;
 		table.setLayoutData(wd);
 		table.setHeaderVisible(false);
@@ -586,8 +583,8 @@ public class TaskSummaryEditor extends EditorPart {
 	}	
 	private void createAddDeleteButtons(Composite parent, FormToolkit toolkit) {
 		Composite container = toolkit.createComposite(parent);
-		container.setLayout(new GridLayout(1, true));
-		Button addButton = toolkit.createButton(container, "  Add  ", SWT.PUSH | SWT.CENTER);
+		container.setLayout(new GridLayout(2, true));
+		Button addButton = toolkit.createButton(container, "  Add Hyperlink  ", SWT.PUSH | SWT.CENTER);
 		//add.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		addButton.addSelectionListener(new SelectionAdapter() {			
 			@Override
@@ -596,8 +593,8 @@ public class TaskSummaryEditor extends EditorPart {
 			}
 		});
 
-		Button deleteButton = toolkit.createButton(container, "Delete", SWT.PUSH | SWT.CENTER);
-		deleteButton.setText("Delete");
+		Button deleteButton = toolkit.createButton(container, "Delete Hyperlink  ", SWT.PUSH | SWT.CENTER);
+//		deleteButton.setText("Delete");
 		//delete.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			
@@ -887,453 +884,8 @@ public class TaskSummaryEditor extends EditorPart {
 		}				
 		return;
 	}
+	
 	public void setParentEditor(TaskEditor parentEditor) {
 		this.parentEditor = parentEditor;
 	}
-	
-
-	
-
-	
-	// Eric's Old Code...
-	//
-	
-	//private StringBuffer sb;
-	//private MenuManager contextMenuManager;
-	//private final String VALUE = "VALUE";
-	//private final String PROPERTY = "PROPERTY";
-	//private final String HEADER = "HEADER";
-	//private Color foreground;
-	//private StringBuffer commentBuffer;
-	//private int index;
-	//private ArrayList<StyledText> texts = new ArrayList<StyledText>();
-	//private StyledText currentSelectedText;
-	//private Font titleFont;
-	//private Font textFont;
-	//private int scrollIncrement;
-	//private int scrollVertPageIncrement;
-	//private int scrollHorzPageIncrement;
-	//private ScrolledComposite scrolledComposite;
-	//private Display display;
-	//private CLabel titleLabel;
-	//private Composite infoArea;
-	//private final int HORZ_INDENT = 0;
-	//private final int HORZ_TABLE_SPACING = 10;
-	
-//	
-//	private void focusOn(StyledText newText, int caretOffset) {
-//		if (newText == null)
-//			return;
-//		newText.setFocus();
-//		newText.setCaretOffset(caretOffset);
-//		scrolledComposite.setOrigin(0, newText.getLocation().y);
-//	}
-//	
-//	/**
-//	 * Find the next text
-//	 */
-//	private StyledText nextText(StyledText text) {
-//		int index = 0;
-//		if (text == null)
-//			return texts.get(0);
-//		else
-//			index = texts.indexOf(text);
-//
-//		//If we are not at the end....
-//		if (index < texts.size() - 1)
-//			return texts.get(index + 1);
-//		else
-//			return texts.get(index);
-//	}
-//
-//	/**
-//	 * Find the previous text
-//	 */
-//	private StyledText previousText(StyledText text) {
-//		int index = 0;
-//		if (text == null)
-//			return texts.get(0);
-//		else
-//			index = texts.indexOf(text);
-//
-//		//If we are not at the end....
-//		if (index == 0)
-//			return texts.get(0);
-//		else
-//			return texts.get(index - 1);
-//	}
-//
-//	protected StyledText getCurrentText() {
-//		return currentSelectedText;
-//	}
-//
-//	protected TaskEditorCopyAction getCopyAction() {
-//		return copyAction;
-//	}
-//
-//	private void addTextListeners(StyledText styledText) {
-//		styledText.addTraverseListener(new TraverseListener() {
-//			public void keyTraversed(TraverseEvent e) {
-//				StyledText text = (StyledText) e.widget;
-//
-//				switch (e.detail) {
-//					case SWT.TRAVERSE_ESCAPE :
-//						e.doit = true;
-//						break;
-//					case SWT.TRAVERSE_TAB_NEXT :
-//
-//						text.setSelection(0);
-//						StyledText nextText = nextText(text);
-//						focusOn(nextText, 0);
-//
-//						e.detail = SWT.TRAVERSE_NONE;
-//						e.doit = true;
-//						break;
-//
-//					case SWT.TRAVERSE_TAB_PREVIOUS :
-//
-//						text.setSelection(text.getSelection());
-//						StyledText previousText = previousText(text);
-//						focusOn(previousText, 0);
-//
-//						e.detail = SWT.TRAVERSE_NONE;
-//						e.doit = true;
-//						break;
-//
-//					default:
-//						break;
-//				}
-//			}
-//		});
-//
-//		styledText.addKeyListener(new KeyListener() {
-//			public void keyReleased(KeyEvent e) {
-//				//Ignore a key release
-//			}
-//
-//			public void keyPressed(KeyEvent event) {
-//				StyledText text = (StyledText) event.widget;
-//				if (event.character == ' ' || event.character == SWT.CR) {
-//					return;
-//				}
-//
-//				if (event.keyCode == SWT.PAGE_DOWN) {
-//
-//					scrolledComposite.setOrigin(0,
-//						scrolledComposite.getOrigin().y
-//							+ scrollVertPageIncrement);
-//					return;
-//				}
-//				if (event.keyCode == SWT.ARROW_DOWN) {
-//					scrolledComposite.setOrigin(0,
-//						scrolledComposite.getOrigin().y + scrollIncrement);
-//				}
-//				if (event.keyCode == SWT.PAGE_UP) {
-//					int origin = scrolledComposite.getOrigin().y;
-//					int scrollAmount = origin - scrollVertPageIncrement;
-//					if (scrollAmount <= 0) {
-//						scrolledComposite.setOrigin(0, 0);
-//					} else {
-//						scrolledComposite.setOrigin(0, scrollAmount);
-//					}
-//					return;
-//				}
-//				if (event.keyCode == SWT.ARROW_UP) {
-//					scrolledComposite.setOrigin(0,
-//						scrolledComposite.getOrigin().y - scrollIncrement);
-//				}
-//			}
-//		});
-//
-//		styledText.addFocusListener(new FocusAdapter() {
-//			
-//			@Override
-//			public void focusLost(FocusEvent e) {
-//				StyledText text = (StyledText) e.widget;
-//				text.setSelection(text.getSelection().x);
-//			}
-//		});
-//	}
-	
-//	public void createLayouts(Composite composite, ITask task) {
-//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//		String title = "Task #" + task.getId();
-//		newLayout(composite, 4, title, HEADER);
-//		titleLabel.setText(title);
-//	}
-//
-//	public void displayArtifact(Composite composite) {
-//		TaskEditorInput editorInput = (TaskEditorInput) getEditorInput();
-//		background = JFaceColors.getBannerBackground(composite.getParent()
-//				.getParent().getDisplay());
-//		composite.setBackground(background);
-//
-//		// Get the background color for the info area
-//		composite.setBackground(background);
-//
-//		// The entire info area is 4 columns in width
-//		// all headers take up all 4, values take up 1
-//		GridLayout infoLayout = new GridLayout();
-//		infoLayout.numColumns = 4;
-//		infoLayout.marginHeight = 10;
-//		infoLayout.verticalSpacing = 6;
-//
-//		infoLayout.marginWidth = 5;
-//		infoLayout.horizontalSpacing = HORZ_TABLE_SPACING;
-//		composite.setLayout(infoLayout);
-//		GridData infoData = new GridData(GridData.FILL_BOTH);
-//		composite.setLayoutData(infoData);
-//
-//		// Create the page with the task's contents
-//		task = editorInput.getTask();
-//		if (task != null) {
-//			createLayouts(composite, task);
-//		} else {
-//			MessageDialog.openError(composite.getShell(), "No such task",
-//					"No task exists with this id");
-//			return;
-//		}
-//	}
-//
-//	/**
-//	 * Make sure that a String that is <code>null</code> is changed to a null
-//	 * string
-//	 * 
-//	 * @param text
-//	 *            The text to check if it is null or not
-//	 * @return
-//	 */
-//	public String checkText(String text) {
-//		if (text == null)
-//			return "";
-//		else
-//			return text;
-//	}
-//
-//	
-//	//
-////	public void newLayout(Composite composite, int colSpan, String text, String style) {
-////		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-////		data.horizontalSpan = colSpan;
-////		if (style.equalsIgnoreCase(VALUE)) {
-////			StyledText styledText = new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);
-////			styledText.setFont(textFont);
-////			styledText.setText(checkText(text));
-////			styledText.setBackground(background);
-////			data.horizontalIndent = HORZ_INDENT;
-////
-////			styledText.setLayoutData(data);
-////			styledText.addSelectionListener(new SelectionAdapter() {
-////				
-////				@Override
-////				public void widgetSelected(SelectionEvent e) {
-////					StyledText c = (StyledText) e.widget;
-////					if (c != null && c.getSelectionCount() > 0) {
-////						if (currentSelectedText != null) {
-////							if (!c.equals(currentSelectedText)) {
-////								currentSelectedText.setSelectionRange(0, 0);
-////							}
-////						}
-////					}
-////					currentSelectedText = c;
-////				}
-////			});
-////
-////			styledText.setMenu(contextMenuManager.createContextMenu(styledText));
-////
-////			styledText.setEditable(false);
-////
-////			if (styledText.getText().trim().length() > 0) {
-////				texts.add(index, styledText);
-////				index++;
-////				addTextListeners(styledText);
-////			}
-////		} else if (style.equalsIgnoreCase(PROPERTY)) {
-////			StyledText styledText = new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);
-////			styledText.setFont(textFont);
-////			styledText.setText(checkText(text));
-////			styledText.setBackground(background);
-////			data.horizontalIndent = HORZ_INDENT;
-////			styledText.setLayoutData(data);
-////			StyleRange sr = new StyleRange(
-////					styledText.getOffsetAtLine(0),
-////					text.length(),
-////					foreground,
-////					background,
-////					SWT.BOLD);
-////			styledText.setStyleRange(sr);
-////			styledText.setEnabled(false);
-////			styledText.setMenu(contextMenuManager.createContextMenu(styledText));
-////		} else {
-////			Composite generalTitleGroup = new Composite(composite, SWT.NONE);
-////			generalTitleGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//			generalTitleGroup.setLayoutData(data);
-//			GridLayout generalTitleLayout = new GridLayout();
-//			generalTitleLayout.numColumns = 2;
-//			generalTitleLayout.marginWidth = 0;
-//			generalTitleLayout.marginHeight = 9;
-//			generalTitleGroup.setLayout(generalTitleLayout);
-//			generalTitleGroup.setBackground(background);
-//
-//			Label image = new Label(generalTitleGroup, SWT.NONE);
-//			image.setBackground(background);
-//			image.setImage(
-//				WorkbenchImages.getImage(IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
-//			GridData gd = new GridData(GridData.FILL_VERTICAL);
-//			gd.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
-//			image.setLayoutData(gd);
-//			StyledText generalTitleText = new StyledText(generalTitleGroup, SWT.MULTI | SWT.READ_ONLY);
-//			generalTitleText.setText(checkText(text));
-//			generalTitleText.setBackground(background);
-//			StyleRange sr =	new StyleRange(
-//					generalTitleText.getOffsetAtLine(0),
-//					text.length(),
-//					foreground,
-//					background,
-//					SWT.BOLD);
-//			generalTitleText.setStyleRange(sr);
-//			generalTitleText.setEditable(false);
-//			
-//			generalTitleText.addSelectionListener(new SelectionAdapter() {
-//				
-//				@Override
-//				public void widgetSelected(SelectionEvent e) {
-//					StyledText c = (StyledText) e.widget;
-//					if (c != null && c.getSelectionCount() > 0) {
-//						if (currentSelectedText != null) {
-//							if (!c.equals(currentSelectedText)) {
-//								currentSelectedText.setSelectionRange(0, 0);
-//							}
-//						}
-//					}
-//					currentSelectedText = c;
-//				}
-//			});
-//			
-//			// create context menu
-//			generalTitleGroup.setMenu(contextMenuManager.createContextMenu(generalTitleGroup));
-//			generalTitleText.setMenu(contextMenuManager.createContextMenu(generalTitleText));
-//			image.setMenu(contextMenuManager.createContextMenu(image));
-//		}
-//	}
-	
-//	private Composite createTitleArea(Composite parent) {
-	//
-//			// Get the background color for the title area
-//			display = parent.getDisplay();
-//			Color background = JFaceColors.getBannerBackground(display);
-//			Color foreground = JFaceColors.getBannerForeground(display);
-//			
-//			// Create the title area which will contain
-//			// a title, message, and image.
-//			Composite titleArea = new Composite(parent, SWT.NO_FOCUS);
-//			GridLayout layout = new GridLayout();
-//			layout.marginHeight = 0;
-//			layout.marginWidth = 0;
-//			layout.verticalSpacing = 0;
-//			layout.horizontalSpacing = 0;
-//			layout.numColumns = 2;
-//			titleArea.setLayout(layout);
-//			titleArea.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//			titleArea.setBackground(background);
-//			
-//			// Message label
-//			titleLabel = new CLabel(titleArea, SWT.LEFT);
-//			JFaceColors.setColors(titleLabel, foreground, background);
-//			titleLabel.setFont(titleFont);
-//			final IPropertyChangeListener fontListener = new IPropertyChangeListener() {
-//				public void propertyChange(PropertyChangeEvent event) {
-//					if (JFaceResources.HEADER_FONT.equals(event.getProperty())) {
-//						titleLabel.setFont(titleFont);
-//					}
-//				}
-//			};
-//			titleLabel.addDisposeListener(new DisposeListener() {
-//				public void widgetDisposed(DisposeEvent event) {
-//					JFaceResources.getFontRegistry().removeListener(fontListener);
-//				}
-//			});
-//			JFaceResources.getFontRegistry().addListener(fontListener);
-//			GridData gd = new GridData(GridData.FILL_BOTH);
-//			titleLabel.setLayoutData(gd);
-	//
-//			// Title image
-//			Label titleImage = new Label(titleArea, SWT.LEFT);
-//			titleImage.setBackground(background);
-//			titleImage.setImage(
-//				WorkbenchImages.getImage(
-//						IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_BANNER));
-//			gd = new GridData();
-//			gd.horizontalAlignment = GridData.END;
-//			titleImage.setLayoutData(gd);
-//			return titleArea;
-//		}
-	//
-//		private Composite createInfoArea(Composite parent) {
-//			// Create the title area which will contain a title, message, and image.
-//			scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
-//			scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-//			infoArea = new Composite(this.scrolledComposite, SWT.NONE);
-//			scrolledComposite.setMinSize(infoArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-	//
-//			contextMenuManager = new MenuManager("#TaskSummaryEditor");
-//			contextMenuManager.setRemoveAllWhenShown(true);
-//			contextMenuManager.addMenuListener(new IMenuListener() {
-//				public void menuAboutToShow(IMenuManager manager) {
-//					manager.add(cutAction);
-//					manager.add(copyAction);
-//					manager.add(pasteAction);
-//					manager.add(new Separator());
-//					manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-//					if (currentSelectedText == null || 
-//							currentSelectedText.getSelectionText().length() == 0) {
-//						copyAction.setEnabled(false);
-//					}
-//					else {
-//						copyAction.setEnabled(true);
-//					}
-//				}
-//			});
-//			getSite().registerContextMenu(
-//				"#TaskSummaryEditor",
-//				contextMenuManager,
-//				getSite().getSelectionProvider());
-	//
-//			displayArtifact(infoArea);
-//			this.scrolledComposite.setContent(infoArea);
-//			Point p = infoArea.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-//			this.scrolledComposite.setMinHeight(p.y);
-//			this.scrolledComposite.setMinWidth(p.x);
-//			this.scrolledComposite.setExpandHorizontal(true);
-//			this.scrolledComposite.setExpandVertical(true);
-	//
-//			// Add the focus listener to the scrolled composite
-//			scrolledComposite.addMouseListener(new MouseAdapter() {
-//				
-//				@Override
-//				public void mouseUp(MouseEvent e) {
-//					if (!texts.isEmpty()) {
-//						StyledText target = texts.get(0);
-//						target.setFocus();
-//					} else {
-//						scrolledComposite.setFocus();
-//					}
-//				}
-//			});
-	//
-//			scrolledComposite.addControlListener(new ControlListener() {
-//				public void controlMoved(ControlEvent e) {
-//					// don't care if a control is moved
-//				}
-//				public void controlResized(ControlEvent e) {
-//					scrolledComposite.getVerticalBar().setIncrement(scrollIncrement);
-//					scrolledComposite.getHorizontalBar().setIncrement(scrollIncrement);
-//					scrollVertPageIncrement = scrolledComposite.getClientArea().height;
-//					scrollHorzPageIncrement = scrolledComposite.getClientArea().width;
-//					scrolledComposite.getVerticalBar().setPageIncrement(scrollVertPageIncrement);
-//					scrolledComposite.getHorizontalBar().setPageIncrement(scrollHorzPageIncrement);
-//				}
-//			});
-//			return infoArea;
-//		}
 }

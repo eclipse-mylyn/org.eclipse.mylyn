@@ -33,6 +33,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
  */
 public class TaskEditor extends MultiPageEditorPart {
 
+	private static final String EDITOR_PAGE_LABEL = "Task Info";
 	protected ITask task;
 	private TaskSummaryEditor taskSummaryEditor;
 	private TaskEditorInput taskEditorInput;
@@ -58,7 +59,7 @@ public class TaskEditor extends MultiPageEditorPart {
 		taskSummaryEditor.createPartControl(getContainer());
 		taskSummaryEditor.setParentEditor(this);
 		int index = addPage(taskSummaryEditor.getControl());
-		setPageText(index, "Summary");		
+		setPageText(index, EDITOR_PAGE_LABEL);		
 	}
 
 	/**

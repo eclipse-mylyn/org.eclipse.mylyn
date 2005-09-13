@@ -83,8 +83,7 @@ public interface ITask extends Serializable, ITaskListElement {
 	public abstract void setEndDate(String date);
 	
 	public abstract String getEndDateString();
-	
-	
+		
 	public abstract Date getCreationDate();
 	
 	public abstract void setCreationDate(String date);

@@ -14,6 +14,8 @@ package org.eclipse.mylar.tasklist.contribution;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -21,6 +23,10 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -28,11 +34,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
 
 /**
  * Temporary date picker from patch posted to: 
@@ -43,6 +44,7 @@ import org.eclipse.swt.layout.GridData;
  * TODO: remove this class when an SWT date picker is added
  * 
  * @author Bahadir Yagan
+ * @author Mik Kersten
  */
 public class DatePicker extends Composite {
 
@@ -77,7 +79,7 @@ public class DatePicker extends Composite {
 		gridLayout.marginHeight = 2;
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
-		setSize(new org.eclipse.swt.graphics.Point(95, 28));
+		setSize(new org.eclipse.swt.graphics.Point(103, 28));
 		dateText = new Text(this, SWT.BORDER | SWT.READ_ONLY);
 		dateText.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_WHITE));
@@ -97,10 +99,13 @@ public class DatePicker extends Composite {
 				// TODO Auto-generated method stub
 
 			}
-
 		});
 	}
 
+	public void addPickerSelectionListener(SelectionListener listener) {
+		pickButton.addSelectionListener(listener);
+	}
+	
 	public Calendar getDate() {
 		return date;
 	}
@@ -140,6 +145,10 @@ public class DatePicker extends Composite {
 	private void updateDateText() {
 		dateText.setText(date.get(Calendar.DAY_OF_MONTH) + "/"
 				+ date.get(Calendar.MONTH) + "/" + date.get(Calendar.YEAR));
+	}
+
+	public void setDateText(String text) {
+		dateText.setText(text);
 	}
 } // @jve:decl-index=0:visual-constraint="10,10"
 
