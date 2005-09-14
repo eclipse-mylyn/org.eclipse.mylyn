@@ -103,7 +103,6 @@ public class ExistingBugEditor extends AbstractBugEditor
 	protected Text addCommentsText;
 	protected BugReport bug;
 
-
     public String getNewCommentText(){
         return addCommentsTextBox.getText();
     }
@@ -448,7 +447,13 @@ public class ExistingBugEditor extends AbstractBugEditor
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
 					public void run() {
 						if(TaskListView.getDefault() != null && 
-								TaskListView.getDefault().getViewer() != null){
+								TaskListView.getDefault().getViewer() != null) {
+							
+							// TODO: left off here
+							
+							// find the bug task
+							// tell it to refresh, not in a job
+							// call update on the task
 							new RefreshBugzillaReportsAction().run();
 						}
 					}

@@ -105,6 +105,7 @@ public class OfflineReportsFile
 					
 					try {
 						in.run(null);
+						// running in new job inside a job causes shell to popup up, losing focus
 //						PlatformUI.getWorkbench().getProgressService().run(true, true, in);
 					} catch (InterruptedException x) {
 						// cancelled by user	
