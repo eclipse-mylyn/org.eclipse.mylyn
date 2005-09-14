@@ -511,8 +511,6 @@ public class BugzillaTask extends Task {
 //    	}
 //    	OfflineView.removeReport(tempBug);
 	    OfflineView.saveOffline(bugReport, false);
-
-	    
 	    
 	    final IWorkbench workbench = PlatformUI.getWorkbench();
 	    if (refresh && !workbench.getDisplay().isDisposed()) {
