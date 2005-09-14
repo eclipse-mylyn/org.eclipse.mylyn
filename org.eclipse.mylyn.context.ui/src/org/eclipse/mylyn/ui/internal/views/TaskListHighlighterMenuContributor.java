@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -24,6 +25,7 @@ import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.actions.EditHighlightersAction;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -74,8 +76,10 @@ public class TaskListHighlighterMenuContributor implements ITaskListDynamicSubMe
               }
               action.setText(highlighter.toString());
               subMenuManager.add(action);
-          }
+          	}
 		} 
+		subMenuManager.add(new Separator());
+		subMenuManager.add(new EditHighlightersAction());
 		return subMenuManager;
   	}
 }

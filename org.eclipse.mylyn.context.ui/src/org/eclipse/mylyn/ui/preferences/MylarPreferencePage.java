@@ -89,8 +89,6 @@ public class MylarPreferencePage extends PreferencePage implements
 	private static String[] columnNames = new String[] { LABEL_COLUMN,
 			COLOR_COLUMN, TYPE_COLUMN, };
 	static final String[] TYPE_ARRAY = { "Gradient", "Solid", "Intersection" };
-
-//    private IntegerFieldEditor userStudyId;
     
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since
@@ -100,7 +98,9 @@ public class MylarPreferencePage extends PreferencePage implements
 	 */
 	public MylarPreferencePage() {		
 		super();
-		setPreferenceStore(MylarUiPlugin.getPrefs());		
+		setPreferenceStore(MylarUiPlugin.getPrefs());	
+		setTitle("Mylar"); 
+//		setDescription("Mylar UI Preferences"); 
 	}
 	
 	@Override
