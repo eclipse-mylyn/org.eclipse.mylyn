@@ -21,9 +21,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+/**
+ * @author Mik Kersten
+ */
 public class MylarIdePlugin extends AbstractUIPlugin {
 
-//    private ResourceStructureBridge genericResourceBridge;
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();    
     
@@ -32,19 +34,10 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public MylarIdePlugin() {
 		plugin = this;
 	}
-
-//    public void earlyStartup() {
-//        final IWorkbench workbench = PlatformUI.getWorkbench();
-//        workbench.getDisplay().asyncExec(new Runnable() {
-//            public void run() {
-//              
-//            }
-//        });
-//    }
 	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		  MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
+		MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
           
   		final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
@@ -60,6 +53,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
+		 MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 	}
 
 	public static MylarIdePlugin getDefault() {

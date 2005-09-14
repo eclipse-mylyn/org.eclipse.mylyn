@@ -11,24 +11,17 @@
 
 package org.eclipse.mylar.java;
 
-import org.eclipse.core.internal.resources.ResourceException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IImportContainer;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
-import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -50,7 +43,6 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
   
     public JavaEditingMonitor() {
         super();
-        JavaPlugin.getDefault().getProblemMarkerManager().addListener(PROBLEM_LISTENER);
     	JavaCore.addElementChangedListener(new IElementChangedListener() {
             public void elementChanged(ElementChangedEvent event) {
             	// TODO: implement interest move
@@ -59,47 +51,6 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
             }
         });
     }
-    
-    private final IProblemChangedListener PROBLEM_LISTENER = new IProblemChangedListener() {
-        public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
-            try {
-            	if (!MylarPlugin.getDefault().isPredictedInterestEnabled()) {
-            		return;
-            	}
-            	if (MylarPlugin.getContextManager().getActiveContext() == null)
-                    return;
-                for (int i = 0; i < changedResources.length; i++) {
-                    IResource resource = changedResources[i];
-//                    if (resource instanceof IFile) {
-                    try {
-                        IMarker[] markers = resource.findMarkers(
-                                IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
-                                true, IResource.DEPTH_INFINITE);
-                        IJavaElement element = (IJavaElement)resource.getAdapter(IJavaElement.class);
-                        boolean hasError = false; 
-                        for (int j = 0; j < markers.length; j++) {
-                            if (markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
-                                hasError = true;
-                            } 
-                        }
-                        if (element != null && resource instanceof IFile && !resource.getFileExtension().equals("class")) {
-                            if (!hasError) {
-                                MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
-                            } else {
-                                MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
-                            }
-                        }
-                    } catch (ResourceException e) {
-                        // ignore missing resources
-                    }
-                }
-                // XXX: notify, but using the correct node
-//                MylarPlugin.getTaskscapeManager().notifyPostPresentationSettingsChange(ITaskscapeListener.UpdateKind.UPDATE); // HACK: wrong notification
-            } catch (Exception e) {
-            	MylarPlugin.log(e, "could not update on marker change");
-            }
-        }
-    };
     
     /**
      * Only public for testing

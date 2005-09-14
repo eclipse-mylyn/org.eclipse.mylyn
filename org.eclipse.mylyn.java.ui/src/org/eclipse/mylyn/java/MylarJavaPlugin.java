@@ -48,6 +48,10 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	private ResourceBundle resourceBundle;
 	private JavaEditorTracker editorTracker;
     
+	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
+	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
+	private JavaEditingMonitor javaEditingMonitor = new JavaEditingMonitor();
+	
     public static final String PLUGIN_ID = "org.eclipse.mylar.java";
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
     public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
@@ -66,8 +70,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
-        MylarPlugin.getContextManager().addListener(new PackageExplorerManager());
-        MylarPlugin.getContextManager().addListener(new LandmarkMarkerManager());
+        MylarPlugin.getContextManager().addListener(packageExplorerManager);
+        MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
 
 		getPreferenceStore().setDefault(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
         		
@@ -93,7 +97,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
             		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
             	}
             	
-                MylarPlugin.getDefault().getSelectionMonitors().add(new JavaEditingMonitor());
+                MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
         		installEditorTracker(workbench);
         		
 //        		 needed because Mylar source viewer configuration does not get initialized properly
@@ -108,6 +112,16 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
+		
+        MylarPlugin.getContextManager().removeListener(packageExplorerManager);
+        MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
+        MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+        
+    	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+    		getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+    	}
+        
+        // TODO: uninstall editor tracker
 	}
 
 //	private void resetActiveEditor() {

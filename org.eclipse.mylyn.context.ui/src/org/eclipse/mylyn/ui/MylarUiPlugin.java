@@ -179,6 +179,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     @Override
     public void stop(BundleContext context) throws Exception {
         super.stop(context);
+        MylarPlugin.getContextManager().removeListener(uiUpdateManager);
     }
     
     private void initializeActions() {
