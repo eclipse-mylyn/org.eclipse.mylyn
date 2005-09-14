@@ -35,8 +35,11 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author Eric Booth
+ * @author Mik Kersten
  */
 public class BugzillaTaskEditor extends TaskEditor {
+
+	private static final String EDITOR_TAB_ITLE = "Bugzilla Report";
 
 	/** The task that created this editor */
 	protected BugzillaTask bugTask;
@@ -100,7 +103,7 @@ public class BugzillaTaskEditor extends TaskEditor {
 		bugzillaEditor.createPartControl(getContainer());
 		Composite composite = bugzillaEditor.getEditorComposite();
 		int index = addPage(composite);
-		setPageText(index, "Bugzilla");
+		setPageText(index, EDITOR_TAB_ITLE);
 	}
     
     

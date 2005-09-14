@@ -27,9 +27,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-
 /**
  * @author Eric Booth
+ * @author Mik Kersten
  */
 public class TaskEditor extends MultiPageEditorPart {
 
