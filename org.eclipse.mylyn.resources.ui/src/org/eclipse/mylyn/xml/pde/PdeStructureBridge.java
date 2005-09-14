@@ -326,7 +326,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		separations.add(new DegreeOfSeparation("landmark files", 1));
 		separations.add(new DegreeOfSeparation("interesting files", 2));
 		separations.add(new DegreeOfSeparation("interesting project", 3));
-		separations.add(new DegreeOfSeparation("project dependancies", 4));
+		separations.add(new DegreeOfSeparation("project dependencies", 4));
 		separations.add(new DegreeOfSeparation("entire workspace", 5));
 
 		return separations;
