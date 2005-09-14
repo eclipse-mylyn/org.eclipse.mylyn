@@ -66,7 +66,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
 
-
 /**
  * A view that displays any bugs that have been saved offline.
  */

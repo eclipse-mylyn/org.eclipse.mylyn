@@ -17,9 +17,11 @@ import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 
-
 /**
  * A two-way or three-way compare for <code>BugReport</code> objects.
+ * 
+ * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class BugzillaCompareInput extends CompareEditorInput {
 

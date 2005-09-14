@@ -15,7 +15,6 @@ import org.eclipse.compare.structuremergeviewer.IStructureCreator;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 
-
 /**
  * This implementation of the <code>IStructureCreator</code> interface
  * makes the contents of a <code>BugReport</code> object available as a

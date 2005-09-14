@@ -102,7 +102,19 @@ public class OfflineReportsFile
 					in.setLeft((BugReport)oldBug);
 					in.setRight((BugReport)entry);
 					in.setTitle("Bug #" + oldBug.getId());
-					PlatformUI.getWorkbench().getProgressService().run(true, true, in);
+					
+					try {
+						in.run(null);
+//						PlatformUI.getWorkbench().getProgressService().run(true, true, in);
+					} catch (InterruptedException x) {
+						// cancelled by user	
+						return false;
+					} catch (InvocationTargetException x) {
+						BugzillaPlugin.log(x);
+						MessageDialog.openError(null, "Compare Failed", x.getTargetException().getMessage());
+						return false;
+					}
+					
 					if(in.getCompareResult() == null){
 						return true;
 					} else if(oldBug.hasChanges()){
@@ -147,11 +159,8 @@ public class OfflineReportsFile
 			writeFile();
 			BugzillaPlugin.getDefault().fireOfflineStatusChanged(entry, status);
 			return true;
-		} catch (InterruptedException x) {
-			// cancelled by user		
-		} catch (InvocationTargetException x) {
-			BugzillaPlugin.log(x);
-			MessageDialog.openError(null, "Compare Failed", x.getTargetException().getMessage());
+		} catch (Exception e) {
+			MessageDialog.openError(null, "failed to add of offline reort", e.getMessage());
 		}
 		return false;
 	}
