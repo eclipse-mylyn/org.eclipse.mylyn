@@ -130,11 +130,6 @@ public class ActiveHierarchyView extends ViewPart {
 				return ((TreeParent)parent).hasChildren();
 			return false;
 		}
-
-//		XXX never used
-//		private void initialize() {
-//			invisibleRoot.addChild(new TreeParent(AsmManager.getDefault().getHierarchy().getRoot()));
-//		}
 	}
 
 	public ActiveHierarchyView() {
@@ -220,21 +215,14 @@ public class ActiveHierarchyView extends ViewPart {
         }
         return null;
     }
-	
-	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
-	 */
+
     @Override
 	public void createPartControl(Composite parent) {
 		try {
 		    viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-//			drillDownAdapter = new DrillDownAdapter(viewer);
 			viewer.setContentProvider(new ViewContentProvider());
 			viewer.setLabelProvider(new HierarchyLabelProvider(JavaContextLabelProvider.createJavaUiLabelProvider()));
-//			viewer.setSorter(new NameSorter());
 			viewer.setInput(getViewSite());
-//            viewer.addOpenListener(new TaskscapeNodeClickListener(viewer));
             
             viewer.addOpenListener(new IOpenListener() {
                 public void open(OpenEvent event) {
@@ -252,7 +240,6 @@ public class ActiveHierarchyView extends ViewPart {
                     }
                 }
             });
-			makeActions();
 			hookContextMenu();
 			contributeToActionBars();
 			viewer.getTree().setBackground(MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR);
@@ -281,26 +268,15 @@ public class ActiveHierarchyView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-//		manager.add(action1);
-//		manager.add(new Separator());
-//		manager.add(action2);
+		// ignore
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-//		manager.add(action1);
-//		manager.add(action2);
-//		manager.add(new Separator());
-//		drillDownAdapter.addNavigationActions(manager);
-		// Other plug-ins can contribute there actions here
-//		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		// ignore
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-//		drillDownAdapter.addNavigationActions(manager);
-	}
-
-	private void makeActions() { 
-		// no actions to make
+		// ignore
 	}
 
 	/**
@@ -422,25 +398,4 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
         }
         return null;
     }
-    
-//    protected void updateForDecorationReady(ViewerLabel settings, Object element) {
-//        super.updateLabel(settings, element);
-//    }
-    
-//    public void updateLabel(ViewerLabel settings, Object element) {
-//        super.updateLabel(settings, ((TreeParent)element).getElement());
-//    }
-//  public Color getForeground(Object element) {
-//  return super.getForeground(((TreeParent)element).getElement());
-//}  
-//
-//public Color getBackground(Object element) {
-//  return super.getBackground(((TreeParent)element).getElement());
-//}
-//public Image getImage(Object element) {
-//  return super.getImage(((TreeParent)element).getElement());
-//}
-//public String getText(Object element) {
-//  return super.getText(((TreeParent)element).getElement());
-//}
 }

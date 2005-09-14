@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,11 +157,11 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
         }
 
 		public List<AbstractRelationshipProvider> getProviders() {
-			return null;
+			return Collections.emptyList();
 		}
 
 		public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-			return null;
+			return Collections.emptyList();
 		}
 
 		public String getHandleForOffsetInObject(Object resource, int offset) {

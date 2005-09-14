@@ -14,6 +14,7 @@
 package org.eclipse.mylar.xml.ant;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.ant.internal.ui.editor.AntEditor;
@@ -331,11 +332,11 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	 * TODO: weird that there is none
 	 */
 	public List<AbstractRelationshipProvider> getProviders() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	public void setParentBridge(IMylarStructureBridge bridge) {

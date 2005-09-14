@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.action.IAction;
@@ -26,7 +27,6 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-
 
 /**
  * @author Mik Kersten
@@ -377,6 +377,16 @@ public class MylarContextManager {
     	}
     }
 
+    public List<AbstractRelationshipProvider> getActiveProviders() {
+    	List<AbstractRelationshipProvider> providers = new ArrayList<AbstractRelationshipProvider>();
+		Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
+        for (String extension : bridges.keySet()) {
+            IMylarStructureBridge bridge = bridges.get(extension);
+            providers.addAll(bridge.getProviders());
+        }
+        return providers;
+    }
+    
     public void updateSearchKindEnabled(AbstractRelationshipProvider provider, int degreeOfSeparation) {
         MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
         if (degreeOfSeparation <= 0) {

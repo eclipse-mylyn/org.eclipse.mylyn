@@ -13,6 +13,7 @@
   */
 package org.eclipse.mylar.ide;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -141,11 +142,11 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
      * These methods aren't needed since there is no generic active search
      */
 	public List<AbstractRelationshipProvider> getProviders() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	public void setParentBridge(IMylarStructureBridge bridge) {

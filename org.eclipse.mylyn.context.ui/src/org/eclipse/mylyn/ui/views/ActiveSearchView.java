@@ -141,8 +141,20 @@ public class ActiveSearchView extends ViewPart {
     
     public ActiveSearchView() { 
         MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
+        for(AbstractRelationshipProvider provider: MylarPlugin.getContextManager().getActiveProviders()){
+            provider.setEnabled(true);
+        }
     }
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		MylarPlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
+		for(AbstractRelationshipProvider provider: MylarPlugin.getContextManager().getActiveProviders()){
+            provider.setEnabled(false);
+        }
+	}
+    
     /**
      * This is a callback that will allow us
      * to create the viewer and initialize it.
@@ -184,15 +196,9 @@ public class ActiveSearchView extends ViewPart {
         fillLocalPullDown(bars.getMenuManager());
         fillLocalToolBar(bars.getToolBarManager());
     }
-
-//    public void resetProviders() {
-//    	fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
-//		getViewSite().getActionBars().getToolBarManager().update(true);
-//		viewer.refresh();     
-//    }
-    
+ 
     private void fillLocalPullDown(IMenuManager manager) {
-
+    	// nothing for now
     }
 
     void fillContextMenu(IMenuManager manager) {
@@ -206,7 +212,7 @@ public class ActiveSearchView extends ViewPart {
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
             List<AbstractRelationshipProvider> providers = bridge.getProviders(); 
-            if(providers != null && providers.size() > 0){
+            if(providers != null && providers.size() > 0) {
 	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
 	            relationshipProviderActions.add(action); 
 	            manager.add(action); 
@@ -215,15 +221,9 @@ public class ActiveSearchView extends ViewPart {
         IAction stopAction = new Action(){
 			@Override
 			public void run() {
-				Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
-		        for (String extension : bridges.keySet()) {
-		            IMylarStructureBridge bridge = bridges.get(extension);
-		            List<AbstractRelationshipProvider> providers = bridge.getProviders();
-		            if(providers == null) continue;
-		            for(AbstractRelationshipProvider provider: providers){
-		            	provider.stopAllRunningJobs();
-		            }
-		        }
+	            for(AbstractRelationshipProvider provider: MylarPlugin.getContextManager().getActiveProviders()){
+	            	provider.stopAllRunningJobs();
+	            }
 			}
         	
         };
@@ -247,6 +247,5 @@ public class ActiveSearchView extends ViewPart {
         viewer.getControl().setFocus();
         //TODO: foo
     }
-
 }
 
