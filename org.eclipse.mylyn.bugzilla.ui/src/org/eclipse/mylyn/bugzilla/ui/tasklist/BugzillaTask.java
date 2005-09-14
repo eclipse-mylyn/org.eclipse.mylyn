@@ -401,9 +401,8 @@ public class BugzillaTask extends Task {
 				updateTaskDetails();
 				notifyTaskDataChange();
 				saveBugReport(true);
-			} catch (Exception e){
-				e.printStackTrace();
-				// ignore
+			} catch (Exception e) {
+				MylarPlugin.fail(e, "Could not download report", false);
 			}
 			BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
 			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
