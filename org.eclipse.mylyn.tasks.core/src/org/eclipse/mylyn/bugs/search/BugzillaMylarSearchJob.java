@@ -14,7 +14,6 @@
 package org.eclipse.mylar.bugs.search;
 
 import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -26,11 +25,11 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * The bugzilla search job used to search a bugzilla site
  * 
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class BugzillaMylarSearchJob extends Job {
 
@@ -53,7 +52,6 @@ public class BugzillaMylarSearchJob extends Job {
 
     @Override
     protected IStatus run(IProgressMonitor monitor) {
-        // create a new status
         final IStatus[] status = new IStatus[1];
 
         try {
@@ -65,7 +63,9 @@ public class BugzillaMylarSearchJob extends Job {
 
             // determine if there was an error, if it was cancelled, or if it is
             // ok
-            if ( status[0].getCode() == IStatus.CANCEL) {
+            if (status[0] == null) {
+            	
+            } else if (status[0].getCode() == IStatus.CANCEL) {
                 // it was cancelled, so just return
                 status[0] = Status.OK_STATUS;
 

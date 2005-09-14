@@ -229,14 +229,18 @@ public class TaskSummaryEditor extends EditorPart {
 		String path = pathText.getText();		
 		path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));		
 		task.setPath(path);
-		task.setReminderDate(datePicker.getDate().getTime());
+		if (datePicker != null && datePicker.getDate() != null) {
+			task.setReminderDate(datePicker.getDate().getTime());
+		}
 		refreshTaskListView(task);
 		markDirty(false);
 	}
+	
 	@Override
 	public void doSaveAs() {
 		// don't support saving
 	}
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {

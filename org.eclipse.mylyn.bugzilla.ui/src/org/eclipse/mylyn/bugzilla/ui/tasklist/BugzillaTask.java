@@ -53,6 +53,8 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class BugzillaTask extends Task {
 	
+	private static final String PROGRESS_LABEL_DOWNLOAD = "Downloading Bugzilla Reports...";
+
 	public enum BugReportSyncState {
 		OUTGOING, OK, INCOMMING, CONFLICT
 
@@ -456,19 +458,6 @@ public class BugzillaTask extends Task {
 		}
 	}
 
-//	/**
-//	 * Refreshes the bug report with the Bugzilla server.
-//	 */
-//	public void refresh() {
-//		// The bug report must be untouched, and this task must not be busy.
-//		if (isDirty() || (state != BugTaskState.FREE)) {
-//			return;
-//		}
-//		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
-////		REFRESH_JOBS.put(job, getHandle());
-//		job.schedule();
-//	}
-
 	@Override
 	public String getToolTipText() {
 		if(lastRefresh == null) return "";
@@ -607,7 +596,7 @@ public class BugzillaTask extends Task {
 	}
 
 	public void scheduleDownloadReport() {
-		GetBugReportJob job = new GetBugReportJob("Downloading from Bugzilla server...");
+		GetBugReportJob job = new GetBugReportJob(PROGRESS_LABEL_DOWNLOAD);
         job.schedule();
 	}
 
@@ -615,7 +604,7 @@ public class BugzillaTask extends Task {
 		if (isDirty() || (state != BugTaskState.FREE)) {
 			return null;
 		}
-		GetBugReportJob job = new GetBugReportJob("Refreshing with Bugzilla server...");
+		GetBugReportJob job = new GetBugReportJob("Refreshing Bugzilla Reports...");
 		return job;
 	}
 	

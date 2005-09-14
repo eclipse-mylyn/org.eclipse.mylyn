@@ -44,11 +44,11 @@ import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
-
 /**
  * Bugzilla search operation for Mylar
  * 
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
         implements IBugzillaSearchOperation {
@@ -118,7 +118,8 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
         	searchCollector = searchLocalQual(monitor);
         }else if(scope == BugzillaMylarSearch.LOCAL_UNQUAL){
             searchCollector = searchLocalUnQual(monitor);
-        }else{
+        } else {
+        	status = Status.OK_STATUS;
             return;
         }
         
@@ -224,7 +225,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 					BugzillaSearchHit hit = new BugzillaSearchHit(bug.getId(), bug.getDescription(), "","","","","","","", bug.getServer());
 					try{
 						searchCollector.accept(hit);
-					}catch(CoreException e){
+					} catch(CoreException e){
 	                    MylarPlugin.log(e, "bug search failed");
 					}
 				}
@@ -462,10 +463,11 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
      */
     public IStatus getStatus() throws LoginException {
         // if a LoginException was thrown while trying to search, throw this
-        if (loginException == null)
+        if (loginException == null) {
             return status;
-        else
+        } else {
             throw loginException;
+        }
     }
 
     /**

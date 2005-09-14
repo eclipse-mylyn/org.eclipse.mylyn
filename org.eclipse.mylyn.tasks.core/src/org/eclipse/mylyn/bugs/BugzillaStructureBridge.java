@@ -50,7 +50,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
     public BugzillaStructureBridge() {
         super();
 		providers = new ArrayList<AbstractRelationshipProvider>();
-    	providers.add(MylarBugsPlugin.getReferenceProvider());
+//    	providers.add(MylarBugsPlugin.getReferenceProvider());
     }
 
     /**
