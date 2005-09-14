@@ -8,21 +8,26 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Feb 16, 2005
-  */
+
 package org.eclipse.mylar.ui.views;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextEdge;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewSite;
-
 
 /**
  * @author Mik Kersten
@@ -30,12 +35,13 @@ import org.eclipse.ui.IViewSite;
 public class MylarContextContentProvider implements IStructuredContentProvider, ITreeContentProvider {
         
     private IViewSite site = null;
+    private Tree tree;
     private Shell shell = null;
     private boolean landmarkOnlyMode;
-    private List<IMylarContextNode> topLevelNodes = new ArrayList<IMylarContextNode>();
     
-    public MylarContextContentProvider(IViewSite site, boolean landmarkOnlyMode) {
-        this.site = site;
+    public MylarContextContentProvider(Tree tree, IViewSite site, boolean landmarkOnlyMode) {
+        this.tree = tree;
+    	this.site = site;
         this.landmarkOnlyMode = landmarkOnlyMode;
     }
     
@@ -53,7 +59,6 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
     }
     
     public Object[] getElements(Object parent) {
-        topLevelNodes.clear();
         if (matchesParent(parent)) {
             List<IMylarContextNode> nodes;
             if (landmarkOnlyMode) {
@@ -65,11 +70,9 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
             } else {
                 nodes = MylarPlugin.getContextManager().getActiveContext().getAllElements();
             }
-            topLevelNodes = nodes;
             return nodes.toArray(); 
         } 
-        return getChildren(parent); 
-        
+        return getChildren(parent);
     }
     
     private boolean matchesParent(Object parent) {
@@ -90,8 +93,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
         assert(parent != null);
         if (parent instanceof IMylarContextNode) {
             IMylarContextNode node = (IMylarContextNode)parent;
-            if (topLevelNodes.contains(node)) {
-                topLevelNodes.remove(node);
+            if (!isPopulatedInRoot(node)) {
                 return getAllEdgeTypes(node.getEdges()); 
             } else {
             	return new Object[0];
@@ -109,7 +111,16 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
         return new Object[0]; 
     } 
     
-    private Object[] getAllTagetsForSource(IMylarContextNode source, String kind) {
+    private boolean isPopulatedInRoot(IMylarContextNode node) {
+    	boolean populated = false;
+    	for (int i = 0; i < tree.getItems().length; i++) {
+			TreeItem item = tree.getItems()[i]; 
+			if (node.equals(item.getData()) && item.getItemCount() > 0) populated = true;
+		}
+		return populated;
+	}
+
+	private Object[] getAllTagetsForSource(IMylarContextNode source, String kind) {
     	Collection<MylarContextEdge> edges = source.getEdges();
     	List<IMylarContextNode> targets = new ArrayList<IMylarContextNode>();
     	for (MylarContextEdge edge : edges) {
@@ -120,7 +131,6 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 		
 		return targets.toArray();
 	}
-
 
 	private Object[] getAllEdgeTypes(Collection<MylarContextEdge> edges) {
 		Map<String, IMylarContextEdge> map = new HashMap<String, IMylarContextEdge>();
@@ -143,7 +153,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 	public boolean hasChildren(Object parent) {
         assert(parent != null);
         if (parent instanceof IMylarContextNode) {
-        	return topLevelNodes.contains(parent)
+        	return isPopulatedInRoot((IMylarContextNode)parent)
               &&((IMylarContextNode)parent).getEdges().size() > 0;
         } else if (parent instanceof MylarContextEdge) {
             return true;

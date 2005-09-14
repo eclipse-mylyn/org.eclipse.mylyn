@@ -56,7 +56,7 @@ public class ActiveSearchView extends ViewPart {
     
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
-//            refresh(node);
+            refresh(node);
         }
         
         public void interestChanged(List<IMylarContextNode> nodes) {
@@ -76,11 +76,11 @@ public class ActiveSearchView extends ViewPart {
         }
         
         public void landmarkAdded(IMylarContextNode node) { 
-            refresh(node);
+            refresh(null);
         }
 
         public void landmarkRemoved(IMylarContextNode node) { 
-            refresh(node);
+            refresh(null);
         }
 
         public void edgesChanged(IMylarContextNode node) {
@@ -96,13 +96,11 @@ public class ActiveSearchView extends ViewPart {
                 public void run() {
                     try {  
                         if (viewer != null && !viewer.getTree().isDisposed()) {
-                        	// TODO: make lazy
-                        	viewer.refresh();
-//                        	if (node != null) {
-//                        		viewer.refresh(node);
-//                        	} else {
-//                        		viewer.refresh();
-//                        	}
+                        	if (node != null) {
+                        		viewer.refresh(node, true);
+                        	} else {
+                        		viewer.refresh();
+                        	}
                             viewer.expandAll();
                         }
                     } catch (Throwable t) {
@@ -163,7 +161,7 @@ public class ActiveSearchView extends ViewPart {
     public void createPartControl(Composite parent) {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         viewer.setUseHashlookup(true);
-        viewer.setContentProvider(new MylarContextContentProvider(this.getViewSite(), true));
+        viewer.setContentProvider(new MylarContextContentProvider(viewer.getTree(), this.getViewSite(), true));
         viewer.setLabelProvider(new DecoratingLabelProvider(
                 new MylarContextLabelProvider(),
                 PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
