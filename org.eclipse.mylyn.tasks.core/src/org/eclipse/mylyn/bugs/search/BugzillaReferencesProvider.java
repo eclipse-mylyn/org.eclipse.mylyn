@@ -42,7 +42,7 @@ import org.eclipse.ui.PlatformUI;
 public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 
     public static final String ID = "org.eclipse.mylar.bugs.search.references";
-    public static final String NAME = "Bugilla report references";
+    public static final String NAME = "referenced by";
     public static final int DEFAULT_DEGREE = 0;
     
     public BugzillaReferencesProvider() {

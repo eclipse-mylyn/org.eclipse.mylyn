@@ -224,7 +224,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
         return getResourceExtension();
     }
 
-	public List<AbstractRelationshipProvider> getProviders() {
+	public List<AbstractRelationshipProvider> getRelationshipProviders() {
 		return providers;
 	}
 	
