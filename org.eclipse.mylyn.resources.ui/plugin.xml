@@ -5,11 +5,13 @@
 	<extension point="org.eclipse.mylar.core.context">
 		<structureBridge
         activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
+        activeSearchLabel="XML References"
         class="org.eclipse.mylar.xml.ant.AntStructureBridge"
         name="Ant Structure Bridge"
         parent="org.eclipse.mylar.ide.ResourceStructureBridge"/>
 		<structureBridge
         activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
+        activeSearchLabel="XML References"
         class="org.eclipse.mylar.xml.pde.PdeStructureBridge"
         name="PDE Structure Bridge"
         parent="org.eclipse.mylar.ide.ResourceStructureBridge"/>

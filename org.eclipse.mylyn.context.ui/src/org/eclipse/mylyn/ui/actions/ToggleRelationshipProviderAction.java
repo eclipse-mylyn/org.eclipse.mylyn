@@ -16,7 +16,6 @@ package org.eclipse.mylar.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -33,22 +32,16 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 //    private final String PREFIX = "org.eclipse.mylar.ui.relatedElements.providers";
 //    private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
     
-    IMylarStructureBridge bridge;
+    private IMylarStructureBridge bridge;
     private Menu dropDownMenu = null;
         
 	public ToggleRelationshipProviderAction(IMylarStructureBridge bridge) {
 		super();
         this.bridge = bridge;
-    
-        // HACK:
-        AbstractRelationshipProvider provider = bridge.getProviders().get(0);
-		setText(provider.getId().toString());
-        setToolTipText(provider.getId().toString());
         setImageDescriptor(MylarPlugin.getDefault().getActiveSearchIcon(bridge));
-
-		setMenuCreator(this);	
+        setToolTipText(MylarPlugin.getDefault().getActiveSearchLabel(bridge));
+        setMenuCreator(this);	
 		
-		// HACK: if there are multiple providers, all store the same current DOS
 		degreeOfSeparation = bridge.getProviders().get(0).getCurrentDegreeOfSeparation();
 		
 		if(degreeOfSeparation > 0)
@@ -57,17 +50,8 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	 
 	@Override
 	public void run() {
-		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), degreeOfSeparation);
-//		valueChanged(isChecked(), true);
+		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), 0);
 	}
-//	
-//	private void valueChanged(final boolean on, boolean store) {
-//		setChecked(on);
-//		if (store) MylarUiPlugin.getPrefs().setValue(prefId, on); //$NON-NLS-1$
-//		provider.setEnabled(on);
-//        MylarPlugin.getContextManager().updateSearchKindEnabled(provider, on, degreeOfSeparation);
-//	}
-	
 	
 	public void dispose() {			
 		if (dropDownMenu != null) {
@@ -97,7 +81,6 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	private int degreeOfSeparation = 0;
 	
 	public void addActionsToMenu() {
-
 		// HACK: if there are multiple providers, all store the same current DOS
 		degreeOfSeparation = bridge.getProviders().get(0).getCurrentDegreeOfSeparation();
 		

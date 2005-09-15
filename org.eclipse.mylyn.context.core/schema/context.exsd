@@ -91,6 +91,13 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="activeSearchLabel" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

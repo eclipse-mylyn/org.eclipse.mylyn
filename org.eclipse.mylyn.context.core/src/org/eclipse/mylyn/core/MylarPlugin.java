@@ -55,6 +55,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String ELEMENT_STRUCTURE_BRIDGE_CLASS = "class";
 	public static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
 	public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon";
+	public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
 	
 	public static final String CONTENT_TYPE_ANY = "*";
 		
@@ -64,6 +65,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 
 	private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
     private Map<IMylarStructureBridge, ImageDescriptor> activeSearchIcons = new HashMap<IMylarStructureBridge, ImageDescriptor>();
+    private Map<IMylarStructureBridge, String> activeSearchLabels = new HashMap<IMylarStructureBridge, String>();
 	
     private IMylarStructureBridge defaultBridge = null;
     
@@ -357,6 +359,14 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     	return activeSearchIcons.get(bridge);
     }
     
+    private void setActiveSearchLabel(IMylarStructureBridge bridge, String label) {
+    	activeSearchLabels.put(bridge, label);
+    }
+    
+    public String getActiveSearchLabel(IMylarStructureBridge bridge) {
+    	return activeSearchLabels.get(bridge);
+    }
+    
     /**
      * TODO: cache this to improve performance?
      * 
@@ -531,6 +541,10 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 						if (descriptor != null) {
 							MylarPlugin.getDefault().setActiveSearchIcon(bridge, descriptor);
 						}
+					}
+					String label = element.getAttribute(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
+					if (label != null) {
+						MylarPlugin.getDefault().setActiveSearchLabel(bridge, label);
 					}
 				} else {
 					MylarPlugin.log("Could not load bridge: " + object.getClass().getCanonicalName() + " must implement " + IMylarStructureBridge.class.getCanonicalName(), thisReader);	
