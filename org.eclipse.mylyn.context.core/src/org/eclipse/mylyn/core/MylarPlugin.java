@@ -158,7 +158,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
             return getResourceExtension();
         }
 
-		public List<AbstractRelationshipProvider> getProviders() {
+		public List<AbstractRelationshipProvider> getRelationshipProviders() {
 			return Collections.emptyList();
 		}
 
@@ -223,7 +223,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
         Map<String, IMylarStructureBridge> bridges = getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
-            List<AbstractRelationshipProvider> providers = bridge.getProviders();
+            List<AbstractRelationshipProvider> providers = bridge.getRelationshipProviders();
             if(providers == null) continue;
             for(AbstractRelationshipProvider provider: providers){
             	provider.stopAllRunningJobs();
@@ -393,8 +393,8 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
     }
 
     private void addBridge(IMylarStructureBridge bridge) {
-    	if(bridge.getProviders() != null){
-    		for(AbstractRelationshipProvider provider: bridge.getProviders()){
+    	if(bridge.getRelationshipProviders() != null){
+    		for(AbstractRelationshipProvider provider: bridge.getRelationshipProviders()){
     			getContextManager().addListener(provider);
     		}
     	}

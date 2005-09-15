@@ -46,7 +46,6 @@ import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
-
 /**
  * @author Mik Kersten
  */
@@ -104,8 +103,8 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     }
     
     public boolean canBeLandmark(String handle) {
-    	Object element = getObjectForHandle(handle);
-    	if (element instanceof IMember || element instanceof IType) {
+    	IJavaElement element = (IJavaElement)getObjectForHandle(handle);
+    	if ((element instanceof IMember || element instanceof IType) && element.exists()) {
             return true;
         } else {
             return false;
@@ -206,7 +205,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
         return getResourceExtension();
     }
 
-	public List<AbstractRelationshipProvider> getProviders() {
+	public List<AbstractRelationshipProvider> getRelationshipProviders() {
 		return providers;
 	}
 	

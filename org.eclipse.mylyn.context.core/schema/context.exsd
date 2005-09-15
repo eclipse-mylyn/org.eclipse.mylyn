@@ -91,7 +91,7 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="activeSearchLabel" type="string" use="required">
+         <attribute name="activeSearchLabel" type="string">
             <annotation>
                <documentation>
                   

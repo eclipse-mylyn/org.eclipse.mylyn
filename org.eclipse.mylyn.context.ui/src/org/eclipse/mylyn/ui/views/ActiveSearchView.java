@@ -37,6 +37,8 @@ import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -52,7 +54,7 @@ public class ActiveSearchView extends ViewPart {
     
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
-    private static final String VIEW_ID = "org.eclipse.mylar.ui.views.ActiveSearchView";
+    public static final String ID = "org.eclipse.mylar.ui.views.ActiveSearchView";
     
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
@@ -96,7 +98,7 @@ public class ActiveSearchView extends ViewPart {
                 public void run() {
                     try {  
                         if (viewer != null && !viewer.getTree().isDisposed()) {
-                        	if (node != null) {
+                        	if (node != null && containsNode(viewer.getTree(), node)) {
                         		viewer.refresh(node, true);
                         	} else {
                         		viewer.refresh();
@@ -109,6 +111,15 @@ public class ActiveSearchView extends ViewPart {
                 }
             });
         }
+        
+		private boolean containsNode(Tree tree, IMylarContextNode node) {
+	    	boolean contains = false;
+	    	for (int i = 0; i < tree.getItems().length; i++) {
+				TreeItem item = tree.getItems()[i]; 
+				if (node.equals(item.getData())) contains = true;
+			}
+			return contains;
+		}
 
         public void presentationSettingsChanged(UpdateKind kind) {
         	if(viewer != null && !viewer.getTree().isDisposed()){
@@ -131,7 +142,7 @@ public class ActiveSearchView extends ViewPart {
     	IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (activePage == null)
             return null;
-        IViewPart view= activePage.findView(VIEW_ID);
+        IViewPart view= activePage.findView(ID);
         if (view instanceof ActiveSearchView)
             return (ActiveSearchView)view;
         return null;    
@@ -209,7 +220,7 @@ public class ActiveSearchView extends ViewPart {
         Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
-            List<AbstractRelationshipProvider> providers = bridge.getProviders(); 
+            List<AbstractRelationshipProvider> providers = bridge.getRelationshipProviders(); 
             if(providers != null && providers.size() > 0) {
 	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
 	            relationshipProviderActions.add(action); 
@@ -245,5 +256,9 @@ public class ActiveSearchView extends ViewPart {
         viewer.getControl().setFocus();
         //TODO: foo
     }
+
+	public TreeViewer getViewer() {
+		return viewer;
+	}
 }
 

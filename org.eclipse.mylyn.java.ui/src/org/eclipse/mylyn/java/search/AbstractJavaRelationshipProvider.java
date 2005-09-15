@@ -55,6 +55,7 @@ import org.eclipse.search2.internal.ui.InternalSearchUI;
  * @author Mik Kersten
  */
 public abstract class AbstractJavaRelationshipProvider extends AbstractRelationshipProvider {
+	
 	public static List<Job> runningJobs = new ArrayList<Job>();
     
 	public static final String ID_GENERIC = "org.eclipse.mylar.java.relation";

@@ -93,7 +93,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
         assert(parent != null);
         if (parent instanceof IMylarContextNode) {
             IMylarContextNode node = (IMylarContextNode)parent;
-            if (!isPopulatedInRoot(node)) {
+            if (isRootItem(node)) {
                 return getAllEdgeTypes(node.getEdges()); 
             } else {
             	return new Object[0];
@@ -111,13 +111,15 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
         return new Object[0]; 
     } 
     
-    private boolean isPopulatedInRoot(IMylarContextNode node) {
-    	boolean populated = false;
+    private boolean isRootItem(IMylarContextNode node) {
+    	boolean isRootItem = false;
     	for (int i = 0; i < tree.getItems().length; i++) {
 			TreeItem item = tree.getItems()[i]; 
-			if (node.equals(item.getData()) && item.getItemCount() > 0) populated = true;
+			if (node.equals(item.getData())) isRootItem = true;
+//			if (node.equals(item.getData()) && item.getItemCount() > 0) isRootItem = true;
+//			System.err.println("> item " + item.getData() + ", pop: " + isRootItem);
 		}
-		return populated;
+		return isRootItem;
 	}
 
 	private Object[] getAllTagetsForSource(IMylarContextNode source, String kind) {
@@ -153,7 +155,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 	public boolean hasChildren(Object parent) {
         assert(parent != null);
         if (parent instanceof IMylarContextNode) {
-        	return isPopulatedInRoot((IMylarContextNode)parent)
+        	return isRootItem((IMylarContextNode)parent)
               &&((IMylarContextNode)parent).getEdges().size() > 0;
         } else if (parent instanceof MylarContextEdge) {
             return true;

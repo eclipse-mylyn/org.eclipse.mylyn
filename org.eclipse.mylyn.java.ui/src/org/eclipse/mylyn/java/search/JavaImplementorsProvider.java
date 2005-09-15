@@ -24,7 +24,7 @@ import org.eclipse.mylar.java.JavaStructureBridge;
 public class JavaImplementorsProvider extends AbstractJavaRelationshipProvider {
 
 	public static final String ID = ID_GENERIC + ".implementors";
-    public static final String NAME = "Java implementors";
+    public static final String NAME = "implemented by";
     
     public JavaImplementorsProvider() {
         super(JavaStructureBridge.CONTENT_TYPE, ID);

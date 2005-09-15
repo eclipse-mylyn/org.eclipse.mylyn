@@ -141,7 +141,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     /**
      * These methods aren't needed since there is no generic active search
      */
-	public List<AbstractRelationshipProvider> getProviders() {
+	public List<AbstractRelationshipProvider> getRelationshipProviders() {
 		return Collections.emptyList();
 	}
 

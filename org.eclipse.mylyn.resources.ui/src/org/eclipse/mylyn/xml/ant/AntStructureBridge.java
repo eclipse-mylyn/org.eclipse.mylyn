@@ -329,7 +329,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	/**
 	 * TODO: weird that there is none
 	 */
-	public List<AbstractRelationshipProvider> getProviders() {
+	public List<AbstractRelationshipProvider> getRelationshipProviders() {
 		return Collections.emptyList();
 	}
 

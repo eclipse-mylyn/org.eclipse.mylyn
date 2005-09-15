@@ -82,7 +82,7 @@ public interface IMylarStructureBridge {
      */
     public abstract String getResourceExtension(String elementHandle);
  
-    public abstract List<AbstractRelationshipProvider> getProviders();
+    public abstract List<AbstractRelationshipProvider> getRelationshipProviders();
     
     public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
 }

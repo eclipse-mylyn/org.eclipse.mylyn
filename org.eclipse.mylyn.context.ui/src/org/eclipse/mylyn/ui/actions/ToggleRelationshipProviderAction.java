@@ -42,7 +42,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
         setToolTipText(MylarPlugin.getDefault().getActiveSearchLabel(bridge));
         setMenuCreator(this);	
 		
-		degreeOfSeparation = bridge.getProviders().get(0).getCurrentDegreeOfSeparation();
+		degreeOfSeparation = bridge.getRelationshipProviders().get(0).getCurrentDegreeOfSeparation();
 		
 		if(degreeOfSeparation > 0)
 			run();
@@ -50,7 +50,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	 
 	@Override
 	public void run() {
-		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), degreeOfSeparation);
+		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getRelationshipProviders(), degreeOfSeparation);
 	}
 	
 	public void dispose() {			
@@ -82,7 +82,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	
 	public void addActionsToMenu() {
 		// HACK: if there are multiple providers, all store the same current DOS
-		degreeOfSeparation = bridge.getProviders().get(0).getCurrentDegreeOfSeparation();
+		degreeOfSeparation = bridge.getRelationshipProviders().get(0).getCurrentDegreeOfSeparation();
 		
 		MenuItem menuItem = new MenuItem(dropDownMenu, SWT.NONE);
 		menuItem.setText("Degree Of Separation");
@@ -97,7 +97,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 				public void run() {
 	    			try{
 		    			degreeOfSeparation = Integer.parseInt(getId());
-		    			MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), degreeOfSeparation);
+		    			MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getRelationshipProviders(), degreeOfSeparation);
 	    			} catch (NumberFormatException e){
 	    				// ignore this for now
 	    			}

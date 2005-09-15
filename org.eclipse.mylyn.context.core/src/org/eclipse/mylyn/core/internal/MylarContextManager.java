@@ -363,8 +363,8 @@ public class MylarContextManager {
     
     public void refreshRelatedElements() {
     	for(IMylarStructureBridge bridge: MylarPlugin.getDefault().getStructureBridges().values()){
-    		if(bridge.getProviders() != null){
-		        for (AbstractRelationshipProvider provider : bridge.getProviders()) {
+    		if(bridge.getRelationshipProviders() != null){
+		        for (AbstractRelationshipProvider provider : bridge.getRelationshipProviders()) {
 		        	List<AbstractRelationshipProvider> providerList = new ArrayList<AbstractRelationshipProvider>();
 		        	providerList.add(provider);
 		        	updateSearchKindEnabled(providerList, provider.getCurrentDegreeOfSeparation());
@@ -382,7 +382,7 @@ public class MylarContextManager {
 		Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
-            providers.addAll(bridge.getProviders());
+            providers.addAll(bridge.getRelationshipProviders());
         }
         return providers;
     }

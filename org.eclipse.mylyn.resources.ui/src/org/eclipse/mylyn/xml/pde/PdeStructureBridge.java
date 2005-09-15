@@ -310,7 +310,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	 * HACK: This is weird that the relationship provider is only here.
 	 * There are relly 3 different bridges, 2 specific and 1 generic
 	 */
-	public List<AbstractRelationshipProvider> getProviders() {
+	public List<AbstractRelationshipProvider> getRelationshipProviders() {
 		return providers;
 	}
 	
