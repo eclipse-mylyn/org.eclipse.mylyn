@@ -216,7 +216,7 @@ public class ActiveSearchView extends ViewPart {
     }
     
     private void fillLocalToolBar(IToolBarManager manager) {
-        manager.removeAll();
+//        manager.removeAll();
         Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
