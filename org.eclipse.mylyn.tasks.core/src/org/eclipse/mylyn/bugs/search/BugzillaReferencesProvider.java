@@ -43,6 +43,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 
     public static final String ID = "org.eclipse.mylar.bugs.search.references";
     public static final String NAME = "Bugilla report references";
+    public static final int DEFAULT_DEGREE = 0;
     
     public BugzillaReferencesProvider() {
         super(BugzillaStructureBridge.CONTENT_TYPE, ID);
@@ -157,5 +158,10 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 	public void stopAllRunningJobs() {
 		BugzillaSearchManager.cancelAllRunningJobs();
 		
+	}
+	
+	@Override
+	protected int getDefaultDegreeOfSeparation() {
+		return DEFAULT_DEGREE;
 	}
 }
