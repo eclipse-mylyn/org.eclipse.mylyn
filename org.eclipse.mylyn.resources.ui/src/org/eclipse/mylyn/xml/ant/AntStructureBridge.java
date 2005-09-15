@@ -43,10 +43,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
-
 /**
  * @author Mik Kersten
- * 
  */
 public class AntStructureBridge implements IMylarStructureBridge {
 

@@ -59,7 +59,8 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     
 	public static final String ID_GENERIC = "org.eclipse.mylar.java.relation";
     public static final String NAME = "Java relationships";	
-	
+    public static final int DEFAULT_DEGREE = 2; 
+    
     public String getGenericId(){
     	return ID_GENERIC;
     }
@@ -351,6 +352,11 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
 			j.cancel();
 		}
 		runningJobs.clear();
+	}
+    
+	@Override
+	protected int getDefaultDegreeOfSeparation() {
+		return DEFAULT_DEGREE;
 	}
 }
  

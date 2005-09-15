@@ -47,7 +47,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
  */
 public class PdeStructureBridge implements IMylarStructureBridge {
 
-    public final static String CONTENT_TYPE = "plugin.xml";
+	public final static String CONTENT_TYPE = "plugin.xml";
     private List<AbstractRelationshipProvider> providers;
     private IMylarStructureBridge parentBridge;
     
@@ -57,9 +57,6 @@ public class PdeStructureBridge implements IMylarStructureBridge {
         
     }
     
-    /**
-     * @see org.eclipse.mylar.core.IMylarStructureBridge#getResourceExtension()
-     */
     public String getResourceExtension() {
         return CONTENT_TYPE;
     }
@@ -72,9 +69,6 @@ public class PdeStructureBridge implements IMylarStructureBridge {
         }
     }
     
-    /**
-     * @see org.eclipse.mylar.core.IMylarStructureBridge#getParentHandle(java.lang.String)
-     */
     public String getParentHandle(String handle) {
         // we can only get the parent if we have a PluginObjectNode
         
@@ -322,12 +316,12 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		List <IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
-		separations.add(new DegreeOfSeparation("disabled", 0));
-		separations.add(new DegreeOfSeparation("landmark files", 1));
-		separations.add(new DegreeOfSeparation("interesting files", 2));
-		separations.add(new DegreeOfSeparation("interesting project", 3));
-		separations.add(new DegreeOfSeparation("project dependencies", 4));
-		separations.add(new DegreeOfSeparation("entire workspace", 5));
+		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
+		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
+		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
+		separations.add(new DegreeOfSeparation(DOS_3_LABEL, 3));
+		separations.add(new DegreeOfSeparation(DOS_4_LABEL, 4));
+		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
 
 		return separations;
 	}

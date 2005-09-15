@@ -50,7 +50,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	 
 	@Override
 	public void run() {
-		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), 0);
+		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getProviders(), degreeOfSeparation);
 	}
 	
 	public void dispose() {			

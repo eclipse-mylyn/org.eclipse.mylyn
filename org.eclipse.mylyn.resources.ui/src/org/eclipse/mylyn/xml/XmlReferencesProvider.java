@@ -57,6 +57,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
 
     public static final String SOURCE_ID = "org.eclipse.mylar.xml.search.references";
     public static final String NAME = "Xml references";
+    public static final int DEFAULT_DEGREE = 3;
     
     public static List<Job> runningJobs = new ArrayList<Job>();
 
@@ -405,5 +406,10 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
 			j.cancel();
 		}
 		runningJobs.clear();
+	}
+
+	@Override
+	protected int getDefaultDegreeOfSeparation() {
+		return DEFAULT_DEGREE;
 	}
 }

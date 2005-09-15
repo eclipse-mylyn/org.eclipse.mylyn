@@ -212,13 +212,12 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		List <IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
-		separations.add(new DegreeOfSeparation("disabled", 0));
-		separations.add(new DegreeOfSeparation("landmark files", 1));
-		separations.add(new DegreeOfSeparation("interesting files", 2));
-		separations.add(new DegreeOfSeparation("interesting project", 3));
-		separations.add(new DegreeOfSeparation("project dependencies", 4));
-		separations.add(new DegreeOfSeparation("entire workspace", 5));
-
+		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
+		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
+		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
+		separations.add(new DegreeOfSeparation(DOS_3_LABEL, 3));
+		separations.add(new DegreeOfSeparation(DOS_4_LABEL, 4));
+		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
 		return separations;
 	}
 

@@ -7,7 +7,7 @@
                point="org.eclipse.mylar.core.context">
             <structureBridge
                   activeSearchIcon="icons/elcl16/edge-ref-java.gif"
-                  activeSearchLabel="Java Relationships"
+                  activeSearchLabel="Java Search"
                   class="org.eclipse.mylar.java.JavaStructureBridge"
                   name="Java Structure Bridge"/>
          </extension>

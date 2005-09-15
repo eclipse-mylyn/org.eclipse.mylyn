@@ -37,10 +37,16 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
     public AbstractRelationshipProvider(String structureKind, String id) {
         this.id = id;
         this.structureKind = structureKind;
-        degreeOfSeparation = MylarPlugin.getDefault().getPreferenceStore().getInt(getGenericId());
+        if (MylarPlugin.getDefault().getPreferenceStore().contains(getGenericId())) {
+        	degreeOfSeparation = MylarPlugin.getDefault().getPreferenceStore().getInt(getGenericId());
+        } else {
+        	degreeOfSeparation = getDefaultDegreeOfSeparation();
+        }
     }
    
-    protected abstract void findRelated(final IMylarContextNode node, int degreeOfSeparation);
+    protected abstract int getDefaultDegreeOfSeparation();
+
+	protected abstract void findRelated(final IMylarContextNode node, int degreeOfSeparation);
     
     /**
      * @param limitTo Only used in thye AbstractJavaRelationshipProvider for the search type

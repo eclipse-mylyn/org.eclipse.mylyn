@@ -22,6 +22,13 @@ import org.eclipse.core.resources.IProject;
  */
 public interface IMylarStructureBridge {
 
+	public static final String DOS_0_LABEL = "disabled";
+	public static final String DOS_1_LABEL = "landmark resources";
+	public static final String DOS_2_LABEL = "interesting resources";
+	public static final String DOS_3_LABEL = "interesting projects";
+	public static final String DOS_4_LABEL = "project dependencies";
+	public static final String DOS_5_LABEL = "entire workspace";
+	
 	/**
 	 * Used for delagating to when the parent of an element is known
 	 * by another bridge.
