@@ -59,7 +59,7 @@ public class ContextReader {
 			}
 			return t;
         } catch (Exception e) {
-            MylarPlugin.log("could not read taskscape, recreating", this);
+            MylarPlugin.fail(e, "could not read context, recreating", false);
             file.renameTo(new File(file.getAbsolutePath() + "-save"));
             return null;
         }
