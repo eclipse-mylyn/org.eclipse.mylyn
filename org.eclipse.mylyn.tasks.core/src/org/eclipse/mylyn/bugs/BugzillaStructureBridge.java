@@ -28,6 +28,7 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.ui.IEditorPart;
@@ -36,7 +37,10 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
-
+/**
+ * @author Mik Kersten
+ * @author Shawn Minto
+ */
 public class BugzillaStructureBridge implements IMylarStructureBridge {
 
     public final static String CONTENT_TYPE = "bugzilla";
@@ -245,5 +249,10 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 
 	public void setParentBridge(IMylarStructureBridge bridge) {
 		// ignore
+	}
+
+	public boolean containsProblem(IMylarContextNode node) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
