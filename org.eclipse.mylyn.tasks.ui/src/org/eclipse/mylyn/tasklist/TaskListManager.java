@@ -61,38 +61,25 @@ public class TaskListManager {
     }
     
     public boolean readTaskList() {
-//    	IProgressService service = PlatformUI.getWorkbench().getProgressService();
-//		try {
-//			service.run(true, true, new IRunnableWithProgress() {
-//				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-			    	MylarTasklistPlugin.getDefault().getTaskListExternalizer().initExtensions();
-			        try { 
-			        	if (taskListFile.exists()) {
-			        		MylarTasklistPlugin.getDefault().getTaskListExternalizer().readTaskList(taskList, taskListFile);
-			        		int maxHandle = taskList.findLargestTaskHandle();
-			        		if (maxHandle >= nextTaskId) {
-			        			nextTaskId = maxHandle + 1;
-			        		}
-			                for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
-			        	} else {
-			        		MylarTasklistPlugin.getTaskListManager().createNewTaskList();
-			        	}
-			        	if (TaskListView.getDefault() != null) {
-			        		TaskListView.getDefault().getViewer().refresh();
-			        	}
-			        } catch (Exception e) { 
-			        	MylarPlugin.log(e, "Could not read task list");
-			        	return false;
-			        }			
-//				}
-//			});
-//		} catch (InvocationTargetException e) {
-//			MylarPlugin.log(e, "Could not read task list");
-//			return false;
-//		} catch (InterruptedException e) {
-//			MylarPlugin.log(e, "Could not read task list");
-//			return false;
-//		}
+    	MylarTasklistPlugin.getDefault().getTaskListExternalizer().initExtensions();
+        try { 
+        	if (taskListFile.exists()) {
+        		MylarTasklistPlugin.getDefault().getTaskListExternalizer().readTaskList(taskList, taskListFile);
+        		int maxHandle = taskList.findLargestTaskHandle();
+        		if (maxHandle >= nextTaskId) {
+        			nextTaskId = maxHandle + 1;
+        		}
+                for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
+        	} else {
+        		MylarTasklistPlugin.getTaskListManager().createNewTaskList();
+        	}
+        	if (TaskListView.getDefault() != null) {
+        		TaskListView.getDefault().getViewer().refresh();
+        	}
+        } catch (Exception e) { 
+        	MylarPlugin.log(e, "Could not read task list");
+        	return false;
+        } 
 		return true;
     }
 
