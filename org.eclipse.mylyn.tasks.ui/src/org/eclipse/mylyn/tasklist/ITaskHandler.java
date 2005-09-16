@@ -38,4 +38,6 @@ public interface ITaskHandler {
 	public abstract void restoreState(TaskListView taskListView);
 
 	public abstract boolean enableAction(Action action, ITaskListElement element);
+	
+	public abstract void itemRemoved(ITaskListElement element, ICategory category);
 }

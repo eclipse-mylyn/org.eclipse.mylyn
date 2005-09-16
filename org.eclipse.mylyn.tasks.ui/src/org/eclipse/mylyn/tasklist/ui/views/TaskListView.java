@@ -78,6 +78,7 @@ import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.NavigatePreviousAction;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
@@ -151,6 +152,7 @@ public class TaskListView extends ViewPart {
     private OpenTaskEditorAction doubleClickAction;
     private NavigatePreviousAction previousTaskAction;
     private NextTaskAction nextTaskAction;
+    private RemoveFromCategoryAction removeAction;
 
     private MarkTaskCompleteAction completeTask;
     private MarkTaskIncompleteAction incompleteTask;
@@ -1091,6 +1093,7 @@ public class TaskListView extends ViewPart {
         addAction(delete, manager, element);
         addAction(copyAction, manager, element);
         addAction(rename, manager, element);
+        addAction(removeAction, manager, element);
         manager.add(new Separator());
         addAction(createTask, manager, element);
         manager.add(new Separator("mylar"));   
@@ -1207,7 +1210,7 @@ public class TaskListView extends ViewPart {
     	createTask = new CreateTaskAction(this);
     	createTaskToolbar = new CreateTaskAction(this);   
         createCategory = new CreateCategoryAction(this);
-        
+        removeAction = new RemoveFromCategoryAction(this);
         rename = new RenameAction(this);
         
         delete = new DeleteAction(this);

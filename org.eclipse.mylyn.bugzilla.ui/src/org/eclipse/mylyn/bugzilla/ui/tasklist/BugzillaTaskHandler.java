@@ -25,6 +25,7 @@ import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListElement;
@@ -34,6 +35,7 @@ import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -233,7 +235,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		if(element instanceof BugzillaHit){
 			return false;
 		} else if(element instanceof BugzillaTask){
-			if(action instanceof DeleteAction || action instanceof CopyDescriptionAction || action instanceof OpenTaskEditorAction){
+			if(action instanceof DeleteAction || action instanceof CopyDescriptionAction || action instanceof OpenTaskEditorAction || action instanceof RemoveFromCategoryAction){
 				return true;
 			} else {
 				return false;
@@ -251,5 +253,22 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			}
 		}
 		return false;
+	}
+
+	public void itemRemoved(ITaskListElement element, ICategory category) {
+		if (element instanceof BugzillaTask){
+			BugzillaTask task = (BugzillaTask) element;
+			if (category != null) {
+				category.removeTask(task);
+			} else {
+				String message = task.getDeleteConfirmationMessage();			
+				boolean deleteConfirmed = MessageDialog.openQuestion(
+			            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+			            "Confirm delete", message);
+				if (!deleteConfirmed) 
+					return;
+				MylarTasklistPlugin.getTaskListManager().deleteTask(task);
+			}
+		}
 	} 
 }
