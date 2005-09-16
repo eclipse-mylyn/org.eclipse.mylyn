@@ -33,6 +33,7 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.java.JavaProblemListener;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IViewPart;
@@ -121,6 +122,8 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     }
 
     public void testErrorInterest() throws CoreException, InterruptedException, InvocationTargetException {
+    	JavaPlugin.getDefault().getProblemMarkerManager().addListener(new JavaProblemListener());
+
     	IViewPart problemsPart = JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
     	assertNotNull(problemsPart);
     	
