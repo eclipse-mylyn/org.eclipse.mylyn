@@ -17,13 +17,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.ui.CategoryEditorInput;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.internal.Workbench;
 
 
 /**
@@ -187,5 +193,27 @@ public class TaskCategory implements ICategory, Serializable {
 
 	public String getStringForSortingDescription() {
 		return getDescription(true);
+	}
+	
+	public void openCategoryInEditor(boolean offline) {
+    	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				openCategory();
+			}
+		});
+    }
+	
+	public void openCategory() {
+		IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (page == null) {
+			return;
+		}
+
+		IEditorInput input = new CategoryEditorInput(this);
+		try {
+			page.openEditor(input, MylarTasklistPlugin.CATEGORY_EDITOR_ID);					
+		} catch (PartInitException ex) {
+			MylarPlugin.log(ex, "open failed");
+		}
 	}
 }

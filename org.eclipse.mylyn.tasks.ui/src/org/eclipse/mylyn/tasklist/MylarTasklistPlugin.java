@@ -75,6 +75,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public static final String TASK_ID = "org.eclipse.mylar.tasklist.userid";
     public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
     public static final String TASK_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.taskEditor";
+    public static final String CATEGORY_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.catEditor";
     public static final String SELECTED_PRIORITY = "org.eclipse.mylar.tasklist.filter.priority";
     public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.complete";
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";

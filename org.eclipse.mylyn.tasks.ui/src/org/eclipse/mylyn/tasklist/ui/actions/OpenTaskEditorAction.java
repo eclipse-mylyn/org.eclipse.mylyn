@@ -18,6 +18,7 @@ import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
@@ -51,6 +52,8 @@ public class OpenTaskEditorAction extends Action {
 	    	} else{
 	    		if(element instanceof Task){
 	    			((Task)element).openTaskInEditor(false);	
+	    		} else if (element instanceof TaskCategory) {
+	    			((TaskCategory)element).openCategoryInEditor(false);
 	    		}
 	    	}
 	    }

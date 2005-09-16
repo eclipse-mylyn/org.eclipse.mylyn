@@ -50,6 +50,12 @@
            class="org.eclipse.mylar.tasklist.report.ui.PlanningGameEditorPart"
            name="Planning Game Report"
            id="org.eclipse.mylar.tasklist.report.ui.planning"/>
+	    <editor
+           icon="icons/eview16/task.gif"
+           class="org.eclipse.mylar.tasklist.ui.CategoryEditor"
+           name="Category Editor"
+           id="org.eclipse.mylar.tasklist.ui.catEditor"/>           
+           
   </extension>
   
   <extension point="org.eclipse.ui.commands">
