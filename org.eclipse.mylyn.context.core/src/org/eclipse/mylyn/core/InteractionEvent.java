@@ -53,6 +53,7 @@ public class InteractionEvent implements Serializable {
                 case PREDICTION: return "prediction";
                 case PROPAGATION: return "propagation";
                 case MANIPULATION: return "manipulation";
+//                case WIERDNESS: return "wierdness";
                 default: return "null";
             }
         }
@@ -65,7 +66,7 @@ public class InteractionEvent implements Serializable {
             if (string.equals("preference")) return PREFERENCE;
             if (string.equals("prediction")) return PREDICTION;
             if (string.equals("propagation")) return PROPAGATION;
-            if (string.equals("manipulation")) return MANIPULATION;
+//            if (string.equals("wierdness")) return WIERDNESS;
             return null;
         }
     }

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
+import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
@@ -152,5 +153,10 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 	public void setParentBridge(IMylarStructureBridge bridge) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean containsProblem(IMylarContextNode node) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

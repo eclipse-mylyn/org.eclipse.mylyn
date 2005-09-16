@@ -24,7 +24,7 @@ import org.eclipse.mylar.core.MylarPlugin;
  * @author Mik Kersten
  */
 public class JavaProblemListener implements IProblemChangedListener {
-
+  
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
         try {
         	if (!MylarPlugin.getDefault().isPredictedInterestEnabled()) {

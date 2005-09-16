@@ -45,10 +45,9 @@ public class MylarContextManager {
     private static final int MAX_PROPAGATION = 17; // TODO: parametrize this
     
     private int numInterestingErrors = 0;
+    private List<String> errorElementHandles = new ArrayList<String>();
     
     private CompositeContext activeContext = new CompositeContext();
-	
-//    private String contextStoreDirPath;
 	private boolean editorAutoCloseEnabled = false;
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
@@ -84,6 +83,7 @@ public class MylarContextManager {
                 SOURCE_ID_MODEL_ERROR,
                 scalingFactors.getErrorInterest());
         handleInteractionEvent(errorEvent, true);
+        errorElementHandles.add(handle);
         numInterestingErrors++; 
     }
 
@@ -94,21 +94,23 @@ public class MylarContextManager {
         if (activeContext.getContextMap().isEmpty()) return;
         if (handle == null) return;
         IMylarContextNode node = activeContext.get(handle);
-        if (node == null || !node.getDegreeOfInterest().isInteresting()) return;
-//        if (node.getDegreeOfInterest().getValue() >= scalingFactors.getErrorInterest()) { // TODO: hack?
-            InteractionEvent errorEvent = new InteractionEvent(
+        if (node != null 
+            && node.getDegreeOfInterest().isInteresting()
+        	&& errorElementHandles.contains(handle)) {
+        	InteractionEvent errorEvent = new InteractionEvent(
                     InteractionEvent.Kind.MANIPULATION, 
                     kind, handle, 
                     SOURCE_ID_MODEL_ERROR,
                     -scalingFactors.getErrorInterest());
             handleInteractionEvent(errorEvent, true);
             numInterestingErrors--;
-            // TODO: this will results in double-notification
+            errorElementHandles.remove(handle);
+            // TODO: this results in double-notification
             if (notify) for (IMylarContextListener listener : listeners) listener.interestChanged(node);
-//        }
+        }
     } 
 
-    public IMylarContextNode getNode(String elementHandle) {
+	public IMylarContextNode getNode(String elementHandle) {
         if (activeContext != null) {
             return activeContext.get(elementHandle);
         } else {
@@ -154,12 +156,6 @@ public class MylarContextManager {
         for (IMylarContextListener listener : listeners) listener.interestChanged(interestDelta);
          
         checkForLandmarkDelta(previousInterest, node);
-        
-//        if (nextEventIsRaiseChildren && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
-//        	tempRaiseChildrenForSelected();
-//    		nextEventIsRaiseChildren = false;
-//    	} 
-        
         return node;
     }
 

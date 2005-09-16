@@ -20,12 +20,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -222,6 +224,56 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 
 	public void setParentBridge(IMylarStructureBridge bridge) {
 		// TODO Auto-generated method stub
-		
+	}
+
+	/**
+	 * Some copying from:
+	 * @see org.eclipse.jdt.ui.ProblemsLabelDecorator
+	 */
+	public boolean containsProblem(IMylarContextNode node) {
+		try {
+			IJavaElement element = (IJavaElement)getObjectForHandle(node.getElementHandle());
+			switch (element.getElementType()) {
+			case IJavaElement.JAVA_PROJECT:
+			case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
+			case IJavaElement.PACKAGE_FRAGMENT:
+			case IJavaElement.COMPILATION_UNIT:
+			case IJavaElement.CLASS_FILE:
+				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
+			case IJavaElement.PACKAGE_DECLARATION:
+			case IJavaElement.IMPORT_DECLARATION:
+			case IJavaElement.IMPORT_CONTAINER:
+			case IJavaElement.TYPE:
+			case IJavaElement.INITIALIZER:
+			case IJavaElement.METHOD:
+			case IJavaElement.FIELD:
+			case IJavaElement.LOCAL_VARIABLE:
+				ICompilationUnit cu= (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
+				if (cu != null) return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);	
+			}
+		} catch (CoreException e) {
+			// ignore
+		}
+		return false;
+	}
+			
+	private boolean getErrorTicksFromMarkers(IResource res, int depth, ISourceReference sourceElement) throws CoreException {
+		if (res == null || !res.isAccessible()) return false;
+		IMarker[] markers= res.findMarkers(IMarker.PROBLEM, true, depth);
+		if (markers != null) {
+			for (int i= 0; i < markers.length; i++) {
+				IMarker curr= markers[i];
+				if (sourceElement == null) {
+					int priority= curr.getAttribute(IMarker.SEVERITY, -1);
+					if (priority == IMarker.SEVERITY_ERROR) {
+						return true;
+					} else {
+						System.err.println("!!!!!!!!!");
+					}
+				}
+			}			
+		}
+		return false;
 	}
 }

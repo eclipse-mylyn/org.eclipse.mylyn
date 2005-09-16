@@ -175,6 +175,11 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 			// TODO Auto-generated method stub
 			
 		}
+
+		public boolean containsProblem(IMylarContextNode node) {
+			// TODO Auto-generated method stub
+			return false;
+		}
     };
 
 	private boolean predictedInterestEnabled = false;
