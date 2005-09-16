@@ -40,7 +40,7 @@ public class PlanningGameWizard extends Wizard implements INewWizard {
 					.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page == null)
 				return false;
-			IEditorInput input = new PlanningGameEditorInput(numDays,
+			IEditorInput input = new CompletedTasksEditorInput(numDays,
 					MylarTasklistPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, MylarTasklistPlugin.PLANNING_GAME_EDITOR_ID);
 		} catch (PartInitException ex) {

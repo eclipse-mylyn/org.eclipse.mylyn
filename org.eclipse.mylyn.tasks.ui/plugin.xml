@@ -68,6 +68,7 @@
          category="org.eclipse.mylar.ui.preferences">
       </page>  
    </extension>
+   <!--
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
@@ -77,4 +78,6 @@
             name="Planning Game Summary">
       </wizard>
    </extension>
+   -->
+   
 </plugin>

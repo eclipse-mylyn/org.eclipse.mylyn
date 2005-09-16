@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.tasklist.report.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -20,13 +21,12 @@ import org.eclipse.mylar.tasklist.ITask;
 /**
  * @author Ken Sueda
  */
-public class PlanningGameContentProvider implements IStructuredContentProvider {
+public class PlannedTasksContentProvider implements IStructuredContentProvider {
 
-	private List<ITask> tasks = null;
-	
-	public PlanningGameContentProvider(List<ITask> tasks) {
-		this.tasks = tasks;
+	private List<ITask> tasks = new ArrayList<ITask>();
+	public PlannedTasksContentProvider() {		
 	}
+	
 	public Object[] getElements(Object inputElement) {
 		return tasks.toArray();
 	}
@@ -35,5 +35,15 @@ public class PlanningGameContentProvider implements IStructuredContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	public void addTask(ITask t) {
+		if (!tasks.contains(t)) {
+			tasks.add(t);
+		}		
+	}
+	
+	public void removeTask(ITask t) {
+		tasks.remove(t);
 	}
 }

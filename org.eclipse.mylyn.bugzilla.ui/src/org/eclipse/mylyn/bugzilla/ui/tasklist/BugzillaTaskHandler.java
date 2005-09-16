@@ -270,5 +270,16 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				MylarTasklistPlugin.getTaskListManager().deleteTask(task);
 			}
 		}
+	}
+
+	public ITask dropItemToPlan(ITaskListElement element) {
+		if(element instanceof BugzillaHit){
+			BugzillaHit hit = (BugzillaHit) element;
+			return hit.getOrCreateCorrespondingTask();
+		} else if(element instanceof BugzillaTask){		
+			return (ITask) element;
+		} else {
+			return null;
+		}		
 	} 
 }

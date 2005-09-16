@@ -40,4 +40,6 @@ public interface ITaskHandler {
 	public abstract boolean enableAction(Action action, ITaskListElement element);
 	
 	public abstract void itemRemoved(ITaskListElement element, ICategory category);
+	
+	public abstract ITask dropItemToPlan(ITaskListElement element);
 }

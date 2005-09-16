@@ -532,4 +532,8 @@ public class Task implements ITask {
 	public String getStringForSortingDescription() {
 		return getDescription(true);
 	}
+
+	public String getEstimateTimeForDisplay() {		
+		return estimatedTime / 10 + " Hours";
+	}
 }

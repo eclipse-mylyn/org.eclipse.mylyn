@@ -105,7 +105,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 			  } else if (element instanceof ICategory) {
 				  ICategory category = (ICategory)element;
 				  if (category.isArchive()) {
-					  return TaskListImages.ARCHIVE_BACKGROUND;
+					  return TaskListImages.BACKGROUND_ARCHIVE;
 //					  return new Color(Display.getCurrent(), 
 //							  Math.max(0, backgroundColor.getRed()-30),
 //							  Math.max(0, backgroundColor.getGreen()-30),
@@ -120,7 +120,7 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 		} catch (Exception e) {
 			MylarPlugin.log("Could not get background color", this);
 		}
-		return null;
+		return TaskListImages.BACKGROUND_WHITE;
     }
     
     public Color getForeground(Object element) {

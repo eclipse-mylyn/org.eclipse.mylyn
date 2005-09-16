@@ -60,6 +60,8 @@ public interface ITask extends Serializable, ITaskListElement {
         
     public abstract int getEstimateTime();
     
+    public abstract String getEstimateTimeForDisplay();
+    
     public abstract void setEstimatedTime(int estimated);
 
     public abstract List<ITask> getChildren();

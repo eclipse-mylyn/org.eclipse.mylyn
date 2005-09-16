@@ -24,11 +24,11 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * @author Ken Sueda
  */
-public class PlanningGameEditorInput implements IEditorInput {
+public class CompletedTasksEditorInput implements IEditorInput {
 	private List<ITask> completedTasks = null;
 	private TaskReportGenerator parser = null;
 	
-	public PlanningGameEditorInput(int prevDays, TaskList tlist) {
+	public CompletedTasksEditorInput(int prevDays, TaskList tlist) {
 		parser = new TaskReportGenerator(tlist);
 		parser.addCollector(new CompletedTaskCollector(prevDays));
 		parser.checkTasks();

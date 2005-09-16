@@ -119,6 +119,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.dialogs.FilteredTree;
 import org.eclipse.ui.part.DrillDownAdapter;
+import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -933,7 +934,7 @@ public class TaskListView extends ViewPart {
 
 	@MylarWebRef(name="Drag and drop article", url="http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
     private void initDragAndDrop(Composite parent) {
-        Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+        Transfer[] types = new Transfer[] { TextTransfer.getInstance(), PluginTransfer.getInstance() };
 
         getViewer().addDragSupport(DND.DROP_MOVE, types, new DragSourceListener() {
 

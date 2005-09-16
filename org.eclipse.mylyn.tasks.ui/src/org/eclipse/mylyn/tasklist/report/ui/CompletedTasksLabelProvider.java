@@ -14,32 +14,40 @@ package org.eclipse.mylar.tasklist.report.ui;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Ken Sueda
  */
-public class PlanningGameLabelProvider extends LabelProvider implements
+public class CompletedTasksLabelProvider extends LabelProvider implements
 		ITableLabelProvider {
 
 	//private String[] columnNames = new String[] { "Description", "Priority", "Date Completed", "Duration"};
 	public Image getColumnImage(Object element, int columnIndex) {		
-		return null;
+		if (! (element instanceof ITaskListElement)) { 
+        	return null;
+        }
+		if (columnIndex == 0) {
+			return ((ITaskListElement)element).getIcon();
+		} else {
+			return null;
+		}
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			switch(columnIndex) {
-			case 0: 
+			case 1: 
 				return task.getDescription(true);				
-			case 1:
-				return task.getPriority();
 			case 2:
-				return task.getCreationDateString();
+				return task.getPriority();
 			case 3:
-				return task.getEndDateString();
+				return task.getCreationDateString();
 			case 4:
+				return task.getEndDateString();
+			case 5:
 				return task.getElapsedTimeForDisplay();
 			}	
 		}		
