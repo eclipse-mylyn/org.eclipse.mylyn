@@ -51,10 +51,11 @@ import org.eclipse.ui.part.ViewPart;
  * @author Mik Kersten
  */
 public class ActiveSearchView extends ViewPart {
-    
+
+    public static final String ID = "org.eclipse.mylar.ui.views.active.search";
+	
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
-    public static final String ID = "org.eclipse.mylar.ui.views.ActiveSearchView";
     
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 

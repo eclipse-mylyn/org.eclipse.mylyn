@@ -13,8 +13,11 @@ package org.eclipse.mylar.java.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaElement;
@@ -59,10 +62,12 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class ActiveHierarchyView extends ViewPart {
 	
+    public static final String ID = "org.eclipse.mylar.ui.views.active.hierarchy";
     private TreeParent root = new TreeParent("<no hierarchy>");
     
     private TreeViewer viewer;
-	
+    Map<String, TreeParent> nodeMap = new HashMap<String, TreeParent>();
+    
 	final IMylarContextListener MODEL_LISTENER = new IMylarContextListener() { 
         
         public void contextActivated(IMylarContext taskscape) {
@@ -138,10 +143,17 @@ public class ActiveHierarchyView extends ViewPart {
 	}
 
 	private void refreshHierarchy() {
-        try {            
-            root.removeAllChildren();
-            List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
-            List<TreeParent> previousHierarchy = new ArrayList<TreeParent>();
+		refreshHierarchy(true);
+	}
+	
+	/**
+	 * Public for testing.
+	 */
+	public void refreshHierarchy(boolean async) {
+        try {    
+        	if (root != null && root.getChildren().length > 0) root.removeAllChildren();
+            nodeMap.clear();
+        	List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
             for (Iterator<IMylarContextNode> it = landmarks.iterator(); it.hasNext();) {
                 IMylarContextNode node = it.next();
                 IJavaElement element = null;
@@ -152,69 +164,51 @@ public class ActiveHierarchyView extends ViewPart {
                     IType type = (IType)element;
                     ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
                     IType[] supertypes = hierarchy.getAllSuperclasses(type);
-                    List<IType> hierarchyTypes = Arrays.asList(supertypes);
-                    
-//                    IType[] subtypes = hierarchy.getSubtypes(type);
-//                    if (subtypes.length > 0) hierarchyTypes.add(subtypes[0]); 
-//                    if (subtypes.length > 1) hierarchyTypes.add(subtypes[1]);
-                    
-                    TreeParent currChild = new TreeParent(type);
-                    List<TreeParent> currentHierarchy = new ArrayList<TreeParent>();
-                    boolean addedToPreviousHierarchy = false;
-                    for (Iterator<IType> it2 = hierarchyTypes.iterator(); it2.hasNext() && !addedToPreviousHierarchy; ) {
-                        IType currType = it2.next();
-                        TreeParent parent = findInTree(root.getChildren(), currType);
-                        if (parent == null) parent = new TreeParent(currType);
-	                    currentHierarchy.add(parent);
-                        addedToPreviousHierarchy = false;
-                        for (Iterator<TreeParent> it3 = previousHierarchy.iterator(); it3.hasNext();) {
-                            TreeParent prev = it3.next();
-                            if (currType.equals(prev.getElement())) {
-                                prev.addChild(currChild);
-                                addedToPreviousHierarchy = true;
-                            }
-                        } 
-                        if (!addedToPreviousHierarchy
-                            && currChild.getName() != "Object") { // HACK ) {
-                            parent.addChild(currChild); 
-                        }
-                        currChild = parent;
-                    } 
-                    if (!addedToPreviousHierarchy 
-                        && currChild.getName() != "Object") { // HACK 
-                        root.addChild(currChild);
-                    } 
-	                    previousHierarchy = currentHierarchy;
+                    List<IType> hierarchyTypes = new ArrayList<IType>(Arrays.asList(supertypes));
+                    Collections.reverse(hierarchyTypes);
+                    hierarchyTypes.add(type);
+                    addHierarchy(root, hierarchyTypes);
                 }
             }
-		    Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-				    try { 
-                        if (viewer != null && !viewer.getTree().isDisposed()) {
-                            viewer.refresh();
-					        viewer.expandAll();
-                        }
-				    } catch (Throwable t) {
-			            MylarPlugin.fail(t, "Could not update viewer", false);
-			        }
-				}
-			});
+
+            if (!async) {
+            	refreshViewer();
+            } else {
+			    Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						refreshViewer();
+					}
+				});
+            }
         } catch (Throwable t) {
             MylarPlugin.fail(t, "Could not update viewer", false);
         }
     }
-	
-    private TreeParent findInTree(TreeParent[] children, IType type) {
-        for (int i = 0; i < children.length; i++) {
-            TreeParent child = children[i];
-            if (child.getElement().equals(type)) {
-                return child;
-            } else {
-                return findInTree(child.getChildren(), type);
-            }
-        }
-        return null;
-    }
+
+	private void addHierarchy(TreeParent node, List<IType> hierarchyTypes) {
+		if (hierarchyTypes.isEmpty()) return;
+		IType type = hierarchyTypes.get(0);
+		if (!type.equals(node.getElement())) {
+			TreeParent newNode = nodeMap.get(type.getHandleIdentifier());
+			if (newNode == null) {
+				newNode = new TreeParent(type);
+				nodeMap.put(type.getHandleIdentifier(), newNode);
+				node.addChild(newNode);
+			}
+			addHierarchy(newNode, hierarchyTypes.subList(1, hierarchyTypes.size()));
+		}
+	}
+
+	private void refreshViewer() {
+		try {
+			if (viewer != null && !viewer.getTree().isDisposed()) {
+			    viewer.refresh();
+			    viewer.expandAll();
+			}
+	    } catch (Throwable t) {
+	        MylarPlugin.fail(t, "Could not update viewer", false);
+	    }
+	}
 
     @Override
 	public void createPartControl(Composite parent) {
@@ -286,6 +280,10 @@ public class ActiveHierarchyView extends ViewPart {
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
+
+	public TreeViewer getViewer() {
+		return viewer;
+	}
 }
 
 class TreeParent implements IAdaptable {
@@ -337,7 +335,9 @@ class TreeParent implements IAdaptable {
 	}
 
 	public void removeAllChildren() {
-        for (TreeParent node : children) node.setParent(null);
+        for (TreeParent node : children) {
+        	if (node != null) node.setParent(null);
+        }
 		children.clear();
 	}
 	
@@ -399,3 +399,7 @@ class HierarchyLabelProvider extends AppearanceAwareLabelProvider implements IFo
         return null;
     }
 }
+
+//IType[] subtypes = hierarchy.getSubtypes(type);
+//if (subtypes.length > 0) hierarchyTypes.add(subtypes[0]); 
+//if (subtypes.length > 1) hierarchyTypes.add(subtypes[1]);
