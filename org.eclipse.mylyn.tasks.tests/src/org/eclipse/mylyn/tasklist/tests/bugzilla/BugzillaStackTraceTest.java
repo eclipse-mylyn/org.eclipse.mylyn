@@ -50,14 +50,13 @@ public class BugzillaStackTraceTest extends TestCase {
 	    assertTrue(msg, r2.equals(ans));
 	}
 	
-	/**
-	 * Test parsing the bug for multiple stacks in in
-	 */
-	public void testMultipleStacksDiffComments(){
-		// BUG 4862 - 2 stack traces - 1 in description, 1 in comment - text before and after
-	    performParse(4862, "4862.html", 2, false);
-	    
-	}
+//	/**
+//	 * Test parsing the bug for multiple stacks in in
+//	 */
+//	public void testMultipleStacksDiffComments(){
+//		// BUG 4862 - 2 stack traces - 1 in description, 1 in comment - text before and after
+//	    performParse(4862, "4862.html", 2, false);
+//	}
 	
 	/**
 	 * Test parsing the bug for a single stack in the description with some
