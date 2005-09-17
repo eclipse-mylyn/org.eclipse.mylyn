@@ -58,6 +58,14 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     
 	public static ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
     
+	private static final String FIRST_USE = 
+		"<html><body bgcolor=\"#ffffff\">" +
+		"<p>If this is your first time using Mylar <b>make sure to watch the </b>\n" +
+		"<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-03.html\">\n" +
+		"<b>5 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n" +
+		"Help-&gt;Help Contents.</p>" +
+		"</body></html>";
+	
 	public MylarJavaPlugin() {
 		super();
 		plugin = this;
@@ -79,7 +87,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
             	if(!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)){
-            		MylarPreferenceWizard wizard= new MylarPreferenceWizard();
+            		MylarPreferenceWizard wizard= new MylarPreferenceWizard(FIRST_USE);
 	    			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 	        		if (wizard != null && shell != null && !shell.isDisposed()) { 
 	        			WizardDialog dialog = new WizardDialog(shell, wizard);

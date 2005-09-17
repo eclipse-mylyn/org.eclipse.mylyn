@@ -44,12 +44,12 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard{
 		
 	}
 	
-	public MylarPreferenceWizard(){
+	public MylarPreferenceWizard(String htmlDocs){
 		super();
 		setDefaultPageImageDescriptor(MylarImages.MYLAR);
 		setWindowTitle("Mylar Preferences Wizard");
 		super.setDefaultPageImageDescriptor(MylarJavaPlugin.imageDescriptorFromPlugin(MylarJavaPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
-		preferencePage = new MylarPreferenceWizardPage("Mylar Preferences");
+		preferencePage = new MylarPreferenceWizardPage("Mylar Configuration", htmlDocs);
 	}
 	
 	@Override
@@ -58,10 +58,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard{
 		return true;
 	}
 	
-   private void setPreferences() {
-//		if(preferencePage.isInPlace()){
-//			MylarJavaPlugin.getDefault().initializeWithPluginContributions();
-//		}		
+    private void setPreferences() {
 		if(preferencePage.isMylarEditorDefault()){
 			if(!MylarJavaPlugin.isMylarEditorDefault()){
 				MylarJavaPlugin.setDefaultEditorForJavaFiles(true);
@@ -107,11 +104,10 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard{
 	}
 
    @Override
-   public void addPages() {
+   	public void addPages() {
 	   addPage(preferencePage);
    }
-
    
-   public void init(IWorkbench workbench, IStructuredSelection selection) {}
+   	public void init(IWorkbench workbench, IStructuredSelection selection) {}
 
 }

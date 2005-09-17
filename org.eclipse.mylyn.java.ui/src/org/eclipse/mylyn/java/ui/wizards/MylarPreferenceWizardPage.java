@@ -27,14 +27,6 @@ import org.eclipse.swt.widgets.Label;
  */
 public class MylarPreferenceWizardPage extends WizardPage {
 
-	private static final String FIRST_USE = 
-		"<html><body bgcolor=\"#ffffff\">" +
-		"<p>If this is your first time using Mylar <b>make sure to watch the </b>\n" +
-		"<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-03.html\">\n" +
-		"<b>5 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n" +
-		"Help-&gt;Help Contents.</p>" +
-		"</body></html>";
-	
 	private static final  String AUTO_FOLDING = "Turn interest-based automatic Java editor folding on";
 	private static final  String AUTO_CLOSE = "Close all editors automatically on task deactivation";
 	private static final  String WORKING_SET = "Add the \"active task context\" working set";
@@ -53,8 +45,11 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	Button closeEditorsOnDeactivation;
 	boolean closeEditors = true;
 	
-	protected MylarPreferenceWizardPage(String pageName) {
+	private String htmlDocs;
+	
+	protected MylarPreferenceWizardPage(String pageName, String htmlDocs) {
 		super(pageName);
+		this.htmlDocs = htmlDocs;
 		setTitle(pageName);
 		setDescription(
 			"Configures Mylar preferences to the recommended defaults. To alter these \n" +
@@ -162,9 +157,9 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		browserComposite.setLayout(new GridLayout());
 		
 		Browser browser = new Browser(browserComposite, SWT.NONE);
-		browser.setText(FIRST_USE);
+		browser.setText(htmlDocs);
         GridData browserLayout = new GridData(GridData.FILL_HORIZONTAL);
-        browserLayout.heightHint = 90;
+        browserLayout.heightHint = 100;
         browserLayout.widthHint = 600;
         browser.setLayoutData(browserLayout);
 		
