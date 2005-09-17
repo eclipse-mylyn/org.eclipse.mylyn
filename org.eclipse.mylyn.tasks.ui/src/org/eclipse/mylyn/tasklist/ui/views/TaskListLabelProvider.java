@@ -113,7 +113,6 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 				  } else {
 					  return backgroundColor;
 				  }
-				  
 			  } else if (element instanceof IQuery) {
 				  return backgroundColor;
 			  }
