@@ -207,8 +207,9 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 		
 		Display.getDefault().asyncExec(new Runnable(){
 			public void run() {
-				if(TaskListView.getDefault() != null)
+				if(TaskListView.getDefault() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()) {
 					TaskListView.getDefault().getViewer().refresh();
+				}
 			}
 		});
 	}
