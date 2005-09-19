@@ -66,6 +66,7 @@ public class TaskListImages {
         
     public static final ImageDescriptor TASK_ACTIVE = create(T_TOOL, "task-active.gif");
     public static final ImageDescriptor TASK_INACTIVE = create(T_TOOL, "task-inactive.gif");
+    public static final ImageDescriptor TASK_INACTIVE_CONTEXT = create(T_TOOL, "task-context.gif");
     public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
     public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
 
