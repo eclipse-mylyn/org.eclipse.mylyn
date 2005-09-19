@@ -41,46 +41,50 @@ public class RemoveFromCategoryAction extends Action {
 	
 	@Override
 	public void run() {
-		Object selectedObject = ((IStructuredSelection) this.view.getViewer()
-				.getSelection()).getFirstElement();		
-		if(selectedObject instanceof ITaskListElement &&
-			MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null){
-			TreeItem item = this.view.getViewer().getTree().getSelection()[0];
-			MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).itemRemoved((ITaskListElement)selectedObject, (ICategory) item.getParentItem().getData());			
-		}else if (selectedObject instanceof ITask) {
-			ITask task = (ITask) selectedObject;
-			if (task.isActive()) {
-				MessageDialog.openError(Workbench.getInstance()
-						.getActiveWorkbenchWindow().getShell(), "Remove failed",
-						"Task must be deactivated in order to remove from category.");
-				return;
-			}
-			ICategory cat = task.getCategory();
-			if (cat != null) {
-				cat.removeTask(task);				
-			} else {
-				String message = task.getDeleteConfirmationMessage();			
-				boolean deleteConfirmed = MessageDialog.openQuestion(
-			            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-			            "Confirm delete", message);
-				if (!deleteConfirmed) 
+		try {
+			Object selectedObject = ((IStructuredSelection) this.view.getViewer()
+					.getSelection()).getFirstElement();		
+			if(selectedObject instanceof ITaskListElement &&
+				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null){
+				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
+				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).itemRemoved((ITaskListElement)selectedObject, (ICategory) item.getParentItem().getData());	
+			} else if (selectedObject instanceof ITask) {
+				ITask task = (ITask) selectedObject;
+				if (task.isActive()) {
+					MessageDialog.openError(Workbench.getInstance()
+							.getActiveWorkbenchWindow().getShell(), "Remove failed",
+							"Task must be deactivated in order to remove from category.");
 					return;
-										
-				MylarTasklistPlugin.getTaskListManager().deleteTask(task);
-				MylarPlugin.getContextManager().contextDeleted(task.getHandle(), task.getPath());
+				}
+				ICategory cat = task.getCategory();
+				if (cat != null) {
+					cat.removeTask(task);				
+				} else {
+					String message = task.getDeleteConfirmationMessage();			
+					boolean deleteConfirmed = MessageDialog.openQuestion(
+				            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+				            "Confirm delete", message);
+					if (!deleteConfirmed) 
+						return;
+											
+					MylarTasklistPlugin.getTaskListManager().deleteTask(task);
+					MylarPlugin.getContextManager().contextDeleted(task.getHandle(), task.getPath());
+				}
+				
+				IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+	
+				// if we couldn't get the page, get out of here
+				if (page == null)
+					return;
+				try {
+					this.view.closeTaskEditors((ITask) selectedObject, page);
+				} catch (Exception e) {
+					MylarPlugin.log(e, " remove failed");
+				}
 			}
-			
-			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-
-			// if we couldn't get the page, get out of here
-			if (page == null)
-				return;
-			try {
-				this.view.closeTaskEditors((ITask) selectedObject, page);
-			} catch (Exception e) {
-				MylarPlugin.log(e, " remove failed");
-			}
+			this.view.getViewer().refresh();
+		} catch (NullPointerException npe) {
+			MylarPlugin.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
 		}
-		this.view.getViewer().refresh();
 	}
 }
