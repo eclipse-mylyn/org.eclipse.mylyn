@@ -45,7 +45,6 @@ public class Task implements ITask {
     private boolean category = false;
     private boolean hasReminded = false;
     
-    
     /**
      * Either to local resource or URL.
      * TODO: consider changing to java.net.URL
@@ -352,11 +351,18 @@ public class Task implements ITask {
 		return this.label;
 	}
 
+	/**
+	 * TODO: tasks hsouldn't know about images, or the context manager
+	 */
 	public Image getStatusIcon() {
 		if (isActive()) {
     		return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
     	} else {
-    		return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+    		if (MylarPlugin.getContextManager().hasContext(getPath())) {
+    			return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
+    		} else {
+    			return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+    		}
     	}        	
 	}
 	
@@ -513,7 +519,6 @@ public class Task implements ITask {
 			
 		}
 	}
-
 	
 	public String getCreationDateString() {
 		if (creationDate != null) {
