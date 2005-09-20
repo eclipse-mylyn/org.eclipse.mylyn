@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc link_to="../org.eclipse.mylar.doc/toc.xml#workbench" label="Workbench Integration">
+	<topic label="Workbench Integration" href="doc/workbench.html">
+		<topic label="Interest Filtering" href="doc/filtering.html"/>
+		<topic label="Navigation" href="doc/navigator.html"/>
+	</topic>
+</toc>
+
+
+

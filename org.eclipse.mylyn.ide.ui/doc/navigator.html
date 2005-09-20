@@ -1,0 +1,541 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta name="copyright" content="Copyright (c) IBM Corporation and others 2000, 2005. This page is made available under license. For full details see the LEGAL in the documentation book that contains this page." >
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="STYLESHEET" href="../book.css" charset="ISO-8859-1"
+	type="text/css">
+<title>Mylar New & Noteworthy</title>
+</head>
+<body>
+<h2>New and Noteworthy for Mylar 0.3.8</h2>
+<p>Features added since Mylar 0.3.7 are <span style="background-color: #FFCC99">&nbsp;highlighted.</span>&nbsp; 
+Send questions to <a href="mailto:mylar-dev@eclipse.org">mylar-dev@eclipse.org</a>.&nbsp; 
+Submit feature requests to
+<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">Bugzilla</a>.</p>
+<h3>Task context</h3>
+<table cellpadding="10" cellspacing="0" width="600" id="table26">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Active Search</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFCC99">Only available in Phase 2 of 
+			the user study.&nbsp; As you work and elements become landmarks 
+			(bold decoration), Active Search eagerly finds related elements.&nbsp; 
+			To force an element to populate the Active Search view manually make 
+			it a landmark by right-clicking or hitting Ctrl+Alt+Shift+Up Arrow.&nbsp; 
+			Use the pull-downs on the toolbar to alter the degree-of-separation 
+			scope of the search.&nbsp; Note that elements with predicted 
+			interest are gray.</span><p>
+			<img border="0" src="images/active-search.gif" width="340" height="309"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table27">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Active Hierarchy</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFCC99">Only available in Phase 2 of 
+			the user study.&nbsp; Similar to Active Search, this view actively 
+			finds and presents the type hierarchy of the current set of 
+			landmarks.</span><p>
+			<img border="0" src="images/active-hierarchy.gif" width="364" height="145"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table28">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Predicted interest of errors</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFCC99">Only available in Phase 2 of 
+			the user study.&nbsp; Java elements that have errors get a predicted 
+			interest, which means that they show up in views such as a the 
+			package explorer.&nbsp; Once the errors are fixed the predicted 
+			interest goes away.</span><p>
+			<img border="0" src="images/interest-error.gif" width="233" height="189"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table29">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Filter declarations in Package Explorer </b></p>
+			</td>
+			<td width="70%" valign="top">
+			If you don't like Mylar's constant showing of Java members in the 
+			Package Explorer, select the drop-down menu, then &quot;Filters...&quot; and 
+			enable the &quot;Mylar Java Declarations Filter&quot;.&nbsp; It will then 
+			stick in the menu in case you want to toggle between modes.<p>
+			<img border="0" src="images/filtering-declarations.gif" width="441" height="211"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+		</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table23">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Interest filter exclusions</b></p>
+			</td>
+			<td width="70%" valign="top">
+			Resources that are always 
+			considered interesting can be configured to always show when the 
+			interest filter is on, via the root Mylar preference page.&nbsp; 
+			Note that the parent of the resource, e.g. the project or folder, 
+			needs to be interesting for it's children to show.&nbsp;
+			<p>
+			<img border="0" src="images/filtering-exclusion.gif" width="420" height="240"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table19">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Automatic interest filter toggling</b></p>
+			</td>
+			<td width="70%" valign="top">
+			By default the interest 
+			filter will automatically be toggled on the Package Explorer when a 
+			task with context is activated, and toggled off when the task is 
+			deactivated.&nbsp; This preference is under Mylar -&gt; Java.<p>
+			<img border="0" src="images/filter-auto-toggle.gif" width="414" height="47"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table16">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Context highlighters</b></p>
+			</td>
+			<td valign="top" width="70%">
+			You can associate a task with a highlighter. This can be useful if 
+			you are using Mylar without the filtering support.&nbsp; It also 
+			allows you to distinguish between task contexts if you have multiple 
+			tasks active.<p><img
+				src="images/highlight.gif"></p>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Ant editing</b></p>
+			</td>
+			<td width="70%" valign="top">
+			Interest-based filtering is 
+			now supported in the Ant editor's Outline view by toggling the 
+			glasses.<p>
+			<img border="0" src="images/filtering-ant.gif" width="464" height="113"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table8">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Interest-based content assist</b></p>
+			</td>
+			<td width="70%" valign="top">
+			The top of the content assist menu will put the items that are in 
+			your task context on top of the list, to enable quick selection via 
+			arrow keys. Once you start typing the menu will work as usual. Note 
+			that the Mylar Java Editor needs to be set as default for &quot;.java&quot; 
+			files (this is the only new functionality that comes from the Mylar 
+			Java editor).<p>
+			<img border="0" src="images/interest-content-assist.gif" width="432" height="131"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table9">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Toggle auto folding</b></p>
+			</td>
+			<td width="70%" valign="top">
+			Pressing the editor toolbar button with the Mylar glasses on it will 
+			enable/disable Mylar's automatic folding.&nbsp; This can be useful 
+			when needing to browse through the code, or copy/paste code around 
+			(since Eclipse's folding support can cause odd expansions when 
+			copying folded regions,
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=104648">bug 
+			104648</a>).<p>
+			<img border="0" src="images/folding-toggle.gif" width="276" height="127"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table4">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Show all filtered children</b></p>
+			</td>
+			<td width="70%" valign="top">
+			When you are using filtering in a Mylar view you have the option of 
+			temporarily showing all children of a filtered node by &lt;alt&gt;clicking 
+			a node that is not currently selected.&nbsp; For example, you can 
+			&lt;alt&gt;click a source folder, keep the &lt;alt&gt; key down, and continue 
+			drilling down until you find a method of interest.&nbsp;
+			<p><img src="images/alt-click.gif" alt="Alt Click"
+				title="New Java Project Wizard"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+		</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table5">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Search within task context</b></p>
+			</td>
+			<td valign="top" width="70%">The automatically updated Mylar Task 
+			Context working set can be searched as any other working set, either 
+			via the popup menus or using the search dialog.&nbsp; For example, 
+			to find all System.out/err calls before checking in, search for 
+			&quot;System.&quot; within the task context. To quickly search all references 
+			click Alt+Shift+G.<p>
+			<img border="0" src="images/search-context.gif" width="470" height="133"></p>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table6">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Directly manipulate interest</b></p>
+			</td>
+			<td valign="top" width="70%">Directly manually manipulate the 
+			interest level of one or more elements by right clicking them and using the two 
+			Mylar actions in the popup menu.&nbsp; Keyboard shortcuts for these 
+			are Ctrl+Alt+Shift+Up Arrow for Make Landmark, and&nbsp; 
+			Ctrl+Alt+Shift+Down Arrow for Make Less Interesting.&nbsp; This now supports disjoint 
+			selections.<p>
+			<img border="0" src="images/interest-manipulate.gif" width="262" height="65"></p>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table7">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Interest filtering for the Java Browsing 
+			perspective</b></p>
+			</td>
+			<td valign="top" width="70%">Interest filtering can be toggled for 
+			the Packages, Types, and Members views simultaneously by clicking 
+			the leftmost toolbar button visible below.<p>
+			<img border="0" src="images/interest-java-browsing.gif" width="404" height="100"></p>
+
+			</td>
+		</tr>
+		</table>
+
+<h3>Bugzilla</h3>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table25">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Archived reports</b></p>
+			</td>
+			<td valign="top" width="70%">
+			<span style="background-color: #FFCC99">All bug reports are archived 
+			in a special category that is invisible by default.&nbsp; But if a 
+			you do a search, and the matches don't show in another category 
+			(e.g. because no query matches that report), the archive category, 
+			highlighted in blue below, gives access to that report.</span><p>
+			<img border="0" src="images/tasks-archive.gif" width="331" height="187"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table24">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Synchronization state</b></p>
+			</td>
+			<td valign="top" width="70%">
+			If a bug report has information on it that has not been viewed, such 
+			as new comments, the blue &quot;incoming&quot; overlay is displayed.&nbsp; If 
+			a bug has changes on it that have been saved but have not been 
+			committed to Bugzilla, the gray &quot;outgoing&quot; overlay is displayed.&nbsp; 
+			A red overlay appears if there is a conflict.<p>
+			<img border="0" src="images/bugzilla-synch.gif" width="323" height="186"></p>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table22">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Custom queries</b></p>
+			</td>
+			<td valign="top" width="70%">
+			To create a custom Bugzilla 
+			query paste the query URL into the New Bugzilla Query dialog. This 
+			enables support of queries that can not be configured via the 
+			dialog, and as such some query hits may not open or format properly.<p>
+			<img border="0" src="images/bugzilla-query-custom.gif" width="483" height="106"></p>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table21">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Offline mode</b></p>
+			</td>
+			<td valign="top" width="70%">
+			You can now explicitly state 
+			whether you want to work with cached copies of Bugzilla reports and 
+			avoid refresh with the server.&nbsp; In offline mode the cached bug 
+			copy is always used.&nbsp; In online mode the Bugzilla server is 
+			always checked for the latest report.<p>
+			<img border="0" src="images/tasks-offline.gif" width="326" height="207"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table16">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Support Ctrl+click in Java Editor to navigate to 
+			bug</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFFFFF">Ctrl+click on a comment that 
+			contains one of the following forms will open the bug with the given 
+			id: bug# 123, bug 123,
+			Bug #123,
+			Bug#123. (Note that all of these are 
+			case insensitive and can be followed by a colon or whitespace).</span><p>
+			<img border="0" src="images/bugzilla-hyperlink.gif" width="381" height="102"></p>
+			</td>
+		</tr>
+</table>
+
+<h3>Task List</h3>
+<table cellpadding="10" cellspacing="0" width="600" id="table15">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>New context menu actions</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFFFFF">The task list now contains 
+			actions for collapsing all nodes, navigating, and specifying 
+			preferences for file closing behavior on task activation.</span><p>
+			<img border="0" src="images/tasklist-actions.gif" width="264" height="185"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table17">
+	<colgroup>
+		<col width="20%" valign="top" align="right">
+		<col width="80%" valign="top" align="left">
+	</colgroup>
+	<tbody>
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Focus on a single task category</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFFFFF">To see only the tasks for a single category 
+			select the &quot;Go Into Category&quot; action from the context menu.&nbsp; To 
+			go back to viewing all tasks and categories under the root use the 
+			&quot;Go Up To Root&quot; action in the Task List's toolbar pull down menu 
+			(visible above).</span><p>
+			<img border="0" src="images/tasks-go-navigation.gif" width="284" height="74"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table18">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Task history navigation</b></p>
+			</td>
+			<td width="70%" valign="top">
+			Navigate between previously 
+			activate tasks using the Task List view's pull down menu (upper 
+			right-hand corner of the toolbar).<p>
+			<img border="0" src="images/tasks-history.gif"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table13">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Quick filter</b></p>
+			</td>
+			<td width="70%" valign="top">
+			To filter task by name or 
+			regexp type the filter text into the field and all matched tasks 
+			will display.&nbsp; Note that this will temporarily suppress all 
+			other filters.&nbsp; To clear the query press the &quot;x&quot; button to the 
+			right of the text field.<p>
+			<img border="0" src="images/tasks-quick-filter.gif" width="315" height="173"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table14">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Reminders</b></p>
+			</td>
+			<td width="70%" valign="top">
+			Set a reminder for a task when creating it, or by selecting the 
+			&quot;Summary&quot; tab of the Task Editor.&nbsp; When you start using Eclipse 
+			on the given day the reminders will come up.<p>
+			<img border="0" src="images/tasks-reminders.gif" width="452" height="154"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table10">
+	<colgroup>
+		<col width="20%" valign="top" align="right">
+		<col width="80%" valign="top" align="left">
+	</colgroup>
+	<tbody>
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Open reports in web browser</b></p>
+			</td>
+			<td width="70%" valign="top">
+			Bug reports can be opened with either the Bug Editor or the Internal 
+			Web Browser.&nbsp; This can be set as a Task List preferences.&nbsp; 
+			When the Bug Editor is open you can click the hyperlink to show the 
+			report in the browser (e.g. to use a feature not yet available in 
+			the editor, such as voting).&nbsp; <p>
+			<img border="0" src="images/bugzilla-internal-browser.gif" width="344" height="157"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+</body>
+</html>

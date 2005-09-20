@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc link_to="../org.eclipse.mylar.doc/toc.xml#javaUi" label="Mylar" href="doc/index.html">
-	<topic label="Overview" href="doc/overview.html"/>
-	<topic label="New &amp; Noteworthy" href="doc/new.html"/>
-	<topic label="Known Limitations" href="doc/limitations.html"/>
+<toc link_to="../org.eclipse.mylar.doc/toc.xml#java" label="Java Development">
+	<topic label="Java Development" href="doc/java.html">
+		<topic label="Editing" href="doc/editing.html"/> 
+		<topic label="Navigation" href="doc/navigation.html"/>
+		<topic label="Active Views" href="doc/active-views.html"/>
+	</topic>
 </toc>
 
-	
+
+

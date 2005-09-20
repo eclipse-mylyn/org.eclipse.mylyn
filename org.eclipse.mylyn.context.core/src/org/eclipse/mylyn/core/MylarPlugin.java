@@ -182,7 +182,7 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
 		}
     };
 
-	private boolean predictedInterestEnabled = false;
+	private boolean predictedInterestEnabled = true;
     
     public MylarPlugin() {  
 		INSTANCE = this;  

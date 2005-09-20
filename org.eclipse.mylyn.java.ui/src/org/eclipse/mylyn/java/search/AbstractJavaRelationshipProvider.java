@@ -232,8 +232,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
       
     	return new JavaSearchOperation(specs);
     }
-    
-    
+        
     public class JavaSearchJob extends Job{
 
         private JavaSearchOperation op;
