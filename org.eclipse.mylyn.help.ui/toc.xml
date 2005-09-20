@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Mylar"> 
-	<anchor id="javaUi"/>
-	<topic label="Mylar Tools" href="doc/tools.html">
-		<anchor id="tools"/>
+<toc label="Mylar" link_to="../last"> 
+	<topic label="Overview" href="doc/overview.html"/>
+	<topic label="New &amp; Noteworthy" href="doc/new.html"/>
+	<topic label="Known Limitations" href="doc/limitations.html"/>
+	<anchor id="tasklist"/>
+	<anchor id="workbench"/>
+	<anchor id="java"/>
+	<anchor id="xml"/>
+	<anchor id="bugzilla"/>
+	<topic label="Extending Mylar" href="doc/extending.html">
+		<topic label="Release Notes" href="doc/changes.html"/>
 	</topic>
 </toc>
 

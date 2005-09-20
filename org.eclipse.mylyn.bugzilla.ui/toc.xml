@@ -2,12 +2,11 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <!--<toc label="Bugzilla Client" topic="docs/html/book.html"> -->
-<toc link_to="../org.eclipse.mylar.doc/toc.xml#tools" label="Bugzilla Client"> 
+<toc link_to="../org.eclipse.mylar.doc/toc.xml#bugzilla" label="Bugzilla Client"> 
 	<topic label="Bugzilla Client" href="docs/html/book.html">
 	    <topic label="Server Configuration" href="docs/html/start/setup.html"/>
 		<topic label="New Bug Wizard" href="docs/html/start/bugWizard.html"/>
 		<topic label="Searching Reports" href="docs/html/start/bugzillaSearch.html"/>
-		<topic label="Updating Search Parameters" href="docs/html/start/bugzillaUpdate.html"/>
 		<topic label="Saving Favorites" href="docs/html/start/bugzillaFavorites.html"/>
 		<topic label="Saving Queries" href="docs/html/start/saveQuery.html"/>
 		<topic label="Editing Reports" href="docs/html/start/bugEditor.html"/>
