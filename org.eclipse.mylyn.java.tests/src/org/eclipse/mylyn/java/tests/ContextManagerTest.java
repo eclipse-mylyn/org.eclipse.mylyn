@@ -84,6 +84,22 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         }
     }    
     
+    public void testHasContext() {
+    	manager.getFileForContext("c.xml").delete();
+    	assertFalse(manager.getFileForContext("c.xml").exists());
+    	assertFalse(manager.hasContext("c.xml"));
+    	manager.contextActivated(manager.loadContext("1", "c.xml"));
+    	assertTrue(manager.hasActiveContext());
+    	manager.contextDeactivated("1", "c.xml");
+    	assertTrue(manager.hasContext("c.xml")); 
+    	
+    	// enable this if we can look into contexts to find if they have selections
+//    	manager.contextActivated("1", "c.xml");
+//    	monitor.selectionChanged(Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart(), new StructuredSelection(type1));
+//    	manager.contextDeactivated("1", "c.xml");
+//    	assertTrue(manager.hasContext("c.xml")); 
+    }
+    
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
         IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
