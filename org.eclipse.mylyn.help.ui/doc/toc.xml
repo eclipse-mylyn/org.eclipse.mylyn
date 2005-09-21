@@ -10,8 +10,8 @@
 	<anchor id="java"/>
 	<anchor id="xml"/>
 	<anchor id="bugzilla"/>
-	<topic label="Extending Mylar" href="doc/extending.html">
-		<topic label="Release Notes" href="doc/changes.html"/>
+	<topic label="For Developers" href="doc/developer/index.html">
+		<topic label="Release Notes" href="doc/developer/changes.html"/>
 	</topic>
 </toc>
 

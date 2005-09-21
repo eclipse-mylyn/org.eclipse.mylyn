@@ -7,7 +7,7 @@
          name="Mylar Help"
          point="org.eclipse.help.toc">
       <toc
-            file="toc.xml"
+            file="doc/toc.xml"
             primary="true">
       </toc>
    </extension>

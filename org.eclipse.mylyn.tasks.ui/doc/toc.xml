@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc link_to="../doc/org.eclipse.mylar.doc/toc.xml#tasklist" label="Task List"> 
+	<topic label="Task List" href="doc/tasklist.html">
+		<topic label="Task Planning" href="doc/planning.html"/>
+		<topic label="Bugzilla Integration" href="doc/bugzilla.html"/>
+	</topic>
+</toc>
+
+	
