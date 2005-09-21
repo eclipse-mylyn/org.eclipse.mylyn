@@ -231,7 +231,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 							// format the description of the bug so that it is roughly in 80
 							// character lines
-							formatDescription();
+//							formatDescription();
 
 							if (model.getDescription().length() != 0) {
 								// add the new comment to the bug post if there is some text in

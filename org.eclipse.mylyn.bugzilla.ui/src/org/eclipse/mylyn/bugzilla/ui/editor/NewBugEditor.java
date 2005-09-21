@@ -110,7 +110,7 @@ public class NewBugEditor extends AbstractBugEditor {
 		
 		descriptionText = 
 			new Text(descriptionComposite,
-				SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+				SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		descriptionText.setFont(COMMENT_FONT);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
