@@ -30,11 +30,7 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
  * @author Mik Kersten
  */
 public class TaskListManager {
-    
-	public static final int INACTIVITY_TIME = 5; // in minutes 
-
-	public static final long INACTIVITY_TIME_MILLIS = INACTIVITY_TIME * 1000 * 60;
-	
+    	
 	private Map<ITask, TaskActiveTimerListener> listenerMap = new HashMap<ITask, TaskActiveTimerListener>(); 
 	
     private File taskListFile;

@@ -68,16 +68,14 @@
          category="org.eclipse.mylar.ui.preferences">
       </page>  
    </extension>
-   <!--
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.tasklist.report.ui.PlanningGameWizard"
-            icon="icons/eview16/task.gif"
+            icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
-            name="Planning Game Summary">
+            name="Mylar Task Planner">
       </wizard>
    </extension>
-   -->
    
 </plugin>

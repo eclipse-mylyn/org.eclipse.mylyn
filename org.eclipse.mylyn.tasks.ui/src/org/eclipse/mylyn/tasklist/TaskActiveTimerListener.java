@@ -1,14 +1,29 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.mylar.tasklist;
 
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ActiveTimerThread;
+import org.eclipse.mylar.core.internal.ActivityTimerThread;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.IActiveTimerListener;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
 
+/**
+ * @author Shawn Minto
+ */
 public class TaskActiveTimerListener implements IActiveTimerListener, IInteractionEventListener {
 
-	private ActiveTimerThread timer;
+	private ActivityTimerThread timer;
 	
 	private ITask task;
 
@@ -16,7 +31,8 @@ public class TaskActiveTimerListener implements IActiveTimerListener, IInteracti
 	
 	public TaskActiveTimerListener(ITask task){
 		this.task = task;
-		timer = new ActiveTimerThread(TaskListManager.INACTIVITY_TIME, this);
+		timer = new ActivityTimerThread(MylarContextManager.ACTIVITY_TIMEOUT_MINUTES);
+		timer.addListener(this);
 		timer.start();
 		MylarPlugin.getDefault().addInteractionListener(this);
 	}
@@ -34,9 +50,9 @@ public class TaskActiveTimerListener implements IActiveTimerListener, IInteracti
 			task.setActive(task.isActive(), false);
 		}
 		isTaskStalled = false;
-	}
+	} 
 
-	public void start() {}
+	public void start() {} 
 
 	public void stopTimer() {
 		timer.killThread();
@@ -44,5 +60,4 @@ public class TaskActiveTimerListener implements IActiveTimerListener, IInteracti
 	}
 
 	public void stop() {}
-
 }

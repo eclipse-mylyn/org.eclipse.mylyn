@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 22, 2004
-  */
+
 package org.eclipse.mylar.tasklist;
 
 import java.text.ParseException;
@@ -21,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
@@ -33,12 +32,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
 
-
 /**
  * @author Mik Kersten
  */
 public class Task implements ITask {
 
+	public static final long INACTIVITY_TIME_MILLIS = MylarContextManager.ACTIVITY_TIMEOUT_MINUTES * 1000 * 60;
+	
     private static final long serialVersionUID = 3545518391537382197L;
     private boolean active = false;
     protected String handle = "-1";
@@ -49,7 +49,7 @@ public class Task implements ITask {
      * Either to local resource or URL.
      * TODO: consider changing to java.net.URL
      */
-    private String path;
+    private String contextPath;
     private String label;
     private String priority = "P3";
     private String notes = "";
@@ -77,22 +77,22 @@ public class Task implements ITask {
     }
     
     public String getPath() {
-    	// returns relative path Mylar Directory
-        return path;
+    	// returns relative contextPath Mylar Directory
+        return contextPath;
     }
     
     public void setPath(String path) {
     	if (path.startsWith(".mylar")) {
-    		this.path = path.substring(path.lastIndexOf('/')+1, path.length());
+    		this.contextPath = path.substring(path.lastIndexOf('/')+1, path.length());
     	} else if (!path.equals("")) {
-    		this.path = path;
+    		this.contextPath = path;
     	}
     }
         
     public Task(String handle, String label, boolean newTask) {
         this.handle = handle;
         this.label = label;     
-        this.path = handle;
+        this.contextPath = handle;
         if(newTask){
         	creationDate = new Date();
         }
@@ -134,7 +134,7 @@ public class Task implements ITask {
     		return;
     	elapsed += new Date().getTime() - timeActivated.getTime();
     	if(isStalled){
-    		elapsed-=TaskListManager.INACTIVITY_TIME_MILLIS;
+    		elapsed-= INACTIVITY_TIME_MILLIS;
     	}
     	if (isActive()) {
     		timeActivated = new Date();
