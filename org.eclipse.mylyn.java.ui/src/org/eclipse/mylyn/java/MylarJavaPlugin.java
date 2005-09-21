@@ -158,7 +158,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			}
 		}
 		
-		// update editos that are already opened
+		// update editors that are already opened
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();
@@ -167,7 +167,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
                 if (part != null  && part instanceof JavaEditor) {
                 	JavaEditor editor = (JavaEditor)part;
                 	editorTracker.registerEditor(editor);
-                	editor.doSave(null); // HACK: to avoid discarding changes
+                	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); // HACK: to avoid discarding changes
                 	editor.setInput(editor.getEditorInput()); // HACK: to fold
                 }
             }

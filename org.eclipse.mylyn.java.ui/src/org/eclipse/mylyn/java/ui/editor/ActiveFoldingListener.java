@@ -14,6 +14,7 @@
 package org.eclipse.mylar.java.ui.editor;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -133,7 +134,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
                     if (!editor.getSite().getPage().isPartVisible(editor)) {
                     	return;
                     } else {
-                    	editor.doSave(null); // HACK: to avoid losing data
+                    	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); // HACK: to avoid losing data
                     	editor.setInput(editor.getEditorInput()); // HACK: should be a better way
                     }
 //                    ISourceViewer sourceViewer = editor.getViewer();
