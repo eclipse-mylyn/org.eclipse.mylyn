@@ -77,7 +77,7 @@ public class BugzillaImages {
     public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = createWithOverlay(TASK_BUGZILLA, OVERLAY_CONFLICT);
 	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = createWithOverlay(TASK_BUGZILLA, OVERLAY_OUTGOING);
 	public static final ImageDescriptor BUGZILLA_HIT = createWithOverlay(BUG_HIT, null);
-	public static final ImageDescriptor BUGZILLA_HIT_INCOMMING = createWithOverlay(BUGZILLA_HIT, OVERLAY_INCOMMING);
+	public static final ImageDescriptor BUGZILLA_HIT_INCOMMING = BUGZILLA_HIT;//createWithOverlay(BUGZILLA_HIT, OVERLAY_INCOMMING);
     	
     public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
     public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif"); 
