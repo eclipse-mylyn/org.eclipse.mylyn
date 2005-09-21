@@ -11,6 +11,8 @@ import org.eclipse.swt.custom.StyledText;
 
 public class CopyDescriptionAction extends Action {
 
+	private static final String DESCRIPTION_PREFIX = "Bugzilla Bug ";
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
 	
 	private TaskListView view;
@@ -29,7 +31,7 @@ public class CopyDescriptionAction extends Action {
 	    Object obj = ((IStructuredSelection)selection).getFirstElement();
 	    if (obj instanceof ITaskListElement) {
 	    	ITaskListElement element = (ITaskListElement)obj;
-	    	String description = element.getDescription(true);
+	    	String description = DESCRIPTION_PREFIX + element.getDescription(true);
 	    	
 	    	// HACK: this should be done using proper copying
 	    	StyledText styledText = new StyledText(view.getFakeComposite(), SWT.NULL);
