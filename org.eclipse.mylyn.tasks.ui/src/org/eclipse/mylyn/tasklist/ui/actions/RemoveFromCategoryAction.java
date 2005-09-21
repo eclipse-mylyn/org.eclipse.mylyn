@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -45,9 +46,13 @@ public class RemoveFromCategoryAction extends Action {
 			Object selectedObject = ((IStructuredSelection) this.view.getViewer()
 					.getSelection()).getFirstElement();		
 			if(selectedObject instanceof ITaskListElement &&
-				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null){
+				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null) {
 				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
-				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).itemRemoved((ITaskListElement)selectedObject, (ICategory) item.getParentItem().getData());	
+				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
+				ITaskHandler handler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(selectedElement);
+				if (item.getParentItem() != null) {
+					handler.itemRemoved(selectedElement, (ICategory)item.getParentItem().getData());	
+				} 
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
 				if (task.isActive()) {
