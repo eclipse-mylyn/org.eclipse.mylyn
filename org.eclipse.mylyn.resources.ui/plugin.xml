@@ -31,4 +31,14 @@
           class="org.eclipse.mylar.xml.ant.AntContextLabelProvider"
           contentType="build.xml"/>
  </extension>
+ 
+ 	<extension
+         id="org.eclipse.mylar.helpDocs"
+         name="Mylar Help"
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="false">
+      </toc>
+   </extension>
 </plugin>

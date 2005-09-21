@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
-<plugin>
-   
+<plugin>   
     <extension point="org.eclipse.ui.viewActions"> 
 	    	  <viewContribution 
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 
@@ -36,6 +35,15 @@
       </viewContribution> 
     </extension>
     
+    <extension
+         id="org.eclipse.mylar.helpDocs"
+         name="Mylar Help"
+         point="org.eclipse.help.toc">
+      <toc
+            file="doc/toc.xml"
+            primary="false">
+      </toc>
+   </extension>
     
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
