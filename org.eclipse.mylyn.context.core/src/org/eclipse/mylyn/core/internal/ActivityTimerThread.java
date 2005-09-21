@@ -11,57 +11,62 @@
 /*
  * Created on Jul 16, 2004
   */
-package org.eclipse.mylar.core.util;
+package org.eclipse.mylar.core.internal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.IActiveTimerListener;
 
 /**
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ActiveTimerThread extends Thread implements Runnable {
+public class ActivityTimerThread extends Thread implements Runnable {
 
     private static final int SECOND = 1000;
     private static final int MINUTE = 60 * SECOND;
-    private int sleepInterval = SECOND;
+    private int sleepInterval = 5 * SECOND;
     private int timeout = 0;
     private int elapsed = 0;
-    private IActiveTimerListener listener;
+    private List<IActiveTimerListener> listeners = new ArrayList<IActiveTimerListener>();
     boolean killed = false;
     
-    public ActiveTimerThread(int timeoutInMillis, int sleepInterval, IActiveTimerListener listener) {
+    public ActivityTimerThread(int timeoutInMillis, int sleepInterval) {
         this.timeout = timeoutInMillis;
         this.sleepInterval = sleepInterval;
-        this.listener = listener;
     }
     
-    public ActiveTimerThread(int timeoutInMinutes, IActiveTimerListener listener) {
+    public ActivityTimerThread(int timeoutInMinutes) {
         this.timeout = timeoutInMinutes * MINUTE;  
-        this.listener = listener;
     }
 
+    public boolean addListener(IActiveTimerListener listener) {
+    	return listeners.add(listener);
+    }
+    
+    public boolean removeListener(IActiveTimerListener listener) {
+    	return listeners.remove(listener);
+    }
+    
     public void run() {
-    	while(!killed){
-//    		try {
-//	            sleep(SECOND);
-//	        } catch (InterruptedException e) {
-//	        	MylarPlugin.log(e, "");
-//	        }
-//    		if(stopped)
-//    			continue;
-    		
-	    	while(elapsed < timeout && /*!stopped && */ !killed){
-		        try {
-		            sleep(sleepInterval);
-		        } catch (InterruptedException e) {
-		        	MylarPlugin.log(e, "");
+    	try {
+	    	while(!killed) {
+		    	while(elapsed < timeout && /*!stopped && */ !killed){
+			        elapsed += sleepInterval;
+			        sleep(sleepInterval);
+		    	}
+		        if (elapsed >= timeout && /*!stopped && */  !killed) {
+		            for (IActiveTimerListener listener : listeners) {
+		            	listener.fireTimedOut();
+					}
 		        }
-		        elapsed += sleepInterval;
+		        sleep(sleepInterval);
 	    	}
-	        if (elapsed >= timeout && /*!stopped && */  !killed) {
-	            listener.fireTimedOut();
-	        }
-    	}
+        } catch (InterruptedException e) {
+        	MylarPlugin.log(e, "timer interrupted");
+        }
     }
         
     public void killThread(){

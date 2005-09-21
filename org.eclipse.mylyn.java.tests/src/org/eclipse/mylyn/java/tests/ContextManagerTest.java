@@ -33,6 +33,7 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.java.JavaProblemListener;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
@@ -83,6 +84,19 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         	// don't care about this event
         }
     }    
+    
+    public void testActivityHistory() {
+    	manager.resetActivityHistory();
+    	MylarContext history = manager.getActivityHistory();
+    	assertNotNull(history);
+    	assertEquals(0, manager.getActivityHistory().getInteractionHistory().size());
+    	
+    	manager.contextActivated(manager.loadContext("1", "c.xml"));
+    	assertEquals(1, manager.getActivityHistory().getInteractionHistory().size());
+    	
+    	manager.contextDeactivated("1", "c.xml");
+    	assertEquals(2, manager.getActivityHistory().getInteractionHistory().size());
+    }
     
     public void testHasContext() {
     	manager.getFileForContext("c.xml").delete();
