@@ -13,6 +13,7 @@ package org.eclipse.mylar.java;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -51,6 +52,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 	private JavaEditingMonitor javaEditingMonitor = new JavaEditingMonitor();
+	private JavaProblemListener problemListener = new JavaProblemListener();
 	
     public static final String PLUGIN_ID = "org.eclipse.mylar.java";
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
@@ -108,6 +110,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
                 MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
         		installEditorTracker(workbench);
         		
+        		JavaPlugin.getDefault().getProblemMarkerManager().addListener(problemListener);
+        	
 //        		 needed because Mylar source viewer configuration does not get initialized properly
 //        		resetActiveEditor();
             }
@@ -128,6 +132,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     	if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
     		getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
     	}
+    	
+    	JavaPlugin.getDefault().getProblemMarkerManager().removeListener(problemListener);
         
         // TODO: uninstall editor tracker
 	}
