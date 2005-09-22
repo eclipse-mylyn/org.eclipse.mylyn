@@ -3,6 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Plug-in
 Bundle-SymbolicName: org.eclipse.mylar
 Bundle-Version: 0.3.8.1
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
