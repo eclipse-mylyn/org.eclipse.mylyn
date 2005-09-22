@@ -92,6 +92,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     private Authentication uploadAuthentication = null;
     private static boolean performingUpload = false;
 	private boolean questionnaireEnabled = true;
+	private SelectionMonitor selectionMonitor;
     
 	private ShellListener SHELL_LISTENER = new ShellListener() {		
 		
@@ -160,7 +161,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
                 windowMonitor = new WindowChangeMonitor();
                 
                 MylarPlugin.getDefault().getCommandMonitors().add(new KeybindingCommandMonitor());
-                MylarPlugin.getDefault().getSelectionMonitors().add(new SelectionMonitor());
+                selectionMonitor = new SelectionMonitor();
+                MylarPlugin.getDefault().getSelectionMonitors().add(selectionMonitor);
 
                 MylarPlugin.getContextManager().getActionExecutionListeners().add(new ActionExecutionMonitor());
                 
@@ -263,6 +265,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
+		MylarPlugin.getDefault().getSelectionMonitors().remove(selectionMonitor);
 	}
 
 	/**
