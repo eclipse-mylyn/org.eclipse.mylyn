@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugs;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -27,7 +28,8 @@ import org.osgi.framework.BundleContext;
 public class MylarBugsPlugin extends AbstractUIPlugin {
 
 	public static ImageDescriptor EDGE_REF_BUGZILLA = getImageDescriptor("icons/elcl16/edge-ref-bug.gif");
-    private static BugzillaSearchManager bridge = null;
+	private BugzillaEditingMonitor bugzillaEditingMonitor;
+	private static BugzillaSearchManager bridge = null;
     private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
 	private static MylarBugsPlugin plugin;
 	private BugzillaReportCache cache;
@@ -43,14 +45,19 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 		super.start(context);
 		cache = new BugzillaReportCache();
 		cache.readCacheFile();
-
-        MylarPlugin.getDefault().getSelectionMonitors().add(new BugzillaEditingMonitor());             
         
         IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (window != null) {
             // create a new bridge and initialize it
             bridge = new BugzillaSearchManager();
         }
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+            	bugzillaEditingMonitor = new BugzillaEditingMonitor();
+            	MylarPlugin.getDefault().getSelectionMonitors().add(bugzillaEditingMonitor);   
+            }
+        });
 	}
 
 	/**
@@ -59,7 +66,7 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-
+		MylarPlugin.getDefault().getSelectionMonitors().remove(bugzillaEditingMonitor); 
 //        List<AbstractRelationshipProvider> providers = structureBridge.getProviders();
 //        if(providers != null){
 //	        for(AbstractRelationshipProvider provider: providers){
