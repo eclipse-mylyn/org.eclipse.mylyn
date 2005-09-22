@@ -547,7 +547,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 			addCommentsText =
 				new Text(
 					addCommentsComposite,
-					SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+					SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 			addCommentsText.setFont(COMMENT_FONT);
 			GridData addCommentsTextData =
 				new GridData(GridData.HORIZONTAL_ALIGN_FILL);

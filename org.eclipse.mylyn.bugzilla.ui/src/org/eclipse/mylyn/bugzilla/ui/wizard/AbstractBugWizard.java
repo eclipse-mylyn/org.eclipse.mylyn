@@ -231,7 +231,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 							// format the description of the bug so that it is roughly in 80
 							// character lines
-//							formatDescription();
+							formatDescription();
 
 							if (model.getDescription().length() != 0) {
 								// add the new comment to the bug post if there is some text in
@@ -355,12 +355,12 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	 */
 	protected void formatDescription() {
 		String origDesc = model.getDescription();
-		String[] descArray = new String[(origDesc.length() / 80 + 1) * 2];
+		String[] descArray = new String[(origDesc.length() / 100 + 1) * 2];
 		for (int i = 0; i < descArray.length; i++)
 			descArray[i] = null;
 		int j = 0;
 		while (true) {
-			int spaceIndex = origDesc.indexOf(" ", 75);
+			int spaceIndex = origDesc.indexOf(" ", 95);
 			if (spaceIndex == origDesc.length() || spaceIndex == -1) {
 				descArray[j] = origDesc;
 				break;

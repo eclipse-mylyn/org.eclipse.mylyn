@@ -1330,31 +1330,31 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 */
 	protected String formatText(String origText)
 	{
-		return origText;
+//		return origText;
 		// REMOVED THIS CODE SINCE WE DONT WANT TO DO ANY FORMATTING
-//		String [] textArray = new String[(origText.length()/80 + 1) *2];
-//		for(int i = 0; i < textArray.length; i++)
-//			textArray[i] = null;
-//		int j = 0;
-//		while(true) {
-//			int spaceIndex = origText.indexOf(" ", 75);
-//			if (spaceIndex == origText.length() || spaceIndex == -1) {
-//				textArray[j] = origText;
-//				break;
-//			}
-//			textArray[j] = origText.substring(0, spaceIndex);
-//			origText = origText.substring(spaceIndex + 1, origText.length());
-//			j++;
-//		}
-//	
-//		String newText = "";
-//	
-//		for (int i = 0; i < textArray.length; i++) {
-//			if(textArray[i] == null)
-//				break;
-//			newText += textArray[i] + "\n";
-//		}
-//		return newText;
+		String [] textArray = new String[(origText.length()/100 + 1) *2];
+		for(int i = 0; i < textArray.length; i++)
+			textArray[i] = null;
+		int j = 0;
+		while(true) {
+			int spaceIndex = origText.indexOf(" ", 95);
+			if (spaceIndex == origText.length() || spaceIndex == -1) {
+				textArray[j] = origText;
+				break;
+			}
+			textArray[j] = origText.substring(0, spaceIndex);
+			origText = origText.substring(spaceIndex + 1, origText.length());
+			j++;
+		}
+	
+		String newText = "";
+	
+		for (int i = 0; i < textArray.length; i++) {
+			if(textArray[i] == null)
+				break;
+			newText += textArray[i] + "\n";
+		}
+		return newText;
 	}
 	
 	/**

@@ -602,7 +602,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 
 		// add the description text field
 		descriptionText = new Text(attributesComposite, SWT.BORDER | SWT.MULTI
-				| SWT.V_SCROLL | SWT.H_SCROLL);
+				| SWT.V_SCROLL | SWT.WRAP);
 
 		descriptionText.setFont(AbstractBugEditor.COMMENT_FONT);
 		GridData descriptionTextData = new GridData(
