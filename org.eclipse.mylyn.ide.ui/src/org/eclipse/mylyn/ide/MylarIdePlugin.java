@@ -29,6 +29,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
     private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
     protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();    
     
+    private ResourceSelectionMonitor resourceSelectionMonitor;
 	private static MylarIdePlugin plugin;
 	
 	public MylarIdePlugin() {
@@ -42,7 +43,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
   		final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-                MylarPlugin.getDefault().getSelectionMonitors().add(new ResourceSelectionMonitor());
+            	resourceSelectionMonitor = new ResourceSelectionMonitor();
+                MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
             	
             	if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
                 if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
@@ -53,7 +55,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-		 MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
+		MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
+		MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 	}
 
 	public static MylarIdePlugin getDefault() {

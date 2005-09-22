@@ -151,7 +151,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-            	UiExtensionPointReader.initExtensions();
             	MylarPlugin.getContextManager().addListener(uiUpdateManager);
                 
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerConfigurator);
@@ -271,7 +270,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
      * null is never returned)
      */
     public IMylarUiBridge getUiBridge(String extension) {
-        IMylarUiBridge bridge = bridges.get(extension);
+    	if (!UiExtensionPointReader.extensionsRead) UiExtensionPointReader.initExtensions();
+    	IMylarUiBridge bridge = bridges.get(extension);
         if (bridge != null) {
             return bridge;
         } else {
@@ -283,7 +283,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
      * TODO: cache this to improve performance?
      */
     public IMylarUiBridge getUiBridgeForEditor(IEditorPart editorPart) {
-        IMylarUiBridge foundBridge = null;
+    	if (!UiExtensionPointReader.extensionsRead) UiExtensionPointReader.initExtensions();
+    	IMylarUiBridge foundBridge = null;
         for (IMylarUiBridge bridge : bridges.values()) {
             if (bridge.acceptsEditor(editorPart)) {
                 foundBridge = bridge;
@@ -297,19 +298,12 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         }
     }
 
-    public void internalAddBridge(String extension, IMylarUiBridge bridge) {
+    private void internalAddBridge(String extension, IMylarUiBridge bridge) {
         this.bridges.put(extension, bridge);
-//        final ActiveSearchView activeSearchView = ActiveSearchView.getFromActivePerspective();
-//        if (activeSearchView != null) {
-//            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//                public void run() { 
-//                    activeSearchView.resetProviders();
-//                }
-//            });   
-//        }
     }
 
     public ILabelProvider getContextLabelProvider(String extension) {
+    	if (!UiExtensionPointReader.extensionsRead) UiExtensionPointReader.initExtensions();
     	ILabelProvider provider = contextLabelProviders.get(extension);
         if (provider != null) {
             return provider;
@@ -318,7 +312,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         }
     }
     
-    public void internalAddContextLabelProvider(String extension, ILabelProvider provider) {
+    private void internalAddContextLabelProvider(String extension, ILabelProvider provider) {
         this.contextLabelProviders.put(extension, provider);
     }
     

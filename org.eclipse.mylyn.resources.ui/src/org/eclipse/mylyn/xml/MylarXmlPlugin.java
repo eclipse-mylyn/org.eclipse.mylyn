@@ -23,12 +23,15 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The main plugin class to be used in the desktop.
+ * @author Mik Kersten
  */
 public class MylarXmlPlugin extends AbstractUIPlugin { 
 
 	public static ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
 	
+	private PdeEditingMonitor pdeEditingMonitor;
+	private AntEditingMonitor antEditingMonitor;
+		
 	private static MylarXmlPlugin plugin;
 	private ResourceBundle resourceBundle;
 	
@@ -50,8 +53,11 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
   		final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-              MylarPlugin.getDefault().getSelectionMonitors().add(new PdeEditingMonitor());
-              MylarPlugin.getDefault().getSelectionMonitors().add(new AntEditingMonitor());            
+            	pdeEditingMonitor = new PdeEditingMonitor();
+            	MylarPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
+            	
+            	antEditingMonitor = new AntEditingMonitor();
+            	MylarPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
             }
         });
 	}
@@ -64,6 +70,8 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		plugin = null;
 		resourceBundle = null;
+        MylarPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+        MylarPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
 	}
 
 	/**

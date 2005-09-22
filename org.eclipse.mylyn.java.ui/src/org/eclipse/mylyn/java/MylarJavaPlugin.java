@@ -51,8 +51,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     
 	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
-	private JavaEditingMonitor javaEditingMonitor = new JavaEditingMonitor();
 	private JavaProblemListener problemListener = new JavaProblemListener();
+	private JavaEditingMonitor javaEditingMonitor;
 	
     public static final String PLUGIN_ID = "org.eclipse.mylar.java";
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
@@ -106,7 +106,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
             	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
             		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
             	}
-            	
+
+            	javaEditingMonitor = new JavaEditingMonitor();
                 MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
         		installEditorTracker(workbench);
         		
