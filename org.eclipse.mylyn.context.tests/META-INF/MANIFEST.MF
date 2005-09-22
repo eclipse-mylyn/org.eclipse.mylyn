@@ -4,7 +4,7 @@ Bundle-Name: Mylar Core Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.core.tests
 Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylar.core.tests.MylarCoreTestsPlugin
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,

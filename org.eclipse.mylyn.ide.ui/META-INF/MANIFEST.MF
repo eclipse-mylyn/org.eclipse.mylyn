@@ -4,7 +4,7 @@ Bundle-Name: Mylar Ide Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.ide;singleton:=true
 Bundle-Version: 0.3.8.1
 Bundle-Activator: org.eclipse.mylar.ide.MylarIdePlugin
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
