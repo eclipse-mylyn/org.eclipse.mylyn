@@ -27,8 +27,7 @@ public class JavaProblemListener implements IProblemChangedListener {
   
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
         try {
-        	if (MylarPlugin.getContextManager().getActiveContext() == null)
-                return;
+        	if (!MylarPlugin.getContextManager().hasActiveContext()) return;
             for (int i = 0; i < changedResources.length; i++) {
                 IResource resource = changedResources[i];
                 try {
