@@ -6,7 +6,7 @@ Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylar.tests.MylarTestsPlugin
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.tests
 Bundle-ClassPath: mylar-tests.jar
 Require-Bundle: org.junit,
