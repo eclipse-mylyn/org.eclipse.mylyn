@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.ui,
  org.eclipse.mylar.core
 Eclipse-AutoStart: true
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: mylar-tasklist.jar
 Export-Package: org.eclipse.mylar.tasklist,
  org.eclipse.mylar.tasklist.internal,

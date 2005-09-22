@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.bugzilla.core,
  org.eclipse.mylar.bugzilla.ui
 Eclipse-AutoStart: true
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.bugzilla.test
 Bundle-ClassPath: bugzilla-test.jar

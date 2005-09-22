@@ -4,7 +4,7 @@ Bundle-Name: Ui Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.bugzilla.ui; singleton:=true
 Bundle-Version: 0.3.8.1
 Bundle-Activator: org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

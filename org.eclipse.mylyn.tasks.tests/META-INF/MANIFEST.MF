@@ -4,7 +4,7 @@ Bundle-Name: Mylar Tasklist Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasklist.tests
 Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylar.tasklist.tests.MylarTasksTestsPlugin
-Bundle-Vendor: University of British Columbia
+Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
