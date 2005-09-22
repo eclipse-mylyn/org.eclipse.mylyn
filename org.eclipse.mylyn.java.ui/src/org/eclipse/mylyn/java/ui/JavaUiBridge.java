@@ -21,7 +21,6 @@ import java.util.List;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
@@ -32,11 +31,13 @@ import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
+/**
+ * @author Mik Kersten
+ */
 public class JavaUiBridge implements IMylarUiBridge {
  
     public void open(IMylarContextNode node) {
@@ -46,10 +47,8 @@ public class JavaUiBridge implements IMylarUiBridge {
         try {
             IEditorPart part = JavaUI.openInEditor(javaElement);
             JavaUI.revealInEditor(part, javaElement);
-        } catch (PartInitException e) {
-        	MylarPlugin.log(e, "could not open: " + node);
-        } catch (JavaModelException e) {
-        	MylarPlugin.log(e, "could not open: " + node);
+        } catch (Throwable t) {
+        	MylarPlugin.fail(t, "Could not open editor for: " + node, true);
         }
     }
 
