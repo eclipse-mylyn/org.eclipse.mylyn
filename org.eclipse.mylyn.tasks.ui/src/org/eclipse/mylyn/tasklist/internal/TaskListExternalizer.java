@@ -50,7 +50,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
+ * @author Ken Sueda
  */
 public class TaskListExternalizer {
 	
