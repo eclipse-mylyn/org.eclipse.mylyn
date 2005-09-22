@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         name="Mylar user monitoring startup"
+         point="org.eclipse.ui.startup">
+   </extension>
+   
+   
+   <extension point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.mylar.wizards"
+            class="org.eclipse.mylar.monitor.ui.wizards.UserStudySubmissionWizard"
+            icon="icons/etool16/wizard-study.gif"
+            id="org.eclipse.mylar.monitor.ui.uploadStatistics.StatisticsUploadWizard"
+            name="Usage Statistics Submission">
+      </wizard>
+      <wizard
+            category="org.eclipse.mylar.wizards"
+            class="org.eclipse.mylar.monitor.ui.wizards.FeedbackWizard"
+            icon="icons/etool16/wizard-feedback.gif"
+            id="org.eclipse.mylar.monitor.ui.wizards.FeedbackWizard"
+            name="User Feedback Submission">
+      </wizard>
+   </extension>
+   
+   <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="User Study"
+         class="org.eclipse.mylar.monitor.ui.preferences.MylarMonitorPreferencePage"
+         id="org.eclipse.mylar.monitor.ui.preferences"
+		 category="org.eclipse.mylar.ui.preferences">
+      </page>  
+   </extension>
+</plugin>

@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylar Monitor Tests Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.monitor.tests
+Bundle-Version: 0.0.0
+Bundle-Activator: org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.jface,
+ org.eclipse.ui.workbench,
+ org.eclipse.mylar.core,
+ org.eclipse.mylar.core.tests,
+ org.eclipse.mylar.monitor,
+ org.eclipse.jdt.ui,
+ org.eclipse.mylar.java,
+ org.eclipse.mylar.ui,
+ org.eclipse.mylar.tasklist,
+ org.eclipse.mylar.monitor.reports
+Eclipse-AutoStart: true
+Bundle-ClassPath: mylar-monitor-tests.jar
+Export-Package: org.eclipse.mylar.monitor.tests

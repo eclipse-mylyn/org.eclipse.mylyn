@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylar Monitor Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.monitor; singleton:=true
+Bundle-Version: 0.3.8.1
+Bundle-Activator: org.eclipse.mylar.monitor.MylarMonitorPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.jface.text,
+ org.eclipse.jdt.ui,
+ org.eclipse.jdt.core,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.editors,
+ org.eclipse.mylar.core,
+ org.eclipse.update.ui,
+ org.eclipse.pde.ui,
+ org.eclipse.update.core,
+ org.eclipse.ui.workbench.texteditor
+Eclipse-AutoStart: true
+Bundle-Vendor: Eclipse.org
+Bundle-ClassPath: mylar-monitor.jar,
+ lib/commons-codec-1.3.jar,
+ lib/commons-httpclient-3.0-rc2.jar,
+ lib/commons-logging.jar,
+ lib/commons-logging-api.jar
+Export-Package: org.eclipse.mylar.monitor,
+ org.eclipse.mylar.monitor.internal,
+ org.eclipse.mylar.monitor.ui,
+ org.eclipse.mylar.monitor.ui.preferences,
+ org.eclipse.mylar.monitor.ui.wizards
