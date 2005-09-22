@@ -280,8 +280,10 @@ public class MylarPlugin extends AbstractUIPlugin implements IStartup {
         	buffer.append(printStrackTrace(status.getException()));
         }
         
-        MylarPlugin.getDefault().getLog().log(status);
-        if (getDefault().logStream != null) getDefault().logStream.println(buffer.toString());
+        if (getDefault() != null) {
+        	getDefault().getLog().log(status);
+        	getDefault().logStream.println(buffer.toString());
+        }
     }
     
     private static String printStrackTrace(Throwable t) {
