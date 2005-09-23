@@ -1067,14 +1067,13 @@ public class TaskListView extends ViewPart {
     	manager.add(new Separator());
     	manager.add(previousTaskAction);
     	manager.add(nextTaskAction);
-    	manager.add(new Separator());
     	manager.add(goBackAction);
-//    	drillDownAdapter.addNavigationActions(manager);
         manager.add(new Separator());
         manager.add(autoClose);
         autoClose.setEnabled(true);
         manager.add(workOffline);
         workOffline.setEnabled(true);
+        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }    
     
     void fillContextMenu(IMenuManager manager) {
@@ -1455,9 +1454,11 @@ public class TaskListView extends ViewPart {
         manager.add(new Separator());
 	    manager.add(filterCompleteTask);
 	    manager.add(filterOnPriority);
-
-    	manager.markDirty();
-        manager.update(true);
+	    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	    
+//    	manager.markDirty();
+//        manager.update(true);
+        
     }
     
     public void addFilter(ITaskFilter filter) {

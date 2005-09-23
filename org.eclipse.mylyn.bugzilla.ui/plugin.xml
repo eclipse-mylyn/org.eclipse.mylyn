@@ -121,14 +121,14 @@
 			id="org.eclipse.mylar.bugzilla.ui.tasklist.actions" 
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
   			<action
-	            class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction"
-	            enablesFor="*"
-	            icon="icons/etool16/task-bug-refresh.gif"
-	            id="org.eclipse.mylar.bugzilla.tasklist.refresh"
-	            label="Synchronized Unresolved Bugzilla Reports"
-	            style="push"
-	            toolbarPath="mylar"
-	            tooltip="Synchronized Unresolved Bugzilla Reports"> 
+           class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction"
+           enablesFor="*"
+           icon="icons/etool16/task-bug-refresh.gif"
+           id="org.eclipse.mylar.bugzilla.tasklist.refresh"
+           label="Synchronize Unresolved Reports"
+           menubarPath="mylar"
+           style="push"
+           tooltip="Synchronize Unresolved Reports"> 
   			</action>
   			<action
 	            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction"
