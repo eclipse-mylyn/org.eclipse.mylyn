@@ -58,15 +58,14 @@ public class BugzillaStackTraceTest extends TestCase {
 //	    performParse(4862, "4862.html", 2, false);
 //	}
 	
-	/**
-	 * Test parsing the bug for a single stack in the description with some
-	 * text before it
-	 */
-	public void testSingleStackCodeBeforeInDescription(){
-	    
-		// BUG 76388 - 1 stack trace - description - text before and formatted ugly 
-		performParse(76388, "76388.html", 1, false);
-	}
+//	/**
+//	 * Test parsing the bug for a single stack in the description with some
+//	 * text before it
+//	 */
+//	public void testSingleStackCodeBeforeInDescription(){
+//		// BUG 76388 - 1 stack trace - description - text before and formatted ugly 
+//		performParse(76388, "76388.html", 1, false);
+//	}
 	
 	/**
 	 * Test parsing the bug for a single stack trace in the description with 

@@ -11,11 +11,10 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
-import org.eclipse.mylar.tasklist.tests.bugzilla.BugzillaSearchPluginTest;
-import org.eclipse.mylar.tasklist.tests.bugzilla.BugzillaStackTraceTest;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.mylar.tasklist.tests.bugzilla.BugzillaSearchPluginTest;
 
 /**
  * @author Mik Kersten
@@ -28,7 +27,7 @@ public class AllTasklistTests {
 		//$JUnit-BEGIN$
         suite.addTestSuite(TaskListManagerTest.class);
         suite.addTestSuite(TaskListUiTest.class);
-		suite.addTestSuite(BugzillaStackTraceTest.class);
+//		suite.addTestSuite(BugzillaStackTraceTest.class);
 		suite.addTestSuite(BugzillaSearchPluginTest.class);
 		//$JUnit-END$
 		return suite;
