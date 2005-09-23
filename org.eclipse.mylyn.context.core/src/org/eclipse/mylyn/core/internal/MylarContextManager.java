@@ -71,6 +71,7 @@ public class MylarContextManager {
 	private List<IActionExecutionListener> actionExecutionListeners = new ArrayList<IActionExecutionListener>();
     private boolean suppressListenerNotification = false;
     private MylarContextExternalizer externalizer = new MylarContextExternalizer();
+	private boolean activationHistorySuppressed = false;
     private static ScalingFactors scalingFactors = new ScalingFactors();
     
     private class ActivityListener implements IActiveTimerListener, IInteractionEventListener {
@@ -319,14 +320,16 @@ public class MylarContextManager {
      */
     public void contextActivated(MylarContext context) {
         activeContext.getContextMap().put(context.getId(), context);
-        activityHistory.parseEvent(
-        	new InteractionEvent(InteractionEvent.Kind.COMMAND,
-        			ACTIVITY_KIND,
-        			context.getId(),
-        			ACTIVITY_ID,
-        			null,
-        			ACTIVITY_ACTIVATED,
-        			1f));
+        if (!activationHistorySuppressed) {
+	        activityHistory.parseEvent(
+	        	new InteractionEvent(InteractionEvent.Kind.COMMAND,
+	        			ACTIVITY_KIND,
+	        			context.getId(),
+	        			ACTIVITY_ID,
+	        			null,
+	        			ACTIVITY_ACTIVATED,
+	        			1f));
+        }
     } 
     
     public void contextActivated(String id, String path) {
@@ -366,14 +369,16 @@ public class MylarContextManager {
 	            activeContext.getContextMap().remove(id);
 	            for (IMylarContextListener listener : listeners) listener.contextDeactivated(context);
 	        }
-	        activityHistory.parseEvent(
-	            	new InteractionEvent(InteractionEvent.Kind.COMMAND,
-	            			ACTIVITY_KIND,
-	            			id,
-	            			ACTIVITY_ID,
-	            			null,
-	            			ACTIVITY_DEACTIVATED,
-	            			1f));
+	        if (!activationHistorySuppressed) {
+		        activityHistory.parseEvent(
+		            	new InteractionEvent(InteractionEvent.Kind.COMMAND,
+		            			ACTIVITY_KIND,
+		            			id,
+		            			ACTIVITY_ID,
+		            			null,
+		            			ACTIVITY_DEACTIVATED,
+		            			1f));
+	        }
 	        saveActivityHistoryContext();
     	} catch (Throwable t) {
     		MylarPlugin.log(t, "Could not deactivate context");
@@ -574,5 +579,13 @@ public class MylarContextManager {
 	public void resetActivityHistory() {
 		activityHistory = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
 		saveActivityHistoryContext();
+	}
+
+	public boolean isActivationHistorySuppressed() {
+		return activationHistorySuppressed;
+	}
+
+	public void setActivationHistorySuppressed(boolean activationHistorySuppressed) {
+		this.activationHistorySuppressed = activationHistorySuppressed;
 	}
 }

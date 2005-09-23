@@ -184,10 +184,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     public MylarPlugin() {  
 		INSTANCE = this;  
 	}
-    
-//    public void earlyStartup() {
-//    	
-//	}
+
     
     /**
      * Initialization order is critical.
