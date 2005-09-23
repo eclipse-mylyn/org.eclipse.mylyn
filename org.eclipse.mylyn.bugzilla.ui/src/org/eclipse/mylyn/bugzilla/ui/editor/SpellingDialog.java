@@ -62,7 +62,7 @@ public class SpellingDialog extends Dialog{
 		suggestions = new List(spellingComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.widthHint = 150;
-		gd.heightHint = 100;
+		gd.heightHint = AbstractBugEditor.WRAP_LENGTH;
 		suggestions.setLayoutData(gd);
 		
 		return c;

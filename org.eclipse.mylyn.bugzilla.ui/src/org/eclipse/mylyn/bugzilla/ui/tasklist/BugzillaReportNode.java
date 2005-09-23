@@ -30,7 +30,9 @@ import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
  */
 public class BugzillaReportNode {
 
-    private static final long serialVersionUID = 3257004367222419506L;
+    private static final int MAX_LABEL_LENGTH = 150;
+
+	private static final long serialVersionUID = 3257004367222419506L;
 
     /** The BugzillaSearchHit associated with this DoiInfo */
     private BugzillaSearchHit hit;
@@ -169,10 +171,9 @@ public class BugzillaReportNode {
      * @return The name of the bug report, max 20 characters
      */
     public String getName() {
-        final int MAX_LENGTH = 100;
         String description = hit.getDescription();
         int length = description.length(); 
-        if (length > MAX_LENGTH) description = description.substring(0, MAX_LENGTH) + "..";
+        if (length > MAX_LABEL_LENGTH) description = description.substring(0, MAX_LABEL_LENGTH) + "..";
         return "bug " + hit.getId() + ": " + description;
     }
 

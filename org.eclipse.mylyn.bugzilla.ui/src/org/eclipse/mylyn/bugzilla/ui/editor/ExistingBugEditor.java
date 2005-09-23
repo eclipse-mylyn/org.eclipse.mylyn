@@ -202,7 +202,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
-				radioData.widthHint = 100;
+				radioData.widthHint = AbstractBugEditor.WRAP_LENGTH;
 				radioOptions[i] = new Combo(
 						buttonComposite,
 						SWT.NO_BACKGROUND

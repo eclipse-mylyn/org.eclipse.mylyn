@@ -31,6 +31,7 @@ import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
+import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.search.internal.ui.SearchMessages;
@@ -355,12 +356,12 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	 */
 	protected void formatDescription() {
 		String origDesc = model.getDescription();
-		String[] descArray = new String[(origDesc.length() / 100 + 1) * 2];
+		String[] descArray = new String[(origDesc.length() / AbstractBugEditor.WRAP_LENGTH + 1) * 2];
 		for (int i = 0; i < descArray.length; i++)
 			descArray[i] = null;
 		int j = 0;
 		while (true) {
-			int spaceIndex = origDesc.indexOf(" ", 95);
+			int spaceIndex = origDesc.indexOf(" ", AbstractBugEditor.WRAP_LENGTH-5);
 			if (spaceIndex == origDesc.length() || spaceIndex == -1) {
 				descArray[j] = origDesc;
 				break;

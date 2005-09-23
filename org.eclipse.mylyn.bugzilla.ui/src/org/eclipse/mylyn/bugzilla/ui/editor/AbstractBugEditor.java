@@ -104,6 +104,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
+	public static final int WRAP_LENGTH = 90;
+
 	protected Display display;
 
 	public static final  Font TITLE_FONT = JFaceResources.getHeaderFont();
@@ -937,7 +939,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		submitButton = new Button(buttonComposite, SWT.NONE);
 		submitButton.setFont(TEXT_FONT);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		submitButtonData.widthHint = 100;
+		submitButtonData.widthHint = AbstractBugEditor.WRAP_LENGTH;
 		submitButtonData.heightHint = 20;
 		submitButton.setText("Submit");
 		submitButton.setLayoutData(submitButtonData);
@@ -1330,14 +1332,12 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 */
 	protected String formatText(String origText)
 	{
-//		return origText;
-		// REMOVED THIS CODE SINCE WE DONT WANT TO DO ANY FORMATTING
-		String [] textArray = new String[(origText.length()/100 + 1) *2];
+		String [] textArray = new String[(origText.length()/WRAP_LENGTH + 1) *2];
 		for(int i = 0; i < textArray.length; i++)
 			textArray[i] = null;
 		int j = 0;
 		while(true) {
-			int spaceIndex = origText.indexOf(" ", 95);
+			int spaceIndex = origText.indexOf(" ", WRAP_LENGTH-5);
 			if (spaceIndex == origText.length() || spaceIndex == -1) {
 				textArray[j] = origText;
 				break;
