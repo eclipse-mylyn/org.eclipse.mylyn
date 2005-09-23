@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasklist.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListManager;
@@ -34,6 +35,7 @@ public class TaskHistoryTest extends TestCase {
 		
 	protected void setUp() throws Exception {
 		super.setUp();
+		MylarPlugin.getContextManager().resetActivityHistory();
 		
 		task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
 		task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);

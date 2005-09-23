@@ -71,8 +71,7 @@ public class TaskActivationHistory {
 		
 		while (pos >= 0){
 			if (!getHistoryTaskAt(pos).isActive()){
-				
-				
+						
 				//Don't go back to this task if it's
 				// a duplicate of something already backed through
 				ITask proposedPrevTask = getHistoryTaskAt(pos);
