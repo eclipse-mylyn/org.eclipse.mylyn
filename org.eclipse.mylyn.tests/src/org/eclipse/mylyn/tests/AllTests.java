@@ -28,10 +28,10 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
         //$JUnit-BEGIN$
+        suite.addTest(AllXmlTests.suite());
         suite.addTest(AllCoreTests.suite());
         suite.addTest(AllJavaTests.suite());
         suite.addTest(AllTasklistTests.suite());
-        suite.addTest(AllXmlTests.suite());
         suite.addTest(AllMonitorTests.suite());
         //$JUnit-END$
         return suite;
