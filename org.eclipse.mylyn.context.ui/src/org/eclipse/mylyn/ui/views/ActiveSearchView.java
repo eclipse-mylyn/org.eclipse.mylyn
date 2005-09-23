@@ -250,8 +250,6 @@ public class ActiveSearchView extends ViewPart {
         manager.markDirty();
     }
     
-    
-
     private void makeActions() { 
     	// don't have any actions to make
     }

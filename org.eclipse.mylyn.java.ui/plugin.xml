@@ -48,19 +48,20 @@
 
 
    <extension point="org.eclipse.ui.views"> 
-   	<view name="Active Search" 
-	  	icon="icons/eview16/active-search.gif"  
-	  	category="org.eclipse.mylar" 
-	  	class="org.eclipse.mylar.ui.views.ActiveSearchView" 
-	  	id="org.eclipse.mylar.ui.views.active.search"/>
-   </extension>
-
-   <extension point="org.eclipse.ui.views"> 
-   	  <view name="Active Hierarchy" 
-	  	icon="icons/eview16/active-hierarchy.gif" 
-	  	category="org.eclipse.mylar" 
-	  	class="org.eclipse.mylar.java.ui.views.ActiveHierarchyView" 
-	  	id="org.eclipse.mylar.ui.views.active.hierarchy"/>
+   	<view
+          allowMultiple="false"
+          category="org.eclipse.mylar"
+          class="org.eclipse.mylar.ui.views.ActiveSearchView"
+          icon="icons/eview16/active-search.gif"
+          id="org.eclipse.mylar.ui.views.active.search"
+          name="Active Search"/>
+   	  <view
+            allowMultiple="false"
+            category="org.eclipse.mylar"
+            class="org.eclipse.mylar.java.ui.views.ActiveHierarchyView"
+            icon="icons/eview16/active-hierarchy.gif"
+            id="org.eclipse.mylar.ui.views.active.hierarchy"
+            name="Active Hierarchy"/>
    </extension>
   
    <extension point="org.eclipse.ui.viewActions"> 

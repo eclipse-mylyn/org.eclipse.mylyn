@@ -61,7 +61,6 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 	private static final String SOURCE_ID = "XMLSearchTest";
 	private SearchPluginTestHelper helper;
 	
-	
 	@Override
     protected void setUp() throws Exception {
     	//TODO: clear the relationship providers?
@@ -147,7 +146,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 	public void testXMLSearchDOS2()throws IOException, CoreException{
 
 		int dos = 2;
-		
+
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
