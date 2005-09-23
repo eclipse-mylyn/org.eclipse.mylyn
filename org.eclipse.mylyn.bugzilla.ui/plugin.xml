@@ -3,15 +3,14 @@
 <?eclipse version="3.0"?>
 <plugin>
    
-   <extension
-         point="org.eclipse.mylar.tasklist.taskListContributor">
+   <extension point="org.eclipse.mylar.tasklist.providers">
       <taskHandler
             taskHandlerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskHandler"
             externalizerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
             id="org.eclipse.mylar.bugzilla.ui.tasklist"
             name="Bugzilla Contributor">
       </taskHandler>
-   </extension>     
+   </extension> 
    
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
@@ -93,7 +92,7 @@
          name="Bugzilla Context-sensitive Help"
          point="org.eclipse.help.contexts">
       <contexts 
-      		file="bugzilla_contexts.xml">
+      		file="bugzilla-help.xml">
       </contexts>
    </extension>
    <extension

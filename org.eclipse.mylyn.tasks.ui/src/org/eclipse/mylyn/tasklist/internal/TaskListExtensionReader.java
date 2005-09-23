@@ -22,7 +22,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
-import org.eclipse.mylar.tasklist.ITaskListener;
+import org.eclipse.mylar.tasklist.ITaskActivationListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 
 /**
@@ -59,10 +59,10 @@ public class TaskListExtensionReader {
 	private static void readTaskListener(IConfigurationElement element) {
 		try{
 			Object taskListener = element.createExecutableExtension(MylarTasklistPlugin.TASK_LISTENER_CLASS_ID);
-			if (taskListener instanceof ITaskListener) {
-				MylarTasklistPlugin.getDefault().addTaskListListener((ITaskListener) taskListener);
+			if (taskListener instanceof ITaskActivationListener) {
+				MylarTasklistPlugin.getDefault().addTaskListListener((ITaskActivationListener) taskListener);
 			} else {
-				MylarPlugin.log("Could not load tasklist listener: " + taskListener.getClass().getCanonicalName() + " must implement " + ITaskListener.class.getCanonicalName(), thisReader);	
+				MylarPlugin.log("Could not load tasklist listener: " + taskListener.getClass().getCanonicalName() + " must implement " + ITaskActivationListener.class.getCanonicalName(), thisReader);	
 			}
 		} catch (CoreException e){
 			MylarPlugin.log(e, "Could not load tasklist listener extension");

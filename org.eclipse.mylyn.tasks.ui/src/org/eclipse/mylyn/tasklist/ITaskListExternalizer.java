@@ -18,7 +18,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * Used to externalize things like tasks and bug reports along with the task list
+ * so that information about them can be persisted across invocations.
+ * 
+ * @author Mik Kersten
+ * @author Ken Sueda
  * 
  * TODO: consider merging tasks and categories
  */

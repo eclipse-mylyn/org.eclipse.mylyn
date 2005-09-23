@@ -289,7 +289,6 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public void createRegistry(Document doc, Node parent) {
 		// nothing to do
 	}
-
 	
 	public boolean canCreateElementFor(IQuery category) {
 		return true;

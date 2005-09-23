@@ -27,7 +27,8 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
+ * @author Ken Sueda
  */
 public class CreateBugzillaTaskAction extends Action implements IViewActionDelegate{
 	

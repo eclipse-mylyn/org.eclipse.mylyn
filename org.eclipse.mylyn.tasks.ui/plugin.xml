@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-    <extension-point id="taskListContributor" name="TaskList Contributor" schema="schema/taskListContributor.exsd"/>
+    <extension-point id="providers" name="Tasklist Providers" schema="schema/providers.exsd"/>
 
    <extension
          name="Mylar Task List Startup"

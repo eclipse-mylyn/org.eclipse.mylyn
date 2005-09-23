@@ -54,7 +54,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private TaskListExternalizer externalizer;
     private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
     
-    public static final String TASK_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.tasklist.taskListContributor";
+    public static final String TASK_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.tasklist.providers";
 
     public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.report.ui.planningGameWizard";
     public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.report.ui.planning";
@@ -448,13 +448,13 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		menuContributors.add(contributor);
 	}
 	
-	private List<ITaskListener> taskListListeners = new ArrayList<ITaskListener>();
+	private List<ITaskActivationListener> taskListListeners = new ArrayList<ITaskActivationListener>();
 	
-	public List<ITaskListener> getTaskListListeners() {
+	public List<ITaskActivationListener> getTaskListListeners() {
 		return taskListListeners;
 	}
 	
-	public void addTaskListListener(ITaskListener taskListListner) {
+	public void addTaskListListener(ITaskActivationListener taskListListner) {
 		taskListListeners.add(taskListListner);
 	}
 		

@@ -11,12 +11,11 @@
 
 package org.eclipse.mylar.tasklist;
 
-
 /**
  * @author Mik Kersten
  * 
  */
-public interface ITaskListener {
+public interface ITaskActivationListener {
 
 	public abstract void taskActivated(ITask task);
 
