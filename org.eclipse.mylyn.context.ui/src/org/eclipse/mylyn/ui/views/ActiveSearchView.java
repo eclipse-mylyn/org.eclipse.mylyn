@@ -59,52 +59,53 @@ public class ActiveSearchView extends ViewPart {
     
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
-            refresh(node);
+            refresh(node, false);
         }
         
         public void interestChanged(List<IMylarContextNode> nodes) {
-            refresh(nodes.get(nodes.size()-1));
+            refresh(nodes.get(nodes.size()-1), true);
         }
 
         public void contextActivated(IMylarContext taskscape) {
-            refresh(null);
+            refresh(null, true);
         }
 
         public void contextDeactivated(IMylarContext taskscape) {
-            refresh(null);
+            refresh(null, true);
         } 
         
         public void presentationSettingsChanging(UpdateKind kind) {
-            refresh(null);
+            refresh(null, true);
         }
         
         public void landmarkAdded(IMylarContextNode node) { 
-            refresh(null);
+            refresh(null, true);
         }
 
         public void landmarkRemoved(IMylarContextNode node) { 
-            refresh(null);
+            refresh(null, true);
         }
 
         public void edgesChanged(IMylarContextNode node) {
-            refresh(node);
+            refresh(node, true);
         }
 
         public void nodeDeleted(IMylarContextNode node) {
-        	refresh(null);
+        	refresh(null, true);
         }
         
-        private void refresh(final IMylarContextNode node) {
+        private void refresh(final IMylarContextNode node, final boolean updateLabels) {
             Workbench.getInstance().getDisplay().syncExec(new Runnable() {
                 public void run() {
                     try {  
                         if (viewer != null && !viewer.getTree().isDisposed()) {
                         	if (node != null && containsNode(viewer.getTree(), node)) {
-                        		viewer.refresh(node, true);
-                        	} else {
+                        		viewer.refresh(node, updateLabels);
+                        	} else if (node == null) {
                         		viewer.refresh();
+                        		viewer.expandAll();
                         	}
-                            viewer.expandAll();
+                            
                         }
                     } catch (Throwable t) {
                     	MylarPlugin.log(t, "active searchrefresh failed");
