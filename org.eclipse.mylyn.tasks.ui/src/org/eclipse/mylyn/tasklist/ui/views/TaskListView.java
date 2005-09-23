@@ -829,7 +829,7 @@ public class TaskListView extends ViewPart {
     	getViewer().getTree().setHeaderVisible(true);
     	getViewer().getTree().setLinesVisible(true);
     	getViewer().setColumnProperties(columnNames);
-    	getViewer().setUseHashlookup(true);    
+    	getViewer().setUseHashlookup(true);  
                 
         columns = new TreeColumn[columnNames.length];
         for (int i = 0; i < columnNames.length; i++) {
@@ -858,7 +858,7 @@ public class TaskListView extends ViewPart {
 				}
             });
         }
-         
+
         CellEditor[] editors = new CellEditor[columnNames.length];
         TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
         ((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
@@ -924,6 +924,7 @@ public class TaskListView extends ViewPart {
         hookContextMenu();
         hookDoubleClickAction();
         contributeToActionBars();       
+        
         ToolTipHandler toolTipHandler = new ToolTipHandler(getViewer().getControl().getShell());
         toolTipHandler.activateHoverHelp(getViewer().getControl());
         

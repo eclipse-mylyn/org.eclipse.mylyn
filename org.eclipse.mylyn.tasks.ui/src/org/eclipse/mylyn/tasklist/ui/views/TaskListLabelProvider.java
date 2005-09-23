@@ -44,19 +44,19 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 			ITaskListElement element = (ITaskListElement) obj;
 			switch (columnIndex) {
 			case 0:
-				return "";
+				return null;
 			case 1:
-				return "";
+				return null;
 			case 2:
 				if (element instanceof ICategory || element instanceof IQuery) {
-					return "";
+					return null;
 				}
 				return element.getPriority();
 			case 3:
 				return element.getDescription(true);
 			}
 		}
-    	return "";
+    	return null;
     }
 
     public Font getFont(Object element) {

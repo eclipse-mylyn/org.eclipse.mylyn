@@ -38,7 +38,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * @author Mik Kersten and Eric Booth
+ * @author Mik Kersten
+ * @author Eric Booth
  */
 public class ToolTipHandler {
    private Shell parentShell;
@@ -206,6 +207,7 @@ public class ToolTipHandler {
 				tipShell.pack();
 				setHoverLocation(tipShell, tipPosition);
 				tipShell.setVisible(true);
+				parentShell.setFocus();
 			}
 		});
 		/*
@@ -249,7 +251,7 @@ public class ToolTipHandler {
 		Rectangle shellBounds = shell.getBounds();
 		shellBounds.x = Math.max(Math.min(position.x, displayBounds.width
 				- shellBounds.width), 0);
-		shellBounds.y = Math.max(Math.min(position.y + 16, displayBounds.height
+		shellBounds.y = Math.max(Math.min(position.y +1, displayBounds.height
 				- shellBounds.height), 0);
 		shell.setBounds(shellBounds);
 	}
