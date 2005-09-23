@@ -27,6 +27,7 @@ public class AllTasklistTests {
 		//$JUnit-BEGIN$
         suite.addTestSuite(TaskListManagerTest.class);
         suite.addTestSuite(TaskListUiTest.class);
+        suite.addTestSuite(TaskHistoryTest.class);
 //		suite.addTestSuite(BugzillaStackTraceTest.class);
 		suite.addTestSuite(BugzillaSearchPluginTest.class);
 		//$JUnit-END$

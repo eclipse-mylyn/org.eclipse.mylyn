@@ -10,60 +10,193 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.ui.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+
 
 /**
- * @author Ken Sueda
+ * @author Ken Sueda (interface)
+ * @author Wesley Coelho (new implementation)
+ * 
+ * Note: Getting the previous or next task involves iterating until one is found
+ * because there could be any number of interaction events for the same task
+ * in the history. However, n should be less than 10 or so in most cases so
+ * this shouldn't be a performance problem.
  */
 public class TaskActivationHistory {
-	private List<ITask> history = new ArrayList<ITask>();
-	private int currentIndex = -1;
+	
+	protected MylarContextManager manager = MylarPlugin.getContextManager();
+	protected int currentIndex = -1;
+	protected int stackPos = 0;
     
 	public TaskActivationHistory() {	
-	}
 	
+	
+	}
+
 	public void addTask(ITask task) {
-		if (hasNext()) {
-			for (int i = currentIndex+1; i < history.size();) {
-				history.remove(i);
-			}			
-		} 			
-		history.add(task);
-		currentIndex++;
+		currentIndex = -1;
+		stackPos = 0;
 	}
 	
 	public ITask getPreviousTask() {
-		if (hasPrevious()) {
-			if((currentIndex == 0 && !history.get(currentIndex).isActive())){
-				return history.get(currentIndex);
-			} else {
-				return history.get(--currentIndex);
+		if (hasPrevious()){
+			if (currentIndex == -1){
+				currentIndex = manager.getActivityHistory().getInteractionHistory().size() - 1;
+			}			
+			
+			while(currentIndex >= 0){
+				ITask task = getHistoryTaskAt(currentIndex--);
+				if (!task.isActive()){
+					stackPos--;
+					return task;
+				}				
 			}
-		} else {
 			return null;
-		}		
+		}
+		else{
+			return null;
+		}
 	}
-	
-	public boolean hasPrevious() {
-		return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;			
+
+	public boolean hasPrevious() {		
+		int pos = currentIndex;
+		
+		if (pos == -1){
+			pos = manager.getActivityHistory().getInteractionHistory().size() - 1;
+		}
+		
+		while (pos >= 0){
+			if (!getHistoryTaskAt(pos).isActive()){
+				
+				
+				//Don't go back to this task if it's
+				// a duplicate of something already backed through
+				ITask proposedPrevTask = getHistoryTaskAt(pos);
+				boolean anotherTaskReached = false;
+				boolean duplicate = false;
+				for(int i = pos; i < manager.getActivityHistory().getInteractionHistory().size() - 1; i++){
+					ITask currTask = getHistoryTaskAt(i);
+					if (currTask != proposedPrevTask){
+						anotherTaskReached = true;
+						continue;
+					}
+				
+					if (anotherTaskReached && currTask == proposedPrevTask){
+						duplicate = true;
+					}
+				}
+				//---
+				
+				
+				if (!duplicate){
+					return true;
+				}
+			}
+			pos--;
+		}
+		
+		return false;
 	}
 	
 	public ITask getNextTask() {
 		if (hasNext()) {
-			return history.get(++currentIndex);
+			for(int i = currentIndex; i < manager.getActivityHistory().getInteractionHistory().size(); i++){
+				ITask task = getHistoryTaskAt(i);
+				if(!task.isActive()){
+					currentIndex = i;
+					stackPos++;
+					if (stackPos == 0){
+						currentIndex = -1;
+					}
+					return task;
+				}
+			}
+			return null;
 		} else {
 			return null;
 		}		
 	}
 	
 	public boolean hasNext() {
-		return currentIndex < history.size() - 1;
+		if (currentIndex == -1){
+			return false;
+		}
+		else{
+			for(int i = currentIndex; i < manager.getActivityHistory().getInteractionHistory().size(); i++){
+				if(!getHistoryTaskAt(i).isActive()){
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 	
+	/** Returns the task corresponding to the interaction event history item at the specified position */
+	protected ITask getHistoryTaskAt(int pos){
+		InteractionEvent event = manager.getActivityHistory().getInteractionHistory().get(pos);
+		return MylarTasklistPlugin.getTaskListManager().getTaskForHandle(event.getStructureHandle(), false);
+	}
+	
+	/** Note: Doesn't really clear, just resets the history pointer*/
 	public void clear() {
-		history.clear();
+		currentIndex = -1;
 	}
 }
+
+
+///**
+// * @author Ken Sueda
+// */
+//public class TaskActivationHistory {
+//	private List<ITask> history = new ArrayList<ITask>();
+//	private int currentIndex = -1;
+//    
+//	public TaskActivationHistory() {	
+//	}
+//	
+//	public void addTask(ITask task) {
+//		if (hasNext()) {
+//			for (int i = currentIndex+1; i < history.size();) {
+//				history.remove(i);
+//			}			
+//		} 			
+//		history.add(task);
+//		currentIndex++;
+//	}
+//	
+//	public ITask getPreviousTask() {
+//		if (hasPrevious()) {
+//			if((currentIndex == 0 && !history.get(currentIndex).isActive())){
+//				return history.get(currentIndex);
+//			} else {
+//				return history.get(--currentIndex);
+//			}
+//		} else {
+//			return null;
+//		}		
+//	}
+//	
+//	public boolean hasPrevious() {
+//		return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;			
+//	}
+//	
+//	public ITask getNextTask() {
+//		if (hasNext()) {
+//			return history.get(++currentIndex);
+//		} else {
+//			return null;
+//		}		
+//	}
+//	
+//	public boolean hasNext() {
+//		return currentIndex < history.size() - 1;
+//	}
+//	
+//	public void clear() {
+//		history.clear();
+//	}
+//}

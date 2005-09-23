@@ -30,7 +30,9 @@ public class NavigatePreviousAction extends Action {
 		setText("Previous Task");
         setToolTipText("Previous Task");
         setId(ID);
-        setEnabled(false);
+        //setEnabled(false);
+        //setEnabled(history.hasPrevious()); //TODO: Use this line instead
+        setEnabled(true);
         setImageDescriptor(TaskListImages.NAVIGATE_PREVIOUS);
     }
 	
