@@ -110,7 +110,7 @@ public class StatisticsReportingTest extends TestCase {
 //		System.err.println(">>> " + editRatioCollector.baselineSelections);
 		
 		// TODO: these are off from expected when test run alone, due to unknown element selections
-		assertEquals(0.25f, editRatioCollector.getBaselineRatio(-1));
+		assertEquals(0.5f, editRatioCollector.getBaselineRatio(-1));
 		assertEquals(2f, editRatioCollector.getMylarRatio(-1));
 	}
 	
