@@ -237,10 +237,10 @@
   		</action> 
   		</viewContribution>
    </extension>
-   <extension
-       point="org.eclipse.mylar.tasklist.taskListContributor">
+   
+   <extension point="org.eclipse.mylar.tasklist.providers"> 
     <dynamicPopupMenu class="org.eclipse.mylar.ui.internal.views.TaskListHighlighterMenuContributor"/>
- </extension>
+   </extension>
  
       <extension point="org.eclipse.ui.workingSets">
         <workingSet
