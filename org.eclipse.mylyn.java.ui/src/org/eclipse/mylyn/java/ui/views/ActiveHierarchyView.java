@@ -264,7 +264,7 @@ public class ActiveHierarchyView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		// ignore
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -272,7 +272,7 @@ public class ActiveHierarchyView extends ViewPart {
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		// ignore
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	/**

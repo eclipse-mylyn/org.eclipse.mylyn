@@ -80,6 +80,8 @@ public class MylarImages {
     public static final ImageDescriptor FILE_GENERIC = create(T_ELCL, "file_obj.gif");
     public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif");
 
+    public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
+    
 	public static ImageDescriptor create(String prefix, String name) {
 		return create(prefix, name, baseURL);
 	}

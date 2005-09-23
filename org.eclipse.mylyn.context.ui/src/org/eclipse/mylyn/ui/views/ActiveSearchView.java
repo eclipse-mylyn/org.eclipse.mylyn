@@ -182,7 +182,6 @@ public class ActiveSearchView extends ViewPart {
                 PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
         viewer.setSorter(new DoiOrderSorter()); 
         viewer.setInput(getViewSite());
-        makeActions();
         hookContextMenu();
         
         viewer.addOpenListener(new TaskscapeNodeClickListener(viewer));
@@ -217,14 +216,25 @@ public class ActiveSearchView extends ViewPart {
 
     private void fillLocalToolBar(IToolBarManager manager) {
     	fillActions(manager);
+    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
     
     private void fillLocalPullDown(IMenuManager manager) {
     	fillActions(manager);
+    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
     
     private void fillActions(IContributionManager manager) {
-        Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
+       	// needed to prevent toolbar from getting too tall, TODO: fille bug report
+    	IAction dummyAction = new Action(){
+			@Override
+			public void run() { }
+        };
+        dummyAction.setText("");
+        dummyAction.setImageDescriptor(MylarImages.BLANK);
+        manager.add(dummyAction);
+    	
+    	Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
             List<AbstractRelationshipProvider> providers = bridge.getRelationshipProviders(); 
@@ -234,26 +244,21 @@ public class ActiveSearchView extends ViewPart {
 	            manager.add(action); 
             }
         }
-        IAction stopAction = new Action(){
+    	
+    	IAction stopAction = new Action(){
 			@Override
 			public void run() {
 	            for(AbstractRelationshipProvider provider: MylarPlugin.getContextManager().getActiveProviders()){
 	            	provider.stopAllRunningJobs();
 	            }
 			}
-        	
         };
         stopAction.setToolTipText(STOP_JOBS_LABEL);
         stopAction.setText(STOP_JOBS_LABEL);
         stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
         manager.add(stopAction);
-        manager.markDirty();
     }
-    
-    private void makeActions() { 
-    	// don't have any actions to make
-    }
-    	
+
     /**
      * Passing the focus request to the viewer's control.
      */

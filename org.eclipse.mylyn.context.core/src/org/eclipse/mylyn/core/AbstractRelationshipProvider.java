@@ -82,7 +82,6 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
 //    	((DegreeOfInterest)targetNode.getDegreeOfInterest()).addEvent(
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
         MylarPlugin.getContextManager().handleInteractionEvent(event, false);
-        
         createEdge(node, elementKind, elementHandle);
     }
 

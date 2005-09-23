@@ -61,7 +61,7 @@ public class MylarContextManager {
     private List<String> errorElementHandles = new ArrayList<String>();
     
     private CompositeContext activeContext = new CompositeContext();
-    private MylarContext activityHistory;
+    private MylarContext activityHistory = null;
     private ActivityListener activityListener;
     
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
