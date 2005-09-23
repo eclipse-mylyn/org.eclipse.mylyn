@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -52,7 +53,9 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class ActiveSearchView extends ViewPart {
 
-    public static final String ID = "org.eclipse.mylar.ui.views.active.search";
+    private static final String STOP_JOBS_LABEL = "Stop Active Search Jobs";
+
+	public static final String ID = "org.eclipse.mylar.ui.views.active.search";
 	
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
@@ -103,9 +106,8 @@ public class ActiveSearchView extends ViewPart {
                         		viewer.refresh(node, updateLabels);
                         	} else if (node == null) {
                         		viewer.refresh();
-                        		viewer.expandAll();
                         	}
-                            
+                        	viewer.expandAll();
                         }
                     } catch (Throwable t) {
                     	MylarPlugin.log(t, "active searchrefresh failed");
@@ -208,17 +210,20 @@ public class ActiveSearchView extends ViewPart {
         fillLocalToolBar(bars.getToolBarManager());
     }
  
-    private void fillLocalPullDown(IMenuManager manager) {
-    	// nothing for now
-    }
-
     void fillContextMenu(IMenuManager manager) {
         manager.add(new Separator());
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
-    
+
     private void fillLocalToolBar(IToolBarManager manager) {
-//        manager.removeAll();
+    	fillActions(manager);
+    }
+    
+    private void fillLocalPullDown(IMenuManager manager) {
+    	fillActions(manager);
+    }
+    
+    private void fillActions(IContributionManager manager) {
         Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
@@ -238,12 +243,14 @@ public class ActiveSearchView extends ViewPart {
 			}
         	
         };
-        stopAction.setToolTipText("Stop all active search jobs");
-        stopAction.setText("Stop all active search jobs");
+        stopAction.setToolTipText(STOP_JOBS_LABEL);
+        stopAction.setText(STOP_JOBS_LABEL);
         stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
         manager.add(stopAction);
         manager.markDirty();
     }
+    
+    
 
     private void makeActions() { 
     	// don't have any actions to make

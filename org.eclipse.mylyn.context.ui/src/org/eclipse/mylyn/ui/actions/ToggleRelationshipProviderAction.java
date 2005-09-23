@@ -39,6 +39,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 		super();
         this.bridge = bridge;
         setImageDescriptor(MylarPlugin.getDefault().getActiveSearchIcon(bridge));
+        setText(MylarPlugin.getDefault().getActiveSearchLabel(bridge));
         setToolTipText(MylarPlugin.getDefault().getActiveSearchLabel(bridge));
         setMenuCreator(this);	
 		
