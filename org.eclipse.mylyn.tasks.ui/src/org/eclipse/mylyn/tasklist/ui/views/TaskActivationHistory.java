@@ -38,24 +38,13 @@ public class TaskActivationHistory {
 	}
 
 	public void addTask(ITask task) {
-		currentIndex = -1;
-		stackPos = 0;
+		clear();
 	}
 	
 	public ITask getPreviousTask() {
 		if (hasPrevious()){
-			if (currentIndex == -1){
-				currentIndex = manager.getActivityHistory().getInteractionHistory().size() - 1;
-			}			
-			
-			while(currentIndex >= 0){
-				ITask task = getHistoryTaskAt(currentIndex--);
-				if (!task.isActive()){
-					stackPos--;
-					return task;
-				}				
-			}
-			return null;
+			stackPos--;
+			return getUniquePreviousTask(true);
 		}
 		else{
 			return null;
@@ -63,6 +52,10 @@ public class TaskActivationHistory {
 	}
 
 	public boolean hasPrevious() {		
+		return getUniquePreviousTask(false) != null;
+	}
+	
+	protected ITask getUniquePreviousTask(boolean setIndex){
 		int pos = currentIndex;
 		
 		if (pos == -1){
@@ -70,8 +63,8 @@ public class TaskActivationHistory {
 		}
 		
 		while (pos >= 0){
-			if (!getHistoryTaskAt(pos).isActive()){
-						
+			if (getHistoryTaskAt(pos) != null && !getHistoryTaskAt(pos).isActive()) {
+							
 				//Don't go back to this task if it's
 				// a duplicate of something already backed through
 				ITask proposedPrevTask = getHistoryTaskAt(pos);
@@ -92,20 +85,23 @@ public class TaskActivationHistory {
 				
 				
 				if (!duplicate){
-					return true;
+					if(setIndex){
+						currentIndex = pos;
+					}
+					return proposedPrevTask;
 				}
 			}
 			pos--;
 		}
 		
-		return false;
+		return null;
 	}
 	
 	public ITask getNextTask() {
 		if (hasNext()) {
 			for(int i = currentIndex; i < manager.getActivityHistory().getInteractionHistory().size(); i++){
 				ITask task = getHistoryTaskAt(i);
-				if(!task.isActive()){
+				if(task != null && !task.isActive()){
 					currentIndex = i;
 					stackPos++;
 					if (stackPos == 0){
@@ -126,7 +122,7 @@ public class TaskActivationHistory {
 		}
 		else{
 			for(int i = currentIndex; i < manager.getActivityHistory().getInteractionHistory().size(); i++){
-				if(!getHistoryTaskAt(i).isActive()){
+				if(getHistoryTaskAt(i) != null && !getHistoryTaskAt(i).isActive()){
 					return true;
 				}
 			}
@@ -143,6 +139,7 @@ public class TaskActivationHistory {
 	/** Note: Doesn't really clear, just resets the history pointer*/
 	public void clear() {
 		currentIndex = -1;
+		stackPos = 0;
 	}
 }
 
