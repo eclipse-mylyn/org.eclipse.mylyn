@@ -209,7 +209,7 @@ public class ActiveSearchView extends ViewPart {
         fillLocalToolBar(bars.getToolBarManager());
     }
  
-    void fillContextMenu(IMenuManager manager) {
+    private void fillContextMenu(IMenuManager manager) {
         manager.add(new Separator());
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }

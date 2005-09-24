@@ -32,6 +32,10 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 //    private final String PREFIX = "org.eclipse.mylar.ui.relatedElements.providers";
 //    private String prefId = "org.eclipse.mylar.ui.relatedElements.providers";
     
+	private static final String LABEL_DEGREE_OF_SEPARATION = "Select Degree Of Separation:";
+
+	public static final String ID = "org.eclipse.mylar.ui.actions.active.search.toggle";
+		
     private IMylarStructureBridge bridge;
     private Menu dropDownMenu = null;
         
@@ -39,14 +43,14 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 		super();
         this.bridge = bridge;
         setImageDescriptor(MylarPlugin.getDefault().getActiveSearchIcon(bridge));
+        setId(ID);
         setText(MylarPlugin.getDefault().getActiveSearchLabel(bridge));
         setToolTipText(MylarPlugin.getDefault().getActiveSearchLabel(bridge));
         setMenuCreator(this);	
 		
 		degreeOfSeparation = bridge.getRelationshipProviders().get(0).getCurrentDegreeOfSeparation();
 		
-		if(degreeOfSeparation > 0)
-			run();
+		if (degreeOfSeparation > 0) run();
 	}   
 	 
 	@Override
@@ -86,8 +90,8 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 		degreeOfSeparation = bridge.getRelationshipProviders().get(0).getCurrentDegreeOfSeparation();
 		
 		MenuItem menuItem = new MenuItem(dropDownMenu, SWT.NONE);
-		menuItem.setText("Degree Of Separation");
-		menuItem.setEnabled(false);
+		menuItem.setText(LABEL_DEGREE_OF_SEPARATION);
+//		menuItem.setEnabled(false);
 		
 		menuItem = new MenuItem(dropDownMenu, SWT.SEPARATOR);
 		
@@ -101,6 +105,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 		    			MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getRelationshipProviders(), degreeOfSeparation);
 	    			} catch (NumberFormatException e){
 	    				// ignore this for now
+	    				MylarPlugin.fail(e, "invalid degree of separation", false);
 	    			}
 				}
 			};  
@@ -113,7 +118,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 			degreeOfSeparationSelectionAction.setChecked(false);
 			if(degreeOfSeparation == 0 && separation.getDegree() == 0){
 				degreeOfSeparationSelectionAction.setChecked(true);
-			}else if (degreeOfSeparation != 0 && separation.getDegree() != 0 && degreeOfSeparation >= separation.getDegree()) {
+			} else if (degreeOfSeparation != 0 && separation.getDegree() != 0 && degreeOfSeparation == separation.getDegree()) {
 				degreeOfSeparationSelectionAction.setChecked(true);
 			}
 		}

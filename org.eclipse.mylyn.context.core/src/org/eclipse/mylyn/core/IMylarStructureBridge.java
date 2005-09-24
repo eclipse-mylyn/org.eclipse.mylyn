@@ -27,7 +27,7 @@ public interface IMylarStructureBridge {
 	public static final String DOS_2_LABEL = "interesting resources";
 	public static final String DOS_3_LABEL = "interesting projects";
 	public static final String DOS_4_LABEL = "project dependencies";
-	public static final String DOS_5_LABEL = "entire workspace";
+	public static final String DOS_5_LABEL = "entire workspace (slow)";
 	
 	/**
 	 * Used for delagating to when the parent of an element is known
