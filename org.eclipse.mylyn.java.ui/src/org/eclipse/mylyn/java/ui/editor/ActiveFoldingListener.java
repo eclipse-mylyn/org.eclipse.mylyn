@@ -45,10 +45,9 @@ public class ActiveFoldingListener implements IMylarContextListener {
     private IMylarContextNode lastUpdatedNode = null;
     
     /**
-     * HACK: reflection to work-around lack of accessibility
+     * Work-around lack of 3.1 method.
      * 
-     * Work-around lack of 3.1 method
-     * @param editor2
+     * HACK: reflection to work-around lack of accessibility
      */
 	public static void resetProjection(JavaEditor javaEditor) {
         try {

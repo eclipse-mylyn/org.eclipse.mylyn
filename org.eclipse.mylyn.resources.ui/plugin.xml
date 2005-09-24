@@ -37,7 +37,7 @@
          name="Mylar Help"
          point="org.eclipse.help.toc">
       <toc
-            file="toc.xml"
+            file="doc/toc.xml"
             primary="false">
       </toc>
    </extension>
