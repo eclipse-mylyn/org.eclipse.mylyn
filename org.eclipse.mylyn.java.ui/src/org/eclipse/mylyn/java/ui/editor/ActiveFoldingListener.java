@@ -44,6 +44,31 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
     private IMylarContextNode lastUpdatedNode = null;
     
+    /**
+     * HACK: reflection to work-around lack of accessibility
+     * 
+     * Work-around lack of 3.1 method
+     * @param editor2
+     */
+	public static void resetProjection(JavaEditor javaEditor) {
+        try {
+        	Class editorClass = JavaEditor.class;
+        	try { // 3.2 method
+	        	Method method = editorClass.getDeclaredMethod("resetProjection", new Class[] {});
+	        	method.invoke(javaEditor, new Object[] {});
+        	} catch (NoSuchMethodException e) {
+	            Field field = editorClass.getDeclaredField("fProjectionModelUpdater");
+	            field.setAccessible(true);
+	            IJavaFoldingStructureProvider fProjectionModelUpdater = (IJavaFoldingStructureProvider)field.get(javaEditor);
+	    		if (fProjectionModelUpdater != null) {
+	    			fProjectionModelUpdater.initialize();
+	    		}
+        	}
+        } catch (Exception e) {
+        	MylarPlugin.fail(e, "couldn't get reset folding", true);
+        }
+	}
+    
     private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {// ||
@@ -197,69 +222,4 @@ public class ActiveFoldingListener implements IMylarContextListener {
         	// don't care when an input changes
         }
     }
-
-    /**
-     * HACK: reflection to work-around lack of accessibility
-     * 
-     * Work-around lack of 3.1 method
-     * @param editor2
-     */
-	public static void resetProjection(JavaEditor javaEditor) {
-        try {
-        	Class editorClass = JavaEditor.class;
-        	Method method = editorClass.getDeclaredMethod("resetProjection", new Class[] {});
-        	if (method == null) { // has 3.2 method
-        		method.invoke(javaEditor, new Object[] {});
-        	} else {
-	            Field field = editorClass.getDeclaredField("fProjectionModelUpdater");
-	            field.setAccessible(true);
-	            IJavaFoldingStructureProvider fProjectionModelUpdater = (IJavaFoldingStructureProvider)field.get(javaEditor);
-	    		if (fProjectionModelUpdater != null) {
-	    			fProjectionModelUpdater.initialize();
-	    		}
-        	}
-        } catch (Exception e) {
-        	MylarPlugin.fail(e, "couldn't get reset folding", true);
-        }
-	}
 }
-
-//ProjectionAnnotationModel model=(ProjectionAnnotationModel)  editor.getAdapter(ProjectionAnnotatioModel.class); 
-//for(Iterator<Annotation> i = model.getAnnotationIterator(); i.hasNext(); ) {
-//  Annotation annotation = i.next();
-//  if (annotation instanceof ProjectionAnnotation) {
-//      ProjectionAnnotation projectionAnnotation = (ProjectionAnnotation)annotation;
-//      Position position = model.getPosition(annotation);
-//  }
-//} 
-
-//if (this.editor.getSite().getPage().isPartVisible(this.editor)) {
-//IJavaElement active = EditorUtility.getActiveEditorJavaInput();
-//final ITaskscapeNode active = MylarPlugin.getTaskscapeManager().getActiveNode();
-//editor.close(true);
-//	MylarJavaPlugin.getUiBridge().open(active);
-//            JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, false);
-//JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
-//}
-
-//Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//    public void run() {
-//        	controller.updateFolding(true);
-//        	ISourceViewer sourceViewer = editor.getViewer();
-//            if (sourceViewer instanceof ProjectionViewer) {
-//                ProjectionViewer pv= (ProjectionViewer) sourceViewer;
-//                try {
-//					pv.reinitializeProjection();
-//				} catch (BadLocationException e) {
-//					// ignore
-//				}
-//            }
-//        }
-//});
-//}
-//ProjectionAnnotationModel model = (ProjectionAnnotationModel)editor.getAdapter(ProjectionAnnotationModel.class);
-//for (Iterator it = model.getAnnotationIterator(); it.hasNext(); ) {
-//	ProjectionAnnotation annotation = (ProjectionAnnotation)it.next();
-//	model.toggleExpansionState(annotation);
-//}
-

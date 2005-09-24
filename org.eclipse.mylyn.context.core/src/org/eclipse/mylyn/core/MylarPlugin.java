@@ -269,7 +269,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         
         if (getDefault() != null) {
         	getDefault().getLog().log(status);
-        	getDefault().logStream.println(buffer.toString());
+        	if (getDefault().logStream != null) getDefault().logStream.println(buffer.toString());
         }
     }
     
