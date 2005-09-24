@@ -4,7 +4,7 @@
 <toc label="Mylar" link_to="../last"> 
 	<topic label="Overview" href="doc/overview.html"/>
 	<topic label="New &amp; Noteworthy" href="doc/new.html"/>
-	<topic label="Known Limitations" href="doc/limitations.html"/>
+	<topic label="FAQ" href="doc/faq.html"/>
 	<anchor id="tasklist"/>
 	<anchor id="workbench"/>
 	<anchor id="java"/>
