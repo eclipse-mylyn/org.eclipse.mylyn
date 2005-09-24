@@ -251,7 +251,7 @@ public class ToolTipHandler {
 		Rectangle shellBounds = shell.getBounds();
 		shellBounds.x = Math.max(Math.min(position.x, displayBounds.width
 				- shellBounds.width), 0);
-		shellBounds.y = Math.max(Math.min(position.y +1, displayBounds.height
+		shellBounds.y = Math.max(Math.min(position.y +10, displayBounds.height
 				- shellBounds.height), 0);
 		shell.setBounds(shellBounds);
 	}
