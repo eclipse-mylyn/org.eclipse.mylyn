@@ -130,13 +130,14 @@ public class ActiveFoldingListener implements IMylarContextListener {
     
         public void resetFolding() {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-                public void run() { 
-                    if (!editor.getSite().getPage().isPartVisible(editor)) {
-                    	return;
-                    } else {
-                    	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); // HACK: to avoid losing data
-                    	editor.setInput(editor.getEditorInput()); // HACK: should be a better way
-                    }
+                public void run() {
+                	editor.resetProjection();
+//                    if (!editor.getSite().getPage().isPartVisible(editor)) {
+//                    	return;
+//                    } else {
+//                    	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); // HACK: to avoid losing data
+//                    	editor.setInput(editor.getEditorInput()); // HACK: should be a better way
+//                    }
 //                    ISourceViewer sourceViewer = editor.getViewer();
 //                    if (sourceViewer instanceof ProjectionViewer) {
 //                        ProjectionViewer pv = (ProjectionViewer) sourceViewer;

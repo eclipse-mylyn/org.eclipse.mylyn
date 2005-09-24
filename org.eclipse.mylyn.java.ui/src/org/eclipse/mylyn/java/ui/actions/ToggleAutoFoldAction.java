@@ -46,10 +46,9 @@ public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActi
     }
 	
     public void run(IAction action) {
-    		valueChanged(action, action.isChecked(), true);
+    	valueChanged(action, action.isChecked(), true);
     }
-	
-	
+		
 	private void valueChanged(IAction action, final boolean on, boolean store) {
 	    try {
 			action.setChecked(on);

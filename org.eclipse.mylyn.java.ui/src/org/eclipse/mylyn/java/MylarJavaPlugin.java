@@ -174,8 +174,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
                 if (part != null  && part instanceof JavaEditor) {
                 	JavaEditor editor = (JavaEditor)part;
                 	editorTracker.registerEditor(editor);
-                	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); // HACK: to avoid discarding changes
-                	editor.setInput(editor.getEditorInput()); // HACK: to fold
+                	editor.resetProjection();
+//                	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); // HACK: to avoid discarding changes
+//                	editor.setInput(editor.getEditorInput()); // HACK: to fold
                 }
             }
         }
