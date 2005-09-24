@@ -27,6 +27,7 @@ import org.eclipse.ui.PartInitException;
 public class TaskHistoryTest extends TestCase {
 
 	protected TaskListManager manager = MylarTasklistPlugin.getTaskListManager(); 
+	protected TaskListView taskView = null;
 	
 	protected Task task1 = null;
 	protected Task task2 = null;
@@ -36,6 +37,19 @@ public class TaskHistoryTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		MylarPlugin.getContextManager().resetActivityHistory();
+		
+		try {
+			MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.mylar.tasks.ui.views.TaskListView");
+		} catch (PartInitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("View not initialized");
+		}
+		
+		assertNotNull(TaskListView.getDefault());  
+		taskView = TaskListView.getDefault();
+		
+		taskView.clearTaskHistory();
 		
 		task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
 		task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);
@@ -50,24 +64,16 @@ public class TaskHistoryTest extends TestCase {
 	}
 		
 	public void testHistory(){
-		
+			
 		(new TaskActivateAction(task1)).run();
+		taskView.addTaskToHistory(task1); //Simulate clicking on it rather than navigating next or previous
 		(new TaskActivateAction(task2)).run();
+		taskView.addTaskToHistory(task2); 
 		(new TaskActivateAction(task3)).run();
+		taskView.addTaskToHistory(task3); 
 		
 		assertTrue(task3.isActive());
 		assertFalse(task2.isActive());
-		
-		try {
-			MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.mylar.tasks.ui.views.TaskListView");
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail("View not initialized");
-		}
-		
-		assertNotNull(TaskListView.getDefault());  
-		TaskListView taskView = TaskListView.getDefault();
 		
 		taskView.getPreviousTaskAction().run();
 		assertTrue(task2.isActive());

@@ -666,11 +666,11 @@ public class TaskListView extends ViewPart {
 						break;
 					}
 				} 
-				getViewer().refresh();
 			} catch (Exception e) {
-				MylarPlugin.log(e, e.getMessage());
+				MylarPlugin.fail(e, e.getMessage(), true);
 			}
-		}                
+			getViewer().refresh();
+		}         
     }
     
     public void addTaskToHistory(ITask task) {
