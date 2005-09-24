@@ -13,6 +13,8 @@
   */
 package org.eclipse.mylar.java.ui.editor;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -20,11 +22,13 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -132,8 +136,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() {
 //                  3.2 method: 	editor.resetProjection();
-                	editor.resetProjection();
-//                	JavaPlugin.getDefault().getFoldingStructureProviderRegistry().getCurrentFoldingProvider().initialize();
+                	ActiveFoldingListener.resetProjection(editor);
                 	
 // 					  old way:         	
 //                    if (!editor.getSite().getPage().isPartVisible(editor)) {
@@ -145,6 +148,12 @@ public class ActiveFoldingListener implements IMylarContextListener {
 //                    ISourceViewer sourceViewer = editor.getViewer();
 //                    if (sourceViewer instanceof ProjectionViewer) {
 //                        ProjectionViewer pv = (ProjectionViewer) sourceViewer;
+//                        try {
+//							pv.reinitializeProjection();
+//						} catch (BadLocationException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 //                        if (pv.canDoOperation(ProjectionViewer.TOGGLE)) pv.doOperation(ProjectionViewer.TOGGLE);
 //                    } 
                 }
@@ -188,6 +197,31 @@ public class ActiveFoldingListener implements IMylarContextListener {
         	// don't care when an input changes
         }
     }
+
+    /**
+     * HACK: reflection to work-around lack of accessibility
+     * 
+     * Work-around lack of 3.1 method
+     * @param editor2
+     */
+	public static void resetProjection(JavaEditor javaEditor) {
+        try {
+        	Class editorClass = JavaEditor.class;
+        	Method method = editorClass.getDeclaredMethod("resetProjection", new Class[] {});
+        	if (method == null) { // has 3.2 method
+        		method.invoke(javaEditor, new Object[] {});
+        	} else {
+	            Field field = editorClass.getDeclaredField("fProjectionModelUpdater");
+	            field.setAccessible(true);
+	            IJavaFoldingStructureProvider fProjectionModelUpdater = (IJavaFoldingStructureProvider)field.get(javaEditor);
+	    		if (fProjectionModelUpdater != null) {
+	    			fProjectionModelUpdater.initialize();
+	    		}
+        	}
+        } catch (Exception e) {
+        	MylarPlugin.fail(e, "couldn't get reset folding", true);
+        }
+	}
 }
 
 //ProjectionAnnotationModel model=(ProjectionAnnotationModel)  editor.getAdapter(ProjectionAnnotatioModel.class); 

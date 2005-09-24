@@ -22,6 +22,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
+import org.eclipse.mylar.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
@@ -176,10 +177,11 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
                 	editorTracker.registerEditor(editor);
                 	
 //                  3.2 method: 	editor.resetProjection();
-                	JavaPlugin.getDefault().getFoldingStructureProviderRegistry().getCurrentFoldingProvider().initialize();
+                	ActiveFoldingListener.resetProjection(editor);
                 	
-//                	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); // HACK: to avoid discarding changes
-//                	editor.setInput(editor.getEditorInput()); // HACK: to fold
+//                	old way:
+//                	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); 
+//                	editor.setInput(editor.getEditorInput()); 
                 }
             }
         }
