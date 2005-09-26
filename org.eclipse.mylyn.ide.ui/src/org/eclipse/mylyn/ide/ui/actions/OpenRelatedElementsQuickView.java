@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui.actions;
+package org.eclipse.mylar.ide.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.views.ActiveSearchQuickView;
+import org.eclipse.mylar.ide.ui.views.ActiveSearchQuickView;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui.views;
+package org.eclipse.mylar.ide.ui.views;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -27,8 +27,11 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.ide.ui.views.ActiveSearchView.DoiOrderSorter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.views.ActiveSearchView.DoiOrderSorter;
+import org.eclipse.mylar.ui.views.MylarContextContentProvider;
+import org.eclipse.mylar.ui.views.MylarContextLabelProvider;
+import org.eclipse.mylar.ui.views.TaskscapeNodeClickListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;

@@ -2,8 +2,18 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>   
+   <extension point="org.eclipse.ui.views"> 
+   	  <view
+          allowMultiple="false"
+          category="org.eclipse.mylar"
+          class="org.eclipse.mylar.ide.ui.views.ActiveSearchView"
+          icon="icons/eview16/active-search.gif"
+          id="org.eclipse.mylar.ui.views.active.search"
+          name="Active Search"/>
+   </extension>
+
     <extension point="org.eclipse.ui.viewActions"> 
-	    	  <viewContribution 
+	  <viewContribution 
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action

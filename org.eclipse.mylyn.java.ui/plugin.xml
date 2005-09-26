@@ -48,13 +48,6 @@
 
 
    <extension point="org.eclipse.ui.views"> 
-   	<view
-          allowMultiple="false"
-          category="org.eclipse.mylar"
-          class="org.eclipse.mylar.ui.views.ActiveSearchView"
-          icon="icons/eview16/active-search.gif"
-          id="org.eclipse.mylar.ui.views.active.search"
-          name="Active Search"/>
    	  <view
             allowMultiple="false"
             category="org.eclipse.mylar"

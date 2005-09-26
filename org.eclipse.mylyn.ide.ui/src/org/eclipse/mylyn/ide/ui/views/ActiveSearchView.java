@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.ui.views;
+package org.eclipse.mylar.ide.ui.views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,10 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
@@ -33,9 +35,17 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
+import org.eclipse.mylar.ui.views.MylarContextContentProvider;
+import org.eclipse.mylar.ui.views.MylarContextLabelProvider;
+import org.eclipse.mylar.ui.views.TaskscapeNodeClickListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
@@ -159,6 +169,34 @@ public class ActiveSearchView extends ViewPart {
         }
     }
 
+	@MylarWebRef(name="Drag and drop article", url="http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
+    private void initDrop() {
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+
+		viewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(viewer) {
+			{
+				setFeedbackEnabled(false);
+			}
+			@Override
+			public boolean performDrop(Object data) {
+//				Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
+				System.err.println(">>>>>>>>" + data);
+				return true;
+//				return false;
+			}
+
+			@Override
+			public boolean validateDrop(Object targetObject,int operation, TransferData transferType) {
+//				Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
+//				return true;
+				//                if (selectedObject instanceof ITaskListElement && ((ITaskListElement)selectedObject).isDragAndDropEnabled()) {
+//                    return true;                    
+//                }                
+                return TextTransfer.getInstance().isSupportedType(transferType);
+			}
+		});
+	}
+    
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -183,6 +221,7 @@ public class ActiveSearchView extends ViewPart {
         viewer.setSorter(new DoiOrderSorter()); 
         viewer.setInput(getViewSite());
         hookContextMenu();
+        initDrop();
         
         viewer.addOpenListener(new TaskscapeNodeClickListener(viewer));
         
