@@ -15,17 +15,19 @@ package org.eclipse.mylar.java.ui.editor;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProcessor;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.MemberProposalInfo;
 import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.TextContentAssistInvocationContext;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
@@ -39,23 +41,22 @@ import org.eclipse.ui.IEditorPart;
  */
 public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 
-    public MylarJavaCompletionProcessor(IEditorPart editor) {
-        super(editor); 
+    public MylarJavaCompletionProcessor(IEditorPart editor, String partition) {
+        super(editor, partition); 
     }
-    
-    @MylarWebRef(name="Reflection documentation", url="http://www.onjava.com/pub/a/onjava/2003/11/12/reflection.html?page=last")
+
+	@MylarWebRef(name="Reflection documentation", url="http://www.onjava.com/pub/a/onjava/2003/11/12/reflection.html?page=last")
     @Override
-    public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {    
+	protected List filterAndSortProposals(List proposals, IProgressMonitor monitor, TextContentAssistInvocationContext context) {
+		super.filterAndSortProposals(proposals, monitor, context);
         try {
             Method method = MemberProposalInfo.class.getDeclaredMethod("resolveMember", new Class[] { } );
             method.setAccessible(true);
-            ICompletionProposal[] proposals = super.computeCompletionProposals(viewer, offset);
-    
             TreeMap<Float, ICompletionProposal> interesting = new TreeMap<Float, ICompletionProposal>();
             List<ICompletionProposal> rest = new ArrayList<ICompletionProposal>();
             int unresolvedProposals = 0;
-            for (int i = 0; i < proposals.length; i++) {
-                ICompletionProposal proposal = proposals[i];
+            for (Object proposalObject : proposals) {
+            	ICompletionProposal proposal = (ICompletionProposal)proposalObject;
                 ProposalInfo info = null;
                 if (proposal instanceof JavaCompletionProposal) {
                     info = ((JavaCompletionProposal)proposal).getProposalInfo();
@@ -120,7 +121,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                     sorted[i] = proposal;
                     i++;
                 }
-                return sorted;
+                return Arrays.asList(sorted);
             }
         } catch (Exception e) {
         	MylarPlugin.log(e, "completion proposal failed");

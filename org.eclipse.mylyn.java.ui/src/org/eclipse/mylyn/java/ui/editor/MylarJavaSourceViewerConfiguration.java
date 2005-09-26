@@ -23,10 +23,10 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.text.CompoundContentAssistProcessor;
 import org.eclipse.jdt.internal.ui.text.ContentAssistPreference;
-import org.eclipse.jdt.internal.ui.text.javadoc.JavaDocCompletionProcessor;
-import org.eclipse.jdt.internal.ui.text.spelling.WordCompletionProcessor;
+import org.eclipse.jdt.internal.ui.text.java.ContentAssistProcessor;
+import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProcessor;
+import org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProcessor;
 import org.eclipse.jdt.ui.text.IColorManager;
 import org.eclipse.jdt.ui.text.IJavaPartitions;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
@@ -43,6 +43,8 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
+ * Installs Mylar content assist and hyperlink detection
+ * 
  * @author Mik Kersten
  */
 public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfiguration {
@@ -57,43 +59,45 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
      * Copied from: @see JavaSourceViewerConfiguration#getContentAssistant(ISourceViewer)
      */
     @Override
-    public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-        if (getEditor() != null) {
-            ContentAssistant assistant= new ContentAssistant();
-            assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-            
-            assistant.setRestoreCompletionProposalSize(getSettings("completion_proposal_size")); //$NON-NLS-1$
-            
-            IContentAssistProcessor javaProcessor= new MylarJavaCompletionProcessor(getEditor());
-            assistant.setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-            
-            // Register the java processor for single line comments to get the NLS template working inside comments
-            IContentAssistProcessor wordProcessor= new WordCompletionProcessor();
-            CompoundContentAssistProcessor compoundProcessor= new CompoundContentAssistProcessor();
-            compoundProcessor.add(javaProcessor);
-            compoundProcessor.add(wordProcessor);
-            
-            assistant.setContentAssistProcessor(compoundProcessor, IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
-            
-            assistant.setContentAssistProcessor(wordProcessor, IJavaPartitions.JAVA_STRING);
-            assistant.setContentAssistProcessor(wordProcessor, IJavaPartitions.JAVA_MULTI_LINE_COMMENT);
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		if (getEditor() != null) {
 
-            assistant.setContentAssistProcessor(new JavaDocCompletionProcessor(getEditor()), IJavaPartitions.JAVA_DOC);
-            
-            ContentAssistPreference.configure(assistant, fPreferenceStore);
-            
-            assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-            assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
-                    
-            return assistant;
-        }
-        
-        return null;
-    }
+			ContentAssistant assistant= new ContentAssistant();
+			assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+
+			assistant.setRestoreCompletionProposalSize(getSettings("completion_proposal_size")); //$NON-NLS-1$
+
+			IContentAssistProcessor javaProcessor= new MylarJavaCompletionProcessor(getEditor(), IDocument.DEFAULT_CONTENT_TYPE);
+			assistant.setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
+
+			ContentAssistProcessor singleLineProcessor= new JavaCompletionProcessor(getEditor(), IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
+			assistant.setContentAssistProcessor(singleLineProcessor, IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
+
+			ContentAssistProcessor stringProcessor= new JavaCompletionProcessor(getEditor(), IJavaPartitions.JAVA_STRING);
+			assistant.setContentAssistProcessor(stringProcessor, IJavaPartitions.JAVA_STRING);
+			
+			ContentAssistProcessor multiLineProcessor= new JavaCompletionProcessor(getEditor(), IJavaPartitions.JAVA_MULTI_LINE_COMMENT);
+			assistant.setContentAssistProcessor(multiLineProcessor, IJavaPartitions.JAVA_MULTI_LINE_COMMENT);
+
+			ContentAssistProcessor javadocProcessor= new JavadocCompletionProcessor(getEditor());
+			assistant.setContentAssistProcessor(javadocProcessor, IJavaPartitions.JAVA_DOC);
+
+			ContentAssistPreference.configure(assistant, fPreferenceStore);
+
+			assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+			assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+			
+			return assistant;
+		}
+
+		return null;
+	}
     
     /**
-     * Copied from super
+     ****************** Copied from super ****************************
      */
+    
+    
     protected IDialogSettings getSettings(String sectionName) {
         IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings().getSection(sectionName);
         if (settings == null)
@@ -136,8 +140,8 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
     private boolean extensionsRead = false;
 
     public static final String JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.java.javaEditorContributor";
-    	public static final String JAVA_HYPERLINK_DETECTOR_ELEMENT = "hyperlinkDetector";
-    		public static final String HYPERLINK_DETECTOR_CLASS = "class";
+    public static final String JAVA_HYPERLINK_DETECTOR_ELEMENT = "hyperlinkDetector";
+    public static final String HYPERLINK_DETECTOR_CLASS = "class";
     
 	private void readDetectorsExtension() {
 		if(!extensionsRead){
@@ -164,6 +168,5 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 			}
 			extensionsRead = true;
 		}
-		
 	}
 }
