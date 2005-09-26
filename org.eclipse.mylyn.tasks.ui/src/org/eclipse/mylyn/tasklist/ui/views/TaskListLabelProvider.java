@@ -13,15 +13,17 @@
   */
 package org.eclipse.mylar.tasklist.ui.views;
 
-import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.jface.viewers.ITableColorProvider;
+import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskHighlighter;
 import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -30,7 +32,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskListLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider, IFontProvider {
+public class TaskListLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider, ITableFontProvider {
 
 	private Color backgroundColor = null;
 	
@@ -58,14 +60,6 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 		}
     	return null;
     }
-
-    public Font getFont(Object element) {
-        if (element instanceof ITaskListElement) {
-        	ITaskListElement task = (ITaskListElement)element;
-        	return task.getFont();
-        }
-        return null;
-    }
    
     public Image getColumnImage(Object element, int columnIndex) {        
         if (! (element instanceof ITaskListElement)) { 
@@ -87,50 +81,48 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
         }
     }
 
-    public Color getBackground(Object element) {
-    	try {
-    	// XXX refactored highlighters
-			  if (element instanceof ITask) {
-	//		      ITask task = (ITask)element;
-	//		      Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
-	//		      if (highlighter != null) return highlighter.getHighlightColor();
-	//		  } 
-	//		  else if (element instanceof BugzillaHit) {
-	//			  BugzillaHit hit = (BugzillaHit)element;
-	//			  BugzillaTask task = hit.getAssociatedTask();
-	//			  if(task != null){
-	//		          Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId("" + task.getHandle());
-	//		          if (highlighter != null) return highlighter.getHighlightColor();
-	//			  }
-			  } else if (element instanceof ICategory) {
-				  ICategory category = (ICategory)element;
-				  if (category.isArchive()) {
-					  return TaskListImages.BACKGROUND_ARCHIVE;
-//					  return new Color(Display.getCurrent(), 
-//							  Math.max(0, backgroundColor.getRed()-30),
-//							  Math.max(0, backgroundColor.getGreen()-30),
-//							  200);
-				  } else {
-					  return backgroundColor;
-				  }
-			  } else if (element instanceof IQuery) {
-				  return backgroundColor;
-			  }
-		} catch (Exception e) {
-			MylarPlugin.log("Could not get background color", this);
-		}
-		return TaskListImages.BACKGROUND_WHITE;
+    public void setBackgroundColor(Color c) {
+    	this.backgroundColor = c;
     }
-    
-    public Color getForeground(Object element) {
+
+	public Color getForeground(Object element, int columnIndex) {
         if (element instanceof ITaskListElement) {
         	ITaskListElement task = (ITaskListElement)element;
             return task.getForeground();
         } 
         return null;
-    }
-    
-    public void setBackgroundColor(Color c) {
-    	this.backgroundColor = c;
-    }
+	}
+
+	public Color getBackground(Object element, int columnIndex) {
+//		System.err.println(columnIndex + ", " + element);
+    	try {
+			  if (element instanceof ITask) {
+			      ITask task = (ITask)element;
+			      ITaskHighlighter highlighter = MylarTasklistPlugin.getDefault().getHighlighter();
+			      if (highlighter != null) {
+			    	  return highlighter.getHighlightColor(task); 
+			      }
+			  } else if (element instanceof ICategory) {
+				  ICategory category = (ICategory)element;
+				  if (category.isArchive()) {
+					  return TaskListImages.BACKGROUND_ARCHIVE;
+				  } else {
+					  return backgroundColor;
+				  }
+			  } else if (element instanceof IQuery) {
+				  return backgroundColor;
+			  } 
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Could not get background color", false);
+		}
+		return TaskListImages.BACKGROUND_WHITE;
+  }
+
+	public Font getFont(Object element, int columnIndex) {
+        if (element instanceof ITaskListElement) {
+        	ITaskListElement task = (ITaskListElement)element;
+        	return task.getFont();
+        }
+        return null;
+	}
 }

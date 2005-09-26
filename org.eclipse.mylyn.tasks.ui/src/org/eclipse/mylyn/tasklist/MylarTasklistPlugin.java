@@ -85,6 +85,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	private ResourceBundle resourceBundle;
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1*3600*1000; // every hour
 	private static Date lastBackup = new Date();
+	private ITaskHighlighter highlighter;
 //	private ITaskListActionContributor primaryContributor;
 	public enum TaskListSaveMode {
 		ONE_HOUR,
@@ -505,4 +506,12 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     			TaskListSaveMode.DAY.toString()};
     	return options;
     }
+
+	public ITaskHighlighter getHighlighter() {
+		return highlighter;
+	}
+
+	public void setHighlighter(ITaskHighlighter highlighter) {
+		this.highlighter = highlighter;
+	}
 }
