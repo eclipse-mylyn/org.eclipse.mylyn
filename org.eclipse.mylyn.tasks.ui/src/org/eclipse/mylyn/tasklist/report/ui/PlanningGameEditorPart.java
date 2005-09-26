@@ -322,7 +322,6 @@ public class PlanningGameEditorPart extends EditorPart {
 	}
 	
 	private void createRemoveButton(Composite parent, FormToolkit toolkit) {
-		System.out.println("Creating Delete");
 //		Composite composite = toolkit.createComposite(parent);
 		Button delete = toolkit.createButton(parent, "Remove Task", SWT.PUSH | SWT.CENTER);
 		

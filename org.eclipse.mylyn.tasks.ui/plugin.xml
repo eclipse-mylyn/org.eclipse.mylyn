@@ -18,6 +18,16 @@
       </toc>
    </extension>
 
+    <extension point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.mylar.wizards"
+            class="org.eclipse.mylar.tasklist.report.ui.PlanningGameWizard"
+            icon="icons/eview16/task-list.gif"
+            id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
+            name="Mylar Task Planner">
+      </wizard>
+   </extension>
+
     <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
@@ -68,14 +78,4 @@
          category="org.eclipse.mylar.ui.preferences">
       </page>  
    </extension>
-    <extension point="org.eclipse.ui.newWizards">
-      <wizard
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.tasklist.report.ui.PlanningGameWizard"
-            icon="icons/eview16/task-list.gif"
-            id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
-            name="Mylar Task Planner">
-      </wizard>
-   </extension>
-   
 </plugin>
