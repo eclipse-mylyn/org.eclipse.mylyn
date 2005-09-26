@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
@@ -63,7 +64,7 @@ public class MylarContextManager {
     private MylarContext activityHistory = null;
     private ActivityListener activityListener;
     
-	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
+	private Vector<IMylarContextListener> listeners = new Vector<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
  
 	// TODO: move
@@ -459,6 +460,7 @@ public class MylarContextManager {
     }
 
 	public void notifyRelationshipsChanged(IMylarContextNode node) {
+		if (suppressListenerNotification) return;
 		for (IMylarContextListener listener : listeners) listener.edgesChanged(node);
 	}
     

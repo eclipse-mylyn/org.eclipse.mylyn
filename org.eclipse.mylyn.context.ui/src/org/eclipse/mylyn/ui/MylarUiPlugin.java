@@ -31,11 +31,15 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskHighlighter;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.ui.internal.ColorMap;
 import org.eclipse.mylar.ui.internal.ViewerConfigurator;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
@@ -163,6 +167,18 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 //        			}
         		}
                 if (ApplyMylarToOutlineAction.getDefault() != null) ApplyMylarToOutlineAction.getDefault().update();
+                MylarTasklistPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
+
+					public Color getHighlightColor(ITask task) {
+						Highlighter highlighter = getHighlighterForTaskId("" + task.getHandle());
+						if (highlighter != null) {
+							return highlighter.getHighlightColor();
+						} else {
+							return null;
+						}
+					}
+                	
+                });
             }
         });
     }
