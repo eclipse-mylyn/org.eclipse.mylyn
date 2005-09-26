@@ -15,17 +15,15 @@
 package org.eclipse.mylar.tasklist.ui.views;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.HelpEvent;
-import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Control;
@@ -42,7 +40,6 @@ import org.eclipse.swt.widgets.Widget;
  * @author Eric Booth
  */
 public class ToolTipHandler {
-   private Shell parentShell;
 
    private Shell tipShell;
 
@@ -64,7 +61,6 @@ public class ToolTipHandler {
 	 */
 	public ToolTipHandler(Shell parent) {
 		final Display display = parent.getDisplay();
-		this.parentShell = parent;
 		tipShell = new Shell(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
@@ -113,7 +109,11 @@ public class ToolTipHandler {
    protected String getToolTipText(Object object) {
 	   ITaskListElement element = getTask(object);
 		if (element != null) {
-			return element.getToolTipText();
+			if (element instanceof ITask && element.getToolTipText().length() < 30) { // HACK
+				return null;
+			} else {
+				return element.getToolTipText();
+			}
 		}
 
 		if (object instanceof Control) {
@@ -197,44 +197,44 @@ public class ToolTipHandler {
 				tipPosition = control.toDisplay(widgetPosition);
 				String text = getToolTipText(widget);
 				Image image = getToolTipImage(widget);
-				if (text == null) {
+				if (text == null) { // HACK: don't check length
 					return;
 				}
-				Control sourceControl = (Control) event.getSource();
-				sourceControl.setFocus();
+//				Control sourceControl = (Control) event.getSource();
+//				sourceControl.setFocus();
 				tipLabelText.setText(text);
 				tipLabelImage.setImage(image); // accepts null
 				tipShell.pack();
 				setHoverLocation(tipShell, tipPosition);
 				tipShell.setVisible(true);
-				parentShell.setFocus();
+//				parentShell.setFocus();
 			}
 		});
-		/*
-		 * Trap F1 Help to pop up a custom help box
-		 */
-		control.addHelpListener(new HelpListener() {
-			public void helpRequested(HelpEvent event) {
-				if (tipWidget == null)
-					return;
-				Object help = getToolTipHelp(tipWidget);
-				if (help == null)
-					return;
-				if (help.getClass() != String.class) {
-					return;
-				}
-				if (tipShell.isVisible()) {
-					tipShell.setVisible(false);
-					Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
-					helpShell.setLayout(new FillLayout());
-					Label label = new Label(helpShell, SWT.NONE);
-					label.setText((String) help);
-					helpShell.pack();
-					setHoverLocation(helpShell, tipPosition);
-					helpShell.open();
-				}
-			}
-		});
+//		/*
+//		 * Trap F1 Help to pop up a custom help box
+//		 */
+//		control.addHelpListener(new HelpListener() {
+//			public void helpRequested(HelpEvent event) {
+//				if (tipWidget == null)
+//					return;
+//				Object help = getToolTipHelp(tipWidget);
+//				if (help == null)
+//					return;
+//				if (help.getClass() != String.class) {
+//					return;
+//				}
+//				if (tipShell.isVisible()) {
+//					tipShell.setVisible(false);
+//					Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
+//					helpShell.setLayout(new FillLayout());
+//					Label label = new Label(helpShell, SWT.NONE);
+//					label.setText((String) help);
+//					helpShell.pack();
+//					setHoverLocation(helpShell, tipPosition);
+//					helpShell.open();
+//				}
+//			}
+//		});
 	}
 
    /**
