@@ -34,4 +34,14 @@
 		 category="org.eclipse.mylar.ui.preferences">
       </page>  
    </extension>
+   
+   	<extension
+         id="org.eclipse.mylar.helpDocs"
+         name="Mylar Help"
+         point="org.eclipse.help.toc">
+      <toc
+            file="doc/toc.xml"
+            primary="false">
+      </toc>
+   </extension>
 </plugin>
