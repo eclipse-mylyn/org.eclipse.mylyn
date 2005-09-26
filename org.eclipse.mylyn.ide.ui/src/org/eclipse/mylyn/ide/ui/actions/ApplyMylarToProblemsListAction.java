@@ -169,8 +169,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
                 refresh.invoke(view, new Object[] { } );
             } 
         } catch (Exception e) {
-        	e.printStackTrace();
-        	MylarPlugin.log(e, "couldn't get problmes viewer");
+        	MylarPlugin.fail(e, "Couldn't toggle problem filter (not yet supported on Eclipse 3.2)", false);
         }
 	}
 

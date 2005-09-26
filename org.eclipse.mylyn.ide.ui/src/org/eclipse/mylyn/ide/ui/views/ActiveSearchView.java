@@ -70,7 +70,7 @@ public class ActiveSearchView extends ViewPart {
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
             refresh(node, false);
-        }
+        } 
         
         public void interestChanged(List<IMylarContextNode> nodes) {
             refresh(nodes.get(nodes.size()-1), true);
@@ -139,15 +139,17 @@ public class ActiveSearchView extends ViewPart {
     }
 
     private void refresh(final IMylarContextNode node, final boolean updateLabels) {
-        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//    	System.err.println("> refreshing: " + node);
+        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
             public void run() { 
                 try {  
                     if (viewer != null && !viewer.getTree().isDisposed()) {
                     	if (node != null && containsNode(viewer.getTree(), node)) {
                     		viewer.refresh(node, updateLabels);
+//                    		viewer.refresh();
                     	} else if (node == null) {
                     		viewer.refresh();
-                    	}
+                    	} 
                     	viewer.expandAll();
                     }
                 } catch (Throwable t) {
@@ -229,16 +231,6 @@ public class ActiveSearchView extends ViewPart {
     }
 
     private void fillLocalToolBar(IToolBarManager manager) {
-    	fillActions(manager);
-    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-    
-    private void fillLocalPullDown(IMenuManager manager) {
-    	fillActions(manager);
-    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-    
-    private void fillActions(IContributionManager manager) {
        	// needed to prevent toolbar from getting too tall, TODO: fille bug report
     	IAction dummyAction = new Action(){
 			@Override
@@ -247,18 +239,12 @@ public class ActiveSearchView extends ViewPart {
         dummyAction.setText("");
         dummyAction.setImageDescriptor(MylarImages.BLANK);
         manager.add(dummyAction);
-    	
-    	Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
-        for (String extension : bridges.keySet()) {
-            IMylarStructureBridge bridge = bridges.get(extension);
-            List<AbstractRelationshipProvider> providers = bridge.getRelationshipProviders(); 
-            if(providers != null && providers.size() > 0) {
-	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
-	            relationshipProviderActions.add(action); 
-	            manager.add(action); 
-            }
-        }
-    	
+    	fillActions(manager);
+    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+    }
+    
+    private void fillLocalPullDown(IMenuManager manager) {
+    	fillActions(manager);
     	IAction stopAction = new Action(){
 			@Override
 			public void run() {
@@ -271,6 +257,20 @@ public class ActiveSearchView extends ViewPart {
         stopAction.setText(STOP_JOBS_LABEL);
         stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
         manager.add(stopAction);
+    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+    }
+    
+    private void fillActions(IContributionManager manager) {
+    	Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
+        for (String extension : bridges.keySet()) {
+            IMylarStructureBridge bridge = bridges.get(extension);
+            List<AbstractRelationshipProvider> providers = bridge.getRelationshipProviders(); 
+            if(providers != null && providers.size() > 0) {
+	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
+	            relationshipProviderActions.add(action); 
+	            manager.add(action); 
+            }
+        }
     }
 
     /**

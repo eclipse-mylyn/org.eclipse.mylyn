@@ -30,7 +30,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.IActiveTimerListener;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
 
-
 /**
  * This is the core class resposible for context management. 
  * 
@@ -340,6 +339,7 @@ public class MylarContextManager {
 		    if (context != null) {
 		    	contextActivated(context);
 		        for (IMylarContextListener listener : listeners) listener.contextActivated(context);
+		        refreshRelatedElements();
 		    } else {
 		        MylarPlugin.log("Could not load context", this);
 		    }
