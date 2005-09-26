@@ -300,8 +300,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		}
 
 		public void changeInterestForSelected(boolean increment) {
-			super.manipulateInterestForNode(MylarPlugin.getContextManager().getActiveNode(), increment);
-			
+			MylarPlugin.getContextManager().manipulateInterestForNode(MylarPlugin.getContextManager().getActiveNode(), increment, false, "");
 		}
 	};
 }

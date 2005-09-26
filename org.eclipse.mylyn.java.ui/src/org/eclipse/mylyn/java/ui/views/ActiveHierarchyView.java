@@ -44,11 +44,15 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.ide.ui.views.ActiveViewDropAdapter;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.ui.JavaContextLabelProvider;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.UiUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -58,6 +62,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 /**
  * @author Mik Kersten
@@ -238,12 +243,20 @@ public class ActiveHierarchyView extends ViewPart {
             });
 			hookContextMenu();
 			contributeToActionBars();
-			viewer.getTree().setBackground(MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR);
+			
+			initDrop();
+//			viewer.getTree().setBackground(MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR);
         } catch (Throwable t) {
         	MylarPlugin.log(t, "create failed");
         }
 	}
 
+	@MylarWebRef(name="Drag and drop article", url="http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
+    private void initDrop() {
+		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
+		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));
+	}
+    
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);

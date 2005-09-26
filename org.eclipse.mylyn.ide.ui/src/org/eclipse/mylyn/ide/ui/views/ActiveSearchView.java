@@ -23,10 +23,8 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.AbstractRelationshipProvider;
 import org.eclipse.mylar.core.IMylarContext;
@@ -43,9 +41,7 @@ import org.eclipse.mylar.ui.views.MylarContextLabelProvider;
 import org.eclipse.mylar.ui.views.TaskscapeNodeClickListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
@@ -57,6 +53,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 /**
  * @author Mik Kersten
@@ -106,34 +103,6 @@ public class ActiveSearchView extends ViewPart {
         public void nodeDeleted(IMylarContextNode node) {
         	refresh(null, true);
         }
-        
-        private void refresh(final IMylarContextNode node, final boolean updateLabels) {
-            Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-                public void run() {
-                    try {  
-                        if (viewer != null && !viewer.getTree().isDisposed()) {
-                        	if (node != null && containsNode(viewer.getTree(), node)) {
-                        		viewer.refresh(node, updateLabels);
-                        	} else if (node == null) {
-                        		viewer.refresh();
-                        	}
-                        	viewer.expandAll();
-                        }
-                    } catch (Throwable t) {
-                    	MylarPlugin.log(t, "active searchrefresh failed");
-                    }
-                }
-            });
-        }
-        
-		private boolean containsNode(Tree tree, IMylarContextNode node) {
-	    	boolean contains = false;
-	    	for (int i = 0; i < tree.getItems().length; i++) {
-				TreeItem item = tree.getItems()[i]; 
-				if (node.equals(item.getData())) contains = true;
-			}
-			return contains;
-		}
 
         public void presentationSettingsChanged(UpdateKind kind) {
         	if(viewer != null && !viewer.getTree().isDisposed()){
@@ -169,32 +138,38 @@ public class ActiveSearchView extends ViewPart {
         }
     }
 
+    private void refresh(final IMylarContextNode node, final boolean updateLabels) {
+        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+            public void run() { 
+                try {  
+                    if (viewer != null && !viewer.getTree().isDisposed()) {
+                    	if (node != null && containsNode(viewer.getTree(), node)) {
+                    		viewer.refresh(node, updateLabels);
+                    	} else if (node == null) {
+                    		viewer.refresh();
+                    	}
+                    	viewer.expandAll();
+                    }
+                } catch (Throwable t) {
+                	MylarPlugin.log(t, "active searchrefresh failed");
+                }
+            }
+        });
+    }
+    
+	private boolean containsNode(Tree tree, IMylarContextNode node) {
+    	boolean contains = false;
+    	for (int i = 0; i < tree.getItems().length; i++) {
+			TreeItem item = tree.getItems()[i]; 
+			if (node.equals(item.getData())) contains = true;
+		}
+		return contains;
+	}
+    
 	@MylarWebRef(name="Drag and drop article", url="http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
     private void initDrop() {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
-
-		viewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(viewer) {
-			{
-				setFeedbackEnabled(false);
-			}
-			@Override
-			public boolean performDrop(Object data) {
-//				Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
-				System.err.println(">>>>>>>>" + data);
-				return true;
-//				return false;
-			}
-
-			@Override
-			public boolean validateDrop(Object targetObject,int operation, TransferData transferType) {
-//				Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
-//				return true;
-				//                if (selectedObject instanceof ITaskListElement && ((ITaskListElement)selectedObject).isDragAndDropEnabled()) {
-//                    return true;                    
-//                }                
-                return TextTransfer.getInstance().isSupportedType(transferType);
-			}
-		});
+		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
+		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));
 	}
     
 	@Override

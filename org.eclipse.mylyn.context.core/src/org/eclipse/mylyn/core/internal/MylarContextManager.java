@@ -588,4 +588,31 @@ public class MylarContextManager {
 	public void setActivationHistorySuppressed(boolean activationHistorySuppressed) {
 		this.activationHistorySuppressed = activationHistorySuppressed;
 	}
+	
+    public void manipulateInterestForNode(IMylarContextNode node, boolean increment, boolean forceLandmark, String sourceId) {
+        float originalValue = node.getDegreeOfInterest().getValue();
+        float changeValue = 0;
+        if (!increment) {
+            if (node.getDegreeOfInterest().isLandmark()) { // keep it interesting
+                changeValue = (-1 * originalValue) + 1; 
+            } else { 
+            	if (originalValue >=0) changeValue = (-1 * originalValue)-1;
+            }
+        } else {
+        	if (!forceLandmark && (originalValue >  MylarContextManager.getScalingFactors().getLandmark())) {
+                changeValue = 0;
+            } else {
+                changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
+            } 
+        }
+        if (changeValue != 0) {
+            InteractionEvent interactionEvent = new InteractionEvent(
+                    InteractionEvent.Kind.MANIPULATION,  
+                    node.getContentKind(), 
+                    node.getElementHandle(), 
+                    sourceId,
+                    changeValue);
+            MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent);
+        }		
+    }
 }

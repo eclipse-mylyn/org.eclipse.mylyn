@@ -16,9 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -44,50 +42,28 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
     protected abstract boolean isIncrement();
     
-   public void run(IAction action) {
+    public void run(IAction action) {
    		boolean increment = isIncrement();
     	if (action instanceof ObjectPluginAction) {
     		ObjectPluginAction objectAction = (ObjectPluginAction)action;
     		if (objectAction.getSelection() instanceof StructuredSelection) {
     			StructuredSelection selection = (StructuredSelection)objectAction.getSelection();
     			for (Object object : selection.toList()) {
-    				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);              
-                    String handle = bridge.getHandleIdentifier(object);
-                    IMylarContextNode node = MylarPlugin.getContextManager().getNode(handle);
-        	        if (node != null) manipulateInterestForNode(node, increment);
+    				IMylarContextNode node = null;
+    				if (object instanceof IMylarContextNode) {
+    					node = (IMylarContextNode)object;
+    				} else {
+	    				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);              
+	                    String handle = bridge.getHandleIdentifier(object);
+	                    node = MylarPlugin.getContextManager().getNode(handle);
+    				}
+    				if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
     			}
     		}
     	} else {
     		IMylarContextNode node = MylarPlugin.getContextManager().getActiveNode();
-    		if (node != null) manipulateInterestForNode(node, increment);
+    		if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
     	}
-    }
-    
-    protected void manipulateInterestForNode(IMylarContextNode node, boolean increment) {
-        float originalValue = node.getDegreeOfInterest().getValue();
-        float changeValue = 0;
-        if (!increment) {
-            if (node.getDegreeOfInterest().isLandmark()) { // keep it interesting
-                changeValue = (-1 * originalValue) + 1; 
-            } else { 
-            	if (originalValue >=0) changeValue = (-1 * originalValue)-1;
-            }
-        } else {
-            if (originalValue >  MylarContextManager.getScalingFactors().getLandmark()) {
-                changeValue = 0;
-            } else {
-                changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
-            } 
-        }
-        if (changeValue != 0) {
-            InteractionEvent interactionEvent = new InteractionEvent(
-                    InteractionEvent.Kind.MANIPULATION,  
-                    node.getContentKind(), 
-                    node.getElementHandle(), 
-                    SOURCE_ID,
-                    changeValue);
-            MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent);
-        }		
     }
 
 	public void dispose() { 

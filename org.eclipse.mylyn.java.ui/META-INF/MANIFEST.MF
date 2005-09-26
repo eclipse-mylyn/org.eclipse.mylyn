@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.debug.ui,
  org.eclipse.jdt.ui,
  org.eclipse.team.cvs.ui,
- org.eclipse.debug.ui
+ org.eclipse.debug.ui,
+ org.eclipse.mylar.ide
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.java,
