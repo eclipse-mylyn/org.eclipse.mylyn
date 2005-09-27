@@ -338,7 +338,9 @@ public class MylarContextManager {
 		    if (context == null) context = loadContext(id, path);
 		    if (context != null) {
 		    	contextActivated(context);
-		        for (IMylarContextListener listener : listeners) listener.contextActivated(context);
+		        for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+		        	listener.contextActivated(context);
+		        }
 		        refreshRelatedElements();
 		    } else {
 		        MylarPlugin.log("Could not load context", this);
@@ -367,7 +369,9 @@ public class MylarContextManager {
 	        if (context != null) {
 	            saveContext(id, path); 
 	            activeContext.getContextMap().remove(id);
-	            for (IMylarContextListener listener : listeners) listener.contextDeactivated(context);
+	            for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+	            	listener.contextDeactivated(context);
+	            }
 	        }
 	        if (!activationHistorySuppressed) {
 		        activityHistory.parseEvent(
@@ -464,8 +468,9 @@ public class MylarContextManager {
      */
 	public void notifyRelationshipsChanged(IMylarContextNode node) {
 		if (suppressListenerNotification) return;
-		List<IMylarContextListener> currentListeners = new ArrayList<IMylarContextListener>(listeners);
-		for (IMylarContextListener listener : currentListeners) listener.edgesChanged(node);
+		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+			listener.edgesChanged(node);
+		}
 	}
     
     public void refreshRelatedElements() {
