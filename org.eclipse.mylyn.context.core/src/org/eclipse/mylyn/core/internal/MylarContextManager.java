@@ -232,7 +232,9 @@ public class MylarContextManager {
         if (event.getKind().isUserEvent()) activeContext.setActiveElement(node);
 
         interestDelta.add(node); // TODO: check that the order of these is sensible
-        for (IMylarContextListener listener : listeners) listener.interestChanged(interestDelta);
+        for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+        	listener.interestChanged(interestDelta);
+        }
          
         checkForLandmarkDelta(previousInterest, node);
         return node;

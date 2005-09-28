@@ -119,6 +119,12 @@
                class="org.eclipse.mylar.java.ui.actions.FindReferencesInTaskscapeAction"
                id="org.eclipse.mylar.java.ui.search.context">
          </action>
+        <action
+               definitionId="org.eclipse.mylar.java.ui.open.type"
+               label="Mylar Open Type"
+               class="org.eclipse.mylar.java.ui.actions.MylarOpenTypeAction"
+               id="org.eclipse.mylar.java.ui.open.type">
+         </action>
     </actionSet>
   </extension>
   
@@ -242,6 +248,12 @@
          id="org.eclipse.mylar.java.ui.search.context"
          name="Search Task Context">
       </command>
+	  <command
+         categoryId="org.eclipse.mylar.ui"
+         description="Mylar Open Type"
+         id="org.eclipse.mylar.java.ui.open.type"
+         name="Mylar Open Type">
+      </command>
    </extension>
 
    <extension point="org.eclipse.ui.bindings">   
@@ -249,6 +261,12 @@
             sequence="M2+M3+G"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.java.ui.search.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key> 
+      <key
+            sequence="M1+M2+M3+T"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.java.ui.open.type"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key> 
    </extension> 

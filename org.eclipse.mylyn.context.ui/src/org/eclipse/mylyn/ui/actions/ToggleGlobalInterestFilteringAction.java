@@ -29,8 +29,8 @@ public class ToggleGlobalInterestFilteringAction extends Action {
 	
     public ToggleGlobalInterestFilteringAction() {
         super();
-        setText("Apply Mylar to all views");
-        setToolTipText("Apply Mylar to all views");
+        setText("Apply Mylar to All Views");
+        setToolTipText("Apply Mylar to All Views");
         setImageDescriptor(MylarImages.INTEREST_FILTERING);
         setActionDefinitionId(ID);
 //        setChecked(MylarUiPlugin.getDefault().isGlobalFilteringEnabled());

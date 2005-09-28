@@ -51,6 +51,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	private JavaEditorTracker editorTracker;
     
 	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
+	private TypeHistoryManager typeHistoryManager = new TypeHistoryManager();
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 	private JavaProblemListener problemListener = new JavaProblemListener();
 	private JavaEditingMonitor javaEditingMonitor;
@@ -82,6 +83,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		super.start(context);
 		
         MylarPlugin.getContextManager().addListener(packageExplorerManager);
+        MylarPlugin.getContextManager().addListener(typeHistoryManager);
         MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
 
 		getPreferenceStore().setDefault(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
@@ -128,6 +130,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		resourceBundle = null;
 		
         MylarPlugin.getContextManager().removeListener(packageExplorerManager);
+        MylarPlugin.getContextManager().removeListener(typeHistoryManager);
         MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
         MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
         
@@ -167,24 +170,26 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		}
 		
 		// update editors that are already opened
-        IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-        if (page != null) {
-            IEditorReference[] references = page.getEditorReferences();
-            for (int i = 0; i < references.length; i++) {
-                IEditorPart part = references[i].getEditor(false);
-                if (part != null  && part instanceof JavaEditor) {
-                	JavaEditor editor = (JavaEditor)part;
-                	editorTracker.registerEditor(editor);
-                	
-//                  3.2 method: 	editor.resetProjection();
-                	ActiveFoldingListener.resetProjection(editor);
-                	
+		if (Workbench.getInstance().getActiveWorkbenchWindow() != null) {
+	        IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+	        if (page != null) {
+	            IEditorReference[] references = page.getEditorReferences();
+	            for (int i = 0; i < references.length; i++) {
+	                IEditorPart part = references[i].getEditor(false);
+	                if (part != null  && part instanceof JavaEditor) {
+	                	JavaEditor editor = (JavaEditor)part;
+	                	editorTracker.registerEditor(editor);
+	                	
+	//                  3.2 method: 	editor.resetProjection();
+	                	ActiveFoldingListener.resetProjection(editor);
+	                	
 //                	old way:
 //                	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); 
 //                	editor.setInput(editor.getEditorInput()); 
-                }
-            }
-        }
+	                }
+	            }
+	        }
+		}
 	}
     
 	/**
