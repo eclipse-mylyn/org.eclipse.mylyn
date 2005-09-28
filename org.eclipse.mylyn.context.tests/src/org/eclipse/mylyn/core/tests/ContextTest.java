@@ -48,6 +48,16 @@ public class ContextTest extends AbstractContextTest {
         assertEquals(22-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());
     }
     
+	public void testPropagatedInterest() {
+		IMylarContextNode node = context.parseEvent(mockPropagation("1"));
+		assertTrue(node.getDegreeOfInterest().isPropagated());
+        context.parseEvent(mockSelection("1"));
+        context.parseEvent(mockInterestContribution("1", -10));
+        assertFalse(node.getDegreeOfInterest().isPropagated());
+//        context.parseEvent(mockInterestContribution("1", 40));
+//        assertEquals(42-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());	
+	}
+    
     public void testEdges() {
         IMylarContextNode node = context.parseEvent(mockSelection("1"));
         context.parseEvent(mockNavigation("2"));

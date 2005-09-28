@@ -122,7 +122,9 @@ public class DegreeOfInterest implements IDegreeOfInterest {
      * Sums predicted and propagated values
      */
     public boolean isPropagated() {
-        return getEncodedValue() <= 0 && propagatedBias > 0;
+    	float value = selections * scaling.get(InteractionEvent.Kind.SELECTION).getValue()
+    		+ edits * scaling.get(InteractionEvent.Kind.EDIT).getValue();
+        return value <= 0 && propagatedBias > 0;
     }
 
     public boolean isPredicted() {

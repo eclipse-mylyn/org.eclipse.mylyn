@@ -30,7 +30,11 @@ public class AbstractContextTest extends TestCase {
 	protected InteractionEvent mockSelection(String handle) {
         return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, handle, MOCK_ORIGIN);
     }
-    
+
+	protected InteractionEvent mockPropagation(String handle) {
+        return new InteractionEvent(InteractionEvent.Kind.PROPAGATION, MOCK_KIND, handle, MOCK_ORIGIN);
+    }
+	
     protected InteractionEvent mockSelection() {
         return mockSelection("<mock-handle>");
     }

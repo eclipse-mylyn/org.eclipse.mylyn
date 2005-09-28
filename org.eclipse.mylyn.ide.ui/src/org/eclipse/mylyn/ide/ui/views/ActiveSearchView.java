@@ -73,7 +73,7 @@ public class ActiveSearchView extends ViewPart {
         } 
         
         public void interestChanged(List<IMylarContextNode> nodes) {
-            refresh(nodes.get(nodes.size()-1), true);
+            refresh(nodes.get(nodes.size()-1), false);
         }
 
         public void contextActivated(IMylarContext taskscape) {
