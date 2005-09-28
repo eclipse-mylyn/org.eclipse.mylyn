@@ -47,8 +47,8 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 	private boolean showProgress = true;
 
 	public RefreshBugzillaReportsAction() {
-		setText("Refresh Bugzilla reports");
-		setToolTipText("Refresh Bugzilla reports");
+		setText("Refresh Bugzilla Reports");
+		setToolTipText("Refresh Bugzilla Reports");
 		setId(ID);
 		setImageDescriptor(BugzillaImages.TASK_BUG_REFRESH);
 	}

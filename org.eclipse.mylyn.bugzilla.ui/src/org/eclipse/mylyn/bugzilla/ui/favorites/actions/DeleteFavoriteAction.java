@@ -37,13 +37,13 @@ public class DeleteFavoriteAction extends AbstractFavoritesAction
 		// on whether it will delete all items or not
 		if (deleteAll) 
 		{
-			setToolTipText("Remove all favorites");
-			setText("Remove all");
+			setToolTipText("Remove All Favorites");
+			setText("Remove All");
 			setImageDescriptor(BugzillaImages.REMOVE_ALL);
 		}
 		else 
 		{
-			setToolTipText( "Remove selected favorites" );
+			setToolTipText( "Remove Selected Favorites" );
 			setText( "Remove" );
 			setImageDescriptor(BugzillaImages.REMOVE);
 		}

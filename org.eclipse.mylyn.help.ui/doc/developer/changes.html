@@ -22,6 +22,1077 @@ a:link
 <BODY LINK="#4756AC" VLINK="#60657B" BGCOLOR="#FFFFFF">					
 						
       <h2>Release Notes</h2>
+		<div class="Section1">
+			<h3>Mylar 0.3.9 released 2005-09-26</h3>
+			<p class="MsoPlainText"><font face="Tahoma" size="2">
+			<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">Mylar 0.3.9.1 is 
+			now available, includes numerous bug fixes, and support for Eclipse 
+			3.2M2. &nbsp;Unfortunately due to changes in Eclipse 3.2M2 it is no 
+			longer possible for the same plug-ins to support both 3.1 and 3.2.&nbsp; 
+			But fortunately it was possible to coerce the update site allow you 
+			to select either the 3.1 or 3.2 based feature.&nbsp; Another key change 
+			in this release is that the Mylar Monitor has been almost entirely 
+			decoupled from the UBC user study in preparation for the 0.4 
+			release, and is now available in CVS at dev.eclipse.org. </span>
+			</font></p>
+			<p class="MsoPlainText"><b><font face="Tahoma" size="2">
+			<span style="FONT-WEIGHT: bold; FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+			Acknowledgements</span></font></b></p>
+			<p class="MsoPlainText"><font face="Tahoma" size="2">
+			<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">Thanks go out to 
+			Wes Coelho for contributing making the Previous/Next task navigation 
+			in the Task List persistent, and for helping provide a previous of 
+			whether a task has context. &nbsp;Also, Eugene Kuleshov came up with the 
+			really good idea of making landmark creation work by dragging an 
+			element to an Active view (see below).</span></font></p>
+			<p class="MsoPlainText"><b><font face="Tahoma" size="2">
+			<span style="FONT-WEIGHT: bold; FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+			Tasks completed (22 total)</span></font></b></p>
+			<table class="MsoNormalTable" style="WIDTH: 95.22%" cellSpacing="0" cellPadding="0" width="95%" border="0" id="table34">
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109815" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109815">
+					109815</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">add phase 
+					2 upgrade popup </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110111" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110111">
+					110111</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">enh</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">create 
+					context activity context </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110113" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110113">
+					110113</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					restructure documentation </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110234" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110234">
+					110234</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">guard 
+					against failure of elements to open </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110132" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110132">
+					110132</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">blo</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">eu@md.pp.ru</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					ClassCircularityError on startup </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110200" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110200">
+					110200</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">enh</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">clean up 
+					task list extension points and create JIRA plug-in </span>
+					</font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=104607" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=104607">
+					104607</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">enh</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">create 
+					FAQ document </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110630" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110630">
+					110630</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">blo</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P1</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">PC</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">eu@md.pp.ru</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					java.lang.VerifyError with Mylar 0.3.9 on Eclipse 3.2M2
+					</span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110112" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110112">
+					110112</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">tasks 
+					fail to get removed from root </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109816" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109816">
+					109816</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">active 
+					search labels blink on every selection </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=106257" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=106257">
+					106257</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">enh</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">PC</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">zazam@uvic.ca</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">Proposed 
+					enhancement: Decouple UBC study </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109803" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109803">
+					109803</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">PC</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">bsd@cs.ubc.ca</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">Tooltips 
+					on task list cause loss of focus </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109804" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109804">
+					109804</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">PC</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">bsd@cs.ubc.ca</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					Differentiating task categories is difficult with Mylar a...
+					</span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110464" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110464">
+					110464</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">enh</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">make 
+					active search check box selections disjoint </span></font>
+					</td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=107810" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=107810">
+					107810</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">PC</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">toggle of 
+					folding can cause file modification when using ... </span>
+					</font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110508" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110508">
+					110508</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">eu@md.pp.ru</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">Allow 
+					drag-n-drop to Active Search to create landmark </span>
+					</font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109462" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109462">
+					109462</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">ksueda@gmail.com</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">can't 
+					change category name </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109783" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=109783">
+					109783</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">wes.coelho@gmail.com</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">provide 
+					indication of whether task has context </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110061" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110061">
+					110061</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">enh</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P2</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">wes.coelho@gmail.com</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">previous 
+					task history should be persistent </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=107490" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=107490">
+					107490</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">nor</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P3</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">if view 
+					is not active content can stick after task de-act... </span>
+					</font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110133" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110133">
+					110133</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">maj</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P3</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">beatmik@acm.org</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">eu@md.pp.ru</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">Unhandled 
+					event loop exception </span></font></td>
+				</tr>
+				<tr>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 15pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<a title="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110134" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=110134">
+					110134</a> </span></font></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">maj</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">P3</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">Oth</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">sminto@cs.ubc.ca</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">eu@md.pp.ru</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<nobr>
+					<p class="MsoNormal">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">
+					<font face="Tahoma" size="2">FIXE</font></span></nobr><span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma"><font face="Tahoma" size="2">
+					</font></span></td>
+					<td style="PADDING-RIGHT: 3pt; PADDING-LEFT: 3pt; PADDING-BOTTOM: 3pt; PADDING-TOP: 3pt">
+					<p class="MsoNormal"><font face="Tahoma" size="2">
+					<span style="FONT-SIZE: 10pt; FONT-FAMILY: Tahoma">Wrong 
+					line breaks in Bugzilla comment editors </span></font></td>
+				</tr>
+			</table>
+		</div>
+		<h3>&nbsp;</h3>
 		<h3>Mylar 0.3.8 released 2005-09-19</h3>
 		<div class="Section1">
 			<p class="MsoPlainText"><font face="Tahoma" size="2">

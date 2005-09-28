@@ -37,13 +37,13 @@ public class DeleteOfflineReportAction extends AbstractOfflineReportsAction
 		// on whether it will delete all items or not
 		if (deleteAll) 
 		{
-			setToolTipText("Remove all offline reports");
+			setToolTipText("Remove All Offline Reports");
 			setText("Remove all");
 			setImageDescriptor(BugzillaImages.REMOVE_ALL);
 		}
 		else 
 		{
-			setToolTipText( "Remove selected offline reports" );
+			setToolTipText( "Remove Selected Offline Reports" );
 			setText( "Remove" );
 			setImageDescriptor(BugzillaImages.REMOVE);
 		}

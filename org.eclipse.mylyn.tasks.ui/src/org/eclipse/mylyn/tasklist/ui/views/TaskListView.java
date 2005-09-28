@@ -185,7 +185,7 @@ public class TaskListView extends ViewPart {
 		public PriorityDropDownAction() {
 			super();
 			setText("Priority Filter");
-			setToolTipText("Filter priority lower than");
+			setToolTipText("Filter Priority Lower Than");
 			setImageDescriptor(TaskListImages.FILTER_PRIORITY);
 			setMenuCreator(this);			
 		}

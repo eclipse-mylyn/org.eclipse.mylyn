@@ -33,8 +33,8 @@ public class ViewFavoriteAction extends AbstractFavoritesAction
 	 */
 	public ViewFavoriteAction( FavoritesView resultsView ) 
 	{
-		setToolTipText( "View selected favorites" );
-		setText( "View selected" );
+		setToolTipText( "View Selected Favorites" );
+		setText( "View Selected" );
 		setImageDescriptor(BugzillaImages.OPEN);
 		view = resultsView;
 	}

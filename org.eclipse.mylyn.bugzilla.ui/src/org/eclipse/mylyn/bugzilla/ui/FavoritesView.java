@@ -213,11 +213,11 @@ public class FavoritesView extends ViewPart {
 		// create actions to handle the sorting of the favorites
 		sortByIDAction = new SortByAction(FavoritesFile.ID_SORT);
 		sortByIDAction.setText("by &Bug ID");
-		sortByIDAction.setToolTipText("Sorts by Bug number");
+		sortByIDAction.setToolTipText("Sorts by bug number");
 		
 		sortByPriorityAction = new SortByAction(FavoritesFile.PRIORITY_SORT);
 		sortByPriorityAction.setText("by &Priority");
-		sortByPriorityAction.setToolTipText("Sorts by priority of the bug");
+		sortByPriorityAction.setToolTipText("Sorts by riority of the bug");
 		
 		sortBySeverityAction = new SortByAction(FavoritesFile.SEVERITY_SORT);
 		sortBySeverityAction.setText("by &Severity");

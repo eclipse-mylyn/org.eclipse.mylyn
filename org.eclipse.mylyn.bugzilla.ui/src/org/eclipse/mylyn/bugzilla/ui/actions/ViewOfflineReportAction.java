@@ -41,8 +41,8 @@ public class ViewOfflineReportAction extends AbstractOfflineReportsAction
 	 */
 	public ViewOfflineReportAction(OfflineView resultsView ) 
 	{
-		setToolTipText( "View selected offline reports" );
-		setText( "View selected" );
+		setToolTipText( "View Selected Offline Reports" );
+		setText( "View Selected" );
 		setImageDescriptor(BugzillaImages.OPEN);
 		view = resultsView;
 	}
