@@ -63,9 +63,6 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
                     ) {
                     decoration.setFont(MylarUiPlugin.BOLD);
                 } 
-                else {
-                	System.err.println(">>> " + node + ", " + node.getDegreeOfInterest());
-                }
             }
         } catch (Exception e) {
         	MylarPlugin.log(e, "decoration failed");
