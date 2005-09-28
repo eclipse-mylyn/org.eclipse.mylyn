@@ -55,12 +55,16 @@ public class LandmarkMarkerManager implements IMylarContextListener {
     }
     
     private void modelUpdated() {
-        for (IMylarContextNode node : markerMap.keySet()) {
-            landmarkRemoved(node);
-        }
-        markerMap.clear();
-        for (IMylarContextNode node : MylarPlugin.getContextManager().getActiveLandmarks()) {
-            landmarkAdded(node);
+    	try {
+	        for (IMylarContextNode node : markerMap.keySet()) {
+	            landmarkRemoved(node);
+	        }
+	        markerMap.clear();
+	        for (IMylarContextNode node : MylarPlugin.getContextManager().getActiveLandmarks()) {
+	            landmarkAdded(node);
+	        }
+        } catch (Throwable t) {
+        	MylarPlugin.fail(t, "Could not update landmark markers", false);
         }
     } 
 

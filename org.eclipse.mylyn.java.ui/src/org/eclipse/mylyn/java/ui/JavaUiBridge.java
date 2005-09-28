@@ -63,6 +63,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                 for (int i = 0; i < references.length; i++) {
                     IEditorPart part = references[i].getEditor(false);
                     if (part != null  && part instanceof JavaEditor) {
+                    	MylarPlugin.log("editor closing not implemented", this);
 //                        JavaEditor editor = (JavaEditor)part;
 //                        String name = MylarJavaPlugin.getStructureBridge().getName(
 //                                MylarJavaPlugin.getStructureBridge().getObjectForHandle(node.getElementHandle()));
