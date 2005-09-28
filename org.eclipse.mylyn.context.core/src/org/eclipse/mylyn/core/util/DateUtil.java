@@ -15,23 +15,25 @@ package org.eclipse.mylar.core.util;
 
 import java.util.Calendar;
 
-
 /**
  * @author Mik Kersten
  */
 public class DateUtil {
 	
-    public static String getFormattedDate() {
-        	
-        int monthInt = (Calendar.getInstance().get(Calendar.MONTH)+1);
+    public static String getFormattedDate() {	
+    	return getFormattedDate(Calendar.getInstance());
+    }
+    
+    public static String getFormattedDate(Calendar calendar) {
+        int monthInt = (calendar.get(Calendar.MONTH)+1);
         String month = "" + monthInt;
         if (monthInt < 10) month = "0" + month;
-        int dateInt = (Calendar.getInstance().get(Calendar.DATE));
+        int dateInt = (calendar.get(Calendar.DATE));
         String date = "" + dateInt;
         if (dateInt < 10) date = "0" + date;        
         return 
-            Calendar.getInstance().get(Calendar.YEAR) + "-" + 
-            month + "-" + date; 
+        	calendar.get(Calendar.YEAR) + "-" + 
+            month + "-" + date;         	
     }
 
     public static String getFormattedTime() {
