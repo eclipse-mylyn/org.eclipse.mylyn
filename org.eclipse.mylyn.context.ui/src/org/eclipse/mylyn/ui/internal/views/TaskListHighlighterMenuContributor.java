@@ -16,7 +16,6 @@ import java.util.Iterator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.IQueryHit;
@@ -26,7 +25,6 @@ import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.EditHighlightersAction;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -57,16 +55,16 @@ public class TaskListHighlighterMenuContributor implements ITaskListDynamicSubMe
 							}
 						}
 
-            		  	if (!task.isActive()) {
-	        	    		MessageDialog.openError(Workbench.getInstance()
-	        						.getActiveWorkbenchWindow().getShell(), "Mylar Highlighting",
-	        						"Please activate the task before setting a highlighter.");
-	        				return;
-	        	    	} else {
+//            		  	if (!task.isActive()) {
+//	        	    		MessageDialog.openError(Workbench.getInstance()
+//	        						.getActiveWorkbenchWindow().getShell(), "Mylar Highlighting",
+//	        						"Please activate the task before setting a highlighter.");
+//	        				return;
+//	        	    	} else {
 	        	    		MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandle(), highlighter.getName());
 	        	    		taskListView.getViewer().refresh();
 	        	    		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
-	        	    	}
+//	        	    	}
             	  }
               };
               if (highlighter.isGradient()) {
