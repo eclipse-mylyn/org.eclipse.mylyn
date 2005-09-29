@@ -34,7 +34,7 @@ public class NextTaskDropDownAction extends DropDownTaskNavigateAction {
 		for(int i = 0; i < tasks.size(); i++){
 			ITask currTask = tasks.get(i);
 			Action taskNavAction = new TaskNavigateAction(currTask);
-			ActionContributionItem item= new ActionContributionItem(taskNavAction);
+			ActionContributionItem item = new ActionContributionItem(taskNavAction);
 			item.fill(dropDownMenu, -1);
 		}
 	}

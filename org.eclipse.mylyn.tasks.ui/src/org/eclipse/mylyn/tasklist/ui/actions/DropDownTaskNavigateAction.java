@@ -3,8 +3,11 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
+import org.eclipse.mylar.tasklist.ui.views.TaskListLabelProvider;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -18,11 +21,11 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 	protected final TaskListView view;
 	protected TaskActivationHistory taskHistory;
 	protected Menu dropDownMenu = null;
-	
+	protected TaskListLabelProvider labelProvider = new TaskListLabelProvider();
+
 	/** Maximum number of items to appear in the drop-down menu */
 	protected final static int MAX_ITEMS = 5;
-	
-	
+		
 	public DropDownTaskNavigateAction(TaskListView view, TaskActivationHistory history){
     	super();
 		this.view = view;
@@ -30,7 +33,8 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
         setMenuCreator(this);
 	}
 	
-	protected class TaskNavigateAction extends Action{
+	protected class TaskNavigateAction extends Action {
+		
 		private ITask targetTask;
 		private static final int MAX_LABEL_LENGTH = 30;
 		
@@ -43,6 +47,8 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 			setText(taskDescription);
 			setEnabled(true);
 			setToolTipText(task.getDescription(true));
+			Image image = labelProvider.getColumnImage(task, 1);
+			setImageDescriptor(TaskListImages.getImageDescriptor(image));
 		}
 		
 		public void run(){
