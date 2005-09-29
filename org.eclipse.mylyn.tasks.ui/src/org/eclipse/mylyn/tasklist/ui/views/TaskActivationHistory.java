@@ -124,6 +124,57 @@ public class TaskActivationHistory {
 		}		
 	}
 	
+	/**
+	 * Get a list of the preceding tasks in the history.
+	 * navigatedToTask(Task) should be called to notify
+	 * the history if the user navigates to an arbitrary 
+	 * previous task from this list
+	 * @author Wesley Coelho
+	 */
+	public List<ITask> getPreviousTasks(){
+		try {
+			if (!persistentHistoryLoaded){
+				loadPersistentHistory();
+				persistentHistoryLoaded = true;
+			}
+			return history.subList(0, currentIndex);
+		} catch (RuntimeException e) {
+			MylarPlugin.fail(e, "could not get previous tasks from history", false);
+			return new ArrayList<ITask>();
+		}
+	}
+	
+	/**
+	 * Get a list of the next tasks in the history.
+	 * navigatedToTask(Task) should be called to notify
+	 * the history if the user navigates to an arbitrary 
+	 * next task from this list
+	 * @author Wesley Coelho
+	 */
+	public List<ITask> getNextTasks(){
+		try {
+			return history.subList(currentIndex + 1, history.size());
+		} catch (RuntimeException e) {
+			MylarPlugin.fail(e, "could not get next tasks from history", false);
+			return new ArrayList<ITask>();
+		}
+	}
+	
+	/**
+	 * Use this method to notify the task history that the
+	 * user has navigated to an arbitrary task in the history
+	 * without using getNextTask() or getPreviousTask()
+	 * @author Wesley Coelho
+	 */
+	public void navigatedToTask(ITask task){
+		for(int i = 0; i < history.size(); i++){
+			if (history.get(i).getHandle() == task.getHandle()){
+				currentIndex = i;
+				break;
+			}
+		}
+	}
+	
 	public boolean hasPrevious() {
 		try {
 			if (!persistentHistoryLoaded){
@@ -168,159 +219,4 @@ public class TaskActivationHistory {
 		}
 	}
 }
-
-///**
-// * @author Ken Sueda (interface)
-// * @author Wesley Coelho (new implementation)
-// * 
-// * Note: Getting the previous or next task involves iterating until one is found
-// * because there could be any number of interaction events for the same task
-// * in the history. However, n should be less than 10 or so in most cases so
-// * this shouldn't be a performance problem.
-// */
-//public class TaskActivationHistory {
-//	
-//	protected MylarContextManager manager = MylarPlugin.getContextManager();
-//	protected int currentIndex = -1;
-//	protected int stackPos = 0;
-//    
-//	public TaskActivationHistory() {	
-//	
-//	
-//	}
-//
-//	public void addTask(ITask task) {
-//		clear();
-//	}
-//	
-//	public ITask getPreviousTask() {
-//		if (hasPrevious()){
-//			stackPos--;
-//			return getUniquePreviousTask(true);
-//		}
-//		else{
-//			return null;
-//		}
-//	}
-//
-//	public boolean hasPrevious() {		
-//		return getUniquePreviousTask(false) != null;
-//	}
-//	
-//	protected ITask getUniquePreviousTask(boolean setIndex){
-//		int pos = currentIndex;
-//		
-//		if (pos == -1){
-//			pos = manager.getActivityHistory().getInteractionHistory().size() - 1;
-//		}
-//		
-//		while (pos >= 0){
-//			if (getHistoryTaskAt(pos) != null && !getHistoryTaskAt(pos).isActive()) {
-//							
-//				//Don't go back to this task if it's
-//				// a duplicate of something already backed through
-//				ITask proposedPrevTask = getHistoryTaskAt(pos);
-//				boolean anotherTaskReached = false;
-//				boolean duplicate = false;
-//				for(int i = pos; i < manager.getActivityHistory().getInteractionHistory().size() - 1; i++){
-//					ITask currTask = getHistoryTaskAt(i);
-//					if (currTask != proposedPrevTask){
-//						anotherTaskReached = true;
-//						continue;
-//					}
-//				
-//					if (anotherTaskReached && currTask == proposedPrevTask){
-//						duplicate = true;
-//					}
-//				}	
-//				
-//				if (!duplicate){
-//					if(setIndex){
-//						currentIndex = pos;
-//					}
-//					return proposedPrevTask;
-//				}
-//			}
-//			pos--;
-//		}
-//		
-//		return null;
-//	}
-//	
-//	public ITask getNextTask() {
-//		if (hasNext()) {
-//			for(int i = currentIndex; i < manager.getActivityHistory().getInteractionHistory().size(); i++){
-//				ITask task = getHistoryTaskAt(i);
-//				if(task != null && !task.isActive()){
-//					currentIndex = i;
-//					stackPos++;
-//					if (stackPos == 0){
-//						currentIndex = -1;
-//					}
-//					else{
-//						
-////						//See if there is another task further down (but before the starting point)
-////						//that is the same as this task. If so, the
-////						//current task would have been skipped on the
-////						//way back so we should move the pointer over.
-////						int tempStackPos = stackPos;
-////						ITask prevTask = task;
-////						for(int j = currentIndex; j < manager.getActivityHistory().getInteractionHistory().size();j++){
-////							ITask currTask = getHistoryTaskAt(j);
-////							
-////							if (currTask == null){
-////								continue;
-////							}
-////							
-////							if (currTask != prevTask){
-////								prevTask = currTask;
-////								tempStackPos++;
-////							}
-////							
-////							if (tempStackPos > 0){
-////								break;
-////							}
-////							
-////							if(currTask == task){
-////								currentIndex = j;
-////							}
-////						}
-//					}
-//					return task;
-//				}
-//			}
-//			return null;
-//		} else {
-//			return null;
-//		}		
-//	}
-//	
-//	public boolean hasNext() {
-//		if (currentIndex == -1){
-//			return false;
-//		}
-//		else{
-//			for(int i = currentIndex; i < manager.getActivityHistory().getInteractionHistory().size(); i++){
-//				if(getHistoryTaskAt(i) != null && !getHistoryTaskAt(i).isActive()){
-//					return true;
-//				}
-//			}
-//			return false;
-//		}
-//	}
-//	
-//	/** Returns the task corresponding to the interaction event history item at the specified position */
-//	protected ITask getHistoryTaskAt(int pos){
-//		InteractionEvent event = manager.getActivityHistory().getInteractionHistory().get(pos);
-//		return MylarTasklistPlugin.getTaskListManager().getTaskForHandle(event.getStructureHandle(), false);
-//	}
-//	
-//	/** Note: Doesn't really clear, just resets the history pointer*/
-//	public void clear() {
-//		currentIndex = -1;
-//		stackPos = 0;
-//	}
-//}
-
-
 

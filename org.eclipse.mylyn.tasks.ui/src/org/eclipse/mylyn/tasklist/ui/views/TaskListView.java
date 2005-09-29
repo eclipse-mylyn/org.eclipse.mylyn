@@ -75,9 +75,9 @@ import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoUpAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylar.tasklist.ui.actions.NavigatePreviousAction;
-import org.eclipse.mylar.tasklist.ui.actions.NextTaskAction;
+import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
@@ -151,14 +151,15 @@ public class TaskListView extends ViewPart {
     private DeleteAction delete;
     private AutoCloseAction autoClose;
     private OpenTaskEditorAction doubleClickAction;
-    private NavigatePreviousAction previousTaskAction;
-    private NextTaskAction nextTaskAction;
+
     private RemoveFromCategoryAction removeAction;
 
     private MarkTaskCompleteAction completeTask;
     private MarkTaskIncompleteAction incompleteTask;
     private FilterCompletedTasksAction filterCompleteTask;
     private PriorityDropDownAction filterOnPriority;
+    private PreviousTaskDropDownAction previousTaskAction;
+    private NextTaskDropDownAction nextTaskAction;
     private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
     private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
     private List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
@@ -179,6 +180,10 @@ public class TaskListView extends ViewPart {
 
 	private boolean canEnableGoInto = false;
     
+	
+
+		
+	
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
     	
@@ -1066,8 +1071,6 @@ public class TaskListView extends ViewPart {
     	updateDrillDownActions();
     	manager.add(collapseAll);
     	manager.add(new Separator());
-    	manager.add(previousTaskAction);
-    	manager.add(nextTaskAction);
     	manager.add(goBackAction);
         manager.add(new Separator());
         manager.add(autoClose);
@@ -1222,8 +1225,8 @@ public class TaskListView extends ViewPart {
         doubleClickAction = new OpenTaskEditorAction(this);            
         filterCompleteTask = new FilterCompletedTasksAction(this);                       
         filterOnPriority = new PriorityDropDownAction();
-        previousTaskAction = new NavigatePreviousAction(this, taskHistory);
-        nextTaskAction = new NextTaskAction(this, taskHistory);
+        previousTaskAction = new PreviousTaskDropDownAction(this, taskHistory);
+        nextTaskAction = new NextTaskDropDownAction(this, taskHistory);
     }
 
     
@@ -1235,11 +1238,11 @@ public class TaskListView extends ViewPart {
     	previousTaskAction.setEnabled(enable);
     }
     
-    public NextTaskAction getNextTaskAction() {
+    public NextTaskDropDownAction getNextTaskAction() {
     	return nextTaskAction;
     }
     
-    public NavigatePreviousAction getPreviousTaskAction() {
+    public PreviousTaskDropDownAction getPreviousTaskAction() {
     	return previousTaskAction;
     }
     /**
@@ -1455,6 +1458,9 @@ public class TaskListView extends ViewPart {
         manager.add(new Separator());
 	    manager.add(filterCompleteTask);
 	    manager.add(filterOnPriority);
+	    manager.add(new Separator());
+	    manager.add(previousTaskAction);
+	    manager.add(nextTaskAction);
 	    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	    
 //    	manager.markDirty();
