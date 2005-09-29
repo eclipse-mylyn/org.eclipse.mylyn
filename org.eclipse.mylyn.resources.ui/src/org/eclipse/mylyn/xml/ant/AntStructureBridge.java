@@ -106,8 +106,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getObjectForHandle(java.lang.String)
      */
     public Object getObjectForHandle(String handle) {
-    	if(handle == null)
-    		return null;
+    	if(handle == null) return null;
         int first = handle.indexOf(";");
         String filename = "";
         if(first == -1){

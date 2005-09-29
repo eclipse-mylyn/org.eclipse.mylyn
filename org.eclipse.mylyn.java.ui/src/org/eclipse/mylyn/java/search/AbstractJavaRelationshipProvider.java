@@ -49,8 +49,6 @@ import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
 
-
-
 /**
  * @author Mik Kersten
  */
@@ -90,43 +88,49 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
         int includeMask = IJavaSearchScope.SOURCES;
         if (degreeOfSeparation == 1) {
             for (IMylarContextNode landmark : landmarks) {
-            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentKind());
-            	Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
-            	if(o instanceof IJavaElement){
-            		IJavaElement landmarkElement = (IJavaElement)o;
-            		if(landmarkElement.exists()){
-		                if (landmarkElement instanceof IMember && !landmark.getDegreeOfInterest().isPropagated()) {
-		                    searchElements.add(((IMember)landmarkElement).getCompilationUnit());
-		                } else if (landmarkElement instanceof ICompilationUnit) {
-		                    searchElements.add(landmarkElement);
-		                }
-            		}
+            	if (landmark.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
+	            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentKind());
+	            	Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
+	            	if(o instanceof IJavaElement){
+	            		IJavaElement landmarkElement = (IJavaElement)o;
+	            		if(landmarkElement.exists()){
+			                if (landmarkElement instanceof IMember && !landmark.getDegreeOfInterest().isPropagated()) {
+			                    searchElements.add(((IMember)landmarkElement).getCompilationUnit());
+			                } else if (landmarkElement instanceof ICompilationUnit) {
+			                    searchElements.add(landmarkElement);
+			                }
+	            		}
+	            	}
             	}
             } 
         } else if (degreeOfSeparation == 2) {
             for (IMylarContextNode interesting : interestingElements) {
-            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
-            	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
-            	if(o instanceof IJavaElement){
-	                IJavaElement interestingElement = (IJavaElement)o;
-	                if(interestingElement.exists()){
-		                if (interestingElement instanceof IMember && !interesting.getDegreeOfInterest().isPropagated()) {
-		                    searchElements.add(((IMember)interestingElement).getCompilationUnit());
-		                } else if (interestingElement instanceof ICompilationUnit) {
-		                    searchElements.add(interestingElement);
+            	if (interesting.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
+	            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
+	            	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
+	            	if(o instanceof IJavaElement){
+		                IJavaElement interestingElement = (IJavaElement)o;
+		                if(interestingElement.exists()){
+			                if (interestingElement instanceof IMember && !interesting.getDegreeOfInterest().isPropagated()) {
+			                    searchElements.add(((IMember)interestingElement).getCompilationUnit());
+			                } else if (interestingElement instanceof ICompilationUnit) {
+			                    searchElements.add(interestingElement);
+			                }
 		                }
-	                }
-            	}
-            }  
+	            	}
+	            }  
+            }
         } else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
             for (IMylarContextNode interesting : interestingElements) {
-            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
-            	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
-            	IProject project = sbridge.getProjectForObject(o);// TODO what to do when the element is not a java element, how determine if a javaProject?
-            	
-            	if(project != null && JavaProject.hasJavaNature(project) && project.exists()){
-            		IJavaProject javaProject = JavaCore.create(project);//((IJavaElement)o).getJavaProject();
-            		if (javaProject != null && javaProject.exists()) searchElements.add(javaProject);
+            	if (interesting.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) { // TODO: search projects without interesting Java elements?
+	            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
+	            	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
+	            	IProject project = sbridge.getProjectForObject(o);// TODO what to do when the element is not a java element, how determine if a javaProject?
+	            	
+	            	if(project != null && JavaProject.hasJavaNature(project) && project.exists()){
+	            		IJavaProject javaProject = JavaCore.create(project);//((IJavaElement)o).getJavaProject();
+	            		if (javaProject != null && javaProject.exists()) searchElements.add(javaProject);
+	            	}
             	}
             }   
             if (degreeOfSeparation == 4) {
