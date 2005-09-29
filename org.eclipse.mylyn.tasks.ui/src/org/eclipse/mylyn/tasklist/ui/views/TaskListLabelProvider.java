@@ -13,6 +13,7 @@
   */
 package org.eclipse.mylar.tasklist.ui.views;
 
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -32,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskListLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider, ITableFontProvider {
+public class TaskListLabelProvider extends LabelProvider implements IColorProvider, ITableLabelProvider, ITableColorProvider, ITableFontProvider {
 
 	private Color backgroundColor = null;
 	
@@ -94,7 +95,6 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
 	}
 
 	public Color getBackground(Object element, int columnIndex) {
-//		System.err.println(columnIndex + ", " + element);
     	try {
 			  if (element instanceof ITask) {
 			      ITask task = (ITask)element;
@@ -124,5 +124,13 @@ public class TaskListLabelProvider extends LabelProvider implements ITableLabelP
         	return task.getFont();
         }
         return null;
+	}
+
+	public Color getForeground(Object element) {
+		return getForeground(element, 0);
+	}
+
+	public Color getBackground(Object element) {
+		return getBackground(element, 0);
 	}
 }
