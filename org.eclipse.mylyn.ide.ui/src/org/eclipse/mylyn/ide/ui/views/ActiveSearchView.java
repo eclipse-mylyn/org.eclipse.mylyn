@@ -66,7 +66,11 @@ public class ActiveSearchView extends ViewPart {
 	
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
+    public boolean qualifiedNameMode = false;
     
+    /**
+     * bug 110688
+     */
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
             refresh(node, false);
@@ -234,7 +238,10 @@ public class ActiveSearchView extends ViewPart {
        	// needed to prevent toolbar from getting too tall, TODO: fille bug report
     	IAction dummyAction = new Action(){
 			@Override
-			public void run() { }
+			public void run() { 
+				qualifiedNameMode = true;
+				refresh(null, true);
+			}
         };
         dummyAction.setText("");
         dummyAction.setImageDescriptor(MylarImages.BLANK);

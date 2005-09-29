@@ -84,13 +84,14 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
         List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
         List<IMylarContextNode> interestingElements = MylarPlugin.getContextManager().getActiveContext().getInteresting();
+
         Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
         int includeMask = IJavaSearchScope.SOURCES;
         if (degreeOfSeparation == 1) {
             for (IMylarContextNode landmark : landmarks) {
-            	if (landmark.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
-	            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentKind());
-	            	Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
+            	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentKind());
+            	if (includeNodeInScope(landmark, bridge)) {
+	            	Object o = bridge.getObjectForHandle(landmark.getElementHandle());
 	            	if(o instanceof IJavaElement){
 	            		IJavaElement landmarkElement = (IJavaElement)o;
 	            		if(landmarkElement.exists()){
@@ -105,11 +106,11 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             } 
         } else if (degreeOfSeparation == 2) {
             for (IMylarContextNode interesting : interestingElements) {
-            	if (interesting.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
-	            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
-	            	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
-	            	if(o instanceof IJavaElement){
-		                IJavaElement interestingElement = (IJavaElement)o;
+            	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
+            	if (includeNodeInScope(interesting, bridge)) {
+	            	Object object = bridge.getObjectForHandle(interesting.getElementHandle());
+	            	if (object instanceof IJavaElement){
+		                IJavaElement interestingElement = (IJavaElement)object;
 		                if(interestingElement.exists()){
 			                if (interestingElement instanceof IMember && !interesting.getDegreeOfInterest().isPropagated()) {
 			                    searchElements.add(((IMember)interestingElement).getCompilationUnit());
@@ -122,10 +123,10 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             }
         } else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
             for (IMylarContextNode interesting : interestingElements) {
-            	if (interesting.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) { // TODO: search projects without interesting Java elements?
-	            	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
-	            	Object o = sbridge.getObjectForHandle(interesting.getElementHandle());
-	            	IProject project = sbridge.getProjectForObject(o);// TODO what to do when the element is not a java element, how determine if a javaProject?
+	            IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(interesting.getContentKind());
+	            if (includeNodeInScope(interesting, bridge)) {
+	            	Object object = bridge.getObjectForHandle(interesting.getElementHandle());
+	            	IProject project = bridge.getProjectForObject(object);// TODO what to do when the element is not a java element, how determine if a javaProject?
 	            	
 	            	if(project != null && JavaProject.hasJavaNature(project) && project.exists()){
 	            		IJavaProject javaProject = JavaCore.create(project);//((IJavaElement)o).getJavaProject();
@@ -152,6 +153,14 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
             return SearchEngine.createJavaSearchScope(elements, includeMask);
         }
     }
+
+    /**
+     * Only include Java elements and files. 
+     */
+	private boolean includeNodeInScope(IMylarContextNode interesting, IMylarStructureBridge bridge) {
+		return interesting.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE) 
+			|| bridge.isDocument(interesting.getElementHandle());
+	}
     
     protected boolean acceptResultElement(IJavaElement element) {
         return !(element instanceof IImportDeclaration);
@@ -213,7 +222,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelations
     	InternalSearchUI.getInstance();
         
         runningJobs.add(job);
-        job.setPriority(Job.DECORATE);
+        job.setPriority(Job.DECORATE-10);
         job.schedule();
     }
 

@@ -103,26 +103,26 @@ public class AntStructureBridge implements IMylarStructureBridge {
     }
 
     /**
-     * @see org.eclipse.mylar.core.IMylarStructureBridge#getObjectForHandle(java.lang.String)
+     * TODO: performance issue?
      */
     public Object getObjectForHandle(String handle) {
-    	if(handle == null) return null;
-        int first = handle.indexOf(";");
-        String filename = "";
-        if(first == -1){
-            // we have just the filename, so return the IFile for this filename
-            filename = handle;
-            IPath path = new Path(filename);
-            IFile f = (IFile)((Workspace)ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
-            return f;
-        }
-        else{
-            // we have an element since there is a line number
-            // get the filename from the handle
-            filename = handle.substring(0, first);
-        }
-        
         try{
+	    	if(handle == null) return null;
+	        int first = handle.indexOf(";");
+	        String filename = "";
+	        if(first == -1){
+	            // we have just the filename, so return the IFile for this filename
+	            filename = handle;
+	            IPath path = new Path(filename);
+	            IFile f = (IFile)((Workspace)ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
+	            return f;
+	        }
+	        else{
+	            // we have an element since there is a line number
+	            // get the filename from the handle
+	            filename = handle.substring(0, first);
+	        }
+        
             // get the file and create a new FileEditorInput
             IPath path = new Path(filename);
             IFile f = (IFile)((Workspace)ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
@@ -134,19 +134,11 @@ public class AntStructureBridge implements IMylarStructureBridge {
             if(elementPath == ""){
                 return f;
             }
-            
-            // get the contents of the file and create a document so that we can get the offset
 
-            
-            // get the offsets for the element and make sure that we are on something other than whitespace
-//            int startOffset = d.getLineOffset(start);
-//            while(d.getChar(startOffset) == ' ')
-//                startOffset++;
-            
-//XXX needed if the editor is the only way to get the model
-//            get the active editor, which should be the ant editor so we can get the AntModel
+            // XXX needed if the editor is the only way to get the model
+            // get the active editor, which should be the ant editor so we can get the AntModel
             IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            if(editorPart instanceof AntEditor){
+            if (editorPart instanceof AntEditor) {
                 AntModel am = ((AntEditor)editorPart).getAntModel(); 
                 if(am != null)
                     

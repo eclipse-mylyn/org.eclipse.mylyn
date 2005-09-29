@@ -138,12 +138,11 @@ public class ActiveFoldingListener implements IMylarContextListener {
         public void updateFolding(final boolean expand) {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
                 public void run() { 
-//                    if (editor == null || editor.getEditorInput() == null) monitor.unregisterEditor(editor);
                     if (!editor.getSite().getPage().isPartVisible(editor)) return;
                     ISourceViewer sourceViewer = editor.getViewer();
                     if (sourceViewer instanceof ProjectionViewer) {
                         ProjectionViewer pv= (ProjectionViewer) sourceViewer;
-                        if (isAutoFoldingEnabled()) {// && MylarUiPlugin.getDefault().isGlobalFilteringEnabled()) { 
+                        if (isAutoFoldingEnabled()) {
                             if (expand) {
                                 if (pv.canDoOperation(ProjectionViewer.EXPAND)) pv.doOperation(ProjectionViewer.EXPAND);
                             } else {

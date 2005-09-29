@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
-import org.eclipse.mylar.java.tests.search.JavaReferencesSearchPluginTest;
+import org.eclipse.mylar.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
 
 /**
@@ -36,7 +36,7 @@ public class AllJavaTests {
         suite.addTestSuite(JavaStructureTest.class);
         suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
         suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
-        suite.addTestSuite(JavaReferencesSearchPluginTest.class);
+        suite.addTestSuite(JavaReferencesSearchTest.class);
         suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
         suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 		//$JUnit-END$

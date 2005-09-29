@@ -25,12 +25,12 @@ import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 /**
  * @author Shawn Minto
  */
-public class SearchTaskscapeNotifier extends AbstractContextTest {
+public class ActiveSearchNotifier extends AbstractContextTest {
 
 	private CompositeContext context; 
 	private String source;
 	
-	public SearchTaskscapeNotifier(CompositeContext context, String source){
+	public ActiveSearchNotifier(CompositeContext context, String source) {
 		this.context = context;
 		this.source = source;
 	}
@@ -58,7 +58,10 @@ public class SearchTaskscapeNotifier extends AbstractContextTest {
 	
 	public IMylarContextNode getElement(String handle, String kind) {
 		IMylarContextNode node = context.addEvent(mockSelection(handle, kind, source));
-		context.addEvent(mockUserEvent(handle, kind, source, (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
+		MylarPlugin.getContextManager().handleInteractionEvent(
+				mockUserEvent(handle, kind, source, (1/MylarContextManager.getScalingFactors().getLandmark()) * -2),
+				true);
+//		context.addEvent(mockUserEvent(handle, kind, source, (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
 		return node;
 	}
 	

@@ -248,7 +248,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
 	   			}
             });
             runningJobs.add(job);
-            job.setPriority(Job.DECORATE);
+            job.setPriority(Job.DECORATE-10);
             job.schedule();
         }
 	}

@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextEdge;
 import org.eclipse.swt.widgets.Shell;
@@ -71,6 +72,13 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
             } else {
                 nodes = MylarPlugin.getContextManager().getActiveContext().getAllElements();
             }
+            List<Object> resolvedNodes = new ArrayList<Object>();
+            for (IMylarContextNode node : nodes) {
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+				Object object = bridge.getObjectForHandle(node.getElementHandle());
+				if (object != null) resolvedNodes.add(object);
+            }
+//            return resolvedNodes.toArray();
             return nodes.toArray(); 
         } 
         return getChildren(parent);

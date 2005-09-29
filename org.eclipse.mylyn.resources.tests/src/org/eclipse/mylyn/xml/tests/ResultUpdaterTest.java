@@ -30,7 +30,7 @@ import org.eclipse.mylar.core.tests.support.ResourceHelper;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
-import org.eclipse.mylar.core.tests.support.search.SearchTaskscapeNotifier;
+import org.eclipse.mylar.core.tests.support.search.ActiveSearchNotifier;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.xml.XmlReferencesProvider;
 
@@ -65,7 +65,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		int dos = 4;
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
-		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
+		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
@@ -88,7 +88,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		int dos = 4;
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
-		SearchTaskscapeNotifier notifier = new SearchTaskscapeNotifier(t, SOURCE_ID);
+		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//

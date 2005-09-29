@@ -559,6 +559,13 @@ public class MylarContextManager {
         } 
 		return acceptedLandmarks;
 	}
+
+	/**
+	 * Get the interesting resources for the active context.
+	 */
+    public Set<IMylarContextNode> getInterestingResources() {
+    	return getInterestingResources(activeContext);
+    }
 	
     public Set<IMylarContextNode> getInterestingResources(IMylarContext context) {
         Set<IMylarContextNode> interestingFiles = new HashSet<IMylarContextNode>();
