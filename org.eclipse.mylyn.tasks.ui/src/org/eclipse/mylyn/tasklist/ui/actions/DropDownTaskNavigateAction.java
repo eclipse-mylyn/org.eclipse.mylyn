@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
 /**
- * This abstract class contains a lot of common code used by
+ * This abstract class contains some common code used by
  * NextTaskDropDownAction and PreviousTaskDropDownAction
  * 
  * @author Wesley Coelho
@@ -33,7 +33,12 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
         setMenuCreator(this);
 	}
 	
-	protected class TaskNavigateAction extends Action {
+	/**
+	 * Action for navigating to a specified task.
+	 * This class should be protected but has been
+	 * made public for testing only
+	 */
+	public class TaskNavigateAction extends Action {
 		
 		private ITask targetTask;
 		private static final int MAX_LABEL_LENGTH = 40;

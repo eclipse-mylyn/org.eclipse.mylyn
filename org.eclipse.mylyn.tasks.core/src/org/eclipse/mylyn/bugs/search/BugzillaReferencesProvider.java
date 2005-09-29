@@ -110,7 +110,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
 			}
             
         });
-        search.run(new NullProgressMonitor(), Job.DECORATE);
+        search.run(new NullProgressMonitor(), Job.DECORATE-10);
 	}
 
 	@Override

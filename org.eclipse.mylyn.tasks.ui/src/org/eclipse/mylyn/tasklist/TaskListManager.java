@@ -139,9 +139,7 @@ public class TaskListManager {
 	    			for (ITaskActivityListener listener : listeners) listener.taskDeactivated(t);    			
 	    		}
 	    		taskList.clearActiveTasks();
-    		} else {
-    			return;
-    		}
+    		} 
     	}
 		taskList.setActive(task, true, false);
 		TaskActiveTimerListener activeListener = new TaskActiveTimerListener(task); 

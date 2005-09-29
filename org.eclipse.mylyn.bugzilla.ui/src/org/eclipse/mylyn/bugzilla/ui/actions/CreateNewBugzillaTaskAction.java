@@ -18,7 +18,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
@@ -41,10 +40,10 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.bug";
 		
 	public CreateNewBugzillaTaskAction() {
-		setText("Create and Add Bugzilla Report");
-        setToolTipText("Create and Add Bugzilla Report");
-        setId(ID); 
-        setImageDescriptor(BugzillaImages.TASK_BUGZILLA_NEW);
+//		setText("Create and Add Bugzilla Report");
+//        setToolTipText("Create and Add Bugzilla Report");
+//        setId(ID); 
+//        setImageDescriptor(BugzillaImages.TASK_BUGZILLA_NEW);
 	} 
 	
 	@Override

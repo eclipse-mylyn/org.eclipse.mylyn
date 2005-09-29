@@ -214,6 +214,7 @@ public class TaskActivationHistory {
 	public void clear() {
 		try {
 			history.clear();
+			currentIndex = -1;
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not clear history", false);
 		}

@@ -128,6 +128,8 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class TaskListView extends ViewPart {
 
+	private static final String SEPARATOR_ID_REPORTS = "reports";
+
 	private static TaskListView INSTANCE;
 		
 	private FilteredTree tree;
@@ -877,9 +879,9 @@ public class TaskListView extends ViewPart {
       
         drillDownAdapter = new DrillDownAdapter(getViewer());
         getViewer().setContentProvider(new TaskListContentProvider());
-        TaskListLabelProvider lp = new TaskListLabelProvider();
-        lp.setBackgroundColor(parent.getBackground());
-        getViewer().setLabelProvider(lp);
+        TaskListLabelProvider labelProvider = new TaskListLabelProvider();
+        labelProvider.setBackgroundColor(parent.getBackground());
+        getViewer().setLabelProvider(labelProvider);
         getViewer().setInput(getViewSite());
         
         getViewer().getTree().addKeyListener(new KeyListener(){
@@ -1070,12 +1072,12 @@ public class TaskListView extends ViewPart {
     private void fillLocalPullDown(IMenuManager manager) {
     	updateDrillDownActions();
     	manager.add(collapseAll);
-    	manager.add(new Separator());
     	manager.add(goBackAction);
+//    	manager.add(new Separator());
         manager.add(autoClose);
         autoClose.setEnabled(true);
         manager.add(workOffline);
-        workOffline.setEnabled(true);
+//        workOffline.setEnabled(true);
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }    
     
@@ -1373,97 +1375,24 @@ public class TaskListView extends ViewPart {
     public TaskCompleteFilter getCompleteFilter() {
     	return COMPLETE_FILTER;
     }
-    
-//    public ViewerFilter getInCompleteFilter() {
-//    	return inCompleteFilter;
-//    }
+
     
     public TaskPriorityFilter getPriorityFilter() {
     	return PRIORITY_FILTER;
     }
-    
-//    public class TaskInputDialog extends Dialog {
-//    	private String taskName = "";
-//    	private String priority = "P3";
-//    	private Text text;
-//		public TaskInputDialog(Shell parentShell) {
-//			super(parentShell);
-//		}
-//		protected Control createDialogArea(Composite parent) {			
-//			Composite composite = (Composite)super.createDialogArea(parent);
-//			GridLayout gl = new GridLayout(3, false);
-//			composite.setLayout(gl);
-//			GridData data = new GridData(GridData.GRAB_HORIZONTAL
-//                    | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
-//                    | GridData.VERTICAL_ALIGN_CENTER);
-//            data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
-//            composite.setLayoutData(data);
-//			
-//			
-//			Label label = new Label(composite, SWT.WRAP);
-//            label.setText("Task name:");            
-//            label.setFont(parent.getFont());
-//            
-//            text = new Text(composite, SWT.SINGLE | SWT.BORDER);
-//            text.setLayoutData(data);
-//            text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-//                | GridData.HORIZONTAL_ALIGN_FILL));
-//
-//			
-//			final Combo c = new Combo(composite, SWT.NO_BACKGROUND
-//						| SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY | SWT.DROP_DOWN);
-//			c.setItems(PRIORITY_LEVELS);
-//			c.setText(priority);
-//			c.addSelectionListener(new SelectionListener() {
-//
-//				public void widgetSelected(SelectionEvent e) {
-//					priority = c.getText();
-//				}
-//
-//				public void widgetDefaultSelected(SelectionEvent e) {	
-//					widgetSelected(e);
-//				}				
-//			});			
-//			label = new Label(composite, SWT.NONE);
-//			return composite;
-//		}
-//		public String getSelectedPriority() {
-//			return priority;
-//		}
-//		public String getTaskname() {
-//			return taskName;
-//		}
-//		protected void buttonPressed(int buttonId) {
-//	        if (buttonId == IDialogConstants.OK_ID) {
-//	        	taskName = text.getText();
-//	        } else {
-//	        	taskName = null;
-//	        }
-//	        super.buttonPressed(buttonId);
-//	    }
-//		protected void configureShell(Shell shell) {
-//	        super.configureShell(shell);
-//	        shell.setText("Enter Task Name");
-//	    }
-//    }
 
     private void fillLocalToolBar(IToolBarManager manager) {
     	manager.removeAll();
-
     	manager.add(createTaskToolbar);
         manager.add(createCategory);
-        manager.add(new Separator("mylar"));
-
+        manager.add(new Separator(SEPARATOR_ID_REPORTS));
         manager.add(new Separator());
 	    manager.add(filterCompleteTask);
 	    manager.add(filterOnPriority);
-	    manager.add(new Separator());
+//	    manager.add(new Separator());
 	    manager.add(previousTaskAction);
 	    manager.add(nextTaskAction);
 	    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	    
-//    	manager.markDirty();
-//        manager.update(true);
         
     }
     
@@ -1518,6 +1447,14 @@ public class TaskListView extends ViewPart {
 	public void setInRenameAction(boolean b) {
 		isInRenameAction = b;
 	}
+	
+	/**
+	 * This method is for testing only
+	 */
+	public TaskActivationHistory getTaskActivationHistory(){
+		return taskHistory;
+	}
+	
 }
 
 //TextTransfer textTransfer = TextTransfer.getInstance();

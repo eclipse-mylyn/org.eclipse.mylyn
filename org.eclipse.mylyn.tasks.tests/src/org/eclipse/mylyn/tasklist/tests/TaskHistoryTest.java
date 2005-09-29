@@ -11,13 +11,20 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListManager;
+import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
+import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
+import org.eclipse.mylar.tasklist.ui.actions.DropDownTaskNavigateAction.TaskNavigateAction;
+import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.PartInitException;
 
@@ -36,7 +43,7 @@ public class TaskHistoryTest extends TestCase {
 		
 	protected void setUp() throws Exception {
 		super.setUp();
-		MylarPlugin.getContextManager().resetActivityHistory();
+		
 		
 		try {
 			MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.mylar.tasks.ui.views.TaskListView");
@@ -49,7 +56,7 @@ public class TaskHistoryTest extends TestCase {
 		assertNotNull(TaskListView.getDefault());  
 		taskView = TaskListView.getDefault();
 		
-		taskView.clearTaskHistory();
+		resetHistory();
 		
 		task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
 		task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);
@@ -63,8 +70,15 @@ public class TaskHistoryTest extends TestCase {
 		
 	}
 		
-	public void testHistory(){
-			
+	private void resetHistory(){
+		taskView.clearTaskHistory();
+		MylarPlugin.getContextManager().resetActivityHistory();
+	}
+	
+	/**
+	 * Tests the next task and previous task navigation
+	 */
+	public void testBasicHistoryNavigation(){
 		(new TaskActivateAction(task1)).run();
 		taskView.addTaskToHistory(task1); //Simulate clicking on it rather than navigating next or previous
 		(new TaskActivateAction(task2)).run();
@@ -113,6 +127,70 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(task4.isActive());
 		
 	}
+	
+	/**
+	 * Tests navigation to previous/next tasks that
+	 * are chosen from a list rather than being
+	 * sequentially navigated
+	 */
+	public void testArbitraryHistoryNavigation(){
+
+		resetHistory();
+		
+		//Simulate activating the tasks by clicking rather than 
+		//navigating previous/next
+		(new TaskActivateAction(task1)).run();
+		taskView.addTaskToHistory(task1);
+		(new TaskActivateAction(task2)).run();
+		taskView.addTaskToHistory(task2);
+		(new TaskActivateAction(task3)).run();
+		taskView.addTaskToHistory(task3);
+		(new TaskActivateAction(task4)).run();
+		taskView.addTaskToHistory(task4);
+		
+		assertTrue(task4.isActive());
+		TaskActivationHistory taskHistory = taskView.getTaskActivationHistory();
+		List<ITask> prevHistoryList = taskHistory.getPreviousTasks();
+		
+		//Check that the previous history list looks right
+		assertTrue(prevHistoryList.size() >= 3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task1);
+		
+		//Get a task from the list and activate it
+		PreviousTaskDropDownAction prevAction = new PreviousTaskDropDownAction(taskView, taskHistory);
+		TaskNavigateAction navigateAction = prevAction.new TaskNavigateAction(task2);
+		navigateAction.run();
+		taskHistory.navigatedToTask(task2);
+		
+		assertTrue(task2.isActive());
+		
+		// Now check that the next and prev lists look right
+		prevHistoryList = taskHistory.getPreviousTasks();
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task1);
+		List<ITask> nextHistoryList = taskHistory.getNextTasks();
+		assertTrue(nextHistoryList.get(0) == task3);
+		assertTrue(nextHistoryList.get(1) == task4);
+		
+		//Navigate to a next item
+		NextTaskDropDownAction nextAction = new NextTaskDropDownAction(taskView, taskHistory);
+		navigateAction = nextAction.new TaskNavigateAction(task4);
+		navigateAction.run();
+		taskHistory.navigatedToTask(task4);
+		
+		assertTrue(task4.isActive());
+		
+		// Check that the prev and next lists look right
+		nextHistoryList = taskHistory.getNextTasks();
+		prevHistoryList = taskHistory.getPreviousTasks();
+		assertTrue(nextHistoryList.size() == 0);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task1);
+		
+	}
+	
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
