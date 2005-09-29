@@ -36,7 +36,7 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 	protected class TaskNavigateAction extends Action {
 		
 		private ITask targetTask;
-		private static final int MAX_LABEL_LENGTH = 30;
+		private static final int MAX_LABEL_LENGTH = 40;
 		
 		public TaskNavigateAction(ITask task){
 			targetTask = task;

@@ -1072,7 +1072,6 @@ public class TaskListView extends ViewPart {
     	manager.add(collapseAll);
     	manager.add(new Separator());
     	manager.add(goBackAction);
-        manager.add(new Separator());
         manager.add(autoClose);
         autoClose.setEnabled(true);
         manager.add(workOffline);
