@@ -178,7 +178,6 @@ public class AntStructureBridge implements IMylarStructureBridge {
      */
     public String getHandleIdentifier(Object object) {
         // we can only create handles for AntElementNodes and build.xml Files
-        
         if (object instanceof XmlNodeHelper) {
             return ((XmlNodeHelper)object).getHandle();
         } else if (object instanceof AntElementNode) {
@@ -188,17 +187,16 @@ public class AntStructureBridge implements IMylarStructureBridge {
             	Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] { } );
                 method.setAccessible(true);
             	String path = (String)method.invoke(node, new Object[] { });
-                if(path == null)
+                if (path == null || node == null || node.getIFile() == null) {
                 	return null;
-                String handle = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path).getHandle();
-                return handle;
-            }catch(Exception e){
-            	MylarPlugin.log(e, "couldn't get handle");
-            }
-            
-        }else if (object instanceof File) {
+                }
+                XmlNodeHelper helper = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path);
+                if (helper != null) return helper.getHandle();
+            } catch(Throwable t){
+            	MylarPlugin.fail(t, "couldn't get xml node handle", false);
+            }  
+        } else if (object instanceof File) {
             File file = (File)object;
-            
             // get the handle for the build.xml file
             if (file.getFullPath().toString().endsWith("build.xml")) return file.getFullPath().toString();
         }

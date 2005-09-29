@@ -13,8 +13,6 @@
   */
 package org.eclipse.mylar.java.ui.editor;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -22,7 +20,6 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.PreferenceConstants;
-import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylar.core.IMylarContext;
@@ -51,18 +48,20 @@ public class ActiveFoldingListener implements IMylarContextListener {
      */
 	public static void resetProjection(JavaEditor javaEditor) {
         try {
-        	Class editorClass = JavaEditor.class;
-        	try { // 3.2 method
-	        	Method method = editorClass.getDeclaredMethod("resetProjection", new Class[] {});
-	        	method.invoke(javaEditor, new Object[] {});
-        	} catch (NoSuchMethodException e) {
-	            Field field = editorClass.getDeclaredField("fProjectionModelUpdater");
-	            field.setAccessible(true);
-	            IJavaFoldingStructureProvider fProjectionModelUpdater = (IJavaFoldingStructureProvider)field.get(javaEditor);
-	    		if (fProjectionModelUpdater != null) {
-	    			fProjectionModelUpdater.initialize();
-	    		}
-        	}
+        	javaEditor.resetProjection();
+//        	Class editorClass = JavaEditor.class;
+//        	try { // 3.2 method
+//        		javaEditor.resetProjection();
+//	        	Method method = editorClass.getDeclaredMethod("resetProjection", new Class[] {});
+//	        	method.invoke(javaEditor, new Object[] {});
+//        	} catch (NoSuchMethodException e) {
+//	            Field field = editorClass.getDeclaredField("fProjectionModelUpdater");
+//	            field.setAccessible(true);
+//	            IJavaFoldingStructureProvider fProjectionModelUpdater = (IJavaFoldingStructureProvider)field.get(javaEditor);
+//	    		if (fProjectionModelUpdater != null) {
+//	    			fProjectionModelUpdater.initialize();
+//	    		}
+//        	}
         } catch (Exception e) {
         	MylarPlugin.fail(e, "couldn't get reset folding", true);
         }

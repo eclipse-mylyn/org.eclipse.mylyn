@@ -90,7 +90,8 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
      */
 	public void createEdge(IMylarContextNode toNode, String elementKind, String targetHandle) {
 		CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(targetHandle);
-        MylarContextNode concreteTargetNode = null;
+        if (targetNode == null) return;
+		MylarContextNode concreteTargetNode = null;
         if (targetNode.getNodes().size() != 1) {
         	return;
         } else {
