@@ -134,10 +134,14 @@ public class TaskListManager {
 
     public void activateTask(ITask task) {
     	if (!MylarTasklistPlugin.getDefault().isMultipleMode()) {
-    		for (ITask t : taskList.getActiveTasks()) {
-    			for (ITaskActivityListener listener : listeners) listener.taskDeactivated(t);    			
+    		if(taskList.getActiveTasks().size() > 0 && taskList.getActiveTasks().get(0).getHandle().compareTo(task.getHandle()) != 0) {
+	    		for (ITask t : taskList.getActiveTasks()) {
+	    			for (ITaskActivityListener listener : listeners) listener.taskDeactivated(t);    			
+	    		}
+	    		taskList.clearActiveTasks();
+    		} else {
+    			return;
     		}
-    		taskList.clearActiveTasks();
     	}
 		taskList.setActive(task, true, false);
 		TaskActiveTimerListener activeListener = new TaskActiveTimerListener(task); 
