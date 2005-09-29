@@ -179,13 +179,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	                if (part != null  && part instanceof JavaEditor) {
 	                	JavaEditor editor = (JavaEditor)part;
 	                	editorTracker.registerEditor(editor);
-	                	
-	//                  3.2 method: 	editor.resetProjection();
 	                	ActiveFoldingListener.resetProjection(editor);
-	                	
-//                	old way:
-//                	if (editor.isSaveAsAllowed() && editor.isDirty()) editor.doSave(null); 
-//                	editor.setInput(editor.getEditorInput()); 
 	                }
 	            }
 	        }
