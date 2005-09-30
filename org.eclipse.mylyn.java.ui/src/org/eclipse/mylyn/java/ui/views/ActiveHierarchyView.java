@@ -52,6 +52,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -239,23 +240,20 @@ public class ActiveHierarchyView extends ViewPart {
 			viewer.setLabelProvider(new DecoratingLabelProvider(
 					JavaContextLabelProvider.createJavaUiLabelProvider(),
 	                PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-//			viewer.setLabelProvider(new HierarchyLabelProvider(JavaContextLabelProvider.createJavaUiLabelProvider()));
 			viewer.setInput(getViewSite());
             
             viewer.addOpenListener(new IOpenListener() {
                 public void open(OpenEvent event) {
-                StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-                if (selection.getFirstElement() != null && selection.getFirstElement() instanceof TreeParent) {
-                    TreeParent treeParent = (TreeParent)selection.getFirstElement();
-                    if (treeParent.getElement() != null && !treeParent.getElement().getElementName().contains("Object"))
-                        try {
-                            JavaUI.openInEditor(treeParent.getElement());
-                        } catch (Throwable e) { 
-                        	MylarPlugin.log(e, "open problem");
-                        }
-                    } else {
-                        return;
-                    }
+	                StructuredSelection selection = (StructuredSelection)viewer.getSelection();
+	                if (selection.getFirstElement() != null && selection.getFirstElement() instanceof IJavaElement) {
+	                    IJavaElement element = (IJavaElement)selection.getFirstElement();
+	                	try {
+	                        IEditorPart part = JavaUI.openInEditor(element);
+	                        JavaUI.revealInEditor(part, element);
+	                    } catch (Throwable t) { 
+	                    	MylarPlugin.log(t, "Could not open type");
+	                    }
+	                } 
                 }
             });
 			hookContextMenu();

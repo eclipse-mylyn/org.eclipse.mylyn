@@ -21,7 +21,7 @@ import org.eclipse.ui.IEditorPart;
  * @author Mik Kersten
  */
 public interface IMylarUiBridge {
-
+	
     public abstract void open(IMylarContextNode node);
     
     public abstract void close(IMylarContextNode node);

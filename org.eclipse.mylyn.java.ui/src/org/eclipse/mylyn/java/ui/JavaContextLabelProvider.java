@@ -26,7 +26,7 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
-import org.eclipse.mylar.java.search.AbstractJavaRelationshipProvider;
+import org.eclipse.mylar.java.search.AbstractJavaRelationProvider;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReadAccessProvider;
@@ -78,7 +78,7 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
 	}
 	
     private ImageDescriptor getIconForRelationship(String relationshipHandle) {
-    	if (relationshipHandle.equals(AbstractJavaRelationshipProvider.ID_GENERIC)) {
+    	if (relationshipHandle.equals(AbstractJavaRelationProvider.ID_GENERIC)) {
             return MylarImages.EDGE_REFERENCE; 
         } else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
             return MylarImages.EDGE_REFERENCE; 
@@ -96,8 +96,8 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
     }
     
     private String getNameForRelationship(String relationshipHandle) {
-    	if (relationshipHandle.equals(AbstractJavaRelationshipProvider.ID_GENERIC)) {
-            return AbstractJavaRelationshipProvider.NAME; 
+    	if (relationshipHandle.equals(AbstractJavaRelationProvider.ID_GENERIC)) {
+            return AbstractJavaRelationProvider.NAME; 
         } else if (relationshipHandle.equals(JavaReferencesProvider.ID)) {
             return JavaReferencesProvider.NAME; 
         } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {

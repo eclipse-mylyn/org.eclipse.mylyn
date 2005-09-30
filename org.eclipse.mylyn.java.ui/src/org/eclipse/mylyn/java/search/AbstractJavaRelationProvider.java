@@ -52,7 +52,7 @@ import org.eclipse.search2.internal.ui.InternalSearchUI;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractJavaRelationshipProvider extends AbstractRelationProvider {
+public abstract class AbstractJavaRelationProvider extends AbstractRelationProvider {
 	
 	public static List<Job> runningJobs = new ArrayList<Job>();
     
@@ -64,7 +64,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelationP
     	return ID_GENERIC;
     }
     
-	protected AbstractJavaRelationshipProvider(String structureKind, String id) {
+	protected AbstractJavaRelationProvider(String structureKind, String id) {
         super(structureKind, id);
     }
     
@@ -214,7 +214,7 @@ public abstract class AbstractJavaRelationshipProvider extends AbstractRelationP
                         incrementInterest(node, JavaStructureBridge.CONTENT_TYPE, element.getHandleIdentifier(), degreeOfSeparation);
                 } 
                 gathered = true;
-                AbstractJavaRelationshipProvider.this.searchCompleted(node);
+                AbstractJavaRelationProvider.this.searchCompleted(node);
             }
 
 		

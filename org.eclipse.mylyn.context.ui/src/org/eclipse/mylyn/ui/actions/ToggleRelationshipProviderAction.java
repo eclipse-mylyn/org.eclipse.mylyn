@@ -55,7 +55,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 	 
 	@Override
 	public void run() {
-		MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getRelationshipProviders(), degreeOfSeparation);
+		MylarPlugin.getContextManager().updateDegreesOfSeparation(bridge.getRelationshipProviders(), degreeOfSeparation);
 	}
 	
 	public void dispose() {			
@@ -102,7 +102,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 				public void run() {
 	    			try{
 		    			degreeOfSeparation = Integer.parseInt(getId());
-		    			MylarPlugin.getContextManager().updateSearchKindEnabled(bridge.getRelationshipProviders(), degreeOfSeparation);
+		    			MylarPlugin.getContextManager().updateDegreesOfSeparation(bridge.getRelationshipProviders(), degreeOfSeparation);
 	    			} catch (NumberFormatException e){
 	    				// ignore this for now
 	    				MylarPlugin.fail(e, "invalid degree of separation", false);

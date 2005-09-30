@@ -21,7 +21,7 @@ import org.eclipse.mylar.java.JavaStructureBridge;
 /**
  * @author Mik Kersten
  */
-public class JavaReadAccessProvider extends AbstractJavaRelationshipProvider {
+public class JavaReadAccessProvider extends AbstractJavaRelationProvider {
 
 	public static final String ID = ID_GENERIC + ".readaccess";
     public static final String NAME = "read by";

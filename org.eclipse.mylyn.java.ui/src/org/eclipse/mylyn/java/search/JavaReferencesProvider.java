@@ -22,7 +22,7 @@ import org.eclipse.mylar.java.JavaStructureBridge;
 /**
  * @author Mik Kersten
  */
-public class JavaReferencesProvider extends AbstractJavaRelationshipProvider {
+public class JavaReferencesProvider extends AbstractJavaRelationProvider {
 
 	public static final String ID = ID_GENERIC + ".references";
     public static final String NAME = "referenced by";

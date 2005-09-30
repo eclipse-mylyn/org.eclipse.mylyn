@@ -138,12 +138,13 @@ public class ActiveSearchView extends ViewPart {
 		MylarPlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
 	}
 
-	public ActiveSearchView() { 
+	public ActiveSearchView() {
         MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
         for(AbstractRelationProvider provider: MylarPlugin.getContextManager().getActiveRelationProviders()){
             provider.setEnabled(true);
         }
-    }
+        MylarPlugin.getContextManager().refreshRelatedElements();
+	}
 
     private void refresh(final IMylarContextNode node, final boolean updateLabels) {
 //    	System.err.println("> refreshing: " + node);
