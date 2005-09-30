@@ -38,6 +38,7 @@ public class ActiveHierarchyTest extends AbstractJavaContextTest {
 		view = (ActiveHierarchyView)JavaPlugin.getActivePage().showView(ActiveHierarchyView.ID);
 		tree = view.getViewer().getTree();	
 	}
+	
 	/**
 	 * bug#107384
 	 */

@@ -12,6 +12,8 @@
 package org.eclipse.mylar.java.tests;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -28,6 +30,7 @@ import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchView;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -51,6 +54,44 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
+    
+    public void testViewRecursion() throws JavaModelException, PartInitException {
+//    	MylarPlugin.getContextManager().refreshRelatedElements();
+    	view = (ActiveSearchView)JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
+    	ActiveSearchView.getFromActivePerspective().setAsyncRefreshMode(false); 
+    	
+    	for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+			assertTrue(provider.isEnabled());
+		}
+    	assertEquals(0, view.getViewer().getTree().getItemCount());
+    	
+        IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        IMethod m1 = type1.createMethod("void m1() {\n m1(); \n}", null, true, null);     
+        StructuredSelection sm1 = new StructuredSelection(m1);
+        monitor.selectionChanged(part, sm1);
+        IMylarContextNode node = manager.handleInteractionEvent(mockInterestContribution(
+        		m1.getHandleIdentifier(), scaling.getLandmark()));
+        assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
+                
+        assertEquals(1, search(2, node).size()); 
+         
+        List<TreeItem> collectedItems = new ArrayList<TreeItem>();
+		getNumberOfTreeItems(view.getViewer().getTree().getItems(), collectedItems);
+		assertEquals(2, collectedItems.size());
+		
+//    	for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+//			provider.setEnabled(false);
+//		}
+    }
+    
+	private void getNumberOfTreeItems(TreeItem[] items, List<TreeItem> collectedItems) {
+		if (items.length > 0) {
+			for (TreeItem childItem : Arrays.asList(items)) {
+				collectedItems.add(childItem);
+				getNumberOfTreeItems(childItem.getItems(), collectedItems);
+			}
+		}
+	}
     
     public void testSearchNotRunIfViewDeactivated() throws PartInitException, JavaModelException {
     	view = (ActiveSearchView)JavaPlugin.getActivePage().showView(ActiveSearchView.ID);

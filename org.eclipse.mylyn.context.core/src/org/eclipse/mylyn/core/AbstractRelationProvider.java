@@ -60,21 +60,21 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     }
         
     public void contextActivated(IMylarContext taskscape) { 
-    	if (enabled) { 
-//    		MylarPlugin.getContextManager().updateSearchKindEnabled(this, degreeOfSeparation);
-    	}
+    	
     }
     
     public void landmarkAdded(IMylarContextNode node) { 
         if (enabled) findRelated(node, degreeOfSeparation);
-  } 
+    } 
     
     public void landmarkRemoved(IMylarContextNode node) {
 //        MylarPlugin.getTaskscapeManager().removeEdge(element, id);
     }
      
     protected void searchCompleted(IMylarContextNode landmark) {
-    	MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
+    	if (landmark.getEdges().size() > 0) {
+    		MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
+    	}
     }
     
     protected void incrementInterest(IMylarContextNode node, String elementKind, String elementHandle, int degreeOfSeparation) {

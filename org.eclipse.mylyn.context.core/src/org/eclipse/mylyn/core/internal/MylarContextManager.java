@@ -504,7 +504,7 @@ public class MylarContextManager {
     public void updateDegreeOfSeparation(AbstractRelationProvider provider, int degreeOfSeparation) {
         MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
         if (degreeOfSeparation <= 0) {
-        	provider.setEnabled(false);
+//        	provider.setEnabled(false);
         	provider.setDegreeOfSeparation(degreeOfSeparation);
         } else {
 //        	provider.setEnabled(true);

@@ -102,7 +102,6 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
     	if (parent == null) return new Object[0];
         if (parent instanceof MylarContextEdge) {
         	IMylarContextEdge edge = (IMylarContextEdge)parent;
-        	
         	IMylarContextNode source = MylarPlugin.getContextManager().getNode(
         			((IMylarContextEdge)parent).getSource().getElementHandle());
         	
@@ -115,21 +114,20 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 	        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(parent);
 	        	node = MylarPlugin.getContextManager().getNode(bridge.getHandleIdentifier(parent));
         	}
-            if (isRootItem(parent)) {
+//            if (rootItems.contains(parent)) { // to avoid infinite recursion
+//            	rootItems.remove(parent);
                 return getAllEdgeTypes(node.getEdges()); 
-            } else {
-            	return new Object[0];
-            }
+//            } else {
+//            	return new Object[0];
+//            }
         }
     } 
     
     private boolean isRootItem(Object object) {
     	boolean isRootItem = false;
     	for (int i = 0; i < tree.getItems().length; i++) {
-			TreeItem item = tree.getItems()[i]; 
+			TreeItem item = tree.getItems()[i];
 			if (object.equals(item.getData())) isRootItem = true;
-//			if (node.equals(item.getData()) && item.getItemCount() > 0) isRootItem = true;
-//			System.err.println("> item " + item.getData() + ", pop: " + isRootItem);
 		}
 		return isRootItem;
 	}

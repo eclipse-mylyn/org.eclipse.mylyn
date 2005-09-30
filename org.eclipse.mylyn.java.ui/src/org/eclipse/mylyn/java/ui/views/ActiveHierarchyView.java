@@ -171,7 +171,7 @@ public class ActiveHierarchyView extends ViewPart {
 	/**
 	 * Public for testing.
 	 */
-	public void refreshHierarchy(boolean async) {
+	public void refreshHierarchy(boolean asyncRefreshMode) {
         try {    
         	if (root != null && root.getChildren().length > 0) root.removeAllChildren();
             nodeMap.clear();
@@ -193,7 +193,7 @@ public class ActiveHierarchyView extends ViewPart {
                 }
             }
 
-            if (!async) { // for testing
+            if (!asyncRefreshMode) { // for testing
             	refreshViewer();
             } else {
 			    Workbench.getInstance().getDisplay().asyncExec(new Runnable() {

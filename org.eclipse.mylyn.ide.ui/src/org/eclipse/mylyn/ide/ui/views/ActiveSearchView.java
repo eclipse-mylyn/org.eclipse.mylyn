@@ -67,7 +67,12 @@ public class ActiveSearchView extends ViewPart {
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
     public boolean qualifiedNameMode = false;
-
+    
+    /**
+     * For testing.
+     */
+	private boolean asyncRefreshMode = true;
+    
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
             refresh(node, false);
@@ -111,7 +116,7 @@ public class ActiveSearchView extends ViewPart {
         	}
         }
     };
-    
+
     static class DoiOrderSorter extends ViewerSorter { 
         protected InterestComparator<Object> comparator = new InterestComparator<Object>();
 
@@ -141,30 +146,35 @@ public class ActiveSearchView extends ViewPart {
 	public ActiveSearchView() {
         MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
         for(AbstractRelationProvider provider: MylarPlugin.getContextManager().getActiveRelationProviders()){
-            provider.setEnabled(true);
+            provider.setEnabled(true); 
         }
         MylarPlugin.getContextManager().refreshRelatedElements();
 	}
 
     private void refresh(final IMylarContextNode node, final boolean updateLabels) {
-//    	System.err.println("> refreshing: " + node);
-        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-            public void run() { 
-                try {  
-                    if (viewer != null && !viewer.getTree().isDisposed()) {
-                    	if (node != null && containsNode(viewer.getTree(), node)) {
-                    		viewer.refresh(node, updateLabels);
-//                    		viewer.refresh();
-                    	} else if (node == null) {
-                    		viewer.refresh();
-                    	} 
-                    	viewer.expandAll();
-                    }
-                } catch (Throwable t) {
-                	MylarPlugin.log(t, "active searchrefresh failed");
-                }
-            }
-        });
+        if (!asyncRefreshMode) { // for testing
+        	if (viewer != null && !viewer.getTree().isDisposed()) {
+        		viewer.refresh();
+            	viewer.expandToLevel(3);
+        	}
+        } else {
+	        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+	            public void run() { 
+	                try {  
+	                    if (viewer != null && !viewer.getTree().isDisposed()) {
+	                    	if (node != null && containsNode(viewer.getTree(), node)) {
+	                    		viewer.refresh(node, updateLabels);
+	                    	} else if (node == null) {
+	                    		viewer.refresh();
+	                    	} 
+	                    	viewer.expandToLevel(3);
+	                    }
+	                } catch (Throwable t) {
+	                	MylarPlugin.log(t, "active searchrefresh failed");
+	                }
+	            }
+	        });
+        }
     }
     
 	private boolean containsNode(Tree tree, IMylarContextNode node) {
@@ -287,6 +297,13 @@ public class ActiveSearchView extends ViewPart {
 
 	public TreeViewer getViewer() {
 		return viewer;
+	}
+
+	/**
+	 * Set to false for testing
+	 */
+	public void setAsyncRefreshMode(boolean asyncRefreshMode) {
+		this.asyncRefreshMode = asyncRefreshMode;
 	}
 }
 
