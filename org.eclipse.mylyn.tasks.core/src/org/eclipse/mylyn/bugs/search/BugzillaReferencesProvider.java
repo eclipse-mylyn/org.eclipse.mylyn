@@ -29,7 +29,7 @@ import org.eclipse.mylar.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.bugs.BugzillaStructureBridge;
 import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
@@ -39,7 +39,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Shawn Minto
  */
-public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
+public class BugzillaReferencesProvider extends AbstractRelationProvider {
 
     public static final String ID = "org.eclipse.mylar.bugs.search.references";
     public static final String NAME = "referenced by";

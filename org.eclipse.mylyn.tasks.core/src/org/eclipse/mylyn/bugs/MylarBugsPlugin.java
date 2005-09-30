@@ -67,9 +67,9 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		plugin = null;
 		MylarPlugin.getDefault().getSelectionMonitors().remove(bugzillaEditingMonitor); 
-//        List<AbstractRelationshipProvider> providers = structureBridge.getProviders();
+//        List<AbstractRelationProvider> providers = structureBridge.getProviders();
 //        if(providers != null){
-//	        for(AbstractRelationshipProvider provider: providers){
+//	        for(AbstractRelationProvider provider: providers){
 //	        	provider.stopAllRunningJobs();
 //	        }
 //        }

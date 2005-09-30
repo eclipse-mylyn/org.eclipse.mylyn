@@ -26,7 +26,7 @@ import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -45,7 +45,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 
     public final static String CONTENT_TYPE = "bugzilla";
     
-    public List<AbstractRelationshipProvider> providers;
+    public List<AbstractRelationProvider> providers;
     
     public String getContentType() {
         return CONTENT_TYPE;
@@ -53,7 +53,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
     
     public BugzillaStructureBridge() {
         super();
-		providers = new ArrayList<AbstractRelationshipProvider>();
+		providers = new ArrayList<AbstractRelationProvider>();
 //    	providers.add(MylarBugsPlugin.getReferenceProvider());
     }
 
@@ -228,7 +228,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
         return getContentType();
     }
 
-	public List<AbstractRelationshipProvider> getRelationshipProviders() {
+	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return providers;
 	}
 	

@@ -29,14 +29,9 @@ public class TaskActivationHistory {
 	private int currentIndex = -1;
 	
 	/** The number of tasks from the previous session to load into the history*/
-	private static final int PERSISTENT_HISTORY_SIZE = 5;
+	private static final int PERSISTENT_HISTORY_SIZE = 10;
  
 	private boolean persistentHistoryLoaded = false;
-	
-	public TaskActivationHistory() {	
-
-
-	}
 
 	/**
 	 * Load in a number of saved history tasks from previous session.
