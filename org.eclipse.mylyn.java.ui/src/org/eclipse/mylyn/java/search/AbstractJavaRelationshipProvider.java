@@ -39,7 +39,7 @@ import org.eclipse.jdt.internal.ui.search.JavaSearchQuery;
 import org.eclipse.jdt.internal.ui.search.JavaSearchResult;
 import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -52,7 +52,7 @@ import org.eclipse.search2.internal.ui.InternalSearchUI;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractJavaRelationshipProvider extends AbstractRelationshipProvider {
+public abstract class AbstractJavaRelationshipProvider extends AbstractRelationProvider {
 	
 	public static List<Job> runningJobs = new ArrayList<Job>();
     

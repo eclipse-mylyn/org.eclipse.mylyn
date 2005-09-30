@@ -35,7 +35,7 @@ import org.eclipse.jdt.internal.core.JarEntryFile;
 import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -55,10 +55,10 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 
     public final static String CONTENT_TYPE = "java";
     
-    public List<AbstractRelationshipProvider> providers;
+    public List<AbstractRelationProvider> providers;
     
     public JavaStructureBridge() {
-    	providers = new ArrayList<AbstractRelationshipProvider>();
+    	providers = new ArrayList<AbstractRelationProvider>();
     	providers.add(new JavaReferencesProvider());
     	providers.add(new JavaImplementorsProvider());
     	providers.add(new JavaReadAccessProvider());
@@ -207,7 +207,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
         return getContentType();
     }
 
-	public List<AbstractRelationshipProvider> getRelationshipProviders() {
+	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return providers;
 	}
 	

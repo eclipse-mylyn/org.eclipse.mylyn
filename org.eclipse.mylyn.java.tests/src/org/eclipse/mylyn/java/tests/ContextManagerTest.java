@@ -26,7 +26,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
@@ -135,7 +135,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         assertTrue(m2Node.getDegreeOfInterest().isLandmark()); 
         
         
-        AbstractRelationshipProvider provider = new JavaStructureBridge().getRelationshipProviders().get(0);
+        AbstractRelationProvider provider = new JavaStructureBridge().getRelationshipProviders().get(0);
         provider.createEdge(m2Node, m1Node.getContentType(), m2.getHandleIdentifier());
         
         assertEquals(1, m2Node.getEdges().size());

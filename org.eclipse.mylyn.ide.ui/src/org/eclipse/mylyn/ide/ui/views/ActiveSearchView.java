@@ -26,7 +26,7 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
@@ -67,10 +67,7 @@ public class ActiveSearchView extends ViewPart {
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
     public boolean qualifiedNameMode = false;
-    
-    /**
-     * bug 110688
-     */
+
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarContextNode node) { 
             refresh(node, false);
@@ -135,9 +132,15 @@ public class ActiveSearchView extends ViewPart {
         return null;    
     }
     
-    public ActiveSearchView() { 
+    @Override
+	public void dispose() {
+		super.dispose();
+		MylarPlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
+	}
+
+	public ActiveSearchView() { 
         MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
-        for(AbstractRelationshipProvider provider: MylarPlugin.getContextManager().getActiveProviders()){
+        for(AbstractRelationProvider provider: MylarPlugin.getContextManager().getActiveRelationProviders()){
             provider.setEnabled(true);
         }
     }
@@ -176,15 +179,6 @@ public class ActiveSearchView extends ViewPart {
     private void initDrop() {
 		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
 		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));
-	}
-    
-	@Override
-	public void dispose() {
-		super.dispose();
-		MylarPlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
-		for(AbstractRelationshipProvider provider: MylarPlugin.getContextManager().getActiveProviders()){
-            provider.setEnabled(false);
-        }
 	}
     
     /**
@@ -255,7 +249,7 @@ public class ActiveSearchView extends ViewPart {
     	IAction stopAction = new Action(){
 			@Override
 			public void run() {
-	            for(AbstractRelationshipProvider provider: MylarPlugin.getContextManager().getActiveProviders()){
+	            for(AbstractRelationProvider provider: MylarPlugin.getContextManager().getActiveRelationProviders()){
 	            	provider.stopAllRunningJobs();
 	            }
 			}
@@ -271,7 +265,7 @@ public class ActiveSearchView extends ViewPart {
     	Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
-            List<AbstractRelationshipProvider> providers = bridge.getRelationshipProviders(); 
+            List<AbstractRelationProvider> providers = bridge.getRelationshipProviders(); 
             if(providers != null && providers.size() > 0) {
 	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
 	            relationshipProviderActions.add(action); 

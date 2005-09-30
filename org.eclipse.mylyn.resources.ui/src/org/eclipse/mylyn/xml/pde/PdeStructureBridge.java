@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -49,11 +49,11 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 public class PdeStructureBridge implements IMylarStructureBridge {
 
 	public final static String CONTENT_TYPE = "plugin.xml";
-    private List<AbstractRelationshipProvider> providers;
+    private List<AbstractRelationProvider> providers;
     private IMylarStructureBridge parentBridge;
     
     public PdeStructureBridge() {
-        providers = new ArrayList<AbstractRelationshipProvider>();
+        providers = new ArrayList<AbstractRelationProvider>();
         providers.add(new XmlReferencesProvider());
         
     }
@@ -311,7 +311,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	 * HACK: This is weird that the relationship provider is only here.
 	 * There are relly 3 different bridges, 2 specific and 1 generic
 	 */
-	public List<AbstractRelationshipProvider> getRelationshipProviders() {
+	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return providers;
 	}
 	

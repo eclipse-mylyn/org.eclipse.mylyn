@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
@@ -27,9 +28,12 @@ import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchView;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.internal.Perspective;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchPage;
 
 /**
  * @author Mik Kersten
@@ -47,10 +51,32 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-	
+    
+    public void testSearchNotRunIfViewDeactivated() throws PartInitException, JavaModelException {
+    	view = (ActiveSearchView)JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
+    	for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+			assertTrue(provider.getCurrentDegreeOfSeparation() > 0);
+		}    
+    	JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView"); // make another view active
+    	
+    	Perspective perspective = ((WorkbenchPage)JavaPlugin.getActivePage()).getActivePerspective();
+    	IViewReference reference = JavaPlugin.getActivePage().findViewReference(ActiveSearchView.ID);
+    	assertNotNull(reference);
+    	assertTrue(perspective.canCloseView(view));
+    	assertTrue(perspective.hideView(reference));
+    	
+    	for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+			assertFalse(provider.isEnabled());
+		}
+                
+    	JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
+    	for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+			assertTrue(provider.isEnabled());
+		}        
+    }
+    
 	public void testSearchAfterDeletion() throws JavaModelException, PartInitException, IOException, CoreException {
 		view = (ActiveSearchView)JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
-//		view = .getFromActivePerspective();
     	if (view != null) {
 	    	assertEquals(0, view.getViewer().getTree().getItemCount());
 	    	
@@ -64,7 +90,6 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 	        assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
 	                
 	        assertEquals(1, search(2, node).size());
-	//        assertEquals(1, node.getEdges().size());
 	        
 	        m1.delete(true, null);
 	        assertFalse(m1.exists());

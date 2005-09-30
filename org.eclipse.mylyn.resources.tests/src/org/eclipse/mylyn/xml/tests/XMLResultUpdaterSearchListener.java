@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.internal.resources.File;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
@@ -37,7 +37,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 	
 	private int degreeOfSeparation;
 
-	public XMLResultUpdaterSearchListener(AbstractRelationshipProvider prov,
+	public XMLResultUpdaterSearchListener(AbstractRelationProvider prov,
 			IMylarContextNode searchNode, int degreeOfSeparation) {
 		super(prov);
 		this.node = searchNode;

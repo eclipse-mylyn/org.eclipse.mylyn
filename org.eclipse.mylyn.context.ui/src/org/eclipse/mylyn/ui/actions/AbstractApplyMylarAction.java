@@ -70,7 +70,9 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
      * This operation is expensive.
      */
     public void update() {
+//    	if (MylarPlugin.getContextManager().hasActiveContext()) {
     	update(MylarPlugin.getDefault().getPreferenceStore().getBoolean(prefId));
+//    	}
     }
 
     /**

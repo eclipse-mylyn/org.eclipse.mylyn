@@ -12,11 +12,14 @@ package org.eclipse.mylar.ide;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.internal.ActiveSearchViewTracker;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -31,6 +34,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
     
     private ResourceSelectionMonitor resourceSelectionMonitor;
 	private static MylarIdePlugin plugin;
+	
+	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 	
 	public MylarIdePlugin() {
 		plugin = this;
@@ -48,6 +53,16 @@ public class MylarIdePlugin extends AbstractUIPlugin {
             	
             	if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
                 if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
+                
+                workbench.addWindowListener(activeSearchViewTracker);
+        		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+        		for (int i= 0; i < windows.length; i++) {
+        			windows[i].addPageListener(activeSearchViewTracker);
+        			IWorkbenchPage[] pages= windows[i].getPages();
+        			for (int j= 0; j < pages.length; j++) {
+        				pages[j].addPartListener(activeSearchViewTracker);
+        			}
+        		}
             }
         });
 	}
@@ -57,6 +72,17 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		plugin = null;
 		MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
 		MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
+		
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.removeWindowListener(activeSearchViewTracker);
+		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+		for (int i= 0; i < windows.length; i++) {
+			IWorkbenchPage[] pages= windows[i].getPages();
+			windows[i].removePageListener(activeSearchViewTracker);
+			for (int j= 0; j < pages.length; j++) {
+				pages[j].removePartListener(activeSearchViewTracker);
+			}
+		}
 	}
 
 	public static MylarIdePlugin getDefault() {

@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -319,7 +319,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	/**
 	 * TODO: weird that there is none
 	 */
-	public List<AbstractRelationshipProvider> getRelationshipProviders() {
+	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return Collections.emptyList();
 	}
 

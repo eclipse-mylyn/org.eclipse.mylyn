@@ -35,7 +35,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -53,7 +53,7 @@ import org.eclipse.search.ui.text.Match;
 /**
  * @author Shawn Minto
  */
-public class XmlReferencesProvider extends AbstractRelationshipProvider {
+public class XmlReferencesProvider extends AbstractRelationProvider {
 
     public static final String SOURCE_ID = "org.eclipse.mylar.xml.search.references";
     public static final String NAME = "referenced by";
@@ -69,7 +69,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     }
 
     /**
-     * @see org.eclipse.mylar.core.AbstractRelationshipProvider#findRelated(org.eclipse.mylar.core.IMylarContextNode, int)
+     * @see org.eclipse.mylar.core.AbstractRelationProvider#findRelated(org.eclipse.mylar.core.IMylarContextNode, int)
      */
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {

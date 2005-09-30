@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.mylar.core.AbstractRelationshipProvider;
+import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextEdge;
 import org.eclipse.mylar.core.IMylarContextListener;
@@ -478,8 +478,8 @@ public class MylarContextManager {
     public void refreshRelatedElements() {
     	for(IMylarStructureBridge bridge: MylarPlugin.getDefault().getStructureBridges().values()){
     		if(bridge.getRelationshipProviders() != null){
-		        for (AbstractRelationshipProvider provider : bridge.getRelationshipProviders()) {
-		        	List<AbstractRelationshipProvider> providerList = new ArrayList<AbstractRelationshipProvider>();
+		        for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
+		        	List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();
 		        	providerList.add(provider);
 		        	updateSearchKindEnabled(providerList, provider.getCurrentDegreeOfSeparation());
 		//            if (provider.isEnabled()) {
@@ -491,8 +491,8 @@ public class MylarContextManager {
     	}
     }
 
-    public List<AbstractRelationshipProvider> getActiveProviders() {
-    	List<AbstractRelationshipProvider> providers = new ArrayList<AbstractRelationshipProvider>();
+    public List<AbstractRelationProvider> getActiveRelationProviders() {
+    	List<AbstractRelationProvider> providers = new ArrayList<AbstractRelationProvider>();
 		Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
@@ -501,7 +501,7 @@ public class MylarContextManager {
         return providers;
     }
     
-    public void updateSearchKindEnabled(AbstractRelationshipProvider provider, int degreeOfSeparation) {
+    public void updateSearchKindEnabled(AbstractRelationProvider provider, int degreeOfSeparation) {
         MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
         if (degreeOfSeparation <= 0) {
         	provider.setEnabled(false);
@@ -513,8 +513,8 @@ public class MylarContextManager {
         }
     }
     
-    public void updateSearchKindEnabled(List<AbstractRelationshipProvider> providers, int degreeOfSeparation) {
-    	for(AbstractRelationshipProvider provider: providers) {
+    public void updateSearchKindEnabled(List<AbstractRelationProvider> providers, int degreeOfSeparation) {
+    	for(AbstractRelationProvider provider: providers) {
     		updateSearchKindEnabled(provider, degreeOfSeparation);
     	}
     }
@@ -635,4 +635,10 @@ public class MylarContextManager {
             MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent);
         }		
     }
+
+	public void setActiveSearchEnabled(boolean enabled) {
+		for(AbstractRelationProvider provider: getActiveRelationProviders()){
+            provider.setEnabled(enabled);
+        }
+	}
 }

@@ -23,7 +23,7 @@ import org.eclipse.mylar.core.search.IMylarSearchOperation;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractRelationshipProvider implements IMylarContextListener {
+public abstract class AbstractRelationProvider implements IMylarContextListener {
 	
     private boolean enabled = false;
     private String id;
@@ -34,7 +34,7 @@ public abstract class AbstractRelationshipProvider implements IMylarContextListe
         return id;
     }
     
-    public AbstractRelationshipProvider(String structureKind, String id) {
+    public AbstractRelationProvider(String structureKind, String id) {
         this.id = id;
         this.structureKind = structureKind;
         if (MylarPlugin.getDefault().getPreferenceStore().contains(getGenericId())) {
