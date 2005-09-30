@@ -47,7 +47,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
     
     public List<AbstractRelationshipProvider> providers;
     
-    public String getResourceExtension() {
+    public String getContentType() {
         return CONTENT_TYPE;
     }
     
@@ -225,7 +225,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	}
 
     public String getResourceExtension(String elementHandle) {
-        return getResourceExtension();
+        return getContentType();
     }
 
 	public List<AbstractRelationshipProvider> getRelationshipProviders() {

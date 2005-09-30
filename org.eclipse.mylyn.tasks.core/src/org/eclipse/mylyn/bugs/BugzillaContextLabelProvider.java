@@ -39,6 +39,16 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 		return MylarImages.getImage(MylarBugsPlugin.EDGE_REF_BUGZILLA); 
 	}
 
+	@Override
+	protected Image getImageForObject(Object object) {
+		return MylarImages.getImage(MylarImages.BUG); 
+	}
+
+	@Override
+	protected String getTextForObject(Object node) {
+		return "" + node;
+	}
+	
     /**
      * TODO: slow?
      */

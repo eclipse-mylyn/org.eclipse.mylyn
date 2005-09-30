@@ -59,7 +59,7 @@ public class BugzillaReferencesProvider extends AbstractRelationshipProvider {
      */
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
-        if (!node.getContentKind().equals("java")) return; 
+        if (!node.getContentType().equals("java")) return; 
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
         if (!acceptElement(javaElement)) {
             return; 
