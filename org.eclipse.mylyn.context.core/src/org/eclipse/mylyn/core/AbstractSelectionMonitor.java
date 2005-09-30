@@ -70,7 +70,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
         InteractionEvent selectionEvent = new InteractionEvent(
                 InteractionEvent.Kind.SELECTION,
-                bridge.getResourceExtension(),
+                bridge.getContentType(),
                 bridge.getHandleIdentifier(selectedElement),
                 part.getSite().getId());
         MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
@@ -84,7 +84,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
         InteractionEvent selectionEvent = new InteractionEvent(
                 InteractionEvent.Kind.EDIT,
-                bridge.getResourceExtension(),
+                bridge.getContentType(),
                 bridge.getHandleIdentifier(selectedElement),
                 part.getSite().getId());
         MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
@@ -95,10 +95,10 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
      */
     protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind) {
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(targetElement);
-        if (adapter.getResourceExtension() != null) {
+        if (adapter.getContentType() != null) {
             InteractionEvent selectionEvent = new InteractionEvent(
                 InteractionEvent.Kind.SELECTION,
-                adapter.getResourceExtension(),
+                adapter.getContentType(),
                 adapter.getHandleIdentifier(targetElement),
                 part.getSite().getId(),
                 kind);

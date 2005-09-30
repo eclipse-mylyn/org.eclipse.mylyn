@@ -77,8 +77,8 @@ public class LandmarkMarkerManager implements IMylarContextListener {
     }
 
     public void landmarkAdded(final IMylarContextNode node) {
-        if (node == null || node.getContentKind() == null) return;
-        if (node.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
+        if (node == null || node.getContentType() == null) return;
+        if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
             final IJavaElement element = JavaCore.create(node.getElementHandle());
             if (!element.exists()) return;
             if (element instanceof IMember) {
@@ -110,7 +110,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
     
     public void landmarkRemoved(final IMylarContextNode node) {
         if (node == null) return;
-        if (node.getContentKind().equals(JavaStructureBridge.CONTENT_TYPE)) {
+        if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
             IJavaElement element = JavaCore.create(node.getElementHandle());
             if (!element.exists()) return;
             if (element.getAncestor(IJavaElement.COMPILATION_UNIT) != null  // stuff from .class files

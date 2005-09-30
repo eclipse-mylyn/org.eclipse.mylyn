@@ -103,12 +103,22 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 
 		@Override
 		protected String getText(IMylarContextNode node) {
-			return "" + node;
+			return "? " + node;
 		}
 
 		@Override
 		protected String getText(IMylarContextEdge edge) {
-			return "" + edge;
+			return "? " + edge;
+		}
+
+		@Override
+		protected Image getImageForObject(Object object) {
+			return null;
+		}
+
+		@Override
+		protected String getTextForObject(Object node) {
+			return "? " + node;
 		}
     	
     };

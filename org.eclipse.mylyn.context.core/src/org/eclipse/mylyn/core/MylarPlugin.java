@@ -97,7 +97,7 @@ public class MylarPlugin extends AbstractUIPlugin {
     
     private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
-        public String getResourceExtension() {
+        public String getContentType() {
             return null;
         }
         
@@ -154,7 +154,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		}
 
         public String getResourceExtension(String elementHandle) {
-            return getResourceExtension();
+            return getContentType();
         }
 
 		public List<AbstractRelationshipProvider> getRelationshipProviders() {
@@ -393,8 +393,8 @@ public class MylarPlugin extends AbstractUIPlugin {
     			getContextManager().addListener(provider);
     		}
     	}
-        bridges.put(bridge.getResourceExtension(), bridge);
-        if (bridge.getResourceExtension().equals(CONTENT_TYPE_ANY)) defaultBridge = bridge;
+        bridges.put(bridge.getContentType(), bridge);
+        if (bridge.getContentType().equals(CONTENT_TYPE_ANY)) defaultBridge = bridge;
     }
     
     public List<AbstractCommandMonitor> getCommandMonitors() {

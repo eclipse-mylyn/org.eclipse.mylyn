@@ -74,12 +74,12 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
             }
             List<Object> resolvedNodes = new ArrayList<Object>();
             for (IMylarContextNode node : nodes) {
-				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 				Object object = bridge.getObjectForHandle(node.getElementHandle());
 				if (object != null) resolvedNodes.add(object);
             }
-//            return resolvedNodes.toArray();
-            return nodes.toArray(); 
+            return resolvedNodes.toArray();
+//            return nodes.toArray(); 
         } 
         return getChildren(parent);
     }
@@ -99,32 +99,35 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
     }
     
     public Object [] getChildren(Object parent) { 
-        assert(parent != null);
-        if (parent instanceof IMylarContextNode) {
-            IMylarContextNode node = (IMylarContextNode)parent;
-            if (isRootItem(node)) {
+    	if (parent == null) return new Object[0];
+        if (parent instanceof MylarContextEdge) {
+        	IMylarContextEdge edge = (IMylarContextEdge)parent;
+        	
+        	IMylarContextNode source = MylarPlugin.getContextManager().getNode(
+        			((IMylarContextEdge)parent).getSource().getElementHandle());
+        	
+        	return getAllTagetsForSource(source, edge.getRelationshipHandle());
+        } else {
+        	IMylarContextNode node;
+        	if (parent instanceof IMylarContextNode) {
+        		node = (IMylarContextNode)parent;
+        	} else {
+	        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(parent);
+	        	node = MylarPlugin.getContextManager().getNode(bridge.getHandleIdentifier(parent));
+        	}
+            if (isRootItem(parent)) {
                 return getAllEdgeTypes(node.getEdges()); 
             } else {
             	return new Object[0];
             }
-        } else {
-            if (parent instanceof MylarContextEdge) {
-            	IMylarContextEdge edge = (IMylarContextEdge)parent;
-            	
-            	IMylarContextNode source = MylarPlugin.getContextManager().getNode(
-            			((IMylarContextEdge)parent).getSource().getElementHandle());
-            	
-            	return getAllTagetsForSource(source, edge.getRelationshipHandle());
-            }
         }
-        return new Object[0]; 
     } 
     
-    private boolean isRootItem(IMylarContextNode node) {
+    private boolean isRootItem(Object object) {
     	boolean isRootItem = false;
     	for (int i = 0; i < tree.getItems().length; i++) {
 			TreeItem item = tree.getItems()[i]; 
-			if (node.equals(item.getData())) isRootItem = true;
+			if (object.equals(item.getData())) isRootItem = true;
 //			if (node.equals(item.getData()) && item.getItemCount() > 0) isRootItem = true;
 //			System.err.println("> item " + item.getData() + ", pop: " + isRootItem);
 		}
@@ -133,10 +136,13 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 
 	private Object[] getAllTagetsForSource(IMylarContextNode source, String kind) {
     	Collection<MylarContextEdge> edges = source.getEdges();
-    	List<IMylarContextNode> targets = new ArrayList<IMylarContextNode>();
+    	List<Object> targets = new ArrayList<Object>();
     	for (MylarContextEdge edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {
-				targets.add(edge.getTarget());
+				IMylarContextNode target = edge.getTarget();
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(target.getContentType());
+				Object object = bridge.getObjectForHandle(target.getElementHandle());
+				if (object != null) targets.add(object);
 			}
 		}
 		
@@ -162,14 +168,14 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 	}
 
 	public boolean hasChildren(Object parent) {
-        assert(parent != null);
-        if (parent instanceof IMylarContextNode) {
-        	return isRootItem((IMylarContextNode)parent)
-              &&((IMylarContextNode)parent).getEdges().size() > 0;
-        } else if (parent instanceof MylarContextEdge) {
-            return true;
-        } else {
-            return false;
-        }
+		if (parent instanceof IMylarContextEdge) {
+			return true;
+		} else {
+			return isRootItem(parent);
+			// note: code below is too slow since edges change
+//			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(parent);
+//        	IMylarContextNode node = MylarPlugin.getContextManager().getNode(bridge.getHandleIdentifier(parent));
+//        	return isRootItem(parent) && node.getEdges().size() > 0;
+		}
     }
 }

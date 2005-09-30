@@ -31,27 +31,32 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
     public Image getImage(IMylarContextNode node) {
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
-        if (bridge != null) {
-            Object object = bridge.getObjectForHandle(node.getElementHandle());
-            if (object instanceof IFile) {
-                return MylarImages.getImage(MylarImages.FILE_GENERIC); 
-            } else if (object instanceof IContainer) {
-                return MylarImages.getImage(MylarImages.FOLDER_GENERIC); 
-            }
-        } 
-        return null;
+        Object object = bridge.getObjectForHandle(node.getElementHandle());
+        return getImageForObject(object);
     }
 
+	@Override
+	protected Image getImageForObject(Object object) {
+        if (object instanceof IFile) {
+            return MylarImages.getImage(MylarImages.FILE_GENERIC); 
+        } else if (object instanceof IContainer) {
+            return MylarImages.getImage(MylarImages.FOLDER_GENERIC); 
+        } 
+        return null;
+	}
+
+	@Override
+	protected String getTextForObject(Object object) {
+		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
+		return bridge.getName(object);  
+	}
+    
     /**
      * TODO: slow?
      */
     public String getText(IMylarContextNode node) {
     	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
-        
-    	String name = bridge.getName(
-        		bridge.getObjectForHandle(node.getElementHandle())
-        );
-        return name;
+        return bridge.getName(bridge.getObjectForHandle(node.getElementHandle()));
     }
 
 	@Override

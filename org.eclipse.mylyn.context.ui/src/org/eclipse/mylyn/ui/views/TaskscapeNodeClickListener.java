@@ -34,7 +34,7 @@ public class TaskscapeNodeClickListener implements IOpenListener {
         if(obj instanceof IMylarContextNode){
             IMylarContextNode node = (IMylarContextNode)obj ;
 
-            MylarUiPlugin.getDefault().getUiBridge(node.getContentKind()).open(node);
+            MylarUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
         } 
     }
 }

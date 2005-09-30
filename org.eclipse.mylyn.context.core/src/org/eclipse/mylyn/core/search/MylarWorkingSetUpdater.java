@@ -118,11 +118,11 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 //		IMylarContext t = MylarPlugin.getContextManager().getActiveContext();
 		for(IMylarContextNode node: MylarPlugin.getContextManager().getActiveContextResources()){
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 
 			// HACK comparing extension to string
 			// No need to add bugzilla resources to the taskscape search...really slow and eclipese doesn't know about them
-			if(bridge.getResourceExtension().equals("bugzilla"))
+			if(bridge.getContentType().equals("bugzilla"))
 				continue;
 			
 			Object o = bridge.getObjectForHandle(node.getElementHandle());

@@ -74,7 +74,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
     @Override
     protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
         
-        if (!node.getContentKind().equals("java")) return;
+        if (!node.getContentType().equals("java")) return;
         IJavaElement javaElement = JavaCore.create(node.getElementHandle());
         if (javaElement == null || javaElement instanceof ICompilationUnit || !javaElement.exists()) return;
         if (!acceptElement(javaElement)) {
@@ -95,7 +95,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
                 // create a search scope for the projects of landmarks
                 List<IResource> l = new ArrayList<IResource>();
                 for (IMylarContextNode landmark : landmarks) {
-                    if (landmark.getContentKind().equals(PdeStructureBridge.CONTENT_TYPE) || landmark.getContentKind().equals(AntStructureBridge.CONTENT_TYPE)) {
+                    if (landmark.getContentType().equals(PdeStructureBridge.CONTENT_TYPE) || landmark.getContentType().equals(AntStructureBridge.CONTENT_TYPE)) {
                         String handle = landmark.getElementHandle();
                         IResource element = null;
                         int first = handle.indexOf(";");
@@ -125,7 +125,7 @@ public class XmlReferencesProvider extends AbstractRelationshipProvider {
                 // create a search scope for the projects of landmarks
                 List<IProject> proj = new ArrayList<IProject>();
                 for (IMylarContextNode landmark : landmarks) {
-                	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentKind());
+                	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
                 	if(sbridge != null){
                 		Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
                 		IProject project = sbridge.getProjectForObject(o);

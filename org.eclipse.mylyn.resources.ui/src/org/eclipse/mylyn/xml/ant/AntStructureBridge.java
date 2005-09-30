@@ -54,15 +54,15 @@ public class AntStructureBridge implements IMylarStructureBridge {
     private IMylarStructureBridge parentBridge;
 
     /**
-     * @see org.eclipse.mylar.core.IMylarStructureBridge#getResourceExtension()
+     * @see org.eclipse.mylar.core.IMylarStructureBridge#getContentType()
      */
-    public String getResourceExtension() {
+    public String getContentType() {
         return CONTENT_TYPE;
     }
     
     public String getResourceExtension(String elementHandle) {
         if (elementHandle.endsWith(".xml")) {
-            return parentBridge.getResourceExtension();
+            return parentBridge.getContentType();
         } else {
             return CONTENT_TYPE;
         }

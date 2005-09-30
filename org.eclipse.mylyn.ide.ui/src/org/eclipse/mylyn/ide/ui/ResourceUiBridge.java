@@ -38,7 +38,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 public class ResourceUiBridge implements IMylarUiBridge {
  
     public void open(IMylarContextNode node) {
-        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
         if (adapter == null) return;
         IResource resource = (IResource)adapter.getObjectForHandle(node.getElementHandle());
         if (resource != null && resource.exists()) {

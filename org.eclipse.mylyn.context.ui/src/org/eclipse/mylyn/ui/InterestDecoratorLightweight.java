@@ -48,7 +48,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
             } else  if (element instanceof IMylarContextNode) {
                 node = (IMylarContextNode)element;
             } else {
-                if (adapter != null && adapter.getResourceExtension() != null) {
+                if (adapter != null && adapter.getContentType() != null) {
                     node = MylarPlugin.getContextManager().getNode(adapter.getHandleIdentifier(element));
                 }
             }

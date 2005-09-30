@@ -242,12 +242,12 @@ public class MylarContextManager {
 
 	private void checkForLandmarkDelta(float previousInterest, IMylarContextNode node) {
 		// TODO: don't call interestChanged if it's a landmark?
-    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
     	if (bridge.canBeLandmark(node.getElementHandle())) {
     		if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
-    			for (IMylarContextListener listener : listeners) listener.landmarkRemoved(node);
+    			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) listener.landmarkRemoved(node);
             } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
-            	for (IMylarContextListener listener : listeners) listener.landmarkAdded(node);
+            	for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) listener.landmarkAdded(node);
             }        	
         } 
 	}
@@ -261,7 +261,7 @@ public class MylarContextManager {
         float propagatedIncrement = node.getDegreeOfInterest().getValue() - previousInterest + decayOffset;
 //        float propagatedIncrement = scalingFactors.getParentPropagationIncrement(level);
       
-        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
                 
         String parentHandle = adapter.getParentHandle(node.getElementHandle());
         if (parentHandle != null) {
@@ -551,7 +551,7 @@ public class MylarContextManager {
 		List<IMylarContextNode> allLandmarks = activeContext.getLandmarks();
 		List<IMylarContextNode> acceptedLandmarks = new ArrayList<IMylarContextNode>();
 		for (IMylarContextNode node : allLandmarks) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 
             if (bridge.canBeLandmark(node.getElementHandle())) {
             	acceptedLandmarks.add(node);
@@ -571,7 +571,7 @@ public class MylarContextManager {
         Set<IMylarContextNode> interestingFiles = new HashSet<IMylarContextNode>();
         List<IMylarContextNode> allIntersting = context.getInteresting();
         for (IMylarContextNode node : allIntersting) {
-            if (MylarPlugin.getDefault().getStructureBridge(node.getContentKind()).isDocument(node.getElementHandle())) {       
+            if (MylarPlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(node.getElementHandle())) {       
                 interestingFiles.add(node);
             }
         }
@@ -628,7 +628,7 @@ public class MylarContextManager {
         if (changeValue != 0) {
             InteractionEvent interactionEvent = new InteractionEvent(
                     InteractionEvent.Kind.MANIPULATION,  
-                    node.getContentKind(), 
+                    node.getContentType(), 
                     node.getElementHandle(), 
                     sourceId,
                     changeValue);

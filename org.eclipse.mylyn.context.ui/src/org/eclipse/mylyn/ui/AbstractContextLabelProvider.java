@@ -18,35 +18,41 @@ import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * TODO: this delegation idiom is breaking, refactor
+ * 
  * @author Mik Kersten
  */
 public abstract class AbstractContextLabelProvider implements ILabelProvider {
 
-	public Image getImage(Object element) {
-    	if (element instanceof IMylarContextEdge) {
-    		return getImage((IMylarContextEdge)element);
-    	} else if (element instanceof IMylarContextNode){
-    		return getImage((IMylarContextNode)element);
+	public Image getImage(Object object) {
+    	if (object instanceof IMylarContextEdge) {
+    		return getImage((IMylarContextEdge)object);
+    	} else if (object instanceof IMylarContextNode){
+    		return getImage((IMylarContextNode)object);
     	} else {
-    		return null;
+    		return getImageForObject(object);
     	}
 	}
 
-	public String getText(Object element) {
-    	if (element instanceof IMylarContextEdge) {
-    		return getText((IMylarContextEdge)element);
-    	} else if (element instanceof IMylarContextNode){
-    		return getText((IMylarContextNode)element);
+	public String getText(Object object) {
+    	if (object instanceof IMylarContextEdge) {
+    		return getText((IMylarContextEdge)object);
+    	} else if (object instanceof IMylarContextNode){
+    		return getText((IMylarContextNode)object);
     	} else {
-    		return null;
+    		return getTextForObject(object);
     	}
 	}
 
 	protected abstract Image getImage(IMylarContextNode node);
 	
 	protected abstract Image getImage(IMylarContextEdge edge);
+
+	protected abstract Image getImageForObject(Object object);
 	
 	protected abstract String getText(IMylarContextNode node);
+
+	protected abstract String getTextForObject(Object object);
 	
 	protected abstract String getText(IMylarContextEdge edge);
 	

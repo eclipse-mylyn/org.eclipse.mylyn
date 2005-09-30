@@ -41,13 +41,23 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected String getText(IMylarContextNode node) {
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
-        String name = bridge.getName(bridge.getObjectForHandle(node.getElementHandle()));
-        return name;
+        return bridge.getName(bridge.getObjectForHandle(node.getElementHandle()));
 	}
 
 	@Override
 	protected String getText(IMylarContextEdge edge) {
 		return XmlReferencesProvider.NAME;  
+	}
+
+	@Override
+	protected Image getImageForObject(Object object) {
+		return MylarImages.getImage(MylarImages.FILE_XML); 
+	}
+
+	@Override
+	protected String getTextForObject(Object object) {
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
+        return bridge.getName(object);
 	}
 
 } 

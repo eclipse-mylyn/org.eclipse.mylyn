@@ -136,7 +136,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         
         
         AbstractRelationshipProvider provider = new JavaStructureBridge().getRelationshipProviders().get(0);
-        provider.createEdge(m2Node, m1Node.getContentKind(), m2.getHandleIdentifier());
+        provider.createEdge(m2Node, m1Node.getContentType(), m2.getHandleIdentifier());
         
         assertEquals(1, m2Node.getEdges().size());
         
@@ -198,7 +198,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         
         IMylarContextNode node = MylarPlugin.getContextManager().getNode(m1.getHandleIdentifier());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
-        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentKind());
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
         IMylarContextNode parent = MylarPlugin.getContextManager().getNode(bridge.getParentHandle(node.getElementHandle()));
         assertTrue(parent.getDegreeOfInterest().isInteresting());
         assertTrue(parent.getDegreeOfInterest().isPropagated()); 

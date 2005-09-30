@@ -18,6 +18,6 @@ public interface IMylarContextElement {
 
     public abstract IDegreeOfInterest getDegreeOfInterest();
 
-    public abstract String getContentKind();
+    public abstract String getContentType();
 	
 }
