@@ -25,7 +25,7 @@ import org.eclipse.mylar.core.internal.MylarContextManager;
 
 
 /**
- * This is a generic workbench filter that can be applied to any StructuredViewer.
+ * This is a generic interest filter that can be applied to any StructuredViewer.
  * It figures out whether an object is interesting by getting it's handle from the 
  * corresponding structure bridge.
  * 
@@ -56,6 +56,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
                 if (!bridge.canFilter(element)) return true;    
                 if (matchesExclusion(element, bridge)) return true;
                 
+//                throw new NullPointerException();
                 String handle = bridge.getHandleIdentifier(element);
                 node = MylarPlugin.getContextManager().getNode(handle);
             }
@@ -67,7 +68,10 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
             	}
             }
         } catch (Throwable t) {
-        	MylarPlugin.log(t, "interest filter failed");
+        	MylarPlugin.log(t, "interest filter failed on viewer: " + viewer.getClass());
+//        	if (viewer instanceof StructuredViewer) {		
+//        		MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer((StructuredViewer)viewer);
+//        	}
         } 
         return false;
     }   

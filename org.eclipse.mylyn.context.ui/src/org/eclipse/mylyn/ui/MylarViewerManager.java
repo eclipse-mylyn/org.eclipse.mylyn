@@ -141,6 +141,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 										}
 										if (objectToRefresh != null) {// && !node.getElementHandle().equals("")) { // root
 								            viewer.refresh(objectToRefresh, updateLabels);
+//								            System.err.println(">>> " + viewer.getClass()); 
 								            
 											// TODO: make outline refresh consistent
 											IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();

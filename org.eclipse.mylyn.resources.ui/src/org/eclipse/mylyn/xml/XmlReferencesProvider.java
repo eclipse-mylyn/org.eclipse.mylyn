@@ -84,13 +84,11 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
         SearchScope scope = createTextSearchScope(degreeOfSeparation);
         if (scope != null) runJob(node, javaElement, degreeOfSeparation, getId());
     }
-    
-    
+        
     protected SearchScope createTextSearchScope(int degreeOfSeparation){    
         List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
         
         switch(degreeOfSeparation){
-            
             case 1:
                 // create a search scope for the projects of landmarks
                 List<IResource> l = new ArrayList<IResource>();
@@ -110,31 +108,26 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
                         	MylarPlugin.log(e, "scope creation failed");
                         }
                         l.add(element);
-                        
                     }
                 }  
                 
                 IResource[] res = new IResource[l.size()];
                 res = l.toArray(res);
                 SearchScope doiScope = SearchScope.newSearchScope("landmark pde and ant xml files", res);
-                
-//                doiScope.addFileNamePattern("*.xml");
-                return l.isEmpty()?null:doiScope;
+                return l.isEmpty() ? null : doiScope;
             case 2:
-                
                 // create a search scope for the projects of landmarks
                 List<IProject> proj = new ArrayList<IProject>();
                 for (IMylarContextNode landmark : landmarks) {
                 	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
                 	if(sbridge != null){
-                		Object o = sbridge.getObjectForHandle(landmark.getElementHandle());
-                		IProject project = sbridge.getProjectForObject(o);
+                		Object object = sbridge.getObjectForHandle(landmark.getElementHandle());
+                		IProject project = sbridge.getProjectForObject(object);
                 		if(project != null){
                 			proj.add(project);
                 		}
                 	}
-                }  
-                
+                }                  
                 
                 res = new IProject[proj.size()];
                 res = proj.toArray(res);
