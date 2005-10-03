@@ -203,12 +203,9 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
                         
                                for(int j = 0; j < mar.length; j++){
                                    Match m = mar[j];
-                                   try{
-
+                                   try {
                                        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
-                                       
                                        String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
-
                                        String second = handle.substring(handle.indexOf(";"));
                                        
                                 	   XmlNodeHelper xnode = new XmlNodeHelper(f.getFullPath().toString(), second);

@@ -42,7 +42,7 @@ public class ProblemsListTest extends AbstractJavaContextTest {
     	IMethod m1 = type1.createMethod("void m1() { int a; }\n", null, true, null);
 		IMethod m2 = type1.createMethod("void m2() { int b; }\n", null, true, null);
 		type1.createMethod("void m3() { c; }", null, true, null);
-        project1.build();
+        project.build();
 
         manager.handleInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), 3f));
         manager.handleInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), 2f));

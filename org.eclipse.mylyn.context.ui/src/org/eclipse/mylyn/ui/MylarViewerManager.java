@@ -170,6 +170,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	} 
     
 	private boolean refreshNeeded(List<IMylarContextNode> nodesToRefresh, StructuredViewer viewer) {
+		if (nodesToRefresh.isEmpty()) return false;
 		IMylarContextNode targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
 		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
 		Object targetObject = structureBridge.getObjectForHandle(targetNode.getElementHandle()); 

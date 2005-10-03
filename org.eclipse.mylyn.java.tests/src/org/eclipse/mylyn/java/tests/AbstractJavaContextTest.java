@@ -37,7 +37,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
 	protected MylarContextManager manager = MylarPlugin.getContextManager();
     protected JavaEditingMonitor monitor = new JavaEditingMonitor();
     	
-    protected TestProject project1;
+    protected TestProject project;
     protected IPackageFragment p1;
     protected IType type1;
     protected String taskId = this.getClass().getCanonicalName();
@@ -47,9 +47,9 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     @Override
     protected void setUp() throws Exception {
     	assertNotNull(MylarJavaPlugin.getDefault());
-    	project1 = new TestProject(this.getClass().getSimpleName());
-        p1 = project1.createPackage("p1");
-        type1 = project1.createType(p1, "Type1.java", "public class Type1 { }" );
+    	project = new TestProject(this.getClass().getSimpleName());
+        p1 = project.createPackage("p1");
+        type1 = project.createType(p1, "Type1.java", "public class Type1 { }" );
         context = new MylarContext(taskId, scaling);
         manager.contextActivated(context);
         assertNotNull(MylarJavaPlugin.getDefault());
@@ -60,7 +60,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     
     @Override
     protected void tearDown() throws Exception {
-    	project1.dispose();
+    	project.dispose();
         context.reset(); 
         manager.getFileForContext(taskId).delete();
         manager.contextDeactivated(taskId, taskId);

@@ -117,9 +117,9 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
         IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
-        IPackageFragment p2 = project1.createPackage("p2");
+        IPackageFragment p2 = project.createPackage("p2");
         
-        IType type2 = project1.createType(p2, "Type2.java", "public class Type2 { }" );
+        IType type2 = project.createType(p2, "Type2.java", "public class Type2 { }" );
         IMethod m2 = type2.createMethod("void m2() { }", null, true, null);
                 
         assertTrue(m1.exists());
@@ -159,9 +159,9 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     	
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
         IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
-        IPackageFragment p2 = project1.createPackage("p2");
+        IPackageFragment p2 = project.createPackage("p2");
         
-        IType type2 = project1.createType(p2, "Type2.java", "public class Type2 { }" );
+        IType type2 = project.createType(p2, "Type2.java", "public class Type2 { }" );
         IMethod m2 = type2.createMethod("void m2() { new p1.Type1().m1(); }", null, true, null);
                 
         assertTrue(m1.exists());
@@ -174,7 +174,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         // delete method to cause error
         m1.delete(true, null);
         assertEquals(0, type1.getMethods().length);
-        project1.build();
+        project.build();
 
         IMarker[] markers = type2.getResource().findMarkers(
                 IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
@@ -186,7 +186,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
         // put it back
         type1.createMethod("public void m1() { }", null, true, null); 
-        project1.build();
+        project.build();
         assertFalse(MylarPlugin.getContextManager().getNode(resourceHandle).getDegreeOfInterest().isInteresting());
     }
     
