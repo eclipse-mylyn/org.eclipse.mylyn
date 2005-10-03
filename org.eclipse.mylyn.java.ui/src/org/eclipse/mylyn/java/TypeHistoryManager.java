@@ -45,9 +45,7 @@ public class TypeHistoryManager implements IMylarContextListener {
 	
 	public void contextActivated(IMylarContext context) {
 		clearTypeHistory();		
-		for (IMylarContextNode node : context.getInteresting()) {
-			updateTypeHistory(node, true);
-		}
+		for (IMylarContextNode node : context.getInteresting()) updateTypeHistory(node, true);
 	}
 
 	/**
@@ -81,7 +79,10 @@ public class TypeHistoryManager implements IMylarContextListener {
 		clearTypeHistory();
 	}
 
-	private void clearTypeHistory() {
+	/**
+	 * Public for testing
+	 */
+	public void clearTypeHistory() {
 		TypeInfo[] typeInfos = TypeInfoHistory.getInstance().getTypeInfos();
 		for (int i = 0; i < typeInfos.length; i++) {
 			TypeInfoHistory.getInstance().remove(typeInfos[i]);
@@ -93,7 +94,7 @@ public class TypeHistoryManager implements IMylarContextListener {
 	}
 
 	public void interestChanged(List<IMylarContextNode> nodes) {
-		interestChanged(nodes.get(nodes.size()-1));
+		for (IMylarContextNode node : nodes) interestChanged(node);
 	}
 
 	public void nodeDeleted(IMylarContextNode node) {

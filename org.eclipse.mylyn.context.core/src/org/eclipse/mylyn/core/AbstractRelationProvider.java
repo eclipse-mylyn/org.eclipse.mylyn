@@ -64,7 +64,9 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     }
     
     public void landmarkAdded(IMylarContextNode node) { 
-        if (enabled) findRelated(node, degreeOfSeparation);
+        if (enabled) {
+        	findRelated(node, degreeOfSeparation);
+        }
     } 
     
     public void landmarkRemoved(IMylarContextNode node) {
@@ -79,9 +81,8 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     
     protected void incrementInterest(IMylarContextNode node, String elementKind, String elementHandle, int degreeOfSeparation) {
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
-//    	((DegreeOfInterest)targetNode.getDegreeOfInterest()).addEvent(
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
-        MylarPlugin.getContextManager().handleInteractionEvent(event, false);
+        MylarPlugin.getContextManager().handleInteractionEvent(event, false, false);
         createEdge(node, elementKind, elementHandle);
     }
 

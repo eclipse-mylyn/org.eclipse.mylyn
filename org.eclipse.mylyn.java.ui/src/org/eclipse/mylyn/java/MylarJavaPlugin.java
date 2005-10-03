@@ -266,6 +266,10 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	public TypeHistoryManager getTypeHistoryManager() {
+		return typeHistoryManager;
+	}
+
     
     
 //    /**

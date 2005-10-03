@@ -26,8 +26,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 
 	private PackageExplorerPart view;
 	private TreeViewer viewer;
-	
-	
+		
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -41,7 +40,6 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-
 
 	public void testPropagation() throws JavaModelException {
         IMethod m1 = type1.createMethod("void m1() { }", null, true, null);

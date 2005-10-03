@@ -200,11 +200,15 @@ public class MylarContextManager {
     public IMylarContextNode handleInteractionEvent(InteractionEvent event) {
     	return handleInteractionEvent(event, true);
     }
+
+    public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
+    	return handleInteractionEvent(event, true, true);
+    }
     
     /**
      * TODO: consider moving this into the context?
      */
-    public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
+    public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents, boolean notifyListeners) {
         if (event.getKind() == InteractionEvent.Kind.COMMAND) return null;
         if (activeContext.getContextMap().values().size() == 0) return null;
         if (suppressListenerNotification) return null;
@@ -232,9 +236,11 @@ public class MylarContextManager {
         if (event.getKind().isUserEvent()) activeContext.setActiveElement(node);
 
         interestDelta.add(node); // TODO: check that the order of these is sensible
-        for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-        	listener.interestChanged(interestDelta);
-        }
+        if (notifyListeners) {
+	        for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+	        	listener.interestChanged(interestDelta);
+	        }
+        } 
          
         checkForLandmarkDelta(previousInterest, node);
         return node;
