@@ -34,6 +34,7 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.ide.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
 import org.eclipse.mylar.ui.views.MylarContextContentProvider;
@@ -66,8 +67,7 @@ public class ActiveSearchView extends ViewPart {
 	
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
-    public boolean qualifiedNameMode = false;
-    
+    private MylarContextLabelProvider labelProvider = new MylarContextLabelProvider();
     /**
      * For testing.
      */
@@ -151,7 +151,7 @@ public class ActiveSearchView extends ViewPart {
         MylarPlugin.getContextManager().refreshRelatedElements();
 	}
 
-    private void refresh(final IMylarContextNode node, final boolean updateLabels) {
+    void refresh(final IMylarContextNode node, final boolean updateLabels) {
         if (!asyncRefreshMode) { // for testing
         	if (viewer != null && !viewer.getTree().isDisposed()) {
         		viewer.refresh();
@@ -198,11 +198,12 @@ public class ActiveSearchView extends ViewPart {
      */
     @Override
     public void createPartControl(Composite parent) {
-        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        
+    	viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         viewer.setUseHashlookup(true);
         viewer.setContentProvider(new MylarContextContentProvider(viewer.getTree(), this.getViewSite(), true));
         viewer.setLabelProvider(new DecoratingLabelProvider(
-                new MylarContextLabelProvider(),
+        		labelProvider,
                 PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
         viewer.setSorter(new DoiOrderSorter()); 
         viewer.setInput(getViewSite());
@@ -240,17 +241,8 @@ public class ActiveSearchView extends ViewPart {
     }
 
     private void fillLocalToolBar(IToolBarManager manager) {
-       	// needed to prevent toolbar from getting too tall, TODO: fille bug report
-    	IAction dummyAction = new Action(){
-			@Override
-			public void run() { 
-				qualifiedNameMode = true;
-				refresh(null, true);
-			}
-        };
-        dummyAction.setText("");
-        dummyAction.setImageDescriptor(MylarImages.BLANK);
-        manager.add(dummyAction);
+    	IAction qualifyElements = new ShowQualifiedNamesAction(this);
+        manager.add(qualifyElements);
     	fillActions(manager);
     	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
@@ -304,6 +296,11 @@ public class ActiveSearchView extends ViewPart {
 	 */
 	public void setAsyncRefreshMode(boolean asyncRefreshMode) {
 		this.asyncRefreshMode = asyncRefreshMode;
+	}
+
+	public void setQualifiedNameMode(boolean qualifiedNameMode) {
+		MylarContextLabelProvider.setQualifyNamesMode(qualifiedNameMode);
+		refresh(null, true); 
 	}
 }
 

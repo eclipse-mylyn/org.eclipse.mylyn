@@ -14,6 +14,8 @@
 package org.eclipse.mylar.java.ui;
 
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
@@ -33,6 +35,7 @@ import org.eclipse.mylar.java.search.JavaReadAccessProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.ui.MylarImages;
+import org.eclipse.mylar.ui.views.MylarContextLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -54,13 +57,24 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
                 if (element == null) {
                     return "<missing element>";                     
                 } else {
-                    return super.getText(element);
+                	return getTextForElement(element);
                 }
             } 
         } else if (object instanceof IMylarContextEdge) {
         	return getNameForRelationship(((IMylarContextEdge)object).getRelationshipHandle());
-        }
+        } else if (object instanceof IJavaElement) {
+        	return getTextForElement((IJavaElement)object);
+        } 
         return super.getText(object);
+	}
+
+	private String getTextForElement(IJavaElement element) {
+    	if (MylarContextLabelProvider.isQualifyNamesMode()) {
+    		if (element instanceof IMember && !(element instanceof IType)) {
+    			return ((IMember)element).getParent().getElementName() + '.' + super.getText(element);
+     		}
+    	}
+    	return super.getText(element);
 	}
 
 	@Override

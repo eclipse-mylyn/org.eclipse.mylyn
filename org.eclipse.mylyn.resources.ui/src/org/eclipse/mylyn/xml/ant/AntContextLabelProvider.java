@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 18, 2005
-  */
+
 package org.eclipse.mylar.xml.ant;
 
 import org.eclipse.mylar.core.IMylarContextEdge;

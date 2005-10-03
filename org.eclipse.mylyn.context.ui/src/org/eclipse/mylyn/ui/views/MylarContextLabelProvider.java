@@ -29,7 +29,17 @@ import org.eclipse.swt.graphics.Image;
  */
 public class MylarContextLabelProvider implements ILabelProvider {
 
-    public Image getImage(Object element) {
+	public static boolean qualifyNamesMode = false; // TODO: make non-static
+	
+    public static boolean isQualifyNamesMode() {
+		return qualifyNamesMode;
+	}
+    
+	public static void setQualifyNamesMode(boolean qualify) {
+		qualifyNamesMode = qualify;
+	}
+
+	public Image getImage(Object element) {
     	if (element instanceof IMylarContextElement) {
     		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(
     				((IMylarContextElement)element).getContentType());
@@ -40,22 +50,14 @@ public class MylarContextLabelProvider implements ILabelProvider {
         	if (provider != null) return provider.getImage(element);
         }
     	return null;
-//    	else if (element instanceof MylarContextEdge) {
-//            IMylarContextEdge edge = (IMylarContextEdge)element;
-//            return provider.getImage(edge);
-//            IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(edge.getStructureKind());
-//            ImageDescriptor descriptor = bridge.getIconForRelationship(edge.getRelationshipHandle());
-//            if (descriptor != null) return MylarImages.getImage(descriptor);
-//        }
     }
 
     public String getText(Object object) {
     	if (object instanceof IMylarContextElement) {
     		IMylarContextElement element = (IMylarContextElement)object;
-    		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(
-    				element.getContentType());
-            if (MylarUiPlugin.getDefault().isDecorateInterestMode()) {
-                return provider.getText(element) + " [" + element.getDegreeOfInterest().getValue() + "]";     
+    		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
+            if (MylarUiPlugin.getDefault().isDecorateInterestMode()) { // TODO: move
+                return provider.getText(element) + " [" + element.getDegreeOfInterest().getValue() + "]"; 
             } else {
                 return provider.getText(element);
             }
@@ -68,8 +70,8 @@ public class MylarContextLabelProvider implements ILabelProvider {
     }
 
     public boolean isLabelProperty(Object element, String property) {
-        return true;
-        // TODO: implement?
+//    	 TODO: implement?
+    	return false;
     }
 
     public void addListener(ILabelProviderListener listener) {

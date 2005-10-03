@@ -67,7 +67,9 @@ public class MylarImages {
     public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
     public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
     public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
-	    
+	
+    public static final ImageDescriptor QUALIFY_NAMES = create(T_TOOL, "qualify-names.gif");
+    
     public static ImageDescriptor EDGE_INHERITANCE = create(T_ELCL, "edge-inheritance.gif"); 
     public static ImageDescriptor EDGE_REFERENCE = create(T_ELCL, "edge-reference.gif"); 
     public static ImageDescriptor EDGE_ACCESS_READ = create(T_ELCL, "edge-read.gif");
