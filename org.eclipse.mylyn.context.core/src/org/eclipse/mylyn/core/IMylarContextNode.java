@@ -15,7 +15,6 @@ import java.util.Collection;
 
 import org.eclipse.mylar.core.internal.MylarContextEdge;
 
-
 /**
  * @author Mik Kersten
  */

@@ -41,14 +41,12 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.xml.ant.AntStructureBridge;
 import org.eclipse.mylar.xml.pde.PdeStructureBridge;
 import org.eclipse.search.internal.core.SearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.text.Match;
-
 
 /**
  * @author Shawn Minto
@@ -93,7 +91,8 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
                 // create a search scope for the projects of landmarks
                 List<IResource> l = new ArrayList<IResource>();
                 for (IMylarContextNode landmark : landmarks) {
-                    if (landmark.getContentType().equals(PdeStructureBridge.CONTENT_TYPE) || landmark.getContentType().equals(AntStructureBridge.CONTENT_TYPE)) {
+                    if (landmark.getContentType().equals(PdeStructureBridge.CONTENT_TYPE)) { 
+                    	// || landmark.getContentType().equals(AntStructureBridge.CONTENT_TYPE)) {
                         String handle = landmark.getElementHandle();
                         IResource element = null;
                         int first = handle.indexOf(";");
@@ -158,7 +157,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
     
     private void addFilenamePatterns(SearchScope scope){
     	scope.addFileNamePattern(PdeStructureBridge.CONTENT_TYPE);
-    	scope.addFileNamePattern(AntStructureBridge.CONTENT_TYPE);
+//    	scope.addFileNamePattern(AntStructureBridge.CONTENT_TYPE);
     }
     
     protected boolean acceptElement(IJavaElement javaElement) {

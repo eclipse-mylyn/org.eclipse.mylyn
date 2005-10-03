@@ -71,7 +71,10 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
 	private String getTextForElement(IJavaElement element) {
     	if (MylarContextLabelProvider.isQualifyNamesMode()) {
     		if (element instanceof IMember && !(element instanceof IType)) {
-    			return ((IMember)element).getParent().getElementName() + '.' + super.getText(element);
+    			String parentName = ((IMember)element).getParent().getElementName();
+    			if (parentName != null && parentName != "" ) {
+    				return parentName + '.' + super.getText(element);
+    			}
      		}
     	}
     	return super.getText(element);

@@ -116,7 +116,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     
 	public void interestChanged(final List<IMylarContextNode> nodes) {
     	refreshViewers(nodes, false);
-    }
+    } 
     
     public void interestChanged(IMylarContextNode node) {
     	refreshViewers(node, false);
@@ -141,7 +141,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 					viewer.getControl().setRedraw(false); 
 					if (nodesToRefresh == null) {// || nodesToRefresh.isEmpty()) {
 			            viewer.refresh();
-					} else if (refreshNeeded(nodesToRefresh, viewer) && !(viewer instanceof TableViewer)) { // TODO: refresh table viewers
+					} else if (refreshNeeded(nodesToRefresh, viewer, updateLabels) && !(viewer instanceof TableViewer)) { // TODO: refresh table viewers
 						Object objectToRefresh = null;
 						for (IMylarContextNode node : nodesToRefresh) {
 							if (node != null) {
@@ -169,7 +169,8 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     	}
 	} 
     
-	private boolean refreshNeeded(List<IMylarContextNode> nodesToRefresh, StructuredViewer viewer) {
+	private boolean refreshNeeded(List<IMylarContextNode> nodesToRefresh, StructuredViewer viewer, boolean updateLabels) {
+		if (updateLabels) return true;
 		if (nodesToRefresh.isEmpty()) return false;
 		IMylarContextNode targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
 		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
