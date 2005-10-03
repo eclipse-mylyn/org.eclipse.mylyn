@@ -40,6 +40,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 	private List<AbstractApplyMylarAction> managedActions = new ArrayList<AbstractApplyMylarAction>();
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
+	private boolean syncRefreshMode = false; // for testing
 	
 	public MylarViewerManager() {
 		MylarUiPlugin.getPrefs().addPropertyChangeListener(this);
@@ -122,45 +123,64 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     } 
     
     protected void refreshViewers(final List<IMylarContextNode> nodesToRefresh, final boolean updateLabels) {
-    	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() {
-            	try {
-            		for (StructuredViewer viewer : managedViewers) {
-            			if (viewer != null && !viewer.getControl().isDisposed()) {
-							viewer.getControl().setRedraw(false); 
-							if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
-					            viewer.refresh();
-							} else if (!(viewer instanceof TableViewer)) { // TODO: refresh table viewers
-								Object objectToRefresh = null;
-								for (IMylarContextNode node : nodesToRefresh) {
-									if (node != null) {
-										IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-										objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle()); 
-										if (node.getDegreeOfInterest().getValue() <= 0) {
-											objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
-										}
-										if (objectToRefresh != null) {// && !node.getElementHandle().equals("")) { // root
-								            viewer.refresh(objectToRefresh, updateLabels);
-//								            System.err.println(">>> " + viewer.getClass()); 
-								            
-											// TODO: make outline refresh consistent
-											IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-											IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
-											bridge.refreshOutline(objectToRefresh, updateLabels);
-										}
-									}
-								}		 	
-							}
-				            viewer.getControl().setRedraw(true); 
-						}
-					}
-            	} catch (Throwable t) {
-            		MylarPlugin.fail(t, "could not refresh viewer", false);
-            	}
-			} 
-        });
+    	if (syncRefreshMode) {
+    		doRefresh(nodesToRefresh, updateLabels);
+    	} else {
+	    	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+	            public void run() {
+	            	doRefresh(nodesToRefresh, updateLabels);
+				}
+	        }); 
+    	}
     } 
 
+    private void doRefresh(final List<IMylarContextNode> nodesToRefresh, final boolean updateLabels) {
+		try {
+    		for (StructuredViewer viewer : managedViewers) {
+    			if (viewer != null && !viewer.getControl().isDisposed()) {
+					viewer.getControl().setRedraw(false); 
+					if (nodesToRefresh == null) {// || nodesToRefresh.isEmpty()) {
+			            viewer.refresh();
+					} else if (refreshNeeded(nodesToRefresh, viewer) && !(viewer instanceof TableViewer)) { // TODO: refresh table viewers
+						Object objectToRefresh = null;
+						for (IMylarContextNode node : nodesToRefresh) {
+							if (node != null) {
+								IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
+								objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle()); 
+								if (node.getDegreeOfInterest().getValue() <= 0) {
+									objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
+								}
+								if (objectToRefresh != null) {
+									viewer.refresh(objectToRefresh, updateLabels);						            
+						            
+									// TODO: make outline refresh consistent
+									IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+									IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+									bridge.refreshOutline(objectToRefresh, updateLabels);
+								}
+							}
+						}
+					}
+		            viewer.getControl().setRedraw(true); 
+				}
+			}
+    	} catch (Throwable t) {
+    		MylarPlugin.fail(t, "could not refresh viewer", false);
+    	}
+	} 
+    
+	private boolean refreshNeeded(List<IMylarContextNode> nodesToRefresh, StructuredViewer viewer) {
+		IMylarContextNode targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
+		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
+		Object targetObject = structureBridge.getObjectForHandle(targetNode.getElementHandle()); 
+
+		if (viewer.testFindItem(targetObject) == null) { // HACK: relying on testing method
+			return true;
+		} else {
+			return false;
+		}
+	}
+    
     public void nodeDeleted(IMylarContextNode node) {
     	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 		IMylarContextNode parent = MylarPlugin.getContextManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
@@ -186,5 +206,12 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		if (MylarUiPlugin.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())) {
 			refreshViewers();
 		}
+	}
+
+	/**
+	 * Set to true for testing
+	 */
+	public void setSyncRefreshMode(boolean syncRefreshMode) {
+		this.syncRefreshMode = syncRefreshMode;
 	}
 }

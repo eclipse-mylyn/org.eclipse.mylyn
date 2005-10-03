@@ -90,10 +90,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	        if (viewer != null) {
 				if (on) {
 					installInterestFilter(getViewer());
-					MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
+					MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
 				} else {
 					uninstallInterestFilter(getViewer());
-					MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
+					MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
 				}
 				refreshViewer();
 				if (on && viewer instanceof TreeViewer) {

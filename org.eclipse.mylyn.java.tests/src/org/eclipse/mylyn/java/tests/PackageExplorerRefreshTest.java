@@ -51,6 +51,6 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
         
         assertNotNull(viewer.testFindItem(m1));
         assertNotNull(viewer.testFindItem(m1.getParent()));
-        assertEquals(6, viewer.getTree());
+        assertEquals(6, countItemsInTree(viewer.getTree()));
 	}
 }
