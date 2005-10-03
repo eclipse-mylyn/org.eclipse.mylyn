@@ -72,9 +72,9 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 
 	private void configureAction() {
 		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
-			MylarUiPlugin.getDefault().getUiUpdateManager().addManagedAction(this);
+			MylarUiPlugin.getDefault().getViewerManager().addManagedAction(this);
 		} else {
-			MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedAction(this);
+			MylarUiPlugin.getDefault().getViewerManager().removeManagedAction(this);
 		}
 	}
 

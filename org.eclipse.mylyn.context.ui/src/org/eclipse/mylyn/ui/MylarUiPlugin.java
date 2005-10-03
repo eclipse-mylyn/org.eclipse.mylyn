@@ -415,7 +415,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         getPrefs().setValue(INTERSECTION_MODE, isIntersectionMode);
     }
 
-	public MylarViewerManager getUiUpdateManager() {
+	public MylarViewerManager getViewerManager() {
 		return uiUpdateManager;
 	}
 

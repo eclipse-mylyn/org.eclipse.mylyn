@@ -13,7 +13,6 @@ package org.eclipse.mylar.java.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -75,7 +74,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
         assertEquals(1, search(2, node).size()); 
          
         List<TreeItem> collectedItems = new ArrayList<TreeItem>();
-		getNumberOfTreeItems(view.getViewer().getTree().getItems(), collectedItems);
+		collectTreeItemsInView(view.getViewer().getTree().getItems(), collectedItems);
 		
 		// just make sure that the view didn't blow up.
 		assertEquals(1, collectedItems.size());
@@ -83,15 +82,6 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
         manager.handleInteractionEvent(mockInterestContribution(
         		m1.getHandleIdentifier(), -scaling.getLandmark()));
     }
-    
-	private void getNumberOfTreeItems(TreeItem[] items, List<TreeItem> collectedItems) {
-		if (items.length > 0) {
-			for (TreeItem childItem : Arrays.asList(items)) {
-				collectedItems.add(childItem);
-				getNumberOfTreeItems(childItem.getItems(), collectedItems);
-			}
-		}
-	}
     
     public void testSearchNotRunIfViewDeactivated() throws PartInitException, JavaModelException {
     	view = (ActiveSearchView)JavaPlugin.getActivePage().showView(ActiveSearchView.ID);

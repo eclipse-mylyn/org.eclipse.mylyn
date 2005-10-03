@@ -67,10 +67,10 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
         	if(viewer == null) continue;
         	if (on) {
 				installInterestFilter(viewer);
-				MylarUiPlugin.getDefault().getUiUpdateManager().addManagedViewer(viewer);
+				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
 			} else {
 				uninstallInterestFilter(viewer);
-				MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer(viewer);
+				MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
 			}
 
         }

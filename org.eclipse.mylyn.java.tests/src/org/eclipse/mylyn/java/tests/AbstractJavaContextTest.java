@@ -11,6 +11,10 @@
 
 package org.eclipse.mylar.java.tests;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -22,6 +26,8 @@ import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author Mik Kersten
@@ -61,4 +67,18 @@ public class AbstractJavaContextTest extends AbstractContextTest {
         manager.contextDeleted(taskId, taskId);
     }
 	
+    protected int countItemsInTree(Tree tree) {
+    	List<TreeItem> collectedItems = new ArrayList<TreeItem>();
+    	collectTreeItemsInView(tree.getItems(), collectedItems);
+    	return collectedItems.size();
+    }
+    
+	protected void collectTreeItemsInView(TreeItem[] items, List<TreeItem> collectedItems) {
+		if (items.length > 0) {
+			for (TreeItem childItem : Arrays.asList(items)) {
+				collectedItems.add(childItem);
+				collectTreeItemsInView(childItem.getItems(), collectedItems);
+			}
+		}
+	}
 }
