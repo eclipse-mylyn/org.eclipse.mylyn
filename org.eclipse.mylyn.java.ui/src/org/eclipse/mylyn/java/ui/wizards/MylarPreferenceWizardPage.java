@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Shawn Minto
- *
+ * @author Mik Kersten
  */
 public class MylarPreferenceWizardPage extends WizardPage {
 
@@ -32,6 +32,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	private static final  String WORKING_SET = "Add the \"active task context\" working set";
 	private static final  String DEFAULT_EDITOR = "Set the Mylar editor to be the default for .java " +
 		"(enables interest-based content assist)";
+	private static final  String OPEN_TASK_LIST = "Open the Mylar Tasks view";
 	
 	Button setMylarEditorDefault;
 	boolean mylarEditorDefault = true;
@@ -44,6 +45,9 @@ public class MylarPreferenceWizardPage extends WizardPage {
 	
 	Button closeEditorsOnDeactivation;
 	boolean closeEditors = true;
+
+	Button openTaskListButton;
+	boolean openTaskList = true;
 	
 	private String htmlDocs;
 	
@@ -147,6 +151,27 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		label.setLayoutData(gd);
 		setControl(buttonComposite);
 		
+		
+		openTaskListButton = new Button(buttonComposite, SWT.CHECK);
+		gd = new GridData();
+		openTaskListButton.setLayoutData(gd);
+		openTaskListButton.setSelection(true);
+		openTaskListButton.addSelectionListener(new SelectionListener(){
+
+			public void widgetSelected(SelectionEvent e) {
+				openTaskList = openTaskListButton.getSelection();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// don't care about this event
+			}
+		});
+		
+		label = new Label(buttonComposite, SWT.NONE);
+		label.setText(OPEN_TASK_LIST);
+		gd = new GridData();
+		label.setLayoutData(gd);
+		
 		Label spacer = new Label(buttonComposite, SWT.NONE);
 		spacer.setText(" ");
 		spacer = new Label(buttonComposite, SWT.NONE);
@@ -174,15 +199,15 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		return closeEditors;
 	}
 
-//	public boolean isInPlace() {
-//		return inPlace;
-//	}
-
 	public boolean isMylarEditorDefault() {
 		return mylarEditorDefault;
 	}
 
 	public boolean isWorkingSet() {
 		return workingSet;
+	}
+	
+	public boolean isOpenTaskList() {
+		return openTaskList;
 	}
 }

@@ -231,7 +231,7 @@ public class PdeUiBridge implements IMylarUiBridge {
         return Collections.emptyList();     
     }
 
-    public void refreshOutline(Object element, boolean updateLabels) {
+    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
         IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         List<TreeViewer> treeViewers = getTreeViewers(editorPart);
         for(TreeViewer treeViewer: treeViewers){

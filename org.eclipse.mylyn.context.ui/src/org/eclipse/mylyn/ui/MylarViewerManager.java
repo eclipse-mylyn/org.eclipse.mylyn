@@ -154,9 +154,10 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 									viewer.refresh(objectToRefresh, updateLabels);						            
 						            
 									// TODO: make outline refresh consistent
+									boolean setSelection = nodesToRefresh.indexOf(node) == nodesToRefresh.size()-1;
 									IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 									IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
-									bridge.refreshOutline(objectToRefresh, updateLabels);
+									bridge.refreshOutline(objectToRefresh, updateLabels, setSelection);
 								}
 							}
 						}

@@ -227,11 +227,15 @@
 
 	<extension point="org.eclipse.ui.newWizards">
       <wizard
+            canFinishEarly="false"
             category="org.eclipse.mylar.wizards"
             class="org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard"
+            descriptionImage="icons/wizban/banner-prefs.gif"
+            hasPages="true"
             icon="icons/etool16/wizard-prefs.gif"
-            id="org.eclipse.mylar.java.ui.mylarPreferenceWizard"
-            name="Preference Configuration">
+            id="org.eclipse.mylar.java.ui.wizards.preferences"
+            name="Preference Configuration"
+            project="false">
       </wizard>
    </extension>
 

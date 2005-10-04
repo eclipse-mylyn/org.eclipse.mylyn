@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -113,7 +114,7 @@ public class JavaUiBridge implements IMylarUiBridge {
     /**
      * TODO: extract common code?
      */
-    public void refreshOutline(final Object element, final boolean updateLabels) {
+    public void refreshOutline(final Object element, final boolean updateLabels, final boolean setSelection) {
         Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
             public void run() { 
                 if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) return;
@@ -128,6 +129,10 @@ public class JavaUiBridge implements IMylarUiBridge {
                             toRefresh = toRefresh.getParent();
                         } 
                         treeViewer.refresh(toRefresh, updateLabels); // TODO: use runnable?
+                    }
+                    if (setSelection) {
+    	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
+    	                    treeViewer.setSelection(new StructuredSelection(element));
                     }
                 }
             }

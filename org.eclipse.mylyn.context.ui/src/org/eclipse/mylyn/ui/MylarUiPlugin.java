@@ -141,7 +141,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
             return Collections.emptyList();
         }
 
-        public void refreshOutline(Object element, boolean updateLabels) {
+        public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
         }
 
     };

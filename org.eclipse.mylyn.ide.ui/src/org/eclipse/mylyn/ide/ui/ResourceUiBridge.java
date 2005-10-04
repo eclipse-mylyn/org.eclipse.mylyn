@@ -78,7 +78,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
         return Collections.emptyList();
     }
 
-    public void refreshOutline(Object element, boolean updateLabels) {
+    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
     	// no outline to refresh
         
     }

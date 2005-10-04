@@ -32,7 +32,8 @@ public interface IMylarUiBridge {
 
     /**
      * @param element  if null refresh the whole tree
+     * @param setSelection TODO
      */
-    public abstract void refreshOutline(Object element, boolean updateLabels);
+    public abstract void refreshOutline(Object element, boolean updateLabels, boolean setSelection);
     
 }

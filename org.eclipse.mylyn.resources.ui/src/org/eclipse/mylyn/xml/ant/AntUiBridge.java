@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -179,7 +180,7 @@ public class AntUiBridge implements IMylarUiBridge {
         return null;
     }
 
-    public void refreshOutline(Object element, boolean updateLabels) { 
+    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) { 
         IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
         if (treeViewer != null) {
@@ -187,8 +188,10 @@ public class AntUiBridge implements IMylarUiBridge {
                 treeViewer.refresh(true);
             } else if (element instanceof AntElementNode) {
                 treeViewer.refresh(element, updateLabels); 
-//                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
-//                    treeViewer.setSelection(new StructuredSelection(element));
+                if (setSelection) {
+	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
+	                    treeViewer.setSelection(new StructuredSelection(element));
+                }
             } 
         }
     }
