@@ -114,7 +114,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
         return null;        
     }
 
-    public void refreshOutline(Object element, boolean updateLabels) {
+    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
     	IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
         if (treeViewer != null) {
