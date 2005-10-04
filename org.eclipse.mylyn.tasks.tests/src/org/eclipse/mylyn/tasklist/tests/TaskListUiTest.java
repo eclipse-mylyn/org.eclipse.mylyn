@@ -20,6 +20,7 @@ import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListManager;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
+import org.eclipse.mylar.tasklist.ui.views.TaskListContentProvider;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
@@ -146,7 +147,7 @@ public class TaskListUiTest extends TestCase {
 		try {
 		assertNotNull(TaskListView.getDefault());  
 		TreeViewer viewer = TaskListView.getDefault().getViewer();
-		viewer.setContentProvider(TaskListView.getDefault().getContentProvider());
+		viewer.setContentProvider(new TaskListContentProvider(TaskListView.getDefault()));
 		viewer.refresh();
 		TaskListView.getDefault().addFilter(TaskListView.getDefault().getCompleteFilter());
 		viewer.refresh();

@@ -33,16 +33,17 @@ public class FilterCompletedTasksAction extends Action {
         setImageDescriptor(TaskListImages.FILTER_COMPLETE);
         setChecked(MylarTasklistPlugin.getDefault().isFilterCompleteMode());
 	}
+	
 	@Override
 	public void run() {
 //        MylarPlugin.getDefault().actionObserved(this);
 		MylarTasklistPlugin.getDefault().setFilterCompleteMode(isChecked());
 		if (isChecked()) {
-			view.addFilter(this.view.getCompleteFilter());
-//				filterInCompleteTask.setChecked(false);
+			view.addFilter(view.getCompleteFilter());
+//				filterInCompleteTask.setChecked(false); 
 //				viewer.removeFilter(inCompleteFilter);
 		} else {
-			view.removeFilter(this.view.getCompleteFilter());        			
+			view.removeFilter(view.getCompleteFilter());        			
 		}
 	    this.view.getViewer().refresh();
 	}

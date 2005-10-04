@@ -35,9 +35,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -133,7 +131,7 @@ public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
 		
-	private FilteredTree tree;
+	FilteredTree tree;
     private DrillDownAdapter drillDownAdapter;
     
     private GoIntoAction goIntoAction;
@@ -165,9 +163,9 @@ public class TaskListView extends ViewPart {
     private NextTaskDropDownAction nextTaskAction;
     private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
     private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
-    private List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
+    List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
     
-    private static final String FILTER_LABEL = "<filter>";
+    static final String FILTER_LABEL = "<filter>";
     
     protected String[] columnNames = new String[] { "", ".", "!", "Description" };
     protected int[] columnWidths = new int[] { 70, 20, 20, 120 };
@@ -313,182 +311,7 @@ public class TaskListView extends ViewPart {
 		}
     }
     
-    class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-			expandToActiveTasks();
-        }
-        public void dispose() {
-        	// ignore
-        }
-        public Object[] getElements(Object parent) {
-            if (parent.equals(getViewSite())) {
-//            	if (MylarTasklistPlugin.getTaskListManager() != null) {
-            		return applyFilter(MylarTasklistPlugin.getTaskListManager().getTaskList().getRoots()).toArray();
-//            	} else {
-//            		return new Object[0];
-//            	}
-//            	return MylarTasklistPlugin.getTaskListManager().getTaskList().getRoots().toArray();            	          
-            }
-            return getChildren(parent);
-        }
-        public Object getParent(Object child) {
-            if (child instanceof ITask) {
-            	if (((ITask)child).getParent() != null) {
-            		return ((ITask)child).getParent();
-            	} else {
-            		return ((ITask)child).getCategory();
-            	}
-                
-            }
-            return null;
-        }
-        public Object [] getChildren(Object parent) {
-        	return getFilteredChildrenFor(parent).toArray();
-        }
-        public boolean hasChildren(Object parent) {  
-            if (parent instanceof ICategory) {
-            	ICategory cat = (ICategory)parent;
-                return cat.getChildren() != null && cat.getChildren().size() > 0;
-            }  else if (parent instanceof Task) {
-            	Task t = (Task) parent;
-            	return t.getChildren() != null && t.getChildren().size() > 0;
-            } else if (parent instanceof IQuery) {
-            	IQuery t = (IQuery) parent;
-            	return t.getChildren() != null && t.getChildren().size() > 0;
-            } 
-            return false;
-        }
-        private List<Object> applyFilter(List<Object> list) {
-        	if (((Text)tree.getFilterControl()).getText() == "") {
-        		List<Object> filteredRoots = new ArrayList<Object>();
-        		for (int i = 0; i < list.size(); i++) {
-        			if (list.get(i) instanceof ITask) {
-        				if (!filter(list.get(i))) {
-        					filteredRoots.add(list.get(i));
-        				}
-        			} else if (list.get(i) instanceof ICategory) {
-//        				if(((ICategory)list.get(i)).isArchive())
-//        					continue;
-        				if (selectCategory((ICategory)list.get(i))) {
-        					filteredRoots.add(list.get(i));
-        				}
-        			} else if (list.get(i) instanceof IQuery) {
-        				if (selectQuery((IQuery)list.get(i))) {
-        					filteredRoots.add(list.get(i));
-        				}
-        			}
-	        	}
-        		return filteredRoots;
-        	} else {
-        		return list;
-        	}
-        }
-        
-        private boolean selectQuery(IQuery cat) {
-        	List<? extends ITaskListElement> list = cat.getChildren();
-        	if (list.size() == 0) {
-        		return true;
-        	}
-        	for (int i = 0; i < list.size(); i++) {
-        		if (!filter(list.get(i))) {
-        			return true;
-        		}    		
-        	}
-        	return false;
-        }
-        
-        private boolean selectCategory(ICategory cat) {
-        	if(cat.isArchive()){
-        		for (ITask task: cat.getChildren()) {
-					if(task.isActive()){
-						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
-						if(t == null)
-							return true;
-					}
-				}
-        		return false;
-        	}
-        	List<? extends ITaskListElement> list = cat.getChildren();
-        	if (list.size() == 0) {
-        		return true;
-        	}
-        	for (int i = 0; i < list.size(); i++) {
-        		if (!filter(list.get(i))) {
-        			return true;
-        		}    		
-        	}
-        	return false;
-        }
-        
-        private List<Object> getFilteredChildrenFor(Object parent) {
-        	if (((Text) tree.getFilterControl()).getText() == ""  
-        			|| ((Text) tree.getFilterControl()).getText().startsWith(FILTER_LABEL)) {
-        		List<Object> children = new ArrayList<Object>();
-	        	if (parent instanceof ICategory) {
-	        		if(((ICategory)parent).isArchive()){
-	        			for (ITask task: ((ICategory)parent).getChildren()) {
-	    					if(task.isActive()){
-	    						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
-	    						if(t == null)
-	    							children.add(task);
-	    					}
-	    				} 
-	        			return children;
-	        		}
-	        		List<? extends ITaskListElement> list = ((ICategory) parent)
-							.getChildren();
-        			for (int i = 0; i < list.size(); i++) {
-            			if (!filter(list.get(i))) {
-            				children.add(list.get(i));
-	            		}    		
-    	        	} 
-        			return children;
-        		} else if (parent instanceof IQuery) {
-					List<? extends ITaskListElement> list = ((IQuery) parent)
-							.getChildren();
-					for (int i = 0; i < list.size(); i++) {
-						if (!filter(list.get(i))) {
-							children.add(list.get(i));
-						}
-					}
-					return children;
-				}else if (parent instanceof Task) {
-        			List<ITask> subTasks = ((Task)parent).getChildren();
-	        		for (ITask t : subTasks) {
-    	    			if (!filter(t)) {
-        					children.add(t);
-        				}
-        			}
-	        		return children;
-    	    	}
-			} else {
-				List<Object> children = new ArrayList<Object>();
-				if (parent instanceof ICategory) {
-					children.addAll(((ICategory) parent).getChildren());
-					return children;					
-				} else if (parent instanceof IQuery) {
-					children.addAll(((IQuery) parent).getChildren());
-					return children;					
-				}else if (parent instanceof Task) {
-					children.addAll(((Task) parent).getChildren());
-					return children;	
-				}
-        	}
-        	return new ArrayList<Object>();
-        }
-        
-        private boolean filter(Object obj){
-        	for (ITaskFilter filter : filters) {
-    			if (!filter.select(obj)) {
-    				return true;
-    			}
-    		} 
-        	return false;
-        }
-    }
-
-	public static TaskListView openInActivePerspective() {
+    public static TaskListView openInActivePerspective() {
 		try {
 			return (TaskListView)Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(ID);
 		} catch(Exception e) {
@@ -883,7 +706,7 @@ public class TaskListView extends ViewPart {
         getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
       
         drillDownAdapter = new DrillDownAdapter(getViewer());
-        getViewer().setContentProvider(new TaskListContentProvider());
+        getViewer().setContentProvider(new TaskListContentProvider(this));
         TaskListLabelProvider labelProvider = new TaskListLabelProvider();
         labelProvider.setBackgroundColor(parent.getBackground());
         getViewer().setLabelProvider(labelProvider);
@@ -1043,7 +866,7 @@ public class TaskListView extends ViewPart {
         });
     }
     
-    private void expandToActiveTasks() {
+    void expandToActiveTasks() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
@@ -1402,24 +1225,13 @@ public class TaskListView extends ViewPart {
     }
     
     public void addFilter(ITaskFilter filter) {
-		if (!filters.contains(filter)) filters.add(filter);		
+		if (!filters.contains(filter)) filters.add(filter);	
 	}
 	
 	public void removeFilter(ITaskFilter filter) {
 		filters.remove(filter);
 	}	
-		
-	public TaskListContentProvider getContentProvider() {
-		return new TaskListContentProvider();
-	}
-//	public  void resetToolbarsAndPopups() {
-//		getViewSite().getActionBars().getMenuManager().removeAll();
-//        fillLocalPullDown(getViewSite().getActionBars().getMenuManager());
-//        fillContextMenu(getViewSite().getActionBars().getMenuManager());
-//		fillLocalToolBar(getViewSite().getActionBars().getToolBarManager());
-//		getViewSite().getActionBars().getToolBarManager().update(true);  
-//	}
-
+	
 	@Override
 	public void dispose() {
 		super.dispose();
