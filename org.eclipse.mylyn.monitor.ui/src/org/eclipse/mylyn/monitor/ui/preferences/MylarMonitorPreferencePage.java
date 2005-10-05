@@ -85,7 +85,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements
 	public boolean performOk() {
 		int uidNum = -1;
       try{
-          if(userStudyId.getStringValue() == ""){
+          if(userStudyId.getStringValue() == null ||  userStudyId.getStringValue().equals("")){
               uidNum = -1;
               userStudyId.setStringValue(uidNum + "");
           }
