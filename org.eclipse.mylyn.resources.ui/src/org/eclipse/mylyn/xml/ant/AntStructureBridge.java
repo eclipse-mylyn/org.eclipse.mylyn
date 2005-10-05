@@ -130,7 +130,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
             
             // get the line number that the element is on
         	String elementPath = handle.substring(first + 1);
-        	if (elementPath == "") {
+        	if (elementPath.equals("")) {
             	return file;
             } else {
 	            // XXX needed if the editor is the only way to get the model

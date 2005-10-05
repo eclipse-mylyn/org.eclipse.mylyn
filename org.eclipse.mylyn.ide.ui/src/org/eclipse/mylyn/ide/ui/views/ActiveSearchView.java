@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.ide.ui.views;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -53,6 +55,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
@@ -191,6 +194,18 @@ public class ActiveSearchView extends ViewPart {
 		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
 		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));
 	}
+	
+	private void initDrag() {
+		int ops= DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+		Transfer[] transfers= new Transfer[] {
+			LocalSelectionTransfer.getInstance(), 
+			ResourceTransfer.getInstance()};
+		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] {
+			new ActiveViewSelectionDragAdapter(viewer),
+			new ActiveViewResourceDragAdapter(viewer)
+		};
+		viewer.addDragSupport(ops, transfers, new ActiveViewDelegatingDragAdapter(dragListeners));
+	}
     
     /**
      * This is a callback that will allow us
@@ -209,6 +224,7 @@ public class ActiveSearchView extends ViewPart {
         viewer.setInput(getViewSite());
         hookContextMenu();
         initDrop();
+        initDrag();
         
         viewer.addOpenListener(new TaskscapeNodeClickListener(viewer));
         

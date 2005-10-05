@@ -30,6 +30,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -43,7 +44,10 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarContextNode;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.ide.ui.views.ActiveViewDelegatingDragAdapter;
 import org.eclipse.mylar.ide.ui.views.ActiveViewDropAdapter;
+import org.eclipse.mylar.ide.ui.views.ActiveViewResourceDragAdapter;
+import org.eclipse.mylar.ide.ui.views.ActiveViewSelectionDragAdapter;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.ui.JavaContextLabelProvider;
 import org.eclipse.swt.SWT;
@@ -56,6 +60,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
@@ -260,7 +265,7 @@ public class ActiveHierarchyView extends ViewPart {
 			contributeToActionBars();
 			
 			initDrop();
-//			viewer.getTree().setBackground(MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR);
+			initDrag();
         } catch (Throwable t) {
         	MylarPlugin.log(t, "create failed");
         }
@@ -270,6 +275,18 @@ public class ActiveHierarchyView extends ViewPart {
     private void initDrop() {
 		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
 		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));
+	}
+	
+	private void initDrag() {
+		int ops= DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+		Transfer[] transfers= new Transfer[] {
+			LocalSelectionTransfer.getInstance(), 
+			ResourceTransfer.getInstance()};
+		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] {
+			new ActiveViewSelectionDragAdapter(viewer),
+			new ActiveViewResourceDragAdapter(viewer)
+		}; 
+		viewer.addDragSupport(ops, transfers, new ActiveViewDelegatingDragAdapter(dragListeners));
 	}
     
 	private void hookContextMenu() {
