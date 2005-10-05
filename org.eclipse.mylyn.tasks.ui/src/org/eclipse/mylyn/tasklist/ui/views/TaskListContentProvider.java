@@ -113,6 +113,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
         	}
         }
         
+        /**
+         * See bug 109693
+         */
         private boolean containsNoFilterText(String filterText) {
         	return filterText == null || filterText.length() == 0;
 		}
