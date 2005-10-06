@@ -26,7 +26,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
@@ -41,9 +41,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public class JavaUiBridge implements IMylarUiBridge {
  
-    public void open(IMylarContextNode node) {
+    public void open(IMylarElement node) {
         //get the element and open it in an editor
-        IJavaElement javaElement = JavaCore.create(node.getElementHandle());
+        IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
         if (javaElement == null || !javaElement.exists()) return;
         try {
             IEditorPart part = JavaUI.openInEditor(javaElement);
@@ -56,7 +56,7 @@ public class JavaUiBridge implements IMylarUiBridge {
     /**
      * TODO: implement if needed
      */
-    public void close(IMylarContextNode node) {
+    public void close(IMylarElement node) {
         try {
             IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
             if (page != null) {

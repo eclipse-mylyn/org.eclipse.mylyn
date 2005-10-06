@@ -175,7 +175,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 			
 		}
 
-		public boolean containsProblem(IMylarContextNode node) {
+		public boolean containsProblem(IMylarElement node) {
 			// TODO Auto-generated method stub
 			return false;
 		}

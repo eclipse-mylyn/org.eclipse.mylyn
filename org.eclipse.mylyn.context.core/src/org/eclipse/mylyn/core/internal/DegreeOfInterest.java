@@ -13,11 +13,10 @@
   */
 package org.eclipse.mylar.core.internal;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.mylar.core.IDegreeOfInterest;
 import org.eclipse.mylar.core.InteractionEvent;
@@ -32,7 +31,9 @@ import org.eclipse.mylar.dt.MylarInterest;
 public class DegreeOfInterest implements IDegreeOfInterest {
     
     private List<InteractionEvent> events = new ArrayList<InteractionEvent>();
-    protected transient ScalingFactors scaling;
+    private Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<InteractionEvent.Kind, InteractionEvent>();
+
+    protected ScalingFactors scaling;
 
     private float edits = 0;
     private float selections = 0;
@@ -61,9 +62,25 @@ public class DegreeOfInterest implements IDegreeOfInterest {
      * TODO: make package-visible
      */
     public void addEvent(InteractionEvent event) {
-        events.add(0, event);
+    	events.add(0, event);
+    	InteractionEvent last = collapsedEvents.get(event.getKind());
+    	if (last != null) {
+	    	InteractionEvent aggregateEvent = new InteractionEvent(
+	    			event.getKind(), 
+	        		event.getContentType(), 
+	        		event.getStructureHandle(), 
+	        		event.getOriginId(), 
+	        		event.getNavigation(), 
+	        		event.getDelta(), 
+	        		last.getInterestContribution() + event.getInterestContribution(),
+	        		last.getDate(), 
+	        		event.getEndDate());
+	    	collapsedEvents.put(event.getKind(), aggregateEvent);
+    	} else {
+    		collapsedEvents.put(event.getKind(), event);
+    	}
         updateEventState(event);
-    }
+    } 
 
     private void updateEventState(InteractionEvent event) {
         switch(event.getKind()) {
@@ -154,18 +171,32 @@ public class DegreeOfInterest implements IDegreeOfInterest {
         return events;
     }
     
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        stream.writeObject(events);
+    public List<InteractionEvent> getCollapsedEvents() {
+    	List<InteractionEvent> allCollapsed = new ArrayList<InteractionEvent>();
+    	allCollapsed.addAll(collapsedEvents.values()); 
+    	if (!allCollapsed.isEmpty()) {
+    		allCollapsed.add(0, new InteractionEvent(
+			        InteractionEvent.Kind.MANIPULATION, 
+			        allCollapsed.get(0).getContentType(),
+			        allCollapsed.get(0).getStructureHandle(), 
+			        MylarContextManager.SOURCE_ID_DECAY,
+			        -getDecayValue()));
+    	}
+    	return allCollapsed;
     }
     
-    @SuppressWarnings(value="unchecked")
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        events = (List<InteractionEvent>)stream.readObject();
-        init();
-        for (InteractionEvent event : events) {
-            updateEventState(event);
-        }
-    }   
+//    private void writeObject(ObjectOutputStream stream) throws IOException {
+//        stream.defaultWriteObject();
+//        stream.writeObject(events);
+//    }
+//    
+//    @SuppressWarnings(value="unchecked")
+//    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+//        stream.defaultReadObject();
+//        events = (List<InteractionEvent>)stream.readObject();
+//        init();
+//        for (InteractionEvent event : events) {
+//            updateEventState(event);
+//        }
+//    }   
 }

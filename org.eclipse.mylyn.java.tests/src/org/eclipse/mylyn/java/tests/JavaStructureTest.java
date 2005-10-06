@@ -20,7 +20,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
@@ -88,8 +88,8 @@ public class JavaStructureTest extends AbstractContextTest {
         editorPart.setHighlightRange(callerSelection.getOffset(),callerSelection.getLength(), true);
         monitor.selectionChanged(editorPart, calleeSelection);
         
-        IMylarContextNode callerNode = manager.getNode(caller.getHandleIdentifier());
-        IMylarContextNode calleeNode = manager.getNode(callee.getHandleIdentifier());
+        IMylarElement callerNode = manager.getNode(caller.getHandleIdentifier());
+        IMylarElement calleeNode = manager.getNode(callee.getHandleIdentifier());
         assertTrue(callerNode.getDegreeOfInterest().isInteresting());
         assertTrue(calleeNode.getDegreeOfInterest().isInteresting());
         assertEquals(1, callerNode.getEdges().size());

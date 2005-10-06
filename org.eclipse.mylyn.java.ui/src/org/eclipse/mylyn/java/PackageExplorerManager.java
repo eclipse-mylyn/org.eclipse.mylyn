@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.ui.MembersFilter;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
@@ -57,19 +57,19 @@ public class PackageExplorerManager implements IMylarContextListener {
 		}
     }
     
-   public void interestChanged(List<IMylarContextNode> nodes) {
+   public void interestChanged(List<IMylarElement> nodes) {
     	if (nodes.size() == 0) return;
-    	IMylarContextNode lastNode = nodes.get(nodes.size()-1);
+    	IMylarElement lastNode = nodes.get(nodes.size()-1);
     	interestChanged(lastNode);
     }
     
-    public void interestChanged(IMylarContextNode node) {
+    public void interestChanged(IMylarElement node) {
 	    try {
     		if (MylarPlugin.getContextManager().hasActiveContext()
 	    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
 	    		&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
     			
-    			IJavaElement lastElement = JavaCore.create(node.getElementHandle()); 
+    			IJavaElement lastElement = JavaCore.create(node.getHandleIdentifier()); 
 				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 				if (packageExplorer != null && lastElement != null) { 
 					ISelection selection = packageExplorer.getTreeViewer().getSelection();
@@ -115,19 +115,19 @@ public class PackageExplorerManager implements IMylarContextListener {
     	// ignore
     }
 
-    public void landmarkAdded(IMylarContextNode node) {
+    public void landmarkAdded(IMylarElement node) {
     	// ignore
     } 
 
-    public void landmarkRemoved(IMylarContextNode node) {
+    public void landmarkRemoved(IMylarElement node) {
     	// ignore
     }
     
-    public void nodeDeleted(IMylarContextNode node) {
+    public void nodeDeleted(IMylarElement node) {
     	// ignore
     }
       
-    public void edgesChanged(IMylarContextNode node) {
+    public void edgesChanged(IMylarElement node) {
     	// ignore
     }
 }

@@ -21,9 +21,9 @@ import java.util.Set;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextEdge;
+import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -145,7 +145,7 @@ public class MylarContextManager {
 //        activityTimer.start();
     }
 
-    public IMylarContextNode getActiveNode() {
+    public IMylarElement getActiveNode() {
         if (activeContext != null) {
             return activeContext.getActiveNode();
         } else {
@@ -172,7 +172,7 @@ public class MylarContextManager {
     public void removeErrorPredictedInterest(String handle, String kind, boolean notify) { 
         if (activeContext.getContextMap().isEmpty()) return;
         if (handle == null) return;
-        IMylarContextNode node = activeContext.get(handle);
+        IMylarElement node = activeContext.get(handle);
         if (node != null 
             && node.getDegreeOfInterest().isInteresting()
         	&& errorElementHandles.contains(handle)) {
@@ -189,7 +189,7 @@ public class MylarContextManager {
         }
     } 
 
-	public IMylarContextNode getNode(String elementHandle) {
+	public IMylarElement getNode(String elementHandle) {
         if (activeContext != null) {
             return activeContext.get(elementHandle);
         } else {
@@ -197,23 +197,23 @@ public class MylarContextManager {
         }
     }
 
-    public IMylarContextNode handleInteractionEvent(InteractionEvent event) {
+    public IMylarElement handleInteractionEvent(InteractionEvent event) {
     	return handleInteractionEvent(event, true);
     }
 
-    public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
+    public IMylarElement handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
     	return handleInteractionEvent(event, true, true);
     }
     
     /**
      * TODO: consider moving this into the context?
      */
-    public IMylarContextNode handleInteractionEvent(InteractionEvent event, boolean propagateToParents, boolean notifyListeners) {
+    public IMylarElement handleInteractionEvent(InteractionEvent event, boolean propagateToParents, boolean notifyListeners) {
         if (event.getKind() == InteractionEvent.Kind.COMMAND) return null;
         if (activeContext.getContextMap().values().size() == 0) return null;
         if (suppressListenerNotification) return null;
         
-        IMylarContextNode previous = activeContext.get(event.getStructureHandle());
+        IMylarElement previous = activeContext.get(event.getStructureHandle());
         float previousInterest = 0;
         float decayOffset = 0;
         if (previous != null) previousInterest = previous.getDegreeOfInterest().getValue();
@@ -222,14 +222,14 @@ public class MylarContextManager {
             	decayOffset = (-1)*(previous.getDegreeOfInterest().getValue());
         		activeContext.addEvent(new InteractionEvent(
                         InteractionEvent.Kind.MANIPULATION, 
-                        event.getStructureKind(),
+                        event.getContentType(),
                         event.getStructureHandle(), 
                         SOURCE_ID_DECAY_CORRECTION,
                         decayOffset));
             }
         }
-        IMylarContextNode node = activeContext.addEvent(event);
-        List<IMylarContextNode> interestDelta = new ArrayList<IMylarContextNode>();
+        IMylarElement node = activeContext.addEvent(event);
+        List<IMylarElement> interestDelta = new ArrayList<IMylarElement>();
         if (propagateToParents && !event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) {
         	propegateDoiToParents(node, previousInterest, decayOffset, 1, interestDelta); 
         }
@@ -246,10 +246,10 @@ public class MylarContextManager {
         return node;
     }
 
-	private void checkForLandmarkDelta(float previousInterest, IMylarContextNode node) {
+	private void checkForLandmarkDelta(float previousInterest, IMylarElement node) {
 		// TODO: don't call interestChanged if it's a landmark?
     	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-    	if (bridge.canBeLandmark(node.getElementHandle())) {
+    	if (bridge.canBeLandmark(node.getHandleIdentifier())) {
     		if (previousInterest >= scalingFactors.getLandmark() && !node.getDegreeOfInterest().isLandmark()) {
     			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) listener.landmarkRemoved(node);
             } else if (previousInterest < scalingFactors.getLandmark() && node.getDegreeOfInterest().isLandmark()) {
@@ -258,7 +258,7 @@ public class MylarContextManager {
         } 
 	}
     
-    private void propegateDoiToParents(IMylarContextNode node, float previousInterest, float decayOffset, int level, List<IMylarContextNode> elementDelta) {
+    private void propegateDoiToParents(IMylarElement node, float previousInterest, float decayOffset, int level, List<IMylarElement> elementDelta) {
         if (level > MAX_PROPAGATION || node == null || node.getDegreeOfInterest().getValue() <= 0) return;// || "/".equals(node.getElementHandle())) return;         
         
         checkForLandmarkDelta(previousInterest, node);
@@ -269,16 +269,16 @@ public class MylarContextManager {
       
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
                 
-        String parentHandle = adapter.getParentHandle(node.getElementHandle());
+        String parentHandle = adapter.getParentHandle(node.getHandleIdentifier());
         if (parentHandle != null) {
             InteractionEvent propagationEvent = new InteractionEvent(
                     InteractionEvent.Kind.PROPAGATION, 
-                    adapter.getResourceExtension(node.getElementHandle()),
-                    adapter.getParentHandle(node.getElementHandle()), 
+                    adapter.getResourceExtension(node.getHandleIdentifier()),
+                    adapter.getParentHandle(node.getHandleIdentifier()), 
                     SOURCE_ID_MODEL_PROPAGATION,
                     CONTAINMENT_PROPAGATION_ID,
                     propagatedIncrement);
-            IMylarContextNode previous = activeContext.get(propagationEvent.getStructureHandle());
+            IMylarElement previous = activeContext.get(propagationEvent.getStructureHandle());
             if (previous != null && previous.getDegreeOfInterest() != null) previousInterest = previous.getDegreeOfInterest().getValue();
             CompositeContextNode parentNode = (CompositeContextNode)activeContext.addEvent(propagationEvent);
             elementDelta.add(0, parentNode);
@@ -286,10 +286,10 @@ public class MylarContextManager {
         }
     }
 
-    public List<IMylarContextNode> findCompositesForNodes(List<MylarContextNode> nodes) {
-        List<IMylarContextNode> composites = new ArrayList<IMylarContextNode>();
+    public List<IMylarElement> findCompositesForNodes(List<MylarContextNode> nodes) {
+        List<IMylarElement> composites = new ArrayList<IMylarElement>();
         for (MylarContextNode node : nodes) {
-            composites.add(activeContext.get(node.getElementHandle()));
+            composites.add(activeContext.get(node.getHandleIdentifier()));
         }
         return composites;
     }
@@ -373,7 +373,7 @@ public class MylarContextManager {
      */
     public void contextDeactivated(String id, String path) {
     	try {
-	        IMylarContext context = activeContext.getContextMap().get(id);        
+	        IMylarContext context = activeContext.getContextMap().get(id);    
 	        if (context != null) {
 	            saveContext(id, path); 
 	            activeContext.getContextMap().remove(id);
@@ -437,12 +437,9 @@ public class MylarContextManager {
  
     public void saveContext(String id, String path) {
         MylarContext context = activeContext.getContextMap().get(id);
-        if (context == null) {
-            return;
-        } else {
-        	context.collapse();
-            externalizer.writeContextToXML(context, getFileForContext(path));
-        }
+        if (context == null) return;
+    	context.collapse();
+        externalizer.writeContextToXML(context, getFileForContext(path));
     }
     
     private void saveActivityHistoryContext() {
@@ -461,8 +458,8 @@ public class MylarContextManager {
      * @param kind
      */
     public void resetLandmarkRelationshipsOfKind(String reltationKind) {
-        for (IMylarContextNode landmark : activeContext.getLandmarks()) {       	
-        	for (IMylarContextEdge edge : landmark.getEdges()) {
+        for (IMylarElement landmark : activeContext.getLandmarks()) {       	
+        	for (IMylarRelation edge : landmark.getEdges()) {
         		if (edge.getRelationshipHandle().equals(reltationKind)) {
         			landmark.clearEdges();         		}
 			}
@@ -474,7 +471,7 @@ public class MylarContextManager {
      * Copy the listener list in case it is modified during the notificiation.
      * @param node
      */
-	public void notifyRelationshipsChanged(IMylarContextNode node) {
+	public void notifyRelationshipsChanged(IMylarElement node) {
 		if (suppressListenerNotification) return;
 		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 			listener.edgesChanged(node);
@@ -491,7 +488,7 @@ public class MylarContextManager {
 		//            if (provider.isEnabled()) {
 		//                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
 		//            }
-		//            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
+		//            for (IMylarElement node : activeContext.getLandmarks()) provider.landmarkAdded(node);
 		        }
     		}
     	}
@@ -515,7 +512,7 @@ public class MylarContextManager {
         } else {
 //        	provider.setEnabled(true);
         	provider.setDegreeOfSeparation(degreeOfSeparation);
-            for (IMylarContextNode node : activeContext.getLandmarks()) provider.landmarkAdded(node);
+            for (IMylarElement node : activeContext.getLandmarks()) provider.landmarkAdded(node);
         }
     }
     
@@ -553,24 +550,24 @@ public class MylarContextManager {
 		return activeContext.getContextMap().values().size() > 0;
 	}
 
-	public List<IMylarContextNode> getActiveLandmarks() {
-		List<IMylarContextNode> allLandmarks = activeContext.getLandmarks();
-		List<IMylarContextNode> acceptedLandmarks = new ArrayList<IMylarContextNode>();
-		for (IMylarContextNode node : allLandmarks) {
+	public List<IMylarElement> getActiveLandmarks() {
+		List<IMylarElement> allLandmarks = activeContext.getLandmarks();
+		List<IMylarElement> acceptedLandmarks = new ArrayList<IMylarElement>();
+		for (IMylarElement node : allLandmarks) {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 
-            if (bridge.canBeLandmark(node.getElementHandle())) {
+            if (bridge.canBeLandmark(node.getHandleIdentifier())) {
             	acceptedLandmarks.add(node);
         	}
         } 
 		return acceptedLandmarks;
 	}
 	
-    public Set<IMylarContextNode> getInterestingResources(IMylarContext context) {
-        Set<IMylarContextNode> interestingFiles = new HashSet<IMylarContextNode>();
-        List<IMylarContextNode> allIntersting = context.getInteresting();
-        for (IMylarContextNode node : allIntersting) {
-            if (MylarPlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(node.getElementHandle())) {       
+    public Set<IMylarElement> getInterestingResources(IMylarContext context) {
+        Set<IMylarElement> interestingFiles = new HashSet<IMylarElement>();
+        List<IMylarElement> allIntersting = context.getInteresting();
+        for (IMylarElement node : allIntersting) {
+            if (MylarPlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(node.getHandleIdentifier())) {       
                 interestingFiles.add(node);
             }
         }
@@ -580,7 +577,7 @@ public class MylarContextManager {
 	/**
 	 * Get the interesting resources for the active context.
 	 */
-	public Set<IMylarContextNode> getActiveContextResources() {
+	public Set<IMylarElement> getActiveContextResources() {
 		return getInterestingResources(activeContext);
     }
 
@@ -611,7 +608,7 @@ public class MylarContextManager {
 		this.activationHistorySuppressed = activationHistorySuppressed;
 	}
 	
-    public void manipulateInterestForNode(IMylarContextNode node, boolean increment, boolean forceLandmark, String sourceId) {
+    public void manipulateInterestForNode(IMylarElement node, boolean increment, boolean forceLandmark, String sourceId) {
         float originalValue = node.getDegreeOfInterest().getValue();
         float changeValue = 0;
         if (!increment) {
@@ -631,7 +628,7 @@ public class MylarContextManager {
             InteractionEvent interactionEvent = new InteractionEvent(
                     InteractionEvent.Kind.MANIPULATION,  
                     node.getContentType(), 
-                    node.getElementHandle(), 
+                    node.getHandleIdentifier(), 
                     sourceId,
                     changeValue);
             MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent);

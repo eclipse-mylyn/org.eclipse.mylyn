@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -77,11 +77,11 @@ public class ActiveSearchView extends ViewPart {
 	private boolean asyncRefreshMode = true;
     
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
-        public void interestChanged(IMylarContextNode node) { 
+        public void interestChanged(IMylarElement node) { 
             refresh(node, false);
         } 
         
-        public void interestChanged(List<IMylarContextNode> nodes) {
+        public void interestChanged(List<IMylarElement> nodes) {
             refresh(nodes.get(nodes.size()-1), false);
         }
 
@@ -97,19 +97,19 @@ public class ActiveSearchView extends ViewPart {
             refresh(null, true);
         }
         
-        public void landmarkAdded(IMylarContextNode node) { 
+        public void landmarkAdded(IMylarElement node) { 
             refresh(null, true);
         }
 
-        public void landmarkRemoved(IMylarContextNode node) { 
+        public void landmarkRemoved(IMylarElement node) { 
             refresh(null, true);
         }
 
-        public void edgesChanged(IMylarContextNode node) {
+        public void edgesChanged(IMylarElement node) {
             refresh(node, true);
         }
 
-        public void nodeDeleted(IMylarContextNode node) {
+        public void nodeDeleted(IMylarElement node) {
         	refresh(null, true);
         }
 
@@ -154,7 +154,7 @@ public class ActiveSearchView extends ViewPart {
         MylarPlugin.getContextManager().refreshRelatedElements();
 	}
 
-    void refresh(final IMylarContextNode node, final boolean updateLabels) {
+    void refresh(final IMylarElement node, final boolean updateLabels) {
         if (!asyncRefreshMode) { // for testing
         	if (viewer != null && !viewer.getTree().isDisposed()) {
         		viewer.refresh();
@@ -180,7 +180,7 @@ public class ActiveSearchView extends ViewPart {
         }
     }
     
-	private boolean containsNode(Tree tree, IMylarContextNode node) {
+	private boolean containsNode(Tree tree, IMylarElement node) {
     	boolean contains = false;
     	for (int i = 0; i < tree.getItems().length; i++) {
 			TreeItem item = tree.getItems()[i]; 

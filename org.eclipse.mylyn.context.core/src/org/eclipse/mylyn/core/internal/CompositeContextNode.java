@@ -17,14 +17,14 @@ import java.util.*;
 
 import org.eclipse.mylar.core.IDegreeOfInterest;
 import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 
 
 /**
  * @author Mik Kersten
  */
-public class CompositeContextNode implements IMylarContextNode {
+public class CompositeContextNode implements IMylarElement {
     private Set<MylarContextNode> nodes = null;//new HashSet<ITaskscapeNode>();
     
     private String handle = "<no handle>";
@@ -41,8 +41,8 @@ public class CompositeContextNode implements IMylarContextNode {
      * TODO: is this always best?
      */
     public IMylarContext getContext() {
-        IMylarContextNode highestValueNode = null;
-        for (IMylarContextNode node : nodes) {
+        IMylarElement highestValueNode = null;
+        for (IMylarElement node : nodes) {
             if (highestValueNode == null || node.getDegreeOfInterest().getValue() < highestValueNode.getDegreeOfInterest().getValue()) highestValueNode = node;
         }
         if (highestValueNode != null) {
@@ -54,17 +54,17 @@ public class CompositeContextNode implements IMylarContextNode {
     
     public IDegreeOfInterest getDegreeOfInterest() {
         CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
-        for (IMylarContextNode node : nodes) {
+        for (IMylarElement node : nodes) {
             degreeOfInterest.getInfos().add(node.getDegreeOfInterest());
         }
         return degreeOfInterest;
     }
 
-    public String getElementHandle() {
+    public String getHandleIdentifier() {
         return handle;
     }
 
-    public void setElementHandle(String elementHandle) {
+    public void setHandleIdentifier(String elementHandle) {
     	// can't set a handle on this
     }
 
@@ -78,7 +78,7 @@ public class CompositeContextNode implements IMylarContextNode {
     public String getContentType() {
         Set<String> kinds = new HashSet<String>();
         String lastKind = null;
-        for (IMylarContextNode node : nodes) {
+        for (IMylarElement node : nodes) {
             lastKind = node.getContentType();
             kinds.add(lastKind);
         }
@@ -95,7 +95,7 @@ public class CompositeContextNode implements IMylarContextNode {
      */
     public MylarContextEdge getEdge(String targetHandle) {
         Set<MylarContextEdge> edges = new HashSet<MylarContextEdge>();
-        for (IMylarContextNode node : nodes) edges.add(node.getEdge(targetHandle));
+        for (IMylarElement node : nodes) edges.add(node.getEdge(targetHandle));
         if (edges.size() == 0) {
             return null;
         } else if (edges.size() > 1) {
@@ -120,7 +120,7 @@ public class CompositeContextNode implements IMylarContextNode {
         if (obj == null) return false;
         if (obj instanceof CompositeContextNode) {
             CompositeContextNode node = (CompositeContextNode)obj;
-            return this.getElementHandle().equals(node.getElementHandle());
+            return this.getHandleIdentifier().equals(node.getHandleIdentifier());
         }
         return false;
     }

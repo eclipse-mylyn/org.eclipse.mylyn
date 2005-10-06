@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.ui.internal;
 
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContextNode;
 import org.eclipse.mylar.core.internal.MylarContext;
@@ -30,17 +30,17 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class UiUtil {
 
-    public static Color getBackgroundForElement(IMylarContextNode node) {
+    public static Color getBackgroundForElement(IMylarElement node) {
         if (node == null || node.getDegreeOfInterest().isPropagated()) return null;
-        IMylarContextNode dominantNode = null;
+        IMylarElement dominantNode = null;
         boolean isMultiple = false;
         if (node instanceof CompositeContextNode) {
             CompositeContextNode compositeNode = (CompositeContextNode)node;
             if (compositeNode.getNodes().isEmpty()) return null;
-            dominantNode = (IMylarContextNode)compositeNode.getNodes().toArray()[0];
+            dominantNode = (IMylarElement)compositeNode.getNodes().toArray()[0];
             if (compositeNode.getNodes().size() > 1) isMultiple = true;
                 
-            for(IMylarContextNode concreteNode : compositeNode.getNodes()) {
+            for(IMylarElement concreteNode : compositeNode.getNodes()) {
                 if (dominantNode != null 
                     && dominantNode.getDegreeOfInterest().getValue() < concreteNode.getDegreeOfInterest().getValue()) {
                     dominantNode = concreteNode;
@@ -84,7 +84,7 @@ public class UiUtil {
         }
     }
  
-    public static Color getForegroundForElement(IMylarContextNode node) {
+    public static Color getForegroundForElement(IMylarElement node) {
         if (node == null) return null; 
         if (node.getDegreeOfInterest().isPredicted() || node.getDegreeOfInterest().isPropagated()) { 
             if (node.getDegreeOfInterest().getValue() >= 20) { // HACK: parametrize

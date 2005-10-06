@@ -15,7 +15,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
@@ -45,7 +45,7 @@ public class JavaReadAccessSearchPluginTest extends TestCase implements ISearchP
 //		List<?> results = search(5);
 //	}
 	
-	public List<?> search(int dos, IMylarContextNode node){
+	public List<?> search(int dos, IMylarElement node){
 		
 		if(node == null)
 			return null;

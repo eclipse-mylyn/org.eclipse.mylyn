@@ -14,7 +14,7 @@ package org.eclipse.mylar.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IViewActionDelegate;
@@ -49,9 +49,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     		if (objectAction.getSelection() instanceof StructuredSelection) {
     			StructuredSelection selection = (StructuredSelection)objectAction.getSelection();
     			for (Object object : selection.toList()) {
-    				IMylarContextNode node = null;
-    				if (object instanceof IMylarContextNode) {
-    					node = (IMylarContextNode)object;
+    				IMylarElement node = null;
+    				if (object instanceof IMylarElement) {
+    					node = (IMylarElement)object;
     				} else {
 	    				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);              
 	                    String handle = bridge.getHandleIdentifier(object);
@@ -61,7 +61,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     			}
     		}
     	} else {
-    		IMylarContextNode node = MylarPlugin.getContextManager().getActiveNode();
+    		IMylarElement node = MylarPlugin.getContextManager().getActiveNode();
     		if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
     	}
     }

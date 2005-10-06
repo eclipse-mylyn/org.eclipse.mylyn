@@ -24,7 +24,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
@@ -39,7 +39,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
     private final JavaEditor editor;
     private ActiveFoldingController controller;
 
-    private IMylarContextNode lastUpdatedNode = null;
+    private IMylarElement lastUpdatedNode = null;
     
     /**
      * Work-around lack of 3.1 method.
@@ -81,14 +81,14 @@ public class ActiveFoldingListener implements IMylarContextListener {
         JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
     }
 
-    public void interestChanged(IMylarContextNode node) {
+    public void interestChanged(IMylarElement node) {
     	if (!node.equals(lastUpdatedNode)) {
     		controller.updateFolding(true);
     		lastUpdatedNode = node;
     	}
     }
 
-    public void interestChanged(List<IMylarContextNode> nodes) {
+    public void interestChanged(List<IMylarElement> nodes) {
     	interestChanged(nodes.get(nodes.size()-1));     
     }
 
@@ -108,19 +108,19 @@ public class ActiveFoldingListener implements IMylarContextListener {
     	controller.resetFolding();
     }
 
-    public void landmarkAdded(IMylarContextNode element) { 
+    public void landmarkAdded(IMylarElement element) { 
     	// don't care when a landmark is added
     }
 
-    public void landmarkRemoved(IMylarContextNode element) { 
+    public void landmarkRemoved(IMylarElement element) { 
     	// don't are when a landmark is removed
     }
 
-    public void edgesChanged(IMylarContextNode node) { 
+    public void edgesChanged(IMylarElement node) { 
     	// don't care when relationships change
     }
 
-    public void nodeDeleted(IMylarContextNode node) {
+    public void nodeDeleted(IMylarElement node) {
 //        hardRefresh(); 
 //        foldingController.updateFolding(false);
     }

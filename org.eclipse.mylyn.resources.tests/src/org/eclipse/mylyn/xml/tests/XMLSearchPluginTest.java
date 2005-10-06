@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
 import org.eclipse.mylar.core.internal.MylarContext;
@@ -91,7 +91,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
     	
     	//
     	// results should be null since the scope would be null.
@@ -149,7 +149,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
     	// results should be null since the scope would be null.
@@ -211,7 +211,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
 		CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
 		// add an element to the taskscape, results should not be null
@@ -252,7 +252,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 		
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IMylarContextNode searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		
 		//
 		// add an element to the taskscape, results should not be null
@@ -287,7 +287,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
 	}
 	
 	
-	public List<?> search(int dos, IMylarContextNode node) throws IOException, CoreException{
+	public List<?> search(int dos, IMylarElement node) throws IOException, CoreException{
 		if(node == null)
 			return null;
 		

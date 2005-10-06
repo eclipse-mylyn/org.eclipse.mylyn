@@ -22,18 +22,18 @@ public interface IMylarContext {
 
     public abstract List<InteractionEvent> getInteractionHistory();
     
-    public List<IMylarContextNode> getInteresting();
+    public List<IMylarElement> getInteresting();
     
-    public abstract IMylarContextNode get(String element);
+    public abstract IMylarElement get(String element);
 
-    public abstract IMylarContextNode getActiveNode();
+    public abstract IMylarElement getActiveNode();
 
-    public abstract void remove(IMylarContextNode node);
+    public abstract void remove(IMylarElement node);
 
-    public abstract List<IMylarContextNode> getAllElements();
+    public abstract List<IMylarElement> getAllElements();
 
-//  public abstract Set<IMylarContextNode> getInterestingResources();
+//  public abstract Set<IMylarElement> getInterestingResources();
     
-//  public abstract List<IMylarContextNode> getLandmarks();
+//  public abstract List<IMylarElement> getLandmarks();
 
 }

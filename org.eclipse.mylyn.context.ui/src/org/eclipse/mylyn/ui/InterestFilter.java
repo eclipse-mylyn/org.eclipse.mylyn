@@ -18,7 +18,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
@@ -48,9 +48,9 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
         	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
         	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
         	
-            IMylarContextNode node = null;
-            if (element instanceof IMylarContextNode) {
-                node = (IMylarContextNode)element;
+            IMylarElement node = null;
+            if (element instanceof IMylarElement) {
+                node = (IMylarElement)element;
             } else { 
                 IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
                 if (!bridge.canFilter(element)) return true;    

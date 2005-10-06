@@ -28,7 +28,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
@@ -331,7 +331,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		parentBridge = bridge;
 	}
 
-	public boolean containsProblem(IMylarContextNode node) {
+	public boolean containsProblem(IMylarElement node) {
 		// TODO Auto-generated method stub
 		return false;
 	}

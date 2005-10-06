@@ -36,7 +36,7 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.core.AbstractRelationProvider;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
@@ -67,13 +67,13 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
     }
 
     /**
-     * @see org.eclipse.mylar.core.AbstractRelationProvider#findRelated(org.eclipse.mylar.core.IMylarContextNode, int)
+     * @see org.eclipse.mylar.core.AbstractRelationProvider#findRelated(org.eclipse.mylar.core.IMylarElement, int)
      */
     @Override
-    protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
+    protected void findRelated(final IMylarElement node, int degreeOfSeparation) {
         
         if (!node.getContentType().equals("java")) return;
-        IJavaElement javaElement = JavaCore.create(node.getElementHandle());
+        IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
         if (javaElement == null || javaElement instanceof ICompilationUnit || !javaElement.exists()) return;
         if (!acceptElement(javaElement)) {
             return; 
@@ -84,16 +84,16 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
     }
         
     protected SearchScope createTextSearchScope(int degreeOfSeparation){    
-        List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
+        List<IMylarElement> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
         
         switch(degreeOfSeparation){
             case 1:
                 // create a search scope for the projects of landmarks
                 List<IResource> l = new ArrayList<IResource>();
-                for (IMylarContextNode landmark : landmarks) {
+                for (IMylarElement landmark : landmarks) {
                     if (landmark.getContentType().equals(PdeStructureBridge.CONTENT_TYPE)) { 
                     	// || landmark.getContentType().equals(AntStructureBridge.CONTENT_TYPE)) {
-                        String handle = landmark.getElementHandle();
+                        String handle = landmark.getHandleIdentifier();
                         IResource element = null;
                         int first = handle.indexOf(";");
                         String filename = handle;
@@ -117,10 +117,10 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
             case 2:
                 // create a search scope for the projects of landmarks
                 List<IProject> proj = new ArrayList<IProject>();
-                for (IMylarContextNode landmark : landmarks) {
+                for (IMylarElement landmark : landmarks) {
                 	IMylarStructureBridge sbridge = MylarPlugin.getDefault().getStructureBridge(landmark.getContentType());
                 	if(sbridge != null){
-                		Object object = sbridge.getObjectForHandle(landmark.getElementHandle());
+                		Object object = sbridge.getObjectForHandle(landmark.getHandleIdentifier());
                 		IProject project = sbridge.getProjectForObject(object);
                 		if(project != null){
                 			proj.add(project);
@@ -165,7 +165,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
             && (javaElement instanceof IMember || javaElement instanceof IType);
     }
     
-    private void runJob(final IMylarContextNode node, final IJavaElement javaElement, final int degreeOfSeparation, final String kind) {
+    private void runJob(final IMylarElement node, final IJavaElement javaElement, final int degreeOfSeparation, final String kind) {
         
         // get the fully qualified name and if it is null, don't search
     	String fullyQualifiedName = getFullyQualifiedName(javaElement);
@@ -243,8 +243,8 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 	}
 
     @Override
-	public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation) {    	
-    	IJavaElement javaElement = JavaCore.create(node.getElementHandle());
+	public IMylarSearchOperation getSearchOperation(IMylarElement node, int limitTo, int degreeOfSeparation) {    	
+    	IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
     	SearchScope scope = createTextSearchScope(degreeOfSeparation);
     	if(scope == null) return null;
     	

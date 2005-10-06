@@ -12,7 +12,7 @@
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
-        objectClass="org.eclipse.mylar.core.IMylarContextNode">
+        objectClass="org.eclipse.mylar.core.IMylarElement">
      	<action  
   		  	label="Mylar: Make Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"

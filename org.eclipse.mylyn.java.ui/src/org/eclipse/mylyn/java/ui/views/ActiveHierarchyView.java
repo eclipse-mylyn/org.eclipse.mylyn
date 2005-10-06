@@ -41,7 +41,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.ide.ui.views.ActiveViewDelegatingDragAdapter;
@@ -85,21 +85,21 @@ public class ActiveHierarchyView extends ViewPart {
             refreshHierarchy();
         }        
         
-	    public void interestChanged(IMylarContextNode info) { 
+	    public void interestChanged(IMylarElement info) { 
 	    }
         
-        public void interestChanged(List<IMylarContextNode> nodes) {
+        public void interestChanged(List<IMylarElement> nodes) {
         } 
         
-        public void landmarkAdded(IMylarContextNode element) { 
+        public void landmarkAdded(IMylarElement element) { 
             refreshHierarchy();
         }
 
-        public void landmarkRemoved(IMylarContextNode element) { 
+        public void landmarkRemoved(IMylarElement element) { 
             refreshHierarchy();
         }
 
-        public void edgesChanged(IMylarContextNode node) {
+        public void edgesChanged(IMylarElement node) {
         }
  
         public void presentationSettingsChanging(UpdateKind kind) {
@@ -109,7 +109,7 @@ public class ActiveHierarchyView extends ViewPart {
             refreshHierarchy();
         }
 
-        public void nodeDeleted(IMylarContextNode node) {
+        public void nodeDeleted(IMylarElement node) {
         }
 	};
 
@@ -180,12 +180,12 @@ public class ActiveHierarchyView extends ViewPart {
         try {    
         	if (root != null && root.getChildren().length > 0) root.removeAllChildren();
             nodeMap.clear();
-        	List<IMylarContextNode> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
-            for (Iterator<IMylarContextNode> it = landmarks.iterator(); it.hasNext();) {
-                IMylarContextNode node = it.next();
+        	List<IMylarElement> landmarks = MylarPlugin.getContextManager().getActiveLandmarks();
+            for (Iterator<IMylarElement> it = landmarks.iterator(); it.hasNext();) {
+                IMylarElement node = it.next();
                 IJavaElement element = null;
                 if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
-                    element = JavaCore.create(node.getElementHandle());
+                    element = JavaCore.create(node.getHandleIdentifier());
                 }
                 if (element != null && element instanceof IType && element.exists()) {	
                     IType type = (IType)element;
@@ -417,14 +417,14 @@ class TreeParent implements IAdaptable {
 //    @Override
 //    public Color getForeground(Object element) {
 //        IJavaElement javaElement = ((TreeParent)element).getElement();
-//        IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
+//        IMylarElement node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
 //        return UiUtil.getForegroundForElement(node);
 //    }
 //
 //    @Override
 //    public Color getBackground(Object element) {
 //        IJavaElement javaElement = ((TreeParent)element).getElement();
-//        IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
+//        IMylarElement node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
 //        return UiUtil.getBackgroundForElement(node);
 //    }
 //
@@ -440,7 +440,7 @@ class TreeParent implements IAdaptable {
 //    
 //    public Font getFont(Object element) {
 //        IJavaElement javaElement = ((TreeParent)element).getElement();
-//        IMylarContextNode node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
+//        IMylarElement node = MylarPlugin.getContextManager().getNode(javaElement.getHandleIdentifier());
 //        if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPropagated()) {
 //            return MylarUiPlugin.BOLD;
 //        }

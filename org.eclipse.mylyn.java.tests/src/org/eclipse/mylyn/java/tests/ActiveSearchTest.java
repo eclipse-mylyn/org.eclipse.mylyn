@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractRelationProvider;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
@@ -67,7 +67,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
         IMethod m1 = type1.createMethod("void m1() {\n m1(); \n}", null, true, null);     
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
-        IMylarContextNode node = manager.handleInteractionEvent(mockInterestContribution(
+        IMylarElement node = manager.handleInteractionEvent(mockInterestContribution(
         		m1.getHandleIdentifier(), scaling.getLandmark()));
         assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
                 
@@ -116,7 +116,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 	        IMethod m2 = type1.createMethod("void m2() { }", null, true, null);  
 	        StructuredSelection sm2 = new StructuredSelection(m2);
 	        monitor.selectionChanged(part, sm2);
-	        IMylarContextNode node = manager.handleInteractionEvent(mockInterestContribution(
+	        IMylarElement node = manager.handleInteractionEvent(mockInterestContribution(
 	        		m2.getHandleIdentifier(), scaling.getLandmark()));
 	        assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
 	                
@@ -129,7 +129,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
     	}
 	} 
 	
-	public List<?> search(int dos, IMylarContextNode node){
+	public List<?> search(int dos, IMylarElement node){
 		if(node == null) return null;
 		
 		JavaReferencesProvider prov = new JavaReferencesProvider();

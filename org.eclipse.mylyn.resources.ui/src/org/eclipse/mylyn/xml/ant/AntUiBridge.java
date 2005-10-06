@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
@@ -49,11 +49,11 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class AntUiBridge implements IMylarUiBridge {
     
     /**
-     * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarContextNode)
+     * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarElement)
      */
-    public void open(IMylarContextNode node) {
+    public void open(IMylarElement node) {
         // get the handle of the node
-        String handle = node.getElementHandle();
+        String handle = node.getHandleIdentifier();
         
         int first = handle.indexOf(";");
         String filename = "";
@@ -125,7 +125,7 @@ public class AntUiBridge implements IMylarUiBridge {
     }
 
 
-    public void close(IMylarContextNode node) {
+    public void close(IMylarElement node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();
@@ -134,7 +134,7 @@ public class AntUiBridge implements IMylarUiBridge {
                 if (part != null) {
                         if (part.getEditorInput() instanceof IFileEditorInput) {
                         IFileEditorInput input = (IFileEditorInput)part.getEditorInput();
-                        if ((input.getFile().getFullPath().toString()).equals(node.getElementHandle())) {
+                        if ((input.getFile().getFullPath().toString()).equals(node.getHandleIdentifier())) {
                             if (part instanceof FormEditor) {
                                 ((FormEditor)part).close(true);
                             } else if (part instanceof AbstractTextEditor) {

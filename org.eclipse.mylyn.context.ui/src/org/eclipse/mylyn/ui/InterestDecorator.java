@@ -14,7 +14,7 @@
 package org.eclipse.mylar.ui;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextEdge;
@@ -33,10 +33,10 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
         super();
     }
 
-    private IMylarContextNode getNode(Object element) {
-        IMylarContextNode node = null;
-        if (element instanceof IMylarContextNode) {
-            node = (IMylarContextNode)element;
+    private IMylarElement getNode(Object element) {
+        IMylarElement node = null;
+        if (element instanceof IMylarElement) {
+            node = (IMylarElement)element;
         } else {
             IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(element);
             node = MylarPlugin.getContextManager().getNode(adapter.getHandleIdentifier(element));
@@ -69,7 +69,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     }
 
     public Font decorateFont(Object element) {
-        IMylarContextNode node = getNode(element);
+        IMylarElement node = getNode(element);
         if (node != null) {    
             if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPropagated()) {
                 return MylarUiPlugin.BOLD;
@@ -79,7 +79,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     }
 
     public Color decorateForeground(Object element) {
-        IMylarContextNode node = getNode(element);
+        IMylarElement node = getNode(element);
         if (element instanceof MylarContextEdge) {
             return MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP;
         } else if (node != null) {
@@ -89,7 +89,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     }
 
     public Color decorateBackground(Object element) {
-        IMylarContextNode node = getNode(element);
+        IMylarElement node = getNode(element);
         if (node != null) {
             return UiUtil.getBackgroundForElement(node);   
         } else {

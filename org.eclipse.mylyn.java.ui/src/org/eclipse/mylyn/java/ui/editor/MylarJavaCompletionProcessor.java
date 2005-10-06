@@ -28,7 +28,7 @@ import org.eclipse.jdt.internal.ui.text.java.MemberProposalInfo;
 import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.TextContentAssistInvocationContext;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.dt.MylarWebRef;
@@ -72,7 +72,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                             // nothing for now
                         	rest.add(proposal);
                         } else {
-                        	IMylarContextNode node = MylarPlugin.getContextManager().getNode(member.getHandleIdentifier()); 
+                        	IMylarElement node = MylarPlugin.getContextManager().getNode(member.getHandleIdentifier()); 
                             if (node != null) {
                             	float interest = node.getDegreeOfInterest().getValue();
 	                            if (interest > MylarContextManager.getScalingFactors().getInteresting()) {

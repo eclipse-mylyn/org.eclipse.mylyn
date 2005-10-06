@@ -18,11 +18,11 @@ import org.eclipse.mylar.core.internal.MylarContextEdge;
 /**
  * @author Mik Kersten
  */
-public interface IMylarContextNode extends IMylarContextElement {
+public interface IMylarElement extends IMylarObject {
        
-    public abstract String getElementHandle();
+    public abstract String getHandleIdentifier();
     
-    public abstract void setElementHandle(String elementHandle);
+    public abstract void setHandleIdentifier(String elementHandle);
    
     public abstract IMylarContext getContext();
     

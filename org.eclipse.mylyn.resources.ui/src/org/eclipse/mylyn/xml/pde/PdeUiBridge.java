@@ -29,7 +29,7 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
@@ -60,11 +60,11 @@ public class PdeUiBridge implements IMylarUiBridge {
     }
     
     /**
-     * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarContextNode)
+     * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarElement)
      */
-    public void open(IMylarContextNode node) {
+    public void open(IMylarElement node) {
         // get the handle of the node
-        String handle = node.getElementHandle();
+        String handle = node.getHandleIdentifier();
         
         int first = handle.indexOf(";");
         String filename = "";
@@ -131,7 +131,7 @@ public class PdeUiBridge implements IMylarUiBridge {
         return null;
     }
 
-    public void close(IMylarContextNode node) {
+    public void close(IMylarElement node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();
@@ -139,7 +139,7 @@ public class PdeUiBridge implements IMylarUiBridge {
                 IEditorPart part = references[i].getEditor(false);
                 if (part != null) {
                     // HACK find better way to get the filename other than the tooltip
-					if(("/"+part.getTitleToolTip()).equals(node.getElementHandle())){
+					if(("/"+part.getTitleToolTip()).equals(node.getHandleIdentifier())){
 						if (part instanceof FormEditor) {
 							((FormEditor)part).close(true);
 						} else if (part instanceof AbstractTextEditor) {

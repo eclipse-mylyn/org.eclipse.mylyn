@@ -23,8 +23,8 @@ import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.IMylarContextEdge;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
@@ -49,19 +49,19 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
 	
 	@Override
 	public String getText(Object object) {
-        if (object instanceof IMylarContextNode) { 
-            IMylarContextNode node = (IMylarContextNode)object;
+        if (object instanceof IMylarElement) { 
+            IMylarElement node = (IMylarElement)object;
             if (node == null) return "<missing info>";
             if (JavaStructureBridge.CONTENT_TYPE.equals(node.getContentType())) {
-                IJavaElement element = JavaCore.create(node.getElementHandle());
+                IJavaElement element = JavaCore.create(node.getHandleIdentifier());
                 if (element == null) {
                     return "<missing element>";                     
                 } else {
                 	return getTextForElement(element);
                 }
             } 
-        } else if (object instanceof IMylarContextEdge) {
-        	return getNameForRelationship(((IMylarContextEdge)object).getRelationshipHandle());
+        } else if (object instanceof IMylarRelation) {
+        	return getNameForRelationship(((IMylarRelation)object).getRelationshipHandle());
         } else if (object instanceof IJavaElement) {
         	return getTextForElement((IJavaElement)object);
         } 
@@ -82,14 +82,14 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
 
 	@Override
 	public Image getImage(Object object) { 
-        if (object instanceof IMylarContextNode) {
-            IMylarContextNode node = (IMylarContextNode)object;
+        if (object instanceof IMylarElement) {
+            IMylarElement node = (IMylarElement)object;
             if (node == null) return null;
             if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
-                return super.getImage(JavaCore.create(node.getElementHandle()));
+                return super.getImage(JavaCore.create(node.getHandleIdentifier()));
             } 
-        } else if (object instanceof IMylarContextEdge) {
-        	return MylarImages.getImage(getIconForRelationship(((IMylarContextEdge)object).getRelationshipHandle()));
+        } else if (object instanceof IMylarRelation) {
+        	return MylarImages.getImage(getIconForRelationship(((IMylarRelation)object).getRelationshipHandle()));
         }
         return super.getImage(object);
 	}

@@ -14,7 +14,7 @@
 package org.eclipse.mylar.ide.ui;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.UiUtil;
@@ -36,7 +36,7 @@ public class ProblemsListLabelProvider implements ITableLabelProvider, IColorPro
     public Font getFont(Object element) {
         if (element instanceof ProblemMarker) {
             String handle = MylarPlugin.getDefault().getStructureBridge(((ProblemMarker)element).getResource().getFileExtension()).getHandleForOffsetInObject(((ProblemMarker)element), 0);
-            IMylarContextNode node = MylarPlugin.getContextManager().getNode(handle);
+            IMylarElement node = MylarPlugin.getContextManager().getNode(handle);
             if (node != null) {    
                 if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPropagated()) {
                     return MylarUiPlugin.BOLD;

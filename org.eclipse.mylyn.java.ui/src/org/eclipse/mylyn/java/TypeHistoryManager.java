@@ -33,7 +33,7 @@ import org.eclipse.jdt.internal.corext.util.TypeInfoFactory;
 import org.eclipse.jdt.internal.corext.util.TypeInfoHistory;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 
 /**
@@ -45,14 +45,14 @@ public class TypeHistoryManager implements IMylarContextListener {
 	
 	public void contextActivated(IMylarContext context) {
 		clearTypeHistory();		
-		for (IMylarContextNode node : context.getInteresting()) updateTypeHistory(node, true);
+		for (IMylarElement node : context.getInteresting()) updateTypeHistory(node, true);
 	}
 
 	/**
 	 * Path has to be compatible with ITypeNameRequestor
 	 */
-	private void updateTypeHistory(IMylarContextNode node, boolean add) {
-		IJavaElement element = JavaCore.create(node.getElementHandle());
+	private void updateTypeHistory(IMylarElement node, boolean add) {
+		IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 		if (element instanceof IType) {
 			IType type = (IType)element;
 			try {
@@ -89,15 +89,15 @@ public class TypeHistoryManager implements IMylarContextListener {
 		};
 	}
 	
-	public void interestChanged(IMylarContextNode node) {
+	public void interestChanged(IMylarElement node) {
 		updateTypeHistory(node, true);
 	}
 
-	public void interestChanged(List<IMylarContextNode> nodes) {
-		for (IMylarContextNode node : nodes) interestChanged(node);
+	public void interestChanged(List<IMylarElement> nodes) {
+		for (IMylarElement node : nodes) interestChanged(node);
 	}
 
-	public void nodeDeleted(IMylarContextNode node) {
+	public void nodeDeleted(IMylarElement node) {
 		updateTypeHistory(node, false);
 	}
 	
@@ -109,15 +109,15 @@ public class TypeHistoryManager implements IMylarContextListener {
 		// ignore
 	}
 
-	public void landmarkAdded(IMylarContextNode node) {
+	public void landmarkAdded(IMylarElement node) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IMylarContextNode node) {
+	public void landmarkRemoved(IMylarElement node) {
 		// ignore
 	}
 
-	public void edgesChanged(IMylarContextNode node) {
+	public void edgesChanged(IMylarElement node) {
 		// ignore
 	}
 

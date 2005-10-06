@@ -122,8 +122,15 @@ public class InteractionEvent implements Serializable {
         this.interestContribution = interestContribution; 
     }
     
-    public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, String delta, float interestContribution,
-    		Date startDate, Date endDate) {
+    public InteractionEvent(Kind kind, 
+    		String structureKind, 
+    		String handle, 
+    		String originId, 
+    		String navigatedRelation, 
+    		String delta, 
+    		float interestContribution,
+    		Date startDate, 
+    		Date endDate) {
         this.date = startDate;
         this.endDate = endDate;
         this.kind = kind;
@@ -134,8 +141,7 @@ public class InteractionEvent implements Serializable {
         this.delta = delta;
         this.interestContribution = interestContribution; 
     }
-    
-
+ 
     @Override
     public boolean equals(Object object) {
         if (object == null || !(object instanceof InteractionEvent)) return false;
@@ -150,15 +156,7 @@ public class InteractionEvent implements Serializable {
             && (delta == null ? event.delta == null : delta.equals(event.delta))
             && interestContribution == event.interestContribution;
     }
-    
-    /**
-     * Creates an aggregate event with the appropriate start and end dates, and the 
-     * aggregated interest contribution.  Handles must match.
-     */
-    public InteractionEvent createAggregateEvent(List<InteractionEvent> events) {
-        throw new RuntimeException("unimplemented");
-    }
-    
+     
     @Override
     public String toString() {
         return "(date: " + date 
@@ -173,7 +171,7 @@ public class InteractionEvent implements Serializable {
         return structureHandle;
     }
 
-    public String getStructureKind() {
+    public String getContentType() {
         return structureKind;
     }
     

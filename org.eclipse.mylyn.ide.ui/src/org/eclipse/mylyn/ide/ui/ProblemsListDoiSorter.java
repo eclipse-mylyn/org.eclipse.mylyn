@@ -13,7 +13,7 @@ package org.eclipse.mylar.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -57,7 +57,7 @@ public class ProblemsListDoiSorter extends TableSorter {
         super(VISIBLE_FIELDS, DEFAULT_PRIORITIES, DEFAULT_DIRECTIONS);
     } 
 
-    protected InterestComparator<IMylarContextNode> interestComparator = new InterestComparator<IMylarContextNode>();
+    protected InterestComparator<IMylarElement> interestComparator = new InterestComparator<IMylarElement>();
     
     @Override
     protected int compare(Object obj1, Object obj2, int depth) {
@@ -73,8 +73,8 @@ public class ProblemsListDoiSorter extends TableSorter {
 	        } else {
 	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
 	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker1.getResource().getFileExtension());
-		            IMylarContextNode node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject(marker1, 0));
-		            IMylarContextNode node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject(marker2, 0));
+		            IMylarElement node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject(marker1, 0));
+		            IMylarElement node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject(marker2, 0));
 		            return interestComparator.compare(node1, node2);
 	       	 	}
 	        }

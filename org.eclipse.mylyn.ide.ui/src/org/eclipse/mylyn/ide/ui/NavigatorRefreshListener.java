@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
@@ -42,13 +42,13 @@ public class NavigatorRefreshListener implements IMylarContextListener {
         return null;    
     }
     
-    protected void refresh(IMylarContextNode node) {
+    protected void refresh(IMylarElement node) {
         ResourceNavigator navigator = getResourceNavigator();
         if (navigator == null || navigator.getTreeViewer() == null) return;
         
         if (node != null) {
         	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
-            Object object = bridge.getObjectForHandle(node.getElementHandle());
+            Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
             getResourceNavigator().getTreeViewer().refresh(object);
         } else {
             getResourceNavigator().getTreeViewer().refresh();
@@ -71,28 +71,28 @@ public class NavigatorRefreshListener implements IMylarContextListener {
         refresh(null);
     }
 
-    public void interestChanged(IMylarContextNode node) {
+    public void interestChanged(IMylarElement node) {
         refresh(node);
     }
 
-    public void interestChanged(List<IMylarContextNode> nodes) {
-        IMylarContextNode node = nodes.get(nodes.size()-1);
+    public void interestChanged(List<IMylarElement> nodes) {
+        IMylarElement node = nodes.get(nodes.size()-1);
         interestChanged(node);
     }
 
-    public void nodeDeleted(IMylarContextNode node) {
+    public void nodeDeleted(IMylarElement node) {
         refresh(node);
     }
 
-    public void landmarkAdded(IMylarContextNode node) {
+    public void landmarkAdded(IMylarElement node) {
         refresh(node);
     }
 
-    public void landmarkRemoved(IMylarContextNode node) {
+    public void landmarkRemoved(IMylarElement node) {
         refresh(node);
     }
 
-    public void edgesChanged(IMylarContextNode node) {
+    public void edgesChanged(IMylarElement node) {
         refresh(null);
     }
 }

@@ -15,7 +15,7 @@ package org.eclipse.mylar.ui.views;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.core.IMylarContextElement;
+import org.eclipse.mylar.core.IMylarObject;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -40,9 +40,9 @@ public class MylarContextLabelProvider implements ILabelProvider {
 	}
 
 	public Image getImage(Object element) {
-    	if (element instanceof IMylarContextElement) {
+    	if (element instanceof IMylarObject) {
     		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(
-    				((IMylarContextElement)element).getContentType());
+    				((IMylarObject)element).getContentType());
             return provider.getImage(element);
         } else {
         	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
@@ -53,8 +53,8 @@ public class MylarContextLabelProvider implements ILabelProvider {
     }
 
     public String getText(Object object) {
-    	if (object instanceof IMylarContextElement) {
-    		IMylarContextElement element = (IMylarContextElement)object;
+    	if (object instanceof IMylarObject) {
+    		IMylarObject element = (IMylarObject)object;
     		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
             if (MylarUiPlugin.getDefault().isDecorateInterestMode()) { // TODO: move
                 return provider.getText(element) + " [" + element.getDegreeOfInterest().getValue() + "]"; 

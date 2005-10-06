@@ -13,7 +13,7 @@ package org.eclipse.mylar.core.tests.support.search;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
@@ -35,29 +35,29 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 		this.source = source;
 	}
 	
-	public IMylarContextNode mockLowerInterest(IMylarContextNode node) {
-		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getContentType(), source, -3));
+	public IMylarElement mockLowerInterest(IMylarElement node) {
+		return context.addEvent(mockUserEvent(node.getHandleIdentifier(), node.getContentType(), source, -3));
     }
 	
-	public IMylarContextNode mockRaiseInterest(IMylarContextNode node) {
-		return context.addEvent(mockUserEvent(node.getElementHandle(), node.getContentType(), source, 2));
+	public IMylarElement mockRaiseInterest(IMylarElement node) {
+		return context.addEvent(mockUserEvent(node.getHandleIdentifier(), node.getContentType(), source, 2));
     }
 	
-	public IMylarContextNode mockLowerInterest(String handle, String kind) {
+	public IMylarElement mockLowerInterest(String handle, String kind) {
 		return mockLowerInterest(mockEditorSelection(handle, kind));
     }
 	
-	public IMylarContextNode mockRaiseInterest(String handle, String kind) {
+	public IMylarElement mockRaiseInterest(String handle, String kind) {
 		return mockRaiseInterest(mockEditorSelection(handle, kind));
     }
 
-	public IMylarContextNode mockEditorSelection(String handle, String kind) {
+	public IMylarElement mockEditorSelection(String handle, String kind) {
 		context.addEvent(mockSelection(handle, kind, source));
 		return context.addEvent(mockSelection(handle, kind, source));
 	}
 	
-	public IMylarContextNode getElement(String handle, String kind) {
-		IMylarContextNode node = context.addEvent(mockSelection(handle, kind, source));
+	public IMylarElement getElement(String handle, String kind) {
+		IMylarElement node = context.addEvent(mockSelection(handle, kind, source));
 		MylarPlugin.getContextManager().handleInteractionEvent(
 				mockUserEvent(handle, kind, source, (1/MylarContextManager.getScalingFactors().getLandmark()) * -2),
 				true);

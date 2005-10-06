@@ -14,10 +14,14 @@ package org.eclipse.mylar.core;
 /**
  * @author Mik Kersten
  */
-public interface IMylarContextElement {
+public interface IMylarRelation extends IMylarObject {
 
-    public abstract IDegreeOfInterest getDegreeOfInterest();
+    public abstract String getLabel();
+    
+    public abstract String getRelationshipHandle();
+    
+    public abstract IMylarElement getTarget();
 
-    public abstract String getContentType();
-	
+    public abstract IMylarElement getSource();
+
 }

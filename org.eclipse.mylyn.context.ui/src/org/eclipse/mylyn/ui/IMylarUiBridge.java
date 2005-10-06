@@ -14,7 +14,7 @@ package org.eclipse.mylar.ui;
 import java.util.List;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -22,9 +22,9 @@ import org.eclipse.ui.IEditorPart;
  */
 public interface IMylarUiBridge {
 	
-    public abstract void open(IMylarContextNode node);
+    public abstract void open(IMylarElement node);
     
-    public abstract void close(IMylarContextNode node);
+    public abstract void close(IMylarElement node);
     
     public abstract boolean acceptsEditor(IEditorPart editorPart);
 

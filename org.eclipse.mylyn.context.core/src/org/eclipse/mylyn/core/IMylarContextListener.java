@@ -49,26 +49,26 @@ public interface IMylarContextListener {
      * Called when the interest level for a single element changes, e.g.
      * when it is selected by the user.
      */
-    public void interestChanged(IMylarContextNode node);
+    public void interestChanged(IMylarElement node);
 
     /**
      * Called when the interest level for multiple elements changes,
      * sorted according to the containment hierarchy.  The last element
      * is the element invoking the change.
      */
-    public void interestChanged(List<IMylarContextNode> nodes);
+    public void interestChanged(List<IMylarElement> nodes);
     
-    public void nodeDeleted(IMylarContextNode node);
-    
-    /**
-     * @param newLandmarks  list of IJavaElement(s)
-     */
-    public void landmarkAdded(IMylarContextNode node);
+    public void nodeDeleted(IMylarElement node);
     
     /**
      * @param newLandmarks  list of IJavaElement(s)
      */
-    public void landmarkRemoved(IMylarContextNode node);    
+    public void landmarkAdded(IMylarElement node);
     
-    public void edgesChanged(IMylarContextNode node);
+    /**
+     * @param newLandmarks  list of IJavaElement(s)
+     */
+    public void landmarkRemoved(IMylarElement node);    
+    
+    public void edgesChanged(IMylarElement node);
 }

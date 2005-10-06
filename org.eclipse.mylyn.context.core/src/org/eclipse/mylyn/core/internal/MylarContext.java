@@ -21,10 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.dt.MylarInterest;
-
 
 /**
  * @author Mik Kersten
@@ -32,14 +31,14 @@ import org.eclipse.mylar.dt.MylarInterest;
 public class MylarContext implements IMylarContext, Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private String id;
+
     private List<InteractionEvent> interactionHistory = new ArrayList<InteractionEvent>();
- 
     protected transient Map<String, MylarContextNode> nodes = new HashMap<String, MylarContextNode>();
-    protected transient IMylarContextNode activeNode = null;
+    
+    protected transient MylarContextNode activeNode = null;
     protected transient List tempRaised = new ArrayList();
-    protected transient Map<String, IMylarContextNode> landmarks;
+    protected transient Map<String, IMylarElement> landmarks;
     protected transient ScalingFactors scaling;
     private transient InteractionEvent lastEdgeEvent = null;
     private transient MylarContextNode lastEdgeNode = null;
@@ -51,7 +50,7 @@ public class MylarContext implements IMylarContext, Serializable {
     
     void parseInteractionHistory() {
         nodes = new HashMap<String, MylarContextNode>();
-        landmarks = new HashMap<String, IMylarContextNode>();
+        landmarks = new HashMap<String, IMylarElement>();
         for (InteractionEvent event : interactionHistory) parseInteractionEvent(event);
         updateLandmarks();
         activeNode = lastEdgeNode;
@@ -63,10 +62,8 @@ public class MylarContext implements IMylarContext, Serializable {
         parseInteractionHistory();
     }
 
-    public IMylarContextNode parseEvent(InteractionEvent event) {
-//    	if (!event.getKind().equals(InteractionEvent.Kind.PREDICTION)) { // TODO: remove this condition
-    		interactionHistory.add(event);
-//    	}
+    public IMylarElement parseEvent(InteractionEvent event) {
+    	interactionHistory.add(event);
         return parseInteractionEvent(event);
     }
 
@@ -74,22 +71,22 @@ public class MylarContext implements IMylarContext, Serializable {
      * Propagations and predictions are not addes as edges
      */
     @MylarInterest(level=MylarInterest.Level.LANDMARK)
-    private IMylarContextNode parseInteractionEvent(InteractionEvent event) {
+    private IMylarElement parseInteractionEvent(InteractionEvent event) {
     	if (event.getKind().isUserEvent()) numUserEvents++;
         MylarContextNode node = nodes.get(event.getStructureHandle());
         if (node == null) {
-            node = new MylarContextNode(event.getStructureKind(), event.getStructureHandle(), this);
+            node = new MylarContextNode(event.getContentType(), event.getStructureHandle(), this);
             nodes.put(event.getStructureHandle(), node);
         }
 
         if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null && lastEdgeNode != null
             && event.getKind() != InteractionEvent.Kind.PROPAGATION 
             && event.getKind() != InteractionEvent.Kind.PREDICTION) {
-            IMylarContextNode navigationSource = nodes.get(lastEdgeEvent.getStructureHandle());
+            IMylarElement navigationSource = nodes.get(lastEdgeEvent.getStructureHandle());
             if (navigationSource != null) {
                MylarContextEdge edge = lastEdgeNode.getEdge(event.getStructureHandle());
                if (edge == null) {
-                    edge = new MylarContextEdge(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node, this);
+                    edge = new MylarContextEdge(event.getContentType(), event.getNavigation(), lastEdgeNode, node, this);
                     lastEdgeNode.addEdge(edge);
                 }
                 DegreeOfInterest doi = (DegreeOfInterest)edge.getDegreeOfInterest();
@@ -100,9 +97,9 @@ public class MylarContext implements IMylarContext, Serializable {
         
         doi.addEvent(event); 
         if (doi.isLandmark()) {
-        	landmarks.put(node.getElementHandle(), node);
+        	landmarks.put(node.getHandleIdentifier(), node);
         } else {
-            landmarks.remove(node.getElementHandle()); // TODO: redundant
+            landmarks.remove(node.getHandleIdentifier()); // TODO: redundant
         }
         if (event.getKind().isUserEvent()) {
             lastEdgeEvent = event;
@@ -115,16 +112,16 @@ public class MylarContext implements IMylarContext, Serializable {
     private void updateLandmarks() {
 //        landmarks = new HashMap<String, ITaskscapeNode>();
         for (MylarContextNode node : nodes.values()) {
-            if (node.getDegreeOfInterest().isLandmark()) landmarks.put(node.getElementHandle(), node);
+            if (node.getDegreeOfInterest().isLandmark()) landmarks.put(node.getHandleIdentifier(), node);
         }
     }
     
-    public IMylarContextNode get(String elementHandle) {
+    public IMylarElement get(String elementHandle) {
         return nodes.get(elementHandle);
     }
     
-    public List<IMylarContextNode> getInteresting() {
-        List<IMylarContextNode> elements = new ArrayList<IMylarContextNode>();
+    public List<IMylarElement> getInteresting() {
+        List<IMylarElement> elements = new ArrayList<IMylarElement>();
         for (String key : nodes.keySet()) {
             MylarContextNode info = nodes.get(key);
             if (info.getDegreeOfInterest().isInteresting()) {
@@ -134,24 +131,24 @@ public class MylarContext implements IMylarContext, Serializable {
         return elements;        
     }
 
-    public List<IMylarContextNode> getLandmarks() {
-        return Collections.unmodifiableList(new ArrayList<IMylarContextNode>(landmarks.values()));
+    public List<IMylarElement> getLandmarks() {
+        return Collections.unmodifiableList(new ArrayList<IMylarElement>(landmarks.values()));
     }
 
-    public IMylarContextNode getActiveNode() {
+    public IMylarElement getActiveNode() {
         return activeNode;
     }
 
     /**
      * @param handleIdentifier
      */
-    public void remove(IMylarContextNode node) {
-        landmarks.remove(node.getElementHandle()); 
-        nodes.remove(node.getElementHandle());
+    public void remove(IMylarElement node) {
+        landmarks.remove(node.getHandleIdentifier()); 
+        nodes.remove(node.getHandleIdentifier());
     }
 
-    public synchronized List<IMylarContextNode> getAllElements() {
-        return new ArrayList<IMylarContextNode>(nodes.values());
+    public synchronized List<IMylarElement> getAllElements() {
+        return new ArrayList<IMylarElement>(nodes.values());
     }
     
     public String getId() {
@@ -181,45 +178,20 @@ public class MylarContext implements IMylarContext, Serializable {
     }
 
 	public void collapse() {
+		List<InteractionEvent> collapsedHistory = new ArrayList<InteractionEvent>();
 		for (MylarContextNode node : nodes.values()) {
-			interactionHistory.add(0, new InteractionEvent(
-	                InteractionEvent.Kind.MANIPULATION, 
-	                node.getContentType(),
-	                node.getElementHandle(), 
-	                MylarContextManager.SOURCE_ID_DECAY,
-	                -node.getDegreeOfInterest().getDecayValue()));
+			if (!node.equals(activeNode)) {
+				collapseNode(collapsedHistory, node);
+			}
 		}
+		collapseNode(collapsedHistory, activeNode);
+		interactionHistory.clear(); 
+		interactionHistory.addAll(collapsedHistory);
 	}
 
+	private void collapseNode(List<InteractionEvent> collapsedHistory, MylarContextNode node) {
+		if (node != null) {
+			collapsedHistory.addAll(((DegreeOfInterest)node.getDegreeOfInterest()).getCollapsedEvents());
+		}
+	}
 }
-
-//private void writeObject(ObjectOutputStream stream) throws IOException {
-//stream.defaultWriteObject();
-//stream.writeInt(id);
-//stream.writeObject(interactionHistory);
-//}
-//
-//@SuppressWarnings(value="unchecked")
-//private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-//stream.defaultReadObject();
-//id = stream.readInt();
-//interactionHistory = (List<InteractionEvent>)stream.readObject();
-//parseInteractionHistory();
-//}
-
-//    public List<TaskscapeEdge> getRelatedElements(String handle) {
-//        return relationshipMap.get(handle);
-//    }
-//
-//    public void addRelatedElements(TaskscapeEdge relationship) {
-//        List<TaskscapeEdge> relationships = relationshipMap.get(relationship.getSource());
-//        if (relationships == null) {
-//            relationships = new ArrayList<TaskscapeEdge>();
-//        }
-//        relationships.add(relationship);
-//        relationshipMap.put(relationship.getSource(), relationships);
-//    } 
-//
-//    public void removeRelatedElements(String handle) {
-//        relationshipMap.remove(handle);
-//    }

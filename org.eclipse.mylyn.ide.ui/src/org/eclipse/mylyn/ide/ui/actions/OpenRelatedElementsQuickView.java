@@ -13,7 +13,7 @@ package org.eclipse.mylar.ide.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchQuickView;
 import org.eclipse.swt.widgets.Shell;
@@ -39,7 +39,7 @@ public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDeleg
     }
 
     public void run(IAction action) {
-        IMylarContextNode activeNode = MylarPlugin.getContextManager().getActiveNode();
+        IMylarElement activeNode = MylarPlugin.getContextManager().getActiveNode();
         
         Shell parent = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
         inplaceDialog = new ActiveSearchQuickView(parent);

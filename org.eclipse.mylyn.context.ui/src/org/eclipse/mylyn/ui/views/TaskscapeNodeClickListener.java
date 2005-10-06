@@ -14,7 +14,8 @@
 package org.eclipse.mylar.ui.views;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -33,10 +34,10 @@ public class TaskscapeNodeClickListener implements IOpenListener {
     public void open(OpenEvent event) {
         StructuredSelection selection = (StructuredSelection)viewer.getSelection();
         Object object = selection.getFirstElement();
-        IMylarContextNode node = null;
-        if(object instanceof IMylarContextNode){
-            node = (IMylarContextNode)object ;
-        } else {
+        IMylarElement node = null;
+        if(object instanceof IMylarElement){
+            node = (IMylarElement)object ;
+        } else if (!(object instanceof IMylarRelation)) {
         	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
         	String handle = bridge.getHandleIdentifier(object);
         	node = MylarPlugin.getContextManager().getNode(handle);

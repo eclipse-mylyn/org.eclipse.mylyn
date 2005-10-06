@@ -16,7 +16,7 @@ package org.eclipse.mylar.core.internal;
 import java.util.*;
 
 import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 
 
@@ -30,9 +30,9 @@ import org.eclipse.mylar.core.InteractionEvent;
 public class CompositeContext implements IMylarContext  {
     
     protected Map<String, MylarContext> contexts = new HashMap<String, MylarContext>();
-    protected IMylarContextNode activeNode = null;
+    protected IMylarElement activeNode = null;
     
-    public IMylarContextNode addEvent(InteractionEvent event) {
+    public IMylarElement addEvent(InteractionEvent event) {
         Set<MylarContextNode> nodes = new HashSet<MylarContextNode>();
         for (MylarContext taskscape : contexts.values()) {
             MylarContextNode info = (MylarContextNode)taskscape.parseEvent(event); 
@@ -42,7 +42,7 @@ public class CompositeContext implements IMylarContext  {
         return compositeNode;  
     }
 
-    public IMylarContextNode get(String handle) { 
+    public IMylarElement get(String handle) { 
         if (contexts.values().size() == 0) return null;
         Set<MylarContextNode> nodes = new HashSet<MylarContextNode>();
         for (MylarContext taskscape : contexts.values()) { 
@@ -55,45 +55,45 @@ public class CompositeContext implements IMylarContext  {
         return composite;
     }
  
-    public List<IMylarContextNode> getLandmarks() {
-        Set<IMylarContextNode> landmarks = new HashSet<IMylarContextNode>();
+    public List<IMylarElement> getLandmarks() {
+        Set<IMylarElement> landmarks = new HashSet<IMylarElement>();
         for (MylarContext taskscape : contexts.values()) {
-            for(IMylarContextNode concreteNode : taskscape.getLandmarks()) {
-               if (concreteNode != null) landmarks.add(get(concreteNode.getElementHandle())); 
+            for(IMylarElement concreteNode : taskscape.getLandmarks()) {
+               if (concreteNode != null) landmarks.add(get(concreteNode.getHandleIdentifier())); 
             }
         }
-        return new ArrayList<IMylarContextNode>(landmarks);
+        return new ArrayList<IMylarElement>(landmarks);
     }
     
-    public List<IMylarContextNode> getInteresting() {
-        Set<IMylarContextNode> landmarks = new HashSet<IMylarContextNode>();
+    public List<IMylarElement> getInteresting() {
+        Set<IMylarElement> landmarks = new HashSet<IMylarElement>();
         for (MylarContext taskscape : contexts.values()) {
-            for(IMylarContextNode concreteNode : taskscape.getInteresting()) {
-               if (concreteNode != null) landmarks.add(get(concreteNode.getElementHandle())); 
+            for(IMylarElement concreteNode : taskscape.getInteresting()) {
+               if (concreteNode != null) landmarks.add(get(concreteNode.getHandleIdentifier())); 
             }
         }
-        return new ArrayList<IMylarContextNode>(landmarks);
+        return new ArrayList<IMylarElement>(landmarks);
     }
         
-//    public Set<IMylarContextNode> getInterestingResources() {
-//        Set<IMylarContextNode> files = new HashSet<IMylarContextNode>();
+//    public Set<IMylarElement> getInterestingResources() {
+//        Set<IMylarElement> files = new HashSet<IMylarElement>();
 //        for (MylarContext taskscape : contexts.values()) {
-//            for(IMylarContextNode fileNode : taskscape.getActiveContextResources()) {
+//            for(IMylarElement fileNode : taskscape.getActiveContextResources()) {
 //               if (fileNode != null) files.add(get(fileNode.getElementHandle())); 
 //            }
 //        }
 //        return Collections.unmodifiableSet(files);
 //    }
 
-    public void setActiveElement(IMylarContextNode activeElement) {
+    public void setActiveElement(IMylarElement activeElement) {
         this.activeNode = activeElement;
     }
 
-    public IMylarContextNode getActiveNode() {
+    public IMylarElement getActiveNode() {
         return activeNode;
     }
 
-    public void remove(IMylarContextNode node) {
+    public void remove(IMylarElement node) {
         for (MylarContext taskscape : contexts.values()) {
             taskscape.remove(node);
         }
@@ -113,14 +113,14 @@ public class CompositeContext implements IMylarContext  {
         return contexts;
     }
 
-    public List<IMylarContextNode> getAllElements() {
-        Set<IMylarContextNode> nodes = new HashSet<IMylarContextNode>();
+    public List<IMylarElement> getAllElements() {
+        Set<IMylarElement> nodes = new HashSet<IMylarElement>();
         for (MylarContext taskscape : contexts.values()) {
-            for(IMylarContextNode concreteNode : taskscape.getAllElements()) {
-               nodes.add(get(concreteNode.getElementHandle()));
+            for(IMylarElement concreteNode : taskscape.getAllElements()) {
+               nodes.add(get(concreteNode.getHandleIdentifier()));
             }
         }
-        return new ArrayList<IMylarContextNode>(nodes);
+        return new ArrayList<IMylarElement>(nodes);
     }
 
     /**

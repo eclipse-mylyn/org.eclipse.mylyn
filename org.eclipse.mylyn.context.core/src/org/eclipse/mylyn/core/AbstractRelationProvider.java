@@ -46,12 +46,12 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
    
     protected abstract int getDefaultDegreeOfSeparation();
 
-	protected abstract void findRelated(final IMylarContextNode node, int degreeOfSeparation);
+	protected abstract void findRelated(final IMylarElement node, int degreeOfSeparation);
     
     /**
      * @param limitTo Only used in thye AbstractJavaRelationshipProvider for the search type
      */
-    public abstract IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSeparation);
+    public abstract IMylarSearchOperation getSearchOperation(IMylarElement node, int limitTo, int degreeOfSeparation);
 
     public abstract String getName();
     
@@ -63,23 +63,23 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     	
     }
     
-    public void landmarkAdded(IMylarContextNode node) { 
+    public void landmarkAdded(IMylarElement node) { 
         if (enabled) {
         	findRelated(node, degreeOfSeparation);
         }
     } 
     
-    public void landmarkRemoved(IMylarContextNode node) {
+    public void landmarkRemoved(IMylarElement node) {
 //        MylarPlugin.getTaskscapeManager().removeEdge(element, id);
     }
      
-    protected void searchCompleted(IMylarContextNode landmark) {
+    protected void searchCompleted(IMylarElement landmark) {
     	if (landmark.getEdges().size() > 0) {
     		MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
     	}
     }
     
-    protected void incrementInterest(IMylarContextNode node, String elementKind, String elementHandle, int degreeOfSeparation) {
+    protected void incrementInterest(IMylarElement node, String elementKind, String elementHandle, int degreeOfSeparation) {
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
         MylarPlugin.getContextManager().handleInteractionEvent(event, false, false);
@@ -89,7 +89,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     /**
      * Public for testing
      */
-	public void createEdge(IMylarContextNode toNode, String elementKind, String targetHandle) {
+	public void createEdge(IMylarElement toNode, String elementKind, String targetHandle) {
 		CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(targetHandle);
         if (targetNode == null) return;
 		MylarContextNode concreteTargetNode = null;
@@ -120,7 +120,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     	return degreeOfSeparation;
     }
     
-    public void nodeDeleted(IMylarContextNode node) {
+    public void nodeDeleted(IMylarElement node) {
     	// we don't care when this happens
     }
     
@@ -136,15 +136,15 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     	// we don't care about this event
     }
 
-    public void interestChanged(IMylarContextNode info) { 
+    public void interestChanged(IMylarElement info) { 
     	// we don't care about this event
     }
     
-    public void interestChanged(List<IMylarContextNode> nodes) { 
+    public void interestChanged(List<IMylarElement> nodes) { 
     	// we don't care about this event
     }
 
-    public void edgesChanged(IMylarContextNode node) { 
+    public void edgesChanged(IMylarElement node) { 
     	// we don't care about this event
     }
     

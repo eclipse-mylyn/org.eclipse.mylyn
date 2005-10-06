@@ -100,7 +100,7 @@ public class ContextWriter {
     	node.setAttribute("StartDate", format.format(e.getDate()));
     	node.setAttribute("EndDate", format.format(e.getEndDate()));
     	node.setAttribute("OriginId", XmlStringConverter.convertToXmlString(e.getOriginId()));
-    	node.setAttribute("StructureKind", XmlStringConverter.convertToXmlString(e.getStructureKind()));
+    	node.setAttribute("StructureKind", XmlStringConverter.convertToXmlString(e.getContentType()));
 		node.setAttribute("StructureHandle", XmlStringConverter.convertToXmlString(e.getStructureHandle()));
 		node.setAttribute("Navigation", XmlStringConverter.convertToXmlString(e.getNavigation()));
 		node.setAttribute("Delta", XmlStringConverter.convertToXmlString(e.getDelta()));
@@ -122,7 +122,7 @@ public class ContextWriter {
     	root.setAttribute("StartDate", format.format(e.getDate()));
     	root.setAttribute("EndDate", format.format(e.getEndDate()));
     	root.setAttribute("OriginId", XmlStringConverter.convertToXmlString(e.getOriginId()));
-    	root.setAttribute("StructureKind", XmlStringConverter.convertToXmlString(e.getStructureKind()));
+    	root.setAttribute("StructureKind", XmlStringConverter.convertToXmlString(e.getContentType()));
     	root.setAttribute("StructureHandle", XmlStringConverter.convertToXmlString(e.getStructureHandle()));
     	root.setAttribute("Navigation", XmlStringConverter.convertToXmlString(e.getNavigation()));
     	root.setAttribute("Delta", XmlStringConverter.convertToXmlString(e.getDelta()));

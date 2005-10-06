@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylar.core.IDegreeOfInterest;
-import org.eclipse.mylar.core.IMylarContextEdge;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
 
 
 /**
@@ -27,7 +27,7 @@ import org.eclipse.mylar.core.IMylarContextNode;
  * 
  * @author Mik Kersten
  */
-public class MylarContextNode implements IMylarContextNode {
+public class MylarContextNode implements IMylarElement {
     
     private String handle;
     private String kind;
@@ -44,11 +44,11 @@ public class MylarContextNode implements IMylarContextNode {
         this.context = context;
     }
        
-    public String getElementHandle() {
+    public String getHandleIdentifier() {
         return handle;
     }
     
-    public void setElementHandle(String elementHandle) {
+    public void setHandleIdentifier(String elementHandle) {
         this.handle = elementHandle;
     }
     
@@ -72,24 +72,24 @@ public class MylarContextNode implements IMylarContextNode {
      * TODO: reduce visibility
      */
     public void addEdge(MylarContextEdge edge) {
-        edges.put(edge.getTarget().getElementHandle(), edge);
+        edges.put(edge.getTarget().getHandleIdentifier(), edge);
     }
     
     public void clearEdges() {
 		edges.clear();
 	}
     
-    void removeEdge(IMylarContextEdge edge) {
-    	edges.remove(edge.getTarget().getElementHandle());
+    void removeEdge(IMylarRelation edge) {
+    	edges.remove(edge.getTarget().getHandleIdentifier());
     }
     
     @Override
     public boolean equals(Object obj) { 
         if (obj == null) return false;
-        if (this.getElementHandle() == null) return false;
+        if (this.getHandleIdentifier() == null) return false;
         if (obj instanceof MylarContextNode) {
             MylarContextNode node = (MylarContextNode)obj;
-            return this.getElementHandle().equals(node.getElementHandle());
+            return this.getHandleIdentifier().equals(node.getHandleIdentifier());
         }
         return false;
     }

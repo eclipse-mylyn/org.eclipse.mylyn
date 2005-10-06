@@ -28,8 +28,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarContextEdge;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHighlighter;
@@ -92,22 +92,22 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
 		@Override
-		protected Image getImage(IMylarContextNode node) {
+		protected Image getImage(IMylarElement node) {
 			return null;
 		}
 
 		@Override
-		protected Image getImage(IMylarContextEdge edge) {
+		protected Image getImage(IMylarRelation edge) {
 			return null;
 		}
 
 		@Override
-		protected String getText(IMylarContextNode node) {
+		protected String getText(IMylarElement node) {
 			return "? " + node;
 		}
 
 		@Override
-		protected String getText(IMylarContextEdge edge) {
+		protected String getText(IMylarRelation edge) {
 			return "? " + edge;
 		}
 
@@ -125,11 +125,11 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 	
     private static final IMylarUiBridge DEFAULT_UI_BRIDGE = new IMylarUiBridge() {
 
-        public void open(IMylarContextNode node) {
+        public void open(IMylarElement node) {
         	// ignore
         }
 
-        public void close(IMylarContextNode node) {
+        public void close(IMylarElement node) {
         	// ignore
         }
 

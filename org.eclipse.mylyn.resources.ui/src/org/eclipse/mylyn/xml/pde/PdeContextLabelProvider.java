@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.xml.pde;
 
-import org.eclipse.mylar.core.IMylarContextEdge;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.AbstractContextLabelProvider;
@@ -27,23 +27,23 @@ import org.eclipse.swt.graphics.Image;
 public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
-	protected Image getImage(IMylarContextNode node) {
+	protected Image getImage(IMylarElement node) {
 		return MylarImages.getImage(MylarImages.FILE_XML); 
 	}
 
 	@Override
-	protected Image getImage(IMylarContextEdge edge) {
+	protected Image getImage(IMylarRelation edge) {
 		return MylarImages.getImage(MylarXmlPlugin.EDGE_REF_XML);
 	}
 
 	@Override
-	protected String getText(IMylarContextNode node) {
+	protected String getText(IMylarElement node) {
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
-		return bridge.getName(bridge.getObjectForHandle(node.getElementHandle()));
+		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
 	@Override
-	protected String getText(IMylarContextEdge edge) {
+	protected String getText(IMylarRelation edge) {
 		return XmlReferencesProvider.NAME;
 	}
 

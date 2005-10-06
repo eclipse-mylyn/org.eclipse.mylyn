@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
@@ -73,7 +73,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		if (taskscape.getActiveNode() != null) {
 			for (AbstractApplyMylarAction action : managedActions) action.update(true);
 		}
-        IMylarContextNode activeNode = taskscape.getActiveNode();
+        IMylarElement activeNode = taskscape.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
         }
@@ -89,7 +89,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
       		UiUtil.closeAllEditors(true);
       	} else {
       		// TODO: enable closing of interesting editors
-//		    	for (IMylarContextNode node : MylarPlugin.getContextManager().getInterestingResources(context)) {
+//		    	for (IMylarElement node : MylarPlugin.getContextManager().getInterestingResources(context)) {
 //		            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
 //		        }       		
       	}
@@ -104,25 +104,25 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     }
 
     protected void refreshViewers() {
-    	List<IMylarContextNode> toRefresh = Collections.emptyList();
+    	List<IMylarElement> toRefresh = Collections.emptyList();
     	refreshViewers(toRefresh, true); 
     }
     
-    protected void refreshViewers(IMylarContextNode node, boolean updateLabels) {
-    	List<IMylarContextNode> toRefresh = new ArrayList<IMylarContextNode>();
+    protected void refreshViewers(IMylarElement node, boolean updateLabels) {
+    	List<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
     	toRefresh.add(node);
     	refreshViewers(toRefresh, updateLabels);
     }
     
-	public void interestChanged(final List<IMylarContextNode> nodes) {
+	public void interestChanged(final List<IMylarElement> nodes) {
     	refreshViewers(nodes, false);
     } 
     
-    public void interestChanged(IMylarContextNode node) {
+    public void interestChanged(IMylarElement node) {
     	refreshViewers(node, false);
     } 
     
-    protected void refreshViewers(final List<IMylarContextNode> nodesToRefresh, final boolean updateLabels) {
+    protected void refreshViewers(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
     	if (syncRefreshMode) {
     		doRefresh(nodesToRefresh, updateLabels);
     	} else {
@@ -134,7 +134,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     	}
     } 
 
-    private void doRefresh(final List<IMylarContextNode> nodesToRefresh, final boolean updateLabels) {
+    private void doRefresh(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
 		try {
     		for (StructuredViewer viewer : managedViewers) {
     			if (viewer != null && !viewer.getControl().isDisposed()) {
@@ -143,12 +143,12 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 			            viewer.refresh();
 					} else if (refreshNeeded(nodesToRefresh, viewer, updateLabels) && !(viewer instanceof TableViewer)) { // TODO: refresh table viewers
 						Object objectToRefresh = null;
-						for (IMylarContextNode node : nodesToRefresh) {
+						for (IMylarElement node : nodesToRefresh) {
 							if (node != null) {
 								IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-								objectToRefresh = structureBridge.getObjectForHandle(node.getElementHandle()); 
+								objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier()); 
 								if (node.getDegreeOfInterest().getValue() <= 0) {
-									objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getElementHandle()));
+									objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getHandleIdentifier()));
 								}
 								if (objectToRefresh != null) {
 									viewer.refresh(objectToRefresh, updateLabels);						            
@@ -170,12 +170,12 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     	}
 	} 
     
-	private boolean refreshNeeded(List<IMylarContextNode> nodesToRefresh, StructuredViewer viewer, boolean updateLabels) {
+	private boolean refreshNeeded(List<IMylarElement> nodesToRefresh, StructuredViewer viewer, boolean updateLabels) {
 		if (updateLabels) return true;
 		if (nodesToRefresh.isEmpty()) return false;
-		IMylarContextNode targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
+		IMylarElement targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
 		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
-		Object targetObject = structureBridge.getObjectForHandle(targetNode.getElementHandle()); 
+		Object targetObject = structureBridge.getObjectForHandle(targetNode.getHandleIdentifier()); 
 
 		if (viewer.testFindItem(targetObject) == null) { // HACK: relying on testing method
 			return true;
@@ -184,24 +184,24 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		}
 	}
     
-    public void nodeDeleted(IMylarContextNode node) {
+    public void nodeDeleted(IMylarElement node) {
     	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-		IMylarContextNode parent = MylarPlugin.getContextManager().getNode(structureBridge.getParentHandle(node.getElementHandle()));
-    	ArrayList<IMylarContextNode> toRefresh = new ArrayList<IMylarContextNode>();
+		IMylarElement parent = MylarPlugin.getContextManager().getNode(structureBridge.getParentHandle(node.getHandleIdentifier()));
+    	ArrayList<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
     	
     	toRefresh.add(parent);
     	refreshViewers(toRefresh, false);
     }
 
-    public void landmarkAdded(IMylarContextNode node) {
+    public void landmarkAdded(IMylarElement node) {
     	refreshViewers(node, true);
     }
 
-    public void landmarkRemoved(IMylarContextNode node) {
+    public void landmarkRemoved(IMylarElement node) {
     	refreshViewers(node, true);
     }
 
-    public void edgesChanged(IMylarContextNode node) {
+    public void edgesChanged(IMylarElement node) {
     	// ignore
     }
 

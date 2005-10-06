@@ -26,7 +26,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchView.DoiOrderSorter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.views.MylarContextContentProvider;
@@ -144,7 +144,7 @@ public class ActiveSearchQuickView {
     /**
      * Open the dialog
      */
-    public void open(IMylarContextNode focusNode) {
+    public void open(IMylarElement focusNode) {
         // If the dialog is already open, dispose the shell and recreate it
         if (dialogShell != null) {
                 close();

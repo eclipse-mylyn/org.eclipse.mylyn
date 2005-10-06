@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylar.core.AbstractRelationProvider;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -31,14 +31,14 @@ import org.eclipse.ui.part.FileEditorInput;
 
 public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 
-	private List<IMylarContextNode> results = null;
+	private List<IMylarElement> results = null;
 
-	private IMylarContextNode node;
+	private IMylarElement node;
 	
 	private int degreeOfSeparation;
 
 	public XMLResultUpdaterSearchListener(AbstractRelationProvider prov,
-			IMylarContextNode searchNode, int degreeOfSeparation) {
+			IMylarElement searchNode, int degreeOfSeparation) {
 		super(prov);
 		this.node = searchNode;
 		this.degreeOfSeparation = degreeOfSeparation;
@@ -48,7 +48,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 
 	@Override
 	public void searchCompleted(List<?> l) {
-		results = new ArrayList<IMylarContextNode>();
+		results = new ArrayList<IMylarElement>();
 		
 		if (l.isEmpty())
 			return;
@@ -98,7 +98,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 		gathered = true;
 	}
 
-	protected void incrementInterest(IMylarContextNode node, String elementKind, String elementHandle, int degreeOfSeparation) {
+	protected void incrementInterest(IMylarElement node, String elementKind, String elementHandle, int degreeOfSeparation) {
         int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
         InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, XmlReferencesProvider.SOURCE_ID, XmlReferencesProvider.SOURCE_ID, null, predictedInterest);
         MylarPlugin.getContextManager().handleInteractionEvent(event);

@@ -8,23 +8,18 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jun 15, 2005
- */
+
 package org.eclipse.mylar.core;
 
-
 /**
+ * TODO: consider finding better name
+ * 
  * @author Mik Kersten
  */
-public interface IMylarContextEdge extends IMylarContextElement {
+public interface IMylarObject {
 
-    public abstract String getLabel();
-    
-    public abstract String getRelationshipHandle();
-    
-    public abstract IMylarContextNode getTarget();
+    public abstract IDegreeOfInterest getDegreeOfInterest();
 
-    public abstract IMylarContextNode getSource();
-
+    public abstract String getContentType();
+	
 }

@@ -37,7 +37,7 @@ import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
@@ -140,7 +140,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
             for (int i = 0; i < children.length; i++) {
                 if (children[i] instanceof JarPackageFragmentRoot) {
                     JarPackageFragmentRoot element = (JarPackageFragmentRoot)children[i];
-                    IMylarContextNode node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
+                    IMylarElement node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
                     if (node != null && node.getDegreeOfInterest().isInteresting()) {
                         return false;
                     } 
@@ -230,9 +230,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	 * Some copying from:
 	 * @see org.eclipse.jdt.ui.ProblemsLabelDecorator
 	 */
-	public boolean containsProblem(IMylarContextNode node) {
+	public boolean containsProblem(IMylarElement node) {
 		try {
-			IJavaElement element = (IJavaElement)getObjectForHandle(node.getElementHandle());
+			IJavaElement element = (IJavaElement)getObjectForHandle(node.getHandleIdentifier());
 			switch (element.getElementType()) {
 			case IJavaElement.JAVA_PROJECT:
 			case IJavaElement.PACKAGE_FRAGMENT_ROOT:

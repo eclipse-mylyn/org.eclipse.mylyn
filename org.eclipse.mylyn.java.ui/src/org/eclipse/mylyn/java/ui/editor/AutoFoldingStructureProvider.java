@@ -57,7 +57,7 @@ import org.eclipse.jface.text.source.projection.IProjectionPosition;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -85,7 +85,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
                 break;
             case IJavaElement.TYPE:
                 if (isInnerType((IType)element)) {
-                    IMylarContextNode node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
+                    IMylarElement node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
                     if (!MylarUiPlugin.getDefault().isGlobalFoldingEnabled()) {
                         collapse = false;
                     } else if (node == null || node.getDegreeOfInterest().isInteresting()) {
@@ -100,7 +100,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
                 createProjection= true;
                 break;
             case IJavaElement.METHOD:
-                IMylarContextNode node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
+                IMylarElement node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
                 if (!MylarUiPlugin.getDefault().isGlobalFoldingEnabled()) {
                     collapse = false;
                 } else if (node == null || node.getDegreeOfInterest().isInteresting()) {

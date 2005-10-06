@@ -87,5 +87,5 @@ public interface IMylarStructureBridge {
     public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
 
     @Deprecated
-	public abstract boolean containsProblem(IMylarContextNode node);
+	public abstract boolean containsProblem(IMylarElement node);
 }

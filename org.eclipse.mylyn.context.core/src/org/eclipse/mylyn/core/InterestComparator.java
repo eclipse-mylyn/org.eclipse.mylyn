@@ -21,9 +21,9 @@ import java.util.Comparator;
 public class InterestComparator<T> implements Comparator<T> {
 
     public int compare(T e1, T e2) {
-        if (e1 instanceof IMylarContextNode && e2 instanceof IMylarContextNode) {
-            IMylarContextNode info1 = (IMylarContextNode)e1;
-            IMylarContextNode info2 = (IMylarContextNode)e2;
+        if (e1 instanceof IMylarElement && e2 instanceof IMylarElement) {
+            IMylarElement info1 = (IMylarElement)e1;
+            IMylarElement info2 = (IMylarElement)e2;
             if (info1 != null && info2 != null) {
                 float v1 = info1.getDegreeOfInterest().getValue();
                 float v2 = info2.getDegreeOfInterest().getValue();

@@ -40,14 +40,15 @@ public class MylarContextExternalizer {
     private ContextReader reader = new ContextReader();
     private ContextWriter writer = new ContextWriter();
     
-    public void writeContextToXML(MylarContext taskscape, File file) { 
+    public void writeContextToXML(MylarContext context, File file) { 
         try {
+        	if (context.getInteractionHistory().isEmpty()) return;
         	if (!file.exists()) {        		
         		file.createNewFile();
         	}
             OutputStream stream = new FileOutputStream(file);
             writer.setOutputStream(stream);
-            writer.writeContextToStream(taskscape);
+            writer.writeContextToStream(context);
             stream.close();
         } catch (IOException e) {
         	MylarPlugin.fail(e, "Could not write: " + file.getAbsolutePath(), true);

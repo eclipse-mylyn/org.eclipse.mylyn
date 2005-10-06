@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -72,31 +72,31 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 		
 	}
 
-	public void interestChanged(IMylarContextNode node) {
+	public void interestChanged(IMylarElement node) {
 		updateWorkingSet();
 		
 	}
 
-	public void interestChanged(List<IMylarContextNode> nodes) {
+	public void interestChanged(List<IMylarElement> nodes) {
 		updateWorkingSet();
 		
 	}
 
-	public void nodeDeleted(IMylarContextNode node) {
+	public void nodeDeleted(IMylarElement node) {
 		updateWorkingSet();
 	}
 
-	public void landmarkAdded(IMylarContextNode node) {
-		updateWorkingSet();
-		
-	}
-
-	public void landmarkRemoved(IMylarContextNode node) {
+	public void landmarkAdded(IMylarElement node) {
 		updateWorkingSet();
 		
 	}
 
-	public void edgesChanged(IMylarContextNode node) {
+	public void landmarkRemoved(IMylarElement node) {
+		updateWorkingSet();
+		
+	}
+
+	public void edgesChanged(IMylarElement node) {
 		// don't care about this relationship
 		
 	}
@@ -117,7 +117,7 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 //		IMylarContext t = MylarPlugin.getContextManager().getActiveContext();
-		for(IMylarContextNode node: MylarPlugin.getContextManager().getActiveContextResources()){
+		for(IMylarElement node: MylarPlugin.getContextManager().getActiveContextResources()){
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 
 			// HACK comparing extension to string
@@ -125,7 +125,7 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 			if(bridge.getContentType().equals("bugzilla"))
 				continue;
 			
-			Object o = bridge.getObjectForHandle(node.getElementHandle());
+			Object o = bridge.getObjectForHandle(node.getHandleIdentifier());
 			if(o instanceof IAdaptable){
 				elements.add((IAdaptable)o);
 			}

@@ -14,24 +14,24 @@
 package org.eclipse.mylar.core.internal;
 
 import org.eclipse.mylar.core.IDegreeOfInterest;
-import org.eclipse.mylar.core.IMylarContextEdge;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
 
 /**
  * TODO: make immutable?
  * 
  * @author Mik Kersten
  */
-public class MylarContextEdge implements IMylarContextEdge {
+public class MylarContextEdge implements IMylarRelation {
 
     private DegreeOfInterest interest;
     
     private String structureKind;
     private String relationshipHandle;
-    private IMylarContextNode source;
-    private IMylarContextNode target;
+    private IMylarElement source;
+    private IMylarElement target;
     
-    public MylarContextEdge(String kind, String edgeKind, IMylarContextNode source, IMylarContextNode target, MylarContext context) {
+    public MylarContextEdge(String kind, String edgeKind, IMylarElement source, IMylarElement target, MylarContext context) {
         interest = new DegreeOfInterest(context);
         this.structureKind = kind;
         this.relationshipHandle = edgeKind; 
@@ -39,7 +39,7 @@ public class MylarContextEdge implements IMylarContextEdge {
         this.source = source;
     }
     
-    public IMylarContextNode getTarget() {
+    public IMylarElement getTarget() {
         return target;
     }
 
@@ -50,8 +50,8 @@ public class MylarContextEdge implements IMylarContextEdge {
     @Override
     public String toString() {
         return "(rel: " + relationshipHandle 
-            + ", source: " + source.getElementHandle() 
-            + ", target: " + target.getElementHandle() + ")";
+            + ", source: " + source.getHandleIdentifier() 
+            + ", target: " + target.getHandleIdentifier() + ")";
     }
 
     public String getLabel() {
@@ -66,7 +66,7 @@ public class MylarContextEdge implements IMylarContextEdge {
         return structureKind;
     }
 
-    public IMylarContextNode getSource() {
+    public IMylarElement getSource() {
         return source;
     }
 }

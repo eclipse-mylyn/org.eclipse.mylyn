@@ -16,7 +16,7 @@ package org.eclipse.mylar.ui;
 import java.util.ConcurrentModificationException;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextEdge;
@@ -42,11 +42,11 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 	    	// ignored, because we can add structure bridges during decoration
 	    }
     	try {
-    		IMylarContextNode node = null;
+    		IMylarElement node = null;
             if (element instanceof MylarContextEdge) {
                 decoration.setForegroundColor(MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP);
-            } else  if (element instanceof IMylarContextNode) {
-                node = (IMylarContextNode)element;
+            } else  if (element instanceof IMylarElement) {
+                node = (IMylarElement)element;
             } else {
                 if (adapter != null && adapter.getContentType() != null) {
                     node = MylarPlugin.getContextManager().getNode(adapter.getHandleIdentifier(element));
@@ -56,7 +56,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
                 decoration.setBackgroundColor(UiUtil.getBackgroundForElement(node));
                 decoration.setForegroundColor(UiUtil.getForegroundForElement(node));      
                 if (adapter != null 
-                	&& adapter.canBeLandmark(node.getElementHandle()) 
+                	&& adapter.canBeLandmark(node.getHandleIdentifier()) 
                     && node.getDegreeOfInterest().isLandmark() 
                     && !node.getDegreeOfInterest().isPropagated()
                     && !node.getDegreeOfInterest().isPredicted()

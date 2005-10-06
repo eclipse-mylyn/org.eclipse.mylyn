@@ -30,7 +30,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.JavaStructureBridge;
 
@@ -40,7 +40,7 @@ import org.eclipse.mylar.java.JavaStructureBridge;
  */
 public class LandmarkMarkerManager implements IMylarContextListener {
 
-    private Map<IMylarContextNode, Long> markerMap = new HashMap<IMylarContextNode, Long>();
+    private Map<IMylarElement, Long> markerMap = new HashMap<IMylarElement, Long>();
     
     public LandmarkMarkerManager() {
         super();
@@ -56,11 +56,11 @@ public class LandmarkMarkerManager implements IMylarContextListener {
     
     private void modelUpdated() {
     	try {
-	        for (IMylarContextNode node : markerMap.keySet()) {
+	        for (IMylarElement node : markerMap.keySet()) {
 	            landmarkRemoved(node);
 	        }
 	        markerMap.clear();
-	        for (IMylarContextNode node : MylarPlugin.getContextManager().getActiveLandmarks()) {
+	        for (IMylarElement node : MylarPlugin.getContextManager().getActiveLandmarks()) {
 	            landmarkAdded(node);
 	        }
         } catch (Throwable t) {
@@ -68,18 +68,18 @@ public class LandmarkMarkerManager implements IMylarContextListener {
         }
     } 
 
-    public void interestChanged(IMylarContextNode element) {
+    public void interestChanged(IMylarElement element) {
     	// don't care when the interest changes
     }
     
-    public void interestChanged(List<IMylarContextNode> nodes) {
+    public void interestChanged(List<IMylarElement> nodes) {
     	// don't care when the interest changes
     }
 
-    public void landmarkAdded(final IMylarContextNode node) {
+    public void landmarkAdded(final IMylarElement node) {
         if (node == null || node.getContentType() == null) return;
         if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
-            final IJavaElement element = JavaCore.create(node.getElementHandle());
+            final IJavaElement element = JavaCore.create(node.getHandleIdentifier());
             if (!element.exists()) return;
             if (element instanceof IMember) {
                 try {
@@ -108,10 +108,10 @@ public class LandmarkMarkerManager implements IMylarContextListener {
         }
     }
     
-    public void landmarkRemoved(final IMylarContextNode node) {
+    public void landmarkRemoved(final IMylarElement node) {
         if (node == null) return;
         if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
-            IJavaElement element = JavaCore.create(node.getElementHandle());
+            IJavaElement element = JavaCore.create(node.getHandleIdentifier());
             if (!element.exists()) return;
             if (element.getAncestor(IJavaElement.COMPILATION_UNIT) != null  // stuff from .class files
                && element instanceof ISourceReference) {
@@ -142,7 +142,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
         }
     }
 
-    public void edgesChanged(IMylarContextNode node) {
+    public void edgesChanged(IMylarElement node) {
     	// don't care when the relationships changed
     }
 
@@ -154,7 +154,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
     	// don't care when there is a presentation setting change
     }
 
-    public void nodeDeleted(IMylarContextNode node) {
+    public void nodeDeleted(IMylarElement node) {
     	// don't care when a node is deleted
     }
 

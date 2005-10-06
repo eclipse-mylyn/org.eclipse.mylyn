@@ -26,7 +26,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.Font;
@@ -48,7 +48,7 @@ public class JavaUiUtil {
 //      if (activeElement == null) return null;
 //    
       if (element == null) return null;
-      IMylarContextNode info = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
+      IMylarElement info = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
       if (info.getDegreeOfInterest().isLandmark() && !info.getDegreeOfInterest().isPropagated()) {
           return MylarUiPlugin.BOLD;
       }

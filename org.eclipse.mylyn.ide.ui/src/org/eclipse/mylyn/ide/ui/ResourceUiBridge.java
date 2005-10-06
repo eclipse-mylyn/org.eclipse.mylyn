@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
@@ -37,10 +37,10 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  */
 public class ResourceUiBridge implements IMylarUiBridge {
  
-    public void open(IMylarContextNode node) {
+    public void open(IMylarElement node) {
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
         if (adapter == null) return;
-        IResource resource = (IResource)adapter.getObjectForHandle(node.getElementHandle());
+        IResource resource = (IResource)adapter.getObjectForHandle(node.getHandleIdentifier());
         if (resource != null && resource.exists()) {
 	        if (resource instanceof IFile) {
 	            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
@@ -53,7 +53,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
         }
     }
 
-    public void close(IMylarContextNode node) {
+    public void close(IMylarElement node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();
