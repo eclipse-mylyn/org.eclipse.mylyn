@@ -35,5 +35,4 @@ public abstract class AbstractMylarHyperlinkDetector implements IHyperlinkDetect
 		Assert.isNotNull(editor);
 		this.editor = editor;
 	}
-
 }
