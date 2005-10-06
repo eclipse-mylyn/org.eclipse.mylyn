@@ -29,7 +29,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractSelectionMonitor;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
@@ -109,7 +109,7 @@ public class SelectionMonitor extends AbstractSelectionMonitor {
                 }
             }
         }
-        IMylarContextNode node = MylarPlugin.getContextManager().getNode(elementHandle);
+        IMylarElement node = MylarPlugin.getContextManager().getNode(elementHandle);
         String delta = "";
         float selectionFactor = MylarContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();
         

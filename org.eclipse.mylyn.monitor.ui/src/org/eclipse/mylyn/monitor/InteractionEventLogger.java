@@ -159,7 +159,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
     	res.append(TAB + OPEN + "date" + CLOSE + format.format(e.getDate()) + OPEN + SLASH + "date" + CLOSE + ENDL);
     	res.append(TAB + OPEN + "endDate" + CLOSE + format.format(e.getEndDate()) + OPEN + SLASH + "endDate" + CLOSE + ENDL);
     	res.append(TAB + OPEN + "originId" + CLOSE + XmlStringConverter.convertToXmlString(e.getOriginId()) + OPEN + SLASH + "originId" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getStructureKind()) + OPEN + SLASH + "structureKind" + CLOSE + ENDL);
+    	res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getContentType()) + OPEN + SLASH + "structureKind" + CLOSE + ENDL);
     	res.append(TAB + OPEN + "structureHandle" + CLOSE + XmlStringConverter.convertToXmlString(e.getStructureHandle()) + OPEN + SLASH + "structureHandle" + CLOSE + ENDL);
     	res.append(TAB + OPEN + "navigation" + CLOSE + XmlStringConverter.convertToXmlString(e.getNavigation()) + OPEN + SLASH + "navigation" + CLOSE + ENDL);
     	res.append(TAB + OPEN + "delta" + CLOSE + XmlStringConverter.convertToXmlString(e.getDelta()) + OPEN + SLASH + "delta" + CLOSE + ENDL);
