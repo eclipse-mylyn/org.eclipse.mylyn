@@ -24,7 +24,7 @@ import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -36,8 +36,8 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 
     protected BugzillaContextLabelProvider labelProvider = new BugzillaContextLabelProvider();
     
-    public void open(IMylarContextNode node) {
-        String handle = node.getElementHandle();
+    public void open(IMylarElement node) {
+        String handle = node.getHandleIdentifier();
         String bugHandle = handle;
         String server =handle.substring(0, handle.indexOf(";"));
                
@@ -73,7 +73,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
         return labelProvider;
     }
 
-    public void close(IMylarContextNode node) {
+    public void close(IMylarElement node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {
             IEditorReference[] references = page.getEditorReferences();

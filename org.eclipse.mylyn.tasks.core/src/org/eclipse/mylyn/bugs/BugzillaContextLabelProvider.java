@@ -16,8 +16,8 @@ package org.eclipse.mylar.bugs;
 import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
-import org.eclipse.mylar.core.IMylarContextEdge;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.AbstractContextLabelProvider;
@@ -30,12 +30,12 @@ import org.eclipse.swt.graphics.Image;
 public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 	
 	@Override
-	protected Image getImage(IMylarContextNode node) {
+	protected Image getImage(IMylarElement node) {
 		return MylarImages.getImage(MylarImages.BUG); 
 	}
 
 	@Override
-	protected Image getImage(IMylarContextEdge edge) {
+	protected Image getImage(IMylarRelation edge) {
 		return MylarImages.getImage(MylarBugsPlugin.EDGE_REF_BUGZILLA); 
 	}
 
@@ -53,23 +53,23 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
      * TODO: slow?
      */
 	@Override
-	protected String getText(IMylarContextNode node) {        
+	protected String getText(IMylarElement node) {        
         // try to get from the cache before downloading
         Object report;
-    	BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getElementHandle());
-    	BugReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getElementHandle());
+    	BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getHandleIdentifier());
+    	BugReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getHandleIdentifier());
     	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(BugzillaStructureBridge.CONTENT_TYPE);
 		
     	if(reportNode != null && cachedReport == null){
     		report = reportNode;
     	} else{
-     		report = bridge.getObjectForHandle(node.getElementHandle());
+     		report = bridge.getObjectForHandle(node.getHandleIdentifier());
     	}
         return bridge.getName(report);
 	}
 
 	@Override
-	protected String getText(IMylarContextEdge edge) {
+	protected String getText(IMylarRelation edge) {
 		return BugzillaReferencesProvider.NAME;  
 	}
 } 

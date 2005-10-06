@@ -28,7 +28,7 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.ui.IEditorPart;
@@ -251,7 +251,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 		// ignore
 	}
 
-	public boolean containsProblem(IMylarContextNode node) {
+	public boolean containsProblem(IMylarElement node) {
 		// TODO Auto-generated method stub
 		return false;
 	}

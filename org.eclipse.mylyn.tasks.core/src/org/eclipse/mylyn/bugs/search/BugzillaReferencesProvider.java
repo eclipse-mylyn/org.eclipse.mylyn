@@ -30,7 +30,7 @@ import org.eclipse.mylar.bugs.BugzillaStructureBridge;
 import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationProvider;
-import org.eclipse.mylar.core.IMylarContextNode;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.ui.PlatformUI;
@@ -58,9 +58,9 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
      * HACK: checking kind as string - don't want the dependancy to mylar.java
      */
     @Override
-    protected void findRelated(final IMylarContextNode node, int degreeOfSeparation) {
+    protected void findRelated(final IMylarElement node, int degreeOfSeparation) {
         if (!node.getContentType().equals("java")) return; 
-        IJavaElement javaElement = JavaCore.create(node.getElementHandle());
+        IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
         if (!acceptElement(javaElement)) {
             return; 
         }
@@ -68,12 +68,12 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
     }
 
 	@Override
-	public IMylarSearchOperation getSearchOperation(IMylarContextNode node, int limitTo, int degreeOfSepatation) {
-		IJavaElement javaElement = JavaCore.create(node.getElementHandle());
+	public IMylarSearchOperation getSearchOperation(IMylarElement node, int limitTo, int degreeOfSepatation) {
+		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
 		return new BugzillaMylarSearch(degreeOfSepatation, javaElement); 
 	}
     
-	private void runJob(final IMylarContextNode node,  final int degreeOfSeparation) {
+	private void runJob(final IMylarElement node,  final int degreeOfSeparation) {
 		BugzillaMylarSearch search = (BugzillaMylarSearch)getSearchOperation(node, 0, degreeOfSeparation);        
 		
         search.addListener(new IActiveSearchListener(){
