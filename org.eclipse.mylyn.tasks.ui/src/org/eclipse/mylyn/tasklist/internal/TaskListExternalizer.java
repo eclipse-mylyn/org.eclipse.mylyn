@@ -36,7 +36,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
@@ -90,7 +90,7 @@ public class TaskListExternalizer {
 			externalizer.createRegistry(doc, root);
 		}		
 
-		for (ICategory category : tlist.getCategories()) {
+		for (ITaskListCategory category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category)) 
@@ -553,7 +553,7 @@ public class TaskListExternalizer {
 			externalizer.createRegistry(doc, root);
 		}		
 
-		for (ICategory category : tlist.getCategories()) {
+		for (ITaskListCategory category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category)) element = externalizer.createCategoryElement(category, doc, root);

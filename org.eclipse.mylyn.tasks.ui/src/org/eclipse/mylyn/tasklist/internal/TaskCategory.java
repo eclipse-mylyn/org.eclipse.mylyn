@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.TaskListImages;
@@ -35,7 +35,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class TaskCategory implements ICategory, Serializable {
+public class TaskCategory implements ITaskListCategory, Serializable {
 
     private static final long serialVersionUID = 3834024740813027380L;
     
@@ -49,35 +49,35 @@ public class TaskCategory implements ICategory, Serializable {
     }
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ICategory#getDescription(boolean)
+	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getDescription(boolean)
 	 */
 	public String getDescription(boolean label) {
 		return description;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ICategory#getHandle()
+	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getHandle()
 	 */
 	public String getHandle() {
 		return handle;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ICategory#setDescription(java.lang.String)
+	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#setDescription(java.lang.String)
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ICategory#setHandle(java.lang.String)
+	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#setHandle(java.lang.String)
 	 */
 	public void setHandle(String handle) {
 		this.handle = handle;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ICategory#getStatusIcon()
+	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getStatusIcon()
 	 */
 	public Image getStatusIcon() {
 		return null;

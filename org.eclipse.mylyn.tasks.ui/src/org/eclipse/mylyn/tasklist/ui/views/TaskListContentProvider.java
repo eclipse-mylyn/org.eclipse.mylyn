@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskFilter;
@@ -74,8 +74,8 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
         }
         
         public boolean hasChildren(Object parent) {  
-            if (parent instanceof ICategory) {
-            	ICategory cat = (ICategory)parent;
+            if (parent instanceof ITaskListCategory) {
+            	ITaskListCategory cat = (ITaskListCategory)parent;
                 return cat.getChildren() != null && cat.getChildren().size() > 0;
             }  else if (parent instanceof Task) {
             	Task t = (Task) parent;
@@ -95,10 +95,10 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
         				if (!filter(list.get(i))) {
         					filteredRoots.add(list.get(i));
         				}
-        			} else if (list.get(i) instanceof ICategory) {
-//        				if(((ICategory)list.get(i)).isArchive())
+        			} else if (list.get(i) instanceof ITaskListCategory) {
+//        				if(((ITaskListCategory)list.get(i)).isArchive())
 //        					continue;
-        				if (selectCategory((ICategory)list.get(i))) {
+        				if (selectCategory((ITaskListCategory)list.get(i))) {
         					filteredRoots.add(list.get(i));
         				}
         			} else if (list.get(i) instanceof IQuery) {
@@ -133,7 +133,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
         	return false;
         }
         
-        private boolean selectCategory(ICategory cat) {
+        private boolean selectCategory(ITaskListCategory cat) {
         	if(cat.isArchive()){
         		for (ITask task: cat.getChildren()) {
 					if(task.isActive()){
@@ -160,9 +160,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
         	if (containsNoFilterText(((Text) this.view.tree.getFilterControl()).getText())
         		|| ((Text) this.view.tree.getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
         		List<Object> children = new ArrayList<Object>();
-	        	if (parent instanceof ICategory) {
-	        		if(((ICategory)parent).isArchive()){
-	        			for (ITask task: ((ICategory)parent).getChildren()) {
+	        	if (parent instanceof ITaskListCategory) {
+	        		if(((ITaskListCategory)parent).isArchive()){
+	        			for (ITask task: ((ITaskListCategory)parent).getChildren()) {
 	    					if(task.isActive()){
 	    						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
 	    						if(t == null)
@@ -171,7 +171,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	    				} 
 	        			return children;
 	        		}
-	        		List<? extends ITaskListElement> list = ((ICategory) parent)
+	        		List<? extends ITaskListElement> list = ((ITaskListCategory) parent)
 							.getChildren();
         			for (int i = 0; i < list.size(); i++) {
             			if (!filter(list.get(i))) {
@@ -199,8 +199,8 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
     	    	}
 			} else {
 				List<Object> children = new ArrayList<Object>();
-				if (parent instanceof ICategory) {
-					children.addAll(((ICategory) parent).getChildren());
+				if (parent instanceof ITaskListCategory) {
+					children.addAll(((ITaskListCategory) parent).getChildren());
 					return children;					
 				} else if (parent instanceof IQuery) {
 					children.addAll(((IQuery) parent).getChildren());

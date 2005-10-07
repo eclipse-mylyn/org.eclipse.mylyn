@@ -42,12 +42,12 @@ public interface ITaskListExternalizer {
 	
 	public abstract String getQueryHitTagName();
 	
-	public abstract boolean canCreateElementFor(ICategory category);
+	public abstract boolean canCreateElementFor(ITaskListCategory category);
 	
 	/**
 	 * @return the element that was created, null if failed
 	 */
-	public abstract Element createCategoryElement(ICategory category, Document doc, Element parent);
+	public abstract Element createCategoryElement(ITaskListCategory category, Document doc, Element parent);
 
 	public abstract boolean canCreateElementFor(ITask task);
 	
@@ -62,7 +62,7 @@ public interface ITaskListExternalizer {
 	
 	public abstract boolean canReadTask(Node node);
 	
-	public abstract ITask readTask(Node node, TaskList tlist, ICategory category, ITask parent) throws MylarExternalizerException;
+	public abstract ITask readTask(Node node, TaskList tlist, ITaskListCategory category, ITask parent) throws MylarExternalizerException;
 	
 	
 	

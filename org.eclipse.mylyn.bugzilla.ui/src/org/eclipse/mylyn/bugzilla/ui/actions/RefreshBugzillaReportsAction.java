@@ -26,7 +26,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
@@ -162,7 +162,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
 			}
 		}
-		for (ICategory cat : MylarTasklistPlugin
+		for (ITaskListCategory cat : MylarTasklistPlugin
 				.getTaskListManager().getTaskList().getCategories()) {
 //			if(cat.isArchive())
 //				continue;

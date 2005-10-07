@@ -12,7 +12,7 @@
 package org.eclipse.mylar.tasklist.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -21,9 +21,9 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class CategoryEditorInput implements IEditorInput {
 
-	private ICategory category;
+	private ITaskListCategory category;
 	
-	public CategoryEditorInput(ICategory cat) {
+	public CategoryEditorInput(ITaskListCategory cat) {
 		this.category = cat;		
 	}
 	public boolean exists() {

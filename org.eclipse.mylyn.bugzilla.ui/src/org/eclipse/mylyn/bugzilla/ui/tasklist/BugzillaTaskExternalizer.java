@@ -17,7 +17,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
@@ -147,7 +147,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 		if (hasCaughtException) throw new MylarExternalizerException("Failed to restore all tasks");
 	}
 	
-	public boolean canCreateElementFor(ICategory cat) {
+	public boolean canCreateElementFor(ITaskListCategory cat) {
 		return false;
 	}
 
@@ -183,7 +183,7 @@ public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 	}
 
 	@Override
-	public ITask readTask(Node node, TaskList tlist, ICategory category, ITask parent)  throws MylarExternalizerException{
+	public ITask readTask(Node node, TaskList tlist, ITaskListCategory category, ITask parent)  throws MylarExternalizerException{
 		Element element = (Element) node;
 		String handle;
 		String label;

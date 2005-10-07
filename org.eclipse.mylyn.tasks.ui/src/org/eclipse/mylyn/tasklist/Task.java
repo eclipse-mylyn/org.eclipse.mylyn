@@ -56,7 +56,7 @@ public class Task implements ITask {
     private int estimatedTime = 0;
     private boolean completed;
     private RelatedLinks links = new RelatedLinks();
-    private ICategory parentCategory = null;
+    private ITaskListCategory parentCategory = null;
     
     private Date timeActivated = null;
     private Date endDate = null;
@@ -328,7 +328,7 @@ public class Task implements ITask {
 		}
 	}
 	
-	public void setCategory(ICategory cat) {
+	public void setCategory(ITaskListCategory cat) {
 		this.parentCategory = cat;
 		if (MylarTasklistPlugin.getDefault() != null) {
 			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
@@ -339,7 +339,7 @@ public class Task implements ITask {
 		this.parentCategory = cat;
 	}
     
-    public ICategory getCategory() {
+    public ITaskListCategory getCategory() {
     	return parentCategory;
     }
 

@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHighlighter;
@@ -51,7 +51,7 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
 			case 1:
 				return null;
 			case 2:
-				if (element instanceof ICategory || element instanceof IQuery) {
+				if (element instanceof ITaskListCategory || element instanceof IQuery) {
 					return null;
 				}
 				return element.getPriority();
@@ -67,13 +67,13 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
         	return null;
         }
         if (columnIndex == 0) {
-        	if (element instanceof ICategory || element instanceof IQuery) {
+        	if (element instanceof ITaskListCategory || element instanceof IQuery) {
         		return ((ITaskListElement)element).getIcon(); 
         	} else {
         		return ((ITaskListElement)element).getStatusIcon();
         	}        	
         } else if (columnIndex == 1) {
-        	if (element instanceof ICategory || element instanceof IQuery) {
+        	if (element instanceof ITaskListCategory || element instanceof IQuery) {
         		return null;
         	}
         	return ((ITaskListElement)element).getIcon();
@@ -102,8 +102,8 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
 			      if (highlighter != null) {
 			    	  return highlighter.getHighlightColor(task); 
 			      }
-			  } else if (element instanceof ICategory) {
-				  ICategory category = (ICategory)element;
+			  } else if (element instanceof ITaskListCategory) {
+				  ITaskListCategory category = (ITaskListCategory)element;
 				  if (category.isArchive()) {
 					  return TaskListImages.BACKGROUND_ARCHIVE;
 				  } else {

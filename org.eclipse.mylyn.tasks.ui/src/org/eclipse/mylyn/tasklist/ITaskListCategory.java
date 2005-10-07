@@ -3,7 +3,7 @@ package org.eclipse.mylar.tasklist;
 import java.util.List;
 
 
-public interface ICategory extends ITaskListElement {
+public interface ITaskListCategory extends ITaskListElement {
 
 	public List<ITask> getChildren();
 	

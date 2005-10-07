@@ -25,9 +25,9 @@ import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -255,7 +255,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		return false;
 	}
 
-	public void itemRemoved(ITaskListElement element, ICategory category) {
+	public void itemRemoved(ITaskListElement element, ITaskListCategory category) {
 		if (element instanceof BugzillaTask){
 			BugzillaTask task = (BugzillaTask) element;
 			if (category != null) {

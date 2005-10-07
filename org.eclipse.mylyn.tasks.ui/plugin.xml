@@ -8,6 +8,21 @@
          point="org.eclipse.ui.startup">
    </extension>
 
+  	<extension point = "org.eclipse.ui.popupMenus">
+     <objectContribution
+        id="org.eclipse.mylar.tasklist.ui"
+        objectClass="org.eclipse.mylar.tasklist.ITaskListCategory">
+     	<action  
+  		  	label="Go Into Category" 
+	  		tooltip="Go Into Category"
+	  		menubarPath="tasks" 
+	  		id="org.eclipse.mylar.tasklist.actions.category.gointo" 
+	  		class="org.eclipse.mylar.tasklist.ui.actions.GoIntoAction"
+	  		icon="icons/etool16/go-into.gif"
+	  		enablesFor="1"/>
+	 </objectContribution>
+	</extension>
+
 	<extension
          id="org.eclipse.mylar.helpDocs"
          name="Mylar Help"

@@ -74,9 +74,9 @@ public interface ITask extends Serializable, ITaskListElement {
     
     public abstract void setPriority(String priority);
     
-    public abstract void setCategory(ICategory cat);
+    public abstract void setCategory(ITaskListCategory cat);
     
-    public abstract ICategory getCategory();
+    public abstract ITaskListCategory getCategory();
     
     public abstract String getElapsedTimeForDisplay();
 	

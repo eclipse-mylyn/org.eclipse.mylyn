@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
@@ -66,11 +66,11 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		this.externalizers = externalizers;
 	}
 	
-	public boolean canCreateElementFor(ICategory category) {
+	public boolean canCreateElementFor(ITaskListCategory category) {
 		return category instanceof TaskCategory;
 	}
 	
-	public Element createCategoryElement(ICategory category, Document doc, Element parent) {
+	public Element createCategoryElement(ITaskListCategory category, Document doc, Element parent) {
 		if(category.isArchive())
 			return parent;
 		Element node = doc.createElement(getCategoryTagName());
@@ -175,7 +175,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getTaskTagName());
 	}
 
-	public ITask readTask(Node node, TaskList tlist, ICategory category, ITask parent)  throws MylarExternalizerException {
+	public ITask readTask(Node node, TaskList tlist, ITaskListCategory category, ITask parent)  throws MylarExternalizerException {
 		Element element = (Element) node;
 		String handle;
 		String label;
@@ -194,7 +194,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		return task;
 	}
 
-	protected void readTaskInfo(ITask task, TaskList tlist, Element element, ICategory category, ITask parent)  throws MylarExternalizerException{
+	protected void readTaskInfo(ITask task, TaskList tlist, Element element, ITaskListCategory category, ITask parent)  throws MylarExternalizerException{
 		if (element.hasAttribute(PRIORITY)) {
 			task.setPriority(element.getAttribute(PRIORITY));
 		} else {

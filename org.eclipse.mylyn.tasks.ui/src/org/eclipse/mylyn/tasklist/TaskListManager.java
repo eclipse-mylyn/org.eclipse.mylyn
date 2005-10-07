@@ -100,7 +100,7 @@ public class TaskListManager {
     	taskList.addRootTask(task);
     }
     
-    public void addCategory(ICategory cat) {
+    public void addCategory(ITaskListCategory cat) {
     	taskList.addCategory(cat);
     }
     
@@ -116,7 +116,7 @@ public class TaskListManager {
         taskList.deleteTask(task);
     }
     
-    public void deleteCategory(ICategory cat) {
+    public void deleteCategory(ITaskListCategory cat) {
     	taskList.deleteCategory(cat);
     }
     

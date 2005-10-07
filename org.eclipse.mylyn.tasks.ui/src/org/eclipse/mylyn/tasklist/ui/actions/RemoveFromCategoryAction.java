@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListElement;
@@ -51,7 +51,7 @@ public class RemoveFromCategoryAction extends Action {
 				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
 				ITaskHandler handler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(selectedElement);
 				if (item.getParentItem() != null) {
-					handler.itemRemoved(selectedElement, (ICategory)item.getParentItem().getData());	
+					handler.itemRemoved(selectedElement, (ITaskListCategory)item.getParentItem().getData());	
 				} 
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
@@ -61,7 +61,7 @@ public class RemoveFromCategoryAction extends Action {
 							"Task must be deactivated in order to remove from category.");
 					return;
 				}
-				ICategory cat = task.getCategory();
+				ITaskListCategory cat = task.getCategory();
 				if (cat != null) {
 					cat.removeTask(task);				
 				} else {

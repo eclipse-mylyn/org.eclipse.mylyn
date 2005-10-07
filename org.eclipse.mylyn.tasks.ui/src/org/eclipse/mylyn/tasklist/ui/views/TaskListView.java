@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
-import org.eclipse.mylar.tasklist.ICategory;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
@@ -134,7 +134,7 @@ public class TaskListView extends ViewPart {
 	FilteredTree tree;
     private DrillDownAdapter drillDownAdapter;
     
-    private GoIntoAction goIntoAction;
+//    private GoIntoAction goIntoAction;
     private GoUpAction goBackAction;
     
     private WorkOfflineAction workOffline;
@@ -179,7 +179,7 @@ public class TaskListView extends ViewPart {
     
     private TaskActivationHistory taskHistory = new TaskActivationHistory();
 
-	private boolean canEnableGoInto = false;
+//	private boolean canEnableGoInto = false;
     	
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
@@ -389,8 +389,8 @@ public class TaskListView extends ViewPart {
 					case 3:
 						return taskListElement.getDescription(true);
 					}
-				} else if (element instanceof ICategory) {
-					ICategory cat = (ICategory) element;
+				} else if (element instanceof ITaskListCategory) {
+					ITaskListCategory cat = (ITaskListCategory) element;
 					switch (columnIndex) {
 					case 0:
 						return new Boolean(false);
@@ -424,8 +424,8 @@ public class TaskListView extends ViewPart {
 			int columnIndex = -1;
 			try {
 				columnIndex = Arrays.asList(columnNames).indexOf(property);
-				if (((TreeItem) element).getData() instanceof ICategory) {
-					ICategory cat = (ICategory)((TreeItem) element).getData();
+				if (((TreeItem) element).getData() instanceof ITaskListCategory) {
+					ITaskListCategory cat = (ITaskListCategory)((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:						
 //						getViewer().setSelection(null);
@@ -535,15 +535,15 @@ public class TaskListView extends ViewPart {
 		 */
         @Override
         public int compare(Viewer compareViewer, Object o1, Object o2) {
-        	if (o1 instanceof ICategory || o1 instanceof IQuery) {
-        		if (o2 instanceof ICategory|| o2 instanceof IQuery) {
+        	if (o1 instanceof ITaskListCategory || o1 instanceof IQuery) {
+        		if (o2 instanceof ITaskListCategory|| o2 instanceof IQuery) {
         			return ((ITaskListElement)o1).getDescription(false).compareTo(
         					((ITaskListElement)o2).getDescription(false));
         		} else {
         			return -1;
         		}
         	} else if(o1 instanceof ITaskListElement){
-        		if (o2 instanceof ICategory || o2 instanceof IQuery) {
+        		if (o2 instanceof ITaskListCategory || o2 instanceof IQuery) {
         			return -1;
         		} else if(o2 instanceof ITaskListElement) {
         			ITaskListElement element1 = (ITaskListElement) o1;
@@ -919,8 +919,8 @@ public class TaskListView extends ViewPart {
         }
         
         addAction(openAction, manager, element);
-        addAction(goIntoAction, manager, element);        
-        manager.add(new Separator());
+//        addAction(goIntoAction, manager, element);        
+        manager.add(new Separator("tasks"));
         addAction(completeTask, manager, element);
         addAction(incompleteTask, manager, element);
         addAction(delete, manager, element);
@@ -929,13 +929,13 @@ public class TaskListView extends ViewPart {
         addAction(removeAction, manager, element);
         manager.add(new Separator());
         addAction(createTask, manager, element);
-        manager.add(new Separator("mylar"));   
-        	
+        
+        manager.add(new Separator("context"));   
     	for (ITaskListDynamicSubMenuContributor contributor : MylarTasklistPlugin.getDefault().getDynamicMenuContributers()) {
-	        manager.add(new Separator());
+//	        manager.add(new Separator());
 	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
 	        if (subMenuManager != null) addMenuManager(subMenuManager, manager, element);
-		}
+    	}
     	
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
@@ -985,18 +985,18 @@ public class TaskListView extends ViewPart {
 			} else if(action instanceof RenameAction){
 				action.setEnabled(true);
 			}
-		} else if(element instanceof ICategory) {
+		} else if(element instanceof ITaskListCategory) {
 			if(action instanceof MarkTaskCompleteAction){
 				action.setEnabled(false);
 			} else if(action instanceof MarkTaskIncompleteAction){
 					action.setEnabled(false);
 			} else if(action instanceof DeleteAction){
-				if(((ICategory)element).isArchive())
+				if(((ITaskListCategory)element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
 			} else if(action instanceof CreateTaskAction){
-				if(((ICategory)element).isArchive())
+				if(((ITaskListCategory)element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1012,7 +1012,7 @@ public class TaskListView extends ViewPart {
 			} else if(action instanceof CopyDescriptionAction){
 				action.setEnabled(true);
 			} else if(action instanceof RenameAction){
-				if(((ICategory)element).isArchive())
+				if(((ITaskListCategory)element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1021,9 +1021,9 @@ public class TaskListView extends ViewPart {
 			action.setEnabled(true);
 		}
 		
-		if(!canEnableGoInto){
-			goIntoAction.setEnabled(false);
-		}
+//		if(!canEnableGoInto){
+//			goIntoAction.setEnabled(false);
+//		}
     }
     
     /**
@@ -1037,7 +1037,7 @@ public class TaskListView extends ViewPart {
     	
     	workOffline = new WorkOfflineAction();
     	
-    	goIntoAction = new GoIntoAction(drillDownAdapter);
+//    	goIntoAction = new GoIntoAction(drillDownAdapter);
     	goBackAction = new GoUpAction(drillDownAdapter);
     	
     	createTask = new CreateTaskAction(this);
@@ -1243,12 +1243,11 @@ public class TaskListView extends ViewPart {
 		} else {
 			goBackAction.setEnabled(false);
 		}
-		
-		if(drillDownAdapter.canGoInto()){
-			canEnableGoInto = true;
-		} else {
-			canEnableGoInto  = false;
-		}
+//		if(drillDownAdapter.canGoInto()){
+//			canEnableGoInto = true;
+//		} else {
+//			canEnableGoInto  = false;
+//		}
 	}
 
 	/**
@@ -1270,6 +1269,11 @@ public class TaskListView extends ViewPart {
 	 */
 	public TaskActivationHistory getTaskActivationHistory(){
 		return taskHistory;
+	}
+
+	public void goIntoCategory() {
+		drillDownAdapter.goInto();
+		updateDrillDownActions();
 	}
 	
 }
