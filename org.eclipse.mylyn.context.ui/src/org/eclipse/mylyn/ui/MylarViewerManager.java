@@ -20,7 +20,6 @@ import java.util.Map;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
@@ -141,9 +140,10 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 			            viewer.getControl().setRedraw(false);
 			            viewer.refresh();
 			            viewer.getControl().setRedraw(true);
-					} else if (refreshNeeded(nodesToRefresh, viewer, updateLabels) && !(viewer instanceof TableViewer)) { // TODO: refresh table viewers
+					} else { //if (!(viewer instanceof TableViewer)) { // TODO: refresh table viewers
+						List<IMylarElement> toRefresh = refreshNeeded(nodesToRefresh, viewer, updateLabels);
 						Object objectToRefresh = null;
-						for (IMylarElement node : nodesToRefresh) {
+						for (IMylarElement node : toRefresh) {
 							if (node != null) {
 								IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 								objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier()); 
@@ -168,18 +168,20 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     /**
      * Note: make as lazy as possible, but elements need to disappear from view too.
      */
-	private boolean refreshNeeded(List<IMylarElement> nodesToRefresh, StructuredViewer viewer, boolean updateLabels) {
-		if (updateLabels) return true;
-		if (nodesToRefresh.isEmpty()) return false;
-		return true;
-//		IMylarElement targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
-//		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
-//		Object targetObject = structureBridge.getObjectForHandle(targetNode.getHandleIdentifier());
-//		if (viewer.testFindItem(targetObject) == null) { // HACK: relying on testing method
-//			return true;
-//		} else {
-//			return false;
-//		}
+	private List<IMylarElement> refreshNeeded(List<IMylarElement> elements, StructuredViewer viewer, boolean updateLabels) {
+//		List<IMylarElement> minimalRefresh = new ArrayList<IMylarElement>();
+		if (updateLabels) return elements;
+		if (elements.isEmpty()) return Collections.emptyList();
+		
+		IMylarElement targetNode = elements.get(elements.size()-1);
+		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
+		Object targetObject = structureBridge.getObjectForHandle(targetNode.getHandleIdentifier());
+		if (viewer.testFindItem(targetObject) == null) { // HACK: relying on testing method
+			return elements;
+		} else {
+			// just the element and it's parent
+			return elements.subList(elements.size()-2, elements.size()-1);
+		}
 	}
     
     public void nodeDeleted(IMylarElement node) {
