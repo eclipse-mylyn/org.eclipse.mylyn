@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.java.tests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IMethod;
@@ -20,13 +21,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * @author Mik Kersten
@@ -53,20 +54,22 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testContents() throws JavaModelException, PartInitException {
-		IEditorPart[] openEditors = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
-		for (int i = 0; i < openEditors.length; i++) {
-			IEditorPart part = openEditors[i];
-			if (part instanceof AbstractTextEditor) {
-				((AbstractTextEditor)part).close(true);
-			}
-		}
-		
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
         openView("org.eclipse.ui.views.ContentOutline");
         JavaUI.openInEditor(m1);
+        
 //        ApplyMylarToOutlineAction.getDefault().update(true);
-        List<StructuredViewer> viewers = action.getViewers();
-        System.err.println(">>>> " + viewers);
+        List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+        IEditorPart[] parts = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
+		for (int i = 0; i < parts.length; i++) {
+			if (parts[i].getTitle().equals("Type1.java")) {
+				IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
+				List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
+				for (TreeViewer viewer : outlineViewers) {
+					if (viewer != null && !viewers.contains(viewer)) viewers.add(viewer);
+				}
+			}
+		}
         assertEquals(1, viewers.size());
         TreeViewer viewer = (TreeViewer)viewers.get(0);
         assertEquals(3, super.countItemsInTree(viewer.getTree()));

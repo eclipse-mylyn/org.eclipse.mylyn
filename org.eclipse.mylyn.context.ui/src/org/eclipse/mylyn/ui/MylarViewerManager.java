@@ -136,12 +136,13 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		try {
     		for (StructuredViewer viewer : managedViewers) {
     			if (viewer != null && !viewer.getControl().isDisposed()) {
-					if (nodesToRefresh == null) {// || nodesToRefresh.isEmpty()) {
+					if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 			            viewer.getControl().setRedraw(false);
-			            viewer.refresh();
+			            viewer.refresh(true);
 			            viewer.getControl().setRedraw(true);
 					} else { //if (!(viewer instanceof TableViewer)) { // TODO: refresh table viewers
 						List<IMylarElement> toRefresh = refreshNeeded(nodesToRefresh, viewer, updateLabels);
+//						System.err.println(">>> refreshing: " + toRefresh );
 						Object objectToRefresh = null;
 						for (IMylarElement node : toRefresh) {
 							if (node != null) {

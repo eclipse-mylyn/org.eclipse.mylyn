@@ -46,7 +46,7 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 			IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
 			List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
 			for (TreeViewer viewer : outlineViewers) {
-				if (viewer != null) viewers.add(viewer);
+				if (viewer != null && !viewers.contains(viewer)) viewers.add(viewer);
 			}
 		}
 		return viewers;

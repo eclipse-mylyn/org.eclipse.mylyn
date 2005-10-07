@@ -207,9 +207,9 @@ public class AntStructureBridge implements IMylarStructureBridge {
      * TODO: make a non-handle based test
      */
     public boolean canBeLandmark(String handle) {
+//    	System.err.println(">> "+ handle);
         return handle.indexOf(';') == -1; 
     }
-
 
     /**
      * @see org.eclipse.mylar.core.IMylarStructureBridge#acceptsObject(java.lang.Object)

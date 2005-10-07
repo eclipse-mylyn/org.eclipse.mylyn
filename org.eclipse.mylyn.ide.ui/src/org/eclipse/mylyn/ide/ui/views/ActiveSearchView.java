@@ -157,23 +157,13 @@ public class ActiveSearchView extends ViewPart {
     void refresh(final IMylarElement node, final boolean updateLabels) {
         if (!asyncRefreshMode) { // for testing
         	if (viewer != null && !viewer.getTree().isDisposed()) {
-        		viewer.refresh();
-            	viewer.expandToLevel(3);
+        		internalRefresh(node, updateLabels);
         	}
         } else {
 	        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 	            public void run() { 
 	                try {  
-	                    if (viewer != null && !viewer.getTree().isDisposed()) {
-	                    	viewer.getControl().setRedraw(false);
-	                    	if (node != null && containsNode(viewer.getTree(), node)) {
-	                    		viewer.refresh(node, updateLabels);
-	                    	} else if (node == null) {
-	                    		viewer.refresh();
-	                    	} 
-	                    	viewer.expandToLevel(3);
-	                    	viewer.getControl().setRedraw(true);
-	                    }
+	                    internalRefresh(node, updateLabels);
 	                } catch (Throwable t) {
 	                	MylarPlugin.log(t, "active searchrefresh failed");
 	                }
@@ -181,6 +171,20 @@ public class ActiveSearchView extends ViewPart {
 	        });
         }
     }
+    
+	private void internalRefresh(final IMylarElement node, boolean updateLabels) {
+//		if (node == null) return;
+		if (viewer != null && !viewer.getTree().isDisposed()) {
+			viewer.getControl().setRedraw(false);
+        	if (node != null && containsNode(viewer.getTree(), node)) {
+        		viewer.refresh(node, updateLabels);
+        	} else if (node == null) {
+        		viewer.refresh();
+        	} 
+			viewer.expandToLevel(3);
+			viewer.getControl().setRedraw(true);
+		}
+	}
     
 	private boolean containsNode(Tree tree, IMylarElement node) {
     	boolean contains = false;

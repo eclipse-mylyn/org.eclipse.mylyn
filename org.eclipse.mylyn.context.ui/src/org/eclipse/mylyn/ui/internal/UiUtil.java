@@ -86,7 +86,9 @@ public class UiUtil {
  
     public static Color getForegroundForElement(IMylarElement node) {
         if (node == null) return null; 
-        if (node.getDegreeOfInterest().isPredicted() || node.getDegreeOfInterest().isPropagated()) { 
+        if (node.getDegreeOfInterest().isInteresting()) {
+        	return null;
+        } else if (node.getDegreeOfInterest().isPredicted() || node.getDegreeOfInterest().isPropagated()) { 
             if (node.getDegreeOfInterest().getValue() >= 20) { // HACK: parametrize
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_DARK; 
             } else if (node.getDegreeOfInterest().getValue() >= 10) {
@@ -94,9 +96,8 @@ public class UiUtil {
             } else {
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_LIGHT; 
             }
-        } else {
-            return null;
         }
+        return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM; 
     }
     
     public static void closeAllEditors(final boolean save) {
