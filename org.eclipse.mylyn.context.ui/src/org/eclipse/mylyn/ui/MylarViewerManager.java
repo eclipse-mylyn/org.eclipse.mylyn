@@ -154,12 +154,6 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 									viewer.getControl().setRedraw(false);
 									viewer.refresh(objectToRefresh, updateLabels);						            
 									viewer.getControl().setRedraw(true);
-									
-									// TODO: make outline refresh consistent
-//									boolean setSelection = nodesToRefresh.indexOf(node) == nodesToRefresh.size()-1;
-//									IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//									IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
-//									bridge.refreshOutline(objectToRefresh, updateLabels, setSelection);
 								}
 							}
 						}
@@ -171,18 +165,21 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     	}
 	} 
     
+    /**
+     * Note: make as lazy as possible, but elements need to disappear from view too.
+     */
 	private boolean refreshNeeded(List<IMylarElement> nodesToRefresh, StructuredViewer viewer, boolean updateLabels) {
 		if (updateLabels) return true;
 		if (nodesToRefresh.isEmpty()) return false;
-		IMylarElement targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
-		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
-		Object targetObject = structureBridge.getObjectForHandle(targetNode.getHandleIdentifier()); 
-
-		if (viewer.testFindItem(targetObject) == null) { // HACK: relying on testing method
-			return true;
-		} else {
-			return false;
-		}
+		return true;
+//		IMylarElement targetNode = nodesToRefresh.get(nodesToRefresh.size()-1);
+//		IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetNode.getContentType());
+//		Object targetObject = structureBridge.getObjectForHandle(targetNode.getHandleIdentifier());
+//		if (viewer.testFindItem(targetObject) == null) { // HACK: relying on testing method
+//			return true;
+//		} else {
+//			return false;
+//		}
 	}
     
     public void nodeDeleted(IMylarElement node) {
@@ -219,3 +216,8 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		this.syncRefreshMode = syncRefreshMode;
 	}
 }
+
+//boolean setSelection = nodesToRefresh.indexOf(node) == nodesToRefresh.size()-1;
+//IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+//bridge.refreshOutline(objectToRefresh, updateLabels, setSelection);

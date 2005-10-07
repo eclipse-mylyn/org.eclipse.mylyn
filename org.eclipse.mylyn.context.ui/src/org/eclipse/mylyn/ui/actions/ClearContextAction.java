@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.ui.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -19,7 +18,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -28,30 +26,31 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class ClearContextAction extends Action implements IViewActionDelegate{
+public class ClearContextAction implements IViewActionDelegate{
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.clear";
-	
-	public ClearContextAction() {
-		setText("Clear Task Context");
-        setToolTipText("Clear Task Context");
-        setId(ID);
-        setImageDescriptor(TaskListImages.ERASE_TASKSCAPE);
+//	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.clear";
+//	
+//	public ClearContextAction() {
+//		setText("Clear Task Context");
+//        setToolTipText("Clear Task Context");
+//        setId(ID);
+//        setImageDescriptor(TaskListImages.ERASE_TASKSCAPE);
+//	}
+//	
+//	@Override
+//	public void run() {
+//		
+//	}
+
+	public void init(IViewPart view) {
+		
 	}
-	
-	@Override
-	public void run() {
+
+	public void run(IAction action) {
 		if(TaskListView.getDefault() == null)
 			return;
 	    Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
 	    if (selectedObject != null && selectedObject instanceof ITask) {
-//	    	ITask task = ((ITask)selectedObject).getOrCreateCorrespondingTask();
-//    		if (task.isActive()) {
-//	    		MessageDialog.openError(Workbench.getInstance()
-//						.getActiveWorkbenchWindow().getShell(), "Clear context failed",
-//						"Task must be deactivated before clearing task context.");
-//				return;
-//	    	}
 	    	boolean deleteConfirmed = MessageDialog.openQuestion(
 		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 		            "Confirm clear context", 
@@ -82,14 +81,6 @@ public class ClearContextAction extends Action implements IViewActionDelegate{
 //	    	}
 //	    	TaskListView.getDefault().getViewer().refresh();
 //	    }
-	}
-
-	public void init(IViewPart view) {
-		
-	}
-
-	public void run(IAction action) {
-		run();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

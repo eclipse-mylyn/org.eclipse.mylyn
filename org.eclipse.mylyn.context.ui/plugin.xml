@@ -40,7 +40,7 @@
               icon="icons/elcl16/context-clear.gif"
               id="org.eclipse.mylar.ui.clear.context"
               label="Clear Task Context"
-              menubarPath="mylar"
+              menubarPath="context"
               tooltip="Clear Task Context">
            <enablement>
               <or>
@@ -48,7 +48,14 @@
               </or>
            </enablement>
         </action>
-        
+        <!--
+        <action
+              class="org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction"
+              id="org.eclipse.mylar.tasklist.actions.context.activate"
+              label="Activate Task"
+              menubarPath="task"
+              tooltip="Activate Task"/>
+        -->
      </viewerContribution>
   </extension>
     
