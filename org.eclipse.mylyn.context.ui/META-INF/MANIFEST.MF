@@ -8,7 +8,8 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.mylar.core,
- org.eclipse.mylar.tasklist
+ org.eclipse.mylar.tasklist,
+ org.eclipse.ui.views
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: mylar-ui.jar

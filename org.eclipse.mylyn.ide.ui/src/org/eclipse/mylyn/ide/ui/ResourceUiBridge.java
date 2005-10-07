@@ -74,7 +74,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
         return false;
     }
 
-    public List<TreeViewer> getTreeViewers(IEditorPart editor) {
+    public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
         return Collections.emptyList();
     }
 

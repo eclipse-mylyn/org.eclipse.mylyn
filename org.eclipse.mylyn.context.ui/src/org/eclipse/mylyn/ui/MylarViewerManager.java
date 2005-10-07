@@ -29,7 +29,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.internal.BrowseFilteredListener;
 import org.eclipse.mylar.ui.internal.UiUtil;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -124,23 +123,24 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     
     protected void refreshViewers(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
     	if (syncRefreshMode) {
-    		doRefresh(nodesToRefresh, updateLabels);
+    		internalRefresh(nodesToRefresh, updateLabels);
     	} else {
 	    	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 	            public void run() {
-	            	doRefresh(nodesToRefresh, updateLabels);
+	            	internalRefresh(nodesToRefresh, updateLabels);
 				}
 	        }); 
     	}
     } 
 
-    private void doRefresh(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
+    private void internalRefresh(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
 		try {
     		for (StructuredViewer viewer : managedViewers) {
     			if (viewer != null && !viewer.getControl().isDisposed()) {
-					viewer.getControl().setRedraw(false); 
 					if (nodesToRefresh == null) {// || nodesToRefresh.isEmpty()) {
+			            viewer.getControl().setRedraw(false);
 			            viewer.refresh();
+			            viewer.getControl().setRedraw(true);
 					} else if (refreshNeeded(nodesToRefresh, viewer, updateLabels) && !(viewer instanceof TableViewer)) { // TODO: refresh table viewers
 						Object objectToRefresh = null;
 						for (IMylarElement node : nodesToRefresh) {
@@ -151,18 +151,19 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 									objectToRefresh = structureBridge.getObjectForHandle(structureBridge.getParentHandle(node.getHandleIdentifier()));
 								}
 								if (objectToRefresh != null) {
+									viewer.getControl().setRedraw(false);
 									viewer.refresh(objectToRefresh, updateLabels);						            
-						            
+									viewer.getControl().setRedraw(true);
+									
 									// TODO: make outline refresh consistent
-									boolean setSelection = nodesToRefresh.indexOf(node) == nodesToRefresh.size()-1;
-									IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-									IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
-									bridge.refreshOutline(objectToRefresh, updateLabels, setSelection);
+//									boolean setSelection = nodesToRefresh.indexOf(node) == nodesToRefresh.size()-1;
+//									IEditorPart editorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//									IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+//									bridge.refreshOutline(objectToRefresh, updateLabels, setSelection);
 								}
 							}
 						}
-					}
-		            viewer.getControl().setRedraw(true); 
+					} 
 				}
 			}
     	} catch (Throwable t) {

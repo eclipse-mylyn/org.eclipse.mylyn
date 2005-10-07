@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.ui.IEditorPart;
-
 /**
  * @author Mik Kersten
  */
@@ -28,12 +27,16 @@ public interface IMylarUiBridge {
     
     public abstract boolean acceptsEditor(IEditorPart editorPart);
 
-    public abstract List<TreeViewer> getTreeViewers(IEditorPart editorPart);
-
     /**
-     * @param element  if null refresh the whole tree
-     * @param setSelection TODO
+     * Note that a single editor part can correspond to multipe outlines 
+     * (e.g. the PDE manifest editor).
      */
-    public abstract void refreshOutline(Object element, boolean updateLabels, boolean setSelection);
+    public abstract List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart);
+
+//    /**
+//     * @param element  if null refresh the whole tree
+//     * @param setSelection TODO
+//     */
+//    public abstract void refreshOutline(Object element, boolean updateLabels, boolean setSelection);
     
 }

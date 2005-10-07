@@ -84,10 +84,7 @@ public class ContextTest extends AbstractContextTest {
         assertFalse(node1.getDegreeOfInterest().isLandmark());
         context.parseEvent(mockSelection("1"));
         context.parseEvent(mockSelection("1"));
-        System.err.println(">>> " + node1.getDegreeOfInterest());
         assertTrue(node1.getDegreeOfInterest().isLandmark());
-//        assertEquals(1, taskscape.getLandmarks().size());
-//        assertTrue(taskscape.getLandmarks().contains(node1));
     }
     
     public void testContextSize() {

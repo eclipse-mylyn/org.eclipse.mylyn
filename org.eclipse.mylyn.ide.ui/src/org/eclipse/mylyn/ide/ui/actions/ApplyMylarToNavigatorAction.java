@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.ide.ui.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
@@ -31,20 +34,18 @@ public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 	}
 	
 	@Override
-	public StructuredViewer getViewer() {
+	public List<StructuredViewer> getViewers() {
+		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
-        if (navigator != null) {
-			return navigator.getTreeViewer();
-		} else {
-			return null;
-		}
+        if (navigator != null) viewers.add(navigator.getTreeViewer());
+		return viewers;
 	}
 
-	@Override
-	public void refreshViewer() {
-		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
-        if (navigator != null) navigator.getTreeViewer().refresh();
-	}
+//	@Override
+//	public void refreshViewer() {
+//		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
+//        if (navigator != null) navigator.getTreeViewer().refresh();
+//	}
 
 	public static ApplyMylarToNavigatorAction getDefault() {
 		return INSTANCE;

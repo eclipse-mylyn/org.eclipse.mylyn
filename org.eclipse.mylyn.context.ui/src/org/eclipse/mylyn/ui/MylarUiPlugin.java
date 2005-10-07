@@ -28,15 +28,15 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHighlighter;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.ui.internal.ColorMap;
-import org.eclipse.mylar.ui.internal.ViewerConfigurator;
+import org.eclipse.mylar.ui.internal.ContentOutlineManager;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
 import org.eclipse.swt.graphics.Color;
@@ -84,8 +84,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private Highlighter intersectionHighlighter;
     private ColorMap colorMap = new ColorMap(); 
     
-    protected MylarViewerManager uiUpdateManager = new MylarViewerManager();
-    private ViewerConfigurator viewerConfigurator = new ViewerConfigurator();
+    protected MylarViewerManager mylarViewerManager = new MylarViewerManager();
+    private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
+    
     public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
@@ -137,13 +138,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
             return false; 
         }
 
-        public List<TreeViewer> getTreeViewers(IEditorPart editor) {
+        public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
             return Collections.emptyList();
         }
-
-        public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
-        }
-
     };
         
     public MylarUiPlugin() {
@@ -165,12 +162,12 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-            	MylarPlugin.getContextManager().addListener(uiUpdateManager);
-                
-                Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(viewerConfigurator);
+            	MylarPlugin.getContextManager().addListener(mylarViewerManager);
+            	
+                Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(contentOutlineManager);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
         		for (int i= 0; i < windows.length; i++) {
-        			windows[i].addPageListener(viewerConfigurator);
+        			windows[i].addPageListener(contentOutlineManager);
 //        			IWorkbenchPage[] pages= windows[i].getPages();
 //        			for (int j= 0; j < pages.length; j++) {
 //        				pages[j].addPartListener(viewerManager);
@@ -204,7 +201,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     @Override
     public void stop(BundleContext context) throws Exception {
         super.stop(context);
-        MylarPlugin.getContextManager().removeListener(uiUpdateManager);
+        MylarPlugin.getContextManager().removeListener(mylarViewerManager);
     }
     
     private void initializeActions() {
@@ -416,7 +413,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     }
 
 	public MylarViewerManager getViewerManager() {
-		return uiUpdateManager;
+		return mylarViewerManager;
 	}
 
 	static class UiExtensionPointReader {

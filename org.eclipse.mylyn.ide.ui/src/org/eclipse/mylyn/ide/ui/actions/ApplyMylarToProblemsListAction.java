@@ -13,6 +13,8 @@ package org.eclipse.mylar.ide.ui.actions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -69,22 +71,24 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
      * HACK: changing accessibility
      */
 	@Override
-	public StructuredViewer getViewer() {
-		if (cachedProblemsTableViewer != null) return cachedProblemsTableViewer;
-        try {
-        	ProblemView view = getProblemView();
-        	if (view != null) {
-                Class infoClass = TableView.class;//problemView.getClass();
-                Method method = infoClass.getDeclaredMethod("getViewer", new Class[] { } );
-                method.setAccessible(true);
-                cachedProblemsTableViewer = (TableViewer)method.invoke(view, new Object[] { });
-    			updateLabelProvider(cachedProblemsTableViewer);
-                return cachedProblemsTableViewer;
-            } 
-        } catch (Exception e) {
-        	MylarPlugin.log(e, "couldn't get problmes viewer");
-        }
-        return null;
+	public List<StructuredViewer> getViewers() {
+		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		if (cachedProblemsTableViewer == null) {
+	        try {
+	        	ProblemView view = getProblemView();
+	        	if (view != null) {
+	                Class infoClass = TableView.class;//problemView.getClass();
+	                Method method = infoClass.getDeclaredMethod("getViewer", new Class[] { } );
+	                method.setAccessible(true);
+	                cachedProblemsTableViewer = (TableViewer)method.invoke(view, new Object[] { });
+	    			updateLabelProvider(cachedProblemsTableViewer);           
+	            } 
+	        } catch (Exception e) {
+	        	MylarPlugin.log(e, "couldn't get problmes viewer");
+	        }
+		}
+        if (cachedProblemsTableViewer != null) viewers.add(cachedProblemsTableViewer);
+        return viewers;
 	}
 
 	protected ProblemView getProblemView() {
@@ -97,13 +101,16 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
         return null;
 	}
 	
-	@Override
-	public void refreshViewer() {
-		StructuredViewer viewer = getViewer();
-		if (viewer != null && !viewer.getControl().isDisposed()) {
-			viewer.refresh();
-		}
-	}
+//	@Override
+//	public void refreshViewer() {
+//		for (StructuredViewer viewer : getViewer()) {
+//			if (viewer != null && !viewer.getControl().isDisposed()) {
+//				viewer.getControl().setRedraw(false);
+//				viewer.refresh();
+//				viewer.getControl().setRedraw(true);
+//			}
+//		}
+//	}
 	
 	private void updateLabelProvider(StructuredViewer viewer) {
 		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
@@ -120,11 +127,15 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	public void update() {	
 		super.update();
 		cachedProblemsTableViewer = null;
-        TableViewer viewer = (TableViewer)getViewer();
-        if (viewer != null && !(viewer.getLabelProvider() instanceof ProblemsListLabelProvider)) {
-            viewer.setLabelProvider(new ProblemsListLabelProvider(
-                    (TableViewLabelProvider)viewer.getLabelProvider()));
-        }
+		for (StructuredViewer viewer : getViewers()) {
+			if (viewer instanceof TableViewer) {
+		        TableViewer tableViewer = (TableViewer)viewer;
+		        if (tableViewer != null && !(tableViewer.getLabelProvider() instanceof ProblemsListLabelProvider)) {
+		        	tableViewer.setLabelProvider(new ProblemsListLabelProvider(
+		                    (TableViewLabelProvider)tableViewer.getLabelProvider()));
+		        }
+			}
+		}
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {

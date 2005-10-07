@@ -15,16 +15,13 @@ package org.eclipse.mylar.java.ui;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -32,7 +29,6 @@ import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -81,61 +77,52 @@ public class JavaUiBridge implements IMylarUiBridge {
         return editorPart instanceof JavaEditor;
     }
 
-    public List<TreeViewer> getTreeViewers(IEditorPart editor) {
-        TreeViewer outline = getOutlineTreeViewer(editor);
-        if (outline != null) {
-            ArrayList<TreeViewer> outlines = new ArrayList<TreeViewer>(1);
-            outlines.add(outline);
-            return outlines;
-        } else {
-            return Collections.emptyList();
-        }
-    }
-    
-    public TreeViewer getOutlineTreeViewer(IEditorPart editorPart) {
+	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
         if (editorPart == null) return null;
+        List<TreeViewer> viewers = new ArrayList<TreeViewer>();
         Object out = editorPart.getAdapter(IContentOutlinePage.class);
         if (out instanceof JavaOutlinePage) {
             JavaOutlinePage page = (JavaOutlinePage)out;
-            if (page != null && page.getControl() != null && page.getControl().isVisible()) {
+            if (page != null && page.getControl() != null) {
                 try {
                     Class clazz = page.getClass();
                     Field field = clazz.getDeclaredField("fOutlineViewer"); 
                     field.setAccessible(true); 
-                    return (TreeViewer)field.get(page);
+                    viewers.add((TreeViewer)field.get(page));
                 } catch (Exception e) { 
                 	MylarPlugin.log(e, "could not get outline viewer");
-                }
+                } 
             }
         }
-        return null;
+        return viewers;
     }
 
-    /**
-     * TODO: extract common code?
-     */
-    public void refreshOutline(final Object element, final boolean updateLabels, final boolean setSelection) {
-        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() { 
-                if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) return;
-                IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                final TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
-                if (treeViewer != null) {
-                    if (element == null) {
-                        treeViewer.refresh(true);
-                    } else if (element instanceof IJavaElement) {
-                        IJavaElement toRefresh = (IJavaElement)element;
-                        if (element instanceof IMember) {
-                            toRefresh = toRefresh.getParent();
-                        } 
-                        treeViewer.refresh(toRefresh, updateLabels); // TODO: use runnable?
-                    }
-                    if (setSelection) {
-    	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
-    	                    treeViewer.setSelection(new StructuredSelection(element));
-                    }
-                }
-            }
-        });  
-    }
+//    public void refreshOutline(final Object element, final boolean updateLabels, final boolean setSelection) {
+//        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//            public void run() { 
+//                if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) return;
+//                IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//                final TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
+//                if (treeViewer != null) {
+//                    if (element == null) {
+//                    	treeViewer.getControl().setRedraw(false);
+//    	                treeViewer.refresh(true);
+//    	                treeViewer.getControl().setRedraw(true);
+//                    } else if (element instanceof IJavaElement) {
+//                        IJavaElement toRefresh = (IJavaElement)element;
+//                        if (element instanceof IMember) {
+//                            toRefresh = toRefresh.getParent();
+//                        } 
+//                        treeViewer.getControl().setRedraw(false);
+//                        treeViewer.refresh(toRefresh, updateLabels); 
+//    	                treeViewer.getControl().setRedraw(true);
+//                    }
+//                    if (setSelection) {
+//    	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
+//    	                    treeViewer.setSelection(new StructuredSelection(element));
+//                    }
+//                }
+//            }
+//        });  
+//    }
 }

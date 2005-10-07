@@ -12,13 +12,13 @@
 package org.eclipse.mylar.java.ui.actions;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.InterestFilter;
-import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -53,46 +53,49 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 		prefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
 		
-	/**
-	 * TODO: refactor duplicate behavior into super class
-	 */
-	@Override
-    protected void valueChanged(IAction action, final boolean on, boolean store) {
-        action.setChecked(on);
-        
-        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
-
-        for(int i = 0; i < viewNames.length; i++){
-        	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
-        	if(viewer == null) continue;
-        	if (on) {
-				installInterestFilter(viewer);
-				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
-			} else {
-				uninstallInterestFilter(viewer);
-				MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
-			}
-
-        }
-		refreshViewer();
-	}
+//	/**
+//	 * TODO: refactor duplicate behavior into super class
+//	 */
+//	@Override
+//    protected void valueChanged(IAction action, final boolean on, boolean store) {
+//        action.setChecked(on);
+//        
+//        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
+//
+//        for(int i = 0; i < viewNames.length; i++){
+//        	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
+//        	if(viewer == null) continue;
+//        	if (on) {
+//				installInterestFilter(viewer);
+//				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
+//			} else {
+//				uninstallInterestFilter(viewer);
+//				MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
+//			}
+//
+//        }
+//		refreshViewer();
+//	}
 	
 	@Override
-	public StructuredViewer getViewer() {
-		return null;
+	public List<StructuredViewer> getViewers() {
+		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		for(int i = 0; i < viewNames.length; i++){
+        	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
+        	if (viewer != null) viewers.add(viewer);
+		}
+		return viewers;
 	}
 
-	@Override
-	public void refreshViewer() {
-        for(int i = 0; i < viewNames.length; i++){
-        	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
-        	if(viewer != null){
-    			viewer.refresh();
-    		} else {
-//    			MylarPlugin.log("Couldn't refresh null viewer: " + viewNames[i], this);
-    		}
-        }
-	}
+//	@Override
+//	public void refreshViewer() {
+//        for(int i = 0; i < viewNames.length; i++){
+//        	StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
+//        	if(viewer != null){
+//    			viewer.refresh();
+//    		} 
+//        }
+//	}
 
 	public static ApplyMylarToBrowsingPerspectiveAction getDefault() {
 		return INSTANCE;

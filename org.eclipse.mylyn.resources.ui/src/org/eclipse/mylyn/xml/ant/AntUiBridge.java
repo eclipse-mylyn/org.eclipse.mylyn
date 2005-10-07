@@ -15,19 +15,16 @@ package org.eclipse.mylar.xml.ant;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.ant.internal.ui.editor.AntEditor;
 import org.eclipse.ant.internal.ui.editor.outline.AntEditorContentOutlinePage;
-import org.eclipse.ant.internal.ui.model.AntElementNode;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -38,7 +35,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
@@ -151,19 +147,11 @@ public class AntUiBridge implements IMylarUiBridge {
         return editorPart instanceof AntEditor;
     }
 
-    public List<TreeViewer> getTreeViewers(IEditorPart editor) {
-        TreeViewer outline = getOutlineTreeViewer(editor);
-        if (outline != null) {
-            ArrayList<TreeViewer> outlines = new ArrayList<TreeViewer>(1);
-            outlines.add(outline);
-            return outlines;
-        } else {
-            return Collections.emptyList();
-        }
-    }
-    
-    public TreeViewer getOutlineTreeViewer(IEditorPart editor) {
-        // HACK use reflection to get the TreeViewer
+    /**
+     * HACK: use reflection to get the TreeViewer
+     */
+    public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
+    	List<TreeViewer> viewers = new ArrayList<TreeViewer>();
         if(editor instanceof AntEditor){
             try{
                 AntEditor ae = (AntEditor)editor;
@@ -171,28 +159,31 @@ public class AntUiBridge implements IMylarUiBridge {
                 Class clazz = ContentOutlinePage.class;
                 Method method= clazz.getDeclaredMethod("getTreeViewer", new Class[] { });
                 method.setAccessible(true);
-                return (TreeViewer)method.invoke(outline, new Object[] { });
+                viewers.add((TreeViewer)method.invoke(outline, new Object[] { }));
             } catch (Exception e) {
             	MylarPlugin.log(e, "couldn't get outline");
-                return null;
             }
         }
-        return null;
+        return viewers;
     }
 
-    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) { 
-        IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
-        if (treeViewer != null) {
-            if (element == null || element instanceof IFile) {
-                treeViewer.refresh(true);
-            } else if (element instanceof AntElementNode) {
-                treeViewer.refresh(element, updateLabels); 
-                if (setSelection) {
-	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
-	                    treeViewer.setSelection(new StructuredSelection(element));
-                }
-            } 
-        }
-    }
+//    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) { 
+//        IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//        TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
+//        if (treeViewer != null) {
+//            if (element == null || element instanceof IFile) {
+//            	treeViewer.getControl().setRedraw(false);
+//            	treeViewer.refresh(true);
+//            	treeViewer.getControl().setRedraw(true);
+//            } else if (element instanceof AntElementNode) {
+//            	treeViewer.getControl().setRedraw(false);
+//            	treeViewer.refresh(element, updateLabels);
+//            	treeViewer.getControl().setRedraw(true); 
+//                if (setSelection) {
+//	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
+//	                    treeViewer.setSelection(new StructuredSelection(element));
+//                }
+//            } 
+//        }
+//    }
 }

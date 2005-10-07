@@ -12,11 +12,13 @@
 package org.eclipse.mylar.ui.actions;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -33,29 +35,21 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 		super(new InterestFilter());
 		INSTANCE = this;
 	}
-	
-	/**
-	 * TODO: a bit wierd how it gets the first viewer
-	 */
-	@Override
-	public StructuredViewer getViewer() {
-		if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
-		IEditorPart activeEditorPart = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        List<TreeViewer> viewers = MylarUiPlugin.getDefault().getUiBridgeForEditor(activeEditorPart).getTreeViewers(activeEditorPart);
-        if (viewers.size() > 0) {
-        	return viewers.get(0);
-        } else {
-        	return null;
-        }
-	}
 
-	/**
-	 * TODO: cache viewer?
-	 */
+	@SuppressWarnings("deprecation")
 	@Override
-	public void refreshViewer() {
-		StructuredViewer viewer = getViewer();
-		if (viewer != null && viewer.getControl().isVisible()) viewer.refresh();
+	public List<StructuredViewer> getViewers() {
+		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
+		IEditorPart[] parts = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
+		for (int i = 0; i < parts.length; i++) {
+			IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
+			List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
+			for (TreeViewer viewer : outlineViewers) {
+				if (viewer != null) viewers.add(viewer);
+			}
+		}
+		return viewers;
 	}
 
 	public static ApplyMylarToOutlineAction getDefault() {

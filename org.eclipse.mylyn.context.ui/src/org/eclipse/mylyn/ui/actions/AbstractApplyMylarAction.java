@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -67,10 +69,12 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
     }
     
     /**
-     * This operation is expensive.
+     * Don't update if the preference has not been initialized.
      */
     public void update() {
-    	update(MylarPlugin.getDefault().getPreferenceStore().getBoolean(prefId));
+    	if (prefId != null) {
+    		update(MylarPlugin.getDefault().getPreferenceStore().getBoolean(prefId));
+    	}
     }
 
     /**
@@ -86,33 +90,46 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	        action.setChecked(on);
 	        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
 	
-	        final StructuredViewer viewer = getViewer();
-	        if (viewer != null) {
-				if (on) {
-					installInterestFilter(getViewer());
-					MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
-				} else {
-					uninstallInterestFilter(getViewer());
-					MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
-				}
-				refreshViewer();
-				if (on && viewer instanceof TreeViewer) {
-					((TreeViewer)viewer).expandAll();
-				}		            
-	        } else {
-	        	// ignore, failure to install is ok if there is no outline when attempted
-	        }
+	        for (StructuredViewer viewer : getViewers()) {
+		        manageViewer(on, viewer);
+	        } 
     	} catch (Throwable t) {
     		MylarPlugin.fail(t, "Could not install viewer manager on: " + prefId, false);
     	}
+	}
+
+    /**
+     * Public for testing
+     */
+	public void manageViewer(final boolean on, StructuredViewer viewer) {
+		if (viewer != null) {
+			if (on) {
+				installInterestFilter(viewer);
+				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
+			} else {
+				uninstallInterestFilter(viewer);
+				MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
+			}	
+			if (on && viewer instanceof TreeViewer) {
+				((TreeViewer)viewer).expandAll();
+			}
+//			refreshViewer(viewer);
+		}
 	}
 	
     /**
      * Public for testing
      */
-	public abstract StructuredViewer getViewer() ;
+	public abstract List<StructuredViewer> getViewers() ;
 	
-	public abstract void refreshViewer();
+//	public void refreshViewer(StructuredViewer viewer) {
+//		System.err.println(">>> refreshing: " + viewer);
+//		if (!viewer.getControl().isDisposed()) {
+//			viewer.getControl().setRedraw(false);
+//			viewer.refresh(true);
+//			viewer.getControl().setRedraw(true);
+//		}
+//	}
 
 	protected void installInterestFilter(StructuredViewer viewer) {
 		try {

@@ -51,6 +51,10 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
+/**
+ * @author Mik Kersten
+ * @author Shawn Minto
+ */
 public class PdeUiBridge implements IMylarUiBridge {
 
 	private TreeViewerListener treeSelectionChangedListener;
@@ -165,21 +169,17 @@ public class PdeUiBridge implements IMylarUiBridge {
         return editorPart instanceof ManifestEditor;
     }
 
-    public List<TreeViewer> getTreeViewers(IEditorPart editor) {
-        // HACK use a lot of reflection to get the TreeViewer
+    /**
+     * HACK: use a lot of reflection to get the TreeViewer
+     */
+    public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
         if (editor instanceof PDEFormEditor) {
         	PDESourcePage sp = null;
         	List<TreeViewer> viewers = new ArrayList<TreeViewer>(2);
         	if((sp = (PDESourcePage)((PDEFormEditor) editor).findPage(PluginInputContext.CONTEXT_ID)) != null){
         		ISortableContentOutlinePage p = sp.getContentOutline();
-        		if (p != null && p.getControl() != null
-                        && p.getControl().isVisible()) {
+        		if (p != null && p.getControl() != null) {
                     try {
-                        // get the current page of the outline
-//                        Class clazz = page.getClass();
-//                        Field field = clazz.getDeclaredField("currentPage");
-//                        field.setAccessible(true);
-//                        Object f = field.get(page);
                         if (p != null && p instanceof SourceOutlinePage) {
                             // get the tree viewer for the outline
                             Class clazz2 = p.getClass();
@@ -192,7 +192,7 @@ public class PdeUiBridge implements IMylarUiBridge {
                         }
                     }catch (Exception e) {
                     	MylarPlugin.log(e, "failed to get tree viewers");
-                        return Collections.emptyList();
+                        return null;
                     }
         		}
         	}
@@ -216,7 +216,7 @@ public class PdeUiBridge implements IMylarUiBridge {
                 }
             } catch (Exception e) {
                 MylarPlugin.log(e.getMessage(), this);
-                return Collections.emptyList();
+                return null;
             }
             
             // add a listener so that when the selection changes, the view is 
@@ -233,15 +233,19 @@ public class PdeUiBridge implements IMylarUiBridge {
 
     public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
         IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        List<TreeViewer> treeViewers = getTreeViewers(editorPart);
+        List<TreeViewer> treeViewers = getContentOutlineViewers(editorPart);
         for(TreeViewer treeViewer: treeViewers){
 	        if (treeViewer != null) {
 	            if (element == null) {
+	            	treeViewer.getControl().setRedraw(false);
 	                treeViewer.refresh(true);
+	                treeViewer.getControl().setRedraw(true);
 	                treeViewer.expandAll();
 	            } 
 	            else if (element instanceof PluginObjectNode) {
-	                treeViewer.refresh(true);
+	            	treeViewer.getControl().setRedraw(false);
+	                treeViewer.refresh(element, true);
+	                treeViewer.getControl().setRedraw(true);
 	                treeViewer.expandAll();
 	            }
 	        }
