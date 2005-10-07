@@ -14,7 +14,6 @@
 package org.eclipse.mylar.bugs;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -29,9 +28,12 @@ import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
+/**
+ * @author Mik Kersten
+ * @author Shawn Minto
+ */
 public class BugzillaUiBridge implements IMylarUiBridge {
 
     protected BugzillaContextLabelProvider labelProvider = new BugzillaContextLabelProvider();
@@ -94,33 +96,29 @@ public class BugzillaUiBridge implements IMylarUiBridge {
         return editorPart instanceof AbstractBugEditor;
     }
 
-    public List<TreeViewer> getTreeViewers(IEditorPart editor) {
-        ArrayList<TreeViewer> outlines = new ArrayList<TreeViewer>(1);
+    public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
+    	List<TreeViewer> viewers = new ArrayList<TreeViewer>();
         TreeViewer outline = getOutlineTreeViewer(editor);
-        if (outline != null) {
-            outlines.add(outline);
-            return outlines;
-        } else {
-            return Collections.emptyList();
-        }
+        if (outline != null) viewers.add(outline);
+        return viewers;
     }
     
     protected TreeViewer getOutlineTreeViewer(IEditorPart editor) {
         if(editor instanceof AbstractBugEditor){
             AbstractBugEditor abe = (AbstractBugEditor)editor;
             BugzillaOutlinePage outline = abe.getOutline();
-            if(outline != null) return outline.getOutlineTreeViewer();
+            if (outline != null) return outline.getOutlineTreeViewer();
         }
         return null;        
     }
 
-    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
-    	IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
-        if (treeViewer != null) {
-        	treeViewer.refresh(true);
-
-            treeViewer.expandAll();
-        }
-    }
+//    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
+//    	IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//        TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
+//        if (treeViewer != null) {
+//        	treeViewer.refresh(true);
+//
+//            treeViewer.expandAll();
+//        }
+//    }
 }
