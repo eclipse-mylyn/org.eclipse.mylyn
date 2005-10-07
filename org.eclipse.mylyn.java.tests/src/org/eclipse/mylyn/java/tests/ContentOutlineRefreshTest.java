@@ -64,8 +64,9 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
         openView("org.eclipse.ui.views.ContentOutline");
         JavaUI.openInEditor(m1);
-        
+//        ApplyMylarToOutlineAction.getDefault().update(true);
         List<StructuredViewer> viewers = action.getViewers();
+        System.err.println(">>>> " + viewers);
         assertEquals(1, viewers.size());
         TreeViewer viewer = (TreeViewer)viewers.get(0);
         assertEquals(3, super.countItemsInTree(viewer.getTree()));

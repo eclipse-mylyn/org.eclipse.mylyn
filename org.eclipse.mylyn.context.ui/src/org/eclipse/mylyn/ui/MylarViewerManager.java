@@ -180,7 +180,11 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 			return elements;
 		} else {
 			// just the element and it's parent
-			return elements.subList(elements.size()-2, elements.size()-1);
+			if (elements.size() >= 2) {
+				return elements.subList(elements.size()-2, elements.size()-1);
+			} else {
+				return elements;
+			}
 		}
 	}
     
