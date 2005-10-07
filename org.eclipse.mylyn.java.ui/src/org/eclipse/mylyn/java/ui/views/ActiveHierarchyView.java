@@ -190,11 +190,13 @@ public class ActiveHierarchyView extends ViewPart {
                 if (element != null && element instanceof IType && element.exists()) {	
                     IType type = (IType)element;
                     ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
-                    IType[] supertypes = hierarchy.getAllSuperclasses(type);
-                    List<IType> hierarchyTypes = new ArrayList<IType>(Arrays.asList(supertypes));
-                    Collections.reverse(hierarchyTypes);
-                    hierarchyTypes.add(type);
-                    addHierarchy(root, hierarchyTypes);
+                    if (hierarchy != null) {
+	                    IType[] supertypes = hierarchy.getAllSuperclasses(type);
+	                    List<IType> hierarchyTypes = new ArrayList<IType>(Arrays.asList(supertypes));
+	                    Collections.reverse(hierarchyTypes);
+	                    hierarchyTypes.add(type);
+	                    addHierarchy(root, hierarchyTypes);
+                    }
                 }
             }
 

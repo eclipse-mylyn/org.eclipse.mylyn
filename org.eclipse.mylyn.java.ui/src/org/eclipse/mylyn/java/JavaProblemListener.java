@@ -37,7 +37,9 @@ public class JavaProblemListener implements IProblemChangedListener {
                     IJavaElement element = (IJavaElement)resource.getAdapter(IJavaElement.class);
                     boolean hasError = false; 
                     for (int j = 0; j < markers.length; j++) {
-                        if (markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
+                        if (markers[j] != null
+                        	&& markers[j].getAttribute(IMarker.SEVERITY) != null
+                        	&& markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
                             hasError = true;
                         } 
                     }

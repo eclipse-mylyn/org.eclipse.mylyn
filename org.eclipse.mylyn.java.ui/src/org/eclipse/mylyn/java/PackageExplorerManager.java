@@ -13,6 +13,7 @@ package org.eclipse.mylar.java;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.JavaCore;
@@ -85,10 +86,12 @@ public class PackageExplorerManager implements IMylarContextListener {
 					if (!suppressSelection) { 
 						if (membersFilteredMode) {
 							if (lastElement instanceof IMember) {
-								packageExplorer.getTreeViewer().setSelection(new StructuredSelection(
-									((IMember)lastElement).getCompilationUnit()), true);
+								ICompilationUnit toSelect = ((IMember)lastElement).getCompilationUnit();
+								if (toSelect != null) {
+									packageExplorer.getTreeViewer().setSelection(new StructuredSelection(toSelect), true);
+								}
 							}
-						} else {
+						} else if (lastElement != null) {
 							packageExplorer.getTreeViewer().setSelection(new StructuredSelection(lastElement), true);
 						}
 					}
