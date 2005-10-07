@@ -229,8 +229,10 @@ public class ActiveHierarchyView extends ViewPart {
 	private void refreshViewer() {
 		try {
 			if (viewer != null && !viewer.getTree().isDisposed()) {
+				viewer.getControl().setRedraw(false);
 			    viewer.refresh();
 			    viewer.expandAll();
+			    viewer.getControl().setRedraw(true);
 			}
 	    } catch (Throwable t) {
 	        MylarPlugin.fail(t, "Could not update viewer", false);

@@ -165,12 +165,14 @@ public class ActiveSearchView extends ViewPart {
 	            public void run() { 
 	                try {  
 	                    if (viewer != null && !viewer.getTree().isDisposed()) {
+	                    	viewer.getControl().setRedraw(false);
 	                    	if (node != null && containsNode(viewer.getTree(), node)) {
 	                    		viewer.refresh(node, updateLabels);
 	                    	} else if (node == null) {
 	                    		viewer.refresh();
 	                    	} 
 	                    	viewer.expandToLevel(3);
+	                    	viewer.getControl().setRedraw(true);
 	                    }
 	                } catch (Throwable t) {
 	                	MylarPlugin.log(t, "active searchrefresh failed");
