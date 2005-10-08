@@ -43,7 +43,12 @@ public class ResourceSelectionMonitor extends AbstractSelectionMonitor {
         	if (part instanceof EditorPart) {
         		try {
 	        		Object object = ((EditorPart)part).getEditorInput().getAdapter(IResource.class);
-	        		if (object instanceof IFile) super.handleElementEdit(part, object);
+	        		if (object instanceof IFile) {
+	        			IFile file = (IFile)object;
+	        			if (!MylarPlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
+		        			super.handleElementEdit(part, object);
+	        			}
+	        		}
         		} catch (Throwable t) {
         			MylarPlugin.fail(t, "failed to resolve resource edit", false);
         		}

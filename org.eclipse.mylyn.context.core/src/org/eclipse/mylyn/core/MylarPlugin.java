@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -340,6 +341,10 @@ public class MylarPlugin extends AbstractUIPlugin {
         } else {
         	return DEFAULT_BRIDGE;
         }
+    }
+    
+    public Set<String> getKnownContentTypes() {
+    	return bridges.keySet();
     }
 
     private void setActiveSearchIcon(IMylarStructureBridge bridge, ImageDescriptor descriptor) {
