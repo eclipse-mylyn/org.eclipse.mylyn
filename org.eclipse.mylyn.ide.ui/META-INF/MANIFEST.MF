@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.core,
  org.eclipse.mylar.ui,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.jface.text
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.ide,
  org.eclipse.mylar.ide.ui,
