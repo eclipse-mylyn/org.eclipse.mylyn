@@ -153,7 +153,7 @@ public class MylarPlugin extends AbstractUIPlugin {
             throw new RuntimeException("null brige for object: " + object);
 		}
 
-        public String getResourceExtension(String elementHandle) {
+        public String getContentType(String elementHandle) {
             return getContentType();
         }
 

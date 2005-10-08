@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.ide.ui.views;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -40,14 +39,7 @@ public class ActiveViewDropAdapter extends ViewerDropAdapter {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(firstElement);
 			String handle = bridge.getHandleIdentifier(firstElement);
 	        IMylarElement node = MylarPlugin.getContextManager().getNode(handle);
-			if (bridge.canBeLandmark(handle)) {
-		        if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, true, true, ID_MANIPULATION);
-			} else {
-				MessageDialog.openInformation(
-						this.getViewer().getControl().getShell(),
-						"Mylar Message", 
-						"The dropped element is not a vaild landmark.");
-			}
+			if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, true, true, ID_MANIPULATION);
 		}
 		return false; // to ensure that the sender doesn't treat this as a move
 	}

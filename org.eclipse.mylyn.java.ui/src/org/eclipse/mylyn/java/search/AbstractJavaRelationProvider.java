@@ -158,6 +158,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
      * Only include Java elements and files. 
      */
 	private boolean includeNodeInScope(IMylarElement interesting, IMylarStructureBridge bridge) {
+		if (interesting == null || bridge == null) return false;
 		return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE) 
 			|| bridge.isDocument(interesting.getHandleIdentifier());
 	}

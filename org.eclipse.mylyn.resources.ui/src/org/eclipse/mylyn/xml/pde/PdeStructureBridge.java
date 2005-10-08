@@ -62,7 +62,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
         return CONTENT_TYPE;
     }
     
-    public String getResourceExtension(String elementHandle) {
+    public String getContentType(String elementHandle) {
         if (elementHandle.endsWith(".xml")) {
             return parentBridge.getContentType();
         } else {

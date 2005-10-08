@@ -62,7 +62,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     		}
     	} else {
     		IMylarElement node = MylarPlugin.getContextManager().getActiveNode();
-    		if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+    		if (node != null) {
+    			MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+    		}
     	}
     }
 

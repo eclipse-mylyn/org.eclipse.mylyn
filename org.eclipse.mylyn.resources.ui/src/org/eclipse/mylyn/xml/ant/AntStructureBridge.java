@@ -61,7 +61,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
         return CONTENT_TYPE;
     }
     
-    public String getResourceExtension(String elementHandle) {
+    public String getContentType(String elementHandle) {
         if (elementHandle.endsWith(".xml")) {
             return parentBridge.getContentType();
         } else {
@@ -207,7 +207,6 @@ public class AntStructureBridge implements IMylarStructureBridge {
      * TODO: make a non-handle based test
      */
     public boolean canBeLandmark(String handle) {
-//    	System.err.println(">> "+ handle);
         return handle.indexOf(';') == -1; 
     }
 

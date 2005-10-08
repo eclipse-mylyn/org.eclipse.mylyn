@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarRelation;
@@ -29,6 +30,7 @@ import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.IActiveTimerListener;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * This is the core class resposible for context management. 
@@ -138,7 +140,6 @@ public class MylarContextManager {
         activityListener.start();
 //        activityTimer.addListener(new IActiveTimerListener() {
 //			public void fireTimedOut() {
-//				System.err.println("timed out");
 //				
 //			}
 //        });
@@ -273,7 +274,7 @@ public class MylarContextManager {
         if (parentHandle != null) {
             InteractionEvent propagationEvent = new InteractionEvent(
                     InteractionEvent.Kind.PROPAGATION, 
-                    adapter.getResourceExtension(node.getHandleIdentifier()),
+                    adapter.getContentType(node.getHandleIdentifier()),
                     adapter.getParentHandle(node.getHandleIdentifier()), 
                     SOURCE_ID_MODEL_PROPAGATION,
                     CONTAINMENT_PROPAGATION_ID,
@@ -620,9 +621,21 @@ public class MylarContextManager {
         } else {
         	if (!forceLandmark && (originalValue >  MylarContextManager.getScalingFactors().getLandmark())) {
                 changeValue = 0;
-            } else {
-                changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
-            } 
+            } else { // make it a landmark
+            	
+    			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
+    			if (node != null
+    				&& bridge.canBeLandmark(node.getHandleIdentifier())
+    				&& !bridge.getContentType(node.getHandleIdentifier()).equals(MylarPlugin.CONTENT_TYPE_ANY)) {
+            		changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
+            	} else {
+            		// TODO: move this to UI?
+    				MessageDialog.openInformation(
+    						Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+    						"Mylar Interest Manipulation", 
+    						"This element is not a valid landmark because it is not a structured element.  Note that files and other resources can not be landmarks.");
+            	}
+            }
         }
         if (changeValue != 0) {
             InteractionEvent interactionEvent = new InteractionEvent(

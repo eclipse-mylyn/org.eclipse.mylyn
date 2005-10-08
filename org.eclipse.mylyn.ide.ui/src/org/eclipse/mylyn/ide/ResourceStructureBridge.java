@@ -135,7 +135,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		return null;
 	}
 
-    public String getResourceExtension(String elementHandle) {
+    public String getContentType(String elementHandle) {
         return getContentType();
     }
 

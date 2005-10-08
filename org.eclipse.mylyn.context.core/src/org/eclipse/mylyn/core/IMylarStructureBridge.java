@@ -80,7 +80,7 @@ public interface IMylarStructureBridge {
     /**
      * Used for switching kinds based on parent handles
      */
-    public abstract String getResourceExtension(String elementHandle);
+    public abstract String getContentType(String elementHandle);
  
     public abstract List<AbstractRelationProvider> getRelationshipProviders();
     
