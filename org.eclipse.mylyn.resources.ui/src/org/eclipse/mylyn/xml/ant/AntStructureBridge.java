@@ -175,8 +175,9 @@ public class AntStructureBridge implements IMylarStructureBridge {
                 }
                 XmlNodeHelper helper = new XmlNodeHelper(node.getIFile().getFullPath().toString(), path);
                 if (helper != null) return helper.getHandle();
-            } catch(Throwable t){
-            	MylarPlugin.fail(t, "couldn't get xml node handle", false);
+            } catch(Throwable t) {
+            	// fail silently, since node.getIFile() can throw NPE
+//            	MylarPlugin.fail(t, "couldn't get xml node handle", false);
             }  
         } else if (object instanceof File) {
             File file = (File)object;
