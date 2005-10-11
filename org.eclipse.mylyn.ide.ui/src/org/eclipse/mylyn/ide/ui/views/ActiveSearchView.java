@@ -173,11 +173,15 @@ public class ActiveSearchView extends ViewPart {
     }
     
 	private void internalRefresh(final IMylarElement node, boolean updateLabels) {
-//		if (node == null) return;
+		Object toRefresh = null;
+		if (node != null) {
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
+			toRefresh = bridge.getObjectForHandle(node.getHandleIdentifier());
+		}
 		if (viewer != null && !viewer.getTree().isDisposed()) {
 			viewer.getControl().setRedraw(false);
-        	if (node != null && containsNode(viewer.getTree(), node)) {
-        		viewer.refresh(node, updateLabels);
+        	if (toRefresh != null && containsNode(viewer.getTree(), toRefresh)) {
+        		viewer.refresh(toRefresh, updateLabels);
         	} else if (node == null) {
         		viewer.refresh();
         	} 
@@ -186,11 +190,11 @@ public class ActiveSearchView extends ViewPart {
 		}
 	}
     
-	private boolean containsNode(Tree tree, IMylarElement node) {
+	private boolean containsNode(Tree tree, Object object) {
     	boolean contains = false;
     	for (int i = 0; i < tree.getItems().length; i++) {
 			TreeItem item = tree.getItems()[i]; 
-			if (node.equals(item.getData())) contains = true;
+			if (object.equals(item.getData())) contains = true;
 		}
 		return contains;
 	}
