@@ -112,9 +112,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
             	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
             		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
             	}
-//            	if (LinkActiveSearchWithEditorAction.getDefault() != null) {
-//            		LinkActiveSearchWithEditorAction.getDefault().update();
-//            	}
             	
             	javaEditingMonitor = new JavaEditingMonitor();
                 MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);

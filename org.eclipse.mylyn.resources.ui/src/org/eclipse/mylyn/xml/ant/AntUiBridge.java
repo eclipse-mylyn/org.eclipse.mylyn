@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -166,6 +167,10 @@ public class AntUiBridge implements IMylarUiBridge {
         }
         return viewers;
     }
+
+	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
+		return null;
+	}
 
 //    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) { 
 //        IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();

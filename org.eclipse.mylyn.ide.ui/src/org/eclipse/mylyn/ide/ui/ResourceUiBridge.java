@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
@@ -82,4 +83,8 @@ public class ResourceUiBridge implements IMylarUiBridge {
     	// no outline to refresh
         
     }
+
+	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
+		return null;
+	}
 }

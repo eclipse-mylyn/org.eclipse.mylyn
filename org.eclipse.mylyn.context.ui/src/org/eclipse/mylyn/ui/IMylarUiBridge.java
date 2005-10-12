@@ -13,6 +13,7 @@ package org.eclipse.mylar.ui;
 
 import java.util.List;
 
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.ui.IEditorPart;
@@ -33,10 +34,11 @@ public interface IMylarUiBridge {
      */
     public abstract List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart);
 
+	public abstract Object getObjectForTextSelection(TextSelection selection, IEditorPart editor);
+
 //    /**
 //     * @param element  if null refresh the whole tree
 //     * @param setSelection TODO
 //     */
 //    public abstract void refreshOutline(Object element, boolean updateLabels, boolean setSelection);
-    
 }

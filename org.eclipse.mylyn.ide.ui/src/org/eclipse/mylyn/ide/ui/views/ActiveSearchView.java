@@ -36,6 +36,7 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.ide.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.ide.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
@@ -292,6 +293,8 @@ public class ActiveSearchView extends ViewPart {
         stopAction.setText(STOP_JOBS_LABEL);
         stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
         manager.add(stopAction);
+        manager.add(new Separator());
+        manager.add(new LinkActiveSearchWithEditorAction());
     	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
     

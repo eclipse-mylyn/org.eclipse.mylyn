@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
@@ -141,6 +142,10 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
             return Collections.emptyList();
         }
+
+		public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
+			return null;
+		}
     };
         
     public MylarUiPlugin() {
@@ -292,9 +297,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
      * @return  the corresponding adapter if found, or an adapter with no behavior otherwise (so
      * null is never returned)
      */
-    public IMylarUiBridge getUiBridge(String extension) {
+    public IMylarUiBridge getUiBridge(String contentType) {
     	if (!UiExtensionPointReader.extensionsRead) UiExtensionPointReader.initExtensions();
-    	IMylarUiBridge bridge = bridges.get(extension);
+    	IMylarUiBridge bridge = bridges.get(contentType);
         if (bridge != null) {
             return bridge;
         } else {

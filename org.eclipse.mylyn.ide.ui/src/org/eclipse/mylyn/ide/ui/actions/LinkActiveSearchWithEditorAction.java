@@ -9,13 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.ui.actions;
+package org.eclipse.mylar.ide.ui.actions;
 
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
-import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.TextSelection;
@@ -23,61 +19,44 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchView;
+import org.eclipse.mylar.ui.IMylarUiBridge;
+import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IActionDelegate2;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
-public class LinkActiveSearchWithEditorAction extends Action implements IViewActionDelegate, IActionDelegate2, IPropertyChangeListener {
+public class LinkActiveSearchWithEditorAction extends Action {
     	
+	private static final String LABEL = "Link with Editor";
 	public static String ID = "org.eclipse.mylar.ui.views.active.search.link";
     private SelectionTracker selectionTracker = new SelectionTracker();
 	private static LinkActiveSearchWithEditorAction INSTANCE;
-    private IAction parentAction = null;
 	
     public LinkActiveSearchWithEditorAction() {
+    	super(LABEL, IAction.AS_CHECK_BOX);
     	INSTANCE = this;
-    	update();
+    	setId(ID);
+    	setImageDescriptor(MylarImages.LINK_WITH_EDITOR);
+    	setText(LABEL);
+    	setToolTipText(LABEL);
+    	MylarUiPlugin.getDefault().getPreferenceStore().setDefault(ID, true);
+    	update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
     }
-    
-	public void init(IViewPart view) {
-//		update();
-	}
 	
-	public void init(IAction action) {
-		parentAction = action;
-        update(action.isChecked());
-	}
-	
-	public void init(IWorkbenchWindow window) {
-		// TODO Auto-generated method stub
-		update();
-	}
-	
-	public void update() {
-		update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
-	}
-	
-	public void run(IAction action) {
-		// TODO Auto-generated method stub
-		update(action.isChecked());
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		
+	@Override
+	public void run() {
+		update(isChecked());
 	}
 	
 	public void update(boolean on) { 
-		if (parentAction != null) parentAction.setChecked(on);
+		setChecked(on);
 		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on); 
 		ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
 		if (on) {
@@ -90,15 +69,15 @@ public class LinkActiveSearchWithEditorAction extends Action implements IViewAct
 	private class SelectionTracker implements ISelectionListener {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			try {
-				ActiveSearchView view = ActiveSearchView.getFromActivePerspective();
-				if (view == null || !view.getViewer().getControl().isVisible()) return; 
-				if (selection instanceof TextSelection && part instanceof JavaEditor) {
-                    TextSelection textSelection = (TextSelection)selection;
-                    IJavaElement selectedElement = SelectionConverter.resolveEnclosingElement((JavaEditor)part, textSelection);
-	                if (selectedElement != null && view.getViewer().testFindItem(selectedElement) != null) {
-	                	view.getViewer().setSelection(new StructuredSelection(selectedElement), true);
+				if (selection instanceof TextSelection && part instanceof IEditorPart) {
+					ActiveSearchView view = ActiveSearchView.getFromActivePerspective();
+					if (view == null || !view.getViewer().getControl().isVisible()) return; 
+					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor((IEditorPart)part);
+					Object toSelect = bridge.getObjectForTextSelection((TextSelection)selection, (IEditorPart)part);
+	                if (toSelect != null && view.getViewer().testFindItem(toSelect) != null) {
+	                	view.getViewer().setSelection(new StructuredSelection(toSelect), true);
 	                }
-	            }
+				}
 		    } catch (Throwable t) {
 				MylarPlugin.log(t, "Could not update package explorer");
 			}

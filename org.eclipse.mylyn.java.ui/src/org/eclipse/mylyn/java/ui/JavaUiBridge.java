@@ -19,9 +19,12 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -96,6 +99,18 @@ public class JavaUiBridge implements IMylarUiBridge {
         }
         return viewers;
     }
+
+	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
+		if (editor instanceof JavaEditor) {
+            TextSelection textSelection = (TextSelection)selection;
+            try {
+				return SelectionConverter.resolveEnclosingElement((JavaEditor)editor, textSelection);
+			} catch (JavaModelException e) {
+				// ignore
+			}
+        }
+		return null;
+	}
 
 //    public void refreshOutline(final Object element, final boolean updateLabels, final boolean setSelection) {
 //        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
