@@ -78,12 +78,14 @@
        targetID="org.eclipse.mylar.ui.views.active.search">
     <action
           class="org.eclipse.mylar.java.ui.actions.LinkActiveSearchWithEditorAction"
+          enablesFor="*"
           icon="icons/etool16/link-with-editor.gif"
           id="org.eclipse.mylar.ui.views.active.search.link"
           label="Link with Editor"
           menubarPath="additions"
           style="toggle"
-          toolbarPath="mylar"/>
+          toolbarPath="additions"
+          tooltip="Link with Editor"/>
  </viewContribution> 
 	</extension>
 	

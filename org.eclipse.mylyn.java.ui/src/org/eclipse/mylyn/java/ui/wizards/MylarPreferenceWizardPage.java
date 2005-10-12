@@ -180,13 +180,16 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		
 		Composite browserComposite = new Composite(containerComposite, SWT.NULL);
 		browserComposite.setLayout(new GridLayout());
-		
-		Browser browser = new Browser(browserComposite, SWT.NONE);
-		browser.setText(htmlDocs);
-        GridData browserLayout = new GridData(GridData.FILL_HORIZONTAL);
-        browserLayout.heightHint = 100;
-        browserLayout.widthHint = 600;
-        browser.setLayoutData(browserLayout);
+		try {			
+			Browser browser = new Browser(browserComposite, SWT.NONE);
+			browser.setText(htmlDocs);
+	        GridData browserLayout = new GridData(GridData.FILL_HORIZONTAL);
+	        browserLayout.heightHint = 100;
+	        browserLayout.widthHint = 600;
+	        browser.setLayoutData(browserLayout);
+		} catch (Throwable  t) {
+			// fail silently if there is no browser
+		}
 		
 		setControl(containerComposite);
 	}

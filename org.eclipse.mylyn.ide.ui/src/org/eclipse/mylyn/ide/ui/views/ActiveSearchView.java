@@ -154,6 +154,11 @@ public class ActiveSearchView extends ViewPart {
         MylarPlugin.getContextManager().refreshRelatedElements();
 	}
 
+	/**
+	 * fix for bug 109235
+	 * @param node
+	 * @param updateLabels
+	 */
     void refresh(final IMylarElement node, final boolean updateLabels) {
         if (!asyncRefreshMode) { // for testing
         	if (viewer != null && !viewer.getTree().isDisposed()) {

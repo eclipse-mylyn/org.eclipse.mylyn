@@ -11,9 +11,12 @@
 
 package org.eclipse.mylar.java.ui.actions;
 
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -29,18 +32,18 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
-public class LinkActiveSearchWithEditorAction implements IViewActionDelegate, IActionDelegate2, IWorkbenchWindowActionDelegate {
+public class LinkActiveSearchWithEditorAction extends Action implements IViewActionDelegate, IActionDelegate2, IPropertyChangeListener {
     	
 	public static String ID = "org.eclipse.mylar.ui.views.active.search.link";
     private SelectionTracker selectionTracker = new SelectionTracker();
 	private static LinkActiveSearchWithEditorAction INSTANCE;
-    
+    private IAction parentAction = null;
+	
     public LinkActiveSearchWithEditorAction() {
     	INSTANCE = this;
     	update();
@@ -51,9 +54,15 @@ public class LinkActiveSearchWithEditorAction implements IViewActionDelegate, IA
 	}
 	
 	public void init(IAction action) {
-//		update();
+		parentAction = action;
+        update(action.isChecked());
 	}
-
+	
+	public void init(IWorkbenchWindow window) {
+		// TODO Auto-generated method stub
+		update();
+	}
+	
 	public void update() {
 		update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
 	}
@@ -67,7 +76,8 @@ public class LinkActiveSearchWithEditorAction implements IViewActionDelegate, IA
 		
 	}
 	
-	public void update(boolean on) {
+	public void update(boolean on) { 
+		if (parentAction != null) parentAction.setChecked(on);
 		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on); 
 		ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
 		if (on) {
@@ -109,8 +119,8 @@ public class LinkActiveSearchWithEditorAction implements IViewActionDelegate, IA
 		return INSTANCE;
 	}
 
-	public void init(IWorkbenchWindow window) {
+	public void propertyChange(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub
-		update();
+		
 	}
 }

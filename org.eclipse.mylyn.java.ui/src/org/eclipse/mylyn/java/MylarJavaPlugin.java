@@ -22,7 +22,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
-import org.eclipse.mylar.java.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.swt.widgets.Shell;
@@ -113,9 +112,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
             	if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
             		ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
             	}
-            	if (LinkActiveSearchWithEditorAction.getDefault() != null) {
-            		LinkActiveSearchWithEditorAction.getDefault().update();
-            	}
+//            	if (LinkActiveSearchWithEditorAction.getDefault() != null) {
+//            		LinkActiveSearchWithEditorAction.getDefault().update();
+//            	}
             	
             	javaEditingMonitor = new JavaEditingMonitor();
                 MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);

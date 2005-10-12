@@ -41,7 +41,6 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylar.ui.interest.filter.";
     protected String prefId;
     protected IAction initAction = null;
-//    private boolean isSelfManaged = false;
     
     protected InterestFilter interestFilter;
     
