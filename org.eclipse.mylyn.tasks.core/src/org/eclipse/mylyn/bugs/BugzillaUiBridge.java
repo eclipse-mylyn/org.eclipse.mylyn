@@ -16,6 +16,7 @@ package org.eclipse.mylar.bugs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
@@ -111,6 +112,10 @@ public class BugzillaUiBridge implements IMylarUiBridge {
         }
         return null;        
     }
+
+	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
+		return null;
+	}
 
 //    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
 //    	IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
