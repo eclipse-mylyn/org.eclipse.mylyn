@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.java.internal.junit;
 
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,7 +27,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 public class MylarJUnitLaunchConfiguration extends JUnitLaunchConfiguration  {
 	
 	protected IType[] getTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
-		List<IType> contextTestCases = JUnitTestUtil.getTestCasesInContext();
+		Set<IType> contextTestCases = JUnitTestUtil.getTestCasesInContext();
 		if (contextTestCases.isEmpty()) {
 			abort(JUnitMessages.JUnitBaseLaunchConfiguration_error_notests, null, IJavaLaunchConfigurationConstants.ERR_UNSPECIFIED_MAIN_TYPE); 
 		}

@@ -11,8 +11,9 @@
 
 package org.eclipse.mylar.java.internal.junit;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -30,8 +31,8 @@ import org.eclipse.mylar.java.search.JUnitReferencesProvider;
  */
 public class JUnitTestUtil {
 
-	public static List<IType> getTestCasesInContext() {
-		List<IType> testTypes = new ArrayList<IType>();
+	public static Set<IType> getTestCasesInContext() {
+		Set<IType> testTypes = new HashSet<IType>();
 		List<IMylarElement> interesting = MylarPlugin.getContextManager().getActiveContext().getInteresting();
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
 		try {

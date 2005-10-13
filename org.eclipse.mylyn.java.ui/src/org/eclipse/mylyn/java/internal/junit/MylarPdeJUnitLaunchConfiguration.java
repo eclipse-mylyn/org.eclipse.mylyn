@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.java.internal.junit;
 
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -35,7 +35,7 @@ import org.eclipse.pde.internal.ui.launcher.JUnitLaunchConfiguration;
 public class MylarPdeJUnitLaunchConfiguration extends JUnitLaunchConfiguration {
 	
 	protected IType[] getTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
-		List<IType> contextTestCases = JUnitTestUtil.getTestCasesInContext();
+		Set<IType> contextTestCases = JUnitTestUtil.getTestCasesInContext();
 		if (contextTestCases.isEmpty()) {
 			abort(JUnitMessages.JUnitBaseLaunchConfiguration_error_notests, null, IJavaLaunchConfigurationConstants.ERR_UNSPECIFIED_MAIN_TYPE); 
 		}
@@ -43,10 +43,10 @@ public class MylarPdeJUnitLaunchConfiguration extends JUnitLaunchConfiguration {
 	}
 	
 	protected String getTestPluginId(ILaunchConfiguration configuration) throws CoreException {
-		List<IType> contextTestCases = JUnitTestUtil.getTestCasesInContext();
+		Set<IType> contextTestCases = JUnitTestUtil.getTestCasesInContext();
 		IJavaProject javaProject = null;
 		if (!contextTestCases.isEmpty()) {
-			javaProject = contextTestCases.get(0).getJavaProject(); // HACK: might want another project
+			javaProject = contextTestCases.iterator().next().getJavaProject(); // HACK: might want another project
 		} else {
 			abort(JUnitMessages.JUnitBaseLaunchConfiguration_error_notests, null, IJavaLaunchConfigurationConstants.ERR_UNSPECIFIED_MAIN_TYPE); 
 		}
