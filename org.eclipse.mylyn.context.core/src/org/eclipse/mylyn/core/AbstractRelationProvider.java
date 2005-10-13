@@ -74,7 +74,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     }
      
     protected void searchCompleted(IMylarElement landmark) {
-    	if (landmark.getEdges().size() > 0) {
+    	if (landmark.getRelations().size() > 0) {
     		MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
     	}
     }

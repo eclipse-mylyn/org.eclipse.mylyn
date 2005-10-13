@@ -122,6 +122,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
         	    ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
         		service.addPostSelectionListener(packageExplorerManager); 
         		
+        		setupDebugConfigurations();
 //        		 needed because Mylar source viewer configuration does not get initialized properly
 //        		resetActiveEditor();
             }
@@ -166,6 +167,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 //			}
 //		}
 //	}
+    
+	private void setupDebugConfigurations() {
+//		ILaunchManager launchManager= DebugPlugin.getDefault().getLaunchManager().addLaunch(
+//				new JUnitLaunchConfiguration()
+//				);
+//		DebugUIPlugin.getDefault().getLaunchConfigurationManager().getlau
+	}
     
 	private void installEditorTracker(IWorkbench workbench) {
 		editorTracker = new JavaEditorTracker();

@@ -123,7 +123,7 @@ public class ContextTest extends AbstractContextTest {
         context.parseEvent(mockNavigation("2"));
         IMylarRelation edge = node.getEdge("2");
         assertNotNull(edge);
-        assertEquals(1, node.getEdges().size());
+        assertEquals(1, node.getRelations().size());
         context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue()*3));
         assertTrue("interest: " + context.get("3").getDegreeOfInterest().getValue(), context.get("3").getDegreeOfInterest().isLandmark());
         float doi = node.getDegreeOfInterest().getValue();
@@ -137,7 +137,7 @@ public class ContextTest extends AbstractContextTest {
         IMylarElement loadedNode = loaded.get("1");
         IMylarRelation edgeNode = loadedNode.getEdge("2");
         assertNotNull(edgeNode);
-        assertEquals(1, loadedNode.getEdges().size());
+        assertEquals(1, loadedNode.getRelations().size());
         
         IMylarElement landmark = loaded.get("3");
         assertNotNull(loadedNode); 

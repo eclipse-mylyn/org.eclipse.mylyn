@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 20, 2005
-  */
+
 package org.eclipse.mylar.xml.pde;
 
 import java.util.ArrayList;
@@ -174,8 +172,8 @@ public class PdeStructureBridge implements IMylarStructureBridge {
             PluginObjectNode node = (PluginObjectNode)object;
             try{
                 // get the handle for the PluginObjectNode
-            	if(node.getModel() == null || node.getModel().getUnderlyingResource() == null || node.getModel().getUnderlyingResource().getFullPath() == null){
-            		MylarPlugin.log("PDE xml node's resource or model is null: " + node.getName(), this);
+            	if(node.getModel() == null || node.getModel().getUnderlyingResource() == null || node.getModel().getUnderlyingResource().getFullPath() == null) {
+//            		MylarPlugin.log("PDE xml node's resource or model is null: " + node.getName(), this);
             		return null;
             	}
                 IPath path = new Path(node.getModel().getUnderlyingResource().getFullPath().toString());

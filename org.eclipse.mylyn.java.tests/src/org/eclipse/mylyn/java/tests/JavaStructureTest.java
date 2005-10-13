@@ -92,14 +92,14 @@ public class JavaStructureTest extends AbstractContextTest {
         IMylarElement calleeNode = manager.getNode(callee.getHandleIdentifier());
         assertTrue(callerNode.getDegreeOfInterest().isInteresting());
         assertTrue(calleeNode.getDegreeOfInterest().isInteresting());
-        assertEquals(1, callerNode.getEdges().size());
+        assertEquals(1, callerNode.getRelations().size());
         
         TextSelection callerAgain = new TextSelection(document,
                 typeFoo.getCompilationUnit().getSource().indexOf("callee();"),
                 "callee".length());
         editorPart.setHighlightRange(callerAgain.getOffset(), callerAgain.getLength(), true);
         monitor.selectionChanged(editorPart, callerSelection);
-        assertTrue(calleeNode.getEdges().size() == 1);
+        assertTrue(calleeNode.getRelations().size() == 1);
     }
 
 }

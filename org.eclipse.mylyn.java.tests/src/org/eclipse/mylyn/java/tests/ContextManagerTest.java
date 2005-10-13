@@ -139,11 +139,11 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         AbstractRelationProvider provider = new JavaStructureBridge().getRelationshipProviders().get(0);
         provider.createEdge(m2Node, m1Node.getContentType(), m2.getHandleIdentifier());
         
-        assertEquals(1, m2Node.getEdges().size());
+        assertEquals(1, m2Node.getRelations().size());
         
         manager.resetLandmarkRelationshipsOfKind(provider.getId());
         
-        assertEquals(0, m2Node.getEdges().size());
+        assertEquals(0, m2Node.getRelations().size());
 	}
     
     public void testPredictedInterest() {

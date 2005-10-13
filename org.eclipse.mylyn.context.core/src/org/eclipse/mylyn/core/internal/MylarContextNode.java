@@ -60,7 +60,7 @@ public class MylarContextNode implements IMylarElement {
         this.kind = kind;
     }
 
-    public Collection<MylarContextEdge> getEdges() {
+    public Collection<MylarContextEdge> getRelations() {
         return edges.values();
     }
 

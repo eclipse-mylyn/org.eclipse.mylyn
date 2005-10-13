@@ -2,34 +2,126 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="javaEditorContributor" name="Mylar Java Editor Contributor" schema="schema/javaEditorContributor.exsd"/>
-         <extension
-               point="org.eclipse.mylar.core.context">
-            <structureBridge
-                  activeSearchIcon="icons/elcl16/edge-ref-java.gif"
-                  activeSearchLabel="Java Search"
-                  class="org.eclipse.mylar.java.JavaStructureBridge"
-                  name="Java Structure Bridge"/>
-         </extension>
-   
-         <extension
-               point="org.eclipse.mylar.ui.context">
-            <uiBridge
-                  class="org.eclipse.mylar.java.ui.JavaUiBridge"
-                  contentType="java"/>
-            <labelProvider
-                  class="org.eclipse.mylar.java.ui.JavaContextLabelProvider"
-                  contentType="java"/>
-         </extension>
+   <extension-point id="javaEditorContributor" 
+   		name="Mylar Java Editor Contributor" 
+   		schema="schema/javaEditorContributor.exsd"/>
+   		
+	<extension
+	       point="org.eclipse.mylar.core.context">
+	    <structureBridge
+	          activeSearchIcon="icons/elcl16/edge-ref-java.gif"
+	          activeSearchLabel="Java Search"
+	          class="org.eclipse.mylar.java.JavaStructureBridge"
+	          name="Java Structure Bridge"/>
+	</extension>
+	   
+	<extension point="org.eclipse.mylar.ui.context">
+	    <uiBridge
+	          class="org.eclipse.mylar.java.ui.JavaUiBridge"
+	          contentType="java"/>
+	    <labelProvider
+	          class="org.eclipse.mylar.java.ui.JavaContextLabelProvider"
+	          contentType="java"/>
+	</extension>
+	
+	<extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            name="Mylar Context Test"
+            delegate="org.eclipse.mylar.java.internal.junit.MylarJUnitLaunchConfiguration"
+            modes="run, debug"
+            id="org.eclipse.mylar.java.junit.launchconfig"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+         <fileExtension
+               default="false"
+               extension="java">
+         </fileExtension>
+         <fileExtension
+               default="false"
+               extension="class">
+         </fileExtension>
+      </launchConfigurationType>
+            <launchConfigurationType
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            name="Mylar Context Plug-in Test"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
+            delegate="org.eclipse.mylar.java.internal.junit.MylarPdeJUnitLaunchConfiguration"
+            modes="run, debug"
+            id="org.eclipse.mylar.pde.junit.launchconfig">
+         <fileExtension
+               default="false"
+               extension="java">
+         </fileExtension>
+         <fileExtension
+               default="false"
+               extension="class">
+         </fileExtension>
+      </launchConfigurationType>
+    </extension>
+    
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+	  	<launchConfigurationTypeImage
+	 		id="org.eclipse.mylar.pde.junit.launchconfig.image"
+	 		configTypeID="org.eclipse.mylar.pde.junit.launchconfig"
+	 		icon="icons/etool16/launch-junit-pde.gif">
+	  	</launchConfigurationTypeImage>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+	  	<launchConfigurationTypeImage
+	 		id="org.eclipse.mylar.java.junit.launchconfig.image"
+	 		configTypeID="org.eclipse.mylar.java.junit.launchconfig"
+	 		icon="icons/etool16/launch-junit.gif">
+	  	</launchConfigurationTypeImage>
+	</extension>
+	
+	<extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.eclipse.mylar.java.junit.launchconfig"
+            helpContextId="org.eclipse.jdt.junit.junit_tab_group"
+            class="org.eclipse.mylar.java.internal.junit.MylarJUnitTabGroup"
+            id="org.eclipse.mylar.java.junit.launchconfig.tabgroup">
+         <launchMode
+               perspective="org.eclipse.debug.ui.DebugPerspective"
+               description="Test suite automatically populated by elements in the task context."
+               mode="debug">
+         </launchMode>
+         <launchMode
+               description="Test suite automatically populated by elements in the task context."
+               mode="run">
+         </launchMode>
+      </launchConfigurationTabGroup>
+    </extension>
 
 	<extension
-         id="org.eclipse.mylar.helpDocs"
-         name="Mylar Help"
-         point="org.eclipse.help.toc">
-      <toc
-            file="doc/toc.xml"
-            primary="false">
-      </toc>
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.eclipse.mylar.pde.junit.launchconfig"
+            helpContextId="org.eclipse.jdt.junit.junit_tab_group"
+            class="org.eclipse.mylar.java.internal.junit.MylarPdeJUnitTabGroup"
+            id="org.eclipse.mylar.pde.junit.launchconfig.tabgroup">
+         <launchMode
+               perspective="org.eclipse.debug.ui.DebugPerspective"
+               description="Test suite automatically populated by elements in the task context."
+               mode="debug">
+         </launchMode>
+         <launchMode
+               description="Test suite automatically populated by elements in the task context."
+               mode="run">
+         </launchMode>
+      </launchConfigurationTabGroup>
+    </extension>	
+
+	<extension
+	     id="org.eclipse.mylar.helpDocs"
+	     name="Mylar Help"
+	     point="org.eclipse.help.toc">
+	  <toc
+	        file="doc/toc.xml"
+	        primary="false">
+	  </toc>
    </extension>
   
   

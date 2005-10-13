@@ -26,7 +26,7 @@ public interface IMylarElement extends IMylarObject {
    
     public abstract IMylarContext getContext();
     
-    public abstract Collection<MylarContextEdge> getEdges();
+    public abstract Collection<MylarContextEdge> getRelations();
         
     public abstract MylarContextEdge getEdge(String targetHandle);
 

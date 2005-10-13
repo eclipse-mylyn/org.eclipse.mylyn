@@ -118,7 +118,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
         	}
 //            if (rootItems.contains(parent)) { // to avoid infinite recursion
 //            	rootItems.remove(parent);
-                return getAllEdgeTypes(node.getEdges()); 
+                return getAllEdgeTypes(node.getRelations()); 
 //            } else {
 //            	return new Object[0];
 //            }
@@ -135,7 +135,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 	}
 
 	private Object[] getAllTagetsForSource(IMylarElement source, String kind) {
-    	Collection<MylarContextEdge> edges = source.getEdges();
+    	Collection<MylarContextEdge> edges = source.getRelations();
     	List<Object> targets = new ArrayList<Object>();
     	for (MylarContextEdge edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {

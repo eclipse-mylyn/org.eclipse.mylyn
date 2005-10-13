@@ -489,7 +489,7 @@ public class MylarContextManager {
      */
     public void resetLandmarkRelationshipsOfKind(String reltationKind) {
         for (IMylarElement landmark : activeContext.getLandmarks()) {       	
-        	for (IMylarRelation edge : landmark.getEdges()) {
+        	for (IMylarRelation edge : landmark.getRelations()) {
         		if (edge.getRelationshipHandle().equals(reltationKind)) {
         			landmark.clearEdges();         		}
 			}

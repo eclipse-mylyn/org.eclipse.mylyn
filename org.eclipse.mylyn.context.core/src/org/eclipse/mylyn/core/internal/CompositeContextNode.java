@@ -104,10 +104,10 @@ public class CompositeContextNode implements IMylarElement {
         return edges.iterator().next();
     }
     
-    public Collection<MylarContextEdge> getEdges() {
+    public Collection<MylarContextEdge> getRelations() {
         Set<MylarContextEdge> edges = new HashSet<MylarContextEdge>();
         
-        for (MylarContextNode node : nodes) edges.addAll(node.getEdges());
+        for (MylarContextNode node : nodes) edges.addAll(node.getRelations());
         return edges;
     }
     

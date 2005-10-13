@@ -26,7 +26,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.tasklist,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.junit.runtime,
- org.eclipse.pde.junit.runtime
+ org.eclipse.pde.junit.runtime,
+ org.eclipse.jdt.launching,
+ org.eclipse.debug.core,
+ org.eclipse.pde.ui,
+ org.eclipse.pde.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.java,

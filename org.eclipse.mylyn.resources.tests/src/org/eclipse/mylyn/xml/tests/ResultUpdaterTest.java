@@ -75,12 +75,12 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		//
 		//
 		
-		Collection<MylarContextEdge> edges = searchNode.getEdges();
+		Collection<MylarContextEdge> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());		
 		
 		ResourceHelper.delete(plugin1);
 		
-		Collection<MylarContextEdge> edgesAfterRemove = searchNode.getEdges();
+		Collection<MylarContextEdge> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());	
 	}
 	
@@ -98,12 +98,12 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		//
 		//
 
-		Collection<MylarContextEdge> edges = searchNode.getEdges();
+		Collection<MylarContextEdge> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());	
 		
 		ResourceHelper.deleteProject(jp1.getProject().getName());
 		
-		Collection<MylarContextEdge> edgesAfterRemove = searchNode.getEdges();
+		Collection<MylarContextEdge> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());	;
 	}
 	
