@@ -43,7 +43,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {
-        try {
+		try {
         	if (!(viewer instanceof StructuredViewer)) return true;
         	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
         	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
@@ -56,7 +56,6 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
                 if (!bridge.canFilter(element)) return true;    
                 if (matchesExclusion(element, bridge)) return true;
                 
-//                throw new NullPointerException();
                 String handle = bridge.getHandleIdentifier(element);
                 node = MylarPlugin.getContextManager().getNode(handle);
             }
@@ -66,12 +65,9 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
             	} else {
             		return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
             	}
-            }
+            } 
         } catch (Throwable t) {
         	MylarPlugin.log(t, "interest filter failed on viewer: " + viewer.getClass());
-//        	if (viewer instanceof StructuredViewer) {		
-//        		MylarUiPlugin.getDefault().getUiUpdateManager().removeManagedViewer((StructuredViewer)viewer);
-//        	}
         } 
         return false;
     }   

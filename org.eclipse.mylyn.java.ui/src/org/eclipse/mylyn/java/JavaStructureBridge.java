@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -117,6 +118,9 @@ public class JavaStructureBridge implements IMylarStructureBridge {
      * TODO: figure out if the non IJavaElement stuff is needed
      */
     public boolean acceptsObject(Object object) {
+    	if (object instanceof IPackageFragment) {
+//    		System.err.println(">>>> " + ((IJavaElement)object).getElementName());
+    	}
         boolean accepts = object instanceof IJavaElement 
             || object instanceof ClassPathContainer
             || object instanceof ClassPathContainer.RequiredProjectWrapper
@@ -142,7 +146,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
                     JarPackageFragmentRoot element = (JarPackageFragmentRoot)children[i];
                     IMylarElement node = MylarPlugin.getContextManager().getNode(element.getHandleIdentifier());
                     if (node != null && node.getDegreeOfInterest().isInteresting()) {
-                        return false;
+                    	return false;
                     } 
                 } 
             } 
