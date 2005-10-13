@@ -17,7 +17,6 @@ import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.debug.ui.sourcelookup.SourceLookupTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaArgumentsTab;
-import org.eclipse.jdt.internal.junit.launcher.JUnitMainTab;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.ui.launcher.AbstractPDELaunchConfigurationTabGroup;
 import org.eclipse.pde.ui.launcher.ConfigurationTab;
@@ -36,7 +35,7 @@ public class MylarPdeJUnitTabGroup extends AbstractPDELaunchConfigurationTabGrou
 		ILaunchConfigurationTab[] tabs = null;
 		if (PDECore.getDefault().getModelManager().isOSGiRuntime()) {
 			tabs = new ILaunchConfigurationTab[]{
-					new JUnitMainTab(),
+//					new JUnitMainTab(),
 					new PluginJUnitMainTab(), 
 					new JavaArgumentsTab(),
 					new PluginsTab(false),	
@@ -45,7 +44,7 @@ public class MylarPdeJUnitTabGroup extends AbstractPDELaunchConfigurationTabGrou
 					new CommonTab()};
 		} else {
 			tabs = new ILaunchConfigurationTab[]{
-					new JUnitMainTab(),
+//					new JUnitMainTab(),
 					new PluginJUnitMainTab(), 
 					new JavaArgumentsTab(),
 					new PluginsTab(false),

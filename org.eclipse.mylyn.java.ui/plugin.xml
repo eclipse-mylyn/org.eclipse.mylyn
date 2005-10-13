@@ -42,7 +42,7 @@
                extension="class">
          </fileExtension>
       </launchConfigurationType>
-            <launchConfigurationType
+         <launchConfigurationType
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             name="Mylar Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
@@ -113,6 +113,7 @@
          </launchMode>
       </launchConfigurationTabGroup>
     </extension>	
+
 
 	<extension
 	     id="org.eclipse.mylar.helpDocs"
