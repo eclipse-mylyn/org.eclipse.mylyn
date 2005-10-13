@@ -42,7 +42,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 	}
 
 	public void testPropagation() throws JavaModelException {
-        IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
+        IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(view, sm1);
         viewer.expandAll();

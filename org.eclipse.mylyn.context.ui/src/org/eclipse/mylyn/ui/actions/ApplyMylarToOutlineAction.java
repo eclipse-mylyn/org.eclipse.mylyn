@@ -40,14 +40,17 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
-		IEditorPart[] parts = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
-		for (int i = 0; i < parts.length; i++) {
-			IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
-			List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
-			for (TreeViewer viewer : outlineViewers) {
-				if (viewer != null && !viewers.contains(viewer)) viewers.add(viewer);
+		try {
+			IEditorPart[] parts = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
+			for (int i = 0; i < parts.length; i++) {
+				IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
+				List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
+				for (TreeViewer viewer : outlineViewers) {
+					if (viewer != null && !viewers.contains(viewer)) viewers.add(viewer);
+				}
 			}
+		} catch (NullPointerException e) {
+			// ignore since this can be called on shutdown
 		}
 		return viewers;
 	}

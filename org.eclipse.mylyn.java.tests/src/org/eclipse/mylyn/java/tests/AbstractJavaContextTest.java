@@ -65,9 +65,9 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     protected void tearDown() throws Exception {
     	project.dispose();
         context.reset(); 
-        manager.getFileForContext(taskId).delete();
         manager.contextDeactivated(taskId, taskId);
         manager.contextDeleted(taskId, taskId);
+        manager.getFileForContext(taskId).delete(); 
     }
 	
     protected int countItemsInTree(Tree tree) {

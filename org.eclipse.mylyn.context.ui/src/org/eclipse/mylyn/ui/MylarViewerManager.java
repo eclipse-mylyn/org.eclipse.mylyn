@@ -36,6 +36,7 @@ import org.eclipse.ui.internal.Workbench;
 public class MylarViewerManager implements IMylarContextListener, IPropertyChangeListener {
 	
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
+	private List<StructuredViewer> filteredViewers = new ArrayList<StructuredViewer>();
 	private List<AbstractApplyMylarAction> managedActions = new ArrayList<AbstractApplyMylarAction>();
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 	private boolean syncRefreshMode = false; // for testing
@@ -53,10 +54,12 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	}
 	
 	public void addManagedViewer(StructuredViewer viewer) {
-		managedViewers.add(viewer);
-		BrowseFilteredListener listener = new BrowseFilteredListener(viewer);
-		listenerMap.put(viewer, listener);
-		viewer.getControl().addMouseListener(listener);
+		if (!managedViewers.contains(viewer)) {
+			managedViewers.add(viewer);
+			BrowseFilteredListener listener = new BrowseFilteredListener(viewer);
+			listenerMap.put(viewer, listener);
+			viewer.getControl().addMouseListener(listener);
+		}
 	}
 	
 	public void removeManagedViewer(StructuredViewer viewer) {
@@ -65,6 +68,16 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		if (listener != null) {
 			viewer.getControl().removeMouseListener(listener);
 		}  
+	}
+
+	public void addFilteredViewer(StructuredViewer viewer) {
+		if (!filteredViewers.contains(viewer)) {
+			filteredViewers.add(viewer);
+		}
+	}
+	
+	public void removeFilteredViewer(StructuredViewer viewer) {
+		filteredViewers.remove(viewer);
 	}
 	
 	public void contextActivated(IMylarContext taskscape) {
@@ -81,8 +94,6 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     public void contextDeactivated(IMylarContext context) {
     	for (AbstractApplyMylarAction action : managedActions) action.update(false);
         refreshViewers();
-//    	boolean confirmed = IDE.saveAllEditors(ResourcesPlugin.getWorkspace().getRoot().getProjects(), true);
-//      if (confirmed) {
       	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE)) {
       		UiUtil.closeAllEditors(true);
       	} else {
@@ -134,17 +145,31 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 
     private void internalRefresh(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
 		try {
-    		for (StructuredViewer viewer : managedViewers) {
+			if (!MylarPlugin.getContextManager().hasActiveContext()) return;
+			for (StructuredViewer viewer : managedViewers) {
     			if (viewer != null && !viewer.getControl().isDisposed()) {
-					if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
+    				if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 			            viewer.getControl().setRedraw(false);
 			            viewer.refresh(true);
 			            viewer.getControl().setRedraw(true);
-					} else { 
-			            viewer.getControl().setRedraw(false);
-			            viewer.refresh(updateLabels);
-			            viewer.getControl().setRedraw(true);
-			            
+    				} else {
+    					if (filteredViewers.contains(viewer)) {
+				            viewer.getControl().setRedraw(false);
+				            viewer.refresh(updateLabels);
+				            viewer.getControl().setRedraw(true);
+						} else { // don't need to worry about content changes
+							for (IMylarElement node : nodesToRefresh) {
+								IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
+								Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier()); 
+								if (objectToRefresh != null) {
+									viewer.getControl().setRedraw(false);
+									viewer.update(objectToRefresh, null);						            
+									viewer.getControl().setRedraw(true);
+								}
+							}
+						}
+					}
+				}
 //						IMylarElement targetElement = nodesToRefresh.get(nodesToRefresh.size()-1);
 //						IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetElement.getContentType());
 //						Object targetObject = structureBridge.getObjectForHandle(targetElement.getHandleIdentifier()); 
@@ -173,8 +198,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 ////								} 
 //							}
 //						}
-					} 
-				}
+//				}
 			}
     	} catch (Throwable t) {
     		MylarPlugin.fail(t, "could not refresh viewer", false);

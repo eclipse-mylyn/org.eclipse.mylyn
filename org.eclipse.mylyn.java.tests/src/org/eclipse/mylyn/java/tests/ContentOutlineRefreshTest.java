@@ -74,7 +74,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
         TreeViewer viewer = (TreeViewer)viewers.get(0);
         assertEquals(3, super.countItemsInTree(viewer.getTree()));
         
-        action.manageViewer(true, viewer);
+        action.installInterestFilter(true, viewer);
         assertEquals(0, super.countItemsInTree(viewer.getTree()));
 
         StructuredSelection sm1 = new StructuredSelection(m1);

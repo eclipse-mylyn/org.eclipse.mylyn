@@ -15,6 +15,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContextNode;
 import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.MylarContextNode;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
@@ -86,17 +87,17 @@ public class UiUtil {
  
     public static Color getForegroundForElement(IMylarElement node) {
         if (node == null) return null; 
-        if (node.getDegreeOfInterest().isInteresting()) {
-        	return null;
-        } else if (node.getDegreeOfInterest().isPredicted() || node.getDegreeOfInterest().isPropagated()) { 
-            if (node.getDegreeOfInterest().getValue() >= 20) { // HACK: parametrize
+        if (node.getDegreeOfInterest().isPredicted() || node.getDegreeOfInterest().isPropagated()) { 
+            if (node.getDegreeOfInterest().getValue() >= MylarContextManager.getScalingFactors().getLandmark()/3) { 
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_DARK; 
             } else if (node.getDegreeOfInterest().getValue() >= 10) {
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM; 
             } else {
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_LIGHT; 
             }
-        }
+        } else if (node.getDegreeOfInterest().isInteresting()) {
+        	return null;
+        } 
         return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM; 
     }
     

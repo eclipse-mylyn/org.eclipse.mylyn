@@ -28,19 +28,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class ClearContextAction implements IViewActionDelegate{
 
-//	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.clear";
-//	
-//	public ClearContextAction() {
-//		setText("Clear Task Context");
-//        setToolTipText("Clear Task Context");
-//        setId(ID);
-//        setImageDescriptor(TaskListImages.ERASE_TASKSCAPE);
-//	}
-//	
-//	@Override
-//	public void run() {
-//		
-//	}
+	public static final String ID = "org.eclipse.mylar.ui.clear.context";
 
 	public void init(IViewPart view) {
 		
