@@ -55,7 +55,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
-	public static String VERSION = "0.3.11";
+	public static String VERSION = "0.3.12";
 	public static String UPLOAD_FILE_LABEL = "USAGE";
 
 	public static final String ETHICS_FORM = "doc/study-ethics.html";
