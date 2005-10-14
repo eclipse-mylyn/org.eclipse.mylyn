@@ -24,13 +24,13 @@ import org.eclipse.mylar.core.MylarPlugin;
 /**
  * @author Mik Kersten
  */
-public class CompositeContextNode implements IMylarElement {
-    private Set<MylarContextNode> nodes = null;//new HashSet<ITaskscapeNode>();
+public class CompositeContextElement implements IMylarElement {
+    private Set<MylarContextElement> nodes = null;//new HashSet<ITaskscapeNode>();
     
     private String handle = "<no handle>";
 //    private String name = "";
     
-    public CompositeContextNode(String handle, Set<MylarContextNode> nodes) {
+    public CompositeContextElement(String handle, Set<MylarContextElement> nodes) {
         assert(handle != null);
         this.nodes = nodes;
         this.handle = handle;
@@ -68,7 +68,7 @@ public class CompositeContextNode implements IMylarElement {
     	// can't set a handle on this
     }
 
-    public Set<MylarContextNode> getNodes() {
+    public Set<MylarContextElement> getNodes() {
         return nodes;
     }
     
@@ -93,8 +93,8 @@ public class CompositeContextNode implements IMylarElement {
     /**
      * TODO: need composite edges here
      */
-    public MylarContextEdge getEdge(String targetHandle) {
-        Set<MylarContextEdge> edges = new HashSet<MylarContextEdge>();
+    public MylarContextRelation getEdge(String targetHandle) {
+        Set<MylarContextRelation> edges = new HashSet<MylarContextRelation>();
         for (IMylarElement node : nodes) edges.add(node.getEdge(targetHandle));
         if (edges.size() == 0) {
             return null;
@@ -104,22 +104,22 @@ public class CompositeContextNode implements IMylarElement {
         return edges.iterator().next();
     }
     
-    public Collection<MylarContextEdge> getRelations() {
-        Set<MylarContextEdge> edges = new HashSet<MylarContextEdge>();
+    public Collection<MylarContextRelation> getRelations() {
+        Set<MylarContextRelation> edges = new HashSet<MylarContextRelation>();
         
-        for (MylarContextNode node : nodes) edges.addAll(node.getRelations());
+        for (MylarContextElement node : nodes) edges.addAll(node.getRelations());
         return edges;
     }
     
     public void clearEdges() {
-    	for (MylarContextNode node : nodes) node.clearEdges();
+    	for (MylarContextElement node : nodes) node.clearEdges();
 	}
     
     @Override
     public boolean equals(Object obj) { 
         if (obj == null) return false;
-        if (obj instanceof CompositeContextNode) {
-            CompositeContextNode node = (CompositeContextNode)obj;
+        if (obj instanceof CompositeContextElement) {
+            CompositeContextElement node = (CompositeContextElement)obj;
             return this.getHandleIdentifier().equals(node.getHandleIdentifier());
         }
         return false;

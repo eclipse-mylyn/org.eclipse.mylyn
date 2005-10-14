@@ -304,7 +304,7 @@ public class MylarContextManager {
                     propagatedIncrement);
             IMylarElement previous = activeContext.get(propagationEvent.getStructureHandle());
             if (previous != null && previous.getDegreeOfInterest() != null) previousInterest = previous.getDegreeOfInterest().getValue();
-            CompositeContextNode parentNode = (CompositeContextNode)activeContext.addEvent(propagationEvent);
+            CompositeContextElement parentNode = (CompositeContextElement)activeContext.addEvent(propagationEvent);
             if (isInterestDelta(
             		previousInterest, 
             		previous.getDegreeOfInterest().isPredicted(), 
@@ -316,9 +316,9 @@ public class MylarContextManager {
         }
     }
 
-    public List<IMylarElement> findCompositesForNodes(List<MylarContextNode> nodes) {
+    public List<IMylarElement> findCompositesForNodes(List<MylarContextElement> nodes) {
         List<IMylarElement> composites = new ArrayList<IMylarElement>();
-        for (MylarContextNode node : nodes) {
+        for (MylarContextElement node : nodes) {
             composites.add(activeContext.get(node.getHandleIdentifier()));
         }
         return composites;

@@ -22,7 +22,7 @@ import org.eclipse.mylar.core.IMylarElement;
  * 
  * @author Mik Kersten
  */
-public class MylarContextEdge implements IMylarRelation {
+public class MylarContextRelation implements IMylarRelation {
 
     private DegreeOfInterest interest;
     
@@ -31,7 +31,7 @@ public class MylarContextEdge implements IMylarRelation {
     private IMylarElement source;
     private IMylarElement target;
     
-    public MylarContextEdge(String kind, String edgeKind, IMylarElement source, IMylarElement target, MylarContext context) {
+    public MylarContextRelation(String kind, String edgeKind, IMylarElement source, IMylarElement target, MylarContext context) {
         interest = new DegreeOfInterest(context);
         this.structureKind = kind;
         this.relationshipHandle = edgeKind; 

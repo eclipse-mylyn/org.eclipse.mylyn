@@ -26,8 +26,9 @@ import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
 public class AllJavaTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.java.tests");
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylar.java.tests");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(RefactoringTest.class);
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
 		suite.addTestSuite(TypeHistoryManagerTest.class);
 		suite.addTestSuite(PackageExplorerRefreshTest.class);

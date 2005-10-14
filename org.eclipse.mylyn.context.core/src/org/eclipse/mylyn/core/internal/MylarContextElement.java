@@ -27,16 +27,16 @@ import org.eclipse.mylar.core.IMylarElement;
  * 
  * @author Mik Kersten
  */
-public class MylarContextNode implements IMylarElement {
+public class MylarContextElement implements IMylarElement {
     
     private String handle;
     private String kind;
     private DegreeOfInterest interest;
     private MylarContext context;
     
-    private Map<String/*target handle*/, MylarContextEdge> edges = new HashMap<String, MylarContextEdge>();
+    private Map<String/*target handle*/, MylarContextRelation> edges = new HashMap<String, MylarContextRelation>();
     
-    public MylarContextNode(String kind, String elementHandle, MylarContext context) {
+    public MylarContextElement(String kind, String elementHandle, MylarContext context) {
         if (elementHandle == null) throw new RuntimeException("malformed taskscape: null handle");
         interest = new DegreeOfInterest(context);
         this.handle = elementHandle;
@@ -60,18 +60,18 @@ public class MylarContextNode implements IMylarElement {
         this.kind = kind;
     }
 
-    public Collection<MylarContextEdge> getRelations() {
+    public Collection<MylarContextRelation> getRelations() {
         return edges.values();
     }
 
-    public MylarContextEdge getEdge(String targetHandle) {
+    public MylarContextRelation getEdge(String targetHandle) {
         return edges.get(targetHandle);
     }
     
     /**
      * TODO: reduce visibility
      */
-    public void addEdge(MylarContextEdge edge) {
+    public void addEdge(MylarContextRelation edge) {
         edges.put(edge.getTarget().getHandleIdentifier(), edge);
     }
     
@@ -87,8 +87,8 @@ public class MylarContextNode implements IMylarElement {
     public boolean equals(Object obj) { 
         if (obj == null) return false;
         if (this.getHandleIdentifier() == null) return false;
-        if (obj instanceof MylarContextNode) {
-            MylarContextNode node = (MylarContextNode)obj;
+        if (obj instanceof MylarContextElement) {
+            MylarContextElement node = (MylarContextElement)obj;
             return this.getHandleIdentifier().equals(node.getHandleIdentifier());
         }
         return false;

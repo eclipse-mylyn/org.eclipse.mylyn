@@ -154,7 +154,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
     public void testErrorInterest() throws CoreException, InterruptedException, InvocationTargetException {
     	JavaPlugin.getDefault().getProblemMarkerManager().addListener(new JavaProblemListener());
-
+ 
     	IViewPart problemsPart = JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
     	assertNotNull(problemsPart);
     	

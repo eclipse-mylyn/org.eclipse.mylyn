@@ -24,7 +24,7 @@ import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextEdge;
+import org.eclipse.mylar.core.internal.MylarContextRelation;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -102,7 +102,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
     
     public Object [] getChildren(Object parent) { 
     	if (parent == null) return new Object[0];
-        if (parent instanceof MylarContextEdge) {
+        if (parent instanceof MylarContextRelation) {
         	IMylarRelation edge = (IMylarRelation)parent;
         	IMylarElement source = MylarPlugin.getContextManager().getNode(
         			((IMylarRelation)parent).getSource().getHandleIdentifier());
@@ -135,9 +135,9 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 	}
 
 	private Object[] getAllTagetsForSource(IMylarElement source, String kind) {
-    	Collection<MylarContextEdge> edges = source.getRelations();
+    	Collection<MylarContextRelation> edges = source.getRelations();
     	List<Object> targets = new ArrayList<Object>();
-    	for (MylarContextEdge edge : edges) {
+    	for (MylarContextRelation edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {
 				IMylarElement target = edge.getTarget();
 				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(target.getContentType());
@@ -149,7 +149,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 		return targets.toArray();
 	}
 
-	private Object[] getAllEdgeTypes(Collection<MylarContextEdge> edges) {
+	private Object[] getAllEdgeTypes(Collection<MylarContextRelation> edges) {
 		Map<String, IMylarRelation> map = new HashMap<String, IMylarRelation>();
 		for (IMylarRelation edge : edges) {
 			IMylarRelation edgeType = map.get(edge.getRelationshipHandle());

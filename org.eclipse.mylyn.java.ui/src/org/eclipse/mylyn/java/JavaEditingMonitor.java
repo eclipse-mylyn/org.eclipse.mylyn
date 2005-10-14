@@ -11,15 +11,12 @@
 
 package org.eclipse.mylar.java;
 
-import org.eclipse.jdt.core.ElementChangedEvent;
-import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IImportContainer;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.TextSelection;
@@ -43,13 +40,6 @@ public class JavaEditingMonitor extends AbstractSelectionMonitor {
   
     public JavaEditingMonitor() {
         super();
-    	JavaCore.addElementChangedListener(new IElementChangedListener() {
-            public void elementChanged(ElementChangedEvent event) {
-            	// TODO: implement interest move
-//                IJavaElementDelta delta = event.getDelta();
-//                super.handleElementEdit(part, selectedElement);
-            }
-        });
     }
     
     /**

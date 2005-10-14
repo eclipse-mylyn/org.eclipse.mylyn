@@ -24,7 +24,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
 import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.internal.MylarContextEdge;
+import org.eclipse.mylar.core.internal.MylarContextRelation;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.ResourceHelper;
 import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
@@ -75,12 +75,12 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		//
 		//
 		
-		Collection<MylarContextEdge> edges = searchNode.getRelations();
+		Collection<MylarContextRelation> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());		
 		
 		ResourceHelper.delete(plugin1);
 		
-		Collection<MylarContextEdge> edgesAfterRemove = searchNode.getRelations();
+		Collection<MylarContextRelation> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());	
 	}
 	
@@ -98,12 +98,12 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest{
 		//
 		//
 
-		Collection<MylarContextEdge> edges = searchNode.getRelations();
+		Collection<MylarContextRelation> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());	
 		
 		ResourceHelper.deleteProject(jp1.getProject().getName());
 		
-		Collection<MylarContextEdge> edgesAfterRemove = searchNode.getRelations();
+		Collection<MylarContextRelation> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());	;
 	}
 	

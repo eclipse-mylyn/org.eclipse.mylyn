@@ -15,9 +15,9 @@ package org.eclipse.mylar.core;
 
 import java.util.List;
 
-import org.eclipse.mylar.core.internal.CompositeContextNode;
-import org.eclipse.mylar.core.internal.MylarContextEdge;
-import org.eclipse.mylar.core.internal.MylarContextNode;
+import org.eclipse.mylar.core.internal.CompositeContextElement;
+import org.eclipse.mylar.core.internal.MylarContextRelation;
+import org.eclipse.mylar.core.internal.MylarContextElement;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 
 /**
@@ -90,17 +90,17 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
      * Public for testing
      */
 	public void createEdge(IMylarElement toNode, String elementKind, String targetHandle) {
-		CompositeContextNode targetNode = (CompositeContextNode)MylarPlugin.getContextManager().getNode(targetHandle);
+		CompositeContextElement targetNode = (CompositeContextElement)MylarPlugin.getContextManager().getNode(targetHandle);
         if (targetNode == null) return;
-		MylarContextNode concreteTargetNode = null;
+		MylarContextElement concreteTargetNode = null;
         if (targetNode.getNodes().size() != 1) {
         	return;
         } else {
         	concreteTargetNode = targetNode.getNodes().iterator().next();
         }
         if (concreteTargetNode != null) {
-	        for (MylarContextNode sourceNode : ((CompositeContextNode)toNode).getNodes()) {
-	        	MylarContextEdge edge = new MylarContextEdge(elementKind, getId(), sourceNode, concreteTargetNode, sourceNode.getContext());
+	        for (MylarContextElement sourceNode : ((CompositeContextElement)toNode).getNodes()) {
+	        	MylarContextRelation edge = new MylarContextRelation(elementKind, getId(), sourceNode, concreteTargetNode, sourceNode.getContext());
 	        	sourceNode.addEdge(edge);
 			}
         }

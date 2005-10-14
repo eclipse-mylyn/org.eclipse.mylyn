@@ -13,7 +13,7 @@ package org.eclipse.mylar.core;
 
 import java.util.Collection;
 
-import org.eclipse.mylar.core.internal.MylarContextEdge;
+import org.eclipse.mylar.core.internal.MylarContextRelation;
 
 /**
  * @author Mik Kersten
@@ -26,9 +26,9 @@ public interface IMylarElement extends IMylarObject {
    
     public abstract IMylarContext getContext();
     
-    public abstract Collection<MylarContextEdge> getRelations();
+    public abstract Collection<MylarContextRelation> getRelations();
         
-    public abstract MylarContextEdge getEdge(String targetHandle);
+    public abstract MylarContextRelation getEdge(String targetHandle);
 
     public abstract void clearEdges();
 }
