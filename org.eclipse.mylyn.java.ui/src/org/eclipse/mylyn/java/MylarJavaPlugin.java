@@ -13,7 +13,6 @@ package org.eclipse.mylar.java;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -60,6 +59,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     public static final String PLUGIN_ID = "org.eclipse.mylar.java";
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
     public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
+    public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.predicted.errors";
     
 	public static ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
     
@@ -86,8 +86,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
         MylarPlugin.getContextManager().addListener(typeHistoryManager);
         MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
 
-		getPreferenceStore().setDefault(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
-        		
+		getPreferenceStore().setDefault(PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
+		getPreferenceStore().setDefault(PREDICTED_INTEREST_ERRORS, false);
+		if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
+			problemListener.enable();
+		}
+		getPreferenceStore().addPropertyChangeListener(problemListener);
+		
 		final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
@@ -285,14 +290,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		return typeHistoryManager;
 	}
 
-	public void enableProblemListener() {
-		JavaPlugin.getDefault().getProblemMarkerManager().addListener(problemListener);
-	}
-	
-	public void disableProblemListener() {
-		JavaPlugin.getDefault().getProblemMarkerManager().removeListener(problemListener);
-	}
-    
 //    /**
 //	 * 
 //	 * CODE FROM

@@ -17,13 +17,16 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModelMarker;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 
 /**
  * @author Mik Kersten
  */
-public class JavaProblemListener implements IProblemChangedListener {
+public class JavaProblemListener implements IProblemChangedListener, IPropertyChangeListener {
   
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
         try {
@@ -58,4 +61,22 @@ public class JavaProblemListener implements IProblemChangedListener {
         	MylarPlugin.log(e, "could not update on marker change");
         }
     }
+
+	public void propertyChange(PropertyChangeEvent event) {
+		if (MylarJavaPlugin.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
+			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS)) {
+				enable();
+			} else {
+				disable();
+			}
+		}
+	}
+	
+	public void enable() {
+		JavaPlugin.getDefault().getProblemMarkerManager().addListener(this);
+	}
+	
+	public void disable() {
+		JavaPlugin.getDefault().getProblemMarkerManager().removeListener(this);
+	}
 }

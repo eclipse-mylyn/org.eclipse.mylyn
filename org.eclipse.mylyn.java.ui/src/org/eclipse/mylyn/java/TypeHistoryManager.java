@@ -55,8 +55,8 @@ public class TypeHistoryManager implements IMylarContextListener {
 		IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 		if (element instanceof IType) {
 			IType type = (IType)element;
-			try {
-				if (!type.isAnonymous() && type.exists()) {
+			try { 
+				if (type.exists() && !type.isAnonymous()) {
 					TypeInfo info = factory.create(
 							type.getPackageFragment().getElementName().toCharArray(), 
 							type.getElementName().toCharArray(),

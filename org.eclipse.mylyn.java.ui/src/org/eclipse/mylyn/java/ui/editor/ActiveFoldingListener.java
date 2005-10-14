@@ -83,7 +83,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
     public void interestChanged(IMylarElement node) {
     	if (!node.equals(lastUpdatedNode)) {
-    		controller.updateFolding(true);
+    		controller.updateFolding(true, false);
     		lastUpdatedNode = node;
     	}
     }
@@ -135,24 +135,32 @@ public class ActiveFoldingListener implements IMylarContextListener {
             } 
         }
         
-        public void updateFolding(final boolean expand) {
-            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-                public void run() { 
-                    if (!editor.getSite().getPage().isPartVisible(editor)) return;
-                    ISourceViewer sourceViewer = editor.getViewer();
-                    if (sourceViewer instanceof ProjectionViewer) {
-                        ProjectionViewer pv= (ProjectionViewer) sourceViewer;
-                        if (isAutoFoldingEnabled()) {
-                            if (expand) {
-                                if (pv.canDoOperation(ProjectionViewer.EXPAND)) pv.doOperation(ProjectionViewer.EXPAND);
-                            } else {
-                                if (pv.canDoOperation(ProjectionViewer.COLLAPSE)) pv.doOperation(ProjectionViewer.COLLAPSE);  
-                            }
-                        } 
-                    }
-                }
-            });    
-        } 
+        public void updateFolding(final boolean expand, boolean async) {
+        	if (async) {
+	            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+	                public void run() { 
+	                    internalUpdateFolding(expand);
+	                }
+	            });    
+        	} else {
+        		internalUpdateFolding(expand);
+        	}
+        }
+
+		private void internalUpdateFolding(final boolean expand) {
+			if (!editor.getSite().getPage().isPartVisible(editor)) return;
+			ISourceViewer sourceViewer = editor.getViewer();
+			if (sourceViewer instanceof ProjectionViewer) {
+			    ProjectionViewer pv= (ProjectionViewer) sourceViewer;
+			    if (isAutoFoldingEnabled()) {
+			        if (expand) {
+			            if (pv.canDoOperation(ProjectionViewer.EXPAND)) pv.doOperation(ProjectionViewer.EXPAND);
+			        } else {
+			            if (pv.canDoOperation(ProjectionViewer.COLLAPSE)) pv.doOperation(ProjectionViewer.COLLAPSE);  
+			        }
+			    } 
+			}
+		} 
     
         public void resetFolding() {
             Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
@@ -192,7 +200,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
         
         public void partActivated(IWorkbenchPartReference partRef) {
             if (editor.equals(partRef.getPart(false))) {
-                updateFolding(true);
+                updateFolding(true, true);
             } 
         }
     
@@ -203,7 +211,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
         public void partBroughtToTop(IWorkbenchPartReference partRef) {
             if (editor.equals(partRef.getPart(false))) {
     //          cancel();
-              updateFolding(true);
+              updateFolding(true, true);
           } 
         }
         public void partDeactivated(IWorkbenchPartReference partRef) {
