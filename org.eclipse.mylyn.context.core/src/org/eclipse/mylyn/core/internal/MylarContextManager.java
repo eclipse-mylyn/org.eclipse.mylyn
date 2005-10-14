@@ -555,10 +555,6 @@ public class MylarContextManager {
     public static ScalingFactors getScalingFactors() {
         return MylarContextManager.scalingFactors;
     }
-
-    public void dumpInteractionHistoryForSelected() {
-    	MylarPlugin.log("> interaction history: " + activeContext.getActiveNode().getDegreeOfInterest().getEvents(), this);
-    }
     
     public void updateMylarDirContents(String prevDir) { 
 		File prev = new File(prevDir);
