@@ -40,7 +40,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-
+	
 	public void testPropagation() throws JavaModelException {
         IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
         StructuredSelection sm1 = new StructuredSelection(m1);

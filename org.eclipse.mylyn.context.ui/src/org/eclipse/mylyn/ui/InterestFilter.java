@@ -44,6 +44,9 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {
 		try {
+//			if (!testselect(viewer, parent, element)) {
+//				System.err.println(">>> " + element.getClass());
+//			}
         	if (!(viewer instanceof StructuredViewer)) return true;
         	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
         	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
@@ -71,6 +74,36 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
         } 
         return false;
     }   
+	
+	boolean testselect(Viewer viewer, Object parent, Object element) {
+		try {
+        	if (!(viewer instanceof StructuredViewer)) return true;
+        	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
+        	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
+        	
+            IMylarElement node = null;
+            if (element instanceof IMylarElement) {
+                node = (IMylarElement)element;
+            } else { 
+                IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
+                if (!bridge.canFilter(element)) return true;    
+                if (matchesExclusion(element, bridge)) return true;
+                
+                String handle = bridge.getHandleIdentifier(element);
+                node = MylarPlugin.getContextManager().getNode(handle);
+            }
+            if (node != null) {
+            	if (node.getDegreeOfInterest().isPredicted()) {
+            		return false;
+            	} else {
+            		return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+            	}
+            } 
+        } catch (Throwable t) {
+        	MylarPlugin.log(t, "interest filter failed on viewer: " + viewer.getClass());
+        } 
+        return false;
+	}
 	
 	private boolean matchesExclusion(Object element, IMylarStructureBridge bridge) {
 		if (excludedMatches == null) return false;

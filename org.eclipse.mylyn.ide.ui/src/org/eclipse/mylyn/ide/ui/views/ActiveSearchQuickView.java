@@ -30,7 +30,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchView.DoiOrderSorter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.views.MylarContextContentProvider;
-import org.eclipse.mylar.ui.views.MylarContextLabelProvider;
+import org.eclipse.mylar.ui.views.MylarDelegatingContextLabelProvider;
 import org.eclipse.mylar.ui.views.TaskscapeNodeClickListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -235,7 +235,7 @@ public class ActiveSearchQuickView {
         viewer.setContentProvider(new MylarContextContentProvider(dialogShell, true)); 
 //        viewer.setLabelProvider(new TaskscapeNodeLabelProvider());
         viewer.setLabelProvider(new DecoratingLabelProvider(
-                new MylarContextLabelProvider(),
+                new MylarDelegatingContextLabelProvider(),
                 PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 //        viewer.setLabelProvider(new MylarAppearanceAwareLabelProvider(viewer)); 
         

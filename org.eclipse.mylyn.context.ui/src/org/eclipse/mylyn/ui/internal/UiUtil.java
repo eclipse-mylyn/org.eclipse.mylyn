@@ -32,7 +32,11 @@ import org.eclipse.ui.internal.Workbench;
 public class UiUtil {
 
     public static Color getBackgroundForElement(IMylarElement node) {
-        if (node == null || node.getDegreeOfInterest().isPropagated()) return null;
+        if (node == null 
+        	|| node.getDegreeOfInterest().isPropagated()
+            || node.getDegreeOfInterest().isPredicted()) {
+        	return null;
+        }
         IMylarElement dominantNode = null;
         boolean isMultiple = false;
         if (node instanceof CompositeContextNode) {

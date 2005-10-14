@@ -27,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author Mik Kersten
  */
-public class MylarContextLabelProvider implements ILabelProvider {
+public class MylarDelegatingContextLabelProvider implements ILabelProvider {
 
 	public static boolean qualifyNamesMode = false; // TODO: make non-static
 	

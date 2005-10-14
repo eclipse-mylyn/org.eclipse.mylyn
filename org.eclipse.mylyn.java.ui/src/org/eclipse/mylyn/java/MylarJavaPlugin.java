@@ -117,9 +117,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
                 MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
         		installEditorTracker(workbench);
         		
-        		JavaPlugin.getDefault().getProblemMarkerManager().addListener(problemListener);
-        	
-        	    ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+        		ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
         		service.addPostSelectionListener(packageExplorerManager); 
         		
         		setupDebugConfigurations();
@@ -145,7 +143,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     		getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
     	}
     	
-    	JavaPlugin.getDefault().getProblemMarkerManager().removeListener(problemListener);
     	
     	if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null) {
     		ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
@@ -288,7 +285,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		return typeHistoryManager;
 	}
 
-    
+	public void enableProblemListener() {
+		JavaPlugin.getDefault().getProblemMarkerManager().addListener(problemListener);
+	}
+	
+	public void disableProblemListener() {
+		JavaPlugin.getDefault().getProblemMarkerManager().removeListener(problemListener);
+	}
     
 //    /**
 //	 * 

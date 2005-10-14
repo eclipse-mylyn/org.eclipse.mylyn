@@ -18,13 +18,12 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
-import org.eclipse.jdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
@@ -35,16 +34,19 @@ import org.eclipse.mylar.java.search.JavaReadAccessProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.views.MylarContextLabelProvider;
+import org.eclipse.mylar.ui.views.MylarDelegatingContextLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
  */
-public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
+public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	public JavaContextLabelProvider() {
-		super(createJavaUiLabelProvider());
+//		super(createJavaUiLabelProvider());
+		super(				
+			AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED,
+            AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
 	}
 	
 	@Override
@@ -69,7 +71,7 @@ public class JavaContextLabelProvider extends DecoratingJavaLabelProvider {
 	}
 
 	private String getTextForElement(IJavaElement element) {
-    	if (MylarContextLabelProvider.isQualifyNamesMode()) {
+    	if (MylarDelegatingContextLabelProvider.isQualifyNamesMode()) {
     		if (element instanceof IMember && !(element instanceof IType)) {
     			String parentName = ((IMember)element).getParent().getElementName();
     			if (parentName != null && parentName != "" ) {
