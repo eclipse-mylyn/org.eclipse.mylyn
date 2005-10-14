@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.mylar.core.tests.ContextTest;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
-import org.eclipse.mylar.monitor.reports.IStatsCollector;
+import org.eclipse.mylar.monitor.reports.IUsageStatsCollector;
 import org.eclipse.mylar.monitor.reports.InteractionEventSummary;
 import org.eclipse.mylar.monitor.reports.ReportGenerator;
 import org.eclipse.mylar.monitor.reports.internal.SummaryCollector;
@@ -38,7 +38,7 @@ public class StatisticsLoggingTest extends ContextTest {
 		logFile.delete();
 		logger = new InteractionEventLogger(logFile);
 		logger.start();
-    	List<IStatsCollector> collectors = new ArrayList<IStatsCollector>();
+    	List<IUsageStatsCollector> collectors = new ArrayList<IUsageStatsCollector>();
 		collectors.add(new SummaryCollector());
 		report = new ReportGenerator(logger, collectors);
 	}
