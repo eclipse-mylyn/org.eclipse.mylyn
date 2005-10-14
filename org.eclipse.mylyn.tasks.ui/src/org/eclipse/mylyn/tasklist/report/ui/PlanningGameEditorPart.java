@@ -121,7 +121,7 @@ public class PlanningGameEditorPart extends EditorPart {
 
 	private void createSummarySection(Composite parent, FormToolkit toolkit) {
 		Section summarySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		summarySection.setText("Planning Game Summary");			
+		summarySection.setText("Mylar Task Planner");			
 		summarySection.setLayout(new TableWrapLayout());
 		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));	
 		Composite summaryContainer = toolkit.createComposite(summarySection);
