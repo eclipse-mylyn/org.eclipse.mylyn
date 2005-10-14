@@ -48,7 +48,7 @@ import org.osgi.framework.BundleContext;
  * TODO: this class is in serious need of refactoring
  */
 public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
-    
+	
     private static MylarTasklistPlugin plugin;
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
