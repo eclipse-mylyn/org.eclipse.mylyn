@@ -91,7 +91,12 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
                 return super.getImage(JavaCore.create(node.getHandleIdentifier()));
             } 
         } else if (object instanceof IMylarRelation) {
-        	return MylarImages.getImage(getIconForRelationship(((IMylarRelation)object).getRelationshipHandle()));
+        	ImageDescriptor descriptor = getIconForRelationship(((IMylarRelation)object).getRelationshipHandle());
+        	if (descriptor != null) {
+        		return MylarImages.getImage(descriptor);
+        	} else {
+        		return null;
+        	}
         }
         return super.getImage(object);
 	}
