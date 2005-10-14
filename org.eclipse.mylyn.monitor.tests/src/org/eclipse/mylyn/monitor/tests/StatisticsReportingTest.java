@@ -12,6 +12,8 @@
 package org.eclipse.mylar.monitor.tests;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -23,8 +25,9 @@ import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.reports.IStatsCollector;
 import org.eclipse.mylar.monitor.reports.ReportGenerator;
-import org.eclipse.mylar.monitor.reports.internal.EditRatioCollector;
+import org.eclipse.mylar.monitor.reports.internal.MylarUserAnalysisCollector;
 import org.eclipse.mylar.monitor.reports.internal.ViewUsageCollector;
 import org.eclipse.mylar.monitor.reports.ui.views.UsageStatisticsSummary;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
@@ -35,29 +38,28 @@ import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 public class StatisticsReportingTest extends TestCase {
 
 	private InteractionEventLogger logger;
-	private ViewUsageCollector viewCollector;
-	private EditRatioCollector editRatioCollector;
+	private ViewUsageCollector viewCollector = new ViewUsageCollector();
+	private MylarUserAnalysisCollector editRatioCollector = new MylarUserAnalysisCollector();;
 	private ReportGenerator report;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		assertNotNull(MylarPlugin.getDefault());
+		assertNotNull(MylarJavaPlugin.getDefault());
+		assertNotNull(PackageExplorerPart.openInActivePerspective());
+		
 		logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
-//		logger.stop();
-//		File file = logger.getOutputFile();
-//		if (file.exists()) assertTrue(file.delete());
-//		logger.setOutputFile(new File(file.getAbsolutePath()));
-//		logger.start();
 		logger.stop();
 		String path = logger.getOutputFile().getAbsolutePath();
 		logger.getOutputFile().delete();
 		logger.setOutputFile(new File(path));
 		logger.start();
 		
-		
-		report = new ReportGenerator(logger, false);
-    	viewCollector = report.getViewUsageCollector();
-    	editRatioCollector = report.getEditRatioCollector();
+		List<IStatsCollector> collectors = new ArrayList<IStatsCollector>();
+		collectors.add(viewCollector);
+		collectors.add(editRatioCollector);
+		report = new ReportGenerator(logger, collectors);
 	}
 
 	@Override
