@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextEdge;
+import org.eclipse.mylar.core.internal.MylarContextRelation;
 import org.eclipse.mylar.ui.internal.UiUtil;
 
 
@@ -43,7 +43,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 	    }
     	try {
     		IMylarElement node = null;
-            if (element instanceof MylarContextEdge) {
+            if (element instanceof MylarContextRelation) {
                 decoration.setForegroundColor(MylarUiPlugin.getDefault().getColorMap().RELATIONSHIP);
             } else  if (element instanceof IMylarElement) {
                 node = (IMylarElement)element;

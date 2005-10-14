@@ -182,7 +182,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
                 MylarTasklistPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
 
 					public Color getHighlightColor(ITask task) {
-						Highlighter highlighter = getHighlighterForTaskId("" + task.getHandle());
+						Highlighter highlighter = getHighlighterForContextId("" + task.getHandle());
 						if (highlighter != null) {
 							return highlighter.getHighlightColor();
 						} else {
@@ -369,7 +369,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         return highlighters.getHighlighter(name);
     }
 
-    public Highlighter getHighlighterForTaskId(String id) {
+    public Highlighter getHighlighterForContextId(String id) {
         String prefId = TASK_HIGHLIGHTER_PREFIX + id;
         String highlighterName = getPrefs().getString(prefId);
         return getHighlighter(highlighterName);

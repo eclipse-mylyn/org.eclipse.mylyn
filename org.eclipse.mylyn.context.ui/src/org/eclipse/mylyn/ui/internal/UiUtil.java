@@ -13,10 +13,10 @@ package org.eclipse.mylar.ui.internal;
 
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.CompositeContextNode;
+import org.eclipse.mylar.core.internal.CompositeContextElement;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.internal.MylarContextNode;
+import org.eclipse.mylar.core.internal.MylarContextElement;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
@@ -32,15 +32,19 @@ import org.eclipse.ui.internal.Workbench;
 public class UiUtil {
 
     public static Color getBackgroundForElement(IMylarElement node) {
-        if (node == null 
-        	|| node.getDegreeOfInterest().isPropagated()
-            || node.getDegreeOfInterest().isPredicted()) {
+    	return getBackgroundForElement(node, false);
+    }
+	
+    public static Color getBackgroundForElement(IMylarElement node, boolean force) {
+        if (node == null) return null;
+        if (!force && (node.getDegreeOfInterest().isPropagated() || node.getDegreeOfInterest().isPredicted())) {
         	return null;
         }
+        
         IMylarElement dominantNode = null;
         boolean isMultiple = false;
-        if (node instanceof CompositeContextNode) {
-            CompositeContextNode compositeNode = (CompositeContextNode)node;
+        if (node instanceof CompositeContextElement) {
+            CompositeContextElement compositeNode = (CompositeContextElement)node;
             if (compositeNode.getNodes().isEmpty()) return null;
             dominantNode = (IMylarElement)compositeNode.getNodes().toArray()[0];
             if (compositeNode.getNodes().size() > 1) isMultiple = true;
@@ -51,39 +55,25 @@ public class UiUtil {
                     dominantNode = concreteNode;
                 }
             }
-        } else if (node instanceof MylarContextNode) {
+        } else if (node instanceof MylarContextElement) {
             dominantNode = node;
         }
         
         if (dominantNode != null) { 
-            Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(
+            Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForContextId(
                   ((MylarContext)dominantNode.getContext()).getId());
             if (highlighter == null) {
                 return null;
-            } else if (MylarUiPlugin.getDefault().isIntersectionMode()) {
+            } 
+            else if (MylarUiPlugin.getDefault().isIntersectionMode()) {
                 if (isMultiple) {
                     return MylarUiPlugin.getDefault().getIntersectionHighlighter().getHighlightColor();
-//                    return highlighter.getHighlight(dominantInfo, false);
                 } else {
                     return null;
                 }
             } else {
                 return highlighter.getHighlight(dominantNode, false);
             }
-//            List<Highlighter> highlighters = new ArrayList<Highlighter>();
-//            for (Iterator<IDegreeOfInterest> it = compositeDoiInfo.getComposite().getInfos().iterator(); it.hasNext();) {
-//                IDegreeOfInterest specificInfo = it.next();
-//                Taskscape taskscape = specificInfo.getCorrespondingTaskscape();
-//                Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(taskscape.getId());
-//                if (highlighter != null) highlighters.add(highlighter);
-//            }
-//            if (highlighters.size() == 0) {
-//                return MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
-//            } else if (highlighters.size() == 1) {
-//                return highlighters.get(0).getHighlight(info, false);
-//            } else {
-//                return Highlighter.blend(highlighters, info, false);
-//            }
         } else { 
             return MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
         }
@@ -120,4 +110,19 @@ public class UiUtil {
             }
         });
     }
+
+//  List<Highlighter> highlighters = new ArrayList<Highlighter>();
+//  for (Iterator<IDegreeOfInterest> it = compositeDoiInfo.getComposite().getInfos().iterator(); it.hasNext();) {
+//      IDegreeOfInterest specificInfo = it.next();
+//      Taskscape taskscape = specificInfo.getCorrespondingTaskscape();
+//      Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForTaskId(taskscape.getId());
+//      if (highlighter != null) highlighters.add(highlighter);
+//  }
+//  if (highlighters.size() == 0) {
+//      return MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
+//  } else if (highlighters.size() == 1) {
+//      return highlighters.get(0).getHighlight(info, false);
+//  } else {
+//      return Highlighter.blend(highlighters, info, false);
+//  }
 }
