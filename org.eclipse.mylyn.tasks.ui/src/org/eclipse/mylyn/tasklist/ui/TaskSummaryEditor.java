@@ -828,13 +828,15 @@ public class TaskSummaryEditor extends EditorPart {
 		dialog.open();
 		String url = null;
 		String link = dialog.getValue();
-		if (!(link.startsWith("http://") || link.startsWith("https://"))) {
-			url = "http://" + link;					
-		} else {
-			url = link;
-		}		
-		tableViewer.add(url);	
-		markDirty(true);
+		if (link != null) {
+			if (!(link.startsWith("http://") || link.startsWith("https://"))) {
+				url = "http://" + link;					
+			} else {
+				url = link;
+			}		
+			tableViewer.add(url);	
+			markDirty(true);
+		}
 	}
 	
 	private void removeLinkFromTable() {
