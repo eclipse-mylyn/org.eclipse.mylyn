@@ -37,7 +37,7 @@ public class MylarContextElement implements IMylarElement {
     private Map<String/*target handle*/, MylarContextRelation> edges = new HashMap<String, MylarContextRelation>();
     
     public MylarContextElement(String kind, String elementHandle, MylarContext context) {
-        if (elementHandle == null) throw new RuntimeException("malformed taskscape: null handle");
+        if (elementHandle == null) throw new RuntimeException("malformed context: null handle");
         interest = new DegreeOfInterest(context);
         this.handle = elementHandle;
         this.kind = kind;
@@ -48,8 +48,8 @@ public class MylarContextElement implements IMylarElement {
         return handle;
     }
     
-    public void setHandleIdentifier(String elementHandle) {
-        this.handle = elementHandle;
+    public void setHandleIdentifier(String handle) {
+        this.handle = handle;
     }
     
     public String getContentType() {

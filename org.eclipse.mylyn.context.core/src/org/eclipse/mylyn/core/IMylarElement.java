@@ -22,7 +22,7 @@ public interface IMylarElement extends IMylarObject {
        
     public abstract String getHandleIdentifier();
     
-    public abstract void setHandleIdentifier(String elementHandle);
+    public abstract void setHandleIdentifier(String handle);
    
     public abstract IMylarContext getContext();
     

@@ -678,4 +678,30 @@ public class MylarContextManager {
             provider.setEnabled(enabled);
         }
 	}
+
+	/**
+	 * Retruns the highest interet context
+	 */
+    public String getDominantContextHandleForElement(IMylarElement node) {
+    	IMylarElement dominantNode = null;
+        if (node instanceof CompositeContextElement) {
+            CompositeContextElement compositeNode = (CompositeContextElement)node;
+            if (compositeNode.getNodes().isEmpty()) return null;
+            dominantNode = (IMylarElement)compositeNode.getNodes().toArray()[0];
+                
+            for(IMylarElement concreteNode : compositeNode.getNodes()) {
+                if (dominantNode != null 
+                    && dominantNode.getDegreeOfInterest().getValue() < concreteNode.getDegreeOfInterest().getValue()) {
+                    dominantNode = concreteNode;
+                }
+            }
+        } else if (node instanceof MylarContextElement) {
+            dominantNode = node;
+        }
+        if (node != null) {
+        	return ((MylarContextElement)dominantNode).getContext().getId();
+        } else {
+        	return null;
+        }
+    }
 }

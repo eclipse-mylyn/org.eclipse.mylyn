@@ -20,15 +20,13 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 
-
 /**
  * @author Mik Kersten
  */
 public class CompositeContextElement implements IMylarElement {
-    private Set<MylarContextElement> nodes = null;//new HashSet<ITaskscapeNode>();
+    private Set<MylarContextElement> nodes = null;
     
     private String handle = "<no handle>";
-//    private String name = "";
     
     public CompositeContextElement(String handle, Set<MylarContextElement> nodes) {
         assert(handle != null);
@@ -64,8 +62,11 @@ public class CompositeContextElement implements IMylarElement {
         return handle;
     }
 
-    public void setHandleIdentifier(String elementHandle) {
-    	// can't set a handle on this
+    public void setHandleIdentifier(String handle) {
+    	this.handle = handle;
+        for (IMylarElement node : nodes) {
+        	node.setHandleIdentifier(handle);
+        }
     }
 
     public Set<MylarContextElement> getNodes() {
@@ -88,7 +89,6 @@ public class CompositeContextElement implements IMylarElement {
             return null;
         }
     }
-
     
     /**
      * TODO: need composite edges here

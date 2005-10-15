@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -91,5 +92,53 @@ public class AbstractJavaContextTest extends AbstractContextTest {
         if (activePage == null) return null;
         IViewPart view = activePage.findView(id);
         return view;
+	}
+
+	class TestProgressMonitor implements IProgressMonitor {
+
+		boolean done = false;
+		
+		public void beginTask(String name, int totalWork) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void done() {
+			done = true; 
+		}
+
+		public void internalWorked(double work) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public boolean isCanceled() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public void setCanceled(boolean value) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void setTaskName(String name) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void subTask(String name) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void worked(int work) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public boolean isDone() {
+			return done;
+		}	
 	}
 }

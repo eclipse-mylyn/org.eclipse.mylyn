@@ -29,6 +29,8 @@ public interface IMylarContext {
     public abstract IMylarElement getActiveNode();
 
     public abstract void remove(IMylarElement node);
+    
+    public abstract void changeElementHandle(IMylarElement element, String newHandle);
 
     public abstract List<IMylarElement> getAllElements();
 

@@ -13,10 +13,7 @@ package org.eclipse.mylar.ui.internal;
 
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.CompositeContextElement;
-import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.internal.MylarContextElement;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
@@ -40,28 +37,12 @@ public class UiUtil {
         if (!resolveContextColor && (node.getDegreeOfInterest().isPropagated() || node.getDegreeOfInterest().isPredicted())) {
         	return null;
         }
-        
-        IMylarElement dominantNode = null;
+
         boolean isMultiple = false;
-        if (node instanceof CompositeContextElement) {
-            CompositeContextElement compositeNode = (CompositeContextElement)node;
-            if (compositeNode.getNodes().isEmpty()) return null;
-            dominantNode = (IMylarElement)compositeNode.getNodes().toArray()[0];
-            if (compositeNode.getNodes().size() > 1) isMultiple = true;
-                
-            for(IMylarElement concreteNode : compositeNode.getNodes()) {
-                if (dominantNode != null 
-                    && dominantNode.getDegreeOfInterest().getValue() < concreteNode.getDegreeOfInterest().getValue()) {
-                    dominantNode = concreteNode;
-                }
-            }
-        } else if (node instanceof MylarContextElement) {
-            dominantNode = node;
-        }
+        String contextId = MylarPlugin.getContextManager().getDominantContextHandleForElement(node);
         
-        if (dominantNode != null) { 
-            Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForContextId(
-                  ((MylarContext)dominantNode.getContext()).getId());
+        if (contextId != null) { 
+            Highlighter highlighter = MylarUiPlugin.getDefault().getHighlighterForContextId(contextId);
             if (highlighter == null) {
                 return null;
             } 
@@ -72,7 +53,7 @@ public class UiUtil {
                     return null;
                 }
             } else {
-                return highlighter.getHighlight(dominantNode, false);
+                return highlighter.getHighlight(node, false);
             }
         } else { 
             return MylarUiPlugin.getDefault().getColorMap().BACKGROUND_COLOR;
@@ -110,7 +91,22 @@ public class UiUtil {
             }
         });
     }
-
+    
+//    if (node instanceof CompositeContextElement) {
+//        CompositeContextElement compositeNode = (CompositeContextElement)node;
+//        if (compositeNode.getNodes().isEmpty()) return null;
+//        dominantNode = (IMylarElement)compositeNode.getNodes().toArray()[0];
+//        if (compositeNode.getNodes().size() > 1) isMultiple = true;
+//            
+//        for(IMylarElement concreteNode : compositeNode.getNodes()) {
+//            if (dominantNode != null 
+//                && dominantNode.getDegreeOfInterest().getValue() < concreteNode.getDegreeOfInterest().getValue()) {
+//                dominantNode = concreteNode;
+//            }
+//        }
+//    } else if (node instanceof MylarContextElement) {
+//        dominantNode = node;
+//    }
 //  List<Highlighter> highlighters = new ArrayList<Highlighter>();
 //  for (Iterator<IDegreeOfInterest> it = compositeDoiInfo.getComposite().getInfos().iterator(); it.hasNext();) {
 //      IDegreeOfInterest specificInfo = it.next();

@@ -14,7 +14,6 @@ package org.eclipse.mylar.java.tests;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -55,65 +54,18 @@ public class RefactoringTest extends AbstractJavaContextTest {
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
         
         project.build();
-        RefactoringProgressMonitor monitor = new RefactoringProgressMonitor();
+        System.err.println("**** " + MylarPlugin.getContextManager().getActiveContext().getInteresting());
+        TestProgressMonitor monitor = new TestProgressMonitor();
         method.rename("refactored", true, monitor);
         if (!monitor.isDone()) Thread.sleep(100);
         IMethod newMethod = type1.getMethods()[0];
         assertTrue(newMethod.getElementName().equals("refactored"));
-        
+        System.err.println("**** " + MylarPlugin.getContextManager().getActiveContext().getInteresting());
         IMylarElement newNode = MylarPlugin.getContextManager().getNode(newMethod.getHandleIdentifier());
+        System.err.println(">>>> " + newNode.getHandleIdentifier());
         assertTrue(newNode.getDegreeOfInterest().isInteresting()); 
         
         IMylarElement goneNode = MylarPlugin.getContextManager().getNode(node.getHandleIdentifier());
         assertFalse(goneNode.getDegreeOfInterest().isInteresting()); 
-	}
-	
-	class RefactoringProgressMonitor implements IProgressMonitor {
-
-		boolean done = false;
-		
-		public void beginTask(String name, int totalWork) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void done() {
-			done = true; 
-		}
-
-		public void internalWorked(double work) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public boolean isCanceled() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public void setCanceled(boolean value) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void setTaskName(String name) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void subTask(String name) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void worked(int work) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public boolean isDone() {
-			return done;
-		}
-		
 	}
 }

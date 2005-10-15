@@ -67,8 +67,8 @@ public class CompositeContext implements IMylarContext  {
     
     public List<IMylarElement> getInteresting() {
         Set<IMylarElement> landmarks = new HashSet<IMylarElement>();
-        for (MylarContext taskscape : contexts.values()) {
-            for(IMylarElement concreteNode : taskscape.getInteresting()) {
+        for (MylarContext context : contexts.values()) {
+            for(IMylarElement concreteNode : context.getInteresting()) {
                if (concreteNode != null) landmarks.add(get(concreteNode.getHandleIdentifier())); 
             }
         }
@@ -115,8 +115,8 @@ public class CompositeContext implements IMylarContext  {
 
     public List<IMylarElement> getAllElements() {
         Set<IMylarElement> nodes = new HashSet<IMylarElement>();
-        for (MylarContext taskscape : contexts.values()) {
-            for(IMylarElement concreteNode : taskscape.getAllElements()) {
+        for (MylarContext context : contexts.values()) {
+            for(IMylarElement concreteNode : context.getAllElements()) {
                nodes.add(get(concreteNode.getHandleIdentifier()));
             }
         }
@@ -131,4 +131,10 @@ public class CompositeContext implements IMylarContext  {
         for (MylarContext taskscape : contexts.values()) events.addAll(taskscape.getInteractionHistory());
         return new ArrayList<InteractionEvent>(events);
     }
+
+	public void changeElementHandle(IMylarElement element, String newHandle) {
+       for (MylarContext context : contexts.values()) {
+            context.changeElementHandle(element, newHandle);
+       }
+	}
 }
