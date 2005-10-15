@@ -109,7 +109,7 @@ public class SelectionMonitor extends AbstractSelectionMonitor {
                 }
             }
         }
-        IMylarElement node = MylarPlugin.getContextManager().getNode(elementHandle);
+        IMylarElement node = MylarPlugin.getContextManager().getElement(elementHandle);
         String delta = "";
         float selectionFactor = MylarContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();
         
