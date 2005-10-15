@@ -104,7 +104,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
     	if (parent == null) return new Object[0];
         if (parent instanceof MylarContextRelation) {
         	IMylarRelation edge = (IMylarRelation)parent;
-        	IMylarElement source = MylarPlugin.getContextManager().getNode(
+        	IMylarElement source = MylarPlugin.getContextManager().getElement(
         			((IMylarRelation)parent).getSource().getHandleIdentifier());
         	
         	return getAllTagetsForSource(source, edge.getRelationshipHandle());
@@ -114,7 +114,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
         		node = (IMylarElement)parent;
         	} else {
 	        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(parent);
-	        	node = MylarPlugin.getContextManager().getNode(bridge.getHandleIdentifier(parent));
+	        	node = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(parent));
         	}
 //            if (rootItems.contains(parent)) { // to avoid infinite recursion
 //            	rootItems.remove(parent);

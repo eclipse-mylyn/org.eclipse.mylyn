@@ -242,7 +242,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 
 	public void nodeDeleted(IMylarElement node) {
     	IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-		IMylarElement parent = MylarPlugin.getContextManager().getNode(structureBridge.getParentHandle(node.getHandleIdentifier()));
+		IMylarElement parent = MylarPlugin.getContextManager().getElement(structureBridge.getParentHandle(node.getHandleIdentifier()));
     	ArrayList<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
     	
     	toRefresh.add(parent);

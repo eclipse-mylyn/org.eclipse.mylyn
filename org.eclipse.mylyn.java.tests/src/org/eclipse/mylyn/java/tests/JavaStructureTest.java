@@ -88,8 +88,8 @@ public class JavaStructureTest extends AbstractContextTest {
         editorPart.setHighlightRange(callerSelection.getOffset(),callerSelection.getLength(), true);
         monitor.selectionChanged(editorPart, calleeSelection);
         
-        IMylarElement callerNode = manager.getNode(caller.getHandleIdentifier());
-        IMylarElement calleeNode = manager.getNode(callee.getHandleIdentifier());
+        IMylarElement callerNode = manager.getElement(caller.getHandleIdentifier());
+        IMylarElement calleeNode = manager.getElement(callee.getHandleIdentifier());
         assertTrue(callerNode.getDegreeOfInterest().isInteresting());
         assertTrue(calleeNode.getDegreeOfInterest().isInteresting());
         assertEquals(1, callerNode.getRelations().size());

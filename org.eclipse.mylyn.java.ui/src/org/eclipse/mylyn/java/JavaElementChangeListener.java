@@ -45,12 +45,10 @@ public class JavaElementChangeListener implements IElementChangedListener {
 			
 			handleDelta(child.getAffectedChildren());
 		}
-		if (added != null && removed != null) {
-			System.err.println(">> " + removed.getHandleIdentifier() + " to " + added.getHandleIdentifier());
-			IMylarElement element = MylarPlugin.getContextManager().getNode(removed.getHandleIdentifier());
-			element.setHandleIdentifier(added.getHandleIdentifier()); 
-		}
-		
+		if (added != null && removed != null) { 
+			IMylarElement element = MylarPlugin.getContextManager().getElement(removed.getHandleIdentifier());
+			MylarPlugin.getContextManager().getActiveContext().changeElementHandle(element, added.getHandleIdentifier());
+		} 
 	}
 	
 }

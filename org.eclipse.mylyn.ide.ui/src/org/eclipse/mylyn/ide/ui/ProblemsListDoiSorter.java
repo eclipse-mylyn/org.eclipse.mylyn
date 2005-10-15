@@ -73,8 +73,8 @@ public class ProblemsListDoiSorter extends TableSorter {
 	        } else {
 	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
 	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker1.getResource().getFileExtension());
-		            IMylarElement node1 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject(marker1, 0));
-		            IMylarElement node2 =  MylarPlugin.getContextManager().getNode(bridge.getHandleForOffsetInObject(marker2, 0));
+		            IMylarElement node1 =  MylarPlugin.getContextManager().getElement(bridge.getHandleForOffsetInObject(marker1, 0));
+		            IMylarElement node2 =  MylarPlugin.getContextManager().getElement(bridge.getHandleForOffsetInObject(marker2, 0));
 		            return interestComparator.compare(node1, node2);
 	       	 	}
 	        }

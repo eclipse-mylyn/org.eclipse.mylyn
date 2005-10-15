@@ -133,8 +133,9 @@ public class CompositeContext implements IMylarContext  {
     }
 
 	public void changeElementHandle(IMylarElement element, String newHandle) {
-       for (MylarContext context : contexts.values()) {
-            context.changeElementHandle(element, newHandle);
-       }
+	    for (MylarContext context : contexts.values()) {
+	         context.changeElementHandle(element, newHandle);
+	    }
+		element.setHandleIdentifier(newHandle);
 	}
 }

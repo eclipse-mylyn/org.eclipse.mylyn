@@ -38,7 +38,7 @@ public class ProblemsListInterestFilter extends InterestFilter {
              if (handle == null) {
                  return false;
              } else {
-                 return super.select(viewer, parent, MylarPlugin.getContextManager().getNode(handle));
+                 return super.select(viewer, parent, MylarPlugin.getContextManager().getElement(handle));
              }
          }
     }

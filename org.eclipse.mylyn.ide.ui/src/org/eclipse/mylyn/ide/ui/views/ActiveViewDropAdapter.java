@@ -38,7 +38,7 @@ public class ActiveViewDropAdapter extends ViewerDropAdapter {
 			Object firstElement = ((StructuredSelection)data).getFirstElement();
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(firstElement);
 			String handle = bridge.getHandleIdentifier(firstElement);
-	        IMylarElement node = MylarPlugin.getContextManager().getNode(handle);
+	        IMylarElement node = MylarPlugin.getContextManager().getElement(handle);
 			if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, true, true, ID_MANIPULATION);
 		}
 		return false; // to ensure that the sender doesn't treat this as a move

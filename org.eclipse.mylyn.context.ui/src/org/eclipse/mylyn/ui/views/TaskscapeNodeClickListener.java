@@ -40,7 +40,7 @@ public class TaskscapeNodeClickListener implements IOpenListener {
         } else if (!(object instanceof IMylarRelation)) {
         	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
         	String handle = bridge.getHandleIdentifier(object);
-        	node = MylarPlugin.getContextManager().getNode(handle);
+        	node = MylarPlugin.getContextManager().getElement(handle);
         }
         if (node != null) MylarUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
     }

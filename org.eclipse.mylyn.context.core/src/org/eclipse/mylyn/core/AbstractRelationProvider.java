@@ -90,7 +90,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
      * Public for testing
      */
 	public void createEdge(IMylarElement toNode, String elementKind, String targetHandle) {
-		CompositeContextElement targetNode = (CompositeContextElement)MylarPlugin.getContextManager().getNode(targetHandle);
+		CompositeContextElement targetNode = (CompositeContextElement)MylarPlugin.getContextManager().getElement(targetHandle);
         if (targetNode == null) return;
 		MylarContextElement concreteTargetNode = null;
         if (targetNode.getNodes().size() != 1) {

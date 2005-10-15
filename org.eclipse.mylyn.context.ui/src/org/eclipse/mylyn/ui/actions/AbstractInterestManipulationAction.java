@@ -55,7 +55,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     				} else {
 	    				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);              
 	                    String handle = bridge.getHandleIdentifier(object);
-	                    node = MylarPlugin.getContextManager().getNode(handle);
+	                    node = MylarPlugin.getContextManager().getElement(handle);
     				}
     				if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
     			}

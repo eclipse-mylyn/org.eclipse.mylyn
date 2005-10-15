@@ -39,7 +39,6 @@ public class RefactoringTest extends AbstractJavaContextTest {
 	}
 
 	public void testMethodRename() throws CoreException, InterruptedException, InvocationTargetException {
- 
     	IViewPart problemsPart = JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
     	assertNotNull(problemsPart);
     	
@@ -50,22 +49,19 @@ public class RefactoringTest extends AbstractJavaContextTest {
         assertEquals(1, type1.getMethods().length);
         
         monitor.selectionChanged(part, new StructuredSelection(method));
-        IMylarElement node = MylarPlugin.getContextManager().getNode(method.getHandleIdentifier());
+        IMylarElement node = MylarPlugin.getContextManager().getElement(method.getHandleIdentifier());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
         
         project.build();
-        System.err.println("**** " + MylarPlugin.getContextManager().getActiveContext().getInteresting());
         TestProgressMonitor monitor = new TestProgressMonitor();
         method.rename("refactored", true, monitor);
         if (!monitor.isDone()) Thread.sleep(100);
         IMethod newMethod = type1.getMethods()[0];
         assertTrue(newMethod.getElementName().equals("refactored"));
-        System.err.println("**** " + MylarPlugin.getContextManager().getActiveContext().getInteresting());
-        IMylarElement newNode = MylarPlugin.getContextManager().getNode(newMethod.getHandleIdentifier());
-        System.err.println(">>>> " + newNode.getHandleIdentifier());
+        IMylarElement newNode = MylarPlugin.getContextManager().getElement(newMethod.getHandleIdentifier());
         assertTrue(newNode.getDegreeOfInterest().isInteresting()); 
         
-        IMylarElement goneNode = MylarPlugin.getContextManager().getNode(node.getHandleIdentifier());
+        IMylarElement goneNode = MylarPlugin.getContextManager().getElement(node.getHandleIdentifier());
         assertFalse(goneNode.getDegreeOfInterest().isInteresting()); 
 	}
 }

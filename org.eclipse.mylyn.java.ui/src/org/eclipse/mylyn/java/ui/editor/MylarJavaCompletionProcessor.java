@@ -72,7 +72,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                             // nothing for now
                         	rest.add(proposal);
                         } else {
-                        	IMylarElement node = MylarPlugin.getContextManager().getNode(member.getHandleIdentifier()); 
+                        	IMylarElement node = MylarPlugin.getContextManager().getElement(member.getHandleIdentifier()); 
                             if (node != null) {
                             	float interest = node.getDegreeOfInterest().getValue();
 	                            if (interest > MylarContextManager.getScalingFactors().getInteresting()) {

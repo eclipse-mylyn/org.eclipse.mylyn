@@ -190,7 +190,7 @@ public class MylarContextManager {
         }
     } 
 
-	public IMylarElement getNode(String elementHandle) {
+	public IMylarElement getElement(String elementHandle) {
         if (activeContext != null) {
             return activeContext.get(elementHandle);
         } else {

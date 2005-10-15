@@ -60,7 +60,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
                 if (matchesExclusion(element, bridge)) return true;
                 
                 String handle = bridge.getHandleIdentifier(element);
-                node = MylarPlugin.getContextManager().getNode(handle);
+                node = MylarPlugin.getContextManager().getElement(handle);
             }
             if (node != null) {
             	if (node.getDegreeOfInterest().isPredicted()) {
@@ -90,7 +90,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
                 if (matchesExclusion(element, bridge)) return true;
                 
                 String handle = bridge.getHandleIdentifier(element);
-                node = MylarPlugin.getContextManager().getNode(handle);
+                node = MylarPlugin.getContextManager().getElement(handle);
             }
             if (node != null) {
             	if (node.getDegreeOfInterest().isPredicted()) {
