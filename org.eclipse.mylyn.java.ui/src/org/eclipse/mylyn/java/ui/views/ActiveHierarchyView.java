@@ -74,6 +74,7 @@ public class ActiveHierarchyView extends ViewPart {
     
     private TreeViewer viewer;
     private Map<String, TreeParent> nodeMap = new HashMap<String, TreeParent>();
+//    private List<ITypeHierarchy> currentHierarchies = new ArrayList<ITypeHierarchy>();
     
 	final IMylarContextListener MODEL_LISTENER = new IMylarContextListener() { 
         
@@ -335,6 +336,11 @@ public class ActiveHierarchyView extends ViewPart {
 	public TreeViewer getViewer() {
 		return viewer;
 	}
+
+//	public void typeHierarchyChanged(ITypeHierarchy typeHierarchy) {
+//		System.err.println(">>> changed: " + typeHierarchy);
+//		refreshHierarchy();
+//	}
 }
 
 class TreeParent implements IAdaptable {

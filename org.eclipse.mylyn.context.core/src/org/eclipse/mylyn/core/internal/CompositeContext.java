@@ -75,16 +75,6 @@ public class CompositeContext implements IMylarContext  {
         return new ArrayList<IMylarElement>(landmarks);
     }
         
-//    public Set<IMylarElement> getInterestingResources() {
-//        Set<IMylarElement> files = new HashSet<IMylarElement>();
-//        for (MylarContext taskscape : contexts.values()) {
-//            for(IMylarElement fileNode : taskscape.getActiveContextResources()) {
-//               if (fileNode != null) files.add(get(fileNode.getElementHandle())); 
-//            }
-//        }
-//        return Collections.unmodifiableSet(files);
-//    }
-
     public void setActiveElement(IMylarElement activeElement) {
         this.activeNode = activeElement;
     }
@@ -132,9 +122,9 @@ public class CompositeContext implements IMylarContext  {
         return new ArrayList<InteractionEvent>(events);
     }
 
-	public void changeElementHandle(IMylarElement element, String newHandle) {
+	public void updateElementHandle(IMylarElement element, String newHandle) {
 	    for (MylarContext context : contexts.values()) {
-	         context.changeElementHandle(element, newHandle);
+	         context.updateElementHandle(element, newHandle);
 	    }
 		element.setHandleIdentifier(newHandle);
 	}

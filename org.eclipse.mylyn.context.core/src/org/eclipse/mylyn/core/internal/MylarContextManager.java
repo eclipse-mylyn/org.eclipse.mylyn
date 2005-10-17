@@ -186,7 +186,7 @@ public class MylarContextManager {
             numInterestingErrors--;
             errorElementHandles.remove(handle);
             // TODO: this results in double-notification
-            if (notify) for (IMylarContextListener listener : listeners) listener.interestChanged(node);
+            if (notify) for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) listener.interestChanged(node);
         }
     } 
 
@@ -704,4 +704,18 @@ public class MylarContextManager {
         	return null;
         }
     }
+
+    public void updateElementHandle(IMylarElement element, String newHandle) {
+		getActiveContext().updateElementHandle(element, newHandle);
+		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+			listener.interestChanged(element);
+		}
+		if (element.getDegreeOfInterest().isLandmark()) {
+			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+				listener.landmarkAdded(element);
+			}			
+		}
+
+    }
+
 }

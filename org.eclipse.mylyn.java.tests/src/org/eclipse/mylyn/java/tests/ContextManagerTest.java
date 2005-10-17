@@ -103,7 +103,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     	IMylarElement old = MylarPlugin.getContextManager().getElement("old");
     	assertTrue(old.getDegreeOfInterest().isInteresting());
     	
-    	MylarPlugin.getContextManager().getActiveContext().changeElementHandle(old, "new");
+    	MylarPlugin.getContextManager().getActiveContext().updateElementHandle(old, "new");
     	IMylarElement changed = MylarPlugin.getContextManager().getElement("new");
     	assertTrue(changed.getDegreeOfInterest().isInteresting());
     }

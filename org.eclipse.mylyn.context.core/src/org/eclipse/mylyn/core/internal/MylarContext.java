@@ -135,10 +135,12 @@ public class MylarContext implements IMylarContext, Serializable {
         return Collections.unmodifiableList(new ArrayList<IMylarElement>(landmarks.values()));
     }
 
-	public void changeElementHandle(IMylarElement element, String newHandle) {
+	public void updateElementHandle(IMylarElement element, String newHandle) {
 		MylarContextElement currElement = nodes.remove(element.getHandleIdentifier());
-		currElement.setHandleIdentifier(newHandle);
-		nodes.put(newHandle, currElement);
+		if (currElement != null) {
+			currElement.setHandleIdentifier(newHandle);
+			nodes.put(newHandle, currElement);
+		}
 	}
     
     public IMylarElement getActiveNode() {

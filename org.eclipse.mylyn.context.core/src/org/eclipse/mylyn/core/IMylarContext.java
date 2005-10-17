@@ -30,7 +30,7 @@ public interface IMylarContext {
 
     public abstract void remove(IMylarElement node);
     
-    public abstract void changeElementHandle(IMylarElement element, String newHandle);
+    public abstract void updateElementHandle(IMylarElement element, String newHandle);
 
     public abstract List<IMylarElement> getAllElements();
 

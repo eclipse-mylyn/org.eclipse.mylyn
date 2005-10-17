@@ -56,9 +56,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 	private JavaProblemListener problemListener = new JavaProblemListener();
 	private JavaEditingMonitor javaEditingMonitor;
-	private JavaElementChangeListener javaElementChangeListener = new JavaElementChangeListener();
-	
-    public static final String PLUGIN_ID = "org.eclipse.mylar.java";
+	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
+
+	public static final String PLUGIN_ID = "org.eclipse.mylar.java";
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
     public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
     public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.predicted.errors";
