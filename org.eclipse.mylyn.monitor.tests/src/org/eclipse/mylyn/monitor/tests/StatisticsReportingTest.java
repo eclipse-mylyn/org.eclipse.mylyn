@@ -25,7 +25,7 @@ import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.monitor.reports.IUsageStatsCollector;
+import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.reports.ReportGenerator;
 import org.eclipse.mylar.monitor.reports.internal.MylarUserAnalysisCollector;
 import org.eclipse.mylar.monitor.reports.internal.ViewUsageCollector;
@@ -56,7 +56,7 @@ public class StatisticsReportingTest extends TestCase {
 		logger.setOutputFile(new File(path));
 		logger.start();
 		
-		List<IUsageStatsCollector> collectors = new ArrayList<IUsageStatsCollector>();
+		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
 		collectors.add(viewCollector);
 		collectors.add(editRatioCollector);
 		report = new ReportGenerator(logger, collectors);
