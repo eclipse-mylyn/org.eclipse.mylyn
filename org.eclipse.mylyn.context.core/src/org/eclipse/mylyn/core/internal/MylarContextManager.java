@@ -705,8 +705,9 @@ public class MylarContextManager {
         }
     }
 
-    public void updateElementHandle(IMylarElement element, String newHandle) {
-		getActiveContext().updateElementHandle(element, newHandle);
+    public void updateHandle(IMylarElement element, String newHandle) {
+		if (element == null) return;
+    	getActiveContext().updateElementHandle(element, newHandle);
 		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 			listener.interestChanged(element);
 		}
@@ -718,6 +719,7 @@ public class MylarContextManager {
     }
 
     public void delete(IMylarElement element) {
+    	if (element == null) return;
 		getActiveContext().delete(element);
 		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 			listener.nodeDeleted(element);

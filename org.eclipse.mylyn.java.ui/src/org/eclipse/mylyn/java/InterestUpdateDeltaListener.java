@@ -25,6 +25,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class InterestUpdateDeltaListener implements IElementChangedListener {
 
+	private static boolean asyncExecMode = true;
+	
 	public void elementChanged(ElementChangedEvent event) {
 		IJavaElementDelta delta = event.getDelta();
 		handleDelta(delta.getAffectedChildren());
@@ -57,24 +59,39 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 	}
 
 	private void resetHandle(final IMylarElement element, final String newHandle) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench != null) {
-		    workbench.getDisplay().asyncExec(new Runnable() {
-		        public void run() { 
-		        	MylarPlugin.getContextManager().updateElementHandle(element, newHandle);
-		        }
-		    });
+		if (!asyncExecMode) {
+			MylarPlugin.getContextManager().updateHandle(element, newHandle);
+		} else {
+			IWorkbench workbench = PlatformUI.getWorkbench();
+			if (workbench != null) {
+			    workbench.getDisplay().asyncExec(new Runnable() {
+			        public void run() { 
+			        	MylarPlugin.getContextManager().updateHandle(element, newHandle);
+			        }
+			    });
+			}
 		}
 	}
 	
 	private void delete(final IMylarElement element) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench != null) {
-		    workbench.getDisplay().asyncExec(new Runnable() {
-		        public void run() { 
-		        	MylarPlugin.getContextManager().delete(element);
-		        }
-		    });
+		if (!asyncExecMode) {
+			MylarPlugin.getContextManager().delete(element);
+		} else {
+			IWorkbench workbench = PlatformUI.getWorkbench();
+			if (workbench != null) {
+			    workbench.getDisplay().asyncExec(new Runnable() {
+			        public void run() { 
+			        	MylarPlugin.getContextManager().delete(element);
+			        }
+			    });
+			}
 		}
+	}
+
+	/**
+	 * For testing
+	 */
+	public static void setAsyncExecMode(boolean asyncExecMode) {
+		InterestUpdateDeltaListener.asyncExecMode = asyncExecMode;
 	}
 }
