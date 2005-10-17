@@ -65,7 +65,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 	public void removeManagedViewer(StructuredViewer viewer) {
 		managedViewers.remove(viewer);
 		BrowseFilteredListener listener = listenerMap.get(viewer);
-		if (listener != null) {
+		if (listener != null && viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.getControl().removeMouseListener(listener);
 		}  
 	}
