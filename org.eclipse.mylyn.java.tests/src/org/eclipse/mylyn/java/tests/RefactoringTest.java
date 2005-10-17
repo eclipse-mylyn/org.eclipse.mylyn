@@ -21,6 +21,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.java.InterestUpdateDeltaListener;
 import org.eclipse.ui.IViewPart;
 
 /**
@@ -34,6 +35,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		view = PackageExplorerPart.openInActivePerspective();
+		InterestUpdateDeltaListener.setAsyncExecMode(false);
 	}
 
 	@Override
