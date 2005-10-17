@@ -17,6 +17,8 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -47,12 +49,32 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		if (added != null && removed != null) { 
 //			System.err.println("> : " + removed.getElementName() + " to " + added.getElementName()); 			
 			IMylarElement element = MylarPlugin.getContextManager().getElement(removed.getHandleIdentifier());
-			if (element != null) {
-				MylarPlugin.getContextManager().updateElementHandle(element, added.getHandleIdentifier());
-			}
+			if (element != null) resetHandle(element, added.getHandleIdentifier());
 		} else if (removed != null) {
 			IMylarElement element = MylarPlugin.getContextManager().getElement(removed.getHandleIdentifier());
-			MylarPlugin.getContextManager().getActiveContext().remove(element);
+			if (element != null) delete(element);
 		} 
+	}
+
+	private void resetHandle(final IMylarElement element, final String newHandle) {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		if (workbench != null) {
+		    workbench.getDisplay().asyncExec(new Runnable() {
+		        public void run() { 
+		        	MylarPlugin.getContextManager().updateElementHandle(element, newHandle);
+		        }
+		    });
+		}
+	}
+	
+	private void delete(final IMylarElement element) {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		if (workbench != null) {
+		    workbench.getDisplay().asyncExec(new Runnable() {
+		        public void run() { 
+		        	MylarPlugin.getContextManager().delete(element);
+		        }
+		    });
+		}
 	}
 }

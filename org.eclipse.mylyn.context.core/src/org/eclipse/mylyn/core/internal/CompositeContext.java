@@ -83,9 +83,9 @@ public class CompositeContext implements IMylarContext  {
         return activeNode;
     }
 
-    public void remove(IMylarElement node) {
+    public void delete(IMylarElement node) {
         for (MylarContext taskscape : contexts.values()) {
-            taskscape.remove(node);
+            taskscape.delete(node);
         }
     }
     

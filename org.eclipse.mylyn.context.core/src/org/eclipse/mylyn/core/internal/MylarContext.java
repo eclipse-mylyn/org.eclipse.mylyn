@@ -150,7 +150,7 @@ public class MylarContext implements IMylarContext, Serializable {
     /**
      * @param handleIdentifier
      */
-    public void remove(IMylarElement node) {
+    public void delete(IMylarElement node) {
         landmarks.remove(node.getHandleIdentifier()); 
         nodes.remove(node.getHandleIdentifier());
     }

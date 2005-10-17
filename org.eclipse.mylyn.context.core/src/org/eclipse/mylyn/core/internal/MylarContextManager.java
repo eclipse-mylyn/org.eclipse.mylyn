@@ -715,7 +715,13 @@ public class MylarContextManager {
 				listener.landmarkAdded(element);
 			}			
 		}
-
     }
 
+    public void delete(IMylarElement element) {
+		getActiveContext().delete(element);
+		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+			listener.nodeDeleted(element);
+		}
+    }
+   
 }
