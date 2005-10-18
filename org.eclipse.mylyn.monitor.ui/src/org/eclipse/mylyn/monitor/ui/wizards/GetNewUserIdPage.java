@@ -62,16 +62,16 @@ public class GetNewUserIdPage extends WizardPage {
     private String companySize = SELECT_BELOW;
     private String companyFunction = SELECT_BELOW;
     
-    private UserStudySubmissionWizard wizard;
+    private UsageSubmissionWizard wizard;
     private boolean performUpload;
     
     /**
      * Constructor
      */
-	public GetNewUserIdPage(UserStudySubmissionWizard wizard, boolean performUpload) {
+	public GetNewUserIdPage(UsageSubmissionWizard wizard, boolean performUpload) {
 		super("Statistics Wizard");
 		this.performUpload = performUpload;
-		setTitle("Get Mylar User Study ID");
+		setTitle("Get Mylar Feedback User ID");
 		setDescription(
 			"Before starting the Mylar user study you must get a study ID by filling out the following form.\n" +
 			"If you already have an ID please fill out the information again to retrieve it.");
@@ -106,8 +106,8 @@ public class GetNewUserIdPage extends WizardPage {
         gd.widthHint = 600;
         browser.setLayoutData(gd);
         
-        Path p = new Path(MylarMonitorPlugin.ETHICS_FORM);
-        URL url = Platform.find(MylarMonitorPlugin.getDefault().getBundle(), p);
+        Path path = new Path(MylarMonitorPlugin.getDefault().getStudyParameters().getFormsConsent());
+        URL url = Platform.find(MylarMonitorPlugin.getDefault().getBundle(), path);
         try {
         	URL localURL = Platform.asLocalURL(url);
         	 browser.setUrl(localURL.toString());
@@ -323,7 +323,7 @@ public class GetNewUserIdPage extends WizardPage {
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		getNewUid.setLayoutData(gd);
 		getNewUid.setSelection(false);
-		getNewUid.setText("I agree, get me a new user study ID");
+		getNewUid.setText("I agree, get me a new user ID");
 		getNewUid.addSelectionListener(new SelectionListener(){
             public void widgetSelected(SelectionEvent e) {
                 if(e.widget instanceof Button){
@@ -350,7 +350,7 @@ public class GetNewUserIdPage extends WizardPage {
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		getExistingUid.setLayoutData(gd);
 		getExistingUid.setSelection(false);
-		getExistingUid.setText("Get my existing user study ID");
+		getExistingUid.setText("Get my existing user ID");
 		getExistingUid.addSelectionListener(new SelectionListener(){
             public void widgetSelected(SelectionEvent e) {
                 if(e.widget instanceof Button){
@@ -359,7 +359,8 @@ public class GetNewUserIdPage extends WizardPage {
                             if(wizard.getUploadPage() != null) 
                                 wizard.getUploadPage().updateUid();
                             hasValidated = true;
-                            MessageDialog.openInformation(Display.getDefault().getActiveShell(),"Mylar User Study ID", "Your mylar user study id is: " + wizard.getUid() + "\n Please record this number if you are using multiple copies of eclipse so that you do not have to register again.");
+                            MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                            		"Mylar Feedback User ID", "Your mylar feedback id is: " + wizard.getUid() + "\n Please record this number if you are using multiple copies of eclipse so that you do not have to register again.");
                         }
                     } else {
                     	MessageDialog.openError( Display.getDefault().getActiveShell(), 

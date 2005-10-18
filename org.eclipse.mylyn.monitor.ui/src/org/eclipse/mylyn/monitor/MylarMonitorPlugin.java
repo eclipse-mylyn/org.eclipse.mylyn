@@ -23,6 +23,12 @@ import java.util.ResourceBundle;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -33,7 +39,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
-import org.eclipse.mylar.monitor.ui.wizards.UserStudySubmissionWizard;
+import org.eclipse.mylar.monitor.ui.wizards.UsageSubmissionWizard;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellEvent;
@@ -57,17 +63,21 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static String VERSION = "0.3.12";
 	public static String UPLOAD_FILE_LABEL = "USAGE";
-
-	public static final String ETHICS_FORM = "doc/study-ethics.html";
-	public static final String UPLOAD_SERVER = "http://ws.cs.ubc.ca/~mylar/userStudy/";
-	public static final String UPLOAD_SCRIPT_ID = "getUID.cgi";
-	public static final String UPLOAD_SCRIPT = "upload.cgi";
-	public static final String UPLAOD_SCRIPT_QUESTIONNAIRE = "questionnaire.cgi";
 	
-    private static final long HOUR = 3600*1000; 
-	private static final long DELAY_BETWEEN_TRANSMITS = 6 * 24 * HOUR; 
+    private static final long HOUR = 3600*1000; 	
 	private static final long DELAY_ON_USER_REQUEST = 3 * HOUR;
-	private static final long DELAY_ON_FAILURE = 5 * HOUR; 
+	private static final long DELAY_ON_FAILURE = 5 * HOUR;
+
+	public static final String DEFAULT_TITLE = "Mylar Feedback";
+	public static final String DEFAULT_DESCRIPTION = "Fill out the following form to help us improve Mylar based on your input.\n";
+	public static final long DEFAULT_DELAY_BETWEEN_TRANSMITS = 6 * 24 * HOUR;
+    public static final String DEFAULT_ETHICS_FORM = "doc/study-ethics.html";
+	public static final String DEFAULT_UPLOAD_SERVER = "http://mylar.eclipse.org/feedback/";
+	public static final String DEFAULT_UPLOAD_SCRIPT_ID = "getUID.cgi";
+	public static final String DEFAULT_UPLOAD_SCRIPT = "upload.cgi";
+	public static final String DEFAULT_UPLAOD_SCRIPT_QUESTIONNAIRE = "questionnaire.cgi";
+	
+	private boolean isDefaultStudyMode = true;
 	
 	public static final String UI_PLUGIN_ID = "org.eclipse.mylar.ui";
     public static final String MONITOR_FILE_NAME = "workspace";
@@ -93,6 +103,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     private static boolean performingUpload = false;
 	private boolean questionnaireEnabled = true;
 	private SelectionMonitor selectionMonitor;
+	
+	private StudyParameters studyParameters = new StudyParameters();
     
 	private ShellListener SHELL_LISTENER = new ShellListener() {		
 		
@@ -151,6 +163,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {				
+				new MonitorExtensionPointReader().initExtensions();
+				
                 interactionLogger = new InteractionEventLogger(getMonitorFile());
                 interactionLogger.start();
                 MylarPlugin.getDefault().addInteractionListener(interactionLogger);
@@ -248,11 +262,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     
     public void userCancelSubmitFeedback(Date currentTime, boolean wait3Hours){ 
     	if (wait3Hours) {
-    		lastTransmit.setTime(currentTime.getTime() + DELAY_ON_USER_REQUEST - DELAY_BETWEEN_TRANSMITS);
+    		lastTransmit.setTime(currentTime.getTime() + DELAY_ON_USER_REQUEST - studyParameters.getTransmitPromptPeriod());
     		plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
     	} else {
     		long day = HOUR * 24;
-    		lastTransmit.setTime(currentTime.getTime() + day - DELAY_BETWEEN_TRANSMITS);
+    		lastTransmit.setTime(currentTime.getTime() + day - studyParameters.getTransmitPromptPeriod());
     		plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
     	}    	
     }
@@ -308,7 +322,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	private void checkForFirstMonitorUse() {
 		if (!notifiedOfUserIdSubmission && !MylarPlugin.getDefault().getPreferenceStore().contains(MylarPlugin.USER_ID)) {
 			notifiedOfUserIdSubmission = true;
-			UserStudySubmissionWizard wizard = new UserStudySubmissionWizard(false);
+			UsageSubmissionWizard wizard = new UsageSubmissionWizard(false);
 			wizard.init(PlatformUI.getWorkbench(), null);
 			WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
 			dialog.create();
@@ -325,7 +339,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
 		}
 		Date currentTime = new Date();        	
-    	if (currentTime.getTime() > lastTransmit.getTime() + DELAY_BETWEEN_TRANSMITS) {        		
+    	if (currentTime.getTime() > lastTransmit.getTime() + studyParameters.getTransmitPromptPeriod()) {        		
     		String ending = getUserTransimitDelay() == 1 ? "" : "s";        		
     		MessageDialog message = new MessageDialog(Display.getDefault().getActiveShell(),
     				"Send Usage Feedback",
@@ -342,7 +356,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     			lastTransmit.setTime(new Date().getTime());
     			plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, currentTime.getTime());
 				
-				UserStudySubmissionWizard wizard = new UserStudySubmissionWizard();
+				UsageSubmissionWizard wizard = new UsageSubmissionWizard();
 				wizard.init(PlatformUI.getWorkbench(), null);
 				// Instantiates the wizard container with the wizard and
 				// opens it
@@ -350,7 +364,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 				dialog.create();
 				dialog.open();
 				if (wizard.failed()) {
-					lastTransmit.setTime(currentTime.getTime() + DELAY_ON_FAILURE - DELAY_BETWEEN_TRANSMITS);
+					lastTransmit.setTime(currentTime.getTime() + DELAY_ON_FAILURE - studyParameters.getTransmitPromptPeriod());
 					plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, currentTime.getTime());
 				}								
     		} else {    
@@ -411,7 +425,83 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		this.questionnaireEnabled = questionnaireEnabled;
 	}
 
-	public String getUPLOAD_SERVER() {
-		return UPLOAD_SERVER;
+	class MonitorExtensionPointReader {
+		
+		public static final String EXTENSION_ID_STUDY = "org.eclipse.mylar.monitor.study";
+		public static final String ELEMENT_SCRIPTS = "scripts";
+		public static final String ELEMENT_SCRIPTS_SERVER_URL = "url";
+		public static final String ELEMENT_SCRIPTS_UPLOAD_USAGE = "upload";
+		public static final String ELEMENT_SCRIPTS_GET_USER_ID = "userId";
+		public static final String ELEMENT_SCRIPTS_UPLOAD_QUESTIONNAIRE = "questionnaire";
+		public static final String ELEMENT_UI = "ui";
+		public static final String ELEMENT_UI_TITLE = "title";
+		public static final String ELEMENT_UI_DESCRIPTION = "description";
+		public static final String ELEMENT_UI_UPLOAD_PROMPT = "daysBetweenUpload";
+		public static final String ELEMENT_UI_QUESTIONNAIRE_PAGE = "questionnairePage";
+		public static final String ELEMENT_UI_CONSENt_FORM = "consentForm";
+		
+		private boolean extensionsRead = false;
+//		private MonitorExtensionPointReader thisReader = new MonitorExtensionPointReader();
+		
+		// read the extensions and load the required plugins
+		public void initExtensions() {
+			try {
+				if(!extensionsRead){
+					IExtensionRegistry registry = Platform.getExtensionRegistry();
+					IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_STUDY);
+					if (extensionPoint != null) {
+						IExtension[] extensions = extensionPoint.getExtensions();
+						for(int i = 0; i < extensions.length; i++) {
+							IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+							for(int j = 0; j < elements.length; j++){
+								if(elements[j].getName().compareTo(ELEMENT_SCRIPTS) == 0){
+									readScripts(elements[j]);
+								} else if(elements[j].getName().compareTo(ELEMENT_UI) == 0){
+									readForms(elements[j]);
+								} 
+							}
+						}
+						extensionsRead = true;
+						isDefaultStudyMode = false;
+					}
+				}
+			} catch (Throwable t) {
+				MylarPlugin.fail(t, "could not read monitor extension", false);
+			}
+		}
+
+		private void readScripts(IConfigurationElement element) {
+			studyParameters.setScriptsUrl(element.getAttribute(ELEMENT_SCRIPTS_SERVER_URL));
+			studyParameters.setScriptsUpload(element.getAttribute(ELEMENT_SCRIPTS_UPLOAD_USAGE));
+			studyParameters.setScriptsUserId(element.getAttribute(ELEMENT_SCRIPTS_GET_USER_ID));
+			studyParameters.setScriptsQuestionnaire(element.getAttribute(ELEMENT_SCRIPTS_UPLOAD_QUESTIONNAIRE));
+		}
+		
+		private void readForms(IConfigurationElement element) throws CoreException {
+			studyParameters.setTitle(element.getAttribute(ELEMENT_UI_TITLE));
+			studyParameters.setDescription(element.getAttribute(ELEMENT_UI_DESCRIPTION));
+			Integer uploadInt = new Integer(element.getAttribute(ELEMENT_UI_UPLOAD_PROMPT));
+			studyParameters.setTransmitPromptPeriod(6 * 24 * uploadInt);
+			
+			Object object = element.createExecutableExtension(ELEMENT_UI_QUESTIONNAIRE_PAGE);
+			if (object instanceof IMonitorQuestionnairePage) {
+				IMonitorQuestionnairePage page = (IMonitorQuestionnairePage)object;
+				studyParameters.setQuestionnairePage(page);
+			}
+			
+			studyParameters.setFormsConsent(
+					"../" + 
+					element.getDeclaringExtension().getNamespace() + "/" +
+					element.getAttribute(ELEMENT_UI_CONSENt_FORM));
+			
+		}
+	}
+
+	public StudyParameters getStudyParameters() {
+		return studyParameters;
+	}
+
+	public boolean isDefaultStudyMode() {
+		return isDefaultStudyMode;
 	}
 }

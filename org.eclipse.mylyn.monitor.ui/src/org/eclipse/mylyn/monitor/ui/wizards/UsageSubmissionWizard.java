@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
+import org.eclipse.mylar.monitor.IMonitorQuestionnairePage;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
@@ -60,7 +61,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  * A wizard for uploading the Mylar statistics to a website
  * @author Shawn Minto
  */
-public class UserStudySubmissionWizard extends Wizard implements INewWizard {
+public class UsageSubmissionWizard extends Wizard implements INewWizard {
    
     public static final String LOG = "log";
     public static final String STATS = "usage";
@@ -74,18 +75,18 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
     private final File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
     private final File logFile = MylarMonitorPlugin.getDefault().getLogFile();
 	
-    private StatisticsUploadWizardPage uploadPage;
+    private UsageUploadWizardPage uploadPage;
     private GetNewUserIdPage getUidPage;
-    private QuestionnaireWizardPage questionnairePage;
+    private IMonitorQuestionnairePage questionnairePage;
     private boolean performUpload = true;
     
-	public UserStudySubmissionWizard() {
+	public UsageSubmissionWizard() {
 		super();
 		setTitles();
 		init(true);
 	}
 
-	public UserStudySubmissionWizard(boolean performUpload) {
+	public UsageSubmissionWizard(boolean performUpload) {
 		super();
 		setTitles();
 		init(performUpload);
@@ -103,10 +104,11 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
         if(uid == 0) {
             uid = -1;
         }
-        uploadPage = new StatisticsUploadWizardPage(this);
+        uploadPage = new UsageUploadWizardPage(this);
         getUidPage = new GetNewUserIdPage(this, performUpload);
         if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() && performUpload) {
-	        questionnairePage = new QuestionnaireWizardPage();
+	        IMonitorQuestionnairePage page = MylarMonitorPlugin.getDefault().getStudyParameters().getQuestionnairePage();
+        	questionnairePage = page;
         }
         super.setForcePreviousAndNextButtons(true);
     }
@@ -125,7 +127,9 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
 //    	MylarPlugin.log("Number events needed: " + numSinceLastPhase, this);
 //    	MylarPlugin.log("Date next release: " + DateUtil.getFormattedDateTime(MylarMonitorPlugin.NEXT_RELEASE_AVAILABLE.getTimeInMillis()), this);
     	if (!performUpload) return true;
-    	if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() && performUpload) {
+    	if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() 
+    		&& performUpload
+    		&& questionnairePage != null) {
         	questionnaireFile = questionnairePage.createFeedbackFile();
     	}
     	
@@ -220,7 +224,7 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
         }
     }
     
-    public StatisticsUploadWizardPage getUploadPage() {
+    public UsageUploadWizardPage getUploadPage() {
         return uploadPage;
     }
 
@@ -233,7 +237,9 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
 
     @Override
 	public void addPages() {
-    	if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() && performUpload) {
+    	if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() 
+    		&& performUpload
+    		&& questionnairePage != null) {
     		addPage(questionnairePage);
     	}
 		if(uid == -1){
@@ -248,16 +254,15 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
      * @param f The file to upload
      */
     private void upload(File f, String type, IProgressMonitor monitor) {
-    	if(failed)
-    		return;
+    	if(failed) return;
     	String uploadFile;
     	String uploadScript;
     	if (type.equals(STATS) || type.equals(LOG)) {        	
         	uploadFile = "usage statistics file";
-        	uploadScript = MylarMonitorPlugin.UPLOAD_SERVER + MylarMonitorPlugin.UPLOAD_SCRIPT;
+        	uploadScript = MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl() + MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUpload();
         } else {
         	uploadFile = "questionnaire";
-        	uploadScript = MylarMonitorPlugin.UPLOAD_SERVER + MylarMonitorPlugin.UPLAOD_SCRIPT_QUESTIONNAIRE;
+        	uploadScript = MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl() + MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsQuestionnaire();
         }
     	
     	if(f.length() == 0)
@@ -430,7 +435,7 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
             }
             
             // create a new post method
-            final GetMethod getUidMethod = new GetMethod(MylarMonitorPlugin.UPLOAD_SERVER + MylarMonitorPlugin.UPLOAD_SCRIPT_ID);
+            final GetMethod getUidMethod = new GetMethod(MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl() + MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUserId());
             
             NameValuePair first = new NameValuePair("firstName", firstName);
             NameValuePair last = new NameValuePair("lastName", lastName);
@@ -573,7 +578,7 @@ public class UserStudySubmissionWizard extends Wizard implements INewWizard {
             }
             
             // create a new post method
-            final GetMethod getUidMethod = new GetMethod(MylarMonitorPlugin.UPLOAD_SERVER + MylarMonitorPlugin.UPLOAD_SCRIPT_ID);
+            final GetMethod getUidMethod = new GetMethod(MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl() + MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUserId());
             
             NameValuePair first = new NameValuePair("firstName", firstName);
             NameValuePair last = new NameValuePair("lastName", lastName);

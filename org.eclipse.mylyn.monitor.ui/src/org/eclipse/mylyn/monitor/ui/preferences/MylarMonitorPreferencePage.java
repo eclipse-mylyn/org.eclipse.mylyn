@@ -94,15 +94,15 @@ public class MylarMonitorPreferencePage extends PreferencePage implements
           }
           
           if(uidNum <= 0 && uidNum != -1){
-              MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "The user study id must be a posative integer");
+              MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect", "The user study id must be a posative integer");
               return false;
           }
           if(uidNum != -1 && uidNum % 17 != 1){
-              MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "Your user study id is not valid, please make sure it is correct or get a new id");
+              MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect", "Your user study id is not valid, please make sure it is correct or get a new id");
               return false;
           }
       }catch(NumberFormatException e){
-          MessageDialog.openError(Display.getDefault().getActiveShell(), "User Study ID Incorrect", "The user study id must be a posative integer");
+          MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect", "The user study id must be a posative integer");
           return false;
       }
       MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uidNum);

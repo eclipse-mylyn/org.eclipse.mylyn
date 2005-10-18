@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="study" name="Mylar Monitor" schema="schema/study.exsd"/>
 
    <extension
          name="Mylar user monitoring startup"
@@ -12,17 +13,10 @@
    <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.monitor.ui.wizards.UserStudySubmissionWizard"
+            class="org.eclipse.mylar.monitor.ui.wizards.UsageSubmissionWizard"
             icon="icons/etool16/wizard-study.gif"
             id="org.eclipse.mylar.monitor.ui.uploadStatistics.StatisticsUploadWizard"
-            name="Usage Statistics Submission">
-      </wizard>
-      <wizard
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.monitor.ui.wizards.FeedbackWizard"
-            icon="icons/etool16/wizard-feedback.gif"
-            id="org.eclipse.mylar.monitor.ui.wizards.FeedbackWizard"
-            name="User Feedback Submission">
+            name="Usage Feedback Upload">
       </wizard>
    </extension>
    

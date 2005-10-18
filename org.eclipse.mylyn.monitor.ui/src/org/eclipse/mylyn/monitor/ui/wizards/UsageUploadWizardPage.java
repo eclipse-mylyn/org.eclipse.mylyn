@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
  * Page to upload the file to the server
  * @author Shawn Minto
  */
-public class StatisticsUploadWizardPage extends WizardPage {
+public class UsageUploadWizardPage extends WizardPage {
 
     /** A text box to hold the address of the server */
 	private Text serverAddrText;
@@ -38,12 +38,12 @@ public class StatisticsUploadWizardPage extends WizardPage {
     /** A text file to show the id of the user */
 	private Text idText;
 	    
-    private UserStudySubmissionWizard wizard;
+    private UsageSubmissionWizard wizard;
     
     /**
      * Constructor
      */
-	public StatisticsUploadWizardPage(UserStudySubmissionWizard wizard) {
+	public UsageUploadWizardPage(UsageSubmissionWizard wizard) {
 		super("Usage Statistics Submission Wizard");
 		setTitle("Statistics Upload");
 		setDescription(
@@ -69,7 +69,7 @@ public class StatisticsUploadWizardPage extends WizardPage {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		serverAddrText.setLayoutData(gd);
 		serverAddrText.setEditable(false);
-		serverAddrText.setText(MylarMonitorPlugin.UPLOAD_SERVER);
+		serverAddrText.setText(MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl());
 		
 		label = new Label(container, SWT.NULL);
 		label.setText("Usage file location:");
