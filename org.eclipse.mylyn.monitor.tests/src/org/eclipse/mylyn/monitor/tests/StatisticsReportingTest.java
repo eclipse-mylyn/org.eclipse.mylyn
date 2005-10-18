@@ -27,8 +27,8 @@ import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.reports.ReportGenerator;
-import org.eclipse.mylar.monitor.reports.internal.MylarUserAnalysisCollector;
-import org.eclipse.mylar.monitor.reports.internal.ViewUsageCollector;
+import org.eclipse.mylar.monitor.reports.collectors.MylarUserAnalysisCollector;
+import org.eclipse.mylar.monitor.reports.collectors.ViewUsageCollector;
 import org.eclipse.mylar.monitor.reports.ui.views.UsageStatisticsSummary;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 

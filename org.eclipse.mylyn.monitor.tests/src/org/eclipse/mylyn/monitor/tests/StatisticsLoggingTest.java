@@ -20,7 +20,7 @@ import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.reports.InteractionEventSummary;
 import org.eclipse.mylar.monitor.reports.ReportGenerator;
-import org.eclipse.mylar.monitor.reports.internal.SummaryCollector;
+import org.eclipse.mylar.monitor.reports.collectors.SummaryCollector;
 
 /**
  * @author Mik Kersten
