@@ -23,6 +23,7 @@ import org.eclipse.mylar.tasklist.TaskListManager;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
+import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.DropDownTaskNavigateAction.TaskNavigateAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -40,6 +41,7 @@ public class TaskHistoryTest extends TestCase {
 	protected Task task2 = null;
 	protected Task task3 = null;
 	protected Task task4 = null;
+	protected Task task5 = null;
 		
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -62,11 +64,13 @@ public class TaskHistoryTest extends TestCase {
 		task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);
 		task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3", true);
 		task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4", true);
+		task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5", true);
 		
 		manager.addRootTask(task1);
 		manager.addRootTask(task2);
 		manager.addRootTask(task3);
 		manager.addRootTask(task4);
+		manager.addRootTask(task5);
 		
 	}
 		
@@ -76,19 +80,19 @@ public class TaskHistoryTest extends TestCase {
 	}
 	
 	/**
-	 * Tests the next task and previous task navigation
+	 * Tests the next task and previous task navigation.
 	 */
 	public void testBasicHistoryNavigation(){
 		(new TaskActivateAction(task1)).run();
-		taskView.addTaskToHistory(task1); //Simulate clicking on it rather than navigating next or previous
+		taskView.addTaskToHistory(task1); 
 		(new TaskActivateAction(task2)).run();
 		taskView.addTaskToHistory(task2); 
 		(new TaskActivateAction(task3)).run();
-		taskView.addTaskToHistory(task3); 
+		taskView.addTaskToHistory(task3);
 		
 		assertTrue(task3.isActive());
 		assertFalse(task2.isActive());
-		
+
 		taskView.getPreviousTaskAction().run();
 		assertTrue(task2.isActive());
 		
@@ -188,6 +192,13 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task1);
+		
+		//Check that a deactivated task appears first on the history list
+		(new TaskActivateAction(task5)).run();
+		(new TaskDeactivateAction(task5, taskView)).run();
+		taskView.addTaskToHistory(task5);
+		prevHistoryList = taskHistory.getPreviousTasks();
+		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task5);
 		
 	}
 	

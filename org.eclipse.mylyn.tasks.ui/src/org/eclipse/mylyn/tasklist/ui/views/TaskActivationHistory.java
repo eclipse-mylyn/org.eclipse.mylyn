@@ -128,11 +128,17 @@ public class TaskActivationHistory {
 	 */
 	public List<ITask> getPreviousTasks(){
 		try {
-			if (!persistentHistoryLoaded){
-				loadPersistentHistory();
-				persistentHistoryLoaded = true;
+			
+			if(!hasPrevious()){
+				return new ArrayList<ITask>();
 			}
-			return history.subList(0, currentIndex);
+
+			if(history.get(currentIndex).isActive()){
+				return history.subList(0, currentIndex);
+			}
+			else{
+				return history.subList(0, currentIndex + 1);
+			}
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not get previous tasks from history", false);
 			return new ArrayList<ITask>();
