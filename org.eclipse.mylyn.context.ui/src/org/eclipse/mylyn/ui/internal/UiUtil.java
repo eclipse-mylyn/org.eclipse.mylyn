@@ -17,13 +17,8 @@ import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 
- 
-/**
+ /**
  * @author Mik Kersten
  */
 public class UiUtil {
@@ -75,23 +70,8 @@ public class UiUtil {
         } 
         return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM; 
     }
-    
-    public static void closeAllEditors(final boolean save) {
-    	IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-		        try {
-		            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-		            if (page != null) {
-		            	page.closeAllEditors(save);
-		            }
-		        } catch (Throwable t) {
-		            MylarPlugin.fail(t, "Could not auto close editor.", false);
-		        } 
-            }
-        });
-    }
-    
+}
+
 //    if (node instanceof CompositeContextElement) {
 //        CompositeContextElement compositeNode = (CompositeContextElement)node;
 //        if (compositeNode.getNodes().isEmpty()) return null;
@@ -121,4 +101,3 @@ public class UiUtil {
 //  } else {
 //      return Highlighter.blend(highlighters, info, false);
 //  }
-}

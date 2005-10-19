@@ -40,8 +40,7 @@ public class JavaStructureTest extends AbstractContextTest {
     private MylarContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-    
-        
+           
     private TestProject project;
     private IPackageFragment pkg;
     private IType typeFoo;

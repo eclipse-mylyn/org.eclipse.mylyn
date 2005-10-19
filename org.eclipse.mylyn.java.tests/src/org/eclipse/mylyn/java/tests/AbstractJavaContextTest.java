@@ -27,6 +27,7 @@ import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -69,6 +70,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
         manager.contextDeactivated(taskId, taskId);
         manager.contextDeleted(taskId, taskId);
         manager.getFileForContext(taskId).delete(); 
+		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
     }
 	
     protected int countItemsInTree(Tree tree) {

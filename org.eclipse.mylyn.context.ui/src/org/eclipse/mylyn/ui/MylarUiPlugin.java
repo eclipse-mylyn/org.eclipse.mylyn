@@ -85,7 +85,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private Highlighter intersectionHighlighter;
     private ColorMap colorMap = new ColorMap(); 
     
-    protected MylarViewerManager mylarViewerManager = new MylarViewerManager();
+    private MylarViewerManager viewerManager = new MylarViewerManager();
+    private MylarEditorManager editorManager = new MylarEditorManager();
+    
     private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
     
     public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
@@ -167,7 +169,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-            	MylarPlugin.getContextManager().addListener(mylarViewerManager);
+            	MylarPlugin.getContextManager().addListener(viewerManager);
+            	MylarPlugin.getContextManager().addListener(editorManager);
             	
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(contentOutlineManager);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
@@ -206,7 +209,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     @Override
     public void stop(BundleContext context) throws Exception {
         super.stop(context);
-        MylarPlugin.getContextManager().removeListener(mylarViewerManager);
+        MylarPlugin.getContextManager().removeListener(viewerManager);
+        MylarPlugin.getContextManager().removeListener(editorManager);
     }
     
     private void initializeActions() {
@@ -418,7 +422,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     }
 
 	public MylarViewerManager getViewerManager() {
-		return mylarViewerManager;
+		return viewerManager;
 	}
 
 	static class UiExtensionPointReader {
@@ -474,5 +478,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 				MylarPlugin.log(e, "Could not load bridge extension");
 			}
 		}
+	}
+
+	public MylarEditorManager getEditorManager() {
+		return editorManager;
 	}
 }
