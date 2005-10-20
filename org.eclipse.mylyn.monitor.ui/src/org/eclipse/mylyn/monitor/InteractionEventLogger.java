@@ -56,7 +56,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
      * TODO: should these be queued for better performance?
      */
     public void interactionObserved(InteractionEvent event) {
-//    	System.err.println(">>> " + event);
+//    	System.err.println("> " + event);
     	try {
             if (started) {       
             	String xml = interactionEventToXml(event);
