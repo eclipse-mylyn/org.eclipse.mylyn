@@ -69,21 +69,20 @@ public class RefactoringTest extends AbstractJavaContextTest {
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
         assertTrue(parentNode.getDegreeOfInterest().isInteresting()); 
         
-        project.build();
         TestProgressMonitor monitor = new TestProgressMonitor();
         type.rename("NewName", true, monitor);
         if (!monitor.isDone()) Thread.sleep(200);
+        project.build();
         ICompilationUnit unit = (ICompilationUnit)p1.getChildren()[0];
         IType newType = (IType)unit.getTypes()[0];
 //        IMylarElement newNode = MylarPlugin.getContextManager().getElement(newType.getHandleIdentifier());
         IMylarElement newParentNode = MylarPlugin.getContextManager().getElement(newType.getParent().getHandleIdentifier());
 //        assertTrue(newNode.getDegreeOfInterest().isInteresting()); 
-        assertTrue(newParentNode.getDegreeOfInterest().isInteresting()); 
-                
 //        IMylarElement oldNode = MylarPlugin.getContextManager().getElement(node.getHandleIdentifier());
         IMylarElement oldParentNode = MylarPlugin.getContextManager().getElement(parentNode.getHandleIdentifier());
 //        assertFalse(oldNode.getDegreeOfInterest().isInteresting()); 
-        assertFalse(oldParentNode.getDegreeOfInterest().isInteresting()); 
+        assertFalse(oldParentNode.getDegreeOfInterest().isInteresting());
+        assertTrue(newParentNode.getDegreeOfInterest().isInteresting()); 
 	}
 	
 	public void testMethodRename() throws CoreException, InterruptedException, InvocationTargetException {

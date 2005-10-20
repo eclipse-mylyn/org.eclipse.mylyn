@@ -46,7 +46,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     protected TestProject project;
     protected IPackageFragment p1;
     protected IType type1;
-    protected String taskId = this.getClass().getCanonicalName();
+    protected String taskId = this.getClass().getSimpleName();
     protected MylarContext context;
     protected ScalingFactors scaling = new ScalingFactors();
      
