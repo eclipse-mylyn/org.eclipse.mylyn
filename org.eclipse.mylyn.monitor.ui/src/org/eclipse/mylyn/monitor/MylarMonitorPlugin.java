@@ -47,6 +47,8 @@ import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
@@ -103,6 +105,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     private static boolean performingUpload = false;
 	private boolean questionnaireEnabled = true;
 	private SelectionMonitor selectionMonitor;
+	private BrowserMonitor browserMonitor;
 	
 	private StudyParameters studyParameters = new StudyParameters();
     
@@ -212,6 +215,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
                 if (!MylarPlugin.getDefault().suppressWizardsOnStartup()) {
                 	checkForFirstMonitorUse();
                 }
+                
+                installBrowserMonitor(workbench);
             }
         });
     }
@@ -222,6 +227,19 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
         logFile = getLogFileLocation();
         startLog();
 	} 
+    
+    private void installBrowserMonitor(IWorkbench workbench) {
+    	browserMonitor = new BrowserMonitor();
+    	workbench.addWindowListener(browserMonitor);
+		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+		for (int i= 0; i < windows.length; i++) {
+			windows[i].addPageListener(browserMonitor);
+			IWorkbenchPage[] pages= windows[i].getPages();
+			for (int j= 0; j < pages.length; j++) {
+				pages[j].addPartListener(browserMonitor);
+			}
+		}
+	}
     
     private File getLogFileLocation() {
         return new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarPlugin.LOG_FILE_NAME);
