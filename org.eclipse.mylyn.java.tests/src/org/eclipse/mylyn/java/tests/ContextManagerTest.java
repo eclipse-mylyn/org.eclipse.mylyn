@@ -198,6 +198,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         // put it back
         type1.createMethod("public void m1() { }", null, true, null); 
         project.build();
+        project.waitForIndexer();
         assertFalse(MylarPlugin.getContextManager().getElement(resourceHandle).getDegreeOfInterest().isInteresting());
     }
     
