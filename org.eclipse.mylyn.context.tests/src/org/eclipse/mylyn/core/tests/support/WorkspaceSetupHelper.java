@@ -11,6 +11,7 @@
 package org.eclipse.mylar.core.tests.support;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -44,7 +45,7 @@ public class WorkspaceSetupHelper {
     	clearDoiModel();
     }
     
-	public static IWorkspaceRoot setupWorkspace() throws CoreException, IOException{
+	public static IWorkspaceRoot setupWorkspace() throws CoreException, IOException, InvocationTargetException, InterruptedException{
 		if(isSetup){
 			clearDoiModel();
 			return workspaceRoot;
@@ -74,31 +75,31 @@ public class WorkspaceSetupHelper {
 		taskscape = new MylarContext("1", new ScalingFactors());
 	}
 	
-	public static MylarContext getTaskscape()throws CoreException, IOException{
+	public static MylarContext getTaskscape()throws CoreException, IOException, InvocationTargetException, InterruptedException{
 		if(!isSetup)
 			setupWorkspace();
 		return taskscape;
 	}
 
-	public static IJavaProject getJdtCoreDomProject() throws CoreException, IOException{
+	public static IJavaProject getJdtCoreDomProject() throws CoreException, IOException, InvocationTargetException, InterruptedException{
 		if(!isSetup)
 			setupWorkspace();
 		return jdtCoreDomProject.getJavaProject();
 	}
 
-	public static IJavaProject getProject1() throws CoreException, IOException{
+	public static IJavaProject getProject1() throws CoreException, IOException, InvocationTargetException, InterruptedException{
 		if(!isSetup)
 			setupWorkspace();
 		return project1;
 	}
 
-	public static IJavaProject getProject2() throws CoreException, IOException{
+	public static IJavaProject getProject2() throws CoreException, IOException, InvocationTargetException, InterruptedException{
 		if(!isSetup)
 			setupWorkspace();
 		return project2;
 	}
 
-	public static IWorkspaceRoot getWorkspaceRoot() throws CoreException, IOException{
+	public static IWorkspaceRoot getWorkspaceRoot() throws CoreException, IOException, InvocationTargetException, InterruptedException{
 		if(!isSetup)
 			setupWorkspace();
 		return workspaceRoot;

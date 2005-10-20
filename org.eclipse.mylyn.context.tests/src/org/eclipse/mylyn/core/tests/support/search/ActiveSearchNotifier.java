@@ -65,11 +65,15 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 		return node;
 	}
 	
-	public void clearTaskscape() throws IOException, CoreException{
+	public void clearTaskscape() throws IOException, CoreException {
 		WorkspaceSetupHelper.clearDoiModel();
-		MylarContext task = WorkspaceSetupHelper.getTaskscape();
-    	MylarPlugin.getContextManager().contextActivated(task.getId(), task.getId());
-    	context = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
+		try {
+			MylarContext task = WorkspaceSetupHelper.getTaskscape();
+			MylarPlugin.getContextManager().contextActivated(task.getId(), task.getId());
+	    	context = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
+		} catch (Exception e) {
+			fail();
+		}
 	}
 	
 	private InteractionEvent mockSelection(String handle, String kind, String origin) {

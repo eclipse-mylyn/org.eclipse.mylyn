@@ -22,7 +22,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.AbstractSelectionMonitor;
+import org.eclipse.mylar.core.AbstractInteractionMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
@@ -31,7 +31,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Mik Kersten
  */
-public class JavaEditingMonitor extends AbstractSelectionMonitor {
+public class JavaEditingMonitor extends AbstractInteractionMonitor {
     
     protected IJavaElement lastSelectedElement = null;
     protected IJavaElement lastResolvedElement = null;

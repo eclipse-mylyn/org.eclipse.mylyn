@@ -529,7 +529,9 @@ public class MylarContextManager {
 		Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
         for (String extension : bridges.keySet()) {
             IMylarStructureBridge bridge = bridges.get(extension);
-            providers.addAll(bridge.getRelationshipProviders());
+            if (bridge.getRelationshipProviders() != null) {
+            	providers.addAll(bridge.getRelationshipProviders());
+            }
         }
         return providers;
     }

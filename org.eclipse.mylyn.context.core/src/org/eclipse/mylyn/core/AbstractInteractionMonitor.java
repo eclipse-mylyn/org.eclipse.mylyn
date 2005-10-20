@@ -25,14 +25,14 @@ import org.eclipse.ui.internal.Workbench;
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractSelectionMonitor implements ISelectionListener {
+public abstract class AbstractInteractionMonitor implements ISelectionListener {
  
 	private Object lastSelectedElement = null;
 	
     /**
      * Requires workbench to be active.
      */
-	public AbstractSelectionMonitor() {
+	public AbstractInteractionMonitor() {
 	    try {
     	    ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
     		service.addPostSelectionListener(this); 
@@ -64,9 +64,8 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
     /**
      * Intended to be called back by subclasses.
      */
-    protected void handleElementSelection(IWorkbenchPart part, Object selectedElement) {
-        if (selectedElement == null) return;
-        if (selectedElement.equals(lastSelectedElement)) return;
+    protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement) {
+        if (selectedElement == null || selectedElement.equals(lastSelectedElement)) return null;
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(selectedElement);
         InteractionEvent selectionEvent = new InteractionEvent(
                 InteractionEvent.Kind.SELECTION,
@@ -74,6 +73,7 @@ public abstract class AbstractSelectionMonitor implements ISelectionListener {
                 bridge.getHandleIdentifier(selectedElement),
                 part.getSite().getId());
         MylarPlugin.getContextManager().handleInteractionEvent(selectionEvent);
+        return selectionEvent;
     }
 
     /**

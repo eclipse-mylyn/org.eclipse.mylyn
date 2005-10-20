@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
@@ -51,6 +52,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
      
     @Override
     protected void setUp() throws Exception {
+    	assertNotNull(JavaPlugin.getDefault());
     	assertNotNull(MylarJavaPlugin.getDefault());
     	project = new TestProject(this.getClass().getSimpleName());
         p1 = project.createPackage("p1");
@@ -65,12 +67,18 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     
     @Override
     protected void tearDown() throws Exception {
-    	project.dispose();
-        context.reset(); 
-        manager.contextDeactivated(taskId, taskId);
-        manager.contextDeleted(taskId, taskId);
-        manager.getFileForContext(taskId).delete(); 
-		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+//		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//			protected void execute(IProgressMonitor monitor) throws CoreException {
+				project.dispose();
+		        context.reset(); 
+		        manager.contextDeactivated(taskId, taskId);
+		        manager.contextDeleted(taskId, taskId);
+		        manager.getFileForContext(taskId).delete(); 
+				MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+//			}
+//		};
+//		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//		service.run(true, true, op);    	
     }
 	
     protected int countItemsInTree(Tree tree) {

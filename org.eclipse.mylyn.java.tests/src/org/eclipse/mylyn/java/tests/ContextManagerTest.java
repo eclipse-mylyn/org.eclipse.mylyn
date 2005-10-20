@@ -282,7 +282,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     	InterestManipulationAction action = new InterestManipulationAction();
     	
     	IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IMethod m1 = type1.createMethod("void m1() { }", null, true, null);     
+        IMethod m1 = type1.createMethod("void m22() { }", null, true, null);     
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
         IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());

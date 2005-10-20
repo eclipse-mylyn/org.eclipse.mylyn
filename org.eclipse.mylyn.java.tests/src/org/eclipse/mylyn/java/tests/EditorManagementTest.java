@@ -11,6 +11,10 @@
 
 package org.eclipse.mylar.java.tests;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
@@ -20,9 +24,14 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.progress.IProgressService;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 /**
  * @author Mik Kersten
@@ -32,14 +41,30 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 	private IWorkbenchPage page;
 	private IViewPart view;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();	
 		page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
 		assertNotNull(page);
-		view = PackageExplorerPart.getFromActivePerspective();
+		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
 		MylarUiPlugin.getDefault().getEditorManager().setAsyncExecMode(false);
+	
+		page.closeAllEditors(true);
+//		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//			protected void execute(IProgressMonitor monitor) throws CoreException {
+//				for (int i = 0; i < page.getEditors().length; i++) {
+//					IEditorPart editor = page.getEditors()[i];
+//					if (editor instanceof AbstractDecoratedTextEditor) {
+//						page.cl
+//						((AbstractDecoratedTextEditor)editor).close(true);
+//					}
+//				}
+//			}
+//		};
+//		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//		service.run(true, true, op);
 	}
 
 	@Override
@@ -47,7 +72,8 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		super.tearDown();
 	}
 	
-	public void testAutoClose() throws JavaModelException {
+	@SuppressWarnings("deprecation")
+	public void testAutoClose() throws JavaModelException, InvocationTargetException, InterruptedException {
 		assertTrue(MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
         IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
@@ -55,16 +81,27 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		IMylarElement element = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 		
-		assertEquals(1, page.getEditorReferences().length);
-		manager.contextDeactivated(taskId, taskId);
-		assertEquals(0, page.getEditorReferences().length);
+		assertEquals(1, page.getEditors().length);
+		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+			protected void execute(IProgressMonitor monitor) throws CoreException {
+				for (int i = 0; i < page.getEditors().length; i++) {
+					IEditorPart editor = page.getEditors()[i];
+					if (editor instanceof AbstractDecoratedTextEditor) {
+						manager.contextDeactivated(taskId, taskId);
+						assertEquals(0, page.getEditors().length);
+					}
+				}
+			}
+		};
+		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+		service.run(true, true, op);
 	}
 	
-	public void testAutoOpen() throws JavaModelException {
+	@SuppressWarnings("deprecation")
+	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException {
 		testAutoClose();
-		manager.contextDeactivated(taskId, taskId);
-		assertEquals(1, page.getEditorReferences().length);
-//		fail();        
+		manager.contextActivated(taskId, taskId);
+		assertEquals(1, page.getEditors().length);
 	}
 	
 	public void testCloseOnUninteresting() {

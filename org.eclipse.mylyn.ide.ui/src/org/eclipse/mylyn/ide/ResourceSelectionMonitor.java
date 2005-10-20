@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.AbstractSelectionMonitor;
+import org.eclipse.mylar.core.AbstractInteractionMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
@@ -27,7 +27,7 @@ import org.eclipse.ui.part.EditorPart;
 /**
  * @author Mik Kersten
  */
-public class ResourceSelectionMonitor extends AbstractSelectionMonitor {
+public class ResourceSelectionMonitor extends AbstractInteractionMonitor {
 
 	@Override
     protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {

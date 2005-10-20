@@ -19,13 +19,13 @@ import java.util.List;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.AbstractSelectionMonitor;
+import org.eclipse.mylar.core.AbstractInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Mik Kersten
  */
-public class TestMonitor extends AbstractSelectionMonitor {
+public class TestMonitor extends AbstractInteractionMonitor {
 
     List<IJavaElement> selections = new ArrayList<IJavaElement>();
     

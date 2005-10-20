@@ -56,7 +56,9 @@ public class TestProject {
     public IJavaProject javaProject;
     private IPackageFragmentRoot sourceFolder;
 
-    public TestProject(String name) throws CoreException {
+    public TestProject(final String name) throws CoreException, InvocationTargetException, InterruptedException {
+//		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//			protected void execute(IProgressMonitor monitor) throws CoreException {
 	    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 	    project= root.getProject(name);
 	    project.create(null) ;
@@ -68,6 +70,10 @@ public class TestProject {
 	    javaProject.setRawClasspath(new IClasspathEntry[0] , null); 
 	    createOutputFolder(binFolder) ;
 	    addSystemLibraries() ;
+//			}
+//		};
+//		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//		service.run(true, true, op);
     } 
     
     public IProject getProject() {
@@ -172,7 +178,7 @@ public class TestProject {
     	return new Path(localJarURL.getPath());
     }
 
-    private void waitForIndexer() throws JavaModelException {
+    public void waitForIndexer() throws JavaModelException {
     	new SearchEngine().searchAllTypeNames(
     	null,
     	null,

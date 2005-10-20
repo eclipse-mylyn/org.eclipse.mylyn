@@ -44,7 +44,9 @@ public class RefactoringTest extends AbstractJavaContextTest {
 	}
 
 	public void testDelete() throws CoreException, InvocationTargetException, InterruptedException {
-    	IMethod method = type1.createMethod("public void deleteMe() { }", null, true, null);
+		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }" );
+        
+		IMethod method = type.createMethod("public void deleteMe() { }", null, true, null);
         monitor.selectionChanged(view, new StructuredSelection(method));
         IMylarElement node = MylarPlugin.getContextManager().getElement(method.getHandleIdentifier());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
@@ -60,16 +62,17 @@ public class RefactoringTest extends AbstractJavaContextTest {
 	 * Limitation: only interest of compilation unit is preserved
 	 */
 	public void testTypeRename() throws CoreException, InterruptedException, InvocationTargetException {
-		monitor.selectionChanged(view, new StructuredSelection(type1));
-        IMylarElement node = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
-        IMylarElement parentNode = MylarPlugin.getContextManager().getElement(type1.getParent().getHandleIdentifier());
+		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }" );
+		monitor.selectionChanged(view, new StructuredSelection(type));
+        IMylarElement node = MylarPlugin.getContextManager().getElement(type.getHandleIdentifier());
+        IMylarElement parentNode = MylarPlugin.getContextManager().getElement(type.getParent().getHandleIdentifier());
         assertTrue(node.getDegreeOfInterest().isInteresting()); 
         assertTrue(parentNode.getDegreeOfInterest().isInteresting()); 
         
         project.build();
         TestProgressMonitor monitor = new TestProgressMonitor();
-        type1.rename("NewName", true, monitor);
-        if (!monitor.isDone()) Thread.sleep(100);
+        type.rename("NewName", true, monitor);
+        if (!monitor.isDone()) Thread.sleep(200);
         ICompilationUnit unit = (ICompilationUnit)p1.getChildren()[0];
         IType newType = (IType)unit.getTypes()[0];
 //        IMylarElement newNode = MylarPlugin.getContextManager().getElement(newType.getHandleIdentifier());
@@ -84,10 +87,11 @@ public class RefactoringTest extends AbstractJavaContextTest {
 	}
 	
 	public void testMethodRename() throws CoreException, InterruptedException, InvocationTargetException {
-    	IMethod method = type1.createMethod("public void refactorMe() { }", null, true, null);
+		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }" );
+        IMethod method = type.createMethod("public void refactorMe() { }", null, true, null);
           
         assertTrue(method.exists());
-        assertEquals(1, type1.getMethods().length);
+        assertEquals(1, type.getMethods().length);
         
         monitor.selectionChanged(view, new StructuredSelection(method));
         IMylarElement node = MylarPlugin.getContextManager().getElement(method.getHandleIdentifier());
@@ -96,8 +100,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
         project.build();
         TestProgressMonitor monitor = new TestProgressMonitor();
         method.rename("refactored", true, monitor);
-        if (!monitor.isDone()) Thread.sleep(100);
-        IMethod newMethod = type1.getMethods()[0];
+        if (!monitor.isDone()) Thread.sleep(200);
+        IMethod newMethod = type.getMethods()[0];
         assertTrue(newMethod.getElementName().equals("refactored"));
         IMylarElement newNode = MylarPlugin.getContextManager().getElement(newMethod.getHandleIdentifier());
         assertTrue(newNode.getDegreeOfInterest().isInteresting()); 

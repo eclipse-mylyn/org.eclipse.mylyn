@@ -69,7 +69,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	
     private IMylarStructureBridge defaultBridge = null;
     
-    private List<AbstractSelectionMonitor> selectionMonitors = new ArrayList<AbstractSelectionMonitor>();
+    private List<AbstractInteractionMonitor> selectionMonitors = new ArrayList<AbstractInteractionMonitor>();
     private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
     
     private List<MylarWorkingSetUpdater> workingSetUpdaters = null; 
@@ -240,7 +240,7 @@ public class MylarPlugin extends AbstractUIPlugin {
         return contextManager;
     }
 
-    public List<AbstractSelectionMonitor> getSelectionMonitors() {
+    public List<AbstractInteractionMonitor> getSelectionMonitors() {
         return selectionMonitors;
     }
 
@@ -464,6 +464,9 @@ public class MylarPlugin extends AbstractUIPlugin {
 		interactionListeners.remove(listener);
 	}
 
+	/**
+	 * TODO: refactor this, it's awkward
+	 */
     public void notifyInteractionObserved(InteractionEvent interactionEvent) {
 		for (IInteractionEventListener listener : interactionListeners) {
 			listener.interactionObserved(interactionEvent);
