@@ -66,7 +66,7 @@ public class TaskEditor extends MultiPageEditorPart {
 			try {
 				taskSummaryEditor.setParentEditor(this);
 				index = addPage(editor, null);
-				setPageText(index, editor.getTitle());
+				setPageText(index, "xxx");
 			} catch (PartInitException e) {
 				MylarPlugin.fail(e, "could not add task editor", false);
 			}
