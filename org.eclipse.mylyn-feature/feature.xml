@@ -299,6 +299,7 @@ litigation.
          id="org.eclipse.mylar.ide"
          download-size="0"
          install-size="0"
-         version="0.3.12"/>
+         version="0.3.12"
+         unpack="false"/>
 
 </feature>
