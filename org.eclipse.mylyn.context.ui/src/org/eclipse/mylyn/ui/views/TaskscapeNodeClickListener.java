@@ -20,10 +20,10 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 
-
-
+/**
+ * @author Mik Kersten
+ */
 public class TaskscapeNodeClickListener implements IOpenListener {
-
     
     private final Viewer viewer;
 

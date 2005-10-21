@@ -33,8 +33,10 @@ public class MylarEditorManager implements IMylarContextListener {
 	private boolean asyncExecMode = true;
 	
 	public void contextActivated(IMylarContext context) {
-		// TODO Auto-generated method stub
-		
+        IMylarElement activeNode = context.getActiveNode();
+        if (activeNode != null) {
+            MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
+        }
 	}
 
 	public void contextDeactivated(IMylarContext context) {

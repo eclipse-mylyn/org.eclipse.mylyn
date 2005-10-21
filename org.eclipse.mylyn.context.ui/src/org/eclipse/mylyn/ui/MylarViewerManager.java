@@ -79,14 +79,10 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		filteredViewers.remove(viewer);
 	}
 	
-	public void contextActivated(IMylarContext taskscape) {
-		if (taskscape.getActiveNode() != null) {
+	public void contextActivated(IMylarContext context) {
+		if (context.getActiveNode() != null) {
 			for (AbstractApplyMylarAction action : managedActions) action.update(true);
 		}
-        IMylarElement activeNode = taskscape.getActiveNode();
-        if (activeNode != null) {
-            MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
-        }
         refreshViewers();
     }
 
