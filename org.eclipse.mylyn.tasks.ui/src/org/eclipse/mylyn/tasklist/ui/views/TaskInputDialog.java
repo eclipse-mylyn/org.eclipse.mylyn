@@ -34,6 +34,8 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskInputDialog extends Dialog {
 
+	private static final String LABEL_SHELL = "New Task";
+	private static final String LABEL_DESCRIPTION = "Description:";
 	private String taskName = "";
 	private String priority = "P3";
 	private String url = "http://";
@@ -56,7 +58,7 @@ public class TaskInputDialog extends Dialog {
 		composite.setLayoutData(data);
 
 		Label taskNameLabel = new Label(composite, SWT.WRAP);
-		taskNameLabel.setText("Task Name:");
+		taskNameLabel.setText(LABEL_DESCRIPTION);
 		taskNameLabel.setFont(parent.getFont());
 
 		taskNameTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
@@ -131,7 +133,7 @@ public class TaskInputDialog extends Dialog {
 
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText("Enter Task Information");
+		shell.setText(LABEL_SHELL);
 	}
 
 }
