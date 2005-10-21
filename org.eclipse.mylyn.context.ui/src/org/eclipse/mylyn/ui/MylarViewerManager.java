@@ -206,12 +206,10 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 //IMylarStructureBridge structureBridge = MylarPlugin.getDefault().getStructureBridge(targetElement.getContentType());
 //Object targetObject = structureBridge.getObjectForHandle(targetElement.getHandleIdentifier()); 
 //if (viewer.testFindItem(targetObject) == null) {
-//	System.err.println("> not found: " + targetObject + viewer.getClass());
 //    viewer.getControl().setRedraw(false);
 //    viewer.refresh(true);
 //    viewer.getControl().setRedraw(true);
 //} else {
-//	System.err.println("111");
 //	viewer.refresh(targetObject, updateLabels);
 //}
 

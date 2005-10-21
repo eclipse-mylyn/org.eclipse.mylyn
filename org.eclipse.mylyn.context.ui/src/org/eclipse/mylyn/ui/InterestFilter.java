@@ -44,9 +44,6 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	@Override
     public boolean select(Viewer viewer, Object parent, Object element) {
 		try {
-//			if (!testselect(viewer, parent, element)) {
-//				System.err.println(">>> " + element.getClass());
-//			}
         	if (!(viewer instanceof StructuredViewer)) return true;
         	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
         	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;

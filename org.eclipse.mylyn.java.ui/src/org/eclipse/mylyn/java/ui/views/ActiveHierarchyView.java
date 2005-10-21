@@ -336,11 +336,6 @@ public class ActiveHierarchyView extends ViewPart {
 	public TreeViewer getViewer() {
 		return viewer;
 	}
-
-//	public void typeHierarchyChanged(ITypeHierarchy typeHierarchy) {
-//		System.err.println(">>> changed: " + typeHierarchy);
-//		refreshHierarchy();
-//	}
 }
 
 class TreeParent implements IAdaptable {

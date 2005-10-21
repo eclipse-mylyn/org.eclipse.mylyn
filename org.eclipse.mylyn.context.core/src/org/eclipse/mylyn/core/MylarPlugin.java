@@ -392,8 +392,8 @@ public class MylarPlugin extends AbstractUIPlugin {
         }
     }
 
-    private void addBridge(IMylarStructureBridge bridge) {
-    	if(bridge.getRelationshipProviders() != null){
+    private void internalAddBridge(IMylarStructureBridge bridge) {
+    	if (bridge.getRelationshipProviders() != null){
     		for(AbstractRelationProvider provider: bridge.getRelationshipProviders()){
     			getContextManager().addListener(provider);
     		}
@@ -520,7 +520,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 				Object object = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_CLASS);
 				if (object instanceof IMylarStructureBridge) {
 					IMylarStructureBridge bridge = (IMylarStructureBridge)object;
-					MylarPlugin.getDefault().addBridge(bridge);
+					MylarPlugin.getDefault().internalAddBridge(bridge);
 					if (element.getAttribute(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
 						Object parent = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_PARENT);
 						if (parent instanceof IMylarStructureBridge) {

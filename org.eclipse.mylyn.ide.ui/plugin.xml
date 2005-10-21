@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
-<plugin>   
+<plugin>
+   <extension
+         point="org.eclipse.mylar.core.context">
+      <structureBridge class="org.eclipse.mylar.ide.ResourceStructureBridge"/> 
+   </extension>
+   <extension
+         point="org.eclipse.mylar.ui.context">
+      <uiBridge
+            class="org.eclipse.mylar.ide.ui.ResourceUiBridge"
+            contentType="*"/>
+      <labelProvider
+            class="org.eclipse.mylar.ide.ui.ResourceContextLabelProvider"
+            contentType="*"/>
+   </extension>   
    <extension point="org.eclipse.ui.views"> 
    	  <view
           allowMultiple="false"
@@ -76,18 +89,5 @@
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.mylar.core.context">
-      <structureBridge class="org.eclipse.mylar.ide.ResourceStructureBridge"/> 
-   </extension>
-   <extension
-         point="org.eclipse.mylar.ui.context">
-      <uiBridge
-            class="org.eclipse.mylar.ide.ui.ResourceUiBridge"
-            contentType="*"/>
-      <labelProvider
-            class="org.eclipse.mylar.ide.ui.ResourceContextLabelProvider"
-            contentType="*"/>
    </extension>
 </plugin>

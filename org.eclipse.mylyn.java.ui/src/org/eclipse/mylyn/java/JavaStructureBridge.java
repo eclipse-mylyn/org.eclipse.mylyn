@@ -34,7 +34,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JarEntryFile;
 import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
-import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.mylar.core.AbstractRelationProvider;
@@ -94,18 +93,11 @@ public class JavaStructureBridge implements IMylarStructureBridge {
      * Uses resource-compatible path for projects
      */
     public String getHandleIdentifier(Object object) {
-    	if (object instanceof PackageFragment) {
-//			System.err.println("??????????? " + ((PackageFragment)object).getElementName());
-//			return null;
-		}
         if (object == null || !(object instanceof IJavaElement)) {
-//        	if (object instanceof PackageFragment) {
-//        		System.err.println(((PackageFragment)object).getElementName());
-//        	}
-//        	System.err.println(" > " + object.getClass().getCanonicalName());
         	return null;
+        } else {
+        	return ((IJavaElement)object).getHandleIdentifier();
         }
-        return ((IJavaElement)object).getHandleIdentifier();
     }
 
     public String getName(Object object) {
@@ -279,9 +271,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 					int priority= curr.getAttribute(IMarker.SEVERITY, -1);
 					if (priority == IMarker.SEVERITY_ERROR) {
 						return true;
-					} else {
-						System.err.println("!!!!!!!!!");
-					}
+					} 
 				}
 			}			
 		}
