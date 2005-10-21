@@ -19,10 +19,11 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.IContextEditorFactory;
+import org.eclipse.mylar.tasklist.ITaskActivationListener;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
-import org.eclipse.mylar.tasklist.ITaskActivationListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.ui.IEditorPart;
 
@@ -41,10 +42,9 @@ public class TaskListExtensionReader {
 	public static final String DYNAMIC_POPUP_CLASS_ID = "class";
 	
 	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasklist.editors";
-	public static final String EDITOR = "editor";
-	public static final String EDITOR_CLASS = "class";
-	
-	
+	public static final String EDITOR_FACTORY = "editorFactory";
+	public static final String EDITOR_FACTORY_CLASS = "class";
+	 	
 	private static boolean extensionsRead = false;
 	private static TaskListExtensionReader thisReader = new TaskListExtensionReader();
 	
@@ -73,8 +73,8 @@ public class TaskListExtensionReader {
 			for(int i = 0; i < editors.length; i++){
 				IConfigurationElement[] elements = editors[i].getConfigurationElements();
 				for(int j = 0; j < elements.length; j++){
-					if(elements[j].getName().compareTo(EDITOR) == 0){
-						readEditor(elements[j]);
+					if(elements[j].getName().compareTo(EDITOR_FACTORY) == 0){
+						readEditorFactory(elements[j]);
 					} 
 				}
 			}
@@ -83,13 +83,13 @@ public class TaskListExtensionReader {
 		}
 	}
 
-	private static void readEditor(IConfigurationElement element) {
+	private static void readEditorFactory(IConfigurationElement element) {
 		try {
-			Object editor = element.createExecutableExtension(EDITOR_CLASS);
-			if (editor instanceof IEditorPart) {
-				MylarTasklistPlugin.getDefault().addTaskEditor((IEditorPart)editor);
+			Object editor = element.createExecutableExtension(EDITOR_FACTORY_CLASS);
+			if (editor instanceof IContextEditorFactory) {
+				MylarTasklistPlugin.getDefault().addContextEditor((IContextEditorFactory)editor);
 			} else {
-				MylarPlugin.log("Could not load editor: " + editor.getClass().getCanonicalName() + " must implement " + IEditorPart.class.getCanonicalName(), thisReader);	
+				MylarPlugin.log("Could not load editor: " + editor.getClass().getCanonicalName() + " must implement " + IContextEditorFactory.class.getCanonicalName(), thisReader);	
 			}
 		} catch (CoreException e){
 			MylarPlugin.log(e, "Could not load tasklist listener extension");

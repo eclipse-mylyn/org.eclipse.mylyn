@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="editor" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="editorFactory" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +42,7 @@
       </complexType>
    </element>
 
-   <element name="editor">
+   <element name="editorFactory">
       <complexType>
          <attribute name="id" type="string">
             <annotation>
@@ -51,7 +51,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
