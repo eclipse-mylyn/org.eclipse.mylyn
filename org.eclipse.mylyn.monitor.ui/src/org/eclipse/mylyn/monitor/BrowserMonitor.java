@@ -72,7 +72,6 @@ public class BrowserMonitor extends AbstractInteractionMonitor implements IPartL
 	
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof WebBrowserEditor) {
-			System.err.println(">>> installing"); 
 			Browser browser = getBrowser((WebBrowserEditor)part);
 			if (browser != null) browser.removeLocationListener(urlTrackingListener);
 		}
