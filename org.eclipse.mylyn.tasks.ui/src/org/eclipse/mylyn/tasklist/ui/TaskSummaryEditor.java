@@ -55,6 +55,7 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -132,6 +133,7 @@ public class TaskSummaryEditor extends EditorPart {
 	private Action add;
     private Action delete;
     private Text description;
+    private Text issueReportURL;
     private Text notes;
     private Spinner estimated;
     
@@ -215,6 +217,7 @@ public class TaskSummaryEditor extends EditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		String label = description.getText();
 		task.setDescription(label);
+		task.setIssueReportURL(issueReportURL.getText());
 		String note = notes.getText();
 		task.setNotes(note);		
 		task.setEstimatedTime(estimated.getSelection());
@@ -382,6 +385,39 @@ public class TaskSummaryEditor extends EditorPart {
 		layout.numColumns = 1;					
 		container.setLayout(layout);
 		
+        Label urlLabel = toolkit.createLabel(container, "Issue Report URL:");
+        urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
+        issueReportURL = toolkit.createText(container, task.getIssueReportURL(), SWT.BORDER);
+        issueReportURL.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        issueReportURL.setForeground(HYPERLINK);
+
+        if (!task.isDirectlyModifiable()) {
+        	issueReportURL.setEnabled(false);
+        } else {
+        	issueReportURL.addModifyListener(new ModifyListener() {
+    			public void modifyText(ModifyEvent e) {
+    				markDirty(true);
+    			}			
+    		});
+        }
+ 
+        issueReportURL.addMouseListener(new MouseListener(){
+			public void mouseDoubleClick(MouseEvent e) {
+				openURLinBrowser(issueReportURL.getText());
+			}
+
+			public void mouseDown(MouseEvent e) {
+				//Don't open on mouse down so that the field can still be edited.
+			}
+
+			public void mouseUp(MouseEvent e) {
+
+			}
+        });
+        
+        
+        Label notesLabel = toolkit.createLabel(container, "Notes:");
+        notesLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	  
 		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI);
 		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
 		tablewrap.heightHint = 100;
@@ -392,9 +428,8 @@ public class TaskSummaryEditor extends EditorPart {
 			}			
 		});
 		
-//		Label l = toolkit.createLabel(container, "Hyperlinks:");
-//		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-//		toolkit.createLabel(container, "");
+		Label relatedLinksLabel = toolkit.createLabel(container, "Related Links:");
+		relatedLinksLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		
 		createTable(container, toolkit);
 		createTableViewer(container, toolkit);		
@@ -704,30 +739,7 @@ public class TaskSummaryEditor extends EditorPart {
 			Object res = null;
 			if (element instanceof String) {								
 				String url = (String) element;
-				try {					
-					IWebBrowser b = null;
-					int flags = 0;
-					if (WorkbenchBrowserSupport.getInstance()
-							.isInternalWebBrowserAvailable()) {
-						flags = WorkbenchBrowserSupport.AS_EDITOR
-								| WorkbenchBrowserSupport.LOCATION_BAR
-								| WorkbenchBrowserSupport.NAVIGATION_BAR;
-
-					} else {
-						flags = WorkbenchBrowserSupport.AS_EXTERNAL
-								| WorkbenchBrowserSupport.LOCATION_BAR
-								| WorkbenchBrowserSupport.NAVIGATION_BAR;
-					}
-					b = WorkbenchBrowserSupport.getInstance().createBrowser(
-							flags, "org.eclipse.mylar.tasklist", "Task", "tasktooltip");
-					b.openURL(new URL((String) element));					
-				} catch (PartInitException e) {
-					MessageDialog.openError( Display.getDefault().getActiveShell(), 
-							"URL not found", url + " could not be opened");
-				} catch (MalformedURLException e) {
-					MessageDialog.openError( Display.getDefault().getActiveShell(), 
-							"URL not found", url + " could not be opened");
-				}
+				openURLinBrowser(url);
 				res = (String) element;
 			}			
 			return res;
@@ -838,7 +850,7 @@ public class TaskSummaryEditor extends EditorPart {
 			markDirty(true);
 		}
 	}
-	
+		
 	private void removeLinkFromTable() {
 		String url = (String) ((IStructuredSelection) tableViewer
 				.getSelection()).getFirstElement();
@@ -847,6 +859,8 @@ public class TaskSummaryEditor extends EditorPart {
 			markDirty(true);
 		}
 	}
+	
+	
 	private void defineActions() {		  
         delete = new Action() {
 			@Override
@@ -893,5 +907,32 @@ public class TaskSummaryEditor extends EditorPart {
 	
 	public void setParentEditor(TaskEditor parentEditor) {
 		this.parentEditor = parentEditor;
+	}
+	
+	private void openURLinBrowser(String url) {
+		try {					
+			IWebBrowser b = null;
+			int flags = 0;
+			if (WorkbenchBrowserSupport.getInstance()
+					.isInternalWebBrowserAvailable()) {
+				flags = WorkbenchBrowserSupport.AS_EDITOR
+						| WorkbenchBrowserSupport.LOCATION_BAR
+						| WorkbenchBrowserSupport.NAVIGATION_BAR;
+
+			} else {
+				flags = WorkbenchBrowserSupport.AS_EXTERNAL
+						| WorkbenchBrowserSupport.LOCATION_BAR
+						| WorkbenchBrowserSupport.NAVIGATION_BAR;
+			}
+			b = WorkbenchBrowserSupport.getInstance().createBrowser(
+					flags, "org.eclipse.mylar.tasklist", "Task", "tasktooltip");
+			b.openURL(new URL(url));					
+		} catch (PartInitException e) {
+			MessageDialog.openError( Display.getDefault().getActiveShell(), 
+					"URL not found", url + " could not be opened");
+		} catch (MalformedURLException e) {
+			MessageDialog.openError( Display.getDefault().getActiveShell(), 
+					"URL not found", url + " could not be opened");
+		}
 	}
 }

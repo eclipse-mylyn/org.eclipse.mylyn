@@ -24,11 +24,27 @@ import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.ITaskActivationListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author Shawn Minto
  */
 public class TaskListExtensionReader {
+	
+    public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasklist.providers";
+	public static final String TASK_HANDLER_ELEMENT = "taskHandler";
+	public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
+	public static final String ACTION_CONTRIBUTOR_CLASS_ID = "taskHandlerClass";
+	public static final String TASK_LISTENER_ELEMENT = "taskListener";
+	public static final String TASK_LISTENER_CLASS_ID = "class";
+	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
+	public static final String DYNAMIC_POPUP_CLASS_ID = "class";
+	
+	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasklist.editors";
+	public static final String EDITOR = "editor";
+	public static final String EDITOR_CLASS = "class";
+	
+	
 	private static boolean extensionsRead = false;
 	private static TaskListExtensionReader thisReader = new TaskListExtensionReader();
 	
@@ -37,18 +53,29 @@ public class TaskListExtensionReader {
 		// code from "contributing to eclipse" with modifications for deprecated code
 		if(!extensionsRead){
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarTasklistPlugin.TASK_CONTRIBUTOR_EXTENSION_POINT_ID);
+			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_TASK_CONTRIBUTOR);
 			IExtension[] extensions = extensionPoint.getExtensions();
 			for(int i = 0; i < extensions.length; i++){
 				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 				for(int j = 0; j < elements.length; j++){
-					if(elements[j].getName().compareTo(MylarTasklistPlugin.TASK_HANDLER_ELEMENT) == 0){
+					if(elements[j].getName().compareTo(TASK_HANDLER_ELEMENT) == 0){
 						readTaskHandler(elements[j], externalizers);
-					} else if(elements[j].getName().compareTo(MylarTasklistPlugin.TASK_LISTENER_ELEMENT) == 0){
+					} else if(elements[j].getName().compareTo(TASK_LISTENER_ELEMENT) == 0){
 						readTaskListener(elements[j]);
-					} else if(elements[j].getName().compareTo(MylarTasklistPlugin.DYNAMIC_POPUP_ELEMENT) == 0){
+					} else if(elements[j].getName().compareTo(DYNAMIC_POPUP_ELEMENT) == 0){
 						readDynamicPopupContributor(elements[j]);
 					}
+				}
+			}
+			
+			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
+			IExtension[] editors = editorsExtensionPoint.getExtensions();
+			for(int i = 0; i < editors.length; i++){
+				IConfigurationElement[] elements = editors[i].getConfigurationElements();
+				for(int j = 0; j < elements.length; j++){
+					if(elements[j].getName().compareTo(EDITOR) == 0){
+						readEditor(elements[j]);
+					} 
 				}
 			}
 			defaultExternalizer.setExternalizers(externalizers);
@@ -56,9 +83,22 @@ public class TaskListExtensionReader {
 		}
 	}
 
+	private static void readEditor(IConfigurationElement element) {
+		try {
+			Object editor = element.createExecutableExtension(EDITOR_CLASS);
+			if (editor instanceof IEditorPart) {
+				MylarTasklistPlugin.getDefault().addTaskEditor((IEditorPart)editor);
+			} else {
+				MylarPlugin.log("Could not load editor: " + editor.getClass().getCanonicalName() + " must implement " + IEditorPart.class.getCanonicalName(), thisReader);	
+			}
+		} catch (CoreException e){
+			MylarPlugin.log(e, "Could not load tasklist listener extension");
+		}
+	}
+	
 	private static void readTaskListener(IConfigurationElement element) {
 		try{
-			Object taskListener = element.createExecutableExtension(MylarTasklistPlugin.TASK_LISTENER_CLASS_ID);
+			Object taskListener = element.createExecutableExtension(TASK_LISTENER_CLASS_ID);
 			if (taskListener instanceof ITaskActivationListener) {
 				MylarTasklistPlugin.getDefault().addTaskListListener((ITaskActivationListener) taskListener);
 			} else {
@@ -71,7 +111,7 @@ public class TaskListExtensionReader {
 
 	private static void readDynamicPopupContributor(IConfigurationElement element) {
 		try{
-			Object dynamicPopupContributor = element.createExecutableExtension(MylarTasklistPlugin.DYNAMIC_POPUP_CLASS_ID);
+			Object dynamicPopupContributor = element.createExecutableExtension(DYNAMIC_POPUP_CLASS_ID);
 			if (dynamicPopupContributor instanceof ITaskListDynamicSubMenuContributor) {
 				MylarTasklistPlugin.getDefault().addDynamicPopupContributor((ITaskListDynamicSubMenuContributor) dynamicPopupContributor);
 			} else {
@@ -84,14 +124,14 @@ public class TaskListExtensionReader {
 
 	private static void readTaskHandler(IConfigurationElement element, List<ITaskListExternalizer> externalizers) {
 		try{
-			Object externalizer = element.createExecutableExtension(MylarTasklistPlugin.EXTERNALIZER_CLASS_ID);
+			Object externalizer = element.createExecutableExtension(EXTERNALIZER_CLASS_ID);
 			if (externalizer instanceof ITaskListExternalizer) {
 				externalizers.add((ITaskListExternalizer) externalizer);
 			} else {
 				MylarPlugin.log("Could not load externalizer: " + externalizer.getClass().getCanonicalName() + " must implement " + ITaskListExternalizer.class.getCanonicalName(), thisReader);	
 			}
 			
-			Object taskHandler = element.createExecutableExtension(MylarTasklistPlugin.ACTION_CONTRIBUTOR_CLASS_ID);
+			Object taskHandler = element.createExecutableExtension(ACTION_CONTRIBUTOR_CLASS_ID);
 			if (taskHandler instanceof ITaskHandler) {
 				MylarTasklistPlugin.getDefault().addTaskHandler((ITaskHandler) taskHandler);
 				

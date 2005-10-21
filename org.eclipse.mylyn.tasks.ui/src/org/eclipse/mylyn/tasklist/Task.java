@@ -56,6 +56,7 @@ public class Task implements ITask {
     private int estimatedTime = 0;
     private boolean completed;
     private RelatedLinks links = new RelatedLinks();
+    private String issueReportURL = "";
     private ITaskListCategory parentCategory = null;
     
     private Date timeActivated = null;
@@ -259,6 +260,14 @@ public class Task implements ITask {
 
 	public void removeLink(String url) {
 		links.remove(url);
+	}
+	
+	public void setIssueReportURL(String url){
+		issueReportURL = url;
+	}
+	
+	public String getIssueReportURL(){
+		return issueReportURL;
 	}
 
 	public String getNotes() {

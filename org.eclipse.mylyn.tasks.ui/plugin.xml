@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
     <extension-point id="providers" name="Tasklist Providers" schema="schema/providers.exsd"/>
+    <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
 
    <extension
          name="Mylar Task List Startup"

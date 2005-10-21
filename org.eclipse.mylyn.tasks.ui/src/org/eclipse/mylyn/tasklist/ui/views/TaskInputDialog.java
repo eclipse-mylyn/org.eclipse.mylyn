@@ -30,13 +30,16 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Ken Sueda
+ * @author Wesley Coelho (Extended to allow URL input)
  */
 public class TaskInputDialog extends Dialog {
 
 	private String taskName = "";
 	private String priority = "P3";
+	private String url = "http://";
 	private Date reminderDate = null;
-	private Text text;
+	private Text taskNameTextWidget = null;
+	private Text issueURLTextWidget = null;
 
 	public TaskInputDialog(Shell parentShell) {
 		super(parentShell);
@@ -52,13 +55,12 @@ public class TaskInputDialog extends Dialog {
 		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
 		composite.setLayoutData(data);
 
-		Label label = new Label(composite, SWT.WRAP);
-		label.setText("Task name:");
-		label.setFont(parent.getFont());
+		Label taskNameLabel = new Label(composite, SWT.WRAP);
+		taskNameLabel.setText("Task Name:");
+		taskNameLabel.setFont(parent.getFont());
 
-		text = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		text.setLayoutData(data);
-		text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
+		taskNameTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		taskNameTextWidget.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.HORIZONTAL_ALIGN_FILL));
 
 		final Combo c = new Combo(composite, SWT.NO_BACKGROUND | SWT.MULTI
@@ -85,6 +87,19 @@ public class TaskInputDialog extends Dialog {
 				// ignore
 			}
 		});
+		
+		
+		Label urlLabel = new Label(composite, SWT.WRAP);
+		urlLabel.setText("Issue URL:");
+		urlLabel.setFont(parent.getFont());
+
+		issueURLTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		issueURLTextWidget.setText(url);
+		GridData urlData = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
+		urlData.horizontalSpan = 3;
+		issueURLTextWidget.setLayoutData(urlData);
+		
+		
 		return composite;
 	}
 
@@ -100,9 +115,14 @@ public class TaskInputDialog extends Dialog {
 		return reminderDate;
 	}
 
+	public String getIssueURL(){
+		return url;
+	}
+	
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
-			taskName = text.getText();			
+			taskName = taskNameTextWidget.getText();
+			url = issueURLTextWidget.getText();
 		} else {
 			taskName = null;
 		}
@@ -111,7 +131,7 @@ public class TaskInputDialog extends Dialog {
 
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText("Enter Task Name");
+		shell.setText("Enter Task Information");
 	}
 
 }

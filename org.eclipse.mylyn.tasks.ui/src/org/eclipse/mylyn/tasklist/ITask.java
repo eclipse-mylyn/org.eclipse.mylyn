@@ -48,6 +48,10 @@ public interface ITask extends Serializable, ITaskListElement {
     
     public abstract void removeLink(String url);
     
+	public abstract void setIssueReportURL(String url);
+	
+	public abstract String getIssueReportURL();
+    
     public abstract String getNotes();
     
     public abstract void setNotes(String notes);

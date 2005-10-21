@@ -35,6 +35,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -53,19 +54,10 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
     private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
+    private List<IEditorPart> taskEditors = new ArrayList<IEditorPart>();    
     
-    public static final String TASK_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.tasklist.providers";
-
     public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.report.ui.planningGameWizard";
     public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.report.ui.planning";
-	public static final String TASK_HANDLER_ELEMENT = "taskHandler";
-	public static final String EXTERNALIZER_CLASS_ID = "externalizerClass";
-	public static final String ACTION_CONTRIBUTOR_CLASS_ID = "taskHandlerClass";
-	public static final String TASK_LISTENER_ELEMENT = "taskListener";
-	public static final String TASK_LISTENER_CLASS_ID = "class";
-	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
-	public static final String DYNAMIC_POPUP_CLASS_ID = "class";
-    		
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasklist.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasklist.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasklist.report.open.external";
@@ -86,7 +78,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1*3600*1000; // every hour
 	private static Date lastBackup = new Date();
 	private ITaskHighlighter highlighter;
-//	private ITaskListActionContributor primaryContributor;
+	
 	public enum TaskListSaveMode {
 		ONE_HOUR,
 		THREE_HOURS,
@@ -372,6 +364,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	public static void setPriorityLevel(PriorityLevel pl) {
 		getPrefs().setValue(SELECTED_PRIORITY, pl.toString());
 	}
+	
 	public static String getPriorityLevel() {
 		if(getPrefs().contains(SELECTED_PRIORITY)) {
 			return getPrefs().getString(SELECTED_PRIORITY);
@@ -470,6 +463,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		return path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
 	}
+	
 	public void reverseBackup() {
 		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;	
 		File taskListFile = new File(path);
@@ -513,5 +507,13 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 
 	public void setHighlighter(ITaskHighlighter highlighter) {
 		this.highlighter = highlighter;
+	}
+
+	public List<IEditorPart> getTaskEditors() {
+		return taskEditors;
+	}
+
+	public void addTaskEditor(IEditorPart taskEditor) {
+		if (taskEditor != null) this.taskEditors.add(taskEditor);
 	}
 }

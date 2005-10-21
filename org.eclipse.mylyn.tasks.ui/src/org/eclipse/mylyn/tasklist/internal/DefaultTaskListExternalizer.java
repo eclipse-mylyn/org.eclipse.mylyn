@@ -46,6 +46,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public static final String LINK = "Link";
 	public static final String ESTIMATED = "Estimated";
 	public static final String ELAPSED = "Elapsed";
+	public static final String ISSUEURL = "IssueURL";
 	public static final String NOTES = "Notes";
 	public static final String BUGZILLA = "Bugzilla";
 	public static final String ACTIVE = "Active";
@@ -115,6 +116,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		}
 		node.setAttribute(BUGZILLA, FALSE); // TODO: this is not great
 		
+		node.setAttribute(ISSUEURL, task.getIssueReportURL());
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, task.getElapsedTime());
 		node.setAttribute(ESTIMATED, ""+task.getEstimateTime());
@@ -212,7 +214,12 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			new TaskActivateAction(task).run();
 		} else {
 			task.setActive(false, false);
-		}			
+		}	
+		if (element.hasAttribute(ISSUEURL)) {
+			task.setIssueReportURL(element.getAttribute(ISSUEURL));
+		} else {
+			task.setIssueReportURL("");
+		}
 		if (element.hasAttribute(NOTES)) {
 			task.setNotes(element.getAttribute(NOTES));
 		} else {
