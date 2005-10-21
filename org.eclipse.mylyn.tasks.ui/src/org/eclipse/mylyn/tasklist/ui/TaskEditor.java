@@ -8,15 +8,15 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on 19-Jan-2005
- */
+
 package org.eclipse.mylar.tasklist.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -29,14 +29,16 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 /**
- * @author Eric Booth
  * @author Mik Kersten
+ * @author Eric Booth
  */
 public class TaskEditor extends MultiPageEditorPart {
 
-	private static final String EDITOR_PAGE_LABEL = "Task Info";
+	private static final String TASK_INFO_PAGE_LABEL = "Task Info";
+	private static final String ISSUE_WEB_PAGE_LABEL = "Issue Report Page";
 	protected ITask task;
 	private TaskSummaryEditor taskSummaryEditor;
+	private Browser issueBrowser;
 	private TaskEditorInput taskEditorInput;
 	
 	public TaskEditor() {
@@ -57,33 +59,51 @@ public class TaskEditor extends MultiPageEditorPart {
 	 * which displays the task for viewing.
 	 */
 	private void createTaskSummaryPage() {
-		taskSummaryEditor.createPartControl(getContainer());
-		taskSummaryEditor.setParentEditor(this);
-		int index = addPage(taskSummaryEditor.getControl());
-		setPageText(index, EDITOR_PAGE_LABEL);
-		
-		for (IEditorPart editor : MylarTasklistPlugin.getDefault().getTaskEditors()) {
-			try {
-				taskSummaryEditor.setParentEditor(this);
-				index = addPage(editor, null);
-				setPageText(index, "xxx");
-			} catch (PartInitException e) {
-				MylarPlugin.fail(e, "could not add task editor", false);
-			}
-		}
+		try {
+			taskSummaryEditor.createPartControl(getContainer());
+			taskSummaryEditor.setParentEditor(this);
+			int index = addPage(taskSummaryEditor.getControl());
+			setPageText(index, TASK_INFO_PAGE_LABEL);	 
+		} catch (RuntimeException e) {
+			MylarPlugin.fail(e, "could not add task editor", false);
+		}		
 	}
 
+	/**
+	 * Creates page 2 of the multi-page editor,
+	 * which displays the task issue web page
+	 */
+	private void createTaskIssueWebPage() {
+		try {
+			issueBrowser = new Browser(getContainer(), SWT.NONE);
+			int index = addPage(issueBrowser);
+			setPageText(index, ISSUE_WEB_PAGE_LABEL);
+			issueBrowser.setUrl(task.getIssueReportURL());
+		} catch (RuntimeException e) {
+			MylarPlugin.fail(e, "could not open issue report web page", false);
+		}
+	}	
+	
 	/**
 	 * Creates the pages of the multi-page editor.
 	 */
 	@Override
 	protected void createPages() {
 		createTaskSummaryPage();
+		if(task.getIssueReportURL().length() > 9){
+			createTaskIssueWebPage();
+		}
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		taskSummaryEditor.doSave(monitor);
+		if (issueBrowser != null){
+			issueBrowser.setUrl(task.getIssueReportURL());
+		}
+		else if(task.getIssueReportURL().length() > 9){
+			createTaskIssueWebPage();
+		}
 	}
 
 	/**
@@ -184,5 +204,5 @@ public class TaskEditor extends MultiPageEditorPart {
 	@Override
 	public void setFocus() {
 //		taskSummaryEditor.setFocus();
-	}
+	}	
 }

@@ -35,7 +35,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -54,7 +53,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private static TaskListManager taskListManager;
     private TaskListExternalizer externalizer;
     private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
-    private List<IEditorPart> taskEditors = new ArrayList<IEditorPart>();    
+    private List<IContextEditorFactory> contextEditors = new ArrayList<IContextEditorFactory>();    
     
     public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.report.ui.planningGameWizard";
     public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.report.ui.planning";
@@ -509,11 +508,11 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		this.highlighter = highlighter;
 	}
 
-	public List<IEditorPart> getTaskEditors() {
-		return taskEditors;
+	public List<IContextEditorFactory> getContextEditors() {
+		return contextEditors;
 	}
 
-	public void addTaskEditor(IEditorPart taskEditor) {
-		if (taskEditor != null) this.taskEditors.add(taskEditor);
+	public void addContextEditor(IContextEditorFactory contextEditor) {
+		if (contextEditor != null) this.contextEditors.add(contextEditor);
 	}
 }

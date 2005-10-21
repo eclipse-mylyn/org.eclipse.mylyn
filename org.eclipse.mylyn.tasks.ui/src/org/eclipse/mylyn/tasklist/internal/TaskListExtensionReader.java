@@ -25,7 +25,6 @@ import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.ui.IEditorPart;
 
 /**
  * @author Shawn Minto
