@@ -422,7 +422,6 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
                             }
                             return null;
                         }
-                    
                     });
                     int rc = d.open();
                     if(rc == InputDialog.OK){
@@ -552,7 +551,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             if(anonymous){
                 boolean hasUid = MessageDialog.openQuestion(null, "Retrieve anonymous user ID", "Do you already have a user study id (e.g. have already set up Mylar in a different workspace)?");
                 if(hasUid){
-                    InputDialog d = new InputDialog(null,"Enter User Study Id", "Please enter your user study id", "", new IInputValidator(){
+                    InputDialog d = new InputDialog(null, "Enter User Study Id", "Please enter your user study id", "", new IInputValidator(){
 
                         public String isValid(String newText) {
                             try{
@@ -615,11 +614,11 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 			            // dialog to inform the user and log the exception
 			        	failed = true;
 			        	if(e instanceof NoRouteToHostException || e instanceof UnknownHostException){
-				            MessageDialog.openError(null, "Error Uploading", 
-				            		"There was an error getting a new user id: \n" +
+				            MessageDialog.openError(null, "Error Communicating", 
+				            		"There was an error getting a new user id. \n" +
 				            		"No network connection.  Please try again later");
 			        	}else{
-			        		MessageDialog.openError(null, "Error Uploading", 
+			        		MessageDialog.openError(null, "Error Communicating", 
 				            		"There was an error getting a new user id: \n" +
 				            		e.getClass().getCanonicalName() + e.getMessage());
 			            	MylarPlugin.log(e, "error uploading");

@@ -27,15 +27,18 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * @author Ken Sueda
+ * @author Mik Kersten
  */
-public class MylarMonitorPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class MylarMonitorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+	private static final String DESCRIPTION = 
+		"Choosing to participate ";
 	private IntegerFieldEditor userStudyId;
 	
 	public MylarMonitorPreferencePage() {
 		super();
 		setPreferenceStore(MylarMonitorPlugin.getPrefs());	
+		setDescription(DESCRIPTION);
 	}
 	
 	@Override
@@ -59,7 +62,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements
 		GridLayout gl = new GridLayout(1, false);
 		container.setLayout(gl);
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Number of user events: " + getPreferenceStore().getInt(MylarMonitorPlugin.PREF_NUM_USER_EVENTS));		
+		label.setText("Number of user events since last submission: " + getPreferenceStore().getInt(MylarMonitorPlugin.PREF_NUM_USER_EVENTS));		
 		
 //		label = new Label(container, SWT.NULL);
 //		label.setText("Number of total events: " + MylarMonitorPlugin.getDefault().getTotalNumberEvents());
@@ -75,8 +78,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements
 		userStudyId = new IntegerFieldEditor("", " User ID:", container); // HACK
 		userStudyId.setErrorMessage("Your user id must be an integer");
 		int uidNum = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPlugin.USER_ID);
-		if (uidNum == 0)
-			uidNum = -1;
+		if (uidNum == 0) uidNum = -1;
 		userStudyId.setEmptyStringAllowed(false);
 		userStudyId.setStringValue(uidNum + "");
 	}

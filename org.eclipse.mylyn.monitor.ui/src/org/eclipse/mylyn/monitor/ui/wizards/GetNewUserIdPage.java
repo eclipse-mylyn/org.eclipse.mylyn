@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylar.monitor.ui.wizards;
 
-import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -25,7 +26,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,19 +36,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-
 /**
  * Page to get a mylar user study id for the user
+ * @author Mik Kersten
  * @author Shawn Minto
  */
 public class GetNewUserIdPage extends WizardPage {
 	
 	private static final String SELECT_BELOW = "<Select Below>";
+	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 	private Text firstName;
     private Text lastName;
 	private Text emailAddress;
     private Button anonymous;
-//    private Hyperlink terms;
     private Button getNewUid;
     private Button getExistingUid;
 	
@@ -56,7 +57,6 @@ public class GetNewUserIdPage extends WizardPage {
     private String email;
     private boolean anon;
     private boolean hasValidated = false;
-//    private String termsMessage = "<html><head>testing</head><p>This is a test </p></html>";
     
     private String jobFunction = SELECT_BELOW;
     private String companySize = SELECT_BELOW;
@@ -64,18 +64,18 @@ public class GetNewUserIdPage extends WizardPage {
     
     private UsageSubmissionWizard wizard;
     private boolean performUpload;
+    private boolean extendedMonitor = false;
     
-    /**
-     * Constructor
-     */
 	public GetNewUserIdPage(UsageSubmissionWizard wizard, boolean performUpload) {
 		super("Statistics Wizard");
 		this.performUpload = performUpload;
 		setTitle("Get Mylar Feedback User ID");
 		setDescription(
-			"Before starting the Mylar user study you must get a study ID by filling out the following form.\n" +
-			"If you already have an ID please fill out the information again to retrieve it.");
+			"In order to submit usage feedback you first need to get a User ID.\n");
         this.wizard = wizard;
+        if (MylarMonitorPlugin.getDefault().getCustomizingPlugin() != null) {
+        	extendedMonitor = true;
+        }
 	} 
 
     /**
@@ -86,33 +86,50 @@ public class GetNewUserIdPage extends WizardPage {
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
 		layout.numColumns = 1;   	
-		createBrowserSection(container);
-        createAnonymousSection(container);
-        createNamesSection(container);
-//        createTermsSection(container);        
-        createJobDetailSection(container);
-        createUserIdButtons(container);
+        if (extendedMonitor) {
+        	createBrowserSection(container);
+        	createAnonymousSection(container);
+        	createNamesSection(container);       
+        	createJobDetailSection(container);
+            createUserIdButtons(container);
+        } else {
+        	createAnonymousParticipationButtons(container);
+        }
 		setControl(container); 
 	}    
 	
 	private void createBrowserSection(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-        container.setLayout(layout);
-        layout.numColumns = 1;
-		Browser browser = new Browser(parent, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.heightHint = 200;
-        gd.widthHint = 600;
-        browser.setLayoutData(gd);
-        
-        Path path = new Path(MylarMonitorPlugin.getDefault().getStudyParameters().getFormsConsent());
-        URL url = Platform.find(MylarMonitorPlugin.getDefault().getBundle(), path);
-        try {
-        	URL localURL = Platform.asLocalURL(url);
-        	 browser.setUrl(localURL.toString());
-        } catch (IOException e) {
-        	browser.setText("Error: Ethics form could not be located");
+		String customizedBy = MylarMonitorPlugin.getDefault().getCustomizingPlugin();
+        if (extendedMonitor) {
+        	Label label = new Label(parent, SWT.NONE);
+    		label.setText("If you already have an ID please fill out the information again to retrieve it.");
+    		
+    		label = new Label(parent, SWT.NULL);
+    		label.setFont(BOLD);
+    		label.setText("NOTE: the monitor has been customized by this user study plug-in: " + customizedBy);
+    		label = new Label(parent, SWT.NULL);
+    		label.setText("If you are not familiar with this plug-in please do not proceed.  Study details: ");
+        	
+        	Composite container = new Composite(parent, SWT.NULL);
+    		GridLayout layout = new GridLayout();
+            container.setLayout(layout);
+            layout.numColumns = 1;
+    		Browser browser = new Browser(parent, SWT.NONE);
+            GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+            gd.heightHint = 200;
+            gd.widthHint = 600;
+            browser.setLayoutData(gd);
+        	Path path = new Path(MylarMonitorPlugin.getDefault().getStudyParameters().getFormsConsent());
+	        URL url = Platform.find(MylarMonitorPlugin.getDefault().getBundle(), path);
+	        try {
+	        	URL localURL = Platform.asLocalURL(url);
+	        	 browser.setUrl(localURL.toString());
+	        } catch (Exception e) {
+	        	browser.setText("Feedback description could not be located.");
+	        }
+        } else {
+        	Label label = new Label(parent, SWT.NULL);
+    		label.setText("bla bla");    		
         }
 	}
     
@@ -376,8 +393,76 @@ public class GetNewUserIdPage extends WizardPage {
 		updateEnablement();
 	}
 	
+	private void createAnonymousParticipationButtons(Composite parent) {
+		Composite container = new Composite(parent, SWT.NULL);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;   
+		container.setLayout(layout);
+		
+		Label label = new Label(container, SWT.NONE);
+		label.setText("Your data will not be traceable back to you, but an ID helps us analyze the usage statistics.");
+		label = new Label(container, SWT.NONE);
+		label.setText("Before switching workspaces please retrieve this ID from the Mylar Preferences so that you can use it again.");
+//		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		label.setLayoutData(gd);
+				
+		container = new Composite(parent, SWT.NULL);
+		layout = new GridLayout();
+		layout.numColumns = 2;   
+		container.setLayout(layout);
+		
+		getNewUid = new Button(container, SWT.PUSH);
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		getNewUid.setLayoutData(gd);
+		getNewUid.setSelection(false);
+		getNewUid.setText("Create or Retrieve ID");
+		getNewUid.addSelectionListener(new SelectionListener(){
+            public void widgetSelected(SelectionEvent e) {
+                if(e.widget instanceof Button){
+                    if(wizard.getNewUid(null, null, null, true, null, null, null) != -1){
+                        if(wizard.getUploadPage() != null) 
+                            wizard.getUploadPage().updateUid();
+                        hasValidated = true;
+                        MessageDialog.openInformation(Display.getDefault().getActiveShell(),"Mylar User Study ID", "Your mylar user study id is: " + wizard.getUid() + "\n Please record this number if you are using multiple copies of eclipse so that you do not have to register again.");
+                    }
+                    GetNewUserIdPage.this.setPageComplete(GetNewUserIdPage.this.isPageComplete());
+                }
+            }
+            public void widgetDefaultSelected(SelectionEvent e) {
+            	// don't care about default selected
+            }
+        });
+        
+//        getExistingUid = new Button(container, SWT.PUSH);
+//		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+//		getExistingUid.setLayoutData(gd);
+//		getExistingUid.setSelection(false);
+//		getExistingUid.setText("Use Existing ID");
+//		getExistingUid.addSelectionListener(new SelectionListener(){
+//            public void widgetSelected(SelectionEvent e) {
+//                if (e.widget instanceof Button) {
+//                    if(wizard.getExistingUid(null, null, null, true) != -1){
+//                        if(wizard.getUploadPage() != null) 
+//                            wizard.getUploadPage().updateUid();
+//                        hasValidated = true;
+//                        MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+//                        		"Mylar Feedback User ID", "Your mylar feedback id is: " + wizard.getUid() + "\n Please record this number if you are using multiple copies of eclipse so that you do not have to register again.");
+//                    }
+//                } else {
+//                	MessageDialog.openError( Display.getDefault().getActiveShell(), 
+//							"Myalr Monitor", "That ID does not exist.");
+//                }
+//                GetNewUserIdPage.this.setPageComplete(GetNewUserIdPage.this.isPageComplete());
+//            }
+//            public void widgetDefaultSelected(SelectionEvent e) {
+//            	// don't care about default selected
+//            }
+//        });
+		updateEnablement();
+	}
 	
 	private void updateEnablement() {
+		if (!extendedMonitor) return;
 		boolean nameFilled = (!firstName.getText().equals("") && !lastName.getText().equals("") && !emailAddress.getText().equals("")) || anon;
 		if(nameFilled){
 			getExistingUid.setEnabled(true);
@@ -392,13 +477,13 @@ public class GetNewUserIdPage extends WizardPage {
 		} else {
 			getExistingUid.setEnabled(false);
 			getNewUid.setEnabled(false);
-		}
+		} 
 	}
 	
     public boolean hasAllFields(boolean existing){
+    	if (!extendedMonitor) return true;
     	boolean nameFilled = !firstName.getText().equals("") && !lastName.getText().equals("") && !emailAddress.getText().equals("");
-        
-    	if(!existing){
+        if(!existing){
 	    	boolean jobFilled = !jobFunction.equals(SELECT_BELOW) 
 	    		&& !companyFunction.equals(SELECT_BELOW)
 	    		&& !companySize.equals(SELECT_BELOW);

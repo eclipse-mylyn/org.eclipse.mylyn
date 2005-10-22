@@ -16,13 +16,13 @@
             class="org.eclipse.mylar.monitor.ui.wizards.UsageSubmissionWizard"
             icon="icons/etool16/wizard-study.gif"
             id="org.eclipse.mylar.monitor.ui.uploadStatistics.StatisticsUploadWizard"
-            name="Usage Feedback Upload">
+            name="Usage Feedback">
       </wizard>
    </extension>
    
    <extension point="org.eclipse.ui.preferencePages">
       <page 
-         name="User Study"
+         name="Usage Feedback"
          class="org.eclipse.mylar.monitor.ui.preferences.MylarMonitorPreferencePage"
          id="org.eclipse.mylar.monitor.ui.preferences"
 		 category="org.eclipse.mylar.ui.preferences">

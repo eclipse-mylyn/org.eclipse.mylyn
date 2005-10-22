@@ -63,7 +63,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
-	public static String VERSION = "0.3.12";
+	public static String VERSION = "0.4";
 	public static String UPLOAD_FILE_LABEL = "USAGE";
 	
     private static final long HOUR = 3600*1000; 	
@@ -79,7 +79,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String DEFAULT_UPLOAD_SCRIPT = "upload.cgi";
 	public static final String DEFAULT_UPLAOD_SCRIPT_QUESTIONNAIRE = "questionnaire.cgi";
 	
-	private boolean isDefaultStudyMode = true;
+	private String customizingPlugin = null;
 	
 	public static final String UI_PLUGIN_ID = "org.eclipse.mylar.ui";
     public static final String MONITOR_FILE_NAME = "workspace";
@@ -478,9 +478,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 									readForms(elements[j]);
 								} 
 							}
+							customizingPlugin = extensions[i].getNamespace();
 						}
 						extensionsRead = true;
-						isDefaultStudyMode = false;
 					}
 				}
 			} catch (Throwable t) {
@@ -519,7 +519,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		return studyParameters;
 	}
 
-	public boolean isDefaultStudyMode() {
-		return isDefaultStudyMode;
+	public String getCustomizingPlugin() {
+		return customizingPlugin;
 	}
 }
