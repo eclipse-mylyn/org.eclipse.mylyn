@@ -22,7 +22,7 @@ public class AllMonitorTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.tests");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(TaskTimerTest.class);
+//		suite.addTestSuite(TaskTimerTest.class);
 		suite.addTestSuite(ActiveTimerTest.class);
 		suite.addTestSuite(StatisticsReportingTest.class);
 		suite.addTestSuite(StatisticsLoggingTest.class);
