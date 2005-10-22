@@ -30,6 +30,7 @@ Export-Package: org.apache.commons.httpclient,
  org.apache.commons.httpclient.methods.multipart,
  org.eclipse.mylar.monitor,
  org.eclipse.mylar.monitor.internal,
+ org.eclipse.mylar.monitor.monitors,
  org.eclipse.mylar.monitor.ui,
  org.eclipse.mylar.monitor.ui.preferences,
  org.eclipse.mylar.monitor.ui.wizards

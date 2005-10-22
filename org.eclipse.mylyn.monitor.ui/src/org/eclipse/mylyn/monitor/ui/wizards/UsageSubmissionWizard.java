@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
-import org.eclipse.mylar.monitor.IMonitorQuestionnairePage;
+import org.eclipse.mylar.monitor.IQuestionnairePage;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
@@ -77,7 +77,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 	
     private UsageUploadWizardPage uploadPage;
     private GetNewUserIdPage getUidPage;
-    private IMonitorQuestionnairePage questionnairePage;
+    private IQuestionnairePage questionnairePage;
     private boolean performUpload = true;
     
 	public UsageSubmissionWizard() {
@@ -107,7 +107,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         uploadPage = new UsageUploadWizardPage(this);
         getUidPage = new GetNewUserIdPage(this, performUpload);
         if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() && performUpload) {
-	        IMonitorQuestionnairePage page = MylarMonitorPlugin.getDefault().getStudyParameters().getQuestionnairePage();
+	        IQuestionnairePage page = MylarMonitorPlugin.getDefault().getStudyParameters().getQuestionnairePage();
         	questionnairePage = page;
         }
         super.setForcePreviousAndNextButtons(true);

@@ -22,10 +22,10 @@ import junit.framework.TestCase;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.monitor.KeybindingCommandMonitor;
-import org.eclipse.mylar.monitor.SelectionMonitor;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.monitors.KeybindingCommandMonitor;
+import org.eclipse.mylar.monitor.monitors.SelectionMonitor;
 import org.eclipse.ui.internal.Workbench;
 
 
@@ -35,22 +35,45 @@ public class MonitorTest extends TestCase {
     private SelectionMonitor selectionMonitor = new SelectionMonitor();
     private KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
     
+    
+    public void testEnablement() {
+    	File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
+    	assertFalse(MylarMonitorPlugin.getDefault().isMonitoringEnabled());
+        generateSelection();
+        assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
+        
+    	MylarMonitorPlugin.getDefault().startMonitoring();
+        generateSelection();
+        assertEquals(1, logger.getHistoryFromFile(monitorFile).size());
+        
+        MylarMonitorPlugin.getDefault().stopMonitoring();
+        generateSelection();
+        assertEquals(1, logger.getHistoryFromFile(monitorFile).size());
+        
+        MylarMonitorPlugin.getDefault().startMonitoring();
+        generateSelection();
+        assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
+    }
+    
     public void testLogging() {
+    	MylarMonitorPlugin.getDefault().startMonitoring();
         logger.stop();
         MylarMonitorPlugin.getDefault().getMonitorFile().delete();
         logger.start();
          
-        selectionMonitor.selectionChanged(
-                Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart(),
-                new StructuredSelection("yo"));
-                
+        generateSelection();        
         commandMonitor.preExecute("foo.command", new ExecutionEvent(new HashMap(), "trigger", "context"));
         File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
         assertTrue(monitorFile.exists());
         logger.stop();
         List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
-        assertTrue(events.size() >= 2);
-//        assertEquals(2, events.size()); 
+        assertTrue(events.size() >= 2); 
     }
+    
 
+	private void generateSelection() {
+		selectionMonitor.selectionChanged(
+                Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart(),
+                new StructuredSelection("yo"));
+	}
 }

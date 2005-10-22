@@ -19,7 +19,7 @@ package org.eclipse.mylar.monitor;
 public class StudyParameters {
 	private String title = MylarMonitorPlugin.DEFAULT_TITLE;
 	private String description = MylarMonitorPlugin.DEFAULT_DESCRIPTION;
-	private IMonitorQuestionnairePage questionnairePage = null;
+	private IQuestionnairePage questionnairePage = null;
 	private long transmitPromptPeriod = MylarMonitorPlugin.DEFAULT_DELAY_BETWEEN_TRANSMITS;
 	
 	private String formsConsent = MylarMonitorPlugin.DEFAULT_ETHICS_FORM;
@@ -70,10 +70,10 @@ public class StudyParameters {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public IMonitorQuestionnairePage getQuestionnairePage() {
+	public IQuestionnairePage getQuestionnairePage() {
 		return questionnairePage;
 	}
-	public void setQuestionnairePage(IMonitorQuestionnairePage questionnairePage) {
+	public void setQuestionnairePage(IQuestionnairePage questionnairePage) {
 		this.questionnairePage = questionnairePage;
 	}
 	public String getTitle() {

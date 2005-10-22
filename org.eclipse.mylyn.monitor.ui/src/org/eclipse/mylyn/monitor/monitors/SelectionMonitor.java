@@ -11,7 +11,7 @@
 /*
  * Created on Jun 10, 2005
   */
-package org.eclipse.mylar.monitor;
+package org.eclipse.mylar.monitor.monitors;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
