@@ -14,7 +14,6 @@ package org.eclipse.mylar.tasklist;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.ActivityTimerThread;
-import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.IActiveTimerListener;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
 
@@ -31,7 +30,7 @@ public class TaskActiveTimerListener implements IActiveTimerListener, IInteracti
 	
 	public TaskActiveTimerListener(ITask task){
 		this.task = task;
-		timer = new ActivityTimerThread(MylarContextManager.ACTIVITY_TIMEOUT_MINUTES);
+		timer = new ActivityTimerThread(MylarPlugin.getContextManager().getActivityTimeoutSeconds());
 		timer.addListener(this);
 		timer.start();
 		MylarPlugin.getDefault().addInteractionListener(this);

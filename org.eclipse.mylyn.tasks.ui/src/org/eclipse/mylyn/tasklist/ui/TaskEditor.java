@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasklist.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.swt.SWT;
@@ -64,6 +65,17 @@ public class TaskEditor extends MultiPageEditorPart {
 			taskSummaryEditor.setParentEditor(this);
 			int index = addPage(taskSummaryEditor.getControl());
 			setPageText(index, TASK_INFO_PAGE_LABEL);	 
+			
+			for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
+				try { 
+					taskSummaryEditor.setParentEditor(this);
+					index = addPage(factory.createEditor(), factory.createEditorInput(MylarPlugin.getContextManager().getActiveContext()));
+					setPageText(index++, factory.getTitle()); 
+				} catch (PartInitException e) {
+					MylarPlugin.fail(e, "could not add task editor", false);
+				}
+			}
+
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not add task editor", false);
 		}		

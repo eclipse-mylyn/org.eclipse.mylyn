@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
@@ -37,7 +36,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class Task implements ITask {
 
-	public static final long INACTIVITY_TIME_MILLIS = MylarContextManager.ACTIVITY_TIMEOUT_MINUTES * 1000 * 60;
+	public static final long INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getActivityTimeoutSeconds() * 1000;
 	
     private static final long serialVersionUID = 3545518391537382197L;
     private boolean active = false;

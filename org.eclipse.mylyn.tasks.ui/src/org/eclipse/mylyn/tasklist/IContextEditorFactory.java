@@ -25,5 +25,6 @@ public interface IContextEditorFactory {
 	public IEditorPart createEditor();
 	
 	public IEditorInput createEditorInput(IMylarContext context);
-	
+
+	public String getTitle();
 }
