@@ -223,7 +223,6 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     }
     
     public void startMonitoring() {
-    	if (monitoringEnabled) return;
         logFile = getLogFileLocation();
         startLog();
         IWorkbench workbench = PlatformUI.getWorkbench();
