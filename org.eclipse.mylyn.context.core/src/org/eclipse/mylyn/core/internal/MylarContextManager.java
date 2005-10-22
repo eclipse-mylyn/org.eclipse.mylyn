@@ -44,7 +44,7 @@ public class MylarContextManager {
 	private static final String ACTIVITY_ID = "org.eclipse.mylar.core";
 	private static final String ACTIVITY_HANDLE = "attention";
 	private static final String ACTIVITY_KIND = "context";
-	public static final int ACTIVITY_TIMEOUT_MINUTES = 5 * 60; // in seconds 
+	private static final int ACTIVITY_TIMEOUT_SECONDS = 5 * 60; // 5 minutes in seconds 
 	
 	private static final String CONTEXT_HISTORY_FILE_NAME = "context-history";
 	public static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylar.core.model.interest.propagation";
@@ -64,6 +64,7 @@ public class MylarContextManager {
     private CompositeContext activeContext = new CompositeContext();
     private MylarContext activityHistory = null;
     private ActivityListener activityListener;
+    private int activityTimeoutSeconds = ACTIVITY_TIMEOUT_SECONDS;
     
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
@@ -80,8 +81,8 @@ public class MylarContextManager {
     	private ActivityTimerThread timer;
     	private boolean isStalled;
     	
-    	public ActivityListener(int timout){
-    		timer = new ActivityTimerThread(timout);
+    	public ActivityListener(int timeoutInSeconds){
+    		timer = new ActivityTimerThread(timeoutInSeconds);
     		timer.addListener(this);
     		timer.start();
     		MylarPlugin.getDefault().addInteractionListener(this);
@@ -126,8 +127,18 @@ public class MylarContextManager {
 
     	public void stop() {}
     	
-    	public void setTimout(int timout) {
-    		timer.setTimeout(timout);
+    	/** Currently used for testing only */
+    	public void setTimeoutSeconds(int timeoutSeconds) {
+    		//timer.setTimeout(timeout);
+    		timer.killThread();
+    		
+    		
+    		//Temp Test
+    		timer = new ActivityTimerThread(timeoutSeconds); 
+    		timer.setTimeoutSeconds(timeoutSeconds);
+    		timer.addListener(this);
+    		timer.start();
+    		
     	}
     }
     
@@ -140,12 +151,17 @@ public class MylarContextManager {
         	resetActivityHistory();
         } 
         
-        activityListener = new ActivityListener(ACTIVITY_TIMEOUT_MINUTES);//ACTIVITY_TIMEOUT_MINUTES);
+        activityListener = new ActivityListener(ACTIVITY_TIMEOUT_SECONDS);//ACTIVITY_TIMEOUT_SECONDS);
         activityListener.start();
     }
     
-    public void setActivityTimterTimout(int timeInSeconds) {
-    	activityListener.setTimout(timeInSeconds);
+    public void setActivityTimeoutSeconds(int timeoutSeconds){
+    	activityTimeoutSeconds = timeoutSeconds;
+    	activityListener.setTimeoutSeconds(timeoutSeconds * 1000);
+    }
+    
+    public int getActivityTimeoutSeconds(){
+    	return activityTimeoutSeconds;
     }
 
     public IMylarElement getActiveNode() {

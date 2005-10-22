@@ -26,20 +26,20 @@ import org.eclipse.mylar.core.util.IActiveTimerListener;
 public class ActivityTimerThread extends Thread implements Runnable {
 
     private static final int SECOND = 1000;
-//    private static final int MINUTE = 60 * SECOND;
     private int sleepInterval = 5 * SECOND;
     private int timeout = 0;
     private int elapsed = 0;
     private List<IActiveTimerListener> listeners = new ArrayList<IActiveTimerListener>();
     boolean killed = false;
     
+    /** Currently used only for testing */
     public ActivityTimerThread(int timeoutInMillis, int sleepInterval) {
-        this.timeout = timeoutInMillis;
-        this.sleepInterval = sleepInterval;
+    	this.sleepInterval = sleepInterval;
+    	setTimeoutMillis(timeoutInMillis);
     }
     
-    public ActivityTimerThread(int timeoutInMinutes) {
-        this.timeout = timeoutInMinutes * SECOND;  
+    public ActivityTimerThread(int timeoutInSeconds) {
+        setTimeoutMillis(timeoutInSeconds * SECOND);
     }
 
     public boolean addListener(IActiveTimerListener listener) {
@@ -77,11 +77,19 @@ public class ActivityTimerThread extends Thread implements Runnable {
     	elapsed = 0;
     }
 
-	public int getTimeout() {
+	public int getTimeoutMillis() {
 		return timeout;
 	}
 
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
+	protected void setTimeoutMillis(int timeoutInMillis) {
+		this.timeout = timeoutInMillis;
+		if (sleepInterval > timeoutInMillis){
+			sleepInterval = timeoutInMillis;
+		}
 	}
+	
+	protected void setTimeoutSeconds(int timeoutInSeconds){
+		setTimeoutMillis(timeoutInSeconds * SECOND);
+	}
+	
 }
