@@ -34,8 +34,7 @@ public class MonitorTest extends TestCase {
     private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
     private SelectionMonitor selectionMonitor = new SelectionMonitor();
     private KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
-    
-    
+        
     public void testEnablement() {
     	File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
     	MylarMonitorPlugin.getDefault().stopMonitoring();
