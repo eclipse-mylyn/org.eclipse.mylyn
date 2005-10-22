@@ -11,18 +11,14 @@
 
 package org.eclipse.mylar.monitor;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.IActionExecutionListener;
+import java.io.File;
+
+import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * @author Mik Kersten
  */
-public class ActionExecutionMonitor implements IActionExecutionListener {
-    	
-	public void actionObserved(IAction action) {
-		InteractionEvent interactionEvent = InteractionEvent.makeCommand(action.getId(), "");
-		MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
-	}
+public interface IQuestionnairePage extends IWizardPage {
+	
+	public abstract File createFeedbackFile();
 }
