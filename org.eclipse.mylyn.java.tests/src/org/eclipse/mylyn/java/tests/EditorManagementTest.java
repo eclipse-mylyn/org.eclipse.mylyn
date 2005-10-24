@@ -13,8 +13,6 @@ package org.eclipse.mylar.java.tests;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
@@ -27,10 +25,7 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 /**
@@ -81,9 +76,9 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		IMylarElement element = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 		
-		assertEquals(1, page.getEditors().length);
-		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor) throws CoreException {
+//		assertEquals(1, page.getEditors().length);
+//		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//			protected void execute(IProgressMonitor monitor) throws CoreException {
 				for (int i = 0; i < page.getEditors().length; i++) {
 					IEditorPart editor = page.getEditors()[i];
 					if (editor instanceof AbstractDecoratedTextEditor) {
@@ -91,10 +86,10 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 						assertEquals(0, page.getEditors().length);
 					}
 				}
-			}
-		};
-		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-		service.run(true, true, op);
+//			}
+//		};
+//		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+//		service.run(true, true, op);
 	}
 	
 	@SuppressWarnings("deprecation")
