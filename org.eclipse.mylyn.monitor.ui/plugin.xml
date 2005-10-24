@@ -22,7 +22,7 @@
    
    <extension point="org.eclipse.ui.preferencePages">
       <page 
-         name="Usage Feedback"
+         name="Monitor"
          class="org.eclipse.mylar.monitor.ui.preferences.MylarMonitorPreferencePage"
          id="org.eclipse.mylar.monitor.ui.preferences"
 		 category="org.eclipse.mylar.ui.preferences">

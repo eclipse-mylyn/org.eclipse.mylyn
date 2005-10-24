@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Page to upload the file to the server
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class UsageUploadWizardPage extends WizardPage {
 
@@ -32,8 +33,8 @@ public class UsageUploadWizardPage extends WizardPage {
     /** A text box to hold the location of the usage statistics file */
 	private Text usageFileText;
 	
-	/** A text box to hold the location of the log file */
-	private Text logFileText;
+//	/** A text box to hold the location of the log file */
+//	private Text logFileText;
 	
     /** A text file to show the id of the user */
 	private Text idText;
@@ -84,12 +85,12 @@ public class UsageUploadWizardPage extends WizardPage {
 		label = new Label(container, SWT.NULL);
 		label.setText("Log file location:");
 		
-		logFileText = new Text(container, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		logFileText.setLayoutData(gd);
-		logFileText.setEditable(false);
-		
-		logFileText.setText(wizard.getLogFileName());
+//		logFileText = new Text(container, SWT.BORDER | SWT.SINGLE);
+//		gd = new GridData(GridData.FILL_HORIZONTAL);
+//		logFileText.setLayoutData(gd);
+//		logFileText.setEditable(false);
+//		
+//		logFileText.setText(wizard.getLogFileName());
 		
 		label = new Label(container, SWT.NULL);
 		label.setText("User study ID:");

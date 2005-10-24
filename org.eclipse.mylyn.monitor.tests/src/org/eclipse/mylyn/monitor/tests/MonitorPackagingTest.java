@@ -31,21 +31,20 @@ public class MonitorPackagingTest extends AbstractContextTest {
 
     public void testCreateUploadPackage() throws IOException, InterruptedException {
         MylarMonitorPlugin.getDefault().getInteractionLogger().stop();
-        MylarMonitorPlugin.getDefault().stopLog();
-        
-        
-        File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
-        File logFile = MylarMonitorPlugin.getDefault().getLogFile();
+//        MylarMonitorPlugin.getDefault().stopLog();
+                
+        File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+//        File logFile = MylarMonitorPlugin.getDefault().getLogFile();
         
         List<File> files = new ArrayList<File>();
         files.add(monitorFile);
-        files.add(logFile);
+//        files.add(logFile);
         
         File zipFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + "/mylarUpload.zip");
         
         UsageSubmissionWizard.createZipFile(zipFile, files);
 
-        MylarMonitorPlugin.getDefault().startLog();
+//        MylarMonitorPlugin.getDefault().startLog();
         MylarMonitorPlugin.getDefault().getInteractionLogger().start();
         
         // pretend to upload
@@ -63,14 +62,14 @@ public class MonitorPackagingTest extends AbstractContextTest {
         for (Enumeration entries = zf.entries(); entries.hasMoreElements();) {
         	numEntries ++;
             String zipEntryName = ((ZipEntry)entries.nextElement()).getName();
-            assertTrue("Unknown Entry: " + zipEntryName, zipEntryName.compareTo(monitorFile.getName()) == 0 || zipEntryName.compareTo(logFile.getName()) == 0);
+            assertTrue("Unknown Entry: " + zipEntryName, zipEntryName.compareTo(monitorFile.getName()) == 0);// || zipEntryName.compareTo(logFile.getName()) == 0);
         }
-        assertEquals("Results not correct size", 2, numEntries);
+        assertEquals("Results not correct size", 1, numEntries);
         
         // check the length of the zip
-        long fileLength = monitorFile.length() + logFile.length();
-        if(monitorFile.length() != 0 || logFile.length() != 0)
-        	assertTrue("Zip didn't help", fileLength > zipFile.length());
+//        long fileLength = monitorFile.length() + logFile.length();
+//        if(monitorFile.length() != 0 || logFile.length() != 0)
+//        	assertTrue("Zip didn't help", fileLength > zipFile.length());
  
         // delete it
         zipFile.delete();

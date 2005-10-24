@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.monitor.tests;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +48,11 @@ public class StatisticsReportingTest extends TestCase {
 		assertNotNull(MylarPlugin.getDefault());
 		assertNotNull(MylarJavaPlugin.getDefault());
 		assertNotNull(PackageExplorerPart.openInActivePerspective());
-		
+
+		MylarMonitorPlugin.getDefault().startMonitoring();
+		assertTrue(MylarMonitorPlugin.getDefault().isMonitoringEnabled());
 		logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
-		logger.stop();
-		String path = logger.getOutputFile().getAbsolutePath();
-		logger.getOutputFile().delete();
-		logger.setOutputFile(new File(path));
-		logger.start();
+		logger.clearInteractionHistory();
 		
 		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
 		collectors.add(viewCollector);
@@ -89,7 +87,6 @@ public class StatisticsReportingTest extends TestCase {
 		logger.stop();
 		PackageExplorerPart part = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(part.getTreeViewer());
-		assertNotNull(MylarJavaPlugin.getDefault());
 		part.setFocus();
 		
 		logger.start();		
@@ -107,7 +104,6 @@ public class StatisticsReportingTest extends TestCase {
 		
 		logger.stop();
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
-		
 		// TODO: these are off from expected when test run alone, due to unknown element selections
 		assertEquals(0.5f, editRatioCollector.getBaselineRatio(-1));
 		assertEquals(2f, editRatioCollector.getMylarRatio(-1));
@@ -119,18 +115,22 @@ public class StatisticsReportingTest extends TestCase {
 		assertTrue(summary.getSingleSummaries().size() > 0);
 	}
 	
-	public void testFilteredModeDetection() {
+	public void testFilteredModeDetection() throws IOException {
+		MylarMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
+		mockExplorerSelection("A.java");
+		mockExplorerSelection("A.java");
+		mockTypesSelection("A.java");
+
+		assertNotNull(MylarPlugin.getDefault().getPreferenceStore());		
+		String prefId = ApplyMylarToPackageExplorerAction.PREF_ID_PREFIX + PackageExplorerPart.VIEW_ID;
+		assertNotNull(prefId);
+		MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, true); 
+		
 		mockExplorerSelection("A.java");
 		mockExplorerSelection("A.java");
 		mockTypesSelection("A.java");
 		
-		MylarPlugin.getDefault().getPreferenceStore().setValue(ApplyMylarToPackageExplorerAction.getDefault().getPrefId(), true); 
-		
-		mockExplorerSelection("A.java");
-		mockExplorerSelection("A.java");
-		mockTypesSelection("A.java");
-		
-		MylarPlugin.getDefault().getPreferenceStore().setValue(ApplyMylarToPackageExplorerAction.getDefault().getPrefId(), false);
+		MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, false);
 		
 		mockExplorerSelection("A.java");
 		

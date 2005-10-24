@@ -72,8 +72,8 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
     /** The id of the user */
     private int uid;
 
-    private final File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
-    private final File logFile = MylarMonitorPlugin.getDefault().getLogFile();
+    private final File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+//    private final File logFile = MylarMonitorPlugin.getDefault().getLogFile();
 	
     private UsageUploadWizardPage uploadPage;
     private GetNewUserIdPage getUidPage;
@@ -177,12 +177,12 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         if(f == null)
         	return;
                 
-        upload(logFile, LOG, monitor);
-        if(!failed){
-        	logFile.delete();
-        }else{
-        	failed = false;
-        }
+//        upload(logFile, LOG, monitor);
+//        if(!failed){
+//        	logFile.delete();
+//        }else{
+//        	failed = false;
+//        }
         
         upload(f, STATS, monitor);
         if(f.exists()){
@@ -204,7 +204,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             }
         }
         
-    	MylarMonitorPlugin.getDefault().startLog();
+//    	MylarMonitorPlugin.getDefault().startLog();
         MylarMonitorPlugin.getDefault().getInteractionLogger().start();
         MylarMonitorPlugin.setPerformingUpload(false);
 		return;
@@ -394,9 +394,9 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
     	return monitorFile.getAbsolutePath();
     }
     
-    public String getLogFileName(){
-    	return logFile.getAbsolutePath();
-    }
+//    public String getLogFileName(){
+//    	return logFile.getAbsolutePath();
+//    }
     
     /** The status from the http request */
     private int status;
@@ -692,7 +692,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
     private File zipFilesForUpload(){
     	MylarMonitorPlugin.setPerformingUpload(true);
    	 	MylarMonitorPlugin.getDefault().getInteractionLogger().stop();
-   	 	MylarMonitorPlugin.getDefault().stopLog();
+//   	 	MylarMonitorPlugin.getDefault().stopLog();
    	 	
         List<File> files = new ArrayList<File>();
         files.add(monitorFile);

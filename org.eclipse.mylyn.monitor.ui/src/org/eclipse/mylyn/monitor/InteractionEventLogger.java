@@ -42,7 +42,7 @@ import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer.Token;
 public class InteractionEventLogger implements IInteractionEventListener {
 
     private File outputFile;
-    private FileOutputStream outputStream;
+    private static FileOutputStream outputStream;
     private boolean started = false;
     private int eventAccumulartor = 0;    
     
@@ -56,7 +56,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
      * TODO: should these be queued for better performance?
      */
     public void interactionObserved(InteractionEvent event) {
-//    	System.err.println("> " + event);
+//    	System.err.println("> " + event); 
     	try {
             if (started) {       
             	String xml = interactionEventToXml(event);
@@ -75,7 +75,6 @@ public class InteractionEventLogger implements IInteractionEventListener {
     public void start() {
         try {
         	if(!outputFile.exists()) outputFile.createNewFile(); 
-        		
             outputStream = new FileOutputStream(outputFile, true);
             started = true;
             
@@ -90,7 +89,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
     
     public void stop() {
         try {
-            outputStream.close();
+        	if (outputStream != null) outputStream.close();
             started = false;
             if (MylarMonitorPlugin.getDefault() != null) MylarMonitorPlugin.getDefault().incrementObservedEvents(eventAccumulartor);
             eventAccumulartor = 0;
@@ -99,11 +98,34 @@ public class InteractionEventLogger implements IInteractionEventListener {
         }
     }
     
-    public void setOutputFile(File outFile) {
-    	if (!started) {
-    		this.outputFile.renameTo(outFile);
-    		this.outputFile = outFile;
-    	}
+    public File moveOutputFile(String newPath) {
+    	stop();
+    	File newFile = new File(newPath);
+    	try { 
+	    	if (outputFile.exists() && !newFile.exists()) {
+	    		outputFile.renameTo(newFile);
+	    	} else if (!newFile.exists()){ 
+	    		newFile.createNewFile();
+	    	} 
+			this.outputFile = newFile;
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Could not set logger output file", true);
+		} 
+		start();
+		return newFile;
+    }
+    
+    /**
+     * @return	true if successfully cleared
+     */
+    public synchronized void clearInteractionHistory() throws IOException {
+    	stop();
+    	outputStream = new FileOutputStream(outputFile, false);
+    	outputStream.flush();
+    	outputStream.close();
+    	outputFile.delete();
+    	outputFile.createNewFile();
+    	start();
     }
     
 	public File getOutputFile() {

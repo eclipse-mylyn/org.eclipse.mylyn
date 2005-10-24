@@ -14,6 +14,7 @@
 package org.eclipse.mylar.monitor.tests;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,11 +36,24 @@ public class MonitorTest extends TestCase {
     private SelectionMonitor selectionMonitor = new SelectionMonitor();
     private KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
         
-    public void testEnablement() {
-    	File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
+    @Override
+	protected void setUp() throws Exception {
+		super.setUp();
+//		MylarMonitorPlugin.getDefault().startMonitoring();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+//		MylarMonitorPlugin.getDefault().stopMonitoring();
+	}
+	
+	public void testEnablement() throws IOException {
+    	File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+    	assertTrue(monitorFile.exists());
     	MylarMonitorPlugin.getDefault().stopMonitoring();
-        logger.stop();
-        MylarMonitorPlugin.getDefault().getMonitorFile().delete();
+        logger.clearInteractionHistory();
+        assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
     	generateSelection();
         assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
         
@@ -56,21 +70,45 @@ public class MonitorTest extends TestCase {
         assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
     }
     
+//    public void testLogFileMove() throws IOException {
+//    	File defaultFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+//    	MylarMonitorPlugin.getDefault().stopMonitoring();
+//    	assertTrue(logger.clearInteractionHistory());
+//    	
+//    	MylarMonitorPlugin.getDefault().startMonitoring();
+//        generateSelection();
+//        generateSelection();
+//        assertEquals(2, logger.getHistoryFromFile(defaultFile).size());
+//        
+//        File newFile = MylarMonitorPlugin.getDefault().moveMonitorLogFile(MylarPlugin.getDefault().getMylarDataDirectory() + "/monitor-test-new.xml");
+//        assertNotNull(newFile);
+//        File movedFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+//    	assertTrue(!newFile.equals(defaultFile));
+//        assertEquals(newFile, movedFile);
+//    	assertEquals(newFile, logger.getOutputFile());
+//    	assertEquals(2, logger.getHistoryFromFile(newFile).size());
+//    	assertEquals(0, logger.getHistoryFromFile(defaultFile).size());
+//    	
+//        generateSelection();
+//        assertEquals(3, logger.getHistoryFromFile(newFile).size());
+//        File restoredFile = MylarMonitorPlugin.getDefault().moveMonitorLogFile(defaultFile.getAbsolutePath());        
+//        assertNotNull(restoredFile);
+//    }
+    
     public void testLogging() {
     	MylarMonitorPlugin.getDefault().startMonitoring();
         logger.stop();
-        MylarMonitorPlugin.getDefault().getMonitorFile().delete();
+        MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
         logger.start();
          
         generateSelection();        
         commandMonitor.preExecute("foo.command", new ExecutionEvent(new HashMap(), "trigger", "context"));
-        File monitorFile = MylarMonitorPlugin.getDefault().getMonitorFile();
+        File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
         assertTrue(monitorFile.exists());
         logger.stop();
         List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
         assertTrue(events.size() >= 2); 
-    }
-    
+    }    
 
 	private void generateSelection() {
 		selectionMonitor.selectionChanged(

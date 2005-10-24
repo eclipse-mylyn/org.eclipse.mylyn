@@ -16,24 +16,35 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
- * @author Ken Sueda
  * @author Mik Kersten
+ * @author Ken Sueda
  */
 public class MylarMonitorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private static final String DESCRIPTION = 
-		"Choosing to participate ";
+		"If enabled the Mylar monitor logs selections, edits, commands, and prefernece changes. "
+		+ "If you would like to help improve the user experience by anonymously sharing non-private "
+		+ "parts of this data, run the Usage Feedback Wizard.";
+	 
 	private IntegerFieldEditor userStudyId;
+	private Button enableMonitoring;
+	private Text logFileText;
+	private Text uploadUrl;
 	
 	public MylarMonitorPreferencePage() {
 		super();
@@ -46,8 +57,9 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout (layout);
-		createStatisticsSection(container);
-		createUserStudyIdSection(container);
+		createLogFileSection(container);
+		createUsageSection(container);
+		updateEnablement();
 		return container;
 	}
 
@@ -55,65 +67,159 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		// Nothing to init
 	}
 
-	private void createStatisticsSection(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		container.setLayoutData(gridData);
-		GridLayout gl = new GridLayout(1, false);
-		container.setLayout(gl);
-		Label label = new Label(container, SWT.NULL);
-		label.setText("Number of user events since last submission: " + getPreferenceStore().getInt(MylarMonitorPlugin.PREF_NUM_USER_EVENTS));		
-		
-//		label = new Label(container, SWT.NULL);
-//		label.setText("Number of total events: " + MylarMonitorPlugin.getDefault().getTotalNumberEvents());
+	private void updateEnablement() {
+		if (!enableMonitoring.getSelection()) {
+			logFileText.setEnabled(false);
+		} else {
+			logFileText.setEnabled(true);
+		}
 	}
 	
-	private void createUserStudyIdSection(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		container.setLayoutData(gridData);
-		GridLayout gl = new GridLayout(1, false);
-		container.setLayout(gl);
+	private void createLogFileSection(Composite parent) {
+		final Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		group.setText("Monitoring");
+		group.setLayout(new GridLayout(2, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		userStudyId = new IntegerFieldEditor("", " User ID:", container); // HACK
+		enableMonitoring = new Button(group, SWT.CHECK);
+		enableMonitoring.setText("Enable logging to: ");
+		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));		
+		enableMonitoring.addSelectionListener(new SelectionListener() {
+
+			public void widgetSelected(SelectionEvent e) {
+				updateEnablement();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
+			}
+		});
+		
+//		Label label = new Label(group, SWT.NULL);
+//		label.setText("");	
+		
+		String logFilePath = MylarMonitorPlugin.getDefault().getMonitorLogFile().getPath();
+		logFilePath = logFilePath.replaceAll("\\\\", "/");
+		logFileText = new Text(group, SWT.BORDER);		
+		logFileText.setText(logFilePath);
+		logFileText.setEditable(false);
+		logFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+//		Button browse = createButton(group, "Browse...");
+//		browse.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				FileDialog dialog = new FileDialog(getShell());
+//				dialog.setText("Folder Selection");
+////				dialog.setMessage("Specify the monitor log file");
+//				String dir = logFileText.getText();
+//				dir = dir.replaceAll("\\\\", "/");
+//				dialog.setFilterPath(dir);
+//
+//				dir = dialog.open();
+//				if(dir == null || dir.equals(""))
+//					return;
+//				logFileText.setText(dir);
+//			}
+//		}); 
+	}
+	
+	private void createUsageSection(Composite parent) {
+		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		group.setText("Usage Feedback");
+		group.setLayout(new GridLayout(1, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		userStudyId = new IntegerFieldEditor("", " Feedback User ID:", group); // HACK
 		userStudyId.setErrorMessage("Your user id must be an integer");
 		int uidNum = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPlugin.USER_ID);
-		if (uidNum == 0) uidNum = -1;
-		userStudyId.setEmptyStringAllowed(false);
-		userStudyId.setStringValue(uidNum + "");
+		if (uidNum > 0) {
+			userStudyId.setStringValue(uidNum + "");	
+			userStudyId.setEmptyStringAllowed(false);
+		}
+			
+		Label label = new Label(group, SWT.NULL);
+		label.setText(" Upload URL: ");
+		uploadUrl = new Text(group, SWT.BORDER);
+		uploadUrl.setEditable(false); 
+		uploadUrl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		uploadUrl.setText(MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl());		
+		
+		Label events = new Label(group, SWT.NULL);
+		events.setText(" Events since upload:");		
+		Label logged = new Label(group, SWT.NULL);
+		logged.setText("" + getPreferenceStore().getInt(MylarMonitorPlugin.PREF_NUM_USER_EVENTS));		
+
+		if (uidNum <= 0) {
+			userStudyId.setEnabled(false, group);
+			uploadUrl.setEnabled(false);
+			label.setEnabled(false);
+			logged.setEnabled(false);
+			events.setEnabled(false);
+		}
+	}
+	
+	public void performDefaults() {
+		super.performDefaults();
+		logFileText.setText(getPreferenceStore().getDefaultString(MylarMonitorPlugin.PREF_LOG_FILE));
 	}
 	
 	@Override
 	public boolean performOk() {
+		if (enableMonitoring.getSelection()) {
+			MylarMonitorPlugin.getDefault().startMonitoring();
+		} else {
+			MylarMonitorPlugin.getDefault().stopMonitoring();
+		}
+		
+		String taskDirectory = logFileText.getText();
+		taskDirectory = taskDirectory.replaceAll("\\\\", "/");		
+		getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
+		
 		int uidNum = -1;
-      try{
-          if(userStudyId.getStringValue() == null ||  userStudyId.getStringValue().equals("")){
-              uidNum = -1;
-              userStudyId.setStringValue(uidNum + "");
-          }
-          else{
-              uidNum = userStudyId.getIntValue();
-          }
-          
-          if(uidNum <= 0 && uidNum != -1){
-              MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect", "The user study id must be a posative integer");
-              return false;
-          }
-          if(uidNum != -1 && uidNum % 17 != 1){
-              MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect", "Your user study id is not valid, please make sure it is correct or get a new id");
-              return false;
-          }
-      }catch(NumberFormatException e){
-          MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect", "The user study id must be a posative integer");
-          return false;
-      }
-      MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uidNum);
-      return true;
+		try {
+			if (userStudyId.getStringValue() == null
+					|| userStudyId.getStringValue().equals("")) {
+				uidNum = -1;
+				userStudyId.setStringValue(uidNum + "");
+			} else {
+				uidNum = userStudyId.getIntValue();
+			}
+
+			if (uidNum <= 0 && uidNum != -1) {
+				MessageDialog.openError(Display.getDefault().getActiveShell(),
+						"User ID Incorrect",
+						"The user study id must be a posative integer");
+				return false;
+			}
+			if (uidNum != -1 && uidNum % 17 != 1) {
+				MessageDialog.openError(
+					Display.getDefault().getActiveShell(),
+					"User ID Incorrect",
+					"Your user study id is not valid, please make sure it is correct or get a new id");
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			MessageDialog.openError(Display.getDefault().getActiveShell(),
+					"User ID Incorrect",
+					"The user study id must be a posative integer");
+			return false;
+		}
+		MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uidNum);
+		return true;
 	}
 	
 	@Override
 	public boolean performCancel() {
+		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));
 		userStudyId.setStringValue(MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPlugin.USER_ID)+"");
 		return true;
 	}
+
+//	private Button createButton(Composite parent, String text) {
+//		Button button = new Button(parent, SWT.TRAIL);
+//		button.setText(text);
+//		button.setVisible(true);
+//		return button;
+//	}
 }
