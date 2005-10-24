@@ -16,37 +16,15 @@
  */
 package org.eclipse.mylar.tasklist.ui;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.RelatedLinks;
-import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.contribution.DatePicker;
 import org.eclipse.mylar.tasklist.internal.RelativePathUtil;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -54,27 +32,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -82,7 +50,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
-import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
@@ -94,15 +61,14 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 import org.eclipse.ui.part.EditorPart;
 
 /**
  * For details on forms, go to:
  * 	http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/pde-ui-home/working/EclipseForms/EclipseForms.html
  *
- * @author Ken Sueda
  * @author Mik Kersten
+ * @author Ken Sueda (initial prototype)
  */
 public class TaskSummaryEditor extends EditorPart {
 	
@@ -122,16 +88,10 @@ public class TaskSummaryEditor extends EditorPart {
 	private RetargetAction cutAction;
 	private static final String cutActionDefId = "org.eclipse.ui.edit.cut";
 	private static final String pasteActionDefId = "org.eclipse.ui.edit.paste";
-	private Table table;
-	private TableViewer tableViewer;
-	private RelatedLinks links;
-	private RelatedLinksContentProvider contentProvider;
 		
 	private Button browse;
 	private Text pathText;
-	private ScrolledForm sform;
-	private Action add;
-    private Action delete;
+	private ScrolledForm form;
     private Text description;
     private Text issueReportURL;
     private Text notes;
@@ -213,6 +173,7 @@ public class TaskSummaryEditor extends EditorPart {
 		copyAction.setEnabled(false);
 		MylarTasklistPlugin.getTaskListManager().addListener(TASK_LIST_LISTENER);
 	}
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		String label = description.getText();
@@ -221,13 +182,13 @@ public class TaskSummaryEditor extends EditorPart {
 		String note = notes.getText();
 		task.setNotes(note);		
 		task.setEstimatedTime(estimated.getSelection());
-		links.clear();		
-		TableItem[] items = table.getItems();
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].getData() instanceof String) {
-				links.add((String)items[i].getData());
-			}			
-		}
+//		links.clear();		
+//		TableItem[] items = table.getItems();
+//		for (int i = 0; i < items.length; i++) {
+//			if (items[i].getData() instanceof String) {
+//				links.add((String)items[i].getData());
+//			}			
+//		}
 		//"<MylarDir>/" + res + ".xml"
 		String path = pathText.getText();		
 		path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));		
@@ -255,6 +216,7 @@ public class TaskSummaryEditor extends EditorPart {
 		editorInput = (TaskEditorInput)input;
 		setPartName(editorInput.getLabel());
 	}
+	
 	@Override
 	public boolean isDirty() {
 		return isDirty;
@@ -268,9 +230,9 @@ public class TaskSummaryEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		sform = toolkit.createScrolledForm(parent);
-		sform.getBody().setLayout(new TableWrapLayout());
-		editorComposite = sform.getBody();
+		form = toolkit.createScrolledForm(parent);
+		form.getBody().setLayout(new TableWrapLayout());
+		editorComposite = form.getBody();
 		
 		
 		TableWrapLayout layout = new TableWrapLayout();
@@ -287,16 +249,16 @@ public class TaskSummaryEditor extends EditorPart {
 		
 		// Put the info onto the editor
 		createContent(editorComposite, toolkit);
-		sform.setFocus();
+		form.setFocus();
 	}
 
 	@Override
 	public void setFocus() {
-		sform.setFocus();
+		form.setFocus();
 	}
 
 	public Control getControl() {
-		return sform;
+		return form;
 	}
 	
 	public void setTask(ITask task) throws Exception {
@@ -333,10 +295,10 @@ public class TaskSummaryEditor extends EditorPart {
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}
 			public void expansionStateChanged(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}			
 		});
 		
@@ -363,7 +325,6 @@ public class TaskSummaryEditor extends EditorPart {
     		});
         }
 	}	
-
 	
 	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
@@ -372,11 +333,11 @@ public class TaskSummaryEditor extends EditorPart {
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}
 
 			public void expansionStateChanged(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}			
 		});
 		Composite container = toolkit.createComposite(section);			
@@ -401,19 +362,19 @@ public class TaskSummaryEditor extends EditorPart {
     		});
         }
  
-        issueReportURL.addMouseListener(new MouseListener(){
-			public void mouseDoubleClick(MouseEvent e) {
-				openURLinBrowser(issueReportURL.getText());
-			}
-
-			public void mouseDown(MouseEvent e) {
-				//Don't open on mouse down so that the field can still be edited.
-			}
-
-			public void mouseUp(MouseEvent e) {
-
-			}
-        });
+//        issueReportURL.addMouseListener(new MouseListener(){
+//			public void mouseDoubleClick(MouseEvent e) {
+//				openURLinBrowser(issueReportURL.getText());
+//			}
+//
+//			public void mouseDown(MouseEvent e) {
+//				//Don't open on mouse down so that the field can still be edited.
+//			}
+//
+//			public void mouseUp(MouseEvent e) {
+//
+//			}
+//        });
         
         
         Label notesLabel = toolkit.createLabel(container, "Notes:");
@@ -431,10 +392,10 @@ public class TaskSummaryEditor extends EditorPart {
 		Label relatedLinksLabel = toolkit.createLabel(container, "Related Links:");
 		relatedLinksLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		
-		createTable(container, toolkit);
-		createTableViewer(container, toolkit);		
+//		createTable(container, toolkit);
+//		createTableViewer(container, toolkit);		
 		toolkit.paintBordersFor(container);
-		createAddDeleteButtons(container, toolkit);
+//		createAddDeleteButtons(container, toolkit);
 //		notes.addKeyListener(new KeyListener() {
 //			public void keyPressed(KeyEvent e) {								
 //			}
@@ -453,11 +414,11 @@ public class TaskSummaryEditor extends EditorPart {
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}
 
 			public void expansionStateChanged(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}			
 		});
 		Composite container = toolkit.createComposite(section);			
@@ -558,91 +519,7 @@ public class TaskSummaryEditor extends EditorPart {
 //		container.setLayout(layout);			
 //	}
 
-	private void createTable(Composite parent, FormToolkit toolkit) {	
-		table = toolkit.createTable(parent, SWT.NONE );		
-		TableColumn col1 = new TableColumn(table, SWT.NULL);
-		TableLayout tlayout = new TableLayout();
-		tlayout.addColumnData(new ColumnWeightData(0,0,false));
-		table.setLayout(tlayout);
-		TableWrapData wd = new TableWrapData(TableWrapData.FILL_GRAB);
-		wd.heightHint = 60;
-		wd.grabVertical = true;
-		table.setLayoutData(wd);
-		table.setHeaderVisible(false);
-		col1.addSelectionListener(new SelectionAdapter() {			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new RelatedLinksTableSorter(
-						RelatedLinksTableSorter.LABEL));
-			}
-		});			
-		table.addMouseTrackListener(new MouseTrackListener() {
-			public void mouseEnter(MouseEvent e) {
-				if(!((RelatedLinksContentProvider)tableViewer.getContentProvider()).isEmpty()) {
-					Cursor hyperlinkCursor = new Cursor(Display.getCurrent(), SWT.CURSOR_HAND);
-					Display.getCurrent().getCursorControl().setCursor(hyperlinkCursor);
-				}				
-			}
-
-			public void mouseExit(MouseEvent e) {
-				Cursor pointer = new Cursor(Display.getCurrent(), SWT.CURSOR_ARROW);
-				Display.getCurrent().getCursorControl().setCursor(pointer);
-			}
-
-			public void mouseHover(MouseEvent e){
-				if(!((RelatedLinksContentProvider)tableViewer.getContentProvider()).isEmpty()) {
-					Cursor hyperlinkCursor = new Cursor(Display.getCurrent(), SWT.CURSOR_HAND);
-					Display.getCurrent().getCursorControl().setCursor(hyperlinkCursor);
-				}
-			}
-		});		
-	}
 	
-	private void createTableViewer(Composite parent, FormToolkit toolkit) {
-		String[] columnNames = {"Links"};	
-		tableViewer = new TableViewer(table);
-		tableViewer.setColumnProperties(columnNames);
-		
-		CellEditor[] editors = new CellEditor[columnNames.length];
-		
-		TextCellEditor textEditor = new TextCellEditor(table);
-		((Text) textEditor.getControl()).setTextLimit(50);
-		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
-		editors[0] = textEditor;		
-		
-		tableViewer.setCellEditors(editors);
-		tableViewer.setCellModifier(new RelatedLinksCellModifier());
-		contentProvider = new RelatedLinksContentProvider();
-		tableViewer.setContentProvider(contentProvider);
-		tableViewer.setLabelProvider(new RelatedLinksLabelProvider());
-		links = task.getRelatedLinks();
-		tableViewer.setInput(links);
-		defineActions();
-		hookContextMenu();
-	}	
-	private void createAddDeleteButtons(Composite parent, FormToolkit toolkit) {
-		Composite container = toolkit.createComposite(parent);
-		container.setLayout(new GridLayout(2, true));
-		Button addButton = toolkit.createButton(container, "  Add Hyperlink  ", SWT.PUSH | SWT.CENTER);
-		//add.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		addButton.addSelectionListener(new SelectionAdapter() {			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addLinkToTable();	
-			}
-		});
-
-		Button deleteButton = toolkit.createButton(container, "Delete Hyperlink  ", SWT.PUSH | SWT.CENTER);
-//		deleteButton.setText("Delete");
-		//delete.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		deleteButton.addSelectionListener(new SelectionAdapter() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeLinkFromTable();				
-			}
-		});
-	}	
 	
 	private void createDetailsSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
@@ -651,10 +528,10 @@ public class TaskSummaryEditor extends EditorPart {
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}
 			public void expansionStateChanged(ExpansionEvent e) {
-				sform.reflow(true);
+				form.reflow(true);
 			}			
 		});
 		
@@ -727,212 +604,16 @@ public class TaskSummaryEditor extends EditorPart {
 	private void refreshTaskListView(ITask task) {
 		if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(task);
 	}
-	private class RelatedLinksCellModifier implements ICellModifier, IColorProvider {
-		RelatedLinksCellModifier() {
-			super();
-
-		}
-		public boolean canModify(Object element, String property) {
-			return true;
-		}
-		public Object getValue(Object element, String property) {			
-			Object res = null;
-			if (element instanceof String) {								
-				String url = (String) element;
-				openURLinBrowser(url);
-				res = (String) element;
-			}			
-			return res;
-		}
-		public void modify(Object element, String property, Object value) {			
-			return;
-		}
-		
-		public Color getForeground(Object element) {
-			return HYPERLINK;
-		}
-		
-		public Color getBackground(Object element) {
-			return null;
-		}
-	}
-	
-	private class RelatedLinksLabelProvider extends LabelProvider implements
-			ITableLabelProvider, IColorProvider {
-		
-		public RelatedLinksLabelProvider() {
-			// don't have any initialization to do
-		}
-		public String getColumnText(Object obj, int columnIndex) {
-			String result = "";
-			if (obj instanceof String) {
-				switch (columnIndex) {
-				case 0:
-					result = (String) obj;
-					break;
-				default:
-					break;
-				}
-			}
-			return result;
-		}
-		public Image getColumnImage(Object obj, int columnIndex) {			
-			return null;
-		}
-		public Color getForeground(Object element) {
-			return HYPERLINK;
-		}
-		
-		public Color getBackground(Object element) {
-			return null;
-		}
-	}
-
-	private class RelatedLinksContentProvider implements
-			IStructuredContentProvider {
-
-		public Object[] getElements(Object inputElement) {
-			return links.getLinks().toArray();
-		}
-		public void dispose() {
-			// don't care if we are disposed
-		}
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			// don't care if the input chages
-		}
-		public boolean isEmpty() {
-			return links.getLinks().isEmpty();
-		}
-	}
-	
-	private class RelatedLinksTableSorter extends ViewerSorter {
-
-		public final static int LABEL = 1;
-		private int criteria;
-
-		public RelatedLinksTableSorter(int criteria) {
-			super();
-			this.criteria = criteria;
-		}
-		
-		@Override
-		public int compare(Viewer viewer, Object o1, Object o2) {
-			String s1 = (String) o1;
-			String s2 = (String) o2;			
-			switch (criteria) {
-				case LABEL:
-					return compareLabel(s1, s2);
-				default:
-					return 0;
-			}
-		}
-		protected int compareLabel(String s1, String s2) {
-			return s1.compareTo(s2);
-		}				
-		public int getCriteria() {
-			return criteria;
-		}
-	}
-	
-	private void addLinkToTable() {
-		InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), "New related link", 
-				"Enter new related link for this task", "", null);
-		dialog.open();
-		String url = null;
-		String link = dialog.getValue();
-		if (link != null) {
-			if (!(link.startsWith("http://") || link.startsWith("https://"))) {
-				url = "http://" + link;					
-			} else {
-				url = link;
-			}		
-			tableViewer.add(url);	
-			markDirty(true);
-		}
-	}
-		
-	private void removeLinkFromTable() {
-		String url = (String) ((IStructuredSelection) tableViewer
-				.getSelection()).getFirstElement();
-		if (url != null) {			
-			tableViewer.remove(url);
-			markDirty(true);
-		}
-	}
-	
-	
-	private void defineActions() {		  
-        delete = new Action() {
-			@Override
-			public void run() {
-				removeLinkFromTable();
-			}
-		};
-        delete.setText("Delete");
-        delete.setToolTipText("Delete");
-        delete.setImageDescriptor(TaskListImages.REMOVE);
-        
-        add = new Action() {
-			@Override
-			public void run() {
-				addLinkToTable();
-			}
-		};
-		add.setText("Add");
-		add.setToolTipText("Add");
-		//add.setImageDescriptor(MylarImages.REMOVE);
-	}
-	
-	private void hookContextMenu() {
-        MenuManager menuMgr = new MenuManager("#PopupMenu");
-        menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow(IMenuManager manager) {
-            	manager.add(add);
-                manager.add(delete);
-            }
-        });
-        Menu menu = menuMgr.createContextMenu(tableViewer.getControl());
-        tableViewer.getControl().setMenu(menu);
-        //getSite().registerContextMenu(menuMgr, tableViewer);
-    }
 	
 	private void markDirty(boolean dirty) {
 		isDirty = dirty;
 		if (parentEditor != null) {
-			parentEditor.updatePartName();			
-		}				
+			parentEditor.updatePartName();
+		}
 		return;
 	}
-	
+
 	public void setParentEditor(TaskEditor parentEditor) {
 		this.parentEditor = parentEditor;
-	}
-	
-	private void openURLinBrowser(String url) {
-		try {					
-			IWebBrowser b = null;
-			int flags = 0;
-			if (WorkbenchBrowserSupport.getInstance()
-					.isInternalWebBrowserAvailable()) {
-				flags = WorkbenchBrowserSupport.AS_EDITOR
-						| WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR;
-
-			} else {
-				flags = WorkbenchBrowserSupport.AS_EXTERNAL
-						| WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR;
-			}
-			b = WorkbenchBrowserSupport.getInstance().createBrowser(
-					flags, "org.eclipse.mylar.tasklist", "Task", "tasktooltip");
-			b.openURL(new URL(url));					
-		} catch (PartInitException e) {
-			MessageDialog.openError( Display.getDefault().getActiveShell(), 
-					"URL not found", url + " could not be opened");
-		} catch (MalformedURLException e) {
-			MessageDialog.openError( Display.getDefault().getActiveShell(), 
-					"URL not found", url + " could not be opened");
-		}
 	}
 }

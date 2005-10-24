@@ -12,6 +12,9 @@
 package org.eclipse.mylar.tasklist.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ITask;
@@ -28,57 +31,89 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.part.MultiPageSelectionProvider;
 
 /**
  * @author Mik Kersten
- * @author Eric Booth
+ * @author Eric Booth (initial prototype)
  */
 public class TaskEditor extends MultiPageEditorPart {
 
 	private static final String TASK_INFO_PAGE_LABEL = "Task Info";
-	private static final String ISSUE_WEB_PAGE_LABEL = "Issue Report Page";
+	private static final String ISSUE_WEB_PAGE_LABEL = "Web Link";
 	protected ITask task;
 	private TaskSummaryEditor taskSummaryEditor;
 	private Browser issueBrowser;
 	private TaskEditorInput taskEditorInput;
 	
+	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
+		private ISelection globalSelection;
+		
+		public TaskEditorSelectionProvider(TaskEditor taskEditor) {
+			super(taskEditor);
+		}
+		
+		public ISelection getSelection() {
+			IEditorPart activeEditor = ((TaskEditor) getMultiPageEditor()).getActiveEditor();
+			if (activeEditor != null && activeEditor.getSite() != null) {
+				ISelectionProvider selectionProvider = activeEditor.getSite().getSelectionProvider();
+				if (selectionProvider != null)
+					return selectionProvider.getSelection();
+			}
+			return globalSelection;
+		}
+
+		public void setSelection(ISelection selection) {
+			IEditorPart activeEditor = ((TaskEditor) getMultiPageEditor()).getActiveEditor();
+			if (activeEditor != null && activeEditor.getSite() != null) {
+				ISelectionProvider selectionProvider = activeEditor.getSite().getSelectionProvider();
+				if (selectionProvider != null) selectionProvider.setSelection(selection);
+			} else {
+				this.globalSelection = selection;
+				fireSelectionChanged(new SelectionChangedEvent(this, globalSelection));
+			}
+		}
+	}
+
 	public TaskEditor() {
 		super();
-
-		// get the workbench page and add a listener so we can detect when it closes
-		IWorkbench wb = MylarTasklistPlugin.getDefault().getWorkbench();
-		IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
-		IWorkbenchPage ap = aw.getActivePage();
+		IWorkbench workbench = MylarTasklistPlugin.getDefault().getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		IWorkbenchPage activePage = window.getActivePage();
 		TaskEditorListener listener = new TaskEditorListener();
-		ap.addPartListener(listener);
-		
+		activePage.addPartListener(listener);
 		taskSummaryEditor = new TaskSummaryEditor();
 	}
 
-	/**
-	 * Creates page 1 of the multi-page editor,
-	 * which displays the task for viewing.
-	 */
-	private void createTaskSummaryPage() {
+	@Override
+	protected void createPages() {
+		try { 
+			int index = createTaskSummaryPage();
+			if(task.getIssueReportURL().length() > 9){
+				createTaskIssueWebPage();
+			}
+			for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
+				taskSummaryEditor.setParentEditor(this);
+				IEditorPart editor = factory.createEditor();
+				index = addPage(editor, factory.createEditorInput(MylarPlugin.getContextManager().getActiveContext()));
+				setPageText(index++, factory.getTitle()); 
+			}
+		} catch (PartInitException e) {
+			MylarPlugin.fail(e, "failed to create task editor pages", false);
+		}
+	}
+
+	private int createTaskSummaryPage() throws PartInitException {
 		try {
 			taskSummaryEditor.createPartControl(getContainer());
 			taskSummaryEditor.setParentEditor(this);
 			int index = addPage(taskSummaryEditor.getControl());
-			setPageText(index, TASK_INFO_PAGE_LABEL);	 
-			
-			for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
-				try { 
-					taskSummaryEditor.setParentEditor(this);
-					index = addPage(factory.createEditor(), factory.createEditorInput(MylarPlugin.getContextManager().getActiveContext()));
-					setPageText(index++, factory.getTitle()); 
-				} catch (PartInitException e) {
-					MylarPlugin.fail(e, "could not add task editor", false);
-				}
-			}
-
+			setPageText(index, TASK_INFO_PAGE_LABEL);	
+			return index;
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not add task editor", false);
 		}		
+		return 0;
 	}
 
 	/**
@@ -95,17 +130,6 @@ public class TaskEditor extends MultiPageEditorPart {
 			MylarPlugin.fail(e, "could not open issue report web page", false);
 		}
 	}	
-	
-	/**
-	 * Creates the pages of the multi-page editor.
-	 */
-	@Override
-	protected void createPages() {
-		createTaskSummaryPage();
-		if(task.getIssueReportURL().length() > 9){
-			createTaskIssueWebPage();
-		}
-	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -136,17 +160,17 @@ public class TaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-
-//		if (!(input instanceof TaskEditorInput))
-//			throw new PartInitException("Invalid Input: Must be TaskEditorInput");
-			taskEditorInput = (TaskEditorInput)input;
+		taskEditorInput = (TaskEditorInput)input;
 		super.init(site, input);
 
+		setSite(site);
+		site.setSelectionProvider(new TaskEditorSelectionProvider(this));
+		
 		/*
 		 * The task data is saved only once, at the initialization of the editor.  This is
 		 * then passed to each of the child editors.  This way, only one instance of 
 		 * the task data is stored for each editor opened.
-		*/
+		 */
 		task = taskEditorInput.getTask();		
 		try {
 			taskSummaryEditor.init(this.getEditorSite(), this.getEditorInput());

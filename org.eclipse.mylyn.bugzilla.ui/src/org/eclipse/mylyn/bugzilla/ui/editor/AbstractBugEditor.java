@@ -1204,7 +1204,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * elements which can change).
 	 */
 	protected void setGeneralTitleText() {
-		String text = "Open in browser";
+		String text = "[Open in Browser]";
 		linkToBug.setText(text);
 		linkToBug.setFont(TEXT_FONT);
 		if(this instanceof ExistingBugEditor){

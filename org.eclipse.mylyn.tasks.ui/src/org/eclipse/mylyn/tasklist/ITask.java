@@ -40,9 +40,9 @@ public interface ITask extends Serializable, ITaskListElement {
         
     public abstract void setCompleted(boolean completed);
     
-    public abstract RelatedLinks getRelatedLinks();
+    public abstract List<String> getRelatedLinks();
     
-    public abstract void setRelatedLinks(RelatedLinks relatedLinks);
+    public abstract void setRelatedLinks(List<String> relatedLinks);
     
     public abstract void addLink(String url);
     

@@ -128,7 +128,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		} else {
 			node.setAttribute(REMINDED, FALSE);
 		}
-		List<String> rl = task.getRelatedLinks().getLinks();
+		List<String> rl = task.getRelatedLinks();
 		int i = 0;
 		for (String link : rl) {
 			node.setAttribute(LINK+i, link);

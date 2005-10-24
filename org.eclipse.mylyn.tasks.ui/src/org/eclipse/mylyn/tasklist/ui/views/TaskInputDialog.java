@@ -92,7 +92,7 @@ public class TaskInputDialog extends Dialog {
 		
 		
 		Label urlLabel = new Label(composite, SWT.WRAP);
-		urlLabel.setText("Issue URL:");
+		urlLabel.setText("Web Link:");
 		urlLabel.setFont(parent.getFont());
 
 		issueURLTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);

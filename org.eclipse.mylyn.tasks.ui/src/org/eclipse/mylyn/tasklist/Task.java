@@ -54,7 +54,7 @@ public class Task implements ITask {
     private String notes = "";
     private int estimatedTime = 0;
     private boolean completed;
-    private RelatedLinks links = new RelatedLinks();
+    private List<String> links = new ArrayList<String>();
     private String issueReportURL = "";
     private ITaskListCategory parentCategory = null;
     
@@ -241,15 +241,15 @@ public class Task implements ITask {
         this.priority = priority;
     }
 
-	public RelatedLinks getRelatedLinks() {
+	public List<String> getRelatedLinks() {
 		// TODO: removed check for null once xml updated.
 		if (links == null) {
-			links = new RelatedLinks();
+			links = new ArrayList<String>();
 		}
 		return links;
 	}
 
-	public void setRelatedLinks(RelatedLinks relatedLinks) {
+	public void setRelatedLinks(List<String> relatedLinks) {
 		this.links = relatedLinks;
 	}
 
