@@ -18,7 +18,6 @@ import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -33,23 +32,24 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
- * @author Ken Sueda and Mik Kersten
+ * @author Mik Kersten
+ * @author Ken Sueda
  */
-public class MylarTaskPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage, SelectionListener {
+public class MylarTasklistPreferencePage extends PreferencePage implements
+		IWorkbenchPreferencePage {
 	
 	private Text taskDirectoryText;
 	private Button browse;
-	
 	private Button reportEditor = null;
 	private Button reportInternal = null;
 	private Button reportExternal = null;
 	private Button multipleActive = null;
 
-	public MylarTaskPreferencePage() {
+	public MylarTasklistPreferencePage() {
 		super();
 		setPreferenceStore(MylarTasklistPlugin.getPrefs());	
 	}
+	
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
@@ -110,6 +110,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		getPreferenceStore().setValue(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS, multipleActive.getSelection());
 		return true;
 	}
+	
 	@Override
 	public boolean performCancel() {
 //		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));		
@@ -187,22 +188,7 @@ public class MylarTaskPreferencePage extends PreferencePage implements
 		Button button = new Button(parent, SWT.TRAIL);
 		button.setText(text);
 		button.setVisible(true);
-		button.addSelectionListener(this);
 		return button;
-	}
-	
-	/**
-	 * Handle selection of an item in the menu.
-	 */
-	public void widgetDefaultSelected(SelectionEvent se) {
-		widgetSelected(se);
-	}
-
-	/**
-	 * Handle selection of an item in the menu.
-	 */
-	public void widgetSelected(SelectionEvent se) {
-		// don't care when the widget is selected
 	}
 }
 
