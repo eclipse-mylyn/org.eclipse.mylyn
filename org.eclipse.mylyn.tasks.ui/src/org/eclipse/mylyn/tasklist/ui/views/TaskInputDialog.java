@@ -15,6 +15,8 @@ import java.util.Date;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.contribution.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -96,13 +98,24 @@ public class TaskInputDialog extends Dialog {
 		urlLabel.setFont(parent.getFont());
 
 		issueURLTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		issueURLTextWidget.setText(url);
+		issueURLTextWidget.setText(getDefaultIssueURL());
 		GridData urlData = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
 		urlData.horizontalSpan = 3;
 		issueURLTextWidget.setLayoutData(urlData);
 		
 		
 		return composite;
+	}
+	
+	protected String getDefaultIssueURL(){
+		String defaultURL = url;
+		
+		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(MylarTasklistPlugin.DEFAULT_URL_PREFIX);
+		if (!defaultPrefix.equals("")){
+			defaultURL = defaultPrefix;
+		}
+		
+		return defaultURL;
 	}
 
 	public String getSelectedPriority() {

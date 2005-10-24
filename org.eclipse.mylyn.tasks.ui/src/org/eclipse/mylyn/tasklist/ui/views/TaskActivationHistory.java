@@ -19,7 +19,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 
 /**
-* @author Ken Sueda (Original implementation)
+* @author Ken Sueda (original prototype)
 * @author Wesley Coelho (Added persistent tasks)
 */
 public class TaskActivationHistory {
@@ -29,7 +29,7 @@ public class TaskActivationHistory {
 	private int currentIndex = -1;
 	
 	/** The number of tasks from the previous session to load into the history*/
-	private static final int PERSISTENT_HISTORY_SIZE = 10;
+	private static final int PERSISTENT_HISTORY_SIZE = 16;
  
 	private boolean persistentHistoryLoaded = false;
 

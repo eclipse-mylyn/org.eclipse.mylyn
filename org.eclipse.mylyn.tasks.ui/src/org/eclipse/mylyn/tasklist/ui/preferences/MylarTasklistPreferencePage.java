@@ -39,10 +39,11 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 	
 	private Text taskDirectoryText;
+	private Text taskURLPrefixText;
 	private Button browse;
 	private Button reportEditor = null;
 	private Button reportInternal = null;
-	private Button reportExternal = null;
+//	private Button reportExternal = null;
 	private Button multipleActive = null;
 
 	public MylarTasklistPreferencePage() {
@@ -56,6 +57,7 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout (layout);
 		
+		createCreationGroup(container);
 		createTaskDirectoryControl(container);	
 		createBugzillaReportOption(container);
 		createUserbooleanControl(container);
@@ -82,19 +84,21 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 	}
 	
 	private void createBugzillaReportOption(Composite parent) {
-		Group container= new Group(parent, SWT.SHADOW_ETCHED_IN);		
+		Group container= new Group(parent, SWT.SHADOW_ETCHED_IN);	
+//		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+//		container.setLayoutData(gridData); 
 		container.setLayout(new RowLayout());
-		container.setText("Open Bugzilla reports with");
+		container.setText("Open Bug Reports With");
 		reportEditor = new Button(container, SWT.RADIO);
 		reportEditor.setText("Bug editor");
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
-		reportExternal = new Button(container, SWT.RADIO);
-		reportExternal.setText("External browser");
-		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
-		reportExternal.setEnabled(false);
+//		reportExternal = new Button(container, SWT.RADIO);
+//		reportExternal.setText("External browser");
+//		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
+//		reportExternal.setEnabled(false);
 	}
 
 	@Override
@@ -103,10 +107,10 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");		
 		getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
 		
-		
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
-		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
+//		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
+		getPreferenceStore().setValue(MylarTasklistPlugin.DEFAULT_URL_PREFIX, taskURLPrefixText.getText());
 		getPreferenceStore().setValue(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS, multipleActive.getSelection());
 		return true;
 	}
@@ -116,7 +120,7 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 //		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));		
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
-		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
+//		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
 		multipleActive.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS));
 //		saveCombo.setText(getPreferenceStore().getString(MylarTasklistPlugin.SAVE_TASKLIST_MODE));
 		return true;
@@ -131,7 +135,8 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 				
 		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
-		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
+//		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
+		taskURLPrefixText.setText(getPreferenceStore().getDefaultString(MylarTasklistPlugin.DEFAULT_URL_PREFIX));
 		multipleActive.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.MULTIPLE_ACTIVE_TASKS));
 	}
 
@@ -183,6 +188,21 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 			}
 		});        
 	}	
+	
+	private void createCreationGroup(Composite parent) {
+		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		group.setText("Task Creation");
+		group.setLayout(new GridLayout(1, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		 
+		Label urlLabel = createLabel(group, "Web link prefix (e.g. https://bugs.eclipse.org/bugs/show_bug.cgi?id=)");
+		urlLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+ 		
+		String taskURLPrefix = getPreferenceStore().getString(MylarTasklistPlugin.DEFAULT_URL_PREFIX);
+		taskURLPrefixText = new Text(group, SWT.BORDER);
+		taskURLPrefixText.setText(taskURLPrefix);
+		taskURLPrefixText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	}		
 	
 	private Button createButton(Composite parent, String text) {
 		Button button = new Button(parent, SWT.TRAIL);

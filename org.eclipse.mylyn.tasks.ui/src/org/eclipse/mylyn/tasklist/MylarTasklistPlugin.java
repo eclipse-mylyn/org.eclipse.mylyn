@@ -72,6 +72,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";
     public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylar.tasklist.save.mode";
     public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
+    public static final String DEFAULT_URL_PREFIX = "org.eclipse.mylar.tasklist.defaultUrlPrefix";
     
 	private ResourceBundle resourceBundle;
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1*3600*1000; // every hour
