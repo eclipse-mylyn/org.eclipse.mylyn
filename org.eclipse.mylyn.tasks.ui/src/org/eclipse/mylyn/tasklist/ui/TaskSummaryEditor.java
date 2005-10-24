@@ -305,7 +305,7 @@ public class TaskSummaryEditor extends EditorPart {
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);		
 		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 3;						
+		layout.numColumns = 2;						
 		container.setLayout(layout);
 		container.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		
@@ -313,12 +313,28 @@ public class TaskSummaryEditor extends EditorPart {
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
         description = toolkit.createText(container, task.getDescription(true), SWT.BORDER);
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
-        td.colspan = 2;
+//        td.colspan = 2;
         description.setLayoutData(td);
         if (!task.isDirectlyModifiable()) {
         	description.setEnabled(false);
         } else {
         	description.addModifyListener(new ModifyListener() {
+    			public void modifyText(ModifyEvent e) {
+    				markDirty(true);
+    			}			
+    		});
+        }
+        
+        Label urlLabel = toolkit.createLabel(container, "Web Link:");
+        urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
+        issueReportURL = toolkit.createText(container, task.getIssueReportURL(), SWT.BORDER);
+        issueReportURL.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+//        issueReportURL.setForeground(HYPERLINK);
+
+        if (!task.isDirectlyModifiable()) {
+        	issueReportURL.setEnabled(false);
+        } else {
+        	issueReportURL.addModifyListener(new ModifyListener() {
     			public void modifyText(ModifyEvent e) {
     				markDirty(true);
     			}			
@@ -345,43 +361,10 @@ public class TaskSummaryEditor extends EditorPart {
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 1;					
 		container.setLayout(layout);
-		
-        Label urlLabel = toolkit.createLabel(container, "Issue Report URL:");
-        urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
-        issueReportURL = toolkit.createText(container, task.getIssueReportURL(), SWT.BORDER);
-        issueReportURL.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        issueReportURL.setForeground(HYPERLINK);
-
-        if (!task.isDirectlyModifiable()) {
-        	issueReportURL.setEnabled(false);
-        } else {
-        	issueReportURL.addModifyListener(new ModifyListener() {
-    			public void modifyText(ModifyEvent e) {
-    				markDirty(true);
-    			}			
-    		});
-        }
- 
-//        issueReportURL.addMouseListener(new MouseListener(){
-//			public void mouseDoubleClick(MouseEvent e) {
-//				openURLinBrowser(issueReportURL.getText());
-//			}
-//
-//			public void mouseDown(MouseEvent e) {
-//				//Don't open on mouse down so that the field can still be edited.
-//			}
-//
-//			public void mouseUp(MouseEvent e) {
-//
-//			}
-//        });
-        
-        
-        Label notesLabel = toolkit.createLabel(container, "Notes:");
-        notesLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	  
-		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI);
+       
+		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
-		tablewrap.heightHint = 100;
+		tablewrap.heightHint = 220;
 		notes.setLayoutData(tablewrap);
 		notes.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -389,22 +372,7 @@ public class TaskSummaryEditor extends EditorPart {
 			}			
 		});
 		
-		Label relatedLinksLabel = toolkit.createLabel(container, "Related Links:");
-		relatedLinksLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
-//		createTable(container, toolkit);
-//		createTableViewer(container, toolkit);		
 		toolkit.paintBordersFor(container);
-//		createAddDeleteButtons(container, toolkit);
-//		notes.addKeyListener(new KeyListener() {
-//			public void keyPressed(KeyEvent e) {								
-//			}
-//
-//			public void keyReleased(KeyEvent e) {
-//				if (e.)
-//				markDirty(true);
-//			}			
-//		});
 	}
 	
 	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
@@ -427,8 +395,8 @@ public class TaskSummaryEditor extends EditorPart {
 		layout.numColumns = 3;					
 		container.setLayout(layout);
 		
-		Label l = toolkit.createLabel(container, "Reminder:");
-        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
+		Label label = toolkit.createLabel(container, "Reminder:");
+        label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
         datePicker = new DatePicker(container, SWT.NULL);	
         TableWrapData td = new TableWrapData(TableWrapData.LEFT);
         datePicker.setLayoutData(td);
@@ -447,12 +415,11 @@ public class TaskSummaryEditor extends EditorPart {
 				// ignore
 			}
 		});
-        l = toolkit.createLabel(container, " ");
-        l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	
+        label = toolkit.createLabel(container, " ");
+        label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	
         
-		
-		l = toolkit.createLabel(container, "Estimated time:");		
-		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label = toolkit.createLabel(container, "Estimated time:");		
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		estimated = new Spinner(container, SWT.BORDER);
 		estimated.setSelection(task.getEstimateTime());		
 		estimated.setDigits(1);
@@ -464,11 +431,11 @@ public class TaskSummaryEditor extends EditorPart {
 				TaskSummaryEditor.this.markDirty(true);
 			}			
 		});  
-		l = toolkit.createLabel(container, "hours ");		
-		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
-		l = toolkit.createLabel(container, "Elapsed time:");		
-		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label = toolkit.createLabel(container, "hours ");		
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+        
+		label = toolkit.createLabel(container, "Elapsed time:");		
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		Text text2 = toolkit.createText(container,task.getElapsedTimeForDisplay(), SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
@@ -477,8 +444,8 @@ public class TaskSummaryEditor extends EditorPart {
         text2.setEditable(false);
         text2.setEnabled(false);
         
-        l = toolkit.createLabel(container, "Creation date:");		
-		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+        label = toolkit.createLabel(container, "Creation date:");		
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		Text creationDate = toolkit.createText(container,task.getCreationDateString(), SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
@@ -487,8 +454,8 @@ public class TaskSummaryEditor extends EditorPart {
         creationDate.setEditable(false);
         creationDate.setEnabled(false);
         
-        l = toolkit.createLabel(container, "Completion date:");		
-		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+        label = toolkit.createLabel(container, "Completion date:");		
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		Text endDate = toolkit.createText(container,task.getEndDateString(), SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
@@ -498,32 +465,9 @@ public class TaskSummaryEditor extends EditorPart {
         endDate.setEnabled(false);
 	}
 	
-//	private void createRelatedLinksSection(Composite parent, FormToolkit toolkit) {
-//		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-//		section.setText("Related Links");			
-//		section.setLayout(new TableWrapLayout());
-//		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-//		section.addExpansionListener(new IExpansionListener() {
-//			public void expansionStateChanging(ExpansionEvent e) {
-//				sform.reflow(true);
-//			}
-//
-//			public void expansionStateChanged(ExpansionEvent e) {
-//				sform.reflow(true);
-//			}			
-//		});
-//		Composite container = toolkit.createComposite(section);			
-//		section.setClient(container);		
-//		TableWrapLayout layout = new TableWrapLayout();
-//		layout.numColumns = 2;					
-//		container.setLayout(layout);			
-//	}
-
-	
-	
 	private void createDetailsSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText("Details");
+		section.setText("Resources");
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		section.addExpansionListener(new IExpansionListener() {
@@ -551,7 +495,7 @@ public class TaskSummaryEditor extends EditorPart {
         handle.setEnabled(false);
               		
 		
-        Label l2 = toolkit.createLabel(container, "Task context path:");
+        Label l2 = toolkit.createLabel(container, "Task context file:");
         l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
         pathText = toolkit.createText(container, "<Mylar_Dir>/"+task.getPath()+".xml", SWT.BORDER);
         pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
