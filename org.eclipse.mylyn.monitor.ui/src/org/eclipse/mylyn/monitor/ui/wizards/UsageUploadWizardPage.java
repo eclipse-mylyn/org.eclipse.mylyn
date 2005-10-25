@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.monitor.ui.wizards;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -63,7 +64,11 @@ public class UsageUploadWizardPage extends WizardPage {
 		layout.numColumns = 2;
 		layout.verticalSpacing = 9;
 		
-		Label label = new Label(container, SWT.NULL);
+		Label label = new Label(parent, SWT.NULL);
+		label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+		label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
+		
+		label = new Label(container, SWT.NULL);
 		label.setText("Upload URL:");		
 		
 		serverAddrText = new Text(container, SWT.BORDER | SWT.SINGLE);
@@ -82,8 +87,8 @@ public class UsageUploadWizardPage extends WizardPage {
 		
 		usageFileText.setText(wizard.getMonitorFileName());
 		
-		label = new Label(container, SWT.NULL);
-		label.setText("Log file location:");
+//		label = new Label(container, SWT.NULL);
+//		label.setText("Log file location:");
 		
 //		logFileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 //		gd = new GridData(GridData.FILL_HORIZONTAL);

@@ -26,7 +26,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -37,14 +36,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Page to get a mylar user study id for the user
+ * Page to get a mylar user study id for the user.
+ * 
  * @author Mik Kersten
  * @author Shawn Minto
  */
 public class GetNewUserIdPage extends WizardPage {
 	
 	private static final String SELECT_BELOW = "<Select Below>";
-	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 	private Text firstName;
     private Text lastName;
 	private Text emailAddress;
@@ -99,17 +98,14 @@ public class GetNewUserIdPage extends WizardPage {
 	}    
 	
 	private void createBrowserSection(Composite parent) {
-		String customizedBy = MylarMonitorPlugin.getDefault().getCustomizingPlugin();
-        if (extendedMonitor) {
-        	Label label = new Label(parent, SWT.NONE);
+		if (extendedMonitor) {
+			Label label = new Label(parent, SWT.NULL);
+    		label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+    		label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
+
+    		label = new Label(parent, SWT.NONE);
     		label.setText("If you already have an ID please fill out the information again to retrieve it.");
     		
-    		label = new Label(parent, SWT.NULL);
-    		label.setFont(BOLD);
-    		label.setText("NOTE: the monitor has been customized by this user study plug-in: " + customizedBy);
-    		label = new Label(parent, SWT.NULL);
-    		label.setText("If you are not familiar with this plug-in please do not proceed.  Study details: ");
-        	
         	Composite container = new Composite(parent, SWT.NULL);
     		GridLayout layout = new GridLayout();
             container.setLayout(layout);

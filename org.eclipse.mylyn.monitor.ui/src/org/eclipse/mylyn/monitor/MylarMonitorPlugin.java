@@ -191,6 +191,13 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		    		getPreferenceStore().setValue(PREF_MONITORING_ENABLED, false); // will be reset
 		    		startMonitoring();
 				}
+		    	
+				if (plugin.getPreferenceStore().contains(PREF_PREVIOUS_TRANSMIT_DATE)) {
+					lastTransmit = new Date(plugin.getPreferenceStore().getLong(PREF_PREVIOUS_TRANSMIT_DATE));
+				} else {
+					lastTransmit = new Date();
+					plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
+				}
             }
         });
     }
@@ -232,13 +239,6 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
         MylarPlugin.getDefault().getSelectionMonitors().add(selectionMonitor);
 
         MylarPlugin.getContextManager().getActionExecutionListeners().add(new ActionExecutionMonitor());
-        
-		if (plugin.getPreferenceStore().contains(PREF_PREVIOUS_TRANSMIT_DATE)) {
-			lastTransmit = new Date(plugin.getPreferenceStore().getLong(PREF_PREVIOUS_TRANSMIT_DATE));
-		} else {
-			lastTransmit = new Date();
-			plugin.getPreferenceStore().setValue(PREF_PREVIOUS_TRANSMIT_DATE, lastTransmit.getTime());
-		}
         workbench.getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
         MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
@@ -563,5 +563,13 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 	public boolean isMonitoringEnabled() {
 		return getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED);
+	}
+	
+	public String getCustomizedByMessage() {
+		String customizedBy = MylarMonitorPlugin.getDefault().getCustomizingPlugin();
+		String message = "NOTE: the monitor has been customized by a user study plug-in with id: " 
+			+ customizedBy + "\n"
+			+ "If you are not familiar with this plug-in do not proceed.";
+		return message;
 	}
 }

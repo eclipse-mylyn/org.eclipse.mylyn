@@ -13,6 +13,7 @@ package org.eclipse.mylar.monitor.ui.preferences;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.SWT;
@@ -57,6 +58,11 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout (layout);
+		
+		Label label = new Label(parent, SWT.NULL);
+		label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+		label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
+		
 		createLogFileSection(container);
 		createUsageSection(container);
 		updateEnablement();
