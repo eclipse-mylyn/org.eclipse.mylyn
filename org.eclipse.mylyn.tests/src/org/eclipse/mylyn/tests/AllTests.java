@@ -33,6 +33,7 @@ public class AllTests {
         suite.addTest(AllJavaTests.suite());
         suite.addTest(AllCoreTests.suite());
         suite.addTest(AllTasklistTests.suite());
+        suite.addTest(MiscTests.suite());
         //$JUnit-END$
         return suite;
     }
