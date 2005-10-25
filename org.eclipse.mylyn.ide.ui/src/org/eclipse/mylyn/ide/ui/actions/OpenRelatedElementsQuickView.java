@@ -39,7 +39,7 @@ public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDeleg
     }
 
     public void run(IAction action) {
-        IMylarElement activeNode = MylarPlugin.getContextManager().getActiveNode();
+        IMylarElement activeNode = MylarPlugin.getContextManager().getActiveElement();
         
         Shell parent = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
         inplaceDialog = new ActiveSearchQuickView(parent);

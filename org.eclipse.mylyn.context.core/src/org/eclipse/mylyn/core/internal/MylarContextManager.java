@@ -164,7 +164,7 @@ public class MylarContextManager {
     	return activityTimeoutSeconds;
     }
 
-    public IMylarElement getActiveNode() {
+    public IMylarElement getActiveElement() {
         if (activeContext != null) {
             return activeContext.getActiveNode();
         } else {

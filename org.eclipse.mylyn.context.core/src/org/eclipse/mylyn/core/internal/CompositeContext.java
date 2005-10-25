@@ -34,8 +34,8 @@ public class CompositeContext implements IMylarContext  {
     
     public IMylarElement addEvent(InteractionEvent event) {
         Set<MylarContextElement> nodes = new HashSet<MylarContextElement>();
-        for (MylarContext taskscape : contexts.values()) {
-            MylarContextElement info = (MylarContextElement)taskscape.parseEvent(event); 
+        for (MylarContext context : contexts.values()) {
+            MylarContextElement info = (MylarContextElement)context.parseEvent(event); 
             nodes.add(info);
         } 
         CompositeContextElement compositeNode = new CompositeContextElement(event.getStructureHandle(), nodes);

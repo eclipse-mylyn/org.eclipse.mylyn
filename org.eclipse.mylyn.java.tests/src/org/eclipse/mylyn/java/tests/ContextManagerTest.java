@@ -288,7 +288,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         monitor.selectionChanged(part, sm1);
         IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
         assertFalse(node.getDegreeOfInterest().isLandmark());
-        assertNotNull(MylarPlugin.getContextManager().getActiveNode());
+        assertNotNull(MylarPlugin.getContextManager().getActiveElement());
         action.changeInterestForSelected(true);
         assertTrue(node.getDegreeOfInterest().isLandmark());
         action.changeInterestForSelected(true);
@@ -313,7 +313,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		}
 
 		public void changeInterestForSelected(boolean increment) {
-			MylarPlugin.getContextManager().manipulateInterestForNode(MylarPlugin.getContextManager().getActiveNode(), increment, false, "");
+			MylarPlugin.getContextManager().manipulateInterestForNode(MylarPlugin.getContextManager().getActiveElement(), increment, false, "");
 		}
 	};
 }
