@@ -364,7 +364,8 @@ public class TaskSummaryEditor extends EditorPart {
        
 		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
-		tablewrap.heightHint = 220;
+		tablewrap.heightHint = 200;
+		tablewrap.grabVertical = true;
 		notes.setLayoutData(tablewrap);
 		notes.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
