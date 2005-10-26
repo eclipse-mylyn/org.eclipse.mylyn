@@ -25,8 +25,8 @@ public class InterestComparator<T> implements Comparator<T> {
             IMylarElement info1 = (IMylarElement)e1;
             IMylarElement info2 = (IMylarElement)e2;
             if (info1 != null && info2 != null) {
-                float v1 = info1.getDegreeOfInterest().getValue();
-                float v2 = info2.getDegreeOfInterest().getValue();
+                float v1 = info1.getInterest().getValue();
+                float v2 = info2.getInterest().getValue();
                 if (v1 >= v2) return -1;
                 if (v1 < v2) return 1;
             }

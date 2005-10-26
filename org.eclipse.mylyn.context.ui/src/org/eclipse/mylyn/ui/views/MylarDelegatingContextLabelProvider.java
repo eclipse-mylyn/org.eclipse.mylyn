@@ -57,7 +57,7 @@ public class MylarDelegatingContextLabelProvider implements ILabelProvider {
     		IMylarObject element = (IMylarObject)object;
     		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
             if (MylarUiPlugin.getDefault().isDecorateInterestMode()) { // TODO: move
-                return provider.getText(element) + " [" + element.getDegreeOfInterest().getValue() + "]"; 
+                return provider.getText(element) + " [" + element.getInterest().getValue() + "]"; 
             } else {
                 return provider.getText(element);
             }

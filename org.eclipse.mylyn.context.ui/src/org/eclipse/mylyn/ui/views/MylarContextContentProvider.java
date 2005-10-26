@@ -67,7 +67,7 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
             	nodes = new ArrayList<IMylarElement>();
                 for (IMylarElement node : landmarks) {
 					if (!node.getContentType().equals(MylarPlugin.CONTENT_TYPE_ANY)
-                        && !node.getDegreeOfInterest().isPredicted()) {
+                        && !node.getInterest().isPredicted()) {
 						nodes.add(node);
 					}
 				}

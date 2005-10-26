@@ -103,7 +103,7 @@ public class MylarContextElement implements IMylarElement {
         }
     }
 
-    public IDegreeOfInterest getDegreeOfInterest() {
+    public IDegreeOfInterest getInterest() {
         return interest;
     }
 

@@ -44,6 +44,9 @@ public class MylarImages {
 	public static final ImageDescriptor INTEREST_FILTERING = create(T_ELCL, "interest-filtering.gif");
 	public static final ImageDescriptor INTEREST_FOLDING = create(T_ELCL, "interest-filtering.gif");
 
+	public static final ImageDescriptor CAPTURE_PAUSE = create(T_ELCL, "capture-pause.gif");
+    public static final ImageDescriptor CAPTURE_RESUME = create(T_ELCL, "capture-resume.gif");
+    	
     public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
     public static final ImageDescriptor FILTER_PRIORITY = create(T_ELCL, "filter-priority.gif");
     

@@ -88,7 +88,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
                     IMylarElement node = MylarPlugin.getContextManager().getElement(element.getHandleIdentifier());
                     if (!MylarUiPlugin.getDefault().isGlobalFoldingEnabled()) {
                         collapse = false;
-                    } else if (node == null || node.getDegreeOfInterest().isInteresting()) {
+                    } else if (node == null || node.getInterest().isInteresting()) {
                         collapse = false;
                     } else {
                         collapse = true;
@@ -103,7 +103,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
                 IMylarElement node = MylarPlugin.getContextManager().getElement(element.getHandleIdentifier());
                 if (!MylarUiPlugin.getDefault().isGlobalFoldingEnabled()) {
                     collapse = false;
-                } else if (node == null || node.getDegreeOfInterest().isInteresting()) {
+                } else if (node == null || node.getInterest().isInteresting()) {
                     collapse = false;
                 } else {
                     collapse = true;

@@ -74,7 +74,7 @@ public class Highlighter {
     }
     
     public Color getHighlight(IMylarElement info, boolean isLandmark) {
-        if (info.getDegreeOfInterest().getValue() > 0) {
+        if (info.getInterest().getValue() > 0) {
             if (isLandmark) {
                 return landmarkColor;
             } else {
@@ -91,13 +91,13 @@ public class Highlighter {
     
     public Color mapDoiToElevation(IMylarElement info) {
         if (info == null) return base;
-        if (info.getDegreeOfInterest().getValue() < 0) return highlightColor;
+        if (info.getInterest().getValue() < 0) return highlightColor;
         
         int step = 2;
         Color color = base;
         for (Iterator<Color> it = ELEVATIONS.iterator(); it.hasNext();) {
             color = it.next();
-            if (info.getDegreeOfInterest().getValue() < step) return color;
+            if (info.getInterest().getValue() < step) return color;
             step += 2;
         }
         return color; // darkest color supported

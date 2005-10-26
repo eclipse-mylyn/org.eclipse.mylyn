@@ -89,8 +89,8 @@ public class JavaStructureTest extends AbstractContextTest {
         
         IMylarElement callerNode = manager.getElement(caller.getHandleIdentifier());
         IMylarElement calleeNode = manager.getElement(callee.getHandleIdentifier());
-        assertTrue(callerNode.getDegreeOfInterest().isInteresting());
-        assertTrue(calleeNode.getDegreeOfInterest().isInteresting());
+        assertTrue(callerNode.getInterest().isInteresting());
+        assertTrue(calleeNode.getInterest().isInteresting());
         assertEquals(1, callerNode.getRelations().size());
         
         TextSelection callerAgain = new TextSelection(document,

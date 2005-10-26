@@ -89,11 +89,11 @@ public class MylarContext implements IMylarContext, Serializable {
                     edge = new MylarContextRelation(event.getContentType(), event.getNavigation(), lastEdgeNode, node, this);
                     lastEdgeNode.addEdge(edge);
                 }
-                DegreeOfInterest doi = (DegreeOfInterest)edge.getDegreeOfInterest();
+                DegreeOfInterest doi = (DegreeOfInterest)edge.getInterest();
                 doi.addEvent(event); 
             }
         } 
-        DegreeOfInterest doi = (DegreeOfInterest)node.getDegreeOfInterest();
+        DegreeOfInterest doi = (DegreeOfInterest)node.getInterest();
         
         doi.addEvent(event); 
         if (doi.isLandmark()) {
@@ -112,7 +112,7 @@ public class MylarContext implements IMylarContext, Serializable {
     private void updateLandmarks() {
 //        landmarks = new HashMap<String, ITaskscapeNode>();
         for (MylarContextElement node : nodes.values()) {
-            if (node.getDegreeOfInterest().isLandmark()) landmarks.put(node.getHandleIdentifier(), node);
+            if (node.getInterest().isLandmark()) landmarks.put(node.getHandleIdentifier(), node);
         }
     }
     
@@ -124,7 +124,7 @@ public class MylarContext implements IMylarContext, Serializable {
         List<IMylarElement> elements = new ArrayList<IMylarElement>();
         for (String key : nodes.keySet()) {
             MylarContextElement info = nodes.get(key);
-            if (info.getDegreeOfInterest().isInteresting()) {
+            if (info.getInterest().isInteresting()) {
                 elements.add(info);  
             }
         }
@@ -199,7 +199,7 @@ public class MylarContext implements IMylarContext, Serializable {
 
 	private void collapseNode(List<InteractionEvent> collapsedHistory, MylarContextElement node) {
 		if (node != null) {
-			collapsedHistory.addAll(((DegreeOfInterest)node.getDegreeOfInterest()).getCollapsedEvents());
+			collapsedHistory.addAll(((DegreeOfInterest)node.getInterest()).getCollapsedEvents());
 		}
 	}
 }

@@ -71,7 +71,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
     public Font decorateFont(Object element) {
         IMylarElement node = getNode(element);
         if (node != null) {    
-            if (node.getDegreeOfInterest().isLandmark() && !node.getDegreeOfInterest().isPropagated()) {
+            if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
                 return MylarUiPlugin.BOLD;
             } 
         } 

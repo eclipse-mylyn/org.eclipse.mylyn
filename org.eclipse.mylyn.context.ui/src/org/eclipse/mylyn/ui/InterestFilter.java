@@ -60,10 +60,10 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
                 node = MylarPlugin.getContextManager().getElement(handle);
             }
             if (node != null) {
-            	if (node.getDegreeOfInterest().isPredicted()) {
+            	if (node.getInterest().isPredicted()) {
             		return false;
             	} else {
-            		return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+            		return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
             	}
             } 
         } catch (Throwable t) {
@@ -90,10 +90,10 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
                 node = MylarPlugin.getContextManager().getElement(handle);
             }
             if (node != null) {
-            	if (node.getDegreeOfInterest().isPredicted()) {
+            	if (node.getInterest().isPredicted()) {
             		return false;
             	} else {
-            		return node.getDegreeOfInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+            		return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
             	}
             } 
         } catch (Throwable t) {

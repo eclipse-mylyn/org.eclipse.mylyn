@@ -49,7 +49,7 @@ public class JavaUiUtil {
 //    
       if (element == null) return null;
       IMylarElement info = MylarPlugin.getContextManager().getElement(element.getHandleIdentifier());
-      if (info.getDegreeOfInterest().isLandmark() && !info.getDegreeOfInterest().isPropagated()) {
+      if (info.getInterest().isLandmark() && !info.getInterest().isPropagated()) {
           return MylarUiPlugin.BOLD;
       }
 //      if (info.getDegreeOfInterest().getDegreeOfInterest().isPredicted()) return UiUtil.ITALIC;

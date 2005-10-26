@@ -74,7 +74,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                         } else {
                         	IMylarElement node = MylarPlugin.getContextManager().getElement(member.getHandleIdentifier()); 
                             if (node != null) {
-                            	float interest = node.getDegreeOfInterest().getValue();
+                            	float interest = node.getInterest().getValue();
 	                            if (interest > MylarContextManager.getScalingFactors().getInteresting()) {
 	                                interesting.put(-interest, proposal);  // negative to invert sorting order
 	                            } else {

@@ -243,6 +243,33 @@
            tooltip="Apply Mylar (interest filtering)"> 
   		</action> 
   		</viewContribution>
+   <viewContribution
+         id="org.eclipse.mylar.tasklist.contribution.context"
+         targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+      <action
+            class="org.eclipse.mylar.ui.actions.ContextCaptureResumeAction"
+            icon="icons/elcl16/capture-resume.gif"
+            id="org.eclipse.mylar.ui.context.capture.pause"
+            label="Resume Capturing Context"
+            menubarPath="context"
+            style="push">
+            <!--
+		<enablement> 
+	 		<and>
+	   			<objectClass name="org.eclipse.examples.actionEnablement.TestElement"/> 
+           		<objectState name="name" value="red"/> 
+	 		</and>
+       </enablement> 
+       -->
+      </action>
+      <action
+            class="org.eclipse.mylar.ui.actions.ContextCapturePauseAction"
+            icon="icons/elcl16/capture-pause.gif"
+            id="org.eclipse.mylar.ui.context.capture.pause"
+            label="Pause Capturing Context"
+            menubarPath="context"
+            style="push"/>
+   </viewContribution>
    </extension>
    
    <extension point="org.eclipse.mylar.tasklist.providers"> 

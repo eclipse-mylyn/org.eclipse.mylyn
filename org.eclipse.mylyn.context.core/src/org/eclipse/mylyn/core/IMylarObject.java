@@ -18,7 +18,7 @@ package org.eclipse.mylar.core;
  */
 public interface IMylarObject {
 
-    public abstract IDegreeOfInterest getDegreeOfInterest();
+    public abstract IDegreeOfInterest getInterest();
 
     public abstract String getContentType();
 	

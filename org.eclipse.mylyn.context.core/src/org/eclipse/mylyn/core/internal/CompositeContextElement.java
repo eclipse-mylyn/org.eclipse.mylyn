@@ -41,7 +41,7 @@ public class CompositeContextElement implements IMylarElement {
     public IMylarContext getContext() {
         IMylarElement highestValueNode = null;
         for (IMylarElement node : nodes) {
-            if (highestValueNode == null || node.getDegreeOfInterest().getValue() < highestValueNode.getDegreeOfInterest().getValue()) highestValueNode = node;
+            if (highestValueNode == null || node.getInterest().getValue() < highestValueNode.getInterest().getValue()) highestValueNode = node;
         }
         if (highestValueNode != null) {
             return highestValueNode.getContext();
@@ -50,10 +50,10 @@ public class CompositeContextElement implements IMylarElement {
         }
     }
     
-    public IDegreeOfInterest getDegreeOfInterest() {
+    public IDegreeOfInterest getInterest() {
         CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
         for (IMylarElement node : nodes) {
-            degreeOfInterest.getInfos().add(node.getDegreeOfInterest());
+            degreeOfInterest.getInfos().add(node.getInterest());
         }
         return degreeOfInterest;
     }

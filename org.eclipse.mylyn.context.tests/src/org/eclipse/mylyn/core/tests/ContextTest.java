@@ -42,18 +42,18 @@ public class ContextTest extends AbstractContextTest {
         IMylarElement node = context.parseEvent(mockSelection("1"));
         context.parseEvent(mockSelection("1"));
         context.parseEvent(mockInterestContribution("1", 40));
-        assertEquals(42-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());
+        assertEquals(42-(scaling.getDecay().getValue()*1), node.getInterest().getValue());
         
         context.parseEvent(mockInterestContribution("1", -20));
-        assertEquals(22-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());
+        assertEquals(22-(scaling.getDecay().getValue()*1), node.getInterest().getValue());
     }
     
 	public void testPropagatedInterest() {
 		IMylarElement node = context.parseEvent(mockPropagation("1"));
-		assertTrue(node.getDegreeOfInterest().isPropagated());
+		assertTrue(node.getInterest().isPropagated());
         context.parseEvent(mockSelection("1"));
         context.parseEvent(mockInterestContribution("1", -10));
-        assertFalse(node.getDegreeOfInterest().isPropagated());
+        assertFalse(node.getInterest().isPropagated());
 //        context.parseEvent(mockInterestContribution("1", 40));
 //        assertEquals(42-(scaling.getDecay().getValue()*1), node.getDegreeOfInterest().getValue());	
 	}
@@ -72,7 +72,7 @@ public class ContextTest extends AbstractContextTest {
         
         context.parseEvent(mockSelection("2"));
         for (int i = 0; i < 98; i++) context.parseEvent(mockSelection("1"));
-        assertEquals(99-(decay*99), node1.getDegreeOfInterest().getValue());
+        assertEquals(99-(decay*99), node1.getInterest().getValue());
     }
      
     public void testLandmarkScaling() {
@@ -80,11 +80,11 @@ public class ContextTest extends AbstractContextTest {
         for (int i = 0; i < scaling.getLandmark()-2 + (scaling.getLandmark()* scaling.getDecay().getValue()); i++) {
             context.parseEvent(mockSelection("1"));
         }
-        assertTrue(node1.getDegreeOfInterest().isInteresting());
-        assertFalse(node1.getDegreeOfInterest().isLandmark());
+        assertTrue(node1.getInterest().isInteresting());
+        assertFalse(node1.getInterest().isLandmark());
         context.parseEvent(mockSelection("1"));
         context.parseEvent(mockSelection("1"));
-        assertTrue(node1.getDegreeOfInterest().isLandmark());
+        assertTrue(node1.getInterest().isLandmark());
     }
     
     public void testContextSize() {
@@ -125,8 +125,8 @@ public class ContextTest extends AbstractContextTest {
         assertNotNull(edge);
         assertEquals(1, node.getRelations().size());
         context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue()*3));
-        assertTrue("interest: " + context.get("3").getDegreeOfInterest().getValue(), context.get("3").getDegreeOfInterest().isLandmark());
-        float doi = node.getDegreeOfInterest().getValue();
+        assertTrue("interest: " + context.get("3").getInterest().getValue(), context.get("3").getInterest().isLandmark());
+        float doi = node.getInterest().getValue();
         assertNotNull(context.getLandmarks());
         assertEquals("2", context.getActiveNode().getHandleIdentifier()); // "3" not a user event
         
@@ -141,8 +141,8 @@ public class ContextTest extends AbstractContextTest {
         
         IMylarElement landmark = loaded.get("3");
         assertNotNull(loadedNode); 
-        assertEquals(doi, loadedNode.getDegreeOfInterest().getValue());
-        assertTrue(landmark.getDegreeOfInterest().isLandmark());
+        assertEquals(doi, loadedNode.getInterest().getValue());
+        assertTrue(landmark.getInterest().isLandmark());
         assertNotNull(loaded.getLandmarks());
         
         assertEquals("2", loaded.getActiveNode().getHandleIdentifier());
@@ -153,12 +153,12 @@ public class ContextTest extends AbstractContextTest {
         assertNull(missing);
         
         IMylarElement node = context.parseEvent(mockSelection());
-        assertTrue(node.getDegreeOfInterest().isInteresting());
+        assertTrue(node.getInterest().isInteresting());
         context.parseEvent(mockSelection());
-        assertTrue(node.getDegreeOfInterest().isInteresting()); 
+        assertTrue(node.getInterest().isInteresting()); 
         context.parseEvent(mockSelection());
         
-        float doi = node.getDegreeOfInterest().getEncodedValue();
+        float doi = node.getInterest().getEncodedValue();
         assertEquals(3.0f -(2*scaling.getDecay().getValue()), doi);  
     }
 }

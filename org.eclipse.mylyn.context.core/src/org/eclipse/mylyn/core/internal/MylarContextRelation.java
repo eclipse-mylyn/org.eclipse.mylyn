@@ -43,7 +43,7 @@ public class MylarContextRelation implements IMylarRelation {
         return target;
     }
 
-    public IDegreeOfInterest getDegreeOfInterest() {
+    public IDegreeOfInterest getInterest() {
         return interest;
     }
 

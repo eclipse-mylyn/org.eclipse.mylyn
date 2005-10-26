@@ -29,7 +29,7 @@ public class UiUtil {
 	
     public static Color getBackgroundForElement(IMylarElement node, boolean resolveContextColor) {
         if (node == null) return null;
-        if (!resolveContextColor && (node.getDegreeOfInterest().isPropagated() || node.getDegreeOfInterest().isPredicted())) {
+        if (!resolveContextColor && (node.getInterest().isPropagated() || node.getInterest().isPredicted())) {
         	return null;
         }
 
@@ -57,15 +57,15 @@ public class UiUtil {
  
     public static Color getForegroundForElement(IMylarElement node) {
         if (node == null) return null; 
-        if (node.getDegreeOfInterest().isPredicted() || node.getDegreeOfInterest().isPropagated()) { 
-            if (node.getDegreeOfInterest().getValue() >= MylarContextManager.getScalingFactors().getLandmark()/3) { 
+        if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) { 
+            if (node.getInterest().getValue() >= MylarContextManager.getScalingFactors().getLandmark()/3) { 
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_DARK; 
-            } else if (node.getDegreeOfInterest().getValue() >= 10) {
+            } else if (node.getInterest().getValue() >= 10) {
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM; 
             } else {
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_LIGHT; 
             }
-        } else if (node.getDegreeOfInterest().isInteresting()) {
+        } else if (node.getInterest().isInteresting()) {
         	return null;
         } 
         return MylarUiPlugin.getDefault().getColorMap().GRAY_MEDIUM; 
