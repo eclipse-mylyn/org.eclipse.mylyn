@@ -115,14 +115,14 @@ public class SelectionMonitor extends AbstractInteractionMonitor {
         
         // XXX: need unit test for these rules.
         if (node != null) {
-        	if (node.getDegreeOfInterest().getEncodedValue() <= selectionFactor
-        		&& node.getDegreeOfInterest().getValue() >  selectionFactor) { 
+        	if (node.getInterest().getEncodedValue() <= selectionFactor
+        		&& node.getInterest().getValue() >  selectionFactor) { 
         		delta = SELECTION_PREDICTED;
-    		} else if (node.getDegreeOfInterest().getEncodedValue() < selectionFactor
-    				&& node.getDegreeOfInterest().getDecayValue() > selectionFactor) {
+    		} else if (node.getInterest().getEncodedValue() < selectionFactor
+    				&& node.getInterest().getDecayValue() > selectionFactor) {
     			delta = SELECTION_DECAYED;
-    		} else if (node.getDegreeOfInterest().getValue() == selectionFactor
-    				&& node.getDegreeOfInterest().getDecayValue() < selectionFactor) {
+    		} else if (node.getInterest().getValue() == selectionFactor
+    				&& node.getInterest().getDecayValue() < selectionFactor) {
     			delta = SELECTION_NEW;
     		} else {
     			delta = SELECTION_DEFAULT;

@@ -77,7 +77,7 @@ public class TaskTimerTest extends TestCase {
 //		long notCountedTime = 20000; 
 		
 		long startTime = GregorianCalendar.getInstance().getTimeInMillis();
-		(new TaskActivateAction(task1)).run();
+		(new TaskActivateAction()).run(task1);
 		
 		try {
 			Thread.sleep(sleepTime); //this time should be counted
@@ -108,7 +108,7 @@ public class TaskTimerTest extends TestCase {
 			e.printStackTrace();
 		}
 		
-		(new TaskDeactivateAction(task1, taskView)).run();
+		(new TaskDeactivateAction()).run(task1);
 		long endTime = GregorianCalendar.getInstance().getTimeInMillis();
 		
 		//Sleep after the task has been deactivated to make sure it isn't still counting
