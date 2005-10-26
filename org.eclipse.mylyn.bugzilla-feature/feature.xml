@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="Mylar Bugzilla Client"
-      version="0.3.12"
+      version="0.4.0"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar.bugzilla.core">
 
@@ -210,7 +210,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Eclipse.org Mylar Update Site" url="http://download.eclipse.org/technology/mylar/update-site/bugzilla"/>
+      <update label="Eclipse.org Mylar Update Site" url="http://download.eclipse.org/technology/org.eclipse.mylar/org.eclipse.mylar-site/bugzilla"/>
    </url>
 
    <requires>
@@ -233,21 +233,21 @@ litigation.
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.3.12"
+         version="0.4.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.3.12"
+         version="0.4.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.core"
          download-size="0"
          install-size="0"
-         version="0.3.12"
+         version="0.4.0"
          unpack="false"/>
 
    <plugin
