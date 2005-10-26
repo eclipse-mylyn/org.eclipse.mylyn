@@ -42,29 +42,27 @@ public class MenuCommandMonitor implements Listener {
 			if (target instanceof IContributionItem) id = ((IContributionItem)target).getId();
 
 			if (item instanceof MenuItem) {
-				if (id == null || id.indexOf('.') == -1) {
-					MenuItem menu = (MenuItem)item;
-					Menu parentMenu = menu.getParent();
-					String location = "";
-					if(parentMenu != null) {
-						while(parentMenu.getParentItem() != null) {
-							location = parentMenu.getParentItem().getText() + MENU_PATH_DELIM + location;
-							parentMenu = parentMenu.getParentMenu();
-						}
+				MenuItem menu = (MenuItem)item;
+				Menu parentMenu = menu.getParent();
+				String location = "";
+				if(parentMenu != null) {
+					while(parentMenu.getParentItem() != null) {
+						location = parentMenu.getParentItem().getText() + MENU_PATH_DELIM + location;
+						parentMenu = parentMenu.getParentMenu();
 					}
-					String simpleId = "";
-					if (id != null) simpleId = id + '.';
-					String itemText = obfuscateValueIfContainsPath(item.getText());
-					id = MENU_ITEM_ID + simpleId + location + itemText;
 				}
+				String simpleId = "";
+				if (id == null) id = "null";
+				String itemText = obfuscateValueIfContainsPath(item.getText());
+				id = id + "$" + MENU_ITEM_ID + simpleId + location + itemText;
+					
 				delta = MENU_ITEM_SELECTED;
 			} else if (item instanceof ToolItem) {
-				if (id == null || id.indexOf('.') == -1) {
-					ToolItem tool = (ToolItem) item;
-					String simpleId = "";
-					if (id != null) simpleId = id + '.';
-					id = MENU_ITEM_ID + simpleId + '.' + tool.getToolTipText();
-				}
+				ToolItem tool = (ToolItem) item;
+				String simpleId = "";
+				if (id == null) id = "null";
+				id = id + "$" + MENU_ITEM_ID + simpleId + '.' + tool.getToolTipText();
+
 				delta = TOOLBAR_ITEM_SELECTED;
 			} 
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(id, delta);
