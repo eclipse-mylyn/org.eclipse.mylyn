@@ -1275,14 +1275,16 @@ public class TaskListView extends ViewPart {
 		updateDrillDownActions();
 	}
 	
-
 	public ITask getSelectedTask() {
 		ISelection selection = getViewer().getSelection();
 		if (selection.isEmpty()) return null;
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection)selection;
-			if (structuredSelection.getFirstElement() instanceof ITask) {
+			Object element = structuredSelection.getFirstElement();
+			if (element instanceof ITask) {
 				return (ITask)structuredSelection.getFirstElement();
+			} else if (element instanceof IQueryHit) {
+				return ((IQueryHit)element).getOrCreateCorrespondingTask();
 			}
 		}
 		return null;
