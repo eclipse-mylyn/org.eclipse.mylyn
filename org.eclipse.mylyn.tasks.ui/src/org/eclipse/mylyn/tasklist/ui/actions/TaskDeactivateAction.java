@@ -39,6 +39,7 @@ public class TaskDeactivateAction extends Action {
 		try {
 			if (task != null) {
 				MylarTasklistPlugin.getTaskListManager().deactivateTask(task);
+				TaskListView.getDefault().getViewer().refresh();
 				TaskListView.getDefault().closeTaskEditors(task, page);
 			}
 		} catch (Exception e) {
