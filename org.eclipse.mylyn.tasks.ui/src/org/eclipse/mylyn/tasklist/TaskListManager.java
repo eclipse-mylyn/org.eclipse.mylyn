@@ -149,8 +149,7 @@ public class TaskListManager {
 
     public void deactivateTask(ITask task) {
     	TaskActiveTimerListener activeListener = listenerMap.remove(task);
-    	if(activeListener != null)
-        	activeListener.stopTimer();
+    	if(activeListener != null) activeListener.stopTimer();
     	taskList.setActive(task, false, false);
 		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
 	}

@@ -120,28 +120,16 @@
 		<viewContribution 
 			id="org.eclipse.mylar.bugzilla.ui.tasklist.actions" 
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-	   		
-  			<action
-           class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
-           enablesFor="*"
-           icon="icons/etool16/task-bug.gif"
-           id="org.eclipse.mylar.bugzilla.tasklist.addExisting"
-           label="Add Existing Bugzilla Report"
-           menubarPath="bugzilla"
-           style="push"
-           tooltip="Add Existing Bugzilla Report"> 
-  			</action>
-  			
-  			<action
-           class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
-           enablesFor="*"
-           icon="icons/etool16/task-bug-new.gif"
-           id="org.eclipse.mylar.bugzilla.tasklist.addNew"
-           label="Add New Bugzilla Report"
-           style="push"
-           toolbarPath="reports"
-           tooltip="Add New Bugzilla Report"> 
-  			</action>
+  		
+  		<action
+               class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction"
+               enablesFor="*"
+               icon="icons/etool16/task-bug-refresh.gif"
+               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
+               label="Synchronize Reports"
+               menubarPath="reports"
+               tooltip="Synchronize Reports">
+         </action>
   			
   			  			
   			<action
@@ -150,24 +138,38 @@
            icon="icons/etool16/category-query-new.gif"
            id="org.eclipse.mylar.bugzilla.tasklist.addQuery"
            label="Add Bugzilla Query"
+           menubarPath="reports"
            style="push"
-           toolbarPath="reports"
            tooltip="Add Bugzilla Query"> 
   			</action>
-  		
-  		<action
-               class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction"
-               enablesFor="*"
-               icon="icons/etool16/task-bug-refresh.gif"
-               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize Reports"
-               menubarPath="bugzilla"
-               tooltip="Synchronize Reports">
-         </action>
+  			
+  			<action
+           class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
+           enablesFor="*"
+           icon="icons/etool16/task-bug-new.gif"
+           id="org.eclipse.mylar.bugzilla.tasklist.addNew"
+           label="Add New Bugzilla Report"
+           menubarPath="reports"
+           style="push"
+           toolbarPath="reports"
+           tooltip="Add New Bugzilla Report"> 
+  			</action>
+	   		
+  			<action
+           class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
+           enablesFor="*"
+           icon="icons/etool16/task-bug.gif"
+           id="org.eclipse.mylar.bugzilla.tasklist.addExisting"
+           label="Add Existing Bugzilla Report"
+           menubarPath="reports"
+           style="push"
+           tooltip="Add Existing Bugzilla Report"> 
+  			</action>
 	    </viewContribution> 
 	</extension>
 	
-	   <extension
+<!--
+	<extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution1"
@@ -201,7 +203,7 @@
             </enablement>
          </action>
       </viewerContribution>
-      
    </extension>
+-->
 </plugin>
 

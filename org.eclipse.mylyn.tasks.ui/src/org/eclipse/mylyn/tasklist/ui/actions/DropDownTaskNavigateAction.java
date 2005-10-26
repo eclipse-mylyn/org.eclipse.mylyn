@@ -67,7 +67,7 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 		}
 		
 		public void run(){
-			new TaskActivateAction(targetTask).run();
+			new TaskActivateAction().run(targetTask);
 			taskHistory.navigatedToTask(targetTask); //Notify the task history of arbitrary history navigation
 			setButtonStatus();
 			view.getViewer().refresh();

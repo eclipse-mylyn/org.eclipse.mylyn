@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.report.ui;
+package org.eclipse.mylar.tasklist.planner.ui;
 
 import java.util.Arrays;
 
@@ -58,9 +58,10 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 
 /**
- * @author Ken Sueda
+ * @author Mik Kersten
+ * @author Ken Sueda (original prototype)
  */
-public class PlanningGameEditorPart extends EditorPart {
+public class MylarTaskPlannerEditorPart extends EditorPart {
 
 	private CompletedTasksEditorInput editorInput = null;
 	private Table completedTable;

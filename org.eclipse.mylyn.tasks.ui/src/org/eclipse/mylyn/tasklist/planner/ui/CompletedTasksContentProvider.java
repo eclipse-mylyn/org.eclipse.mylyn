@@ -9,9 +9,8 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.report.ui;
+package org.eclipse.mylar.tasklist.planner.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -21,12 +20,13 @@ import org.eclipse.mylar.tasklist.ITask;
 /**
  * @author Ken Sueda
  */
-public class PlannedTasksContentProvider implements IStructuredContentProvider {
+public class CompletedTasksContentProvider implements IStructuredContentProvider {
 
-	private List<ITask> tasks = new ArrayList<ITask>();
-	public PlannedTasksContentProvider() {		
-	}
+	private List<ITask> tasks = null;
 	
+	public CompletedTasksContentProvider(List<ITask> tasks) {
+		this.tasks = tasks;
+	}
 	public Object[] getElements(Object inputElement) {
 		return tasks.toArray();
 	}
@@ -35,15 +35,5 @@ public class PlannedTasksContentProvider implements IStructuredContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
-
-	public void addTask(ITask t) {
-		if (!tasks.contains(t)) {
-			tasks.add(t);
-		}		
-	}
-	
-	public void removeTask(ITask t) {
-		tasks.remove(t);
 	}
 }

@@ -55,6 +55,7 @@ public class Task implements ITask {
     private int estimatedTime = 0;
     private boolean completed;
     private List<String> links = new ArrayList<String>();
+    private List<String> plans = new ArrayList<String>();
     private String issueReportURL = "";
     private ITaskListCategory parentCategory = null;
     
@@ -548,5 +549,13 @@ public class Task implements ITask {
 
 	public String getEstimateTimeForDisplay() {		
 		return estimatedTime / 10 + " Hours";
+	}
+
+	public void addPlan(String plan) {
+		if (plan != null && !plans.contains(plan)) plans.add(plan);
+	}
+
+	public List<String> getPlans() {
+		return plans;
 	}
 }

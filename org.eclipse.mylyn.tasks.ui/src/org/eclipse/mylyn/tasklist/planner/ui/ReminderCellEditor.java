@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist.report.ui;
+package org.eclipse.mylar.tasklist.planner.ui;
 
 import java.util.Date;
 

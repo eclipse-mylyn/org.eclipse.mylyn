@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.report.ui;
+package org.eclipse.mylar.tasklist.planner.ui;
 
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.internal.TaskList;
-import org.eclipse.mylar.tasklist.report.internal.CompletedTaskCollector;
-import org.eclipse.mylar.tasklist.report.internal.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.planner.internal.CompletedTaskCollector;
+import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -47,7 +47,7 @@ public class CompletedTasksEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return "Planning Game Report";
+		return "Task Planner";
 	}
 
 	public IPersistableElement getPersistable() {

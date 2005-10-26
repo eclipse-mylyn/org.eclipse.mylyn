@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.report.ui;
+package org.eclipse.mylar.tasklist.planner.ui;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -21,29 +21,35 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * @author Ken Sueda
+ * @author Mik Kersten
+ * @author Ken Sueda (original prototype)
  */
-public class PlanningGameWizardPage extends WizardPage {
+public class MylarTaskPlannerWizardPage extends WizardPage {
 
+	private static final String DEFAULT_DAYS = "7";
+	private static final String TITLE = "Mylar Task Planner";
+	private static final String DESCRIPTION = 
+		"Summarizes task activity and assists planning future tasks.";
+	
 	private Text numDays;
 	private int num = 0;
 	
-	public PlanningGameWizardPage() {
-		super("Planning Game Wizard");
-		setTitle("Planning Game Report");
-		setDescription("All tasks completed with the last selected date will be summarized into a report");
+	public MylarTaskPlannerWizardPage() {
+		super(TITLE);
+		setTitle(TITLE);
+		setDescription(DESCRIPTION);
 	}
 	
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
-		layout.numColumns = 2;
-		
+		layout.numColumns = 2;		
 
 		Label l = new Label(container, SWT.NULL);
-		l.setText("Number of days to compile reports over: ");
+		l.setText("Number of past days to report on: ");
 		numDays = new Text(container, SWT.BORDER);
+		numDays.setText(DEFAULT_DAYS);
 		numDays.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				try{

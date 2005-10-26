@@ -44,6 +44,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public static final String TAG_TASK_CATEGORY = "Task" + TAG_CATEGORY;
 	
 	public static final String LINK = "Link";
+	public static final String PLAN = "Plan";
 	public static final String ESTIMATED = "Estimated";
 	public static final String ELAPSED = "Elapsed";
 	public static final String ISSUEURL = "IssueURL";
@@ -134,6 +135,12 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			node.setAttribute(LINK+i, link);
 			i++;
 		}
+		List<String> plans = task.getPlans();
+		int currPlan = 0;
+		for (String plan : plans) {
+			node.setAttribute(PLAN+currPlan, plan);
+			currPlan++;
+		}
 		
 		for (ITask t : task.getChildren()) {
 			createTaskElement(t, doc, node);
@@ -211,7 +218,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true, false);
 			tlist.setActive(task, true, false);
-			new TaskActivateAction(task).run();
+			new TaskActivateAction().run(task);
 		} else {
 			task.setActive(false, false);
 		}	
@@ -271,6 +278,11 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		while (element.hasAttribute(LINK+i)) {
 			task.getRelatedLinks().add(element.getAttribute(LINK+i));
 			i++;
+		}
+		int ii = 0;
+		while (element.hasAttribute(PLAN+ii)) {
+			task.getPlans().add(element.getAttribute(PLAN+i));
+			ii++;
 		}
 		if (category != null) {
 			task.internalSetCategory((TaskCategory) category);

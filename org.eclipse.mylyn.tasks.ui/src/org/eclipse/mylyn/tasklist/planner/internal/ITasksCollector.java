@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.report.internal;
+package org.eclipse.mylar.tasklist.planner.internal;
 
 import java.util.Collection;
 

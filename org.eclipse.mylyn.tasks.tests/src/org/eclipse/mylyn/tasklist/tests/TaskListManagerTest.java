@@ -32,12 +32,33 @@ import org.eclipse.mylar.tasklist.internal.TaskList;
  */
 public class TaskListManagerTest extends TestCase {
 
+    public void testPlans() {
+        File file = new File("foo" + MylarTasklistPlugin.FILE_EXTENSION);
+        file.deleteOnExit();
+        TaskListManager manager = new TaskListManager(file);
+        
+        Task task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
+        task1.addPlan("default");
+        manager.addRootTask(task1);
+
+        manager.saveTaskList();
+        assertNotNull(manager.getTaskList());
+        TaskList list = new TaskList();
+        manager.setTaskList(list);
+        manager.readTaskList();
+        assertNotNull(manager.getTaskList());
+
+    	List<ITask> readList = manager.getTaskList().getRootTasks();
+    	ITask task = readList.get(0);
+    	assertEquals(1, task.getPlans().size());
+    	assertTrue(task.getPlans().get(0).equals("default"));
+    }
+	
     public void testCreationAndExternalization() {
         File file = new File("foo" + MylarTasklistPlugin.FILE_EXTENSION);
         file.deleteOnExit();
         TaskListManager manager = new TaskListManager(file);
         
-//        TaskList tlist = manager.getTaskList();
         Task task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
         manager.addRootTask(task1);
         Task sub1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "sub 1", true);

@@ -15,37 +15,38 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
 public class TaskDeactivateAction extends Action {
 	
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.deactivate";
-	
-	private ITask task;
-	private final TaskListView view;
-	
-	public TaskDeactivateAction(ITask task, TaskListView view) {
-		this.task = task;
-		this.view = view;
+		
+	public TaskDeactivateAction() {
 		setId(ID);
+		setText("Deactivate");
+		setImageDescriptor(TaskListImages.TASK_INACTIVE);
+	}
+	
+	public void run(ITask task) {
+		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
+        IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (page == null) return;
+		try {
+			if (task != null) {
+				MylarTasklistPlugin.getTaskListManager().deactivateTask(task);
+				TaskListView.getDefault().closeTaskEditors(task, page);
+			}
+		} catch (Exception e) {
+			MylarPlugin.log(e, " Closing task editor on task deactivation failed");
+		}		
 	}
 	
 	public void run() {
-		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
-        MylarTasklistPlugin.getTaskListManager().deactivateTask(task);
-        IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-
-		// if we couldn't get the page, get out of here
-		if (page == null)
-			return;
-		try {
-			this.view.closeTaskEditors(task, page);
-		} catch (Exception e) {
-			MylarPlugin.log(e, " Closing task editor on task deactivation failed");
-		}
+		run(TaskListView.getDefault().getSelectedTask());
 	}
 }

@@ -27,8 +27,8 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskListExternalizer;
-import org.eclipse.mylar.tasklist.report.internal.ReminderRequiredCollector;
-import org.eclipse.mylar.tasklist.report.internal.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.planner.internal.ReminderRequiredCollector;
+import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
 import org.eclipse.mylar.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.events.DisposeEvent;
@@ -55,8 +55,8 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
     private List<IContextEditorFactory> contextEditors = new ArrayList<IContextEditorFactory>();    
     
-    public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.report.ui.planningGameWizard";
-    public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.report.ui.planning";
+    public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.ui.planner.wizard";
+    public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.planner.editor";
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasklist.report.open.editor";
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasklist.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasklist.report.open.external";

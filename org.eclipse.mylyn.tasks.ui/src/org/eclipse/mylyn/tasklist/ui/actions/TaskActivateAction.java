@@ -14,10 +14,10 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -28,36 +28,33 @@ import org.eclipse.ui.IViewPart;
 public class TaskActivateAction extends Action implements IViewActionDelegate {
 	
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.activate";
-		
-	private ITask task = null;
+	
+	public ITask task = null;
 	
 	public TaskActivateAction() {
-		// plugin.xml activation
-	}
-	
-	public TaskActivateAction(ITask task) {
-		this.task = task;
 		setId(ID);
+		setText("Activate");
+		setImageDescriptor(TaskListImages.TASK_ACTIVE);
 	}
 	
-	public void run() {	
-		MylarPlugin.getContextManager().actionObserved(this, Boolean.TRUE.toString());
-		MylarTasklistPlugin.getTaskListManager().activateTask(task);
-	}
-
 	public void init(IViewPart view) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void run(IAction action) {
-		ISelection selection = TaskListView.getDefault().getViewer().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			Object element = ((IStructuredSelection)selection).getFirstElement();
-			if (element instanceof ITask) {
-				MylarTasklistPlugin.getTaskListManager().activateTask((ITask)element);
-			}
+	public void run() {	
+		MylarPlugin.getContextManager().actionObserved(this, Boolean.TRUE.toString());
+		run(TaskListView.getDefault().getSelectedTask());
+	}
+	
+	public void run(ITask task) {
+		if (task != null) {
+			MylarTasklistPlugin.getTaskListManager().activateTask(task);
 		}
+	}
+	
+	public void run(IAction action) {
+		run();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

@@ -9,31 +9,35 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.report.ui;
+package org.eclipse.mylar.tasklist.planner.internal;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.tasklist.ITask;
 
 /**
  * @author Ken Sueda
  */
-public class CompletedTasksContentProvider implements IStructuredContentProvider {
+public class ReminderRequiredCollector implements ITasksCollector {
 
-	private List<ITask> tasks = null;
+	private List<ITask> tasks = new ArrayList<ITask>();
+	private Date curr = null;
 	
-	public CompletedTasksContentProvider(List<ITask> tasks) {
-		this.tasks = tasks;
+	public ReminderRequiredCollector() {
+		curr = new Date();
 	}
-	public Object[] getElements(Object inputElement) {
-		return tasks.toArray();
+	
+	public void consumeTask(ITask task) {
+		if (task.getReminderDate() != null && !task.hasBeenReminded() && task.getReminderDate().compareTo(curr) < 0) {
+			task.setReminded(true);
+			tasks.add(task);
+		}
 	}
 
-	public void dispose() {
+	public List<ITask> getTasks() {
+		return tasks;
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
 }

@@ -51,7 +51,7 @@ public class PreviousTaskDropDownAction extends DropDownTaskNavigateAction {
 	
     public void run() {
 		if (taskHistory.hasPrevious()) {
-			new TaskActivateAction(taskHistory.getPreviousTask()).run();
+			new TaskActivateAction().run(taskHistory.getPreviousTask());
 			setButtonStatus();
 			view.getViewer().refresh();			
 		} 

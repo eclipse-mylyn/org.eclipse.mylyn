@@ -22,7 +22,7 @@ import org.eclipse.mylar.tasklist.internal.TaskCategory;
 /**
  * @author Mik Kersten
  * 
- * TODO: make IDs be handles
+ * TODO: make IDs be handles, clean up
  */
 public interface ITask extends Serializable, ITaskListElement {
     
@@ -37,6 +37,10 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract boolean isActive();
     
     public abstract void setActive(boolean active, boolean isStalled);
+    
+    public abstract void addPlan(String plan);
+    
+    public List<String> getPlans();
         
     public abstract void setCompleted(boolean completed);
     

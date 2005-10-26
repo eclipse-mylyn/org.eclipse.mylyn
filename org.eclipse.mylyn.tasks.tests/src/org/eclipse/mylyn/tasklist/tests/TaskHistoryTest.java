@@ -83,11 +83,11 @@ public class TaskHistoryTest extends TestCase {
 	 * Tests the next task and previous task navigation.
 	 */
 	public void testBasicHistoryNavigation(){
-		(new TaskActivateAction(task1)).run();
+		(new TaskActivateAction()).run(task1);
 		taskView.addTaskToHistory(task1); 
-		(new TaskActivateAction(task2)).run();
+		(new TaskActivateAction()).run(task2);
 		taskView.addTaskToHistory(task2); 
-		(new TaskActivateAction(task3)).run();
+		(new TaskActivateAction()).run(task3);
 		taskView.addTaskToHistory(task3);
 		
 		assertTrue(task3.isActive());
@@ -117,7 +117,7 @@ public class TaskHistoryTest extends TestCase {
 		taskView.getNextTaskAction().run();
 		assertTrue(task3.isActive());
 		
-		(new TaskActivateAction(task4)).run();
+		(new TaskActivateAction()).run(task4);
 		taskView.addTaskToHistory(task4); //Simulate clicking on it rather than navigating next or previous
 		assertTrue(task4.isActive());
 		
@@ -143,13 +143,13 @@ public class TaskHistoryTest extends TestCase {
 		
 		//Simulate activating the tasks by clicking rather than 
 		//navigating previous/next
-		(new TaskActivateAction(task1)).run();
+		(new TaskActivateAction()).run(task1);
 		taskView.addTaskToHistory(task1);
-		(new TaskActivateAction(task2)).run();
+		(new TaskActivateAction()).run(task2);
 		taskView.addTaskToHistory(task2);
-		(new TaskActivateAction(task3)).run();
+		(new TaskActivateAction()).run(task3);
 		taskView.addTaskToHistory(task3);
-		(new TaskActivateAction(task4)).run();
+		(new TaskActivateAction()).run(task4);
 		taskView.addTaskToHistory(task4);
 		
 		assertTrue(task4.isActive());
@@ -194,8 +194,8 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task1);
 		
 		//Check that a deactivated task appears first on the history list
-		(new TaskActivateAction(task5)).run();
-		(new TaskDeactivateAction(task5, taskView)).run();
+		(new TaskActivateAction()).run(task5);
+		(new TaskDeactivateAction()).run(task5);
 		taskView.addTaskToHistory(task5);
 		prevHistoryList = taskHistory.getPreviousTasks();
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task5);

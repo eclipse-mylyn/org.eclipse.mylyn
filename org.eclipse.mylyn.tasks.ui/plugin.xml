@@ -37,7 +37,7 @@
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.tasklist.report.ui.PlanningGameWizard"
+            class="org.eclipse.mylar.tasklist.planner.ui.MylarTaskPlannerWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
             name="Mylar Task Planner">
@@ -71,16 +71,16 @@
            class="org.eclipse.mylar.tasklist.ui.TaskEditor"
            name="Task Viewer"
            id="org.eclipse.mylar.tasklist.ui.taskEditor"/>
-    <editor
-           icon="icons/eview16/task.gif"
-           class="org.eclipse.mylar.tasklist.report.ui.PlanningGameEditorPart"
-           name="Planning Game Report"
-           id="org.eclipse.mylar.tasklist.report.ui.planning"/>
 	    <editor
            icon="icons/eview16/task.gif"
            class="org.eclipse.mylar.tasklist.ui.CategoryEditor"
            name="Category Editor"
-           id="org.eclipse.mylar.tasklist.ui.catEditor"/>           
+           id="org.eclipse.mylar.tasklist.ui.catEditor"/>
+    <editor
+           icon="icons/eview16/task-list.gif"
+           class="org.eclipse.mylar.tasklist.planner.ui.MylarTaskPlannerEditorPart"
+           name="Mylar Task Planner"
+           id="org.eclipse.mylar.tasklist.ui.planner.editor"/>           
            
   </extension>
   

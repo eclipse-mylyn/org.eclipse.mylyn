@@ -21,7 +21,7 @@ import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 public class AutoCloseAction extends Action {
 	
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.auto.close";
-	private static final String LABEL = "Close Editors On Context Switch";
+	private static final String LABEL = "Auto Close Editors";
 	
 	public AutoCloseAction() {
 		setText(LABEL);

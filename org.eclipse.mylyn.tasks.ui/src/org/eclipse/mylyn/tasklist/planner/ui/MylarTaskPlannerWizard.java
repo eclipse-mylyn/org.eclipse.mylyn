@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.report.ui;
+package org.eclipse.mylar.tasklist.planner.ui;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -24,10 +24,10 @@ import org.eclipse.ui.PartInitException;
 /**
  * @author Ken Sueda
  */
-public class PlanningGameWizard extends Wizard implements INewWizard {
+public class MylarTaskPlannerWizard extends Wizard implements INewWizard {
 
-	private PlanningGameWizardPage planningGamePage = null;
-	public PlanningGameWizard() {
+	private MylarTaskPlannerWizardPage planningGamePage = null;
+	public MylarTaskPlannerWizard() {
 		super();
 		init();
 	}
@@ -44,7 +44,7 @@ public class PlanningGameWizard extends Wizard implements INewWizard {
 					MylarTasklistPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, MylarTasklistPlugin.PLANNING_GAME_EDITOR_ID);
 		} catch (PartInitException ex) {
-			MylarPlugin.log(ex, "coudln't open summary editor");
+			MylarPlugin.log(ex, "couldn't open summary editor");
 		}
 		return true;
 	}
@@ -53,7 +53,7 @@ public class PlanningGameWizard extends Wizard implements INewWizard {
 	}
 
 	private void init() {
-		planningGamePage = new PlanningGameWizardPage();
+		planningGamePage = new MylarTaskPlannerWizardPage();
 		super.setForcePreviousAndNextButtons(true);
 	}
 	

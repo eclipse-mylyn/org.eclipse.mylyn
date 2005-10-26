@@ -31,11 +31,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -46,12 +47,12 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskFilter;
 import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
@@ -128,7 +129,8 @@ public class TaskListView extends ViewPart {
 
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 	private static final String SEPARATOR_ID_REPORTS = "reports";
-
+    private static final String PART_NAME = "Mylar Tasks";
+	
 	private static TaskListView INSTANCE;
 		
 	FilteredTree tree;
@@ -142,8 +144,7 @@ public class TaskListView extends ViewPart {
     private CopyDescriptionAction copyAction;
     private OpenTaskEditorAction openAction;
     
-    private CreateTaskAction createTask;
-    private CreateTaskAction createTaskToolbar;
+    private CreateTaskAction createTaskAction;
     private CreateCategoryAction createCategory;
     
     private RenameAction rename;
@@ -151,7 +152,7 @@ public class TaskListView extends ViewPart {
     private CollapseAllAction collapseAll;
     private DeleteAction delete;
     private AutoCloseAction autoClose;
-    private OpenTaskEditorAction doubleClickAction;
+    private OpenTaskEditorAction openTaskEditor;
 
     private RemoveFromCategoryAction removeAction;
 
@@ -472,11 +473,11 @@ public class TaskListView extends ViewPart {
 						}
 						if (task != null) {
 							if (task.isActive()) {
-								new TaskDeactivateAction(task, INSTANCE).run();
+								new TaskDeactivateAction().run();
 								nextTaskAction.setEnabled(taskHistory.hasNext());
 					    		previousTaskAction.setEnabled(taskHistory.hasPrevious());
 							} else {
-								new TaskActivateAction(task).run();
+								new TaskActivateAction().run();
 								addTaskToHistory(task);
 							}
 //							getViewer().setSelection(null);
@@ -757,7 +758,7 @@ public class TaskListView extends ViewPart {
         
         makeActions();
         hookContextMenu();
-        hookDoubleClickAction();
+        hookOpenAction();
         contributeToActionBars();       
         
         ToolTipHandler toolTipHandler = new ToolTipHandler(getViewer().getControl().getShell());
@@ -899,15 +900,33 @@ public class TaskListView extends ViewPart {
 
     private void fillLocalPullDown(IMenuManager manager) {
     	updateDrillDownActions();
-    	manager.add(collapseAll);
+    	manager.add(new Separator("reports"));
+    	manager.add(new Separator("local"));
+    	manager.add(createTaskAction);
+    	manager.add(createCategory); 
     	manager.add(goBackAction);
+    	manager.add(collapseAll);
 //    	manager.add(new Separator());
+//        autoClose.setEnabled(true);
+        manager.add(new Separator("context"));
         manager.add(autoClose);
-        autoClose.setEnabled(true);
         manager.add(workOffline);
-//        workOffline.setEnabled(true);
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }    
+    
+    private void fillLocalToolBar(IToolBarManager manager) {
+//    	manager.removeAll();
+    	manager.add(new Separator(SEPARATOR_ID_REPORTS));
+    	manager.add(createTaskAction);
+        manager.add(new Separator());
+	    manager.add(filterCompleteTask);
+	    manager.add(filterOnPriority);
+	    manager.add(new Separator()); 
+    	manager.add(previousTaskAction);
+	    manager.add(nextTaskAction);
+	    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        
+    }
     
     void fillContextMenu(IMenuManager manager) {
     	updateDrillDownActions();
@@ -918,17 +937,19 @@ public class TaskListView extends ViewPart {
         	element = (ITaskListElement) selectedObject;
         }
         
+        addAction(new TaskActivateAction(), manager, element);
+        addAction(new TaskDeactivateAction(), manager, element);
         addAction(openAction, manager, element);
-//        addAction(goIntoAction, manager, element);        
+//        addAction(openAction, manager, element);
         manager.add(new Separator("tasks"));
         addAction(completeTask, manager, element);
         addAction(incompleteTask, manager, element);
-        addAction(delete, manager, element);
-        addAction(copyAction, manager, element);
+        manager.add(new Separator());
         addAction(rename, manager, element);
         addAction(removeAction, manager, element);
-        manager.add(new Separator());
-        addAction(createTask, manager, element);
+        addAction(delete, manager, element);
+        addAction(copyAction, manager, element);
+//        addAction(createTask, manager, element);
         
         manager.add(new Separator("context"));   
     	for (ITaskListDynamicSubMenuContributor contributor : MylarTasklistPlugin.getDefault().getDynamicMenuContributers()) {
@@ -1026,10 +1047,6 @@ public class TaskListView extends ViewPart {
 //		}
     }
     
-    /**
-     * @see org.eclipse.pde.internal.ui.view.HistoryDropDownAction
-     *
-     */
     private void makeActions() {
     	
     	copyAction = new CopyDescriptionAction(this);
@@ -1040,8 +1057,7 @@ public class TaskListView extends ViewPart {
 //    	goIntoAction = new GoIntoAction(drillDownAdapter);
     	goBackAction = new GoUpAction(drillDownAdapter);
     	
-    	createTask = new CreateTaskAction(this);
-    	createTaskToolbar = new CreateTaskAction(this);   
+    	createTaskAction = new CreateTaskAction(this);   
         createCategory = new CreateCategoryAction(this);
         removeAction = new RemoveFromCategoryAction(this);
         rename = new RenameAction(this);
@@ -1051,13 +1067,12 @@ public class TaskListView extends ViewPart {
         autoClose = new AutoCloseAction();
         completeTask = new MarkTaskCompleteAction(this);
         incompleteTask = new MarkTaskIncompleteAction(this);        
-        doubleClickAction = new OpenTaskEditorAction(this);            
+        openTaskEditor = new OpenTaskEditorAction(this);            
         filterCompleteTask = new FilterCompletedTasksAction(this);                       
         filterOnPriority = new PriorityDropDownAction();
         previousTaskAction = new PreviousTaskDropDownAction(this, taskHistory);
         nextTaskAction = new NextTaskDropDownAction(this, taskHistory);
     }
-
     
     public void toggleNextAction(boolean enable) {
     	nextTaskAction.setEnabled(enable);
@@ -1117,11 +1132,11 @@ public class TaskListView extends ViewPart {
         }
 	}
 	
-	private void hookDoubleClickAction() {
-		getViewer().addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
-            }
+	private void hookOpenAction() {
+		getViewer().addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
+				openTaskEditor.run();
+			}
         });
     }
     
@@ -1204,24 +1219,8 @@ public class TaskListView extends ViewPart {
     	return COMPLETE_FILTER;
     }
 
-    
     public TaskPriorityFilter getPriorityFilter() {
     	return PRIORITY_FILTER;
-    }
-
-    private void fillLocalToolBar(IToolBarManager manager) {
-    	manager.removeAll();
-    	manager.add(createTaskToolbar);
-        manager.add(createCategory);
-        manager.add(new Separator(SEPARATOR_ID_REPORTS));
-        manager.add(new Separator());
-	    manager.add(filterCompleteTask);
-	    manager.add(filterOnPriority);
-//	    manager.add(new Separator());
-	    manager.add(previousTaskAction);
-	    manager.add(nextTaskAction);
-	    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        
     }
     
     public void addFilter(ITaskFilter filter) {
@@ -1276,279 +1275,24 @@ public class TaskListView extends ViewPart {
 		updateDrillDownActions();
 	}
 	
+
+	public ITask getSelectedTask() {
+		ISelection selection = getViewer().getSelection();
+		if (selection.isEmpty()) return null;
+		if (selection instanceof StructuredSelection) {
+			StructuredSelection structuredSelection = (StructuredSelection)selection;
+			if (structuredSelection.getFirstElement() instanceof ITask) {
+				return (ITask)structuredSelection.getFirstElement();
+			}
+		}
+		return null;
+	}
+
+	public void indicatePaused(boolean paused) {
+		if (paused) {	
+			setPartName("(paused) " + PART_NAME);
+		} else {
+			setPartName(PART_NAME); 
+		}
+	}
 }
-
-//TextTransfer textTransfer = TextTransfer.getInstance();
-//DropTarget target = new DropTarget(viewer.getTree(), DND.DROP_MOVE);
-//target.setTransfer(new Transfer[] { textTransfer });
-//target.addDropListener(new TaskListDropTargetListener(parent, null, textTransfer, true));
-//
-//DragSource source = new DragSouarce(viewer.getTree(), DND.DROP_MOVE);
-//source.setTransfer(types); 
-
-//source.addDragListener(new DragSourceListener() {
-//public void dragStart(DragSourceEvent event) {
-//  if (((StructuredSelection)viewer.getSelection()).isEmpty()) { 
-//      event.doit = false; 
-//  }
-//}
-//public void dragSetData(DragSourceEvent event) {
-//  StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-//  if (!selection.isEmpty()) { 
-//      event.data = "" + ((ITask)selection.getFirstElement()).getId();
-//  } else {
-//      event.data = "null";
-//  }
-//}
-//
-//public void dragFinished(DragSourceEvent event) { }
-//});
-
-
-//	public boolean getServerStatus() {
-//		return serverStatus;
-//	}
-//	
-//	/**
-//	 * Sets whether or not we could connect to the Bugzilla server. If
-//	 * necessary, the corresponding label in the view is updated.
-//	 * 
-//	 * @param canRead
-//	 *            <code>true</code> if the Bugzilla server could be connected
-//	 *            to
-//	 */
-//	public void setServerStatus(boolean canRead) {
-//		if (serverStatus != canRead) {
-//			serverStatus = canRead;
-//			updateServerStatusLabel();
-//		}
-//	}
-//	
-//	private void updateServerStatusLabel() {
-//		if (serverStatusLabel.isDisposed()) {
-//			return;
-//		}
-//		if (serverStatus) {
-//			serverStatusLabel.setText(CAN_READ_LABEL);
-//		}
-//		else {
-//			serverStatusLabel.setText(CANNOT_READ_LABEL);
-//		}
-//	}
-//	
-//	private class ServerPingJob extends Job {
-//		private boolean shouldCheckAgain = true;
-//		private int counter = 0;
-//		
-//		public ServerPingJob(String name) {
-//			super(name);
-//		}
-//		
-//		public void stopPinging() {
-//			shouldCheckAgain = false;
-//		}
-//
-//		protected IStatus run(IProgressMonitor monitor) {
-//			while (shouldCheckAgain) {
-//				try {
-//					final boolean canReadFromServer = TaskListView.checkServer();
-//					Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//						public void run() {
-//							setServerStatus(canReadFromServer);
-//						}
-//					});
-//					Thread.sleep(10000/*MylarPreferencePage.getServerPing()*5000*/);
-//				} catch (InterruptedException e) {
-//					break;
-//				}
-//			}
-//			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
-//		}
-//	}
-//	
-//	/**
-//	 * @return <code>true</code> if we could connect to the Bugzilla server
-//	 */
-//	public static boolean checkServer() {
-//		boolean canRead = true;
-//		BufferedReader in = null;
-//		
-//		// Call this function to intialize the Bugzilla url that the repository
-//		// is using.
-//		BugzillaRepository.getInstance();
-//
-//		try {
-//			// connect to the bugzilla server
-//			SSLContext ctx = SSLContext.getInstance("TLS");
-//			javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[]{new TrustAll()};
-//			ctx.init(null, tm, null);
-//			HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-//			String urlText = "";
-//			
-//			// use the usename and password to get into bugzilla if we have it
-//			if(BugzillaPreferences.getUserName() != null && !BugzillaPreferences.getUserName().equals("") && BugzillaPreferences.getPassword() != null && !BugzillaPreferences.getPassword().equals(""))
-//			{
-//				/*
-//				 * The UnsupportedEncodingException exception for
-//				 * URLEncoder.encode() should not be thrown, since every
-//				 * implementation of the Java platform is required to support
-//				 * the standard charset "UTF-8"
-//				 */
-//				try {
-//					urlText += "?GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
-//				} catch (UnsupportedEncodingException e) { }
-//			}
-//			
-//			URL url = new URL(BugzillaRepository.getURL() + "/enter_bug.cgi" + urlText);
-//			
-//			// create a new input stream for getting the bug
-//			in = new BufferedReader(new InputStreamReader(url.openStream()));
-//		}
-//		catch (Exception e) {
-//			// If there was an IOException, then there was a problem connecting.
-//			// If there was some other exception, then it was a problem not
-//			// related to the server.
-//			if (e instanceof IOException) {
-//				canRead = false;
-//			}
-//		}
-//
-//		// Close the BufferedReader if we opened one.
-//		try {
-//			if (in != null)
-//				in.close();
-//		} catch(IOException e) {}
-//		
-//		return canRead;
-//	}
-//
-//	public void dispose() {
-//		if (serverPingJob != null) {
-//			serverPingJob.stopPinging();
-//		}
-//		super.dispose();
-//	}
-
-//      source.addDragListener(new DragSourceListener() {
-//
-//            public void dragStart(DragSourceEvent event) {
-//                if (((StructuredSelection) viewer.getSelection()).getFirstElement() == null) {
-//                    event.doit = false;
-//                }
-//            }
-//
-//            public void dragSetData(DragSourceEvent event) {
-//                StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-//                ITask task = (ITask) selection.getFirstElement();
-//                if (task != null) {
-//                    event.data = "" + task.getId();
-//                } else {
-//                    event.data = " ";
-//                }
-//            }
-//
-//            public void dragFinished(DragSourceEvent event) {
-//                StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-//                if (selection.isEmpty()) {
-//                    return;
-//                } else {
-//                    ITask task = (ITask) selection.getFirstElement();
-//                    
-//
-//                }
-//            }
-//
-//        });
-
-
-//private ViewerFilter completeFilter = new ViewerFilter(){
-//@Override
-//public boolean select(Viewer viewer, Object parentElement, Object element) {
-//	if (element instanceof ITaskListElement) {
-//		if(element instanceof ITask && ((ITaskListElement)element).hasCorrespondingActivatableTask()){
-//			ITask task = ((ITaskListElement)element).getOrCreateCorrespondingTask();
-//			if (task.isActive()) {
-//				return true;
-//			}
-//			if(task != null){
-//				return !task.isCompleted();
-//			} else {
-//				return true;
-//			}
-//		} else {
-//			return true;
-//		}
-//	} 
-//	return false;
-//}    			
-//};
-//
-//private ViewerFilter inCompleteFilter = new ViewerFilter(){
-//@Override
-//public boolean select(Viewer viewer, Object parentElement, Object element) {
-//	if (element instanceof ITask) {
-//		return ((ITask)element).isCompleted();
-//	} else {
-//		return true;
-//	} 
-//}    			
-//};
-//
-//public class PriorityFilter extends ViewerFilter {
-//private List<String> priorities = new ArrayList<String>();
-//
-//public PriorityFilter() {    		
-//	displayPrioritiesAbove(MylarTasklistPlugin.getPriorityLevel());
-//}
-//
-//public void displayPrioritiesAbove(String p) {
-//	priorities.clear();    		
-//	if (p.equals(PRIORITY_LEVELS[0])) {
-//		priorities.add(PRIORITY_LEVELS[0]);
-//	}
-//	if (p.equals(PRIORITY_LEVELS[1])) {
-//		priorities.add(PRIORITY_LEVELS[0]);
-//		priorities.add(PRIORITY_LEVELS[1]);
-//	} else if (p.equals(PRIORITY_LEVELS[2])) {
-//		priorities.add(PRIORITY_LEVELS[0]);
-//		priorities.add(PRIORITY_LEVELS[1]);
-//		priorities.add(PRIORITY_LEVELS[2]);
-//	} else if (p.equals(PRIORITY_LEVELS[3])) {
-//		priorities.add(PRIORITY_LEVELS[0]);
-//		priorities.add(PRIORITY_LEVELS[1]);
-//		priorities.add(PRIORITY_LEVELS[2]);
-//		priorities.add(PRIORITY_LEVELS[3]);
-//	} else if (p.equals(PRIORITY_LEVELS[4])) {
-//		priorities.add(PRIORITY_LEVELS[0]);
-//		priorities.add(PRIORITY_LEVELS[1]);
-//		priorities.add(PRIORITY_LEVELS[2]);
-//		priorities.add(PRIORITY_LEVELS[3]);
-//		priorities.add(PRIORITY_LEVELS[4]);
-//	}
-//}
-//
-//@Override
-//public boolean select(Viewer viewer, Object parentElement, Object element) {
-//	if (element instanceof ITaskListElement) {
-//		ITaskListElement task = (ITaskListElement) element;
-//		if (priorities.size() == PRIORITY_LEVELS.length) {
-//			return true;
-//		} else {
-//			return checkTask(task);
-//		}								
-//	} else {
-//		return true;
-//	}
-//}
-//private boolean checkTask(ITaskListElement task) {
-//	if (task instanceof ITask && ((ITask)task).isActive()) {
-//		return true;
-//	}
-//	for (String filter : priorities) {				
-//		if (task.getPriority().equals(filter)) {
-//			return true;
-//		}
-//	}
-//	return false;
-//}
-//};
