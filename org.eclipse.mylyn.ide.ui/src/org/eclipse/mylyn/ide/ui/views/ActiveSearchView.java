@@ -72,6 +72,7 @@ public class ActiveSearchView extends ViewPart {
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
     private MylarDelegatingContextLabelProvider labelProvider = new MylarDelegatingContextLabelProvider();
+    
     /**
      * For testing.
      */
