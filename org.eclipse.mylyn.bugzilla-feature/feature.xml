@@ -257,4 +257,10 @@ litigation.
          version="0.4.0"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.mylar.bugs"
+         download-size="0"
+         install-size="0"
+         version="0.4.0"/>
+
 </feature>
