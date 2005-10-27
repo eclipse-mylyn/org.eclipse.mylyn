@@ -75,7 +75,7 @@
 
   <extension point="org.eclipse.ui.views">
 
-	  <view name="Mylar Tasks" 
+	  <view name="Task List" 
 	  	icon="icons/eview16/task-list.gif" 
 	  	category="org.eclipse.mylar" 
 	  	class="org.eclipse.mylar.tasklist.ui.views.TaskListView" 

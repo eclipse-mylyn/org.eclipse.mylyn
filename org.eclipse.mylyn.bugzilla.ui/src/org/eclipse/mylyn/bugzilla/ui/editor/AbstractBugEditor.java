@@ -1296,8 +1296,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		
 		changeDirtyStatus(false);
 		OfflineView.saveOffline(getBug(), true);
-		OfflineView.checkWindow();
-		OfflineView.refreshView();
+//		OfflineView.checkWindow();
+//		OfflineView.refreshView();
 	}
 	
 	/**

@@ -52,7 +52,6 @@ import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
-import org.eclipse.mylar.bugzilla.ui.favorites.actions.AddToFavoritesAction;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -152,8 +151,8 @@ public class ExistingBugEditor extends AbstractBugEditor
 		contextMenuManager.setRemoveAllWhenShown(true);
 		contextMenuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(new AddToFavoritesAction(ExistingBugEditor.this));
-				manager.add(new Separator());
+//				manager.add(new AddToFavoritesAction(ExistingBugEditor.this));
+//				manager.add(new Separator());
 				manager.add(cutAction);
 				manager.add(copyAction);
 				manager.add(pasteAction);
