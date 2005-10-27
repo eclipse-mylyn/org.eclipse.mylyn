@@ -14,6 +14,7 @@ package org.eclipse.mylar.monitor;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -571,5 +572,17 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			+ customizedBy + "\n"
 			+ "If you are not familiar with this plug-in do not proceed.";
 		return message;
+	}
+
+	/**
+	 * @return  true if the list was set
+	 */
+	public boolean setAcceptedUrlMatchList(List<String> list) {
+		if (browserMonitor != null) {
+			browserMonitor.setAcceptedUrls(list);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -12,6 +12,8 @@
 package org.eclipse.mylar.monitor.monitors;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.AbstractInteractionMonitor;
@@ -35,7 +37,7 @@ import org.eclipse.ui.internal.browser.WebBrowserEditor;
 public class BrowserMonitor extends AbstractInteractionMonitor implements IPartListener, IWindowListener, IPageListener {
 
 	private UrlTrackingListener urlTrackingListener = new UrlTrackingListener();
-//	private WebBrowserEditor currentBrowserPart = null;
+	private List<String> acceptedUrls = new ArrayList<String>();
 		
 	class UrlTrackingListener implements LocationListener {
 
@@ -44,15 +46,22 @@ public class BrowserMonitor extends AbstractInteractionMonitor implements IPartL
 		}
 
 		public void changed(LocationEvent locationEvent) { 
-		    InteractionEvent interactionEvent = new InteractionEvent(
-		    		InteractionEvent.Kind.SELECTION, 
-		    		"url", 
-		    		locationEvent.location, 
-		    		WebBrowserEditor.WEB_BROWSER_EDITOR_ID, 
-		    		"null", 
-		    		"", 
-		    		0); 
-			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO: move			
+			String url = locationEvent.location;
+			boolean accept = false;
+			for (String urlMatch : acceptedUrls) {
+				if (url.indexOf(urlMatch) != -1) accept = true;
+			}
+			if (accept) {
+			    InteractionEvent interactionEvent = new InteractionEvent(
+			    		InteractionEvent.Kind.SELECTION, 
+			    		"url", 
+			    		url, 
+			    		WebBrowserEditor.WEB_BROWSER_EDITOR_ID, 
+			    		"null", 
+			    		"", 
+			    		0); 
+				MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO: move			
+			}
 		}
 	}	
 	
@@ -85,7 +94,6 @@ public class BrowserMonitor extends AbstractInteractionMonitor implements IPartL
 
 	public void partDeactivated(IWorkbenchPart part) {
 	}
-
 	
 	private Browser getBrowser(final WebBrowserEditor browserEditor) {
         try { // HACK: using reflection to gain accessibility
@@ -124,6 +132,14 @@ public class BrowserMonitor extends AbstractInteractionMonitor implements IPartL
 	}
 	public void pageOpened(IWorkbenchPage page) {
 		page.addPartListener(this);
+	}
+
+	public List<String> getAcceptedUrls() {
+		return acceptedUrls;
+	}
+
+	public void setAcceptedUrls(List<String> acceptedUrls) {
+		this.acceptedUrls = acceptedUrls;
 	}
 	
 }
