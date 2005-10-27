@@ -46,7 +46,7 @@ public class MylarContextManager {
 	private static final String ACTIVITY_KIND = "context";
 	private static final int ACTIVITY_TIMEOUT_SECONDS = 5 * 60; // 5 minutes in seconds 
 	
-	private static final String CONTEXT_HISTORY_FILE_NAME = "context-history";
+	public static final String CONTEXT_HISTORY_FILE_NAME = "context-history";
 	public static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylar.core.model.interest.propagation";
     public static final String SOURCE_ID_DECAY = "org.eclipse.mylar.core.model.interest.decay";
     public static final String SOURCE_ID_DECAY_CORRECTION = "org.eclipse.mylar.core.model.interest.decay.correction";
@@ -493,7 +493,14 @@ public class MylarContextManager {
     private void saveActivityHistoryContext() {
     	externalizer.writeContextToXML(activityHistory, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 	}
-
+    
+    /**
+     * Saves a copy of the activity history context to the specified destination file
+     */
+    public void saveActivityHistoryContextFileCopy(File destinationFile){
+    	externalizer.writeContextToXML(activityHistory, destinationFile);
+    }
+    
     public File getFileForContext(String path) {
         return new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + path + FILE_EXTENSION);
     }
