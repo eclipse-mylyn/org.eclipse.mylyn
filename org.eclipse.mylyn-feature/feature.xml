@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar_feature"
-      label="Mylar for Eclipse SDK"
+      label="Mylar IDE Integration"
       version="0.4.0"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">

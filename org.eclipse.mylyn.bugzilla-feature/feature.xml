@@ -7,7 +7,7 @@
       plugin="org.eclipse.mylar.bugzilla.core">
 
    <description>
-      For those using Bugzilla or reporting bugs to eclipse.org. Can be used standalone.
+      Bugzilla client integrated with Eclipse and Mylar, can be used standalone.
    </description>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
