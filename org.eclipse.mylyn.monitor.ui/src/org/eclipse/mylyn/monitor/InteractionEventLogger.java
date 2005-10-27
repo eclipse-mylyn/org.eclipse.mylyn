@@ -137,7 +137,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	    
     public List<InteractionEvent> getHistoryFromFile(File file) {
         List<InteractionEvent> events = new ArrayList<InteractionEvent>();
-        String xml = null;
+//        String xml = null;
         try {
             // The file may be a zip file...
             if ( file.getName().endsWith(".zip")) {
