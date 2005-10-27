@@ -347,7 +347,7 @@ public class MylarContextManager {
         	if (suppressListenerNotification) {
         		waitingListeners.add(listener);
         	} else {
-        		listeners.add(listener);   
+        		if (!listeners.contains(listener)) listeners.add(listener);   
         	}
         } else {
             MylarPlugin.log("attempted to add null lisetener", this);
