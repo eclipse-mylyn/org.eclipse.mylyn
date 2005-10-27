@@ -168,12 +168,12 @@
 	    </viewContribution> 
 	</extension>
 	
-<!--
 	<extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution1"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+         <!--
          <action
                class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
                enablesFor="*"
@@ -186,6 +186,7 @@
                <objectClass name="org.eclipse.mylar.tasklist.internal.TaskCategory"/>
             </enablement>
          </action>
+         -->
          <action
                class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction"
                enablesFor="*"
@@ -204,6 +205,5 @@
          </action>
       </viewerContribution>
    </extension>
--->
 </plugin>
 

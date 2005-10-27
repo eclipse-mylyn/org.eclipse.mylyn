@@ -145,7 +145,7 @@ public class TaskListView extends ViewPart {
     private OpenTaskEditorAction openAction;
     
     private CreateTaskAction createTaskAction;
-    private CreateCategoryAction createCategory;
+    private CreateCategoryAction createCategoryAction;
     
     private RenameAction rename;
     
@@ -903,7 +903,7 @@ public class TaskListView extends ViewPart {
     	manager.add(new Separator("reports"));
     	manager.add(new Separator("local"));
     	manager.add(createTaskAction);
-    	manager.add(createCategory); 
+    	manager.add(createCategoryAction); 
     	manager.add(goBackAction);
     	manager.add(collapseAll);
 //    	manager.add(new Separator());
@@ -918,7 +918,8 @@ public class TaskListView extends ViewPart {
 //    	manager.removeAll();
     	manager.add(new Separator(SEPARATOR_ID_REPORTS));
     	manager.add(createTaskAction);
-        manager.add(new Separator());
+    	manager.add(createCategoryAction);
+    	manager.add(new Separator());
 	    manager.add(filterCompleteTask);
 	    manager.add(filterOnPriority);
 	    manager.add(new Separator()); 
@@ -1057,7 +1058,7 @@ public class TaskListView extends ViewPart {
     	goBackAction = new GoUpAction(drillDownAdapter);
     	
     	createTaskAction = new CreateTaskAction(this);   
-        createCategory = new CreateCategoryAction(this);
+        createCategoryAction = new CreateCategoryAction(this);
         removeAction = new RemoveFromCategoryAction(this);
         rename = new RenameAction(this);
         
