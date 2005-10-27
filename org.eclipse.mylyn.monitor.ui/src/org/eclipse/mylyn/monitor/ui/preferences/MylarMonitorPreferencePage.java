@@ -59,9 +59,11 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout (layout);
 		
-		Label label = new Label(parent, SWT.NULL);
-		label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-		label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
+		if (MylarMonitorPlugin.getDefault().getCustomizingPlugin() != null) {
+			Label label = new Label(parent, SWT.NULL);
+			label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
+			label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+		}
 		
 		createLogFileSection(container);
 		createUsageSection(container);

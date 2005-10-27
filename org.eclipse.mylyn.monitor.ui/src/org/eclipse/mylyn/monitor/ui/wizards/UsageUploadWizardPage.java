@@ -64,9 +64,12 @@ public class UsageUploadWizardPage extends WizardPage {
 		layout.numColumns = 2;
 		layout.verticalSpacing = 9;
 		
-		Label label = new Label(parent, SWT.NULL);
-		label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-		label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
+		Label label;
+		if (MylarMonitorPlugin.getDefault().getCustomizingPlugin() != null) {
+			label = new Label(parent, SWT.NULL);
+			label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+			label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
+		}
 		
 		label = new Label(container, SWT.NULL);
 		label.setText("Upload URL:");		
