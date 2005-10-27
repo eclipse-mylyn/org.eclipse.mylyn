@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.text.ParseException;
@@ -23,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -56,7 +59,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
      * TODO: should these be queued for better performance?
      */
     public void interactionObserved(InteractionEvent event) {
-//    	System.err.println("> " + event);
+//    	System.err.println("> " + event); 
     	try {
             if (started) {       
             	String xml = interactionEventToXml(event);
@@ -136,34 +139,61 @@ public class InteractionEventLogger implements IInteractionEventListener {
         List<InteractionEvent> events = new ArrayList<InteractionEvent>();
         String xml = null;
         try {
-            String tag = "</" + MylarContextExternalizer.INTERACTION_EVENT_ID + ">";
-            String endl = "\r\n";
-            String buf = "";
-            int index;
-            FileInputStream reader = new FileInputStream(file);
-            byte[] buffer = new byte[1000];
-            while (reader.read(buffer) != -1) {
-                buf = buf + new String(buffer);
-                while ((index = buf.indexOf(tag)) != -1) {
-                    index += tag.length();
-                    xml = buf.substring(0, index);
-                    InteractionEvent event = readEvent(xml);
-                    events.add(event);
-                   
-                    if (index + endl.length() > buf.length()) {
-                    	buf = "";
-					} else {
-						buf = buf.substring(index + endl.length(), buf.length());
-					}                  
-                }
-                buffer = new byte[1000];
+            // The file may be a zip file...
+            if ( file.getName().endsWith(".zip")) {
+    		    ZipFile zip = new ZipFile(file);
+    		    if (zip.entries().hasMoreElements()) {
+    		    	ZipEntry entry = zip.entries().nextElement();
+    		    	getHistoryFromStream(zip.getInputStream(entry), events);
+    		    }
+            } else {
+            	InputStream reader = new FileInputStream(file);
+            	getHistoryFromStream(reader, events);
+            	reader.close();
             }
-            reader.close();
+            
         } catch (Exception e) {
             MylarPlugin.log("could not read interaction history", this);
+            e.printStackTrace();
         }
         return events;
     }
+
+	/**
+	 * @param events
+	 * @param tag
+	 * @param endl
+	 * @param buf
+	 */
+	private void getHistoryFromStream(InputStream reader, List<InteractionEvent> events) 
+	throws IOException {
+		String xml;
+		int index;
+		String buf = "";
+        String tag = "</" + MylarContextExternalizer.INTERACTION_EVENT_ID + ">";
+        String endl = "\r\n";
+		byte[] buffer = new byte[1000];
+		int bytesRead = 0;
+		while ( ( bytesRead = reader.read(buffer)) != -1) {
+		    buf = buf + new String(buffer, 0, bytesRead);
+		    while ((index = buf.indexOf(tag)) != -1) {
+		        index += tag.length();
+		        xml = buf.substring(0, index);
+		        InteractionEvent event = readEvent(xml);
+		        if ( event != null )
+		        	events.add(event);
+		       
+		        if (index + endl.length() > buf.length()) {
+		        	buf = "";
+				} else {
+					buf = buf.substring(index + endl.length(), buf.length());
+				}                  
+		    }
+		    buffer = new byte[1000];
+		}
+	}
+    
+
     
     private static final String OPEN = "<";
     private static final String CLOSE = ">";
@@ -295,8 +325,13 @@ public class InteractionEventLogger implements IInteractionEventListener {
 			return ie;
 			
 		} catch (ParseException e) {
+			System.err.println("readevent: " + xml);
 			e.printStackTrace();
 		} catch (IOException e) {
+			System.err.println("readevent: " + xml);
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("readevent: " + xml);
 			e.printStackTrace();
 		}
 
