@@ -20,7 +20,7 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
+import org.eclipse.mylar.tasklist.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -29,7 +29,7 @@ import org.eclipse.mylar.ui.actions.EditHighlightersAction;
 /**
  * @author Mik Kersten
  */
-public class TaskListHighlighterMenuContributor implements ITaskListDynamicSubMenuContributor {
+public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String CHOOSE_HIGHLIGHTER = "Choose Highlighter";
 	
@@ -37,7 +37,6 @@ public class TaskListHighlighterMenuContributor implements ITaskListDynamicSubMe
 		final ITaskListElement selectedElement = selection;
 		final TaskListView taskListView = view;
 		final MenuManager subMenuManager = new MenuManager(CHOOSE_HIGHLIGHTER);
-//		List<IAction> actions = new ArrayList<IAction>();
 		for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
           final Highlighter highlighter = it.next();
           if (selectedElement instanceof ITaskListElement) {
