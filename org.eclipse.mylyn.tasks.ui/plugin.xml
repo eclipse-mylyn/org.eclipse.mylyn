@@ -42,7 +42,24 @@
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
             name="Mylar Task Planner">
       </wizard>
-   </extension>
+	</extension>
+
+     <extension point="org.eclipse.ui.exportWizards"> 
+      <category
+		id="org.eclipse.mylar.exportCategory"
+		name="Mylar"/>
+      <wizard 
+         id="org.eclipse.mylar.tasklist.ui.exportWizard" 
+         name="Task Data" 
+         class="org.eclipse.mylar.tasklist.ui.TaskDataExportWizard"
+         category="org.eclipse.mylar.exportCategory" 
+         icon="icons/eview16/task-list.gif"> 
+         <description> 
+            Export Mylar task data files to the file system.
+         </description> 
+      </wizard> 
+    </extension> 
+
 
     <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
@@ -95,3 +112,6 @@
       </page>  
    </extension>
 </plugin>
+
+
+

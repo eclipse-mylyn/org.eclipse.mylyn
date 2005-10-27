@@ -62,6 +62,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasklist.report.open.external";
     public static final String MULTIPLE_ACTIVE_TASKS = "org.eclipse.mylar.tasklist.active.multipe";
     
+    public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
     public static final String FILE_EXTENSION = ".xml";
     public static final String TASK_ID = "org.eclipse.mylar.tasklist.userid";
     public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
