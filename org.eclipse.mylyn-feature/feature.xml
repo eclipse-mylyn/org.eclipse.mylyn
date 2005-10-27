@@ -4,7 +4,7 @@
       label="Mylar"
       version="0.4.0"
       provider-name="Eclipse.org"
-      plugin="org.eclipse.mylar.core">
+      plugin="org.eclipse.mylar">
 
    <description url="http://eclipse.org/mylar">
       Mylar Plugin
