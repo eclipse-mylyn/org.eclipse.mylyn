@@ -1,4 +1,4 @@
-package org.eclipse.mylar.tasklist.ui;
+package org.eclipse.mylar.tasklist.ui.wizards;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package org.eclipse.mylar.tasklist.ui;
+package org.eclipse.mylar.tasklist.ui.wizards;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
