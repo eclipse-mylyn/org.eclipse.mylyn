@@ -43,7 +43,7 @@ public class TaskEditor extends MultiPageEditorPart {
 	private static final String ISSUE_WEB_PAGE_LABEL = "Web Link";
 	protected ITask task;
 	private TaskSummaryEditor taskSummaryEditor;
-	private Browser issueBrowser;
+	private Browser webBrowser;
 	private TaskEditorInput taskEditorInput;
 	
 	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
@@ -102,6 +102,10 @@ public class TaskEditor extends MultiPageEditorPart {
 			MylarPlugin.fail(e, "failed to create task editor pages", false);
 		}
 	}
+	
+	public IEditorPart getActiveEditor() {
+		return super.getActiveEditor();
+	}
 
 	private int createTaskSummaryPage() throws PartInitException {
 		try {
@@ -122,10 +126,10 @@ public class TaskEditor extends MultiPageEditorPart {
 	 */
 	private void createTaskIssueWebPage() {
 		try {
-			issueBrowser = new Browser(getContainer(), SWT.NONE);
-			int index = addPage(issueBrowser);
+			webBrowser = new Browser(getContainer(), SWT.NONE);
+			int index = addPage(webBrowser);
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
-			issueBrowser.setUrl(task.getIssueReportURL());
+			webBrowser.setUrl(task.getIssueReportURL());
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not open issue report web page", false);
 		}
@@ -134,8 +138,8 @@ public class TaskEditor extends MultiPageEditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		taskSummaryEditor.doSave(monitor);
-		if (issueBrowser != null){
-			issueBrowser.setUrl(task.getIssueReportURL());
+		if (webBrowser != null){
+			webBrowser.setUrl(task.getIssueReportURL());
 		}
 		else if(task.getIssueReportURL().length() > 9){
 			createTaskIssueWebPage();
@@ -237,8 +241,13 @@ public class TaskEditor extends MultiPageEditorPart {
 		firePropertyChange(PROP_DIRTY);
 		return;
 	}
+
 	@Override
 	public void setFocus() {
 //		taskSummaryEditor.setFocus();
-	}	
+	}
+
+	public Browser getWebBrowser() {
+		return webBrowser;
+	}
 }
