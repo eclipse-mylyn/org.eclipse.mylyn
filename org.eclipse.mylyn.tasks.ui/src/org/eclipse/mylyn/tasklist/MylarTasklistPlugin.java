@@ -432,13 +432,13 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	private List<ITaskListDynamicSubMenuContributor> menuContributors = new ArrayList<ITaskListDynamicSubMenuContributor>();
+	private List<IDynamicSubMenuContributor> menuContributors = new ArrayList<IDynamicSubMenuContributor>();
 	
-	public List<ITaskListDynamicSubMenuContributor> getDynamicMenuContributers() {
+	public List<IDynamicSubMenuContributor> getDynamicMenuContributers() {
 		return menuContributors;
 	}
 	
-	public void addDynamicPopupContributor(ITaskListDynamicSubMenuContributor contributor) {
+	public void addDynamicPopupContributor(IDynamicSubMenuContributor contributor) {
 		menuContributors.add(contributor);
 	}
 	

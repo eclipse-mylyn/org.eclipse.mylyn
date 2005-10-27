@@ -53,7 +53,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskFilter;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListCategory;
-import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
+import org.eclipse.mylar.tasklist.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
@@ -952,8 +952,7 @@ public class TaskListView extends ViewPart {
 //        addAction(createTask, manager, element);
         
         manager.add(new Separator("context"));   
-    	for (ITaskListDynamicSubMenuContributor contributor : MylarTasklistPlugin.getDefault().getDynamicMenuContributers()) {
-//	        manager.add(new Separator());
+    	for (IDynamicSubMenuContributor contributor : MylarTasklistPlugin.getDefault().getDynamicMenuContributers()) {
 	        MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement)selectedObject);
 	        if (subMenuManager != null) addMenuManager(subMenuManager, manager, element);
     	}

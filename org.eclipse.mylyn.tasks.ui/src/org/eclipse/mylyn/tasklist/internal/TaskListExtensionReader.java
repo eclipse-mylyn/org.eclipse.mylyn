@@ -22,7 +22,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ITaskActivationListener;
 import org.eclipse.mylar.tasklist.ITaskHandler;
-import org.eclipse.mylar.tasklist.ITaskListDynamicSubMenuContributor;
+import org.eclipse.mylar.tasklist.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 
@@ -111,10 +111,10 @@ public class TaskListExtensionReader {
 	private static void readDynamicPopupContributor(IConfigurationElement element) {
 		try{
 			Object dynamicPopupContributor = element.createExecutableExtension(DYNAMIC_POPUP_CLASS_ID);
-			if (dynamicPopupContributor instanceof ITaskListDynamicSubMenuContributor) {
-				MylarTasklistPlugin.getDefault().addDynamicPopupContributor((ITaskListDynamicSubMenuContributor) dynamicPopupContributor);
+			if (dynamicPopupContributor instanceof IDynamicSubMenuContributor) {
+				MylarTasklistPlugin.getDefault().addDynamicPopupContributor((IDynamicSubMenuContributor) dynamicPopupContributor);
 			} else {
-				MylarPlugin.log("Could not load dyanmic popup menu: " + dynamicPopupContributor.getClass().getCanonicalName() + " must implement " + ITaskListDynamicSubMenuContributor.class.getCanonicalName(), thisReader);	
+				MylarPlugin.log("Could not load dyanmic popup menu: " + dynamicPopupContributor.getClass().getCanonicalName() + " must implement " + IDynamicSubMenuContributor.class.getCanonicalName(), thisReader);	
 			}
 		} catch (CoreException e){
 			MylarPlugin.log(e, "Could not load dynamic popup extension");
