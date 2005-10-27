@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylar_feature"
-      label="Mylar UI"
+      label="Mylar for Eclipse SDK"
       version="0.4.0"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
    <description url="http://eclipse.org/mylar">
-      Mylar Plugin
+      Mylar UI and support for the Eclipse SDK.
    </description>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
