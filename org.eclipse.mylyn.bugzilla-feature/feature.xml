@@ -210,7 +210,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Eclipse.org Mylar Update Site" url="http://download.eclipse.org/technology/org.eclipse.mylar/org.eclipse.mylar-site/bugzilla"/>
+      <update label="Mylar Bugzilla Client" url="http://download.eclipse.org/technology/mylar/update-site/bugzilla"/>
    </url>
 
    <requires>
@@ -254,7 +254,7 @@ litigation.
          id="org.eclipse.mylar.tasklist"
          download-size="0"
          install-size="0"
-         version="0.3.12"
+         version="0.4.0"
          unpack="false"/>
 
 </feature>

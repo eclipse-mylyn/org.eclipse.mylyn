@@ -3,7 +3,7 @@
       id="org.eclipse.mylar_feature"
       label="Mylar"
       version="0.4.0"
-      provider-name="University of British Columbia"
+      provider-name="Eclipse.org"
       plugin="org.eclipse.mylar.core">
 
    <description url="http://eclipse.org/mylar">
@@ -210,7 +210,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Mylar" url="http://download.eclipse.org/technology/org.eclipse.mylar/org.eclipse.mylar-site/eclipse3.2"/>
+      <update label="Mylar" url="http://download.eclipse.org/technology/mylar/update-site/e3.2"/>
    </url>
 
    <includes
