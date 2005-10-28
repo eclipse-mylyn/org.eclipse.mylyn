@@ -26,6 +26,7 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -37,6 +38,7 @@ import org.eclipse.ui.internal.Workbench;
 public class Task implements ITask {
 
 	public static final long INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getActivityTimeoutSeconds() * 1000;
+	public Color ACTIVE  = new Color(Display.getDefault(), 30, 30, 60);
 	
     private static final long serialVersionUID = 3545518391537382197L;
     private boolean active = false;
@@ -411,6 +413,8 @@ public class Task implements ITask {
 	public Color getForeground() {
         if (isCompleted()){
         	return GRAY_VERY_LIGHT;
+        } else if (isActive()) {
+        	return ACTIVE;
         } else {
         	return null;
         }
