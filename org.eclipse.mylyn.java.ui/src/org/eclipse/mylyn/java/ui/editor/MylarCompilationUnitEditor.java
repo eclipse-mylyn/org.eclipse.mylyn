@@ -17,11 +17,8 @@ package org.eclipse.mylar.java.ui.editor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
-import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jdt.ui.text.IJavaPartitions;
-import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -46,19 +43,19 @@ public class MylarCompilationUnitEditor extends CompilationUnitEditor {
     	initializeEditor(); 
     	super.createPartControl(parent);
         
-        JavaElementImageProvider prov = new JavaElementImageProvider();
-        if (super.getInputJavaElement() != null) {
-	        Image image = prov.getJavaImageDescriptor(super.getInputJavaElement(), 0).createImage(); 
-	        Point size= JavaElementImageProvider.SMALL_SIZE;
-			MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image, MylarImages.MYLAR_OVERLAY, size);
-			setTitleImage(MylarImages.getImage(desc));
-        }
+//        JavaElementImageProvider prov = new JavaElementImageProvider();
+//        if (super.getInputJavaElement() != null) {
+//	        Image image = prov.getJavaImageDescriptor(super.getInputJavaElement(), 0).createImage(); 
+//	        Point size= JavaElementImageProvider.SMALL_SIZE;
+//			MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image, MylarImages.MYLAR_OVERLAY, size);
+//			setTitleImage(MylarImages.getImage(desc));
+//        }
     }
 
 	@Override
 	public void updatedTitleImage(Image image) {
-		Point size= JavaElementImageProvider.SMALL_SIZE;
-		MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image, MylarImages.MYLAR_OVERLAY, size);
-		setTitleImage(MylarImages.getImage(desc));
+//		Point size= JavaElementImageProvider.SMALL_SIZE;
+//		MylarJavaElementDescriptor desc = new MylarJavaElementDescriptor(image, MylarImages.MYLAR_OVERLAY, size);
+//		setTitleImage(MylarImages.getImage(desc));
 	} 
 }

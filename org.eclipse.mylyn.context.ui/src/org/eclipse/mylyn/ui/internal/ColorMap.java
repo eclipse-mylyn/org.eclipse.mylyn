@@ -58,7 +58,7 @@ public class ColorMap {
     private GammaSetting gammaSetting = GammaSetting.STANDARD;
     
     public Color HYPERLINK  = new Color(Display.getDefault(), 0, 0, 255); // TODO: use theme?
-    public Color LANDMARK  = new Color(Display.getDefault(), 26, 26, 52); 
+    public Color LANDMARK  = new Color(Display.getDefault(), 30, 30, 60); 
         
     public Color PACKAGE_LABEL = new Color(Display.getDefault(), 100, 100, 100);
     public Color TEXT = new Color(Display.getDefault(), 0, 0, 0);

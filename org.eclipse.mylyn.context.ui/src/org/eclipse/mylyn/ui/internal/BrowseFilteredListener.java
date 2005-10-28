@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
@@ -27,12 +29,22 @@ import org.eclipse.swt.widgets.Tree;
 /**
  * @author Mik Kersten
  */
-public class BrowseFilteredListener implements MouseListener {
+public class BrowseFilteredListener implements MouseListener, KeyListener {
 	
 	private StructuredViewer viewer;
 	
 	public BrowseFilteredListener(StructuredViewer viewer) {
 		this.viewer = viewer;
+	}
+	
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void mouseDown(MouseEvent event) {
@@ -86,4 +98,5 @@ public class BrowseFilteredListener implements MouseListener {
 	public void mouseUp(MouseEvent e) { }
 
 	public void mouseDoubleClick(MouseEvent e) { }
+
 }
