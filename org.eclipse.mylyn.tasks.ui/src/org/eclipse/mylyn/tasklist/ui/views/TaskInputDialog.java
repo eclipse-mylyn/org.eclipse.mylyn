@@ -194,21 +194,27 @@ public class TaskInputDialog extends Dialog {
 			
 			browser.addTitleListener(new TitleListener(){
 				
-				boolean changeCalled = false;
+				//Determines when to ignore the second call to changed()
+				boolean ignore = false;
 				
 				public void changed(TitleEvent event) {
-					if (!changeCalled){
-						changeCalled = true;
-						if (event.title.equals(url) ||
-								event.title.equals("Object not found!") || 
-								event.title.equals("No page to display") || 
-								event.title.equals("Cannot find server") || 
-								event.title.equals("Invalid Bug ID")){ //Last one is bugzilla-specific
-							MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error", "Could not retrieve a description from the specified web page.");
+					if (!ignore){
+						if (event.title.equals(url)){
+							return;
 						}
 						else{
-							taskNameTextWidget.setText(event.title);
-						}						
+							ignore = true;
+							if (event.title.equals(url + "/") ||
+									event.title.equals("Object not found!") || 
+									event.title.equals("No page to display") || 
+									event.title.equals("Cannot find server") || 
+									event.title.equals("Invalid Bug ID")){ //Last one is bugzilla-specific
+								MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error", "Could not retrieve a description from the specified web page.");
+							}
+							else{
+								taskNameTextWidget.setText(event.title);
+							}							
+						}
 					}
 				}
 			});
