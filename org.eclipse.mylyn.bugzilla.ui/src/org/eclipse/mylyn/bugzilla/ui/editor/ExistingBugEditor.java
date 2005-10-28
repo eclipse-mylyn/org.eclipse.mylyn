@@ -969,10 +969,18 @@ public class ExistingBugEditor extends AbstractBugEditor
 	 * @author Wesley Coelho
 	 */
 	private void setDefaultCCValue(){
-		Attribute attr = bug.getAttributeForKnobName("newcc");
-		if(attr != null) {
-			if (attr.getNewValue().equals("")){
-				attr.setNewValue(BugzillaPreferences.getUserName());
+		Attribute newCCattr = bug.getAttributeForKnobName("newcc");
+		Attribute owner = bug.getAttribute("Assigned To");
+		
+		//Don't add the cc if the user is the bug owner
+		if(owner != null && owner.getValue().indexOf(BugzillaPreferences.getUserName()) > -1){
+			return;
+		}
+		
+		//Add the user to the cc list
+		if(newCCattr != null) {
+			if (newCCattr.getNewValue().equals("")){
+				newCCattr.setNewValue(BugzillaPreferences.getUserName());
 			}
 		}
 	}
