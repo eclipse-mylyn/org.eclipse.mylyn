@@ -194,7 +194,7 @@
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize Reports"
+               label="Synchronize Report(s)"
                menubarPath="reports"
                tooltip="Synchronize Reports">
             <enablement>
