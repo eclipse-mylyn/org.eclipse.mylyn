@@ -212,7 +212,7 @@
    <extension point="org.eclipse.ui.decorators">
       <decorator
             lightweight="true"
-            label="Mylar Label Decorator"
+            label="Mylar Interest Decorator"
             class="org.eclipse.mylar.ui.InterestDecoratorLightweight"
             state="true"
             id="org.eclipse.mylar.ui.decorator.interest">
@@ -240,7 +240,7 @@
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Apply Mylar (interest filtering)"> 
+           tooltip="Apply Mylar"> 
   		</action> 
   		</viewContribution>
    <viewContribution

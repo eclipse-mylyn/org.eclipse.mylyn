@@ -27,7 +27,7 @@
 	<extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            name="Mylar Context Test"
+            name="Task Context Test"
             delegate="org.eclipse.mylar.java.internal.junit.MylarJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylar.java.junit.launchconfig"
@@ -44,7 +44,7 @@
       </launchConfigurationType>
          <launchConfigurationType
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
-            name="Mylar Context Plug-in Test"
+            name="Task Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
             delegate="org.eclipse.mylar.java.internal.junit.MylarPdeJUnitLaunchConfiguration"
             modes="run, debug"

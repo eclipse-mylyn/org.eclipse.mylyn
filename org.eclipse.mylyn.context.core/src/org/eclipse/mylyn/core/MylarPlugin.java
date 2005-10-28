@@ -48,7 +48,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarPlugin extends AbstractUIPlugin {
+public class MylarPlugin extends AbstractUIPlugin { 
 	
 	public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.core.context";
 	public static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";

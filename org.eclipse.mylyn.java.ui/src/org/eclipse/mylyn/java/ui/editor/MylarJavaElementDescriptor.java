@@ -42,8 +42,7 @@ public class MylarJavaElementDescriptor extends CompositeImageDescriptor {
 		
 //		Point size= getSize();
 		ImageData data= getImageData(overlay);
-		drawImage(data, 0, bg.height - data.height);
-		
+		drawImage(data, data.width, bg.height - data.height);
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
