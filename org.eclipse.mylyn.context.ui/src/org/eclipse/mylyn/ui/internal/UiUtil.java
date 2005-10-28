@@ -65,6 +65,8 @@ public class UiUtil {
             } else {
                 return MylarUiPlugin.getDefault().getColorMap().GRAY_LIGHT; 
             }
+        } else if (node.getInterest().isLandmark()) {
+        	return MylarUiPlugin.getDefault().getColorMap().LANDMARK;
         } else if (node.getInterest().isInteresting()) {
         	return null;
         } 
