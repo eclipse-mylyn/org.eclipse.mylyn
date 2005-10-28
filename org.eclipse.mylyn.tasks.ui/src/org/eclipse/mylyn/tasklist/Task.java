@@ -353,7 +353,11 @@ public class Task implements ITask {
     }
 
 	public Image getIcon() {
-		return TaskListImages.getImage(TaskListImages.TASK);
+		if (issueReportURL != null && !issueReportURL.trim().equals("") && !issueReportURL.equals("http://")) {
+			return TaskListImages.getImage(TaskListImages.TASK_WEB);
+		} else {
+			return TaskListImages.getImage(TaskListImages.TASK);
+		}
 	}
 
 	public String getDescription(boolean label) {

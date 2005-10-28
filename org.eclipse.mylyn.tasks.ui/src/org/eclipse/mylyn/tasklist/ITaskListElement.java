@@ -26,6 +26,9 @@ public interface ITaskListElement {
 
     public Color GRAY_VERY_LIGHT  = new Color(Display.getDefault(), 200, 200, 200); // TODO: use theme?
     	
+    /**
+     * TODO: refactor to label decorator
+     */
 	public abstract Image getIcon();
 	
 	public abstract Image getStatusIcon();

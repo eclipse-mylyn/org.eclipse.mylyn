@@ -72,11 +72,11 @@ public class BugzillaImages {
 	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_ELCL, "overlay-outgoing.gif");
 	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_ELCL, "overlay-conflicting.gif");
 	
-	public static final ImageDescriptor TASK_BUGZILLA = createWithOverlay(TASK_BUG, null);
-    public static final ImageDescriptor TASK_BUGZILLA_INCOMMING = createWithOverlay(TASK_BUGZILLA, OVERLAY_INCOMMING);
-    public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = createWithOverlay(TASK_BUGZILLA, OVERLAY_CONFLICT);
-	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = createWithOverlay(TASK_BUGZILLA, OVERLAY_OUTGOING);
-	public static final ImageDescriptor BUGZILLA_HIT = createWithOverlay(BUG_HIT, null);
+	public static final ImageDescriptor TASK_BUGZILLA = createWithOverlay(TASK_BUG, null, true);
+    public static final ImageDescriptor TASK_BUGZILLA_INCOMMING = createWithOverlay(TASK_BUGZILLA, OVERLAY_INCOMMING, true);
+    public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = createWithOverlay(TASK_BUGZILLA, OVERLAY_CONFLICT, true);
+	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = createWithOverlay(TASK_BUGZILLA, OVERLAY_OUTGOING, true);
+	public static final ImageDescriptor BUGZILLA_HIT = createWithOverlay(BUG_HIT, null, true);
 	public static final ImageDescriptor BUGZILLA_HIT_INCOMMING = BUGZILLA_HIT;//createWithOverlay(BUGZILLA_HIT, OVERLAY_INCOMMING);
     	
     public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
@@ -97,8 +97,8 @@ public class BugzillaImages {
 		}
 	}
 	
-	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay) { 
-		return new MylarTasklistOverlayDescriptor(base, overlay);
+	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top) { 
+		return new MylarTasklistOverlayDescriptor(base, overlay, top);
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {

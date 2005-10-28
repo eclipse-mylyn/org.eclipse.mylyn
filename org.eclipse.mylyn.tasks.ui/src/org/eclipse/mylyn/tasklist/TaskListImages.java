@@ -50,7 +50,10 @@ public class TaskListImages {
     public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
     
     public static final ImageDescriptor TASK2 = create(T_TOOL, "task.gif");
-    public static final ImageDescriptor TASK = createWithOverlay(TASK2, null); 
+    public static final ImageDescriptor TASK = createWithOverlay(TASK2, null, true); 
+
+    public static final ImageDescriptor WEB_OVERLAY = create(T_TOOL, "overlay-web.gif");
+    public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK2, WEB_OVERLAY, false);
     
     public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif"); 
     public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif"); 
@@ -69,7 +72,7 @@ public class TaskListImages {
     public static final ImageDescriptor TASK_INACTIVE_CONTEXT = create(T_TOOL, "task-context.gif");
     public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
     public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
-
+    
 	public static final ImageDescriptor COLLAPSE_ALL = create(T_ELCL, "collapseall.png");
    
 	private static ImageDescriptor create(String prefix, String name) {
@@ -80,8 +83,8 @@ public class TaskListImages {
 		}
 	}
 	
-	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay) { 
-		return new MylarTasklistOverlayDescriptor(base, overlay);
+	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top) { 
+		return new MylarTasklistOverlayDescriptor(base, overlay, top);
 	}
 	
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
@@ -122,11 +125,12 @@ public class TaskListImages {
 		private ImageData base;
 		private ImageData overlay;
 		private Point fSize;
+		private boolean top;
 		
-		public MylarTasklistOverlayDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc) {
+		public MylarTasklistOverlayDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top) {
 			this.base = getImageData(baseDesc);
-			if(overlayDesc != null)
-				this.overlay = getImageData(overlayDesc);
+			this.top = top;
+			if(overlayDesc != null) this.overlay = getImageData(overlayDesc);
 			Point size = new Point(base.width, base.height); 
 			setImageSize(size);
 		}
@@ -134,8 +138,13 @@ public class TaskListImages {
 		@Override
 		protected void drawCompositeImage(int width, int height) {
 			drawImage(base, 0, 0);
-			if(overlay != null)
-				drawImage(overlay, base.width - overlay.width, 0);
+			if(overlay != null) {
+				if (top) {
+					drawImage(overlay, base.width - overlay.width, 0);
+				} else {
+					drawImage(overlay, base.width - overlay.width, base.height - overlay.height);
+				}
+			}
 		}
 
 		private ImageData getImageData(ImageDescriptor descriptor) {

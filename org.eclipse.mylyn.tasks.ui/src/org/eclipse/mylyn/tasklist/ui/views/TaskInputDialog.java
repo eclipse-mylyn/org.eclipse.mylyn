@@ -67,7 +67,7 @@ public class TaskInputDialog extends Dialog {
 		GridData data = new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER);
-		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
+		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH + 100);
 		composite.setLayoutData(data);
 
 		Label taskNameLabel = new Label(composite, SWT.WRAP);
@@ -103,7 +103,6 @@ public class TaskInputDialog extends Dialog {
 			}
 		});
 		
-		
 		Label urlLabel = new Label(composite, SWT.WRAP);
 		urlLabel.setText("Web Link:");
 		urlLabel.setFont(parent.getFont());
@@ -116,7 +115,7 @@ public class TaskInputDialog extends Dialog {
 		
 		getDescButton = new Button(composite, SWT.PUSH);
 		getDescButton.setText("Get Description");
-		getDescButton.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		setButtonStatus();
 		
 		
