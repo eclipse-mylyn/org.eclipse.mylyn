@@ -58,6 +58,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 			BrowseFilteredListener listener = new BrowseFilteredListener(viewer);
 			listenerMap.put(viewer, listener);
 			viewer.getControl().addMouseListener(listener);
+			viewer.getControl().addKeyListener(listener);
 		}
 	}
 	
@@ -66,6 +67,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		BrowseFilteredListener listener = listenerMap.get(viewer);
 		if (listener != null && viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.getControl().removeMouseListener(listener);
+			viewer.getControl().removeKeyListener(listener);
 		}  
 	}
 

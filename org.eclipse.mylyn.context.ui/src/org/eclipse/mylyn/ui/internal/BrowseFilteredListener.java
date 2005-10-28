@@ -37,9 +37,29 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		this.viewer = viewer;
 	}
 	
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void keyPressed(KeyEvent event) {
+		final InterestFilter filter = getFilter(viewer);
+		if (filter == null) return;
+		if (keyboardInteractionAccepted(event)) {
+			if (viewer instanceof TreeViewer) {
+				final TreeViewer treeViewer = (TreeViewer)viewer;
+				ISelection selection = treeViewer.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					Object targetObject = ((IStructuredSelection)selection).getFirstElement();
+					unfilter(filter, treeViewer, targetObject);
+				} 
+			} 
+		} else {
+			filter.resetTemporarilyUnfiltered();
+		}
+	}
+
+	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
+		if (targetObject != null) {
+			filter.setTemporarilyUnfiltered(targetObject);
+			treeViewer.refresh(targetObject, true);
+			treeViewer.expandToLevel(targetObject, 2);
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -49,7 +69,6 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	
 	public void mouseDown(MouseEvent event) {
 		final InterestFilter filter = getFilter(viewer);
-		
 		if (filter == null) return;
 		if (mouseInteractionAccepted(event)) {
 			if (viewer instanceof TreeViewer) {
@@ -62,11 +81,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 					} else if (treeViewer.getTree().getTopItem() != null) {
 						targetObject = treeViewer.getTree().getTopItem().getData();
 					}
-					if (targetObject != null) {
-						filter.setTemporarilyUnfiltered(targetObject);
-						treeViewer.refresh(targetObject, true);
-						treeViewer.expandToLevel(targetObject, 2);
-					}
+					unfilter(filter, treeViewer, targetObject);
 				} 
 			} 
 		} else {
@@ -87,6 +102,10 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		return (event.stateMask & SWT.ALT) != 0;
 	}
 
+	private boolean keyboardInteractionAccepted(KeyEvent event) {
+		return event.keyCode == SWT.ARROW_RIGHT;
+	}
+	
 	private InterestFilter getFilter(StructuredViewer structuredViewer) {
 		ViewerFilter[] filters = structuredViewer.getFilters();
 		for (int i = 0; i < filters.length; i++) {
