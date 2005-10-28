@@ -41,6 +41,7 @@ import org.eclipse.mylar.bugzilla.core.BugPost;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
@@ -326,6 +327,9 @@ public class ExistingBugEditor extends AbstractBugEditor
 		// set the url for the bug to be submitted to
 		setURL(form, "process_bug.cgi");
 
+		//Add the user's address to the CC list if they haven't specified a CC
+		setDefaultCCValue();		
+		
 		// go through all of the attributes and add them to the bug post
 		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {
 			Attribute a = it.next();
@@ -956,6 +960,20 @@ public class ExistingBugEditor extends AbstractBugEditor
 		if (!(a.getNewValue().equals(sel))) {
 			a.setNewValue(sel);
 			changeDirtyStatus(true);
+		}
+	}
+	
+	/**
+	 * Sets the cc field to the user's address if a cc has not been
+	 * specified to ensure that commenters are on the cc list.
+	 * @author Wesley Coelho
+	 */
+	private void setDefaultCCValue(){
+		Attribute attr = bug.getAttributeForKnobName("newcc");
+		if(attr != null) {
+			if (attr.getNewValue().equals("")){
+				attr.setNewValue(BugzillaPreferences.getUserName());
+			}
 		}
 	}
 	
