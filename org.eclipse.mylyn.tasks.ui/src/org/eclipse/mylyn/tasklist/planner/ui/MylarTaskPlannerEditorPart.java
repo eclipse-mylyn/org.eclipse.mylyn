@@ -113,7 +113,7 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		
 		createSummarySection(editorComposite, toolkit);
 		createCompletedSection(editorComposite, toolkit);
-		createPlannedTasksSection(editorComposite, toolkit);
+//		createPlannedTasksSection(editorComposite, toolkit);
 	}
 
 	@Override
@@ -244,7 +244,10 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		completedTableViewer.setInput(editorInput);
 	}
 	
-	private void createPlannedTasksSection(Composite parent, FormToolkit toolkit) {
+	/**
+	 * TODO: make private
+	 */
+	public void createPlannedTasksSection(Composite parent, FormToolkit toolkit) {
 		Section planSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		planSection.setText("Planned Tasks");			
 		planSection.setLayout(new TableWrapLayout());

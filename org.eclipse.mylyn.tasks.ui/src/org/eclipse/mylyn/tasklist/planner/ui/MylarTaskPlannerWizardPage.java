@@ -15,6 +15,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -26,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class MylarTaskPlannerWizardPage extends WizardPage {
 
-	private static final String DEFAULT_DAYS = "7";
+	private static final int DEFAULT_DAYS = 7;
 	private static final String TITLE = "Mylar Task Planner";
 	private static final String DESCRIPTION = 
 		"Summarizes task activity and assists planning future tasks.";
@@ -46,10 +47,13 @@ public class MylarTaskPlannerWizardPage extends WizardPage {
 		container.setLayout(layout);
 		layout.numColumns = 2;		
 
+		GridData gd = new GridData();
+		gd.widthHint = 50;
+		
 		Label l = new Label(container, SWT.NULL);
 		l.setText("Number of past days to report on: ");
 		numDays = new Text(container, SWT.BORDER);
-		numDays.setText(DEFAULT_DAYS);
+		numDays.setLayoutData(gd);
 		numDays.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				try{
@@ -61,6 +65,8 @@ public class MylarTaskPlannerWizardPage extends WizardPage {
 				}
 			}			
 		});		
+		numDays.setText("" + DEFAULT_DAYS);
+		num = DEFAULT_DAYS;
 		setControl(container);
 	}
 	
