@@ -84,13 +84,18 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 						} else if (elementToSelect != null) {
 							viewer.setSelection(new StructuredSelection(elementToSelect), true);
 						}
-						if (MylarJavaPlugin.getDefault().getPluginPreferences().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND)) {
-							try {
-								viewer.getControl().setRedraw(false);		
+						
+						if (elementToSelect != null && MylarJavaPlugin.getDefault().getPluginPreferences().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND)) {
+//							Object[] expanded = viewer.getExpandedElements();
+//							boolean needsExpansion = false;
+//							for (int i = 0; i < expanded.length; i++) {
+//								if (elementToSelect.equals(expanded[i])) needsExpansion = false;
+//							}
+//							if (needsExpansion) {
+//								viewer.getControl().setRedraw(false);		
 								viewer.expandAll();
-							} finally {
-								viewer.getControl().setRedraw(true);
-							}
+//								viewer.getControl().setRedraw(true);
+//							}
 						}
 					}
 				}
