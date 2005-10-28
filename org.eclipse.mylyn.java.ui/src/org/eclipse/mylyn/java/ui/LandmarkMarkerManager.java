@@ -89,7 +89,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
                     IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
                         public void run(IProgressMonitor monitor) throws CoreException {
                             IMarker marker = resource.createMarker("org.eclipse.mylar.ui.landmark");//MylarUiPlugin.MARKER_LANDMARK);
-                            if (marker != null) {
+                            if (marker != null && range != null) {
 	                            marker.setAttribute(IMarker.CHAR_START, range.getOffset());
 	                            marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
 	                            marker.setAttribute(IMarker.MESSAGE, "Mylar Landmark"); 
