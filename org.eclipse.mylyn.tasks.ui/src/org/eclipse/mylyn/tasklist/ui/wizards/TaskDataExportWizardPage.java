@@ -25,7 +25,8 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskDataExportWizardPage extends WizardPage {
 
-	private final static String PAGE_TITLE = "Export Mylar Task Data";
+	protected final static String PAGE_TITLE = "Export Mylar Task Data";
+	public final static String PAGE_NAME = PAGE_TITLE;
 	
 	//Control fields
 	private Button taskListCheckBox = null;
@@ -47,10 +48,12 @@ public class TaskDataExportWizardPage extends WizardPage {
 	public TaskDataExportWizardPage(){
 		super("org.eclipse.mylar.tasklist.exportPage", PAGE_TITLE, 
 				MylarTasklistPlugin.imageDescriptorFromPlugin(MylarTasklistPlugin.PLUGIN_ID, "icons/wizban/banner-export.gif"));
-		
 		setPageComplete(false);
 	}
 	
+	public String getName(){
+		return PAGE_NAME;
+	}
 	
 	/**
 	 * Create the widgets on the page
@@ -113,26 +116,19 @@ public class TaskDataExportWizardPage extends WizardPage {
 		
 		browseButton = new Button(destDirGroup, SWT.PUSH);
 		browseButton.setText("Browse...");
-		if (!MylarPlugin.getContextManager().hasActiveContext()) {
-			browseButton.setEnabled(true);
-		} else {
-			browseButton.setEnabled(false);
-		}
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
 				dialog.setText("Folder Selection");
 				dialog.setMessage("Specify the destination folder for task data");
 				String dir = destDirText.getText();
-				dir = dir.replaceAll("\\\\", "/");
 				dialog.setFilterPath(dir);
-
 				dir = dialog.open();
 				if(dir == null || dir.equals(""))
 					return;
 				destDirText.setText(dir);
 			}
-		});        
+		});      
 	}	
 	
 	
@@ -244,5 +240,14 @@ public class TaskDataExportWizardPage extends WizardPage {
 	/** True if the user wants to overwrite files by default*/
 	public boolean overwrite(){
 		return overwriteCheckBox.getSelection();
+	}
+	
+	/** For testing only. Sets controls to the specified values */
+	public void setParameters(boolean overwrite, boolean exportTaskList, boolean exportActivationHistory, boolean exportTaskContexts, String destinationDir){
+		overwriteCheckBox.setSelection(overwrite);
+		taskListCheckBox.setSelection(exportTaskList);
+		taskActivationHistoryCheckBox.setSelection(exportActivationHistory);
+		taskContextsCheckBox.setSelection(exportTaskContexts);
+		destDirText.setText(destinationDir);
 	}
 }

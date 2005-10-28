@@ -23,13 +23,14 @@ public class AllTasklistTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.mylar.tasklist.bugzilla.tests");
+				"Test for org.eclipse.mylar.tasklist.tests");
 		//$JUnit-BEGIN$
         suite.addTestSuite(TaskListManagerTest.class);
         suite.addTestSuite(TaskListUiTest.class);
         suite.addTestSuite(TaskHistoryTest.class);
-//		suite.addTestSuite(BugzillaStackTraceTest.class);
 		suite.addTestSuite(BugzillaSearchPluginTest.class);
+		suite.addTestSuite(TaskDataExportTest.class);
+//		suite.addTestSuite(BugzillaStackTraceTest.class);
 		//$JUnit-END$
 		return suite;
 	}

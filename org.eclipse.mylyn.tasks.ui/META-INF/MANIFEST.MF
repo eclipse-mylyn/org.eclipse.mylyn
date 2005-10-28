@@ -20,4 +20,5 @@ Export-Package: org.eclipse.mylar.tasklist,
  org.eclipse.mylar.tasklist.ui,
  org.eclipse.mylar.tasklist.ui.actions,
  org.eclipse.mylar.tasklist.ui.preferences,
- org.eclipse.mylar.tasklist.ui.views
+ org.eclipse.mylar.tasklist.ui.views,
+ org.eclipse.mylar.tasklist.ui.wizards
