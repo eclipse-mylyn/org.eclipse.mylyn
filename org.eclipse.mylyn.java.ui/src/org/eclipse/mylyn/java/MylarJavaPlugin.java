@@ -156,7 +156,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     		getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
     	}
     	    	
-    	if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null) {
+    	if (Workbench.getInstance() != null 
+    		&& Workbench.getInstance().getActiveWorkbenchWindow() != null
+    		&& !Workbench.getInstance().isClosing()) {
     		ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
     		service.removePostSelectionListener(packageExplorerManager); 
     	}
