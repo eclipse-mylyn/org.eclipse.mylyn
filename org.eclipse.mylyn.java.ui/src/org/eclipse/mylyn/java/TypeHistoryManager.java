@@ -56,7 +56,7 @@ public class TypeHistoryManager implements IMylarContextListener {
 		if (element instanceof IType) {
 			IType type = (IType)element;
 			try { 
-				if (type != null && type.exists() && !type.isAnonymous()) {
+				if (type != null && type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
 					TypeInfo info = factory.create(
 							type.getPackageFragment().getElementName().toCharArray(), 
 							type.getElementName().toCharArray(),
@@ -73,6 +73,20 @@ public class TypeHistoryManager implements IMylarContextListener {
 			} catch (JavaModelException e) {
 				MylarPlugin.log(e, "failed to update history for a type");
 			}
+		}
+	}
+
+	/**
+	 * HACK: to avoid adding AspectJ types, for example:
+	 * 
+	 * class: =TJP Example/src<tjp{Demo.java[Demo 
+	 * aspect: =TJP Example/src<tjp*GetInfo.aj}GetInfo 
+	 */
+	private boolean isAspectjType(IType type) {
+		if (type.getHandleIdentifier().indexOf('}') != -1) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
