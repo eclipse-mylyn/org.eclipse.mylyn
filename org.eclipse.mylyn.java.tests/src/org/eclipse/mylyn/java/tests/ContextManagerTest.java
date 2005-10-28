@@ -48,8 +48,7 @@ import org.eclipse.ui.internal.Workbench;
 public class ContextManagerTest extends AbstractJavaContextTest {
  	
 	protected PackageExplorerPart explorer;
-    
-	
+    	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -229,7 +228,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         project.waitForIndexer();
         
         // XXX: put this back
-//        assertFalse(MylarPlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
+        assertFalse(MylarPlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
     }
     
     public void testParentInterestAfterDecay() throws JavaModelException {

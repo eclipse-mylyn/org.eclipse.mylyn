@@ -24,7 +24,8 @@ import org.eclipse.mylar.core.MylarPlugin;
  * @author Mik Kersten
  */
 public class CompositeContextElement implements IMylarElement {
-    private Set<MylarContextElement> nodes = null;
+    
+	private Set<MylarContextElement> nodes = null;
     
     private String handle = "<no handle>";
     
@@ -93,9 +94,9 @@ public class CompositeContextElement implements IMylarElement {
     /**
      * TODO: need composite edges here
      */
-    public MylarContextRelation getEdge(String targetHandle) {
+    public MylarContextRelation getRelation(String targetHandle) {
         Set<MylarContextRelation> edges = new HashSet<MylarContextRelation>();
-        for (IMylarElement node : nodes) edges.add(node.getEdge(targetHandle));
+        for (IMylarElement node : nodes) edges.add(node.getRelation(targetHandle));
         if (edges.size() == 0) {
             return null;
         } else if (edges.size() > 1) {
@@ -111,8 +112,8 @@ public class CompositeContextElement implements IMylarElement {
         return edges;
     }
     
-    public void clearEdges() {
-    	for (MylarContextElement node : nodes) node.clearEdges();
+    public void clearRelations() {
+    	for (MylarContextElement node : nodes) node.clearRelations();
 	}
     
     @Override

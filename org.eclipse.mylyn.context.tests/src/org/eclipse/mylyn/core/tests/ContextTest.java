@@ -61,7 +61,7 @@ public class ContextTest extends AbstractContextTest {
     public void testEdges() {
         IMylarElement node = context.parseEvent(mockSelection("1"));
         context.parseEvent(mockNavigation("2"));
-        IMylarRelation edge = node.getEdge("2");
+        IMylarRelation edge = node.getRelation("2");
         assertNotNull(edge);
         assertEquals(edge.getTarget().getHandleIdentifier(), "2");
     }
@@ -121,7 +121,7 @@ public class ContextTest extends AbstractContextTest {
         
         IMylarElement node = context.parseEvent(mockSelection("1"));
         context.parseEvent(mockNavigation("2"));
-        IMylarRelation edge = node.getEdge("2");
+        IMylarRelation edge = node.getRelation("2");
         assertNotNull(edge);
         assertEquals(1, node.getRelations().size());
         context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue()*3));
@@ -135,7 +135,7 @@ public class ContextTest extends AbstractContextTest {
         assertNotNull(loaded);
         assertEquals(3, loaded.getInteractionHistory().size());
         IMylarElement loadedNode = loaded.get("1");
-        IMylarRelation edgeNode = loadedNode.getEdge("2");
+        IMylarRelation edgeNode = loadedNode.getRelation("2");
         assertNotNull(edgeNode);
         assertEquals(1, loadedNode.getRelations().size());
         

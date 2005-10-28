@@ -84,7 +84,7 @@ public class MylarContext implements IMylarContext, Serializable {
             && event.getKind() != InteractionEvent.Kind.PREDICTION) {
             IMylarElement navigationSource = nodes.get(lastEdgeEvent.getStructureHandle());
             if (navigationSource != null) {
-               MylarContextRelation edge = lastEdgeNode.getEdge(event.getStructureHandle());
+               MylarContextRelation edge = lastEdgeNode.getRelation(event.getStructureHandle());
                if (edge == null) {
                     edge = new MylarContextRelation(event.getContentType(), event.getNavigation(), lastEdgeNode, node, this);
                     lastEdgeNode.addEdge(edge);

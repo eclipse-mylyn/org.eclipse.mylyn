@@ -69,6 +69,11 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
         monitor.selectionChanged(part, sm1);
         IMylarElement node = manager.handleInteractionEvent(mockInterestContribution(
         		m1.getHandleIdentifier(), scaling.getLandmark()));
+        
+        // force an edge on so that it shows up in the view
+//        ((MylarContextElement)((CompositeContextElement)node).getNodes().iterator().next()).addEdge(new MylarContextRelation("kind", "edgeKind", node, node, context));
+//        System.err.println(">>> " + node.getRelations());
+        
         assertEquals(1, MylarPlugin.getContextManager().getActiveLandmarks().size());
                 
         assertEquals(1, search(2, node).size()); 

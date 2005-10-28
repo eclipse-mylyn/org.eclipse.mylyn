@@ -64,7 +64,7 @@ public class MylarContextElement implements IMylarElement {
         return edges.values();
     }
 
-    public MylarContextRelation getEdge(String targetHandle) {
+    public MylarContextRelation getRelation(String targetHandle) {
         return edges.get(targetHandle);
     }
     
@@ -75,7 +75,7 @@ public class MylarContextElement implements IMylarElement {
         edges.put(edge.getTarget().getHandleIdentifier(), edge);
     }
     
-    public void clearEdges() {
+    public void clearRelations() {
 		edges.clear();
 	}
     

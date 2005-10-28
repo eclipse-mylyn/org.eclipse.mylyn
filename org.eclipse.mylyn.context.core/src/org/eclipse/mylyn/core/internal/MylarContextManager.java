@@ -516,7 +516,7 @@ public class MylarContextManager {
         for (IMylarElement landmark : activeContext.getLandmarks()) {       	
         	for (IMylarRelation edge : landmark.getRelations()) {
         		if (edge.getRelationshipHandle().equals(reltationKind)) {
-        			landmark.clearEdges();         		}
+        			landmark.clearRelations();         		}
 			}
         }
         for (IMylarContextListener listener : listeners) listener.edgesChanged(null);
