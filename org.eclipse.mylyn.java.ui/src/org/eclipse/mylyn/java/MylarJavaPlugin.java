@@ -62,7 +62,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
     public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
     public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
     public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.predicted.errors";
-    
+    public static final String PACKAGE_EXPLORER_AUTO_EXPAND = "org.eclipse.mylar.java.explorer.auto.exapand";
+        
 	public static ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
     
 	public static final String FIRST_USE = 
@@ -87,9 +88,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
         MylarPlugin.getContextManager().addListener(packageExplorerManager);
         MylarPlugin.getContextManager().addListener(typeHistoryManager);
         MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
-
-		getPreferenceStore().setDefault(PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
-		getPreferenceStore().setDefault(PREDICTED_INTEREST_ERRORS, false);
+		
+        setPreferenceDefaults();
 		if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
 			problemListener.enable();
 		}
@@ -133,6 +133,12 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
         });
 		savePluginPreferences();
 		JavaCore.addElementChangedListener(javaElementChangeListener);
+	}
+
+	private void setPreferenceDefaults() {
+		getPreferenceStore().setDefault(PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
+		getPreferenceStore().setDefault(PACKAGE_EXPLORER_AUTO_EXPAND, true);
+		getPreferenceStore().setDefault(PREDICTED_INTEREST_ERRORS, false);
 	}
 
     @Override

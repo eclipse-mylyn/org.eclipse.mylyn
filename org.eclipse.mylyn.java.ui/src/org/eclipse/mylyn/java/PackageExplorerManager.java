@@ -25,6 +25,7 @@ import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
@@ -61,14 +62,15 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
             if (elementToSelect != null) {
 				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 				if (packageExplorer != null) { 
-					ISelection currentSelection = packageExplorer.getTreeViewer().getSelection();
+					TreeViewer viewer = packageExplorer.getTreeViewer();
+					ISelection currentSelection = viewer.getSelection();
 					boolean suppressSelection = false;
 					boolean membersFilteredMode = false;
 					if (currentSelection instanceof StructuredSelection) {
 						if (((StructuredSelection)currentSelection).size() > 1) suppressSelection = true;
 					}
 					if (!isInLinkToEditorMode(packageExplorer)) suppressSelection = true;
-					for (ViewerFilter filter : Arrays.asList(packageExplorer.getTreeViewer().getFilters())) {
+					for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
 						if (filter instanceof MembersFilter) membersFilteredMode = true;
 					}
 					if (!suppressSelection) {  
@@ -76,13 +78,20 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 							if (elementToSelect instanceof IMember) {
 								ICompilationUnit toSelect = ((IMember)elementToSelect).getCompilationUnit();
 								if (toSelect != null) {
-									packageExplorer.getTreeViewer().setSelection(new StructuredSelection(toSelect), true);
+									viewer.setSelection(new StructuredSelection(toSelect), true);
 								}
 							}
 						} else if (elementToSelect != null) {
-							packageExplorer.getTreeViewer().setSelection(new StructuredSelection(elementToSelect), true);
+							viewer.setSelection(new StructuredSelection(elementToSelect), true);
 						}
-						packageExplorer.getTreeViewer().expandAll();
+						if (MylarJavaPlugin.getDefault().getPluginPreferences().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND)) {
+							try {
+								viewer.getControl().setRedraw(false);		
+								viewer.expandAll();
+							} finally {
+								viewer.getControl().setRedraw(true);
+							}
+						}
 					}
 				}
     		}
