@@ -28,11 +28,14 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
         //$JUnit-BEGIN$
+        
+        // NOTE: the order of these tests matters
+        // TODO: make tests clear workbench state on completion
         suite.addTest(AllMonitorTests.suite());
         suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
         suite.addTest(AllCoreTests.suite());
-        suite.addTest(AllTasklistTests.suite());
         suite.addTest(AllJavaTests.suite());
+        suite.addTest(AllTasklistTests.suite());
         suite.addTest(MiscTests.suite());
         //$JUnit-END$
         return suite;
