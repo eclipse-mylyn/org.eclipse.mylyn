@@ -30,9 +30,9 @@ public class AllTests {
         //$JUnit-BEGIN$
         suite.addTest(AllMonitorTests.suite());
         suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
-        suite.addTest(AllJavaTests.suite());
         suite.addTest(AllCoreTests.suite());
         suite.addTest(AllTasklistTests.suite());
+        suite.addTest(AllJavaTests.suite());
         suite.addTest(MiscTests.suite());
         //$JUnit-END$
         return suite;
