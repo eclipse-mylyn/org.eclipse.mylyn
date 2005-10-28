@@ -941,13 +941,11 @@ public class TaskListView extends ViewPart {
         addAction(new TaskActivateAction(), manager, element);
         addAction(new TaskDeactivateAction(), manager, element);
         addAction(openAction, manager, element);
-//        addAction(openAction, manager, element);
-        manager.add(new Separator("tasks"));
         addAction(completeTask, manager, element);
         addAction(incompleteTask, manager, element);
-        manager.add(new Separator());
-        addAction(rename, manager, element);
+        manager.add(new Separator("tasks"));
         addAction(removeAction, manager, element);
+        addAction(rename, manager, element);
         addAction(delete, manager, element);
         addAction(copyAction, manager, element);
 //        addAction(createTask, manager, element);
