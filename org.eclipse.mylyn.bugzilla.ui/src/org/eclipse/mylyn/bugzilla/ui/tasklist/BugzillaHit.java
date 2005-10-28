@@ -143,7 +143,7 @@ public class BugzillaHit implements IQueryHit {
 
 	public Color getForeground() {
         if ((task != null && task.isCompleted()) || isCompleted()){
-        	return GRAY_VERY_LIGHT;
+        	return GRAY_LIGHT;
         } else {
         	return null;
         }

@@ -412,7 +412,7 @@ public class Task implements ITask {
 	
 	public Color getForeground() {
         if (isCompleted()){
-        	return GRAY_VERY_LIGHT;
+        	return GRAY_LIGHT;
         } else if (isActive()) {
         	return ACTIVE;
         } else {

@@ -24,7 +24,7 @@ public interface ITaskListElement {
     public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
     public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
-    public Color GRAY_VERY_LIGHT  = new Color(Display.getDefault(), 200, 200, 200); // TODO: use theme?
+    public Color GRAY_LIGHT  = new Color(Display.getDefault(), 170, 170, 170); // TODO: use theme?
     	
     /**
      * TODO: refactor to label decorator
