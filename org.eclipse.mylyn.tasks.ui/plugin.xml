@@ -47,7 +47,7 @@
      <extension point="org.eclipse.ui.exportWizards"> 
       <wizard 
          id="org.eclipse.mylar.tasklist.ui.exportWizard" 
-         name="Task Data" 
+         name="Mylar Task Data" 
          class="org.eclipse.mylar.tasklist.ui.wizards.TaskDataExportWizard"
          icon="icons/eview16/task-list.gif"> 
          <description> 
