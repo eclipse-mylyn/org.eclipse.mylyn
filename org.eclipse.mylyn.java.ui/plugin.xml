@@ -177,7 +177,7 @@
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.jdt.core.IJavaElement">
      	<action  
-  		  	label="Mylar: Make Less Interesting" 
+  		  	label="Mylar: Mark Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
@@ -185,8 +185,8 @@
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
-  		  	label="Mylar: Make Landmark" 
-	  		tooltip="Make selected element a landmark"
+  		  	label="Mylar: Mark as Landmark" 
+	  		tooltip="Mark the selected element as a landmark"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
 	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
