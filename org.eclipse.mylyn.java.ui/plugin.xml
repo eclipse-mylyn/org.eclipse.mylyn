@@ -202,13 +202,14 @@
             visible="true"> 
             
   		<action
-         	id="org.eclipse.mylar.action.contribution.editor.autoFold" 
-         	style="toggle"
-         	label="Mylar Automatic Editor Folding" 
-         	icon="icons/elcl16/interest-folding.gif"
-         	tooltip="Mylar automatic folding"
-      		toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
-         	class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"> 
+          class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"
+          definitionId="org.eclipse.mylar.java.ui.editor.folding.auto"
+          icon="icons/elcl16/interest-folding.gif"
+          id="org.eclipse.mylar.java.ui.editor.folding.auto"
+          label="Mylar Automatic Editor Folding"
+          style="toggle"
+          toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
+          tooltip="Mylar Automatic Folding"> 
       	</action> 
         <action
                definitionId="org.eclipse.mylar.java.ui.search.context"
@@ -342,6 +343,12 @@
          id="org.eclipse.mylar.java.ui.search.context"
          name="Search Task Context">
       </command>
+	  <command
+         categoryId="org.eclipse.mylar.ui"
+         description="Toggle Automatic Folding"
+         id="org.eclipse.mylar.java.ui.editor.folding.auto"
+         name="Toggle Automatic Folding">
+      </command>
    </extension>
 
    <extension point="org.eclipse.ui.bindings">   
@@ -350,7 +357,13 @@
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.java.ui.search.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key> 
+      </key>
+	  <key
+            sequence="M1+M2+M3+F"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.java.ui.editor.folding.auto"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
    </extension> 
    
    
