@@ -45,14 +45,10 @@
 	</extension>
 
      <extension point="org.eclipse.ui.exportWizards"> 
-      <category
-		id="org.eclipse.mylar.exportCategory"
-		name="Mylar"/>
       <wizard 
          id="org.eclipse.mylar.tasklist.ui.exportWizard" 
          name="Task Data" 
          class="org.eclipse.mylar.tasklist.ui.wizards.TaskDataExportWizard"
-         category="org.eclipse.mylar.exportCategory" 
          icon="icons/eview16/task-list.gif"> 
          <description> 
             Export Mylar task data files to the file system.
