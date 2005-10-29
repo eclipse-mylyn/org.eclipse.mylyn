@@ -156,6 +156,9 @@ public class TaskListView extends ViewPart {
 
     private RemoveFromCategoryAction removeAction;
 
+    private TaskActivateAction activateAction = new TaskActivateAction();
+    private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
+    
     private MarkTaskCompleteAction completeTask;
     private MarkTaskIncompleteAction incompleteTask;
     private FilterCompletedTasksAction filterCompleteTask;
@@ -938,8 +941,10 @@ public class TaskListView extends ViewPart {
         	element = (ITaskListElement) selectedObject;
         }
         
-        addAction(new TaskActivateAction(), manager, element);
-        addAction(new TaskDeactivateAction(), manager, element);
+        if (!(element instanceof ITaskListCategory) && !(element instanceof IQuery)) {
+        	manager.add(activateAction);
+        	manager.add(deactivateAction);
+        }
         addAction(openAction, manager, element);
         addAction(completeTask, manager, element);
         addAction(incompleteTask, manager, element);
@@ -964,8 +969,7 @@ public class TaskListView extends ViewPart {
         	manager.add(menuToAdd);
     	}
     }
-    
-    
+        
     private void addAction(Action action, IMenuManager manager, ITaskListElement element) {
     	manager.add(action);
     	if(element != null){
@@ -979,8 +983,7 @@ public class TaskListView extends ViewPart {
     }
 
     private void updateActionEnablement(Action action, ITaskListElement element){
-    
-		if(element instanceof ITask){
+    	if(element instanceof ITask){
 			if(action instanceof MarkTaskCompleteAction){
 				if(element.isCompleted()){
 					action.setEnabled(false);
@@ -1039,7 +1042,6 @@ public class TaskListView extends ViewPart {
 		} else {
 			action.setEnabled(true);
 		}
-		
 //		if(!canEnableGoInto){
 //			goIntoAction.setEnabled(false);
 //		}
