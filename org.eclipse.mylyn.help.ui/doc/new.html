@@ -9,46 +9,28 @@
 <title>Mylar New & Noteworthy</title>
 </head>
 <body>
-<h2>New and Noteworthy for Mylar 0.4</h2>
+<h2>New and Noteworthy for Mylar 0.4.0</h2>
 <p>Features added since Mylar 0.3.12 are <span style="background-color: #FFCC99">&nbsp;highlighted.</span>&nbsp; 
 Send questions to <a href="mailto:mylar-dev@eclipse.org">mylar-dev@eclipse.org</a>.&nbsp; 
 Submit feature requests to
 <a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">Bugzilla</a>.</p>
 <h3>Task context</h3>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table72">
+<table cellpadding="10" cellspacing="0" width="600" id="table74">
 		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Filtered navigation</b></p>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Task context indication</b></p>
 			</td>
-			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Keybinding to toggle auto 
-			folding Ctrl+Alt+Shift+F</span><p>
-			&nbsp;</td>
+			<td valign="top" width="70%">
+			<span style="background-color: #FFCC99">If a task is inactive, but 
+			has a context associated with it, the Activate widget appears 
+			lightly filled (i.e. as bug 111722 below).&nbsp; </span><p>
+			<img border="0" src="images/tasklist-context.gif" width="297" height="191"></td>
 		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table71">
 		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Filtered navigation</b></p>
+			<td colspan="2">
+			<hr>
 			</td>
-			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Filtered navigation via 
-			keyboard...</span><p>
-			&nbsp;</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table70">
-		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Task export</b></p>
-			</td>
-			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Can export the task list, 
-			history, and contexts (e.g. for backup).</span><p>
-			&nbsp;</td>
 		</tr>
 </table>
 
@@ -58,57 +40,20 @@ Submit feature requests to
 			<p align="right"><b>Pause and resume context capture</b></p>
 			</td>
 			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Context capture can be 
-			temporarily paused...</span><p>
-			&nbsp;</td>
+			<span style="background-color: #FFCC99">Pause and resume task 
+			context capture using the drop-down menu on the Task List.&nbsp; 
+			This can be useful for quick diversions that don't warrant a new 
+			task.&nbsp; Also note that some of the toolbar buttons have moved to 
+			the local pull-down.</span><p>
+			<img border="0" src="images/context-pause.gif" width="248" height="317"></td>
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table68">
+<table cellpadding="10" cellspacing="0" width="600" id="table75">
 		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Task planner</b></p>
+			<td>
+			<hr>
 			</td>
-			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Summarizes activity and 
-			supports planning...</span><p>
-			&nbsp;</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table67">
-		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Optional monitor</b></p>
-			</td>
-			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Can be enabled 
-			voluntarily... if monitor is extended a message shows.</span><p>
-			&nbsp;</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table66">
-		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Web Documents in Context</b></p>
-			</td>
-			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Web documents navigated to 
-			are captured and displayed...</span><p>
-			&nbsp;</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table65">
-		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Links to web reports</b></p>
-			</td>
-			<td width="70%" valign="top">
-			<span style="background-color: #FFCC99">Tasks can be created with 
-			web links, easily opened, overlay in task list.</span><p>
-			&nbsp;</td>
 		</tr>
 </table>
 
@@ -164,8 +109,7 @@ Submit feature requests to
 			</td>
 			<td width="70%" valign="top">
 			The predicted interest of 
-			errors can be turned and off in the Java preferences.&nbsp;<span style="background-color: #FFCC99"> </span>
-			When on, Java elements that have errors get a predicted 
+			errors can be turned and off in the Java preferences.&nbsp;When on, Java elements that have errors get a predicted 
 			interest, which means that they show up in views such as a the 
 			package explorer.&nbsp; Once the errors are fixed the predicted 
 			interest goes away.&nbsp; Set this on the Java preference page.&nbsp; 
@@ -459,7 +403,8 @@ Submit feature requests to
 			(since Eclipse's folding support can cause odd expansions when 
 			copying folded regions,
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=104648">bug 
-			104648</a>).<p>
+			104648</a>).&nbsp; <span style="background-color: #FFCC99">The 
+			keyboard shortcut is Ctrl+Alt+Shift+F.</span><p>
 			<img border="0" src="images/folding-toggle.gif" width="276" height="127"></p>
 			</td>
 		</tr>
@@ -477,11 +422,13 @@ Submit feature requests to
 			</td>
 			<td width="70%" valign="top">
 			When you are using filtering in a Mylar view you have the option of 
-			temporarily showing all children of a filtered node by &lt;alt&gt;clicking 
+			temporarily showing all children of a filtered node by Alt+clicking 
 			a node that is not currently selected.&nbsp; For example, you can 
-			&lt;alt&gt;click a source folder, keep the &lt;alt&gt; key down, and continue 
-			drilling down until you find a method of interest.&nbsp;
-			<p><img src="images/alt-click.gif" alt="Alt Click"
+			Alt+click a source folder, keep the Alt+key down, and continue 
+			drilling down until you find a method of interest.
+			<span style="background-color: #FFCC99">To navigate using the 
+			keyboard alone use the Right Arrow key instead of Alt+clicking, and 
+			the Down Arrow key to select elements.&nbsp;</span><p><img src="images/alt-click.gif" alt="Alt Click"
 				title="New Java Project Wizard"></p>
 			</td>
 		</tr>
@@ -553,6 +500,56 @@ Submit feature requests to
 
 <h3>Task List</h3>
 
+<table cellpadding="10" cellspacing="0" width="600" id="table71">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Links to web reports</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFCC99">Tasks can be linked to web 
+			pages.&nbsp; For example, if you want a task to correspond to a Wiki 
+			page or to a bug report copy the URL of the report, click the New 
+			Task button on the Task List, and the URL will automatically be 
+			inserted in the Web Link field.&nbsp; If you click Get Description 
+			the title of the page will be inserted into the Description field.&nbsp; 
+			The task will appear with a Web icon decorator, and will 
+			automatically bring up a Task Editor page that loads the web link 
+			when opened.&nbsp; </span>
+			<p>
+			<img border="0" src="images/tasklist-weblink.gif" width="528" height="155"></p>
+			<p>
+			<img border="0" src="images/tasklist-weblink-editor.gif" width="585" height="195"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table72">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table70">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Task export</b></p>
+			</td>
+			<td width="70%" valign="top">
+			<span style="background-color: #FFCC99">The Mylar Task List and 
+			related data can be exported, e.g. for backup purposes.</span><p>
+			<img border="0" src="images/tasklist-export.gif" width="555" height="343"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table73">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
+
 <table cellpadding="10" cellspacing="0" width="600" id="table46">
 		<tr>
 			<td width="30%" valign="top" align="left">
@@ -569,24 +566,6 @@ Submit feature requests to
 <table cellpadding="10" cellspacing="0" width="600" id="table47">
 		<tr>
 			<td>
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table39">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Task context indication</b></p>
-			</td>
-			<td valign="top" width="70%">
-			If a task has a context, 
-			this will show as faint Mylar glasses on the task.&nbsp; The dark 
-			glasses and bold label indicate which task is active.<p>
-			<img border="0" src="images/task-context-visible.gif" width="318" height="188"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
 			<hr>
 			</td>
 		</tr>
