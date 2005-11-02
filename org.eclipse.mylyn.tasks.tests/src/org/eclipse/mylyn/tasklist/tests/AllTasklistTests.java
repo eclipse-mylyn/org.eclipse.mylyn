@@ -14,6 +14,9 @@ package org.eclipse.mylar.tasklist.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylar.tasklist.tests.bugzilla.BugzillaSearchPluginTest;
+import org.eclipse.mylar.tasklist.tests.bugzilla.BugzillaStackTraceTest;
+
 /**
  * @author Mik Kersten
  */
@@ -30,8 +33,8 @@ public class AllTasklistTests {
 		suite.addTestSuite(ChangeMainTaskDirTest.class);
 
 		// TODO: enable when Bugzilla search features added
-//		suite.addTestSuite(BugzillaSearchPluginTest.class);
-//		suite.addTestSuite(BugzillaStackTraceTest.class);
+		suite.addTestSuite(BugzillaSearchPluginTest.class);
+		suite.addTestSuite(BugzillaStackTraceTest.class);
 		//$JUnit-END$
 		return suite;
 	}
