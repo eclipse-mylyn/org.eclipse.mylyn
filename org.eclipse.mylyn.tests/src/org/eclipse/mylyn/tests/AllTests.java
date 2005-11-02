@@ -33,8 +33,8 @@ public class AllTests {
         // TODO: make tests clear workbench state on completion
         suite.addTest(AllMonitorTests.suite());
         suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
-        suite.addTest(AllCoreTests.suite());
         suite.addTest(AllJavaTests.suite());
+        suite.addTest(AllCoreTests.suite());
         suite.addTest(AllTasklistTests.suite());
         suite.addTest(MiscTests.suite());
         //$JUnit-END$
