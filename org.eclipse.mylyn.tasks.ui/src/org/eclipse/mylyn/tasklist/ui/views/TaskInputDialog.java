@@ -13,8 +13,13 @@ package org.eclipse.mylar.tasklist.ui.views;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.contribution.DatePicker;
@@ -38,7 +43,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 /**
  * @author Ken Sueda
@@ -130,10 +134,7 @@ public class TaskInputDialog extends Dialog {
 		
 		getDescButton.addSelectionListener(new SelectionListener(){
 			public void widgetSelected(SelectionEvent e) {
-				String desc = retrieveTaskDescription(issueURLTextWidget.getText());
-				if (!desc.equals("")){
-					taskNameTextWidget.setText(desc);
-				}
+				retrieveTaskDescription(issueURLTextWidget.getText());
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {	
 			}
@@ -181,49 +182,24 @@ public class TaskInputDialog extends Dialog {
 	}
 	
 	/**
-	 * Attempts to set the task description to the title from
+	 * Attempts to set the task pageTitle to the title from
 	 * the specified url
 	 */
-	protected String retrieveTaskDescription(final String url){
+	protected void retrieveTaskDescription(final String url){
 		
 		try {
 			final Shell shell = new Shell(Display.getDefault());
 			shell.setVisible(false);
 			Browser browser = new Browser(shell, SWT.NONE);
-			browser.setUrl(url);
 			
-			browser.addTitleListener(new TitleListener(){
-				
-				//Determines when to ignore the second call to changed()
-				boolean ignore = false;
-				
-				public void changed(TitleEvent event) {
-					if (!ignore){
-						if (event.title.equals(url)){
-							return;
-						}
-						else{
-							ignore = true;
-							if (event.title.equals(url + "/") ||
-									event.title.equals("Object not found!") || 
-									event.title.equals("No page to display") || 
-									event.title.equals("Cannot find server") || 
-									event.title.equals("Invalid Bug ID")){ //Last one is bugzilla-specific
-								MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error", "Could not retrieve a description from the specified web page.");
-							}
-							else{
-								taskNameTextWidget.setText(event.title);
-							}							
-						}
-					}
-				}
-			});
+			RetrieveTaskDescriptionJob job = new RetrieveTaskDescriptionJob("Retrieving task description", issueURLTextWidget.getText());
+			browser.addTitleListener(job);
+			browser.setUrl(url);
+			job.schedule();
 			
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not open task web page", false);
 		}		
-
-		return new String();
 	}
 	
 	/**
@@ -273,4 +249,80 @@ public class TaskInputDialog extends Dialog {
 		shell.setText(LABEL_SHELL);
 	}
 
+	/**
+	 * Waits for the title from the browser
+	 * @author Wesley Coelho
+	 */
+	private class RetrieveTaskDescriptionJob extends Job implements TitleListener{
+
+		private final static long MAX_WAIT_TIME_MILLIS = 1000 * 30; //(30 Seconds)
+		private final static long SLEEP_INTERVAL_MILLIS = 500;
+		
+		
+		private String taskURL = null;
+		private String pageTitle = null;
+		private boolean retrievalFailed = false;
+		private long timeWaitedMillis = 0;
+		boolean ignoreChangeCall = false; //Determines when to ignore the second call to changed()
+		
+		public RetrieveTaskDescriptionJob(String name, String url) {
+			super(name);
+			taskURL = url;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			
+			while(pageTitle == null && !retrievalFailed && (timeWaitedMillis <= MAX_WAIT_TIME_MILLIS)){
+				
+				try {
+					Thread.sleep(SLEEP_INTERVAL_MILLIS);
+				} catch (InterruptedException e) {
+					MylarPlugin.fail(e, "Thread interrupted during sleep", false);
+				}
+				timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
+			}
+			
+			if (pageTitle != null){
+				Display.getDefault().asyncExec(new Runnable(){
+					public void run(){
+						taskNameTextWidget.setText(pageTitle);
+					}
+				});
+				return Status.OK_STATUS;
+			}
+			else{
+				Display.getDefault().asyncExec(new Runnable(){
+					public void run(){
+						MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error", "Could not retrieve a description from the specified web page.");
+					}
+				});				
+				return Status.CANCEL_STATUS;
+			}
+			
+		}
+		
+
+		public void changed(TitleEvent event) {
+			if (!ignoreChangeCall){
+				if (event.title.equals(taskURL)){
+					return;
+				}
+				else{
+					ignoreChangeCall = true;
+					if (event.title.equals(taskURL + "/") ||
+							event.title.equals("Object not found!") || 
+							event.title.equals("No page to display") || 
+							event.title.equals("Cannot find server") || 
+							event.title.equals("Invalid Bug ID")){ //Last one is bugzilla-specific
+						retrievalFailed = true;
+					}
+					else{
+						pageTitle = event.title;
+					}							
+				}
+			}
+		}
+		
+	}
 }
