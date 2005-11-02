@@ -946,9 +946,18 @@ public class TaskListView extends ViewPart {
         	element = (ITaskListElement) selectedObject;
         }
         
-        if (!(element instanceof ITaskListCategory) && !(element instanceof IQuery)) {
-        	manager.add(activateAction);
-        	manager.add(deactivateAction);
+        if ((element instanceof ITask) || (element instanceof IQueryHit)) {
+        	ITask task = null;
+        	if (element instanceof IQueryHit) {
+        		task = ((IQueryHit)element).getOrCreateCorrespondingTask();
+        	} else {
+        		task = (ITask)element;
+        	}
+        	if (task.isActive()) {
+        		manager.add(deactivateAction);
+        	} else {
+            	manager.add(activateAction);
+        	} 
         }
         addAction(openAction, manager, element);
         addAction(completeTask, manager, element);
