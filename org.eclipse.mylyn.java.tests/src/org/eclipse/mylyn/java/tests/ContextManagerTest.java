@@ -253,7 +253,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         assertTrue(MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier()).getInterest().isInteresting());
     }
     
-    public void testIncremenOfParentDoi() throws JavaModelException {
+    public void testIncremenOfParentDoi() throws JavaModelException, Exception {
         IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
         IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
         StructuredSelection sm1 = new StructuredSelection(m1);
@@ -262,7 +262,8 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
         
         assertTrue(node.getInterest().isInteresting());
-
+        
+        project.build();
         IJavaElement parent = m1.getParent();
         int level = 1;
         do {

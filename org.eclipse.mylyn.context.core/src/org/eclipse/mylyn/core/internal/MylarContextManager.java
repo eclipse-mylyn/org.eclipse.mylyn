@@ -582,22 +582,23 @@ public class MylarContextManager {
     public static ScalingFactors getScalingFactors() {
         return MylarContextManager.scalingFactors;
     }
-    
-    public void updateMylarDirContents(String prevDir) { 
-		File prev = new File(prevDir);
-		if (!prev.isDirectory()) {
-			return;
-		}
-		File[] contents = prev.listFiles();
-		File curr = new File(MylarPlugin.getDefault().getMylarDataDirectory());
-		for (File f : contents) {
-			// XXX: remove hack below
-			if ( (f.getName().endsWith(".xml") && f.getName().startsWith("task")) || f.getName().startsWith("mylar")) {
-				String name = curr.getAbsolutePath() + "/" + f.getName();				
-				f.renameTo(new File(name));
-			}
-		}		
-	}
+ 
+// Copying of mylar dir contents disabled for now (WC)    
+//    public void updateMylarDirContents(String prevDir) { 
+//		File prev = new File(prevDir);
+//		if (!prev.isDirectory()) {
+//			return;
+//		}
+//		File[] contents = prev.listFiles();
+//		File curr = new File(MylarPlugin.getDefault().getMylarDataDirectory());
+//		for (File f : contents) {
+//			// XXX: remove hack below
+//			if ( (f.getName().endsWith(".xml") && f.getName().startsWith("task")) || f.getName().startsWith("mylar")) {
+//				String name = curr.getAbsolutePath() + "/" + f.getName();				
+//				f.renameTo(new File(name));
+//			}
+//		}		
+//	}
 
 	public boolean hasActiveContext() {
 		return activeContext.getContextMap().values().size() > 0;

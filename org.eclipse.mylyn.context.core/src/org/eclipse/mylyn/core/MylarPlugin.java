@@ -96,6 +96,18 @@ public class MylarPlugin extends AbstractUIPlugin {
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
     public static final String MYLAR_DIR_NAME = ".mylar";
     
+    /** 
+     * True if the shared data directory has been temporarily set for 
+     * reporting purposes 
+     */
+    private boolean sharedDataDirectoryInUse = false;
+    
+    /** 
+     * Path of the data directory to temporarily use as the 
+     * MylarDataDirectory (for reporting)
+     */
+    private String sharedDataDirectory = null;
+    
     private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
         public String getContentType() {
@@ -225,7 +237,53 @@ public class MylarPlugin extends AbstractUIPlugin {
     }
     
     public String getMylarDataDirectory() {
-        return getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
+    	if (sharedDataDirectoryInUse){
+    		return sharedDataDirectory;
+    	}
+    	else{
+    		return getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
+    	}
+    }
+    
+    /**
+     * Sets the path of a shared data directory to be temporarily
+     * used (for reporting). Call useMainDataDirectory() to 
+     * return to using the main data directory.
+     */
+    public void setSharedDataDirectory(String dirPath){
+    	sharedDataDirectory = dirPath;
+    }
+    
+    /**
+     * Returns the shared data directory path if one has been
+     * set. If not, the empty string is returned. Note that
+     * the directory may not currently be in use.
+     */
+    public String getSharedDataDirectory(){
+    	if (sharedDataDirectory != null){
+    		return sharedDataDirectory;
+    	}
+    	else{
+    		return new String();
+    	}
+    }
+    
+    /**
+     * Set to true to use the shared data directory set with 
+     * setSharedDataDirectory(String)
+     * Set to false to return to using the main data directory
+     */
+    public void setSharedDataDirectoryEnabled(boolean enable){
+    	if (enable && sharedDataDirectory == null){
+    		MylarPlugin.fail(new Exception("EnableDataDirectoryException"), "Could not enable shared data directory because no shared data directory was specifed.", true);
+    		return;
+    	}
+    	sharedDataDirectoryInUse = enable;
+    }
+    
+    /** True if a shared data directory rather than the main data directory is currently in use */
+    public boolean isSharedDataDirectoryEnabled(){
+    	return sharedDataDirectoryInUse;
     }
     
     public static MylarPlugin getDefault() {
