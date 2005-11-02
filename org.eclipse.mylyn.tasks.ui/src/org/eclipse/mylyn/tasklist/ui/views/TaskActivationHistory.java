@@ -28,8 +28,11 @@ public class TaskActivationHistory {
 	
 	private int currentIndex = -1;
 	
-	/** The number of tasks from the previous session to load into the history*/
-	private static final int PERSISTENT_HISTORY_SIZE = 16;
+	/** 
+	 * The number of tasks from the previous Eclipse session to load into the history
+	 * at startup. (This is not the maximum size of the history, which is currently unbounded)
+	 */
+	private static final int NUM_SAVED_HISTORY_ITEMS_TO_LOAD = 10;
  
 	private boolean persistentHistoryLoaded = false;
 
@@ -49,7 +52,7 @@ public class TaskActivationHistory {
 				history.add(0, prevTask);
 				currentIndex++;
 				tasksAdded++;
-				if (tasksAdded == PERSISTENT_HISTORY_SIZE){
+				if (tasksAdded == NUM_SAVED_HISTORY_ITEMS_TO_LOAD){
 					break;
 				}
 			}

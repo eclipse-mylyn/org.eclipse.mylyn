@@ -185,6 +185,11 @@ public class TaskListView extends ViewPart {
 
 //	private boolean canEnableGoInto = false;
     	
+	/** 
+	 * True if the view should indicate that interaction monitoring is paused 
+	 */
+	protected boolean isPaused = false;
+    
     private final class PriorityDropDownAction extends Action implements IMenuCreator {
     	private Menu dropDownMenu = null;
     	
@@ -1289,12 +1294,39 @@ public class TaskListView extends ViewPart {
 		}
 		return null;
 	}
-
+	
+	//TODO: Need a better way to indicate paused and/or the shared folder
 	public void indicatePaused(boolean paused) {
-		if (paused) {	
-			setPartName("(paused) " + PART_NAME);
+		isPaused = paused;
+		if (isPaused) {	
+			setPartName("(paused) " + getPartName());
 		} else {
-			setPartName(PART_NAME); 
+			setPartName(getPartName().replaceAll("\\(paused\\) ", ""));
 		}
+	}
+	
+	/**
+	 * Show the shared data folder currently in use.
+	 * Call with "" to turn off the indication.
+	 * TODO: Need a better way to indicate paused and/or the shared folder
+	 */
+	public void indicateSharedFolder(String folderName){
+		if (folderName.equals("")){
+			if (isPaused){
+				setPartName("(paused) " + PART_NAME);
+			}
+			else{
+				setPartName(PART_NAME);
+			}
+		}
+		else{
+			if (isPaused){
+				setPartName("(paused) " + folderName + " " + PART_NAME);
+			}
+			else{
+				setPartName(folderName + " " + PART_NAME);
+			}
+		}
+		
 	}
 }

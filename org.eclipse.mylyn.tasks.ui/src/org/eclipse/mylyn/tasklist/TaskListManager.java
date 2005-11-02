@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.internal.RelativePathUtil;
-import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
@@ -158,47 +156,7 @@ public class TaskListManager {
     	for (ITaskActivityListener listener : listeners) listener.taskPropertyChanged(task, property);
     }
     
-    public void updateTaskscapeReference(String prevDir) {    	
-    	List<ITask> rootTasks = this.getTaskList().getRootTasks();
-    	for (TaskCategory cat : taskList.getTaskCategories()) {
-    			updateTaskscapeReferenceHelper(cat.getChildren(), prevDir);
-    	}
-    	updateTaskscapeReferenceHelper(rootTasks, prevDir);
-    	
-    }
-
-    public void updateTaskscapeReferenceHelper(List<ITask> list, String prevDir) {
-    	for (ITask task : list) {
-			if (!task.getPath().startsWith("task-")) {
-				if (task.getPath().startsWith("..")) {					
-					String path = task.getPath();					
-					File d = new File(prevDir);
-					while (path.startsWith("..")) {
-						d = d.getParentFile();
-						path = path.substring(3, path.length());
-					}
-					
-					String absPath = d.getPath() + "/" + path + MylarTasklistPlugin.FILE_EXTENSION;
-					absPath = absPath.replaceAll("\\\\", "/");
-					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getMylarDataDirectory() + "/", absPath);										
-					task.setPath(rel);
-					taskPropertyChanged(task, "Path");
-				} else {
-					String absPath = prevDir + "/" + task.getPath() + MylarTasklistPlugin.FILE_EXTENSION;
-					absPath = absPath.replaceAll("\\\\", "/");
-					String rel = RelativePathUtil.findRelativePath(MylarPlugin.getDefault().getMylarDataDirectory(), absPath);
-					task.setPath(rel);
-					taskPropertyChanged(task, "Path");
-				}
-			}
-//			updateTaskscapeReferenceHelper(task.getChildren(), prevDir);
-    	}
-    }
-    
     public void setTaskListFile(File f) {
-    	if (this.taskListFile.exists()) {
-    		this.taskListFile.delete();
-    	}
     	this.taskListFile = f;
     }
     

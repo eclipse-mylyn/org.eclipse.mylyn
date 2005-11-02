@@ -26,7 +26,6 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.contribution.DatePicker;
-import org.eclipse.mylar.tasklist.internal.RelativePathUtil;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -527,15 +526,12 @@ public class TaskSummaryEditor extends EditorPart {
 					String mylarDir = MylarPlugin.getDefault().getMylarDataDirectory()
 							+ "/";
 					mylarDir = mylarDir.replaceAll("\\\\", "/");
-					// mylarDir = formatPath(mylarDir);
 					dialog.setFilterPath(mylarDir);
 
 					String res = dialog.open();
 					if (res != null) {
 						res = res.replaceAll("\\\\", "/");
-						res = RelativePathUtil.findRelativePath(mylarDir, res);
 						pathText.setText("<MylarDir>/" + res + ".xml");
-//						task.setPath(res);
 						markDirty(true);
 					}
 				}

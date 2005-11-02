@@ -37,8 +37,8 @@ public class PreviousTaskDropDownAction extends DropDownTaskNavigateAction {
 	protected void addActionsToMenu(){
 		List<ITask> tasks = taskHistory.getPreviousTasks();
 		
-		if(tasks.size() > MAX_ITEMS){
-			tasks = tasks.subList(tasks.size() - MAX_ITEMS, tasks.size());
+		if(tasks.size() > MAX_ITEMS_TO_DISPLAY){
+			tasks = tasks.subList(tasks.size() - MAX_ITEMS_TO_DISPLAY, tasks.size());
 		}
 		
 		for(int i = tasks.size() - 1; i >= 0; i--){

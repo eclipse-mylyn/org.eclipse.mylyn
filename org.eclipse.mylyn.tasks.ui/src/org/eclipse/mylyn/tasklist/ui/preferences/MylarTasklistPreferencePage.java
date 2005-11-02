@@ -38,9 +38,10 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class MylarTasklistPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 	
-	private Text taskDirectoryText;
-	private Text taskURLPrefixText;
-	private Button browse;
+	private Text taskDirectoryText = null;
+	private Text taskURLPrefixText = null;
+	private Button browse = null;
+	private Button copyExistingDataCheckbox = null;
 	private Button reportEditor = null;
 	private Button reportInternal = null;
 //	private Button reportExternal = null;
@@ -104,9 +105,18 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 	@Override
 	public boolean performOk() {
 		String taskDirectory = taskDirectoryText.getText();
-		taskDirectory = taskDirectory.replaceAll("\\\\", "/");		
-		getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
+		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
+		if (!taskDirectory.equals(MylarPlugin.getDefault().getMylarDataDirectory())){
+			//Order matters:
+			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
+			if (copyExistingDataCheckbox.getSelection()){
+				MylarTasklistPlugin.getDefault().copyDataDirContentsTo(taskDirectory);
+			}
+			getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
+			MylarTasklistPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getMylarDataDirectory());
+		}
 		
+		getPreferenceStore().setValue(MylarTasklistPlugin.COPY_TASK_DATA, copyExistingDataCheckbox.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
 //		getPreferenceStore().setValue(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
@@ -130,9 +140,10 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 		super.performDefaults();
 
 		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-		String taskDirectory = rootPath.toString() + "/" +MylarPlugin.MYLAR_DIR_NAME;
+		String taskDirectory = rootPath.toString() + "/" + MylarPlugin.MYLAR_DIR_NAME;
 		taskDirectoryText.setText(taskDirectory);
-				
+		
+		copyExistingDataCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.COPY_TASK_DATA));
 		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
 //		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
@@ -162,14 +173,7 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 		taskDirectoryText.setEditable(false);
 		taskDirectoryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		
 		browse = createButton(taskDirComposite, "Browse...");
-		if (!MylarPlugin.getContextManager().hasActiveContext()) {
-			browse.setEnabled(true);
-		} else {
-			browse.setEnabled(false);
-			createLabel(taskDirComposite, "NOTE: if you have a task active, deactivate it before changing directories");
-		}
 		browse.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
@@ -186,7 +190,12 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 					return;
 				taskDirectoryText.setText(dir);
 			}
-		});        
+		});
+		
+		copyExistingDataCheckbox = new Button(taskDirComposite, SWT.CHECK);
+		copyExistingDataCheckbox.setText("Copy existing data to new location");
+		copyExistingDataCheckbox.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.COPY_TASK_DATA));
+		
 	}	
 	
 	private void createCreationGroup(Composite parent) {

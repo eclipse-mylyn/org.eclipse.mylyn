@@ -34,7 +34,7 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 	protected TaskListLabelProvider labelProvider = new TaskListLabelProvider();
 
 	/** Maximum number of items to appear in the drop-down menu */
-	protected final static int MAX_ITEMS = 5;
+	protected final static int MAX_ITEMS_TO_DISPLAY = 10;
 		
 	public DropDownTaskNavigateAction(TaskListView view, TaskActivationHistory history){
     	super();

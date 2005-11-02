@@ -61,6 +61,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasklist.report.open.internal";
     public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasklist.report.open.external";
     public static final String MULTIPLE_ACTIVE_TASKS = "org.eclipse.mylar.tasklist.active.multipe";
+    public static final String COPY_TASK_DATA = "org.eclipse.mylar.tasklist.preferences.copyTaskData";
     
     public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
     public static final String FILE_EXTENSION = ".xml";
@@ -205,24 +206,16 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private static IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			// TODO Auto-generated method stub
-			if (event.getProperty().equals(MylarPlugin.MYLAR_DIR)) {				
-				if (event.getOldValue() instanceof String) {
-					String prevDir = (String) event.getOldValue();				
-					MylarPlugin.getContextManager().updateMylarDirContents(prevDir);
-					getTaskListManager().updateTaskscapeReference(prevDir);
-					
-					String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;        
-					getTaskListManager().setTaskListFile(new File(path));
-				}
-			} else if (event.getProperty().equals(MULTIPLE_ACTIVE_TASKS)) {
+			
+			if (event.getProperty().equals(MULTIPLE_ACTIVE_TASKS)) {
 				TaskListView.getDefault().togglePreviousAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
 				TaskListView.getDefault().toggleNextAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
 				TaskListView.getDefault().clearTaskHistory();
-			} else {
-			}
+			} 
 		}        
     };
+    
+
     
 	public MylarTasklistPlugin() {
 		super();
@@ -316,6 +309,20 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	public static IPreferenceStore getPrefs() {
 		return MylarPlugin.getDefault().getPreferenceStore();
 	}
+	
+	
+    /**
+     * Sets the directory containing the task list file to use.
+     * Switches immediately to use the data at that location.
+     */
+    public void setDataDirectory(String newDirPath){
+    	String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
+    	getTaskListManager().setTaskListFile(new File(taskListFilePath));
+    	getTaskListManager().createNewTaskList();
+    	getTaskListManager().readTaskList();
+    	
+    	TaskListView.getDefault().clearTaskHistory();
+    }
 	
 	/**
 	 * TODO: make private
@@ -470,6 +477,21 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + "-backup.xml";
 		copy(new File(backup), taskListFile);
+	}
+	
+	/**
+	 * Copies all files in the current data directory to
+	 * the specified folder. Will overwrite.
+	 */
+	public void copyDataDirContentsTo(String targetFolderPath){
+		File mainDataDir = new File(MylarPlugin.getDefault().getMylarDataDirectory());
+		
+		for ( File currFile : mainDataDir.listFiles()) {
+			if (currFile.isFile()){
+				File destFile = new File(targetFolderPath + File.separator + currFile.getName());
+				copy(currFile, destFile);				
+			}
+		}
 	}
 	
     private boolean copy(File src, File dst) {
