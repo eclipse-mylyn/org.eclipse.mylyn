@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -225,9 +226,9 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         // put it back
         type1.createMethod("public void m1() { }", null, true, null); 
         project.build();
-        project.waitForIndexer();
-        
-        // XXX: put this back
+        project.build(); // HACK
+                
+        // XXX: put this back, but it needs to wait on the resource marker update somehow
         assertFalse(MylarPlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
     }
     
@@ -254,13 +255,14 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     }
     
     public void testIncremenOfParentDoi() throws JavaModelException, Exception {
-        IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+    	IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
         IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
+        IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
+        assertFalse(node.getInterest().isInteresting());
+        
         StructuredSelection sm1 = new StructuredSelection(m1);
         monitor.selectionChanged(part, sm1);
-        
-        IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
-        
+        node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
         assertTrue(node.getInterest().isInteresting());
         
         project.build();
@@ -269,10 +271,10 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         do {
             level++; 
             IMylarElement parentNode = MylarPlugin.getContextManager().getElement(parent.getHandleIdentifier());    
-//            assertEquals(scaling.getParentPropagationIncrement(level), parentNode.getDegreeOfInterest().getValue());
-            assertEquals(node.getInterest().getValue(), parentNode.getInterest().getValue());
+            if (!(parent instanceof JavaModel)) {
+            	assertEquals("failed on: " + parent.getClass(), node.getInterest().getValue(), parentNode.getInterest().getValue());
+            }
             parent = parent.getParent();
-            
         } while (parent != null);
     }
     

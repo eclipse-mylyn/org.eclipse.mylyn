@@ -69,12 +69,13 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     protected void tearDown() throws Exception {
 //		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 //			protected void execute(IProgressMonitor monitor) throws CoreException {
-				project.dispose();
-		        context.reset(); 
-		        manager.contextDeactivated(taskId, taskId);
-		        manager.contextDeleted(taskId, taskId);
-		        manager.getFileForContext(taskId).delete(); 
-				MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+        context.reset(); 
+        manager.contextDeactivated(taskId, taskId);
+        manager.contextDeleted(taskId, taskId);
+        manager.getFileForContext(taskId).delete(); 
+		project.build();
+        project.dispose();
+		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
 //			}
 //		};
 //		IProgressService service = PlatformUI.getWorkbench().getProgressService();
