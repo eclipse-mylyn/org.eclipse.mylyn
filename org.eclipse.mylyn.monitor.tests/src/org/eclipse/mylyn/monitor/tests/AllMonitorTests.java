@@ -31,11 +31,6 @@ public class AllMonitorTests {
 		suite.addTestSuite(MonitorTest.class);
 		suite.addTestSuite(InteractionEventExternalizationTest.class);
 		suite.addTestSuite(MonitorPackagingTest.class);
-		
-		//Enable after fixing test case conflicts?
-		//suite.addTestSuite(SharedTaskFolderTest.class);
-		
-		
 		//$JUnit-END$
 
 		return suite;
