@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -23,30 +24,32 @@ import org.eclipse.ui.IViewPart;
  */
 public class GoIntoAction extends Action implements IViewActionDelegate {
 
-//	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.into";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.into";
 //		
 //	private DrillDownAdapter drillDownAdapter;
 //	
-//	public GoIntoAction(DrillDownAdapter drillDownAdapter) {
-//		this.drillDownAdapter = drillDownAdapter;
-//		
-//		setId(ID);
-//		setText("Go Into Category");
-//		setToolTipText("Go Into Category");
-//		setImageDescriptor(TaskListImages.GO_INTO);
-//	}
+	public GoIntoAction() {
+		setId(ID);
+		setText("Go Into Category");
+		setToolTipText("Go Into Category");
+		setImageDescriptor(TaskListImages.GO_INTO);
+	}
 
 	public void init(IViewPart view) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void run(IAction action) {
-		if(TaskListView.getDefault() != null){
+	public void run() {
+		if(TaskListView.getDefault() != null) {
 			TaskListView.getDefault().goIntoCategory();
 		}
 	}
 
+	public void run(IAction action) {
+		run();
+	}
+	
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
 		

@@ -135,36 +135,30 @@ public class TaskListView extends ViewPart {
 		
 	FilteredTree tree;
     private DrillDownAdapter drillDownAdapter;
+    private ITaskListCategory drilledIntoCategory = null;
     
-//    private GoIntoAction goIntoAction;
-    private GoUpAction goBackAction;
-    
+    private GoIntoAction goIntoAction;
+    private GoUpAction goUpAction;
     private WorkOfflineAction workOffline;
-    
     private CopyDescriptionAction copyDescriptionAction;
     private OpenTaskEditorAction openAction;
-    
     private CreateTaskAction createTaskAction;
     private CreateCategoryAction createCategoryAction;
-    
     private RenameAction rename;
-    
     private CollapseAllAction collapseAll;
     private DeleteAction deleteAction;
     private AutoCloseAction autoClose;
     private OpenTaskEditorAction openTaskEditor;
-
     private RemoveFromCategoryAction removeAction;
-
     private TaskActivateAction activateAction = new TaskActivateAction();
     private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
-    
     private MarkTaskCompleteAction markIncompleteAction;
     private MarkTaskIncompleteAction markCompleteAction;
     private FilterCompletedTasksAction filterCompleteTask;
     private PriorityDropDownAction filterOnPriority;
     private PreviousTaskDropDownAction previousTaskAction;
     private NextTaskDropDownAction nextTaskAction;
+    
     private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
     private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
     List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
@@ -918,7 +912,7 @@ public class TaskListView extends ViewPart {
 //    	manager.add(new Separator("local"));
 //    	manager.add(createTaskAction);
 //    	manager.add(createCategoryAction); 
-    	manager.add(goBackAction);
+    	manager.add(goUpAction);
     	manager.add(collapseAll);
 //    	manager.add(new Separator());
 //        autoClose.setEnabled(true);
@@ -982,6 +976,12 @@ public class TaskListView extends ViewPart {
         }
 //        manager.add(new Separator("tasks"));
         addAction(deleteAction, manager, element);
+        if (element instanceof ITaskListCategory) {
+        	manager.add(goIntoAction);
+        }
+        if (drilledIntoCategory != null) {
+        	manager.add(goUpAction);
+        }
 //        addAction(rename, manager, element);
 //        addAction(copyDescriptionAction, manager, element);
 
@@ -1090,8 +1090,8 @@ public class TaskListView extends ViewPart {
     	
     	workOffline = new WorkOfflineAction();
     	
-//    	goIntoAction = new GoIntoAction(drillDownAdapter);
-    	goBackAction = new GoUpAction(drillDownAdapter);
+    	goIntoAction = new GoIntoAction();
+    	goUpAction = new GoUpAction(drillDownAdapter);
     	
     	createTaskAction = new CreateTaskAction(this);   
         createCategoryAction = new CreateCategoryAction(this);
@@ -1274,9 +1274,9 @@ public class TaskListView extends ViewPart {
 
 	public void updateDrillDownActions() {
 		if(drillDownAdapter.canGoBack()){
-			goBackAction.setEnabled(true);
+			goUpAction.setEnabled(true);
 		} else {
-			goBackAction.setEnabled(false);
+			goUpAction.setEnabled(false);
 		}
 //		if(drillDownAdapter.canGoInto()){
 //			canEnableGoInto = true;
@@ -1307,7 +1307,21 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void goIntoCategory() {
-		drillDownAdapter.goInto();
+		ISelection selection = getViewer().getSelection();
+		if (selection instanceof StructuredSelection) {
+			StructuredSelection structuredSelection = (StructuredSelection)selection;
+			Object element = structuredSelection.getFirstElement();
+			if (element instanceof ITaskListCategory) {
+				drilledIntoCategory = (ITaskListCategory)element;
+				drillDownAdapter.goInto();
+				updateDrillDownActions();
+			}
+		}
+	}
+	
+	public void goUpToRoot() {
+		drilledIntoCategory = null;
+		drillDownAdapter.goBack();
 		updateDrillDownActions();
 	}
 	
@@ -1359,5 +1373,9 @@ public class TaskListView extends ViewPart {
 			}
 		}
 		
+	}
+
+	public ITaskListCategory getDrilledIntoCategory() {
+		return drilledIntoCategory;
 	}
 }

@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
@@ -56,12 +57,18 @@ public class CreateTaskAction extends Action {
 			if (selectedObject instanceof TaskCategory) {
 				newTask.setCategory((TaskCategory) selectedObject);
 				((TaskCategory) selectedObject).addTask(newTask);
-			} else {            	
+			} else if (selectedObject instanceof ITask) {
+				ITask task = (ITask)selectedObject;
+				if (task.getCategory() != null) {
+					newTask.setCategory(task.getCategory());
+					((TaskCategory)task.getCategory()).addTask(newTask);
+				}
+			} else if (view.getDrilledIntoCategory() != null) {
+				newTask.setCategory(view.getDrilledIntoCategory());
+				((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
+		 	} else {
 	            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
 	        }
-//			MylarUiPlugin.getDefault().setHighlighterMapping(
-//	                newTask.getHandle(), 
-//	                MylarUiPlugin.getDefault().getDefaultHighlighter().getName());
 			this.view.getViewer().refresh();
 		}
     }
