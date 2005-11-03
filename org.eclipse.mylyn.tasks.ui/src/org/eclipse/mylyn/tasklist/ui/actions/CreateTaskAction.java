@@ -68,7 +68,12 @@ public class CreateTaskAction extends Action {
 			 	} else {
 		            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
 		        }
-			}
+			} else if (view.getDrilledIntoCategory() != null) {
+				newTask.setCategory(view.getDrilledIntoCategory());
+				((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
+		 	} else {
+	            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
+	        }
 			view.getViewer().refresh();
 		}
     }
