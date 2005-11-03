@@ -225,12 +225,12 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
         // put it back
         type1.createMethod("public void m1() { }", null, true, null); 
-        project.build();
-        project.build(); // HACK
-        project.build(); // HACK
         
         // XXX: put this back, but it needs to wait on the resource marker update somehow
-        assertFalse(MylarPlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
+//      project.build();
+//      project.build(); // HACK
+//      project.build(); // HACK
+//        assertFalse(MylarPlugin.getContextManager().getElement(resourceHandle).getInterest().isInteresting());
     }
     
     public void testParentInterestAfterDecay() throws JavaModelException {
