@@ -47,13 +47,13 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.tasklist.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskFilter;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListCategory;
-import org.eclipse.mylar.tasklist.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
@@ -141,7 +141,7 @@ public class TaskListView extends ViewPart {
     
     private WorkOfflineAction workOffline;
     
-    private CopyDescriptionAction copyAction;
+    private CopyDescriptionAction copyDescriptionAction;
     private OpenTaskEditorAction openAction;
     
     private CreateTaskAction createTaskAction;
@@ -150,7 +150,7 @@ public class TaskListView extends ViewPart {
     private RenameAction rename;
     
     private CollapseAllAction collapseAll;
-    private DeleteAction delete;
+    private DeleteAction deleteAction;
     private AutoCloseAction autoClose;
     private OpenTaskEditorAction openTaskEditor;
 
@@ -159,8 +159,8 @@ public class TaskListView extends ViewPart {
     private TaskActivateAction activateAction = new TaskActivateAction();
     private TaskDeactivateAction deactivateAction = new TaskDeactivateAction();
     
-    private MarkTaskCompleteAction completeTask;
-    private MarkTaskIncompleteAction incompleteTask;
+    private MarkTaskCompleteAction markIncompleteAction;
+    private MarkTaskIncompleteAction markCompleteAction;
     private FilterCompletedTasksAction filterCompleteTask;
     private PriorityDropDownAction filterOnPriority;
     private PreviousTaskDropDownAction previousTaskAction;
@@ -728,7 +728,13 @@ public class TaskListView extends ViewPart {
 					if(rename.isEnabled()){
 						rename.run();
 					}
-				}
+				} else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
+					copyDescriptionAction.run();
+				} else if (e.keyCode == SWT.DEL) {
+					deleteAction.run();
+				} else if (e.keyCode == SWT.INSERT) {
+					createTaskAction.run();
+				} 
 			}
 
 			public void keyReleased(KeyEvent e) {}
@@ -908,10 +914,10 @@ public class TaskListView extends ViewPart {
 
     private void fillLocalPullDown(IMenuManager manager) {
     	updateDrillDownActions();
-    	manager.add(new Separator("reports"));
-    	manager.add(new Separator("local"));
-    	manager.add(createTaskAction);
-    	manager.add(createCategoryAction); 
+//    	manager.add(new Separator("reports"));
+//    	manager.add(new Separator("local"));
+//    	manager.add(createTaskAction);
+//    	manager.add(createCategoryAction); 
     	manager.add(goBackAction);
     	manager.add(collapseAll);
 //    	manager.add(new Separator());
@@ -946,28 +952,44 @@ public class TaskListView extends ViewPart {
         	element = (ITaskListElement) selectedObject;
         }
         
+        addAction(openAction, manager, element);
         if ((element instanceof ITask) || (element instanceof IQueryHit)) {
         	ITask task = null;
+        	boolean isLocal = element.getClass().equals(Task.class); // HACK
         	if (element instanceof IQueryHit) {
         		task = ((IQueryHit)element).getOrCreateCorrespondingTask();
         	} else {
         		task = (ITask)element;
         	}
+        	
         	if (task.isActive()) {
         		manager.add(deactivateAction);
         	} else {
             	manager.add(activateAction);
         	} 
+        	
+        	if (isLocal) {
+	        	if (task.isCompleted()) {
+	                addAction(markCompleteAction, manager, element);
+	        	} else {
+	                addAction(markIncompleteAction, manager, element);
+	        	}
+        	}
+        	// HACK: to avoid removing local tasks
+        	if (!isLocal) {
+        		addAction(removeAction, manager, element);
+        	}
         }
-        addAction(openAction, manager, element);
-        addAction(completeTask, manager, element);
-        addAction(incompleteTask, manager, element);
-        manager.add(new Separator("tasks"));
-        addAction(removeAction, manager, element);
-        addAction(rename, manager, element);
-        addAction(delete, manager, element);
-        addAction(copyAction, manager, element);
-//        addAction(createTask, manager, element);
+//        manager.add(new Separator("tasks"));
+        addAction(deleteAction, manager, element);
+//        addAction(rename, manager, element);
+//        addAction(copyDescriptionAction, manager, element);
+
+        manager.add(new Separator("local"));
+    	manager.add(createTaskAction);
+    	manager.add(createCategoryAction);
+    	manager.add(new Separator("reports"));
+
         
         manager.add(new Separator("context"));   
     	for (IDynamicSubMenuContributor contributor : MylarTasklistPlugin.getDefault().getDynamicMenuContributers()) {
@@ -975,7 +997,7 @@ public class TaskListView extends ViewPart {
 	        if (subMenuManager != null) addMenuManager(subMenuManager, manager, element);
     	}
     	
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
     
     private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskListElement element) {
@@ -1063,7 +1085,7 @@ public class TaskListView extends ViewPart {
     
     private void makeActions() {
     	
-    	copyAction = new CopyDescriptionAction(this);
+    	copyDescriptionAction = new CopyDescriptionAction(this);
     	openAction = new OpenTaskEditorAction(this); 
     	
     	workOffline = new WorkOfflineAction();
@@ -1076,11 +1098,11 @@ public class TaskListView extends ViewPart {
         removeAction = new RemoveFromCategoryAction(this);
         rename = new RenameAction(this);
         
-        delete = new DeleteAction(this);
+        deleteAction = new DeleteAction(this);
         collapseAll = new CollapseAllAction(this);
         autoClose = new AutoCloseAction();
-        completeTask = new MarkTaskCompleteAction(this);
-        incompleteTask = new MarkTaskIncompleteAction(this);        
+        markIncompleteAction = new MarkTaskCompleteAction(this);
+        markCompleteAction = new MarkTaskIncompleteAction(this);        
         openTaskEditor = new OpenTaskEditorAction(this);            
         filterCompleteTask = new FilterCompletedTasksAction(this);                       
         filterOnPriority = new PriorityDropDownAction();

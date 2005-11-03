@@ -43,10 +43,11 @@ public class RemoveFromCategoryAction extends Action {
 	@Override
 	public void run() {
 		try {
-			Object selectedObject = ((IStructuredSelection) this.view.getViewer()
-					.getSelection()).getFirstElement();		
-			if(selectedObject instanceof ITaskListElement &&
+			Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();		
+			
+			if (selectedObject instanceof ITaskListElement &&
 				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null) {
+				
 				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
 				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
 				ITaskHandler handler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(selectedElement);
@@ -63,8 +64,8 @@ public class RemoveFromCategoryAction extends Action {
 				}
 				ITaskListCategory cat = task.getCategory();
 				if (cat != null) {
-					cat.removeTask(task);				
-				} else {
+//					cat.removeTask(task);				
+//				} else {
 					String message = task.getDeleteConfirmationMessage();			
 					boolean deleteConfirmed = MessageDialog.openQuestion(
 				            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
@@ -79,12 +80,12 @@ public class RemoveFromCategoryAction extends Action {
 				IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	
 				// if we couldn't get the page, get out of here
-				if (page == null)
-					return;
-				try {
-					this.view.closeTaskEditors((ITask) selectedObject, page);
-				} catch (Exception e) {
-					MylarPlugin.log(e, " remove failed");
+				if (page != null) {
+					try {
+						this.view.closeTaskEditors((ITask) selectedObject, page);
+					} catch (Exception e) {
+						MylarPlugin.log(e, " remove failed");
+					}
 				}
 			}
 			this.view.getViewer().refresh();

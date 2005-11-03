@@ -33,6 +33,7 @@ public class CopyDescriptionAction extends Action {
 		setToolTipText("Copy Description");
 		setId(ID);
 		setImageDescriptor(TaskListImages.COPY);
+		setAccelerator(SWT.MOD1 + 'c');
 	}
 
 	@Override
