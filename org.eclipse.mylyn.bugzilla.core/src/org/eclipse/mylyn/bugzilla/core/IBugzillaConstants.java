@@ -53,6 +53,7 @@ public interface IBugzillaConstants
 	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
 	static final String MOST_RECENT_QUERY = "MOST_RECENT_QUERY";
 	static final String IS_218 = "BUGZILLA_IS_218";
+	static final String IS_220 = "BUGZILLA_IS_220";
 	static final String REFRESH_QUERY = "REFRESH_QUERY";
 	static final String MAX_RESULTS = "MAX_BUGZILLA_RESULTS";
     

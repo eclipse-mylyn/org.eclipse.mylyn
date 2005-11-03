@@ -86,8 +86,6 @@ public class MylarTasklistPreferencePage extends PreferencePage implements
 	
 	private void createBugzillaReportOption(Composite parent) {
 		Group container= new Group(parent, SWT.SHADOW_ETCHED_IN);	
-//		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-//		container.setLayoutData(gridData); 
 		container.setLayout(new RowLayout());
 		container.setText("Open Bug Reports With");
 		reportEditor = new Button(container, SWT.RADIO);
