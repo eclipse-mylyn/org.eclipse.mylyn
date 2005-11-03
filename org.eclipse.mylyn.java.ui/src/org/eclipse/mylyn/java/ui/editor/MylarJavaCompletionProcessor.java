@@ -26,6 +26,7 @@ import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.MemberProposalInfo;
 import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.TextContentAssistInvocationContext;
 import org.eclipse.mylar.core.IMylarElement;
@@ -41,8 +42,8 @@ import org.eclipse.ui.IEditorPart;
  */
 public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 
-    public MylarJavaCompletionProcessor(IEditorPart editor, String partition) {
-        super(editor, partition); 
+    public MylarJavaCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
+        super(editor, assistant, partition); 
     }
 
 	@MylarWebRef(name="Reflection documentation", url="http://www.onjava.com/pub/a/onjava/2003/11/12/reflection.html?page=last")

@@ -60,7 +60,7 @@ public class ProblemsListDoiSorter extends TableSorter {
     protected InterestComparator<IMylarElement> interestComparator = new InterestComparator<IMylarElement>();
     
     @Override
-    protected int compare(Object obj1, Object obj2, int depth) {
+    public int compare(Viewer viewer, Object obj1, Object obj2) {
         if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) { 
         	ProblemMarker marker1 = (ProblemMarker)obj1;
         	ProblemMarker marker2 = (ProblemMarker)obj2;
@@ -79,12 +79,6 @@ public class ProblemsListDoiSorter extends TableSorter {
 	       	 	}
 	        }
         }
-        return super.compare(obj1, obj2, depth);
-    }
-
-    @Override
-    public int compare(Viewer viewer, Object obj1, Object obj2) {
-    	return compare(obj1, obj2, 1);
-//    	return super.compare(viewer, obj1, obj2);
+        return super.compare(viewer, obj1, obj2);
     }
 }
