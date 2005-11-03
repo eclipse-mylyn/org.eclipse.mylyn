@@ -52,8 +52,8 @@ public class CreateTaskAction extends Action {
 			newTask.setReminderDate(dialog.getReminderDate());
 			newTask.setIssueReportURL(dialog.getIssueURL());
 			
-			Object selectedObject = ((IStructuredSelection) this.view
-					.getViewer().getSelection()).getFirstElement();
+			Object selectedObject = ((IStructuredSelection)view.getViewer().getSelection()).getFirstElement();
+			
 			if (selectedObject instanceof TaskCategory) {
 				newTask.setCategory((TaskCategory) selectedObject);
 				((TaskCategory) selectedObject).addTask(newTask);
@@ -62,14 +62,14 @@ public class CreateTaskAction extends Action {
 				if (task.getCategory() != null) {
 					newTask.setCategory(task.getCategory());
 					((TaskCategory)task.getCategory()).addTask(newTask);
-				}
-			} else if (view.getDrilledIntoCategory() != null) {
-				newTask.setCategory(view.getDrilledIntoCategory());
-				((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
-		 	} else {
-	            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
-	        }
-			this.view.getViewer().refresh();
+				} else if (view.getDrilledIntoCategory() != null) {
+					newTask.setCategory(view.getDrilledIntoCategory());
+					((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
+			 	} else {
+		            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
+		        }
+			}
+			view.getViewer().refresh();
 		}
     }
 }
