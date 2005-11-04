@@ -35,9 +35,9 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private Text workingSetNameText;
 	private IWorkingSet workingSet;
-	public static final String WORKING_SET_NAME = "Mylar Task Context";
 	
-	
+	public static final String WORKING_SET_NAME = "Mylar Task Context (for search)";
+		
 	public MylarWorkingSetPage() {
 		super("org.eclipse.mylar.monitor.workingSetPage", 
 			"Mylar Task Context Working Set", 

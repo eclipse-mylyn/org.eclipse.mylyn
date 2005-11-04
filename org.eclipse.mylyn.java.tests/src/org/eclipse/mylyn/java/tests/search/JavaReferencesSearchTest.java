@@ -87,10 +87,11 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 		
-    	// results should be not null, but have no references since the landmark
+    	// results should be not null, but have no java references since the landmark
 		// is an element in the same project, but there are no references in it 
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
+		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		
     	// results should be not null, but have no references
 		// This file type should never affect the scope
@@ -100,7 +101,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
     	// results should be not null, and there should be 1 reference since we are searching
 		// the file with the element in it
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 	}
 	
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException{
@@ -121,8 +122,9 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		
     	// results should be not null, but have no references since the interesting element
 		// is an element in the same project, but no references in it
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
+		helper.searchResultsNotNull(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
 		
     	// results should be not null, but have no references
 		// This file type should never affect the scope
@@ -130,16 +132,18 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		helper.searchResultsNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos);
 
     	// results should be not null, and we should get 1 result back
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 
     	// results should be null, since we have nothing to search 
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNull(notifier, searchNode, dos);
 		
     	// results should be not null, and we should get 1 result back
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 	}
 	
 	public void testJavaReferencesSearchDOS3() throws Exception{
@@ -159,24 +163,28 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 
     	// results should be not null, and have 1 reference since the project is the same
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 
     	// results should be not null, and have 1 reference
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 
     	// results should be not null, and we should get 1 result back
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 
     	// results should be null, since we have nothing to search 
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNull(notifier, searchNode, dos);
 
     	// results should be not null, and we should get 1 result back
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 	}
 	
 	public void testJavaReferencesSearchDOS4() throws Exception{
@@ -198,39 +206,45 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		helper.searchResultsNotNull(notifier, type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 0);
 
     	// results should be not null, and have 1 reference since the project is the same
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNullInteresting(notifier, type11.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 
     	// results should be not null, and have 1 reference
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNull(notifier, plugin1.getFullPath().toString(), PdeStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 
     	// results should be not null, and we should get 1 result back
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNull(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 
     	// results should be null, since we have nothing to search 
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 		helper.searchResultsNull(notifier, searchNode, dos);
 
     	// results should be not null, and we should get 1 result back
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 1);
+		helper.searchResultsNotNullInteresting(notifier, type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, searchNode, dos, 2);
 	}
 	
 	public void testJavaReferencesSearchDOS5() throws IOException, CoreException{
 		int dos = 5;
 		
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
         CompositeContext t = (CompositeContext)MylarPlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
 		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
     	
     	// we should have 1 result since we are searching the entire workspace
-		helper.searchResultsNotNull(notifier, searchNode, dos, 1);
+		helper.searchResultsNotNull(notifier, searchNode, dos, 2);
 
 		// we should have no results since there are no java references in the workspace
+		// NOTE: as of 3.2M3 there is a plugin.xml reference
 		searchNode = notifier.getElement(type2.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
-		helper.searchResultsNotNull(notifier, searchNode, dos, 0);
+		helper.searchResultsNotNull(notifier, searchNode, dos, 1);
 	}
 	
 	public List<?> search(int dos, IMylarElement node){
