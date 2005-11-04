@@ -218,7 +218,12 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true, false);
 			tlist.setActive(task, true, false);
-			new TaskActivateAction().run(task);
+			try {
+				// TODO: move this
+				new TaskActivateAction().run(task);
+			} catch (Throwable t) {
+				// ignore an activation failure since it's a UI issue
+			}
 		} else {
 			task.setActive(false, false);
 		}	

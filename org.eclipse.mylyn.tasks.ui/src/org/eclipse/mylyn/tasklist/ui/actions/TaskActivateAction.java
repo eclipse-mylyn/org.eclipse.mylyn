@@ -50,7 +50,9 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	public void run(ITask task) {
 		if (task != null) {
 			MylarTasklistPlugin.getTaskListManager().activateTask(task);
-			TaskListView.getDefault().getViewer().refresh();
+			if (TaskListView.getDefault() != null) {
+				TaskListView.getDefault().getViewer().refresh();
+			}
 		}
 	}
 	
