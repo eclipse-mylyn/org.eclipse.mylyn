@@ -50,24 +50,25 @@ public class ToolTipHandler {
 
    protected Point tipPosition; // the position being hovered over on the
    	protected Point widgetPosition; // the position hovered over in the Widget;
-//   	private Shell parentShell;
    	
-	public ToolTipHandler(Shell parent) {
-//		this.parentShell = parent;
-		final Display display = parent.getDisplay();
-		tipShell = new Shell(parent, SWT.NONE);
+	public ToolTipHandler(Shell parentShell) {
+		tipShell = createTipShell(parentShell);
+	}
+
+	private Shell createTipShell(Shell parent){
+		Shell tipShell = new Shell(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		gridLayout.marginWidth = 2;
 		gridLayout.marginHeight = 2;
 		tipShell.setLayout(gridLayout);
-		tipShell.setBackground(display
+		tipShell.setBackground(parent.getDisplay()
 				.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
 		tipLabelImage = new Label(tipShell, SWT.NONE);
-		tipLabelImage.setForeground(display
+		tipLabelImage.setForeground(parent.getDisplay()
 				.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		tipLabelImage.setBackground(display
+		tipLabelImage.setBackground(parent.getDisplay()
 				.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
 		GridData imageGridData = new GridData(
@@ -76,16 +77,18 @@ public class ToolTipHandler {
 		tipLabelImage.setLayoutData(imageGridData);
 
 		tipLabelText = new Label(tipShell, SWT.NONE);
-		tipLabelText.setForeground(display
+		tipLabelText.setForeground(parent.getDisplay()
 				.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		tipLabelText.setBackground(display
+		tipLabelText.setBackground(parent.getDisplay()
 				.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
 		GridData textGridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.VERTICAL_ALIGN_CENTER);
 		tipLabelText.setLayoutData(textGridData);
+		
+		return tipShell;
 	}
-
+	
    private ITaskListElement getTask(Object hoverObject) {
 		if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
@@ -140,6 +143,7 @@ public class ToolTipHandler {
 	 * @control the control on which to enable hoverhelp
 	 */
 	public void activateHoverHelp(final Control control) {
+		
 		/*
 		 * Get out of the way if we attempt to activate the control underneath
 		 * the tooltip
@@ -194,14 +198,16 @@ public class ToolTipHandler {
 				if (text == null) { // HACK: don't check length
 					return;
 				}
-//				Control sourceControl = (Control) event.getSource();
-//				sourceControl.setFocus();
+
+				if (tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()){
+					tipShell = createTipShell(Display.getCurrent().getActiveShell());
+				}
+				
 				tipLabelText.setText(text);
 				tipLabelImage.setImage(image); // accepts null
 				tipShell.pack();
 				setHoverLocation(tipShell, tipPosition);
 				tipShell.setVisible(true);
-//				parentShell.setFocus(); 
 			}
 		});
 //		/*
