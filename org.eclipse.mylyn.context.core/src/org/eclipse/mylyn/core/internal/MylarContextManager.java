@@ -128,16 +128,12 @@ public class MylarContextManager {
     	
     	/** Currently used for testing only */
     	public void setTimeoutSeconds(int timeoutSeconds) {
-    		//timer.setTimeout(timeout);
     		timer.killThread();
     		
-    		
-    		//Temp Test
     		timer = new ActivityTimerThread(timeoutSeconds); 
     		timer.setTimeoutSeconds(timeoutSeconds);
     		timer.addListener(this);
     		timer.start();
-    		
     	}
     }
     
@@ -490,16 +486,9 @@ public class MylarContextManager {
         externalizer.writeContextToXML(context, getFileForContext(path));
     }
     
-    private void saveActivityHistoryContext() {
+    public void saveActivityHistoryContext() {
     	externalizer.writeContextToXML(activityHistory, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 	}
-    
-    /**
-     * Saves a copy of the activity history context to the specified destination file
-     */
-    public void saveActivityHistoryContextFileCopy(File destinationFile){
-    	externalizer.writeContextToXML(activityHistory, destinationFile);
-    }
     
     public File getFileForContext(String path) {
         return new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + path + FILE_EXTENSION);
