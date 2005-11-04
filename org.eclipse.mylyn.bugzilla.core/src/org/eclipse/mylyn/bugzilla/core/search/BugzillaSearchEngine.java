@@ -220,10 +220,8 @@ public class BugzillaSearchEngine {
 				} else if (re.matches(line, match)) {
 					RegularExpression regularExpression;
 					if (BugzillaPlugin.getDefault().isServerCompatability220()) {
-						System.err.println("220");
 						regularExpression = reValueBugzilla220;
 					} else {
-						System.err.println("218");
 						regularExpression = reValue;
 					}
 					

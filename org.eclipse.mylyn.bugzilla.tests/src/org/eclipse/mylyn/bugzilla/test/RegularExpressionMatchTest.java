@@ -39,7 +39,6 @@ public class RegularExpressionMatchTest extends TestCase {
 		BugzillaSearchHit hit = BugzillaSearchEngine.createHit(BugzillaSearchEngine.reValueBugzilla220, new NullProgressMonitor(), in, match, 123);
 		assertEquals("nor", hit.getSeverity());
 		assertEquals("P2", hit.getPriority());
-		System.err.println(">> " + hit.getSeverity());
 	}
 	
 	private static final String BUGZILLA_218 =

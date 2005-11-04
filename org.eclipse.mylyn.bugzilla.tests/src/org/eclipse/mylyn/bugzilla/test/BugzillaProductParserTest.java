@@ -20,6 +20,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
 
 
@@ -38,21 +40,23 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void testFullReportBugNoBug() throws Exception {
 
+		BugzillaPlugin.getDefault().getPluginPreferences().setValue(
+				IBugzillaConstants.SERVER_VERSION, 
+				IBugzillaConstants.SERVER_218);
+		 
 		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/product-page.html"));
 		
 		Reader in = new FileReader(f);
-
 		List<String> productList = new ArrayList<String>();
 		productList = new ProductParser(in).getProducts();
-//		printList(productList);
 
 		Iterator<String> itr = productList.iterator();
-
-//		while (itr.hasNext()) {
-			assertEquals("AJDT", "AJDT", itr.next());
-			assertEquals("ALF", "ALF", itr.next());
-			assertEquals("AspectJ", "AspectJ", itr.next());
-			assertEquals("BIRT", "BIRT", itr.next());
+		assertTrue(itr.hasNext());
+		assertEquals("AJDT", "AJDT", itr.next());
+		assertEquals("ALF", "ALF", itr.next());
+		assertEquals("AspectJ", "AspectJ", itr.next());
+		assertEquals("BIRT", "BIRT", itr.next());
+		
 //			assertEquals("CME", "CME", itr.next());
 //			assertEquals("ECESIS", "ECESIS", itr.next());
 //			assertEquals("EMF", "EMF", itr.next());

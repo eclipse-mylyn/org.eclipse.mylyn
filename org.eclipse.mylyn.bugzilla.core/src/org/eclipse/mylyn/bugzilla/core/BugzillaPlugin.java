@@ -150,12 +150,12 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	}
 	
     public boolean isServerCompatability218(){
-        return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_218))
-        	|| IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_220));
+        return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION))
+        	|| IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
     }
 	
     public boolean isServerCompatability220(){
-    	return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_220));
+    	return IBugzillaConstants.SERVER_220.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION));
     }
 	
 	/**
