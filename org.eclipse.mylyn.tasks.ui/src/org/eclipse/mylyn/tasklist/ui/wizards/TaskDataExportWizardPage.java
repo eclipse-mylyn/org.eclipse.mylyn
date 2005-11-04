@@ -31,7 +31,8 @@ public class TaskDataExportWizardPage extends WizardPage {
 	//Control fields
 	private Button taskListCheckBox = null;
 	private Button taskActivationHistoryCheckBox = null;
-	private Button taskContextsCheckBox = null;;
+	private Button taskContextsCheckBox = null;
+	private Button zipCheckBox = null;
 	private Button browseButton = null;
 	private Text destDirText = null; 
 	private Button overwriteCheckBox = null;
@@ -43,7 +44,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	private final static String CONTEXTS_SETTING = "Contexts setting";
 	private final static String DEST_DIR_SETTING = "Destination directory setting";
 	private final static String OVERWRITE_SETTING = "Overwrite setting";
-	
+	private final static String ZIP_SETTING = "Zip Setting";
 
 	public TaskDataExportWizardPage(){
 		super("org.eclipse.mylar.tasklist.exportPage", PAGE_TITLE, 
@@ -67,6 +68,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 			createFileSelectionControl(container);
 			createExportDirectoryControl(container);
 			
+			zipCheckBox = createCheckBox(container, "Export to zip file");
 			overwriteCheckBox = createCheckBox(container, "Overwrite existing files without warning");
 			
 			initSettings();
@@ -145,6 +147,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 			taskContextsCheckBox.setSelection(true);
 			destDirText.setText("");
 			overwriteCheckBox.setSelection(true);
+			zipCheckBox.setSelection(false);
 		}
 		else{
 			//Retrieve previous values from the dialog settings
@@ -156,6 +159,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 				destDirText.setText(settings.get(DEST_DIR_SETTING));
 			}	
 			overwriteCheckBox.setSelection(settings.getBoolean(OVERWRITE_SETTING));
+			zipCheckBox.setSelection(settings.getBoolean(ZIP_SETTING));
 		}
 	}
 	
@@ -171,6 +175,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 		settings.put(CONTEXTS_SETTING, taskContextsCheckBox.getSelection());
 		settings.put(DEST_DIR_SETTING, destDirText.getText());
 		settings.put(OVERWRITE_SETTING, overwriteCheckBox.getSelection());
+		settings.put(ZIP_SETTING, zipCheckBox.getSelection());
 
 		settings.put(SETTINGS_SAVED, SETTINGS_SAVED);
 	}
@@ -242,12 +247,18 @@ public class TaskDataExportWizardPage extends WizardPage {
 		return overwriteCheckBox.getSelection();
 	}
 	
+	/** True if the user wants to write to a zip file */
+	public boolean zip(){
+		return zipCheckBox.getSelection();
+	}
+	
 	/** For testing only. Sets controls to the specified values */
-	public void setParameters(boolean overwrite, boolean exportTaskList, boolean exportActivationHistory, boolean exportTaskContexts, String destinationDir){
+	public void setParameters(boolean overwrite, boolean exportTaskList, boolean exportActivationHistory, boolean exportTaskContexts, boolean zip, String destinationDir){
 		overwriteCheckBox.setSelection(overwrite);
 		taskListCheckBox.setSelection(exportTaskList);
 		taskActivationHistoryCheckBox.setSelection(exportActivationHistory);
 		taskContextsCheckBox.setSelection(exportTaskContexts);
 		destDirText.setText(destinationDir);
+		zipCheckBox.setSelection(zip);
 	}
 }

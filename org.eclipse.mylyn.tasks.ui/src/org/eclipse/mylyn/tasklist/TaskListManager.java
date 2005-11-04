@@ -29,7 +29,7 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
  */
 public class TaskListManager {
     	
-	private Map<ITask, TaskActiveTimerListener> listenerMap = new HashMap<ITask, TaskActiveTimerListener>(); 
+	private Map<ITask, TaskActivityListener> listenerMap = new HashMap<ITask, TaskActivityListener>(); 
 	
     private File taskListFile;
     private TaskList taskList = new TaskList();
@@ -107,7 +107,7 @@ public class TaskListManager {
     }
     
     public void deleteTask(ITask task) {
-        TaskActiveTimerListener activeListener = listenerMap.remove(task);
+        TaskActivityListener activeListener = listenerMap.remove(task);
         if(activeListener != null)
         	activeListener.stopTimer();
         taskList.setActive(task, false, false);        
@@ -140,13 +140,13 @@ public class TaskListManager {
     		} 
     	}
 		taskList.setActive(task, true, false);
-		TaskActiveTimerListener activeListener = new TaskActiveTimerListener(task); 
+		TaskActivityListener activeListener = new TaskActivityListener(task); 
 		listenerMap.put(task, activeListener);
 		for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
 	}
 
     public void deactivateTask(ITask task) {
-    	TaskActiveTimerListener activeListener = listenerMap.remove(task);
+    	TaskActivityListener activeListener = listenerMap.remove(task);
     	if(activeListener != null) activeListener.stopTimer();
     	taskList.setActive(task, false, false);
 		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);

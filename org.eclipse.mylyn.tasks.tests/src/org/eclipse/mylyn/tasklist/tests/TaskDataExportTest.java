@@ -58,13 +58,25 @@ public class TaskDataExportTest extends TestCase{
 		assertTrue(MylarPlugin.getContextManager().hasContext(task1.getPath()));
 		assertTrue(taskFile.exists());
 	}
-	
+
+	/** Tests the wizard when it has been asked to export all task data to a zip file*/
+	public void testExportAllToZip(){
+		
+		//Set parameters in the wizard to simulate a user setting them and clicking "Finish"
+		wizardPage.setParameters(true, true, true, true, true, destinationDir.getPath());
+		wizard.performFinish();
+		
+		//Check that the task list file was exported
+		File destZipFile =  new File(destinationDir + File.separator
+				+ TaskDataExportWizard.ZIP_FILE_NAME);	
+		assertTrue(destZipFile.exists());
+	}
 
 	/** Tests the wizard when it has been asked to export all task data */
 	public void testExportAll(){
 		
 		//Set parameters in the wizard to simulate a user setting them and clicking "Finish"
-		wizardPage.setParameters(true, true, true, true, destinationDir.getPath());
+		wizardPage.setParameters(true, true, true, true, false, destinationDir.getPath());
 		wizard.performFinish();
 		
 		//Check that the task list file was exported
@@ -87,7 +99,14 @@ public class TaskDataExportTest extends TestCase{
 	protected void tearDown() throws Exception{
 		
 		//Delete the test destination folder
+		
+		File[] files = destinationDir.listFiles();
+		for (File file : files) {
+			file.delete();
+		}
+		
 		destinationDir.delete();
+		assertFalse(destinationDir.exists());
 		
 		super.tearDown();
 	}

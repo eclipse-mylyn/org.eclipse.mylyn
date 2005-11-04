@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.util.ZipFileUtil;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
@@ -36,6 +37,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	 */
 	private final static String SETTINGS_SECTION = "org.eclipse.mylar.tasklist.ui.exportWizard";
 
+	public final static String ZIP_FILE_NAME = "mylartaskdata.zip";
+	
 	private final static String WINDOW_TITLE = "Export";
 
 	private TaskDataExportWizardPage exportPage = null;
@@ -44,7 +47,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		IDialogSettings masterSettings = MylarTasklistPlugin.getDefault()
 				.getDialogSettings();
 		setDialogSettings(getSettingsSection(masterSettings));
-		setNeedsProgressMonitor(true); // ?
+		setNeedsProgressMonitor(true);
 		setWindowTitle(WINDOW_TITLE);
 	}
 
@@ -82,6 +85,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	 */
 	public boolean performFinish() {
 		boolean overwrite = exportPage.overwrite();
+		boolean zip = exportPage.zip();
 		
 		//Get file paths to check for existence
 		String destDir = exportPage.getDestinationDirectory();
@@ -91,40 +95,52 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				+ File.separator
 				+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 				+ MylarContextManager.FILE_EXTENSION);
+		File destZipFile = new File(destDir + File.separator + ZIP_FILE_NAME);
 		
 		
 		//Prompt the user to confirm if ANY of the save operations will cause an overwrite
 		if(!overwrite){
-			if (exportPage.exportTaskList() && destTaskListFile.exists()){
-				if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "The task list file " + destTaskListFile.getPath() + " already exists. Do you want to overwrite it?")){
-					return false;
-				}
-			}
 			
-			if (exportPage.exportActivationHistory() && destActivationHistoryFile.exists()){
-				if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "The task activation history file " + destActivationHistoryFile.getPath() + " already exists. Do you want to overwrite it?")){
-					return false;
-				}		
+			if (zip){
+				if (destZipFile.exists()){
+					if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "The zip file " + destZipFile.getPath() + " already exists. Do you want to overwrite it?")){
+						return false;
+					}
+				}				
 			}
-			
-			if (exportPage.exportTaskContexts()) {
-				 for(ITask task : getAllTasks())
-				 {
-					File destTaskFile = new File(destDir + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
-					if (destTaskFile.exists()){
-						if(!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "Task context files already exist in " + destDir + ". Do you want to overwrite them?")){
-							return false;
-						}
-						else{
-							break;
-						}
+			else{
+				if (exportPage.exportTaskList() && destTaskListFile.exists()){
+					if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "The task list file " + destTaskListFile.getPath() + " already exists. Do you want to overwrite it?")){
+						return false;
 					}
 				}
-			}			
+				
+				if (exportPage.exportActivationHistory() && destActivationHistoryFile.exists()){
+					if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "The task activation history file " + destActivationHistoryFile.getPath() + " already exists. Do you want to overwrite it?")){
+						return false;
+					}		
+				}
+				
+				if (exportPage.exportTaskContexts()) {
+					 for(ITask task : getAllTasks())
+					 {
+						File destTaskFile = new File(destDir + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
+						if (destTaskFile.exists()){
+							if(!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "Task context files already exist in " + destDir + ". Do you want to overwrite them?")){
+								return false;
+							}
+							else{
+								break;
+							}
+						}
+					}
+				}					
+			}
 		}
 		
 		//Save the files
 		
+		List<File> filesToZip = new ArrayList<File>();
 		if (exportPage.exportTaskList()) {
 			MylarTasklistPlugin.getTaskListManager().saveTaskList();
 			
@@ -133,15 +149,33 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 					+ File.separator
 					+ MylarTasklistPlugin.DEFAULT_TASK_LIST_FILE;
 			File sourceTaskListFile = new File(sourceTaskListPath);
-
-			if (!copy(sourceTaskListFile, destTaskListFile)) {
-				MylarPlugin.fail(new Exception("Export Exception"), "Could not export task list file.", false);
-			}	
+			
+			if (zip){
+				filesToZip.add(sourceTaskListFile);
+			}
+			else{
+				if (!copy(sourceTaskListFile, destTaskListFile)) {
+					MylarPlugin.fail(new Exception("Export Exception"), "Could not export task list file.", false);
+				}				
+			}
+	
 		}
 
 		if (exportPage.exportActivationHistory()) {
 			try {
-				MylarPlugin.getContextManager().saveActivityHistoryContextFileCopy(destActivationHistoryFile);
+				File sourceActivationHistoryFile = new File(MylarPlugin.getDefault().getMylarDataDirectory()
+						+ File.separator
+						+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME
+						+ MylarContextManager.FILE_EXTENSION);
+				
+				MylarPlugin.getContextManager().saveActivityHistoryContext();
+				
+				if (zip){
+					filesToZip.add(sourceActivationHistoryFile);
+				}
+				else{
+					copy(sourceActivationHistoryFile, destActivationHistoryFile);
+				}
 			} catch (RuntimeException e) {
 				MylarPlugin.fail(e, "Could not export activity history context file", true);
 			}
@@ -158,11 +192,27 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				 
 				File destTaskFile = new File(destDir + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
 				File sourceTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
-				if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed){
-					MylarPlugin.fail(new Exception("Export Exception: " + sourceTaskFile.getPath() + " -> " + destTaskFile.getPath()), "Could not export one or more task context files.", true);
-					errorDisplayed = true;
+				if (zip){
+					filesToZip.add(sourceTaskFile);
+				}
+				else{
+					if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed){
+						MylarPlugin.fail(new Exception("Export Exception: " + sourceTaskFile.getPath() + " -> " + destTaskFile.getPath()), "Could not export one or more task context files.", true);
+						errorDisplayed = true;
+					}					
 				}
 			}
+		}
+		
+		if (zip){
+			try {
+				if (destZipFile.exists()){
+					destZipFile.delete();
+				}
+				ZipFileUtil.createZipFile(destZipFile, filesToZip);
+			} catch (Exception e) {
+				MylarPlugin.fail(e, "Could not create zip file.", true);
+			} 
 		}
 
 		exportPage.saveSettings();
