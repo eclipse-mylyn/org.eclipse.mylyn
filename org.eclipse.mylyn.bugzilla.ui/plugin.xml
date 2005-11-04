@@ -132,6 +132,18 @@
                menubarPath="additions"
                tooltip="Synchronize Unresolved Reports">
          </action>
+         
+         <action
+               class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
+               enablesFor="*"
+               icon="icons/etool16/task-bug-new.gif"
+               id="org.eclipse.mylar.bugzilla.tasklist.addNew"
+               label="Add New Bugzilla Report"
+               style="push"
+               toolbarPath="reports"
+               tooltip="Add New Bugzilla Report"> 
+  		</action>
+  			
 	    </viewContribution> 
 	</extension>
 	
@@ -170,7 +182,9 @@
                </or>
             </enablement>
          </action>
-           			<action
+          
+          
+          	<action
            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction"
            enablesFor="*"
            icon="icons/etool16/category-query-new.gif"

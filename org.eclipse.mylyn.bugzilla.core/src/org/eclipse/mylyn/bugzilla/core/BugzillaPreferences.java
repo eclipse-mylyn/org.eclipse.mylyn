@@ -70,9 +70,8 @@ public class BugzillaPreferences
 
 	private static final String bugzillaPasswordLabel = "Bugzilla Password: ";
 
-
-    private static final String bugzilla220Label = "Using Bugzilla 2.20 compatiblity (overrides option below, some features disabled)";
-    private static final String bugzilla218Label = "Using Bugzilla 2.18 (default is 2.16)";
+//    private static final String bugzilla220Label = "Using Bugzilla 2.20 compatiblity (overrides option below, some features disabled)";
+    private static final String bugzilla218Label = "Using Bugzilla 2.18 or later (default is 2.16)";
         
     private static final String bugzillaMaxResultsLabel = "Maximum returned results: ";
     
@@ -127,7 +126,7 @@ public class BugzillaPreferences
 
 		maxResults = new IntegerFieldEditor(IBugzillaConstants.MAX_RESULTS, bugzillaMaxResultsLabel, getFieldEditorParent());
 		
-		bugzilla220 = new BooleanFieldEditor(IBugzillaConstants.IS_220, bugzilla220Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
+//		bugzilla220 = new BooleanFieldEditor(IBugzillaConstants.IS_220, bugzilla220Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
 		bugzilla218 = new BooleanFieldEditor(IBugzillaConstants.IS_218, bugzilla218Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
         
 		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY, "Automatically refresh Bugzilla reports and queries on startup", 

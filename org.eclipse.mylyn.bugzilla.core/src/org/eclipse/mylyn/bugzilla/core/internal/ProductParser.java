@@ -13,12 +13,14 @@ package org.eclipse.mylar.bugzilla.core.internal;
 import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.bugzilla.core.search.BugzillaQueryPageParser;
 
 
 
@@ -45,75 +47,83 @@ public class ProductParser
 	 */
 	public List<String> getProducts() throws IOException, ParseException, LoginException
 	{
-		ArrayList<String> products = null;
-
-		boolean isTitle = false;
-		boolean possibleBadLogin = false;
-		String title = "";
-
-		for (HtmlStreamTokenizer.Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-				
-			// make sure that bugzilla doesn't want us to login
-			if(token.getType() == Token.TAG && ((HtmlTag)(token.getValue())).getTagType() == HtmlTag.Type.TITLE && !((HtmlTag)(token.getValue())).isEndTag())
-			{
-				isTitle = true;
-				continue;
-			}
-			
-			if(isTitle)
-			{
-				// get all of the data in the title tag
-				if(token.getType() != Token.TAG)
-				{
-					title += ((StringBuffer)token.getValue()).toString().toLowerCase() + " ";
-					continue;
-				}
-				else if(token.getType() == Token.TAG && ((HtmlTag)token.getValue()).getTagType() == HtmlTag.Type.TITLE && ((HtmlTag)token.getValue()).isEndTag())
-				{
-					// compare the title to see if we think that there is a problem with login
-					if((title.indexOf("login") != -1 || (title.indexOf("invalid") != -1 && title.indexOf("password") != -1) ||  title.indexOf("check e-mail") != -1 || title.indexOf("error") != -1))
-						possibleBadLogin = true;
-					isTitle = false;
-					title = "";
-				}
-					continue;
-			}
-				
-			if (token.getType() == Token.TAG ) {
-				HtmlTag tag = (HtmlTag) token.getValue();
-				if (tag.getTagType() == HtmlTag.Type.TR) 
-				{
-					token = tokenizer.nextToken();
-					if(token.getType() != Token.EOF && token.getType() == Token.TAG)
-					{
-						tag = (HtmlTag)token.getValue();
-						if(tag.getTagType() != HtmlTag.Type.TH)
-							continue;
-						else
-						{
-							if(products == null)
-                                products = new ArrayList<String>();
-                            parseProducts(products);
-							
-						}
-					}
-					continue;
-				}
-			}
+		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(new NullProgressMonitor());
+		if (!parser.wasSuccessful()) {
+			throw new RuntimeException("Couldn't get products");
+		} else {
+			return Arrays.asList(parser.getProductValues());
 		}
 		
-		// if we have no products and we suspect a login error, assume that it was a login error
-		if(products == null && possibleBadLogin)
-			throw new LoginException("Bugzilla login information incorrect");
-		return products;
+//		ArrayList<String> products = null;
+//
+//		boolean isTitle = false;
+//		boolean possibleBadLogin = false;
+//		String title = "";
+//
+//		for (HtmlStreamTokenizer.Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+//				
+//			// make sure that bugzilla doesn't want us to login
+//			if(token.getType() == Token.TAG && ((HtmlTag)(token.getValue())).getTagType() == HtmlTag.Type.TITLE && !((HtmlTag)(token.getValue())).isEndTag())
+//			{
+//				isTitle = true;
+//				continue;
+//			}
+//			
+//			if(isTitle)
+//			{
+//				// get all of the data in the title tag
+//				if(token.getType() != Token.TAG)
+//				{
+//					title += ((StringBuffer)token.getValue()).toString().toLowerCase() + " ";
+//					continue;
+//				}
+//				else if(token.getType() == Token.TAG && ((HtmlTag)token.getValue()).getTagType() == HtmlTag.Type.TITLE && ((HtmlTag)token.getValue()).isEndTag())
+//				{
+//					// compare the title to see if we think that there is a problem with login
+//					if((title.indexOf("login") != -1 || (title.indexOf("invalid") != -1 && title.indexOf("password") != -1) ||  title.indexOf("check e-mail") != -1 || title.indexOf("error") != -1))
+//						possibleBadLogin = true;
+//					isTitle = false;
+//					title = "";
+//				}
+//					continue;
+//			}
+//				
+//			if (token.getType() == Token.TAG ) {
+//				HtmlTag tag = (HtmlTag) token.getValue();
+//				if (tag.getTagType() == HtmlTag.Type.TR) 
+//				{
+//					token = tokenizer.nextToken();
+//					if(token.getType() != Token.EOF && token.getType() == Token.TAG)
+//					{
+//						tag = (HtmlTag)token.getValue();
+//						if(tag.getTagType() != HtmlTag.Type.TH)
+//							continue;
+//						else
+//						{
+//							if(products == null)
+//                                products = new ArrayList<String>();
+//                            parseProducts(products);
+//							
+//						}
+//					}
+//					continue;
+//				}
+//			}
+//		}
+//		
+//		// if we have no products and we suspect a login error, assume that it was a login error
+//		if(products == null && possibleBadLogin)
+//			throw new LoginException("Bugzilla login information incorrect");
+//		return products;
 	}
 
 	/**
 	 * Parse the products that we can enter bugs for
 	 * @param products The list of products to add this new product to
-	 * @return
+	 * 
+	 * TODO: remove, not used
 	 */
-	private void parseProducts(List<String> products) throws IOException, ParseException 
+	public  void parseProducts(List<String> products) throws IOException, ParseException 
 	{
 		StringBuffer sb = new StringBuffer();
 

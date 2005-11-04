@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -449,8 +450,11 @@ public class BugParser
 				sb.append((StringBuffer)token.getValue());
 			}
 		}
-		date = df.parse(sb.substring(0, 16));
-		
+		if (sb.length() > 16) {
+			date = df.parse(sb.substring(0, 16));
+		} else {
+			date = Calendar.getInstance().getTime(); // XXX: failed to get date
+		}
 		return new Comment(bug, number, date, author, authorName);
 	}
 

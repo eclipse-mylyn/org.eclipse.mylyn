@@ -157,8 +157,8 @@ public class BugzillaHit implements IQueryHit {
 	}
 
 	public boolean isCompleted() {
-		if (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI")) {
-			return true;
+		if (status != null && (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI"))) {
+			return true; 
 		}
 		return false;
 	}

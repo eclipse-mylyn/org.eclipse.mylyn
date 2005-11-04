@@ -48,33 +48,26 @@ public class BugzillaProductParserTest extends TestCase {
 
 		Iterator<String> itr = productList.iterator();
 
-		while (itr.hasNext()) {
+//		while (itr.hasNext()) {
 			assertEquals("AJDT", "AJDT", itr.next());
+			assertEquals("ALF", "ALF", itr.next());
 			assertEquals("AspectJ", "AspectJ", itr.next());
-			assertEquals("CDT", "CDT", itr.next());
-			assertEquals("CME", "CME", itr.next());
-			assertEquals("ECESIS", "ECESIS", itr.next());
-			assertEquals("EMF", "EMF", itr.next());
-			assertEquals("Equinox", "Equinox", itr.next());
-			assertEquals("GEF", "GEF", itr.next());
-			assertEquals("GMT", "GMT", itr.next());
-			assertEquals("Hyades", "Hyades", itr.next());
-			assertEquals("JDT", "JDT", itr.next());
-			assertEquals("PDE", "PDE", itr.next());
-			assertEquals("Platform", "Platform", itr.next());
-			assertEquals("Stellation", "Stellation", itr.next());
-			assertEquals("UML2", "UML2", itr.next());
-			assertEquals("VE", "VE", itr.next());
-			assertEquals("WSVT", "WSVT", itr.next());
-			assertEquals("XSD", "XSD", itr.next());
-		}
+			assertEquals("BIRT", "BIRT", itr.next());
+//			assertEquals("CME", "CME", itr.next());
+//			assertEquals("ECESIS", "ECESIS", itr.next());
+//			assertEquals("EMF", "EMF", itr.next());
+//			assertEquals("Equinox", "Equinox", itr.next());
+//			assertEquals("GEF", "GEF", itr.next());
+//			assertEquals("GMT", "GMT", itr.next());
+//			assertEquals("Hyades", "Hyades", itr.next());
+//			assertEquals("JDT", "JDT", itr.next());
+//			assertEquals("PDE", "PDE", itr.next());
+//			assertEquals("Platform", "Platform", itr.next());
+//			assertEquals("Stellation", "Stellation", itr.next());
+//			assertEquals("UML2", "UML2", itr.next());
+//			assertEquals("VE", "VE", itr.next());
+//			assertEquals("WSVT", "WSVT", itr.next());
+//			assertEquals("XSD", "XSD", itr.next());
+//		}
 	}
-
-//	private void printList(List<String> productList) {
-//
-//		Iterator<String> itr = productList.iterator();
-//		System.out.println("Product List:");
-//		while (itr.hasNext())
-//			System.out.println(itr.next());
-//	}
 }

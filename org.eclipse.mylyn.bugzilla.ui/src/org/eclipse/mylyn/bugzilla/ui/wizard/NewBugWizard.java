@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
@@ -49,8 +52,7 @@ public class NewBugWizard extends AbstractBugWizard {
 		// try to get the list of products from the server
 		if (!model.hasParsedProducts()) {
 			try {
-				WizardProductPage.products = BugzillaRepository.getInstance()
-						.getProductList();
+				WizardProductPage.products = BugzillaRepository.getInstance().getProductList();
 				model.setConnected(true);
 				model.setParsedProductsStatus(true);
 			} catch (Exception e) {
@@ -91,7 +93,7 @@ public class NewBugWizard extends AbstractBugWizard {
 		}
 
 		try {
-			if (WizardProductPage.products.size() != 0
+			if (WizardProductPage.products != null && WizardProductPage.products.size() != 0
 					&& BugzillaPlugin.getDefault().getProductConfiguration()
 							.getProducts().length > 1) {
 				productPage = new WizardProductPage(workbenchInstance, this);
@@ -99,12 +101,11 @@ public class NewBugWizard extends AbstractBugWizard {
 			} else {
 				// There wasn't a list of products so there must only be 1
 				if (!model.hasParsedAttributes()) {
-					if (model.isConnected())
-						BugzillaRepository.getInstance().getnewBugAttributes(model,
-								true);
-					else
-						BugzillaRepository.getInstance().getProdConfigAttributes(
-								model);
+					if (model.isConnected()) {
+						BugzillaRepository.getInstance().getnewBugAttributes(model, true);
+					} else { 
+						BugzillaRepository.getInstance().getProdConfigAttributes(model);
+					}
 					model.setParsedAttributesStatus(true);
 				}
 	
@@ -112,11 +113,18 @@ public class NewBugWizard extends AbstractBugWizard {
 				attributePage = new WizardAttributesPage(workbenchInstance);
 				addPage(attributePage);
 			}
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
+			throw new CoreException(
+				new Status(IStatus.ERROR,
+						"org.eclipse.mylar.bugzilla.core",
+						IStatus.OK,
+						"Unable to get products, possibly due to Bugzilla version incompatability",
+						e)
+			);
 			// TODO add better error message here
-			MessageDialog.openError(null, "Bugzilla Error",
-					"Unable to get the products.");
-			super.getShell().close();
+//			MessageDialog.openError(null, "Bugzilla Error",
+//					"Unable to get the products.");
+//			super.getShell().close();
 		}
 	}
 

@@ -136,7 +136,7 @@ public class WizardProductPage extends AbstractWizardListPage {
 		// try to get the attributes from the bugzilla server
 		try	{
 			if (!model.hasParsedAttributes() || !prevProduct.equals(model.getProduct())) {
-				if (model.isConnected()) {
+				if (model.isConnected()) { 
 					BugzillaRepository.getInstance().getnewBugAttributes(model, false);
 				}
 	 			else {

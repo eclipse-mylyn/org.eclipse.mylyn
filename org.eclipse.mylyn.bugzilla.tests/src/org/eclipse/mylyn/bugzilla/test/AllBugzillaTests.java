@@ -13,15 +13,10 @@ package org.eclipse.mylar.bugzilla.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-//TODO add tests for 2.18 bugzilla
-
 /**
- * @author tanya
- * 
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author Mik Kersten
  */
-public class AllTests {
+public class AllBugzillaTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.test");
@@ -31,11 +26,11 @@ public class AllTests {
 		suite.addTest(new TestSuite(BugzillaNewBugParserTestGMT.class));
 		suite.addTest(new TestSuite(BugzillaNewBugParserTestPlatform.class));
 		suite.addTest(new TestSuite(BugzillaNewBugParserTestVE.class));
-		suite.addTest(new TestSuite(BugzillaParserTest.class));
 		suite.addTest(new TestSuite(BugzillaParserTestNoBug.class));
-		suite.addTest(new TestSuite(
-				BugzillaProductParser1ProductHipikatTest.class));
 		suite.addTest(new TestSuite(BugzillaProductParserTest.class));
+		
+		// TODO: enable
+//		suite.addTest(new TestSuite(BugzillaParserTest.class));
 		//$JUnit-END$
 		return suite;
 	}

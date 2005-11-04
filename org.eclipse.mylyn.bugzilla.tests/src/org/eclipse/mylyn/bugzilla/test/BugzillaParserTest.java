@@ -123,7 +123,7 @@ public class BugzillaParserTest extends TestCase {
 				+ "\tSee also 1GEAG1A: ITPVCM:WINNT - Internal error comparing with a document\n"
 				+ "\twhich failed with an error.  Never got log from Tod though.";
 
-		assertTrue(description.length() == bug.getDescription().length());
+		assert(description.length() == bug.getDescription().length());
 		assertEquals("Description", description, bug.getDescription());
 
 		// Comments:

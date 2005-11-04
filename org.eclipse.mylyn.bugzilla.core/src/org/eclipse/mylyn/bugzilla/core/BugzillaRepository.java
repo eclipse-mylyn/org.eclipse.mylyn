@@ -157,6 +157,7 @@ public class BugzillaRepository
 		}
 		catch(Exception e) {
 			// throw an exception if there is a problem reading the bug from the server
+			e.printStackTrace();
 			throw new IOException(e.getMessage());
 		}
 		finally

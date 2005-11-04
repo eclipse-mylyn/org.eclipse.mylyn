@@ -179,7 +179,6 @@ public class BugzillaSearchEngine {
 			String line;
 			while ((line = in.readLine()) != null) {
 				
-				
 				if(maxMatches != -1 && numCollected >= maxMatches){
 					maxReached  = true;
 					break;
@@ -221,8 +220,7 @@ public class BugzillaSearchEngine {
 					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
 					collector.accept(hit);
 					numCollected++;
-				}
-				else if (re.matches(line, match)) {
+				} else if (re.matches(line, match)) {
 					int id = Integer.parseInt(match.getCapturedText(1));
 					String severity = null;
 					String priority = null;
@@ -238,7 +236,7 @@ public class BugzillaSearchEngine {
 							if (monitor.isCanceled()) {
 								throw new OperationCanceledException("Search cancelled");
 							}
-							line = in.readLine().trim();
+							line = in.readLine();
 							if (line == null) break;
 							line = line.trim();
 						} while (!reValue.matches(line, match));
@@ -268,10 +266,10 @@ public class BugzillaSearchEngine {
 					line = in.readLine();
 					line = in.readLine();
 					
-					String description = line.substring(8);
+					String description = "<activate to view description>";
+					if (line != null) description = line.substring(8);
 					String query = BugzillaPlugin.getMostRecentQuery();
-					if (query == null)
-						query = "";
+					if (query == null) query = "";
 					
 					String server = BugzillaPlugin.getDefault().getServerName();
 					
@@ -300,7 +298,11 @@ public class BugzillaSearchEngine {
 
 			IStatus s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getClass().toString() + ":  ", e);
 			((MultiStatus)status).add(s);
-			s = new Status (IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getMessage(), e);
+			s = new Status (IStatus.ERROR, 
+					IBugzillaConstants.PLUGIN_ID, 
+					IStatus.OK, 
+					"search failed", 
+					e);
 			((MultiStatus)status).add(s);
 									
 			// write error to log 
