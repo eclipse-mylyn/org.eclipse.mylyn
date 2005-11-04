@@ -39,6 +39,8 @@ import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 /**
  * Singleton class that creates <code>BugReport</code> objects by fetching
  * bug's state and contents from the Bugzilla server.
+ * 
+ * @author Mik Kersten (hardening of initial prototype)
  */
 public class BugzillaRepository 
 {

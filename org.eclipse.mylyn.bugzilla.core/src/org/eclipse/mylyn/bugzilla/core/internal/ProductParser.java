@@ -22,12 +22,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaQueryPageParser;
 
-
-
 /**
- * @author Shawn Minto
- *
  * This class is used to parse the available products to log a bug for
+ * 
+ * @author Shawn Minto
+ * @author Mik Kersten (hardening of initial prototype)
  */
 public class ProductParser 
 {

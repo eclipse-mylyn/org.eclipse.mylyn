@@ -135,8 +135,16 @@ public class BugzillaTask extends Task {
     	setPriority(hit.getPriority());
 	}
 
+    /**
+     * Also sets the URL.
+     */
     @Override
 	public String getDescription(boolean isLabel) {
+    	if (bugReport != null) {
+    		String url = BugzillaRepository.getBugUrlWithoutLogin(bugReport.getId());
+    		if (url != null) super.setIssueReportURL(url);
+    	}
+    	
 		if (this.isBugDownloaded() || !super.getDescription(isLabel).startsWith("<")) {
 			return super.getDescription(isLabel);
 		} else {
@@ -146,7 +154,6 @@ public class BugzillaTask extends Task {
 				return BugzillaTask.getBugId(getHandle()) + ":";
 			}
 		}
-		
 //        return BugzillaTasksTools.getBugzillaDescription(this);
     }
 

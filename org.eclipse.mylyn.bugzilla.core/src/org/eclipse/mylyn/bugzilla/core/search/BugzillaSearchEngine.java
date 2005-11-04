@@ -38,6 +38,8 @@ import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 
 /**
  * Queries the Bugzilla server for the list of bugs matching search criteria.
+ * 
+ * @author Mik Kersten (hardening of initial prototype)
  */
 public class BugzillaSearchEngine {
 
