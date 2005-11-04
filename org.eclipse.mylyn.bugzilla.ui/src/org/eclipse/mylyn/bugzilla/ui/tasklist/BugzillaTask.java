@@ -31,7 +31,6 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -120,6 +119,7 @@ public class BugzillaTask extends Task {
 		super(id, label, newTask);
 		isDirty = false;
 		scheduleDownloadReport();
+		setUrl(); 
 	}    
     
 	public BugzillaTask(String id, String label, boolean noDownload, boolean newTask) {
@@ -128,23 +128,23 @@ public class BugzillaTask extends Task {
         if (!noDownload) {
             scheduleDownloadReport();
         } 
+        setUrl();
     }
 	
     public BugzillaTask(BugzillaHit hit, boolean newTask) {
     	this(hit.getHandle(), hit.getDescription(false), newTask);
     	setPriority(hit.getPriority());
+    	setUrl();
 	}
 
-    /**
-     * Also sets the URL.
-     */
+    private void setUrl() {
+    	int id = BugzillaTask.getBugId(getHandle());
+		String url = BugzillaRepository.getBugUrlWithoutLogin(id);
+		if (url != null) super.setIssueReportURL(url);
+    }
+    
     @Override
 	public String getDescription(boolean isLabel) {
-    	if (bugReport != null) {
-    		String url = BugzillaRepository.getBugUrlWithoutLogin(bugReport.getId());
-    		if (url != null) super.setIssueReportURL(url);
-    	}
-    	
 		if (this.isBugDownloaded() || !super.getDescription(isLabel).startsWith("<")) {
 			return super.getDescription(isLabel);
 		} else {
@@ -320,11 +320,9 @@ public class BugzillaTask extends Task {
 	
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					
-					MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
-					if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
-						
-						try{
+					try{
+						MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
+						if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
 							// if we can reach the server, get the latest for the bug
 							if(!isBugDownloaded() && offline){
 								MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla task since you are currently offline");
@@ -335,45 +333,38 @@ public class BugzillaTask extends Task {
 							} else if(syncState == BugReportSyncState.OUTGOING || syncState == BugReportSyncState.CONFLICT){
 								input.setOfflineBug(bugReport);
 							}
-							
-							// get the active workbench page
-							IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-							
-							// if we couldn't get the page, get out of here
-							if (page == null)
-								return;
-							
-							// try to open an editor on the input bug
-							//page.openEditor(input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
-							page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor");
-							
 						} 
-						catch (Exception ex) {
-							MylarPlugin.log(ex, "couldn't open bugzilla task");
-							return;
+						// get the active workbench page
+						IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+						if (page == null) return;
+						page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor");
+						
+	//					else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+	//						String title = "Bug #" + BugzillaTask.getBugId(getHandle());
+	//						BugzillaUITools.openUrl(title, title, getBugUrl());	    			
+	//					}
+						if(syncState == BugReportSyncState.INCOMMING){
+							syncState = BugReportSyncState.OK;
+							Display.getDefault().asyncExec(new Runnable(){
+								public void run() {
+									if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
+										TaskListView.getDefault().getViewer().refresh();
+									}	
+								}
+							});
+						} else if(syncState == BugReportSyncState.CONFLICT){
+							syncState = BugReportSyncState.OUTGOING;
+							Display.getDefault().asyncExec(new Runnable(){
+								public void run() {
+									if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
+										TaskListView.getDefault().getViewer().refresh();
+									}	
+								}
+							});
 						}
-					} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
-						String title = "Bug #" + BugzillaTask.getBugId(getHandle());
-						BugzillaUITools.openUrl(title, title, getBugUrl());	    			
-					}
-					if(syncState == BugReportSyncState.INCOMMING){
-						syncState = BugReportSyncState.OK;
-						Display.getDefault().asyncExec(new Runnable(){
-							public void run() {
-								if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
-									TaskListView.getDefault().getViewer().refresh();
-								}	
-							}
-						});
-					} else if(syncState == BugReportSyncState.CONFLICT){
-						syncState = BugReportSyncState.OUTGOING;
-						Display.getDefault().asyncExec(new Runnable(){
-							public void run() {
-								if(TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null && !TaskListView.getDefault().getViewer().getControl().isDisposed()){
-									TaskListView.getDefault().getViewer().refresh();
-								}	
-							}
-						});
+					} catch (Exception ex) {
+						MylarPlugin.log(ex, "couldn't open bugzilla task");
+						return;
 					}
 				}
 			});
@@ -403,7 +394,8 @@ public class BugzillaTask extends Task {
 				notifyTaskDataChange();
 				// Update time this bugtask was last downloaded.
 				lastRefresh = new Date();
-				bugReport = downloadReport();			
+				bugReport = downloadReport();	
+				
 				state = BugTaskState.FREE;			
 				updateTaskDetails();
 				notifyTaskDataChange();

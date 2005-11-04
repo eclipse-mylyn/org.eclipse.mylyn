@@ -50,10 +50,10 @@ public class ToolTipHandler {
 
    protected Point tipPosition; // the position being hovered over on the
    	protected Point widgetPosition; // the position hovered over in the Widget;
-   	private Shell parentShell;
+//   	private Shell parentShell;
    	
 	public ToolTipHandler(Shell parent) {
-		this.parentShell = parent;
+//		this.parentShell = parent;
 		final Display display = parent.getDisplay();
 		tipShell = new Shell(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
@@ -201,7 +201,7 @@ public class ToolTipHandler {
 				tipShell.pack();
 				setHoverLocation(tipShell, tipPosition);
 				tipShell.setVisible(true);
-				parentShell.setFocus(); 
+//				parentShell.setFocus(); 
 			}
 		});
 //		/*

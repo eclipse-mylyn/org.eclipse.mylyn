@@ -114,7 +114,6 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-
 	/**
 	 * Get the favorites file contatining the favorites
 	 * 
@@ -138,7 +137,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store)
 	{
-		BugzillaPreferences.initDefaults(store);
+		BugzillaPreferencePage.initDefaults(store);
 	}
 	
 	/**
@@ -146,10 +145,18 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	 * 
 	 * @return A string containing the prefered name of the bugzilla server
 	 */
-	public String getServerName() 
-	{
+	public String getServerName() {
 		return plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);		
 	}
+	
+    public boolean isServerCompatability218(){
+        return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_218))
+        	|| IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_220));
+    }
+	
+    public boolean isServerCompatability220(){
+    	return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_220));
+    }
 	
 	/**
 	 * Get the most recent query key for the preferences

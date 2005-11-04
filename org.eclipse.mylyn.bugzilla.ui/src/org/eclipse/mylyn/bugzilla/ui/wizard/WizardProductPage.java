@@ -22,7 +22,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
@@ -86,10 +86,10 @@ public class WizardProductPage extends AbstractWizardListPage {
 				monitor.beginTask("Updating search options...", 55);
 
 				try {
-					BugzillaPreferences.updateQueryOptions(monitor);
+					BugzillaPreferencePage.updateQueryOptions(monitor);
 					
 					products = new ArrayList<String>();
-					for(String product : BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRODUCT_VALUES))){
+					for(String product : BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRODUCT_VALUES))){
 						products.add(product);
 					}
 					monitor.worked(1);

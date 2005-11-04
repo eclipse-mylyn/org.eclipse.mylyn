@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlTag;
@@ -90,22 +90,22 @@ public class BugzillaQueryPageParser
 
 		// if we are dealing with 2.18 we need to use the folowing in the 
 		// query string to get the right search page
-        if(BugzillaPreferences.is218()){
+        if(BugzillaPlugin.getDefault().isServerCompatability218()){
             urlString += "?format=advanced";
         }
         
 		// use the user name and password if we have it
-		if(BugzillaPreferences.getUserName() != null && !BugzillaPreferences.getUserName().equals("") && BugzillaPreferences.getPassword() != null && !BugzillaPreferences.getPassword().equals(""))
+		if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
 		{
 			try {
 				// if we are dealing with 2.18 we already have the ? from before so we need
 				// an & instead.  If other version, still add ?
-                if(BugzillaPreferences.is218())
+                if(BugzillaPlugin.getDefault().isServerCompatability218())
                     urlString+="&";
                 else
                     urlString+="?";
                 
-				urlString += "GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
+				urlString += "GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
 			} 
 			catch (UnsupportedEncodingException e) {
 				/*

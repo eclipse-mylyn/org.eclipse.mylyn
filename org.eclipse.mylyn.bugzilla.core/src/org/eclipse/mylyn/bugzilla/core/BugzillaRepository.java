@@ -121,7 +121,7 @@ public class BugzillaRepository
 	
 			// allow the use to only see the operations that they can do to a bug if they have
 			// their user name and password in the preferences
-			if(BugzillaPreferences.getUserName() != null && !BugzillaPreferences.getUserName().equals("") && BugzillaPreferences.getPassword() != null && !BugzillaPreferences.getPassword().equals(""))
+			if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
 			{
 				/*
 				 * The UnsupportedEncodingException exception for
@@ -129,7 +129,7 @@ public class BugzillaRepository
 				 * implementation of the Java platform is required to support
 				 * the standard charset "UTF-8"
 				 */
-				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
+				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
 			}
 			
 			URL bugUrl = new URL(url);
@@ -140,7 +140,7 @@ public class BugzillaRepository
 					in = new BufferedReader(new InputStreamReader(input));
 		
 					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, BugzillaPlugin.getDefault().getServerName(), BugzillaPreferences.is218(), BugzillaPreferences.getUserName(), BugzillaPreferences.getPassword());
+					BugReport bug = BugParser.parseBug(in, id, BugzillaPlugin.getDefault().getServerName(), BugzillaPlugin.getDefault().isServerCompatability218(), BugzillaPreferencePage.getUserName(), BugzillaPreferencePage.getPassword());
 					return bug; 
 				}
 			}
@@ -212,7 +212,7 @@ public class BugzillaRepository
 			String urlText = "";
 
 			// use the usename and password to get into bugzilla if we have it
-			if(BugzillaPreferences.getUserName() != null && !BugzillaPreferences.getUserName().equals("") && BugzillaPreferences.getPassword() != null && !BugzillaPreferences.getPassword().equals(""))
+			if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
 			{
 				/*
 				 * The UnsupportedEncodingException exception for
@@ -220,7 +220,7 @@ public class BugzillaRepository
 				 * implementation of the Java platform is required to support
 				 * the standard charset "UTF-8"
 				 */
-				urlText += "?GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
+				urlText += "?GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
 			}
 
 			URL url = new URL(bugzillaUrl + "/enter_bug.cgi"+urlText);
@@ -278,7 +278,7 @@ public class BugzillaRepository
 			 * implementation of the Java platform is required to support
 			 * the standard charset "UTF-8"
 			 */
-			url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
+			url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
 			
 			URL bugUrl = new URL(url);
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
@@ -398,15 +398,15 @@ public class BugzillaRepository
 	public static String getBugUrl(int id) {		
 		String url = BugzillaPlugin.getDefault().getServerName() + "/show_bug.cgi?id=" + id;
 		try {
-			if (BugzillaPreferences.getUserName() != null
-					&& !BugzillaPreferences.getUserName().equals("")
-					&& BugzillaPreferences.getPassword() != null
-					&& !BugzillaPreferences.getPassword().equals("")) {
+			if (BugzillaPreferencePage.getUserName() != null
+					&& !BugzillaPreferencePage.getUserName().equals("")
+					&& BugzillaPreferencePage.getPassword() != null
+					&& !BugzillaPreferencePage.getPassword().equals("")) {
 
 				url += "&GoAheadAndLogIn=1&Bugzilla_login="
-						+ URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8")
+						+ URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8")
 						+ "&Bugzilla_password="
-						+ URLEncoder.encode(BugzillaPreferences.getPassword(),"UTF-8");
+						+ URLEncoder.encode(BugzillaPreferencePage.getPassword(),"UTF-8");
 			}
 		} catch (UnsupportedEncodingException e) {		
 			return "";

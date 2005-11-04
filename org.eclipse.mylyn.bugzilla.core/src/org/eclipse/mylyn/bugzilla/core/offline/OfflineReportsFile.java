@@ -24,6 +24,8 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugReport;
@@ -83,7 +85,7 @@ public class OfflineReportsFile
 	 * Add an offline report to the offline reports list
 	 * @param entry The bug to add
 	 */
-	public boolean add(IBugzillaBug entry, boolean saveChosen) {
+	public boolean add(IBugzillaBug entry, boolean saveChosen) throws CoreException {
 		try{
 			BugzillaOfflineStaus status = BugzillaOfflineStaus.SAVED;
 			// check for bug and do a compare
@@ -161,9 +163,14 @@ public class OfflineReportsFile
 			BugzillaPlugin.getDefault().fireOfflineStatusChanged(entry, status);
 			return true;
 		} catch (Exception e) {
-			MessageDialog.openError(null, "failed to add of offline reort", e.getMessage());
+			IStatus status = new Status(
+				IStatus.ERROR,
+				IBugzillaConstants.PLUGIN_ID,
+				IStatus.OK,
+				"failed to add of offline reort", 
+				e);
+			throw new CoreException(status);
 		}
-		return false;
 	}
 	
 	/**
@@ -379,7 +386,7 @@ public class OfflineReportsFile
 	 * @param bug
 	 *            The bug to add/update.
 	 */
-	public static void saveOffline(IBugzillaBug bug, boolean saveChosen) {
+	public static void saveOffline(IBugzillaBug bug, boolean saveChosen) throws CoreException {
 		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
 		// If there is already an offline report for this bug, update the file.
 		if (bug.isSavedOffline()) {

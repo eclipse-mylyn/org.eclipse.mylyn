@@ -52,8 +52,16 @@ public interface IBugzillaConstants
 	//	Bugzilla Preferences keys
 	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
 	static final String MOST_RECENT_QUERY = "MOST_RECENT_QUERY";
-	static final String IS_218 = "BUGZILLA_IS_218";
-	static final String IS_220 = "BUGZILLA_IS_220";
+	
+	static final String SERVER_VERSION = "org.eclipse.mylar.bugzilla.server.version";
+	static final String SERVER_220 = "2.20";
+	static final String SERVER_218 = "2.18";
+	static final String SERVER_216 = "2.16";
+	
+//	static final String IS_216 = "BUGZILLA_IS_216";
+//	static final String IS_218 = "BUGZILLA_IS_218";
+//	static final String IS_220 = "BUGZILLA_IS_220";
+	
 	static final String REFRESH_QUERY = "REFRESH_QUERY";
 	static final String MAX_RESULTS = "MAX_BUGZILLA_RESULTS";
     

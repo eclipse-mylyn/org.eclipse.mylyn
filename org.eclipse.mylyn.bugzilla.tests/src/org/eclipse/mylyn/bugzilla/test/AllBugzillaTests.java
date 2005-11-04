@@ -21,13 +21,14 @@ public class AllBugzillaTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.test");
 		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(BugzillaNewBugParserTestCDT.class));
-		suite.addTest(new TestSuite(BugzillaNewBugParserTestEquinox.class));
-		suite.addTest(new TestSuite(BugzillaNewBugParserTestGMT.class));
-		suite.addTest(new TestSuite(BugzillaNewBugParserTestPlatform.class));
-		suite.addTest(new TestSuite(BugzillaNewBugParserTestVE.class));
-		suite.addTest(new TestSuite(BugzillaParserTestNoBug.class));
-		suite.addTest(new TestSuite(BugzillaProductParserTest.class));
+		suite.addTestSuite(RegularExpressionMatchTest.class);
+		suite.addTestSuite(BugzillaNewBugParserTestCDT.class);
+		suite.addTestSuite(BugzillaNewBugParserTestEquinox.class);
+		suite.addTestSuite(BugzillaNewBugParserTestGMT.class);
+		suite.addTestSuite(BugzillaNewBugParserTestPlatform.class);
+		suite.addTestSuite(BugzillaNewBugParserTestVE.class);
+		suite.addTestSuite(BugzillaParserTestNoBug.class);
+		suite.addTestSuite(BugzillaProductParserTest.class);
 		
 		// TODO: enable
 //		suite.addTest(new TestSuite(BugzillaParserTest.class));

@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugPost;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.bugzilla.core.Comment;
@@ -450,10 +450,16 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		infoArea.setLayout(infoLayout);
 		infoArea.setBackground(background);
 		if (getBug() == null) {
-			close();
-			MessageDialog.openError(infoArea.getShell(), "No such bug",
-					"No bug exists with this id");
-			return null;
+//			close();
+			MessageDialog.openError(
+					Display.getDefault().getActiveShell(), 
+					"Bugzilla Client Errror",
+					"Could not resolve the requested bug, check Bugzilla server and version.");
+
+			Composite composite = new Composite(parent, SWT.NULL);
+			Label noBugLabel = new Label(composite, SWT.NULL);
+			noBugLabel.setText("Could not resolve bug");
+			return composite;
 		}
 		createLayouts();
 
@@ -1374,8 +1380,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		}
 
 		// add the login information to the bug post
-		form.add("Bugzilla_login", BugzillaPreferences.getUserName());
-		form.add("Bugzilla_password", BugzillaPreferences.getPassword());
+		form.add("Bugzilla_login", BugzillaPreferencePage.getUserName());
+		form.add("Bugzilla_password", BugzillaPreferencePage.getPassword());
 	}
 	
 	@Override

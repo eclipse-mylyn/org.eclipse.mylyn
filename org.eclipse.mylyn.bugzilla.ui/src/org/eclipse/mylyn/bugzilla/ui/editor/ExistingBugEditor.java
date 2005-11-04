@@ -41,7 +41,7 @@ import org.eclipse.mylar.bugzilla.core.BugPost;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
@@ -973,14 +973,14 @@ public class ExistingBugEditor extends AbstractBugEditor
 		Attribute owner = bug.getAttribute("Assigned To");
 		
 		//Don't add the cc if the user is the bug owner
-		if(owner != null && owner.getValue().indexOf(BugzillaPreferences.getUserName()) > -1){
+		if(owner != null && owner.getValue().indexOf(BugzillaPreferencePage.getUserName()) > -1){
 			return;
 		}
 		
 		//Add the user to the cc list
 		if(newCCattr != null) {
 			if (newCCattr.getNewValue().equals("")){
-				newCCattr.setNewValue(BugzillaPreferences.getUserName());
+				newCCattr.setNewValue(BugzillaPreferencePage.getUserName());
 			}
 		}
 	}

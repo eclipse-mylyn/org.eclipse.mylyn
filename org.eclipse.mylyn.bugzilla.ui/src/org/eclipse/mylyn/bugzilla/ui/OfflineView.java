@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -41,6 +42,7 @@ import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.actions.AbstractOfflineReportsAction;
 import org.eclipse.mylar.bugzilla.ui.actions.DeleteOfflineReportAction;
 import org.eclipse.mylar.bugzilla.ui.actions.ViewOfflineReportAction;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -476,7 +478,7 @@ public class OfflineView extends ViewPart {
 	 */
 	public static void saveOffline(final IBugzillaBug bug, final boolean saveChosen) {
 		Display.getDefault().asyncExec(new Runnable(){
-			public void run() {
+			public void run()  {
 			
 				OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
 				// If there is already an offline report for this bug, update the file.
@@ -492,8 +494,12 @@ public class OfflineView extends ViewPart {
 		//				MessageDialog.openInformation(null, "Bug's Id is already used.", "There is already a bug saved offline with an identical id.");
 		//				return;
 		//			}
-					file.add(bug, saveChosen);
-					bug.setOfflineState(true);
+					try {
+						file.add(bug, saveChosen);
+						bug.setOfflineState(true);
+					} catch (CoreException e) {
+						MylarPlugin.fail(e, e.getMessage(), false);
+					}
 		//			file.sort(OfflineReportsFile.lastSel);
 				}
 //				OfflineView.checkWindow();

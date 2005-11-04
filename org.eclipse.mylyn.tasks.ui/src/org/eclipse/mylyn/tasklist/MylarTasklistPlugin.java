@@ -406,6 +406,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	}
 	
 	public ReportOpenMode getReportMode() {
+//		return ReportOpenMode.EDITOR;
 		if (getPrefs().getBoolean(REPORT_OPEN_EDITOR)) {
 			return ReportOpenMode.EDITOR;
 		} else if (getPrefs().getBoolean(REPORT_OPEN_INTERNAL)) {

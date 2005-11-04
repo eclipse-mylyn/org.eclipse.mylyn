@@ -24,7 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchOperation;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchQuery;
@@ -78,18 +78,18 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	private static final String [] emailRoleValues = {"emailassigned_to1", "emailreporter1", "emailcc1", "emaillongdesc1"};
 
 	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
-	private String [] statusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES));
-	protected String [] preselectedStatusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES));
-	private String [] resolutionValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES));
-	private String [] severityValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.SEVERITY_VALUES));
-	private String [] priorityValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRIORITY_VALUES));
-	private String [] hardwareValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.HARDWARE_VALUES));
-	private String [] osValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.OS_VALUES));
+	private String [] statusValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES));
+	protected String [] preselectedStatusValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES));
+	private String [] resolutionValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES));
+	private String [] severityValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.SEVERITY_VALUES));
+	private String [] priorityValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRIORITY_VALUES));
+	private String [] hardwareValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.HARDWARE_VALUES));
+	private String [] osValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.OS_VALUES));
 	
-	private String [] productValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRODUCT_VALUES));
-	private String [] componentValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.COMPONENT_VALUES));
-	private String [] versionValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.VERSION_VALUES));
-	private String [] targetValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.TARGET_VALUES));
+	private String [] productValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRODUCT_VALUES));
+	private String [] componentValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.COMPONENT_VALUES));
+	private String [] versionValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.VERSION_VALUES));
+	private String [] targetValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.TARGET_VALUES));
 	
 	private static class BugzillaSearchData {
 		/** Pattern to match on */
@@ -624,29 +624,29 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				monitor.beginTask("Updating search options...", 55);
 
 				try {
-					BugzillaPreferences.updateQueryOptions(monitor);
+					BugzillaPreferencePage.updateQueryOptions(monitor);
 					
-					product.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRODUCT_VALUES)));
+					product.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRODUCT_VALUES)));
 					monitor.worked(1);
-					component.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.COMPONENT_VALUES)));
+					component.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.COMPONENT_VALUES)));
 					monitor.worked(1);
-					version.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.VERSION_VALUES)));
+					version.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.VERSION_VALUES)));
 					monitor.worked(1);
-					target.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.TARGET_VALUES)));
+					target.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.TARGET_VALUES)));
 					monitor.worked(1);
-					status.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES)));
+					status.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES)));
 					monitor.worked(1);
-					status.setSelection(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES)));
+					status.setSelection(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES)));
 					monitor.worked(1);
-					resolution.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES)));
+					resolution.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES)));
 					monitor.worked(1);
-					severity.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.SEVERITY_VALUES)));
+					severity.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.SEVERITY_VALUES)));
 					monitor.worked(1);
-					priority.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRIORITY_VALUES)));
+					priority.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRIORITY_VALUES)));
 					monitor.worked(1);
-					hardware.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.HARDWARE_VALUES)));
+					hardware.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.HARDWARE_VALUES)));
 					monitor.worked(1);
-					os.setItems(BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.OS_VALUES)));
+					os.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.OS_VALUES)));
 					monitor.worked(1);
 				}
 				catch (LoginException exception) {
@@ -851,10 +851,10 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		sb.append("buglist.cgi?");
 		
 		// use the username and password if we have it
-		if(BugzillaPreferences.getUserName() != null && !BugzillaPreferences.getUserName().equals("") && BugzillaPreferences.getPassword() != null && !BugzillaPreferences.getPassword().equals(""))
+		if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
 		{
 			try {
-				sb.append("GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8") + "&");
+				sb.append("GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8") + "&");
 			} catch (UnsupportedEncodingException e) {
 				/*
 				 * Do nothing. Every implementation of the Java platform is required

@@ -39,7 +39,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public class BugzillaTaskEditor extends TaskEditor {
 
-	private static final String EDITOR_TAB_ITLE = "Bugzilla Report";
+	private static final String EDITOR_TAB_ITLE = "Bug Editor";
 
 	/** The task that created this editor */
 	protected BugzillaTask bugTask;
@@ -63,7 +63,6 @@ public class BugzillaTaskEditor extends TaskEditor {
 			}
 		}
     };    
-
     
 	public BugzillaTaskEditor() {
 		super();

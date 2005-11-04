@@ -32,11 +32,14 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaQueryPageParser;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -50,7 +53,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 /**
  * The class that deals with the preferences page in eclipse
  */
-public class BugzillaPreferences
+public class BugzillaPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
@@ -70,26 +73,22 @@ public class BugzillaPreferences
 
 	private static final String bugzillaPasswordLabel = "Bugzilla Password: ";
 
+	private RadioGroupFieldEditor bugzillaVersionEditor;
 //    private static final String bugzilla220Label = "Using Bugzilla 2.20 compatiblity (overrides option below, some features disabled)";
-    private static final String bugzilla218Label = "Using Bugzilla 2.18 or later (default is 2.16)";
-        
+//    private static final String bugzilla218Label = "Using Bugzilla 2.16 (default is 2.16)";
+//    private BooleanFieldEditor bugzilla220;
+//    private BooleanFieldEditor bugzilla218;
+            
     private static final String bugzillaMaxResultsLabel = "Maximum returned results: ";
-    
-    private BooleanFieldEditor bugzilla220;
-    private BooleanFieldEditor bugzilla218;
-    
 	private StringFieldEditor bugzillaUser;
-
 	private MyStringFieldEditor bugzillaPassword;
-	
 	private IntegerFieldEditor maxResults;
-	
 	private BooleanFieldEditor refreshQueries;
-
+	
 	/**
 	 * Constructor for the preferences page
 	 */
-	public BugzillaPreferences() {
+	public BugzillaPreferencePage() {
 		super(GRID);
 
 		// set the preference store for this preference page
@@ -99,6 +98,19 @@ public class BugzillaPreferences
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);		
+//		server220.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
+
+		// HACK: there has to be an easier way
+		Control[] radios = bugzillaVersionEditor.getRadioBoxControl(getFieldEditorParent()).getChildren();
+		String currentVersion = BugzillaPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION);
+		for (int i = 0; i < radios.length; i++) {
+			Button button = (Button)radios[i];
+			if (button.getText().equals(currentVersion)) {
+				button.setSelection(true);
+			} else {
+				button.setSelection(false);
+			}
+		}
 	}
 
 	@Override
@@ -126,8 +138,18 @@ public class BugzillaPreferences
 
 		maxResults = new IntegerFieldEditor(IBugzillaConstants.MAX_RESULTS, bugzillaMaxResultsLabel, getFieldEditorParent());
 		
-//		bugzilla220 = new BooleanFieldEditor(IBugzillaConstants.IS_220, bugzilla220Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
-		bugzilla218 = new BooleanFieldEditor(IBugzillaConstants.IS_218, bugzilla218Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
+//		bugzillaVersionEditor.setPreferenceStore(BugzillaPlugin.getDefault().getPreferenceStore());
+	    bugzillaVersionEditor = new RadioGroupFieldEditor(
+	    	     			IBugzillaConstants.BUGZILLA_SERVER, "Bugzilla Version", 3,
+	    	     			new String[][] {
+	    	     				{IBugzillaConstants.SERVER_220, IBugzillaConstants.BUGZILLA_SERVER},
+	    	     				{IBugzillaConstants.SERVER_218, IBugzillaConstants.BUGZILLA_SERVER},
+	    	     				{IBugzillaConstants.SERVER_216, IBugzillaConstants.BUGZILLA_SERVER}
+	    	     			},
+	    	     			getFieldEditorParent());
+	    
+//	    bugzillaVersionEditor.setPropertyChangeListener(new IPropertyChangeListener() {)
+//		bugzilla218 = new BooleanFieldEditor(IBugzillaConstants.IS_218, bugzilla218Label, BooleanFieldEditor.DEFAULT, getFieldEditorParent());
         
 		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY, "Automatically refresh Bugzilla reports and queries on startup", 
 				BooleanFieldEditor.DEFAULT, getFieldEditorParent());
@@ -137,8 +159,8 @@ public class BugzillaPreferences
 		addField(bugzillaUser);
 		addField(bugzillaPassword);
 		addField(maxResults);
-		addField(bugzilla220);
-		addField(bugzilla218);
+		addField(bugzillaVersionEditor);
+//		addField(bugzilla218);
 		addField(refreshQueries);
 		
 
@@ -158,9 +180,12 @@ public class BugzillaPreferences
 		// most recent query
 		getCachedData();
 
-		store.setDefault(IBugzillaConstants.BUGZILLA_SERVER,IBugzillaConstants.DEFAULT_BUGZILLA_SERVER);
+		store.setDefault(IBugzillaConstants.BUGZILLA_SERVER, IBugzillaConstants.DEFAULT_BUGZILLA_SERVER);
 		store.setDefault(IBugzillaConstants.MOST_RECENT_QUERY, "");
-		store.setDefault(IBugzillaConstants.IS_218, true);
+		
+		store.setDefault(IBugzillaConstants.SERVER_VERSION, IBugzillaConstants.SERVER_220);
+//		store.setDefault(IBugzillaConstants.IS_218, true);
+		
 		store.setDefault(IBugzillaConstants.REFRESH_QUERY, false);
 		store.setDefault(IBugzillaConstants.MAX_RESULTS, 100);
         
@@ -183,8 +208,18 @@ public class BugzillaPreferences
 
 	@Override
 	public boolean performOk() {
-	    BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.IS_218, bugzilla218.getBooleanValue());
-	    BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY, refreshQueries.getBooleanValue());
+		// HACK: there has to be an easier way
+		Control[] radios = bugzillaVersionEditor.getRadioBoxControl(getFieldEditorParent()).getChildren();
+		for (int i = 0; i < radios.length; i++) {
+			Button button = (Button)radios[i];
+			if (button.getSelection()) {
+				BugzillaPlugin.getDefault().getPreferenceStore().setValue(
+						IBugzillaConstants.SERVER_VERSION, 
+						button.getText());
+			}
+		}
+
+		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY, refreshQueries.getBooleanValue());
 	    BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS, maxResults.getIntValue());
 		String oldBugzillaServer = BugzillaPlugin.getDefault().getServerName();
 		ProductConfiguration configuration = null;
@@ -530,14 +565,6 @@ public class BugzillaPreferences
 		getCachedData();
 		return user;
 	}
-    
-    /**
-     * Get whether we are dealing with Bugzilla 2.18 or not
-     * @return true if it is 218
-     */
-    public static boolean is218(){
-        return BugzillaPlugin.getDefault().getPreferenceStore().getBoolean(IBugzillaConstants.IS_218);
-    }
 
 	/**
 	 * Gets the bugzilla password from the preferences
@@ -600,7 +627,7 @@ public class BugzillaPreferences
 		try {
 			temp = new URL("http://" + IBugzillaConstants.PLUGIN_ID);
 		} catch (MalformedURLException e) {
-			BugzillaPlugin.log(new Status(IStatus.WARNING, IBugzillaConstants.PLUGIN_ID,IStatus.OK,"Bad temp server url: BugzillaPreferences", e));
+			BugzillaPlugin.log(new Status(IStatus.WARNING, IBugzillaConstants.PLUGIN_ID,IStatus.OK,"Bad temp server url: BugzillaPreferencePage", e));
 		}
 		FAKE_URL = temp;
 	}

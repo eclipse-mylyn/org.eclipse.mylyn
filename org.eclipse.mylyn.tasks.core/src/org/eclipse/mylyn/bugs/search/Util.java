@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 
 
@@ -43,11 +43,11 @@ public class Util {
     /**
      * List of all of the resolutions that we can have <br> FIXED, INVALID, WONTFIX, LATER, REMIND, DUPLICATE, WORKSFORME, MOVED, ---
      */
-    private static String[] resolutionValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES));
+    private static String[] resolutionValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES));
     /**
      * List of all of the statuses that we can have <br> UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED
      */
-    private static String[] statusValues = BugzillaPreferences.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES));
+    private static String[] statusValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES));
 
     /**
      * Get the bugzilla url used for searching for exact matches
@@ -145,15 +145,15 @@ public class Util {
         sb.append("buglist.cgi?");
     
         // use the username and password if we have it
-        if (BugzillaPreferences.getUserName() != null
-                && !BugzillaPreferences.getUserName().equals("")
-                && BugzillaPreferences.getPassword() != null
-                && !BugzillaPreferences.getPassword().equals("")) {
+        if (BugzillaPreferencePage.getUserName() != null
+                && !BugzillaPreferencePage.getUserName().equals("")
+                && BugzillaPreferencePage.getPassword() != null
+                && !BugzillaPreferencePage.getPassword().equals("")) {
             try{
                 sb.append("GoAheadAndLogIn=1&Bugzilla_login="
-                    + URLEncoder.encode(BugzillaPreferences.getUserName(), Charset.defaultCharset().toString())
+                    + URLEncoder.encode(BugzillaPreferencePage.getUserName(), Charset.defaultCharset().toString())
                     + "&Bugzilla_password="
-                    + URLEncoder.encode(BugzillaPreferences.getPassword(), Charset.defaultCharset().toString())
+                    + URLEncoder.encode(BugzillaPreferencePage.getPassword(), Charset.defaultCharset().toString())
                     + "&");
             } catch (UnsupportedEncodingException e)
             {

@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.search.ui.NewSearchUI;
 
@@ -49,7 +49,9 @@ public class BugzillaSearchEngine {
 	protected static final RegularExpression re = new RegularExpression("<a href=\"show_bug.cgi\\?id=(\\d+)\">", "i");
 	
 	/** regular expression matching values of query matches' attributes in Eclipse.org Bugzilla */
-	protected static final RegularExpression reValue = new RegularExpression("<td><nobr>([^<]*)</nobr>");
+	public static final RegularExpression reValue = new RegularExpression("<td><nobr>([^<]*)</nobr>");
+
+	public static final RegularExpression reValueBugzilla220 = new RegularExpression("<td style=\"white-space: nowrap\">([^<]*)");
 	
 	/** regular expression matching Bugzilla query results format used in v2.12 */
 	protected static final RegularExpression reOld = new RegularExpression("<a href=\"show_bug.cgi\\?id=(\\d+)\">\\d+</a>\\s*<td class=severity><nobr>([^>]+)</nobr><td class=priority><nobr>([^>]+)</nobr><td class=platform><nobr>([^>]*)</nobr><td class=owner><nobr>([^>]*)</nobr><td class=status><nobr>([^>]*)</nobr><td class=resolution><nobr>([^>]*)</nobr><td class=summary>(.*)$", "i");
@@ -62,10 +64,10 @@ public class BugzillaSearchEngine {
 		this.urlString = url;
 
 		// use the username and password if we have it to log into bugzilla
-		if(BugzillaPreferences.getUserName() != null && !BugzillaPreferences.getUserName().equals("") && BugzillaPreferences.getPassword() != null && !BugzillaPreferences.getPassword().equals(""))
+		if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
 		{
 			try {
-				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferences.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferences.getPassword(), "UTF-8");
+				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				/*
 				 * Do nothing. Every implementation of the Java platform is required
@@ -134,12 +136,9 @@ public class BugzillaSearchEngine {
 	 */
 	public IStatus search(IBugzillaSearchResultCollector collector, int startMatches, int maxMatches) throws LoginException {
 		IProgressMonitor monitor = collector.getProgressMonitor();
-
 		IStatus status = null; 
-		
 		boolean possibleBadLogin = false;
 		int numCollected = 0;
-		
 		BufferedReader in = null;
 		
 		try {
@@ -147,17 +146,14 @@ public class BugzillaSearchEngine {
 			collector.aboutToStart(startMatches);
 
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(new URL(urlString));
-			if(cntx == null || !(cntx instanceof HttpURLConnection))
+			if(cntx == null || !(cntx instanceof HttpURLConnection)) {
 				return null;
+			}
 
 			HttpURLConnection connect = (HttpURLConnection) cntx;
-			
 			connect.connect();
-
 			int responseCode = connect.getResponseCode();
-									
-			if(responseCode != HttpURLConnection.HTTP_OK)
-			{
+			if(responseCode != HttpURLConnection.HTTP_OK) {
 				String msg;
 				if(responseCode == -1 || responseCode == HttpURLConnection.HTTP_FORBIDDEN)
 					msg = BugzillaPlugin.getDefault().getServerName() + " does not seem to be a valid Bugzilla server.  Check Bugzilla preferences.";
@@ -172,7 +168,6 @@ public class BugzillaSearchEngine {
 			}
 			
 			in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException("Search cancelled");
 			}
@@ -180,8 +175,7 @@ public class BugzillaSearchEngine {
 			Match match = new Match();
 			String line;
 			while ((line = in.readLine()) != null) {
-				
-				if(maxMatches != -1 && numCollected >= maxMatches){
+				if(maxMatches != -1 && numCollected >= maxMatches) {
 					maxReached  = true;
 					break;
 				}
@@ -222,60 +216,19 @@ public class BugzillaSearchEngine {
 					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
 					collector.accept(hit);
 					numCollected++;
+					
 				} else if (re.matches(line, match)) {
-					int id = Integer.parseInt(match.getCapturedText(1));
-					String severity = null;
-					String priority = null;
-					String platform = null;
-					String owner = null;
-					String state = null;
-					String result = null;
-					for (int i = 0; i < 6; i++) {
-						if (monitor.isCanceled()) {
-							throw new OperationCanceledException("Search cancelled");
-						}
-						do {
-							if (monitor.isCanceled()) {
-								throw new OperationCanceledException("Search cancelled");
-							}
-							line = in.readLine();
-							if (line == null) break;
-							line = line.trim();
-						} while (!reValue.matches(line, match));
-						switch (i) {
-							case 0: 
-								severity = match.getCapturedText(1);
-								break;
-							case 1:
-								priority = match.getCapturedText(1);
-								break;
-							case 2:
-								platform = match.getCapturedText(1);
-								break;
-							case 3:
-								owner = match.getCapturedText(1);
-								break;
-							case 4:
-								state = match.getCapturedText(1);
-								break;
-							case 5:
-								result = match.getCapturedText(1);
-								break;
-						}
+					RegularExpression regularExpression;
+					if (BugzillaPlugin.getDefault().isServerCompatability220()) {
+						System.err.println("220");
+						regularExpression = reValueBugzilla220;
+					} else {
+						System.err.println("218");
+						regularExpression = reValue;
 					}
 					
-					// two more
-					line = in.readLine();
-					line = in.readLine();
-					
-					String description = "<activate to view description>";
-					if (line != null) description = line.substring(8);
-					String query = BugzillaPlugin.getMostRecentQuery();
-					if (query == null) query = "";
-					
-					String server = BugzillaPlugin.getDefault().getServerName();
-					
-					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
+					int id = Integer.parseInt(match.getCapturedText(1));
+					BugzillaSearchHit hit = createHit(regularExpression, monitor, in, match, id);
 					collector.accept(hit);
 					numCollected++;
 				}
@@ -290,11 +243,10 @@ public class BugzillaSearchEngine {
 			
 			// write error to log
 			BugzillaPlugin.log(status);
-		} 
-		catch (OperationCanceledException e) {
+		} catch (OperationCanceledException e) {
 		    status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID, 
 		            IStatus.CANCEL, "", null);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			status = new MultiStatus( IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getClass().toString() + " occurred while querying Bugzilla Server " + BugzillaPlugin.getDefault().getServerName() + ".\n"
 									  + "\nClick Details or see log for more information.", e);
 
@@ -330,6 +282,66 @@ public class BugzillaSearchEngine {
 			return new Status(IStatus.OK, NewSearchUI.PLUGIN_ID, IStatus.OK, "", null);
 		else
 			return status;
+	}
+
+	public static BugzillaSearchHit createHit(RegularExpression regularExpression, IProgressMonitor monitor, BufferedReader in, Match match, int id) throws IOException {
+		String line;
+		String severity = null;
+		String priority = null;
+		String platform = null;
+		String owner = null;
+		String state = null;
+		String result = null;
+		for (int i = 0; i < 6; i++) {
+			do {
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException("Search cancelled");
+				}
+				line = in.readLine();
+				if (line == null) break;
+				line = line.trim();
+			} while (!regularExpression.matches(line, match));
+				switch (i) {
+					case 0: 
+						severity = match.getCapturedText(1);
+						break;
+					case 1:
+						priority = match.getCapturedText(1);
+						break;
+					case 2:
+						platform = match.getCapturedText(1);
+						break;
+					case 3:
+						owner = match.getCapturedText(1);
+						break;
+					case 4:
+						state = match.getCapturedText(1);
+						break;
+					case 5:
+						result = match.getCapturedText(1);
+						break;
+			}
+		}
+		
+		// two more
+		line = in.readLine();
+		line = in.readLine();
+		
+		String description = "<activate to view description>";
+		if (line != null) description = line.substring(8);
+		
+		String query = "";
+		String server = "<unknown server>";
+		try {
+			String recentQuery = BugzillaPlugin.getMostRecentQuery();
+			if (recentQuery != null) query = recentQuery;
+			server = BugzillaPlugin.getDefault().getServerName();
+		} catch (Exception e) {
+			// ignore, for testing
+		}
+		
+		BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
+		return hit;
 	}
 
 	public boolean isMaxReached() {

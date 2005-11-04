@@ -40,7 +40,7 @@ import org.eclipse.ui.part.MultiPageSelectionProvider;
 public class TaskEditor extends MultiPageEditorPart {
 
 	private static final String TASK_INFO_PAGE_LABEL = "Task Info";
-	private static final String ISSUE_WEB_PAGE_LABEL = "Web Link";
+	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 	protected ITask task;
 	private TaskSummaryEditor taskSummaryEditor;
 	private Browser webBrowser;

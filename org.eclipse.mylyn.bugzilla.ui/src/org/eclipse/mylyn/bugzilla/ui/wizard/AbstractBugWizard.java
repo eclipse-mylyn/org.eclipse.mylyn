@@ -25,7 +25,7 @@ import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugPost;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferences;
+import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
@@ -95,7 +95,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		try {
 			// check Bugzilla preferences to see if user has supplied a username
-			if (BugzillaPreferences.getUserName().equals(""))
+			if (BugzillaPreferencePage.getUserName().equals(""))
 				throw new LoginException(
 						"A Bugzilla User Name has not been provided."
 								+ "  Please check your Bugzilla Preferences information.");
@@ -346,8 +346,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		form.setURL(baseURL + formName);
 
 		// add the login information to the bug post
-		form.add("Bugzilla_login", BugzillaPreferences.getUserName());
-		form.add("Bugzilla_password", BugzillaPreferences.getPassword());
+		form.add("Bugzilla_login", BugzillaPreferencePage.getUserName());
+		form.add("Bugzilla_password", BugzillaPreferencePage.getPassword());
 	}
 
 	/**
