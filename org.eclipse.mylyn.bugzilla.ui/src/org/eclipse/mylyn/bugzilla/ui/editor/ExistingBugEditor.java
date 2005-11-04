@@ -413,7 +413,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							WebBrowserDialog.openAcceptAgreement(null,
-									"Possible Bugzilla Failure",
+									"Possible Bugzilla Client Failure",
 									"Bugzilla may not have posted your bug.\n" + e.getMessage(), 
 									form.getError());
 							BugzillaPlugin.log(e);

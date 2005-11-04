@@ -158,19 +158,17 @@ public class BugPost {
 			error = "";
 			
 			while (aString != null) {
-				if (isDebug)
-					System.out.println(aString);
+//				System.err.println(">>>> " + aString);
 				error += aString==null?"":aString + "\n";
 					
-				// check if we have run into an error
-				if(result == null && (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf("error") != -1))
-				{
-					throw new LoginException("Bugzilla login information incorrect");
+//				// check if we have run into an error
+				if(result == null && (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf("error") != -1)) {
+//					 error handling is now passed up
+//					throw new LoginException("Bugzilla login problem");
 				} else if( aString.toLowerCase().matches(".*bug\\s+processed.*")){
 					possibleFailure = false;
-				}
-				
-				// get the bug number if it is required
+				}	
+//				// get the bug number if it is required
 				if (prefix != null && postfix1 != null && postfix2 != null && result == null) {
 					int startIndex = aString.toLowerCase().indexOf(prefix.toLowerCase());
 					if (startIndex > -1) {
@@ -181,10 +179,6 @@ public class BugPost {
 						if (stopIndex > -1) {
 							result = (aString.substring(startIndex, stopIndex)).trim();
 							possibleFailure = false;
-							// need this to get the whole error message
-//							if (!isDebug) {
-//								break;
-//							}
 						}
 					}
 				}

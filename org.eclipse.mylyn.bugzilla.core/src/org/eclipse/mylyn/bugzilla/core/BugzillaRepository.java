@@ -223,7 +223,7 @@ public class BugzillaRepository
 				urlText += "?GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
 			}
 
-			URL url = new URL(bugzillaUrl + "/enter_bug.cgi"+urlText);
+			URL url = new URL(bugzillaUrl + "/enter_bug.cgi" + urlText);
 
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
 			if(cntx != null){

@@ -229,6 +229,9 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 							// add the summary to the bug post
 							form.add("short_desc", model.getSummary());
+							
+							// dummy target milestone
+							form.add("target_milestone", "---");
 
 							// format the description of the bug so that it is roughly in 80
 							// character lines
@@ -259,7 +262,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 								WebBrowserDialog
 								.openAcceptAgreement(
 										null,
-										"Possible Bugzilla Failure",
+										"Possible Bugzilla Client Failure",
 										"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
 								BugzillaPlugin.log(e);
 							} catch (LoginException e) {

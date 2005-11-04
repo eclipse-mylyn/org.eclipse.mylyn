@@ -245,13 +245,13 @@ public class NewBugEditor extends AbstractBugEditor {
 							WebBrowserDialog
 							.openAcceptAgreement(
 									null,
-									"Possible Bugzilla Failure",
+									"Possible Bugzilla Client Failure",
 									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
 							BugzillaPlugin.log(e);
 						}catch (LoginException e) {
+							e.printStackTrace();
 							// if we had an error with logging in, display an error
-							MessageDialog
-									.openError(
+							MessageDialog.openError(
 											null,
 											"Posting Error",
 											"Bugzilla could not post your bug since your login name or password is incorrect."

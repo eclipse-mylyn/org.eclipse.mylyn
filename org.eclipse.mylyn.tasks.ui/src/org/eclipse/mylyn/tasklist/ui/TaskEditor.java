@@ -130,8 +130,10 @@ public class TaskEditor extends MultiPageEditorPart {
 			int index = addPage(webBrowser);
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
 			webBrowser.setUrl(task.getIssueReportURL());
-//			if (task.isDirectlyModifiable()) 
-			setActivePage(index);
+			
+			boolean openWithBrowser = MylarTasklistPlugin.getPrefs().getBoolean(
+					MylarTasklistPlugin.REPORT_OPEN_INTERNAL);
+			if (task.isDirectlyModifiable() || openWithBrowser) setActivePage(index);
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not open issue report web page", false);
 		}
