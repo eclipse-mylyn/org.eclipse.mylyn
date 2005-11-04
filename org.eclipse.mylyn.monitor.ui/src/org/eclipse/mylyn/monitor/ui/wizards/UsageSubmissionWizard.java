@@ -12,9 +12,6 @@ package org.eclipse.mylar.monitor.ui.wizards;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,8 +21,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
@@ -48,6 +43,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
+import org.eclipse.mylar.core.util.ZipFileUtil;
 import org.eclipse.mylar.monitor.IQuestionnairePage;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -700,7 +696,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         File zipFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + "/mylarUpload.zip");
         
         try{
-       	 createZipFile(zipFile, files);
+       	 ZipFileUtil.createZipFile(zipFile, files);
         }catch(Exception e){
        	 MylarPlugin.log(e, "error uploading");
        	 return null;
@@ -708,46 +704,5 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 
         return zipFile;
    }
-	
-	public static void createZipFile(File zipFile, List<File> files) throws FileNotFoundException, IOException{
-        if(zipFile.exists()){
-        	zipFile.delete();
-        }
-        
-        ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-        
-        for(File file: files){
-        	try{
-        		addZipEntry(zipOut, file);
-        	}catch (Exception e){
-        		MylarPlugin.log(e, "StatisticsUploadWizard");
-        	}
-        }
-    
-        // Complete the ZIP file
-        zipOut.close();
-	}
-	
-	private static void addZipEntry(ZipOutputStream zipOut, File file) throws FileNotFoundException, IOException {
-
-        // Create a buffer for reading the files
-        byte[] buf = new byte[1024];
-        
-        // Compress the files
-        FileInputStream in = new FileInputStream(file);
-
-        // Add ZIP entry to output stream.
-        zipOut.putNextEntry(new ZipEntry(file.getName()));
-
-        // Transfer bytes from the file to the ZIP file
-        int len;
-        while ((len = in.read(buf)) > 0) {
-        	zipOut.write(buf, 0, len);
-        }
-
-        // Complete the entry
-        zipOut.closeEntry();
-        in.close();
-	}
 
 }

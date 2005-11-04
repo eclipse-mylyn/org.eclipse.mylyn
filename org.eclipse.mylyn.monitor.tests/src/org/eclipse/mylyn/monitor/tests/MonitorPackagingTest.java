@@ -23,8 +23,8 @@ import java.util.zip.ZipFile;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
+import org.eclipse.mylar.core.util.ZipFileUtil;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.monitor.ui.wizards.UsageSubmissionWizard;
 
 
 public class MonitorPackagingTest extends AbstractContextTest {
@@ -42,7 +42,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
         
         File zipFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + "/mylarUpload.zip");
         
-        UsageSubmissionWizard.createZipFile(zipFile, files);
+        ZipFileUtil.createZipFile(zipFile, files);
 
 //        MylarMonitorPlugin.getDefault().startLog();
         MylarMonitorPlugin.getDefault().getInteractionLogger().start();
