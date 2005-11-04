@@ -12,10 +12,14 @@ package org.eclipse.mylar.bugzilla.test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
@@ -24,9 +28,10 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
 
-
 /**
  * Tests for parsing Product Page for new Bugzilla reports
+ * 
+ * @author Mik Kersten
  */
 public class BugzillaProductParserTest extends TestCase {
 
@@ -38,15 +43,50 @@ public class BugzillaProductParserTest extends TestCase {
 		super(arg0);
 	}
 
+	public void test220Products() throws LoginException, IOException, ParseException {
+		BugzillaPlugin.getDefault().getPluginPreferences().setValue(
+				IBugzillaConstants.SERVER_VERSION, 
+				IBugzillaConstants.SERVER_220);
+
+		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/test-products-220.html"));
+		Reader in = new FileReader(file);
+		List<String> productList = new ArrayList<String>();
+		productList = new ProductParser(in).getProducts();
+		
+		Iterator<String> itr = productList.iterator();
+		assertTrue(itr.hasNext());
+		assertEquals("AJDT", "AJDT", itr.next());
+		assertEquals("ALF", "ALF", itr.next());
+		assertEquals("AspectJ", "AspectJ", itr.next());
+		assertEquals("BIRT", "BIRT", itr.next());
+	}
+	
+	public void test218Products() throws LoginException, IOException, ParseException {
+		BugzillaPlugin.getDefault().getPluginPreferences().setValue(
+				IBugzillaConstants.SERVER_VERSION, 
+				IBugzillaConstants.SERVER_218);
+
+		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/test-products-218.html"));
+		Reader in = new FileReader(file);
+		List<String> productList = new ArrayList<String>();
+		productList = new ProductParser(in).getProducts();
+		
+		Iterator<String> itr = productList.iterator();
+		assertTrue(itr.hasNext());
+		assertEquals("AJDT", "AJDT", itr.next());
+		assertEquals("ALF", "ALF", itr.next());
+		assertEquals("AspectJ", "AspectJ", itr.next());
+		assertEquals("BIRT", "BIRT", itr.next());
+	}
+	
 	public void testFullReportBugNoBug() throws Exception {
 
 		BugzillaPlugin.getDefault().getPluginPreferences().setValue(
 				IBugzillaConstants.SERVER_VERSION, 
 				IBugzillaConstants.SERVER_218);
 		 
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/product-page.html"));
-		
-		Reader in = new FileReader(f);
+		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/product-page.html"));
+		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
 		productList = new ProductParser(in).getProducts();
 

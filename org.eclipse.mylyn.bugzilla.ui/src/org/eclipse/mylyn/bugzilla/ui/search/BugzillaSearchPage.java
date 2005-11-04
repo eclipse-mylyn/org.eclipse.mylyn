@@ -605,12 +605,12 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		//	Info text		
 		label = new Label(group, SWT.LEFT);
-		label.setText("Update search options from server (may take several seconds):");
+		label.setText("Update search options from server:");
 		gd = new GridData(GridData.BEGINNING);
 		label.setLayoutData(gd);
 		
 		updateButton = new Button(group, SWT.LEFT | SWT.PUSH);
-		updateButton.setText("Update");
+		updateButton.setText("Update Options");
 			
 		updateButton.setLayoutData(new GridData());
 		

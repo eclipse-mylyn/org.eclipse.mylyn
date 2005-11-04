@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Find a Specific Bug</title>
+
+
+<link rel="Top" href="https://bugs.eclipse.org/bugs/">
+
+  
+
+
+  
+
+
+  
+    <link rel="Saved&nbsp;Searches" title="My Bugs"
+          href="buglist.cgi?bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&email1=beatmik%40acm.org&emailtype1=exact&emailassigned_to1=1&emailreporter1=1">
+
+    <link rel="Saved&nbsp;Searches" 
+          title="All Open Mylar Bugs"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=All%20Open%20Mylar%20Bugs">
+    <link rel="Saved&nbsp;Searches" 
+          title="Open P1, P2"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Open%20P1%2C%20P2">
+
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.1"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.1">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.10"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.10">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.11"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.11">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.12"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.12">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.2"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.2">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.3"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.3">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.4"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.4">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.5"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.5">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.6"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.6">
+
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.7"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.7">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.8"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.8">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.3.9"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.9">
+    <link rel="Saved&nbsp;Searches" 
+          title="Resolved for 0.4"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.4">
+
+    
+
+    <script type="text/javascript">
+  <!--
+  
+  function initHelp() {}
+  // -->
+  </script>
+
+    <link href="skins/standard/global.css" rel="stylesheet" type="text/css">
+    <link href="skins/custom/global.css" rel="stylesheet" type="text/css">
+
+      <style type="text/css">td.selected_tab {
+                 border-width: 2px 2px 0px;
+                 border-style: solid; 
+               }
+               td.unselected_tab, td.spacer {
+                 border-width: 0px 0px 2px 0px;
+                 border-style: solid; 
+               }
+      </style>
+
+
+    
+
+  </head>
+
+
+
+  <body onload=""
+        class="bugs-eclipse-org-bugs">
+
+
+<!-- 1.0@bugzilla.org -->
+
+
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000" >
+<table BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="100%" ><tr><td
+WIDTH="100%"><table BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="100%"
+BGCOLOR="#006699" ><tr><td BGCOLOR="#000000" width="116" ><img
+src="images/EclipseBannerPic.jpg" width="115" height="50"></td><td
+WIDTH="637"><a href=http://www.eclipse.org><img SRC="images/gradient.jpg" BORDER=0 height=50
+width=282></a></td><td WIDTH="250"><img src="images/eproject-simple.gif"
+width="250" height="48"></td></tr></table></td></tr></table>
+
+<div id="header">
+
+
+</div>
+<center>
+  <table cellspacing="0" cellpadding="10" border="0" width="100%">
+    <tr>
+      <td class="spacer">&nbsp;</td>
+
+ 
+          <td align="center" bgcolor="lightblue" class="selected_tab">Find a Specific Bug 
+          </td>
+          <td align="center" bgcolor="#BBBBEE" class="unselected_tab">
+            <a href="query.cgi?format=advanced" >Advanced Search
+            </a>
+          </td>
+ 
+       <td class="spacer">&nbsp;</td>
+     </tr>
+   </table>
+</center>
+
+<p>
+Find a specific bug by entering words that describe it.  Bugzilla will search bug descriptions and comments
+for those words and return a list of matching bugs sorted
+by relevance.
+</p>
+
+<p>
+For example, if the bug you are looking for is a browser crash when you go to a secure web site with an embedded Flash animation, you might search
+for "crash secure SSL flash".
+</p>
+
+<form name="queryform" method="get" action="buglist.cgi">
+<input type="hidden" name="query_format" value="specific">
+<input type="hidden" name="order" value="relevance desc">
+
+<table>
+  <tr>
+    <td align="right" valign="baseline">
+
+      <b><label for="bug_status">Status:</label></b>
+    </td>
+    <td>
+      <select name="bug_status" id="bug_status">
+            <option value="__open__" >Open
+          </option>
+            <option value="__closed__" >Closed
+          </option>
+            <option value="__all__" >All
+          </option>
+
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td align="right" valign="baseline">
+      <b><label for="product">Product:</label></b>
+    </td>
+    <td>
+
+      <select name="product" id="product">
+        <option value="">All</option>
+            <option value="AJDT">AJDT
+            </option>
+            <option value="ALF">ALF
+            </option>
+            <option value="AspectJ">AspectJ
+            </option>
+            <option value="BIRT">BIRT
+            </option>
+
+            <option value="Buckminster">Buckminster
+            </option>
+            <option value="CDT">CDT
+            </option>
+            <option value="CME">CME
+            </option>
+            <option value="Community">Community
+            </option>
+            <option value="Dali">Dali
+            </option>
+            <option value="Data Tools">Data Tools
+            </option>
+
+            <option value="DSDP">DSDP
+            </option>
+            <option value="ECESIS">ECESIS
+            </option>
+            <option value="ECF">ECF
+            </option>
+            <option value="EMF">EMF
+            </option>
+            <option value="EMFT">EMFT
+            </option>
+            <option value="Equinox">Equinox
+            </option>
+
+            <option value="ERCP">ERCP
+            </option>
+            <option value="GEF">GEF
+            </option>
+            <option value="GMF">GMF
+            </option>
+            <option value="GMT">GMT
+            </option>
+            <option value="Higgins">Higgins
+            </option>
+            <option value="Hyades">Hyades
+            </option>
+
+            <option value="Java Server Faces">Java Server Faces
+            </option>
+            <option value="JDT">JDT
+            </option>
+            <option value="JSR220-ORM">JSR220-ORM
+            </option>
+            <option value="Laszlo">Laszlo
+            </option>
+            <option value="Lepido">Lepido
+            </option>
+            <option value="MDDi">MDDi
+            </option>
+
+            <option value="Mylar">Mylar
+            </option>
+            <option value="PDE">PDE
+            </option>
+            <option value="Phoenix">Phoenix
+            </option>
+            <option value="Photran">Photran
+            </option>
+            <option value="Platform">Platform
+            </option>
+            <option value="Pollinate">Pollinate
+            </option>
+
+            <option value="PTP">PTP
+            </option>
+            <option value="Target Management">Target Management
+            </option>
+            <option value="TPTP">TPTP
+            </option>
+            <option value="UML2">UML2
+            </option>
+            <option value="VE">VE
+            </option>
+            <option value="VTP">VTP
+            </option>
+
+            <option value="Web Tools">Web Tools
+            </option>
+            <option value="WSVT">WSVT
+            </option>
+            <option value="XSD">XSD
+            </option>
+            <option value="z_Archived">z_Archived
+            </option>
+      </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="right" valign="baseline">
+      <b><label for="content">Words:</label></b>
+    </td>
+    <td>
+      <input name="content" size="40" id="content"
+             value="">
+      <script type="text/javascript"> <!--
+          document.forms['queryform'].content.focus(); 
+      // -->
+      </script>
+    </td>
+
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <input type="submit" value="Search">
+    </td>
+  </tr>
+</table>
+</form>
+<div id="footer">
+
+  <div class="intro"></div>
+
+
+
+
+<form method="get" action="show_bug.cgi">
+<div id="useful-links">
+  <div id="links-actions">
+    <div class="label">Actions:</div>
+    <div class="links">
+        <a href="./">Home</a> | 
+        <a href="enter_bug.cgi">New</a> | 
+        <a href="query.cgi">Search</a> |
+        bug # <input class="txt" name="id" size="6">
+
+        <input class="btn" type="submit" value="Find"> | 
+        
+        <a href="report.cgi">Reports</a> 
+        
+          | <a href="request.cgi?requester=beatmik%40acm.org&amp;requestee=beatmik%40acm.org&amp;do_union=1&amp;group=type">My Requests</a>
+        
+          | <a href="votes.cgi?action=show_user">My&nbsp;Votes</a>      
+         
+              | <a href="relogin.cgi">Log&nbsp;out</a>&nbsp;beatmik&#64;acm.org
+    </div>
+
+  </div>
+       
+  <div id="links-edit">
+    <div class="label">Edit:</div>
+    <div class="links">
+
+        <a href="userprefs.cgi">Prefs</a> 
+    </div>
+  </div>
+    
+
+    
+    
+  <div id="links-saved">
+
+    <div class="label">
+          Saved&nbsp;Searches:
+    </div>
+    <div class="links">
+          <a href="buglist.cgi?bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&email1=beatmik%40acm.org&emailtype1=exact&emailassigned_to1=1&emailreporter1=1">My&nbsp;Bugs</a>
+ | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=All%20Open%20Mylar%20Bugs">All&nbsp;Open&nbsp;Mylar&nbsp;Bugs</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Open%20P1%2C%20P2">Open&nbsp;P1,&nbsp;P2</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.1">Resolved&nbsp;for&nbsp;0.3.1</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.10">Resolved&nbsp;for&nbsp;0.3.10</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.11">Resolved&nbsp;for&nbsp;0.3.11</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.12">Resolved&nbsp;for&nbsp;0.3.12</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.2">Resolved&nbsp;for&nbsp;0.3.2</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.3">Resolved&nbsp;for&nbsp;0.3.3</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.4">Resolved&nbsp;for&nbsp;0.3.4</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.5">Resolved&nbsp;for&nbsp;0.3.5</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.6">Resolved&nbsp;for&nbsp;0.3.6</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.7">Resolved&nbsp;for&nbsp;0.3.7</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.8">Resolved&nbsp;for&nbsp;0.3.8</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.3.9">Resolved&nbsp;for&nbsp;0.3.9</a> | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=Resolved%20for%200.4">Resolved&nbsp;for&nbsp;0.4</a>
+
+    </div>
+  </div>
+
+  
+</div>
+</form>
+
+  <div class="outro"></div>
+</div>
+
+</body>
+</html>

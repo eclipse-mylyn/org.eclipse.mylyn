@@ -144,7 +144,7 @@ public class BugzillaSearchEngine {
 		try {
 			monitor.beginTask(QUERYING_SERVER, IProgressMonitor.UNKNOWN);
 			collector.aboutToStart(startMatches);
-
+			
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(new URL(urlString));
 			if(cntx == null || !(cntx instanceof HttpURLConnection)) {
 				return null;
@@ -220,7 +220,7 @@ public class BugzillaSearchEngine {
 				} else if (re.matches(line, match)) {
 					RegularExpression regularExpression;
 					if (BugzillaPlugin.getDefault().isServerCompatability220()) {
-						regularExpression = reValueBugzilla220;
+						regularExpression = reValueBugzilla220; 
 					} else {
 						regularExpression = reValue;
 					}
