@@ -27,6 +27,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	protected final static String PAGE_TITLE = "Export Mylar Task Data";
 	public final static String PAGE_NAME = PAGE_TITLE;
+	public final static String ZIP_FILE_NAME = "MylarTaskData.zip";
 	
 	//Control fields
 	private Button taskListCheckBox = null;
@@ -68,7 +69,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 			createFileSelectionControl(container);
 			createExportDirectoryControl(container);
 			
-			zipCheckBox = createCheckBox(container, "Export to zip file");
+			zipCheckBox = createCheckBox(container, "Export to zip file: " + ZIP_FILE_NAME);
 			overwriteCheckBox = createCheckBox(container, "Overwrite existing files without warning");
 			
 			initSettings();

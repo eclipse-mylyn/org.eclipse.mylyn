@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -37,7 +39,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	 */
 	private final static String SETTINGS_SECTION = "org.eclipse.mylar.tasklist.ui.exportWizard";
 
-	public final static String ZIP_FILE_NAME = "mylartaskdata.zip";
+	public final static String ZIP_FILE_NAME = TaskDataExportWizardPage.ZIP_FILE_NAME;
 	
 	private final static String WINDOW_TITLE = "Export";
 
@@ -89,6 +91,13 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		
 		//Get file paths to check for existence
 		String destDir = exportPage.getDestinationDirectory();
+		File destDirFile = new File(destDir);
+		if (!destDirFile.exists() || !destDirFile.isDirectory()){
+			//This should never happen
+			MylarPlugin.fail(new Exception("File Export Exception"), "Could not export data because specified location does not exist or is not a folder", true);
+			return false;
+		}
+		
 		File destTaskListFile = new File(destDir + File.separator
 				+ MylarTasklistPlugin.DEFAULT_TASK_LIST_FILE);		
 		File destActivationHistoryFile = new File(destDir
@@ -140,7 +149,12 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		
 		//Save the files
 		
+		//List of files to add to the zip archive
 		List<File> filesToZip = new ArrayList<File>();
+		
+		//Map of file paths used to avoid duplicates
+		Map<String,String> filesToZipMap = new HashMap<String, String>();
+		
 		if (exportPage.exportTaskList()) {
 			MylarTasklistPlugin.getTaskListManager().saveTaskList();
 			
@@ -192,8 +206,12 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				 
 				File destTaskFile = new File(destDir + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
 				File sourceTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
+				
 				if (zip){
-					filesToZip.add(sourceTaskFile);
+					if (!filesToZipMap.containsKey(task.getPath())){
+						filesToZip.add(sourceTaskFile);
+						filesToZipMap.put(task.getPath(), null);
+					}
 				}
 				else{
 					if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed){
