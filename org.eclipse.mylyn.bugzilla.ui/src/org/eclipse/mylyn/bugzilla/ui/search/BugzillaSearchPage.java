@@ -610,7 +610,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		label.setLayoutData(gd);
 		
 		updateButton = new Button(group, SWT.LEFT | SWT.PUSH);
-		updateButton.setText("Update Options");
+		updateButton.setText("Update Products");
 			
 		updateButton.setLayoutData(new GridData());
 		

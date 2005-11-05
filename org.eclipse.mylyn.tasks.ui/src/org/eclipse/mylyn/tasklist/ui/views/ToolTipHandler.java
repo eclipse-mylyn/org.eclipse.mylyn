@@ -52,8 +52,9 @@ public class ToolTipHandler {
    	protected Point widgetPosition; // the position hovered over in the Widget;
    	
 	public ToolTipHandler(Shell parentShell) {
-		if (parentShell == null || parentShell.getDisplay() == null) return;
-		tipShell = createTipShell(parentShell);
+		if (parentShell != null) {
+			tipShell = createTipShell(parentShell);
+		}
 	}
 
 	private Shell createTipShell(Shell parent){
@@ -199,7 +200,9 @@ public class ToolTipHandler {
 					return;
 				}
 
-				if (tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()){
+				if (tipShell.getShell() != null
+					&& tipShell.getShell().getParent() != null
+					&& tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()){
 					tipShell = createTipShell(Display.getCurrent().getActiveShell());
 				}
 				
