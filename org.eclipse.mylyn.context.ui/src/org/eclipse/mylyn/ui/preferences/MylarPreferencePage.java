@@ -31,7 +31,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.internal.ColorMap;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
@@ -255,7 +254,8 @@ public class MylarPreferencePage extends PreferencePage implements
 				contentProvider.updateHighlighter(selection);
 			}
 		} else {
-            MylarPlugin.log("Received Unknown change in Editor: " + obj.getClass().toString(), this);
+			// ignore
+//            MylarPlugin.log("Received Unknown change in Editor: ", this);
 		}
 	}
 
