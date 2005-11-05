@@ -55,6 +55,7 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -1290,18 +1291,21 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * offline. Otherwise, any changes are updated in the file.
 	 */
 	public void saveBug() {
-		updateBug();
-		
-		IBugzillaBug bug = getBug();
-		
-		if(bug.hasChanges()){
-			BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
-		} else {
-			BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
+		try {
+			updateBug();
+			IBugzillaBug bug = getBug();
+			
+			if(bug.hasChanges()){
+				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
+			} else {
+				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
+			}
+			
+			changeDirtyStatus(false);
+			OfflineView.saveOffline(getBug(), true);
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "bug save offline failed", true);
 		}
-		
-		changeDirtyStatus(false);
-		OfflineView.saveOffline(getBug(), true);
 //		OfflineView.checkWindow();
 //		OfflineView.refreshView();
 	}

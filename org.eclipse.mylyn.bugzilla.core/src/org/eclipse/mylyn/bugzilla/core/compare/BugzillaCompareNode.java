@@ -13,6 +13,8 @@ package org.eclipse.mylar.bugzilla.core.compare;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.eclipse.compare.IStreamContentAccessor;
@@ -183,7 +185,12 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	public static BugzillaCompareNode parseBugReport(BugReport bug) {
 		Image defaultImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW);
 		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);
-		topNode.addChild(new BugzillaCompareNode("Creation Date", bug.getCreated().toString(), defaultImage));
+		Date creationDate = bug.getCreated();
+		if (creationDate == null) {
+			creationDate = Calendar.getInstance().getTime(); // XXX: this could be backwards
+		}
+		BugzillaCompareNode child = new BugzillaCompareNode("Creation Date", creationDate.toString(), defaultImage);
+		topNode.addChild(child);
 		
 		String keywords = "";
 		if (bug.getKeywords() != null) {

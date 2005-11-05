@@ -52,6 +52,7 @@ public class ToolTipHandler {
    	protected Point widgetPosition; // the position hovered over in the Widget;
    	
 	public ToolTipHandler(Shell parentShell) {
+		if (parentShell == null) return;
 		tipShell = createTipShell(parentShell);
 	}
 
@@ -62,8 +63,7 @@ public class ToolTipHandler {
 		gridLayout.marginWidth = 2;
 		gridLayout.marginHeight = 2;
 		tipShell.setLayout(gridLayout);
-		tipShell.setBackground(parent.getDisplay()
-				.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		tipShell.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
 		tipLabelImage = new Label(tipShell, SWT.NONE);
 		tipLabelImage.setForeground(parent.getDisplay()
