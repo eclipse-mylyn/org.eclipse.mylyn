@@ -29,6 +29,7 @@
       </page>  
    </extension>
    
+   <!--
    	<extension
          id="org.eclipse.mylar.helpDocs"
          name="Mylar Help"
@@ -38,4 +39,5 @@
             primary="false">
       </toc>
    </extension>
+   -->
 </plugin>
