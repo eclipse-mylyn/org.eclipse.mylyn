@@ -141,7 +141,7 @@ public class BugzillaRepository
 		
 					// get the actual bug fron the server and return it
 					BugReport bug = BugParser.parseBug(in, id, BugzillaPlugin.getDefault().getServerName(), BugzillaPlugin.getDefault().isServerCompatability218(), BugzillaPreferencePage.getUserName(), BugzillaPreferencePage.getPassword());
-					return bug; 
+					return bug;
 				}
 			}
 			// TODO handle the error
@@ -159,16 +159,19 @@ public class BugzillaRepository
 		}
 		catch(Exception e) {
 			// throw an exception if there is a problem reading the bug from the server
-			e.printStackTrace();
-			throw new IOException(e.getMessage());
-		}
-		finally
-		{
-			try{
-				if(in != null)
-					in.close();
-			}catch(IOException e)
-			{
+//			e.printStackTrace();
+//			throw new IOException(e.getMessage());
+			BugzillaPlugin.log(new Status(
+					IStatus.ERROR, 
+					IBugzillaConstants.PLUGIN_ID,
+					IStatus.ERROR,
+					"Problem getting report", 
+					e));
+			return null;
+		} finally {
+			try {
+				if(in != null) in.close();
+			} catch(IOException e) {
 				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID,IStatus.ERROR,"Problem closing the stream", e));
 			}
 		}
