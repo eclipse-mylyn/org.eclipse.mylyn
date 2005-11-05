@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.tasklist.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -45,6 +48,7 @@ public class TaskEditor extends MultiPageEditorPart {
 	private TaskSummaryEditor taskSummaryEditor;
 	private Browser webBrowser;
 	private TaskEditorInput taskEditorInput;
+	private List<IEditorPart> editorsToNotifyOnChange = new ArrayList<IEditorPart>();
 	
 	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
 		private ISelection globalSelection;
@@ -95,6 +99,7 @@ public class TaskEditor extends MultiPageEditorPart {
 			for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
 				taskSummaryEditor.setParentEditor(this);
 				IEditorPart editor = factory.createEditor();
+				editorsToNotifyOnChange.add(editor);
 				index = addPage(editor, factory.createEditorInput(MylarPlugin.getContextManager().getActiveContext()));
 				setPageText(index++, factory.getTitle()); 
 			}
@@ -253,5 +258,15 @@ public class TaskEditor extends MultiPageEditorPart {
 
 	public Browser getWebBrowser() {
 		return webBrowser;
+	}
+
+	@Override
+	protected void pageChange(int newPageIndex) {
+		super.pageChange(newPageIndex);
+		for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
+			for (IEditorPart editor: editorsToNotifyOnChange) {
+				factory.notifyEditorActivationChange(editor);
+			}
+		}
 	}
 }
