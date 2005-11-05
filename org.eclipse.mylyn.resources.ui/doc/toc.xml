@@ -3,8 +3,8 @@
 
 <toc link_to="../org.eclipse.mylar.doc/doc/toc.xml#xml" label="XML Support">
 	<topic label="XML Support" href="doc/xml.html">
-		<!--<topic label="PDE Development" href="doc/pde.html"/>-->
-		<topic label="Ant Development" href="doc/ant.html"/>
+		<!--<topic label="PDE Editing" href="doc/pde.html"/>-->
+		<topic label="Ant Editing" href="doc/ant.html"/>
 	</topic>
 </toc>
 
