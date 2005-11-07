@@ -91,6 +91,7 @@ public class StatisticsReportingTest extends TestCase {
 		
 		logger.start();		
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockExplorerSelection("A.java");
 		mockEdit("A.java");		
 		
@@ -100,6 +101,7 @@ public class StatisticsReportingTest extends TestCase {
 
 		mockExplorerSelection("A.java");
 		mockEdit("A.java");		
+		mockUserDelay();
 		mockEdit("A.java");		
 		
 		logger.stop();
@@ -118,7 +120,9 @@ public class StatisticsReportingTest extends TestCase {
 	public void testFilteredModeDetection() throws IOException {
 		MylarMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockTypesSelection("A.java");
 
 		assertNotNull(MylarPlugin.getDefault().getPreferenceStore());		
@@ -127,7 +131,9 @@ public class StatisticsReportingTest extends TestCase {
 		MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, true); 
 		
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockTypesSelection("A.java");
 		
 		MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, false);
@@ -142,5 +148,17 @@ public class StatisticsReportingTest extends TestCase {
 		
 		assertEquals(5, normal);
 		assertEquals(2, filtered);
+	}
+	
+	/**
+	 * Delay enough to make replicated events different
+	 */
+	private void mockUserDelay() {
+		// TODO: Refactor into mylar.core.tests
+		try {
+			Thread.sleep(100);
+		} catch( InterruptedException ie ) {
+			;
+		}
 	}
 }

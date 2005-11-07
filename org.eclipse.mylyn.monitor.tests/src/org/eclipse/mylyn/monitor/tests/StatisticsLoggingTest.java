@@ -51,6 +51,7 @@ public class StatisticsLoggingTest extends ContextTest {
 
 	public void testFileReading() {
 		logger.interactionObserved(mockSelection());
+		mockUserDelay();
 		logger.interactionObserved(mockSelection());
 		logger.stop();
 		
@@ -59,4 +60,17 @@ public class StatisticsLoggingTest extends ContextTest {
 		InteractionEventSummary first = (InteractionEventSummary)summary.get(0);
 		assertEquals(2, first.getUsageCount());
 	}
+	
+	/**
+	 * Delay enough to make replicated events different
+	 */
+	private void mockUserDelay() {
+		// TODO: Refactor into mylar.core.tests
+		try {
+			Thread.sleep(100);
+		} catch( InterruptedException ie ) {
+			;
+		}
+	}
+
 }

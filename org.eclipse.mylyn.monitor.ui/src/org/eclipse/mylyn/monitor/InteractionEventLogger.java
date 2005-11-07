@@ -158,6 +158,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
         }
         return events;
     }
+    
 
 	/**
 	 * @param events
@@ -192,7 +193,6 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		    buffer = new byte[1000];
 		}
 	}
-    
 
     
     private static final String OPEN = "<";
