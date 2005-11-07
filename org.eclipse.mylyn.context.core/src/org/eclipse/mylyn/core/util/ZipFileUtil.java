@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
 
 /**
@@ -22,9 +23,19 @@ public class ZipFileUtil {
 	/**
 	 * @param zipFile Destination zipped file
 	 * @param files List of files to add to the zip file
-	 * @author Shawn Minto
 	 */
 	public static void createZipFile(File zipFile, List<File> files) throws FileNotFoundException, IOException{
+        createZipFile(zipFile, files, null);
+	}
+
+	/**
+	 * @param zipFile Destination zipped file
+	 * @param files List of files to add to the zip file
+	 * @param progressMonitor will report worked(1) to the monitor for each file zipped
+	 * @author Shawn Minto
+	 * @author Wesley Coelho
+	 */
+	public static void createZipFile(File zipFile, List<File> files, IProgressMonitor monitor) throws FileNotFoundException, IOException{
         if(zipFile.exists()){
         	zipFile.delete();
         }
@@ -34,6 +45,9 @@ public class ZipFileUtil {
         for(File file: files){
         	try{
         		addZipEntry(zipOut, file);
+        		if (monitor != null){
+        			monitor.worked(1);
+        		}
         	}catch (Exception e){
         		MylarPlugin.log(e, "Could not add " + file.getName() + " to zip");
         	}
