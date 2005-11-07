@@ -50,6 +50,7 @@ import org.eclipse.ui.progress.IProgressService;
  * Class that contains shared functions for the wizards that submit bug reports.
  *
  * @author Eric Booth
+ * @author Mik Kersten (some hardening of prototype)
  */
 public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
@@ -355,34 +356,37 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 	/**
 	 * Format the description into lines of about 80 characters so that it is
-	 * displayed properly in bugzilla
+	 * displayed properly in bugzilla, done automatically by Bugzilla 2.20
 	 */
 	protected void formatDescription() {
 		String origDesc = model.getDescription();
-		String[] descArray = new String[(origDesc.length() / AbstractBugEditor.WRAP_LENGTH + 1) * 2];
-		for (int i = 0; i < descArray.length; i++)
-			descArray[i] = null;
-		int j = 0;
-		while (true) {
-			int spaceIndex = origDesc.indexOf(" ", AbstractBugEditor.WRAP_LENGTH-5);
-			if (spaceIndex == origDesc.length() || spaceIndex == -1) {
-				descArray[j] = origDesc;
-				break;
+		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
+			model.setDescription(origDesc);
+		} else {
+			String[] descArray = new String[(origDesc.length() / AbstractBugEditor.WRAP_LENGTH + 1) * 2];
+			for (int i = 0; i < descArray.length; i++)
+				descArray[i] = null;
+			int j = 0;
+			while (true) {
+				int spaceIndex = origDesc.indexOf(" ", AbstractBugEditor.WRAP_LENGTH - 5);
+				if (spaceIndex == origDesc.length() || spaceIndex == -1) {
+					descArray[j] = origDesc;
+					break;
+				}
+				descArray[j] = origDesc.substring(0, spaceIndex);
+				origDesc = origDesc.substring(spaceIndex + 1, origDesc.length());
+				j++;
 			}
-			descArray[j] = origDesc.substring(0, spaceIndex);
-			origDesc = origDesc.substring(spaceIndex + 1, origDesc.length());
-			j++;
+
+			String newDesc = "";
+
+			for (int i = 0; i < descArray.length; i++) {
+				if (descArray[i] == null)
+					break;
+				newDesc += descArray[i] + "\n";
+			}
+			model.setDescription(newDesc);
 		}
-
-		String newDesc = "";
-
-		for (int i = 0; i < descArray.length; i++) {
-			if (descArray[i] == null)
-				break;
-			newDesc += descArray[i] + "\n";
-		}
-		model.setDescription(newDesc);
-
 	}
 	
 	public String getId() {
