@@ -39,7 +39,7 @@ public class Task implements ITask {
 
 	public static final long INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getActivityTimeoutSeconds() * 1000;
 	public static final int MAX_LABEL_LENGTH = 50;
-	public Color ACTIVE  = new Color(Display.getDefault(), 30, 30, 60);
+	public static Color ACTIVE  = new Color(Display.getDefault(), 30, 30, 60);
 	
     private static final long serialVersionUID = 3545518391537382197L;
     private boolean active = false;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on Dec 26, 2004
-  */
+ */
 package org.eclipse.mylar.tasklist.internal;
 
 import java.io.Serializable;
@@ -21,6 +21,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.CategoryEditorInput;
 import org.eclipse.swt.graphics.Color;
@@ -31,23 +32,25 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
 
-
 /**
  * @author Mik Kersten
  */
 public class TaskCategory implements ITaskListCategory, Serializable {
 
-    private static final long serialVersionUID = 3834024740813027380L;
-    
-    private List<ITask> tasks = new ArrayList<ITask>();
-    
+	private static final long serialVersionUID = 3834024740813027380L;
+
+	private List<ITask> tasks = new ArrayList<ITask>();
+
 	protected String description = "";
+
 	private String handle = "";
+
 	private boolean isArchive = false;
+
 	public TaskCategory(String description) {
-    	this.description = description;
-    }
-	
+		this.description = description;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getDescription(boolean)
 	 */
@@ -82,17 +85,16 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	public Image getStatusIcon() {
 		return null;
 	}
-        
+
 	public Image getIcon() {
-		if(isArchive()){
+		if (isArchive()) {
 			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
 		} else {
 			return TaskListImages.getImage(TaskListImages.CATEGORY);
 		}
 	}
-    
 
-	public String getPriority() {		
+	public String getPriority() {
 		String highestPriority = "P5";
 		if (tasks.isEmpty()) {
 			return "P1";
@@ -104,46 +106,48 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 		}
 		return highestPriority;
 	}
-	
-    public void addTask(ITask task) {
-    	tasks.add(task);
-    	if (MylarTasklistPlugin.getDefault() != null) {
+
+	public void addTask(ITask task) {
+		tasks.add(task);
+		if (MylarTasklistPlugin.getDefault() != null) {
 			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
-    }
-    
-    /**
-     * So it can be used by other externalizers
-     */
+	}
+
+	/**
+	 * So it can be used by other externalizers
+	 */
 	public void internalAddTask(ITask task) {
-    	tasks.add(task);
-    }
-	
-    public void removeTask(ITask task) {
-        tasks.remove(task);
-        if (MylarTasklistPlugin.getDefault() != null) {
+		tasks.add(task);
+	}
+
+	public void removeTask(ITask task) {
+		tasks.remove(task);
+		if (MylarTasklistPlugin.getDefault() != null) {
 			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
-    }
-    
-    public List<ITask> getChildren() {
-        return tasks;
-    }   
-   
-    @Override
-    public boolean equals(Object object) {
-        if (object == null) return false;
-        if (object instanceof TaskCategory) {
-           TaskCategory compare = (TaskCategory)object;
-           return this.getDescription(false).equals(compare.getDescription(false));
-        } else {
-            return false;
-        }
-    }
+	}
+
+	public List<ITask> getChildren() {
+		return tasks;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == null)
+			return false;
+		if (object instanceof TaskCategory) {
+			TaskCategory compare = (TaskCategory) object;
+			return this.getDescription(false).equals(compare.getDescription(false));
+		} else {
+			return false;
+		}
+	}
 
 	public ITask getOrCreateCorrespondingTask() {
 		return null;
 	}
+
 	public boolean hasCorrespondingActivatableTask() {
 		return false;
 	}
@@ -151,27 +155,32 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	public boolean isDirectlyModifiable() {
 		return true;
 	}
-	
+
 	public boolean isActivatable() {
 		return false;
 	}
-	
+
 	public boolean isDragAndDropEnabled() {
 		return false;
 	}
-	
+
 	public Color getForeground() {
-       	return null;
+		for (ITask child : getChildren()) {
+			if (child.isActive())
+				return Task.ACTIVE;
+		}
+		return null;
 	}
 
 	public Font getFont() {
-        for (ITask child : getChildren()) {
+		for (ITask child : getChildren()) {
 			if (child.isActive())
 				return BOLD;
 		}
 		return null;
 	}
-	public boolean isCompleted(){
+
+	public boolean isCompleted() {
 		return false;
 	}
 
@@ -186,23 +195,24 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	public boolean isArchive() {
 		return isArchive;
 	}
-	
+
 	public void setIsArchive(boolean isArchive) {
-		this.isArchive = isArchive;;
+		this.isArchive = isArchive;
+		;
 	}
 
 	public String getStringForSortingDescription() {
 		return getDescription(true);
 	}
-	
+
 	public void openCategoryInEditor(boolean offline) {
-    	Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+		Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				openCategory();
 			}
 		});
-    }
-	
+	}
+
 	public void openCategory() {
 		IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page == null) {
@@ -211,7 +221,7 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 
 		IEditorInput input = new CategoryEditorInput(this);
 		try {
-			page.openEditor(input, MylarTasklistPlugin.CATEGORY_EDITOR_ID);					
+			page.openEditor(input, MylarTasklistPlugin.CATEGORY_EDITOR_ID);
 		} catch (PartInitException ex) {
 			MylarPlugin.log(ex, "open failed");
 		}

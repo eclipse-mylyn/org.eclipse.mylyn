@@ -89,7 +89,7 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
 	public Color getForeground(Object element, int columnIndex) {
         if (element instanceof ITaskListElement) {
         	ITaskListElement task = (ITaskListElement)element;
-            return task.getForeground();
+        	return task.getForeground();
         } 
         return null;
 	}

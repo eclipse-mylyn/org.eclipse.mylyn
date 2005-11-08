@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 package org.eclipse.mylar.bugzilla.ui.tasklist;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.IC
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Color;
@@ -45,51 +47,57 @@ import org.eclipse.ui.PlatformUI;
  * @author Shawn Minto
  */
 public class BugzillaQueryCategory implements IQuery {
-	
-	private static final long serialVersionUID = 5517146402031743253L;	
+
+	private static final long serialVersionUID = 5517146402031743253L;
+
 	private String queryString;
+
 	private int maxHits;
+
 	private List<IQueryHit> hits = new ArrayList<IQueryHit>();
+
 	private boolean hasBeenRefreshed = false;
-	
+
 	protected Date lastRefresh;
-	
+
 	protected String description = "";
+
 	private String handle = "";
-	
+
 	private ICategorySearchListener listener = new BugzillaQueryCategorySearchListener();
+
 	private boolean isMaxReached = false;
-	
-	public class BugzillaQueryCategorySearchListener implements ICategorySearchListener { 
+
+	public class BugzillaQueryCategorySearchListener implements ICategorySearchListener {
 
 		Map<Integer, BugzillaSearchHit> hits = new HashMap<Integer, BugzillaSearchHit>();
-		
+
 		public void searchCompleted(BugzillaResultCollector collector) {
-			for(BugzillaSearchHit hit: collector.getResults()){
-		
+			for (BugzillaSearchHit hit : collector.getResults()) {
+
 				// HACK need the server name and handle properly
 				addHit(new BugzillaHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), hit.getId(), null, hit.getState()));
 			}
 		}
 
-	}	
-		
+	}
+
 	public BugzillaQueryCategory(String label, String url, String maxHits) {
 		this.description = label;
 		this.queryString = url;
-		try{
+		try {
 			this.maxHits = Integer.parseInt(maxHits);
-		} catch (Exception e){
+		} catch (Exception e) {
 			this.maxHits = -1;
 		}
 	}
 
 	public String getDescription(boolean label) {
 		if (hits.size() > 0 || !label) {
-			if(!hasBeenRefreshed && label){
-				return description + " <needs refresh>";	
-			}else if(isMaxReached && label){
-				return description + " <first "+ maxHits +" hits>";
+			if (!hasBeenRefreshed && label) {
+				return description + " <needs refresh>";
+			} else if (isMaxReached && label) {
+				return description + " <first " + maxHits + " hits>";
 			} else {
 				return description;
 			}
@@ -99,22 +107,19 @@ public class BugzillaQueryCategory implements IQuery {
 			return description + " <no hits>";
 		}
 	}
-	
-	
+
 	public Image getIcon() {
 		return TaskListImages.getImage(BugzillaImages.CATEGORY_QUERY);
 	}
-	
+
 	public String getQueryString() {
 		return queryString;
 	}
-	
-	
-	
+
 	public List<IQueryHit> getChildren() {
 		return hits;
 	}
-	
+
 	public void addHit(IQueryHit hit) {
 		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(hit.getHandle());
 		hit.setAssociatedTask(task);
@@ -124,18 +129,17 @@ public class BugzillaQueryCategory implements IQuery {
 	public void removeHit(BugzillaHit hit) {
 		hits.remove(hit);
 	}
-	
+
 	public void refreshBugs() {
 		hits.clear();
 		// refresh the view to show that the results are gone
-		Display.getDefault().asyncExec(new Runnable(){
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				if(TaskListView.getDefault() != null)
+				if (TaskListView.getDefault() != null)
 					TaskListView.getDefault().getViewer().refresh();
 			}
 		});
-		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(
-				getQueryString(), maxHits);
+		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(getQueryString(), maxHits);
 		catSearch.addResultsListener(listener);
 		final IStatus[] status = new IStatus[1];
 
@@ -158,14 +162,11 @@ public class BugzillaQueryCategory implements IQuery {
 				return;
 			} else if (!status[0].isOK()) {
 				// there was an error, so display an error message
-				PlatformUI.getWorkbench().getDisplay().asyncExec(
-						new Runnable() {
-							public void run() {
-								ErrorDialog.openError(null,
-										"Bugzilla Search Error", null,
-										status[0]);
-							}
-						});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						ErrorDialog.openError(null, "Bugzilla Search Error", null, status[0]);
+					}
+				});
 				status[0] = Status.OK_STATUS;
 				return;
 				//			                return status[0];
@@ -179,8 +180,7 @@ public class BugzillaQueryCategory implements IQuery {
 							null,
 							"Login Error",
 							"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-			BugzillaPlugin.log(new Status(IStatus.ERROR,
-					IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));
+			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));
 		}
 		return;
 	}
@@ -188,7 +188,7 @@ public class BugzillaQueryCategory implements IQuery {
 	public void setQueryString(String url) {
 		this.queryString = url;
 	}
-	
+
 	public String getPriority() {
 		String highestPriority = "P5";
 		if (hits.isEmpty()) {
@@ -205,7 +205,7 @@ public class BugzillaQueryCategory implements IQuery {
 	public boolean isDirectlyModifiable() {
 		return true;
 	}
-	
+
 	public boolean isActivatable() {
 		return false;
 	}
@@ -213,17 +213,26 @@ public class BugzillaQueryCategory implements IQuery {
 	public boolean isDragAndDropEnabled() {
 		return false;
 	}
-	
+
 	public Color getForeground() {
-       	return null;
+		for (ITaskListElement child : getChildren()) {
+			if (child instanceof BugzillaHit) {
+				BugzillaHit hit = (BugzillaHit) child;
+				BugzillaTask task = hit.getAssociatedTask();
+				if (task != null && task.isActive()) {
+					return Task.ACTIVE;
+				}
+			}
+		}
+		return null;
 	}
 
 	public Font getFont() {
-        for (ITaskListElement child : getChildren()) {
-			if (child instanceof BugzillaHit){
+		for (ITaskListElement child : getChildren()) {
+			if (child instanceof BugzillaHit) {
 				BugzillaHit hit = (BugzillaHit) child;
 				BugzillaTask task = hit.getAssociatedTask();
-				if(task != null && task.isActive()){
+				if (task != null && task.isActive()) {
 					return BOLD;
 				}
 			}
@@ -263,7 +272,7 @@ public class BugzillaQueryCategory implements IQuery {
 	}
 
 	public void setDescription(String description) {
-		this.description = description;		
+		this.description = description;
 	}
 
 	public String getStringForSortingDescription() {
