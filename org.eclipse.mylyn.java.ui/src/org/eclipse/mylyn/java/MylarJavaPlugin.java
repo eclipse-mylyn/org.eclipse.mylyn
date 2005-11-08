@@ -127,7 +127,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
         		ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
         		service.addPostSelectionListener(packageExplorerManager); 
         		
-//        		 needed because Mylar source viewer configuration does not get initialized properly
+//        		 needed if Mylar source viewer configuration does not get initialized properly
 //        		resetActiveEditor();
             }
         });

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.ui.actions;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -19,16 +20,32 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 /**
+ * This action is not persistent, in order to avoid Mylar not working on startup.
+ * 
  * @author Mik Kersten
  */
-public class ContextCaptureResumeAction implements IViewActionDelegate {
+public class ToggleContextCaptureAction extends Action implements IViewActionDelegate {
 
 	public void init(IViewPart view) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
 
 	public void run(IAction action) {
+		setChecked(!action.isChecked());
+		if (isChecked()) {
+			resume();
+		} else {
+			pause();
+		}
+//		super.setChecked(!super.isChecked());
+	}
+
+	public void pause() {
+		MylarPlugin.getContextManager().setContextCapturePaused(true);
+		TaskListView.getDefault().indicatePaused(true);
+	}
+
+	public void resume() {
 		MylarPlugin.getContextManager().setContextCapturePaused(false);
 		TaskListView.getDefault().indicatePaused(false);
 	}
