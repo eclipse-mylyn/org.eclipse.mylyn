@@ -41,23 +41,25 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class ToolTipHandler {
 
-   private Shell tipShell;
+	private Shell tipShell;
 
-   private Label tipLabelImage;
-   private Label tipLabelText;
+	private Label tipLabelImage;
 
-   private Widget tipWidget; // widget this tooltip is hovering over
+	private Label tipLabelText;
 
-   protected Point tipPosition; // the position being hovered over on the
-   	protected Point widgetPosition; // the position hovered over in the Widget;
-   	
+	private Widget tipWidget; // widget this tooltip is hovering over
+
+	protected Point tipPosition; // the position being hovered over on the
+
+	protected Point widgetPosition; // the position hovered over in the Widget;
+
 	public ToolTipHandler(Shell parentShell) {
 		if (parentShell != null) {
 			tipShell = createTipShell(parentShell);
 		}
 	}
 
-	private Shell createTipShell(Shell parent){
+	private Shell createTipShell(Shell parent) {
 		Shell tipShell = new Shell(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
@@ -65,32 +67,25 @@ public class ToolTipHandler {
 		gridLayout.marginHeight = 2;
 		tipShell.setLayout(gridLayout);
 		tipShell.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		
-		tipLabelImage = new Label(tipShell, SWT.NONE);
-		tipLabelImage.setForeground(parent.getDisplay()
-				.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		tipLabelImage.setBackground(parent.getDisplay()
-				.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
-		GridData imageGridData = new GridData(
-				GridData.HORIZONTAL_ALIGN_BEGINNING
-						| GridData.VERTICAL_ALIGN_BEGINNING);
+		tipLabelImage = new Label(tipShell, SWT.NONE);
+		tipLabelImage.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		tipLabelImage.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+
+		GridData imageGridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 		tipLabelImage.setLayoutData(imageGridData);
 
 		tipLabelText = new Label(tipShell, SWT.NONE);
-		tipLabelText.setForeground(parent.getDisplay()
-				.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		tipLabelText.setBackground(parent.getDisplay()
-				.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		tipLabelText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		tipLabelText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
-		GridData textGridData = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.VERTICAL_ALIGN_CENTER);
+		GridData textGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
 		tipLabelText.setLayoutData(textGridData);
-		
+
 		return tipShell;
 	}
-	
-   private ITaskListElement getTask(Object hoverObject) {
+
+	private ITaskListElement getTask(Object hoverObject) {
 		if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
 			if (data != null) {
@@ -98,14 +93,14 @@ public class ToolTipHandler {
 					return (ITaskListElement) data;
 				} else if (data instanceof IAdaptable) {
 					return (ITaskListElement) ((IAdaptable) data).getAdapter(ITaskListElement.class);
-				} 
+				}
 			}
 		}
 		return null;
 	}
-   
-   protected String getToolTipText(Object object) {
-	   ITaskListElement element = getTask(object);
+
+	protected String getToolTipText(Object object) {
+		ITaskListElement element = getTask(object);
 		if (element != null) {
 			if (element instanceof ITask && element.getToolTipText().length() < 30) { // HACK
 				return null;
@@ -120,8 +115,8 @@ public class ToolTipHandler {
 		return null;
 	}
 
-   protected Image getToolTipImage(Object object) {
-	   ITaskListElement projectNode = getTask(object);
+	protected Image getToolTipImage(Object object) {
+		ITaskListElement projectNode = getTask(object);
 		if (projectNode != null) {
 			// TODO Code for determining image
 		}
@@ -138,19 +133,19 @@ public class ToolTipHandler {
 		return null;
 	}
 
-   /**
+	/**
 	 * Enables customized hover help for a specified control
 	 * 
 	 * @control the control on which to enable hoverhelp
 	 */
 	public void activateHoverHelp(final Control control) {
-		
+
 		/*
 		 * Get out of the way if we attempt to activate the control underneath
 		 * the tooltip
 		 */
 		control.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if (tipShell.isVisible())
@@ -161,7 +156,7 @@ public class ToolTipHandler {
 		 * Trap hover events to pop-up tooltip
 		 */
 		control.addMouseTrackListener(new MouseTrackAdapter() {
-			
+
 			@Override
 			public void mouseExit(MouseEvent e) {
 				if (tipShell.isVisible())
@@ -200,12 +195,11 @@ public class ToolTipHandler {
 					return;
 				}
 
-				if (tipShell.getShell() != null
-					&& tipShell.getShell().getParent() != null
-					&& tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()){
+				if (tipShell.getShell() != null && tipShell.getShell().getParent() != null
+						&& tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()) {
 					tipShell = createTipShell(Display.getCurrent().getActiveShell());
 				}
-				
+
 				tipLabelText.setText(text);
 				tipLabelImage.setImage(image); // accepts null
 				tipShell.pack();
@@ -213,34 +207,34 @@ public class ToolTipHandler {
 				tipShell.setVisible(true);
 			}
 		});
-//		/*
-//		 * Trap F1 Help to pop up a custom help box
-//		 */
-//		control.addHelpListener(new HelpListener() {
-//			public void helpRequested(HelpEvent event) {
-//				if (tipWidget == null)
-//					return;
-//				Object help = getToolTipHelp(tipWidget);
-//				if (help == null)
-//					return;
-//				if (help.getClass() != String.class) {
-//					return;
-//				}
-//				if (tipShell.isVisible()) {
-//					tipShell.setVisible(false);
-//					Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
-//					helpShell.setLayout(new FillLayout());
-//					Label label = new Label(helpShell, SWT.NONE);
-//					label.setText((String) help);
-//					helpShell.pack();
-//					setHoverLocation(helpShell, tipPosition);
-//					helpShell.open();
-//				}
-//			}
-//		});
+		//		/*
+		//		 * Trap F1 Help to pop up a custom help box
+		//		 */
+		//		control.addHelpListener(new HelpListener() {
+		//			public void helpRequested(HelpEvent event) {
+		//				if (tipWidget == null)
+		//					return;
+		//				Object help = getToolTipHelp(tipWidget);
+		//				if (help == null)
+		//					return;
+		//				if (help.getClass() != String.class) {
+		//					return;
+		//				}
+		//				if (tipShell.isVisible()) {
+		//					tipShell.setVisible(false);
+		//					Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
+		//					helpShell.setLayout(new FillLayout());
+		//					Label label = new Label(helpShell, SWT.NONE);
+		//					label.setText((String) help);
+		//					helpShell.pack();
+		//					setHoverLocation(helpShell, tipPosition);
+		//					helpShell.open();
+		//				}
+		//			}
+		//		});
 	}
 
-   /**
+	/**
 	 * Sets the location for a hovering shell
 	 * 
 	 * @param shell
@@ -252,10 +246,8 @@ public class ToolTipHandler {
 	private void setHoverLocation(Shell shell, Point position) {
 		Rectangle displayBounds = shell.getDisplay().getBounds();
 		Rectangle shellBounds = shell.getBounds();
-		shellBounds.x = Math.max(Math.min(position.x, displayBounds.width
-				- shellBounds.width), 0);
-		shellBounds.y = Math.max(Math.min(position.y +10, displayBounds.height
-				- shellBounds.height), 0);
+		shellBounds.x = Math.max(Math.min(position.x, displayBounds.width - shellBounds.width), 0);
+		shellBounds.y = Math.max(Math.min(position.y + 10, displayBounds.height - shellBounds.height), 0);
 		shell.setBounds(shellBounds);
 	}
 }
