@@ -95,7 +95,6 @@ public class StatisticsReportingTest extends TestCase {
 		mockUserDelay();
 		final InteractionEvent second = mockExplorerSelection("A.java");
 		
-		// WIERD: if this assertion is taken out race condition causes failure
 		assertTrue(!first.getDate().equals(second.getDelta()));
 				
 		mockEdit("A.java");		

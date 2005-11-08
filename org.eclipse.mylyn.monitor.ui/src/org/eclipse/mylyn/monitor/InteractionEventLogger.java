@@ -92,7 +92,10 @@ public class InteractionEventLogger implements IInteractionEventListener {
     
     public void stop() {
         try {
-        	if (outputStream != null) outputStream.close();
+        	if (outputStream != null) {
+        		outputStream.flush();
+        		outputStream.close();
+        	}
             started = false;
             if (MylarMonitorPlugin.getDefault() != null) MylarMonitorPlugin.getDefault().incrementObservedEvents(eventAccumulartor);
             eventAccumulartor = 0;
