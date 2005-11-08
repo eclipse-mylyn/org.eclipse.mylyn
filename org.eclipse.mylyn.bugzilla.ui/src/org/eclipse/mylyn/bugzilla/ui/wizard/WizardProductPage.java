@@ -43,6 +43,11 @@ import org.eclipse.ui.IWorkbench;
  */
 public class WizardProductPage extends AbstractWizardListPage {
 
+	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n" +
+		"Press the Update button if you do not see the desired product.";
+
+	private static final String LABEL_UPDATE = "Update Options from Bugzilla Server";
+
 	/** The list of products to submit a bug report for */
 	static List<String> products = null;
 
@@ -62,7 +67,7 @@ public class WizardProductPage extends AbstractWizardListPage {
 	 */
 	public WizardProductPage(IWorkbench workbench, NewBugWizard bugWiz) {
 		super("Page1", "New Bug Report",
-				"Pick a product on which to enter a bug.", workbench);
+				DESCRIPTION, workbench);
 		this.bugWizard = bugWiz;
 	}
 
@@ -72,7 +77,7 @@ public class WizardProductPage extends AbstractWizardListPage {
 	@Override
 	public void createAdditionalControls(Composite parent){
 		Button updateButton = new Button(parent, SWT.LEFT | SWT.PUSH);
-		updateButton.setText("Update");
+		updateButton.setText(LABEL_UPDATE);
 			
 		updateButton.setLayoutData(new GridData());
 		
