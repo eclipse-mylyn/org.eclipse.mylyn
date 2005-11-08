@@ -12,6 +12,7 @@
 package org.eclipse.mylar.monitor.tests;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,10 +66,10 @@ public class StatisticsReportingTest extends TestCase {
 		super.tearDown();
 	}
 	
-	protected void mockExplorerSelection(String handle) {
-		MylarPlugin.getDefault().notifyInteractionObserved(
-				new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", handle, JavaUI.ID_PACKAGES)
-    	);
+	protected InteractionEvent mockExplorerSelection(String handle) {
+		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", handle, JavaUI.ID_PACKAGES);
+		MylarPlugin.getDefault().notifyInteractionObserved(event);
+		return event;
 	}
 
 	protected void mockEdit(String handle) {
@@ -83,15 +84,20 @@ public class StatisticsReportingTest extends TestCase {
     	);
 	}
 	
-	public void testEditRatio() {
+	public void testEditRatio() throws InvocationTargetException, InterruptedException {
 		logger.stop();
 		PackageExplorerPart part = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(part.getTreeViewer());
 		part.setFocus();
 		
 		logger.start();		
-		mockExplorerSelection("A.java");
-		mockExplorerSelection("A.java");
+		final InteractionEvent first = mockExplorerSelection("A.java");
+		mockUserDelay();
+		final InteractionEvent second = mockExplorerSelection("A.java");
+		
+		// WIERD: if this assertion is taken out race condition causes failure
+		assertTrue(!first.getDate().equals(second.getDelta()));
+				
 		mockEdit("A.java");		
 		
 		MylarPlugin.getDefault().notifyInteractionObserved(
@@ -100,10 +106,19 @@ public class StatisticsReportingTest extends TestCase {
 
 		mockExplorerSelection("A.java");
 		mockEdit("A.java");		
+		mockUserDelay();
 		mockEdit("A.java");		
-		
+
 		logger.stop();
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
+  
+//		try {
+//			// XXX: this could be sensitive to CPU speeds
+//			Thread.sleep(4000);
+//		} catch(InterruptedException ie) { 
+//			fail();
+//		}
+		//		System.err.println(">>> " + editRatioCollector.get);
 		// TODO: these are off from expected when test run alone, due to unknown element selections
 		assertEquals(0.5f, editRatioCollector.getBaselineRatio(-1));
 		assertEquals(2f, editRatioCollector.getMylarRatio(-1));
@@ -118,7 +133,9 @@ public class StatisticsReportingTest extends TestCase {
 	public void testFilteredModeDetection() throws IOException {
 		MylarMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockTypesSelection("A.java");
 
 		assertNotNull(MylarPlugin.getDefault().getPreferenceStore());		
@@ -127,7 +144,9 @@ public class StatisticsReportingTest extends TestCase {
 		MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, true); 
 		
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockExplorerSelection("A.java");
+		mockUserDelay();
 		mockTypesSelection("A.java");
 		
 		MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, false);
@@ -142,5 +161,18 @@ public class StatisticsReportingTest extends TestCase {
 		
 		assertEquals(5, normal);
 		assertEquals(2, filtered);
+	}
+	
+	/**
+	 * Delay enough to make replicated events different
+	 */
+	private void mockUserDelay() {
+		// TODO: Refactor into mylar.core.tests
+		try {
+			// XXX: this could be sensitive to CPU speeds
+			Thread.sleep(100);
+		} catch(InterruptedException ie) { 
+			fail();
+		} 
 	}
 }
