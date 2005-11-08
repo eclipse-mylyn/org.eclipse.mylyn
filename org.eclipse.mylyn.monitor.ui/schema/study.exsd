@@ -15,6 +15,7 @@
          <sequence>
             <element ref="scripts"/>
             <element ref="ui"/>
+            <element ref="monitors"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -60,6 +61,13 @@
             </annotation>
          </attribute>
          <attribute name="userId" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="acceptedUrlFilter" type="string">
             <annotation>
                <documentation>
                   
@@ -117,6 +125,18 @@
                <appInfo>
                   <meta.attribute kind="resource"/>
                </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="monitors">
+      <complexType>
+         <attribute name="browserUrlFilter" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

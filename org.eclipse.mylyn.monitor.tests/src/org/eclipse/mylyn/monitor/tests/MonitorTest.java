@@ -25,16 +25,20 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.monitors.BrowserMonitor;
 import org.eclipse.mylar.monitor.monitors.KeybindingCommandMonitor;
 import org.eclipse.mylar.monitor.monitors.SelectionMonitor;
 import org.eclipse.ui.internal.Workbench;
 
-
+/**
+ * @author Mik Kersten
+ */
 public class MonitorTest extends TestCase {
 
     private InteractionEventLogger logger = MylarMonitorPlugin.getDefault().getInteractionLogger();
     private SelectionMonitor selectionMonitor = new SelectionMonitor();
     private KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
+    private BrowserMonitor browserMonitor = new BrowserMonitor();
         
     @Override
 	protected void setUp() throws Exception {
@@ -49,7 +53,7 @@ public class MonitorTest extends TestCase {
 	}
 	
 	public void testEnablement() throws IOException {
-    	File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
     	assertTrue(monitorFile.exists());
     	MylarMonitorPlugin.getDefault().stopMonitoring();
         logger.clearInteractionHistory();
@@ -95,6 +99,17 @@ public class MonitorTest extends TestCase {
 //        assertNotNull(restoredFile);
 //    }
     
+	public void testUrlFilter() {
+		browserMonitor.setAcceptedUrls("url1,url2,url3");
+		assertEquals(3, browserMonitor.getAcceptedUrls().size());
+		
+		browserMonitor.setAcceptedUrls(null);
+		assertEquals(0, browserMonitor.getAcceptedUrls().size());
+		
+		browserMonitor.setAcceptedUrls("");
+		assertEquals(0, browserMonitor.getAcceptedUrls().size());
+	}
+	
     public void testLogging() {
     	MylarMonitorPlugin.getDefault().startMonitoring();
         logger.stop();

@@ -14,7 +14,6 @@ package org.eclipse.mylar.monitor;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -85,6 +84,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String DEFAULT_UPLOAD_SCRIPT_ID = "getUID.cgi";
 	public static final String DEFAULT_UPLOAD_SCRIPT = "upload.cgi";
 	public static final String DEFAULT_UPLAOD_SCRIPT_QUESTIONNAIRE = "questionnaire.cgi";
+	public static final String DEFAULT_ACCEPTED_URL_LIST = "";
 	
 	public static final String UI_PLUGIN_ID = "org.eclipse.mylar.ui";
     public static final String MONITOR_LOG_NAME = "monitor-history";
@@ -187,6 +187,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		        menuMonitor = new MenuCommandMonitor();
 		        keybindingCommandMonitor = new KeybindingCommandMonitor();
 		    	browserMonitor = new BrowserMonitor();
+		    	setAcceptedUrlMatchList(studyParameters.getAcceptedUrlList());
 		    	
 		    	if (getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED)) {
 		    		getPreferenceStore().setValue(PREF_MONITORING_ENABLED, false); // will be reset
@@ -495,7 +496,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		public static final String ELEMENT_UI_DESCRIPTION = "description";
 		public static final String ELEMENT_UI_UPLOAD_PROMPT = "daysBetweenUpload";
 		public static final String ELEMENT_UI_QUESTIONNAIRE_PAGE = "questionnairePage";
-		public static final String ELEMENT_UI_CONSENt_FORM = "consentForm";
+		public static final String ELEMENT_UI_CONSENT_FORM = "consentForm";
+		public static final String ELEMENT_MONITORS = "monitors";
+		public static final String ELEMENT_MONITORS_BROWSER_URL = "browserUrlFilter";
 		
 		private boolean extensionsRead = false;
 //		private MonitorExtensionPointReader thisReader = new MonitorExtensionPointReader();
@@ -514,7 +517,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 									readScripts(elements[j]);
 								} else if(elements[j].getName().compareTo(ELEMENT_UI) == 0){
 									readForms(elements[j]);
-								} 
+								} else if(elements[j].getName().compareTo(ELEMENT_MONITORS) == 0){
+									readMonitors(elements[j]);
+								}
 							}
 							customizingPlugin = extensions[i].getNamespace();
 							getPreferenceStore().setValue(PREF_MONITORING_ENABLED, true);
@@ -549,8 +554,16 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			studyParameters.setFormsConsent(
 					"../" + 
 					element.getDeclaringExtension().getNamespace() + "/" +
-					element.getAttribute(ELEMENT_UI_CONSENt_FORM));
+					element.getAttribute(ELEMENT_UI_CONSENT_FORM));
 			
+		}
+		
+		private void readMonitors(IConfigurationElement element) throws CoreException {	
+			// TODO: This should parse a list of filters but right now it takes the 
+			// entire string as a single filter.
+			//ArrayList<String> urlList = new ArrayList<String>();
+			String urlList = element.getAttribute(ELEMENT_MONITORS_BROWSER_URL);
+			studyParameters.setAcceptedUrlList(urlList);
 		}
 	}
 
@@ -577,9 +590,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	/**
 	 * @return  true if the list was set
 	 */
-	public boolean setAcceptedUrlMatchList(List<String> list) {
-		if (browserMonitor != null) {
-			browserMonitor.setAcceptedUrls(list);
+	public boolean setAcceptedUrlMatchList(String urlBuffer) {
+		if (browserMonitor != null) {		
+			browserMonitor.setAcceptedUrls(urlBuffer);
 			return true;
 		} else {
 			return false;

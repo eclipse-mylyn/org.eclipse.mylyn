@@ -14,6 +14,7 @@ package org.eclipse.mylar.monitor.monitors;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.AbstractInteractionMonitor;
@@ -36,6 +37,8 @@ import org.eclipse.ui.internal.browser.WebBrowserEditor;
  */
 public class BrowserMonitor extends AbstractInteractionMonitor implements IPartListener, IWindowListener, IPageListener {
 
+	public static final String URL_LIST_DELIM = ",";
+	
 	private UrlTrackingListener urlTrackingListener = new UrlTrackingListener();
 	private List<String> acceptedUrls = new ArrayList<String>();
 		
@@ -138,8 +141,15 @@ public class BrowserMonitor extends AbstractInteractionMonitor implements IPartL
 		return acceptedUrls;
 	}
 
-	public void setAcceptedUrls(List<String> acceptedUrls) {
-		this.acceptedUrls = acceptedUrls;
+	public void setAcceptedUrls(String urlBuffer) {
+		acceptedUrls = new ArrayList<String>();
+		
+		if(urlBuffer != null) {	
+			StringTokenizer token = new StringTokenizer(urlBuffer, URL_LIST_DELIM);
+			while (token.hasMoreTokens()) {
+				acceptedUrls.add(token.nextToken());
+			}
+		}
 	}
 	
 }

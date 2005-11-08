@@ -12,6 +12,7 @@
 package org.eclipse.mylar.monitor;
 
 
+
 /**
  * @author Mik Kersten
  * @author Leah Findlater
@@ -21,13 +22,14 @@ public class StudyParameters {
 	private String description = MylarMonitorPlugin.DEFAULT_DESCRIPTION;
 	private IQuestionnairePage questionnairePage = null;
 	private long transmitPromptPeriod = MylarMonitorPlugin.DEFAULT_DELAY_BETWEEN_TRANSMITS;
+	private String acceptedUrlList = MylarMonitorPlugin.DEFAULT_ACCEPTED_URL_LIST;
 	
 	private String formsConsent = MylarMonitorPlugin.DEFAULT_ETHICS_FORM;
 	private String scriptsUrl = MylarMonitorPlugin.DEFAULT_UPLOAD_SERVER;
 	private String scriptsUpload = MylarMonitorPlugin.DEFAULT_UPLOAD_SCRIPT;
 	private String scriptsUserId = MylarMonitorPlugin.DEFAULT_UPLOAD_SCRIPT_ID;
 	private String scriptsQuestionnaire = MylarMonitorPlugin.DEFAULT_UPLAOD_SCRIPT_QUESTIONNAIRE;
-
+	
 	public String getScriptsUserId() {
 		return scriptsUserId;
 	}
@@ -81,5 +83,11 @@ public class StudyParameters {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getAcceptedUrlList () {
+		return this.acceptedUrlList;
+	}
+	public void setAcceptedUrlList(String acceptedUrlList) {
+		this.acceptedUrlList = acceptedUrlList;
 	}
 }
