@@ -80,8 +80,8 @@ public class ColorMap {
     
     public Color HIGLIGHTER_RED_INTERSECTION = new Color(Display.getDefault(), 200, 0, 0);
     
-    public Color HIGHLIGHTER_ORANGE_GRADIENT = new Color(Display.getDefault(), 214, 124, 53);
-    public Color HIGLIGHTER_BLUE_GRADIENT = new Color(Display.getDefault(), 51, 153, 255);
+    public Color HIGHLIGHTER_ORANGE_GRADIENT = new Color(Display.getDefault(), 222, 137, 71);
+    public Color HIGLIGHTER_BLUE_GRADIENT = new Color(Display.getDefault(), 81, 158, 235);
     
     public Color HIGHLIGHTER_YELLOW = new Color(Display.getDefault(), 255, 238, 99);
     public Color PANTONE_PASTEL_YELLOW = new Color(Display.getDefault(), 244, 238, 175);
