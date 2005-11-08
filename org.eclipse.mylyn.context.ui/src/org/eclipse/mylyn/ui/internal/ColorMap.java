@@ -89,13 +89,8 @@ public class ColorMap {
     public Color PANTONE_PASTEL_MAUVE = new Color(Display.getDefault(), 241, 183, 216);
     public Color PANTONE_PASTEL_PURPLE = new Color(Display.getDefault(), 202, 169, 222);
     public Color PANTONE_PASTEL_BLUE = new Color(Display.getDefault(), 120, 160, 250);
-//    public Color PANTONE_PASTEL_BLUE = new Color(Display.getDefault(), 120, 210, 230);
     public Color PANTONE_PASTERL_GREEN = new Color(Display.getDefault(), 162, 231, 215);
-    
-//  public Color HIGLIGHTER_ROSE = new Color(Display.getDefault(), 240, 195, 196);
-//  public Color HIGLIGHTER_YELLOW = new Color(Display.getDefault(), 255, 255, 102);
-//  public Color HIGLIGHTER_BLUE = new Color(Display.getDefault(), 51, 153, 255);
-//  public Color HIGLIGHTER_MAUVE = new Color(Display.getDefault(), 153, 102, 255);
+
     
     public GammaSetting getGammaSetting() {
         return gammaSetting;
