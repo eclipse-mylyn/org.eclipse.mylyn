@@ -81,7 +81,7 @@
         point="org.eclipse.ui.editors">
      <editor
            icon="icons/eview16/task.gif"
-           class="org.eclipse.mylar.tasklist.ui.TaskEditor"
+           class="org.eclipse.mylar.tasklist.ui.MylarTaskEditor"
            name="Task Viewer"
            id="org.eclipse.mylar.tasklist.ui.taskEditor"/>
 	    <editor

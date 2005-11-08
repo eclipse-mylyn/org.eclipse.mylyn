@@ -21,39 +21,39 @@ import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * A node for the tree in the <code>BugzillaOutlinePage</code>.
  */
 public class BugzillaOutlineNode implements IBugzillaReportSelection {
-	
+
 	/** The id of the Bugzilla object that the selection was on. */
 	protected int id;
-	
+
 	/** The server of the Bugzilla object that the selection was on. */
 	protected String server;
-	
+
 	/** The label for this piece of data. */
 	private String key;
-	
+
 	/** The children of this node. */
 	private ArrayList<BugzillaOutlineNode> nodeChildren;
-	
+
 	/** The parent of this node or null if it is the bug report */
 	private BugzillaOutlineNode parent;
-	
+
 	/** This node's image. */
 	private Image image;
-	
-    private Object data = null;
-    
-    private String bugSummary;
-    
-    private boolean fromEditor = false;
-    
-    private boolean isCommentHeader = false;
-    private boolean isDescription = false;
-	
+
+	private Object data = null;
+
+	private String bugSummary;
+
+	private boolean fromEditor = false;
+
+	private boolean isCommentHeader = false;
+
+	private boolean isDescription = false;
+
 	/**
 	 * Creates a new <code>BugzillaOutlineNode</code>.
 	 * 
@@ -76,22 +76,22 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		this.key = key;
 		this.nodeChildren = null;
 		this.image = image;
-        this.data = data;
-        this.parent = null;
-        this.bugSummary = summary;
+		this.data = data;
+		this.parent = null;
+		this.bugSummary = summary;
 	}
-	
-    public boolean isFromEditor(){
-        return fromEditor;
-    }
-    
+
+	public boolean isFromEditor() {
+		return fromEditor;
+	}
+
 	/**
 	 * @return The children of this node, represented as an <code>Object</code> array.
 	 */
 	public BugzillaOutlineNode[] getChildren() {
 		return (nodeChildren == null) ? new BugzillaOutlineNode[0] : nodeChildren.toArray(new BugzillaOutlineNode[nodeChildren.size()]);
 	}
-	
+
 	/**
 	 * Adds a node to this node's list of children.
 	 * @param bugNode The new child.
@@ -110,7 +110,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	public String getKey() {
 		return key;
 	}
-	
+
 	/**
 	 * Set the label of this node.
 	 * @param key The new label.
@@ -118,14 +118,14 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
+
 	/**
-	 * @return The decorator image for this node.
+	 * TODO: remove, nodes don't need to know about image decorator
 	 */
 	public Image getImage() {
 		return image;
 	}
-	
+
 	/**
 	 * Sets the decorator image for this node.
 	 * @param newImage The new image.
@@ -146,13 +146,12 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		}
 		return super.equals(arg0);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return getKey().hashCode();
 	}
-	
-	
+
 	/**
 	 * @return The name of this node.
 	 */
@@ -160,22 +159,21 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		return getKey();
 	}
 
-    /**
+	/**
 	 * @return The data (where applicable) this node represents.
 	 */
-    public Object getData() {
-        return data;
-    }
-    
+	public Object getData() {
+		return data;
+	}
 
-    /**
-     * Sets the data that this node represents.
-     * @param data The new piece of data.
-     */
-    public void setData(Object data) {
-        this.data = data;
-    }
-	
+	/**
+	 * Sets the data that this node represents.
+	 * @param data The new piece of data.
+	 */
+	public void setData(Object data) {
+		this.data = data;
+	}
+
 	/**
 	 * Parses the given <code>IBugzillaBug</code> into a tree of
 	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
@@ -189,16 +187,14 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		// Choose the appropriate parsing function based on
 		// the type of IBugzillaBug.
 		if (bug instanceof NewBugModel) {
-			return parseBugReport((NewBugModel)bug);
-		}
-		else if (bug instanceof BugReport) {
-			return parseBugReport((BugReport)bug);
-		}
-		else {
+			return parseBugReport((NewBugModel) bug);
+		} else if (bug instanceof BugReport) {
+			return parseBugReport((BugReport) bug);
+		} else {
 			return null;
 		}
 	}
-    
+
 	/**
 	 * Parses the given <code>NewBugModel</code> into a tree of
 	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
@@ -208,21 +204,21 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 *            The <code>NewBugModel</code> that needs parsing.
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
-    protected static BugzillaOutlineNode parseBugReport(NewBugModel bug){
+	protected static BugzillaOutlineNode parseBugReport(NewBugModel bug) {
 		int bugId = bug.getId();
 		String bugServer = bug.getServer();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
-        Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
-        BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());
+		Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
+		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());
 
-        topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null, bug.getSummary()));
-        
-        BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage, null, bug.getSummary());
-        titleNode.addChild(topNode);
-        
-        return titleNode;
-    }
-    
+		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null, bug.getSummary()));
+
+		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage, null, bug.getSummary());
+		titleNode.addChild(topNode);
+
+		return titleNode;
+	}
+
 	/**
 	 * Parses the given <code>BugReport</code> into a tree of
 	 * <code>BugzillaOutlineNode</code>'s suitable for use in the
@@ -233,41 +229,40 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 * @return The tree of <code>BugzillaOutlineNode</code>'s.
 	 */
 	protected static BugzillaOutlineNode parseBugReport(BugReport bug) {
-	
+
 		int bugId = bug.getId();
 		String bugServer = bug.getServer();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
-        Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
+		Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
 		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());
-		
+
 		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
-		
+
 		topNode.addChild(desc);
-		
-		
+
 		BugzillaOutlineNode comments = null;
 		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
-            Comment comment = iter.next();
+			Comment comment = iter.next();
 
-            if(comments == null){
-                comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug.getSummary());
-                comments.setIsCommentHeader(true);
-            }
+			if (comments == null) {
+				comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug.getSummary());
+				comments.setIsCommentHeader(true);
+			}
 			comments.addChild(new BugzillaOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage, comment, bug.getSummary()));
 		}
-        if(comments != null){
-            topNode.addChild(comments);
-        }
-		
+		if (comments != null) {
+			topNode.addChild(comments);
+		}
+
 		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Comment", defaultImage, null, bug.getSummary()));
-			
+
 		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "BugReport Object", defaultImage, null, bug.getSummary());
 		titleNode.addChild(topNode);
-		
+
 		return titleNode;
-    }
-	
+	}
+
 	public boolean hasComment() {
 		// If the comment category was selected, then the comment object is
 		// not the intended selection (it is just used to help find the correct
@@ -276,7 +271,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	}
 
 	public Comment getComment() {
-		return (hasComment()) ? (Comment)data : null;
+		return (hasComment()) ? (Comment) data : null;
 	}
 
 	public void setComment(Comment comment) {
@@ -326,7 +321,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	public boolean isDescription() {
 		return isDescription;
 	}
-	
+
 	public void setIsCommentHeader(boolean isCommentHeader) {
 		this.isCommentHeader = isCommentHeader;
 	}

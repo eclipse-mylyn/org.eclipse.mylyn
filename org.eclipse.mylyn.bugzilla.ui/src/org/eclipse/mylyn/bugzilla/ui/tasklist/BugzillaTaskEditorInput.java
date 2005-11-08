@@ -29,7 +29,6 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
-
 	private String bugTitle;
 
 	private BugReport offlineBug;
@@ -64,7 +63,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	@Override
 	public String getName() {
-		return "Bug #" + bugId;
+		return bugTask.getDescription(true); 
 	}
 
 	@Override

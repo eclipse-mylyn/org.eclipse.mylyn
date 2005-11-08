@@ -97,7 +97,7 @@ public class TaskSummaryEditor extends EditorPart {
     private Spinner estimated;
     
     private boolean isDirty = false;
-    private TaskEditor parentEditor = null;
+    private MylarTaskEditor parentEditor = null;
 
     private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
         public void taskActivated(ITask activeTask) {    
@@ -554,7 +554,7 @@ public class TaskSummaryEditor extends EditorPart {
 		return;
 	}
 
-	public void setParentEditor(TaskEditor parentEditor) {
+	public void setParentEditor(MylarTaskEditor parentEditor) {
 		this.parentEditor = parentEditor;
 	}
 }

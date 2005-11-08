@@ -22,7 +22,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.tasklist.TaskListImages;
-import org.eclipse.mylar.tasklist.ui.TaskEditor;
+import org.eclipse.mylar.tasklist.ui.MylarTaskEditor;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Composite;
@@ -37,7 +37,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Eric Booth
  * @author Mik Kersten
  */
-public class BugzillaTaskEditor extends TaskEditor {
+public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	private static final String EDITOR_TAB_ITLE = "Bug Editor";
 
@@ -169,7 +169,8 @@ public class BugzillaTaskEditor extends TaskEditor {
 		}
 		
 		// Set the title on the editor's tab
-		this.setPartName("Bug #" + bugzillaEditorInput.getBugId());
+//		this.setPartName("Bug #" + bugzillaEditorInput.getBugId());
+		this.setPartName(bugTask.getDescription(true));
 		this.setTitleImage(TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA));
 	}
 	

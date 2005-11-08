@@ -38,6 +38,7 @@ import org.eclipse.ui.internal.Workbench;
 public class Task implements ITask {
 
 	public static final long INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getActivityTimeoutSeconds() * 1000;
+	public static final int MAX_LABEL_LENGTH = 50;
 	public Color ACTIVE  = new Color(Display.getDefault(), 30, 30, 60);
 	
     private static final long serialVersionUID = 3545518391537382197L;
@@ -362,8 +363,16 @@ public class Task implements ITask {
 		}
 	}
 
-	public String getDescription(boolean label) {
-		return this.label;
+	public String getDescription(boolean truncate) {
+		if (!truncate) {
+			return label;
+		} else {
+			if (label == null || label.length() <= MAX_LABEL_LENGTH) {
+				return label;
+			} else {
+				return label.substring(0, MAX_LABEL_LENGTH) + "...";
+			}
+		}
 	}
 
 	/**

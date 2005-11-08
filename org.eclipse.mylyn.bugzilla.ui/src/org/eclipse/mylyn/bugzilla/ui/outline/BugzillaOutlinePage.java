@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.bugzilla.core.IBugzillaReportSelection;
+import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -75,9 +76,13 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			@Override
 			public Image getImage(Object element) {
 				if (element instanceof BugzillaOutlineNode) {
-					return ((BugzillaOutlineNode)element).getImage();
-				}
-				else {
+					BugzillaOutlineNode node = (BugzillaOutlineNode)element;
+					if (node.getComment() != null) {
+						return node.getImage(); 
+					} else {
+						return BugzillaImages.getImage(BugzillaImages.BUG);
+					}
+				} else {
 					return super.getImage(element);
 				}
 			}
@@ -85,11 +90,15 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BugzillaOutlineNode) {
-					return ((BugzillaOutlineNode)element).getName();
+					BugzillaOutlineNode node = (BugzillaOutlineNode)element;
+					if (node.getComment() != null) {
+						return node.getComment().getAuthorName() 
+						+ " (" + node.getName() + ")";
+					} else {
+						return node.getName();
+					}
 				}
-				else {
-					return super.getText(element);
-				}
+				return super.getText(element);
 			}
 		});
 		viewer.setInput(topTreeNode);

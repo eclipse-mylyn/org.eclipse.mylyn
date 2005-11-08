@@ -40,7 +40,7 @@ import org.eclipse.ui.part.MultiPageSelectionProvider;
  * @author Mik Kersten
  * @author Eric Booth (initial prototype)
  */
-public class TaskEditor extends MultiPageEditorPart {
+public class MylarTaskEditor extends MultiPageEditorPart {
 
 	private static final String TASK_INFO_PAGE_LABEL = "Task Info";
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
@@ -53,12 +53,12 @@ public class TaskEditor extends MultiPageEditorPart {
 	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
 		private ISelection globalSelection;
 		
-		public TaskEditorSelectionProvider(TaskEditor taskEditor) {
+		public TaskEditorSelectionProvider(MylarTaskEditor taskEditor) {
 			super(taskEditor);
 		}
 		
 		public ISelection getSelection() {
-			IEditorPart activeEditor = ((TaskEditor) getMultiPageEditor()).getActiveEditor();
+			IEditorPart activeEditor = ((MylarTaskEditor) getMultiPageEditor()).getActiveEditor();
 			if (activeEditor != null && activeEditor.getSite() != null) {
 				ISelectionProvider selectionProvider = activeEditor.getSite().getSelectionProvider();
 				if (selectionProvider != null)
@@ -68,7 +68,7 @@ public class TaskEditor extends MultiPageEditorPart {
 		}
 
 		public void setSelection(ISelection selection) {
-			IEditorPart activeEditor = ((TaskEditor) getMultiPageEditor()).getActiveEditor();
+			IEditorPart activeEditor = ((MylarTaskEditor) getMultiPageEditor()).getActiveEditor();
 			if (activeEditor != null && activeEditor.getSite() != null) {
 				ISelectionProvider selectionProvider = activeEditor.getSite().getSelectionProvider();
 				if (selectionProvider != null) selectionProvider.setSelection(selection);
@@ -79,7 +79,7 @@ public class TaskEditor extends MultiPageEditorPart {
 		}
 	}
 
-	public TaskEditor() {
+	public MylarTaskEditor() {
 		super();
 		IWorkbench workbench = MylarTasklistPlugin.getDefault().getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();

@@ -11,6 +11,7 @@
 package org.eclipse.mylar.bugzilla.ui.editor;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import javax.security.auth.login.LoginException;
 
@@ -20,6 +21,8 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 
 /**
  * The <code>IEditorInput</code> implementation for <code>ExistingBugEditor</code>.
+ * 
+ * @author Mik Kersten (some hardening of initial prototype)
  */
 public class ExistingBugEditorInput extends AbstractBugEditorInput
 {
@@ -47,7 +50,6 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput
 	 */
 	public ExistingBugEditorInput(int bugId) throws LoginException, IOException {
 		this.bugId = bugId;
-		
 		// get the bug from the server if it exists
 		bug = BugzillaRepository.getInstance().getBug(bugId);
 	}
@@ -56,7 +58,21 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput
 		this.bugId = bugId;
 		
 		if(!offline){
-			bug = BugzillaRepository.getInstance().getBug(bugId);
+			try {
+				bug = BugzillaRepository.getInstance().getBug(bugId);
+			} catch (UnknownHostException e) {
+				bug = BugzillaRepository.getInstance().getCurrentBug(bugId);
+//    			IWorkbench workbench = PlatformUI.getWorkbench();
+//    			workbench.getDisplay().asyncExec(new Runnable() {
+//    	            public void run() {
+//    					MessageDialog.openInformation(
+//							Display.getDefault().getActiveShell(), 
+//							"Mylar Bugzilla Client", 
+//							"Unable to download bug report, using offline copy.");
+//
+//    	            }
+//    	        });
+			}
 		} else {
 			bug = BugzillaRepository.getInstance().getCurrentBug(bugId);
 		}
