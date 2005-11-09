@@ -44,7 +44,7 @@ public class MylarContextManager {
 	private static final String ACTIVITY_ID = "org.eclipse.mylar.core";
 	private static final String ACTIVITY_HANDLE = "attention";
 	private static final String ACTIVITY_KIND = "context";
-	private static final int ACTIVITY_TIMEOUT_SECONDS = 1 * 60; // minutes in seconds 
+	private static final int ACTIVITY_TIMEOUT_SECONDS = 3 * 60; // minutes in seconds 
 	
 	public static final String CONTEXT_HISTORY_FILE_NAME = "context-history";
 	public static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylar.core.model.interest.propagation";
