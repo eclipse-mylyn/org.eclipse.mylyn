@@ -117,7 +117,7 @@ public class MylarWorkingSetUpdater implements IWorkingSetUpdater, IMylarContext
 	
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 //		IMylarContext t = MylarPlugin.getContextManager().getActiveContext();
-		for(IMylarElement node: MylarPlugin.getContextManager().getActiveContextResources()){
+		for(IMylarElement node: MylarPlugin.getContextManager().getInterestingDocuments()){
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 
 			// HACK comparing extension to string

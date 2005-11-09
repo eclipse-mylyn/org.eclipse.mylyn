@@ -9,17 +9,23 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui;
+package org.eclipse.mylar.ide.internal;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.MylarIdePlugin;
+import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -33,6 +39,18 @@ public class MylarEditorManager implements IMylarContextListener {
 	private boolean asyncExecMode = true;
 	
 	public void contextActivated(IMylarContext context) {
+		IResource[] resources = MylarIdePlugin.getDefault().getInterestingResources();
+		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		for (int i = 0; i < resources.length; i++) {
+			IResource resource = resources[i];
+			if (resource instanceof IFile) {
+				try {
+					IDE.openEditor(activePage, (IFile)resource, false);
+				} catch (PartInitException e) {
+					MylarPlugin.fail(e, "failed to open editor", false);
+				}
+			}
+		}
         IMylarElement activeNode = context.getActiveNode();
         if (activeNode != null) {
             MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);

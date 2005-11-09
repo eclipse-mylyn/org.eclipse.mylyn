@@ -10,11 +10,19 @@
  *******************************************************************************/
 package org.eclipse.mylar.ide;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.internal.ActiveSearchViewTracker;
+import org.eclipse.mylar.ide.internal.MylarEditorManager;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
-import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction;
 import org.eclipse.ui.IWorkbench;
@@ -29,57 +37,64 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarIdePlugin extends AbstractUIPlugin {
 
-    private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
-    protected ProblemsListInterestFilter interestFilter = new ProblemsListInterestFilter();    
-    
-    private ResourceSelectionMonitor resourceSelectionMonitor;
+	private NavigatorRefreshListener navigatorRefreshListener = new NavigatorRefreshListener();
+
+	private MylarEditorManager editorManager = new MylarEditorManager();
+    	
+	private ResourceSelectionMonitor resourceSelectionMonitor;
+
 	private static MylarIdePlugin plugin;
-	
+
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
-	
+
 	public MylarIdePlugin() {
 		plugin = this;
 	}
-	
+
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
-          
-  		final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-            	resourceSelectionMonitor = new ResourceSelectionMonitor();
-                MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
+
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				resourceSelectionMonitor = new ResourceSelectionMonitor();
+				MylarPlugin.getContextManager().addListener(editorManager);
             	
-            	if (ApplyMylarToNavigatorAction.getDefault() != null) ApplyMylarToNavigatorAction.getDefault().update();
-                if (ApplyMylarToProblemsListAction.getDefault() != null) ApplyMylarToProblemsListAction.getDefault().update();
-                
-                workbench.addWindowListener(activeSearchViewTracker);
-        		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
-        		for (int i= 0; i < windows.length; i++) {
-        			windows[i].addPageListener(activeSearchViewTracker);
-        			IWorkbenchPage[] pages= windows[i].getPages();
-        			for (int j= 0; j < pages.length; j++) {
-        				pages[j].addPartListener(activeSearchViewTracker);
-        			}
-        		}
-            }
-        });
+				MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
+
+				if (ApplyMylarToNavigatorAction.getDefault() != null)
+					ApplyMylarToNavigatorAction.getDefault().update();
+				if (ApplyMylarToProblemsListAction.getDefault() != null)
+					ApplyMylarToProblemsListAction.getDefault().update();
+
+				workbench.addWindowListener(activeSearchViewTracker);
+				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+				for (int i = 0; i < windows.length; i++) {
+					windows[i].addPageListener(activeSearchViewTracker);
+					IWorkbenchPage[] pages = windows[i].getPages();
+					for (int j = 0; j < pages.length; j++) {
+						pages[j].addPartListener(activeSearchViewTracker);
+					}
+				}
+			}
+		});
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
+		MylarPlugin.getContextManager().removeListener(editorManager);
 		MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
 		MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
-		
+
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.removeWindowListener(activeSearchViewTracker);
-		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
-		for (int i= 0; i < windows.length; i++) {
-			IWorkbenchPage[] pages= windows[i].getPages();
+		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+		for (int i = 0; i < windows.length; i++) {
+			IWorkbenchPage[] pages = windows[i].getPages();
 			windows[i].removePageListener(activeSearchViewTracker);
-			for (int j= 0; j < pages.length; j++) {
+			for (int j = 0; j < pages.length; j++) {
 				pages[j].removePartListener(activeSearchViewTracker);
 			}
 		}
@@ -88,12 +103,36 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public static MylarIdePlugin getDefault() {
 		return plugin;
 	}
+
+	public IResource[] getInterestingResources() {
+		List<IResource> interestingResources = new ArrayList<IResource>();
+		Set<IMylarElement> resourceElements = MylarPlugin.getContextManager().getInterestingDocuments();
+		for (IMylarElement element : resourceElements) {
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+			Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
+			if (object instanceof IResource) {
+				interestingResources.add((IResource)object);
+			} else if (object instanceof IAdaptable) {
+				Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
+				if (adapted instanceof IResource) {
+					interestingResources.add((IResource)adapted);
+				}
+			}
+		}
+		
+		return interestingResources.toArray(new IResource[interestingResources.size()]);
+	}
+	
+	public MylarEditorManager getEditorManager() {
+		return editorManager;
+	}
 	
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
+	 * 
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {

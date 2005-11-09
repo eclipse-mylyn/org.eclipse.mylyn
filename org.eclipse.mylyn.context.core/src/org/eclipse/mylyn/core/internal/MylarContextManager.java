@@ -606,7 +606,7 @@ public class MylarContextManager {
 		return acceptedLandmarks;
 	}
 	
-    public Set<IMylarElement> getInterestingResources(IMylarContext context) {
+    public Set<IMylarElement> getInterestingDocuments(IMylarContext context) {
         Set<IMylarElement> interestingFiles = new HashSet<IMylarElement>();
         List<IMylarElement> allIntersting = context.getInteresting();
         for (IMylarElement node : allIntersting) {
@@ -620,8 +620,8 @@ public class MylarContextManager {
 	/**
 	 * Get the interesting resources for the active context.
 	 */
-	public Set<IMylarElement> getActiveContextResources() {
-		return getInterestingResources(activeContext);
+	public Set<IMylarElement> getInterestingDocuments() {
+		return getInterestingDocuments(activeContext);
     }
 
 	public void actionObserved(IAction action, String info) {

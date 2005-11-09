@@ -112,32 +112,4 @@ public class JavaUiBridge implements IMylarUiBridge {
 		return null;
 	}
 
-//    public void refreshOutline(final Object element, final boolean updateLabels, final boolean setSelection) {
-//        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//            public void run() { 
-//                if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) return;
-//                IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//                final TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
-//                if (treeViewer != null) {
-//                    if (element == null) {
-//                    	treeViewer.getControl().setRedraw(false);
-//    	                treeViewer.refresh(true);
-//    	                treeViewer.getControl().setRedraw(true);
-//                    } else if (element instanceof IJavaElement) {
-//                        IJavaElement toRefresh = (IJavaElement)element;
-//                        if (element instanceof IMember) {
-//                            toRefresh = toRefresh.getParent();
-//                        } 
-//                        treeViewer.getControl().setRedraw(false);
-//                        treeViewer.refresh(toRefresh, updateLabels); 
-//    	                treeViewer.getControl().setRedraw(true);
-//                    }
-//                    if (setSelection) {
-//    	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
-//    	                    treeViewer.setSelection(new StructuredSelection(element));
-//                    }
-//                }
-//            }
-//        });  
-//    }
 }

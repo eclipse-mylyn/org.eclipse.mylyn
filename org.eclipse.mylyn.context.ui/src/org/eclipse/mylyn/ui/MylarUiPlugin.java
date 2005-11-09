@@ -86,7 +86,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     private ColorMap colorMap = new ColorMap(); 
     
     private MylarViewerManager viewerManager = new MylarViewerManager();
-    private MylarEditorManager editorManager = new MylarEditorManager();
     
     private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
     
@@ -170,7 +169,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
             	MylarPlugin.getContextManager().addListener(viewerManager);
-            	MylarPlugin.getContextManager().addListener(editorManager);
             	
                 Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(contentOutlineManager);
         		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
@@ -210,7 +208,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
     public void stop(BundleContext context) throws Exception {
         super.stop(context);
         MylarPlugin.getContextManager().removeListener(viewerManager);
-        MylarPlugin.getContextManager().removeListener(editorManager);
     }
     
     private void initializeActions() {
@@ -478,9 +475,5 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 				MylarPlugin.log(e, "Could not load bridge extension");
 			}
 		}
-	}
-
-	public MylarEditorManager getEditorManager() {
-		return editorManager;
 	}
 }

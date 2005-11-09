@@ -139,13 +139,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
 					}
 
+					CVSUIPlugin.getPlugin().getChangeSetManager().add(dynamicChangeSet);
 					//        		 needed if Mylar source viewer configuration does not get initialized properly
 					//        		resetActiveEditor();
 				}
 			});
 			
 			JavaCore.addElementChangedListener(javaElementChangeListener);
-			CVSUIPlugin.getPlugin().getChangeSetManager().add(dynamicChangeSet);
 			savePluginPreferences();
 		} catch (Exception e) {
 			MylarPlugin.fail(e, "Mylar Java Plug-in Initialization failed", true);
@@ -182,20 +182,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 		// TODO: uninstall editor tracker
 	}
-
-	//	private void resetActiveEditor() {
-	//		IEditorPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-	//		if (part instanceof MylarCompilationUnitEditor) {
-	//			MylarCompilationUnitEditor editor = (MylarCompilationUnitEditor)part;
-	//			IJavaElement inputElement = editor.getInputJavaElement();
-	//			editor.close(true);
-	//			try {
-	//				JavaUI.openInEditor(inputElement);
-	//			} catch (Exception e) {
-	//				MylarPlugin.fail(e, "Could not reset active editor", false);
-	//			}
-	//		}
-	//	}
 
 	private void installEditorTracker(IWorkbench workbench) {
 		editorTracker = new JavaEditorTracker();
@@ -318,6 +304,20 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		return dynamicChangeSet;
 	}
 
+//	private void resetActiveEditor() {
+//		IEditorPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//		if (part instanceof MylarCompilationUnitEditor) {
+//			MylarCompilationUnitEditor editor = (MylarCompilationUnitEditor)part;
+//			IJavaElement inputElement = editor.getInputJavaElement();
+//			editor.close(true);
+//			try {
+//				JavaUI.openInEditor(inputElement);
+//			} catch (Exception e) {
+//				MylarPlugin.fail(e, "Could not reset active editor", false);
+//			}
+//		}
+//	}
+	
 	//    /**
 	//	 * 
 	//	 * CODE FROM
