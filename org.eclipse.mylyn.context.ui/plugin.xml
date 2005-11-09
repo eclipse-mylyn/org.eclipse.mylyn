@@ -251,7 +251,6 @@
             icon="icons/elcl16/capture-pause.gif"
             id="org.eclipse.mylar.ui.context.capture.pause"
             label="Pause Capturing Context"
-            menubarPath="context"
             style="toggle"
             toolbarPath="context"
             tooltip="Pause Capturing Context"/>
