@@ -147,8 +147,7 @@
 	    </viewContribution> 
 	</extension>
 	
-	<extension
-         point="org.eclipse.ui.popupMenus">
+	<extension point="org.eclipse.ui.popupMenus"> 
       <viewerContribution
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
@@ -184,7 +183,7 @@
          </action>
           
           
-          	<action
+        <action
            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction"
            enablesFor="*"
            icon="icons/etool16/category-query-new.gif"
