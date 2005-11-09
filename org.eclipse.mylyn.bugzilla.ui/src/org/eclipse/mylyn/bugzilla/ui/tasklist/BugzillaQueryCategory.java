@@ -34,7 +34,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.IC
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Color;
@@ -220,7 +220,7 @@ public class BugzillaQueryCategory implements IQuery {
 				BugzillaHit hit = (BugzillaHit) child;
 				BugzillaTask task = hit.getAssociatedTask();
 				if (task != null && task.isActive()) {
-					return Task.ACTIVE;
+					return MylarTasklistPlugin.ACTIVE_TASK;
 				}
 			}
 		}

@@ -126,7 +126,7 @@ import org.eclipse.ui.part.ViewPart;
  * @author Ken Sueda
  */
 public class TaskListView extends ViewPart {
-
+ 
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
 	private static final String SEPARATOR_ID_REPORTS = "reports";

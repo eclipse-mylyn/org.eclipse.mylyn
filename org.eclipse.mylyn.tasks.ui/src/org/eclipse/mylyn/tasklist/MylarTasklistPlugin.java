@@ -35,6 +35,8 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -54,7 +56,12 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private TaskListExternalizer externalizer;
     private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
     private List<IContextEditorFactory> contextEditors = new ArrayList<IContextEditorFactory>();    
-    
+
+    /** 
+     * TODO: move to common color map.
+     */
+    public static Color ACTIVE_TASK = new Color(Display.getDefault(), 36, 22, 50);
+	    
     public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.ui.planner.wizard";
     public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.planner.editor";
     public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasklist.report.open.editor";

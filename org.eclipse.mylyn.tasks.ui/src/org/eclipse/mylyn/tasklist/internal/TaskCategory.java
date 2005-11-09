@@ -18,10 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
 import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.CategoryEditorInput;
 import org.eclipse.swt.graphics.Color;
@@ -167,7 +166,7 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	public Color getForeground() {
 		for (ITask child : getChildren()) {
 			if (child.isActive())
-				return Task.ACTIVE;
+				return MylarTasklistPlugin.ACTIVE_TASK;
 		}
 		return null;
 	}

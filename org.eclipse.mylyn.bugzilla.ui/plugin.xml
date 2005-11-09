@@ -150,7 +150,7 @@
 	<extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            id="org.eclipse.mylar.bugzilla.ui.viewerContribution1"
+            id="org.eclipse.mylar.bugzilla.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
          <!--
          <action

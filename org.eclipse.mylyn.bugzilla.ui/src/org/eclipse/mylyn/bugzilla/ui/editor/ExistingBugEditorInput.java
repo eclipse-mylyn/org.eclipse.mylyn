@@ -11,7 +11,6 @@
 package org.eclipse.mylar.bugzilla.ui.editor;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import javax.security.auth.login.LoginException;
 
@@ -60,7 +59,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput
 		if(!offline){
 			try {
 				bug = BugzillaRepository.getInstance().getBug(bugId);
-			} catch (UnknownHostException e) {
+			} catch (IOException e) {
 				bug = BugzillaRepository.getInstance().getCurrentBug(bugId);
 //    			IWorkbench workbench = PlatformUI.getWorkbench();
 //    			workbench.getDisplay().asyncExec(new Runnable() {
