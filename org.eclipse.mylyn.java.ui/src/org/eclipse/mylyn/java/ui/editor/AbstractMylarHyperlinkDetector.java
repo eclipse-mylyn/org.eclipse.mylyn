@@ -17,6 +17,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/**
+ * @author Mik Kersten
+ */
 public abstract class AbstractMylarHyperlinkDetector implements IHyperlinkDetector {
 
 	private ITextEditor editor;
