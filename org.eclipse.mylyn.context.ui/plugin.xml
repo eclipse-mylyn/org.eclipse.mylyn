@@ -29,7 +29,7 @@
 	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
-	 </objectContribution>
+	 </objectContribution> 
 	 
      <viewerContribution
            id="org.eclipse.mylar.ui.tasklist.contribution"

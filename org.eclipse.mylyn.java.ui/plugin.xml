@@ -151,7 +151,7 @@
    </extension>
   
    <extension point="org.eclipse.ui.viewActions"> 
-	<viewContribution 
+		<viewContribution 
 		id="org.eclipse.mylar.java.explorer.contribution" 
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
     	<action
@@ -169,10 +169,10 @@
  	  <viewContribution
        id="org.eclipse.mylar.ui.views.active.search.contribution"
        targetID="org.eclipse.mylar.ui.views.active.search">
- </viewContribution>
-</extension>
+ 		</viewContribution>
+	</extension>
 	
-  <extension point = "org.eclipse.ui.popupMenus">
+  <extension point="org.eclipse.ui.popupMenus">
        <viewerContribution
             id="org.eclipse.mylar.java.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
@@ -191,6 +191,7 @@
            </enablement>
         </action>
      </viewerContribution>
+     
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.jdt.core.IJavaElement">
