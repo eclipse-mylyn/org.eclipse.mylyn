@@ -956,18 +956,17 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
-		//    	manager.removeAll();
 		manager.add(new Separator(SEPARATOR_ID_REPORTS));
 		manager.add(createTaskAction);
 //		manager.add(createCategoryAction);
 		manager.add(new Separator());
 		manager.add(filterCompleteTask);
 		manager.add(filterOnPriority);
+		manager.add(new Separator("navigation"));
 		manager.add(previousTaskAction);
 		manager.add(nextTaskAction);
-//		manager.add(new Separator("context"));
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
+		manager.add(new Separator("context"));
+//		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	void fillContextMenu(IMenuManager manager) {
