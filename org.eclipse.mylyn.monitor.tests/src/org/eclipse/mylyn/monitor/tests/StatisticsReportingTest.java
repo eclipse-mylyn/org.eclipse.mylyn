@@ -93,6 +93,14 @@ public class StatisticsReportingTest extends TestCase {
 		logger.start();		
 		final InteractionEvent first = mockExplorerSelection("A.java");
 		mockUserDelay();
+		
+		try {
+			// XXX: this could be sensitive to CPU speeds
+			Thread.sleep(1000); 
+		} catch(InterruptedException ie) { 
+			fail();
+		}
+		
 		final InteractionEvent second = mockExplorerSelection("A.java");
 		
 		assertTrue(!first.getDate().equals(second.getDelta()));
@@ -111,12 +119,6 @@ public class StatisticsReportingTest extends TestCase {
 		logger.stop();
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
   
-//		try {
-//			// XXX: this could be sensitive to CPU speeds
-//			Thread.sleep(4000);
-//		} catch(InterruptedException ie) { 
-//			fail();
-//		}
 		//		System.err.println(">>> " + editRatioCollector.get);
 		// TODO: these are off from expected when test run alone, due to unknown element selections
 		assertEquals(0.5f, editRatioCollector.getBaselineRatio(-1));
