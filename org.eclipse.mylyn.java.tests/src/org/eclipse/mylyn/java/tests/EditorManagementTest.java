@@ -20,7 +20,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.internal.MylarEditorManager;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -35,7 +35,6 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 
 	private IWorkbenchPage page;
 	private IViewPart view;
-	private MylarEditorManager editorManager = new MylarEditorManager();
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -45,9 +44,10 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
+		assertTrue(MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
+		
 //		MylarIdePlugin.getDefault().getEditorManager().setAsyncExecMode(false);
-	
-		page.closeAllEditors(true);
+//		page.closeAllEditors(true);
 //		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 //			protected void execute(IProgressMonitor monitor) throws CoreException {
 //				for (int i = 0; i < page.getEditors().length; i++) {
@@ -70,9 +70,8 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 	
 	@SuppressWarnings("deprecation")
 	public void testAutoClose() throws JavaModelException, InvocationTargetException, InterruptedException {
-		editorManager.closeAllEditors();
+		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
-		assertTrue(MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
         IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
         monitor.selectionChanged(view, new StructuredSelection(m1));
@@ -86,7 +85,7 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 	
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException {
-		editorManager.closeAllEditors();
+		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		manager.contextActivated(taskId, taskId);
 		  

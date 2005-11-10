@@ -21,7 +21,6 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.internal.ActiveSearchViewTracker;
-import org.eclipse.mylar.ide.internal.MylarEditorManager;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction;

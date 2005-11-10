@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ide.internal;
+package org.eclipse.mylar.ide;
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -31,48 +30,40 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class MylarEditorManager implements IMylarContextListener {
 
-	/**
-	 * Set false for testing.
-	 */
-//	private boolean asyncExecMode = true;
-	
 	public void contextActivated(IMylarContext context) {
-		IResource[] resources = MylarIdePlugin.getDefault().getInterestingResources();
-		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-		for (int i = 0; i < resources.length; i++) {
-			IResource resource = resources[i];
-			if (resource instanceof IFile) {
-				try {
-					IDE.openEditor(activePage, (IFile)resource, false);
-				} catch (PartInitException e) {
-					MylarPlugin.fail(e, "failed to open editor", false);
+    	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE)) {
+			IResource[] resources = MylarIdePlugin.getDefault().getInterestingResources();
+			IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+			for (int i = 0; i < resources.length; i++) {
+				IResource resource = resources[i];
+				if (resource instanceof IFile) {
+					try {
+						IDE.openEditor(activePage, (IFile)resource, false);
+					} catch (PartInitException e) {
+						MylarPlugin.fail(e, "failed to open editor", false);
+					}
 				}
 			}
-		}
-        IMylarElement activeNode = context.getActiveNode();
-        if (activeNode != null) {
-            MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
-        }
+	        IMylarElement activeNode = context.getActiveNode();
+	        if (activeNode != null) {
+	            MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
+	        }
+    	}
 	}
 
 	public void contextDeactivated(IMylarContext context) {
     	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE)) {
-//    		if (!asyncExecMode) {
-//    			closeAllEditors();
-//    		}
         	closeAllEditors();
+//    		if (!asyncExecMode) {
+//			closeAllEditors();
+//		}        	
 //        	IWorkbench workbench = PlatformUI.getWorkbench();
 //            workbench.getDisplay().asyncExec(new Runnable() {
 //                public void run() {
 //                	closeAllEditors();
 //                }
 //            });
-      	} else {
-      		// TODO: enable closing of interesting editors
-//		    	for (IMylarElement node : MylarPlugin.getContextManager().getInterestingResources(context)) {
-//		            MylarUiPlugin.getDefault().getUiBridge(node.getStructureKind()).close(node);
-//		        }       		
-      	}
+      	} 
 	}
 
 	public void closeAllEditors() {
