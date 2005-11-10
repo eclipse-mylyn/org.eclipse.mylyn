@@ -93,18 +93,18 @@ public class StatisticsReportingTest extends TestCase {
 		logger.start();		
 		final InteractionEvent first = mockExplorerSelection("A.java");
 		mockUserDelay();
-		
+		mockUserDelay();
+		final InteractionEvent second = mockExplorerSelection("A.java");
+ 
+		assertTrue(!first.getDate().equals(second.getDelta()));
+				
 		try {
-			// XXX: this could be sensitive to CPU speeds
-			Thread.sleep(1000); 
+			// XXX: this is a hack and sensitive to CPU speeds
+			Thread.sleep(3000); 
 		} catch(InterruptedException ie) { 
 			fail();
 		}
 		
-		final InteractionEvent second = mockExplorerSelection("A.java");
-		
-		assertTrue(!first.getDate().equals(second.getDelta()));
-				
 		mockEdit("A.java");		
 		
 		MylarPlugin.getDefault().notifyInteractionObserved(
@@ -118,7 +118,7 @@ public class StatisticsReportingTest extends TestCase {
 
 		logger.stop();
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
-  
+		
 		//		System.err.println(">>> " + editRatioCollector.get);
 		// TODO: these are off from expected when test run alone, due to unknown element selections
 		assertEquals(0.5f, editRatioCollector.getBaselineRatio(-1));
