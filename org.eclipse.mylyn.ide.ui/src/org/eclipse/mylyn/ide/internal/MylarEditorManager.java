@@ -21,10 +21,8 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 
@@ -36,7 +34,7 @@ public class MylarEditorManager implements IMylarContextListener {
 	/**
 	 * Set false for testing.
 	 */
-	private boolean asyncExecMode = true;
+//	private boolean asyncExecMode = true;
 	
 	public void contextActivated(IMylarContext context) {
 		IResource[] resources = MylarIdePlugin.getDefault().getInterestingResources();
@@ -59,15 +57,16 @@ public class MylarEditorManager implements IMylarContextListener {
 
 	public void contextDeactivated(IMylarContext context) {
     	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE)) {
-    		if (!asyncExecMode) {
-    			closeAllEditors();
-    		}
-        	IWorkbench workbench = PlatformUI.getWorkbench();
-            workbench.getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                	closeAllEditors();
-                }
-            });
+//    		if (!asyncExecMode) {
+//    			closeAllEditors();
+//    		}
+        	closeAllEditors();
+//        	IWorkbench workbench = PlatformUI.getWorkbench();
+//            workbench.getDisplay().asyncExec(new Runnable() {
+//                public void run() {
+//                	closeAllEditors();
+//                }
+//            });
       	} else {
       		// TODO: enable closing of interesting editors
 //		    	for (IMylarElement node : MylarPlugin.getContextManager().getInterestingResources(context)) {
@@ -125,8 +124,8 @@ public class MylarEditorManager implements IMylarContextListener {
 		
 	}
 
-	public void setAsyncExecMode(boolean asyncExecMode) {
-		this.asyncExecMode = asyncExecMode;
-	}
+//	public void setAsyncExecMode(boolean asyncExecMode) {
+//		this.asyncExecMode = asyncExecMode;
+//	}
 
 }

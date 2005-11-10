@@ -20,7 +20,6 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.internal.MylarEditorManager;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.ui.IMylarUiBridge;
@@ -46,7 +45,7 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
-		MylarIdePlugin.getDefault().getEditorManager().setAsyncExecMode(false);
+//		MylarIdePlugin.getDefault().getEditorManager().setAsyncExecMode(false);
 	
 		page.closeAllEditors(true);
 //		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
