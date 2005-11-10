@@ -39,7 +39,8 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 
 	public static ApplyMylarToProblemsListAction INSTANCE;
-    public TableViewer cachedProblemsTableViewer = null;
+    public StructuredViewer cachedProblemsTableViewer = null;
+//    private TreeViewer cachedProblemsTreeViewer = null;
     private MarkerFilter defaultFilter = null;	
 //    private ViewerSorter defaultSorter = null;
     private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
@@ -80,7 +81,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	                Class infoClass = TableView.class;//problemView.getClass();
 	                Method method = infoClass.getDeclaredMethod("getViewer", new Class[] { } );
 	                method.setAccessible(true);
-	                cachedProblemsTableViewer = (TableViewer)method.invoke(view, new Object[] { });
+	                cachedProblemsTableViewer = (StructuredViewer)method.invoke(view, new Object[] { });
 	    			updateLabelProvider(cachedProblemsTableViewer);           
 	            } 
 	        } catch (Exception e) {
@@ -166,18 +167,23 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
         	ProblemView view = getProblemView();
         	if (view != null) {
         		Class viewClass = view.getClass();
-        		Field problemFilter = viewClass.getDeclaredField("problemFilter");
-        		problemFilter.setAccessible(true);
-        		defaultFilter = (MarkerFilter)problemFilter.get(view);	
         		
-        		Class filterClass = defaultFilter.getClass().getSuperclass();
-        		Method method = filterClass.getDeclaredMethod("setEnabled", new Class[] { boolean.class } );
-                method.setAccessible(true);
-        		method.invoke(defaultFilter, new Object[] { enabled });
-        		
-                Method refresh = view.getClass().getSuperclass().getDeclaredMethod("refresh", new Class[] { } );
-                refresh.setAccessible(true);
-                refresh.invoke(view, new Object[] { } );
+        		try { 
+        			// 3.1 way of removing existing filter
+	        		Field problemFilter = viewClass.getDeclaredField("problemFilter");
+	        		problemFilter.setAccessible(true);
+	        		defaultFilter = (MarkerFilter)problemFilter.get(view);	
+	        		
+	        		Class filterClass = defaultFilter.getClass().getSuperclass();
+	        		Method method = filterClass.getDeclaredMethod("setEnabled", new Class[] { boolean.class } );
+	                method.setAccessible(true);
+	        		method.invoke(defaultFilter, new Object[] { enabled });
+	                Method refresh = view.getClass().getSuperclass().getDeclaredMethod("refresh", new Class[] { } );
+	                refresh.setAccessible(true);
+	                refresh.invoke(view, new Object[] { } );
+        		} catch (NoSuchFieldException nfe) {
+        			// should 
+        		}
             } 
         } catch (Exception e) {
         	MylarPlugin.fail(e, "Couldn't toggle problem filter (not yet supported on Eclipse 3.2)", false);
