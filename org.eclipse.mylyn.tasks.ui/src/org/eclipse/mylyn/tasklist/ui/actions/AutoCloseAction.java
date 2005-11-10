@@ -19,16 +19,17 @@ import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
  * @author Mik Kersten and Ken Sueda
  */
 public class AutoCloseAction extends Action {
-	
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.auto.close";
-	private static final String LABEL = "Auto Close Editors";
-	
+
+	private static final String LABEL = "Manage Editors with Activation";
+
 	public AutoCloseAction() {
 		setText(LABEL);
 		setId(ID);
 		setChecked(MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
 	}
-	
+
 	@Override
 	public void run() {
 		boolean on = !MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE);
