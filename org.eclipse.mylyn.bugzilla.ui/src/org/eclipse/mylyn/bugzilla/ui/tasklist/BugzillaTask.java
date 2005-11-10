@@ -416,7 +416,9 @@ public class BugzillaTask extends Task {
 			} catch (Exception e) {
 				MylarPlugin.fail(e, "Could not download report", false);
 			}
-			BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
+			if (BugzillaUiPlugin.getDefault() != null) {
+				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
+			}
 			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 		}
 	}
