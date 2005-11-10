@@ -32,7 +32,7 @@ public class AllTests {
         
         // NOTE: the order of these tests matters
         // TODO: make tests clear workbench state on completion
-        suite.addTest(AllMonitorTests.suite());
+        suite.addTest(AllMonitorTests.suite()); 
         suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
         suite.addTest(AllJavaTests.suite());
         suite.addTest(AllCoreTests.suite());
