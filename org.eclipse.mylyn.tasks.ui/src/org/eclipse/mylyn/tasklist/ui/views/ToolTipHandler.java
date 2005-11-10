@@ -195,7 +195,9 @@ public class ToolTipHandler {
 					return;
 				}
 
-				if (tipShell.getShell() != null && tipShell.getShell().getParent() != null
+				if (tipShell.getShell() != null 
+						&& tipShell.getShell().getParent() != null
+						&& Display.getCurrent().getActiveShell() != null
 						&& tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()) {
 					tipShell = createTipShell(Display.getCurrent().getActiveShell());
 				}
