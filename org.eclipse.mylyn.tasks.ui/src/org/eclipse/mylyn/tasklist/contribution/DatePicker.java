@@ -11,8 +11,10 @@
 
 package org.eclipse.mylar.tasklist.contribution;
 
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.eclipse.swt.SWT;
@@ -47,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Mik Kersten
  */
 public class DatePicker extends Composite {
-
+ 
 	private Text dateText = null;
 
 	private Button pickButton = null;
@@ -143,8 +145,8 @@ public class DatePicker extends Composite {
 	}
 
 	private void updateDateText() {
-		dateText.setText(date.get(Calendar.DAY_OF_MONTH) + "/"
-				+ date.get(Calendar.MONTH) + "/" + date.get(Calendar.YEAR));
+		Date currentDate = new Date(date.getTimeInMillis());
+		dateText.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(currentDate));
 	}
 
 	public void setDateText(String text) {
