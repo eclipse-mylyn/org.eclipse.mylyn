@@ -121,13 +121,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 						}
 					}
 
-					javaEditingMonitor = new JavaEditingMonitor();
-					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
-					installEditorTracker(workbench);
-
-					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
-					service.addPostSelectionListener(packageExplorerManager);
-
 					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
 						ApplyMylarToPackageExplorerAction.getDefault().update();
 						getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
@@ -139,6 +132,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
 					}
 
+					javaEditingMonitor = new JavaEditingMonitor();
+					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+					installEditorTracker(workbench);
+
+					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+					service.addPostSelectionListener(packageExplorerManager);
+					
 					CVSUIPlugin.getPlugin().getChangeSetManager().add(dynamicChangeSet);
 					//        		 needed if Mylar source viewer configuration does not get initialized properly
 					//        		resetActiveEditor();
