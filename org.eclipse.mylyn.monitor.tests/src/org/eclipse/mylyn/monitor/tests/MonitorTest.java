@@ -23,11 +23,15 @@ import junit.framework.TestCase;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.monitor.monitors.BrowserMonitor;
 import org.eclipse.mylar.monitor.monitors.KeybindingCommandMonitor;
+import org.eclipse.mylar.monitor.monitors.PerspectiveChangeMonitor;
 import org.eclipse.mylar.monitor.monitors.SelectionMonitor;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.internal.Workbench;
 
 /**
@@ -39,6 +43,7 @@ public class MonitorTest extends TestCase {
     private SelectionMonitor selectionMonitor = new SelectionMonitor();
     private KeybindingCommandMonitor commandMonitor = new KeybindingCommandMonitor();
     private BrowserMonitor browserMonitor = new BrowserMonitor();
+    private PerspectiveChangeMonitor perspectiveMonitor = new PerspectiveChangeMonitor();
         
     @Override
 	protected void setUp() throws Exception {
@@ -123,11 +128,28 @@ public class MonitorTest extends TestCase {
         logger.stop();
         List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
         assertTrue(events.size() >= 2); 
-    }    
+        
+        logger.stop();
+        MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
+        logger.start();
+     
+        generatePerspectiveSwitch();
+        assertTrue(monitorFile.exists());
+        logger.stop();
+        events = logger.getHistoryFromFile(monitorFile);
+        assertTrue(events.size() >= 2); 
+  }    
 
 	private void generateSelection() {
 		selectionMonitor.selectionChanged(
                 Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart(),
                 new StructuredSelection("yo"));
+	}
+	
+	private void generatePerspectiveSwitch() {
+        IPerspectiveRegistry registry = MylarPlugin.getDefault().getWorkbench().getPerspectiveRegistry();
+        IPerspectiveDescriptor perspective = registry.clonePerspective("newId","newLabel",registry.getPerspectives()[0]);
+        
+        perspectiveMonitor.perspectiveActivated(null, perspective);
 	}
 }
