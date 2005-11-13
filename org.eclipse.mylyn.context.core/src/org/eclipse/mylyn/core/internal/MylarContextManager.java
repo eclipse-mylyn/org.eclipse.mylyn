@@ -391,7 +391,11 @@ public class MylarContextManager {
 		    if (context != null) {
 		    	contextActivated(context);
 		        for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-		        	listener.contextActivated(context);
+		        	try {
+		        		listener.contextActivated(context);
+					} catch (Exception e) {
+						MylarPlugin.fail(e, "context listener failed", false);
+					}
 		        }
 		        refreshRelatedElements();
 		    } else {
@@ -422,7 +426,11 @@ public class MylarContextManager {
 	            saveContext(id, path); 
 	            activeContext.getContextMap().remove(id);
 	            for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-	            	listener.contextDeactivated(context);
+	            	try {
+	            		listener.contextDeactivated(context);
+					} catch (Exception e) {
+						MylarPlugin.fail(e, "context listener failed", false);
+					}
 	            }
 	        }
 	        if (!activationHistorySuppressed) {
