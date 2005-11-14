@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -135,6 +136,27 @@ public class JavaStructureBridge implements IMylarStructureBridge {
      * i.e. they're not IJavaElement(s).
      */
     public boolean canFilter(Object object) {
+    	if (object instanceof IJavaElement) {
+    		try {
+	    		IJavaElement element = (IJavaElement)object;
+	            IResource resource = element.getCorrespondingResource();
+	            boolean hasError = false; 
+	            if (resource != null) {
+		            IMarker[] markers = resource.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, 2);
+		            for (int j = 0; j < markers.length; j++) {
+		                if (markers[j] != null
+		                	&& markers[j].getAttribute(IMarker.SEVERITY) != null
+		                	&& markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
+		                    hasError = true;
+		                } 
+		            } 
+		            if (hasError) return false;
+	            }
+			} catch (CoreException e) {
+				// ignore
+			}
+    	}
+    	
         if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
             return true;
         }
