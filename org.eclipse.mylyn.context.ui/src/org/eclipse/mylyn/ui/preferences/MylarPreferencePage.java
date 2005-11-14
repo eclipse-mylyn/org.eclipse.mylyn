@@ -32,7 +32,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.internal.ColorMap;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -44,7 +43,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -77,9 +75,9 @@ public class MylarPreferencePage extends PreferencePage implements
 	private HighlighterContentProvider contentProvider = null;
 	
 	// Buttons for gamma setting
-	private Button lightened;
-	private Button darkened;
-	private Button standard;
+//	private Button lightened;
+//	private Button darkened;
+//	private Button standard;
 
 	// Set the table column property names
 	private static final String LABEL_COLUMN = "Label";
@@ -115,12 +113,12 @@ public class MylarPreferencePage extends PreferencePage implements
 		tableViewer.setContentProvider(contentProvider);
 		tableViewer.setLabelProvider(new HighlighterLabelProvider());
 		tableViewer.setInput(MylarUiPlugin.getDefault().getHighlighterList());
-		createGammaSettingControl(entryTable);	
+//		createGammaSettingControl(entryTable);	
 		createExclusionFilterControl(entryTable);
 		
-		lightened.setEnabled(false);
-		darkened.setEnabled(false);
-		standard.setEnabled(false);
+//		lightened.setEnabled(false);
+//		darkened.setEnabled(false);
+//		standard.setEnabled(false);
 		
 		return entryTable;
 	}
@@ -163,25 +161,25 @@ public class MylarPreferencePage extends PreferencePage implements
 		getPreferenceStore().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX, MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
         getPreferenceStore().setValue(MylarUiPlugin.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
         		
-		ColorMap.GammaSetting gm = null;
-		if (standard.getSelection()) {
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,true);
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
-			gm = ColorMap.GammaSetting.STANDARD;
-		} else if (lightened.getSelection()) {
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,true);
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
-			gm = ColorMap.GammaSetting.LIGHTEN;
-		} else if (darkened.getSelection()) {
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
-			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,true);
-			gm = ColorMap.GammaSetting.DARKEN;
-		}
+//		ColorMap.GammaSetting gm = null;
+//		if (standard.getSelection()) {
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,true);
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
+//			gm = ColorMap.GammaSetting.STANDARD;
+//		} else if (lightened.getSelection()) {
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,true);
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,false);
+//			gm = ColorMap.GammaSetting.LIGHTEN;
+//		} else if (darkened.getSelection()) {
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_STANDARD,false);
+//			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_DARKENED,true);
+//			gm = ColorMap.GammaSetting.DARKEN;
+//		}
 		// update gamma setting
-		MylarUiPlugin.getDefault().updateGammaSetting(gm);
+//		MylarUiPlugin.getDefault().updateGammaSetting(gm);
 		
 		return true;
 	}
@@ -198,12 +196,12 @@ public class MylarPreferencePage extends PreferencePage implements
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		
-		lightened.setSelection(getPreferenceStore().getBoolean(
-				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
-		standard.setSelection(getPreferenceStore().getBoolean(
-				MylarUiPlugin.GAMMA_SETTING_STANDARD));
-		darkened.setSelection(getPreferenceStore().getBoolean(
-				MylarUiPlugin.GAMMA_SETTING_DARKENED));
+//		lightened.setSelection(getPreferenceStore().getBoolean(
+//				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+//		standard.setSelection(getPreferenceStore().getBoolean(
+//				MylarUiPlugin.GAMMA_SETTING_STANDARD));
+//		darkened.setSelection(getPreferenceStore().getBoolean(
+//				MylarUiPlugin.GAMMA_SETTING_DARKENED));
 		
 		return true;
 	}
@@ -221,12 +219,12 @@ public class MylarPreferencePage extends PreferencePage implements
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		
-		standard.setSelection(getPreferenceStore().getDefaultBoolean(
-				MylarUiPlugin.GAMMA_SETTING_STANDARD));
-		lightened.setSelection(getPreferenceStore().getDefaultBoolean(
-				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
-		darkened.setSelection(getPreferenceStore().getDefaultBoolean(
-				MylarUiPlugin.GAMMA_SETTING_DARKENED));
+//		standard.setSelection(getPreferenceStore().getDefaultBoolean(
+//				MylarUiPlugin.GAMMA_SETTING_STANDARD));
+//		lightened.setSelection(getPreferenceStore().getDefaultBoolean(
+//				MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+//		darkened.setSelection(getPreferenceStore().getDefaultBoolean(
+//				MylarUiPlugin.GAMMA_SETTING_DARKENED));
 //		
 		MylarUiPlugin.getDefault().getHighlighterList().setToDefaultList();
 		return;
@@ -674,12 +672,13 @@ public class MylarPreferencePage extends PreferencePage implements
 
 	private void createExclusionFilterControl(Composite parent) {
 		Group exclusionControl = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		
-		exclusionControl.setLayout(new RowLayout());
-		exclusionControl.setText("Interest filter exclusion pattern");	
+
+		exclusionControl.setLayout(new GridLayout(1, false));
+		exclusionControl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		exclusionControl.setText("Interest Filter");	
 
 		Label label = new Label(exclusionControl, SWT.LEFT);
-		label.setText("Matching elements will always be shown (* = any string):");
+		label.setText("Exclusion pattern, matches will always be shown (e.g. build*.xml):");
 		
 		exclusionFieldEditor = new StringFieldEditor("", "",
 				StringFieldEditor.UNLIMITED, exclusionControl);
@@ -691,20 +690,20 @@ public class MylarPreferencePage extends PreferencePage implements
 		return; 
 	}
 	
-	private void createGammaSettingControl(Composite parent) {
-		Group gammaSettingComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);
-		
-		gammaSettingComposite.setLayout(new RowLayout());
-		gammaSettingComposite.setText("Gamma Setting");
-		lightened = new Button(gammaSettingComposite, SWT.RADIO);
-		lightened.setText("Lightened");
-		lightened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
-		standard = new Button(gammaSettingComposite, SWT.RADIO);
-		standard.setText("Standard");
-		standard.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_STANDARD));
-		darkened = new Button(gammaSettingComposite, SWT.RADIO);
-		darkened.setText("Darkened");
-		darkened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_DARKENED));		
-		return;
-	}
+//	private void createGammaSettingControl(Composite parent) {
+//		Group gammaSettingComposite= new Group(null, SWT.SHADOW_ETCHED_IN);
+//		
+//		gammaSettingComposite.setLayout(new RowLayout());
+//		gammaSettingComposite.setText("Gamma Setting");
+//		lightened = new Button(gammaSettingComposite, SWT.RADIO);
+//		lightened.setText("Lightened");
+//		lightened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_LIGHTENED));
+//		standard = new Button(gammaSettingComposite, SWT.RADIO);
+//		standard.setText("Standard");
+//		standard.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_STANDARD));
+//		darkened = new Button(gammaSettingComposite, SWT.RADIO);
+//		darkened.setText("Darkened");
+//		darkened.setSelection(getPreferenceStore().getBoolean(MylarUiPlugin.GAMMA_SETTING_DARKENED));		
+//		return;
+//	}
 }
