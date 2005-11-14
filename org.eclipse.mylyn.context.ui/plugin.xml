@@ -31,7 +31,7 @@
 	  		enablesFor="*"/>
 	 </objectContribution> 
 	 
-     <viewerContribution
+     <viewerContribution 
            id="org.eclipse.mylar.ui.tasklist.contribution"
            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
         <action
