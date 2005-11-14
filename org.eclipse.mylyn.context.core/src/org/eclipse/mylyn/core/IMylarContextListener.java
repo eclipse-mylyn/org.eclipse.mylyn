@@ -22,6 +22,9 @@ import java.util.List;
  */
 public interface IMylarContextListener {
 
+	/**
+	 * TODO: refactor
+	 */
     public enum UpdateKind {
         HIGHLIGHTER,
         SCALING,
@@ -49,26 +52,26 @@ public interface IMylarContextListener {
      * Called when the interest level for a single element changes, e.g.
      * when it is selected by the user.
      */
-    public void interestChanged(IMylarElement node);
+    public void interestChanged(IMylarElement element);
 
     /**
      * Called when the interest level for multiple elements changes,
      * sorted according to the containment hierarchy.  The last element
      * is the element invoking the change.
      */
-    public void interestChanged(List<IMylarElement> nodes);
+    public void interestChanged(List<IMylarElement> elements);
     
-    public void nodeDeleted(IMylarElement node);
-    
-    /**
-     * @param newLandmarks  list of IJavaElement(s)
-     */
-    public void landmarkAdded(IMylarElement node);
+    public void nodeDeleted(IMylarElement element);
     
     /**
      * @param newLandmarks  list of IJavaElement(s)
      */
-    public void landmarkRemoved(IMylarElement node);    
+    public void landmarkAdded(IMylarElement element);
     
-    public void edgesChanged(IMylarElement node);
+    /**
+     * @param newLandmarks  list of IJavaElement(s)
+     */
+    public void landmarkRemoved(IMylarElement element);    
+    
+    public void edgesChanged(IMylarElement element);
 }

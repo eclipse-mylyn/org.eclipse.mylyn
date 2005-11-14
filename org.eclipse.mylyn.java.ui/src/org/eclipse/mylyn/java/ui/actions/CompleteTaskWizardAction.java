@@ -48,8 +48,8 @@ public class CompleteTaskWizardAction implements IViewActionDelegate {
 			return;
 		}
 		
-		IResource[] resources = MylarJavaPlugin.getDefault().getDynamicChangeSet().getResources();
-		if (resources.length == 0){
+		IResource[] resources = MylarJavaPlugin.getDefault().getChangeSetManager().getResources(task);
+		if (resources == null || resources.length == 0){
 			MessageDialog.openInformation(null, 
 					"Mylar Information", 
 					"There are no interesting resources in the active task context.");

@@ -181,7 +181,7 @@
               enablesFor="*"
               icon="icons/elcl16/cvs_persp.gif"
               id="org.eclipse.mylar.ui.clear.context"
-              label="Commit Resources in Context..."
+              label="Commit Task Context..."
               menubarPath="context"
               tooltip="Commit All ">
            <enablement>

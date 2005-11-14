@@ -27,7 +27,6 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
-import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 
 /**
