@@ -32,10 +32,9 @@ public class MylarEditorManager implements IMylarContextListener {
 
 	public void contextActivated(IMylarContext context) {
     	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE)) {
-			IResource[] resources = MylarIdePlugin.getDefault().getInterestingResources();
+			List <IResource> resources = MylarIdePlugin.getDefault().getInterestingResources();
 			IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-			for (int i = 0; i < resources.length; i++) {
-				IResource resource = resources[i];
+			for (IResource resource : resources) {
 				if (resource instanceof IFile) {
 					try {
 						IDE.openEditor(activePage, (IFile)resource, false);
