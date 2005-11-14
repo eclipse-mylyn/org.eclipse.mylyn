@@ -9,6 +9,7 @@
          point="org.eclipse.ui.startup">
    </extension>
 
+<!--
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
         id="org.eclipse.mylar.tasklist.ui"
@@ -23,6 +24,7 @@
 	  		enablesFor="1"/>
 	 </objectContribution>
 	</extension>
+-->
 
 	<extension
          id="org.eclipse.mylar.helpDocs"
