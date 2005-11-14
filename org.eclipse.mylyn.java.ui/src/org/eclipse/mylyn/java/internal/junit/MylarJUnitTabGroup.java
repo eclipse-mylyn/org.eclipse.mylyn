@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.java.internal.junit;
 
+
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
 import org.eclipse.debug.ui.CommonTab;
@@ -34,7 +35,7 @@ public class MylarJUnitTabGroup extends AbstractLaunchConfigurationTabGroup {
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {		
 		ILaunchConfigurationTab[] tabs= new ILaunchConfigurationTab[] {
-//			new JUnitMainTab(),
+			new MylarJUnitMainTab(false), 
 			new JavaArgumentsTab(),
 			new JavaClasspathTab(),
 			new JavaJRETab(),
@@ -45,9 +46,6 @@ public class MylarJUnitTabGroup extends AbstractLaunchConfigurationTabGroup {
 		setTabs(tabs);
 	}
 
-	/**
-	 * @see ILaunchConfigurationTabGroup#setDefaults(ILaunchConfigurationWorkingCopy)
-	 */
 	public void setDefaults(ILaunchConfigurationWorkingCopy config) {
 		super.setDefaults(config); 
 	}

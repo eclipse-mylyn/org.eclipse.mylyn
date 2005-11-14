@@ -36,6 +36,7 @@ public class MylarPdeJUnitTabGroup extends AbstractPDELaunchConfigurationTabGrou
 		if (PDECore.getDefault().getModelManager().isOSGiRuntime()) {
 			tabs = new ILaunchConfigurationTab[]{
 //					new JUnitMainTab(),
+					new MylarJUnitMainTab(true),
 					new PluginJUnitMainTab(), 
 					new JavaArgumentsTab(),
 					new PluginsTab(false),	
@@ -45,6 +46,7 @@ public class MylarPdeJUnitTabGroup extends AbstractPDELaunchConfigurationTabGrou
 		} else {
 			tabs = new ILaunchConfigurationTab[]{
 //					new JUnitMainTab(),
+					new MylarJUnitMainTab(true), 
 					new PluginJUnitMainTab(), 
 					new JavaArgumentsTab(),
 					new PluginsTab(false),

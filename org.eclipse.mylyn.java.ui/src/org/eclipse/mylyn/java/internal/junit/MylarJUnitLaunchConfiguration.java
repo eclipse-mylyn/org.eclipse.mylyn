@@ -26,7 +26,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
  */
 public class MylarJUnitLaunchConfiguration extends JUnitLaunchConfiguration  {
 	
-	protected IType[] getTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm) throws CoreException {
+	protected IType[] getTestTypes(ILaunchConfiguration config, IProgressMonitor pm) throws CoreException {
 		Set<IType> contextTestCases = JUnitTestUtil.getTestCasesInContext();
 		if (contextTestCases.isEmpty()) {
 			abort(JUnitMessages.JUnitBaseLaunchConfiguration_error_notests, null, IJavaLaunchConfigurationConstants.ERR_UNSPECIFIED_MAIN_TYPE); 
