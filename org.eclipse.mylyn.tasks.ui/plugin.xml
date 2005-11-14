@@ -71,15 +71,15 @@
           </perspectiveExtension>
 	</extension>
 
-  <extension point="org.eclipse.ui.views">
-
+  	<extension point="org.eclipse.ui.views">
 	  <view name="Mylar Tasks" 
 	  	icon="icons/eview16/task-list.gif" 
 	  	category="org.eclipse.mylar" 
 	  	class="org.eclipse.mylar.tasklist.ui.views.TaskListView" 
 	  	id="org.eclipse.mylar.tasks.ui.views.TaskListView" /> 
-  </extension>
-  <extension
+  	</extension>
+
+  	<extension
         point="org.eclipse.ui.editors">
      <editor
            icon="icons/eview16/task.gif"
