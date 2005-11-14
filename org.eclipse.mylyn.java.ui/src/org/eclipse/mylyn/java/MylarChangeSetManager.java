@@ -111,7 +111,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 						} catch (TeamException e) {
 							MylarPlugin.fail(e, "could not add resource to change set", false);
 						}
-					}
+					} 
 				}
 			}
 		}

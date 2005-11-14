@@ -103,7 +103,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public IResource[] getInterestingResources() {
+	public List<IResource> getInterestingResources() {
 		List<IResource> interestingResources = new ArrayList<IResource>();
 		Set<IMylarElement> resourceElements = MylarPlugin.getContextManager().getInterestingDocuments();
 		for (IMylarElement element : resourceElements) {
@@ -111,7 +111,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			if (resource != null) interestingResources.add(resource); 
 		}
 		
-		return interestingResources.toArray(new IResource[interestingResources.size()]);
+		return interestingResources;
 	}
 	
 	public IResource getResourceForElement(IMylarElement element) {

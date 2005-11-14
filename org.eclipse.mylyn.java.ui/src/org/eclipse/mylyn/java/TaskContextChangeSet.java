@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.java;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.ide.MylarIdePlugin;
@@ -26,7 +26,7 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 public class TaskContextChangeSet extends ActiveChangeSet {
 
 	private static final String LABEL_PREFIX = "Mylar Task";
-	private IResource[] resources;
+	private List<IResource> resources;
 	private ITask task;
 	
 	public TaskContextChangeSet(ITask task, SubscriberChangeSetCollector collector) {
@@ -50,11 +50,11 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 		if (MylarIdePlugin.getDefault() != null) {
 			resources = MylarIdePlugin.getDefault().getInterestingResources();
 		}
-		return resources;
+		return resources.toArray(new IResource[resources.size()]);
 	}
 	
     public boolean contains(IResource local) {
-        return Arrays.asList(resources).contains(local);
+    	return resources.contains(local);
     }
 
 	protected String generateComment(ITask task) {
