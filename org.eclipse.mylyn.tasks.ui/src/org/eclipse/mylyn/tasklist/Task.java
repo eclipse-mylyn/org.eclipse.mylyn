@@ -100,9 +100,10 @@ public class Task implements ITask {
         }
     } 
     
-    public String getHandle() {
+    public String getHandleIdentifier() {
         return handle;
     }
+    
     public void setHandle(String id) {
         this.handle = id;
     }
@@ -207,7 +208,7 @@ public class Task implements ITask {
     @Override
     public boolean equals(Object obj) {
        if (obj instanceof Task && obj != null) {
-           return this.getHandle().compareTo(((Task)obj).getHandle()) == 0;
+           return this.getHandleIdentifier().compareTo(((Task)obj).getHandleIdentifier()) == 0;
        } else {
            return false;
        }
@@ -215,7 +216,7 @@ public class Task implements ITask {
     
     @Override
     public int hashCode() {
-        return this.getHandle().hashCode(); 
+        return this.getHandleIdentifier().hashCode(); 
     }
     public boolean isCompleted() {
     	return completed;
