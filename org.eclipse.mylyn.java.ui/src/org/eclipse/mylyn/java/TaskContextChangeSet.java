@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.team.core.TeamException;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 
@@ -37,27 +37,6 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 	
 	@Override
 	public String getComment() {
-		ITask task = TaskListView.getDefault().getSelectedTask();
-		if (task != null) {
-			return generateComment(task);
-		} else {
-			return "";
-		}
-	}
-	
-	@Override
-	public IResource[] getResources() {
-		if (MylarIdePlugin.getDefault() != null) {
-			resources = MylarIdePlugin.getDefault().getInterestingResources();
-		}
-		return resources.toArray(new IResource[resources.size()]);
-	}
-	
-    public boolean contains(IResource local) {
-    	return resources.contains(local);
-    }
-
-	protected String generateComment(ITask task) {
 		String prefix = "";
 		if (task.isCompleted()) {
 			prefix = "Completed "; 
@@ -70,4 +49,35 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 			return prefix + "Bug " + task.getDescription(false);
 		}
 	}
+	
+	@Override
+	public void remove(IResource resource) {
+		super.remove(resource);
+		resources.remove(resource);
+	}
+
+	@Override
+	public void remove(IResource[] newResources) {
+		super.remove(newResources);
+		for (int i = 0; i < newResources.length; i++) resources.remove(newResources[i]);
+	} 
+
+	@Override
+	public void add(IResource[] newResources) throws TeamException {
+		super.add(newResources);
+		for (int i = 0; i < newResources.length; i++) resources.add(newResources[i]);
+	}
+
+	@Override
+	public IResource[] getResources() {
+		if (MylarIdePlugin.getDefault() != null) {
+			resources = MylarIdePlugin.getDefault().getInterestingResources();
+		}
+		return resources.toArray(new IResource[resources.size()]);
+	}
+	
+    public boolean contains(IResource local) {
+    	return resources.contains(local);
+    }
+
 }
