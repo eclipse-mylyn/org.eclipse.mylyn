@@ -54,6 +54,30 @@ public class DateUtil {
             c.get(Calendar.SECOND);
     }
     
+    /** Returns the time in the format: HHH:MM */
+    public static String getFormattedDurationShort(long duration){
+    	if (duration <= 0){
+    		return "00:00";
+    	}
+    	
+    	long totalMinutes = duration / 1000 / 60;
+    	long remainderMinutes = totalMinutes % 60;
+    	long totalHours = totalMinutes / 60;
+    	
+    	String hourString = "" + totalHours;
+    	String minuteString = "" + remainderMinutes;
+    	
+    	if (totalHours < 10){
+    		hourString = "0" + hourString;
+    	}
+    	
+    	if (remainderMinutes < 10){
+    		minuteString = "0" + remainderMinutes;
+    	}
+    	
+    	return hourString + ":" + minuteString;
+    }
+     
     public static String getFormattedDuration(long duration) {
     	long seconds = duration / 1000;
 		long minutes = 0;
