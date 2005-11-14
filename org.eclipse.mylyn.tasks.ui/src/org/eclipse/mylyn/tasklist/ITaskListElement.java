@@ -39,7 +39,7 @@ public interface ITaskListElement {
     
     public abstract void setDescription(String description);
     
-    public abstract String getHandle();
+    public abstract String getHandleIdentifier();
     
     public abstract void setHandle(String id);
 	

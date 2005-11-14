@@ -121,7 +121,7 @@ public class BugzillaQueryCategory implements IQuery {
 	}
 
 	public void addHit(IQueryHit hit) {
-		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(hit.getHandle());
+		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(hit.getHandleIdentifier());
 		hit.setAssociatedTask(task);
 		hits.add(hit);
 	}
@@ -267,7 +267,7 @@ public class BugzillaQueryCategory implements IQuery {
 		return null;
 	}
 
-	public String getHandle() {
+	public String getHandleIdentifier() {
 		return handle;
 	}
 

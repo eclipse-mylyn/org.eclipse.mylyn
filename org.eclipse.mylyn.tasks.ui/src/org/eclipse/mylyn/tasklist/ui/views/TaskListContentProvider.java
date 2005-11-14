@@ -137,7 +137,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
         	if(cat.isArchive()){
         		for (ITask task: cat.getChildren()) {
 					if(task.isActive()){
-						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
+						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
 						if(t == null)
 							return true;
 					}
@@ -164,7 +164,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	        		if(((ITaskListCategory)parent).isArchive()){
 	        			for (ITask task: ((ITaskListCategory)parent).getChildren()) {
 	    					if(task.isActive()){
-	    						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
+	    						ITask t = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
 	    						if(t == null)
 	    							children.add(task);
 	    					}

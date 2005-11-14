@@ -102,7 +102,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		Element node = doc.createElement(getTaskTagName());
 		node.setAttribute(PATH, task.getPath());
 		node.setAttribute(LABEL, task.getDescription(false));
-		node.setAttribute(HANDLE, task.getHandle());
+		node.setAttribute(HANDLE, task.getHandleIdentifier());
 		node.setAttribute(PRIORITY, task.getPriority());
 		
 		if (task.isCompleted()) {
@@ -212,7 +212,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		if (element.hasAttribute(PATH)) {
 			task.setPath(element.getAttribute(PATH));
 		} else {
-			task.setPath(task.getHandle());
+			task.setPath(task.getHandleIdentifier());
 		}		
 		
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
@@ -362,7 +362,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public Element createQueryHitElement(IQueryHit queryHit, Document doc, Element parent) {
 		Element node = doc.createElement(getQueryHitTagName());
 		node.setAttribute(NAME, queryHit.getDescription(false));
-		node.setAttribute(HANDLE, queryHit.getHandle());
+		node.setAttribute(HANDLE, queryHit.getHandleIdentifier());
 		node.setAttribute(PRIORITY, queryHit.getPriority());
 		if (queryHit.isCompleted()) {
 			node.setAttribute(COMPLETE, TRUE);

@@ -32,7 +32,7 @@ public class TaskEditorInput implements IEditorInput {
 	
 	public TaskEditorInput(ITask task) {
 		this.task = task;
-		id = task.getHandle();
+		id = task.getHandleIdentifier();
 		label = task.getDescription(true);
 	}
 

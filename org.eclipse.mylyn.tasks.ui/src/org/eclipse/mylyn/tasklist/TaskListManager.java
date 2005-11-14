@@ -132,7 +132,7 @@ public class TaskListManager {
 
     public void activateTask(ITask task) {
     	if (!MylarTasklistPlugin.getDefault().isMultipleMode()) {
-    		if(taskList.getActiveTasks().size() > 0 && taskList.getActiveTasks().get(0).getHandle().compareTo(task.getHandle()) != 0) {
+    		if(taskList.getActiveTasks().size() > 0 && taskList.getActiveTasks().get(0).getHandleIdentifier().compareTo(task.getHandleIdentifier()) != 0) {
 	    		for (ITask t : taskList.getActiveTasks()) {
 	    			for (ITaskActivityListener listener : listeners) listener.taskDeactivated(t);    			
 	    		}

@@ -161,17 +161,17 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     private static ITaskActivityListener CONTEXT_MANAGER_TASK_LISTENER = new ITaskActivityListener() {
 
         public void taskActivated(ITask task) {
-            MylarPlugin.getContextManager().contextActivated(task.getHandle(), task.getPath());
+            MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getPath());
         }
 
         public void tasksActivated(List<ITask> tasks) {
             for (ITask task : tasks) {
-                MylarPlugin.getContextManager().contextActivated(task.getHandle(), task.getPath());
+                MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getPath());
             }
         }
 
         public void taskDeactivated(ITask task) {
-            MylarPlugin.getContextManager().contextDeactivated(task.getHandle(), task.getPath());
+            MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier(), task.getPath());
         }
 
 		public void taskPropertyChanged(ITask updatedTask, String property) {
@@ -337,7 +337,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public void saveTaskListAndContexts() {
         taskListManager.saveTaskList();
         for(ITask task : taskListManager.getTaskList().getActiveTasks()) {
-            MylarPlugin.getContextManager().saveContext(task.getHandle(), task.getPath());
+            MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier(), task.getPath());
         }
 //        lastSave = new Date();
 //		plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());

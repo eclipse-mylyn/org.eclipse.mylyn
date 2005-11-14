@@ -136,13 +136,13 @@ public class BugzillaTask extends Task {
 	}
 
 	public BugzillaTask(BugzillaHit hit, boolean newTask) {
-		this(hit.getHandle(), hit.getDescription(false), newTask);
+		this(hit.getHandleIdentifier(), hit.getDescription(false), newTask);
 		setPriority(hit.getPriority());
 		setUrl();
 	}
 
 	private void setUrl() {
-		int id = BugzillaTask.getBugId(getHandle());
+		int id = BugzillaTask.getBugId(getHandleIdentifier());
 		String url = BugzillaRepository.getBugUrlWithoutLogin(id);
 		if (url != null)
 			super.setIssueReportURL(url);
@@ -154,9 +154,9 @@ public class BugzillaTask extends Task {
 			return super.getDescription(truncate);
 		} else {
 			if (getState() == BugzillaTask.BugTaskState.FREE) {
-				return BugzillaTask.getBugId(getHandle()) + ": <Could not find bug>";
+				return BugzillaTask.getBugId(getHandleIdentifier()) + ": <Could not find bug>";
 			} else {
-				return BugzillaTask.getBugId(getHandle()) + ":";
+				return BugzillaTask.getBugId(getHandleIdentifier()) + ":";
 			}
 		}
 		//        return BugzillaTasksTools.getBugzillaDescription(this);
@@ -238,10 +238,10 @@ public class BugzillaTask extends Task {
 		try {
 			// XXX make sure to send in the server name if there are multiple repositories
 			if (BugzillaPlugin.getDefault() == null) {
-				MylarPlugin.log("Bug Beport download failed for: " + getBugId(getHandle()) + " due to bugzilla core not existing", this);
+				MylarPlugin.log("Bug Beport download failed for: " + getBugId(getHandleIdentifier()) + " due to bugzilla core not existing", this);
 				return null;
 			}
-			return BugzillaRepository.getInstance().getBug(getBugId(getHandle()));
+			return BugzillaRepository.getInstance().getBug(getBugId(getHandleIdentifier()));
 		} catch (LoginException e) {
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 
@@ -254,7 +254,7 @@ public class BugzillaTask extends Task {
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					((ApplicationWindow) BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()).setStatus("Download of bug "
-							+ getBugId(getHandle()) + " failed due to I/O exception");
+							+ getBugId(getHandleIdentifier()) + " failed due to I/O exception");
 				}
 			});
 			//			MylarPlugin.log(e, "download failed due to I/O exception");
@@ -318,7 +318,7 @@ public class BugzillaTask extends Task {
 
 	@Override
 	public String toString() {
-		return "bugzilla report id: " + getHandle();
+		return "bugzilla report id: " + getHandleIdentifier();
 	}
 
 	/**
@@ -434,7 +434,7 @@ public class BugzillaTask extends Task {
 			if (status.equals("RESOLVED") || status.equals("CLOSED") || status.equals("VERIFIED")) {
 				setCompleted(true);
 			}
-			this.setDescription(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandle()) + ": " + bugReport.getSummary()));
+			this.setDescription(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandleIdentifier()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
 			MylarPlugin.fail(npe, "Task details update failed", false);
 		}
@@ -466,7 +466,7 @@ public class BugzillaTask extends Task {
 				return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 			} catch (Exception e) {
 				//				MessageDialog.openError(null, "Error Opening Bug", "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()));
-				MylarPlugin.fail(e, "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()), true);
+				MylarPlugin.fail(e, "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandleIdentifier()), true);
 			}
 			return Status.CANCEL_STATUS;
 		}
@@ -486,7 +486,7 @@ public class BugzillaTask extends Task {
 
 	public boolean readBugReport() {
 		// XXX server name needs to be with the bug report
-		IBugzillaBug tempBug = OfflineView.find(getBugId(getHandle()));
+		IBugzillaBug tempBug = OfflineView.find(getBugId(getHandleIdentifier()));
 		if (tempBug == null) {
 			bugReport = null;
 			return true;
@@ -528,7 +528,7 @@ public class BugzillaTask extends Task {
 	public void removeReport() {
 		// XXX do we really want to do this???
 		// XXX remove from registry too??
-		IBugzillaBug tempBug = OfflineView.find(getBugId(getHandle()));
+		IBugzillaBug tempBug = OfflineView.find(getBugId(getHandleIdentifier()));
 		OfflineView.removeReport(tempBug);
 		//    	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
 		//    	int location = offlineReports.find(getBugId(getHandle()));
@@ -624,7 +624,7 @@ public class BugzillaTask extends Task {
 	}
 
 	public String getStringForSortingDescription() {
-		return getBugId(getHandle()) + "";
+		return getBugId(getHandleIdentifier()) + "";
 	}
 
 	public static long getLastRefreshTimeInMinutes(Date lastRefresh) {

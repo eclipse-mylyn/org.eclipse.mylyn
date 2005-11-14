@@ -60,7 +60,7 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	/* (non-Javadoc)
 	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getHandle()
 	 */
-	public String getHandle() {
+	public String getHandleIdentifier() {
 		return handle;
 	}
 

@@ -67,7 +67,7 @@ public class TaskActivationHistory {
 	protected boolean isDuplicate(ITask task, int startingIndex){
 		for (int i = startingIndex; i < MylarPlugin.getContextManager().getActivityHistory().getInteractionHistory().size(); i++){
 			ITask currTask = getHistoryTaskAt(i);
-			if(currTask != null && currTask.getHandle() == task.getHandle()){
+			if(currTask != null && currTask.getHandleIdentifier() == task.getHandleIdentifier()){
 				return true;
 			}
 		}
@@ -172,7 +172,7 @@ public class TaskActivationHistory {
 	 */
 	public void navigatedToTask(ITask task){
 		for(int i = 0; i < history.size(); i++){
-			if (history.get(i).getHandle() == task.getHandle()){
+			if (history.get(i).getHandleIdentifier() == task.getHandleIdentifier()){
 				currentIndex = i;
 				break;
 			}

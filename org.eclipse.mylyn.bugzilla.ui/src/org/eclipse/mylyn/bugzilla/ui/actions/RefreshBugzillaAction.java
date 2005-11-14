@@ -136,11 +136,11 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 		}
 		for(ITask task: MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks()){
 			if(task instanceof BugzillaTask){
-				ITask found = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandle(), false);
+				ITask found = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
 				if(found == null){
 					MylarTasklistPlugin.getTaskListManager().addRootTask(task);
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
-							BugzillaTask.getBugId(task.getHandle()) + 
+							BugzillaTask.getBugId(task.getHandleIdentifier()) + 
 							" has been moved to the root since it is activated and has disappeared from a query.");
 				}
 			}

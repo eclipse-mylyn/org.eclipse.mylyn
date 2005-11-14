@@ -94,7 +94,7 @@ public class BugzillaHit implements IQueryHit {
 		}
 	}
 
-	public String getHandle() {
+	public String getHandleIdentifier() {
 		return getServerName()+"-"+getID();
 	}
 

@@ -101,7 +101,7 @@ public class TaskSummaryEditor extends EditorPart {
 
     private ITaskActivityListener TASK_LIST_LISTENER = new ITaskActivityListener() {
         public void taskActivated(ITask activeTask) {    
-        	if (task != null && !browse.isDisposed() && activeTask.getHandle().equals(task.getHandle())) {
+        	if (task != null && !browse.isDisposed() && activeTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
         		browse.setEnabled(false);
         	}
         }
@@ -113,13 +113,13 @@ public class TaskSummaryEditor extends EditorPart {
         }
 
         public void taskDeactivated(ITask deactiveTask) {
-        	if (task != null && !browse.isDisposed() && deactiveTask.getHandle().equals(task.getHandle())) {
+        	if (task != null && !browse.isDisposed() && deactiveTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
         		browse.setEnabled(true);
         	}
         }
 
 		public void taskPropertyChanged(ITask updatedTask, String property) {
-			if (task != null && updatedTask.getHandle().equals(task.getHandle())) {
+			if (task != null && updatedTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
         		if (property.equals("Description") && !description.isDisposed()) {
         			description.setText(task.getDescription(false));
         		} else if (property.equals("Path") && !pathText.isDisposed()) {
@@ -487,7 +487,7 @@ public class TaskSummaryEditor extends EditorPart {
 		
 		Label l = toolkit.createLabel(container, "Task Handle:");
         l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-        Text handle = toolkit.createText(container, task.getHandle(), SWT.BORDER);
+        Text handle = toolkit.createText(container, task.getHandleIdentifier(), SWT.BORDER);
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.colspan = 2;
         handle.setLayoutData(td);

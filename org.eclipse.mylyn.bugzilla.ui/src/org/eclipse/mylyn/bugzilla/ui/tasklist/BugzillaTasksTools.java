@@ -30,7 +30,7 @@ public class BugzillaTasksTools {
 		if (bugTask == null) return "<no info>";
 		
 		String prefix = //((bugTask.isDirty()) ? ">" : "") +
-					    BugzillaTask.getBugId(bugTask.getHandle()) + ": ";
+					    BugzillaTask.getBugId(bugTask.getHandleIdentifier()) + ": ";
     	
 		if (bugTask.getState() == BugzillaTask.BugTaskState.DOWNLOADING) {
 			return prefix + "<Downloading bug report from server...>";

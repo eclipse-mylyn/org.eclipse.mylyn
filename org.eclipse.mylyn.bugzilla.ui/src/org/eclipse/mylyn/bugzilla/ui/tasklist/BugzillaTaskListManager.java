@@ -34,8 +34,8 @@ public class BugzillaTaskListManager implements IOfflineBugListener {
     // XXX we never delete anything from this registry
     
     public void addToBugzillaTaskRegistry(BugzillaTask task){
-    	if(bugzillaTaskRegistry.get(task.getHandle()) == null){
-    		bugzillaTaskRegistry.put(task.getHandle(), task);
+    	if(bugzillaTaskRegistry.get(task.getHandleIdentifier()) == null){
+    		bugzillaTaskRegistry.put(task.getHandleIdentifier(), task);
     		if(cat != null){
         		cat.internalAddTask(task);
         	}

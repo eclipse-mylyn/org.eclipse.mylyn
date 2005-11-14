@@ -52,7 +52,7 @@ public class ChangeMainTaskDirTest extends TestCase{
 		//Check that the main data dir task isn't in the list or the folder
 		File taskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + mainDataDirTask.getPath() + MylarTasklistPlugin.FILE_EXTENSION);
 		assertFalse(taskFile.exists());
-		assertNull(manager.getTaskForHandle(mainDataDirTask.getHandle(), false));
+		assertNull(manager.getTaskForHandle(mainDataDirTask.getHandleIdentifier(), false));
 		
 		//Check that a newly created task appears in the right place (method will check)
 		ITask newDataDirTask = createAndSaveTask("New Data Dir");
@@ -67,7 +67,7 @@ public class ChangeMainTaskDirTest extends TestCase{
 		switchMainTaskDirectory(originalMainDataDir);
 		
 		//Check that the previously created main dir task is in the task list and its file exists
-		assertNotNull(manager.getTaskForHandle(mainDataDirTask.getHandle(), false));
+		assertNotNull(manager.getTaskForHandle(mainDataDirTask.getHandleIdentifier(), false));
 		taskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + mainDataDirTask.getPath() + MylarTasklistPlugin.FILE_EXTENSION);
 		assertTrue(taskFile.exists());
 		
@@ -83,7 +83,7 @@ public class ChangeMainTaskDirTest extends TestCase{
 		//Create the task and add it to the root of the task list
 		ITask newTask = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), taskName, true);
 		manager.addRootTask(newTask);
-		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(newTask.getHandle(), newTask.getPath());
+		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(newTask.getHandleIdentifier(), newTask.getPath());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT,"structureKind","handle","originId");
 		mockContext.parseEvent(event);
 		MylarPlugin.getContextManager().contextActivated(mockContext);

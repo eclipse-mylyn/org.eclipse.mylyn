@@ -830,7 +830,7 @@ public class TaskListView extends ViewPart {
 					ITaskListElement element = (ITaskListElement) selection.getFirstElement();
 
 					if (!selection.isEmpty() && element.isDragAndDropEnabled()) {
-						event.data = "" + element.getHandle();
+						event.data = "" + element.getHandleIdentifier();
 					} else {
 						event.data = "null";
 					}

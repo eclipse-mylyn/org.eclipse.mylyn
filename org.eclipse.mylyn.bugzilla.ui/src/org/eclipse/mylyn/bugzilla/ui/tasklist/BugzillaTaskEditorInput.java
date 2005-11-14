@@ -38,10 +38,10 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	private boolean offline;
 
 	public BugzillaTaskEditorInput(BugzillaTask bugTask, boolean offline) throws LoginException, IOException {
-        super(BugzillaTask.getBugId(bugTask.getHandle()), offline);
+        super(BugzillaTask.getBugId(bugTask.getHandleIdentifier()), offline);
 		this.bugTask = bugTask;
 		offlineBug = bugTask.getBugReport();
-		bugId = BugzillaTask.getBugId(bugTask.getHandle());
+		bugId = BugzillaTask.getBugId(bugTask.getHandleIdentifier());
 		bugTitle = "";
 		this.offline = offline;
 	}

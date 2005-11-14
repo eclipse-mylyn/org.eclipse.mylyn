@@ -77,7 +77,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 									
 			task.removeReport();
 			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
-			MylarPlugin.getContextManager().contextDeleted(task.getHandle(), task.getPath());
+			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
 			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			// if we couldn't get the page, get out of here
@@ -109,7 +109,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 					MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla task since you are currently offline");
 	    			return;
 	    		}
-				String title = "Bug #" + BugzillaTask.getBugId(t.getHandle());
+				String title = "Bug #" + BugzillaTask.getBugId(t.getHandleIdentifier());
 				BugzillaUITools.openUrl(title, title, t.getBugUrl());	    			
 			} else {
 				// not supported
@@ -164,7 +164,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
     				MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla report since you are currently offline");
 	    			return;
 	    		}
-    			String title = "Bug #" + BugzillaTask.getBugId(hit.getHandle());
+    			String title = "Bug #" + BugzillaTask.getBugId(hit.getHandleIdentifier());
     			BugzillaUITools.openUrl(title, title, hit.getBugUrl());  			
     		} else {
     			// not supported
@@ -211,7 +211,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 
 	public ITask taskAdded(ITask newTask) {
 		if(newTask instanceof BugzillaTask){
-			BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(newTask.getHandle());
+			BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(newTask.getHandleIdentifier());
 			if(bugTask == null){
 				BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 				bugTask = (BugzillaTask)newTask;	

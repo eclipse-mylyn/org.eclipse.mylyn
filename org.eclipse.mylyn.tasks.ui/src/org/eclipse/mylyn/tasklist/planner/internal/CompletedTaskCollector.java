@@ -36,8 +36,8 @@ public class CompletedTaskCollector implements ITasksCollector {
 	}
 
 	public void consumeTask(ITask task) {
-		if (task.isCompleted() && task.getEndDate() != null && task.getEndDate().compareTo(cutOffDate) > 0 && !completedTasks.containsKey(task.getHandle())) {
-			completedTasks.put(task.getHandle(), task);
+		if (task.isCompleted() && task.getEndDate() != null && task.getEndDate().compareTo(cutOffDate) > 0 && !completedTasks.containsKey(task.getHandleIdentifier())) {
+			completedTasks.put(task.getHandleIdentifier(), task);
 		}
 	}
 	
