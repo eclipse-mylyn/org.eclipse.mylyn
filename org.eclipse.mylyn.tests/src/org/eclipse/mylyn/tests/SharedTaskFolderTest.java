@@ -98,7 +98,7 @@ public class SharedTaskFolderTest extends TestCase{
 		//Check that the task created in the main data dir isn't there
 		File mainDataDirTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + mainDataDirTask.getPath() + MylarTasklistPlugin.FILE_EXTENSION);
 		assertFalse(mainDataDirTaskFile.exists());
-		assertNull(manager.getTaskForHandle(mainDataDirTask.getHandle(), false));
+		assertNull(manager.getTaskForHandle(mainDataDirTask.getHandleIdentifier(), false));
 		
 		//Create a new task in bob's task data folder only and check that it exists in the right place
 		ITask bobsTask = createAndSaveTask("Bob's Task");
@@ -106,7 +106,7 @@ public class SharedTaskFolderTest extends TestCase{
 		assertTrue(bobsTaskFile.exists());
 		bobsTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + bobsTask.getPath() + MylarTasklistPlugin.FILE_EXTENSION);
 		assertTrue(bobsTaskFile.exists());
-		assertNotNull(manager.getTaskForHandle(bobsTask.getHandle(), false));
+		assertNotNull(manager.getTaskForHandle(bobsTask.getHandleIdentifier(), false));
 		
 		//Switch to Jill's folder
 		switchAction.switchTaskDataFolder(sharedDataFolderOptions[1]);
@@ -114,7 +114,7 @@ public class SharedTaskFolderTest extends TestCase{
 		//Check that Bob's task isn't there
 		bobsTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + bobsTask.getPath() + MylarTasklistPlugin.FILE_EXTENSION);
 		assertFalse(bobsTaskFile.exists());
-		assertNull(manager.getTaskForHandle(bobsTask.getHandle(), false));		
+		assertNull(manager.getTaskForHandle(bobsTask.getHandleIdentifier(), false));		
 		
 		//Switch back to Bob's folder
 		switchAction.switchTaskDataFolder(sharedDataFolderOptions[0]);
@@ -122,7 +122,7 @@ public class SharedTaskFolderTest extends TestCase{
 		//Check that bob's task is still there
 		bobsTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + bobsTask.getPath() + MylarTasklistPlugin.FILE_EXTENSION);
 		assertTrue(bobsTaskFile.exists());
-		assertNotNull(manager.getTaskForHandle(bobsTask.getHandle(), false));			
+		assertNotNull(manager.getTaskForHandle(bobsTask.getHandleIdentifier(), false));			
 		
 		//Switch back to the main data folder
 		sharedDataFolderOptions = switchAction.getFolderStrings();
@@ -131,7 +131,7 @@ public class SharedTaskFolderTest extends TestCase{
 		//Check that the main task is there
 		mainDataDirTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + mainDataDirTask.getPath() + MylarTasklistPlugin.FILE_EXTENSION);
 		assertTrue(mainDataDirTaskFile.exists());
-		assertNotNull(manager.getTaskForHandle(mainDataDirTask.getHandle(), false));			
+		assertNotNull(manager.getTaskForHandle(mainDataDirTask.getHandleIdentifier(), false));			
 		
 	}
 		
@@ -144,7 +144,7 @@ public class SharedTaskFolderTest extends TestCase{
 		//Create the task and add it to the root of the task list
 		ITask newTask = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), taskName, true);
 		manager.addRootTask(newTask);
-		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(newTask.getHandle(), newTask.getPath());
+		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(newTask.getHandleIdentifier(), newTask.getPath());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT,"structureKind","handle","originId");
 		mockContext.parseEvent(event);
 		MylarPlugin.getContextManager().contextActivated(mockContext);
