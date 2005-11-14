@@ -453,7 +453,9 @@ public class MylarContextManager {
         IMylarContext context = activeContext.getContextMap().get(id);
         eraseContext(id, false);
         if (context != null) { // TODO: this notification is redundant with eraseContext's
-            for (IMylarContextListener listener : listeners) listener.contextDeactivated(context);
+            for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+            	listener.contextDeactivated(context);
+            }
         }
         try {
 	        File f = getFileForContext(path);
@@ -705,7 +707,9 @@ public class MylarContextManager {
 	}
 
 	/**
-	 * Retruns the highest interet context
+	 * Retruns the highest interet context.
+	 * 
+	 * TODO: refactor this into better multiple context support
 	 */
     public String getDominantContextHandleForElement(IMylarElement node) {
     	IMylarElement dominantNode = null;

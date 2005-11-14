@@ -60,7 +60,7 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 //	        						"Please activate the task before setting a highlighter.");
 //	        				return;
 //	        	    	} else {
-	        	    		MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandle(), highlighter.getName());
+	        	    		MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(), highlighter.getName());
 	        	    		taskListView.getViewer().refresh();
 	        	    		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
 //	        	    	}

@@ -19,14 +19,12 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.java.internal.MylarDynamicChangeSet;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -67,7 +65,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	private MylarDynamicChangeSet dynamicChangeSet = new MylarDynamicChangeSet();
+	private MylarChangeSetManager changeSetManager = new MylarChangeSetManager();
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.java";
 
@@ -100,6 +98,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			MylarPlugin.getContextManager().addListener(packageExplorerManager);
 			MylarPlugin.getContextManager().addListener(typeHistoryManager);
 			MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
+			MylarPlugin.getContextManager().addListener(changeSetManager);
 
 			setPreferenceDefaults();
 			if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
@@ -110,17 +109,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			workbench.getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
-						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
-						Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
-						if (wizard != null && shell != null && !shell.isDisposed()) {
-							WizardDialog dialog = new WizardDialog(shell, wizard);
-							dialog.create();
-							dialog.open();
-							getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
-						}
-					}
-
 					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
 						ApplyMylarToPackageExplorerAction.getDefault().update();
 						getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
@@ -139,9 +127,16 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
 					service.addPostSelectionListener(packageExplorerManager);
 					
-					CVSUIPlugin.getPlugin().getChangeSetManager().add(dynamicChangeSet);
-					//        		 needed if Mylar source viewer configuration does not get initialized properly
-					//        		resetActiveEditor();
+					if (!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
+						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
+						Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+						if (wizard != null && shell != null && !shell.isDisposed()) {
+							WizardDialog dialog = new WizardDialog(shell, wizard);
+							dialog.create();
+							dialog.open();
+							getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+						}
+					}
 				}
 			});
 			
@@ -167,6 +162,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		MylarPlugin.getContextManager().removeListener(packageExplorerManager);
 		MylarPlugin.getContextManager().removeListener(typeHistoryManager);
 		MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
+		MylarPlugin.getContextManager().removeListener(changeSetManager);
+		
 		MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
 
 		if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
@@ -178,7 +175,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			service.removePostSelectionListener(packageExplorerManager);
 		}
 		JavaCore.removeElementChangedListener(javaElementChangeListener);
-		CVSUIPlugin.getPlugin().getChangeSetManager().remove(dynamicChangeSet);
+//		CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 
 		// TODO: uninstall editor tracker
 	}
@@ -300,8 +297,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		EDGE_REF_JUNIT = edge_ref_junit;
 	}
 
-	public MylarDynamicChangeSet getDynamicChangeSet() {
-		return dynamicChangeSet;
+	public MylarChangeSetManager getChangeSetManager() {
+		return changeSetManager;
 	}
 
 //	private void resetActiveEditor() {

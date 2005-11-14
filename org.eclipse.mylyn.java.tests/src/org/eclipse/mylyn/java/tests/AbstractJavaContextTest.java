@@ -67,19 +67,13 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     
     @Override
     protected void tearDown() throws Exception {
-//		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-//			protected void execute(IProgressMonitor monitor) throws CoreException {
         context.reset(); 
         manager.contextDeactivated(taskId, taskId);
         manager.contextDeleted(taskId, taskId);
         manager.getFileForContext(taskId).delete(); 
 		project.build();
         project.dispose();
-		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
-//			}
-//		};
-//		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-//		service.run(true, true, op);    	
+		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);	
     }
 	
     protected int countItemsInTree(Tree tree) {

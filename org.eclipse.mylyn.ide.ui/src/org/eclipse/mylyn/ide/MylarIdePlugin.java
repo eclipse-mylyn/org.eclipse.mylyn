@@ -107,19 +107,25 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		List<IResource> interestingResources = new ArrayList<IResource>();
 		Set<IMylarElement> resourceElements = MylarPlugin.getContextManager().getInterestingDocuments();
 		for (IMylarElement element : resourceElements) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
-			Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
-			if (object instanceof IResource) {
-				interestingResources.add((IResource)object);
-			} else if (object instanceof IAdaptable) {
-				Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
-				if (adapted instanceof IResource) {
-					interestingResources.add((IResource)adapted);
-				}
-			}
+			IResource resource = getResourceForElement(element);
+			if (resource != null) interestingResources.add(resource); 
 		}
 		
 		return interestingResources.toArray(new IResource[interestingResources.size()]);
+	}
+	
+	public IResource getResourceForElement(IMylarElement element) {
+		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
+		if (object instanceof IResource) {
+			return (IResource)object;
+		} else if (object instanceof IAdaptable) {
+			Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
+			if (adapted instanceof IResource) {
+				return (IResource)adapted;
+			}
+		}
+		return null;
 	}
 	
 	public MylarEditorManager getEditorManager() {

@@ -183,7 +183,7 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
                 MylarTasklistPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
 
 					public Color getHighlightColor(ITask task) {
-						Highlighter highlighter = getHighlighterForContextId("" + task.getHandle());
+						Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
 						if (highlighter != null) {
 							return highlighter.getHighlightColor();
 						} else {
