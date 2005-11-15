@@ -19,13 +19,44 @@ highlighted&nbsp; </span></p>
 
 <h3>Task Context</h3>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table99">
+<table cellpadding="10" cellspacing="0" width="600" id="table101">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Hierarchical problems list supported</b></p>
+			<p align="right"><b>Change Set Integration</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Now supported...</td>
+			The active task now corresponds to a Change Set that's managed 
+			by Mylar.&nbsp; All resources in the task's context automatically get included 
+			in this change set, making it possible to synchronize and 
+			commit only those resources.&nbsp; Resources modified that 
+			are not part of the Task Context will appear outside of the Change 
+			Set in the Synchronize view.&nbsp; Note that as with other Change 
+			Sets you need to set the Synchronize view into either Incoming or 
+			Outgoing mode and toggle the &quot;Show Change Sets&quot; button.<p>
+			<img border="0" src="images/0.4.2/context-change-set.gif" width="498" height="192"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table102">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Commit Task Context</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Resources in the Task Context can be committed either by 
+			right-clicking the active task and selecting the Commit Task Context action, or 
+			by right-clicking the Change Set in the Synchronize view.&nbsp; In 
+			both cases the commit message will be populated by the description 
+			and URL of the task (if available).&nbsp; The comment prefix can be 
+			changed in the Task List preferences page.<p>
+			<img border="0" src="images/0.4.2/context-commit.gif" width="231" height="79"><p>
+			<img border="0" src="images/0.4.2/context-commit-wizard.gif" width="525" height="369"><p>
+			<img border="0" src="images/0.4.2/context-commit-prefix.gif" width="432" height="84"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -41,10 +72,11 @@ highlighted&nbsp; </span></p>
 			</td>
 			<td valign="top" width="70%">
 			When a task is activated, all interesting editors are automatically 
-			opened and the last active node is brought to focus...&nbsp; Option 
-			must be enabled... Can now use Ctrl+E to browse list of files in 
-			context.<p>
-			&nbsp;</td>
+			opened and the last active node is brought to the top.&nbsp; This 
+			ensures that the Ctrl+E editor list is populated by the the task 
+			context.&nbsp; The option to manage open editors on task activation 
+			and deactivation can be toggled in the Mylar Tasks pull-down.<p>
+			<img border="0" src="images/0.4.2/tasklist-editors-manage.gif" width="265" height="169"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -53,17 +85,18 @@ highlighted&nbsp; </span></p>
 		</tr>
 </table>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table97">
+<table cellpadding="10" cellspacing="0" width="600" id="table99">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Change Set Integration</b></p>
+			<p align="right"><b>Support for Hierarchical Problems Layout </b></p>
 			</td>
 			<td valign="top" width="70%">
-			For an active task... if completed message is &quot;resolved..&quot;, if 
-			incomplete message is &quot;progress on..&quot;&nbsp; Multiple 
-			active tasks not yet supported (will default to first activated).&nbsp; 
-			Commit comment can be specified.<p>
-			&nbsp;</td>
+			The
+			Mylar interest filter can now be applied to the Eclipse 3.2 Hierarchical Layout of the 
+			Problems view.&nbsp; The Flat Layout is recommended when Mylar is 
+			applied, since it helps focus on the markers of interest.
+			<p>
+			<img border="0" src="images/0.4.2/problems-hierarchical.gif" width="451" height="189"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -114,13 +147,14 @@ highlighted&nbsp; </span></p>
 
 <h3>Bugzilla Client</h3>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table93">
+<table cellpadding="10" cellspacing="0" width="600" id="table100">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Improved Bugzilla Outline</b></p>
+			<p align="right"><b>Proxy settings</b></p>
 			</td>
 			<td valign="top" width="70%">
-			The Outline view can be used to navigate commenters.<p>...</td>
+			To enable use with firewalls and proxy servers the Bugzilla Client 
+			follows proxy settings set in the Install/Update preference page.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -234,8 +268,8 @@ highlighted&nbsp; </span></p>
 			<td width="70%" valign="top">
 			The Mylar Task List and 
 			related data can be exported, e.g. for backup purposes.&nbsp;
-			<span style="background-color: #E0D0E6">You can now export to an 
-			archive file.</span><p>
+			You can now export to an 
+			archive file.<p>
 			<img border="0" src="images/tasklist-export.gif" width="555" height="343"></td>
 		</tr>
 </table>
