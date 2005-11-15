@@ -17,8 +17,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.junit.launcher.JUnitLaunchConfigurationTab;
-import org.eclipse.jdt.internal.junit.ui.JUnitPlugin;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -81,6 +81,6 @@ class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
 	}
 	
 	public Image getImage() {
-		return JUnitPlugin.getImageDescriptor("obj16/test.gif").createImage();
+		return MylarJavaPlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
 	}
 }
