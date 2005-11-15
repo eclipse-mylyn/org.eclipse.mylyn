@@ -40,9 +40,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 
 	public static ApplyMylarToProblemsListAction INSTANCE;
     public StructuredViewer cachedProblemsTableViewer = null;
-//    private TreeViewer cachedProblemsTreeViewer = null;
-    private MarkerFilter defaultFilter = null;	
-//    private ViewerSorter defaultSorter = null;
+    private MarkerFilter defaultFilter = null;
     private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
     
 	public ApplyMylarToProblemsListAction() {
@@ -144,12 +142,23 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	}
 
 	@Override
-	protected void installInterestFilter(StructuredViewer viewer) {
+	protected void installInterestFilter(final StructuredViewer viewer) {
 //		defaultSorter = viewer.getSorter();
 //		viewer.setSorter(interestSorter);
-		super.installInterestFilter(viewer); 
-//		verifySorterInstalled(viewer);
+		super.installInterestFilter(viewer);
 		toggleMarkerFilter(false); 
+//		if (viewer instanceof TreeViewer) {
+//			IWorkbench workbench = PlatformUI.getWorkbench();
+//			workbench.getDisplay().asyncExec(new Runnable() {
+//	            public void run() {
+//	            	if (viewer != null && !viewer.getControl().isDisposed()) {
+//	        			viewer.getControl().setRedraw(false);
+//	        			((TreeViewer)viewer).expandToLevel(3);
+//	        			viewer.getControl().setRedraw(true);
+//	            	}
+//	            }
+//	        });
+//		}
 	}
 
 	@Override
@@ -182,7 +191,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	                refresh.setAccessible(true);
 	                refresh.invoke(view, new Object[] { } );
         		} catch (NoSuchFieldException nfe) {
-        			// should 
+        			// 3.2 way
         		}
             } 
         } catch (Exception e) {

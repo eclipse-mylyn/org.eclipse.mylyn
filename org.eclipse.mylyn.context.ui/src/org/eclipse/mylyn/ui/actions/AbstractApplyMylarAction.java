@@ -116,24 +116,18 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		}
 	}
 	
-//    private void refreshViewer(StructuredViewer viewer) {
-//		viewer.getControl().setRedraw(false);
-//		viewer.refresh(true);						            
-//		viewer.getControl().setRedraw(true);
-//	}
-
 	/**
      * Public for testing
      */
 	public abstract List<StructuredViewer> getViewers() ;
-	
+
 	protected void installInterestFilter(StructuredViewer viewer) {
 		try {
 			if (viewer != null) {
 	            boolean found = false;
 	            for (int i = 0; i < viewer.getFilters().length; i++) {
-	                ViewerFilter filter = viewer.getFilters()[i];
-	                if (filter instanceof InterestFilter) found = true;
+	                ViewerFilter viewerFilter = viewer.getFilters()[i];
+	                if (viewerFilter instanceof InterestFilter) found = true;
 	            }
 	            if (!found) viewer.addFilter(interestFilter);
 	        } else {
