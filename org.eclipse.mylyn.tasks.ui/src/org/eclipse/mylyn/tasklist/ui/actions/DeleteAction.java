@@ -28,63 +28,57 @@ import org.eclipse.ui.internal.Workbench;
  * @author Mik Kersten and Ken Sueda
  */
 public class DeleteAction extends Action {
-	
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.delete";
-		
+
 	private final TaskListView view;
 
 	public DeleteAction(TaskListView view) {
 		this.view = view;
 		setText("Delete");
 		setId(ID);
-        setImageDescriptor(TaskListImages.REMOVE);
+		setImageDescriptor(TaskListImages.REMOVE);
 	}
-	
+
 	@Override
 	public void run() {
-		
-//		MylarPlugin.getDefault().actionObserved(this);
-		Object selectedObject = ((IStructuredSelection) this.view.getViewer()
-				.getSelection()).getFirstElement();
-		if(selectedObject instanceof ITaskListElement &&
-				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null){
-			MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).itemDeleted((ITaskListElement)selectedObject);
-		}else if (selectedObject instanceof ITask) {
+
+		//		MylarPlugin.getDefault().actionObserved(this);
+		Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();
+		if (selectedObject instanceof ITaskListElement && MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
+			MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).itemDeleted((ITaskListElement) selectedObject);
+		} else if (selectedObject instanceof ITask) {
 			ITask task = (ITask) selectedObject;
 			if (task.isActive()) {
-				MessageDialog.openError(Workbench.getInstance()
-						.getActiveWorkbenchWindow().getShell(), "Delete failed",
+				MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed",
 						"Task must be deactivated in order to delete.");
 				return;
 			}
-			
-			String message = task.getDeleteConfirmationMessage();			
-			boolean deleteConfirmed = MessageDialog.openQuestion(
-		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-		            "Confirm delete", message);
-			if (!deleteConfirmed) 
+
+			String message = task.getDeleteConfirmationMessage();
+			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Confirm delete", message);
+			if (!deleteConfirmed)
 				return;
-									
+
 			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
 			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
 			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
-			// if we couldn't get the page, get out of here
-			if (page == null)
+			if (page == null) {
+				this.view.getViewer().refresh();
 				return;
+			}
 			try {
 				this.view.closeTaskEditors((ITask) selectedObject, page);
 			} catch (Exception e) {
 				MylarPlugin.log(e, " deletion failed");
 			}
 		} else if (selectedObject instanceof TaskCategory) {
-			boolean deleteConfirmed = MessageDialog.openQuestion(
-		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-		            "Confirm delete", 
-		            "Delete the selected category and all contained tasks?");
-			if (!deleteConfirmed) 
+			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Confirm delete",
+					"Delete the selected category and all contained tasks?");
+			if (!deleteConfirmed)
 				return;
-			
+
 			TaskCategory cat = (TaskCategory) selectedObject;
 			for (ITask task : cat.getChildren()) {
 				MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
@@ -99,9 +93,7 @@ public class DeleteAction extends Action {
 			}
 			MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
 		} else {
-			MessageDialog.openError(Workbench.getInstance()
-					.getActiveWorkbenchWindow().getShell(), "Delete failed",
-					"Nothing selected.");
+			MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed", "Nothing selected.");
 			return;
 		}
 		this.view.getViewer().refresh();
