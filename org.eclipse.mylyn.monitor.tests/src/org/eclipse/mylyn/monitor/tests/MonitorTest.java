@@ -130,15 +130,16 @@ public class MonitorTest extends TestCase {
         assertTrue(events.size() >= 2); 
         
         logger.stop();
+        events = logger.getHistoryFromFile(monitorFile);
+        assertTrue(events.size() >= 0); 
         MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
         logger.start();
      
         generatePerspectiveSwitch();
         assertTrue(monitorFile.exists());
         logger.stop();
-        Thread.sleep(2000);
         events = logger.getHistoryFromFile(monitorFile);
-        assertTrue(events.size() >= 2); 
+        assertTrue(events.size() >= 1); 
   }    
 
 	private void generateSelection() {
