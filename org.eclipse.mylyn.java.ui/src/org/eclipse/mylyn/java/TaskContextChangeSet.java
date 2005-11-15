@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
@@ -26,27 +27,34 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 public class TaskContextChangeSet extends ActiveChangeSet {
 
 	private static final String LABEL_PREFIX = "Mylar Task";
+	private static final String LABEL_BUG = "Bug";
 	private List<IResource> resources;
 	private ITask task;
 	
 	public TaskContextChangeSet(ITask task, SubscriberChangeSetCollector collector) {
 		super(collector, LABEL_PREFIX);
 		this.task = task;
-		super.setTitle(LABEL_PREFIX + ": " + this.task.getDescription(true));
+		if (task.isLocal()) {
+			super.setTitle(LABEL_PREFIX + ": " + this.task.getDescription(true));
+		} else {
+			super.setTitle(LABEL_PREFIX + ": " + LABEL_BUG + " " + this.task.getDescription(true));
+		}
 	}
 	
 	@Override
-	public String getComment() {
+	public String getComment() { 
+		String completedPrefix = MylarTasklistPlugin.getPrefs().getString(MylarTasklistPlugin.COMMIT_PREFIX_COMPLETED);
+		String progressPrefix = MylarTasklistPlugin.getPrefs().getString(MylarTasklistPlugin.COMMIT_PREFIX_PROGRESS);
 		String prefix = "";
 		if (task.isCompleted()) {
-			prefix = "Completed "; 
+			prefix = completedPrefix + " "; 
 		} else {
-			prefix = "Progress on ";
+			prefix = progressPrefix + " ";
 		}
-		if (task.isDirectlyModifiable()) {
+		if (task.isLocal()) {
 			return prefix + task.getDescription(false);
 		} else { // bug report
-			return prefix + "Bug " + task.getDescription(false);
+			return prefix + LABEL_BUG + " " + task.getDescription(false);
 		}
 	}
 	
