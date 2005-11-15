@@ -366,7 +366,7 @@ public class TaskListView extends ViewPart {
 			if (columnIndex == 0 && element instanceof ITaskListElement) {
 				return ((ITaskListElement) element).isActivatable();
 			} else if (columnIndex == 2 && element instanceof ITask) {
-				return ((ITask) element).isDirectlyModifiable();
+				return ((ITask) element).isLocal();
 			}
 			//            int columnIndex = Arrays.asList(columnNames).indexOf(property);
 			//            if (element instanceof ITask) {
@@ -392,7 +392,7 @@ public class TaskListView extends ViewPart {
 				//            	case 1: return false;
 				//            	case 2: return taskListElement.isDirectlyModifiable();
 				case 3:
-					return taskListElement.isDirectlyModifiable();
+					return taskListElement.isLocal();
 				}
 			}
 			return false;
@@ -522,14 +522,14 @@ public class TaskListView extends ViewPart {
 					case 1:
 						break;
 					case 2:
-						if (task.isDirectlyModifiable()) {
+						if (task.isLocal()) {
 							Integer intVal = (Integer) value;
 							task.setPriority("P" + (intVal + 1));
 							//							getViewer().setSelection(null);
 						}
 						break;
 					case 3:
-						if (task.isDirectlyModifiable()) {
+						if (task.isLocal()) {
 							task.setDescription(((String) value).trim());
 							MylarTasklistPlugin.getTaskListManager().taskPropertyChanged(task, columnNames[3]);
 							//							getViewer().setSelection(null);

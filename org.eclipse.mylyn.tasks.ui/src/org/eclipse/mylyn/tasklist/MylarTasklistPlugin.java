@@ -83,6 +83,10 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
     public static final String DEFAULT_URL_PREFIX = "org.eclipse.mylar.tasklist.defaultUrlPrefix";
     
+    public static final String COMMIT_PREFIX_COMPLETED = "org.eclipse.mylar.team.commit.prefix.completed";
+    public static final String COMMIT_PREFIX_PROGRESS = "org.eclipse.mylar.team.commit.prefix.progress";
+    
+    
 	private ResourceBundle resourceBundle;
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1*3600*1000; // every hour
 	private static Date lastBackup = new Date();
@@ -273,6 +277,10 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
     	store.setDefault(REPORT_OPEN_INTERNAL, false);
     	store.setDefault(REPORT_OPEN_EXTERNAL, false);
     	store.setDefault(MULTIPLE_ACTIVE_TASKS, false);
+    	
+    	store.setDefault(COMMIT_PREFIX_COMPLETED, "Completed");
+    	store.setDefault(COMMIT_PREFIX_PROGRESS, "Progress on");
+    	
     	store.setDefault(SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
     }    
     

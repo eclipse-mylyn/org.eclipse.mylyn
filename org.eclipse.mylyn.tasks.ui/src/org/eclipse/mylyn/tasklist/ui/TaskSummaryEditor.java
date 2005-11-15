@@ -314,7 +314,7 @@ public class TaskSummaryEditor extends EditorPart {
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
 //        td.colspan = 2;
         description.setLayoutData(td);
-        if (!task.isDirectlyModifiable()) {
+        if (!task.isLocal()) {
         	description.setEnabled(false);
         } else {
         	description.addModifyListener(new ModifyListener() {
@@ -330,7 +330,7 @@ public class TaskSummaryEditor extends EditorPart {
         issueReportURL.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 //        issueReportURL.setForeground(HYPERLINK);
 
-        if (!task.isDirectlyModifiable()) {
+        if (!task.isLocal()) {
         	issueReportURL.setEnabled(false);
         } else {
         	issueReportURL.addModifyListener(new ModifyListener() {

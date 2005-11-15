@@ -138,7 +138,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			
 			boolean openWithBrowser = MylarTasklistPlugin.getPrefs().getBoolean(
 					MylarTasklistPlugin.REPORT_OPEN_INTERNAL);
-			if (task.isDirectlyModifiable() || openWithBrowser) setActivePage(index);
+			if (task.isLocal() || openWithBrowser) setActivePage(index);
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not open issue report web page", false);
 		}

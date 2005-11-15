@@ -43,7 +43,7 @@ public interface ITaskListElement {
     
     public abstract void setHandle(String id);
 	
-    public abstract boolean isDirectlyModifiable();
+    public abstract boolean isLocal();
     
     public abstract boolean isActivatable();
 

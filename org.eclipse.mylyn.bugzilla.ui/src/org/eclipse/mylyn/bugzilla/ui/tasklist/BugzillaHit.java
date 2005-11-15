@@ -117,7 +117,7 @@ public class BugzillaHit implements IQueryHit {
 		return BugzillaRepository.getBugUrlWithoutLogin(id);
 	}
 	
-	public boolean isDirectlyModifiable() {
+	public boolean isLocal() {
 		return false;
 	}
 

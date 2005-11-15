@@ -151,7 +151,7 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 		return false;
 	}
 
-	public boolean isDirectlyModifiable() {
+	public boolean isLocal() {
 		return true;
 	}
 

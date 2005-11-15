@@ -589,7 +589,7 @@ public class BugzillaTask extends Task {
 	}
 
 	@Override
-	public boolean isDirectlyModifiable() {
+	public boolean isLocal() {
 		return false;
 	}
 

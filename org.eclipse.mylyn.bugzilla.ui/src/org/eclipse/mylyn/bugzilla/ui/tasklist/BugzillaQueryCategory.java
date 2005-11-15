@@ -202,7 +202,7 @@ public class BugzillaQueryCategory implements IQuery {
 		return highestPriority;
 	}
 
-	public boolean isDirectlyModifiable() {
+	public boolean isLocal() {
 		return true;
 	}
 

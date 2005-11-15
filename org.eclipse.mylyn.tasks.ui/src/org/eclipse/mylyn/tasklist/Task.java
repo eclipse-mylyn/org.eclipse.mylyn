@@ -402,7 +402,7 @@ public class Task implements ITask {
     	return "Delete the selected task and discard task context?";
     }
     
-	public boolean isDirectlyModifiable() {
+	public boolean isLocal() {
 		return true;
 	}
 	
