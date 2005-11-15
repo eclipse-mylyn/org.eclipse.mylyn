@@ -71,7 +71,7 @@ public class MylarJavaPreferencePage extends PreferencePage implements
 		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND));		
 				
 		enableErrorInterest = new Button(group, SWT.CHECK);
-		enableErrorInterest.setText("Enable predicted interest of errors so they automatically appear until fixed.");
+		enableErrorInterest.setText("Enable predicted interest of errors (causes increase view refresh).");
 		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS));
 	}
 	
