@@ -43,20 +43,26 @@ import org.eclipse.ui.part.MultiPageSelectionProvider;
 public class MylarTaskEditor extends MultiPageEditorPart {
 
 	private static final String TASK_INFO_PAGE_LABEL = "Task Info";
+
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
+
 	protected ITask task;
+
 	private TaskSummaryEditor taskSummaryEditor;
+
 	private Browser webBrowser;
+
 	private TaskEditorInput taskEditorInput;
+
 	private List<IEditorPart> editorsToNotifyOnChange = new ArrayList<IEditorPart>();
-	
+
 	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
 		private ISelection globalSelection;
-		
+
 		public TaskEditorSelectionProvider(MylarTaskEditor taskEditor) {
 			super(taskEditor);
 		}
-		
+
 		public ISelection getSelection() {
 			IEditorPart activeEditor = ((MylarTaskEditor) getMultiPageEditor()).getActiveEditor();
 			if (activeEditor != null && activeEditor.getSite() != null) {
@@ -71,7 +77,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			IEditorPart activeEditor = ((MylarTaskEditor) getMultiPageEditor()).getActiveEditor();
 			if (activeEditor != null && activeEditor.getSite() != null) {
 				ISelectionProvider selectionProvider = activeEditor.getSite().getSelectionProvider();
-				if (selectionProvider != null) selectionProvider.setSelection(selection);
+				if (selectionProvider != null)
+					selectionProvider.setSelection(selection);
 			} else {
 				this.globalSelection = selection;
 				fireSelectionChanged(new SelectionChangedEvent(this, globalSelection));
@@ -91,9 +98,9 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	protected void createPages() {
-		try { 
+		try {
 			int index = createTaskSummaryPage();
-			if(task.getIssueReportURL().length() > 9){
+			if (task.getIssueReportURL().length() > 9) {
 				createTaskIssueWebPage();
 			}
 			for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
@@ -101,13 +108,13 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				IEditorPart editor = factory.createEditor();
 				editorsToNotifyOnChange.add(editor);
 				index = addPage(editor, factory.createEditorInput(MylarPlugin.getContextManager().getActiveContext()));
-				setPageText(index++, factory.getTitle()); 
+				setPageText(index++, factory.getTitle());
 			}
 		} catch (PartInitException e) {
 			MylarPlugin.fail(e, "failed to create task editor pages", false);
 		}
 	}
-	
+
 	public IEditorPart getActiveEditor() {
 		return super.getActiveEditor();
 	}
@@ -117,17 +124,17 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			taskSummaryEditor.createPartControl(getContainer());
 			taskSummaryEditor.setParentEditor(this);
 			int index = addPage(taskSummaryEditor.getControl());
-			setPageText(index, TASK_INFO_PAGE_LABEL);	
+			setPageText(index, TASK_INFO_PAGE_LABEL);
 			return index;
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not add task editor", false);
-		}		
+		}
 		return 0;
 	}
 
 	/**
-	 * Creates page 2 of the multi-page editor,
-	 * which displays the task issue web page
+	 * Creates page 2 of the multi-page editor, which displays the task issue
+	 * web page
 	 */
 	private void createTaskIssueWebPage() {
 		try {
@@ -135,30 +142,29 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			int index = addPage(webBrowser);
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
 			webBrowser.setUrl(task.getIssueReportURL());
-			
-			boolean openWithBrowser = MylarTasklistPlugin.getPrefs().getBoolean(
-					MylarTasklistPlugin.REPORT_OPEN_INTERNAL);
-			if (task.isLocal() || openWithBrowser) setActivePage(index);
+
+			boolean openWithBrowser = MylarTasklistPlugin.getPrefs().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL);
+			if (task.isLocal() || openWithBrowser)
+				setActivePage(index);
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "could not open issue report web page", false);
 		}
-	}	
+	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		taskSummaryEditor.doSave(monitor);
-		if (webBrowser != null){
+		if (webBrowser != null) {
 			webBrowser.setUrl(task.getIssueReportURL());
-		}
-		else if(task.getIssueReportURL().length() > 9){
+		} else if (task.getIssueReportURL().length() > 9) {
 			createTaskIssueWebPage();
 		}
 	}
 
 	/**
-	 * Saves the multi-page editor's document as another file.
-	 * Also updates the text for page 0's tab, and updates this multi-page editor's input
-	 * to correspond to the nested editor's.
+	 * Saves the multi-page editor's document as another file. Also updates the
+	 * text for page 0's tab, and updates this multi-page editor's input to
+	 * correspond to the nested editor's.
 	 * 
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
@@ -173,18 +179,18 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		taskEditorInput = (TaskEditorInput)input;
+		taskEditorInput = (TaskEditorInput) input;
 		super.init(site, input);
 
 		setSite(site);
 		site.setSelectionProvider(new TaskEditorSelectionProvider(this));
-		
+
 		/*
-		 * The task data is saved only once, at the initialization of the editor.  This is
-		 * then passed to each of the child editors.  This way, only one instance of 
-		 * the task data is stored for each editor opened.
+		 * The task data is saved only once, at the initialization of the
+		 * editor. This is then passed to each of the child editors. This way,
+		 * only one instance of the task data is stored for each editor opened.
 		 */
-		task = taskEditorInput.getTask();		
+		task = taskEditorInput.getTask();
 		try {
 			taskSummaryEditor.init(this.getEditorSite(), this.getEditorInput());
 			taskSummaryEditor.setTask(task);
@@ -194,7 +200,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			throw new PartInitException(e.getMessage());
 		}
 	}
-	
+
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
@@ -204,11 +210,11 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	public boolean isDirty() {
 		return taskSummaryEditor.isDirty();
 	}
+
 	/**
 	 * Class to listen for editor events
 	 */
-	private class TaskEditorListener implements IPartListener
-	{
+	private class TaskEditorListener implements IPartListener {
 
 		/**
 		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
@@ -245,7 +251,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			// don't care about this event
 		}
 	}
-	
+
 	public void updatePartName() {
 		firePropertyChange(PROP_DIRTY);
 		return;
@@ -253,7 +259,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public void setFocus() {
-//		taskSummaryEditor.setFocus();
+		// taskSummaryEditor.setFocus();
 	}
 
 	public Browser getWebBrowser() {
@@ -264,7 +270,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
 		for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
-			for (IEditorPart editor: editorsToNotifyOnChange) {
+			for (IEditorPart editor : editorsToNotifyOnChange) {
 				factory.notifyEditorActivationChange(editor);
 			}
 		}

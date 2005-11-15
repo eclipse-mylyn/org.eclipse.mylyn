@@ -43,7 +43,7 @@ public class MylarTasklistPreferencePage extends PreferencePage implements IWork
 	private Text commitPrefixCompleted = null;
 
 	private Text commitPrefixProgress = null;
-
+	
 	private Button browse = null;
 
 	private Button copyExistingDataCheckbox = null;
