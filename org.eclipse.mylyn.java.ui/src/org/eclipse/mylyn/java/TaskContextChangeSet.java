@@ -26,6 +26,7 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
  */
 public class TaskContextChangeSet extends ActiveChangeSet {
 
+	private static final String PREFIX_URL = "Issue URL: ";
 	private static final String LABEL_PREFIX = "Mylar Task";
 	private static final String LABEL_BUG = "Bug";
 	private List<IResource> resources;
@@ -45,17 +46,20 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 	public String getComment() { 
 		String completedPrefix = MylarTasklistPlugin.getPrefs().getString(MylarTasklistPlugin.COMMIT_PREFIX_COMPLETED);
 		String progressPrefix = MylarTasklistPlugin.getPrefs().getString(MylarTasklistPlugin.COMMIT_PREFIX_PROGRESS);
-		String prefix = "";
+		String comment = "";
 		if (task.isCompleted()) {
-			prefix = completedPrefix + " "; 
+			comment = completedPrefix + " "; 
 		} else {
-			prefix = progressPrefix + " ";
+			comment = progressPrefix + " ";
 		}
 		if (task.isLocal()) {
-			return prefix + task.getDescription(false);
+			comment += task.getDescription(false);
 		} else { // bug report
-			return prefix + LABEL_BUG + " " + task.getDescription(false);
+			comment += LABEL_BUG + " " + task.getDescription(false);
 		}
+		String url = task.getIssueReportURL();
+		if (url != null && !url.endsWith("//")) comment += "\n" + PREFIX_URL + url;
+		return comment;
 	}
 	
 	@Override
