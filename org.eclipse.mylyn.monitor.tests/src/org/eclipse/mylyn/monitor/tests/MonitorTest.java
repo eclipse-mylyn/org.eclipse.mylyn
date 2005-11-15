@@ -115,7 +115,7 @@ public class MonitorTest extends TestCase {
 		assertEquals(0, browserMonitor.getAcceptedUrls().size());
 	}
 	
-    public void testLogging() {
+    public void testLogging() throws InterruptedException {
     	MylarMonitorPlugin.getDefault().startMonitoring();
         logger.stop();
         MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
@@ -136,6 +136,7 @@ public class MonitorTest extends TestCase {
         generatePerspectiveSwitch();
         assertTrue(monitorFile.exists());
         logger.stop();
+        Thread.sleep(2000);
         events = logger.getHistoryFromFile(monitorFile);
         assertTrue(events.size() >= 2); 
   }    
