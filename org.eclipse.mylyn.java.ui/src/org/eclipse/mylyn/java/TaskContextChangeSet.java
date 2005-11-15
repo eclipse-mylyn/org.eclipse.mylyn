@@ -58,7 +58,7 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 			comment += LABEL_BUG + " " + task.getDescription(false);
 		}
 		String url = task.getIssueReportURL();
-		if (url != null && !url.endsWith("//")) comment += "\n" + PREFIX_URL + url;
+		if (url != null && !url.equals("") && !url.endsWith("//")) comment += "\n" + PREFIX_URL + url;
 		return comment;
 	}
 	
