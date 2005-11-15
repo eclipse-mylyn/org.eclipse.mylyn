@@ -327,15 +327,15 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		ctx.init(null, tm, null);
 		HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
 		
-		Proxy p = Proxy.NO_PROXY;
+		Proxy proxy = Proxy.NO_PROXY;
 		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
 			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
 			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
 			
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			p = new Proxy(Type.HTTP, sockAddr);
+			proxy = new Proxy(Type.HTTP, sockAddr);
 		}
-		URLConnection cntx = url.openConnection(p);
+		URLConnection cntx = url.openConnection(proxy);
 		return cntx;
 	}
 

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -322,7 +323,9 @@ public class BugParser
 					}
 					
 					// connect to the bugzilla server to get the keyword list
-					input = new BufferedReader(new InputStreamReader(new URL(BugzillaRepository.getURL() + "/" + keywordsUrl+urlText).openStream()));
+					URL url = new URL(BugzillaRepository.getURL() + "/" + keywordsUrl+urlText);
+					URLConnection urlConnection = BugzillaPlugin.getDefault().getUrlConnection(url);
+					input = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 				
 					// parse the valid keywords and add them to the bug
 					List<String> keywords = new KeywordParser(input).getKeywords();
