@@ -79,9 +79,11 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public static ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
 
-	public static final String FIRST_USE = "<html><body bgcolor=\"#ffffff\">" + "<p>If this is your first time using Mylar <b>make sure to watch the </b>\n"
-			+ "<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-03.html\">\n"
-			+ "<b>5 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n" + "Help-&gt;Help Contents.</p>" + "</body></html>";
+	public static final String FIRST_USE = 
+			"<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"http://eclipse.org/mylar/doc/style.css\"/></head>" +
+			"<body bgcolor=\"#ffffff\">" + "<p>If this is your first time using Mylar make sure to watch the \n"
+			+ "<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-04.html\">\n"
+			+ "<b>3 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n" + "Help-&gt;Help Contents.</p>" + "</body></html>";
 
 	public MylarJavaPlugin() {
 		super();
@@ -118,7 +120,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					}
 					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
 						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-					}
+					} 
 
 					javaEditingMonitor = new JavaEditingMonitor();
 					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
