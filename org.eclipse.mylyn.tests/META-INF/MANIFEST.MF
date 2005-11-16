@@ -22,4 +22,4 @@ Require-Bundle: org.junit,
  org.eclipse.mylar.tasklist,
  org.eclipse.mylar.monitor.reports,
  org.eclipse.mylar.core,
- org.eclipse.mylar.bugzilla.test
+ org.eclipse.mylar.bugzilla.tests
