@@ -89,16 +89,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 	}
 	
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void interestChanged(IMylarElement element) {
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
 		if (bridge.isDocument(element.getHandleIdentifier())) {
@@ -120,7 +110,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			}
 		}
 	}
-
+	
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
 			interestChanged(element);
@@ -132,18 +122,22 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 	public void landmarkAdded(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void landmarkRemoved(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void edgesChanged(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
+	public void presentationSettingsChanging(UpdateKind kind) {
+		// ignore
+	}
+
+	public void presentationSettingsChanged(UpdateKind kind) {
+		// ignore
+	}
 }
