@@ -63,7 +63,7 @@ public class BugParser
 		parseTableCell(tokenizer, sb);
 		HtmlStreamTokenizer.unescape(sb);
 		// remove the colon if there is one
-		if (sb.charAt(sb.length() - 1) == ':') {
+		if (sb.length() > 0 && sb.charAt(sb.length() - 1) == ':') {
 			sb.deleteCharAt(sb.length() - 1);
 		}
 		return sb.toString();
