@@ -2,7 +2,7 @@
 <html>
   <head>
 <meta name="copyright" content="Copyright (c) IBM Corporation and others 2000, 2005. This page is made available under license. For full details see the LEGAL in the documentation book that contains this page." >
-    <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css">
+    <link rel="stylesheet" href="http://eclipse.org/mylar/style.css" charset="ISO-8859-1" type="text/css">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta http-equiv="Content-Style-Type" content="text/css">
     <title>
@@ -11,25 +11,60 @@
   </head>
   <body>
     <h1>
+      Mylar
       Frequent Asked Questions</h1>
-	<h3>What platforms are supported?</h3>
-	<p>Mylar supports Eclipse 3.1 final and Eclipse 3.2 milestone releases.&nbsp; 
-	For the time being Mylar <i>only runs in a Java 5 VM</i>, but we are 
-	exploring support for JDK 1.4 VMs.</p>
-	<h3>How do I stop declarations from showing up in the Package Explorer?</h3>
-			If you don't like Mylar's constant showing of Java members in the 
+	<p>For supported platforms and known limitations please see
+	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> </p>
+<p><b>Contents</b></p>
+<ul>
+	<li><a href="#install-failure">Why does Mylar fail to install?</a></li>
+	<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
+	<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
+</ul>
+<h3><a name="install-failure">Why does Mylar fail to install?</a></h3>
+<p>The most likely reason is that you are using an <b>incompatible VM </b>(e.g. JDK 
+1.4), in which case you'll errors like the following in your log file.&nbsp; To 
+check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
+-&gt; Configuration Details and verify that the java.vm.version is 1.5.&nbsp; Mac 
+users should refer to the last
+<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4">bug 1163477</a> 
+for instructions on how to change the 1.4 default.</p>
+<p>
+<pre>   Root exception:
+   java.lang.UnsupportedClassVersionError: org/eclipse/mylar/tasklist/MylarTasklistPlugin 
+   (Unsupported major.minor version 49.0)</pre>
+</p>
+<p>
+This can also be the result of using an <b>incompatible version of Eclipse</b> 
+(e.g. a 3.2 version installed into a 3.1 Eclipse), in which case you'll see 
+errors like the following in your &lt;workspace&gt;/.metadata/.log file:</p>
+<p>
+<pre>   java.lang.NoSuchMethodError:
+   org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()Lorg/eclipse/swt/widgets/Text;
+</pre>
+</p>
+<p>In this case you need to uninstall the old version of Mylar using Help -&gt; 
+Software Updates -&gt; Manage Configuration.&nbsp; You need to first Disable on all 
+Mylar features by right-clicking them, allow Eclipse to restart after the last 
+is disabled, and after restart.&nbsp; Then ensure that the 3rd toolbar button is 
+pressed (figure below) so that you see the disabled features to uninstall, and 
+Uninstall them using the popup menu. Note that manually removing the plug-ins 
+and features can lead to configuration errors. After uninstalling update Eclipse 
+by adding the correct update site specified at:
+	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> </p>
+<p>
+<img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
+
+<h3>&nbsp;</h3>
+<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>If you don't like Mylar's constant showing of Java members in the 
 			Package Explorer, select the drop-down menu, then &quot;Filters...&quot; and 
 			enable the &quot;Mylar Java Declarations Filter&quot;.&nbsp; It will then 
 			stick in the menu in case you want to toggle between modes.<p>
 			<img border="0" src="images/filtering-declarations.gif" width="441" height="211"></p>
-	<h3>
-			Why does nothing show up in the Active Search or Active Hierarchy?</h3>
-	<p>
+<p>
+			&nbsp;</p>
+			<h3><a name="active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></h3><p>
 			As you work and elements become landmarks (bold decoration), and 
 			these elements populate the Active Search and Active Hierarchy 
 			views.&nbsp; To force an element to populate the views manually make 
-			it a landmark by right-clicking or hitting Ctrl+Alt+Shift+Up Arrow.&nbsp; </p>
-			    
-  </body>
-</html>
-
+			it a landmark by right-clicking or hitting Ctrl+Alt+Shift+Up Arrow.&nbsp; </p></body></html>
