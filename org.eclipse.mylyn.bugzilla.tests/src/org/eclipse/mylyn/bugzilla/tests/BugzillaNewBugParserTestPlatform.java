@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.test;
+package org.eclipse.mylar.bugzilla.tests;
 
 import java.io.File;
 import java.io.FileReader;

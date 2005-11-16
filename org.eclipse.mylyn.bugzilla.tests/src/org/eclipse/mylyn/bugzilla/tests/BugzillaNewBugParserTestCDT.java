@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.test;
+package org.eclipse.mylar.bugzilla.tests;
 
 import java.io.File;
 import java.io.FileReader;
@@ -26,28 +26,29 @@ import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
 
 
 /**
- * Tests NewBugParser -- parses product attributes
+ * Tests NewBugParser -- parses product attributes for new bug reports
  */
-public class BugzillaNewBugParserTestVE extends TestCase {
+public class BugzillaNewBugParserTestCDT extends TestCase {
 
-	public BugzillaNewBugParserTestVE() {
+	public BugzillaNewBugParserTestCDT() {
 		super();
 	}
 
-	public BugzillaNewBugParserTestVE(String arg0) {
+	public BugzillaNewBugParserTestCDT(String arg0) {
 		super(arg0);
 	}
 
-	public void testProductVE() throws Exception {
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/ve-page.html"));
+	public void testProductCDT() throws Exception {
+
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/cdt-page.html"));
 		
 		Reader in = new FileReader(f);
 
 		NewBugModel nbm = new NewBugModel();
 		new NewBugParser(in).parseBugAttributes(nbm, true); // ** TRUE vs FALSE **
 
-		// attributes for this but model
-		List<Attribute> attributes = nbm.getAttributes();
+		// attributes for this bug model
+		List<Attribute> attributes =  nbm.getAttributes();
 //		printList(attributes);
 
 		Iterator<Attribute> itr = attributes.iterator();
@@ -56,7 +57,7 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 		// Attribute: Severity
 		assertEquals("Attribute: Severity", "Severity", att.getName());
 
-		Map<String, String> attOptions =  att.getOptionValues(); // HashMap of
+		Map<String, String> attOptions = att.getOptionValues(); // HashMap of
 															  // options for the
 															  // current
 															  // attribute
@@ -130,20 +131,22 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 
 		//attOptions = (HashMap) att.getOptionValues();
 		options = att.getOptionValues().keySet().toArray();
-		assertEquals("# Version options", 3, options.length);
+		assertEquals("# Version options", 5, options.length);
 
 		i = 0;
 		while (i < options.length) {
-			assertEquals("Version options", "0.5.0", options[i++]);
-			assertEquals("Version options", "1.0.0", options[i++]);
-			assertEquals("Version options", "unspecified", options[i++]);
+			assertEquals("Version options", "1.0", options[i++]);
+			assertEquals("Version options", "1.0.1", options[i++]);
+			assertEquals("Version options", "1.1", options[i++]);
+			assertEquals("Version options", "1.2", options[i++]);
+			assertEquals("Version options", "2.0", options[i++]);
 		}
 
 		// Attribute: Platform
 		att = itr.next();
 		assertEquals("Attribute: Platform", "Platform", att.getName());
 
-		options =  att.getOptionValues().keySet().toArray();
+		options = att.getOptionValues().keySet().toArray();
 		assertEquals("# Platform options", 6, options.length);
 
 		i = 0;
@@ -156,20 +159,25 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 			assertEquals("Platform options", "Other", options[i++]);
 		}
 
+		// Attribute: Component
 		att = itr.next();
 		assertEquals("Attribute: Component", "Component", att.getName());
 
 		options = att.getOptionValues().keySet().toArray();
-		assertEquals("# Component options", 6, options.length);
+		assertEquals("# Component options", 9, options.length);
 
 		i = 0;
 		while (i < options.length) {
-			assertEquals("Component options", "CDE", options[i++]);
+			assertEquals("Component options", "CDT-parser", options[i++]);
+			assertEquals("Component options", "Core", options[i++]);
+			assertEquals("Component options", "Cpp-Extensions", options[i++]);
+			assertEquals("Component options", "Debug", options[i++]);
+			assertEquals("Component options", "Debug-MI", options[i++]);
 			assertEquals("Component options", "Doc", options[i++]);
-			assertEquals("Component options", "Java Core", options[i++]);
-			assertEquals("Component options", "Java Model (JEM)", options[i++]);
-			assertEquals("Component options", "JFC/Swing", options[i++]);
-			assertEquals("Component options", "SWT", options[i++]);
+			assertEquals("Component options", "Generic-Extensions",
+					options[i++]);
+			assertEquals("Component options", "Launcher", options[i++]);
+			assertEquals("Component options", "UI", options[i++]);
 		}
 
 		// Attribute: bug_status
@@ -177,7 +185,7 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 		assertEquals("Attribute: bug_status", "bug_status", att.getName());
 
 		options = att.getOptionValues().keySet().toArray();
-		assertEquals("No bug_status options", 0, options.length);
+		assertEquals("# bug_status options [none]", 0, options.length);
 
 		// Attribute: form_name
 		att = itr.next();
@@ -197,7 +205,7 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 		att = itr.next();
 		assertEquals("Attribute: priority", "priority", att.getName());
 
-		options =  att.getOptionValues().keySet().toArray();
+		options = att.getOptionValues().keySet().toArray();
 		assertEquals("No priority options", 0, options.length);
 
 	}
@@ -214,7 +222,7 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 //			System.out.println(attr.getName() + ":  ");
 //			System.out.println("-----------");
 //
-//			Map<String, String> options =  attr.getOptionValues();
+//			Map<String, String> options = attr.getOptionValues();
 //			Object[] it = options.keySet().toArray();
 //			for (int i = 0; i < it.length; i++)
 //				System.out.println((String) it[i]);

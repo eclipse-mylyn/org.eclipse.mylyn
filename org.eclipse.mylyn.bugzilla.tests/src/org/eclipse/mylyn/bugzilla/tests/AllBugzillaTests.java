@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.test;
+package org.eclipse.mylar.bugzilla.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -19,7 +19,7 @@ import junit.framework.TestSuite;
 public class AllBugzillaTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.test");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(RegularExpressionMatchTest.class);
 		suite.addTestSuite(BugzillaNewBugParserTestCDT.class);

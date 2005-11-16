@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.test;
+package org.eclipse.mylar.bugzilla.tests;
 
 import java.io.File;
 import java.io.FileReader;
@@ -26,21 +26,21 @@ import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
 
 
 /**
- * Tests NewBugParser -- parses product attributes for new bug reports
+ * Tests NewBugParser -- parses product attributes
  */
-public class BugzillaNewBugParserTestCDT extends TestCase {
+public class BugzillaNewBugParserTestEquinox extends TestCase {
 
-	public BugzillaNewBugParserTestCDT() {
+	public BugzillaNewBugParserTestEquinox() {
 		super();
 	}
 
-	public BugzillaNewBugParserTestCDT(String arg0) {
+	public BugzillaNewBugParserTestEquinox(String arg0) {
 		super(arg0);
 	}
 
-	public void testProductCDT() throws Exception {
+	public void testProductEquinox() throws Exception {
 
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/cdt-page.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/equinox-page.html"));
 		
 		Reader in = new FileReader(f);
 
@@ -79,27 +79,24 @@ public class BugzillaNewBugParserTestCDT extends TestCase {
 
 		// Attribute: product
 		att = itr.next();
-		assertEquals("Attribute: product", "product", att.getName());
+		assertEquals("Attribute: prodcut", "product", att.getName());
 
-		attOptions = att.getOptionValues();
-		options = attOptions.keySet().toArray();
+		options = att.getOptionValues().keySet().toArray();
 		assertEquals("No product options", 0, options.length);
 
 		// Attribute: AssignedTo
 		att = itr.next();
 		assertEquals("Attribute: AssignedTo", "AssignedTo", att.getName());
 
-		attOptions = att.getOptionValues();
-		options = attOptions.keySet().toArray();
+		options = att.getOptionValues().keySet().toArray();
 		assertEquals("No AssignedTo options", 0, options.length);
 
 		// Attribute: OS
 		att = itr.next();
 		assertEquals("Attribute: OS", "OS", att.getName());
 
-		attOptions = att.getOptionValues();
-		options = attOptions.keySet().toArray();
-		assertEquals("# of options", 20, options.length);
+		options = att.getOptionValues().keySet().toArray();
+		assertEquals("# OS options", 20, options.length);
 
 		i = 0;
 		while (i < options.length) {
@@ -129,17 +126,12 @@ public class BugzillaNewBugParserTestCDT extends TestCase {
 		att = itr.next();
 		assertEquals("Attribute: Version", "Version", att.getName());
 
-		//attOptions = (HashMap) att.getOptionValues();
 		options = att.getOptionValues().keySet().toArray();
-		assertEquals("# Version options", 5, options.length);
+		assertEquals("# Version options", 1, options.length);
 
 		i = 0;
 		while (i < options.length) {
-			assertEquals("Version options", "1.0", options[i++]);
-			assertEquals("Version options", "1.0.1", options[i++]);
-			assertEquals("Version options", "1.1", options[i++]);
-			assertEquals("Version options", "1.2", options[i++]);
-			assertEquals("Version options", "2.0", options[i++]);
+			assertEquals("Version options", "unspecified", options[i++]);
 		}
 
 		// Attribute: Platform
@@ -164,20 +156,13 @@ public class BugzillaNewBugParserTestCDT extends TestCase {
 		assertEquals("Attribute: Component", "Component", att.getName());
 
 		options = att.getOptionValues().keySet().toArray();
-		assertEquals("# Component options", 9, options.length);
+		assertEquals("# Component options", 3, options.length);
 
 		i = 0;
 		while (i < options.length) {
-			assertEquals("Component options", "CDT-parser", options[i++]);
-			assertEquals("Component options", "Core", options[i++]);
-			assertEquals("Component options", "Cpp-Extensions", options[i++]);
-			assertEquals("Component options", "Debug", options[i++]);
-			assertEquals("Component options", "Debug-MI", options[i++]);
-			assertEquals("Component options", "Doc", options[i++]);
-			assertEquals("Component options", "Generic-Extensions",
-					options[i++]);
-			assertEquals("Component options", "Launcher", options[i++]);
-			assertEquals("Component options", "UI", options[i++]);
+			assertEquals("Component options", "Dynamic Plugins", options[i++]);
+			assertEquals("Component options", "General", options[i++]);
+			assertEquals("Component options", "OSGi", options[i++]);
 		}
 
 		// Attribute: bug_status
@@ -185,7 +170,7 @@ public class BugzillaNewBugParserTestCDT extends TestCase {
 		assertEquals("Attribute: bug_status", "bug_status", att.getName());
 
 		options = att.getOptionValues().keySet().toArray();
-		assertEquals("# bug_status options [none]", 0, options.length);
+		assertEquals("No bug_status options", 0, options.length);
 
 		// Attribute: form_name
 		att = itr.next();
