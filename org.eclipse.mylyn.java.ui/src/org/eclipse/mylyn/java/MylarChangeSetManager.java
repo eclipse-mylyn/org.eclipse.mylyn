@@ -100,7 +100,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 	public void interestChanged(IMylarElement element) {
-		System.err.println(">>> " + element);
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
 		if (bridge.isDocument(element.getHandleIdentifier())) {
 			IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
