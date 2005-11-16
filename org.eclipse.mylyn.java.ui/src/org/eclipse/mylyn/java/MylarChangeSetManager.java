@@ -99,7 +99,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		
 	}
 
-	public void interestChanged(IMylarElement element) {	
+	public void interestChanged(IMylarElement element) {
+		System.err.println(">>> " + element);
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
 		if (bridge.isDocument(element.getHandleIdentifier())) {
 			IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
@@ -107,7 +108,11 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				for (TaskContextChangeSet changeSet: getChangeSets()) {
 					if (!changeSet.contains(resource)) {
 						try {
-							changeSet.add(new IResource[] { resource });
+							if (element.getInterest().isInteresting()) {
+								changeSet.add(new IResource[] { resource });
+							} else {
+								changeSet.remove(resource);
+							}
 						} catch (TeamException e) {
 							MylarPlugin.fail(e, "could not add resource to change set", false);
 						}
@@ -124,8 +129,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 	public void nodeDeleted(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void landmarkAdded(IMylarElement node) {
