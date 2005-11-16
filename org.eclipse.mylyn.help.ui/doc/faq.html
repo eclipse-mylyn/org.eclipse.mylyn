@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta http-equiv="Content-Style-Type" content="text/css">
     <title>
-      Mylar Limitations
+      Mylar FAQ
     </title>
   </head>
   <body>
@@ -35,23 +35,27 @@ for instructions on how to change the 1.4 default.</p>
    (Unsupported major.minor version 49.0)</pre>
 </p>
 <p>
-This can also be the result of using an <b>incompatible version of Eclipse</b> 
-(e.g. a 3.2 version installed into a 3.1 Eclipse), in which case you'll see 
-errors like the following in your &lt;workspace&gt;/.metadata/.log file:</p>
+This can also be the result of using an <b>incompatible version of Eclipse</b>.&nbsp; 
+Separate versions and update sites exist
+<a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2 
+milestone</a>), in which case you'll see complaints from the OSGi framework or errors like the following in your &lt;workspace&gt;/.metadata/.log file:</p>
 <p>
 <pre>   java.lang.NoSuchMethodError:
    org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()Lorg/eclipse/swt/widgets/Text;
 </pre>
 </p>
-<p>In this case you need to uninstall the old version of Mylar using Help -&gt; 
+<p>In this case the easiest thing to do is reinstall Mylar (your tasks won't be 
+lost).&nbsp; First uninstall the old version of Mylar using Help -&gt; 
 Software Updates -&gt; Manage Configuration.&nbsp; You need to first Disable on all 
 Mylar features by right-clicking them, allow Eclipse to restart after the last 
 is disabled, and after restart.&nbsp; Then ensure that the 3rd toolbar button is 
 pressed (figure below) so that you see the disabled features to uninstall, and 
 Uninstall them using the popup menu. Note that manually removing the plug-ins 
-and features can lead to configuration errors. After uninstalling update Eclipse 
+and features can lead to Eclipse configuration errors. After uninstalling update Eclipse 
 by adding the correct update site specified at:
-	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> </p>
+	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a>, 
+and after that automatically or manually updating will install the correct 
+version.</p>
 <p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
 
