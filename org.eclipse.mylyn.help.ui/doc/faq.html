@@ -38,10 +38,12 @@ for instructions on how to change the 1.4 default.</p>
 This can also be the result of using an <b>incompatible version of Eclipse</b>.&nbsp; 
 Separate versions and update sites exist
 <a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2 
-milestone</a>), in which case you'll see complaints from the OSGi framework or errors like the following in your &lt;workspace&gt;/.metadata/.log file:</p>
+milestone</a>), in which case you'll see errors like the following in your &lt;workspace&gt;/.metadata/.log file:</p>
 <p>
 <pre>   java.lang.NoSuchMethodError:
    org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()Lorg/eclipse/swt/widgets/Text;
+
+   org.osgi.framework.BundleException: The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.mylar.java is invalid
 </pre>
 </p>
 <p>In this case the easiest thing to do is reinstall Mylar (your tasks won't be 
@@ -52,7 +54,7 @@ is disabled, and after restart.&nbsp; Then ensure that the 3rd toolbar button is
 pressed (figure below) so that you see the disabled features to uninstall, and 
 Uninstall them using the popup menu. Note that manually removing the plug-ins 
 and features can lead to Eclipse configuration errors. After uninstalling update Eclipse 
-by adding the correct update site specified at:
+by adding the correct update site specified at: 
 	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a>, 
 and after that automatically or manually updating will install the correct 
 version.</p>
@@ -60,7 +62,7 @@ version.</p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
 
 <h3>&nbsp;</h3>
-<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
+<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer??</a></h3>
 <p>If you don't like Mylar's constant showing of Java members in the 
 			Package Explorer, select the drop-down menu, then &quot;Filters...&quot; and 
 			enable the &quot;Mylar Java Declarations Filter&quot;.&nbsp; It will then 
