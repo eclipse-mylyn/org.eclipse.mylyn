@@ -662,6 +662,7 @@ public class MylarContextManager {
 	}
 	
     public void manipulateInterestForNode(IMylarElement element, boolean increment, boolean forceLandmark, String sourceId) {
+//    	System.err.println(">> man: " + element);
     	float originalValue = element.getInterest().getValue();
         float changeValue = 0; 
         if (!increment) {
@@ -674,7 +675,9 @@ public class MylarContextManager {
             	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
                 for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
 					IMylarElement childElement = getElement(childHandle);
-					manipulateInterestForNode(childElement, increment, forceLandmark, sourceId);
+					if (childElement.getInterest().isInteresting()) {
+						manipulateInterestForNode(childElement, increment, forceLandmark, sourceId);
+					}
 				}
             }
         } else {

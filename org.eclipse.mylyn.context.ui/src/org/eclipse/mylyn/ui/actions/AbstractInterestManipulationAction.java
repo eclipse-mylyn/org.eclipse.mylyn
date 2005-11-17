@@ -57,14 +57,20 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	                    String handle = bridge.getHandleIdentifier(object);
 	                    node = MylarPlugin.getContextManager().getElement(handle);
     				}
-    				if (node != null) MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+    				if (node != null) {
+    					MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+    				} else {
+    					MylarPlugin.log("no element for interest manipulation", this);
+    				}
     			}
     		}
     	} else {
     		IMylarElement node = MylarPlugin.getContextManager().getActiveElement();
     		if (node != null) {
     			MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
-    		}
+    		} else {
+				MylarPlugin.log("no active element for interest manipulation", this);
+			}
     	}
     }
 

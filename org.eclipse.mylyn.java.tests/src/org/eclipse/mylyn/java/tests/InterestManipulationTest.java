@@ -11,14 +11,20 @@
 
 package org.eclipse.mylar.java.tests;
 
-import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.ResourceSelectionMonitor;
+import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
@@ -28,29 +34,70 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class InterestManipulationTest extends AbstractJavaContextTest {
 
-    public void testDecrementInterest() throws JavaModelException {
-    	IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IMethod m1 = type1.createMethod("void testDecrement() { }", null, true, null);     
-        StructuredSelection sm1 = new StructuredSelection(m1);
-        monitor.selectionChanged(part, sm1);
-        IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
-        IMylarElement classNode = MylarPlugin.getContextManager().getElement(m1.getParent().getHandleIdentifier());
-        IMylarElement fileNode = MylarPlugin.getContextManager().getElement(m1.getParent().getParent().getHandleIdentifier());
-        IJavaElement pkg = m1.getParent().getParent().getParent();
-        assertTrue(pkg instanceof IPackageFragment);
-        IMylarElement packageNode = MylarPlugin.getContextManager().getElement(pkg.getHandleIdentifier());        
+	private IMylarElement method;
+	private IMylarElement clazz;
+	private IMylarElement cu;
+    
+	private IMethod javaMethod;
+	private IType javaType;
+	private ICompilationUnit javaCu;
+	private IPackageFragment javaPackage;
+	
+	private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+	
+    @Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		javaMethod = type1.createMethod("void testDecrement() { }", null, true, null);  
+		javaType = (IType)javaMethod.getParent();
+		javaCu = (ICompilationUnit) javaType.getParent();
+		javaPackage = (IPackageFragment)javaCu.getParent();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+
+	/**
+	 * TODO: move to IDE tests
+	 */
+	public void testDecrementOfFile() throws JavaModelException {
+		IFolder folder = (IFolder)javaPackage.getAdapter(IResource.class);
+		IFile file = (IFile)javaCu.getAdapter(IResource.class);
+		ResourceStructureBridge bridge = new ResourceStructureBridge();
+		
+		new ResourceSelectionMonitor().selectionChanged(part, new StructuredSelection(file));
+		
+		IMylarElement folderElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(folder));
+        IMylarElement fileElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
+		        
+        assertTrue(fileElement.getInterest().isInteresting());
+		assertTrue(folderElement.getInterest().isInteresting());
         
-        assertTrue(node.getInterest().isInteresting());
-        assertTrue(classNode.getInterest().isInteresting());
-        assertTrue(fileNode.getInterest().isInteresting());
-//        assertTrue(packageNode.getInterest().isInteresting());
+        MylarPlugin.getContextManager().manipulateInterestForNode(folderElement, false, false, "test");
+
+        assertFalse(folderElement.getInterest().isInteresting());
+        assertFalse(fileElement.getInterest().isInteresting());
+    }
+	
+	public void testDecrementInterestOfCompilationUnit() throws JavaModelException {
+        monitor.selectionChanged(part, new StructuredSelection(javaMethod));
+        method = MylarPlugin.getContextManager().getElement(javaMethod.getHandleIdentifier());
+        clazz = MylarPlugin.getContextManager().getElement(javaType.getHandleIdentifier());
+        cu = MylarPlugin.getContextManager().getElement(javaCu.getHandleIdentifier());
+		
+		IMylarElement packageNode = MylarPlugin.getContextManager().getElement(javaPackage.getHandleIdentifier());        
+        
+        assertTrue(method.getInterest().isInteresting());
+        assertTrue(clazz.getInterest().isInteresting());
+        assertTrue(cu.getInterest().isInteresting());
         
         MylarPlugin.getContextManager().manipulateInterestForNode(packageNode, false, false, "test");
-      
         assertFalse(packageNode.getInterest().isInteresting());
-        assertFalse(fileNode.getInterest().isInteresting());
-        assertFalse(classNode.getInterest().isInteresting());
-        assertFalse(node.getInterest().isInteresting());
+        assertFalse(cu.getInterest().isInteresting());
+        assertFalse(clazz.getInterest().isInteresting());
+        assertFalse(method.getInterest().isInteresting());
     }
 	
     public void testManipulation() throws JavaModelException {

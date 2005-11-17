@@ -289,7 +289,6 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
         return decorateInterestMode;
     }
     
-
     public void setDecorateInterestMode(boolean decorateInterestLevel) {
         this.decorateInterestMode = decorateInterestLevel;
     }

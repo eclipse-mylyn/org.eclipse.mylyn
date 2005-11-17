@@ -15,6 +15,7 @@ package org.eclipse.mylar.ui.views;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarObject;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -56,15 +57,22 @@ public class MylarDelegatingContextLabelProvider implements ILabelProvider {
     	if (object instanceof IMylarObject) {
     		IMylarObject element = (IMylarObject)object;
     		ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
-            if (MylarUiPlugin.getDefault().isDecorateInterestMode()) { // TODO: move
+        	if (MylarUiPlugin.getDefault().isDecorateInterestMode()) { // TODO: move
                 return provider.getText(element) + " [" + element.getInterest().getValue() + "]"; 
             } else {
-                return provider.getText(element);
+            	return provider.getText(element);
             }
         } else {
         	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
         	ILabelProvider provider = MylarUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
-        	if (provider != null) return provider.getText(object);
+        	if (provider != null) {
+	        	if (MylarUiPlugin.getDefault().isDecorateInterestMode()) {
+	        		IMylarElement element = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(object));
+	        		return provider.getText(object) + " [" + element.getInterest().getValue() + "]"; 
+	        	} else {
+	        		return provider.getText(object);
+	        	}
+        	}
         }
     	return "? " + object;
     }
