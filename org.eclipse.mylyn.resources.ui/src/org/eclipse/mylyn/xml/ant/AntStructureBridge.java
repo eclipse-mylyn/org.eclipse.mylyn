@@ -69,6 +69,10 @@ public class AntStructureBridge implements IMylarStructureBridge {
         }
     }
     
+	public List<String> getChildHandles(String handle) {
+		return Collections.emptyList();
+	}
+    
     /**
      * @see org.eclipse.mylar.core.IMylarStructureBridge#getParentHandle(java.lang.String)
      */

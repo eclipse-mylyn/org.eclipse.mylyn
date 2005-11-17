@@ -22,10 +22,9 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.core.tests.support.TestProject;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.ui.IWorkbenchPart;
@@ -35,7 +34,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class JavaStructureTest extends AbstractContextTest {
+public class JavaStructureTest extends AbstractJavaContextTest {
     
     private MylarContextManager manager = MylarPlugin.getContextManager();
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
@@ -65,7 +64,7 @@ public class JavaStructureTest extends AbstractContextTest {
     protected void tearDown() throws Exception {
         manager.removeAllListeners();
         manager.contextDeactivated("12312", "12312");
-        project.dispose();
+        deleteProject(project.getProject());
     }
     
     public void testNavigation() throws JavaModelException, PartInitException {

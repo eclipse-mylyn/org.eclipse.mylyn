@@ -15,7 +15,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -54,28 +60,89 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     protected void setUp() throws Exception {
     	assertNotNull(JavaPlugin.getDefault());
     	assertNotNull(MylarJavaPlugin.getDefault());
-    	project = new TestProject(this.getClass().getSimpleName());
+    	project = new TestProject(this.getClass().getSimpleName());// + "-" + projectCounter++);
         p1 = project.createPackage("p1");
         type1 = project.createType(p1, "Type1.java", "public class Type1 { }" );
         context = new MylarContext(taskId, scaling);
+        context.reset();
+//        assertTrue(manager.getActiveContext().getInteresting().toString(), manager.getActiveContext().getInteresting().isEmpty());
         manager.contextActivated(context);
         assertNotNull(MylarJavaPlugin.getDefault());
-
         assertTrue(MylarPlugin.getDefault().getStructureBridges().toString().indexOf(
     		JavaStructureBridge.class.getCanonicalName()) != -1);
+        
+		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);	
     }
     
     @Override
     protected void tearDown() throws Exception {
         context.reset(); 
+        assertTrue(context.getInteresting().isEmpty());
         manager.contextDeactivated(taskId, taskId);
         manager.contextDeleted(taskId, taskId);
         manager.getFileForContext(taskId).delete(); 
-		project.build();
-        project.dispose();
-		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);	
+//        project.dispose();
+        deleteProject(project.getProject());
+        waitForAutoBuild();
     }
 	
+	public static void waitForAutoBuild() {
+		boolean wasInterrupted = false;
+		do {
+			try {
+				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+				wasInterrupted = false;
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				wasInterrupted = true;
+			}
+		} while (wasInterrupted);
+	}
+    
+	protected void deleteProject(IProject project) throws CoreException {
+		if (project.exists() && !project.isOpen()) { // force opening so that project can be deleted without logging (see bug 23629)
+			project.open(null);
+		}
+		deleteResource(project);
+	}
+	
+	public void deleteResource(IResource resource) throws CoreException {
+		CoreException lastException = null;
+		try {
+			resource.delete(true, null);
+		} catch (CoreException e) {
+			lastException = e;
+			// just print for info
+			System.out.println("(CoreException): " + e.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (IllegalArgumentException iae) {
+			// just print for info
+			System.out.println("(IllegalArgumentException): " + iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		int retryCount = 60; // wait 1 minute at most
+		while (resource.isAccessible() && --retryCount >= 0) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+			try {
+				resource.delete(true, null);
+			} catch (CoreException e) {
+				lastException = e;
+				// just print for info
+				System.out.println("(CoreException) Retry "+retryCount+": "+ e.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			} catch (IllegalArgumentException iae) {
+				// just print for info
+				System.out.println("(IllegalArgumentException) Retry "+retryCount+": "+ iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		}
+		if (!resource.isAccessible()) return;
+		System.err.println("Failed to delete " + resource.getFullPath()); //$NON-NLS-1$
+		if (lastException != null) {
+			throw lastException;
+		}
+	}
+    
     protected int countItemsInTree(Tree tree) {
     	List<TreeItem> collectedItems = new ArrayList<TreeItem>();
     	collectTreeItemsInView(tree.getItems(), collectedItems);

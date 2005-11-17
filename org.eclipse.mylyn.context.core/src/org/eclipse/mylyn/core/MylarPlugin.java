@@ -188,9 +188,8 @@ public class MylarPlugin extends AbstractUIPlugin {
 			
 		}
 
-		public boolean containsProblem(IMylarElement node) {
-			// TODO Auto-generated method stub
-			return false;
+		public List<String> getChildHandles(String handle) {
+			return Collections.emptyList();
 		}
     };
 

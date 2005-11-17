@@ -33,12 +33,10 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.java.JavaProblemListener;
 import org.eclipse.mylar.java.JavaStructureBridge;
-import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
@@ -312,42 +310,5 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         assertEquals(1, listener.numDeletions);
     }
     
-    public void testManipulation() throws JavaModelException {
-    	InterestManipulationAction action = new InterestManipulationAction();
-    	
-    	IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        IMethod m1 = type1.createMethod("void m22() { }", null, true, null);     
-        StructuredSelection sm1 = new StructuredSelection(m1);
-        monitor.selectionChanged(part, sm1);
-        IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
-        assertFalse(node.getInterest().isLandmark());
-        assertNotNull(MylarPlugin.getContextManager().getActiveElement());
-        action.changeInterestForSelected(true);
-        assertTrue(node.getInterest().isLandmark());
-        action.changeInterestForSelected(true);
-        
-        assertEquals(node.getInterest().getValue(), scaling.getLandmark() + scaling.get(InteractionEvent.Kind.SELECTION).getValue());
-        
-        action.changeInterestForSelected(false);
-        assertFalse(node.getInterest().isLandmark());
-        assertTrue(node.getInterest().isInteresting());
-        action.changeInterestForSelected(false);
-        assertFalse(node.getInterest().isInteresting());  
-        assertEquals(node.getInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION).getValue());
-        action.changeInterestForSelected(false);
-        assertEquals(node.getInterest().getValue(), -scaling.get(InteractionEvent.Kind.SELECTION).getValue());
-    }
-    
-	class InterestManipulationAction extends AbstractInterestManipulationAction {
-		
-		@Override
-		protected boolean isIncrement() {
-			return true;
-		}
-
-		public void changeInterestForSelected(boolean increment) {
-			MylarPlugin.getContextManager().manipulateInterestForNode(MylarPlugin.getContextManager().getActiveElement(), increment, false, "");
-		}
-	}
 }
 

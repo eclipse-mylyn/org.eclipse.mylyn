@@ -12,6 +12,7 @@
 package org.eclipse.mylar.xml.pde;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.internal.resources.File;
@@ -67,6 +68,10 @@ public class PdeStructureBridge implements IMylarStructureBridge {
             return CONTENT_TYPE;
         }
     }
+    
+	public List<String> getChildHandles(String handle) {
+		return Collections.emptyList();
+	}
     
     public String getParentHandle(String handle) {
         // we can only get the parent if we have a PluginObjectNode

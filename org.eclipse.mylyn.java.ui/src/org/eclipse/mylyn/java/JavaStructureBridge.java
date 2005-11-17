@@ -14,6 +14,7 @@
 package org.eclipse.mylar.java;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -28,6 +29,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IParent;
 import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -80,6 +82,29 @@ public class JavaStructureBridge implements IMylarStructureBridge {
         } 
     }
 
+	public List<String> getChildHandles(String handle) {
+		Object object = getObjectForHandle(handle);
+		if (object instanceof IJavaElement) {
+			IJavaElement element = (IJavaElement)object;
+			if (element instanceof IParent) {
+				IParent parent = (IParent)element;
+				IJavaElement[] children;
+				try {
+					children = parent.getChildren();
+					List<String> childHandles = new ArrayList<String>();
+					for (int i = 0; i < children.length; i++) {
+						String childHandle = getHandleIdentifier(children[i]);
+						if (childHandle != null) childHandles.add(childHandle);
+					}
+					return childHandles;
+				} catch (Exception e) {
+					MylarPlugin.fail(e, "could not get child", false);
+				}
+			}
+		} 
+		return Collections.emptyList();
+	}
+    
     public Object getObjectForHandle(String handle) {
     	try {
     		return JavaCore.create(handle);

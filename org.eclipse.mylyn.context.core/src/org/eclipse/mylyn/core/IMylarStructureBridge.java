@@ -39,9 +39,11 @@ public interface IMylarStructureBridge {
     
     public abstract String getHandleIdentifier(Object object);
     
+    public abstract String getParentHandle(String handle);
+        
     public abstract Object getObjectForHandle(String handle);
     
-    public abstract String getParentHandle(String handle);
+    public abstract List<String> getChildHandles(String handle);
     
     /**
      * @return 	The name or a null String("").  Can't be null since the views
@@ -85,7 +87,4 @@ public interface IMylarStructureBridge {
     public abstract List<AbstractRelationProvider> getRelationshipProviders();
     
     public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
-
-    @Deprecated
-	public abstract boolean containsProblem(IMylarElement node);
 }

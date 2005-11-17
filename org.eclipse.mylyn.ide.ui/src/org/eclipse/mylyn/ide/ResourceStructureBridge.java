@@ -13,9 +13,11 @@
   */
 package org.eclipse.mylar.ide;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -25,7 +27,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
-import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
@@ -57,6 +58,31 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
         }
     }
 
+	public List<String> getChildHandles(String handle) {
+		Object object = getObjectForHandle(handle);
+		if (object instanceof IResource) {
+			IResource resource = (IResource)object;
+			if (resource instanceof IContainer) {
+				IContainer container = (IContainer)resource;
+				IResource[] children;
+				try {
+					children = container.members();
+					List<String> childHandles = new ArrayList<String>();
+					for (int i = 0; i < children.length; i++) {
+						String childHandle = getHandleIdentifier(children[i]);
+						if (childHandle != null) childHandles.add(childHandle);
+					}
+					return childHandles;
+				} catch (Exception e) {
+					MylarPlugin.fail(e, "could not get child", false);
+				}
+			} else if (resource instanceof IFile) {
+				// delegate to child bridges
+			}
+		} 
+		return Collections.emptyList();
+	}
+    
     public String getHandleIdentifier(Object object) {
         if (object instanceof IProject) {
             String path = ((IResource)object).getFullPath().toPortableString();
@@ -155,9 +181,5 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		// TODO Auto-generated method stub
 		
 	}
-
-	public boolean containsProblem(IMylarElement node) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 }

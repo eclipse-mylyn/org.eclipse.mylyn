@@ -22,9 +22,9 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -661,24 +661,30 @@ public class MylarContextManager {
 		this.activationHistorySuppressed = activationHistorySuppressed;
 	}
 	
-    public void manipulateInterestForNode(IMylarElement node, boolean increment, boolean forceLandmark, String sourceId) {
-        float originalValue = node.getInterest().getValue();
-        float changeValue = 0;
+    public void manipulateInterestForNode(IMylarElement element, boolean increment, boolean forceLandmark, String sourceId) {
+    	float originalValue = element.getInterest().getValue();
+        float changeValue = 0; 
         if (!increment) {
-            if (node.getInterest().isLandmark()) { // keep it interesting
+            if (element.getInterest().isLandmark()) { // keep it interesting
                 changeValue = (-1 * originalValue) + 1; 
             } else { 
             	if (originalValue >=0) changeValue = (-1 * originalValue)-1;
+            	
+            	// reduce interest of children
+            	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+                for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
+					IMylarElement childElement = getElement(childHandle);
+					manipulateInterestForNode(childElement, increment, forceLandmark, sourceId);
+				}
             }
         } else {
         	if (!forceLandmark && (originalValue >  MylarContextManager.getScalingFactors().getLandmark())) {
                 changeValue = 0;
             } else { // make it a landmark
-            	
-    			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-    			if (node != null
-    				&& bridge.canBeLandmark(node.getHandleIdentifier())
-    				&& !bridge.getContentType(node.getHandleIdentifier()).equals(MylarPlugin.CONTENT_TYPE_ANY)) {
+    			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+    			if (element != null
+    				&& bridge.canBeLandmark(element.getHandleIdentifier())
+    				&& !bridge.getContentType(element.getHandleIdentifier()).equals(MylarPlugin.CONTENT_TYPE_ANY)) {
             		changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
             	} else {
             		// TODO: move this to UI?
@@ -692,12 +698,12 @@ public class MylarContextManager {
         if (changeValue != 0) {
             InteractionEvent interactionEvent = new InteractionEvent(
                     InteractionEvent.Kind.MANIPULATION,  
-                    node.getContentType(), 
-                    node.getHandleIdentifier(), 
+                    element.getContentType(), 
+                    element.getHandleIdentifier(), 
                     sourceId,
                     changeValue);
             MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent);
-        }		
+        }
     }
 
 	public void setActiveSearchEnabled(boolean enabled) {
