@@ -21,7 +21,8 @@
 	<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
 	<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
 </ul>
-<h3><a name="install-failure">Why does Mylar fail to install/update?</a></h3>
+<h3><a name="install-failure">Why does Mylar fail to install, update, or show my 
+tasks?</a></h3>
 <p>The most likely reason is that you are using an <b>incompatible VM </b>(e.g. JDK 
 1.4), in which case you'll errors like the following in your log file.&nbsp; To 
 check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
@@ -38,7 +39,8 @@ for instructions on how to change the 1.4 default.</p>
 This can also be the result of using an <b>incompatible version of Eclipse</b>.&nbsp; 
 Separate versions and update sites exist
 <a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2 
-milestone</a>), in which case you'll see errors like the following in your &lt;workspace&gt;/.metadata/.log file:</p>
+milestone</a>), in which case you'll see errors like the following in your 
+&lt;workspace&gt;/.metadata/.log file or in a Mylar view:</p>
 <p>
 <pre>   java.lang.NoSuchMethodError:
    org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()Lorg/eclipse/swt/widgets/Text;
@@ -46,13 +48,16 @@ milestone</a>), in which case you'll see errors like the following in your &lt;w
    org.osgi.framework.BundleException: The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.mylar.java is invalid
 </pre>
 </p>
-<p>In this case the easiest thing to do is reinstall Mylar (your tasks won't be 
-lost).&nbsp; First uninstall the old version of Mylar using Help -&gt; 
+<p>In this case the easiest thing to do is reinstall Mylar.&nbsp; <b>Your tasks won't be 
+lost</b>, by default they are stored in the &lt;workspace&gt;/.mylar/tasklist.xml file 
+which will be read next time Mylar starts.&nbsp;First, uninstall the old version of Mylar using Help -&gt; 
 Software Updates -&gt; Manage Configuration.&nbsp; You need to first Disable on all 
 Mylar features by right-clicking them, allow Eclipse to restart after the last 
 is disabled, and after restart.&nbsp; Then ensure that the 3rd toolbar button is 
 pressed (figure below) so that you see the disabled features to uninstall, and 
-Uninstall them using the popup menu. Note that manually removing the plug-ins 
+Uninstall them using the popup menu.&nbsp; If you don't uninstall the the Update 
+Manager will think that you have the latest and tell you that there are no 
+updates. Note that manually removing the plug-ins 
 and features can lead to Eclipse configuration errors. After uninstalling update Eclipse 
 by adding the correct update site specified at: 
 	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a>, 
