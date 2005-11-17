@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
@@ -25,7 +27,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.team.core.TeamException;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 
@@ -91,21 +92,30 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	
 	public void interestChanged(IMylarElement element) {
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
+		
 		if (bridge.isDocument(element.getHandleIdentifier())) {
 			IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
 			if (resource != null) {
 				for (TaskContextChangeSet changeSet: getChangeSets()) {
-					if (!changeSet.contains(resource)) {
-						try {
+					try {
+						if (!changeSet.contains(resource)) {
 							if (element.getInterest().isInteresting()) {
 								changeSet.add(new IResource[] { resource });
-							} else {
-								changeSet.remove(resource);
+							} 
+						} else if (!element.getInterest().isInteresting()){
+							changeSet.remove(resource);
+							
+							// HACK: touching ensures file is added outside of set
+							if (resource instanceof IFile) {
+								((IFile)resource).touch(new NullProgressMonitor());
 							}
-						} catch (TeamException e) {
-							MylarPlugin.fail(e, "could not add resource to change set", false);
+							if (!collector.contains(changeSet)) {
+								collector.add(changeSet);
+							}
 						}
-					} 
+					} catch (Exception e) {
+						MylarPlugin.fail(e, "could not add resource to change set", false);
+					}
 				}
 			}
 		}
@@ -119,6 +129,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void nodeDeleted(IMylarElement node) {
 		// ignore
+		System.err.println(">>> deleted: "+ node);
 	}
 
 	public void landmarkAdded(IMylarElement node) {
