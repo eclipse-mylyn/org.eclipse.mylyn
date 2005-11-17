@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -28,7 +29,6 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
-import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
 import org.eclipse.ui.IEditorPart;
@@ -251,9 +251,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	public void setParentBridge(IMylarStructureBridge bridge) {
 		// ignore
 	}
-
-	public boolean containsProblem(IMylarElement node) {
-		// TODO Auto-generated method stub
-		return false;
+	
+	public List<String> getChildHandles(String handle) {
+		return Collections.emptyList();
 	}
 }
