@@ -129,7 +129,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void nodeDeleted(IMylarElement node) {
 		// ignore
-		System.err.println(">>> deleted: "+ node);
 	}
 
 	public void landmarkAdded(IMylarElement node) {
