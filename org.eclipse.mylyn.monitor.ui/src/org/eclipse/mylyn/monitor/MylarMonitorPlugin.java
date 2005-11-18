@@ -72,7 +72,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public static String VERSION = "0.4";
 	public static String UPLOAD_FILE_LABEL = "USAGE";
 	
-    private static final long HOUR = 3600*1000; 	
+    private static final long HOUR = 100;
 	private static final long DELAY_ON_USER_REQUEST = 3 * HOUR;
 	private static final long DELAY_ON_FAILURE = 5 * HOUR;
 
@@ -80,12 +80,14 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String DEFAULT_DESCRIPTION = "Fill out the following form to help us improve Mylar based on your input.\n";
 	public static final long DEFAULT_DELAY_BETWEEN_TRANSMITS = 14 * 24 * HOUR;
     public static final String DEFAULT_ETHICS_FORM = "doc/study-ethics.html";
+	public static final String DEFAULT_VERSION = "";
 	public static final String DEFAULT_UPLOAD_SERVER = "http://mylar.eclipse.org/feedback/";
 	public static final String DEFAULT_UPLOAD_SCRIPT_ID = "getUID.cgi";
 	public static final String DEFAULT_UPLOAD_SCRIPT = "upload.cgi";
 	public static final String DEFAULT_UPLAOD_SCRIPT_QUESTIONNAIRE = "questionnaire.cgi";
 	public static final String DEFAULT_ACCEPTED_URL_LIST = "";
-	
+	public static final String DEFAULT_CONTACT_CONSENT_FIELD = "false";
+	 
 	public static final String UI_PLUGIN_ID = "org.eclipse.mylar.ui";
     public static final String MONITOR_LOG_NAME = "monitor-history";
     public static final String MONITOR_LOG_NAME_OLD = "workspace";
@@ -117,9 +119,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     private Authentication uploadAuthentication = null;
     private static boolean performingUpload = false;
 	private boolean questionnaireEnabled = true;
-	
-	private StudyParameters studyParameters = new StudyParameters();
+	private boolean backgroundEnabled = false;
     
+	private StudyParameters studyParameters = new StudyParameters();
+	
 	private ShellListener SHELL_LISTENER = new ShellListener() {		
 		
         public void shellDeactivated(ShellEvent arg0) {
@@ -487,6 +490,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		
 		public static final String EXTENSION_ID_STUDY = "org.eclipse.mylar.monitor.study";
 		public static final String ELEMENT_SCRIPTS = "scripts";
+		public static final String ELEMENT_SCRIPTS_VERSION = "version";
 		public static final String ELEMENT_SCRIPTS_SERVER_URL = "url";
 		public static final String ELEMENT_SCRIPTS_UPLOAD_USAGE = "upload";
 		public static final String ELEMENT_SCRIPTS_GET_USER_ID = "userId";
@@ -496,7 +500,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		public static final String ELEMENT_UI_DESCRIPTION = "description";
 		public static final String ELEMENT_UI_UPLOAD_PROMPT = "daysBetweenUpload";
 		public static final String ELEMENT_UI_QUESTIONNAIRE_PAGE = "questionnairePage";
+		public static final String ELEMENT_UI_BACKGROUND_PAGE = "backgroundPage";
 		public static final String ELEMENT_UI_CONSENT_FORM = "consentForm";
+		public static final String ELEMENT_UI_CONTACT_CONSENT_FIELD = "useContactField";
 		public static final String ELEMENT_MONITORS = "monitors";
 		public static final String ELEMENT_MONITORS_BROWSER_URL = "browserUrlFilter";
 		
@@ -533,6 +539,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		private void readScripts(IConfigurationElement element) {
+			studyParameters.setVersion(element.getAttribute(ELEMENT_SCRIPTS_VERSION));
 			studyParameters.setScriptsUrl(element.getAttribute(ELEMENT_SCRIPTS_SERVER_URL));
 			studyParameters.setScriptsUpload(element.getAttribute(ELEMENT_SCRIPTS_UPLOAD_USAGE));
 			studyParameters.setScriptsUserId(element.getAttribute(ELEMENT_SCRIPTS_GET_USER_ID));
@@ -542,15 +549,33 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		private void readForms(IConfigurationElement element) throws CoreException {
 			studyParameters.setTitle(element.getAttribute(ELEMENT_UI_TITLE));
 			studyParameters.setDescription(element.getAttribute(ELEMENT_UI_DESCRIPTION));
-			Integer uploadInt = new Integer(element.getAttribute(ELEMENT_UI_UPLOAD_PROMPT));
-			studyParameters.setTransmitPromptPeriod(6 * 24 * uploadInt);
-			
-			Object object = element.createExecutableExtension(ELEMENT_UI_QUESTIONNAIRE_PAGE);
-			if (object instanceof IQuestionnairePage) {
-				IQuestionnairePage page = (IQuestionnairePage)object;
-				studyParameters.setQuestionnairePage(page);
+			if (element.getAttribute(ELEMENT_UI_UPLOAD_PROMPT) != null) {
+				Integer uploadInt = new Integer(element.getAttribute(ELEMENT_UI_UPLOAD_PROMPT));
+				studyParameters.setTransmitPromptPeriod(HOUR * 24 * uploadInt);
 			}
+			studyParameters.setUseContactField(element.getAttribute(ELEMENT_UI_CONTACT_CONSENT_FIELD));
 			
+			try {
+				Object questionnaireObject = element.createExecutableExtension(ELEMENT_UI_QUESTIONNAIRE_PAGE);
+				if (questionnaireObject instanceof IQuestionnairePage) {
+					IQuestionnairePage page = (IQuestionnairePage)questionnaireObject;
+					studyParameters.setQuestionnairePage(page);
+				}
+			} catch(CoreException throwable) {
+				MylarMonitorPlugin.getDefault().setQuestionnaireEnabled(false);
+			}
+
+			try {
+				Object backgroundObject = element.createExecutableExtension(ELEMENT_UI_BACKGROUND_PAGE);
+				if (backgroundObject instanceof IBackgroundPage) {
+					IBackgroundPage page = (IBackgroundPage)backgroundObject;
+					studyParameters.setBackgroundPage(page);
+					MylarMonitorPlugin.getDefault().setBackgroundEnabled(true);
+				}
+			} catch(CoreException throwable) {
+				MylarMonitorPlugin.getDefault().setBackgroundEnabled(false);
+			}
+	
 			studyParameters.setFormsConsent(
 					"../" + 
 					element.getDeclaringExtension().getNamespace() + "/" +
@@ -581,7 +606,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	
 	public String getCustomizedByMessage() {
 		String customizedBy = MylarMonitorPlugin.getDefault().getCustomizingPlugin();
-		String message = "NOTE: the monitor has been customized by a user study plug-in with id: " 
+		String message = "NOTE: You have previously downloaded the Mylar monitor and a user study plug-in with id: "
 			+ customizedBy + "\n"
 			+ "If you are not familiar with this plug-in do not proceed.";
 		return message;
@@ -597,5 +622,24 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean isBackgroundEnabled() {
+		return backgroundEnabled;
+	}
+
+	public void setBackgroundEnabled(boolean backgroundEnabled) {
+		this.backgroundEnabled = backgroundEnabled;
+	}
+	
+	public String getExtensionVersion() {
+		return studyParameters.getVersion();
+	}
+	
+	public boolean usingContactField() {
+		if (studyParameters.getUseContactField().equals("true"))
+			return true;
+		else
+			return false;
 	}
 }

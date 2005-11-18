@@ -44,6 +44,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.ZipFileUtil;
+import org.eclipse.mylar.monitor.IBackgroundPage;
 import org.eclipse.mylar.monitor.IQuestionnairePage;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -62,8 +63,10 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
     public static final String LOG = "log";
     public static final String STATS = "usage";
     public static final String QUESTIONAIRE = "questionaire";
+    public static final String BACKGROUND = "background";
     
     private boolean failed = false;
+    private boolean displayBackgroundPage = false;
     
     /** The id of the user */
     private int uid;
@@ -74,6 +77,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
     private UsageUploadWizardPage uploadPage;
     private GetNewUserIdPage getUidPage;
     private IQuestionnairePage questionnairePage;
+    private IBackgroundPage backgroundPage;
     private boolean performUpload = true;
     
 	public UsageSubmissionWizard() {
@@ -102,6 +106,10 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         }
         uploadPage = new UsageUploadWizardPage(this);
         getUidPage = new GetNewUserIdPage(this, performUpload);
+        if (MylarMonitorPlugin.getDefault().isBackgroundEnabled()) {
+	        IBackgroundPage page = MylarMonitorPlugin.getDefault().getStudyParameters().getBackgroundPage();
+        	backgroundPage = page;
+        }
         if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() && performUpload) {
 	        IQuestionnairePage page = MylarMonitorPlugin.getDefault().getStudyParameters().getQuestionnairePage();
         	questionnairePage = page;
@@ -110,6 +118,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
     }
 
 	private File questionnaireFile = null;
+	private File backgroundFile = null;
 	
     @Override
 	public boolean performFinish() {
@@ -122,13 +131,21 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 //    	MylarPlugin.log("Number user events: " + numEvents, this);
 //    	MylarPlugin.log("Number events needed: " + numSinceLastPhase, this);
 //    	MylarPlugin.log("Date next release: " + DateUtil.getFormattedDateTime(MylarMonitorPlugin.NEXT_RELEASE_AVAILABLE.getTimeInMillis()), this);
+    	
+
     	if (!performUpload) return true;
     	if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() 
     		&& performUpload
     		&& questionnairePage != null) {
         	questionnaireFile = questionnairePage.createFeedbackFile();
     	}
-    	
+    	if (MylarMonitorPlugin.getDefault().isBackgroundEnabled() 
+        		&& performUpload
+        		&& displayBackgroundPage
+        		&& backgroundPage != null) {
+            	backgroundFile = backgroundPage.createFeedbackFile();
+    	}
+
     	final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 					monitor.beginTask("Uploading user statistics", 3);
@@ -157,7 +174,18 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 	}
     
     public void performUpload(IProgressMonitor monitor){
-    	
+    	if (MylarMonitorPlugin.getDefault().isBackgroundEnabled() && performUpload && backgroundFile != null) {
+        	upload(backgroundFile, BACKGROUND, monitor);
+   
+	        if(failed){
+	        	failed = false;
+	        }
+	        
+	        if (backgroundFile.exists()) {
+				backgroundFile.delete();
+			}
+    	}
+
     	if (MylarMonitorPlugin.getDefault().isQuestionnaireEnabled() && performUpload && questionnaireFile != null) {
         	upload(questionnaireFile, QUESTIONAIRE, monitor);
         
@@ -245,6 +273,14 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         }
 	}
     
+    public void addBackgroundPage() {
+    	if (MylarMonitorPlugin.getDefault().isBackgroundEnabled()
+		    && backgroundPage != null) {
+			addPage(backgroundPage);
+			displayBackgroundPage = true;
+		}
+    }
+    
     /**
      * Method to upload a file to a cgi script
      * @param f The file to upload
@@ -269,20 +305,30 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             
             long time = new Date().getTime();
             
+            String extensionVersion = "";
+            if (MylarMonitorPlugin.getDefault().getExtensionVersion().length() > 0) {
+            	extensionVersion = "-" + MylarMonitorPlugin.getDefault().getExtensionVersion();
+            }
+            
             Part[] parts;            
             if (type.equals(STATS)) {
-            	Part[] p = { new FilePart("MYLAR" + uid, MylarMonitorPlugin.UPLOAD_FILE_LABEL + "-"+ MylarMonitorPlugin.VERSION + "-"+ STATS + "-" + uid + "-" + DateUtil.getFormattedDateTime(time) + ".zip", f) };
+            	Part[] p = { new FilePart("MYLAR" + uid, MylarMonitorPlugin.UPLOAD_FILE_LABEL + "-"+ MylarMonitorPlugin.VERSION + extensionVersion + "-" + STATS + "-" + uid + "-" + DateUtil.getFormattedDateTime(time) + ".zip", f) };
             	parts =  p;
             	uploadFile = "usage statistics file";
             }else if (type.equals(LOG)) {
-            	Part[] p = { new FilePart("MYLAR" + uid, MylarMonitorPlugin.UPLOAD_FILE_LABEL + "-"+ MylarMonitorPlugin.VERSION + "-"+ LOG + "-" + uid + "-" + DateUtil.getFormattedDateTime(time) + ".txt", f) };
+            	Part[] p = { new FilePart("MYLAR" + uid, MylarMonitorPlugin.UPLOAD_FILE_LABEL + "-"+ MylarMonitorPlugin.VERSION + extensionVersion + "-"+ LOG + "-" + uid + "-" + DateUtil.getFormattedDateTime(time) + ".txt", f) };
             	parts =  p;
             	uploadFile = "mylar log file";
             }
             else if(type.equals(QUESTIONAIRE)){
-            	Part[] p ={ new FilePart("MYLAR" + uid, MylarMonitorPlugin.UPLOAD_FILE_LABEL + "-"+ MylarMonitorPlugin.VERSION + "-"+ QUESTIONAIRE + "-" + uid + "-" + DateUtil.getFormattedDateTime(time) + ".txt", f) };
+            	Part[] p ={ new FilePart("MYLAR" + uid, MylarMonitorPlugin.UPLOAD_FILE_LABEL + "-"+ MylarMonitorPlugin.VERSION + extensionVersion + "-"+ QUESTIONAIRE + "-" + uid + "-" + DateUtil.getFormattedDateTime(time) + ".txt", f) };
             	parts = p;
             	uploadFile = "questionnaire";
+            }
+            else if(type.equals(BACKGROUND)){
+            	Part[] p ={ new FilePart("MYLAR" + uid, MylarMonitorPlugin.UPLOAD_FILE_LABEL + "-"+ MylarMonitorPlugin.VERSION + extensionVersion + "-"+ BACKGROUND + "-" + uid + "-" + DateUtil.getFormattedDateTime(time) + ".txt", f) };
+            	parts = p;
+            	uploadFile = "background";
             }
             else{
             	failed = true;
@@ -403,14 +449,14 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
     public int getExistingUid(String firstName, String lastName, String emailAddress, boolean anonymous) {
     	if(failed)
     		return -1;
-    	try {
+    	try { 			
             if(anonymous){
             	InputDialog d = new InputDialog(null,"Enter User Study Id", "Please enter your user study id", "", new IInputValidator(){
                         public String isValid(String newText) {
                             try{
                                 int testUid = Integer.parseInt(newText);
                                 if(testUid <= 0)
-                                    return "User id must be a posative integer";
+                                    return "User id must be a positive integer";
                                 else if(testUid % 17 != 1)
                                     return "User id is invalid, please check your user id or get a new id by clicking cancel";
                             }catch (Exception e){
@@ -438,13 +484,18 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             NameValuePair job = new NameValuePair("jobFunction", "");
             NameValuePair size = new NameValuePair("companySize", "");
             NameValuePair buisness = new NameValuePair("companyBuisness", "");
+            NameValuePair contact = new NameValuePair("contact", "");
             NameValuePair anon = null;
             if(anonymous){                
                 anon = new NameValuePair("anonymous", "true");                            
             }else{
                 anon = new NameValuePair("anonymous", "false");
             }
-            getUidMethod.setQueryString(new NameValuePair[]{first, last, email, job,size, buisness, anon});
+            
+            if(MylarMonitorPlugin.getDefault().usingContactField())
+            	getUidMethod.setQueryString(new NameValuePair[]{first, last, email, job,size, buisness, anon, contact});
+            else
+            	getUidMethod.setQueryString(new NameValuePair[]{first, last, email, job,size, buisness, anon});
             
             // create a new client and upload the file
             final HttpClient client = new HttpClient();
@@ -540,10 +591,12 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         return -1;
 	}
     
-    public int getNewUid(String firstName, String lastName, String emailAddress, boolean anonymous, String jobFunction, String companySize, String companyFunction) {
+    public int getNewUid(String firstName, String lastName, String emailAddress, boolean anonymous, String jobFunction, String companySize, String companyFunction, boolean contactEmail) {
     	if(failed)
     		return -1;
     	try {
+    		addBackgroundPage();
+    		
             if(anonymous){
                 boolean hasUid = MessageDialog.openQuestion(null, "Retrieve anonymous user ID", "Do you already have a user study id (e.g. have already set up Mylar in a different workspace)?");
                 if(hasUid){
@@ -553,7 +606,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
                             try{
                                 int testUid = Integer.parseInt(newText);
                                 if(testUid <= 0)
-                                    return "User id must be a posative integer";
+                                    return "User id must be a positive integer";
                                 else if(testUid % 17 != 1)
                                     return "User id is invalid, please check your user id or get a new id by clicking cancel";
                             }catch (Exception e){
@@ -581,13 +634,23 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             NameValuePair job = new NameValuePair("jobFunction", jobFunction);
             NameValuePair size = new NameValuePair("companySize", companySize);
             NameValuePair buisness = new NameValuePair("companyBuisness", companyFunction);
+            NameValuePair contact = null;
+            if(contactEmail) {
+            	contact = new NameValuePair("contact", "true");
+            } else {
+            	contact = new NameValuePair("contact", "false");
+            }
             NameValuePair anon = null;
             if(anonymous){                
                 anon = new NameValuePair("anonymous", "true");                            
             }else{
                 anon = new NameValuePair("anonymous", "false");
             }
-            getUidMethod.setQueryString(new NameValuePair[]{first, last, email, job,size, buisness, anon});
+            
+            if(MylarMonitorPlugin.getDefault().usingContactField())
+            	getUidMethod.setQueryString(new NameValuePair[]{first, last, email, job,size, buisness, anon, contact});
+            else
+            	getUidMethod.setQueryString(new NameValuePair[]{first, last, email, job,size, buisness, anon});
             
             // create a new client and upload the file
             final HttpClient client = new HttpClient();
@@ -602,7 +665,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 						status = client.executeMethod(getUidMethod);
 						
 						resp = getData(getUidMethod.getResponseBodyAsStream());
-			            
+		            
 			            // release the connection to the server
 			            getUidMethod.releaseConnection();
 					}catch (Exception e){
@@ -704,5 +767,4 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 
         return zipFile;
    }
-
 }

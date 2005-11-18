@@ -47,10 +47,20 @@ public class UsageUploadWizardPage extends WizardPage {
      */
 	public UsageUploadWizardPage(UsageSubmissionWizard wizard) {
 		super("Usage Statistics Submission Wizard");
+
 		setTitle("Statistics Upload");
-		setDescription(
-				"The files listed below will be uploaded. Information about program elements that you "
-				+ "worked with is obfuscated to ensure privacy.");
+        if (MylarMonitorPlugin.getDefault().getCustomizingPlugin() != null) {
+        	String customizedTitle = MylarMonitorPlugin.getDefault().getStudyParameters().getTitle();
+        	if (!customizedTitle.equals("")) {
+        		setTitle(customizedTitle + ": Statistics Upload");
+        	}	
+        }
+       	
+        setDescription("The usage file listed below will be uploaded. If you would to view the file first you may do so now.\n" +
+        	"Information about program elements that you worked with is obfuscated to ensure privacy.");
+//		setDescription(
+//				"The files listed below will be uploaded. Information about program elements that you "
+//				+ "worked with is obfuscated to ensure privacy.");
 		this.wizard = wizard;
 	}
 

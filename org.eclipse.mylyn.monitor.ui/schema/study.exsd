@@ -67,14 +67,21 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="acceptedUrlFilter" type="string">
+         <attribute name="questionnaire" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="questionnaire" type="string">
+         <attribute name="background" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="version" type="string">
             <annotation>
                <documentation>
                   
@@ -117,6 +124,16 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="backgroundPage" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
+            </annotation>
+         </attribute>
          <attribute name="consentForm" type="string">
             <annotation>
                <documentation>
@@ -125,6 +142,13 @@
                <appInfo>
                   <meta.attribute kind="resource"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="useContactField" type="boolean">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
