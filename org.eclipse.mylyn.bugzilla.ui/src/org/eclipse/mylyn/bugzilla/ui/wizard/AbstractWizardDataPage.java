@@ -16,12 +16,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -39,14 +41,17 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 
-
 /**
  * Class that contains shared functions for the last page of the wizards that
  * submit bug reports. This page allows the user to set the bug report's
  * attributes before submitting it.
+ * 
+ * @author Mik Kersten (hardening of initial prototype)
  */
-public abstract class AbstractWizardDataPage extends WizardPage implements
-		Listener {
+public abstract class AbstractWizardDataPage extends WizardPage implements Listener {
+
+	public static final String ATTRIBUTE_PLATFORM = "Platform";
+	public static final String ATTRIBUTE_OS = "OS";
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -59,13 +64,13 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 
 	/** Text field for the summary of the bug */
 	protected Text summaryText;
-	
+
 	/** Text field for the assignedTo of the bug */
 	protected Text assignedToText;
-	
+
 	/** Radio button to select when sending the new bug report to the server */
 	protected Button serverButton;
-	
+
 	/** Radio button to select when saving the new bug report offline */
 	protected Button offlineButton;
 
@@ -114,8 +119,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 	 * @param workbench
 	 *            the instance of the workbench
 	 */
-	public AbstractWizardDataPage(String pageName, String title,
-			String description, IWorkbench workbench) {
+	public AbstractWizardDataPage(String pageName, String title, String description, IWorkbench workbench) {
 		super(pageName);
 		setTitle(title);
 		setDescription(description);
@@ -188,8 +192,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 	 * @param style
 	 *            The style that the control should have
 	 */
-	public void newLayout(Composite composite, int colSpan, String text,
-			String style) {
+	public void newLayout(Composite composite, int colSpan, String text, String style) {
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = colSpan;
 
@@ -216,8 +219,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 			l.setLayoutData(data);
 		} else {
 			Composite generalTitleGroup = new Composite(composite, SWT.NONE);
-			generalTitleGroup.setLayoutData(new GridData(
-					GridData.FILL_HORIZONTAL));
+			generalTitleGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			generalTitleGroup.setLayoutData(data);
 			GridLayout generalTitleLayout = new GridLayout();
 			generalTitleLayout.numColumns = 2;
@@ -226,8 +228,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 			generalTitleGroup.setLayout(generalTitleLayout);
 
 			Label image = new Label(generalTitleGroup, SWT.NONE);
-			image.setImage(WorkbenchImages.getImage(
-					IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
+			image.setImage(WorkbenchImages.getImage(IDEInternalWorkbenchImages.IMG_OBJS_WELCOME_ITEM));
 
 			GridData gd = new GridData(GridData.FILL_BOTH);
 			gd.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
@@ -259,8 +260,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		setPageComplete(pageComplete);
 
 		if (!pageComplete)
-			status = new Status(IStatus.ERROR, "not_used", 0,
-					"You must enter a summary and a description", null);
+			status = new Status(IStatus.ERROR, "not_used", 0, "You must enter a summary and a description", null);
 
 		attributeStatus = status;
 
@@ -286,9 +286,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 	@Override
 	public boolean isPageComplete() {
 		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
-		if (summaryText.getText() == null || summaryText.getText().equals("")
-				|| descriptionText.getText() == null
-				|| descriptionText.getText().equals("")) {
+		if (summaryText.getText() == null || summaryText.getText().equals("") || descriptionText.getText() == null || descriptionText.getText().equals("")) {
 			wizard.attributeCompleted = false;
 			return false;
 		}
@@ -317,28 +315,23 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 			if (values == null)
 				values = new HashMap<String, String>();
 
-			if (key.equals("OS")) {
+			if (key.equals(ATTRIBUTE_OS)) {
 				String os = oSCombo.getItem(oSCombo.getSelectionIndex());
 				attribute.setValue(os);
 			} else if (key.equals("Version")) {
-				String version = versionCombo.getItem(versionCombo
-						.getSelectionIndex());
+				String version = versionCombo.getItem(versionCombo.getSelectionIndex());
 				attribute.setValue(version);
 			} else if (key.equals("Severity")) {
-				String severity = severityCombo.getItem(severityCombo
-						.getSelectionIndex());
+				String severity = severityCombo.getItem(severityCombo.getSelectionIndex());
 				attribute.setValue(severity);
-			} else if (key.equals("Platform")) {
-				String platform = platformCombo.getItem(platformCombo
-						.getSelectionIndex());
+			} else if (key.equals(ATTRIBUTE_PLATFORM)) {
+				String platform = platformCombo.getItem(platformCombo.getSelectionIndex());
 				attribute.setValue(platform);
 			} else if (key.equals("Component")) {
-				String component = componentCombo.getItem(componentCombo
-						.getSelectionIndex());
+				String component = componentCombo.getItem(componentCombo.getSelectionIndex());
 				attribute.setValue(component);
 			} else if (key.equals("Priority")) {
-				String priority = priorityCombo.getItem(priorityCombo
-						.getSelectionIndex());
+				String priority = priorityCombo.getItem(priorityCombo.getSelectionIndex());
 				attribute.setValue(priority);
 			} else if (key.equals("URL")) {
 				String url = urlText.getText();
@@ -348,7 +341,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 			} else if (key.equals("Assign To")) {
 				String assignTo = assignedToText.getText();
 				attribute.setValue(assignTo);
-			}else {
+			} else {
 				// do nothing
 			}
 		}
@@ -357,9 +350,9 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 
 	@Override
 	protected void setControl(Control c) {
-	    super.setControl(c);
+		super.setControl(c);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -374,6 +367,9 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		// get the model for the new bug
 		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
 		NewBugModel nbm = wizard.model;
+
+		// Set the current platform and OS on the model
+		setPlatformOptions(nbm);
 
 		// Attributes Composite- this holds all the combo fields and text
 		// fields
@@ -394,8 +390,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		attributesTitleLayout.horizontalSpacing = 0;
 		attributesTitleLayout.marginWidth = 0;
 
-		GridData attributesTitleData = new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL);
+		GridData attributesTitleData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		attributesTitleData.horizontalSpan = 4;
 
 		attributesTitleData.grabExcessVerticalSpace = false;
@@ -404,7 +399,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		newLayout(attributesComposite, 1, "Product", PROPERTY);
 		newLayout(attributesComposite, 1, nbm.getProduct(), VALUE);
 
-		//	Populate Attributes
+		// Populate Attributes
 		for (Iterator<Attribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
 			Attribute attribute = it.next();
 			String key = attribute.getParameterName();
@@ -429,8 +424,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 			// create and populate the combo fields for the attributes
 			if (key.equals("op_sys")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				oSCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND
-						| SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				oSCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
 				oSCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -446,8 +440,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 			} else if (key.equals("version")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 
-				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND
-						| SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
 				versionCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -462,9 +455,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 				versionCombo.addListener(SWT.Modify, this);
 			} else if (key.equals("bug_severity")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				severityCombo = new Combo(attributesComposite,
-						SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-								| SWT.READ_ONLY);
+				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
 				severityCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -480,9 +471,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 
 			} else if (key.equals("rep_platform")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				platformCombo = new Combo(attributesComposite,
-						SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-								| SWT.READ_ONLY);
+				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
 				platformCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -497,9 +486,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 				platformCombo.addListener(SWT.Modify, this);
 			} else if (key.equals("component")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				componentCombo = new Combo(attributesComposite,
-						SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-								| SWT.READ_ONLY);
+				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
 				componentCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -514,9 +501,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 				componentCombo.addListener(SWT.Modify, this);
 			} else if (key.equals("priority")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				priorityCombo = new Combo(attributesComposite,
-						SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-								| SWT.READ_ONLY);
+				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
 
 				priorityCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -532,7 +517,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 				priExist = true;
 			} else if (key.equals("bug_file_loc")) {
 				url = value;
-			}else {
+			} else {
 				// do nothing if it isn't a standard value to change
 			}
 		}
@@ -547,8 +532,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		if (url != null) {
 			// add the assigned to text field
 			newLayout(attributesComposite, 1, "URL", PROPERTY);
-			urlText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE
-					| SWT.WRAP);
+			urlText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 			summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 			summaryTextData.horizontalSpan = 3;
@@ -564,20 +548,17 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		summaryTextData.horizontalSpan = 2;
 		l.setLayoutData(summaryTextData);
-		assignedToText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE
-				| SWT.WRAP);
+		assignedToText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 		summaryTextData.horizontalSpan = 1;
 		summaryTextData.widthHint = 200;
 		assignedToText.setLayoutData(summaryTextData);
 		assignedToText.setText("");
-		
-		
+
 		// add the summary text field
 		newLayout(attributesComposite, 1, "Summary", PROPERTY);
-		summaryText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE
-				| SWT.WRAP);
+		summaryText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 		summaryTextData.horizontalSpan = 3;
@@ -586,11 +567,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		summaryText.setText(nbm.getSummary());
 		summaryText.addListener(SWT.Modify, this);
 
-		
-		
 		// Description Text
-		Composite descriptionComposite = new Composite(attributesComposite,
-				SWT.NONE);
+		Composite descriptionComposite = new Composite(attributesComposite, SWT.NONE);
 
 		descriptionComposite.setLayout(attributesTitleLayout);
 
@@ -601,50 +579,142 @@ public abstract class AbstractWizardDataPage extends WizardPage implements
 		newLayout(descriptionComposite, 4, "Description:", HEADER);
 
 		// add the description text field
-		descriptionText = new Text(attributesComposite, SWT.BORDER | SWT.MULTI
-				| SWT.V_SCROLL | SWT.WRAP);
+		descriptionText = new Text(attributesComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 
 		descriptionText.setFont(AbstractBugEditor.COMMENT_FONT);
-		GridData descriptionTextData = new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL);
+		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
 		descriptionTextData.widthHint = AbstractBugEditor.DESCRIPTION_WIDTH;
 		descriptionTextData.heightHint = AbstractBugEditor.DESCRIPTION_HEIGHT;
 		descriptionText.setLayoutData(descriptionTextData);
 		descriptionText.addListener(SWT.Modify, this);
 
-	    serverButton = new Button(attributesComposite, SWT.RADIO);
+		serverButton = new Button(attributesComposite, SWT.RADIO);
 		serverButton.setText("Submit bug report to the server.");
-	    GridData toServerButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		GridData toServerButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		toServerButtonData.horizontalSpan = 4;
 		serverButton.setLayoutData(toServerButtonData);
 		serverButton.setSelection(true);
-		
-	    offlineButton = new Button(attributesComposite, SWT.RADIO);
+
+		offlineButton = new Button(attributesComposite, SWT.RADIO);
 		offlineButton.setText("Save bug report offline.");
-	    GridData offlineButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		GridData offlineButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		offlineButtonData.horizontalSpan = 4;
 		offlineButton.setLayoutData(offlineButtonData);
 		offlineButton.setSelection(false);
 
-		if(wizard.fromDialog)
+		if (wizard.fromDialog)
 			offlineButton.setEnabled(false);
-		
+
 		setControl(attributesComposite);
 		return;
 	}
-	
+
 	/**
-	 * @return <code>true</code> if the radio button to submit the bug to the server is selected.
+	 * @return <code>true</code> if the radio button to submit the bug to the
+	 *         server is selected.
 	 */
 	public boolean serverSelected() {
 		return (serverButton == null) ? false : serverButton.getSelection();
 	}
 
 	/**
-	 * @return <code>true</code> if the radio button to save the bug offline is selected.
+	 * @return <code>true</code> if the radio button to save the bug offline
+	 *         is selected.
 	 */
 	public boolean offlineSelected() {
 		return (offlineButton == null) ? false : offlineButton.getSelection();
 	}
+
+	/*
+	 * The following are Bugzilla's: OS's All AIX Windows 95 Windows 98 Windows
+	 * CE Windows Mobile 2003 Windows Mobile 2005 Windows ME Windows 2000
+	 * Windows NT Windows XP Windows 2003 Server Windows All MacOS X Linux
+	 * Linux-GTK Linux-Motif HP-UX Neutrino QNX-Photon Solaris Solaris-GTK
+	 * Solaris-Motif SymbianOS-Series 80 Unix All other 
+	 * 
+	 * The following are the platforsm in Bugzilla:
+	 *  All Macintosh PC Power PC Sun Other
+	 * 
+	 * The following are Java's Archictures: [PA_RISC, ppc, sparc, x86,
+	 * x86_64, ia64, ia64_32]
+	 * 
+	 * The following are Java's OS's: [aix, hpux, linux, macosx, qnx,
+	 * solaris, win32]
+	 */
+	/**
+	 * Sets the OS and Platform for the new bug
+	 * 
+	 * @param newBugModel
+	 *            The bug to set the options for
+	 */
+	public void setPlatformOptions(NewBugModel newBugModel) {
+		try {
+			// A Map from Java's OS and Platform to Buzilla's
+			Map<String, String> java2buzillaOSMap = new HashMap<String, String>();
+			Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
+
+			java2buzillaPlatformMap.put("x86", "PC");
+			java2buzillaPlatformMap.put("x86_64", "PC");
+			java2buzillaPlatformMap.put("ia64", "PC");
+			java2buzillaPlatformMap.put("ia64_32", "PC");
+			java2buzillaPlatformMap.put("sparc", "Sun");
+			java2buzillaPlatformMap.put("ppc", "Power");
+
+			java2buzillaOSMap.put("aix", "AIX");
+			java2buzillaOSMap.put("hpux", "HP-UX");
+			java2buzillaOSMap.put("linux", "Linux");
+			java2buzillaOSMap.put("macosx", "MacOS X");
+			java2buzillaOSMap.put("qnx", "QNX-Photon");
+			java2buzillaOSMap.put("solaris", "Solaris");
+			java2buzillaOSMap.put("win32", "Windows All");
+
+			// Get OS
+			// Lookup Map
+			// Check that the result is in Values, if it is not, set it to other
+			Attribute opSysAttribute = newBugModel.getAttribute(ATTRIBUTE_OS);
+			Attribute platformAttribute = newBugModel.getAttribute(ATTRIBUTE_PLATFORM);
+
+			String OS = Platform.getOS();
+			String platform = Platform.getOSArch();
+
+			String bugzillaOS = null; // Bugzilla String for OS
+			String bugzillaPlatform = null; // Bugzilla String for Platform
+
+			if (java2buzillaOSMap.containsKey(OS)) {
+				bugzillaOS = java2buzillaOSMap.get(OS);
+				if (!opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
+					// If the OS we found is not in the list of available
+					// options, set bugzillaOS
+					// to null, and just use "other"
+					bugzillaOS = null;
+				}
+			} else {
+				// If we have a strangeOS, then just set buzillaOS to null, and
+				// use "other"
+				bugzillaOS = null;
+			}
+
+			if (java2buzillaPlatformMap.containsKey(platform)) {
+				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
+				if (!platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
+					// If the platform we found is not int the list of available
+					// optinos, set the
+					// Bugzilla Platform to null, and juse use "other"
+					bugzillaPlatform = null;
+				}
+			} else {
+				// If we have a strange platform, then just set bugzillaPatforrm
+				// to null, and use "other"
+				bugzillaPlatform = null;
+			}
+
+			// Set the OS and the Platform in the model
+			if (bugzillaOS != null) opSysAttribute.setValue(bugzillaOS);
+			if (bugzillaPlatform != null) platformAttribute.setValue(bugzillaPlatform);
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "could not set platform options", false);
+		}
+	}
+
 }
