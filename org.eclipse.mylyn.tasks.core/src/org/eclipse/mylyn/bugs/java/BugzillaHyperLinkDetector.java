@@ -37,16 +37,12 @@ import org.eclipse.mylar.java.ui.editor.AbstractMylarHyperlinkDetector;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.texteditor.ITextEditor;
+
 /**
  * @author Shawn Minto
- *
+ * 
  */
 public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
-
-	
-	public BugzillaHyperLinkDetector() {
-		super();
-	}
 
 	@SuppressWarnings("unchecked")
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
@@ -54,101 +50,100 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 		if (region == null || textEditor == null || canShowMultipleHyperlinks || !(textEditor instanceof JavaEditor))
 			return null;
 
-		IEditorSite site= textEditor.getEditorSite();
+		IEditorSite site = textEditor.getEditorSite();
 		if (site == null)
 			return null;
 
-		IJavaElement javaElement= getInputJavaElement(textEditor);
+		IJavaElement javaElement = getInputJavaElement(textEditor);
 		if (javaElement == null)
 			return null;
 
-		CompilationUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(javaElement, ASTProvider.WAIT_NO, null);
+		CompilationUnit ast = JavaPlugin.getDefault().getASTProvider().getAST(javaElement, ASTProvider.WAIT_NO, null);
 		if (ast == null)
 			return null;
 
-		ASTNode node= NodeFinder.perform(ast, region.getOffset(), 1);
-	
+		ASTNode node = NodeFinder.perform(ast, region.getOffset(), 1);
+
 		if (node == null || !(node instanceof TextElement || node instanceof Block))
 			return null;
-	
+
 		String comment = null;
 		int commentStart = -1;
-		
-		if(node instanceof TextElement){
-			TextElement element = (TextElement)node;
+
+		if (node instanceof TextElement) {
+			TextElement element = (TextElement) node;
 			comment = element.getText();
 			commentStart = element.getStartPosition();
-		} else if(node instanceof Block){
+		} else if (node instanceof Block) {
 			Comment c = findComment(ast.getCommentList(), region.getOffset(), 1);
-			if(c != null){
-				try{
-					IDocument document= textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+			if (c != null) {
+				try {
+					IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 					String commentString = document.get(c.getStartPosition(), c.getLength());
 					comment = getStringFromComment(c, region.getOffset(), commentString);
 					commentStart = getLocationFromComment(c, comment, commentString) + c.getStartPosition();
-				} catch (BadLocationException e){
+				} catch (BadLocationException e) {
 					MylarPlugin.log(e, "Failed to get text for comment");
 				}
 			}
 		}
 
-		if(comment == null)
+		if (comment == null)
 			return null;
-		
-		int startOffset= region.getOffset();
-		int endOffset= startOffset + region.getLength();
+
+		int startOffset = region.getOffset();
+		int endOffset = startOffset + region.getLength();
 
 		Pattern p = Pattern.compile("^.*bug\\s+\\d+.*");
 		Matcher m = p.matcher(comment.toLowerCase().trim());
 		boolean b = m.matches();
-		
+
 		p = Pattern.compile("^.*bug#\\s+\\d+.*");
 		m = p.matcher(comment.toLowerCase().trim());
 		boolean b2 = m.matches();
-		
+
 		p = Pattern.compile("^.*bug\\s#\\d+.*");
 		m = p.matcher(comment.toLowerCase().trim());
 		boolean b3 = m.matches();
-		
+
 		p = Pattern.compile("^.*bug#\\d+.*");
 		m = p.matcher(comment.toLowerCase().trim());
 		boolean b4 = m.matches();
-		
+
 		// XXX walk forward from where we are
-		if(b || b2 || b3 || b4){
-	
+		if (b || b2 || b3 || b4) {
+
 			int start = comment.toLowerCase().indexOf("bug");
 			int ahead = 4;
-			if(b2 || b3 || b4){
+			if (b2 || b3 || b4) {
 				int pound = comment.toLowerCase().indexOf("#", start);
 				ahead = pound - start + 1;
 			}
-			String endComment = comment.substring(start+ahead, comment.length());
+			String endComment = comment.substring(start + ahead, comment.length());
 			endComment = endComment.trim();
 			int endCommentStart = comment.indexOf(endComment);
 
 			int end = comment.indexOf(" ", endCommentStart);
 			int end2 = comment.indexOf(":", endCommentStart);
-			
-			if((end2 < end && end2 != -1) || (end == -1 && end2 != -1)){
+
+			if ((end2 < end && end2 != -1) || (end == -1 && end2 != -1)) {
 				end = end2;
 			}
-			
-			if(end == -1)
+
+			if (end == -1)
 				end = comment.length();
 
-			try{
+			try {
 				int bugId = Integer.parseInt(comment.substring(endCommentStart, end).trim());
-				
-			
+
 				start += commentStart;
 				end += commentStart;
-			
-				if(startOffset >= start && endOffset <= end){
-				IRegion sregion= new Region(start, end-start);
-					return new IHyperlink[] {new BugzillaHyperLink(sregion, bugId)};
+
+				if (startOffset >= start && endOffset <= end) {
+					IRegion sregion = new Region(start, end - start);
+					return new IHyperlink[] { new BugzillaHyperLink(sregion, bugId) };
 				}
-			} catch (NumberFormatException e){
+			} catch (NumberFormatException e) {
 				return null;
 			}
 		}
@@ -156,7 +151,7 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 	}
 
 	private int getLocationFromComment(Comment c, String commentLine, String commentString) {
-		if(commentLine == null){
+		if (commentLine == null) {
 			return -1;
 		} else {
 			return commentString.indexOf(commentLine);
@@ -164,15 +159,15 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 	}
 
 	private String getStringFromComment(Comment comment, int desiredOffset, String commentString) {
-		String [] parts = commentString.split("\n");
-		if(parts.length > 1){
+		String[] parts = commentString.split("\n");
+		if (parts.length > 1) {
 			int offset = comment.getStartPosition();
-			for(String part: parts){
+			for (String part : parts) {
 				int newOffset = offset + part.length() + 1;
-				if(desiredOffset >= offset && desiredOffset <= newOffset){
+				if (desiredOffset >= offset && desiredOffset <= newOffset) {
 					return part;
 				}
-				
+
 			}
 		} else {
 			return commentString;
@@ -182,8 +177,8 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 	}
 
 	private Comment findComment(List<Comment> commentList, int offset, int i) {
-		for(Comment comment: commentList){
-			if(comment.getStartPosition() <= offset && (comment.getStartPosition() + comment.getLength() >= offset + i)){
+		for (Comment comment : commentList) {
+			if (comment.getStartPosition() <= offset && (comment.getStartPosition() + comment.getLength() >= offset + i)) {
 				return comment;
 			}
 		}
@@ -191,13 +186,13 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 	}
 
 	private IJavaElement getInputJavaElement(ITextEditor editor) {
-		IEditorInput editorInput= editor.getEditorInput();
+		IEditorInput editorInput = editor.getEditorInput();
 		if (editorInput instanceof IClassFileEditorInput)
-			return ((IClassFileEditorInput)editorInput).getClassFile();
+			return ((IClassFileEditorInput) editorInput).getClassFile();
 
 		if (editor instanceof CompilationUnitEditor)
 			return JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
 
 		return null;
-	}	
+	}
 }

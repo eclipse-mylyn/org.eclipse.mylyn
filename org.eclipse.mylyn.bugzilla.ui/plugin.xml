@@ -147,24 +147,10 @@
 	    </viewContribution> 
 	</extension>
 	
-	<extension point="org.eclipse.ui.popupMenus"> 
+	<extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-         <!--
-         <action
-               class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
-               enablesFor="*"
-               icon="icons/etool16/task-bug.gif"
-               id="org.eclipse.mylar.bugzilla.ui.popup.addExisting"
-               label="Add Existing Bugzilla Report"
-               menubarPath="reports"
-               tooltip="Add Existing Bugzilla Report">
-            <enablement>
-               <objectClass name="org.eclipse.mylar.tasklist.internal.TaskCategory"/>
-            </enablement>
-         </action>
-         -->
          <action
                class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction"
                enablesFor="*"
@@ -219,3 +205,18 @@
    </extension>
 </plugin>
 
+
+         <!--
+         <action
+               class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
+               enablesFor="*"
+               icon="icons/etool16/task-bug.gif"
+               id="org.eclipse.mylar.bugzilla.ui.popup.addExisting"
+               label="Add Existing Bugzilla Report"
+               menubarPath="reports"
+               tooltip="Add Existing Bugzilla Report">
+            <enablement>
+               <objectClass name="org.eclipse.mylar.tasklist.internal.TaskCategory"/>
+            </enablement>
+         </action>
+         -->

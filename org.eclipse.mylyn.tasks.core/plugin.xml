@@ -10,14 +10,32 @@
             class="org.eclipse.mylar.bugs.BugzillaStructureBridge"
             name="Bugzilla Structure Bridge"/>
    </extension>
+   
    <extension
          point="org.eclipse.mylar.ui.context">
       <uiBridge
             class="org.eclipse.mylar.bugs.BugzillaUiBridge"
             contentType="bugzilla"/>
    </extension>
+   
    <extension
          point="org.eclipse.mylar.java.javaEditorContributor">
       <hyperlinkDetector class="org.eclipse.mylar.bugs.java.BugzillaHyperLinkDetector"/>
    </extension> 
+   
+   	<extension point="org.eclipse.ui.popupMenus"> 
+		<objectContribution
+            objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
+            id="org.eclipse.mylar.ui.team.open.report">
+         <action
+	           class="org.eclipse.mylar.bugs.ui.actions.OpenCorrespondingReportAction"
+	           enablesFor="*" 
+	           icon="icons/elcl16/task-bug.gif"
+	           id="org.eclipse.mylar.bugzilla.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Report"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Report"> 
+	  		</action> 
+	    </objectContribution>
+	</extension>
 </plugin>
