@@ -26,7 +26,7 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
  */
 public class TaskContextChangeSet extends ActiveChangeSet {
 
-	private static final String PREFIX_URL = "Issue URL: ";
+	private static final String PREFIX_URL = "Report URL: ";
 	private static final String LABEL_PREFIX = "Mylar Task";
 	private static final String LABEL_BUG = "Bug ";
 	
