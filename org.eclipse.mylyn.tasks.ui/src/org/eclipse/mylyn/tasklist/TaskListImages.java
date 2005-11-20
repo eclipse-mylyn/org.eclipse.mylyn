@@ -41,6 +41,8 @@ public class TaskListImages {
 	private static final String T_TOOL = "etool16";
 	private static final URL baseURL = MylarTasklistPlugin.getDefault().getBundle().getEntry("/icons/");
 	
+	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
+	
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
 	public static final ImageDescriptor ERASE_TASKSCAPE = create(T_ELCL, "context-clear.gif");
 

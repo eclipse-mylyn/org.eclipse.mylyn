@@ -23,6 +23,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -1369,13 +1370,15 @@ public class TaskListView extends ViewPart {
 		return null;
 	}
 
-	//TODO: Need a better way to indicate paused and/or the shared folder
 	public void indicatePaused(boolean paused) {
 		isPaused = paused;
+		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
-			setPartName("(paused) " + getPartName());
+			statusLineManager.setMessage(
+					TaskListImages.getImage(TaskListImages.TASKLIST), 
+					"Mylar context capture paused");
 		} else {
-			setPartName(getPartName().replaceAll("\\(paused\\) ", ""));
+			statusLineManager.setMessage("");
 		}
 	}
 
