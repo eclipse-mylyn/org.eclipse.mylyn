@@ -26,7 +26,8 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
  */
 public class TaskContextChangeSet extends ActiveChangeSet {
 
-	private static final String PREFIX_URL = "Report URL: ";
+	private static final String PREFIX_URL = "Report ";
+	private static final String LABEL_URL = "URL: ";
 	private static final String LABEL_PREFIX = "Mylar Task";
 	private static final String LABEL_BUG = "Bug ";
 	
@@ -95,7 +96,9 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 			comment += LABEL_BUG + task.getDescription(false);
 		}
 		String url = task.getIssueReportURL();
-		if (url != null && !url.equals("") && !url.endsWith("//")) comment += "\n" + PREFIX_URL + url;
+		if (url != null && !url.equals("") && !url.endsWith("//")) {
+			comment += "\n" + PREFIX_URL + LABEL_URL + url;
+		}
 		return comment;
 	}
     
@@ -113,9 +116,9 @@ public class TaskContextChangeSet extends ActiveChangeSet {
     }
 
     public static String getUrlFromComment(String comment) {
-    	int urlIndex = comment.indexOf(PREFIX_URL);
+    	int urlIndex = comment.indexOf(LABEL_URL);
     	if (urlIndex != -1) {
-    		int idStart = urlIndex + PREFIX_URL.length();
+    		int idStart = urlIndex + LABEL_URL.length();
     		int idEnd = comment.indexOf(' ', idStart);
     		if (idEnd == -1) {
     			return comment.substring(idStart);
