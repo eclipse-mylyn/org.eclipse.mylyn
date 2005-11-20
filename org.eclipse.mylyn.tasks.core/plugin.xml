@@ -26,12 +26,25 @@
    	<extension point="org.eclipse.ui.popupMenus"> 
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
-            id="org.eclipse.mylar.ui.team.open.report">
+            id="org.eclipse.mylar.ui.team.synchronize.open.report">
          <action
 	           class="org.eclipse.mylar.bugs.ui.actions.OpenCorrespondingReportAction"
-	           enablesFor="*" 
+	           enablesFor="1" 
 	           icon="icons/elcl16/task-bug.gif"
 	           id="org.eclipse.mylar.bugzilla.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Report"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Report"> 
+	  		</action> 
+	    </objectContribution>
+		<objectContribution
+            objectClass="org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry"
+            id="org.eclipse.mylar.ui.team.history.open.report">
+         <action
+	           class="org.eclipse.mylar.bugs.ui.actions.OpenCorrespondingReportAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-bug.gif"
+	           id="org.eclipse.mylar.bugzilla.ui.team.history.contribution.open.report"
 	           label="Open Corresponding Report"
 	           menubarPath="mylar"
 	           tooltip="Open Corresponding Report"> 

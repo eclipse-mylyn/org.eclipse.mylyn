@@ -28,64 +28,67 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.progress.UIJob;
 
-
 /**
- * Action performed when the bugs are supposed to be displayed in the editor window
- * from the favorites list
+ * Action performed when the bugs are supposed to be displayed in the editor
+ * window from the favorites list
  */
-public class ViewBugzillaAction extends UIJob 
-{
-    
-    /** List of bugs to be displayed */
+public class ViewBugzillaAction extends UIJob {
+
+	/** List of bugs to be displayed */
 	private List<BugzillaOpenStructure> bugs;
-	
+
 	/**
-	 * Constructor 
-	 * @param name The job name
-	 * @param bugs List of bugs to be displayed
+	 * Constructor
+	 * 
+	 * @param name
+	 *            The job name
+	 * @param bugs
+	 *            List of bugs to be displayed
 	 */
-	public ViewBugzillaAction(String name, List<BugzillaOpenStructure> bugs) 
-	{
+	public ViewBugzillaAction(String name, List<BugzillaOpenStructure> bugs) {
 		super(name);
 		this.bugs = bugs;
 	}
-	
+
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
 		IWorkbenchPage page = BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		
+
 		// go through each bug and get its id
-		for (Iterator<BugzillaOpenStructure> it = bugs.iterator(); it.hasNext(); ) {
-            BugzillaOpenStructure bos = it.next(); 
+		for (Iterator<BugzillaOpenStructure> it = bugs.iterator(); it.hasNext();) {
+			BugzillaOpenStructure bos = it.next();
 			Integer bugId = bos.getBugId();
-            Integer commentNumber = bos.getCommentNumber();
-           
+			Integer commentNumber = bos.getCommentNumber();
+
 			try {
 				// try to open a new editor on the bug
 				ExistingBugEditorInput editorInput = new ExistingBugEditorInput(bugId.intValue());
-				
-				// if the bug could not be found, then tell the user that the server settings are wrong
+
+				// if the bug could not be found, then tell the user that the
+				// server settings are wrong
 				if (editorInput.getBug() == null) {
 					MessageDialog.openError(null, "Server Setting Error", "Incorrect server set for the bug.");
-				}
-				else {
-                    AbstractBugEditor abe = (AbstractBugEditor)page.openEditor(editorInput, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
-					if(commentNumber == 0){
+				} else {
+					AbstractBugEditor abe = (AbstractBugEditor) page.openEditor(editorInput, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
+					if (commentNumber == 0) {
 						abe.selectDescription();
-					}else if(commentNumber == 1){
+					} else if (commentNumber == 1) {
 						abe.select(commentNumber);
 					} else {
-						abe.select(commentNumber-1);
+						abe.select(commentNumber - 1);
 					}
 				}
 			} catch (LoginException e) {
-				MessageDialog.openError(null, "Login Error", "Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+				MessageDialog
+						.openError(
+								null,
+								"Login Error",
+								"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
 				BugzillaPlugin.log(e);
 			} catch (PartInitException e) {
 				BugzillaPlugin.log(e);
 			} catch (IOException e) {
-			    BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, 
-			            "occurred while opening the bug report.", "Bugzilla Error");
+				BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while opening the bug report.", "Bugzilla Error");
 			}
 		}
 		return new Status(IStatus.OK, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", null);

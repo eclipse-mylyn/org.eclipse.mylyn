@@ -20,6 +20,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.TaskContextChangeSet;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -42,34 +43,44 @@ public class OpenCorrespondingReportAction implements IViewActionDelegate {
     		if (objectAction.getSelection() instanceof StructuredSelection) {
     			StructuredSelection selection = (StructuredSelection)objectAction.getSelection();
     			Object firstElement = selection.getFirstElement();
+    			String comment = null;
+    			boolean resolved = false;
     			if (firstElement instanceof ChangeSetDiffNode) {
-    				ChangeSetDiffNode node = (ChangeSetDiffNode)firstElement;
-    				String id = TaskContextChangeSet.getIssueIdFromComment(node.getName());
-    				String url = TaskContextChangeSet.getUrlFromComment(node.getName());
-    				
-    				int idInt = -1;
-    				try {
-    					idInt = Integer.parseInt(id);
-    				} catch (NumberFormatException e) { 
-    					// ignore
-    				}
-    				if (idInt != -1) {
-    					OpenBugzillaReportJob job = new OpenBugzillaReportJob(idInt);
-    					IProgressService service = PlatformUI.getWorkbench().getProgressService();
-    					try {
+    				comment = ((ChangeSetDiffNode)firstElement).getName();
+    			} else if (firstElement instanceof LogEntry){
+    				comment = ((LogEntry)firstElement).getComment();
+    			}
+    			if (comment != null) {
+					String idString = TaskContextChangeSet.getIssueIdFromComment(comment);
+					String url = TaskContextChangeSet.getUrlFromComment(comment);
+					
+					int id = -1;
+					try {
+						id = Integer.parseInt(idString);
+					} catch (NumberFormatException e) { 
+						// ignore
+					}
+					if (id != -1) {
+						OpenBugzillaReportJob job = new OpenBugzillaReportJob(id);
+						IProgressService service = PlatformUI.getWorkbench().getProgressService();
+						try {
 							service.run(true, false, job);
 						} catch (Exception e) {
 							MylarPlugin.fail(e, "Could not open report", true);
 						}
-    				} else if (url != null) {
-        				BugzillaUITools.openUrl("Web Browser", "Web Browser", url);
-    				} else {
-    					MessageDialog.openInformation(
-    							Display.getCurrent().getActiveShell(), 
-    							"Mylar Information", 
-    							"Could not resolve report corresponding to change set comment.");
-    				}
+						resolved = true;
+					} else if (url != null) {
+	    				BugzillaUITools.openUrl("Web Browser", "Web Browser", url);
+	    				resolved = true;
+					} 
     			}
+    			
+    			if (!resolved) {
+					MessageDialog.openInformation(
+							Display.getCurrent().getActiveShell(), 
+							"Mylar Information", 
+							"Could not resolve report corresponding to change set comment.");
+				}
     		}
 		}
 	}
