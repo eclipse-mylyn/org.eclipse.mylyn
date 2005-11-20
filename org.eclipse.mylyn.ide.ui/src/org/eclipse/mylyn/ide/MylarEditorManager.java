@@ -53,15 +53,6 @@ public class MylarEditorManager implements IMylarContextListener {
 	public void contextDeactivated(IMylarContext context) {
     	if (MylarUiPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE)) {
         	closeAllEditors();
-//    		if (!asyncExecMode) {
-//			closeAllEditors();
-//		}        	
-//        	IWorkbench workbench = PlatformUI.getWorkbench();
-//            workbench.getDisplay().asyncExec(new Runnable() {
-//                public void run() {
-//                	closeAllEditors();
-//                }
-//            });
       	} 
 	}
 
@@ -75,47 +66,35 @@ public class MylarEditorManager implements IMylarContextListener {
 	}
 	
 	public void presentationSettingsChanging(UpdateKind kind) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void presentationSettingsChanged(UpdateKind kind) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void interestChanged(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void interestChanged(List<IMylarElement> nodes) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void nodeDeleted(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void landmarkAdded(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void landmarkRemoved(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
 
 	public void edgesChanged(IMylarElement node) {
-		// TODO Auto-generated method stub
-		
+		// ignore
 	}
-
-//	public void setAsyncExecMode(boolean asyncExecMode) {
-//		this.asyncExecMode = asyncExecMode;
-//	}
 
 }

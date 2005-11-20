@@ -662,7 +662,6 @@ public class MylarContextManager {
 	}
 	
     public void manipulateInterestForNode(IMylarElement element, boolean increment, boolean forceLandmark, String sourceId) {
-//    	System.err.println(">> man: " + element);
     	float originalValue = element.getInterest().getValue();
         float changeValue = 0; 
         if (!increment) {

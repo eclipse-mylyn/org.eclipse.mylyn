@@ -21,6 +21,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.internal.ActiveSearchViewTracker;
+import org.eclipse.mylar.ide.internal.InterestManipulatingEditorTracker;
 import org.eclipse.mylar.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction;
@@ -46,6 +47,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 
+	private InterestManipulatingEditorTracker interestEditorTracker = new InterestManipulatingEditorTracker();
+	
 	public MylarIdePlugin() {
 		plugin = this;
 	}
@@ -74,6 +77,15 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					IWorkbenchPage[] pages = windows[i].getPages();
 					for (int j = 0; j < pages.length; j++) {
 						pages[j].addPartListener(activeSearchViewTracker);
+					}
+				}
+				
+				workbench.addWindowListener(interestEditorTracker);
+				for (int i = 0; i < windows.length; i++) {
+					windows[i].addPageListener(interestEditorTracker);
+					IWorkbenchPage[] pages= windows[i].getPages();
+					for (int j= 0; j < pages.length; j++) {
+						pages[j].addPartListener(interestEditorTracker);
 					}
 				}
 			}
