@@ -28,7 +28,8 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 
 	private static final String PREFIX_URL = "Issue URL: ";
 	private static final String LABEL_PREFIX = "Mylar Task";
-	private static final String LABEL_BUG = "Bug";
+	private static final String LABEL_BUG = "Bug ";
+	
 	private List<IResource> resources;
 	private ITask task;
 	
@@ -47,21 +48,10 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 		String completedPrefix = MylarTasklistPlugin.getPrefs().getString(MylarTasklistPlugin.COMMIT_PREFIX_COMPLETED);
 		String progressPrefix = MylarTasklistPlugin.getPrefs().getString(MylarTasklistPlugin.COMMIT_PREFIX_PROGRESS);
 		String comment = "";
-		if (task.isCompleted()) {
-			comment = completedPrefix + " "; 
-		} else {
-			comment = progressPrefix + " ";
-		}
-		if (task.isLocal()) {
-			comment += task.getDescription(false);
-		} else { // bug report
-			comment += LABEL_BUG + " " + task.getDescription(false);
-		}
-		String url = task.getIssueReportURL();
-		if (url != null && !url.equals("") && !url.endsWith("//")) comment += "\n" + PREFIX_URL + url;
+		comment = generateComment(task, completedPrefix, progressPrefix);
 		return comment;
 	}
-	
+
 	@Override
 	public void remove(IResource resource) {
 		super.remove(resource);
@@ -92,4 +82,47 @@ public class TaskContextChangeSet extends ActiveChangeSet {
     	return resources.contains(local);
     }
 
+	public static String generateComment(ITask task, String completedPrefix, String progressPrefix) {
+		String comment;
+		if (task.isCompleted()) {
+			comment = completedPrefix + " "; 
+		} else {
+			comment = progressPrefix + " ";
+		}
+		if (task.isLocal()) {
+			comment += task.getDescription(false);
+		} else { // bug report
+			comment += LABEL_BUG + task.getDescription(false);
+		}
+		String url = task.getIssueReportURL();
+		if (url != null && !url.equals("") && !url.endsWith("//")) comment += "\n" + PREFIX_URL + url;
+		return comment;
+	}
+    
+    public static String getIssueIdFromComment(String comment) {
+    	int bugIndex = comment.indexOf(LABEL_BUG);
+    	if (bugIndex != -1) {
+    		int idEnd = comment.indexOf(':', bugIndex);
+    		int idStart = bugIndex + LABEL_BUG.length();
+    		if (idEnd != -1 && idStart < idEnd) {
+    			String id = comment.substring(idStart, idEnd);
+    			if (id != null) return id.trim();
+    		}
+    	}
+    	return null;
+    }
+
+    public static String getUrlFromComment(String comment) {
+    	int urlIndex = comment.indexOf(PREFIX_URL);
+    	if (urlIndex != -1) {
+    		int idStart = urlIndex + PREFIX_URL.length();
+    		int idEnd = comment.indexOf(' ', idStart);
+    		if (idEnd == -1) {
+    			return comment.substring(idStart);
+    		} else if (idEnd != -1 && idStart < idEnd) {
+    			return comment.substring(idStart, idEnd);
+    		}
+    	}
+    	return null;
+    }
 }

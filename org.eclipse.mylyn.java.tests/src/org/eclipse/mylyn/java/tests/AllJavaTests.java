@@ -28,6 +28,7 @@ public class AllJavaTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylar.java.tests");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(TaskContextChangeSetTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(EditorManagementTest.class);

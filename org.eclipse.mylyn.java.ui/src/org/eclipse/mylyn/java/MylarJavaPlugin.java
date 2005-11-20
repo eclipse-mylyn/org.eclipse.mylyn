@@ -111,17 +111,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			workbench.getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-						ApplyMylarToPackageExplorerAction.getDefault().update();
-						getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
-					}
-					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-					}
-					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-					} 
-
 					javaEditingMonitor = new JavaEditingMonitor();
 					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
@@ -139,6 +128,17 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 							getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
 						}
 					}
+					
+					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+						ApplyMylarToPackageExplorerAction.getDefault().update();
+						getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+					}
+					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+					}
+					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+					} 
 				}
 			});
 			
