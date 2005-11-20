@@ -64,7 +64,7 @@ import org.eclipse.mylar.tasklist.internal.TaskCompleteFilter;
 import org.eclipse.mylar.tasklist.internal.TaskListPatternFilter;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
-import org.eclipse.mylar.tasklist.ui.actions.AutoCloseAction;
+import org.eclipse.mylar.tasklist.ui.actions.ManageEditorsAction;
 import org.eclipse.mylar.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
@@ -162,7 +162,7 @@ public class TaskListView extends ViewPart {
 
 	private DeleteAction deleteAction;
 
-	private AutoCloseAction autoClose;
+	private ManageEditorsAction autoClose;
 
 	private OpenTaskEditorAction openTaskEditor;
 
@@ -1134,7 +1134,7 @@ public class TaskListView extends ViewPart {
 
 		deleteAction = new DeleteAction(this);
 		collapseAll = new CollapseAllAction(this);
-		autoClose = new AutoCloseAction();
+		autoClose = new ManageEditorsAction();
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskEditorAction(this);

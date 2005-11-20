@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.team.ui,
  org.eclipse.team.cvs.ui,
  org.eclipse.compare,
- org.eclipse.team.core
+ org.eclipse.team.core,
+ org.eclipse.team.cvs.core
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.bugs,
  org.eclipse.mylar.bugs.java,

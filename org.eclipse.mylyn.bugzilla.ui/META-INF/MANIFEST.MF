@@ -17,7 +17,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.core,
  org.eclipse.ui.forms,
  org.eclipse.jface.text,
- org.eclipse.mylar.tasklist
+ org.eclipse.mylar.tasklist,
+ org.eclipse.team.ui,
+ org.eclipse.team.cvs.ui
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.bugzilla.ui,
  org.eclipse.mylar.bugzilla.ui.actions,
