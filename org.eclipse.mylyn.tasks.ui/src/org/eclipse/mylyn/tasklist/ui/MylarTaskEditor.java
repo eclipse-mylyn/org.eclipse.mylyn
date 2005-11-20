@@ -23,6 +23,7 @@ import org.eclipse.mylar.tasklist.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -146,8 +147,10 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			boolean openWithBrowser = MylarTasklistPlugin.getPrefs().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL);
 			if (task.isLocal() || openWithBrowser)
 				setActivePage(index);
+		} catch (SWTError e) {
+			MylarPlugin.fail(e, "Could not create Browser page: " + e.getMessage(), true);
 		} catch (RuntimeException e) {
-			MylarPlugin.fail(e, "could not open issue report web page", false);
+			MylarPlugin.fail(e, "could not create issue report page", false);
 		}
 	}
 

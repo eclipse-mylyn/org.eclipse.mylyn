@@ -50,6 +50,11 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
  */
 public abstract class AbstractWizardDataPage extends WizardPage implements Listener {
 
+	public static final String ATTRIBUTE_URL = "URL";
+	public static final String ATTRIBUTE_PRIORITY = "Priority";
+	public static final String ATTRIBUTE_COMPONENT = "Component";
+	public static final String ATTRIBUTE_SEVERITY = "Severity";
+	public static final String ATTRIBUTE_VERSION = "Version";
 	public static final String ATTRIBUTE_PLATFORM = "Platform";
 	public static final String ATTRIBUTE_OS = "OS";
 
@@ -312,37 +317,38 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			String key = attribute.getName();
 			Map<String, String> values = attribute.getOptionValues();
 
-			if (values == null)
-				values = new HashMap<String, String>();
-
-			if (key.equals(ATTRIBUTE_OS)) {
-				String os = oSCombo.getItem(oSCombo.getSelectionIndex());
-				attribute.setValue(os);
-			} else if (key.equals("Version")) {
-				String version = versionCombo.getItem(versionCombo.getSelectionIndex());
-				attribute.setValue(version);
-			} else if (key.equals("Severity")) {
-				String severity = severityCombo.getItem(severityCombo.getSelectionIndex());
-				attribute.setValue(severity);
-			} else if (key.equals(ATTRIBUTE_PLATFORM)) {
-				String platform = platformCombo.getItem(platformCombo.getSelectionIndex());
-				attribute.setValue(platform);
-			} else if (key.equals("Component")) {
-				String component = componentCombo.getItem(componentCombo.getSelectionIndex());
-				attribute.setValue(component);
-			} else if (key.equals("Priority")) {
-				String priority = priorityCombo.getItem(priorityCombo.getSelectionIndex());
-				attribute.setValue(priority);
-			} else if (key.equals("URL")) {
-				String url = urlText.getText();
-				if (url.equalsIgnoreCase("http://"))
-					url = "";
-				attribute.setValue(url);
-			} else if (key.equals("Assign To")) {
-				String assignTo = assignedToText.getText();
-				attribute.setValue(assignTo);
-			} else {
-				// do nothing
+			try {
+				if (values == null) values = new HashMap<String, String>();
+				if (key.equals(ATTRIBUTE_OS)) {
+					String os = oSCombo.getItem(oSCombo.getSelectionIndex());
+					attribute.setValue(os);
+				} else if (key.equals(ATTRIBUTE_VERSION)) {
+					String version = versionCombo.getItem(versionCombo.getSelectionIndex());
+					attribute.setValue(version);
+				} else if (key.equals(ATTRIBUTE_SEVERITY)) {
+					String severity = severityCombo.getItem(severityCombo.getSelectionIndex());
+					attribute.setValue(severity);
+				} else if (key.equals(ATTRIBUTE_PLATFORM)) {
+					String platform = platformCombo.getItem(platformCombo.getSelectionIndex());
+					attribute.setValue(platform);
+				} else if (key.equals(ATTRIBUTE_COMPONENT)) {
+					String component = componentCombo.getItem(componentCombo.getSelectionIndex());
+					attribute.setValue(component);
+				} else if (key.equals(ATTRIBUTE_PRIORITY)) {
+					String priority = priorityCombo.getItem(priorityCombo.getSelectionIndex());
+					attribute.setValue(priority);
+				} else if (key.equals(ATTRIBUTE_URL)) {
+					String url = urlText.getText();
+					if (url.equalsIgnoreCase("http://")) url = "";
+					attribute.setValue(url);
+				} else if (key.equals("Assign To")) {
+					String assignTo = assignedToText.getText();
+					attribute.setValue(assignTo);
+				} else {
+					// do nothing
+				}
+			} catch (IllegalArgumentException e) {
+				MylarPlugin.fail(e, "could not set attribute: " + attribute, false);
 			}
 		}
 		wizard.attributeCompleted = true;
@@ -531,7 +537,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 
 		if (url != null) {
 			// add the assigned to text field
-			newLayout(attributesComposite, 1, "URL", PROPERTY);
+			newLayout(attributesComposite, 1, ATTRIBUTE_URL, PROPERTY);
 			urlText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 			summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
