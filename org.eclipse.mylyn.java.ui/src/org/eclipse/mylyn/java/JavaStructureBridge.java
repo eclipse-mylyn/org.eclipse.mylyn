@@ -189,13 +189,17 @@ public class JavaStructureBridge implements IMylarStructureBridge {
                 } 
             }
         } else if (object instanceof WorkingSet) { 
-        	WorkingSet workingSet = (WorkingSet)object;
-        	IAdaptable[] elements = workingSet.getElements();
-        	for (int i = 0; i < elements.length; i++) {
-				IAdaptable adaptable = elements[i];
-				IMylarElement element = MylarPlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
-				if (element.getInterest().isInteresting()) return false;
-			}
+        	try {
+	        	WorkingSet workingSet = (WorkingSet)object;
+	        	IAdaptable[] elements = workingSet.getElements();
+	        	for (int i = 0; i < elements.length; i++) {
+					IAdaptable adaptable = elements[i];
+					IMylarElement element = MylarPlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
+					if (element.getInterest().isInteresting()) return false;
+				}
+        	} catch (Exception e) {
+        		return false;
+        	}
         }
         return true;
     }
