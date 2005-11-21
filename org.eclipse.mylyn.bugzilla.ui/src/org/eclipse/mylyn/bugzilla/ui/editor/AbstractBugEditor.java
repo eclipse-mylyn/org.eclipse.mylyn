@@ -1370,11 +1370,11 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			Combo combo = (Combo) event.widget;
 			if (comboListenerMap.containsKey(combo)) {
 				String sel = combo.getItem(combo.getSelectionIndex());
-				Attribute a = getBug().getAttribute(comboListenerMap.get(combo));
-				if (!(a.getNewValue().equals(sel))) {
-					a.setNewValue(sel);
+				Attribute attribute = getBug().getAttribute(comboListenerMap.get(combo));
+				if (sel != null && !(sel.equals(attribute.getNewValue()))) {
+					attribute.setNewValue(sel);
 					for (IBugzillaAttributeListener client : attributesListeners) {
-						client.attributeChanged(a.getName(), sel);
+						client.attributeChanged(attribute.getName(), sel);
 					}
 					changeDirtyStatus(true);
 				}

@@ -330,6 +330,9 @@ public class ExistingBugEditor extends AbstractBugEditor
 		//Add the user's address to the CC list if they haven't specified a CC
 		setDefaultCCValue();		
 		
+		// HACK: ensure default OS is set
+//		form.add("op_sys", "All");
+		
 		// go through all of the attributes and add them to the bug post
 		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {
 			Attribute a = it.next();
@@ -343,6 +346,7 @@ public class ExistingBugEditor extends AbstractBugEditor
 				// we have a hidden attribute and we should send it back.
 				form.add(a.getParameterName(), a.getValue());
 			}
+//			System.err.println(">>> " + a.getParameterName());
 		}
 		
 		// make sure that the comment is broken up into 80 character lines
