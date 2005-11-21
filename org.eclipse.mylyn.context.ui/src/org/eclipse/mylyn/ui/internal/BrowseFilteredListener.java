@@ -99,7 +99,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	}
 
 	private boolean mouseInteractionAccepted(MouseEvent event) {
-		return (event.stateMask & SWT.MOD3) != 0; 
+		return (event.stateMask & SWT.ALT) != 0; 
 	}
 
 	private boolean keyboardInteractionAccepted(KeyEvent event) {
