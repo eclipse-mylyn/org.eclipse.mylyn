@@ -35,6 +35,8 @@ public interface IMylarStructureBridge {
 	 */
     public abstract void setParentBridge(IMylarStructureBridge bridge);
 	
+//    public abstract void addChildBridge(IMylarStructureBridge bridge);
+    
     public abstract String getContentType();
     
     public abstract String getHandleIdentifier(Object object);

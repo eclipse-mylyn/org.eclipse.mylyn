@@ -582,6 +582,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 						Object parent = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_PARENT);
 						if (parent instanceof IMylarStructureBridge) {
 							((IMylarStructureBridge)bridge).setParentBridge(((IMylarStructureBridge)parent));
+//							((IMylarStructureBridge)parent).addChildBridge(((IMylarStructureBridge)bridge));
 						} else {
 							MylarPlugin.log("Could not load parent bridge: " + parent.getClass().getCanonicalName() + " must implement " + IMylarStructureBridge.class.getCanonicalName(), thisReader);	
 						}

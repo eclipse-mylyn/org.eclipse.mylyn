@@ -83,6 +83,9 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		return Collections.emptyList();
 	}
     
+	/**
+	 * Uses java-style path for projects.
+	 */
     public String getHandleIdentifier(Object object) {
         if (object instanceof IProject) {
             String path = ((IResource)object).getFullPath().toPortableString();
@@ -179,7 +182,6 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 
 	public void setParentBridge(IMylarStructureBridge bridge) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 }

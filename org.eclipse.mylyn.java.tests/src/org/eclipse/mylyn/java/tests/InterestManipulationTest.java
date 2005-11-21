@@ -59,8 +59,28 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		super.tearDown();
 	}
 
+	public void testDecrementAcrossBridges() throws JavaModelException {
+		monitor.selectionChanged(part, new StructuredSelection(javaMethod));
+        method = MylarPlugin.getContextManager().getElement(javaMethod.getHandleIdentifier());
+
+		IFile file = (IFile)javaCu.getAdapter(IResource.class);
+        ResourceStructureBridge bridge = new ResourceStructureBridge();
+		new ResourceSelectionMonitor().selectionChanged(part, new StructuredSelection(file));
+		
+		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
+		IMylarElement projectElement = MylarPlugin.getContextManager().getElement(javaCu.getJavaProject().getHandleIdentifier());       
+		
+        assertTrue(fileElement.getInterest().isInteresting());
+		assertTrue(method.getInterest().isInteresting());
+        
+        MylarPlugin.getContextManager().manipulateInterestForNode(projectElement, false, false, "test");
+
+        assertFalse(method.getInterest().isInteresting());
+        assertFalse(fileElement.getInterest().isInteresting());
+    }
+	
 	/**
-	 * TODO: move to IDE tests
+	 * TODO: move to IDE tests?
 	 */
 	public void testDecrementOfFile() throws JavaModelException {
 		IFolder folder = (IFolder)javaPackage.getAdapter(IResource.class);

@@ -44,6 +44,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
+import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReadAccessProvider;
@@ -59,6 +60,8 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     public final static String CONTENT_TYPE = "java";
     
     public List<AbstractRelationProvider> providers;
+    
+    private IMylarStructureBridge parentBridge;
     
     public JavaStructureBridge() {
     	providers = new ArrayList<AbstractRelationProvider>();
@@ -96,6 +99,13 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 						String childHandle = getHandleIdentifier(children[i]);
 						if (childHandle != null) childHandles.add(childHandle);
 					}
+					if (parentBridge != null && parentBridge instanceof ResourceStructureBridge) {
+						if (element.getElementType() < IJavaElement.TYPE) {
+							List<String> resourceChildren = parentBridge.getChildHandles(handle);
+							if (!resourceChildren.isEmpty()) childHandles.addAll(resourceChildren);
+						}
+					}
+					
 					return childHandles;
 				} catch (Exception e) {
 					MylarPlugin.fail(e, "could not get child", false);
@@ -272,7 +282,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	}
 
 	public void setParentBridge(IMylarStructureBridge bridge) {
-		// TODO Auto-generated method stub
+		parentBridge = bridge;
 	}
 
 	/**
