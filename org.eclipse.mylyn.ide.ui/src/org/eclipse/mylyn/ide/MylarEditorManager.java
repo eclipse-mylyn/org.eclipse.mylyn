@@ -44,12 +44,11 @@ public class MylarEditorManager implements IMylarContextListener {
 		        
 				List <IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
-				
-				
 				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < ACTIVATION_THRESHOLD; opened++) {
 					IMylarElement document = (IMylarElement) iter.next();
 					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(document.getContentType());
 					bridge.restoreEditor(document);
+					opened++;
 				}
 				IMylarElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
@@ -59,7 +58,6 @@ public class MylarEditorManager implements IMylarContextListener {
 				MylarPlugin.fail(e, "failed to open editors on activation", false);
 			} finally {				
 				MylarPlugin.getContextManager().setContextCapturePaused(false);
-
 				for (IMylarUiBridge bridge : MylarUiPlugin.getDefault().getUiBridges()) {
 					bridge.setContextCapturePaused(false);
 				}
