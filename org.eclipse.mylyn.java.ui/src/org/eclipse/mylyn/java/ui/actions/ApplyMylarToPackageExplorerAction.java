@@ -54,12 +54,6 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 		return viewers;
 	}
 
-//	@Override
-//	public void refreshViewer() {
-//		TreeViewer viewer = (TreeViewer)getViewer();
-//		viewer.refresh();
-//	}
-
 	public static ApplyMylarToPackageExplorerAction getDefault() {
 		return INSTANCE;
 	}

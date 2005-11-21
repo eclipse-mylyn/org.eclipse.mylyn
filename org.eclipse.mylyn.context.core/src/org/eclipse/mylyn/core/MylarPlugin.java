@@ -90,7 +90,6 @@ public class MylarPlugin extends AbstractUIPlugin {
     public static final String LOG_FILE_NAME = "mylar-log.txt";
     private PrintStream logStream = null;
 
-	public static final String TASKLIST_EDITORS_CLOSE = "org.eclipse.mylar.tasklist.activation.editors.close.all";
 	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
     
     public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";

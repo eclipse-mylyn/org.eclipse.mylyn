@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Label;
 public class MylarPreferenceWizardPage extends WizardPage {
 
 	private static final  String AUTO_FOLDING = "Turn interest-based automatic Java editor folding on";
-	private static final  String AUTO_CLOSE = "Close all editors automatically on task deactivation";
+	private static final  String AUTO_CLOSE = "Automatically manage open editors to match task context";
 	private static final  String WORKING_SET = "Add the \"active task context\" working set";
 	private static final  String DEFAULT_EDITOR = "Set the Mylar editor to be the default for .java " +
 		"(enables interest-based content assist)";

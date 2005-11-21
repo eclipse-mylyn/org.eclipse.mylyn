@@ -20,6 +20,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider;
+import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -84,10 +85,10 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, false);
 		}
 		
-		if(preferencePage.closeEditors()){
-			MylarUiPlugin.getPrefs().setValue(MylarPlugin.TASKLIST_EDITORS_CLOSE, true); //$NON-NLS-1$
+		if( preferencePage.closeEditors()){
+			MylarTasklistPlugin.getPrefs().setValue(MylarTasklistPlugin.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
 		} else {
-			MylarUiPlugin.getPrefs().setValue(MylarPlugin.TASKLIST_EDITORS_CLOSE, false); //$NON-NLS-1$
+			MylarTasklistPlugin.getPrefs().setValue(MylarTasklistPlugin.AUTO_MANAGE_EDITORS, false); //$NON-NLS-1$
 		}
 		
 		if(preferencePage.isWorkingSet()){

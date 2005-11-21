@@ -69,7 +69,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					ApplyMylarToNavigatorAction.getDefault().update();
 				if (ApplyMylarToProblemsListAction.getDefault() != null)
 					ApplyMylarToProblemsListAction.getDefault().update();
-
+				
 				workbench.addWindowListener(activeSearchViewTracker);
 				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 				for (int i = 0; i < windows.length; i++) {

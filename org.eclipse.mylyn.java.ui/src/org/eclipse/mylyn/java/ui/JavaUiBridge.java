@@ -104,8 +104,13 @@ public class JavaUiBridge implements IMylarUiBridge {
 		if (editor instanceof JavaEditor) {
             TextSelection textSelection = (TextSelection)selection;
             try {
-				return SelectionConverter.resolveEnclosingElement((JavaEditor)editor, textSelection);
-			} catch (JavaModelException e) {
+            	if (selection != null) {
+            		return SelectionConverter.resolveEnclosingElement((JavaEditor)editor, textSelection);
+            	} else {
+            		Object element = ((JavaEditor)editor).getEditorInput().getAdapter(IJavaElement.class);
+            		if (element instanceof IJavaElement) return element;
+            	}
+            } catch (JavaModelException e) {
 				// ignore
 			}
         }

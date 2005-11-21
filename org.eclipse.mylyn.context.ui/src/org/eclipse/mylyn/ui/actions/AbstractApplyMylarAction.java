@@ -165,10 +165,6 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		run(action);
 	}
 
-//	public void setViewerIsSelfManaged(boolean isSelfManaged) {
-//		this.isSelfManaged = isSelfManaged;
-//	}
-
 	public String getPrefId() {
 		return prefId;
 	}
