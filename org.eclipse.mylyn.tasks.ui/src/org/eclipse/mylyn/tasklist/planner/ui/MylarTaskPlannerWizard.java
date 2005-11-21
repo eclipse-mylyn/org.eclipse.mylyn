@@ -42,7 +42,7 @@ public class MylarTaskPlannerWizard extends Wizard implements INewWizard {
 				return false;
 			IEditorInput input = new CompletedTasksEditorInput(numDays,
 					MylarTasklistPlugin.getTaskListManager().getTaskList());
-			page.openEditor(input, MylarTasklistPlugin.PLANNING_GAME_EDITOR_ID);
+			page.openEditor(input, MylarTasklistPlugin.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {
 			MylarPlugin.log(ex, "couldn't open summary editor");
 		}

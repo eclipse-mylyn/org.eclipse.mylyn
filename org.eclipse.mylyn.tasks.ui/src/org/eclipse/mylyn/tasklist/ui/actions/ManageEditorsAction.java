@@ -12,35 +12,37 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
 public class ManageEditorsAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.auto.close";
-
-	private static final String LABEL = "Manage Editors with Activation";
-
+	public static final String ID = "org.eclipse.mylar.ui.editors.auto.manage";
+	
 	public ManageEditorsAction() {
-		setText(LABEL);
+		super("Manage Editors with Context", IAction.AS_CHECK_BOX);
 		setId(ID);
-		setChecked(MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
+		update(MylarTasklistPlugin.getPrefs().getBoolean(MylarTasklistPlugin.AUTO_MANAGE_EDITORS));
 	}
-
+	
 	@Override
 	public void run() {
-		boolean on = !MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE);
-		MylarTasklistPlugin.getPrefs().setValue(MylarPlugin.TASKLIST_EDITORS_CLOSE, on);
-
-		if (on) {
+		update(isChecked());
+	} 
+    
+    public void update(boolean on) {
+    	setChecked(on);
+    	MylarTasklistPlugin.getPrefs().setValue(MylarTasklistPlugin.AUTO_MANAGE_EDITORS, on);
+		
+    	if (on) {
 			boolean previousValue = WorkbenchPlugin.getDefault().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 			MylarTasklistPlugin.getPrefs().setValue(
-					MylarPlugin.TASKLIST_EDITORS_CLOSE, 
+					IPreferenceConstants.REUSE_EDITORS_BOOLEAN, 
 					previousValue);
 			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
@@ -50,6 +52,6 @@ public class ManageEditorsAction extends Action {
 			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
 					previousValue);			
-		}
+		}	
 	}
 }

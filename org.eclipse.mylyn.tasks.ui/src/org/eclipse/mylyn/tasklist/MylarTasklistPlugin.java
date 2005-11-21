@@ -66,9 +66,11 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	 */
 	public static Color ACTIVE_TASK = new Color(Display.getDefault(), 36, 22, 50);
 
-	public static final String PLANNING_GAME_WIZARD_ID = "org.eclipse.mylar.tasklist.ui.planner.wizard";
+	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ui.editors.auto.manage";
+	
+	public static final String PLANNER_WIZARD_ID = "org.eclipse.mylar.tasklist.ui.planner.wizard";
 
-	public static final String PLANNING_GAME_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.planner.editor";
+	public static final String PLANNER_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.planner.editor";
 
 	public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasklist.report.open.editor";
 
@@ -313,7 +315,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(MylarPlugin.TASKLIST_EDITORS_CLOSE, true);
+		store.setDefault(AUTO_MANAGE_EDITORS, true);
 		store.setDefault(SELECTED_PRIORITY, "P5");
 		store.setDefault(REPORT_OPEN_EDITOR, true);
 		store.setDefault(REPORT_OPEN_INTERNAL, false);

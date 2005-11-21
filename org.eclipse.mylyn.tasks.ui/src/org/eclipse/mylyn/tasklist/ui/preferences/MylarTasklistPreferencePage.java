@@ -85,7 +85,7 @@ public class MylarTasklistPreferencePage extends PreferencePage implements IWork
 		container.setLayout(gl);
 		//		closeEditors = new Button(container, SWT.CHECK);
 		//		closeEditors.setText("Close all editors on task deactivation (defaults to close only editors of interesting resources)");
-		//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));
+		//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));
 
 		multipleActive = new Button(container, SWT.CHECK);
 		multipleActive.setText("Enable multiple task contexts to be active");
@@ -138,7 +138,7 @@ public class MylarTasklistPreferencePage extends PreferencePage implements IWork
 
 	@Override
 	public boolean performCancel() {
-		//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.TASKLIST_EDITORS_CLOSE));		
+		//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));		
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL));
 		//		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTasklistPlugin.REPORT_OPEN_EXTERNAL));
