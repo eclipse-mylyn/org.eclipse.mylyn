@@ -36,14 +36,14 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 public class MylarChangeSetManager implements IMylarContextListener {
 
 	private SubscriberChangeSetCollector collector;
-	private Map<ITask, TaskContextChangeSet> changeSets = new HashMap<ITask, TaskContextChangeSet>();
+	private Map<String, MylarContextChangeSet> changeSets = new HashMap<String, MylarContextChangeSet>();
 	
 	public MylarChangeSetManager() {
 		this.collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 	}
 
 	public IResource[] getResources(ITask task) {
-		TaskContextChangeSet changeSet = changeSets.get(task);
+		MylarContextChangeSet changeSet = changeSets.get(task);
 		if (changeSet != null) {
 			return changeSet.getResources();
 		} else {
@@ -56,10 +56,10 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			ITask task = getTask(context); 
 			if (task == null) {
 				MylarPlugin.log("could not resolve task for context", this);
-			} else if (!changeSets.containsKey(task)) { 
-				TaskContextChangeSet changeSet = new TaskContextChangeSet(task, collector);
+			} else if (!changeSets.containsKey(task.getHandleIdentifier())) { 
+				MylarContextChangeSet changeSet = new MylarContextChangeSet(task, collector);
 				changeSet.add(changeSet.getResources());
-				changeSets.put(task, changeSet);
+				changeSets.put(task.getHandleIdentifier(), changeSet);
 				if (!collector.contains(changeSet)) collector.add(changeSet);
 			}
 		} catch (Exception e) {
@@ -69,14 +69,14 @@ public class MylarChangeSetManager implements IMylarContextListener {
 
 	public void contextDeactivated(IMylarContext context) {
 		// TODO: support multiple tasks
-		for (ITask task : changeSets.keySet()) {
-			collector.remove(changeSets.get(task));			
+		for (String taskHandle : changeSets.keySet()) {
+			collector.remove(changeSets.get(taskHandle));			
 		}
 		changeSets.clear();
 	}
 
-	public List<TaskContextChangeSet> getChangeSets() {
-		return new ArrayList<TaskContextChangeSet>(changeSets.values());
+	public List<MylarContextChangeSet> getChangeSets() {
+		return new ArrayList<MylarContextChangeSet>(changeSets.values());
 	}
 	
 	private ITask getTask(IMylarContext context) {
@@ -96,7 +96,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		if (bridge.isDocument(element.getHandleIdentifier())) {
 			IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
 			if (resource != null) {
-				for (TaskContextChangeSet changeSet: getChangeSets()) {
+				for (MylarContextChangeSet changeSet: getChangeSets()) {
 					try {
 						if (!changeSet.contains(resource)) {
 							if (element.getInterest().isInteresting()) {

@@ -24,7 +24,7 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 /**
  * @author Mik Kersten
  */
-public class TaskContextChangeSet extends ActiveChangeSet {
+public class MylarContextChangeSet extends ActiveChangeSet {
 
 	private static final String PREFIX_URL = "Report ";
 	private static final String LABEL_URL = "URL: ";
@@ -34,7 +34,7 @@ public class TaskContextChangeSet extends ActiveChangeSet {
 	private List<IResource> resources;
 	private ITask task;
 	
-	public TaskContextChangeSet(ITask task, SubscriberChangeSetCollector collector) {
+	public MylarContextChangeSet(ITask task, SubscriberChangeSetCollector collector) {
 		super(collector, LABEL_PREFIX);
 		this.task = task;
 		if (task.isLocal()) {
