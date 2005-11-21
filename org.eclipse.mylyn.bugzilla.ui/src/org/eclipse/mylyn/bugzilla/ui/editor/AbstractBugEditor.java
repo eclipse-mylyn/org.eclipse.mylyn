@@ -600,7 +600,11 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				for (int i = 0; i < a.length; i++) {
 					oSCombo.add(a[i]);
 				}
-				oSCombo.select(oSCombo.indexOf(value));
+				if (oSCombo.indexOf(value) != -1) {
+					oSCombo.select(oSCombo.indexOf(value));
+				} else {
+					oSCombo.select(oSCombo.indexOf("All"));
+				}
 				oSCombo.addListener(SWT.Modify, this);
 				comboListenerMap.put(oSCombo, name);
 				oSCombo.addListener(SWT.FocusIn, new GenericListener());
