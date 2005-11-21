@@ -22,11 +22,11 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IParent;
@@ -50,6 +50,7 @@ import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReadAccessProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
+import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
 /**
@@ -161,7 +162,8 @@ public class JavaStructureBridge implements IMylarStructureBridge {
             || object instanceof ClassPathContainer.RequiredProjectWrapper
             || object instanceof JarEntryFile
             || object instanceof IPackageFragment
-            || object instanceof IJavaProject; // TODO: redundant?
+//            || object instanceof IJavaProject // TODO: redundant?
+            || object instanceof WorkingSet; // TODO: move to IDE?
         return accepts;
     }
 
@@ -170,27 +172,6 @@ public class JavaStructureBridge implements IMylarStructureBridge {
      * i.e. they're not IJavaElement(s).
      */
     public boolean canFilter(Object object) {
-//    	if (object instanceof IJavaElement) {
-//    		try {
-//	    		IJavaElement element = (IJavaElement)object;
-//	            IResource resource = element.getCorrespondingResource();
-//	            boolean hasError = false; 
-//	            if (resource != null) {
-//		            IMarker[] markers = resource.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, 2);
-//		            for (int j = 0; j < markers.length; j++) {
-//		                if (markers[j] != null
-//		                	&& markers[j].getAttribute(IMarker.SEVERITY) != null
-//		                	&& markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
-//		                    hasError = true;
-//		                } 
-//		            } 
-//		            if (hasError) return false;
-//	            }
-//			} catch (CoreException e) {
-//				// ignore
-//			}
-//    	}  
-    	
         if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
             return true;
         }
@@ -207,6 +188,14 @@ public class JavaStructureBridge implements IMylarStructureBridge {
                     } 
                 } 
             }
+        } else if (object instanceof WorkingSet) { 
+        	WorkingSet workingSet = (WorkingSet)object;
+        	IAdaptable[] elements = workingSet.getElements();
+        	for (int i = 0; i < elements.length; i++) {
+				IAdaptable adaptable = elements[i];
+				IMylarElement element = MylarPlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
+				if (element.getInterest().isInteresting()) return false;
+			}
         }
         return true;
     }
@@ -334,3 +323,24 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		return false;
 	}
 }
+
+//if (object instanceof IJavaElement) {
+//try {
+//	IJavaElement element = (IJavaElement)object;
+//    IResource resource = element.getCorrespondingResource();
+//    boolean hasError = false; 
+//    if (resource != null) {
+//        IMarker[] markers = resource.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, 2);
+//        for (int j = 0; j < markers.length; j++) {
+//            if (markers[j] != null
+//            	&& markers[j].getAttribute(IMarker.SEVERITY) != null
+//            	&& markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR)) {
+//                hasError = true;
+//            } 
+//        } 
+//        if (hasError) return false;
+//    }
+//} catch (CoreException e) {
+//	// ignore
+//}
+//}  
