@@ -117,6 +117,16 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 		return null;
 	}
 
+	public void restoreEditor(IMylarElement document) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setContextCapturePaused(boolean paused) {
+		// TODO Auto-generated method stub
+		
+	}
+
 //    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
 //    	IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 //        TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
