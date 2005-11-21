@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugs.java.OpenBugzillaReportJob;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.java.TaskContextChangeSet;
+import org.eclipse.mylar.java.MylarContextChangeSet;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
@@ -51,8 +51,8 @@ public class OpenCorrespondingReportAction implements IViewActionDelegate {
     				comment = ((LogEntry)firstElement).getComment();
     			}
     			if (comment != null) {
-					String idString = TaskContextChangeSet.getIssueIdFromComment(comment);
-					String url = TaskContextChangeSet.getUrlFromComment(comment);
+					String idString = MylarContextChangeSet.getIssueIdFromComment(comment);
+					String url = MylarContextChangeSet.getUrlFromComment(comment);
 					
 					int id = -1;
 					try {
