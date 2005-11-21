@@ -288,4 +288,14 @@ public class PdeUiBridge implements IMylarUiBridge {
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
 	}
+
+	public void restoreEditor(IMylarElement document) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setContextCapturePaused(boolean paused) {
+		// TODO Auto-generated method stub
+		
+	}
 }

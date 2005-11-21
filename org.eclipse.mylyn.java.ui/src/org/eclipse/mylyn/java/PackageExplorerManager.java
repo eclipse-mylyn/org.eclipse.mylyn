@@ -45,6 +45,7 @@ import org.eclipse.ui.part.EditorPart;
 public class PackageExplorerManager implements IMylarContextListener, ISelectionListener {
 
 	public void selectionChanged(IWorkbenchPart part, ISelection changedSelection) {
+		if (MylarPlugin.getContextManager().isContextCapturePaused()) return;
 	    try {
     		if (!(MylarPlugin.getContextManager().hasActiveContext()
 		    		&& ApplyMylarToPackageExplorerAction.getDefault() != null

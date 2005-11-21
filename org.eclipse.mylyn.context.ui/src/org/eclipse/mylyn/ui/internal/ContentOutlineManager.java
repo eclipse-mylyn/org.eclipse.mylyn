@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
@@ -37,6 +38,8 @@ import org.eclipse.ui.internal.Workbench;
 public class ContentOutlineManager implements IPartListener, IPageListener, IMylarContextListener {
     
 	public void partActivated(IWorkbenchPart part) {
+		if (MylarPlugin.getContextManager().isContextCapturePaused()) return;
+		
     	if (part instanceof IEditorPart) {
             IEditorPart editorPart = (IEditorPart)part;
             configureDecorator(editorPart);

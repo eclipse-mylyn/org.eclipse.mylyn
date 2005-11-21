@@ -13,6 +13,7 @@ package org.eclipse.mylar.core.internal;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.IActiveTimerListener;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
@@ -425,6 +427,8 @@ public class MylarContextManager {
 	        if (context != null) {
 	            saveContext(id, path); 
 	            activeContext.getContextMap().remove(id);
+	            
+	            setContextCapturePaused(true);
 	            for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 	            	try {
 	            		listener.contextDeactivated(context);
@@ -432,6 +436,7 @@ public class MylarContextManager {
 						MylarPlugin.fail(e, "context listener failed", false);
 					}
 	            }
+	            setContextCapturePaused(false);
 	        }
 	        if (!activationHistorySuppressed) {
 		        activityHistory.parseEvent(
@@ -453,9 +458,11 @@ public class MylarContextManager {
         IMylarContext context = activeContext.getContextMap().get(id);
         eraseContext(id, false);
         if (context != null) { // TODO: this notification is redundant with eraseContext's
-            for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+        	setContextCapturePaused(true);
+        	for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
             	listener.contextDeactivated(context);
             }
+        	setContextCapturePaused(false);
         }
         try {
 	        File f = getFileForContext(path);
@@ -616,21 +623,28 @@ public class MylarContextManager {
 		return acceptedLandmarks;
 	}
 	
-    public Set<IMylarElement> getInterestingDocuments(IMylarContext context) {
-        Set<IMylarElement> interestingFiles = new HashSet<IMylarElement>();
+	/**
+	 * Sorted in descending interest order.
+	 */
+    public List<IMylarElement> getInterestingDocuments(IMylarContext context) {
+        Set<IMylarElement> set = new HashSet<IMylarElement>();
         List<IMylarElement> allIntersting = context.getInteresting();
         for (IMylarElement node : allIntersting) {
             if (MylarPlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(node.getHandleIdentifier())) {       
-                interestingFiles.add(node);
+                set.add(node);
             }
         }
-        return interestingFiles;
+        List<IMylarElement> list = new ArrayList<IMylarElement>(set);
+        Collections.sort(list, new InterestComparator<IMylarElement>());
+        return list;
     }
 	
 	/**
 	 * Get the interesting resources for the active context.
+	 * 
+	 * Sorted in descending interest order.
 	 */
-	public Set<IMylarElement> getInterestingDocuments() {
+	public List<IMylarElement> getInterestingDocuments() {
 		return getInterestingDocuments(activeContext);
     }
 
@@ -767,8 +781,8 @@ public class MylarContextManager {
 		return contextCapturePaused;
 	}
 
-	public void setContextCapturePaused(boolean contextCapturePaused) {
-		this.contextCapturePaused = contextCapturePaused;
+	public void setContextCapturePaused(boolean paused) {
+		this.contextCapturePaused = paused;
 	}
    
 }

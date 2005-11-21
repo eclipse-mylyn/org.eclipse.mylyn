@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -54,6 +55,23 @@ public class ResourceUiBridge implements IMylarUiBridge {
         }
     }
 
+	public void setContextCapturePaused(boolean paused) {
+		// TODO Auto-generated method stub
+		
+	}
+    
+	public void restoreEditor(IMylarElement document) {
+		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
+		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		if (resource instanceof IFile) {
+			try {
+				IDE.openEditor(activePage, (IFile)resource, false);
+			} catch (PartInitException e) {
+				MylarPlugin.fail(e, "failed to open editor for: " + resource, false);
+			}	
+		}
+	}
+    
     public void close(IMylarElement node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {

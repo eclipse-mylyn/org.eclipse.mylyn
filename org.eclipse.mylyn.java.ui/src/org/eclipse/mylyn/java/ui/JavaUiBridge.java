@@ -17,21 +17,29 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
+import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
+import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -39,7 +47,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Mik Kersten
  */
 public class JavaUiBridge implements IMylarUiBridge {
- 
+	
+	private boolean explorerLinked = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_PACKAGES_TO_EDITOR);
+	
     public void open(IMylarElement node) {
         //get the element and open it in an editor
         IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
@@ -51,6 +61,38 @@ public class JavaUiBridge implements IMylarUiBridge {
         	MylarPlugin.fail(t, "Could not open editor for: " + node, true);
         }
     }
+    
+	public void setContextCapturePaused(boolean paused) {
+		PackageExplorerPart explorer = PackageExplorerPart.getFromActivePerspective();
+		if (paused) {
+			explorerLinked = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_PACKAGES_TO_EDITOR);
+			if (explorerLinked) { // causes delayed selection
+				if (explorer != null) explorer.setLinkingEnabled(false);
+			}
+		} else {
+			explorer.setLinkingEnabled(true);
+			PreferenceConstants.getPreferenceStore().setValue(
+					PreferenceConstants.LINK_PACKAGES_TO_EDITOR, explorerLinked);
+			if (explorer != null) {
+				explorer.setLinkingEnabled(explorerLinked);
+			}
+			if (ApplyMylarToOutlineAction.getDefault() != null) {
+				ApplyMylarToOutlineAction.getDefault().update();
+			}
+		}
+	}
+    
+	public void restoreEditor(IMylarElement document) {
+		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
+		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		if (resource instanceof IFile) {
+			try {
+				IDE.openEditor(activePage, (IFile)resource, false);
+			} catch (PartInitException e) {
+				MylarPlugin.fail(e, "failed to open editor for: " + resource, false);
+			}	
+		}	
+	}
 
     /**
      * TODO: implement if needed

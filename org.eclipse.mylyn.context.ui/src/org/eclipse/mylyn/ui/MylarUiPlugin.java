@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -166,6 +167,15 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 		public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 			return null;
 		}
+
+		public void restoreEditor(IMylarElement document) {
+			// ignore
+		}
+
+		public void setContextCapturePaused(boolean paused) {
+			// TODO Auto-generated method stub
+			
+		}
 	};
 
 	public MylarUiPlugin() {
@@ -314,6 +324,10 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 		this.decorateInterestMode = decorateInterestLevel;
 	}
 
+	public List<IMylarUiBridge> getUiBridges() {
+		return new ArrayList<IMylarUiBridge>(bridges.values());
+	}
+	
 	/**
 	 * @return the corresponding adapter if found, or an adapter with no
 	 *         behavior otherwise (so null is never returned)

@@ -550,7 +550,7 @@ public class MylarPreferencePage extends PreferencePage implements
 
 	private void createTable(Composite parent) {
 		Group tableComposite= new Group(parent, SWT.SHADOW_ETCHED_IN);
-		tableComposite.setText("Task Context Highlighters");
+		tableComposite.setText("Context Highlighters");
 		tableComposite.setLayout(new GridLayout(2, false));
 		tableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -685,8 +685,6 @@ public class MylarPreferencePage extends PreferencePage implements
 		
 		String text = getPreferenceStore().getString(MylarUiPlugin.INTEREST_FILTER_EXCLUSION);
 		if (text != null) exclusionFieldEditor.setStringValue(text);
-        
-//		createLabel(exclusionControl, );
 		return; 
 	}
 	

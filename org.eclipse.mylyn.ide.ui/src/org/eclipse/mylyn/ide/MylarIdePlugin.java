@@ -12,7 +12,6 @@ package org.eclipse.mylar.ide;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -117,12 +116,11 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	public List<IResource> getInterestingResources() {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		Set<IMylarElement> resourceElements = MylarPlugin.getContextManager().getInterestingDocuments();
+		List<IMylarElement> resourceElements = MylarPlugin.getContextManager().getInterestingDocuments();
 		for (IMylarElement element : resourceElements) {
 			IResource resource = getResourceForElement(element);
 			if (resource != null) interestingResources.add(resource); 
 		}
-		
 		return interestingResources;
 	}
 	
@@ -135,7 +133,10 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
 			if (adapted instanceof IResource) {
 				return (IResource)adapted;
-			}
+			} 
+//			else { // recurse
+//				return getResourceForElement(MylarPlugin.getContextManager().getElement(bridge.getParentHandle(element.getHandleIdentifier())));
+//			}
 		}
 		return null;
 	}

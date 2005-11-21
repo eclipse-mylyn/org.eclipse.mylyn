@@ -133,7 +133,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     } 
 
     private void internalRefresh(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
-		try {
+    	try {
 			if (!MylarPlugin.getContextManager().hasActiveContext()) return;
 			for (StructuredViewer viewer : managedViewers) {
     			if (viewer != null && !viewer.getControl().isDisposed()) {
