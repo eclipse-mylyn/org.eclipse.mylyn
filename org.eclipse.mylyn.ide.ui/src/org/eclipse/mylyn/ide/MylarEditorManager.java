@@ -30,7 +30,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class MylarEditorManager implements IMylarContextListener {
 
-	public static final int ACTIVATION_THRESHOLD = 8; 
+//	public static final int ACTIVATION_THRESHOLD = 8; 
 	
 	public void contextActivated(IMylarContext context) {
 		if (MylarTasklistPlugin.getPrefs().getBoolean(MylarTasklistPlugin.AUTO_MANAGE_EDITORS)) {
@@ -44,7 +44,8 @@ public class MylarEditorManager implements IMylarContextListener {
 		        
 				List <IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
-				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < ACTIVATION_THRESHOLD; opened++) {
+				int threshold = MylarUiPlugin.getPrefs().getInt(MylarUiPlugin.MANAGE_EDITORS_AUTO_OPEN_NUM);
+				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < threshold-1; opened++) {
 					IMylarElement document = (IMylarElement) iter.next();
 					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(document.getContentType());
 					bridge.restoreEditor(document);

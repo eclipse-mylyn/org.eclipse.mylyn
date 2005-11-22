@@ -76,6 +76,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String INTEREST_FILTER_EXCLUSION = "org.eclipse.mylar.ui.interest.filter.exclusion";
 
+	public static final String MANAGE_EDITORS_AUTO_OPEN_NUM = "org.eclipse.mylar.ide.ui.editors.auto.open.num";
+	
 	public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
 
 	public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylar.ui.gamma.darkened";
@@ -259,6 +261,8 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
+		store.setDefault(MANAGE_EDITORS_AUTO_OPEN_NUM, 8);
+		
 		store.setDefault(GAMMA_SETTING_LIGHTENED, false);
 		store.setDefault(GAMMA_SETTING_STANDARD, true);
 		store.setDefault(GAMMA_SETTING_DARKENED, false);

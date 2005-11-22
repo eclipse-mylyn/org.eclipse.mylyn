@@ -81,7 +81,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 			}
 		}
 	}
-    
+     
 	public void restoreEditor(IMylarElement document) {
 		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
 		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();

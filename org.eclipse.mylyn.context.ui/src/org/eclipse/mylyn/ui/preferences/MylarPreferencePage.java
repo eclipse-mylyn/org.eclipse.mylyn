@@ -16,6 +16,7 @@ package org.eclipse.mylar.ui.preferences;
 
 import java.util.Arrays;
 
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.viewers.CellEditor;
@@ -68,6 +69,7 @@ public class MylarPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage, SelectionListener, ICellEditorListener {
 
 	private StringFieldEditor exclusionFieldEditor;
+	private IntegerFieldEditor autoOpenEditorsNum;
 	private Table table;
 	private TableViewer tableViewer;
 	private ColorCellEditor colorDialogEditor;
@@ -114,6 +116,7 @@ public class MylarPreferencePage extends PreferencePage implements
 		tableViewer.setLabelProvider(new HighlighterLabelProvider());
 		tableViewer.setInput(MylarUiPlugin.getDefault().getHighlighterList());
 //		createGammaSettingControl(entryTable);	
+		createEditorsSection(entryTable);
 		createExclusionFilterControl(entryTable);
 		
 //		lightened.setEnabled(false);
@@ -160,7 +163,12 @@ public class MylarPreferencePage extends PreferencePage implements
 	public boolean performOk() {        
 		getPreferenceStore().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX, MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
         getPreferenceStore().setValue(MylarUiPlugin.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
-        		
+        
+        int value = autoOpenEditorsNum.getIntValue();
+        if (value > 0) {
+        	getPreferenceStore().setValue(MylarUiPlugin.MANAGE_EDITORS_AUTO_OPEN_NUM, value);
+        } 
+        
 //		ColorMap.GammaSetting gm = null;
 //		if (standard.getSelection()) {
 //			getPreferenceStore().setValue(MylarUiPlugin.GAMMA_SETTING_LIGHTENED,false);
@@ -685,6 +693,26 @@ public class MylarPreferencePage extends PreferencePage implements
 		
 		String text = getPreferenceStore().getString(MylarUiPlugin.INTEREST_FILTER_EXCLUSION);
 		if (text != null) exclusionFieldEditor.setStringValue(text);
+		return; 
+	}
+	
+	private void createEditorsSection(Composite parent) {
+		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+
+		group.setLayout(new GridLayout(1, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		group.setText("Editor Management");	
+
+//		Label label = new Label(group, SWT.LEFT);
+//		label.setText("");
+		
+		autoOpenEditorsNum = new IntegerFieldEditor("", "Max number of editors to open on context activation:", group);
+		autoOpenEditorsNum.setErrorMessage("Your user id must be an integer");
+		int num = getPreferenceStore().getInt(MylarUiPlugin.MANAGE_EDITORS_AUTO_OPEN_NUM);
+		if (num > 0) {
+			autoOpenEditorsNum.setStringValue(num + "");	
+			autoOpenEditorsNum.setEmptyStringAllowed(false);
+		}
 		return; 
 	}
 	
