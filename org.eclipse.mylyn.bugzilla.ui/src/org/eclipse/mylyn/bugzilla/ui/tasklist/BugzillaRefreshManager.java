@@ -21,45 +21,45 @@ import org.eclipse.core.runtime.jobs.Job;
 public class BugzillaRefreshManager {
 
 	private List<BugzillaTask> toBeRefreshed;
-	
+
 	private Map<BugzillaTask, Job> currentlyRefreshing;
-	
+
 	private static final int MAX_REFRESH_JOBS = 5;
-	
-	public BugzillaRefreshManager (){
+
+	public BugzillaRefreshManager() {
 		toBeRefreshed = new LinkedList<BugzillaTask>();
 		currentlyRefreshing = new HashMap<BugzillaTask, Job>();
 	}
-	
-	public void addTaskToBeRefreshed(BugzillaTask task){
-		if(!currentlyRefreshing.containsKey(task) && !toBeRefreshed.contains(task)){
+
+	public void requestRefresh(BugzillaTask task) {
+		if (!currentlyRefreshing.containsKey(task) && !toBeRefreshed.contains(task)) {
 			toBeRefreshed.add(task);
 		}
 		updateRefreshState();
 	}
-	
-	public void removeTaskToBeRefreshed(BugzillaTask task){
+
+	public void removeTaskToBeRefreshed(BugzillaTask task) {
 		toBeRefreshed.remove(task);
-		if(currentlyRefreshing.get(task) != null){
+		if (currentlyRefreshing.get(task) != null) {
 			currentlyRefreshing.get(task).cancel();
 			currentlyRefreshing.remove(task);
 		}
 		updateRefreshState();
 	}
-	
-	public void removeRefreshingTask(BugzillaTask task){
-		if(currentlyRefreshing.containsKey(task)){
+
+	public void removeRefreshingTask(BugzillaTask task) {
+		if (currentlyRefreshing.containsKey(task)) {
 			currentlyRefreshing.remove(task);
 		}
 		updateRefreshState();
 	}
-	
-	private void updateRefreshState(){
-		if(currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0){
+
+	private void updateRefreshState() {
+		if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
 			BugzillaTask t = toBeRefreshed.remove(0);
 			Job j = t.getRefreshJob();
-			if(j != null){
-				currentlyRefreshing.put(t, j);	
+			if (j != null) {
+				currentlyRefreshing.put(t, j);
 				j.schedule();
 			}
 		}
@@ -69,8 +69,8 @@ public class BugzillaRefreshManager {
 		toBeRefreshed.clear();
 		List<Job> l = new ArrayList<Job>();
 		l.addAll(currentlyRefreshing.values());
-		for(Job j : l){
-			if(j != null)
+		for (Job j : l) {
+			if (j != null)
 				j.cancel();
 		}
 		currentlyRefreshing.clear();

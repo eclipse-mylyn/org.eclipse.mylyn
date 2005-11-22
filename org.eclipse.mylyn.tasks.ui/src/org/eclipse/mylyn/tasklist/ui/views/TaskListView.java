@@ -152,6 +152,8 @@ public class TaskListView extends ViewPart {
 
 	private OpenTaskEditorAction openAction;
 
+	private OpenTaskEditorAction openTaskEditor; // TODO: remove?
+	
 	private CreateTaskAction createTaskAction;
 
 	private CreateCategoryAction createCategoryAction;
@@ -163,8 +165,6 @@ public class TaskListView extends ViewPart {
 	private DeleteAction deleteAction;
 
 	private ManageEditorsAction autoClose;
-
-	private OpenTaskEditorAction openTaskEditor;
 
 	private RemoveFromCategoryAction removeAction;
 

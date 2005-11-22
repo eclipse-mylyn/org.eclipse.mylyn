@@ -158,29 +158,23 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 
 		for (ITask task : tasks) {
 			if (task instanceof BugzillaTask && !task.isCompleted()) {
-//				((BugzillaTask) task).refresh();
-				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
+				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask)task);
 			}
 		}
-		for (ITaskListCategory cat : MylarTasklistPlugin
-				.getTaskListManager().getTaskList().getCategories()) {
-//			if(cat.isArchive())
-//				continue;
+		for (ITaskListCategory cat : MylarTasklistPlugin.getTaskListManager().getTaskList().getCategories()) {
 			
 			if (cat instanceof TaskCategory) {
 				for (ITask task : ((TaskCategory) cat).getChildren()) {
 					if (task instanceof BugzillaTask && !task.isCompleted()) {
 						if(BugzillaTask.getLastRefreshTimeInMinutes(((BugzillaTask)task).getLastRefresh()) > 2){
-							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
+							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask)task);
 						}
-//						((BugzillaTask) task).refresh();
 					}
 				}
 				if (((TaskCategory) cat).getChildren() != null) {
 		            for (ITask child : ((TaskCategory) cat).getChildren()) {
 						if (child instanceof BugzillaTask && !child.isCompleted()) {
-							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)child);
-//							((BugzillaTask)child).refresh();
+							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask)child);
 						}
 					}
 				}
@@ -198,7 +192,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				if(hit.hasCorrespondingActivatableTask()){
 					BugzillaTask task = ((BugzillaTask)hit.getOrCreateCorrespondingTask());
 					if(!task.isCompleted()){
-						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed(task);
+						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(task);
 //									task.refresh();
 					}
 				}

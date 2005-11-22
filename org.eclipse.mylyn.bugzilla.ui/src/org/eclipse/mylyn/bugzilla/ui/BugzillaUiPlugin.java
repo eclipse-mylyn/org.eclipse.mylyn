@@ -80,4 +80,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public BugzillaRefreshManager getBugzillaRefreshManager() {
 		return bugzillaRefreshManager;
 	}
+	
+	public String createBugHandleIdentifier(int bugId) {
+		return "Bugzilla-"+bugId;
+	}
 }

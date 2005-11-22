@@ -119,15 +119,15 @@ public class BugzillaTask extends Task {
 		}
 	};
 
-	public BugzillaTask(String id, String label, boolean newTask) {
-		super(id, label, newTask);
+	public BugzillaTask(String handle, String label, boolean newTask) {
+		super(handle, label, newTask);
 		isDirty = false;
 		scheduleDownloadReport();
 		setUrl();
 	}
 
-	public BugzillaTask(String id, String label, boolean noDownload, boolean newTask) {
-		super(id, label, newTask);
+	public BugzillaTask(String handle, String label, boolean noDownload, boolean newTask) {
+		super(handle, label, newTask);
 		isDirty = false;
 		if (!noDownload) {
 			scheduleDownloadReport();

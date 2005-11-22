@@ -73,12 +73,6 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 		}
 		if (obj instanceof BugzillaQueryCategory) {
 			final BugzillaQueryCategory cat = (BugzillaQueryCategory) obj;
-//			final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-//				protected void execute(IProgressMonitor monitor) throws CoreException {
-//					
-//				}
-//			};
-			
 			Job j = new Job("Bugzilla Category Refresh"){
 
 				@Override
@@ -86,7 +80,7 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 					cat.refreshBugs();
 					for(IQueryHit hit: cat.getChildren()){
 						if(hit.hasCorrespondingActivatableTask() && hit instanceof BugzillaHit){
-							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)hit.getOrCreateCorrespondingTask());
+							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask)hit.getOrCreateCorrespondingTask());
 						}
 					}
 					Display.getDefault().asyncExec(new Runnable(){
@@ -95,13 +89,6 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 								TaskListView.getDefault().getViewer().refresh();
 						}
 					});
-//					try {
-//						op.run(monitor);
-//					} catch (InvocationTargetException e) {
-//						MylarPlugin.log(e, e.getMessage());
-//					} catch (InterruptedException e) {
-//						MylarPlugin.log(e, e.getMessage());
-//					}
 					return Status.OK_STATUS;
 				}
 				
@@ -123,15 +110,15 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 			TaskCategory cat = (TaskCategory) obj;
 			for (ITask task : cat.getChildren()) {
 				if (task instanceof BugzillaTask) {
-					BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)task);
+					BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask)task);
 				}
 			}
 		} else if (obj instanceof BugzillaTask) {
-			BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed((BugzillaTask)obj);
+			BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask)obj);
 		} else if(obj instanceof BugzillaHit){
 			BugzillaHit hit = (BugzillaHit)obj;
 			if(hit.hasCorrespondingActivatableTask()){
-				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().addTaskToBeRefreshed(hit.getAssociatedTask());
+				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(hit.getAssociatedTask());
 			}
 		}
 		for(ITask task: MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks()){

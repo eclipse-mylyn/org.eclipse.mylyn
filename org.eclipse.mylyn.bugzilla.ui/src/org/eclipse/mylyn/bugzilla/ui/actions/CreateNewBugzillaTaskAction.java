@@ -84,7 +84,9 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    }
 		
 		    
-		    BugzillaTask newTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>", true, true);				
+		    BugzillaTask newTask = new BugzillaTask(
+		    		BugzillaUiPlugin.getDefault().createBugHandleIdentifier(bugId), 
+		    		"<bugzilla info>", true, true);				
 		    Object selectedObject = null;
 		    if(TaskListView.getDefault() != null)
 		    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
