@@ -109,43 +109,47 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			getPreferenceStore().addPropertyChangeListener(problemListener);
 
 			final IWorkbench workbench = PlatformUI.getWorkbench();
+			javaEditingMonitor = new JavaEditingMonitor();
+			MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+			installEditorTracker(workbench);
+
+			ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+			service.addPostSelectionListener(packageExplorerManager);
+						
 			workbench.getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					javaEditingMonitor = new JavaEditingMonitor();
-					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
-					installEditorTracker(workbench);
-
-					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
-					service.addPostSelectionListener(packageExplorerManager);
-					
-					if (!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
-						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
-						Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
-						if (wizard != null && shell != null && !shell.isDisposed()) {
-							WizardDialog dialog = new WizardDialog(shell, wizard);
-							dialog.create();
-							dialog.open();
-							getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+					try {
+						if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+							ApplyMylarToPackageExplorerAction.getDefault().update();
+							getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
 						}
+						if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+							ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+						}
+						if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+							ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+						} 
+						
+						if (!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
+							MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
+							Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+							if (wizard != null && shell != null && !shell.isDisposed()) {
+								WizardDialog dialog = new WizardDialog(shell, wizard);
+								dialog.create();
+								dialog.open();
+								getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+							}
+						}
+					} catch (Throwable t) {
+						MylarPlugin.fail(t, "Mylar Java plug-in initialization failed", true);
 					}
-					
-					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-						ApplyMylarToPackageExplorerAction.getDefault().update();
-						getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
-					}
-					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-					}
-					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-					} 
 				}
 			});
 			
 			JavaCore.addElementChangedListener(javaElementChangeListener);
 			savePluginPreferences();
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "Mylar Java Plug-in Initialization failed", true);
+			MylarPlugin.fail(e, "Mylar Java plug-in initialization failed", true);
 		}
 	}
 
