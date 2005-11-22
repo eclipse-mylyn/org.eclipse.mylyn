@@ -49,14 +49,14 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class BugzillaTaskHandler implements ITaskHandler {
 
-	public void itemDeleted(ITaskListElement element) {
+	public boolean deleteElement(ITaskListElement element) {
 		if (element instanceof BugzillaQueryCategory) {
 			boolean deleteConfirmed = MessageDialog.openQuestion(
 		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 		            "Confirm delete", 
 		            "Delete the selected query and all contained tasks?");
 			if (!deleteConfirmed) 
-				return;
+				return false;
 			BugzillaQueryCategory query = (BugzillaQueryCategory) element;
 			MylarTasklistPlugin.getTaskListManager().deleteQuery(query);
 		} else if (element instanceof BugzillaTask) {
@@ -65,30 +65,32 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				MessageDialog.openError(Workbench.getInstance()
 						.getActiveWorkbenchWindow().getShell(), "Delete failed",
 						"Task must be deactivated in order to delete.");
-				return;
+				return false;
 			}
 			
 			String message = task.getDeleteConfirmationMessage();			
 			boolean deleteConfirmed = MessageDialog.openQuestion(
 		            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 		            "Confirm delete", message);
-			if (!deleteConfirmed) 
-				return;
+			if (!deleteConfirmed)
+				return false;  
 									
-			task.removeReport();
+//			task.removeReport();
 			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
 			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
 			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			// if we couldn't get the page, get out of here
 			if (page == null)
-				return;
+				return true;
 			try {
 				TaskListView.getDefault().closeTaskEditors(task, page);
 			} catch (Exception e) {
 				MylarPlugin.log(e, " deletion failed");
 			}
 		}
+		TaskListView.getDefault().getViewer().refresh();
+		return true;
 	}
 
 	public void taskCompleted(ITask task) {

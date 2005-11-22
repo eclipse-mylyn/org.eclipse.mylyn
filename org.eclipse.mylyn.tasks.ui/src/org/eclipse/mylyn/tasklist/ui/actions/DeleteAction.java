@@ -42,11 +42,13 @@ public class DeleteAction extends Action {
 
 	@Override
 	public void run() {
-
 		//		MylarPlugin.getDefault().actionObserved(this);
 		Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();
 		if (selectedObject instanceof ITaskListElement && MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
-			MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).itemDeleted((ITaskListElement) selectedObject);
+			boolean deleted = MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
+			if (deleted) {
+				new RemoveFromCategoryAction(view).run(); // TODO: refactor category removal?
+			}
 		} else if (selectedObject instanceof ITask) {
 			ITask task = (ITask) selectedObject;
 			if (task.isActive()) {
@@ -57,22 +59,23 @@ public class DeleteAction extends Action {
 
 			String message = task.getDeleteConfirmationMessage();
 			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Confirm delete", message);
-			if (!deleteConfirmed)
+			if (!deleteConfirmed) {
 				return;
+			}
 
 			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
 			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
 			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			if (page == null) {
-				this.view.getViewer().refresh();
 				return;
 			}
 			try {
-				this.view.closeTaskEditors((ITask) selectedObject, page);
+				view.closeTaskEditors((ITask) selectedObject, page);
 			} catch (Exception e) {
-				MylarPlugin.log(e, " deletion failed");
+				MylarPlugin.log(e, "closing editors failed");
 			}
+			view.getViewer().refresh();
 		} else if (selectedObject instanceof TaskCategory) {
 			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Confirm delete",
 					"Delete the selected category and all contained tasks?");
@@ -92,10 +95,10 @@ public class DeleteAction extends Action {
 				}
 			}
 			MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
+			view.getViewer().refresh();
 		} else {
 			MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed", "Nothing selected.");
 			return;
 		}
-		this.view.getViewer().refresh();
 	}
 }

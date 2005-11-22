@@ -17,7 +17,7 @@ import org.eclipse.ui.IWorkbenchPage;
 
 public interface ITaskHandler {
 
-	public abstract void itemDeleted(ITaskListElement element);
+	public abstract boolean deleteElement(ITaskListElement element);
 
 	public abstract void taskCompleted(ITask task);
 
