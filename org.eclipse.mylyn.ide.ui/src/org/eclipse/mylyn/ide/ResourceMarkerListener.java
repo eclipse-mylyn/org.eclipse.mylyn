@@ -27,7 +27,6 @@ import org.eclipse.ui.PlatformUI;
 public class ResourceMarkerListener implements IResourceChangeListener {
 
 	public void resourceChanged(IResourceChangeEvent event) {
-		//we are only interested in POST_CHANGE events
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE)
 			return;
 		IResourceDelta rootDelta = event.getDelta();

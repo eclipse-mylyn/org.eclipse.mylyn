@@ -39,10 +39,10 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     public final static String CONTENT_TYPE = MylarPlugin.CONTENT_TYPE_ANY;
 
     public ResourceStructureBridge() {
-    	if (false) { // XXX enable
-    		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-   	   		workspace.addResourceChangeListener(new ResourceMarkerListener());
-    	}
+//    	if (false) { 
+//    		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+//   	   		workspace.addResourceChangeListener(new ResourceMarkerListener());
+//    	}
     }
     
     public String getContentType() {
