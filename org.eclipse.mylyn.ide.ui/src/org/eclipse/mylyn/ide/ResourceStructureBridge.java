@@ -105,7 +105,12 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         if (path.segmentCount() == 1) {
             String projectName = handle.substring(1);
-            return workspace.getRoot().getProject(projectName);
+            try {
+            	return workspace.getRoot().getProject(projectName);
+            } catch (IllegalArgumentException e) {
+            	MylarPlugin.fail(e, "bad path for handle: " + handle, false);
+            	return null;
+            }
         } else if (path.segmentCount() > 1) {
         	return workspace.getRoot().findMember(path);
         } else {
