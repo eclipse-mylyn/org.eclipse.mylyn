@@ -22,32 +22,23 @@ highlighted&nbsp; </span></p>
 <table cellpadding="10" cellspacing="0" width="600" id="table105">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Editor management</b></p>
+			<p align="right"><b>Editor Management</b></p>
 			</td>
 			<td valign="top" width="70%">
-			overrides auto-close editors behavior if on, closing is a shortcut 
-			for &quot;Mark less interesting&quot;, note that this now propagates to all 
-			child nodes.&nbsp; Auto manage will now turn off automatic closing 
-			of editors (and automatically close editors that become 
-			uninteresting itself).&nbsp; Previous value restored if this option 
-			is toggled.<p>So if you you navigated to a node that wasn't 
-			interesting, just hit Ctrl+F4...<p>Restored in order in descending 
-			order of interest<p>Defaults to 8.&nbsp; Might add preference.</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table104">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Context pause indication</b></p>
-			</td>
-			<td valign="top" width="70%">
-			...</td>
+			If the Manage Editors with Context option is selected open editors 
+			will correspond to the active task context:<br>
+			- On task activation the editors of the most interesting elements 
+			will be automatically opened, and populate the Ctrl+E list.&nbsp; 
+			Set the number of editors to open on the Mylar preference page.<br>
+			- Closing an editor will mark the corresponding file and all 
+			children uninteresting (ote that &quot;Mark Less Interesting&quot; now 
+			recurses to children).&nbsp; So if you navigate to something 
+			uninteresting simply hit Ctrl+F4.<br>
+			- Note that this option will turn off the Eclipse &quot;Close editors 
+			automatically&quot; option, but will set it back to it's original state 
+			if toggled off.<p>
+			<img border="0" src="images/0.4.3/editors-auto-manage.gif" width="318" height="150"><p>
+			<img border="0" src="images/0.4.3/editors-auto-manage-pref.gif" width="400" height="43"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -59,16 +50,39 @@ highlighted&nbsp; </span></p>
 <table cellpadding="10" cellspacing="0" width="600" id="table103">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Incoming Changes grouped by Task</b></p>
+			<p align="right"><b>Mapping of Incoming Changes to Reports</b></p>
 			</td>
 			<td valign="top" width="70%">
-			This simply relies on the convention of commit messages.&nbsp; Can 
-			navigate to Bugzilla issue, or to linked web page.<p>CVS Resource 
-			History View, in both views can right-click to open report.</p>
-			<p>
+			When the Synchronize view is in Incoming and Change Sets mode 
+			(visible below), and Mylar Change Set support was used to commit, 
+			incoming changes will be grouped by task description.&nbsp; Right 
+			clicking a Change Set will bring up an &quot;Open Corresponding Report&quot; 
+			action to navigate to the corresponding issue (either Bugzilla 
+			report or Web Link).&nbsp; The same action is available for 
+			navigating from commit messages to reports in the CVS Resource 
+			History view.<p>
 			<img border="0" src="images/0.4.3/synchronize-change-sets.gif" width="593" height="206"></p>
 			<p>
 			<img border="0" src="images/0.4.3/cvs-resource-history-open.gif" width="476" height="163"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table107">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Context Capture Pause Indication</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Pausing context capture is now indicated on the status bar.&nbsp; 
+			Note that other notifications can occlude this one, so if you notice 
+			newly selected elements not populating the context check the state 
+			of the toggle button on the Task List.<p>
+			<img border="0" src="images/0.4.3/context-capture-pause-indicator.gif" width="305" height="126"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -115,27 +129,6 @@ highlighted&nbsp; </span></p>
 			<img border="0" src="images/0.4.2/context-commit.gif" width="231" height="79"><p>
 			<img border="0" src="images/0.4.2/context-commit-wizard.gif" width="525" height="369"><p>
 			<img border="0" src="images/0.4.2/context-commit-prefix.gif" width="432" height="84"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table98">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Editor management</b></p>
-			</td>
-			<td valign="top" width="70%">
-			New stuff here?<p>When a task is activated, all interesting editors are automatically 
-			opened and the last active node is brought to the top.&nbsp; This 
-			ensures that the Ctrl+E editor list is populated by the the task 
-			context.&nbsp; The option to manage open editors on task activation 
-			and deactivation can be toggled in the Mylar Tasks pull-down.</p>
-			<p>
-			<img border="0" src="images/0.4.2/tasklist-editors-manage.gif" width="265" height="169"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -212,7 +205,9 @@ highlighted&nbsp; </span></p>
 			<p align="right"><b>Improved Outline</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Commenter, etc.</td>
+			The Bug Editor Outline can be used to navigate the report by 
+			commenter and date.<p>
+			<img border="0" src="images/0.4.3/bugzilla-outline.gif" width="382" height="165"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
