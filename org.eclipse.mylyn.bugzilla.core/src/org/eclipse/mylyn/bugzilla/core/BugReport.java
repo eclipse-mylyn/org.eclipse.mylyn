@@ -27,9 +27,7 @@ import org.eclipse.core.runtime.Status;
  * A bug report entered in Bugzilla.
  */
 public class BugReport implements Serializable, IBugzillaBug {
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
+
 	private static final long serialVersionUID = 3258693199936631348L;
 	
 	/** Bug id */

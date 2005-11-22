@@ -23,6 +23,8 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * A node for the tree in the <code>BugzillaOutlinePage</code>.
+ * 
+ * @author Mik Kersten (hardening of prototype)
  */
 public class BugzillaOutlineNode implements IBugzillaReportSelection {
 
@@ -111,13 +113,13 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		return key;
 	}
 
-	/**
-	 * Set the label of this node.
-	 * @param key The new label.
-	 */
-	public void setKey(String key) {
-		this.key = key;
-	}
+//	/**
+//	 * Set the label of this node.
+//	 * @param key The new label.
+//	 */
+//	public void setKey(String key) {
+//		this.key = key;
+//	}
 
 	/**
 	 * TODO: remove, nodes don't need to know about image decorator
