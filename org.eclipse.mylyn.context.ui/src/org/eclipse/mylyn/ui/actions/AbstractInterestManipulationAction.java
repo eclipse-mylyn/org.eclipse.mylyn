@@ -21,6 +21,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ObjectPluginAction;
 
 /**
@@ -44,34 +45,43 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
     
     public void run(IAction action) {
    		boolean increment = isIncrement();
+   		ISelection currentSelection = null;
     	if (action instanceof ObjectPluginAction) {
     		ObjectPluginAction objectAction = (ObjectPluginAction)action;
-    		if (objectAction.getSelection() instanceof StructuredSelection) {
-    			StructuredSelection selection = (StructuredSelection)objectAction.getSelection();
-    			for (Object object : selection.toList()) {
-    				IMylarElement node = null;
-    				if (object instanceof IMylarElement) {
-    					node = (IMylarElement)object;
-    				} else {
-	    				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);              
-	                    String handle = bridge.getHandleIdentifier(object);
-	                    node = MylarPlugin.getContextManager().getElement(handle);
-    				}
-    				if (node != null) {
-    					MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
-    				} else {
-    					MylarPlugin.log("no element for interest manipulation", this);
-    				}
-    			}
-    		}
+    		currentSelection = objectAction.getSelection();
     	} else {
-    		IMylarElement node = MylarPlugin.getContextManager().getActiveElement();
-    		if (node != null) {
-    			MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
-    		} else {
+    		try {
+    			currentSelection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection(); 
+    		} catch (Exception e) {
+    			// ignore
+    		}
+    	}
+    	
+		if (currentSelection instanceof StructuredSelection) {
+			StructuredSelection selection = (StructuredSelection)currentSelection;
+			for (Object object : selection.toList()) {
+				IMylarElement node = null;
+				if (object instanceof IMylarElement) {
+					node = (IMylarElement)object;
+				} else {
+    				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);              
+                    String handle = bridge.getHandleIdentifier(object);
+                    node = MylarPlugin.getContextManager().getElement(handle);
+				}
+				if (node != null) {
+					MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+				} else {
+					MylarPlugin.log("no element for interest manipulation", this);
+				}
+			}
+		} else {
+			IMylarElement node = MylarPlugin.getContextManager().getActiveElement();
+			if (node != null) {
+				MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
+			} else {
 				MylarPlugin.log("no active element for interest manipulation", this);
 			}
-    	}
+		}
     }
 
 	public void dispose() { 

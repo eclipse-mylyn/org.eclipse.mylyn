@@ -678,15 +678,17 @@ public class MylarContextManager {
     public void manipulateInterestForNode(IMylarElement element, boolean increment, boolean forceLandmark, String sourceId) {
     	float originalValue = element.getInterest().getValue();
         float changeValue = 0; 
+        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
         if (!increment) {
-            if (element.getInterest().isLandmark()) { // keep it interesting
-                changeValue = (-1 * originalValue) + 1; 
+            if (element.getInterest().isLandmark() && bridge.canBeLandmark(element.getHandleIdentifier())) {
+            	 // keep it interesting
+            	changeValue = (-1 * originalValue) + 1; 
             } else { 
+            	// make uninteresting
             	if (originalValue >=0) changeValue = (-1 * originalValue)-1;
             	
             	// reduce interest of children
-            	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
-                for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
+            	for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
 					IMylarElement childElement = getElement(childHandle);
 					if (childElement.getInterest().isInteresting()) {
 						manipulateInterestForNode(childElement, increment, forceLandmark, sourceId);
@@ -697,7 +699,6 @@ public class MylarContextManager {
         	if (!forceLandmark && (originalValue >  MylarContextManager.getScalingFactors().getLandmark())) {
                 changeValue = 0;
             } else { // make it a landmark
-    			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
     			if (element != null
     				&& bridge.canBeLandmark(element.getHandleIdentifier())
     				&& !bridge.getContentType(element.getHandleIdentifier()).equals(MylarPlugin.CONTENT_TYPE_ANY)) {
