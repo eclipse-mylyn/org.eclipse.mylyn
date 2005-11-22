@@ -57,7 +57,7 @@ public class MylarJavaPreferencePage extends PreferencePage implements
 		container.setLayoutData(gridData);
 		GridLayout gl = new GridLayout(1, false);
 		container.setLayout(gl);		
-
+ 
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);		
 		group.setLayout(gl);//new RowLayout());
 		group.setText("Package Explorer");
@@ -71,7 +71,7 @@ public class MylarJavaPreferencePage extends PreferencePage implements
 		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND));		
 				
 		enableErrorInterest = new Button(group, SWT.CHECK);
-		enableErrorInterest.setText("Enable predicted interest of errors (causes increase view refresh).");
+		enableErrorInterest.setText("Enable predicted interest of errors (significantly increases view refresh).");
 		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS));
 	}
 	
