@@ -85,6 +85,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
     
     protected void valueChanged(IAction action, final boolean on, boolean store) {
     	try {
+    		MylarPlugin.getContextManager().setContextCapturePaused(true);
     		setChecked(on);
 	        action.setChecked(on);
 	        if (store && MylarPlugin.getDefault() != null) MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on); 
@@ -95,6 +96,8 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	        } 
     	} catch (Throwable t) {
     		MylarPlugin.fail(t, "Could not install viewer manager on: " + prefId, false);
+    	} finally {
+    		MylarPlugin.getContextManager().setContextCapturePaused(false);
     	}
 	}
 
