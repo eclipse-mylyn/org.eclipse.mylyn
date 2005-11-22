@@ -109,16 +109,16 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			getPreferenceStore().addPropertyChangeListener(problemListener);
 
 			final IWorkbench workbench = PlatformUI.getWorkbench();
-			javaEditingMonitor = new JavaEditingMonitor();
-			MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
-			installEditorTracker(workbench);
-
-			ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
-			service.addPostSelectionListener(packageExplorerManager);
-						
 			workbench.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
+						javaEditingMonitor = new JavaEditingMonitor();
+						MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+						installEditorTracker(workbench);
+
+						ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+						service.addPostSelectionListener(packageExplorerManager);
+												
 						if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
 							ApplyMylarToPackageExplorerAction.getDefault().update();
 							getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
