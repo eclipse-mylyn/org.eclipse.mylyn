@@ -15,9 +15,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -28,14 +25,13 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * Manages the installation of the outline filter.
  * 
  * @author Mik Kersten
  */
-public class ContentOutlineManager implements IPartListener, IPageListener, IMylarContextListener {
+public class ContentOutlineManager implements IPartListener, IPageListener {
     
 	public void partActivated(IWorkbenchPart part) {
 		if (MylarPlugin.getContextManager().isContextCapturePaused()) return;
@@ -44,11 +40,11 @@ public class ContentOutlineManager implements IPartListener, IPageListener, IMyl
             IEditorPart editorPart = (IEditorPart)part;
             configureDecorator(editorPart);
         }
-        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-            public void run() { 
+//        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//            public void run() { 
             	if (ApplyMylarToOutlineAction.getDefault() != null) ApplyMylarToOutlineAction.getDefault().update();
-            }
-        });
+//            }
+//        });
 	}
 
     public void partOpened(IWorkbenchPart part) { 
@@ -73,22 +69,47 @@ public class ContentOutlineManager implements IPartListener, IPageListener, IMyl
     	}
     }
     
-    public void contextActivated(IMylarContext taskscape) {
-    	// ignore
-    }
-
-    public void contextDeactivated(IMylarContext taskscape) {
+  public void partBroughtToTop(IWorkbenchPart partRef) {
 		// ignore
-    }
+	}
+
+	public void partClosed(IWorkbenchPart partRef) {
+		// ignore
+	}
+
+	public void partDeactivated(IWorkbenchPart partRef) {
+		// ignore
+	}
+
+	public void pageActivated(IWorkbenchPage page) {
+		// ignore
+	}
+
+	public void pageClosed(IWorkbenchPage page) {
+		// ignore
+	}
+
+	public void pageOpened(IWorkbenchPage page) {
+		// ignore
+
+	}
     
-   public void interestChanged(List<IMylarElement> nodes) {
-    	if (nodes.size() == 0) return;
-    	IMylarElement lastNode = nodes.get(nodes.size()-1);
-    	interestChanged(lastNode);
-    }
-    
-    public void interestChanged(IMylarElement node) {
-    	// TODO: uncomment this for setting selections
+//    public void contextActivated(IMylarContext taskscape) {
+//    	// ignore
+//    }
+//
+//    public void contextDeactivated(IMylarContext taskscape) {
+//		// ignore
+//    }
+//    
+//   public void interestChanged(List<IMylarElement> nodes) {
+//    	if (nodes.size() == 0) return;
+//    	IMylarElement lastNode = nodes.get(nodes.size()-1);
+//    	interestChanged(lastNode);
+//    }
+//    
+//    public void interestChanged(IMylarElement node) {
+//    	// TODO: uncomment this for setting selections
 //	    try {
 //    		if (MylarPlugin.getContextManager().hasActiveContext()
 //	    		&& ApplyMylarToOutlineAction.getDefault() != null
@@ -110,58 +131,34 @@ public class ContentOutlineManager implements IPartListener, IPageListener, IMyl
 //	    } catch (Throwable t) {
 //			MylarPlugin.log(t, "Could not update package explorer");
 //		}
-    }
-
-	public void revealInteresting() {
-    	// ignore     
-    }
-    
-    public void presentationSettingsChanging(UpdateKind kind) {
-    	// ignore
-    }
-
-    public void presentationSettingsChanged(UpdateKind kind) {
-    	// ignore
-    }
-
-    public void landmarkAdded(IMylarElement node) {
-    	// ignore
-    } 
-
-    public void landmarkRemoved(IMylarElement node) {
-    	// ignore
-    }
-    
-    public void nodeDeleted(IMylarElement node) {
-    	// ignore
-    }
-      
-    public void edgesChanged(IMylarElement node) {
-    	// ignore
-    }
-    
-    public void partBroughtToTop(IWorkbenchPart partRef) { 
-    	// ignore
-    }
-
-    public void partClosed(IWorkbenchPart partRef) { 
-    	// ignore
-    }
-
-    public void partDeactivated(IWorkbenchPart partRef) {
-    	// ignore
-    }
-
-	public void pageActivated(IWorkbenchPage page) {
-		// ignore
-	}
-
-	public void pageClosed(IWorkbenchPage page) {
-		// ignore
-	}
-
-	public void pageOpened(IWorkbenchPage page) {
-		// ignore
-		
-	}
+//    }
+//
+//	public void revealInteresting() {
+//    	// ignore     
+//    }
+//    
+//    public void presentationSettingsChanging(UpdateKind kind) {
+//    	// ignore
+//    }
+//
+//    public void presentationSettingsChanged(UpdateKind kind) {
+//    	// ignore
+//    }
+//
+//    public void landmarkAdded(IMylarElement node) {
+//    	// ignore
+//    } 
+//
+//    public void landmarkRemoved(IMylarElement node) {
+//    	// ignore
+//    }
+//    
+//    public void nodeDeleted(IMylarElement node) {
+//    	// ignore
+//    }
+//      
+//    public void edgesChanged(IMylarElement node) {
+//    	// ignore
+//    }
+//    
 }
