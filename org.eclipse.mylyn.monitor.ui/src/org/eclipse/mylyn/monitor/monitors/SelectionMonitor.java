@@ -113,7 +113,7 @@ public class SelectionMonitor extends AbstractInteractionMonitor {
         String delta = "";
         float selectionFactor = MylarContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();
         
-        // XXX: need unit test for these rules.
+        // XXX: broken in 0.4?
         if (node != null) {
         	if (node.getInterest().getEncodedValue() <= selectionFactor
         		&& node.getInterest().getValue() >  selectionFactor) { 
@@ -126,8 +126,9 @@ public class SelectionMonitor extends AbstractInteractionMonitor {
     			delta = SELECTION_NEW;
     		} else {
     			delta = SELECTION_DEFAULT;
-    		}
+    		} 
         }
+//        System.err.println(">>> "  + ": " + delta + ", " + node.getInterest().getValue());
         
         InteractionEvent event = new InteractionEvent(
         		interactionKind, 
