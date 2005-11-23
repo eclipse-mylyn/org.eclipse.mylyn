@@ -38,7 +38,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class MylarMonitorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private static final String DESCRIPTION = 
-		"If enabled the Mylar monitor logs selections, edits, commands, and prefernece changes. "
+		"If enabled the Mylar monitor logs selections, edits, commands, and preference changes. "
 		+ "If you would like to help improve the user experience by anonymously sharing non-private "
 		+ "parts of this data, run the Usage Feedback Wizard.";
 	 

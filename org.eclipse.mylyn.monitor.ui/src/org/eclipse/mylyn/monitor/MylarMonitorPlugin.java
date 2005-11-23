@@ -72,7 +72,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public static String VERSION = "0.4";
 	public static String UPLOAD_FILE_LABEL = "USAGE";
 	
-    private static final long HOUR = 100;
+    private static final long HOUR = 3600 * 1000;
 	private static final long DELAY_ON_USER_REQUEST = 3 * HOUR;
 	private static final long DELAY_ON_FAILURE = 5 * HOUR;
 
@@ -608,7 +608,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		String customizedBy = MylarMonitorPlugin.getDefault().getCustomizingPlugin();
 		String message = "NOTE: You have previously downloaded the Mylar monitor and a user study plug-in with id: "
 			+ customizedBy + "\n"
-			+ "If you are not familiar with this plug-in do not proceed.";
+			+ "If you are not familiar with this plug-in do not upload data.";
 		return message;
 	}
 
