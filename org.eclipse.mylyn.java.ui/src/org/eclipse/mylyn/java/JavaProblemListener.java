@@ -37,11 +37,13 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 				IResource resource = changedResources[i];
 				if (resource instanceof IFile) {
 					IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
-					IMylarElement element = MylarPlugin.getContextManager().getElement(javaElement.getHandleIdentifier());
-					if (!javaStructureBridge.containsProblem(element)) {
-						MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
-					} else {
-						MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
+					if (javaElement != null) {
+						IMylarElement element = MylarPlugin.getContextManager().getElement(javaElement.getHandleIdentifier());
+						if (!javaStructureBridge.containsProblem(element)) {
+							MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
+						} else {
+							MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
+						}
 					}
 				}
 			}

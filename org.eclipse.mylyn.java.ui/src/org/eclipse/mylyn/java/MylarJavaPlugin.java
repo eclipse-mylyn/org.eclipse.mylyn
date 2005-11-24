@@ -107,7 +107,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 				problemListener.enable();
 			}
 			getPreferenceStore().addPropertyChangeListener(problemListener);
-
+			
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			workbench.getDisplay().asyncExec(new Runnable() {
 				public void run() {
