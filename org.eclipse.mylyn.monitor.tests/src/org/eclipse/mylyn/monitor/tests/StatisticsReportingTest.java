@@ -28,8 +28,8 @@ import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.reports.ReportGenerator;
-import org.eclipse.mylar.monitor.reports.collectors.MylarUserAnalysisCollector;
 import org.eclipse.mylar.monitor.reports.collectors.ViewUsageCollector;
+import org.eclipse.mylar.monitor.reports.internal.MylarUsageAnalysisCollector;
 import org.eclipse.mylar.monitor.reports.ui.views.UsageStatisticsSummary;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 
@@ -40,7 +40,7 @@ public class StatisticsReportingTest extends TestCase {
 
 	private InteractionEventLogger logger;
 	private ViewUsageCollector viewCollector = new ViewUsageCollector();
-	private MylarUserAnalysisCollector editRatioCollector = new MylarUserAnalysisCollector();;
+	private MylarUsageAnalysisCollector editRatioCollector = new MylarUsageAnalysisCollector();;
 	private ReportGenerator report;
 
 	@Override
