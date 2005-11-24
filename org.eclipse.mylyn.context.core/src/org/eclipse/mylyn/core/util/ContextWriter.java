@@ -57,7 +57,7 @@ public class ContextWriter {
 		}
 	}
 	
-	public void writeContextToStream(MylarContext t) throws IOException{
+	public void writeContextToStream(MylarContext context) throws IOException{
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;
@@ -66,9 +66,9 @@ public class ContextWriter {
 		clearDocument();
 		root = doc.createElement("InteractionHistory");
 		root.setAttribute("Version", "1");
-		root.setAttribute("Id", t.getId());
+		root.setAttribute("Id", context.getId());
 
-		for (InteractionEvent ie : t.getInteractionHistory()) {
+		for (InteractionEvent ie : context.getInteractionHistory()) {
 			writeInteractionEvent(ie);
 		}
 		doc.appendChild(root);

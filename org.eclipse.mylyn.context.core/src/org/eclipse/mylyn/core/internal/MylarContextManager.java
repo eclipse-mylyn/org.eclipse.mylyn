@@ -497,15 +497,29 @@ public class MylarContextManager {
     }
  
     public void saveContext(String id, String path) {
-        MylarContext context = activeContext.getContextMap().get(id);
-        if (context == null) return;
-    	context.collapse();
-        externalizer.writeContextToXML(context, getFileForContext(path));
+    	try {
+    		setContextCapturePaused(true);
+	        MylarContext context = activeContext.getContextMap().get(id);
+	        if (context == null) return;
+	    	context.collapse();
+	        externalizer.writeContextToXML(context, getFileForContext(path));
+		} catch (Throwable t) {
+			MylarPlugin.fail(t, "could now save context", false);
+		} finally {
+			setContextCapturePaused(false);
+		}
     }
     
     public void saveActivityHistoryContext() {
-    	externalizer.writeContextToXML(activityHistory, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
-	}
+    	try {
+    		setContextCapturePaused(true);
+    		externalizer.writeContextToXML(activityHistory, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+		} catch (Throwable t) {
+			MylarPlugin.fail(t, "could now save activity history", false);
+		} finally {
+			setContextCapturePaused(false);
+		}
+    }
     
     public File getFileForContext(String path) {
         return new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + path + FILE_EXTENSION);
