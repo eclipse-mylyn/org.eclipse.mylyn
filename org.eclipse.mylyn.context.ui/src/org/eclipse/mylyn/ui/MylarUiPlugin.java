@@ -45,7 +45,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -56,7 +55,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
+public class MylarUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.ui";
 
@@ -195,7 +194,12 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 		initializeActions();
 	}
 
-	public void earlyStartup() {
+//	public void earlyStartup() {
+//	}
+
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -205,15 +209,10 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 				for (int i = 0; i < windows.length; i++) {
 					windows[i].addPageListener(contentOutlineManager);
-					// IWorkbenchPage[] pages= windows[i].getPages();
-					// for (int j= 0; j < pages.length; j++) {
-					// pages[j].addPartListener(viewerManager);
-					// }
 				}
 				if (ApplyMylarToOutlineAction.getDefault() != null)
 					ApplyMylarToOutlineAction.getDefault().update();
 				MylarTasklistPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
-
 					public Color getHighlightColor(ITask task) {
 						Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
 						if (highlighter != null) {
@@ -222,15 +221,9 @@ public class MylarUiPlugin extends AbstractUIPlugin implements IStartup {
 							return null;
 						}
 					}
-
 				});
 			}
 		});
-	}
-
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
 	}
 
 	/**
