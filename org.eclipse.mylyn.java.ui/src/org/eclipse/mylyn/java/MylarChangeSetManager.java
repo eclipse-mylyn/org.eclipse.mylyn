@@ -39,7 +39,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	private Map<String, MylarContextChangeSet> changeSets = new HashMap<String, MylarContextChangeSet>();
 	
 	public MylarChangeSetManager() {
-		this.collector = CVSUIPlugin.getPlugin().getChangeSetManager();
+		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
+//		collector.addListener(new InterestInducingChangeSetListener());
 	}
 
 	public IResource[] getResources(ITask task) {

@@ -13,13 +13,21 @@ package org.eclipse.mylar.java;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.mylar.core.IMylarStructureBridge;
+import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.team.core.TeamException;
+import org.eclipse.team.core.synchronize.SyncInfo;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -33,6 +41,8 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	
 	private List<IResource> resources;
 	private ITask task;
+	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
+	public static final String SOURCE_ID = "org.eclipse.mylar.java.context.changeset.add";
 	
 	public MylarContextChangeSet(ITask task, SubscriberChangeSetCollector collector) {
 		super(collector, LABEL_PREFIX);
@@ -66,6 +76,17 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	} 
 
 	@Override
+	public void add(SyncInfo info) {
+		super.add(info);
+		addResourceToContext(info.getLocal());
+	}
+
+	@Override
+	public void add(SyncInfo[] infos) {
+		super.add(infos); 
+	}
+
+	@Override
 	public void add(IResource[] newResources) throws TeamException {
 		super.add(newResources);
 		for (int i = 0; i < newResources.length; i++) resources.add(newResources[i]);
@@ -77,6 +98,34 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 			resources = MylarIdePlugin.getDefault().getInterestingResources();
 		}
 		return resources.toArray(new IResource[resources.size()]);
+	}
+	
+	private void addResourceToContext(final IResource resource) {
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (resource instanceof IFile) {
+					IMylarStructureBridge bridge = null;
+					Object adapter = resource.getAdapter(IJavaElement.class);
+					String handle = null;
+					if (adapter instanceof IJavaElement) {
+						bridge = javaStructureBridge;
+						handle = bridge.getHandleIdentifier((IJavaElement)adapter);
+					} else {
+						bridge = MylarPlugin.getDefault().getStructureBridge(resource);
+						handle = bridge.getHandleIdentifier(resource);
+					}
+					if (handle != null) {
+						InteractionEvent manipulationEvent = new InteractionEvent(
+				                InteractionEvent.Kind.SELECTION,
+				                bridge.getContentType(),
+				                handle,
+				                SOURCE_ID);
+						MylarPlugin.getContextManager().handleInteractionEvent(manipulationEvent, true);
+					}
+				}
+			}
+		});
 	}
 	
     public boolean contains(IResource local) {

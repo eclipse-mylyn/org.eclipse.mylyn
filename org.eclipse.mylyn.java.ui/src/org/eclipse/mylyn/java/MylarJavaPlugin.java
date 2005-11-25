@@ -59,7 +59,10 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 
-	private JavaProblemListener problemListener = new JavaProblemListener();
+	/**
+	 * bug 123
+	 */
+	private JavaProblemListener problemListener = new JavaProblemListener(); 
 
 	private JavaEditingMonitor javaEditingMonitor;
 

@@ -32,7 +32,7 @@ import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.IActiveTimerListener;
 import org.eclipse.mylar.core.util.IInteractionEventListener;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * This is the core class resposible for context management. 
@@ -719,8 +719,7 @@ public class MylarContextManager {
             		changeValue = MylarContextManager.getScalingFactors().getLandmark() - originalValue + 1;
             	} else {
             		// TODO: move this to UI?
-    				MessageDialog.openInformation(
-    						Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+    				MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
     						"Mylar Interest Manipulation", 
     						"This element is not a valid landmark because it is not a structured element.  Note that files and other resources can not be landmarks.");
             	}
