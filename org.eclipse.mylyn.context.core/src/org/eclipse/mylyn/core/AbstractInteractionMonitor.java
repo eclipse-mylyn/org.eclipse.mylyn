@@ -27,7 +27,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public abstract class AbstractInteractionMonitor implements ISelectionListener {
  
-	private Object lastSelectedElement = null;
+	protected Object lastSelectedElement = null;
 	
     /**
      * Requires workbench to be active.

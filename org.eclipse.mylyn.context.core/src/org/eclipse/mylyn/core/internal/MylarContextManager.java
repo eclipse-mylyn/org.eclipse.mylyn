@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -319,7 +320,9 @@ public class MylarContextManager {
                     CONTAINMENT_PROPAGATION_ID,
                     propagatedIncrement);
             IMylarElement previous = activeContext.get(propagationEvent.getStructureHandle());
-            if (previous != null && previous.getInterest() != null) previousInterest = previous.getInterest().getValue();
+            if (previous != null && previous.getInterest() != null) {
+            	previousInterest = previous.getInterest().getValue();
+            }
             CompositeContextElement parentNode = (CompositeContextElement)activeContext.addEvent(propagationEvent);
             if (isInterestDelta(
             		previousInterest, 
@@ -572,8 +575,8 @@ public class MylarContextManager {
     public List<AbstractRelationProvider> getActiveRelationProviders() {
     	List<AbstractRelationProvider> providers = new ArrayList<AbstractRelationProvider>();
 		Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
-        for (String extension : bridges.keySet()) {
-            IMylarStructureBridge bridge = bridges.get(extension);
+        for (Entry<String, IMylarStructureBridge> entry : bridges.entrySet()) {
+            IMylarStructureBridge bridge = entry.getValue();//bridges.get(extension);
             if (bridge.getRelationshipProviders() != null) {
             	providers.addAll(bridge.getRelationshipProviders());
             }
@@ -690,6 +693,7 @@ public class MylarContextManager {
 	}
 	
     public void manipulateInterestForNode(IMylarElement element, boolean increment, boolean forceLandmark, String sourceId) {
+    	if (element == null) return;
     	float originalValue = element.getInterest().getValue();
         float changeValue = 0; 
         IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());

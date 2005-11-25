@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -89,8 +90,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public static final String USER_ID = "org.eclipse.mylar.user.id";
 
-	public static boolean started = false;
-
 	private static MylarPlugin INSTANCE;
 
 	private static MylarContextManager contextManager;
@@ -121,6 +120,8 @@ public class MylarPlugin extends AbstractUIPlugin {
 	 */
 	private String sharedDataDirectory = null;
 
+//	public static boolean started = false;
+	
 	private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
 		public String getContentType() {
@@ -238,8 +239,8 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 		// Stop all running jobs when we exit if the plugin didn't do it
 		Map<String, IMylarStructureBridge> bridges = getStructureBridges();
-		for (String extension : bridges.keySet()) {
-			IMylarStructureBridge bridge = bridges.get(extension);
+		for (Entry<String, IMylarStructureBridge> entry: bridges.entrySet()) {
+			IMylarStructureBridge bridge = entry.getValue();//bridges.get(extension);
 			List<AbstractRelationProvider> providers = bridge.getRelationshipProviders();
 			if (providers == null)
 				continue;
@@ -275,7 +276,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		if (sharedDataDirectory != null) {
 			return sharedDataDirectory;
 		} else {
-			return new String();
+			return "";
 		}
 	}
 

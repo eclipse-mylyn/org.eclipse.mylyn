@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on May 18, 2005
-  */
+ */
 package org.eclipse.mylar.core;
 
 import java.io.Serializable;
@@ -25,182 +25,208 @@ import java.util.*;
  */
 public class InteractionEvent implements Serializable {
 
-    private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 3L;
 
-    public enum Kind {
-        SELECTION,
-        EDIT,
-        COMMAND,
-        PREFERENCE,
-        PREDICTION,
-        PROPAGATION,
-        MANIPULATION;
-        
-        /**
-         * TODO: add PREFERENCE?
-         */
-        public boolean isUserEvent() {
-        	return this == SELECTION || this == EDIT || this == COMMAND || this == PREFERENCE;
-        }
-        
-        @Override
-        public String toString() {
-            switch(this) {
-                case SELECTION: return "selection";
-                case EDIT: return "edit";
-                case COMMAND: return "command";
-                case PREFERENCE: return "preference";
-                case PREDICTION: return "prediction";
-                case PROPAGATION: return "propagation";
-                case MANIPULATION: return "manipulation";
-                default: return "null";
-            }
-        }
-        
-        public static Kind fromString(String string) {
-            if (string == null) return null;
-            if (string.equals("selection")) return SELECTION;
-            if (string.equals("edit")) return EDIT;
-            if (string.equals("command")) return COMMAND;
-            if (string.equals("preference")) return PREFERENCE;
-            if (string.equals("prediction")) return PREDICTION;
-            if (string.equals("propagation")) return PROPAGATION;
-            if (string.equals("manipulation")) return MANIPULATION;
-            return null;
-        }
-    }
+	public enum Kind {
+		SELECTION, EDIT, COMMAND, PREFERENCE, PREDICTION, PROPAGATION, MANIPULATION;
 
-    private final Kind kind; 
-    private final Date date;
-    private final Date endDate;
-    private final String originId;
-    private final String structureKind;
-    private final String structureHandle;
-    private final String navigation;
-    private final String delta;
-    private float interestContribution;
+		/**
+		 * TODO: add PREFERENCE?
+		 */
+		public boolean isUserEvent() {
+			return this == SELECTION || this == EDIT || this == COMMAND || this == PREFERENCE;
+		}
 
-    public InteractionEvent(Kind kind, String structureKind, String handle, String originId) {
-        this(kind, structureKind, handle, originId, 1f); // default contribution
-    } 
+		@Override
+		public String toString() {
+			switch (this) {
+			case SELECTION:
+				return "selection";
+			case EDIT:
+				return "edit";
+			case COMMAND:
+				return "command";
+			case PREFERENCE:
+				return "preference";
+			case PREDICTION:
+				return "prediction";
+			case PROPAGATION:
+				return "propagation";
+			case MANIPULATION:
+				return "manipulation";
+			default:
+				return "null";
+			}
+		}
 
-    public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation) {
-        this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f); // default contribution
-    } 
+		public static Kind fromString(String string) {
+			if (string == null)
+				return null;
+			if (string.equals("selection"))
+				return SELECTION;
+			if (string.equals("edit"))
+				return EDIT;
+			if (string.equals("command"))
+				return COMMAND;
+			if (string.equals("preference"))
+				return PREFERENCE;
+			if (string.equals("prediction"))
+				return PREDICTION;
+			if (string.equals("propagation"))
+				return PROPAGATION;
+			if (string.equals("manipulation"))
+				return MANIPULATION;
+			return null;
+		}
+	}
 
-    public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, float interestContribution) {
-        this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); // default contribution
-    } 
+	private final Kind kind;
 
-    /**
-     * Factory method.
-     */
-    public static InteractionEvent makeCommand(String originId, String delta) {
-        return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1); 
-    }
-    
-    /**
-     * Factory method.
-     */
-    public static InteractionEvent makePreference(String originId, String delta) {
-        return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default contribution
-    }
-    
-    public InteractionEvent(Kind kind, String structureKind, String handle, String originId, float interestContribution) {
-        this(kind, structureKind, handle, originId, "null", "null", interestContribution); // default contribution
-    }
+	private final Date date;
 
-    public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, String delta, float interestContribution) {
-        this.date = Calendar.getInstance().getTime();
-        this.endDate = Calendar.getInstance().getTime();
-        this.kind = kind;
-        this.structureKind = structureKind;
-        this.structureHandle = handle;
-        this.originId = originId;
-        this.navigation = navigatedRelation;
-        this.delta = delta;
-        this.interestContribution = interestContribution; 
-    }
-    
-    public InteractionEvent(Kind kind, 
-    		String structureKind, 
-    		String handle, 
-    		String originId, 
-    		String navigatedRelation, 
-    		String delta, 
-    		float interestContribution,
-    		Date startDate, 
-    		Date endDate) {
-        this.date = startDate;
-        this.endDate = endDate;
-        this.kind = kind;
-        this.structureKind = structureKind;
-        this.structureHandle = handle;
-        this.originId = originId;
-        this.navigation = navigatedRelation;
-        this.delta = delta;
-        this.interestContribution = interestContribution; 
-    }
- 
-    @Override
-    public boolean equals(Object object) {
-        if (object == null || !(object instanceof InteractionEvent)) return false;
-        InteractionEvent event = (InteractionEvent)object;
-        return (date == null ? event.date == null : date.equals(event.date))
-            && (endDate == null ? event.endDate == null : endDate.equals(event.endDate))
-            && (kind == null ? event.kind == null : kind.equals(event.kind))
-            && (structureKind == null ? event.structureKind == null : structureKind.equals(event.structureKind))
-            && (structureHandle == null ? event.structureHandle == null : structureHandle.equals(event.structureHandle))
-            && (originId == null ? event.originId == null : originId.equals(event.originId))
-            && (navigation == null ? event.navigation == null : navigation.equals(event.navigation))
-            && (delta == null ? event.delta == null : delta.equals(event.delta))
-            && interestContribution == event.interestContribution;
-    }
-     
-    @Override
-    public String toString() {
-        return "(date: " + date 
-        	+ ", kind: " 
-        	+ kind + ", sourceHandle: "
-        	+ structureHandle 
-        	+ ", origin: " + originId
-        	+ ", delta: " + delta + ")";
-    }
+	private final Date endDate;
 
-    public String getStructureHandle() {
-        return structureHandle;
-    }
+	private final String originId;
 
-    public String getContentType() {
-        return structureKind;
-    }
-    
-    public Date getDate() {
-        return date;
-    }
+	private final String structureKind;
 
-    public String getDelta() {
-        return delta;
-    }
+	private final String structureHandle;
 
-    public Kind getKind() {
-        return kind;
-    }
+	private final String navigation;
 
-    public String getOriginId() {
-        return originId;
-    }
+	private final String delta;
 
-    public float getInterestContribution() {
-        return interestContribution;
-    }
+	private float interestContribution;
 
-    public Date getEndDate() {
-        return endDate;
-    }
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId) {
+		this(kind, structureKind, handle, originId, 1f); // default
+		// contribution
+	}
 
-    public String getNavigation() {
-        return navigation;
-    }
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation) {
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f); // default
+		// contribution
+	}
+
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, float interestContribution) {
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); // default
+		// contribution
+	}
+
+	/**
+	 * Factory method.
+	 */
+	public static InteractionEvent makeCommand(String originId, String delta) {
+		return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1);
+	}
+
+	/**
+	 * Factory method.
+	 */
+	public static InteractionEvent makePreference(String originId, String delta) {
+		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default
+		// contribution
+	}
+
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, float interestContribution) {
+		this(kind, structureKind, handle, originId, "null", "null", interestContribution); // default
+		// contribution
+	}
+
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, String delta, float interestContribution) {
+		this.date = Calendar.getInstance().getTime();
+		this.endDate = Calendar.getInstance().getTime();
+		this.kind = kind;
+		this.structureKind = structureKind;
+		this.structureHandle = handle;
+		this.originId = originId;
+		this.navigation = navigatedRelation;
+		this.delta = delta;
+		this.interestContribution = interestContribution;
+	}
+
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, String delta,
+			float interestContribution, Date startDate, Date endDate) {
+		this.date = startDate;
+		this.endDate = endDate;
+		this.kind = kind;
+		this.structureKind = structureKind;
+		this.structureHandle = handle;
+		this.originId = originId;
+		this.navigation = navigatedRelation;
+		this.delta = delta;
+		this.interestContribution = interestContribution;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == null || !(object instanceof InteractionEvent))
+			return false;
+		InteractionEvent event = (InteractionEvent) object;
+		return (date == null ? event.date == null : date.equals(event.date)) 
+				&& (endDate == null ? event.endDate == null : endDate.equals(event.endDate))
+				&& (kind == null ? event.kind == null : kind.equals(event.kind))
+				&& (structureKind == null ? event.structureKind == null : structureKind.equals(event.structureKind))
+				&& (structureHandle == null ? event.structureHandle == null : structureHandle.equals(event.structureHandle))
+				&& (originId == null ? event.originId == null : originId.equals(event.originId))
+				&& (navigation == null ? event.navigation == null : navigation.equals(event.navigation))
+				&& (delta == null ? event.delta == null : delta.equals(event.delta)) 
+				&& interestContribution == event.interestContribution;
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = 0; 
+		if (date != null) hashCode += date.hashCode();
+		if (endDate != null) hashCode += endDate.hashCode();
+		if (kind != null) hashCode += kind.hashCode();
+		if (structureKind != null) hashCode += structureKind.hashCode();
+		if (structureHandle != null) hashCode += structureHandle.hashCode();
+		if (originId != null) hashCode += originId.hashCode();
+		if (navigation != null) hashCode += navigation.hashCode();
+		if (delta != null) hashCode += delta.hashCode();
+		hashCode += new Float(interestContribution).hashCode(); // TODO: could this lose precision?
+		return hashCode;
+	}
+
+	@Override
+	public String toString() {
+		return "(date: " + date + ", kind: " + kind + ", sourceHandle: " + structureHandle + ", origin: " + originId + ", delta: " + delta + ")";
+	}
+
+	public String getStructureHandle() {
+		return structureHandle;
+	}
+
+	public String getContentType() {
+		return structureKind;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public String getDelta() {
+		return delta;
+	}
+
+	public Kind getKind() {
+		return kind;
+	}
+
+	public String getOriginId() {
+		return originId;
+	}
+
+	public float getInterestContribution() {
+		return interestContribution;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public String getNavigation() {
+		return navigation;
+	}
 }
-

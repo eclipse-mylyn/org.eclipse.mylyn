@@ -150,7 +150,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
     
     @Override
     public String toString() {
-        return "(provider for: " + id.toString() + ")";
+        return "(provider for: " + id + ")";
     }
 
     public String getStructureKind() {

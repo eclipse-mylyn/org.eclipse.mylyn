@@ -39,14 +39,14 @@ import org.xml.sax.SAXException;
  */
 public class ContextReader {
     
-	static int readVersion; 
+//	private int readVersion; 
     
     public MylarContext readContext(File file) {
         if (!file.exists()) return null;
         try {
             Document doc = openAsDOM(file);
             Element root = doc.getDocumentElement();
-            readVersion = Integer.parseInt(root.getAttribute("Version"));
+//            readVersion = Integer.parseInt(root.getAttribute("Version"));
             String id = root.getAttribute("Id");
             MylarContext t = new MylarContext(id, MylarContextManager.getScalingFactors());
 			NodeList list = root.getChildNodes();
