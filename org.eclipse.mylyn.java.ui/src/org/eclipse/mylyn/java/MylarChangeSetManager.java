@@ -107,7 +107,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 							changeSet.remove(resource);
 							
 							// HACK: touching ensures file is added outside of set
-							if (resource instanceof IFile) {
+							if (resource instanceof IFile && resource.exists()) {
 								((IFile)resource).touch(new NullProgressMonitor());
 							}
 							if (!collector.contains(changeSet)) {
