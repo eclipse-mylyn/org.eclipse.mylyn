@@ -433,7 +433,9 @@ public class BugzillaTask extends Task {
 			String status = bugReport.getAttribute("Status").getValue();
 			if (status.equals("RESOLVED") || status.equals("CLOSED") || status.equals("VERIFIED")) {
 				setCompleted(true);
-			}
+			} else if (status.equals("REOPENED")) {
+				setCompleted(false);
+			} 
 			this.setDescription(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandleIdentifier()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
 			MylarPlugin.fail(npe, "Task details update failed", false);
