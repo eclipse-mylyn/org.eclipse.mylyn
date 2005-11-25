@@ -34,8 +34,10 @@ import org.eclipse.ui.PlatformUI;
  */
 public class MylarContextChangeSet extends ActiveChangeSet {
 
-	private static final String PREFIX_URL = "Report ";
-	private static final String LABEL_URL = "URL: ";
+//	private static final String PREFIX_URL = "Report ";
+//	private static final String LABEL_URL = "URL: ";
+	private static final String PREFIX_HTTP = "http://";
+	private static final String PREFIX_HTTPS = "https://";
 	private static final String LABEL_PREFIX = "Mylar Task";
 	private static final String LABEL_BUG = "Bug ";
 	
@@ -146,7 +148,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		}
 		String url = task.getIssueReportURL();
 		if (url != null && !url.equals("") && !url.endsWith("//")) {
-			comment += "\n" + PREFIX_URL + LABEL_URL + url;
+			comment += "\n" + url;
 		}
 		return comment;
 	}
@@ -165,9 +167,15 @@ public class MylarContextChangeSet extends ActiveChangeSet {
     }
 
     public static String getUrlFromComment(String comment) {
-    	int urlIndex = comment.indexOf(LABEL_URL);
-    	if (urlIndex != -1) {
-    		int idStart = urlIndex + LABEL_URL.length();
+    	int httpIndex = comment.indexOf(PREFIX_HTTP);
+    	int httpsIndex = comment.indexOf(PREFIX_HTTPS);
+    	int idStart = -1;
+    	if (httpIndex != -1) {
+    		idStart = httpIndex;
+    	} else if (httpsIndex != -1) {
+    		idStart = httpsIndex;
+    	}
+    	if (idStart != -1) {
     		int idEnd = comment.indexOf(' ', idStart);
     		if (idEnd == -1) {
     			return comment.substring(idStart);
