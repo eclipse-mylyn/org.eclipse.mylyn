@@ -84,7 +84,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void add(SyncInfo[] infos) {
 		super.add(infos); 
-	}
+	} 
 
 	@Override
 	public void add(IResource[] newResources) throws TeamException {
