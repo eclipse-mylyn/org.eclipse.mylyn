@@ -59,7 +59,10 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
             	if (part instanceof EditorPart) {
             		elementToSelect = ((EditorPart)part).getEditorInput().getAdapter(IResource.class);
             	}
+            } else {
+            	return;
             }
+    		
             if (elementToSelect != null) {
 				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 				if (packageExplorer != null) { 
