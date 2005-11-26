@@ -189,7 +189,7 @@ public class TasksReminderDialog extends Dialog {
 		}
 	}
 	
-	private class ReminderTasksLabelProvider extends LabelProvider implements
+	private static class ReminderTasksLabelProvider extends LabelProvider implements
 			ITableLabelProvider {
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
@@ -212,7 +212,7 @@ public class TasksReminderDialog extends Dialog {
 
 	}
 
-	class ReminderTaskSorter extends ViewerSorter {
+	private static class ReminderTaskSorter extends ViewerSorter {
 
 		public final static int DESCRIPTION = 1;
 		public final static int PRIORITY = 2;

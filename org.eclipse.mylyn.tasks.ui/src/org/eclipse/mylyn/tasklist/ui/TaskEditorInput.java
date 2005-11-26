@@ -106,7 +106,7 @@ public class TaskEditorInput implements IEditorInput {
 	public boolean equals(Object o) {
 		if (o instanceof TaskEditorInput) {
 			TaskEditorInput input = (TaskEditorInput) o;
-			return getId() == input.getId();
+			return getId() != null && getId().equals(input.getId());
 		}
 		return false;
 	}

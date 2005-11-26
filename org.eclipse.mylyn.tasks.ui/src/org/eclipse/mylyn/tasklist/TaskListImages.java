@@ -34,8 +34,8 @@ public class TaskListImages {
 
     private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
     
-    public static Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
-    public static Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 190, 210, 238);
+    public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
+    public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 190, 210, 238);
     
 	private static final String T_ELCL = "elcl16";
 	private static final String T_TOOL = "etool16";

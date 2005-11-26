@@ -130,6 +130,8 @@ public class TaskListView extends ViewPart {
  
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
+	public static final String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
+	
 	private static final String SEPARATOR_ID_REPORTS = "reports";
 
 	private static final String PART_NAME = "Mylar Tasks";
@@ -205,8 +207,6 @@ public class TaskListView extends ViewPart {
 	public static final String tableSortIdentifier = "org.eclipse.mylar.tasklist.ui.views.tasklist.sortIndex";
 
 	private int sortIndex = 2;
-
-	public static String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
 
 	private TaskActivationHistory taskHistory = new TaskActivationHistory();
 
@@ -415,7 +415,7 @@ public class TaskListView extends ViewPart {
 					switch (columnIndex) {
 					case 0:
 						if (task == null) {
-							return new Boolean(true);
+							return Boolean.TRUE;
 						} else {
 							return new Boolean(task.isCompleted());
 						}
@@ -596,7 +596,7 @@ public class TaskListView extends ViewPart {
 					//    	                if (task1.isCompleted()) return 1;
 					//    	                if (task2.isCompleted()) return -1;
 					//        			}        			
-					if (column == columnNames[1]) {
+					if (column != null && column.equals(columnNames[1])) {
 						return 0;
 					} else if (column == columnNames[2]) {
 						return element1.getPriority().compareTo(element2.getPriority());

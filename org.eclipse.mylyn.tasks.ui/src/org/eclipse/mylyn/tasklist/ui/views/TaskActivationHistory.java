@@ -21,6 +21,7 @@ import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 /**
 * @author Ken Sueda (original prototype)
 * @author Wesley Coelho (Added persistent tasks)
+* @author Mik Kersten (hardening)
 */
 public class TaskActivationHistory {
 	
@@ -67,7 +68,7 @@ public class TaskActivationHistory {
 	protected boolean isDuplicate(ITask task, int startingIndex){
 		for (int i = startingIndex; i < MylarPlugin.getContextManager().getActivityHistory().getInteractionHistory().size(); i++){
 			ITask currTask = getHistoryTaskAt(i);
-			if(currTask != null && currTask.getHandleIdentifier() == task.getHandleIdentifier()){
+			if(currTask != null && currTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				return true;
 			}
 		}
@@ -172,7 +173,8 @@ public class TaskActivationHistory {
 	 */
 	public void navigatedToTask(ITask task){
 		for(int i = 0; i < history.size(); i++){
-			if (history.get(i).getHandleIdentifier() == task.getHandleIdentifier()){
+			if (history.get(i).getHandleIdentifier() != null
+				&& history.get(i).getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				currentIndex = i;
 				break;
 			}

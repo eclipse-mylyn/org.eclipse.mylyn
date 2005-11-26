@@ -214,10 +214,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		return taskSummaryEditor.isDirty();
 	}
 
-	/**
-	 * Class to listen for editor events
-	 */
-	private class TaskEditorListener implements IPartListener {
+	private static class TaskEditorListener implements IPartListener {
 
 		/**
 		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)

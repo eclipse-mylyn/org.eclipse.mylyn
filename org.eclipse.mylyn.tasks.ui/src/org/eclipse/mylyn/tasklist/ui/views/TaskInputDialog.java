@@ -212,9 +212,8 @@ public class TaskInputDialog extends Dialog {
 		String contents = (String) clipboard.getContents(transfer);
 		if (contents != null){
 			return contents;
-		}
-		else{
-			return new String();
+		} else {
+			return "";
 		}
 	}
 

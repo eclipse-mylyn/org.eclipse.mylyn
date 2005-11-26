@@ -203,7 +203,7 @@ public class TaskList implements Serializable {
 		for (ITask t : tasks) {
 			if (t.participatesInTaskHandles()) {
 				String string = t.getHandleIdentifier().substring(t.getHandleIdentifier().indexOf('-') + 1, t.getHandleIdentifier().length());
-				if (string != "") {
+				if (!"".equals(string)) {
 					ihandle = Integer.parseInt(string);
 				}
 			}

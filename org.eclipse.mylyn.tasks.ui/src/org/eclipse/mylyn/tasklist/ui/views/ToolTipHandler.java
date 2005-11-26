@@ -116,10 +116,10 @@ public class ToolTipHandler {
 	}
 
 	protected Image getToolTipImage(Object object) {
-		ITaskListElement projectNode = getTask(object);
-		if (projectNode != null) {
-			// TODO Code for determining image
-		}
+//		ITaskListElement projectNode = getTask(object);
+//		if (projectNode != null) {
+//			// TODO Code for determining image
+//		}
 		if (object instanceof Control) {
 			return (Image) ((Control) object).getData("TIP_IMAGE");
 		}

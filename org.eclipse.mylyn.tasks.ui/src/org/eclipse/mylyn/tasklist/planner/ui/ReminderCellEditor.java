@@ -40,7 +40,8 @@ public class ReminderCellEditor extends DialogCellEditor {
 	public Date getReminderDate() {
 		return reminderDate;
 	}
-	private class ReminderDialog extends Dialog {
+	
+	private static class ReminderDialog extends Dialog {
 
 		private Date reminderDate = null;
 		protected ReminderDialog(Shell parentShell) {

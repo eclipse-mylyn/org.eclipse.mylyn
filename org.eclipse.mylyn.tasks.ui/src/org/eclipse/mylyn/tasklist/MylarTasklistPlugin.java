@@ -51,7 +51,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 
-	private static MylarTasklistPlugin plugin;
+	private static MylarTasklistPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
 
@@ -64,7 +64,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	/** 
 	 * TODO: move to common color map.
 	 */
-	public static Color ACTIVE_TASK = new Color(Display.getDefault(), 36, 22, 50);
+	public static final Color ACTIVE_TASK = new Color(Display.getDefault(), 36, 22, 50);
 
 	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ui.editors.auto.manage";
 	
@@ -273,7 +273,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 
 	public MylarTasklistPlugin() {
 		super();
-		plugin = this;
+		INSTANCE = this;
 		initializeDefaultPreferences(getPrefs());
 		externalizer = new TaskListExternalizer();
 
@@ -309,7 +309,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		plugin = null;
+		INSTANCE = null;
 		resourceBundle = null;
 	}
 
@@ -336,11 +336,11 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	 * Returns the shared instance.
 	 */
 	public static MylarTasklistPlugin getDefault() {
-		return plugin;
+		return INSTANCE;
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
+	 * Returns the string from the INSTANCE's resource bundle,
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
@@ -353,7 +353,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	/**
-	 * Returns the plugin's resource bundle,
+	 * Returns the INSTANCE's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
 		try {
@@ -391,7 +391,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 			MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier(), task.getPath());
 		}
 		//        lastSave = new Date();
-		//		plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+		//		INSTANCE.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
 	}
 
 	private void checkTaskListBackup() {
@@ -405,7 +405,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		if (currentTime.getTime() > lastBackup.getTime() + AUTOMATIC_BACKUP_SAVE_INTERVAL) {//TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
 			MylarTasklistPlugin.getDefault().createTaskListBackupFile();
 			lastBackup = new Date();
-			//			plugin.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
+			//			INSTANCE.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
 		}
 	}
 
