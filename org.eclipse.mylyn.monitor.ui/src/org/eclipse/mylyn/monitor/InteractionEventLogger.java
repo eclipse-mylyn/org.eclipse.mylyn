@@ -44,123 +44,128 @@ import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer.Token;
  */
 public class InteractionEventLogger implements IInteractionEventListener {
 
-    private File outputFile;
-    private static FileOutputStream outputStream;
-    private boolean started = false;
-    private int eventAccumulartor = 0;    
-    
-    private List<InteractionEvent> queue = new ArrayList<InteractionEvent>();
-    
-    public InteractionEventLogger(File outputFile) {
-        this.outputFile = outputFile;
-    }
-    
-    /**
-     * TODO: should these be queued for better performance?
-     */
-    public void interactionObserved(InteractionEvent event) {
-//    	System.err.println("> " + event);   
-    	try {
-            if (started) {       
-            	String xml = interactionEventToXml(event);
-                outputStream.write(xml.getBytes());
-            } else {
-            	queue.add(event);
-            }
-            eventAccumulartor++;
-        } catch (NullPointerException e) {
-            MylarPlugin.log(e, "could not log interaction event");
-        } catch (Throwable t) {
-            MylarPlugin.log(t, "could not log interaction event");
-        }
-    }
+	private File outputFile;
 
-    public void start() {
-        try {
-        	if(!outputFile.exists()) outputFile.createNewFile(); 
-            outputStream = new FileOutputStream(outputFile, true);
-            started = true;
-            
-            for (InteractionEvent queuedEvent : queue) interactionObserved(queuedEvent);
-            queue.clear();
-        } catch (FileNotFoundException e) {
-            MylarPlugin.log(e, "could not resolve file");
-        } catch (Throwable t) {
-            MylarPlugin.log(t, "could not create new file");
-        } 
-    }
-    
-    public void stop() {
-        try {
-        	if (outputStream != null) {
-        		outputStream.flush();
-        		outputStream.close();
-        	}
-            started = false;
-            if (MylarMonitorPlugin.getDefault() != null) MylarMonitorPlugin.getDefault().incrementObservedEvents(eventAccumulartor);
-            eventAccumulartor = 0;
-        } catch (IOException e) {
-            MylarPlugin.fail(e, "could not close interaction event stream", false);
-        }
-    }
-    
-    public File moveOutputFile(String newPath) {
-    	stop();
-    	File newFile = new File(newPath);
-    	try { 
-	    	if (outputFile.exists() && !newFile.exists()) {
-	    		outputFile.renameTo(newFile);
-	    	} else if (!newFile.exists()){ 
-	    		newFile.createNewFile();
-	    	} 
+	private static FileOutputStream outputStream;
+
+	private boolean started = false;
+
+	private int eventAccumulartor = 0;
+
+	private List<InteractionEvent> queue = new ArrayList<InteractionEvent>();
+
+	public InteractionEventLogger(File outputFile) {
+		this.outputFile = outputFile;
+	}
+
+	/**
+	 * TODO: should these be queued for better performance?
+	 */
+	public void interactionObserved(InteractionEvent event) {
+//		System.err.println("> " + event);   
+		try {
+			if (started) {
+				String xml = interactionEventToXml(event);
+				outputStream.write(xml.getBytes());
+			} else {
+				queue.add(event);
+			}
+			eventAccumulartor++;
+		} catch (NullPointerException e) {
+			MylarPlugin.log(e, "could not log interaction event");
+		} catch (Throwable t) {
+			MylarPlugin.log(t, "could not log interaction event");
+		}
+	}
+
+	public void start() {
+		try {
+			if (!outputFile.exists())
+				outputFile.createNewFile();
+			outputStream = new FileOutputStream(outputFile, true);
+			started = true;
+
+			for (InteractionEvent queuedEvent : queue)
+				interactionObserved(queuedEvent);
+			queue.clear();
+		} catch (FileNotFoundException e) {
+			MylarPlugin.log(e, "could not resolve file");
+		} catch (Throwable t) {
+			MylarPlugin.log(t, "could not create new file");
+		}
+	}
+
+	public void stop() {
+		try {
+			if (outputStream != null) {
+				outputStream.flush();
+				outputStream.close();
+			}
+			started = false;
+			if (MylarMonitorPlugin.getDefault() != null)
+				MylarMonitorPlugin.getDefault().incrementObservedEvents(eventAccumulartor);
+			eventAccumulartor = 0;
+		} catch (IOException e) {
+			MylarPlugin.fail(e, "could not close interaction event stream", false);
+		}
+	}
+
+	public File moveOutputFile(String newPath) {
+		stop();
+		File newFile = new File(newPath);
+		try {
+			if (outputFile.exists() && !newFile.exists()) {
+				outputFile.renameTo(newFile);
+			} else if (!newFile.exists()) {
+				newFile.createNewFile();
+			}
 			this.outputFile = newFile;
 		} catch (Exception e) {
 			MylarPlugin.fail(e, "Could not set logger output file", true);
-		} 
+		}
 		start();
 		return newFile;
-    }
-    
-    /**
-     * @return	true if successfully cleared
-     */
-    public synchronized void clearInteractionHistory() throws IOException {
-    	stop();
-    	outputStream = new FileOutputStream(outputFile, false);
-    	outputStream.flush();
-    	outputStream.close();
-    	outputFile.delete();
-    	outputFile.createNewFile();
-    	start();
-    }
-    
+	}
+
+	/**
+	 * @return	true if successfully cleared
+	 */
+	public synchronized void clearInteractionHistory() throws IOException {
+		stop();
+		outputStream = new FileOutputStream(outputFile, false);
+		outputStream.flush();
+		outputStream.close();
+		outputFile.delete();
+		outputFile.createNewFile();
+		start();
+	}
+
 	public File getOutputFile() {
 		return outputFile;
 	}
-	    
-    public List<InteractionEvent> getHistoryFromFile(File file) {
-        List<InteractionEvent> events = new ArrayList<InteractionEvent>();
-        try {
-            // The file may be a zip file...
-            if ( file.getName().endsWith(".zip")) {
-    		    ZipFile zip = new ZipFile(file);
-    		    if (zip.entries().hasMoreElements()) {
-    		    	ZipEntry entry = zip.entries().nextElement();
-    		    	getHistoryFromStream(zip.getInputStream(entry), events);
-    		    }
-            } else {
-            	InputStream reader = new FileInputStream(file);
-            	getHistoryFromStream(reader, events);
-            	reader.close();
-            }
-            
-        } catch (Exception e) {
-            MylarPlugin.log("could not read interaction history", this);
-            e.printStackTrace();
-        }
-        return events;
-    }
-    
+
+	public List<InteractionEvent> getHistoryFromFile(File file) {
+		List<InteractionEvent> events = new ArrayList<InteractionEvent>();
+		try {
+			// The file may be a zip file...
+			if (file.getName().endsWith(".zip")) {
+				ZipFile zip = new ZipFile(file);
+				if (zip.entries().hasMoreElements()) {
+					ZipEntry entry = zip.entries().nextElement();
+					getHistoryFromStream(zip.getInputStream(entry), events);
+				}
+			} else {
+				InputStream reader = new FileInputStream(file);
+				getHistoryFromStream(reader, events);
+				reader.close();
+			}
+
+		} catch (Exception e) {
+			MylarPlugin.log("could not read interaction history", this);
+			e.printStackTrace();
+		}
+		return events;
+	}
 
 	/**
 	 * @param events
@@ -168,61 +173,65 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	 * @param endl
 	 * @param buf
 	 */
-	private void getHistoryFromStream(InputStream reader, List<InteractionEvent> events) 
-	throws IOException {
+	private void getHistoryFromStream(InputStream reader, List<InteractionEvent> events) throws IOException {
 		String xml;
 		int index;
 		String buf = "";
-        String tag = "</" + MylarContextExternalizer.INTERACTION_EVENT_ID + ">";
-        String endl = "\r\n";
+		String tag = "</" + MylarContextExternalizer.INTERACTION_EVENT_ID + ">";
+		String endl = "\r\n";
 		byte[] buffer = new byte[1000];
 		int bytesRead = 0;
-		while ( ( bytesRead = reader.read(buffer)) != -1) {
-		    buf = buf + new String(buffer, 0, bytesRead);
-		    while ((index = buf.indexOf(tag)) != -1) {
-		        index += tag.length();
-		        xml = buf.substring(0, index);
-		        InteractionEvent event = readEvent(xml);
-		        if ( event != null )
-		        	events.add(event);
-		       
-		        if (index + endl.length() > buf.length()) {
-		        	buf = "";
+		while ((bytesRead = reader.read(buffer)) != -1) {
+			buf = buf + new String(buffer, 0, bytesRead);
+			while ((index = buf.indexOf(tag)) != -1) {
+				index += tag.length();
+				xml = buf.substring(0, index);
+				InteractionEvent event = readEvent(xml);
+				if (event != null)
+					events.add(event);
+
+				if (index + endl.length() > buf.length()) {
+					buf = "";
 				} else {
 					buf = buf.substring(index + endl.length(), buf.length());
-				}                  
-		    }
-		    buffer = new byte[1000];
+				}
+			}
+			buffer = new byte[1000];
 		}
 	}
 
-    
-    private static final String OPEN = "<";
-    private static final String CLOSE = ">";
-    private static final String SLASH = "/";    	
-    private static final String ENDL = "\n";
-    private static final String TAB = "\t";
-    
-    public String interactionEventToXml(InteractionEvent e) {
-    	StringBuffer res = new StringBuffer();
-    	String tag = "interactionEvent";
-    	String f = "yyyy-MM-dd HH:mm:ss.S z";
-    	SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
-    	res.append(OPEN + tag + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "kind" + CLOSE + e.getKind().toString() + OPEN + SLASH + "kind" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "date" + CLOSE + format.format(e.getDate()) + OPEN + SLASH + "date" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "endDate" + CLOSE + format.format(e.getEndDate()) + OPEN + SLASH + "endDate" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "originId" + CLOSE + XmlStringConverter.convertToXmlString(e.getOriginId()) + OPEN + SLASH + "originId" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getContentType()) + OPEN + SLASH + "structureKind" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "structureHandle" + CLOSE + XmlStringConverter.convertToXmlString(e.getStructureHandle()) + OPEN + SLASH + "structureHandle" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "navigation" + CLOSE + XmlStringConverter.convertToXmlString(e.getNavigation()) + OPEN + SLASH + "navigation" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "delta" + CLOSE + XmlStringConverter.convertToXmlString(e.getDelta()) + OPEN + SLASH + "delta" + CLOSE + ENDL);
-    	res.append(TAB + OPEN + "interestContribution" + CLOSE + "" + e.getInterestContribution() + OPEN + SLASH + "interestContribution" + CLOSE + ENDL);
-    	res.append(OPEN + SLASH + tag + CLOSE + ENDL);
-    	return res.toString();
-    }
-    
-    public InteractionEvent readEvent(String xml) {
+	private static final String OPEN = "<";
+
+	private static final String CLOSE = ">";
+
+	private static final String SLASH = "/";
+
+	private static final String ENDL = "\n";
+
+	private static final String TAB = "\t";
+
+	public String interactionEventToXml(InteractionEvent e) {
+		StringBuffer res = new StringBuffer();
+		String tag = "interactionEvent";
+		String f = "yyyy-MM-dd HH:mm:ss.S z";
+		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+		res.append(OPEN + tag + CLOSE + ENDL);
+		res.append(TAB + OPEN + "kind" + CLOSE + e.getKind().toString() + OPEN + SLASH + "kind" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "date" + CLOSE + format.format(e.getDate()) + OPEN + SLASH + "date" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "endDate" + CLOSE + format.format(e.getEndDate()) + OPEN + SLASH + "endDate" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "originId" + CLOSE + XmlStringConverter.convertToXmlString(e.getOriginId()) + OPEN + SLASH + "originId" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getContentType()) + OPEN + SLASH + "structureKind" + CLOSE
+				+ ENDL);
+		res.append(TAB + OPEN + "structureHandle" + CLOSE + XmlStringConverter.convertToXmlString(e.getStructureHandle()) + OPEN + SLASH + "structureHandle"
+				+ CLOSE + ENDL);
+		res.append(TAB + OPEN + "navigation" + CLOSE + XmlStringConverter.convertToXmlString(e.getNavigation()) + OPEN + SLASH + "navigation" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "delta" + CLOSE + XmlStringConverter.convertToXmlString(e.getDelta()) + OPEN + SLASH + "delta" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "interestContribution" + CLOSE + "" + e.getInterestContribution() + OPEN + SLASH + "interestContribution" + CLOSE + ENDL);
+		res.append(OPEN + SLASH + tag + CLOSE + ENDL);
+		return res.toString();
+	}
+
+	public InteractionEvent readEvent(String xml) {
 		Reader reader = new StringReader(xml);
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 		String kind = "";
@@ -241,20 +250,20 @@ public class InteractionEventLogger implements IInteractionEventListener {
 					if (!token.getValue().toString().equals("</kind>")) {
 						kind = token.getValue().toString().toLowerCase();
 						token = tokenizer.nextToken();
-					}					
+					}
 				} else if (token.getValue().toString().equals("<date>")) {
 					token = tokenizer.nextToken();
 					while (!token.getValue().toString().equals("</date>")) {
 						startDate += token.getValue().toString() + " ";
 						token = tokenizer.nextToken();
-					}					
+					}
 					startDate.trim();
 				} else if (token.getValue().toString().equals("<endDate>")) {
 					token = tokenizer.nextToken();
 					while (!token.getValue().toString().equals("</endDate>")) {
 						endDate += token.getValue().toString() + " ";
 						token = tokenizer.nextToken();
-					}					
+					}
 					endDate.trim();
 				} else if (token.getValue().toString().equals("<originId>")) {
 					token = tokenizer.nextToken();
@@ -267,9 +276,9 @@ public class InteractionEventLogger implements IInteractionEventListener {
 							structureKind += token.getValue().toString();
 						} else {
 							structureKind += " " + token.getValue().toString();
-						}						
+						}
 						token = tokenizer.nextToken();
-					}					
+					}
 					structureKind = XmlStringConverter.convertXmlToString(structureKind);
 				} else if (token.getValue().toString().equals("<structureHandle>")) {
 					token = tokenizer.nextToken();
@@ -280,7 +289,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 							structureHandle += " " + token.getValue().toString();
 						}
 						token = tokenizer.nextToken();
-					}						
+					}
 					structureHandle = XmlStringConverter.convertXmlToString(structureHandle);
 				} else if (token.getValue().toString().equals("<navigation>")) {
 					token = tokenizer.nextToken();
@@ -289,9 +298,9 @@ public class InteractionEventLogger implements IInteractionEventListener {
 							navigation += token.getValue().toString();
 						} else {
 							navigation += " " + token.getValue().toString();
-						}						
+						}
 						token = tokenizer.nextToken();
-					}						
+					}
 					navigation = XmlStringConverter.convertXmlToString(navigation);
 					navigation.trim();
 				} else if (token.getValue().toString().equals("<delta>")) {
@@ -301,9 +310,9 @@ public class InteractionEventLogger implements IInteractionEventListener {
 							delta += token.getValue().toString();
 						} else {
 							delta += " " + token.getValue().toString();
-						}						
+						}
 						token = tokenizer.nextToken();
-					}						
+					}
 					delta = XmlStringConverter.convertXmlToString(delta);
 					delta.trim();
 				} else if (token.getValue().toString().equals("<interestContribution>")) {
@@ -313,19 +322,17 @@ public class InteractionEventLogger implements IInteractionEventListener {
 				}
 			}
 			String formatString = "yyyy-MM-dd HH:mm:ss.S z";
-	    	SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+			SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 			float interestFloatVal = 0;
 			try {
 				interestFloatVal = Float.parseFloat(interest);
 			} catch (NumberFormatException nfe) {
 				// ignore for empty interest values
 			}
-	    	InteractionEvent ie = new InteractionEvent(Kind.fromString(kind),
-					structureKind, structureHandle, originId, navigation,
-					delta, interestFloatVal, format.parse(startDate),
-					format.parse(endDate));
+			InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId, navigation, delta, interestFloatVal,
+					format.parse(startDate), format.parse(endDate));
 			return ie;
-			
+
 		} catch (ParseException e) {
 			System.err.println("readevent: " + xml);
 			e.printStackTrace();
