@@ -26,10 +26,11 @@ import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	
-	public static ApplyMylarToOutlineAction INSTANCE;
+	private static ApplyMylarToOutlineAction INSTANCE;
 	
 	public ApplyMylarToOutlineAction() {
 		super(new InterestFilter());

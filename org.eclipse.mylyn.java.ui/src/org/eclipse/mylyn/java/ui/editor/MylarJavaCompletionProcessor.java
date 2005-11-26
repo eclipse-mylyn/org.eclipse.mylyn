@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IMember;
@@ -33,6 +34,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -42,7 +44,9 @@ import org.eclipse.ui.IEditorPart;
  */
 public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 
-    public MylarJavaCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
+    private static final String LABEL_SEPARATOR = " -----------------------------------";
+
+	public MylarJavaCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
         super(editor, assistant, partition); 
     }
 
@@ -102,10 +106,14 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
             } else {
                 ICompletionProposal[] sorted = new ICompletionProposal[interesting.keySet().size() + rest.size() + 1];
                 int i = 0;
-                for (Float f : interesting.keySet()) {
-                    sorted[i] = interesting.get(f);
+                for (Entry<Float, ICompletionProposal> entry : interesting.entrySet()) {
+                    sorted[i] = entry.getValue();//interesting.get(f);
                     i++; 
-                }    
+                }  
+//                for (Float f : interesting.keySet()) {
+//                    sorted[i] = interesting.get(f);
+//                    i++; 
+//                }  
                 if (interesting.keySet().size() > 0) {
                     int replacementOffset = -1;
                     if (sorted[i-1] instanceof JavaCompletionProposal) {
@@ -115,7 +123,10 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                     } else {
                         MylarPlugin.log("Could not create proposal separator for class: " + sorted[i-1].getClass(), this);
                     }
-                    sorted[i] = new JavaCompletionProposal("", replacementOffset, 0, null, "----------------", 0);
+                    sorted[i] = new JavaCompletionProposal(
+                    		"", replacementOffset, 0, 
+                    		MylarImages.getImage(MylarImages.CONTENT_ASSIST_SEPARATOR), 
+                    		LABEL_SEPARATOR, 0);
                     i++;
                 } 
                 for (ICompletionProposal proposal : rest) {
@@ -124,8 +135,8 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                 }
                 return Arrays.asList(sorted);
             }
-        } catch (Exception e) {
-        	MylarPlugin.log(e, "completion proposal failed");
+        } catch (Throwable t) {
+        	MylarPlugin.log(t, "completion proposal filter and sort failed");
         }
         return null;
     } 

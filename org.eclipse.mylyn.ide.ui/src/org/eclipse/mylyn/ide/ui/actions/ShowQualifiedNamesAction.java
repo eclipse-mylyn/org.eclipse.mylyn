@@ -22,7 +22,7 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
 public class ShowQualifiedNamesAction extends Action {
     	
 	public static final String LABEL = "Qualify Member Names";
-	public static String ID = "org.eclipse.mylar.ui.views.elements.qualify";
+	public static final String ID = "org.eclipse.mylar.ui.views.elements.qualify";
 	
 	private ActiveSearchView view;
 	

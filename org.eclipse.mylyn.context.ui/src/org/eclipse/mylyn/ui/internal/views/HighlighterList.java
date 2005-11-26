@@ -119,8 +119,7 @@ public class HighlighterList {
 		// if the preference store returns a null string, then we would initialize
 		// the default highlighter.
 		// but if this flag is in place, we will know if highlighterlist has ever been saved
-		String result = new String();
-		result = "flag:";
+		String result = "flag:";
 		for (Iterator<Highlighter> it = highlighters.iterator(); it.hasNext();) {
 			Highlighter highlighter = it.next();
 			result += highlighter.externalizeToString() + ":";

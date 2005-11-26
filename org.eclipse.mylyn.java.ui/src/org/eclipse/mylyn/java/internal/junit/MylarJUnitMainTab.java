@@ -49,7 +49,6 @@ class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
 		comp.setLayout(topLayout);		
 		
 		Label label = new Label(comp, SWT.NONE);
-		label = new Label(comp, SWT.NONE);
 		GridData gd = new GridData();
 		gd.horizontalSpan = 3;
 		label.setLayoutData(gd);

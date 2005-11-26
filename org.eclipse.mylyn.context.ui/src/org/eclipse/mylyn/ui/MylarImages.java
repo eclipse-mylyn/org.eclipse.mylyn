@@ -55,8 +55,9 @@ public class MylarImages {
     public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
     public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
     
-    public static final ImageDescriptor STOP_SEARCH = create(T_ELCL, "stop_all.gif");
-    
+    public static final ImageDescriptor STOP_SEARCH = create(T_ELCL, "stop_all.gif"); 
+    public static final ImageDescriptor CONTENT_ASSIST_SEPARATOR = create(T_TOOL, "content-assist-separator.gif");
+        
     public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
     public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
     public static final ImageDescriptor TASK = create(T_TOOL, "task.gif"); 
@@ -73,10 +74,10 @@ public class MylarImages {
 	
     public static final ImageDescriptor QUALIFY_NAMES = create(T_TOOL, "qualify-names.gif");
     
-    public static ImageDescriptor EDGE_INHERITANCE = create(T_ELCL, "edge-inheritance.gif"); 
-    public static ImageDescriptor EDGE_REFERENCE = create(T_ELCL, "edge-reference.gif"); 
-    public static ImageDescriptor EDGE_ACCESS_READ = create(T_ELCL, "edge-read.gif");
-    public static ImageDescriptor EDGE_ACCESS_WRITE = create(T_ELCL, "edge-write.gif");
+    public static final ImageDescriptor EDGE_INHERITANCE = create(T_ELCL, "edge-inheritance.gif"); 
+    public static final ImageDescriptor EDGE_REFERENCE = create(T_ELCL, "edge-reference.gif"); 
+    public static final ImageDescriptor EDGE_ACCESS_READ = create(T_ELCL, "edge-read.gif");
+    public static final ImageDescriptor EDGE_ACCESS_WRITE = create(T_ELCL, "edge-write.gif");
 //    public static ImageDescriptor EDGE_REF_XML = create(T_ELCL, "edge-ref-xml.gif"); 
 //    public static ImageDescriptor EDGE_REF_JUNIT = create(T_ELCL, "edge-ref-junit.gif"); 
 

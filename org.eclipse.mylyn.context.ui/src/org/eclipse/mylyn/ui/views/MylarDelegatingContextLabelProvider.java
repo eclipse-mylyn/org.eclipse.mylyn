@@ -30,7 +30,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class MylarDelegatingContextLabelProvider implements ILabelProvider {
 
-	public static boolean qualifyNamesMode = false; // TODO: make non-static
+	private static boolean qualifyNamesMode = false; // TODO: make non-static
 	
     public static boolean isQualifyNamesMode() {
 		return qualifyNamesMode;

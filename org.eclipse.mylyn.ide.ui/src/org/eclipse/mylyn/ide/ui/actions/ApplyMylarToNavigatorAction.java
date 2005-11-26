@@ -26,7 +26,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 
-	public static ApplyMylarToNavigatorAction INSTANCE;
+	private static ApplyMylarToNavigatorAction INSTANCE;
 	
 	public ApplyMylarToNavigatorAction() {
 		super(new InterestFilter());

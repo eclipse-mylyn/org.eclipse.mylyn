@@ -23,7 +23,13 @@ import org.eclipse.swt.widgets.Display;
  */
 public class Highlighter {
 
-	private final int NUM_LEVELS = 40;
+	private static final String LABEL_SOLID = "Solid";
+
+	private static final String LABEL_INTERSECTION = "Intersection";
+
+	private static final String LABEL_GRADIENT = "Gradient";
+
+	private static final int NUM_LEVELS = 40;
 
 	private final List<Color> ELEVATIONS = new ArrayList<Color>();
 
@@ -232,22 +238,20 @@ public class Highlighter {
 	public String getType() {
 		String res = "";
 		if (this.isGradient) {
-			res = new String("Gradient");
+			res = LABEL_GRADIENT;
 		} else if (this.isIntersection) {
-			res = new String("Intersection");
+			res = LABEL_INTERSECTION;
 		} else {
-			res = new String("Solid");
+			res = LABEL_SOLID;
 		}
 		return res;
 	}
 
 	public String externalizeToString() {
-		String result = new String();
 		Integer r = new Integer(this.core.getRed());
 		Integer g = new Integer(this.core.getGreen());
 		Integer b = new Integer(this.core.getBlue());
-		result = r.toString() + ";" + g.toString() + ";" + b.toString() + ";" + this.name + ";" + this.getType();
-		return result;
+		return r.toString() + ";" + g.toString() + ";" + b.toString() + ";" + this.name + ";" + this.getType();
 	}
 
 	private void initializeFromString(String attributes) {
@@ -258,10 +262,10 @@ public class Highlighter {
 		Integer b = new Integer(data[2]);
 		this.core = new Color(Display.getCurrent(), r.intValue(), g.intValue(), b.intValue());
 		this.name = data[3];
-		if (data[4].compareTo("Gradient") == 0) {
+		if (data[4].compareTo(LABEL_GRADIENT) == 0) {
 			this.isGradient = true;
 			this.isIntersection = false;
-		} else if (data[4].compareTo("Intersection") == 0) {
+		} else if (data[4].compareTo(LABEL_INTERSECTION) == 0) {
 			this.isGradient = false;
 			this.isIntersection = true;
 		} else {

@@ -33,10 +33,10 @@ import org.eclipse.ui.internal.Workbench;
  * @author Mik Kersten
  */
 public class LinkActiveSearchWithEditorAction extends Action {
-    	
-	private static final String LABEL = "Link with Editor";
-	public static String ID = "org.eclipse.mylar.ui.views.active.search.link";
-    private SelectionTracker selectionTracker = new SelectionTracker();
+    
+	public static final String ID = "org.eclipse.mylar.ui.views.active.search.link";
+    private static final String LABEL = "Link with Editor";
+	private SelectionTracker selectionTracker = new SelectionTracker();
 	private static LinkActiveSearchWithEditorAction INSTANCE;
 	
     public LinkActiveSearchWithEditorAction() {
@@ -66,7 +66,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 		}
 	}
 	
-	private class SelectionTracker implements ISelectionListener {
+	private static class SelectionTracker implements ISelectionListener {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			try {
 				if (selection instanceof TextSelection && part instanceof IEditorPart) {

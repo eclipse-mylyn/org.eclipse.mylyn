@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     University Of British Columbia - initial API and implementation
- *******************************************************************************/
+ **********s*********************************************************************/
 
 package org.eclipse.mylar.ide.ui.views;
 
@@ -97,7 +97,7 @@ public class ActiveSearchQuickView {
      * The name of the dialog store's section associated with the 
      * inplace XReference view.
      */
-    private final String sectionName = "org.eclipse.contribution.internal.xref.QuickXRef"; //$NON-NLS-1$
+    private static final String sectionName = "org.eclipse.contribution.internal.xref.QuickXRef"; //$NON-NLS-1$
 
     /**
      * Fields for text matching and filtering
@@ -694,67 +694,7 @@ public class ActiveSearchQuickView {
         });
     }
 
-//    private void setMatcherString(String pattern) {
-//        if (pattern.length() == 0) {
-//            stringMatcher = null;
-//        } else {
-//            boolean ignoreCase = pattern.toLowerCase().equals(pattern);
-//            stringMatcher = new StringMatcher(pattern, ignoreCase, false);
-//        }
-//        stringMatcherUpdated();
-//    }
-
-//    private void stringMatcherUpdated() {
-//        // refresh viewer to refilter
-//        viewer.getControl().setRedraw(false);
-//        viewer.refresh();
-//        viewer.expandAll();
-//        selectFirstMatch();
-//        viewer.getControl().setRedraw(true);
-//    }
-
-//    private void selectFirstMatch() {
-//        Tree tree = viewer.getTree();
-//        Object element = findElement(tree.getItems());
-//        if (element != null)
-//            viewer.setSelection(new StructuredSelection(element), true);
-//        else
-//            viewer.setSelection(StructuredSelection.EMPTY);
-//    }
-
-//    private Object findElement(TreeItem[] items) {
-//        for (int i = 0; i < items.length; i++) {
-//            Object o = items[i].getData();
-//            TreeParent treeParent = null;
-//            TreeObject treeObject = null;
-//            if (o instanceof TreeParent) {
-//                treeParent = (TreeParent) o;
-//            } else if (o instanceof TreeObject) {
-//                treeObject = (TreeObject) o;
-//            }
-//            Object element = null;
-//            if (treeParent == null) {
-//                element = treeObject;
-//            } else {
-//                element = treeParent;
-//            }
-//            if (stringMatcher == null)
-//                return element;
-//
-//            if (element != null) {
-//                String label = labelProvider.getText(element);
-//                if (stringMatcher.match(label))
-//                    return element;
-//            }
-//
-//            element = findElement(items[i].getItems());
-//            if (element != null)
-//                return element;
-//        }
-//        return null;
-//    }
-
-    protected class NamePatternFilter extends ViewerFilter {
+    protected static class NamePatternFilter extends ViewerFilter {
 
         public NamePatternFilter() {
         	// don't have anything to initialize
@@ -990,3 +930,63 @@ public class ActiveSearchQuickView {
         return dialogShell != null;
     }
 }
+
+//private void setMatcherString(String pattern) {
+//if (pattern.length() == 0) {
+//  stringMatcher = null;
+//} else {
+//  boolean ignoreCase = pattern.toLowerCase().equals(pattern);
+//  stringMatcher = new StringMatcher(pattern, ignoreCase, false);
+//}
+//stringMatcherUpdated();
+//}
+
+//private void stringMatcherUpdated() {
+//// refresh viewer to refilter
+//viewer.getControl().setRedraw(false);
+//viewer.refresh();
+//viewer.expandAll();
+//selectFirstMatch();
+//viewer.getControl().setRedraw(true);
+//}
+
+//private void selectFirstMatch() {
+//Tree tree = viewer.getTree();
+//Object element = findElement(tree.getItems());
+//if (element != null)
+//  viewer.setSelection(new StructuredSelection(element), true);
+//else
+//  viewer.setSelection(StructuredSelection.EMPTY);
+//}
+
+//private Object findElement(TreeItem[] items) {
+//for (int i = 0; i < items.length; i++) {
+//  Object o = items[i].getData();
+//  TreeParent treeParent = null;
+//  TreeObject treeObject = null;
+//  if (o instanceof TreeParent) {
+//      treeParent = (TreeParent) o;
+//  } else if (o instanceof TreeObject) {
+//      treeObject = (TreeObject) o;
+//  }
+//  Object element = null;
+//  if (treeParent == null) {
+//      element = treeObject;
+//  } else {
+//      element = treeParent;
+//  }
+//  if (stringMatcher == null)
+//      return element;
+//
+//  if (element != null) {
+//      String label = labelProvider.getText(element);
+//      if (stringMatcher.match(label))
+//          return element;
+//  }
+//
+//  element = findElement(items[i].getItems());
+//  if (element != null)
+//      return element;
+//}
+//return null;
+//}

@@ -80,7 +80,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public static final String PACKAGE_EXPLORER_AUTO_EXPAND = "org.eclipse.mylar.java.explorer.auto.exapand";
 
-	public static ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
+	public static final ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
 
 	public static final String FIRST_USE = 
 			"<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"http://eclipse.org/mylar/doc/style.css\"/></head>" +
@@ -296,14 +296,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public TypeHistoryManager getTypeHistoryManager() {
 		return typeHistoryManager;
-	}
-
-	public static ImageDescriptor getEDGE_REF_JUNIT() {
-		return EDGE_REF_JUNIT;
-	}
-
-	public static void setEDGE_REF_JUNIT(ImageDescriptor edge_ref_junit) {
-		EDGE_REF_JUNIT = edge_ref_junit;
 	}
 
 	public MylarChangeSetManager getChangeSetManager() {

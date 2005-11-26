@@ -272,15 +272,11 @@ public class MylarPreferencePage extends PreferencePage implements
 	public void editorValueChanged(boolean oldValidState, boolean newValidState) {
 		// don't care when the value is changed
 	}
-
-	/***************************************************************************
-	 * Nested Classes for preference page
-	 **************************************************************************/
-
+	
 	/**
 	 * Class HighlighterLabelProvider - Label and image provider for tableViewer
 	 */
-	private class HighlighterLabelProvider extends LabelProvider implements
+	private static class HighlighterLabelProvider extends LabelProvider implements
 			ITableLabelProvider {
 
 		public HighlighterLabelProvider() {
@@ -406,8 +402,7 @@ public class MylarPreferencePage extends PreferencePage implements
 				Highlighter hl = (Highlighter) element;
 				switch (columnIndex) {
 				case 0: // LABEL_COLUMN
-					// return label name
-					res = new String(hl.getName());
+					res = hl.getName();
 					break;
 				case 1: // COLOR_COLUMN
 					// Store selected Highlighter. If color is changed, then
@@ -492,7 +487,7 @@ public class MylarPreferencePage extends PreferencePage implements
 	 * class HighlighterTableSorter - sort columns of table
 	 * added to every column as a sorter
 	 */
-	private class HighlighterTableSorter extends ViewerSorter {
+	private static class HighlighterTableSorter extends ViewerSorter {
 
 		public final static int LABEL = 1;
 		public final static int COLOR = 2;

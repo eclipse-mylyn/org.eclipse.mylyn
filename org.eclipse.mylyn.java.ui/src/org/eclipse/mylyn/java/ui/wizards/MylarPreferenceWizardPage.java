@@ -175,7 +175,6 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		Label spacer = new Label(buttonComposite, SWT.NONE);
 		spacer.setText(" ");
 		spacer = new Label(buttonComposite, SWT.NONE);
-		spacer = new Label(buttonComposite, SWT.NONE);
 		spacer.setText(" ");
 		
 		Composite browserComposite = new Composite(containerComposite, SWT.NULL);

@@ -93,7 +93,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 		menuItem.setText(LABEL_DEGREE_OF_SEPARATION);
 //		menuItem.setEnabled(false);
 		
-		menuItem = new MenuItem(dropDownMenu, SWT.SEPARATOR);
+		new MenuItem(dropDownMenu, SWT.SEPARATOR);
 		
 		for(IDegreeOfSeparation separation: bridge.getDegreesOfSeparation()){
 								

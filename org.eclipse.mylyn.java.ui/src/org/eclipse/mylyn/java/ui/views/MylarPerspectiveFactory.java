@@ -18,8 +18,8 @@ import org.eclipse.ui.IPageLayout;
 
 public class MylarPerspectiveFactory extends JavaPerspectiveFactory {
 
-    public static String ID_RELATED_ELEMENTS_VIEW = "org.eclipse.mylar.ui.views.RelatedElementsView"; 
-    public static String ID_TASK_LIST_VIEW = "org.eclipse.mylar.tasklist.ui.views.TaskListView"; 
+    public static final String ID_RELATED_ELEMENTS_VIEW = "org.eclipse.mylar.ui.views.RelatedElementsView"; 
+    public static final String ID_TASK_LIST_VIEW = "org.eclipse.mylar.tasklist.ui.views.TaskListView"; 
 	  
 	/**
 	 * Constructs a new Default layout engine.

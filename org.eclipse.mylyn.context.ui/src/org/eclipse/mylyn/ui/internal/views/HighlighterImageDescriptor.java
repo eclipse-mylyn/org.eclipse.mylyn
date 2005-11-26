@@ -33,7 +33,7 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
     
     @Override
     public boolean equals(Object obj) {
-        return (obj != null) && this.equals(obj.getClass())
+        return obj instanceof HighlighterImageDescriptor
                 && image.equals(((HighlighterImageDescriptor) obj).image);
     }
     

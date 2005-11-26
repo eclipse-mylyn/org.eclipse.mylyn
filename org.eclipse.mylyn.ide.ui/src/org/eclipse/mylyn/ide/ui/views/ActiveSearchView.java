@@ -14,6 +14,7 @@ package org.eclipse.mylar.ide.ui.views;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -302,8 +303,8 @@ public class ActiveSearchView extends ViewPart {
     
     private void fillActions(IContributionManager manager) {
     	Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
-        for (String extension : bridges.keySet()) {
-            IMylarStructureBridge bridge = bridges.get(extension);
+        for (Entry<String, IMylarStructureBridge> entry: bridges.entrySet()) {
+            IMylarStructureBridge bridge = entry.getValue(); //bridges.get(extension);
             List<AbstractRelationProvider> providers = bridge.getRelationshipProviders(); 
             if(providers != null && providers.size() > 0) {
 	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);

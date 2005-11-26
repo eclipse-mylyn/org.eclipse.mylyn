@@ -38,9 +38,9 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
  */
 public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 
-	public static ApplyMylarToProblemsListAction INSTANCE;
-    public StructuredViewer cachedProblemsTableViewer = null;
-    private MarkerFilter defaultFilter = null;
+	private static ApplyMylarToProblemsListAction INSTANCE;
+    private StructuredViewer cachedProblemsTableViewer = null;
+	private MarkerFilter defaultFilter = null;
     private ProblemsListDoiSorter interestSorter = new ProblemsListDoiSorter();
     
 	public ApplyMylarToProblemsListAction() {

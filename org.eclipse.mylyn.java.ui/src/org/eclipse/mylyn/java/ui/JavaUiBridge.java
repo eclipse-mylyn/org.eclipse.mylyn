@@ -70,7 +70,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 				if (explorer != null) explorer.setLinkingEnabled(false);
 			}
 		} else {
-			explorer.setLinkingEnabled(true);
+			if (explorer != null) explorer.setLinkingEnabled(true);
 			PreferenceConstants.getPreferenceStore().setValue(
 					PreferenceConstants.LINK_PACKAGES_TO_EDITOR, explorerLinked);
 			if (explorer != null) {
