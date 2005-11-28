@@ -24,13 +24,11 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Shawn Minto 
  */
-public class ResourceMarkerListener implements IResourceChangeListener {
+public class InterestUpdateChangeListener implements IResourceChangeListener {
 
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (event.getType() != IResourceChangeEvent.POST_CHANGE)
-			return;
+		if (event.getType() != IResourceChangeEvent.POST_CHANGE) return;
 		IResourceDelta rootDelta = event.getDelta();
-
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
 				IMarkerDelta[] markers = delta.getMarkerDeltas();
