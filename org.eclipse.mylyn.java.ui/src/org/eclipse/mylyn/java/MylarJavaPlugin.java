@@ -59,9 +59,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 
-	/**
-	 * bug 123
-	 */
 	private JavaProblemListener problemListener = new JavaProblemListener(); 
 
 	private JavaEditingMonitor javaEditingMonitor;
@@ -115,13 +112,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			workbench.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
+						ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+						service.addPostSelectionListener(packageExplorerManager);
+
 						javaEditingMonitor = new JavaEditingMonitor();
 						MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 						installEditorTracker(workbench);
-
-						ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
-						service.addPostSelectionListener(packageExplorerManager);
-												
+						
 						if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
 							ApplyMylarToPackageExplorerAction.getDefault().update();
 							getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());

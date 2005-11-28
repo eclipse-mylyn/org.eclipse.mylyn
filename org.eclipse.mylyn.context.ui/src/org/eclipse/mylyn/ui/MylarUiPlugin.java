@@ -113,6 +113,17 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
+	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
+		public Color getHighlightColor(ITask task) {
+			Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
+			if (highlighter != null) {
+				return highlighter.getHighlightColor();
+			} else {
+				return null;
+			}
+		}
+	};
+	
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
 		@Override
@@ -212,16 +223,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				}
 				if (ApplyMylarToOutlineAction.getDefault() != null)
 					ApplyMylarToOutlineAction.getDefault().update();
-				MylarTasklistPlugin.getDefault().setHighlighter(new ITaskHighlighter() {
-					public Color getHighlightColor(ITask task) {
-						Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
-						if (highlighter != null) {
-							return highlighter.getHighlightColor();
-						} else {
-							return null;
-						}
-					}
-				});
+				MylarTasklistPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 			}
 		});
 	}
