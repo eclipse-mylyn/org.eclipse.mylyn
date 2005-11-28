@@ -285,18 +285,21 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 
 	public void earlyStartup() {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
-
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
-				Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent e) {
-						if (getDefault() != null)
-							getDefault().saveTaskListAndContexts();
-					}
-				});
-				MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-				taskListManager.readTaskList();
+				try {
+					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(new DisposeListener() {
+						public void widgetDisposed(DisposeEvent e) {
+							if (getDefault() != null)
+								getDefault().saveTaskListAndContexts();
+						}
+					});
+					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+					taskListManager.readTaskList();
+				} catch (Exception e) {
+					MylarPlugin.fail(e, "Task List initialization failed", true);
+				}
 			}
 		});
 	}
