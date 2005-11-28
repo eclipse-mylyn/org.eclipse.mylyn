@@ -20,11 +20,11 @@ import org.eclipse.mylar.tasklist.ITask;
 /**
  * @author Ken Sueda
  */
-public class CompletedTasksContentProvider implements IStructuredContentProvider {
+public class TasksContentProvider implements IStructuredContentProvider {
 
 	private List<ITask> tasks = null;
 	
-	public CompletedTasksContentProvider(List<ITask> tasks) {
+	public TasksContentProvider(List<ITask> tasks) {
 		this.tasks = tasks;
 	}
 	public Object[] getElements(Object inputElement) {

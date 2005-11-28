@@ -99,7 +99,9 @@ public class TaskInputDialog extends Dialog {
         datePicker.setDateText("<reminder>");
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
-				reminderDate = datePicker.getDate().getTime();
+				if (datePicker.getDate() != null){
+					reminderDate = datePicker.getDate().getTime();
+				}
 			}
 
 			public void widgetDefaultSelected(SelectionEvent arg0) {

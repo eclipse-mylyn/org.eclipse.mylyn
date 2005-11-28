@@ -16,6 +16,7 @@
  */
 package org.eclipse.mylar.tasklist.ui;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -35,6 +36,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -398,8 +401,7 @@ public class TaskSummaryEditor extends EditorPart {
 		Label label = toolkit.createLabel(container, "Reminder:");
         label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	        
         datePicker = new DatePicker(container, SWT.NULL);	
-        TableWrapData td = new TableWrapData(TableWrapData.LEFT);
-        datePicker.setLayoutData(td);
+        
         Calendar calendar = Calendar.getInstance();
         if (task.getReminderDate() != null) {
         	calendar.setTime(task.getReminderDate());
@@ -420,7 +422,20 @@ public class TaskSummaryEditor extends EditorPart {
         
 		label = toolkit.createLabel(container, "Estimated time:");		
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		estimated = new Spinner(container, SWT.BORDER);
+		
+		Composite estimatedComposite = toolkit.createComposite(container);
+		
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.horizontalSpacing = 2;
+		gridLayout.verticalSpacing = 2;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 2;
+		gridLayout.makeColumnsEqualWidth = false;
+		estimatedComposite.setLayout(gridLayout);
+		
+		
+		estimated = new Spinner(estimatedComposite, SWT.BORDER);
 		estimated.setSelection(task.getEstimateTime());		
 		estimated.setDigits(1);
 		estimated.setMaximum(100);
@@ -430,14 +445,30 @@ public class TaskSummaryEditor extends EditorPart {
 			public void modifyText(ModifyEvent e) {
 				TaskSummaryEditor.this.markDirty(true);
 			}			
-		});  
-		label = toolkit.createLabel(container, "hours ");		
+		});
+		
+		GridData estimatedSpinnerGridData = new org.eclipse.swt.layout.GridData();
+		estimatedSpinnerGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		estimatedSpinnerGridData.grabExcessHorizontalSpace = true;
+		estimatedSpinnerGridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		estimated.setData(estimatedSpinnerGridData);
+		
+		label = toolkit.createLabel(estimatedComposite, "hours ");		
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		
+		
+		GridData hoursLabelGridData = new org.eclipse.swt.layout.GridData();
+		hoursLabelGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
+		hoursLabelGridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		label.setData(hoursLabelGridData);
+		
+		//Temp hack because couldn't get the estimatedComposite above to span two columns
+		label = toolkit.createLabel(container, " ");
         
 		label = toolkit.createLabel(container, "Elapsed time:");		
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		Text text2 = toolkit.createText(container,task.getElapsedTimeForDisplay(), SWT.BORDER);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
         td.colspan = 2;
         text2.setLayoutData(td);
@@ -446,7 +477,16 @@ public class TaskSummaryEditor extends EditorPart {
         
         label = toolkit.createLabel(container, "Creation date:");		
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		Text creationDate = toolkit.createText(container,task.getCreationDateString(), SWT.BORDER);
+		
+		String dateString = "";
+		try{
+			dateString = DateFormat.getDateInstance(DateFormat.SHORT).format(task.getCreationDate());
+		}
+		catch(RuntimeException e){
+			MylarPlugin.fail(e, "Could not format date", true);
+		}
+		
+		Text creationDate = toolkit.createText(container, dateString, SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
         td.colspan = 2;
@@ -456,7 +496,16 @@ public class TaskSummaryEditor extends EditorPart {
         
         label = toolkit.createLabel(container, "Completion date:");		
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		Text endDate = toolkit.createText(container,task.getEndDateString(), SWT.BORDER);
+		dateString = "";
+		if (task.getEndDate() != null){
+			try{
+				dateString = DateFormat.getDateInstance(DateFormat.SHORT).format(task.getEndDate());
+			}
+			catch(RuntimeException e){
+				MylarPlugin.fail(e, "Could not format date", true);
+			}
+		}
+		Text endDate = toolkit.createText(container, dateString, SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
         td.grabHorizontal = true;
         td.colspan = 2;

@@ -11,9 +11,10 @@
 
 package org.eclipse.mylar.tasklist.planner.internal;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.tasklist.ITask;
@@ -41,7 +42,9 @@ public class CompletedTaskCollector implements ITasksCollector {
 		}
 	}
 	
-	public Collection<ITask> getTasks() {
-		return completedTasks.values();
+	public List<ITask> getTasks() {
+		List<ITask> tasks = new ArrayList<ITask>();
+		tasks.addAll(completedTasks.values());
+		return tasks;
 	}
 }

@@ -417,11 +417,11 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		//    		getPrefs().setValue(REMINDER_CHECK, false);
 		final TaskReportGenerator parser = new TaskReportGenerator(MylarTasklistPlugin.getTaskListManager().getTaskList());
 		parser.addCollector(new ReminderRequiredCollector());
-		parser.checkTasks();
-		if (!parser.getTasks().isEmpty()) {
+		parser.collectTasks();
+		if (!parser.getAllCollectedTasks().isEmpty()) {
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					TasksReminderDialog dialog = new TasksReminderDialog(Workbench.getInstance().getDisplay().getActiveShell(), parser.getTasks());
+					TasksReminderDialog dialog = new TasksReminderDialog(Workbench.getInstance().getDisplay().getActiveShell(), parser.getAllCollectedTasks());
 					dialog.setBlockOnOpen(false);
 					dialog.open();
 				}

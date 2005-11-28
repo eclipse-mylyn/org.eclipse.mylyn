@@ -90,6 +90,8 @@ public interface ITask extends Serializable, ITaskListElement {
     
     public abstract String getElapsedTimeForDisplay();
 	
+    public abstract long getElapsedMillis();
+    
 	public abstract Date getEndDate();
 	
 	public abstract void setEndDate(String date);

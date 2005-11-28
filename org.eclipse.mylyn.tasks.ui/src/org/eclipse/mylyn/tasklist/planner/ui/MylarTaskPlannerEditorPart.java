@@ -11,7 +11,9 @@
 
 package org.eclipse.mylar.tasklist.planner.ui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -22,7 +24,9 @@ import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -40,6 +44,8 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -58,20 +64,37 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 
 /**
+ * 
+ * Note: Some methods have been generalized to remove duplicate code but the design
+ * still isn't right (long parameter lists, inflexible table creation). Needs refactoring.
+ * (Planned tasks section is currently disabled but should also use the new common methods)
+ * 
  * @author Mik Kersten
  * @author Ken Sueda (original prototype)
+ * @author Wesley Coelho (added tasks in progress section, refactored-out similar code)
  */
 public class MylarTaskPlannerEditorPart extends EditorPart {
 
-	private CompletedTasksEditorInput editorInput = null;
-	private Table completedTable;
-	private TableViewer completedTableViewer;
-	private String[] completedColumnNames = new String[] {".", "Description", "Priority", "Date Created", "Date Completed", "Duration"};
+	
+	private TasksEditorInput editorInput = null;
+
+	//Completed Table Information
+	private String[] completedColumnNames = new String[] {"Description", "Priority", "Date Created", "Date Completed", "Duration"};
+	private int[] completedColumnWidths = new int[] {300, 50, 90, 90, 70};
+	private int[] completedSorterConstants = new int[] {TaskSorter.DESCRIPTION, TaskSorter.PRIORITY, TaskSorter.CREATION_DATE, TaskSorter.COMPLETED_DATE, TaskSorter.DURATION};
+	
+	//In Progress Table Information
+	private String[] inProgressColumnNames = new String[] {"Description", "Priority", "Date Created", "Duration"};
+	private int[] inProgressColumnWidths = new int[] {300, 50, 90, 70};
+	private int[] inProgressSorterConstants = new int[] {TaskSorter.DESCRIPTION, TaskSorter.PRIORITY, TaskSorter.CREATION_DATE, TaskSorter.DURATION};
+		
+	private List<TableViewer> tableViewers = new ArrayList<TableViewer>();
+	
 	private Table planTable;
 	private TableViewer planTableViewer;
 	private PlannedTasksContentProvider contentProvider = new PlannedTasksContentProvider();
 	private ReminderCellEditor reminderEditor = null;
-	private String[] planColumnNames = new String[] {".", "Description", "Priority", "Estimated Time", "Reminder Date"};
+	private String[] planColumnNames = new String[] {"Description", "Priority", "Estimated Time", "Reminder Date"};
 	private static final String[] ESTIMATE_TIMES = new String[] {"0 Hours", "1 Hours", "2 Hours", "3 Hours","4 Hours","5 Hours","6 Hours","7 Hours","8 Hours","9 Hours","10 Hours"};
 	private OpenTaskEditorAction doubleClickAction = new OpenTaskEditorAction();
 	
@@ -89,11 +112,11 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 			throws PartInitException {
 		setSite(site);
 		setInput(input);
-		editorInput = (CompletedTasksEditorInput)input;
+		editorInput = (TasksEditorInput)input;
 		setPartName(editorInput.getName());
 		setTitleToolTip(editorInput.getToolTipText());
 	}
-
+	
 	@Override
 	public boolean isDirty() {
 		return false;
@@ -112,8 +135,14 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		Composite editorComposite = sform.getBody();
 		
 		createSummarySection(editorComposite, toolkit);
-		createCompletedSection(editorComposite, toolkit);
-//		createPlannedTasksSection(editorComposite, toolkit);
+		
+		IStructuredContentProvider completedTasksProvider = new TasksContentProvider(editorInput.getCompletedTasks());
+		createTableSection(editorComposite, toolkit, "Completed Tasks Details", completedColumnNames, completedColumnWidths, completedSorterConstants, completedTasksProvider, new CompletedTasksLabelProvider());
+		
+		IStructuredContentProvider inProgressTasksProvider = new TasksContentProvider(editorInput.getInProgressTasks());
+		createTableSection(editorComposite, toolkit, "Tasks in Progress Details", inProgressColumnNames, inProgressColumnWidths, inProgressSorterConstants, inProgressTasksProvider, new InProgressTasksLabelProvider());
+		
+		//createPlannedTasksSection(editorComposite, toolkit);
 	}
 
 	@Override
@@ -131,26 +160,41 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		layout.numColumns = 1;						
 		summaryContainer.setLayout(layout);
 		
-		int length = editorInput.getListSize();
-		String numComplete = "Number of completed tasks: " + editorInput.getListSize();
+		int length = editorInput.getCompletedTasks().size();
+		String numComplete = "Number of completed tasks: " + editorInput.getCompletedTasks().size();
 		Label label = toolkit.createLabel(summaryContainer, numComplete, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		String avgTime = "Average time spent: ";
+		
+		String avgTime = "Average time spent per completed task: ";
 		if (length > 0) {
-			avgTime =  avgTime + DateUtil.getFormattedDuration(editorInput.getTotalTimeSpent() / editorInput.getListSize());		
+			avgTime =  avgTime + DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks() / editorInput.getCompletedTasks().size());		
 		} else {
 			avgTime =  avgTime + 0;
 		}
 		label = toolkit.createLabel(summaryContainer, avgTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		String totalTime = "Total time spent: " + DateUtil.getFormattedDuration(editorInput.getTotalTimeSpent());
-		label = toolkit.createLabel(summaryContainer, totalTime, SWT.NULL);
+		
+		String totalCompletedTaskTime = "Total time spent on completed tasks: " + DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks());
+		label = toolkit.createLabel(summaryContainer, totalCompletedTaskTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+	
+		String numInProgress = "Number of tasks in progress: " + editorInput.getInProgressTasks().size();
+		label = toolkit.createLabel(summaryContainer, numInProgress, SWT.NULL);
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		
+		String totalInProgressTaskTime = "Total time spent on tasks in progress: " + DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks());
+		label = toolkit.createLabel(summaryContainer, totalInProgressTaskTime, SWT.NULL);
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));	
+		
+		String grandTotalTime = "Total time spent on all tasks: " + DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks() + editorInput.getTotalTimeSpentOnInProgressTasks());
+		label = toolkit.createLabel(summaryContainer,  grandTotalTime, SWT.NULL);
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));		
+	
 	}
 	
-	private void createCompletedSection(Composite parent, FormToolkit toolkit) {
+	private void createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames, int[] columnWidths, int[] sorterConstants, IStructuredContentProvider contentProvider, LabelProvider labelProvider) {
 		Section detailSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		detailSection.setText("Completed Tasks Details");			
+		detailSection.setText(title);			
 		detailSection.setLayout(new TableWrapLayout());
 		detailSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));	
 		Composite detailContainer = toolkit.createComposite(detailSection);
@@ -159,90 +203,86 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		layout.numColumns = 2;						
 		detailContainer.setLayout(layout);
 		
-		createCompletedTable(detailContainer, toolkit);
-		createCompletedTableViewer();
+		createTable(detailContainer, toolkit, columnNames, columnWidths, sorterConstants, contentProvider, labelProvider);
 	}
 	
-	private void createCompletedTable(Composite parent, FormToolkit toolkit) {
+	/** TODO: Comment parameters */
+	private Table createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths, final int[] sorterConstants, IStructuredContentProvider contentProvider, LabelProvider labelProvider) {
 		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-		completedTable = toolkit.createTable(parent, style );		
+		Table table = toolkit.createTable(parent, style );		
 		TableLayout tlayout = new TableLayout();
-		completedTable.setLayout(tlayout);
+		table.setLayout(tlayout);
 		TableWrapData wd = new TableWrapData(TableWrapData.FILL_GRAB);
 		wd.heightHint = 300;
 		wd.grabVertical = true;
-		completedTable.setLayoutData(wd);
+		table.setLayoutData(wd);
 				
-		completedTable.setLinesVisible(true);
-		completedTable.setHeaderVisible(true);
-		completedTable.setEnabled(true);
-
-		TableColumn column = new TableColumn(completedTable, SWT.LEFT, 0);
-		column.setText(completedColumnNames[0]);
-		column.setWidth(30);		
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		table.setEnabled(true);
 		
-		column = new TableColumn(completedTable, SWT.LEFT, 1);
-		column.setText(completedColumnNames[1]);
-		column.setWidth(300);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				completedTableViewer.setSorter(new CompletedTasksSorter(CompletedTasksSorter.DESCRIPTION));
-
-			}
-		});
-
-		column = new TableColumn(completedTable, SWT.LEFT, 2);
-		column.setText(completedColumnNames[2]);
-		column.setWidth(50);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				completedTableViewer.setSorter(new CompletedTasksSorter(CompletedTasksSorter.PRIORITY));
-			}
-		});
-
-		column = new TableColumn(completedTable, SWT.LEFT, 3);
-		column.setText(completedColumnNames[3]);
-		column.setWidth(170);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				completedTableViewer.setSorter(new CompletedTasksSorter(CompletedTasksSorter.CREATION_DATE));
-			}
-		});
+		TableColumn firstColumn = new TableColumn(table, SWT.LEFT, 0);
+		firstColumn.setText(" ");
+		firstColumn.setWidth(30);	
 		
-		column = new TableColumn(completedTable, SWT.LEFT, 4);
-		column.setText(completedColumnNames[4]);
-		column.setWidth(170);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				completedTableViewer.setSorter(new CompletedTasksSorter(CompletedTasksSorter.COMPLETED_DATE));
-			}
-		});
-
+		for (int i = 0; i < columnNames.length; i++){
+			TableColumn column = new TableColumn(table, SWT.LEFT, i+1);
+			column.setText(columnNames[i]);
+			column.setWidth(columnWidths[i]);
+		}
 		
-		column = new TableColumn(completedTable, SWT.LEFT, 5);
-		column.setText(completedColumnNames[5]);
-		column.setWidth(100);
+		TableViewer tableViewer = createTableViewer(table, contentProvider, labelProvider);
+		
+		for (int i = 0; i < columnNames.length; i++){
+			TableColumn column = table.getColumn(i + 1);
+			addColumnSelectionListener(tableViewer, column, sorterConstants[i]);
+		}	
+
+		colorRows(table, contentProvider);
+		
+		return table;
+	}
+
+	private void addColumnSelectionListener(final TableViewer tableViewer, TableColumn column, final int sorterConstant){
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				completedTableViewer.setSorter(new CompletedTasksSorter(CompletedTasksSorter.DURATION));
+				tableViewer.setSorter(new TaskSorter(sorterConstant));
 			}
 		});
 	}
 	
-	private void createCompletedTableViewer() {
-		completedTableViewer = new TableViewer(completedTable);
-		completedTableViewer.setUseHashlookup(true);
-		completedTableViewer.setColumnProperties(completedColumnNames);
+	private TableViewer createTableViewer(Table table, IStructuredContentProvider contentProvider, LabelProvider labelProvider) {
+		TableViewer tableViewer = new TableViewer(table);
+		tableViewer.setUseHashlookup(true);
+		tableViewer.setColumnProperties(completedColumnNames);
 		
-		completedTableViewer.setContentProvider(new CompletedTasksContentProvider(editorInput.getTasks()));
-		completedTableViewer.setLabelProvider(new CompletedTasksLabelProvider());
-		completedTableViewer.setInput(editorInput);
-	}
+		tableViewer.setContentProvider( contentProvider );
+		tableViewer.setLabelProvider(labelProvider);
+		tableViewer.setInput(editorInput);
+
+		tableViewers.add(tableViewer);
+		
+		
+//		tableViewer.addFilter(new ViewerFilter(){
+//
+//			@Override
+//			public boolean select(Viewer viewer, Object parentElement, Object element) {
+//				// TODO Auto-generated method stub
+//				
+//				//((TableViewer)viewer).
+//				
+//				
+//				return true;
+//			}
+//			
+//			
+//			
+//		});
+		
+		
+		return tableViewer;
+	}	
 	
 	/**
 	 * TODO: make private
@@ -288,7 +328,7 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new CompletedTasksSorter(PlannedTasksSorter.DESCRIPTION));
+				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.DESCRIPTION));
 			}
 		});
 
@@ -298,7 +338,7 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new CompletedTasksSorter(PlannedTasksSorter.PRIORITY));
+				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.PRIORITY));
 			}
 		});
 		
@@ -308,7 +348,7 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new CompletedTasksSorter(PlannedTasksSorter.ESTIMATE));
+				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.ESTIMATE));
 			}
 		});
 
@@ -319,7 +359,7 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new CompletedTasksSorter(PlannedTasksSorter.REMINDER));
+				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.REMINDER));
 			}
 		});
 		
@@ -473,4 +513,18 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		    planTableViewer.refresh(obj);
 		}
 	}
+	
+	
+	/**
+	 * Sets the font color of a row blue if the task was created during the period
+	 */
+	private void colorRows(Table table, IStructuredContentProvider provider){
+		Object[] tasks = provider.getElements(null);
+		for(int i = 0; i < tasks.length; i++){
+			if(editorInput.createdDuringReportPeriod((ITask)tasks[i])){
+				table.getItem(i).setForeground(new Color(null, new RGB(0,0,255)));
+			}
+		}
+	}
+	
 }

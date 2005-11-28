@@ -18,7 +18,7 @@ import org.eclipse.mylar.tasklist.ITask;
 /**
  * @author Ken Sueda
  */
-public class CompletedTasksSorter extends ViewerSorter {
+public class TaskSorter extends ViewerSorter {
 	/**
 	 * Constructor argument values that indicate to sort items by 
 	 * different columns.
@@ -38,7 +38,7 @@ public class CompletedTasksSorter extends ViewerSorter {
 	 * @param criteria the sort criterion to use: one of <code>NAME</code> or 
 	 *   <code>TYPE</code>
 	 */
-	public CompletedTasksSorter(int criteria) {
+	public TaskSorter(int criteria) {
 		super();
 		this.criteria = criteria;
 	}

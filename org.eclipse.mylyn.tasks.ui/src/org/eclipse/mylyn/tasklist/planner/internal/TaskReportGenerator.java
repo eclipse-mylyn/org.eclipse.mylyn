@@ -36,8 +36,8 @@ public class TaskReportGenerator {
 	public void addCollector(ITasksCollector collector) {
 		collectors.add(collector);		
 	}
-	
-	private void getTasksForReport() {
+
+	public void collectTasks() {
 		List<ITask> roots = tasklist.getRootTasks();
 		for(int i = 0; i < roots.size(); i++) {
 			ITask t = (ITask) roots.get(i);
@@ -63,11 +63,7 @@ public class TaskReportGenerator {
 		}
 	}
 	
-	public void checkTasks() {
-		getTasksForReport();
-	}
-	
-	public List<ITask> getTasks() {		
+	public List<ITask> getAllCollectedTasks() {		
 		return tasks;
 	}
 }

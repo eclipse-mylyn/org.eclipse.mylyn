@@ -11,12 +11,15 @@
 
 package org.eclipse.mylar.tasklist.planner.ui;
 
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.mylar.tasklist.planner.internal.CompletedTaskCollector;
+import org.eclipse.mylar.tasklist.planner.internal.ITasksCollector;
+import org.eclipse.mylar.tasklist.planner.internal.InProgressTaskCollector;
 import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -24,20 +27,32 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * @author Ken Sueda
  */
-public class CompletedTasksEditorInput implements IEditorInput {
+public class TasksEditorInput implements IEditorInput {
 	private List<ITask> completedTasks = null;
+	private List<ITask> inProgressTasks = null;
 	private TaskReportGenerator parser = null;
+	private int prevDaysToReport = -1;
+	private long DAY = 24*3600*1000;
 	
-	public CompletedTasksEditorInput(int prevDays, TaskList tlist) {
+	public TasksEditorInput(int prevDays, TaskList tlist) {
 		parser = new TaskReportGenerator(tlist);
-		parser.addCollector(new CompletedTaskCollector(prevDays));
-		parser.checkTasks();
-		completedTasks = parser.getTasks();
+		
+		ITasksCollector completedTaskCollector = new CompletedTaskCollector(prevDays);
+		parser.addCollector(completedTaskCollector);
+		
+		ITasksCollector inProgressTaskCollector = new InProgressTaskCollector(prevDays);
+		parser.addCollector(inProgressTaskCollector);
+		
+		parser.collectTasks();
+		
+		completedTasks = completedTaskCollector.getTasks();
+		inProgressTasks = inProgressTaskCollector.getTasks();
+		
+		prevDaysToReport = prevDays;
 	}
 	
-	/**
-	 * IEditorInput interface methods
-	 */
+	//IEditorInput interface methods
+
 	public boolean exists() {
 		return true;
 	}
@@ -55,26 +70,34 @@ public class CompletedTasksEditorInput implements IEditorInput {
 	}
 
 	public String getToolTipText() {
-		return "Planning Game Report";
+		return "Task Planner";
 	}
 
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
 
-	/**
-	 * Methods
-	 */
-	public List<ITask> getTasks() {
+	//Methods
+
+	public List<ITask> getCompletedTasks() {
 		return completedTasks;
 	}
 	
-	public int getListSize() {
-		return completedTasks.size();
+	public List<ITask> getInProgressTasks() {
+		return inProgressTasks;
 	}
-	public long getTotalTimeSpent() {
+
+	public long getTotalTimeSpentOnCompletedTasks() {
 		long duration = 0;
 		for(ITask t : completedTasks) {
+			duration += t.getElapsedTimeLong();
+		}
+		return duration;
+	}	
+	
+	public long getTotalTimeSpentOnInProgressTasks() {
+		long duration = 0;
+		for(ITask t : inProgressTasks) {
 			duration += t.getElapsedTimeLong();
 		}
 		return duration;
@@ -83,4 +106,11 @@ public class CompletedTasksEditorInput implements IEditorInput {
 	public TaskReportGenerator getReportGenerator() {
 		return parser;
 	}
+
+	public boolean createdDuringReportPeriod(ITask task) {
+		Date reportStartDate = new Date(new Date().getTime() - prevDaysToReport * DAY);
+		return task.getCreationDate().compareTo(reportStartDate) > 0;
+	}
+
+	
 }

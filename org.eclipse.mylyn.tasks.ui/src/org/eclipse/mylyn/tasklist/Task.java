@@ -64,7 +64,7 @@ public class Task implements ITask {
     private Date endDate = null;
     private Date creationDate = null;
     private Date reminderDate=null;
-    private long elapsed;
+    private long elapsed = 0;
 
     /**
      * null if root
@@ -133,17 +133,22 @@ public class Task implements ITask {
     }
     
     private void calculateElapsedTime(boolean isStalled) {
-    	if (timeActivated == null) 
-    		return;
-    	elapsed += new Date().getTime() - timeActivated.getTime();
-    	if(isStalled){
-    		elapsed-= INACTIVITY_TIME_MILLIS;
+    	if (timeActivated != null){
+	    	elapsed += new Date().getTime() - timeActivated.getTime();
+	    	if(isStalled){
+	    		elapsed-= INACTIVITY_TIME_MILLIS;
+	    	}
+	    	if (isActive()) {
+	    		timeActivated = new Date();
+	    	} else {
+	    		timeActivated = null;
+	    	}
     	}
-    	if (isActive()) {
-    		timeActivated = new Date();
-    	} else {
-    		timeActivated = null;
-    	}
+    	
+		if (elapsed < 0){
+			MylarPlugin.fail(new Exception("Time Calculation Exception"), "Computed time was less than zero", false);
+			elapsed = 0;
+		}
     }
     
     public boolean isActive() {
@@ -288,12 +293,22 @@ public class Task implements ITask {
 		if (isActive()) {
 			calculateElapsedTime(false);			
 		}
+		
+		if (elapsed < 0) {
+			MylarPlugin.log("Computed time was less than zero: " + elapsed, false);
+			elapsed = 0;
+		}
+		
 		return "" + elapsed;
 	}
 
 	public long getElapsedTimeLong() {
 		if (isActive()) {
 			calculateElapsedTime(false);			
+		}
+		if (elapsed < 0){
+			MylarPlugin.log("Computed time was less than zero: " + elapsed, false);
+			elapsed = 0;
 		}
 		return elapsed; 
 	}
@@ -389,9 +404,19 @@ public class Task implements ITask {
     	}        	
 	}
 	
+	/** 
+	 * Clients should use getElapsedTime() and perform
+	 * their own formatting 
+	 * @deprecated
+	 */
 	public String getElapsedTimeForDisplay() {
 		calculateElapsedTime(false);
 		return DateUtil.getFormattedDuration(elapsed);		
+	}
+	
+	public long getElapsedMillis(){
+		calculateElapsedTime(false);
+		return elapsed;
 	}
 	
     public boolean canEditDescription() {
@@ -441,6 +466,11 @@ public class Task implements ITask {
 		return endDate;
 	}	
 	
+	/** 
+	 * Clients should use getEndDate() and perform
+	 * their own formatting 
+	 * @deprecated
+	 */
 	public String getEndDateString() {
 		if (endDate != null) {
 			String f = "yyyy-MM-dd HH:mm:ss.S z";
@@ -492,6 +522,11 @@ public class Task implements ITask {
 		return reminderDate;
 	}
 	
+	/** 
+	 * Clients should use getReminderDate() and perform
+	 * their own formatting 
+	 * @deprecated
+	 */
 	public String getReminderDateString(boolean forDisplay) {
 		if (reminderDate != null) {
 			String f = "";
@@ -515,6 +550,11 @@ public class Task implements ITask {
 		this.hasReminded = reminded;	
 	}
 
+	/** 
+	 * Clients should use getReminderDate() and perform
+	 * their own formatting 
+	 * @deprecated
+	 */
 	public String getReminderDateForDisplay() {
 		if (reminderDate != null) {
 			
@@ -545,6 +585,13 @@ public class Task implements ITask {
 		}
 	}
 	
+	/** 
+	 * This format is used by the externalizer. UI clients
+	 * needing a different format should use getCreateionDate() 
+	 * and perform the required formatting. (So should the
+	 * externalizer, for that matter)
+	 * @deprecated
+	 */
 	public String getCreationDateString() {
 		if (creationDate != null) {
 			String f = "yyyy-MM-dd HH:mm:ss.S z";
@@ -563,6 +610,11 @@ public class Task implements ITask {
 		return getDescription(true);
 	}
 
+	/** 
+	 * Clients should use getElapsedTime() and perform
+	 * their own formatting
+	 * @deprecated
+	 */
 	public String getEstimateTimeForDisplay() {		
 		return estimatedTime / 10 + " Hours";
 	}
