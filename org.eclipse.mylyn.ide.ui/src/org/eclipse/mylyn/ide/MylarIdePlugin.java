@@ -54,59 +54,69 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
-
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				resourceSelectionMonitor = new ResourceSelectionMonitor();
-				MylarPlugin.getContextManager().addListener(editorManager);
-            	
-				MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
+				try {
+					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
 
-				if (ApplyMylarToNavigatorAction.getDefault() != null)
-					ApplyMylarToNavigatorAction.getDefault().update();
-				if (ApplyMylarToProblemsListAction.getDefault() != null)
-					ApplyMylarToProblemsListAction.getDefault().update();
-				
-				workbench.addWindowListener(activeSearchViewTracker);
-				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-				for (int i = 0; i < windows.length; i++) {
-					windows[i].addPageListener(activeSearchViewTracker);
-					IWorkbenchPage[] pages = windows[i].getPages();
-					for (int j = 0; j < pages.length; j++) {
-						pages[j].addPartListener(activeSearchViewTracker);
+					resourceSelectionMonitor = new ResourceSelectionMonitor();
+					MylarPlugin.getContextManager().addListener(editorManager);
+	            	
+					MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
+	
+					if (ApplyMylarToNavigatorAction.getDefault() != null)
+						ApplyMylarToNavigatorAction.getDefault().update();
+					if (ApplyMylarToProblemsListAction.getDefault() != null)
+						ApplyMylarToProblemsListAction.getDefault().update();
+					
+					workbench.addWindowListener(activeSearchViewTracker);
+					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+					for (int i = 0; i < windows.length; i++) {
+						windows[i].addPageListener(activeSearchViewTracker);
+						IWorkbenchPage[] pages = windows[i].getPages();
+						for (int j = 0; j < pages.length; j++) {
+							pages[j].addPartListener(activeSearchViewTracker);
+						}
 					}
-				}
-				
-				workbench.addWindowListener(interestEditorTracker);
-				for (int i = 0; i < windows.length; i++) {
-					windows[i].addPageListener(interestEditorTracker);
-					IWorkbenchPage[] pages= windows[i].getPages();
-					for (int j= 0; j < pages.length; j++) {
-						pages[j].addPartListener(interestEditorTracker);
+					
+					workbench.addWindowListener(interestEditorTracker);
+					for (int i = 0; i < windows.length; i++) {
+						windows[i].addPageListener(interestEditorTracker);
+						IWorkbenchPage[] pages= windows[i].getPages();
+						for (int j= 0; j < pages.length; j++) {
+							pages[j].addPartListener(interestEditorTracker);
+						}
 					}
+				} catch (Exception e) {
+					MylarPlugin.fail(e, "Mylar IDE initialization failed", false);
 				}
 			}
 		});
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
-		MylarPlugin.getContextManager().removeListener(editorManager);
-		MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
-		MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
-
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.removeWindowListener(activeSearchViewTracker);
-		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-		for (int i = 0; i < windows.length; i++) {
-			IWorkbenchPage[] pages = windows[i].getPages();
-			windows[i].removePageListener(activeSearchViewTracker);
-			for (int j = 0; j < pages.length; j++) {
-				pages[j].removePartListener(activeSearchViewTracker);
+		try {
+			super.stop(context);
+			plugin = null;
+			MylarPlugin.getContextManager().removeListener(editorManager);
+			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
+			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
+	
+			IWorkbench workbench = PlatformUI.getWorkbench();
+			if (workbench != null) {
+				workbench.removeWindowListener(activeSearchViewTracker);
+				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+				for (int i = 0; i < windows.length; i++) {
+					IWorkbenchPage[] pages = windows[i].getPages();
+					windows[i].removePageListener(activeSearchViewTracker);
+					for (int j = 0; j < pages.length; j++) {
+						pages[j].removePartListener(activeSearchViewTracker);
+					}
+				}
 			}
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Mylar IDE stop failed", false);
 		}
 	}
 

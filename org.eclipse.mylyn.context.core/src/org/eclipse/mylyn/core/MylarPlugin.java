@@ -220,8 +220,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		getPreferenceStore().setDefault(MYLAR_DIR, getDefaultStoreDirectory());
-		if (contextManager == null)
-			contextManager = new MylarContextManager();
+		if (contextManager == null) contextManager = new MylarContextManager();
 	}
 
 	private String getDefaultStoreDirectory() {
@@ -233,20 +232,24 @@ public class MylarPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		INSTANCE = null;
-		resourceBundle = null;
-
-		// Stop all running jobs when we exit if the plugin didn't do it
-		Map<String, IMylarStructureBridge> bridges = getStructureBridges();
-		for (Entry<String, IMylarStructureBridge> entry: bridges.entrySet()) {
-			IMylarStructureBridge bridge = entry.getValue();//bridges.get(extension);
-			List<AbstractRelationProvider> providers = bridge.getRelationshipProviders();
-			if (providers == null)
-				continue;
-			for (AbstractRelationProvider provider : providers) {
-				provider.stopAllRunningJobs();
+		try {
+			super.stop(context);
+			INSTANCE = null;
+			resourceBundle = null;
+	
+			// Stop all running jobs when we exit if the plugin didn't do it
+			Map<String, IMylarStructureBridge> bridges = getStructureBridges();
+			for (Entry<String, IMylarStructureBridge> entry: bridges.entrySet()) {
+				IMylarStructureBridge bridge = entry.getValue();//bridges.get(extension);
+				List<AbstractRelationProvider> providers = bridge.getRelationshipProviders();
+				if (providers == null)
+					continue;
+				for (AbstractRelationProvider provider : providers) {
+					provider.stopAllRunningJobs();
+				}
 			}
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Mylar Core stop failed", false);
 		}
 	}
 

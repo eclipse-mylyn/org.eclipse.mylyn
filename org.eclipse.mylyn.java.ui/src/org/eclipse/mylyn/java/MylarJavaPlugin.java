@@ -59,7 +59,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private LandmarkMarkerManager landmarkMarkerManager = new LandmarkMarkerManager();
 
-	private JavaProblemListener problemListener = new JavaProblemListener(); 
+	private JavaProblemListener problemListener = new JavaProblemListener();
 
 	private JavaEditingMonitor javaEditingMonitor;
 
@@ -79,9 +79,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public static final ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
 
-	public static final String FIRST_USE = 
-			"<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"http://eclipse.org/mylar/doc/style.css\"/></head>" +
-			"<body bgcolor=\"#ffffff\">" + "<p>If this is your first time using Mylar make sure to watch the \n"
+	public static final String FIRST_USE = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"http://eclipse.org/mylar/doc/style.css\"/></head>"
+			+ "<body bgcolor=\"#ffffff\">" + "<p>If this is your first time using Mylar make sure to watch the \n"
 			+ "<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-04.html\">\n"
 			+ "<b>3 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n" + "Help-&gt;Help Contents.</p>" + "</body></html>";
 
@@ -95,62 +94,59 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
-		try {
-			super.start(context);
-			MylarPlugin.getContextManager().addListener(packageExplorerManager);
-			MylarPlugin.getContextManager().addListener(typeHistoryManager);
-			MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
-			MylarPlugin.getContextManager().addListener(changeSetManager);
+		super.start(context);
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				try {
+					MylarPlugin.getContextManager().addListener(packageExplorerManager);
+					MylarPlugin.getContextManager().addListener(typeHistoryManager);
+					MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
+					MylarPlugin.getContextManager().addListener(changeSetManager);
 
-			setPreferenceDefaults();
-			if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
-				problemListener.enable();
-			}
-			getPreferenceStore().addPropertyChangeListener(problemListener);
-			
-			final IWorkbench workbench = PlatformUI.getWorkbench();
-			workbench.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					try {
-						ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
-						service.addPostSelectionListener(packageExplorerManager);
-
-						javaEditingMonitor = new JavaEditingMonitor();
-						MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
-						installEditorTracker(workbench);
-						
-						if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-							ApplyMylarToPackageExplorerAction.getDefault().update();
-							getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
-						}
-						if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-							ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-						}
-						if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
-							ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
-						} 
-						
-						if (!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
-							MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
-							Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
-							if (wizard != null && shell != null && !shell.isDisposed()) {
-								WizardDialog dialog = new WizardDialog(shell, wizard);
-								dialog.create();
-								dialog.open();
-								getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
-							}
-						}
-					} catch (Throwable t) {
-						MylarPlugin.fail(t, "Mylar Java plug-in initialization failed", true);
+					setPreferenceDefaults();
+					if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
+						problemListener.enable();
 					}
+					getPreferenceStore().addPropertyChangeListener(problemListener);
+
+					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+					service.addPostSelectionListener(packageExplorerManager);
+
+					javaEditingMonitor = new JavaEditingMonitor();
+					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+					installEditorTracker(workbench);
+
+					if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+						ApplyMylarToPackageExplorerAction.getDefault().update();
+						getPreferenceStore().addPropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+					}
+					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+					}
+					if (ApplyMylarToBrowsingPerspectiveAction.getDefault() != null) {
+						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
+					}
+
+					if (!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
+						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
+						Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+						if (wizard != null && shell != null && !shell.isDisposed()) {
+							WizardDialog dialog = new WizardDialog(shell, wizard);
+							dialog.create();
+							dialog.open();
+							getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+						}
+					}
+
+					JavaCore.addElementChangedListener(javaElementChangeListener);
+					savePluginPreferences();
+
+				} catch (Throwable t) {
+					MylarPlugin.fail(t, "Mylar Java plug-in initialization failed", true);
 				}
-			});
-			
-			JavaCore.addElementChangedListener(javaElementChangeListener);
-			savePluginPreferences();
-		} catch (Exception e) {
-			MylarPlugin.fail(e, "Mylar Java plug-in initialization failed", true);
-		}
+			}
+		});
 	}
 
 	private void setPreferenceDefaults() {
@@ -161,29 +157,32 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
-		resourceBundle = null;
-
-		MylarPlugin.getContextManager().removeListener(packageExplorerManager);
-		MylarPlugin.getContextManager().removeListener(typeHistoryManager);
-		MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
-		MylarPlugin.getContextManager().removeListener(changeSetManager);
-		
-		MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
-
-		if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
-			getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+		try {
+			super.stop(context);
+			plugin = null;
+			resourceBundle = null;
+	
+			MylarPlugin.getContextManager().removeListener(packageExplorerManager);
+			MylarPlugin.getContextManager().removeListener(typeHistoryManager);
+			MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
+			MylarPlugin.getContextManager().removeListener(changeSetManager);
+	
+			MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+	
+			if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
+				getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
+			}
+	
+			if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null && !Workbench.getInstance().isClosing()) {
+				ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+				service.removePostSelectionListener(packageExplorerManager);
+			}
+			JavaCore.removeElementChangedListener(javaElementChangeListener);
+			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
+			// TODO: uninstall editor tracker
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Mylar Java stop failed", false);
 		}
-
-		if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null && !Workbench.getInstance().isClosing()) {
-			ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
-			service.removePostSelectionListener(packageExplorerManager);
-		}
-		JavaCore.removeElementChangedListener(javaElementChangeListener);
-//		CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
-
-		// TODO: uninstall editor tracker
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {
@@ -223,8 +222,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not
+	 * found.
 	 */
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = MylarJavaPlugin.getDefault().getResourceBundle();
@@ -249,10 +248,11 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
+	 * 
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
@@ -269,7 +269,11 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public static void setDefaultEditorForJavaFiles(boolean mylar) {
 
-		EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin.getDefault().getEditorRegistry(); // HACK: cast to allow save
+		EditorRegistry editorRegistry = (EditorRegistry) WorkbenchPlugin.getDefault().getEditorRegistry(); // HACK:
+		// cast
+		// to
+		// allow
+		// save
 		// to be called
 		IFileEditorMapping[] array = WorkbenchPlugin.getDefault().getEditorRegistry().getFileEditorMappings();
 
@@ -299,95 +303,108 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		return changeSetManager;
 	}
 
-//	private void resetActiveEditor() {
-//		IEditorPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//		if (part instanceof MylarCompilationUnitEditor) {
-//			MylarCompilationUnitEditor editor = (MylarCompilationUnitEditor)part;
-//			IJavaElement inputElement = editor.getInputJavaElement();
-//			editor.close(true);
-//			try {
-//				JavaUI.openInEditor(inputElement);
-//			} catch (Exception e) {
-//				MylarPlugin.fail(e, "Could not reset active editor", false);
-//			}
-//		}
-//	}
-	
-	//    /**
-	//	 * 
-	//	 * CODE FROM
-	//	 * 
-	//	 * @see org.eclipse.jdt.ui.actions.CustomFiltersActionGroup
-	//	 * 
-	//	 * Slightly modified. Needed to initialize the structure view to have no
-	//	 * filter
-	//	 * 
-	//	 */
+	// private void resetActiveEditor() {
+	// IEditorPart part =
+	// Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	// if (part instanceof MylarCompilationUnitEditor) {
+	// MylarCompilationUnitEditor editor = (MylarCompilationUnitEditor)part;
+	// IJavaElement inputElement = editor.getInputJavaElement();
+	// editor.close(true);
+	// try {
+	// JavaUI.openInEditor(inputElement);
+	// } catch (Exception e) {
+	// MylarPlugin.fail(e, "Could not reset active editor", false);
+	// }
+	// }
+	// }
+
+	// /**
+	// *
+	// * CODE FROM
+	// *
+	// * @see org.eclipse.jdt.ui.actions.CustomFiltersActionGroup
+	// *
+	// * Slightly modified. Needed to initialize the structure view to have no
+	// * filter
+	// *
+	// */
 	//    
-	//	private static final String TAG_USER_DEFINED_PATTERNS_ENABLED= "userDefinedPatternsEnabled"; //$NON-NLS-1$
-	//	private static final String TAG_USER_DEFINED_PATTERNS= "userDefinedPatterns"; //$NON-NLS-1$
-	//	private static final String TAG_LRU_FILTERS = "lastRecentlyUsedFilters"; //$NON-NLS-1$
+	// private static final String TAG_USER_DEFINED_PATTERNS_ENABLED=
+	// "userDefinedPatternsEnabled"; //$NON-NLS-1$
+	// private static final String TAG_USER_DEFINED_PATTERNS=
+	// "userDefinedPatterns"; //$NON-NLS-1$
+	// private static final String TAG_LRU_FILTERS = "lastRecentlyUsedFilters";
+	// //$NON-NLS-1$
 	//
-	//	private static final String SEPARATOR= ",";  //$NON-NLS-1$
+	// private static final String SEPARATOR= ","; //$NON-NLS-1$
 	//	
-	//	private final String fTargetId = "org.eclipse.jdt.internal.ui.text.QuickOutline";
+	// private final String fTargetId =
+	// "org.eclipse.jdt.internal.ui.text.QuickOutline";
 
-	//    // HACK: used to disable the filter from the quick outline by default
-	//    public void initializeWithPluginContributions() {
-	//    	IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
-	//    	if (store.contains(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE")))
-	//    		return;
+	// // HACK: used to disable the filter from the quick outline by default
+	// public void initializeWithPluginContributions() {
+	// IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+	// if (store.contains(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE")))
+	// return;
 	//    	
-	//		FilterDescriptor[] filterDescs= getCachedFilterDescriptors();
-	//		Map<String, FilterDescriptor> fFilterDescriptorMap= new HashMap<String, FilterDescriptor>(filterDescs.length);
-	//		Map<String, Boolean> fEnabledFilterIds= new HashMap<String, Boolean>(filterDescs.length);
-	//		for (int i= 0; i < filterDescs.length; i++) {
-	//			String id= filterDescs[i].getId();
-	//			Boolean isEnabled= new Boolean(filterDescs[i].isEnabled());
-	//			if (fEnabledFilterIds.containsKey(id))
-	//				JavaPlugin.logErrorMessage("WARNING: Duplicate id for extension-point \"org.eclipse.jdt.ui.javaElementFilters\""); //$NON-NLS-1$
-	//			fEnabledFilterIds.put(id, isEnabled);
-	//			fFilterDescriptorMap.put(id, filterDescs[i]);
-	//		}
-	//		storeViewDefaults(fEnabledFilterIds, store);
-	//	}
+	// FilterDescriptor[] filterDescs= getCachedFilterDescriptors();
+	// Map<String, FilterDescriptor> fFilterDescriptorMap= new HashMap<String,
+	// FilterDescriptor>(filterDescs.length);
+	// Map<String, Boolean> fEnabledFilterIds= new HashMap<String,
+	// Boolean>(filterDescs.length);
+	// for (int i= 0; i < filterDescs.length; i++) {
+	// String id= filterDescs[i].getId();
+	// Boolean isEnabled= new Boolean(filterDescs[i].isEnabled());
+	// if (fEnabledFilterIds.containsKey(id))
+	// JavaPlugin.logErrorMessage("WARNING: Duplicate id for extension-point
+	// \"org.eclipse.jdt.ui.javaElementFilters\""); //$NON-NLS-1$
+	// fEnabledFilterIds.put(id, isEnabled);
+	// fFilterDescriptorMap.put(id, filterDescs[i]);
+	// }
+	// storeViewDefaults(fEnabledFilterIds, store);
+	// }
 
-	//    private void storeViewDefaults(Map<String, Boolean> fEnabledFilterIds, IPreferenceStore store) {
-	//		// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=22533
-	//		store.setValue(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE"), "storedViewPreferences");//$NON-NLS-1$//$NON-NLS-2$
+	// private void storeViewDefaults(Map<String, Boolean> fEnabledFilterIds,
+	// IPreferenceStore store) {
+	// // see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=22533
+	// store.setValue(getPreferenceKey("TAG_DUMMY_TO_TEST_EXISTENCE"),
+	// "storedViewPreferences");//$NON-NLS-1$//$NON-NLS-2$
 	//		
-	//		store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS_ENABLED), false);
-	//		store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS), CustomFiltersDialog.convertToString(new String[0],SEPARATOR));
+	// store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS_ENABLED),
+	// false);
+	// store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS),
+	// CustomFiltersDialog.convertToString(new String[0],SEPARATOR));
 	//
-	//		Iterator iter= fEnabledFilterIds.entrySet().iterator();
-	//		while (iter.hasNext()) {
-	//			Map.Entry entry= (Map.Entry)iter.next();
-	//			String id= (String)entry.getKey();
-	//			boolean isEnabled= ((Boolean)entry.getValue()).booleanValue();
-	//			if(id.equals("org.eclipse.mylar.ui.java.InterestFilter")){
-	//				store.setValue(id, false);	
-	//			} else {
-	//				store.setValue(id, isEnabled);
-	//			}
-	//		}
+	// Iterator iter= fEnabledFilterIds.entrySet().iterator();
+	// while (iter.hasNext()) {
+	// Map.Entry entry= (Map.Entry)iter.next();
+	// String id= (String)entry.getKey();
+	// boolean isEnabled= ((Boolean)entry.getValue()).booleanValue();
+	// if(id.equals("org.eclipse.mylar.ui.java.InterestFilter")){
+	// store.setValue(id, false);
+	// } else {
+	// store.setValue(id, isEnabled);
+	// }
+	// }
 	//
-	//		StringBuffer buf= new StringBuffer("");
-	//		store.setValue(TAG_LRU_FILTERS, buf.toString());
-	//	}
+	// StringBuffer buf= new StringBuffer("");
+	// store.setValue(TAG_LRU_FILTERS, buf.toString());
+	// }
 
-	//	private String getPreferenceKey(String tag) {
-	//		return "CustomFiltersActionGroup." + fTargetId + '.' + tag; //$NON-NLS-1$
-	//	}
+	// private String getPreferenceKey(String tag) {
+	// return "CustomFiltersActionGroup." + fTargetId + '.' + tag; //$NON-NLS-1$
+	// }
 	//    
-	//	private FilterDescriptor[] getCachedFilterDescriptors() {
-	//		FilterDescriptor[] fCachedFilterDescriptors= FilterDescriptor.getFilterDescriptors(fTargetId);
-	//		return fCachedFilterDescriptors;
-	//	}
+	// private FilterDescriptor[] getCachedFilterDescriptors() {
+	// FilterDescriptor[] fCachedFilterDescriptors=
+	// FilterDescriptor.getFilterDescriptors(fTargetId);
+	// return fCachedFilterDescriptors;
+	// }
 
-	//	/**
-	//	 * TODO: remove
-	//	 */
-	//	public static JavaUiUpdateBridge getModelUpdateBridge() {
-	//		return modelUpdateBridge;
-	//	}
+	// /**
+	// * TODO: remove
+	// */
+	// public static JavaUiUpdateBridge getModelUpdateBridge() {
+	// return modelUpdateBridge;
+	// }
 }

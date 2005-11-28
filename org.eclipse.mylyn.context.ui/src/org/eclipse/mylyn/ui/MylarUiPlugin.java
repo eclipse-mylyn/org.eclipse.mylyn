@@ -214,16 +214,20 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				MylarPlugin.getContextManager().addListener(viewerManager);
-
-				Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(contentOutlineManager);
-				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-				for (int i = 0; i < windows.length; i++) {
-					windows[i].addPageListener(contentOutlineManager);
+				try {
+					MylarPlugin.getContextManager().addListener(viewerManager);
+					
+					Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(contentOutlineManager);
+					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+					for (int i = 0; i < windows.length; i++) {
+						windows[i].addPageListener(contentOutlineManager);
+					}
+					if (ApplyMylarToOutlineAction.getDefault() != null)
+						ApplyMylarToOutlineAction.getDefault().update();
+					MylarTasklistPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
+				} catch (Exception e) {
+					MylarPlugin.fail(e, "Mylar UI initialization failed", true);
 				}
-				if (ApplyMylarToOutlineAction.getDefault() != null)
-					ApplyMylarToOutlineAction.getDefault().update();
-				MylarTasklistPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 			}
 		});
 	}
@@ -233,8 +237,12 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		MylarPlugin.getContextManager().removeListener(viewerManager);
+		try {
+			super.stop(context);
+			MylarPlugin.getContextManager().removeListener(viewerManager);
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Mylar UI stop failed", false);
+		}
 	}
 
 	private void initializeActions() {

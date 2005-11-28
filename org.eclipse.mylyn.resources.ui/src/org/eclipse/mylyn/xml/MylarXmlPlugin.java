@@ -53,11 +53,15 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
   		final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-            	pdeEditingMonitor = new PdeEditingMonitor();
-            	MylarPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
-            	
-            	antEditingMonitor = new AntEditingMonitor();
-            	MylarPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
+            	try {
+	            	pdeEditingMonitor = new PdeEditingMonitor();
+	            	MylarPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
+	            	
+	            	antEditingMonitor = new AntEditingMonitor();
+	            	MylarPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
+	    		} catch (Exception e) {
+	    			MylarPlugin.fail(e, "Mylar IDE stop failed", true);
+	    		}
             }
         });
 	}
@@ -67,12 +71,16 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 	 */
     @Override
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
-		resourceBundle = null;
-        MylarPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
-        MylarPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
-	}
+    	try {
+			super.stop(context);
+			plugin = null;
+			resourceBundle = null;
+	        MylarPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+	        MylarPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Mylar XML stop failed", false);
+		}
+    }
 
 	/**
 	 * Returns the shared instance.
