@@ -96,7 +96,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		
 		if (bridge.isDocument(element.getHandleIdentifier())) {
 			IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
-			if (resource != null) {
+			if (resource != null && resource.exists()) {
 				for (MylarContextChangeSet changeSet: getChangeSets()) {
 					try {
 						if (!changeSet.contains(resource)) {
@@ -107,7 +107,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 							changeSet.remove(resource);
 							
 							// HACK: touching ensures file is added outside of set
-							if (resource instanceof IFile && resource.exists()) {
+							if (resource instanceof IFile) {
 								((IFile)resource).touch(new NullProgressMonitor());
 							}
 							if (!collector.contains(changeSet)) {
