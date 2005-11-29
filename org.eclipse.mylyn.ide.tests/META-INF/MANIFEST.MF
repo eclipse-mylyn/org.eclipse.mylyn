@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylar IDE Tests Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.ide.tests
+Bundle-Version: 0.0.0
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Require-Bundle: org.junit
+Export-Package: org.eclipse.mylar.ide.tests
