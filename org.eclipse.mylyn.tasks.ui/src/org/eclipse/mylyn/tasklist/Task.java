@@ -371,9 +371,9 @@ public class Task implements ITask {
 
 	public Image getIcon() {
 		if (issueReportURL != null && !issueReportURL.trim().equals("") && !issueReportURL.equals("http://")) {
-			return TaskListImages.getImage(TaskListImages.TASK_WEB);
+			return TasklistImages.getImage(TasklistImages.TASK_WEB);
 		} else {
-			return TaskListImages.getImage(TaskListImages.TASK);
+			return TasklistImages.getImage(TasklistImages.TASK);
 		}
 	}
 
@@ -394,12 +394,12 @@ public class Task implements ITask {
 	 */
 	public Image getStatusIcon() {
 		if (isActive()) {
-    		return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
+    		return TasklistImages.getImage(TasklistImages.TASK_ACTIVE);
     	} else {
     		if (MylarPlugin.getContextManager().hasContext(getPath())) {
-    			return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
+    			return TasklistImages.getImage(TasklistImages.TASK_INACTIVE_CONTEXT);
     		} else {
-    			return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+    			return TasklistImages.getImage(TasklistImages.TASK_INACTIVE);
     		}
     	}        	
 	}

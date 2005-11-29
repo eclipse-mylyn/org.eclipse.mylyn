@@ -17,7 +17,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskInputDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -37,7 +37,7 @@ public class CreateTaskAction extends Action {
 		setText("Add Task");
         setToolTipText("Add Task");
         setId(ID);
-        setImageDescriptor(TaskListImages.TASK_NEW);
+        setImageDescriptor(TasklistImages.TASK_NEW);
 	}
 	
     @Override

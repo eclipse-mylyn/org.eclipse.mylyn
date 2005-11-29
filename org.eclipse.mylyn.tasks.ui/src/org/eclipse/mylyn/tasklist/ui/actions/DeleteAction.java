@@ -18,7 +18,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,7 +37,7 @@ public class DeleteAction extends Action {
 		this.view = view;
 		setText("Delete");
 		setId(ID);
-		setImageDescriptor(TaskListImages.REMOVE);
+		setImageDescriptor(TasklistImages.REMOVE);
 	}
 
 	@Override

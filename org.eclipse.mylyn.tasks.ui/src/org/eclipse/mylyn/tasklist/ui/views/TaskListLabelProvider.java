@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHighlighter;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -105,7 +105,7 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
 			  } else if (element instanceof ITaskListCategory) {
 				  ITaskListCategory category = (ITaskListCategory)element;
 				  if (category.isArchive()) {
-					  return TaskListImages.BACKGROUND_ARCHIVE;
+					  return TasklistImages.BACKGROUND_ARCHIVE;
 				  } else {
 					  return backgroundColor;
 				  }
@@ -115,7 +115,7 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
 		} catch (Exception e) {
 			MylarPlugin.fail(e, "Could not get background color", false);
 		}
-		return TaskListImages.BACKGROUND_WHITE;
+		return TasklistImages.BACKGROUND_WHITE;
   }
 
 	public Font getFont(Object element, int columnIndex) {

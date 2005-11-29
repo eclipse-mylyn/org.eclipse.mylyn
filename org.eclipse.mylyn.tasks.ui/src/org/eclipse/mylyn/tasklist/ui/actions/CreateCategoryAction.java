@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.internal.Workbench;
@@ -34,7 +34,7 @@ public class CreateCategoryAction extends Action {
 		setText("Add Category");
         setToolTipText("Add Category");
         setId(ID);
-        setImageDescriptor(TaskListImages.CATEGORY_NEW);
+        setImageDescriptor(TasklistImages.CATEGORY_NEW);
     }
     
     @Override

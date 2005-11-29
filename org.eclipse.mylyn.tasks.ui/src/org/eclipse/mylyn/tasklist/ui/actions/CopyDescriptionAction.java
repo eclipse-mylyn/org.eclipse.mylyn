@@ -14,7 +14,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -32,7 +32,7 @@ public class CopyDescriptionAction extends Action {
 		setText("Copy Description");
 		setToolTipText("Copy Description");
 		setId(ID);
-		setImageDescriptor(TaskListImages.COPY);
+		setImageDescriptor(TasklistImages.COPY);
 		setAccelerator(SWT.MOD1 + 'c');
 	}
 

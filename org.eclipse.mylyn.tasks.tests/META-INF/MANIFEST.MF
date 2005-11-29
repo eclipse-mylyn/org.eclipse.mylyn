@@ -19,5 +19,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylar.tasklist
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-tasklist-tests.jar
-Export-Package: org.eclipse.mylar.tasklist.tests.bugzilla,
- org.eclipse.mylar.tasklist.tests
+Export-Package: org.eclipse.mylar.tasklist.tests

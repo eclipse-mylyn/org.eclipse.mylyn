@@ -37,7 +37,7 @@ public class RemoveFromCategoryAction extends Action {
 		this.view = view;
 		setText("Remove From Category");
 		setId(ID);
-//        setImageDescriptor(TaskListImages.REMOVE);
+//        setImageDescriptor(TasklistImages.REMOVE);
 	}
 	
 	@Override

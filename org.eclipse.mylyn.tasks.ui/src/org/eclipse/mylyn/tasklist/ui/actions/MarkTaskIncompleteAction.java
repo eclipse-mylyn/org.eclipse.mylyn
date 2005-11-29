@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
@@ -31,7 +31,7 @@ public class MarkTaskIncompleteAction extends Action {
 		setText("Mark Incomplete");
         setToolTipText("Mark Incomplete");
         setId(ID);
-        setImageDescriptor(TaskListImages.TASK_INCOMPLETE);
+        setImageDescriptor(TasklistImages.TASK_INCOMPLETE);
 	}
 	@Override
 	public void run() {         

@@ -36,7 +36,7 @@ import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -562,15 +562,15 @@ public class BugzillaTask extends Task {
 	@Override
 	public Image getIcon() {
 		if (syncState == BugReportSyncState.OK) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
+			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA);
 		} else if (syncState == BugReportSyncState.OUTGOING) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_OUTGOING);
+			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA_OUTGOING);
 		} else if (syncState == BugReportSyncState.INCOMMING) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_INCOMMING);
+			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA_INCOMMING);
 		} else if (syncState == BugReportSyncState.CONFLICT) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_CONFLICT);
+			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA_CONFLICT);
 		} else {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
+			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA);
 		}
 
 	}

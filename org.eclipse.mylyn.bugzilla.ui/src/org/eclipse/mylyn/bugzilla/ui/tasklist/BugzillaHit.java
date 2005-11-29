@@ -17,7 +17,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -66,7 +66,7 @@ public class BugzillaHit implements IQueryHit {
 		if (hasCorrespondingActivatableTask()) {
     		return task.getStatusIcon();
     	} else {
-    		return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+    		return TasklistImages.getImage(TasklistImages.TASK_INACTIVE);
     	}  
 	}
 

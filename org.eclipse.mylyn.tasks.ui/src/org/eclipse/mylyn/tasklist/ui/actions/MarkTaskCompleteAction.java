@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
@@ -33,7 +33,7 @@ public class MarkTaskCompleteAction extends Action {
 		setText("Mark Complete");
         setToolTipText("Mark Complete");
         setId(ID);
-        setImageDescriptor(TaskListImages.TASK_COMPLETE);
+        setImageDescriptor(TasklistImages.TASK_COMPLETE);
 	}
 	@Override
 	public void run() {   

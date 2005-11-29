@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -29,7 +29,7 @@ public class TaskDeactivateAction extends Action {
 	public TaskDeactivateAction() {
 		setId(ID);
 		setText("Deactivate");
-		setImageDescriptor(TaskListImages.TASK_INACTIVE);
+		setImageDescriptor(TasklistImages.TASK_INACTIVE);
 	}
 	
 	public void run(ITask task) {

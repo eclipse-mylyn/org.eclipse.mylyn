@@ -21,7 +21,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.CategoryEditorInput;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -87,9 +87,9 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 
 	public Image getIcon() {
 		if (isArchive()) {
-			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
+			return TasklistImages.getImage(TasklistImages.CATEGORY_ARCHIVE);
 		} else {
-			return TaskListImages.getImage(TaskListImages.CATEGORY);
+			return TasklistImages.getImage(TasklistImages.CATEGORY);
 		}
 	}
 

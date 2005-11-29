@@ -35,7 +35,7 @@ import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -109,7 +109,7 @@ public class BugzillaQueryCategory implements IQuery {
 	}
 
 	public Image getIcon() {
-		return TaskListImages.getImage(BugzillaImages.CATEGORY_QUERY);
+		return TasklistImages.getImage(BugzillaImages.CATEGORY_QUERY);
 	}
 
 	public String getQueryString() {

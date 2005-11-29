@@ -58,7 +58,7 @@ import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListImages;
+import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskCompleteFilter;
 import org.eclipse.mylar.tasklist.internal.TaskListPatternFilter;
@@ -224,7 +224,7 @@ public class TaskListView extends ViewPart {
 			super();
 			setText("Priority Filter");
 			setToolTipText("Filter Priority Lower Than");
-			setImageDescriptor(TaskListImages.FILTER_PRIORITY);
+			setImageDescriptor(TasklistImages.FILTER_PRIORITY);
 			setMenuCreator(this);
 		}
 
@@ -1375,7 +1375,7 @@ public class TaskListView extends ViewPart {
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
 			statusLineManager.setMessage(
-					TaskListImages.getImage(TaskListImages.TASKLIST), 
+					TasklistImages.getImage(TasklistImages.TASKLIST), 
 					"Mylar context capture paused");
 		} else {
 			statusLineManager.setMessage("");

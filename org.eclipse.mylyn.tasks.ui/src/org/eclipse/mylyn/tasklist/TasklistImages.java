@@ -15,11 +15,10 @@ package org.eclipse.mylar.tasklist;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -30,10 +29,11 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Mik Kersten
  */ 
-public class TaskListImages {
+public class TasklistImages {
 
-    private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
-    
+//    private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
+    private static ImageRegistry imageRegistry = new ImageRegistry();
+	
     public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
     public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 190, 210, 238);
     
@@ -103,23 +103,23 @@ public class TaskListImages {
 	 * Lazily initializes image map.
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
-	    Image image = imageMap.get(imageDescriptor);
+	    Image image = imageRegistry.get(""+imageDescriptor.hashCode());
 	    if (image == null) {
 	        image = imageDescriptor.createImage();
-	        imageMap.put(imageDescriptor, image);
+	        imageRegistry.put(""+imageDescriptor.hashCode(), image);
 	    }
 	    return image;
 	}
 	
-	/**
-	 * TODO: get rid of this
-	 */
-	public static ImageDescriptor getImageDescriptor(Image image) {
-		for (ImageDescriptor imageDescriptor : imageMap.keySet()) {
-			if (image.equals(imageMap.get(imageDescriptor))) return imageDescriptor;
-		}
-		return null;
-	}
+//	/**
+//	 * TODO: get rid of this
+//	 */
+//	public static ImageDescriptor getImageDescriptor(Image image) {
+//		for (ImageDescriptor imageDescriptor : imageMap.keySet()) {
+//			if (image.equals(imageMap.get(imageDescriptor))) return imageDescriptor;
+//		}
+//		return null;
+//	}
 	
 	
 	public static class MylarTasklistOverlayDescriptor extends CompositeImageDescriptor {

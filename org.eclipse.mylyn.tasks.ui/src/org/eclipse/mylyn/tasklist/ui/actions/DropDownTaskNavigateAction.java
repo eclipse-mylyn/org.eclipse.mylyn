@@ -12,8 +12,8 @@ package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListLabelProvider;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -63,7 +63,7 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 			setEnabled(true);
 			setToolTipText(task.getDescription(true));
 			Image image = labelProvider.getColumnImage(task, 1);
-			setImageDescriptor(TaskListImages.getImageDescriptor(image));
+			setImageDescriptor(ImageDescriptor.createFromImage(image));
 		}
 		
 		public void run(){
