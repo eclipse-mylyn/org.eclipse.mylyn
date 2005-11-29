@@ -69,8 +69,8 @@ public class JUnitTestUtil {
     public static boolean isTestType(IType type) {
         ITypeHierarchy hierarchy;
         try {
-			if (Flags.isAbstract(type.getFlags())) return false;
-		} catch (JavaModelException e1) {
+        	if (Flags.isAbstract(type.getFlags())) return false;
+		} catch (JavaModelException e) {
 			return false;
 		}
         try {
