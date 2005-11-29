@@ -14,6 +14,8 @@ package org.eclipse.mylar.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylar.tests.bugs.BugzillaSearchPluginTest;
+import org.eclipse.mylar.tests.bugs.BugzillaStackTraceTest;
 import org.eclipse.mylar.tests.hypertext.HypertextStructureBridgeTest;
 
 /**
@@ -27,6 +29,8 @@ public class MiscTests {
 		//$JUnit-BEGIN$
         suite.addTestSuite(HypertextStructureBridgeTest.class);
 		suite.addTestSuite(SharedTaskFolderTest.class);
+		suite.addTestSuite(BugzillaSearchPluginTest.class);
+		suite.addTestSuite(BugzillaStackTraceTest.class);
 		//$JUnit-END$
 		return suite;
 	}
