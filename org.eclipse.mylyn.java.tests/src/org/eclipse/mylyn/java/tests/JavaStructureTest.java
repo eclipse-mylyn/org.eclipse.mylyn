@@ -25,6 +25,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
+import org.eclipse.mylar.ide.tests.ResourceTestUtil;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -39,7 +40,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
     private JavaEditingMonitor monitor = new JavaEditingMonitor();
     private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
            
-    private TestProject project;
+    private TestJavaProject project;
     private IPackageFragment pkg;
     private IType typeFoo;
     private IMethod caller;
@@ -49,7 +50,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
     
     @Override
     protected void setUp() throws Exception {
-        project = new TestProject(this.getClass().getName());
+        project = new TestJavaProject(this.getClass().getName());
         pkg = project.createPackage("pkg1");
         typeFoo = project.createType(pkg, "Foo.java", "public class Foo { }" );
         caller = typeFoo.createMethod("void caller() { callee(); }", null, true, null);
@@ -63,7 +64,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
     protected void tearDown() throws Exception {
         manager.removeAllListeners();
         manager.contextDeactivated("12312", "12312");
-        deleteProject(project.getProject());
+        ResourceTestUtil.deleteProject(project.getProject());
     }
     
     public void testNavigation() throws JavaModelException, PartInitException {

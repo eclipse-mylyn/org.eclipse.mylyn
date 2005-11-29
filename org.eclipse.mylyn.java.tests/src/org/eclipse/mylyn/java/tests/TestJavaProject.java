@@ -51,14 +51,14 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * From Erich Gamma's "Contributing to Eclipse" book.
  */
-public class TestProject {
+public class TestJavaProject {
 	public IProject project;
 
 	public IJavaProject javaProject;
 
 	private IPackageFragmentRoot sourceFolder;
 
-	public TestProject(final String name) throws CoreException, InvocationTargetException, InterruptedException {
+	public TestJavaProject(final String name) throws CoreException, InvocationTargetException, InterruptedException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		project = root.getProject(name);
 		project.create(null);

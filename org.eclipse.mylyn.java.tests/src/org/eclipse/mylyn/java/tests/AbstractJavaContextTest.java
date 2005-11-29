@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
@@ -30,6 +27,7 @@ import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
+import org.eclipse.mylar.ide.tests.ResourceTestUtil;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
@@ -48,7 +46,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
 	protected MylarContextManager manager = MylarPlugin.getContextManager();
     protected JavaEditingMonitor monitor = new JavaEditingMonitor();
     	
-    protected TestProject project;
+    protected TestJavaProject project;
     protected IPackageFragment p1;
     protected IType type1;
     protected String taskId = this.getClass().getSimpleName();
@@ -59,7 +57,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
     protected void setUp() throws Exception {
     	assertNotNull(JavaPlugin.getDefault());
     	assertNotNull(MylarJavaPlugin.getDefault());
-    	project = new TestProject(this.getClass().getSimpleName());// + "-" + projectCounter++);
+    	project = new TestJavaProject(this.getClass().getSimpleName());// + "-" + projectCounter++);
         p1 = project.createPackage("p1");
         type1 = project.createType(p1, "Type1.java", "public class Type1 { }" );
         context = new MylarContext(taskId, scaling);
@@ -81,7 +79,7 @@ public class AbstractJavaContextTest extends AbstractContextTest {
         manager.contextDeleted(taskId, taskId);
         manager.getFileForContext(taskId).delete(); 
 //        project.dispose();
-        deleteProject(project.getProject());
+        ResourceTestUtil.deleteProject(project.getProject());
         waitForAutoBuild();
     }
 	
@@ -97,49 +95,6 @@ public class AbstractJavaContextTest extends AbstractContextTest {
 				wasInterrupted = true;
 			}
 		} while (wasInterrupted);
-	}
-    
-	protected void deleteProject(IProject project) throws CoreException {
-		if (project.exists() && !project.isOpen()) { // force opening so that project can be deleted without logging (see bug 23629)
-			project.open(null);
-		}
-		deleteResource(project);
-	}
-	
-	public void deleteResource(IResource resource) throws CoreException {
-		CoreException lastException = null;
-		try {
-			resource.delete(true, null);
-		} catch (CoreException e) {
-			lastException = e;
-			// just print for info
-			System.out.println("(CoreException): " + e.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
-		} catch (IllegalArgumentException iae) {
-			// just print for info
-			System.out.println("(IllegalArgumentException): " + iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		int retryCount = 60; // wait 1 minute at most
-		while (resource.isAccessible() && --retryCount >= 0) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
-			try {
-				resource.delete(true, null);
-			} catch (CoreException e) {
-				lastException = e;
-				// just print for info
-				System.out.println("(CoreException) Retry "+retryCount+": "+ e.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			} catch (IllegalArgumentException iae) {
-				// just print for info
-				System.out.println("(IllegalArgumentException) Retry "+retryCount+": "+ iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
-		}
-		if (!resource.isAccessible()) return;
-		System.err.println("Failed to delete " + resource.getFullPath()); //$NON-NLS-1$
-		if (lastException != null) {
-			throw lastException;
-		}
 	}
     
     protected int countItemsInTree(Tree tree) {

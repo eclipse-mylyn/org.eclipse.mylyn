@@ -27,7 +27,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.ScalingFactors;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.tests.support.ResourceHelper;
-import org.eclipse.mylar.java.tests.TestProject;
+import org.eclipse.mylar.java.tests.TestJavaProject;
 
 
 public class WorkspaceSetupHelper {
@@ -38,7 +38,7 @@ public class WorkspaceSetupHelper {
 	
 	private static IJavaProject project1;
 	private static IJavaProject project2;
-	private static TestProject jdtCoreDomProject;
+	private static TestJavaProject jdtCoreDomProject;
     private static IWorkspaceRoot workspaceRoot;
 	
     public static void clearWorkspace() throws CoreException, IOException{
@@ -59,7 +59,7 @@ public class WorkspaceSetupHelper {
 		project1 = ResourceHelper.createJavaPluginProjectFromZip("project1", "project1.zip");
     	project2 = ResourceHelper.createJavaPluginProjectFromZip("project2", "project2.zip");
    	
-    	jdtCoreDomProject = new TestProject("workspace-helper-project");
+    	jdtCoreDomProject = new TestJavaProject("workspace-helper-project");
     	IPackageFragment jdtCoreDomPkg = jdtCoreDomProject.createPackage("org.eclipse.jdt.core.dom");
         IType astNodeType = jdtCoreDomProject.createType(jdtCoreDomPkg, "ASTNode.java", "public class ASTNode { }" );
         astNodeType.createMethod("public final void setSourceRange(int startPosition, int length) { }",null, false, null);
