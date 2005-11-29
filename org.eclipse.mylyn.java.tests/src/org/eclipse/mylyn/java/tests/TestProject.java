@@ -11,7 +11,7 @@
 /*
  * Created on Jul 20, 2004
  */
-package org.eclipse.mylar.core.tests.support;
+package org.eclipse.mylar.java.tests;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -105,33 +105,6 @@ public class TestProject {
 		return cu.getTypes()[0];
 	}
 
-//	public void dispose() throws CoreException {
-//		// WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-//		// protected void execute(IProgressMonitor monitor) throws CoreException
-//		// {
-//		project.getProject().delete(true, true, null);
-//		waitForIndexer();
-//		// };
-//		// };
-//		// IProgressService service =
-//		// PlatformUI.getWorkbench().getProgressService();
-//		// service.run(true, true, op);
-//	}
-//
-//	public static void waitForAutoBuild() {
-//		boolean wasInterrupted = false;
-//		do {
-//			try {
-//				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-//				wasInterrupted = false;
-//			} catch (OperationCanceledException e) {
-//				e.printStackTrace();
-//			} catch (InterruptedException e) {
-//				wasInterrupted = true;
-//			}
-//		} while (wasInterrupted);
-//	}
-	
 	private IFolder createBinFolder() throws CoreException {
 		IFolder binFolder = project.getFolder("bin");
 		binFolder.create(false, true, null);

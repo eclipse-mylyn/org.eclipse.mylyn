@@ -15,10 +15,9 @@ package org.eclipse.mylar.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -26,8 +25,9 @@ import org.eclipse.swt.graphics.Image;
  */ 
 public class MylarImages {
 
-    private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
-     
+//    private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
+    private static ImageRegistry imageRegistry = new ImageRegistry(); 
+	
 	public static final String T_ELCL = "elcl16";
 	public static final String T_TOOL = "etool16";
 	private static final URL baseURL = MylarUiPlugin.getDefault().getBundle().getEntry("/icons/");
@@ -116,10 +116,10 @@ public class MylarImages {
 	 * Lazily initializes image map.
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
-	    Image image = imageMap.get(imageDescriptor);
+	    Image image = imageRegistry.get(""+imageDescriptor.hashCode());
 	    if (image == null) {
 	        image = imageDescriptor.createImage();
-	        imageMap.put(imageDescriptor, image);
+	        imageRegistry.put(""+imageDescriptor.hashCode(), image);
 	    }
 	    return image;
 	}

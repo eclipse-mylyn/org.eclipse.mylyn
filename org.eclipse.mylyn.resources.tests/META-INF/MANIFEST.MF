@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylar.core.tests,
  org.eclipse.mylar.java,
  org.eclipse.mylar.xml,
- org.eclipse.mylar.ide
+ org.eclipse.mylar.ide,
+ org.eclipse.mylar.java.tests
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-xml-tests.jar
 Export-Package: org.eclipse.mylar.xml.tests

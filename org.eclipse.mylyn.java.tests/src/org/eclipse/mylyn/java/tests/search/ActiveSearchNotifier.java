@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.core.tests.support.search;
+package org.eclipse.mylar.java.tests.search;
 
 import java.io.IOException;
 
@@ -20,7 +20,6 @@ import org.eclipse.mylar.core.internal.CompositeContext;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 
 /**
  * @author Shawn Minto

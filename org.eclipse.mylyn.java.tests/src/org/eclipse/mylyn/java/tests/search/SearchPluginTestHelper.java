@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.core.tests.support.search;
+package org.eclipse.mylar.java.tests.search;
 
 import java.io.IOException;
 import java.util.Date;
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 
 /**
  * @author Shawn Minto

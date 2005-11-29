@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.IMylarElement;
@@ -48,6 +50,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	private InterestManipulatingEditorTracker interestEditorTracker = new InterestManipulatingEditorTracker();
 	
+	private ResourceChangeListener resourceChangeListener = new ResourceChangeListener();
+	
 	public MylarIdePlugin() {
 		plugin = this;
 	}
@@ -61,10 +65,11 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
 
 					resourceSelectionMonitor = new ResourceSelectionMonitor();
-					MylarPlugin.getContextManager().addListener(editorManager);
-	            	
 					MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
-	
+					MylarPlugin.getContextManager().addListener(editorManager);
+					
+					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_CHANGE);
+	            		
 					if (ApplyMylarToNavigatorAction.getDefault() != null)
 						ApplyMylarToNavigatorAction.getDefault().update();
 					if (ApplyMylarToProblemsListAction.getDefault() != null)
@@ -103,6 +108,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
 			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 	
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.removeWindowListener(activeSearchViewTracker);

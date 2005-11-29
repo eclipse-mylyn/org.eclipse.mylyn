@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.core.tests.support;
+package org.eclipse.mylar.java.tests.search;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +26,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.ScalingFactors;
 import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.tests.support.ResourceHelper;
+import org.eclipse.mylar.java.tests.TestProject;
 
 
 public class WorkspaceSetupHelper {

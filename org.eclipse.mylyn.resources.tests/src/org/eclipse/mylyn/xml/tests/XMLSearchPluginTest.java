@@ -24,12 +24,12 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.CompositeContext;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.core.tests.support.WorkspaceSetupHelper;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.core.tests.support.search.SearchPluginTestHelper;
-import org.eclipse.mylar.core.tests.support.search.ActiveSearchNotifier;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.mylar.java.JavaStructureBridge;
+import org.eclipse.mylar.java.tests.search.ActiveSearchNotifier;
+import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
+import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
 import org.eclipse.mylar.xml.XmlReferencesProvider;
 import org.eclipse.mylar.xml.pde.PdeStructureBridge;
 
