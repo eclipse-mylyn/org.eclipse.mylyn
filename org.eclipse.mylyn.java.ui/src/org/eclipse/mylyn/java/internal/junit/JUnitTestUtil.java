@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
@@ -67,6 +68,11 @@ public class JUnitTestUtil {
 	
     public static boolean isTestType(IType type) {
         ITypeHierarchy hierarchy;
+        try {
+			if (Flags.isAbstract(type.getFlags())) return false;
+		} catch (JavaModelException e1) {
+			return false;
+		}
         try {
             hierarchy = type.newSupertypeHierarchy(null);
             IType[] supertypes = hierarchy.getAllSuperclasses(type);
