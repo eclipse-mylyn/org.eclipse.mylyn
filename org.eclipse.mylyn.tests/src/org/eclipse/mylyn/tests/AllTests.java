@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylar.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylar.core.tests.AllCoreTests;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.tests.AllIdeTests;
 import org.eclipse.mylar.java.tests.AllJavaTests;
 import org.eclipse.mylar.monitor.tests.AllMonitorTests;
@@ -29,10 +30,12 @@ public class AllTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
-        //$JUnit-BEGIN$
+
+        MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
         
         // NOTE: the order of these tests matters
         // TODO: make tests clear workbench state on completion
+        //$JUnit-BEGIN$        
         suite.addTest(AllMonitorTests.suite()); 
         suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
         suite.addTest(AllIdeTests.suite());
