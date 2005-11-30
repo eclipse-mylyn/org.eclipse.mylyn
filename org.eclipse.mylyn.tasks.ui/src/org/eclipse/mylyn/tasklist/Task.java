@@ -146,7 +146,7 @@ public class Task implements ITask {
     	}
     	
 		if (elapsed < 0){
-			MylarPlugin.log("Computed time was less than zero", this);
+			MylarPlugin.log("Elapsed time was less than zero for: " + getDescription(true), this);
 			elapsed = 0;
 		}
     }
@@ -293,12 +293,6 @@ public class Task implements ITask {
 		if (isActive()) {
 			calculateElapsedTime(false);			
 		}
-		
-		if (elapsed < 0) {
-			MylarPlugin.log("Computed time was less than zero: " + elapsed, false);
-			elapsed = 0;
-		}
-		
 		return "" + elapsed;
 	}
 
@@ -306,12 +300,9 @@ public class Task implements ITask {
 		if (isActive()) {
 			calculateElapsedTime(false);			
 		}
-		if (elapsed < 0){
-			MylarPlugin.log("Computed time was less than zero: " + elapsed, false);
-			elapsed = 0;
-		}
 		return elapsed; 
 	}
+	
 	public void setElapsedTime(String elapsedString) {
 		if (elapsedString.equals("")) {
 			elapsed = 0;
