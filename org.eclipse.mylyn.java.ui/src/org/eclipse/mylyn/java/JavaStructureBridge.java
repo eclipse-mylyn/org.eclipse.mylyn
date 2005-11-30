@@ -184,8 +184,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     public boolean canFilter(Object object) {
         if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
             return true;
-        }
-        if (object instanceof ClassPathContainer) { // HACK: check if it has anything interesting
+        } else if (object instanceof ClassPathContainer) { // HACK: check if it has anything interesting
             ClassPathContainer container = (ClassPathContainer)object;
             
             Object[] children = container.getChildren(container);

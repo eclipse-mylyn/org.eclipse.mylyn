@@ -89,8 +89,10 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     }
 
     public void contextDeactivated(IMylarContext context) {
-    	for (AbstractApplyMylarAction action : managedActions) action.update(false);
-      	refreshViewers();
+    	for (AbstractApplyMylarAction action : managedActions) {
+    		action.update(false);
+    	}
+    	refreshViewers();
     }
 
     public void presentationSettingsChanging(UpdateKind kind) {

@@ -282,7 +282,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
         @Override
         public IStatus run(IProgressMonitor monitor) {
             try {
-                IStatus s = super.run(monitor);
+                IStatus runStatus = super.run(monitor);
                 ISearchResult result = getSearchResult();
                 if(result instanceof JavaSearchResult){
                     //TODO make better
@@ -297,14 +297,14 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	                    notifySearchCompleted(l);
                     }
                 }
-                return s;
+                return runStatus;
             } catch (ConcurrentModificationException cme) {
             	MylarPlugin.log(cme, "java search failed");
             } catch (Throwable t) {
             	MylarPlugin.log(t, "java search failed");
             } 
-//            	 search manager not initalized?
-        	IStatus status =new Status(IStatus.WARNING,
+            
+        	IStatus status = new Status(IStatus.WARNING,
                     MylarPlugin.IDENTIFIER,
                     IStatus.OK,
                     "could not run Java search",

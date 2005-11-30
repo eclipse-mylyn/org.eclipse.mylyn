@@ -97,11 +97,13 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					setPreferenceDefaults();
+					savePluginPreferences();
+					
 					MylarPlugin.getContextManager().addListener(packageExplorerManager);
 					MylarPlugin.getContextManager().addListener(typeHistoryManager);
 					MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
 
-					setPreferenceDefaults();
 					if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
 					}
@@ -137,8 +139,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					}
 
 					JavaCore.addElementChangedListener(javaElementChangeListener);
-					savePluginPreferences();
-
 				} catch (Throwable t) {
 					MylarPlugin.fail(t, "Mylar Java plug-in initialization failed", true);
 				}

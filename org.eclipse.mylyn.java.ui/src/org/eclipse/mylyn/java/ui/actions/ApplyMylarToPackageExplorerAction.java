@@ -44,6 +44,7 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	@Override
 	public void update() {
 		super.update();
+		configureAction();
 	}
 	
 	@Override

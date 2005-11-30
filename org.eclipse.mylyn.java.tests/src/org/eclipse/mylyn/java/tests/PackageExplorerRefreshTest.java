@@ -23,8 +23,9 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
  * @author Mik Kersten
  */
 public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
-
+ 
 	private PackageExplorerPart view;
+	
 	private TreeViewer viewer;
 		
 	@Override
@@ -39,6 +40,22 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+	}
+	
+	public void testIsEmptyAfterDeactivation() throws JavaModelException, InterruptedException {
+        IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
+        StructuredSelection sm1 = new StructuredSelection(m1);
+        monitor.selectionChanged(view, sm1);
+        viewer.expandAll();
+
+        assertTrue(countItemsInTree(viewer.getTree()) > 0);
+        assertNotNull(viewer.testFindItem(m1));
+        assertNotNull(viewer.testFindItem(m1.getParent()));
+
+        manager.contextDeactivated(taskId, taskId);
+        ApplyMylarToPackageExplorerAction.getDefault().update(true);
+        assertTrue("num items: " + countItemsInTree(viewer.getTree()), countItemsInTree(viewer.getTree()) == 0);
+        ApplyMylarToPackageExplorerAction.getDefault().update();
 	}
 	
 	public void testPropagation() throws JavaModelException {

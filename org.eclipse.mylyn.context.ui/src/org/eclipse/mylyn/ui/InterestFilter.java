@@ -48,12 +48,14 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
         	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
         	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
         	
-            IMylarElement node = null;
+        	IMylarElement node = null;
             if (element instanceof IMylarElement) {
                 node = (IMylarElement)element;
             } else { 
                 IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-                if (!bridge.canFilter(element)) return true;    
+                if (!bridge.canFilter(element)) {
+                	return true;    
+                }
                 if (matchesExclusion(element, bridge)) return true;
                 
                 String handle = bridge.getHandleIdentifier(element);
