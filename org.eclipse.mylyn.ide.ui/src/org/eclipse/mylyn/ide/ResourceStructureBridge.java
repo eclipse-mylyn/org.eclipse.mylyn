@@ -41,7 +41,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
     public ResourceStructureBridge() {
 //    	if (false) { 
 //    		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-//   	   		workspace.addResourceChangeListener(new ResourceChangeListener());
+//   	   		workspace.addResourceChangeListener(new ResourceChangeMonitor());
 //    	}
     }
     

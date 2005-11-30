@@ -27,6 +27,7 @@ import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.ScalingFactors;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.tests.ResourceTestUtil;
 import org.eclipse.mylar.java.JavaEditingMonitor;
 import org.eclipse.mylar.java.JavaStructureBridge;
@@ -66,6 +67,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
     		JavaStructureBridge.class.getCanonicalName()) != -1);
         
 		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);	
+		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
     }
     
     @Override

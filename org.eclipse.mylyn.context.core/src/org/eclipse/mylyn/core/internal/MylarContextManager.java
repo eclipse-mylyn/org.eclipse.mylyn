@@ -468,9 +468,9 @@ public class MylarContextManager {
         	setContextCapturePaused(false);
         }
         try {
-	        File f = getFileForContext(path);
-	        if (f.exists()) {
-	        	f.delete();
+	        File file = getFileForContext(path);
+	        if (file.exists()) {
+	        	file.delete();
 	        }
 		} catch (SecurityException e) {
 			MylarPlugin.fail(e, "Could not delete context file", false);

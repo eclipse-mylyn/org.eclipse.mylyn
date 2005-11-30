@@ -14,6 +14,7 @@ package org.eclipse.mylar.java.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.tests.ChangeSetManagerTest;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
@@ -28,6 +29,7 @@ public class AllJavaTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylar.java.tests");
+		
 		//$JUnit-BEGIN$
 		suite.addTestSuite(TaskContextChangeSetTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
@@ -49,6 +51,8 @@ public class AllJavaTests {
         suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
         suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
 		//$JUnit-END$
+        
+        MylarIdePlugin.getDefault().setResourceMonitoringEnabled(true);
 		return suite;
 	} 
 }

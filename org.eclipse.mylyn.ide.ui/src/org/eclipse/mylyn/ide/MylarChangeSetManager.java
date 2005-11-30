@@ -35,6 +35,7 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 public class MylarChangeSetManager implements IMylarContextListener {
 
 	private SubscriberChangeSetCollector collector;
+	
 	private Map<String, MylarContextChangeSet> changeSets = new HashMap<String, MylarContextChangeSet>();
 	
 	public MylarChangeSetManager() {

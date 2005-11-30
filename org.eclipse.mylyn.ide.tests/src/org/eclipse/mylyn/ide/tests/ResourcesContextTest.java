@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
 
 /**
@@ -30,11 +31,14 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(true);
+		MylarIdePlugin.getDefault().getInterestUpdater().setSyncExec(true);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		MylarIdePlugin.getDefault().getInterestUpdater().setSyncExec(false);
 	}
 	
 	public void testResourceSelect() throws CoreException {
@@ -47,13 +51,22 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isInteresting());
 	}
 
-	public void testAddedResource() throws CoreException {
+	public void testFileAdded() throws CoreException {
 		IFile file = project.getProject().getFile("new-file.txt");
 		file.create(null, true, null);
 		assertTrue(file.exists());
 		
-//		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
-//		assertTrue(element.getInterest().isInteresting());
+		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		assertTrue(element.getInterest().isInteresting());
+	}
+
+	public void testFolderAdded() throws CoreException {
+		IFolder folder = project.getProject().getFolder("folder");
+		folder.create(true, true, null);
+		assertTrue(folder.exists());
+		
+		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
+		assertTrue(element.getInterest().isInteresting());
 	}
 	
 	public void testDecrementOfFile() throws CoreException, InvocationTargetException, InterruptedException {

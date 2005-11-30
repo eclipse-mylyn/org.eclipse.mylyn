@@ -20,12 +20,13 @@ import junit.framework.TestSuite;
 public class AllIdeTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.mylar.ide.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.ide.tests");
+		
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ResourcesContextTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		//$JUnit-END$
+		
 		return suite;
 	}
 }

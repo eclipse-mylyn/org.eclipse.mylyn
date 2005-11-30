@@ -50,9 +50,11 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	private InterestManipulatingEditorTracker interestEditorTracker = new InterestManipulatingEditorTracker();
 	
-	private ResourceChangeListener resourceChangeListener = new ResourceChangeListener();
+	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
 	
 	private MylarChangeSetManager changeSetManager = new MylarChangeSetManager();
+	
+	private ResourceInterestUpdater interestUpdater = new ResourceInterestUpdater();
 	
 	public MylarIdePlugin() {
 		plugin = this;
@@ -71,7 +73,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 					MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
 					MylarPlugin.getContextManager().addListener(editorManager);
 					
-					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_CHANGE);
+					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor, IResourceChangeEvent.POST_CHANGE);
 	            		
 					if (ApplyMylarToNavigatorAction.getDefault() != null)
 						ApplyMylarToNavigatorAction.getDefault().update();
@@ -112,7 +114,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 			MylarPlugin.getContextManager().removeListener(changeSetManager);
 	
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.removeWindowListener(activeSearchViewTracker);
@@ -130,6 +132,13 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		}
 	}
 
+	/**
+	 * For testing.
+	 */
+	public void setResourceMonitoringEnabled(boolean enabled) {
+		resourceChangeMonitor.setEnabled(enabled);
+	}
+	
 	public static MylarIdePlugin getDefault() {
 		return plugin;
 	}
@@ -179,5 +188,9 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.ide", path);
+	}
+
+	public ResourceInterestUpdater getInterestUpdater() {
+		return interestUpdater;
 	}
 }

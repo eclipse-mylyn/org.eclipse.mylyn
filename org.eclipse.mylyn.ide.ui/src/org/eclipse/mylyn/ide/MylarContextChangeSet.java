@@ -13,19 +13,13 @@ package org.eclipse.mylar.ide;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.synchronize.SyncInfo;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -82,8 +76,8 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	@Override
 	public void add(SyncInfo info) {
-		super.add(info);
-		addResourceToContext(info.getLocal());
+		super.add(info); 
+		MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(info.getLocal());
 	}
 
 	@Override
@@ -104,27 +98,6 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 			resources = MylarIdePlugin.getDefault().getInterestingResources();
 		}
 		return resources.toArray(new IResource[resources.size()]);
-	}
-
-	private void addResourceToContext(final IResource resource) {
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (resource instanceof IFile) {
-//					Object adapter = resource.getAdapter(IJavaElement.class);
-//					if (adapter instanceof IJavaElement) {
-//						bridge = javaStructureBridge;
-//						handle = bridge.getHandleIdentifier((IJavaElement) adapter);
-//					} else {
-					IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
-					String handle = bridge.getHandleIdentifier(resource);
-					if (handle != null) {
-						InteractionEvent manipulationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge.getContentType(), handle, SOURCE_ID);
-						MylarPlugin.getContextManager().handleInteractionEvent(manipulationEvent, true);
-					}
-				}
-			}
-		});
 	}
 
 	public boolean contains(IResource local) {

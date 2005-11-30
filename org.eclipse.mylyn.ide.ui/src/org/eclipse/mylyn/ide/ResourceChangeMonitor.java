@@ -21,10 +21,13 @@ import org.eclipse.mylar.core.MylarPlugin;
 /**
  * @author Mik Kersten
  */
-public class ResourceChangeListener implements IResourceChangeListener {
+public class ResourceChangeMonitor implements IResourceChangeListener {
 
+	private boolean enabled = true;
+	
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (!MylarPlugin.getContextManager().hasActiveContext()
+		if (!enabled 
+			|| !MylarPlugin.getContextManager().hasActiveContext()
 			|| MylarPlugin.getContextManager().isContextCapturePaused()) return;
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) return;
 		IResourceDelta rootDelta = event.getDelta();
@@ -34,9 +37,8 @@ public class ResourceChangeListener implements IResourceChangeListener {
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
-					if (resource.isAccessible() && !resource.isDerived() && !resource.isPhantom()) {
-//						System.err.println(">>" + resource);
-						
+					if (acceptResource(resource)) {
+						MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resource);
 					}
 				}
 				return true;
@@ -47,6 +49,18 @@ public class ResourceChangeListener implements IResourceChangeListener {
 		} catch (CoreException e) {
 			MylarPlugin.log(e, "could not accet marker visitor");
 		}	
+	}
+
+	private boolean acceptResource(IResource resource) {
+		return resource.isAccessible() && !resource.isDerived() && !resource.isPhantom();
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
 //	private void processMarkerDelata(IMarkerDelta[] markers) {
