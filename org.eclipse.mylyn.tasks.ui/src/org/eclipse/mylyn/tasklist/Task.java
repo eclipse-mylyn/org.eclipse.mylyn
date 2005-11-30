@@ -146,7 +146,7 @@ public class Task implements ITask {
     	}
     	
 		if (elapsed < 0){
-			MylarPlugin.fail(new Exception("Time Calculation Exception"), "Computed time was less than zero", false);
+			MylarPlugin.log("Computed time was less than zero", this);
 			elapsed = 0;
 		}
     }

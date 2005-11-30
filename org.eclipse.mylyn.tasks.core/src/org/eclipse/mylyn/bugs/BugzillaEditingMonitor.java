@@ -18,14 +18,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
-import org.eclipse.mylar.core.AbstractInteractionMonitor;
+import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 
 /**
  * @author Mik Kersten
  */
-public class BugzillaEditingMonitor extends AbstractInteractionMonitor {
+public class BugzillaEditingMonitor extends AbstractUserInteractionMonitor {
 
     public BugzillaEditingMonitor() {
         super();
