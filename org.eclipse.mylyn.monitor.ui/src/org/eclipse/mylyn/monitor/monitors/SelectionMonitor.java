@@ -28,7 +28,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.AbstractInteractionMonitor;
+import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -43,7 +43,7 @@ import org.eclipse.ui.part.EditorPart;
  * 
  * @author Mik Kersten
  */
-public class SelectionMonitor extends AbstractInteractionMonitor {
+public class SelectionMonitor extends AbstractUserInteractionMonitor {
 
     public static final String SELECTION_DEFAULT = "selected";
     public static final String SELECTION_NEW = "new";

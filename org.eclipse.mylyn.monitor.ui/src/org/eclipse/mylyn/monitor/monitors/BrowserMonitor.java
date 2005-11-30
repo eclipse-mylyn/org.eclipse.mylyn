@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.AbstractInteractionMonitor;
+import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.swt.browser.Browser;
@@ -35,7 +35,7 @@ import org.eclipse.ui.internal.browser.WebBrowserEditor;
 /**
  * @author Mik Kersten
  */
-public class BrowserMonitor extends AbstractInteractionMonitor implements IPartListener, IWindowListener, IPageListener {
+public class BrowserMonitor extends AbstractUserInteractionMonitor implements IPartListener, IWindowListener, IPageListener {
 
 	public static final String URL_LIST_DELIM = ",";
 	
