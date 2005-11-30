@@ -52,6 +52,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	
 	private ResourceChangeListener resourceChangeListener = new ResourceChangeListener();
 	
+	private MylarChangeSetManager changeSetManager = new MylarChangeSetManager();
+	
 	public MylarIdePlugin() {
 		plugin = this;
 	}
@@ -63,6 +65,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
+					MylarPlugin.getContextManager().addListener(changeSetManager);
 
 					resourceSelectionMonitor = new ResourceSelectionMonitor();
 					MylarPlugin.getDefault().getSelectionMonitors().add(resourceSelectionMonitor);
@@ -107,6 +110,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			MylarPlugin.getContextManager().removeListener(editorManager);
 			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
 			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
+			MylarPlugin.getContextManager().removeListener(changeSetManager);
 	
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
 			IWorkbench workbench = PlatformUI.getWorkbench();
@@ -130,6 +134,10 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public MylarChangeSetManager getChangeSetManager() {
+		return changeSetManager;
+	}
+	
 	public List<IResource> getInterestingResources() {
 		List<IResource> interestingResources = new ArrayList<IResource>();
 		List<IMylarElement> resourceElements = MylarPlugin.getContextManager().getInterestingDocuments();

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.ide;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -23,6 +24,8 @@ import org.eclipse.mylar.core.MylarPlugin;
 public class ResourceChangeListener implements IResourceChangeListener {
 
 	public void resourceChanged(IResourceChangeEvent event) {
+		if (!MylarPlugin.getContextManager().hasActiveContext()
+			|| MylarPlugin.getContextManager().isContextCapturePaused()) return;
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) return;
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
@@ -30,8 +33,11 @@ public class ResourceChangeListener implements IResourceChangeListener {
 //				processMarkerDelata(delta.getMarkerDeltas());
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
-//					IResourceDelta delta2 = added[i];
-					
+					IResource resource = added[i].getResource();
+					if (resource.isAccessible() && !resource.isDerived() && !resource.isPhantom()) {
+//						System.err.println(">>" + resource);
+						
+					}
 				}
 				return true;
 			}

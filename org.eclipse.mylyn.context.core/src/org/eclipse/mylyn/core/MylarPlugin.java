@@ -76,7 +76,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	private IMylarStructureBridge defaultBridge = null;
 
-	private List<AbstractInteractionMonitor> selectionMonitors = new ArrayList<AbstractInteractionMonitor>();
+	private List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
 
 	private List<AbstractCommandMonitor> commandMonitors = new ArrayList<AbstractCommandMonitor>();
 
@@ -318,7 +318,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		return contextManager;
 	}
 
-	public List<AbstractInteractionMonitor> getSelectionMonitors() {
+	public List<AbstractUserInteractionMonitor> getSelectionMonitors() {
 		return selectionMonitors;
 	}
 
@@ -407,15 +407,12 @@ public class MylarPlugin extends AbstractUIPlugin {
 		return bridges;
 	}
 
-	/**
-	 * TODO: performance issue?
-	 */
 	public IMylarStructureBridge getStructureBridge(String contentType) {
-		if (!CoreExtensionPointReader.extensionsRead)
-			CoreExtensionPointReader.initExtensions();
-		IMylarStructureBridge adapter = bridges.get(contentType);
-		if (adapter != null) {
-			return adapter;
+		if (!CoreExtensionPointReader.extensionsRead) CoreExtensionPointReader.initExtensions();
+		
+		IMylarStructureBridge bridge = bridges.get(contentType);
+		if (bridge != null) {
+			return bridge;
 		} else if (defaultBridge != null) {
 			return defaultBridge;
 		} else {
@@ -482,9 +479,11 @@ public class MylarPlugin extends AbstractUIPlugin {
 				getContextManager().addListener(provider);
 			}
 		}
-		bridges.put(bridge.getContentType(), bridge);
-		if (bridge.getContentType().equals(CONTENT_TYPE_ANY))
+		if (bridge.getContentType().equals(CONTENT_TYPE_ANY)) {
 			defaultBridge = bridge;
+		} else {
+			bridges.put(bridge.getContentType(), bridge);
+		}
 	}
 
 	public List<AbstractCommandMonitor> getCommandMonitors() {

@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 28, 2004
-  */
+
 package org.eclipse.mylar.core;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -21,18 +19,19 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
 
 /**
- * Self-registering on construction.
+ * Self-registering on construction.  Encapsulates users' interaction with the
+ * context model.
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractInteractionMonitor implements ISelectionListener {
+public abstract class AbstractUserInteractionMonitor implements ISelectionListener {
  
 	protected Object lastSelectedElement = null;
 	
     /**
      * Requires workbench to be active.
      */
-	public AbstractInteractionMonitor() {
+	public AbstractUserInteractionMonitor() {
 	    try {
     	    ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
     		service.addPostSelectionListener(this); 

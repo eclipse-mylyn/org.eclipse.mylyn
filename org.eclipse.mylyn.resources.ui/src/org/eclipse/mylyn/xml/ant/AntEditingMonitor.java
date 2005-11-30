@@ -22,7 +22,7 @@ import org.eclipse.ant.internal.ui.model.AntModel;
 import org.eclipse.ant.internal.ui.model.AntProjectNode;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.AbstractInteractionMonitor;
+import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.ui.IEditorInput;
@@ -32,7 +32,7 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * @author Mik Kersten
  */
-public class AntEditingMonitor extends AbstractInteractionMonitor {
+public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 
     public AntEditingMonitor() {
         super();

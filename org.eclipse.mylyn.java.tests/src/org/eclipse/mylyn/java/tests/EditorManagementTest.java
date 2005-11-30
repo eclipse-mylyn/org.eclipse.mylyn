@@ -88,7 +88,7 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 //        for (int i = 0; i < page.getEditors().length; i++) {
 //			System.err.println(">>> " + page.getEditors()[i].getTitle());
 //		}
-        assertTrue(page.getEditors().length == 2 || page.getEditors().length == 3);
+        assertTrue("num editors: " + page.getEditors().length, page.getEditors().length == 2 || page.getEditors().length == 3);
 	}
 	
 	public void testCloseOnUninteresting() {

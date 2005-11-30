@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on May 27, 2005
-  */
+ */
 package org.eclipse.mylar.ide.ui;
 
 import java.util.List;
@@ -31,68 +31,72 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public class NavigatorRefreshListener implements IMylarContextListener {
 
-    public static ResourceNavigator getResourceNavigator() {
-        if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null) return null;
-        IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-        if (activePage == null)
-            return null;
-        IViewPart view= activePage.findView("org.eclipse.ui.views.ResourceNavigator");
-        if (view instanceof ResourceNavigator)
-            return (ResourceNavigator)view;
-        return null;    
-    }
-    
-    protected void refresh(IMylarElement node) {
-        ResourceNavigator navigator = getResourceNavigator();
-        if (navigator == null || navigator.getTreeViewer() == null) return;
-        
-        if (node != null) {
-        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
-            Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
-            getResourceNavigator().getTreeViewer().refresh(object);
-        } else {
-            getResourceNavigator().getTreeViewer().refresh();
-        }
-    }
-    
-    public void contextActivated(IMylarContext taskscape) {
-        refresh(null);
-    }
+	public static final String ID_NAVIGATOR = "org.eclipse.ui.views.ResourceNavigator";
 
-    public void contextDeactivated(IMylarContext taskscape) {
-        refresh(null);
-    }
+	public static ResourceNavigator getResourceNavigator() {
+		if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null)
+			return null;
+		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null)
+			return null;
+		IViewPart view = activePage.findView(ID_NAVIGATOR);
+		if (view instanceof ResourceNavigator)
+			return (ResourceNavigator) view;
+		return null;
+	}
 
-    public void presentationSettingsChanging(UpdateKind kind) {
-        refresh(null);
-    }
+	protected void refresh(IMylarElement node) {
+		ResourceNavigator navigator = getResourceNavigator();
+		if (navigator == null || navigator.getTreeViewer() == null)
+			return;
 
-    public void presentationSettingsChanged(UpdateKind kind) {
-        refresh(null);
-    }
+		if (node != null) {
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
+			Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
+			getResourceNavigator().getTreeViewer().refresh(object);
+		} else {
+			getResourceNavigator().getTreeViewer().refresh();
+		}
+	}
 
-    public void interestChanged(IMylarElement node) {
-        refresh(node);
-    }
+	public void contextActivated(IMylarContext taskscape) {
+		refresh(null);
+	}
 
-    public void interestChanged(List<IMylarElement> nodes) {
-        IMylarElement node = nodes.get(nodes.size()-1);
-        interestChanged(node);
-    }
+	public void contextDeactivated(IMylarContext taskscape) {
+		refresh(null);
+	}
 
-    public void nodeDeleted(IMylarElement node) {
-        refresh(node);
-    }
+	public void presentationSettingsChanging(UpdateKind kind) {
+		refresh(null);
+	}
 
-    public void landmarkAdded(IMylarElement node) {
-        refresh(node);
-    }
+	public void presentationSettingsChanged(UpdateKind kind) {
+		refresh(null);
+	}
 
-    public void landmarkRemoved(IMylarElement node) {
-        refresh(node);
-    }
+	public void interestChanged(IMylarElement node) {
+		refresh(node);
+	}
 
-    public void edgesChanged(IMylarElement node) {
-        refresh(null);
-    }
+	public void interestChanged(List<IMylarElement> nodes) {
+		IMylarElement node = nodes.get(nodes.size() - 1);
+		interestChanged(node);
+	}
+
+	public void nodeDeleted(IMylarElement node) {
+		refresh(node);
+	}
+
+	public void landmarkAdded(IMylarElement node) {
+		refresh(node);
+	}
+
+	public void landmarkRemoved(IMylarElement node) {
+		refresh(node);
+	}
+
+	public void edgesChanged(IMylarElement node) {
+		refresh(null);
+	}
 }

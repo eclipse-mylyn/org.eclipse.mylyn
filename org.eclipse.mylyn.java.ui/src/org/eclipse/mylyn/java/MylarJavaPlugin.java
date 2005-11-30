@@ -65,8 +65,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	private MylarChangeSetManager changeSetManager = new MylarChangeSetManager();
-
 	public static final String PLUGIN_ID = "org.eclipse.mylar.java";
 
 	public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
@@ -102,7 +100,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					MylarPlugin.getContextManager().addListener(packageExplorerManager);
 					MylarPlugin.getContextManager().addListener(typeHistoryManager);
 					MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
-					MylarPlugin.getContextManager().addListener(changeSetManager);
 
 					setPreferenceDefaults();
 					if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
@@ -165,7 +162,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			MylarPlugin.getContextManager().removeListener(packageExplorerManager);
 			MylarPlugin.getContextManager().removeListener(typeHistoryManager);
 			MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
-			MylarPlugin.getContextManager().removeListener(changeSetManager);
 	
 			MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
 	
@@ -297,10 +293,6 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	public TypeHistoryManager getTypeHistoryManager() {
 		return typeHistoryManager;
-	}
-
-	public MylarChangeSetManager getChangeSetManager() {
-		return changeSetManager;
 	}
 
 	// private void resetActiveEditor() {

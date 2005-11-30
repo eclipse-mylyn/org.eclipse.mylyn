@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.ui.actions;
+package org.eclipse.mylar.ide.ui.actions;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
@@ -18,8 +18,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.java.MylarJavaPlugin;
-import org.eclipse.mylar.java.ui.wizards.MylarCommitWizard;
+import org.eclipse.mylar.ide.MylarIdePlugin;
+import org.eclipse.mylar.ide.ui.wizards.MylarCommitWizard;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Shell;
@@ -48,7 +48,7 @@ public class CompleteTaskWizardAction implements IViewActionDelegate {
 			return;
 		}
 		
-		IResource[] resources = MylarJavaPlugin.getDefault().getChangeSetManager().getResources(task);
+		IResource[] resources = MylarIdePlugin.getDefault().getChangeSetManager().getResources(task);
 		if (resources == null || resources.length == 0){
 			MessageDialog.openInformation(null, 
 					"Mylar Information", 

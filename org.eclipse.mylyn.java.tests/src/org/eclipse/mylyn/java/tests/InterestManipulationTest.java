@@ -14,8 +14,6 @@ package org.eclipse.mylar.java.tests;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
@@ -66,7 +64,9 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(part, new StructuredSelection(javaMethod));		
 		method = MylarPlugin.getContextManager().getElement(javaMethod.getHandleIdentifier());
 		
-		IFile file = (IFile)javaCu.getAdapter(IResource.class);
+		IFile file = project.getProject().getFile("foo.txt");
+		file.create(null, true, null);
+//		IFile file = (IFile)javaCu.getAdapter(IResource.class);
         ResourceStructureBridge bridge = new ResourceStructureBridge();
 		new ResourceSelectionMonitor().selectionChanged(part, new StructuredSelection(file));
 		
@@ -81,34 +81,6 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
         assertFalse(fileElement.getInterest().isInteresting());
         // TODO: re-enable, fails in AllTests
 //        assertFalse(method.getInterest().isInteresting());
-    }
-	
-	/**
-	 * TODO: move to IDE tests?
-	 * @throws InterruptedException 
-	 * @throws InvocationTargetException 
-	 * @throws CoreException 
-	 */
-	public void testDecrementOfFile() throws CoreException, InvocationTargetException, InterruptedException {
-		IFolder folder = (IFolder)javaPackage.getAdapter(IResource.class);
-		IFile file = (IFile)javaCu.getAdapter(IResource.class);
-		ResourceStructureBridge bridge = new ResourceStructureBridge();
-		
-		project.build();
-		
-		new ResourceSelectionMonitor().selectionChanged(part, new StructuredSelection(file));
-		new ResourceSelectionMonitor().selectionChanged(part, new StructuredSelection(folder));
-		
-		IMylarElement folderElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(folder));
-        IMylarElement fileElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
-		        
-        assertTrue(fileElement.getInterest().isInteresting());
-		assertTrue(folderElement.getInterest().isInteresting());
-        
-        MylarPlugin.getContextManager().manipulateInterestForNode(folderElement, false, false, "test");
-
-        assertFalse(folderElement.getInterest().isInteresting());
-        assertFalse(fileElement.getInterest().isInteresting());
     }
 	
 	public void testDecrementInterestOfCompilationUnit() throws JavaModelException {

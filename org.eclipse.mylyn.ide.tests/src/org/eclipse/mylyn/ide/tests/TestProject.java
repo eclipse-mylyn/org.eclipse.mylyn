@@ -22,7 +22,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * From Erich Gamma's "Contributing to Eclipse" book.
+ * @author Mik Kersten
  */
 public class TestProject {
 	
@@ -38,10 +38,10 @@ public class TestProject {
 	public IProject getProject() {
 		return project;
 	}
-
+	
 	public IFolder createFolder(String name) throws CoreException {
-		IFolder binFolder = project.getFolder(name);
-		binFolder.create(false, true, null);
-		return binFolder;
+		IFolder folder = project.getFolder(name);
+		folder.create(false, true, null);
+		return folder;
 	}
 }

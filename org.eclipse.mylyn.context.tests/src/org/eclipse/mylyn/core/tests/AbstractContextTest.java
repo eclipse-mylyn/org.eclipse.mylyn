@@ -10,54 +10,62 @@
  *******************************************************************************/
 /*
  * Created on May 26, 2005
-  */
+ */
 package org.eclipse.mylar.core.tests;
+
+import junit.framework.TestCase;
 
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.InteractionEvent;
-
-import junit.framework.TestCase;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
-public class AbstractContextTest extends TestCase {
+public abstract class AbstractContextTest extends TestCase {
 
-    private static final String MOCK_PROVIDER = "<mock-provider>";
+	private static final String MOCK_PROVIDER = "<mock-provider>";
+
 	private static final String MOCK_ORIGIN = "<mock-origin>";
+
 	private static final String MOCK_KIND = "java";
 
 	protected InteractionEvent mockSelection(String handle) {
-        return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, handle, MOCK_ORIGIN);
-    }
+		return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, handle, MOCK_ORIGIN);
+	}
 
 	protected InteractionEvent mockPropagation(String handle) {
-        return new InteractionEvent(InteractionEvent.Kind.PROPAGATION, MOCK_KIND, handle, MOCK_ORIGIN);
-    }
-	
-    protected InteractionEvent mockSelection() {
-        return mockSelection("<mock-handle>");
-    }
-    
-    protected InteractionEvent mockNavigation(String toHandle) {
-        return new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", toHandle, MOCK_ORIGIN, MOCK_PROVIDER);
-    }
+		return new InteractionEvent(InteractionEvent.Kind.PROPAGATION, MOCK_KIND, handle, MOCK_ORIGIN);
+	}
 
-    protected InteractionEvent mockInterestContribution(String handle, String kind, float value) {
-        InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, MOCK_ORIGIN, value);
-        return event;
-    }
-    
-    protected InteractionEvent mockInterestContribution(String handle, float value) {
-    	return mockInterestContribution(handle, MOCK_KIND, value);
-    }
+	protected InteractionEvent mockSelection() {
+		return mockSelection("<mock-handle>");
+	}
 
-    protected InteractionEvent mockPreferenceChange(String handle) {
-        return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, MOCK_KIND, handle, MOCK_ORIGIN);
-    }
-    
-    protected boolean compareTaskscapeEquality(IMylarContext t1, IMylarContext t2) {
-        return false;
-    }
-    
+	protected InteractionEvent mockNavigation(String toHandle) {
+		return new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", toHandle, MOCK_ORIGIN, MOCK_PROVIDER);
+	}
+
+	protected InteractionEvent mockInterestContribution(String handle, String kind, float value) {
+		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, MOCK_ORIGIN, value);
+		return event;
+	}
+
+	protected InteractionEvent mockInterestContribution(String handle, float value) {
+		return mockInterestContribution(handle, MOCK_KIND, value);
+	}
+
+	protected InteractionEvent mockPreferenceChange(String handle) {
+		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, MOCK_KIND, handle, MOCK_ORIGIN);
+	}
+
+	protected boolean compareTaskscapeEquality(IMylarContext t1, IMylarContext t2) {
+		return false;
+	}
+
+	protected IViewPart openView(String id) throws PartInitException {
+		return Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(id);
+	}
 }

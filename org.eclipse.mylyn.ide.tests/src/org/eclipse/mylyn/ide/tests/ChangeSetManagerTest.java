@@ -9,21 +9,19 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylar.ide.tests;
 
-import org.eclipse.mylar.java.MylarChangeSetManager;
-import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.ide.MylarChangeSetManager;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
-
-
 
 /**
  * @author Mik Kersten
  */
-public class ChangeSetManagerTest extends AbstractJavaContextTest {
+public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
-	private MylarChangeSetManager changeSetManager = MylarJavaPlugin.getDefault().getChangeSetManager();
+	private MylarChangeSetManager changeSetManager = MylarIdePlugin.getDefault().getChangeSetManager();
 		
     @Override
     protected void setUp() throws Exception {

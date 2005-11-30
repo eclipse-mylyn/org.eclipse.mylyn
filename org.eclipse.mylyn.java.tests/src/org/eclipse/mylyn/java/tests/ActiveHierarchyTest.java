@@ -31,13 +31,14 @@ import org.eclipse.ui.PartInitException;
 public class ActiveHierarchyTest extends AbstractJavaContextTest {
 
 	private ActiveHierarchyView view;
+
 	private Tree tree;
-	
+
 	public ActiveHierarchyTest() throws PartInitException {
-		view = (ActiveHierarchyView)JavaPlugin.getActivePage().showView(ActiveHierarchyView.ID);
-		tree = view.getViewer().getTree();	
+		view = (ActiveHierarchyView) JavaPlugin.getActivePage().showView(ActiveHierarchyView.ID);
+		tree = view.getViewer().getTree();
 	}
-	
+
 	/**
 	 * bug#107384
 	 */
@@ -45,37 +46,36 @@ public class ActiveHierarchyTest extends AbstractJavaContextTest {
 		assertEquals(0, tree.getItemCount());
 		assertEquals(0, MylarPlugin.getContextManager().getActiveLandmarks().size());
 
-		IType superType = project.createType(p1, "Super.java", "public class Super { }" );
+		IType superType = project.createType(p1, "Super.java", "public class Super { }");
 		makeLandmark(superType);
 		List<TreeItem> collectedItems = new ArrayList<TreeItem>();
 		collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(2, collectedItems.size());
 
-		IType sub1 = project.createType(p1, "Sub1.java", "public class Sub1 extends Super { }" );
+		IType sub1 = project.createType(p1, "Sub1.java", "public class Sub1 extends Super { }");
 		makeLandmark(sub1);
 		collectedItems = new ArrayList<TreeItem>();
 		collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(3, collectedItems.size());
 
-		IType sub2 = project.createType(p1, "Sub2.java", "public class Sub2 extends Super { }" );
+		IType sub2 = project.createType(p1, "Sub2.java", "public class Sub2 extends Super { }");
 		makeLandmark(sub2);
 		collectedItems = new ArrayList<TreeItem>();
 		collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(4, collectedItems.size());
-		
-		IType subsub = project.createType(p1, "SubSub.java", "public class SubSub extends Sub1 { }" );
+
+		IType subsub = project.createType(p1, "SubSub.java", "public class SubSub extends Sub1 { }");
 		makeLandmark(subsub);
 		collectedItems = new ArrayList<TreeItem>();
 		collectTreeItemsInView(tree.getItems(), collectedItems);
 		assertEquals(5, collectedItems.size());
 	}
-	
+
 	private void makeLandmark(IJavaElement element) {
-        StructuredSelection s1 = new StructuredSelection(element);
-        monitor.selectionChanged(view, s1);
-        manager.handleInteractionEvent(mockInterestContribution(
-        		element.getHandleIdentifier(), scaling.getLandmark()));
-        view.refreshHierarchy(false);
+		StructuredSelection s1 = new StructuredSelection(element);
+		monitor.selectionChanged(view, s1);
+		manager.handleInteractionEvent(mockInterestContribution(element.getHandleIdentifier(), scaling.getLandmark()));
+		view.refreshHierarchy(false);
 	}
-	
+
 }

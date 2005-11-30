@@ -173,26 +173,7 @@
  		</viewContribution>
 	</extension>
 	
-  <extension point="org.eclipse.ui.popupMenus">
-       <viewerContribution
-            id="org.eclipse.mylar.java.ui.viewerContribution"
-            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-        <action
-              class="org.eclipse.mylar.java.ui.actions.CompleteTaskWizardAction"
-              enablesFor="*"
-              icon="icons/elcl16/cvs_persp.gif"
-              id="org.eclipse.mylar.ui.clear.context"
-              label="Commit Task Context..."
-              menubarPath="context"
-              tooltip="Commit All ">
-           <enablement>
-              <or>
-                 <objectClass name="org.eclipse.mylar.tasklist.ITask"/>
-              </or>
-           </enablement>
-        </action>
-     </viewerContribution>
-     
+  <extension point="org.eclipse.ui.popupMenus"> 
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.jdt.core.IJavaElement">

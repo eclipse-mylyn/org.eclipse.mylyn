@@ -34,14 +34,11 @@ import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
-public class AbstractJavaContextTest extends AbstractContextTest {
+public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	protected MylarContextManager manager = MylarPlugin.getContextManager();
     protected JavaEditingMonitor monitor = new JavaEditingMonitor();
@@ -110,14 +107,6 @@ public class AbstractJavaContextTest extends AbstractContextTest {
 				collectTreeItemsInView(childItem.getItems(), collectedItems);
 			}
 		}
-	}
-
-	protected IViewPart openView(String id) {
-    	if (Workbench.getInstance() == null) return null;
-    	IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-        if (activePage == null) return null;
-        IViewPart view = activePage.findView(id);
-        return view;
 	}
 
 	class TestProgressMonitor implements IProgressMonitor {

@@ -13,7 +13,7 @@ package org.eclipse.mylar.java.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.java.MylarContextChangeSet;
+import org.eclipse.mylar.ide.MylarContextChangeSet;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;

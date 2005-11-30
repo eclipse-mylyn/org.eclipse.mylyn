@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.ui.wizards;
+package org.eclipse.mylar.ide.ui.wizards;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.core.MylarPlugin;
