@@ -129,10 +129,14 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		// TODO: support multiple tasks
-//		for (String taskHandle : activeChangeSets.keySet()) {
-//			collector.remove(activeChangeSets.get(taskHandle));			
-//		}
+		// TODO: support multiple active tasks
+		for (String taskHandle : activeChangeSets.keySet()) {
+			MylarContextChangeSet changeSet = activeChangeSets.get(taskHandle);
+			IResource[] resources = changeSet.getResources();
+			if (resources == null || resources.length == 0) {
+				collector.remove(changeSet);			
+			}
+		}
 //		activeChangeSets.clear();
 	}
 
