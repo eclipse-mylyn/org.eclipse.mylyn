@@ -32,7 +32,7 @@ public class MylarContextRelation implements IMylarRelation {
     private IMylarElement target;
     
     public MylarContextRelation(String kind, String edgeKind, IMylarElement source, IMylarElement target, MylarContext context) {
-        interest = new DegreeOfInterest(context);
+        interest = new DegreeOfInterest(context, MylarContextManager.getScalingFactors());
         this.structureKind = kind;
         this.relationshipHandle = edgeKind; 
         this.target = target;

@@ -52,7 +52,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
 	
-	private MylarChangeSetManager changeSetManager = new MylarChangeSetManager();
+	private MylarChangeSetManager changeSetManager;
 	
 	private ResourceInterestUpdater interestUpdater = new ResourceInterestUpdater();
 	
@@ -66,6 +66,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					changeSetManager = new MylarChangeSetManager();
 					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
 					MylarPlugin.getContextManager().addListener(changeSetManager);
 

@@ -38,7 +38,7 @@ public class MylarContextElement implements IMylarElement {
     
     public MylarContextElement(String kind, String elementHandle, MylarContext context) {
         if (elementHandle == null) throw new RuntimeException("malformed context: null handle");
-        interest = new DegreeOfInterest(context);
+        interest = new DegreeOfInterest(context, MylarContextManager.getScalingFactors());
         this.handle = elementHandle;
         this.kind = kind;
         this.context = context;

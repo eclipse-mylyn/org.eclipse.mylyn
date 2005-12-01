@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.internal.DegreeOfInterest;
 import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 
 /**
  * @author Mik Kersten
@@ -35,7 +36,7 @@ public class DegreeOfInterestTest extends TestCase {
     }
 
 	public void testPredictedInterest() {
-		DegreeOfInterest doi = new DegreeOfInterest(mockContext);
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext, MylarContextManager.getScalingFactors());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, "kind", "handle", "source-id", "id", null, 1);
         doi.addEvent(event);
 
@@ -46,7 +47,7 @@ public class DegreeOfInterestTest extends TestCase {
 	} 
     
 	public void testPropagatedInterest() {
-		DegreeOfInterest doi = new DegreeOfInterest(mockContext);
+		DegreeOfInterest doi = new DegreeOfInterest(mockContext, MylarContextManager.getScalingFactors());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "kind", "handle", "source-id", "id", null, 1);
         doi.addEvent(event);
 
@@ -57,7 +58,7 @@ public class DegreeOfInterestTest extends TestCase {
 	}
     
 	public void testCreation() {
-    	DegreeOfInterest doi = new DegreeOfInterest(mockContext);
+    	DegreeOfInterest doi = new DegreeOfInterest(mockContext, MylarContextManager.getScalingFactors());
     	assertFalse(doi.isInteresting());
     	assertFalse(doi.isLandmark());
     	assertFalse(doi.isPropagated());

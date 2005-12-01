@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
-import org.eclipse.mylar.ide.ResourceStructureBridge;
 
 /**
  * @author Mik Kersten
@@ -75,13 +74,11 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 		IFile file = project.getProject().getFile(new Path("folder/foo.txt"));
 		file.create(null, true, null);
 		
-		ResourceStructureBridge bridge = new ResourceStructureBridge();
-		
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
 		monitor.selectionChanged(navigator, new StructuredSelection(folder));
 		
-		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
-		IMylarElement folderElement = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(folder));
+		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IMylarElement folderElement = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
         
         assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(folderElement.getInterest().isInteresting());

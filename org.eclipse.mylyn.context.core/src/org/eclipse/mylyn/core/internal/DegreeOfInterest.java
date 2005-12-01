@@ -45,17 +45,10 @@ public class DegreeOfInterest implements IDegreeOfInterest {
     private MylarContext context;
     private int eventCountOnCreation;
     
-    public DegreeOfInterest(MylarContext context) {
+    public DegreeOfInterest(MylarContext context, ScalingFactors scaling) {
         this.context = context;
         this.eventCountOnCreation = context.getUserEventCount();
-        init();
-    }
-    
-    /**
-     * TODO: lose the reference to TaskManager?
-     */
-    private void init() {
-        scaling = MylarContextManager.getScalingFactors();
+        this.scaling = scaling;
     }
     
     /**

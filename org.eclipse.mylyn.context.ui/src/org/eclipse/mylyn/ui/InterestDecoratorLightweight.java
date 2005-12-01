@@ -33,11 +33,11 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
     }
 
     public void decorate(Object element, IDecoration decoration) {
-    	IMylarStructureBridge adapter = null;
+    	IMylarStructureBridge bridge = null;
     	try {
     		if(MylarPlugin.getDefault() == null)
     			return;
-    		adapter = MylarPlugin.getDefault().getStructureBridge(element);
+    		bridge = MylarPlugin.getDefault().getStructureBridge(element);
 	    } catch (ConcurrentModificationException cme) {
 	    	// ignored, because we can add structure bridges during decoration
 	    }
@@ -48,15 +48,15 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
             } else  if (element instanceof IMylarElement) {
                 node = (IMylarElement)element;
             } else {
-                if (adapter != null && adapter.getContentType() != null) {
-                    node = MylarPlugin.getContextManager().getElement(adapter.getHandleIdentifier(element));
+                if (bridge != null && bridge.getContentType() != null) {
+                    node = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(element));
                 }
             }
             if (node != null) {
                 decoration.setBackgroundColor(UiUtil.getBackgroundForElement(node));
                 decoration.setForegroundColor(UiUtil.getForegroundForElement(node));      
-                if (adapter != null 
-                	&& adapter.canBeLandmark(node.getHandleIdentifier()) 
+                if (bridge != null 
+                	&& bridge.canBeLandmark(node.getHandleIdentifier()) 
                     && node.getInterest().isLandmark() 
                     && !node.getInterest().isPropagated()
                     && !node.getInterest().isPredicted()
