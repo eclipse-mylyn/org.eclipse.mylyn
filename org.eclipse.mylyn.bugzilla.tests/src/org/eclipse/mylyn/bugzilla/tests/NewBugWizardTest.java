@@ -11,27 +11,65 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.bugzilla.ui.wizard.AbstractWizardDataPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Ian Bull
  */
 public class NewBugWizardTest extends TestCase {
 	
-	public void testPlatformOptions() {
+	public void testPlatformOptions() throws Exception {
+		
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/cdt-page.html"));
+		Reader in = new FileReader(f);
+		
 		NewBugModel model = new NewBugModel();
 		AbstractWizardDataPage page = new TestWizardDataPage();
+		new NewBugParser(in).parseBugAttributes(model, true); // ** TRUE vs FALSE **
 		page.setPlatformOptions(model);
 		
-		// TODO: uncomment and make it pass
-//		String os = Platform.getOS();
-//		String platform = Platform.getOSArch();
-//		assertEquals(os, model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS));
-//		assertEquals(platform, model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM));
+		String os = Platform.getOS();
+		if ( os.equals("win32") )
+			assertEquals("Windows All", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+		else if ( os.equals("solaris") )
+			assertEquals("Solaris", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+		else if ( os.equals("qnx") )
+			assertEquals("QNX-Photon", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+		else if ( os.equals("macosx") )
+			assertEquals("MacOS X", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+		else if ( os.equals("linux")) 
+			assertEquals("Linux", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+		else if ( os.equals("hpux"))
+			assertEquals("HP-UX", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+		else if ( os.equals("aix" ))
+			assertEquals("AIX", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+		
+		String platform = Platform.getOSArch();
+		if ( platform.equals("x86"))
+			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+		else if ( platform.equals("x86_64"))
+			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+		else if ( platform.equals("ia64"))
+			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+		else if ( platform.equals("ia64_32"))
+			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+		else if ( platform.equals("sparc"))
+			assertEquals("Sun", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+		else if ( platform.equals("ppc"))
+			assertEquals("Power", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+		
 	}
 	
 	static class TestWizardDataPage extends AbstractWizardDataPage {
@@ -40,5 +78,6 @@ public class NewBugWizardTest extends TestCase {
 			super("", "", "", PlatformUI.getWorkbench());
 		}
 	}
+ 	
 	
 }
