@@ -224,9 +224,12 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void taskPropertyChanged(ITask updatedTask, String property) {
-			// don't care about property change	
+			// ignore
 		}
 
+		public void tasklistRead() {
+			// ignore
+		}
 	};
 
 	/**

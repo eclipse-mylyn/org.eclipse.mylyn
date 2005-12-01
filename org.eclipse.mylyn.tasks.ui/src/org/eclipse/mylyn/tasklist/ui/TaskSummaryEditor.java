@@ -129,6 +129,10 @@ public class TaskSummaryEditor extends EditorPart {
         			pathText.setText("<Mylar_Dir>/" + task.getPath());
         		}
         	}
+		}
+
+		public void tasklistRead() {
+			// ignore
 		}        
     };    
 

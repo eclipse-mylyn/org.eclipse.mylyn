@@ -131,17 +131,17 @@ public class TaskList implements Serializable {
 	}
 
 	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
-		ITask t = null;
+		ITask foundTask = null;
 		for (ITaskListCategory cat : categories) {
 			if (!lookInArchives && cat.isArchive())
 				continue;
-			if ((t = findTaskHelper(cat.getChildren(), handle)) != null) {
-				return t;
+			if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
+				return foundTask;
 			}
 		}
 		for (IQuery query : queries) {
-			if ((t = findTaskHelper(query.getChildren(), handle)) != null) {
-				return t;
+			if ((foundTask = findTaskHelper(query.getChildren(), handle)) != null) {
+				return foundTask;
 			}
 		}
 		return findTaskHelper(rootTasks, handle);
