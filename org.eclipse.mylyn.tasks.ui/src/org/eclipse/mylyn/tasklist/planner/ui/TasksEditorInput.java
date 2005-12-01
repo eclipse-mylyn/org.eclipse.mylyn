@@ -108,8 +108,14 @@ public class TasksEditorInput implements IEditorInput {
 	}
 
 	public boolean createdDuringReportPeriod(ITask task) {
-		Date reportStartDate = new Date(new Date().getTime() - prevDaysToReport * DAY);
-		return task.getCreationDate().compareTo(reportStartDate) > 0;
+		Date creationDate = task.getCreationDate();
+		if (creationDate != null){
+			Date reportStartDate = new Date(new Date().getTime() - prevDaysToReport * DAY);
+			return creationDate.compareTo(reportStartDate) > 0;			
+		}
+		else{
+			return false;
+		}
 	}
 
 	

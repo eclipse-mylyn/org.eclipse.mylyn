@@ -176,8 +176,7 @@ public class BugzillaQueryCategory implements IQuery {
 			// problem
 			// thrown in BugzillaSearchOperation
 			MessageDialog
-					.openError(
-							null,
+					.openError(Display.getDefault().getActiveShell(),
 							"Login Error",
 							"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
 			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));

@@ -50,9 +50,21 @@ public class CompletedTasksLabelProvider extends LabelProvider implements
 				case 2:
 					return task.getPriority();
 				case 3:
-					return DateFormat.getDateInstance(DateFormat.SHORT).format(task.getCreationDate());
+					if (task.getCreationDate() != null){
+						return DateFormat.getDateInstance(DateFormat.SHORT).format(task.getCreationDate());
+					}
+					else{
+						MylarPlugin.log("Task has no creation date: " + task.getDescription(true), this);
+						return "Unknown";
+					}
 				case 4:
-					return DateFormat.getDateInstance(DateFormat.SHORT).format(task.getEndDate());
+					if (task.getCreationDate() != null){
+						return DateFormat.getDateInstance(DateFormat.SHORT).format(task.getEndDate());
+					}
+					else{
+						MylarPlugin.log("Task has no creation date: " + task.getDescription(true), this);
+						return "Unknown";
+					}
 				case 5:
 					return DateUtil.getFormattedDurationShort(task.getElapsedMillis());
 				}	

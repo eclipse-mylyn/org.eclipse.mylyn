@@ -140,7 +140,8 @@ public class DatePicker extends Composite {
 			date = new GregorianCalendar();
 		}
 		datePickerPanel.setDate(date);
-		pickerShell.setSize(new Point(225, 180));
+		//pickerShell.setSize(new Point(225, 180));
+		pickerShell.setSize(new Point(240, 180));
 		pickerShell.setLocation(new Point(x, y));
 		
 		datePickerPanel.addKeyListener(new KeyListener(){

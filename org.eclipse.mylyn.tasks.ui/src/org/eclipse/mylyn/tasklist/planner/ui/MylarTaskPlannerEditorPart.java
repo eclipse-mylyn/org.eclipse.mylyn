@@ -76,6 +76,8 @@ import org.eclipse.ui.part.EditorPart;
 public class MylarTaskPlannerEditorPart extends EditorPart {
 
 	
+	private static final String FONT_COLOR_EXPLANATION_NOTE = "Tasks created during the report period are shown in blue";
+
 	private TasksEditorInput editorInput = null;
 
 	//Completed Table Information
@@ -204,6 +206,8 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		detailContainer.setLayout(layout);
 		
 		createTable(detailContainer, toolkit, columnNames, columnWidths, sorterConstants, contentProvider, labelProvider);
+	
+		toolkit.createLabel(parent, FONT_COLOR_EXPLANATION_NOTE);
 	}
 	
 	/** TODO: Comment parameters */
