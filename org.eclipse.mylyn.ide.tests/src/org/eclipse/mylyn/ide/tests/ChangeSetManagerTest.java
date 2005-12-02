@@ -90,7 +90,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(1, changeSets.size());
 		MylarContextChangeSet set = changeSets.get(0); 
 		IResource[] resources = set.getResources();
-		assertEquals(1, resources.length);
+		assertTrue(resources.length <= 2); // can have .project file in there
 		
         for (int i = 0; i < 1/(scaling.getDecay().getValue())*3; i++) {
             MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());            

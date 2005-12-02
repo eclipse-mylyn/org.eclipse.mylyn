@@ -97,9 +97,9 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 	                            markerMap.put(node, marker.getId());
                             }
                         }
-                    };
+                    }; 
                     if (resource != null) resource.getWorkspace().run(runnable, null);
-                } catch (JavaModelException e) {
+                } catch (JavaModelException e) { 
                     MylarPlugin.fail(e, "couldn't update marker", false);
                 }catch (CoreException e) {
                     MylarPlugin.fail(e, "couldn't update marker", false);

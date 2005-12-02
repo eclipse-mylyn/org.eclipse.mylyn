@@ -58,10 +58,8 @@ public class TimerThread extends Thread implements Runnable {
 		    	}
 		        if (elapsed >= timeout && /*!stopped && */  !killed) {
 		            for (ITimerThreadListener listener : listeners) {
-		            
-		            	
 		            	listener.fireTimedOut();
-					
+		            	resetTimer();
 		            }
 		        }
 		        sleep(sleepInterval);
