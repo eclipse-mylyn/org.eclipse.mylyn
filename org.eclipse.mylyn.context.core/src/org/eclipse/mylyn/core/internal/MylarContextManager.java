@@ -562,19 +562,19 @@ public class MylarContextManager {
 	}
     
     public void refreshRelatedElements() {
-    	for(IMylarStructureBridge bridge: MylarPlugin.getDefault().getStructureBridges().values()){
-    		if(bridge.getRelationshipProviders() != null){
-		        for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
-		        	List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();
-		        	providerList.add(provider);
-		        	updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
-		//            if (provider.isEnabled()) {
-		//                MylarPlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
-		//            }
-		//            for (IMylarElement node : activeContext.getLandmarks()) provider.landmarkAdded(node);
-		        }
-    		}
-    	}
+    	try {
+	    	for(IMylarStructureBridge bridge: MylarPlugin.getDefault().getStructureBridges().values()){
+	    		if(bridge.getRelationshipProviders() != null){
+			        for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
+			        	List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();
+			        	providerList.add(provider);
+			        	updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
+			        }
+	    		}
+	    	}
+        } catch (Throwable t) {
+        	MylarPlugin.fail(t, "Could not refresn related elements", false);
+        }
     }
 
     public List<AbstractRelationProvider> getActiveRelationProviders() {

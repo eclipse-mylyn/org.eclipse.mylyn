@@ -13,8 +13,8 @@ package org.eclipse.mylar.core.tests;
 
 import java.io.File;
 
-import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextExternalizer;
 import org.eclipse.mylar.core.internal.ScalingFactors;
@@ -36,6 +36,16 @@ public class ContextTest extends AbstractContextTest {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
+    }
+    
+    public void testReset() {
+    	context.parseEvent(mockSelection());
+//    	MylarPlugin.getContextManager().contextDeleted(taskId, taskId);
+    	context.reset();
+//    	MylarPlugin.getContextManager().contextActivated(taskId, taskId);
+    	
+    	assertNull(context.getActiveNode());
+
     }
     
     public void testManipulation() {

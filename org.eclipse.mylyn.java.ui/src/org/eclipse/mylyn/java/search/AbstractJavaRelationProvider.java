@@ -72,6 +72,10 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
     @Override
     protected void findRelated(final IMylarElement node, int degreeOfSeparation) {
     	if (node == null) return;
+    	if (node.getContentType() == null) {
+    		MylarPlugin.log("null content type for: " + node, this);
+    		return;
+    	}
         if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) return;
         IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
         if (!acceptElement(javaElement) || !javaElement.exists()) {

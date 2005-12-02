@@ -182,10 +182,10 @@ public class MylarContext implements IMylarContext, Serializable {
 
 	public void reset() {
 		interactionHistory.clear();
-
 		nodes.clear();
 		interactionHistory.clear();
 		landmarks.clear();
+		activeNode = null;
 	}
 
 	public int getUserEventCount() {
