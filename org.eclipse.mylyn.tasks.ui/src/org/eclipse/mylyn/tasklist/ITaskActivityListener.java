@@ -26,7 +26,9 @@ public interface ITaskActivityListener {
     
     public abstract void taskDeactivated(ITask task);
     
-    public abstract void taskPropertyChanged(ITask updatedTask, String property);
+    public abstract void tastChanged(ITask task);
+    
+//    public abstract void taskPropertyChanged(ITask task, String property);
 
 	public abstract void tasklistRead();
 }

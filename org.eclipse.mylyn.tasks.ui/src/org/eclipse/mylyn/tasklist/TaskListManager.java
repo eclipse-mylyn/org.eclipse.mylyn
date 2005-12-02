@@ -166,10 +166,16 @@ public class TaskListManager {
 			listener.taskDeactivated(task);
 	}
 
-	public void taskPropertyChanged(ITask task, String property) {
-		for (ITaskActivityListener listener : listeners)
-			listener.taskPropertyChanged(task, property);
+	/**
+	 * TODO: refactor into task deltas?
+	 */
+	public void notifyTaskChanged(ITask task) {
+		for (ITaskActivityListener listener : listeners) listener.tastChanged(task);
 	}
+	
+//	public void notifyTaskPropertyChanged(ITask task, String property) {
+//		for (ITaskActivityListener listener : listeners) listener.taskPropertyChanged(task, property);
+//	}
 
 	public void setTaskListFile(File f) {
 		this.taskListFile = f;

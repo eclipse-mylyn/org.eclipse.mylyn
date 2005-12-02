@@ -532,8 +532,8 @@ public class TaskListView extends ViewPart {
 					case 3:
 						if (task.isLocal()) {
 							task.setDescription(((String) value).trim());
-							MylarTasklistPlugin.getTaskListManager().taskPropertyChanged(task, columnNames[3]);
-							//							getViewer().setSelection(null);
+//							MylarTasklistPlugin.getTaskListManager().notifyTaskPropertyChanged(task, columnNames[3]);
+							MylarTasklistPlugin.getTaskListManager().notifyTaskChanged(task);
 						}
 						break;
 					}

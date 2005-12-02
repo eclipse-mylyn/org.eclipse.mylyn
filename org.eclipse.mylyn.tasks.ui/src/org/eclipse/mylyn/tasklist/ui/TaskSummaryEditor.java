@@ -120,19 +120,21 @@ public class TaskSummaryEditor extends EditorPart {
         		browse.setEnabled(true);
         	}
         }
-
-		public void taskPropertyChanged(ITask updatedTask, String property) {
-			if (task != null && updatedTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
-        		if (property.equals("Description") && !description.isDisposed()) {
-        			description.setText(task.getDescription(false));
-        		} else if (property.equals("Path") && !pathText.isDisposed()) {
-        			pathText.setText("<Mylar_Dir>/" + task.getPath());
-        		}
-        	}
-		}
-
+        
 		public void tasklistRead() {
 			// ignore
+		}
+
+		public void tastChanged(ITask updateTask) {
+			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
+        		if (!description.isDisposed()) {
+        			description.setText(updateTask.getDescription(false));
+        		}
+        		if (!pathText.isDisposed() && !updateTask.getPath().equals(task.getPath())) {
+        			pathText.setText("<Mylar_Dir>/" + task.getPath());
+        		}
+        			
+        	}
 		}        
     };    
 
@@ -203,6 +205,7 @@ public class TaskSummaryEditor extends EditorPart {
 			task.setReminderDate(datePicker.getDate().getTime());
 		}
 		refreshTaskListView(task);
+		MylarTasklistPlugin.getTaskListManager().notifyTaskChanged(task);
 		markDirty(false);
 	}
 	
