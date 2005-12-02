@@ -13,21 +13,24 @@ package org.eclipse.mylar.tasklist.planner.ui;
 
 import java.text.DateFormat;
 
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.ui.views.TaskListLabelProvider;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Ken Sueda
  */
-public class CompletedTasksLabelProvider extends LabelProvider implements
-		ITableLabelProvider {
-
-	//private String[] columnNames = new String[] { "Description", "Priority", "Date Completed", "Duration"};
+public class TasksPlannerLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
+	
+	private TaskListLabelProvider taskListLabelProvider = new TaskListLabelProvider();
+	
 	public Image getColumnImage(Object element, int columnIndex) {		
 		if (! (element instanceof ITaskListElement)) { 
         	return null;
@@ -40,30 +43,26 @@ public class CompletedTasksLabelProvider extends LabelProvider implements
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		
 		try {
 			if (element instanceof ITask) {
 				ITask task = (ITask) element;
 				switch(columnIndex) {
-				case 1: 
-					return task.getDescription(true);				
-				case 2:
+				case 1:
 					return task.getPriority();
+				case 2: 
+					return task.getDescription(true);				
 				case 3:
 					if (task.getCreationDate() != null){
-						return DateFormat.getDateInstance(DateFormat.SHORT).format(task.getCreationDate());
-					}
-					else{
+						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
+					} else{
 						MylarPlugin.log("Task has no creation date: " + task.getDescription(true), this);
-						return "Unknown";
+						return "[unknown]";
 					}
 				case 4:
-					if (task.getCreationDate() != null){
-						return DateFormat.getDateInstance(DateFormat.SHORT).format(task.getEndDate());
-					}
-					else{
-						MylarPlugin.log("Task has no creation date: " + task.getDescription(true), this);
-						return "Unknown";
+					if (task.getEndDate() != null) {
+						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getEndDate());
+					} else{
+						return "";
 					}
 				case 5:
 					return DateUtil.getFormattedDurationShort(task.getElapsedMillis());
@@ -74,6 +73,17 @@ public class CompletedTasksLabelProvider extends LabelProvider implements
 			return "";
 		}		
 		return null;
+	}
+
+	public Color getForeground(Object element) {
+//			if (editorInput.createdDuringReportPeriod((ITask) tasks[i])) {
+//				table.getItem(i).setForeground(new Color(null, new RGB(0, 0, 255)));
+//			}
+		return taskListLabelProvider.getForeground(element);
+	}
+
+	public Color getBackground(Object element) {
+		return taskListLabelProvider.getBackground(element);
 	}
 
 }

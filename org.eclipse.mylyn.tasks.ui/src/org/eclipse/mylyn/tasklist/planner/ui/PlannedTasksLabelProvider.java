@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.tasklist.planner.ui;
 
+import java.text.DateFormat;
+
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.tasklist.ITask;
@@ -40,14 +42,18 @@ public class PlannedTasksLabelProvider extends LabelProvider implements
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			switch(columnIndex) {
-			case 1: 
-				return task.getDescription(true);				
-			case 2:
+			case 1:
 				return task.getPriority();
+			case 2: 
+				return task.getDescription(true);				
 			case 3:
-				return task.getEstimateTimeForDisplay();
+				return task.getEstimateTimeHours() + " hours";
 			case 4:
-				return task.getReminderDateString(true);
+				if (task.getReminderDate() != null) {
+					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getReminderDate());
+				} else {
+					return "";
+				}
 			}	
 		}		
 		return null;

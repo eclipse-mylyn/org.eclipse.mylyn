@@ -61,6 +61,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 	public static final String CREATION_DATE = "CreationDate";
 	public static final String REMINDER_DATE = "ReminderDate";
 	public static final String REMINDED = "Reminded";
+	public static final String LABEL_AUTOMATIC = "<automatic>";
 
 	private List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 	
@@ -120,7 +121,7 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 		node.setAttribute(ISSUEURL, task.getIssueReportURL());
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, task.getElapsedTime());
-		node.setAttribute(ESTIMATED, ""+task.getEstimateTime());
+		node.setAttribute(ESTIMATED, ""+task.getEstimateTimeHours());
 		node.setAttribute(END_DATE, task.getEndDateString());
 		node.setAttribute(CREATION_DATE, task.getCreationDateString());
 		node.setAttribute(REMINDER_DATE, task.getReminderDateString(false));
@@ -246,12 +247,12 @@ public class DefaultTaskListExternalizer implements ITaskListExternalizer {
 			String est = element.getAttribute(ESTIMATED);
 			try {
 				int estimate = Integer.parseInt(est);
-				task.setEstimatedTime(estimate);
+				task.setEstimatedTimeHours(estimate);
 			} catch (Exception e) {
-				task.setEstimatedTime(0);
+				task.setEstimatedTimeHours(0);
 			}					
 		} else {
-			task.setEstimatedTime(0);
+			task.setEstimatedTimeHours(0);
 		}
 		// NOTE: do not change the order of complete and end date!!
 		if (element.getAttribute(COMPLETE).compareTo(TRUE) == 0) {

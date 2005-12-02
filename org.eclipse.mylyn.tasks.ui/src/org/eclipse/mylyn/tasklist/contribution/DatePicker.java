@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Temporary date picker from patch posted to: 
- * 	  https://bugs.eclipse.org/bugs/show_bug.cgi?id=19945
+ * Temporary date picker from patch posted to:
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?id=19945
  * 
  * see bug# 19945
  * 
@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Mik Kersten
  */
 public class DatePicker extends Composite {
- 
+
 	private Text dateText = null;
 
 	private Button pickButton = null;
@@ -63,7 +63,7 @@ public class DatePicker extends Composite {
 	private Shell pickerShell = null;
 
 	private DatePickerPanel datePickerPanel = null;
-	
+
 	private List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
 	public DatePicker(Composite parent, int style) {
@@ -76,11 +76,11 @@ public class DatePicker extends Composite {
 		dateTextGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		dateTextGridData.grabExcessHorizontalSpace = true;
 		dateTextGridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		
+
 		GridData pickButtonGridData = new org.eclipse.swt.layout.GridData();
 		pickButtonGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
 		pickButtonGridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		
+
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		gridLayout.horizontalSpacing = 2;
@@ -89,11 +89,10 @@ public class DatePicker extends Composite {
 		gridLayout.marginHeight = 2;
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
-		
-		setSize(new org.eclipse.swt.graphics.Point(125, 28));
+
+		setSize(new org.eclipse.swt.graphics.Point(135, 28));
 		dateText = new Text(this, SWT.BORDER | SWT.READ_ONLY);
-		dateText.setBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_WHITE));
+		dateText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		dateText.setLayoutData(dateTextGridData);
 		pickButton = new Button(this, SWT.ARROW | SWT.DOWN);
 		pickButton.setLayoutData(pickButtonGridData);
@@ -101,8 +100,7 @@ public class DatePicker extends Composite {
 
 			public void widgetSelected(SelectionEvent arg0) {
 				Display display = Display.getCurrent();
-				showDatePicker(display.getCursorLocation().x, 
-						       display.getCursorLocation().y);
+				showDatePicker(display.getCursorLocation().x, display.getCursorLocation().y);
 			}
 
 			public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -114,9 +112,7 @@ public class DatePicker extends Composite {
 	public void addPickerSelectionListener(SelectionListener listener) {
 		pickerListeners.add(listener);
 	}
-	
-	
-	
+
 	public Calendar getDate() {
 		return date;
 	}
@@ -125,12 +121,12 @@ public class DatePicker extends Composite {
 		this.date = date;
 		updateDateText();
 	}
-	
+
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		this.layout();
 		return new Point(this.getSize().x, this.getSize().y);
 	}
-	
+
 	private void showDatePicker(int x, int y) {
 		pickerShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP);
 		pickerShell.setText("Shell");
@@ -140,39 +136,39 @@ public class DatePicker extends Composite {
 			date = new GregorianCalendar();
 		}
 		datePickerPanel.setDate(date);
-		//pickerShell.setSize(new Point(225, 180));
+		// pickerShell.setSize(new Point(225, 180));
 		pickerShell.setSize(new Point(240, 180));
 		pickerShell.setLocation(new Point(x, y));
-		
-		datePickerPanel.addKeyListener(new KeyListener(){
+
+		datePickerPanel.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.ESC){
+				if (e.keyCode == SWT.ESC) {
 					dateSelected(true);
 				}
 			}
 
-			public void keyReleased(KeyEvent e) { }
+			public void keyReleased(KeyEvent e) {
+			}
 		});
-		
-		
+
 		pickerShell.open();
 	}
-	
+
 	/** Called when the user has selected a date */
-	protected void dateSelected(boolean canceled){
-		if (!canceled){
+	protected void dateSelected(boolean canceled) {
+		if (!canceled) {
 			updateDateText();
 		}
-		
-		for(SelectionListener listener: pickerListeners){
+
+		for (SelectionListener listener : pickerListeners) {
 			listener.widgetSelected(null);
 		}
-		
+
 		pickerShell.close();
 	}
 
 	private void updateDateText() {
-		if (date != null){
+		if (date != null) {
 			Date currentDate = new Date(date.getTimeInMillis());
 			dateText.setText(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(currentDate));
 		}
@@ -181,12 +177,11 @@ public class DatePicker extends Composite {
 	public void setDateText(String text) {
 		dateText.setText(text);
 	}
-	
-	
-	class DatePickerPanel extends Composite implements KeyListener{
+
+	class DatePickerPanel extends Composite implements KeyListener {
 
 		private Combo timeCombo = null;
-		
+
 		private Combo monthCombo = null;
 
 		private Spinner yearSpinner = null;
@@ -231,7 +226,10 @@ public class DatePicker extends Composite {
 		 */
 		private void createTimeCombo() {
 			timeCombo = new Combo(this, SWT.READ_ONLY);
-			timeCombo.setItems(new String[] {"12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"});
+			timeCombo.setItems(new String[] { "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM",
+					"6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM",
+					"2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM",
+					"11:00 PM" });
 			timeCombo.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 			timeCombo.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent arg0) {
@@ -242,9 +240,7 @@ public class DatePicker extends Composite {
 			});
 			timeCombo.addKeyListener(this);
 		}
-		
-		
-		
+
 		/**
 		 * This method initializes the month combo
 		 * 
@@ -275,8 +271,7 @@ public class DatePicker extends Composite {
 			gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 			yearSpinner = new Spinner(this, SWT.BORDER | SWT.READ_ONLY);
 			yearSpinner.setMinimum(1900);
-			yearSpinner.setBackground(Display.getDefault().getSystemColor(
-					SWT.COLOR_WHITE));
+			yearSpinner.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 			yearSpinner.setDigits(0);
 			yearSpinner.setMaximum(3000);
 			yearSpinner.setLayoutData(gridData1);
@@ -336,8 +331,7 @@ public class DatePicker extends Composite {
 			gridData1.grabExcessVerticalSpace = true;
 			gridData1.grabExcessHorizontalSpace = true;
 			calendarComposite = new Composite(this, SWT.BORDER);
-			calendarComposite.setBackground(Display.getDefault().getSystemColor(
-					SWT.COLOR_WHITE));
+			calendarComposite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 			calendarComposite.setLayout(gridLayout2);
 			calendarComposite.setLayoutData(gridData1);
 		}
@@ -363,10 +357,8 @@ public class DatePicker extends Composite {
 						unSellectAll();
 						Label label = (Label) arg0.getSource();
 						if (!label.getText().equals("")) {
-							label.setBackground(Display.getDefault()
-									.getSystemColor(SWT.COLOR_LIST_SELECTION));
-							label.setForeground(Display.getDefault()
-									.getSystemColor(SWT.COLOR_WHITE));
+							label.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_SELECTION));
+							label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 						}
 					}
 
@@ -374,13 +366,11 @@ public class DatePicker extends Composite {
 						Label label = (Label) arg0.getSource();
 						if (!label.getText().equals("")) {
 							date.set(Calendar.YEAR, yearSpinner.getSelection());
-							date.set(Calendar.MONTH, monthCombo
-											.getSelectionIndex());
-							date.set(Calendar.DAY_OF_MONTH, Integer.parseInt(label
-									.getText()));
+							date.set(Calendar.MONTH, monthCombo.getSelectionIndex());
+							date.set(Calendar.DAY_OF_MONTH, Integer.parseInt(label.getText()));
 							dateSelected(false);
 						}
-						
+
 					}
 
 				});
@@ -390,8 +380,7 @@ public class DatePicker extends Composite {
 		private void updateCalendar() {
 			unSellectAll();
 			// Fill Labels
-			Calendar cal = new GregorianCalendar(date.get(Calendar.YEAR), date
-					.get(Calendar.MONTH), 1);
+			Calendar cal = new GregorianCalendar(date.get(Calendar.YEAR), date.get(Calendar.MONTH), 1);
 			int dayofWeek = cal.get(Calendar.DAY_OF_WEEK) - 1;
 
 			for (int i = 0; i < dayofWeek; ++i) {
@@ -406,21 +395,17 @@ public class DatePicker extends Composite {
 				calendarLabels[i].setText("");
 			}
 
-			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek]
-					.setBackground(Display.getDefault().getSystemColor(
-							SWT.COLOR_LIST_SELECTION));
-			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek]
-					.setForeground(Display.getDefault().getSystemColor(
-							SWT.COLOR_WHITE));
+			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek].setBackground(Display.getDefault()
+					.getSystemColor(SWT.COLOR_LIST_SELECTION));
+			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek].setForeground(Display.getDefault()
+					.getSystemColor(SWT.COLOR_WHITE));
 
 		}
 
 		private void unSellectAll() {
 			for (int i = 0; i < 42; ++i) {
-				calendarLabels[i].setForeground(Display.getDefault()
-						.getSystemColor(SWT.COLOR_BLACK));
-				calendarLabels[i].setBackground(Display.getCurrent()
-						.getSystemColor(SWT.COLOR_WHITE));
+				calendarLabels[i].setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+				calendarLabels[i].setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 			}
 		}
 
@@ -434,18 +419,15 @@ public class DatePicker extends Composite {
 		}
 
 		public void keyPressed(KeyEvent e) {
-			if (e.keyCode == SWT.ESC){
+			if (e.keyCode == SWT.ESC) {
 				dateSelected(true);
 			}
 		}
 
-		public void keyReleased(KeyEvent e) { }
+		public void keyReleased(KeyEvent e) {
+		}
 
-	} 
-	
-	
-	
-	
-	
-} // @jve:decl-index=0:visual-constraint="10,10"
+	}
+
+} 
 

@@ -108,6 +108,7 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 
 	public void addTask(ITask task) {
 		tasks.add(task);
+//		task.setCategory(this); 
 		if (MylarTasklistPlugin.getDefault() != null) {
 			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}

@@ -187,7 +187,7 @@ public class TaskSummaryEditor extends EditorPart {
 		task.setIssueReportURL(issueReportURL.getText());
 		String note = notes.getText();
 		task.setNotes(note);		
-		task.setEstimatedTime(estimated.getSelection());
+		task.setEstimatedTimeHours(estimated.getSelection());
 //		links.clear();		
 //		TableItem[] items = table.getItems();
 //		for (int i = 0; i < items.length; i++) {
@@ -440,11 +440,11 @@ public class TaskSummaryEditor extends EditorPart {
 		
 		
 		estimated = new Spinner(estimatedComposite, SWT.BORDER);
-		estimated.setSelection(task.getEstimateTime());		
-		estimated.setDigits(1);
+		estimated.setSelection(task.getEstimateTimeHours());		
+		estimated.setDigits(0);
 		estimated.setMaximum(100);
 		estimated.setMinimum(0);
-		estimated.setIncrement(5);
+		estimated.setIncrement(1);
 		estimated.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				TaskSummaryEditor.this.markDirty(true);

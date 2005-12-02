@@ -27,31 +27,40 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * @author Ken Sueda
  */
-public class TasksEditorInput implements IEditorInput {
-	private List<ITask> completedTasks = null;
-	private List<ITask> inProgressTasks = null;
-	private TaskReportGenerator parser = null;
-	private int prevDaysToReport = -1;
-	private long DAY = 24*3600*1000;
+public class TasksPlannerEditorInput implements IEditorInput {
 	
-	public TasksEditorInput(int prevDays, TaskList tlist) {
+	private List<ITask> completedTasks = null;
+
+	private List<ITask> inProgressTasks = null;
+
+	private TaskReportGenerator parser = null;
+
+	private int prevDaysToReport = -1;
+
+	private long DAY = 24 * 3600 * 1000;
+	
+	private Date reportStartDate = null;
+
+	public TasksPlannerEditorInput(int prevDays, TaskList tlist) {
 		parser = new TaskReportGenerator(tlist);
-		
+
 		ITasksCollector completedTaskCollector = new CompletedTaskCollector(prevDays);
 		parser.addCollector(completedTaskCollector);
-		
+
 		ITasksCollector inProgressTaskCollector = new InProgressTaskCollector(prevDays);
 		parser.addCollector(inProgressTaskCollector);
-		
+
 		parser.collectTasks();
-		
+
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
-		
+
 		prevDaysToReport = prevDays;
+		
+		reportStartDate = new Date(new Date().getTime() - prevDaysToReport * DAY);
 	}
-	
-	//IEditorInput interface methods
+
+	// IEditorInput interface methods
 
 	public boolean exists() {
 		return true;
@@ -77,46 +86,47 @@ public class TasksEditorInput implements IEditorInput {
 		return null;
 	}
 
-	//Methods
+	// Methods
 
 	public List<ITask> getCompletedTasks() {
 		return completedTasks;
 	}
-	
+
 	public List<ITask> getInProgressTasks() {
 		return inProgressTasks;
 	}
 
 	public long getTotalTimeSpentOnCompletedTasks() {
 		long duration = 0;
-		for(ITask t : completedTasks) {
+		for (ITask t : completedTasks) {
 			duration += t.getElapsedTimeLong();
 		}
 		return duration;
-	}	
-	
+	}
+
 	public long getTotalTimeSpentOnInProgressTasks() {
 		long duration = 0;
-		for(ITask t : inProgressTasks) {
+		for (ITask t : inProgressTasks) {
 			duration += t.getElapsedTimeLong();
 		}
 		return duration;
-	}	
-	
+	}
+
 	public TaskReportGenerator getReportGenerator() {
 		return parser;
 	}
 
 	public boolean createdDuringReportPeriod(ITask task) {
 		Date creationDate = task.getCreationDate();
-		if (creationDate != null){
-			Date reportStartDate = new Date(new Date().getTime() - prevDaysToReport * DAY);
-			return creationDate.compareTo(reportStartDate) > 0;			
-		}
-		else{
+		if (creationDate != null) {
+			return creationDate.compareTo(reportStartDate) > 0;
+		} else {
 			return false;
 		}
 	}
 
-	
+	public Date getReportStartDate() {
+		return reportStartDate;
+	}
+
 }

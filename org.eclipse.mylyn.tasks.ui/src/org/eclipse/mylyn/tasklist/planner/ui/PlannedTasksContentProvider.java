@@ -24,9 +24,7 @@ import org.eclipse.mylar.tasklist.ITask;
 public class PlannedTasksContentProvider implements IStructuredContentProvider {
 
 	private List<ITask> tasks = new ArrayList<ITask>();
-	public PlannedTasksContentProvider() {		
-	}
-	
+
 	public Object[] getElements(Object inputElement) {
 		return tasks.toArray();
 	}
@@ -40,10 +38,14 @@ public class PlannedTasksContentProvider implements IStructuredContentProvider {
 	public void addTask(ITask t) {
 		if (!tasks.contains(t)) {
 			tasks.add(t);
-		}		
+		}
 	}
-	
+
 	public void removeTask(ITask t) {
 		tasks.remove(t);
+	}
+
+	public List<ITask> getTasks() {
+		return tasks;
 	}
 }

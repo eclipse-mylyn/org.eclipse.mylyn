@@ -53,18 +53,18 @@ public class Task implements ITask {
     private String label;
     private String priority = "P3";
     private String notes = "";
-    private int estimatedTime = 0;
+    private int estimatedTimeHours = 0;
     private boolean completed;
     private List<String> links = new ArrayList<String>();
     private List<String> plans = new ArrayList<String>();
     private String issueReportURL = "";
     private ITaskListCategory parentCategory = null;
     
-    private Date timeActivated = null;
-    private Date endDate = null;
-    private Date creationDate = null;
+    private Date lastActivatedDate = null;
+    private long timeActive = 0;
+    private Date completionDate = null;
+    private Date creationDate = null; 
     private Date reminderDate=null;
-    private long elapsed = 0;
 
     /**
      * null if root
@@ -125,29 +125,29 @@ public class Task implements ITask {
     public void setActive(boolean active, boolean isStalled) {
     	this.active = active;
     	if (active && !isStalled) {
-    		timeActivated = new Date();
+    		lastActivatedDate = new Date();
     	} else {    		
     		calculateElapsedTime(isStalled);
-    		timeActivated = null;
+    		lastActivatedDate = null;
     	}    	        
     }
     
     private void calculateElapsedTime(boolean isStalled) {
-    	if (timeActivated != null){
-	    	elapsed += new Date().getTime() - timeActivated.getTime();
-	    	if(isStalled){
-	    		elapsed-= INACTIVITY_TIME_MILLIS;
+    	if (lastActivatedDate != null) {
+	    	timeActive += new Date().getTime() - lastActivatedDate.getTime();
+	    	if (isStalled) {
+	    		timeActive -= INACTIVITY_TIME_MILLIS;
 	    	}
 	    	if (isActive()) {
-	    		timeActivated = new Date();
+	    		lastActivatedDate = new Date();
 	    	} else {
-	    		timeActivated = null;
+	    		lastActivatedDate = null;
 	    	}
     	}
     	
-		if (elapsed < 0){
+		if (timeActive < 0){
 			MylarPlugin.log("Elapsed time was less than zero for: " + getDescription(true), this);
-			elapsed = 0;
+			timeActive = 0;
 		}
     }
     
@@ -228,7 +228,7 @@ public class Task implements ITask {
     }
     public void setCompleted(boolean completed) {
     	if (completed) {  
-    		endDate = new Date();
+    		completionDate = new Date();
     	}
         this.completed = completed;
     }
@@ -293,38 +293,30 @@ public class Task implements ITask {
 		if (isActive()) {
 			calculateElapsedTime(false);			
 		}
-		return "" + elapsed;
+		return "" + timeActive;
 	}
 
 	public long getElapsedTimeLong() {
 		if (isActive()) {
 			calculateElapsedTime(false);			
 		}
-		return elapsed; 
+		return timeActive; 
 	}
 	
 	public void setElapsedTime(String elapsedString) {
 		if (elapsedString.equals("")) {
-			elapsed = 0;
+			timeActive = 0;
 		} else {
-			elapsed = Long.parseLong(elapsedString);
+			timeActive = Long.parseLong(elapsedString);
 		}
 	}
 
-//	public String getEstimatedTimeForDisplay() {
-//		if (estimatedTime == 0) {
-//			return "";
-//		} else {
-//			return "" + estimatedTime * 10;
-//		}		
-//	}
-
-	public int getEstimateTime() {
-		return estimatedTime;
+	public int getEstimateTimeHours() {
+		return estimatedTimeHours;
 	}
 	
-	public void setEstimatedTime(int estimated) {
-		this.estimatedTime = estimated;
+	public void setEstimatedTimeHours(int estimated) {
+		this.estimatedTimeHours = estimated;
 	}	
 	
 	public List<ITask> getChildren() {
@@ -402,12 +394,12 @@ public class Task implements ITask {
 	 */
 	public String getElapsedTimeForDisplay() {
 		calculateElapsedTime(false);
-		return DateUtil.getFormattedDuration(elapsed);		
+		return DateUtil.getFormattedDuration(timeActive);		
 	}
 	
 	public long getElapsedMillis(){
 		calculateElapsedTime(false);
-		return elapsed;
+		return timeActive;
 	}
 	
     public boolean canEditDescription() {
@@ -454,7 +446,7 @@ public class Task implements ITask {
 	}
 	
 	public Date getEndDate() {
-		return endDate;
+		return completionDate;
 	}	
 	
 	/** 
@@ -463,10 +455,10 @@ public class Task implements ITask {
 	 * @deprecated
 	 */
 	public String getEndDateString() {
-		if (endDate != null) {
+		if (completionDate != null) {
 			String f = "yyyy-MM-dd HH:mm:ss.S z";
 	    	SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
-	    	return format.format(endDate);
+	    	return format.format(completionDate);
 		} else {
 			return "";
 		}		
@@ -477,14 +469,14 @@ public class Task implements ITask {
 			String formatString = "yyyy-MM-dd HH:mm:ss.S z";
 			SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 			try {
-				endDate = format.parse(date);
+				completionDate = format.parse(date);
 			} catch (ParseException e) {
 				MylarPlugin.log(e, "Could not parse end date");
-				endDate = null;
+				completionDate = null;
 			}
 		} else {
 			if (isCompleted()) {
-				endDate = new Date(0);
+				completionDate = new Date(0);
 			}
 		}
 	}
@@ -607,7 +599,7 @@ public class Task implements ITask {
 	 * @deprecated
 	 */
 	public String getEstimateTimeForDisplay() {		
-		return estimatedTime / 10 + " Hours";
+		return estimatedTimeHours / 10 + " Hours";
 	}
 
 	public void addPlan(String plan) {

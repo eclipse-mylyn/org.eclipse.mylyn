@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  */
 public class BugzillaTaskExternalizer extends DefaultTaskListExternalizer {
 
-	public static final String BUGZILLA_ARCHIVE_LABEL = "Archived Reports <automatic>";
+	public static final String BUGZILLA_ARCHIVE_LABEL = "Archived Reports " + DefaultTaskListExternalizer.LABEL_AUTOMATIC;
 	private static final String BUGZILLA = "Bugzilla";
 	private static final String LAST_DATE = "LastDate";
 	private static final String DIRTY = "Dirty";

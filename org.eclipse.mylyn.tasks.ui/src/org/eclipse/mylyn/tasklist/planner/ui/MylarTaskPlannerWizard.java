@@ -40,7 +40,7 @@ public class MylarTaskPlannerWizard extends Wizard implements INewWizard {
 					.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page == null)
 				return false;
-			IEditorInput input = new TasksEditorInput(numDays,
+			IEditorInput input = new TasksPlannerEditorInput(numDays,
 					MylarTasklistPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, MylarTasklistPlugin.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {

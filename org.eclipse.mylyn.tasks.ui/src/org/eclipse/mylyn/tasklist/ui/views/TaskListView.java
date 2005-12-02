@@ -863,7 +863,7 @@ public class TaskListView extends ViewPart {
 
 					if (getCurrentTarget() instanceof TaskCategory) {
 						((TaskCategory) getCurrentTarget()).addTask(source);
-						source.setCategory((TaskCategory) getCurrentTarget());
+						source.setCategory((TaskCategory) getCurrentTarget()); 
 					} else if (getCurrentTarget() instanceof ITask) {
 						ITask target = (ITask) getCurrentTarget();
 						source.setCategory(null);

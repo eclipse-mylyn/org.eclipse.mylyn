@@ -65,7 +65,7 @@ public class PlannedTasksSorter extends ViewerSorter {
 	}
 
 	private int compareEstimate(ITask task1, ITask task2) {
-		if (task1.getEstimateTime() > task2.getEstimateTime()) {
+		if (task1.getEstimateTimeHours() > task2.getEstimateTimeHours()) {
 			return 1;
 		} else {
 			return -1;
