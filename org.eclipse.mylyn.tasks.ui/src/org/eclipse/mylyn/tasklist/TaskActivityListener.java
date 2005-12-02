@@ -13,11 +13,11 @@ package org.eclipse.mylar.tasklist;
 
 import java.util.Date;
 
+import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.ActivityTimerThread;
-import org.eclipse.mylar.core.util.IActiveTimerListener;
-import org.eclipse.mylar.core.util.IInteractionEventListener;
+import org.eclipse.mylar.core.util.ITimerThreadListener;
+import org.eclipse.mylar.core.util.TimerThread;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.PlatformUI;
@@ -31,19 +31,19 @@ import org.eclipse.ui.PlatformUI;
  * @author Shawn Minto
  * @author Wesley Coelho (Added correction for PC sleep/hibernation errors)
  */
-public class TaskActivityListener implements IActiveTimerListener, IInteractionEventListener, ShellListener {
+public class TaskActivityListener implements ITimerThreadListener, IInteractionEventListener, ShellListener {
 
 	/** Amount of time for which discrepencies between timer and timestamp values will be ignored */
 	private final static long SLOP_FACTOR_MILLIS = 1000 * 30; //30 seconds
 	
-	private ActivityTimerThread timer;
+	private TimerThread timer;
 	private ITask task;
 	private boolean isTaskStalled = false;
 	private long windowDeactivationTime = 0;
 	
 	public TaskActivityListener(ITask task){
 		this.task = task;
-		timer = new ActivityTimerThread(MylarPlugin.getContextManager().getActivityTimeoutSeconds());
+		timer = new TimerThread(MylarPlugin.getContextManager().getActivityTimeoutSeconds());
 		timer.addListener(this);
 		timer.start();
 		MylarPlugin.getDefault().addInteractionListener(this);

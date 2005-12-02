@@ -28,6 +28,7 @@ public class AllTasklistTests {
         suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(ChangeMainTaskDirTest.class);
+		suite.addTestSuite(PeriodicSaveTest.class);
 		//$JUnit-END$
 		return suite;
 	}

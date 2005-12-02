@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.tasklist.internal.ISaveTimerListener;
+import org.eclipse.mylar.tasklist.internal.SaveTimer;
 import org.eclipse.mylar.tasklist.internal.TaskListExternalizer;
 import org.eclipse.mylar.tasklist.planner.internal.ReminderRequiredCollector;
 import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
@@ -49,7 +51,7 @@ import org.osgi.framework.BundleContext;
  * 
  * TODO: this class is in serious need of refactoring
  */
-public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
+public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, ISaveTimerListener {
 
 	private static MylarTasklistPlugin INSTANCE;
 
@@ -121,6 +123,8 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	private static Date lastBackup = new Date();
 
 	private ITaskHighlighter highlighter;
+	
+	private SaveTimer saveTimer = null;
 
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
@@ -284,6 +288,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		File taskListFile = new File(path);
 		taskListManager = new TaskListManager(taskListFile);
 		taskListManager.addListener(CONTEXT_MANAGER_TASK_LISTENER);
+		saveTimer = new SaveTimer(this);
 	}
 
 	public void earlyStartup() {
@@ -388,9 +393,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 		TaskListView.getDefault().clearTaskHistory();
 	}
 
-	/**
-	 * TODO: make private
-	 */
+
 	public void saveTaskListAndContexts() {
 		taskListManager.saveTaskList();
 		for (ITask task : taskListManager.getTaskList().getActiveTasks()) {
@@ -606,5 +609,18 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup {
 	public void addContextEditor(IContextEditorFactory contextEditor) {
 		if (contextEditor != null)
 			this.contextEditors.add(contextEditor);
+	}
+
+	/** 
+	 * Called periodically by the save timer 
+	 */
+	public void saveRequested() {
+		saveTaskListAndContexts();
+		MylarPlugin.log("Automatically saved task list", this);
+	}
+
+	/** For testing only **/
+	public SaveTimer getSaveTimer() {
+		return saveTimer;
 	}
 }

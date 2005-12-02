@@ -581,6 +581,11 @@ public class BugzillaTask extends Task {
 	}
 
 	@Override
+	public String getIssueReportURL(){
+		return getBugUrl();
+	}
+	
+	@Override
 	public boolean canEditDescription() {
 		return false;
 	}
