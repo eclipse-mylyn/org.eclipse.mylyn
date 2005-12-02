@@ -25,7 +25,16 @@ highlighted&nbsp; </span></p>
 			<p align="right"><b>Persistent Change Sets</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Change sets don't go away on deactivation...</td>
+			Change sets don't go away on deactivation...<p>The automatic task 
+			context change sets now persist, so that if there are any 
+			uncommitted resources in the change set it will not disappear when 
+			the task is deactivated, and multiple change sets can be present.&nbsp; 
+			While the context change sets are affected interest manipulations 
+			(i.e. marking a file uninteresting will remove it from the change 
+			set), they do not 'see' the interest decay in order to retain any 
+			resources modified as part of that task.&nbsp; If resources are 
+			changed outside of the context (e.g. by applying a patch) they can 
+			be added to the context via...</td>
 		</tr>
 		<tr>
 			<td colspan="2">
