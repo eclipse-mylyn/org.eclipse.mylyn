@@ -27,11 +27,11 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.InteractionEvent.Kind;
 import org.eclipse.mylar.core.internal.MylarContextExternalizer;
-import org.eclipse.mylar.core.util.IInteractionEventListener;
 import org.eclipse.mylar.core.util.XmlStringConverter;
 import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer.Token;
