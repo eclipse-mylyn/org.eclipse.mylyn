@@ -103,7 +103,6 @@ public class MylarContextManager {
     	            			1f));
     		}
     		isStalled = true; 
-    		timer.resetTimer();
     	}
 
     	public void interactionObserved(InteractionEvent event) {
