@@ -16,5 +16,7 @@ Require-Bundle: org.junit,
  org.eclipse.mylar.core.tests,
  org.eclipse.ui.views,
  org.eclipse.jface,
- org.eclipse.mylar.tasklist
+ org.eclipse.mylar.tasklist,
+ org.eclipse.team.core,
+ org.eclipse.team.cvs.ui
 Export-Package: org.eclipse.mylar.ide.tests

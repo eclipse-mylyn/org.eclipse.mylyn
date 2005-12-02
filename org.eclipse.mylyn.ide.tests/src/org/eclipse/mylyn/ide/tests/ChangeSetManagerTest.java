@@ -25,6 +25,9 @@ import org.eclipse.mylar.ide.MylarContextChangeSet;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
+import org.eclipse.team.internal.core.subscribers.ChangeSet;
+import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 
 /**
  * @author Mik Kersten
@@ -33,11 +36,14 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	private MylarChangeSetManager changeSetManager;
 		
+	private SubscriberChangeSetCollector collector;
+	
     @Override
     protected void setUp() throws Exception {
     	super.setUp();
     	assertNotNull(MylarIdePlugin.getDefault());
     	changeSetManager = MylarIdePlugin.getDefault().getChangeSetManager();
+    	collector = CVSUIPlugin.getPlugin().getChangeSetManager();
     	assertNotNull(changeSetManager);
     }
     
@@ -47,15 +53,26 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
     }
     
     public void testSingleContextActivation() {
+    	ChangeSet[] sets = collector.getSets();
+    	for (int i = 0; i < sets.length; i++) {
+			collector.remove(sets[i]);
+		}
+    	assertEquals(0, collector.getSets().length);
     	manager.contextDeactivated(taskId, taskId);
     	changeSetManager.clearActiveChangeSets();
     	assertEquals(0, changeSetManager.getActiveChangeSets().size());
+    	
     	Task task1 = new Task("task1", "label", true);
     	MylarTasklistPlugin.getTaskListManager().activateTask(task1);
     	assertEquals(1, changeSetManager.getActiveChangeSets().size()); 
+    	assertEquals(1, collector.getSets().length);
+    	
     	MylarTasklistPlugin.getTaskListManager().deactivateTask(task1); 
-    	assertEquals(1, changeSetManager.getActiveChangeSets().size());
+    	assertEquals(0, changeSetManager.getActiveChangeSets().size());
+    	assertEquals(0, collector.getSets().length); // deleted because no active resources
     	MylarTasklistPlugin.getTaskListManager().deactivateTask(task1);
+    	
+    	// TODO: test with resource
     }
     
     public void testContentsAfterDecay() throws CoreException {
