@@ -65,7 +65,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				try {
+				try { 
 					changeSetManager = new MylarChangeSetManager();
 					MylarPlugin.getContextManager().addListener(navigatorRefreshListener);
 					MylarPlugin.getContextManager().addListener(changeSetManager);

@@ -12,7 +12,10 @@
 package org.eclipse.mylar.ide;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.tasklist.ITask;
@@ -38,7 +41,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	 
 	private static final String CTX_TITLE = "title"; // HACK: copied from super
 
-	private List<IResource> resources;
+//	private List<IResource> resources; // TODO: get rid of this?
 	
 	private boolean suppressInterestContribution = false;
 
@@ -98,14 +101,14 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void remove(IResource resource) {
 		super.remove(resource);
-		resources.remove(resource);
+//		resources.remove(resource);
 	}
 
 	@Override
 	public void remove(IResource[] newResources) {
 		super.remove(newResources);
-		for (int i = 0; i < newResources.length; i++)
-			resources.remove(newResources[i]);
+//		for (int i = 0; i < newResources.length; i++)
+//			resources.remove(newResources[i]);
 	}
 
 	@Override
@@ -114,6 +117,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		if (!suppressInterestContribution) {
 			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(info.getLocal());
 		}
+//		resources.add(info.getLocal());
 	}
 
 	@Override
@@ -124,17 +128,17 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void add(IResource[] newResources) throws TeamException {
 		super.add(newResources);
-		for (int i = 0; i < newResources.length; i++) resources.add(newResources[i]);
+//		for (int i = 0; i < newResources.length; i++) resources.add(newResources[i]);
 	}
 
 	public void restoreResources(IResource[] newResources) throws TeamException {
 		suppressInterestContribution = true;
 		try {
 			super.add(newResources);
-			resources = new ArrayList<IResource>();
-			for (int i = 0; i < newResources.length; i++) {
-				resources.add(newResources[i]);
-			}
+//			resources = new ArrayList<IResource>();
+//			for (int i = 0; i < newResources.length; i++) {
+//				resources.add(newResources[i]);
+//			}
 			setComment(getComment());
 		} catch (TeamException e) {
 			throw e;
@@ -145,14 +149,30 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	
 	@Override
 	public IResource[] getResources() {
+//		return super.getResources();
+		List<IResource> allResources = getAllResourcesInChangeContext();
+		return allResources.toArray(new IResource[allResources.size()]);
+	}
+	  
+	public List<IResource> getAllResourcesInChangeContext() {
+		Set<IResource> allResources = new HashSet<IResource>();
+		allResources.addAll(Arrays.asList(super.getResources()));
 		if (MylarIdePlugin.getDefault() != null && task.isActive()) {
-			resources = MylarIdePlugin.getDefault().getInterestingResources();
+			// TODO: if super is always managed correctly should remove following line
+			allResources.addAll(MylarIdePlugin.getDefault().getInterestingResources());
 		}
-		return resources.toArray(new IResource[resources.size()]);
+//		System.err.println(">>>>> " + MylarIdePlugin.getDefault().getInterestingResources());
+		return new ArrayList<IResource>(allResources);
 	}
 
+	/**
+	 * TODO: unnessary check context?
+	 */
 	public boolean contains(IResource local) {
-		return resources.contains(local);
+//		System.err.println(">>> " + getAllResourcesInChangeContext().contains(local) + " " + local);
+		return getAllResourcesInChangeContext().contains(local);
+//		return super.contains(local);
+//		return resources.contains(local);
 	}
 
 	public static String generateComment(ITask task, String completedPrefix, String progressPrefix) {

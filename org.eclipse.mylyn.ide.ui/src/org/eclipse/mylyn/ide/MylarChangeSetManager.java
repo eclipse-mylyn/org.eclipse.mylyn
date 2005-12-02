@@ -118,10 +118,13 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			if (task == null) {
 				MylarPlugin.log("could not resolve task for context", this);
 			} else if (!activeChangeSets.containsKey(task.getHandleIdentifier())) { 
-				MylarContextChangeSet changeSet = new MylarContextChangeSet(task, collector);
-				changeSet.add(changeSet.getResources());
-				activeChangeSets.put(task.getHandleIdentifier(), changeSet);
-				if (!collector.contains(changeSet)) collector.add(changeSet);
+				MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
+//				changeSet.add(changeSet.getResources());
+				List<IResource> interestingResources = MylarIdePlugin.getDefault().getInterestingResources();
+				contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
+				
+				activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
+				if (!collector.contains(contextChangeSet)) collector.add(contextChangeSet);
 			}
 		} catch (Exception e) {
 			MylarPlugin.fail(e, "could not update change set", false);
@@ -129,15 +132,17 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		// TODO: support multiple active tasks
-		for (String taskHandle : activeChangeSets.keySet()) {
-			MylarContextChangeSet changeSet = activeChangeSets.get(taskHandle);
-			IResource[] resources = changeSet.getResources();
-			if (resources == null || resources.length == 0) {
-				collector.remove(changeSet);			
+		ChangeSet[] sets = collector.getSets();
+		for (int i = 0; i < sets.length; i++) {
+			ChangeSet set = sets[i];
+			if (set instanceof MylarContextChangeSet) {
+				IResource[] resources = set.getResources();
+				if (resources == null || resources.length == 0) {
+					collector.remove(set);			
+				}				
 			}
-		}
-//		activeChangeSets.clear();
+		}  
+		activeChangeSets.clear();
 	}
 
 	public List<MylarContextChangeSet> getActiveChangeSets() {
@@ -160,21 +165,22 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		if (bridge.isDocument(element.getHandleIdentifier())) {
 			IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
 			if (resource != null && resource.exists()) {
-				for (MylarContextChangeSet changeSet: getActiveChangeSets()) {
+				for (MylarContextChangeSet contextChangeSet: getActiveChangeSets()) {
 					try {
-						if (!changeSet.contains(resource)) {
+						if (!contextChangeSet.contains(resource)) {
 							if (element.getInterest().isInteresting()) {
-								changeSet.add(new IResource[] { resource });
+								System.err.println(">>> adding: " + resource);
+								contextChangeSet.add(new IResource[] { resource });
 							} 
 						} else if (shouldRemove(element)) {
-							changeSet.remove(resource);
+							contextChangeSet.remove(resource);
 							
 							// HACK: touching ensures file is added outside of set
 							if (resource instanceof IFile) {
 								((IFile)resource).touch(new NullProgressMonitor());
 							}
-							if (!collector.contains(changeSet)) {
-								collector.add(changeSet);
+							if (!collector.contains(contextChangeSet)) {
+								collector.add(contextChangeSet);
 							}
 						}
 					} catch (Exception e) {
