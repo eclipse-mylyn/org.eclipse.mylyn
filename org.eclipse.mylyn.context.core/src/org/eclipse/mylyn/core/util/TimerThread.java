@@ -11,42 +11,41 @@
 /*
  * Created on Jul 16, 2004
   */
-package org.eclipse.mylar.core.internal;
+package org.eclipse.mylar.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.IActiveTimerListener;
 
 /**
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ActivityTimerThread extends Thread implements Runnable {
+public class TimerThread extends Thread implements Runnable {
 
     private static final int SECOND = 1000;
     private int sleepInterval = 5 * SECOND;
     private int timeout = 0;
     private int elapsed = 0;
-    private List<IActiveTimerListener> listeners = new ArrayList<IActiveTimerListener>();
+    private List<ITimerThreadListener> listeners = new ArrayList<ITimerThreadListener>();
     boolean killed = false;
     
     /** Currently used only for testing */
-    public ActivityTimerThread(int timeoutInMillis, int sleepInterval) {
+    public TimerThread(int timeoutInMillis, int sleepInterval) {
     	this.sleepInterval = sleepInterval;
     	setTimeoutMillis(timeoutInMillis);
     }
     
-    public ActivityTimerThread(int timeoutInSeconds) {
+    public TimerThread(int timeoutInSeconds) {
         setTimeoutMillis(timeoutInSeconds * SECOND);
     }
 
-    public boolean addListener(IActiveTimerListener listener) {
+    public boolean addListener(ITimerThreadListener listener) {
     	return listeners.add(listener);
     }
     
-    public boolean removeListener(IActiveTimerListener listener) {
+    public boolean removeListener(ITimerThreadListener listener) {
     	return listeners.remove(listener);
     }
     
@@ -58,9 +57,12 @@ public class ActivityTimerThread extends Thread implements Runnable {
 			        sleep(sleepInterval);
 		    	}
 		        if (elapsed >= timeout && /*!stopped && */  !killed) {
-		            for (IActiveTimerListener listener : listeners) {
+		            for (ITimerThreadListener listener : listeners) {
+		            
+		            	
 		            	listener.fireTimedOut();
-					}
+					
+		            }
 		        }
 		        sleep(sleepInterval);
 	    	}
@@ -81,14 +83,14 @@ public class ActivityTimerThread extends Thread implements Runnable {
 		return timeout;
 	}
 
-	protected void setTimeoutMillis(int timeoutInMillis) {
+	public void setTimeoutMillis(int timeoutInMillis) {
 		this.timeout = timeoutInMillis;
 		if (sleepInterval > timeoutInMillis){
 			sleepInterval = timeoutInMillis;
 		}
 	}
 	
-	protected void setTimeoutSeconds(int timeoutInSeconds){
+	public void setTimeoutSeconds(int timeoutInSeconds){
 		setTimeoutMillis(timeoutInSeconds * SECOND);
 	}
 	

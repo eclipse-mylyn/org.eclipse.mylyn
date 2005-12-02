@@ -8,15 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 16, 2004
-  */
+
 package org.eclipse.mylar.core.util;
 
 /**
  * @author Mik Kersten
  */
-public interface IActiveTimerListener {
+public interface ITimerThreadListener {
 
     public void fireTimedOut();
 }

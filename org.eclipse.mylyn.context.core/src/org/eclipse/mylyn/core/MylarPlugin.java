@@ -40,7 +40,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.core.util.DateUtil;
-import org.eclipse.mylar.core.util.IInteractionEventListener;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

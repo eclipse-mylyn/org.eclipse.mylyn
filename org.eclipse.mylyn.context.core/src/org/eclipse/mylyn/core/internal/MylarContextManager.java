@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.AbstractRelationProvider;
+import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
@@ -31,8 +32,8 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.IActiveTimerListener;
-import org.eclipse.mylar.core.util.IInteractionEventListener;
+import org.eclipse.mylar.core.util.ITimerThreadListener;
+import org.eclipse.mylar.core.util.TimerThread;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -78,13 +79,13 @@ public class MylarContextManager {
 	private boolean activationHistorySuppressed = false;
     private static ScalingFactors scalingFactors = new ScalingFactors();
     
-    private class ActivityListener implements IActiveTimerListener, IInteractionEventListener {
+    private class ActivityListener implements ITimerThreadListener, IInteractionEventListener {
     	
-    	private ActivityTimerThread timer;
+    	private TimerThread timer;
     	private boolean isStalled;
     	
     	public ActivityListener(int timeoutInSeconds){
-    		timer = new ActivityTimerThread(timeoutInSeconds);
+    		timer = new TimerThread(timeoutInSeconds);
     		timer.addListener(this);
     		timer.start();
     		MylarPlugin.getDefault().addInteractionListener(this);
@@ -133,7 +134,7 @@ public class MylarContextManager {
     	public void setTimeoutSeconds(int timeoutSeconds) {
     		timer.killThread();
     		
-    		timer = new ActivityTimerThread(timeoutSeconds); 
+    		timer = new TimerThread(timeoutSeconds); 
     		timer.setTimeoutSeconds(timeoutSeconds);
     		timer.addListener(this);
     		timer.start();

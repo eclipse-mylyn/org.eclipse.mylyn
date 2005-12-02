@@ -9,9 +9,8 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.util;
+package org.eclipse.mylar.core;
 
-import org.eclipse.mylar.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

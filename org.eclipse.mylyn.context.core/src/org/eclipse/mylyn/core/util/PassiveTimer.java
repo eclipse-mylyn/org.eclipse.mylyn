@@ -19,17 +19,18 @@ package org.eclipse.mylar.core.util;
  * @author Mik Kersten
  */
 public class PassiveTimer {
-    
-    private long elapsed = 0;
-    private long lastStartTime = System.currentTimeMillis();
 
-    public void restart() {
-        lastStartTime = System.currentTimeMillis(); 
-        elapsed = 0;
-    } 
+	private long elapsed = 0;
 
-    public long getElapsedInSeconds() {
-        elapsed = System.currentTimeMillis() - lastStartTime;
-        return elapsed/1000;
-    }
+	private long lastStartTime = System.currentTimeMillis();
+
+	public void restart() {
+		lastStartTime = System.currentTimeMillis();
+		elapsed = 0;
+	}
+
+	public long getElapsedInSeconds() {
+		elapsed = System.currentTimeMillis() - lastStartTime;
+		return elapsed / 1000;
+	}
 }
