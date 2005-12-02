@@ -67,30 +67,29 @@ public class PeriodicSaveTest extends TestCase {
 		ITask diskTask = getTaskFromDisk(task1);
 		assertTrue(diskTask != null);
 
+		//This causes the sleep interval to be very low to 
+		//test for unintended save requests
+		saveTimer.setSaveIntervalMillis(250); 
+		saveTimer.setSaveIntervalMillis(1000);
+		
 		long elapsedTimeBeforeSave = diskTask.getElapsedMillis();
-
-		saveTimer.setSaveIntervalMillis(500);
-
+		
 		try {
-			Thread.sleep(900); // Wait long enough that the save request should
-								// have fired
+			
+			Thread.sleep(1500);
+			
+			//At this point the task list should have been saved, but only once
+			diskTask = getTaskFromDisk(task1);
+			long elapsedTimeAfterSave = diskTask.getElapsedMillis();
+			assertTrue(elapsedTimeAfterSave > elapsedTimeBeforeSave);
+			
+			//Checks that only one save has occured
+			assertTrue(elapsedTimeAfterSave < 1000);
+			
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		saveTimer.setSaveIntervalMillis(600000); // Prevent more save
-													// requests by setting long
-													// interval
-
-		try {
-			Thread.sleep(1000); // Fudge time to allow disk write to finish
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		// Read the task from disk and check that it has a greater time
-		diskTask = getTaskFromDisk(task1);
-		assertTrue(diskTask.getElapsedMillis() > elapsedTimeBeforeSave);
 
 	}
 

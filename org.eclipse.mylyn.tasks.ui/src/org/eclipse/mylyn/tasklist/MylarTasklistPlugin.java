@@ -227,12 +227,13 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier(), task.getPath());
 		}
 
-		public void taskPropertyChanged(ITask updatedTask, String property) {
+		public void tasklistRead() {
 			// ignore
 		}
 
-		public void tasklistRead() {
-			// ignore
+		public void tastChanged(ITask task) {
+			// TODO Auto-generated method stub
+			
 		}
 	};
 
@@ -269,7 +270,6 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	private static IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
-
 			if (event.getProperty().equals(MULTIPLE_ACTIVE_TASKS)) {
 				TaskListView.getDefault().togglePreviousAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
 				TaskListView.getDefault().toggleNextAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
