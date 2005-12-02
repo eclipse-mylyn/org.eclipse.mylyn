@@ -15,8 +15,8 @@ import org.eclipse.mylar.core.util.TimerThread;
  */
 public class SaveTimer implements ITimerThreadListener {
 
-	private final static int DEFAULT_SAVE_INTERVAL = 2 * 60 * 1000; // (Ten
-																		// minutes)
+	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
+	
 	private int saveInterval = DEFAULT_SAVE_INTERVAL;
 
 	private ISaveTimerListener listener = null;

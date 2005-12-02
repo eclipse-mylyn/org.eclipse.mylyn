@@ -84,7 +84,7 @@ public class PeriodicSaveTest extends TestCase {
 			assertTrue(elapsedTimeAfterSave > elapsedTimeBeforeSave);
 			
 			//Checks that only one save has occured
-			assertTrue(elapsedTimeAfterSave < 1000);
+			assertTrue((elapsedTimeAfterSave - elapsedTimeBeforeSave) < 1100);
 			
 			
 		} catch (InterruptedException e) {

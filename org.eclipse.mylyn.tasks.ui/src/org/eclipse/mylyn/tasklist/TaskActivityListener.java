@@ -54,7 +54,6 @@ public class TaskActivityListener implements ITimerThreadListener, IInteractionE
 	public void fireTimedOut() {
 		task.setActive(task.isActive(), true);
 		isTaskStalled = true;
-		timer.resetTimer();	
 	}
 	
 	public void interactionObserved(InteractionEvent event) {
