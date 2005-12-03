@@ -22,35 +22,21 @@ highlighted&nbsp; </span></p>
 <table cellpadding="10" cellspacing="0" width="600" id="table110">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Persistent Change Sets</b></p>
+			<p align="right"><b>Persistent Context Change Sets</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Change sets don't go away on deactivation...<p>The automatic task 
-			context change sets now persist, so that if there are any 
-			uncommitted resources in the change set it will not disappear when 
-			the task is deactivated, and multiple change sets can be present.&nbsp; 
-			While the context change sets are affected interest manipulations 
-			(i.e. marking a file uninteresting will remove it from the change 
-			set), they do not 'see' the interest decay in order to retain any 
-			resources modified as part of that task.&nbsp; If resources are 
-			changed outside of the context (e.g. by applying a patch) they can 
-			be added to the context via...</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table109">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Task planner<br>
-			(experimental)</b></p>
-			</td>
-			<td valign="top" width="70%">
-			...</td>
+			The automatic task context change sets now persist, so that if there 
+			are any uncommitted resources in the change set it will not 
+			disappear when the task is deactivated, and multiple change sets can 
+			be present.&nbsp; While the context change sets are affected 
+			interest manipulations (i.e. marking a file uninteresting will 
+			remove it from the change set), they do not 'see' the interest decay 
+			in order to retain any resources modified as part of that task.&nbsp; 
+			If resources are changed outside of the context (e.g. by applying a 
+			patch) they can be added to the task via the Add To menu.&nbsp; If 
+			the task context they are added to is active those resources will be 
+			come interesting.<p>
+			<img border="0" src="images/0.4.4/changeset-addto.gif" width="592" height="271"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -62,13 +48,11 @@ highlighted&nbsp; </span></p>
 <table cellpadding="10" cellspacing="0" width="600" id="table108">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Newly created resources become interesting</b></p>
+			<p align="right"><b>New Resources get Added</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Newly created resources become interesting...<p>Adding resource to 
-			Change Set makes them interesting (e.g. for patching)</p>
-			<p>
-			&nbsp;</td>
+			Newly created resources (e.g. packages, classes, files) now get 
+			automatically added to the active task context.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
