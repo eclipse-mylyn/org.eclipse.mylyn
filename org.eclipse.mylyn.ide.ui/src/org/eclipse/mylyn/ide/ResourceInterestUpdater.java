@@ -50,8 +50,7 @@ public class ResourceInterestUpdater {
 		if (handle != null) {
 			IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
 			if (!element.getInterest().isInteresting()) {
-				MylarPlugin.log("adding to context: " + resource, this);
-				
+//				MylarPlugin.log("adding to context: " + resource, this);
 				InteractionEvent interactionEvent = new InteractionEvent(
 						InteractionEvent.Kind.SELECTION,
 						bridge.getContentType(), 
