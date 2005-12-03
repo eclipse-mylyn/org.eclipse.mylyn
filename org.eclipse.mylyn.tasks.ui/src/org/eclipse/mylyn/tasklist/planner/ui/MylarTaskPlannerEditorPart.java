@@ -83,7 +83,7 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class MylarTaskPlannerEditorPart extends EditorPart {
 
-	private static final String LABEL_DIALOG = "Mylar Task Planner";
+	private static final String LABEL_DIALOG = "Summary";
 
 	private static final String LABEL_TASK_ACTIVITY = "Task Activity";
 

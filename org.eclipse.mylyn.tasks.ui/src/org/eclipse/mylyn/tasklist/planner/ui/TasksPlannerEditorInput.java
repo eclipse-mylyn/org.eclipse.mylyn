@@ -71,7 +71,7 @@ public class TasksPlannerEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return "Task Planner";
+		return "Mylar Task Planner";
 	}
 
 	public IPersistableElement getPersistable() {
