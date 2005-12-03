@@ -35,16 +35,20 @@ public class ContentOutlineManager implements IPartListener, IPageListener {
     
 	public void partActivated(IWorkbenchPart part) {
 		if (MylarPlugin.getContextManager().isContextCapturePaused()) return;
-		
+		 
     	if (part instanceof IEditorPart) {
             IEditorPart editorPart = (IEditorPart)part;
             configureDecorator(editorPart);
         }
-//        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//            public void run() { 
-            	if (ApplyMylarToOutlineAction.getDefault() != null) ApplyMylarToOutlineAction.getDefault().update();
-//            }
-//        });
+    	
+//    	IWorkbench workbench = PlatformUI.getWorkbench();
+//		workbench.getDisplay().asyncExec(new Runnable() {
+//			public void run() {
+    	if (ApplyMylarToOutlineAction.getDefault() != null) {
+    		ApplyMylarToOutlineAction.getDefault().update();
+    	}
+//			}
+//		});
 	}
 
     public void partOpened(IWorkbenchPart part) { 

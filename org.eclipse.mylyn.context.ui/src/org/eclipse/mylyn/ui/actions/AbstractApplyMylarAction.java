@@ -110,14 +110,15 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 */
 	public void installInterestFilter(final boolean on, StructuredViewer viewer) {
 		if (viewer != null) {
+			boolean installed = false;
 			if (on) {
-				installInterestFilter(viewer);
+				installed = installInterestFilter(viewer);
 				MylarUiPlugin.getDefault().getViewerManager().addFilteredViewer(viewer);
 			} else {
 				uninstallInterestFilter(viewer);
 				MylarUiPlugin.getDefault().getViewerManager().removeFilteredViewer(viewer);
 			}
-			if (on && viewer instanceof TreeViewer) {
+			if (installed && on && viewer instanceof TreeViewer) {
 				((TreeViewer) viewer).expandAll();
 			}
 		}
@@ -128,7 +129,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	 */
 	public abstract List<StructuredViewer> getViewers();
 
-	protected void installInterestFilter(StructuredViewer viewer) {
+	protected boolean installInterestFilter(StructuredViewer viewer) {
 		try {
 			if (viewer != null) {
 				boolean found = false;
@@ -141,13 +142,15 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 					viewer.getControl().setRedraw(false);
 					viewer.addFilter(interestFilter);
 					viewer.getControl().setRedraw(true);
-				}
+					return true;
+				} 
 			} else {
 				MylarPlugin.log("Could not install interest filter", this);
 			}
 		} catch (Throwable t) {
 			MylarPlugin.fail(t, "Could not install viewer fitler on: " + prefId, false);
 		}
+		return false;
 	}
 
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
