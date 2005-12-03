@@ -66,6 +66,8 @@ public class TasksPlannerLabelProvider extends LabelProvider implements ITableLa
 					}
 				case 5:
 					return DateUtil.getFormattedDurationShort(task.getElapsedMillis());
+				case 6: 
+					return task.getEstimateTimeHours() + " hours";
 				}	
 			}
 		} catch (RuntimeException e) {

@@ -90,14 +90,15 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 	private TasksPlannerEditorInput editorInput = null;
 
 	private String[] activityColumnNames = new String[] {  "  !", "Description", "Created", "Completed",
-			"Duration" };
+			"Duration", "Estimated" };
 
-	private int[] activityColumnWidths = new int[] { 30, 300, 90, 90, 70 };
+	private int[] activityColumnWidths = new int[] { 30, 300, 90, 90, 70, 70 };
 
 	private int[] activitySorterConstants = new int[] { 
 			TaskSorter.PRIORITY, TaskSorter.DESCRIPTION, 
 			TaskSorter.CREATION_DATE, TaskSorter.COMPLETED_DATE, 
-			TaskSorter.DURATION };
+			TaskSorter.DURATION,
+			TaskSorter.ESTIMATED }; 
 	
 	private String[] planColumnNames = new String[] { " ", " !", "Description", "Estimated", "Reminder" };
 
@@ -190,7 +191,6 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		layout.numColumns = 2;
 		summaryContainer.setLayout(layout);
 
-		int length = editorInput.getCompletedTasks().size();
 		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();
 		Label label = toolkit.createLabel(summaryContainer, numComplete, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -209,15 +209,22 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 		label = toolkit.createLabel(summaryContainer, totalInProgressTaskTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
-		String avgTime = "Average completion time: ";
-		if (length > 0) {
-			avgTime = avgTime
-					+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
-							/ editorInput.getCompletedTasks().size());
-		} else {
-			avgTime = avgTime + 0;
-		}
-		label = toolkit.createLabel(summaryContainer, avgTime, SWT.NULL);
+//		int length = editorInput.getCompletedTasks().size();
+//		String avgTime = "Average completion time: ";
+//		if (length > 0) {
+//			avgTime = avgTime
+//					+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
+//							/ editorInput.getCompletedTasks().size());
+//		} else {
+//			avgTime = avgTime + 0;
+//		}
+//		label = toolkit.createLabel(summaryContainer, avgTime, SWT.NULL);
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		
+		String spacer = "        ";
+		String totalEstimated = "Total estimated time: " 
+			+ editorInput.getTotalTimeEstimated() + " hours" + spacer;
+		label = toolkit.createLabel(summaryContainer, totalEstimated, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		
 		String grandTotalTime = "Total time: "

@@ -28,7 +28,7 @@ import org.eclipse.ui.IPersistableElement;
  * @author Ken Sueda
  */
 public class TasksPlannerEditorInput implements IEditorInput {
-	
+
 	private List<ITask> completedTasks = null;
 
 	private List<ITask> inProgressTasks = null;
@@ -38,7 +38,7 @@ public class TasksPlannerEditorInput implements IEditorInput {
 	private int prevDaysToReport = -1;
 
 	private long DAY = 24 * 3600 * 1000;
-	
+
 	private Date reportStartDate = null;
 
 	public TasksPlannerEditorInput(int prevDays, TaskList tlist) {
@@ -56,7 +56,7 @@ public class TasksPlannerEditorInput implements IEditorInput {
 		inProgressTasks = inProgressTaskCollector.getTasks();
 
 		prevDaysToReport = prevDays;
-		
+
 		reportStartDate = new Date(new Date().getTime() - prevDaysToReport * DAY);
 	}
 
@@ -127,6 +127,14 @@ public class TasksPlannerEditorInput implements IEditorInput {
 
 	public Date getReportStartDate() {
 		return reportStartDate;
+	}
+
+	public int getTotalTimeEstimated() {
+		int duration = 0;
+		for (ITask task : inProgressTasks) {
+			duration += task.getEstimateTimeHours();
+		}
+		return duration;
 	}
 
 }

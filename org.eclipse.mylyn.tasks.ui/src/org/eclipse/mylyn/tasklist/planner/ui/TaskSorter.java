@@ -28,7 +28,8 @@ public class TaskSorter extends ViewerSorter {
 	public final static int CREATION_DATE = 3;
 	public final static int COMPLETED_DATE = 4;
 	public final static int DURATION = 5;
-
+	public final static int ESTIMATED = 6;
+	
 	// Criteria that the instance uses 
 	private int criteria;
 
@@ -59,6 +60,8 @@ public class TaskSorter extends ViewerSorter {
 				return compareCompletedDate(t1, t2);
 			case DURATION:
 				return compareDuration(t1, t2);
+			case ESTIMATED:
+				return compareEstimated(t1, t2);
 			default:
 				return 0;
 		}
@@ -76,6 +79,10 @@ public class TaskSorter extends ViewerSorter {
 		return task2.getEndDate().compareTo(task1.getEndDate());
 	}
 
+	private int compareEstimated(ITask task1, ITask task2) {
+		return task2.getEstimateTimeHours() - task1.getEstimateTimeHours();
+	}
+	
 	private int compareCreationDate(ITask task1, ITask task2) {
 		if(task1.getCreationDate() == null)
 			return 1;
