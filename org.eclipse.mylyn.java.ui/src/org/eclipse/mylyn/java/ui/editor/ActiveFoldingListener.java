@@ -26,6 +26,7 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -69,8 +70,17 @@ public class ActiveFoldingListener implements IMylarContextListener {
     
     private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {// ||
+			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_PROVIDER)) {
 				controller.resetFolding();
+			}
+			if (event.getProperty().equals(PreferenceConstants.EDITOR_FOLDING_ENABLED)) {
+				if (event.getNewValue().equals(Boolean.FALSE.toString())) {
+					ToggleAutoFoldAction.toggleFolding(false);
+				} else if (event.getNewValue().equals(Boolean.TRUE.toString())) {
+					if (AutoFoldingStructureProvider.ID.equals(JavaPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER))) {
+						ToggleAutoFoldAction.toggleFolding(true);
+					}
+				}
 			}
 		}        
     };

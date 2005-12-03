@@ -123,6 +123,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
     }
     
     public static String getStringOfNode(IDocumentNode node) {
+    	if (node == null) return null;
     	String s = node.getXMLTagName();
     	for(IDocumentAttribute a: node.getNodeAttributes()){
     		s += a.getAttributeName() + "=" + a.getAttributeValue();

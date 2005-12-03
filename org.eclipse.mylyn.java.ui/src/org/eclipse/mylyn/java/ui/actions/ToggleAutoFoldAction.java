@@ -37,15 +37,26 @@ public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActi
     
     public static final String PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
 
+    private static ToggleAutoFoldAction INSTANCE;
+    
     private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
     
+    private IAction parentAction = null;
+    
     public ToggleAutoFoldAction() {
-		super();
+    	super();
+    	INSTANCE = this;
 		setText("Auto fold"); 
 		setImageDescriptor(MylarImages.INTEREST_FOLDING);	
 		setToolTipText("Auto Manage Editors and Folding"); 
     }
 	
+	public static void toggleFolding(boolean on) {
+		if (INSTANCE.parentAction != null) {
+			INSTANCE.valueChanged(INSTANCE.parentAction, on, true);
+		}
+	}
+    
     public void run(IAction action) {
     	valueChanged(action, action.isChecked(), true);
     }
@@ -76,6 +87,7 @@ public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActi
     }
 
 	public void init(IAction action) {
+		this.parentAction = action;
 		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID), true);
 	}
 

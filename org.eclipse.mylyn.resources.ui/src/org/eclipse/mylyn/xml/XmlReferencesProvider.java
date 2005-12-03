@@ -205,14 +205,16 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
                                    try {
                                        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
                                        String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
-                                       String second = handle.substring(handle.indexOf(";"));
-                                       
-                                	   XmlNodeHelper xnode = new XmlNodeHelper(f.getFullPath().toString(), second);
-                                       nodeMap.put(m, xnode);
-                                       Object o = bridge.getObjectForHandle(handle);
-                                       String name = bridge.getName(o);
-                                       if(o != null){
-                                           nodes.put(handle, name);
+                                       if (handle != null) {
+	                                       String second = handle.substring(handle.indexOf(";"));
+	                                       
+	                                	   XmlNodeHelper xnode = new XmlNodeHelper(f.getFullPath().toString(), second);
+	                                       nodeMap.put(m, xnode);
+	                                       Object o = bridge.getObjectForHandle(handle);
+	                                       String name = bridge.getName(o);
+	                                       if(o != null){
+	                                           nodes.put(handle, name);
+	                                       }
                                        }
                                    } catch(Exception e){
                                 	   MylarPlugin.log(e, "search failed - unable to create match");
