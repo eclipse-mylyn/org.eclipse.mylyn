@@ -126,7 +126,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	
 	private SaveTimer saveTimer = null;
 	
-	private static boolean shellActive = true;
+	private static boolean shouldAutoSave = true;
 
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
@@ -252,13 +252,13 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		 * bug 1002249: too slow to save state here
 		 */
 		public void shellDeactivated(ShellEvent arg0) {
-			shellActive = false;
+			shouldAutoSave = false;
 		}
 
 		public void shellActivated(ShellEvent arg0) {
 			getDefault().checkTaskListBackup();
 			getDefault().checkReminders();
-			shellActive = true;
+			shouldAutoSave = true;
 		}
 
 		public void shellDeiconified(ShellEvent arg0) {
@@ -618,7 +618,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	 * Called periodically by the save timer 
 	 */
 	public void saveRequested() {
-		if (shellActive) {
+		if (shouldAutoSave) {
 			try {
 				saveTaskListAndContexts();
 				MylarPlugin.log("Automatically saved task list", this);
@@ -631,5 +631,12 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	/** For testing only **/
 	public SaveTimer getSaveTimer() {
 		return saveTimer;
+	}
+
+	/**
+	 * For testing.
+	 */
+	public void setShouldAutoSave(boolean shellActive) {
+		MylarTasklistPlugin.shouldAutoSave = shellActive;
 	}
 }
