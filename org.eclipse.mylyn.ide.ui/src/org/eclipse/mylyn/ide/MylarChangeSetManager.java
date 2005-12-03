@@ -30,6 +30,7 @@ import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
+import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 
 /**
@@ -79,6 +80,38 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		if (MylarTasklistPlugin.getTaskListManager().isTaskListRead()) {
 			initContextChangeSets(); // otherwise listener will do it
 		}  
+		collector.addListener(new IChangeSetChangeListener() {
+
+			public void setRemoved(ChangeSet set) {
+				if (set instanceof MylarContextChangeSet) {
+					MylarContextChangeSet contextChangeSet = (MylarContextChangeSet)set;
+					if (contextChangeSet.getTask().isActive()) {
+						collector.add(contextChangeSet); // put it back
+					}
+				}
+			}
+			
+			public void setAdded(ChangeSet set) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void defaultSetChanged(ChangeSet previousDefault, ChangeSet set) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void nameChanged(ChangeSet set) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void resourcesChanged(ChangeSet set, IResource[] resources) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 	}
 
 	private void initContextChangeSets() {
@@ -178,7 +211,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 					try {
 						if (!contextChangeSet.contains(resource)) {
 							if (element.getInterest().isInteresting()) {
-								System.err.println(">>> adding: " + resource);
 								contextChangeSet.add(new IResource[] { resource });
 							} 
 						} else if (shouldRemove(element)) {

@@ -161,7 +161,6 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 			// TODO: if super is always managed correctly should remove following line
 			allResources.addAll(MylarIdePlugin.getDefault().getInterestingResources());
 		}
-//		System.err.println(">>>>> " + MylarIdePlugin.getDefault().getInterestingResources());
 		return new ArrayList<IResource>(allResources);
 	}
 
@@ -171,8 +170,6 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	public boolean contains(IResource local) {
 //		System.err.println(">>> " + getAllResourcesInChangeContext().contains(local) + " " + local);
 		return getAllResourcesInChangeContext().contains(local);
-//		return super.contains(local);
-//		return resources.contains(local);
 	}
 
 	public static String generateComment(ITask task, String completedPrefix, String progressPrefix) {
