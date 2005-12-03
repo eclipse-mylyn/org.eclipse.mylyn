@@ -621,9 +621,9 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		if (shouldAutoSave) {
 			try {
 				saveTaskListAndContexts();
-				MylarPlugin.log("Automatically saved task list", this);
+//				MylarPlugin.log("Automatically saved task list", this);
 			} catch (Exception e) {
-				MylarPlugin.fail(e, "Could not auto save task list", true);
+				MylarPlugin.fail(e, "Could not auto save task list", false);
 			}
 		}
 	}
