@@ -22,7 +22,7 @@ import org.eclipse.mylar.core.internal.ScalingFactors;
 /**
  * @author Mik Kersten
  */
-public class ContextTest extends AbstractContextTest {
+public class ContextStandaloneTest extends AbstractContextTest {
 
     private MylarContext context;
     private ScalingFactors scaling;

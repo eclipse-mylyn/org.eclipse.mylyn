@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -46,8 +46,8 @@ public class ClearContextAction implements IViewActionDelegate{
 			if (!deleteConfirmed) 
 				return;
 			
-	    	MylarPlugin.getContextManager().contextDeleted(((ITask)selectedObject).getHandleIdentifier(), ((Task)selectedObject).getPath());
-	    	MylarPlugin.getContextManager().contextActivated(((ITask)selectedObject).getHandleIdentifier(), ((Task)selectedObject).getPath());
+	    	MylarPlugin.getContextManager().contextDeleted(((ITask)selectedObject).getHandleIdentifier(), ((Task)selectedObject).getContextPath());
+	    	MylarPlugin.getContextManager().contextActivated(((ITask)selectedObject).getHandleIdentifier(), ((Task)selectedObject).getContextPath());
 
 	    	//	    	MylarPlugin.getContextManager().contextDeleted(((ITask)selectedObject).getHandleIdentifier(), ((Task)selectedObject).getPath());
 	    	TaskListView.getDefault().getViewer().refresh();

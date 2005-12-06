@@ -15,8 +15,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.ide.MylarContextChangeSet;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
 
 /**
  * @author Mik Kersten
@@ -32,8 +32,8 @@ public class TaskContextChangeSetTest extends TestCase {
 		};
 		String comment = MylarContextChangeSet.generateComment(
 				task, 
-				MylarTasklistPlugin.DEFAULT_PREFIX_COMPLETED, 
-				MylarTasklistPlugin.DEFAULT_PREFIX_PROGRESS);
+				MylarTaskListPlugin.DEFAULT_PREFIX_COMPLETED, 
+				MylarTaskListPlugin.DEFAULT_PREFIX_PROGRESS);
 		String bugId = MylarContextChangeSet.getIssueIdFromComment(comment);
 		assertEquals("111", bugId);
 	}
@@ -44,8 +44,8 @@ public class TaskContextChangeSetTest extends TestCase {
 		task.setIssueReportURL("http://eclipse.org/mylar");
 		String comment = MylarContextChangeSet.generateComment(
 				task, 
-				MylarTasklistPlugin.DEFAULT_PREFIX_COMPLETED, 
-				MylarTasklistPlugin.DEFAULT_PREFIX_PROGRESS);
+				MylarTaskListPlugin.DEFAULT_PREFIX_COMPLETED, 
+				MylarTaskListPlugin.DEFAULT_PREFIX_PROGRESS);
 		String bugId = MylarContextChangeSet.getIssueIdFromComment(comment);
 		assertEquals(null, bugId);
 		String url = MylarContextChangeSet.getUrlFromComment(comment);
@@ -54,8 +54,8 @@ public class TaskContextChangeSetTest extends TestCase {
 		task.setIssueReportURL("http://eclipse.org/mylar bla \n bla");
 		String comment2 = MylarContextChangeSet.generateComment(
 				task, 
-				MylarTasklistPlugin.DEFAULT_PREFIX_COMPLETED, 
-				MylarTasklistPlugin.DEFAULT_PREFIX_PROGRESS);
+				MylarTaskListPlugin.DEFAULT_PREFIX_COMPLETED, 
+				MylarTaskListPlugin.DEFAULT_PREFIX_PROGRESS);
 		String url2 = MylarContextChangeSet.getUrlFromComment(comment2);
 		assertEquals("http://eclipse.org/mylar", url2);
 	}

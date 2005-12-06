@@ -16,7 +16,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.AbstractEditorTracker;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -35,7 +35,7 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 
 	@Override
 	public void editorClosed(IEditorPart editorPart) {
-		if (MylarTasklistPlugin.getPrefs().getBoolean(MylarTasklistPlugin.AUTO_MANAGE_EDITORS)) {
+		if (MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPlugin.AUTO_MANAGE_EDITORS)) {
 			IMylarElement element = null;
 			IMylarUiBridge uiBridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);

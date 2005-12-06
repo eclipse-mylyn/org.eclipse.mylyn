@@ -51,7 +51,7 @@ public class MylarControlPanel extends Composite {
 //        tableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 //        tableViewer.setContentProvider(new ItemContentProvider());
 //        tableViewer.setInput(part.getViewSite());
-//        tableViewer.setLabelProvider(new TaskListLabelProvider());
+//        tableViewer.setLabelProvider(new TasklistLabelProvider());
 
         final Composite group = new Composite(this, SWT.NONE);
         final GridLayout gridLayout_2 = new GridLayout();

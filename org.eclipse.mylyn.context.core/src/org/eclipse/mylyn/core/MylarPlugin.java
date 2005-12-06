@@ -64,7 +64,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public static final String CONTENT_TYPE_ANY = "*";
 
-	private static final String ERROR_MESSAGE = "Please report the following error by following the link at:\n" + "https://eclipse.org/mylar\n\n"
+	private static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n" + "https://eclipse.org/mylar\n\n"
 			+ "For details on this error please open the PDE Runtime -> Error Log view";
 
 	private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
@@ -391,7 +391,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		final Status status = new Status(Status.ERROR, MylarPlugin.IDENTIFIER, IStatus.OK, message, throwable);
 		log(status);
 
-		if (informUser) {
+		if (informUser && Workbench.getInstance() != null) {
 			Workbench.getInstance().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					ErrorDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Mylar error", ERROR_MESSAGE, status);

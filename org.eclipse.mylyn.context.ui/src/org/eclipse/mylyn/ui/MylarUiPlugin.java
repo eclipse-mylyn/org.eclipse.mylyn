@@ -34,8 +34,8 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskHighlighter;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.ui.internal.ColorMap;
 import org.eclipse.mylar.ui.internal.ContentOutlineManager;
@@ -224,7 +224,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 					}
 					if (ApplyMylarToOutlineAction.getDefault() != null)
 						ApplyMylarToOutlineAction.getDefault().update();
-					MylarTasklistPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
+					MylarTaskListPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 				} catch (Exception e) {
 					MylarPlugin.fail(e, "Mylar UI initialization failed", true);
 				}

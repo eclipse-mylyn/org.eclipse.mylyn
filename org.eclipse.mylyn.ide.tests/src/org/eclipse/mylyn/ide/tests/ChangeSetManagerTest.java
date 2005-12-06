@@ -23,8 +23,8 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarChangeSetManager;
 import org.eclipse.mylar.ide.MylarContextChangeSet;
 import org.eclipse.mylar.ide.MylarIdePlugin;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
@@ -63,14 +63,14 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
     	assertEquals(0, changeSetManager.getActiveChangeSets().size());
     	
     	Task task1 = new Task("task1", "label", true);
-    	MylarTasklistPlugin.getTaskListManager().activateTask(task1);
+    	MylarTaskListPlugin.getTaskListManager().activateTask(task1);
     	assertEquals(1, changeSetManager.getActiveChangeSets().size()); 
     	assertEquals(1, collector.getSets().length);
     	
-    	MylarTasklistPlugin.getTaskListManager().deactivateTask(task1); 
+    	MylarTaskListPlugin.getTaskListManager().deactivateTask(task1); 
     	assertEquals(0, changeSetManager.getActiveChangeSets().size());
     	assertEquals(0, collector.getSets().length); // deleted because no active resources
-    	MylarTasklistPlugin.getTaskListManager().deactivateTask(task1);
+    	MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
     	
     	// TODO: test with resource
     }
@@ -80,7 +80,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		  
 		Task task1 = new Task("task1", "label", true);
-    	MylarTasklistPlugin.getTaskListManager().activateTask(task1);
+    	MylarTaskListPlugin.getTaskListManager().activateTask(task1);
 		
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
 		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
@@ -98,6 +98,6 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
         assertTrue(fileElement.getInterest().getValue() < 0);
         assertTrue(resources.length <= 2); // can have .project file in there
         
-        MylarTasklistPlugin.getTaskListManager().deactivateTask(task1);
+        MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
     }
 }

@@ -23,7 +23,7 @@ public class AllCoreTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.core.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(DegreeOfInterestTest.class);
-		suite.addTestSuite(ContextTest.class);
+		suite.addTestSuite(ContextStandaloneTest.class);
 		//$JUnit-END$
 		return suite;
 	}

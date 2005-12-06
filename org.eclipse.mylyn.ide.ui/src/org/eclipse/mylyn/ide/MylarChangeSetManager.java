@@ -27,7 +27,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
@@ -48,7 +48,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			initContextChangeSets();
 		}
 		
-		public void tastChanged(ITask task) {
+		public void taskChanged(ITask task) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
@@ -72,12 +72,17 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		public void taskDeactivated(ITask task) {
 			// ignore
 		}
+
+		public void tasklistModified() {
+			// TODO Auto-generated method stub
+			
+		}
 	};
 	
 	public MylarChangeSetManager() {
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
-		MylarTasklistPlugin.getTaskListManager().addListener(TASK_ACTIVITY_LISTENER); // TODO: remove on stop?
-		if (MylarTasklistPlugin.getTaskListManager().isTaskListRead()) {
+		MylarTaskListPlugin.getTaskListManager().addListener(TASK_ACTIVITY_LISTENER); // TODO: remove on stop?
+		if (MylarTaskListPlugin.getTaskListManager().isTaskListRead()) {
 			initContextChangeSets(); // otherwise listener will do it
 		}  
 		collector.addListener(new IChangeSetChangeListener() {
@@ -121,7 +126,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			if (!(restoredSet instanceof MylarContextChangeSet)) {
 				String encodedTitle = restoredSet.getName();
 				String taskHandle = MylarContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-				ITask task = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(taskHandle, true);
+				ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(taskHandle, true);
 				if (task != null) {				
 					try {
 						MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
@@ -192,7 +197,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 	
 	private ITask getTask(IMylarContext context) {
-		List<ITask> activeTasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks();
+		List<ITask> activeTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks();
 		
 		// TODO: support multiple tasks
 		if (activeTasks.size() > 0) {
