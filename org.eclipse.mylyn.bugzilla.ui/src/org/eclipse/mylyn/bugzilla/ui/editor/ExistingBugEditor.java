@@ -58,7 +58,7 @@ import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -442,11 +442,11 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					public void run() {
 						if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null) {
 							String handle = BugzillaUiPlugin.getDefault().createBugHandleIdentifier(bug.getId());
-							ITask task = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(handle, false);
+							ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 							if (task instanceof BugzillaTask) {
 								BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
 										(BugzillaTask)task);
-//								ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(task);
+//								ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(task);
 //							    if(taskHandler != null) { 
 //						    		taskHandler.itemOpened(task);
 //							    }

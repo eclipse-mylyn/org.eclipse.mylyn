@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
@@ -27,7 +27,7 @@ public class ManageEditorsAction extends Action {
 	public ManageEditorsAction() {
 		super("Manage Editors with Context", IAction.AS_CHECK_BOX);
 		setId(ID);
-		update(MylarTasklistPlugin.getPrefs().getBoolean(MylarTasklistPlugin.AUTO_MANAGE_EDITORS));
+		update(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPlugin.AUTO_MANAGE_EDITORS));
 	}
 	
 	@Override
@@ -37,18 +37,18 @@ public class ManageEditorsAction extends Action {
     
     public void update(boolean on) {
     	setChecked(on);
-    	MylarTasklistPlugin.getPrefs().setValue(MylarTasklistPlugin.AUTO_MANAGE_EDITORS, on);
+    	MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPlugin.AUTO_MANAGE_EDITORS, on);
 		
     	if (on) {
 			boolean previousValue = WorkbenchPlugin.getDefault().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
-			MylarTasklistPlugin.getPrefs().setValue(
+			MylarTaskListPlugin.getPrefs().setValue(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN, 
 					previousValue);
 			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
 					false);
 		} else {
-			boolean previousValue = MylarTasklistPlugin.getPrefs().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+			boolean previousValue = MylarTaskListPlugin.getPrefs().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
 					previousValue);			

@@ -28,7 +28,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -60,7 +60,7 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 	@Override
 	public void run() {
 		
-		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
 		if(offline){
 			MessageDialog.openInformation(null, "Unable to refresh query", "Unable to refresh the query since you are currently offline");
 			return;
@@ -121,11 +121,11 @@ public class RefreshBugzillaAction extends Action implements IViewActionDelegate
 				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(hit.getAssociatedTask());
 			}
 		}
-		for(ITask task: MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks()){
+		for(ITask task: MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()){
 			if(task instanceof BugzillaTask){
-				ITask found = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
+				ITask found = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
 				if(found == null){
-					MylarTasklistPlugin.getTaskListManager().addRootTask(task);
+					MylarTaskListPlugin.getTaskListManager().addRootTask(task);
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
 							BugzillaTask.getBugId(task.getHandleIdentifier()) + 
 							" has been moved to the root since it is activated and has disappeared from a query.");

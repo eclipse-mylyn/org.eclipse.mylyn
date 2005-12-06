@@ -13,7 +13,6 @@
  */
 package org.eclipse.mylar.tasklist;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -24,14 +23,10 @@ import org.eclipse.mylar.tasklist.internal.TaskCategory;
  * 
  * TODO: make IDs be handles, clean up
  */
-public interface ITask extends Serializable, ITaskListElement {
+public interface ITask extends ITaskListElement {
     
     public abstract String getHandleIdentifier();
 	
-    public abstract String getPath();
-
-    public abstract void setPath(String path);
-    
     public abstract ITask getParent(); 
     
     public abstract void setParent(ITask parent);
@@ -39,6 +34,13 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract boolean isActive();
     
     public abstract void setActive(boolean active, boolean isStalled);
+
+	/**
+	 * TODO: consider changing to java.net.URL
+	 */
+    public abstract String getContextPath();
+
+    public abstract void setContextPath(String path);
     
     public abstract void addPlan(String plan);
     
@@ -69,9 +71,7 @@ public interface ITask extends Serializable, ITaskListElement {
     public abstract void setElapsedTime(String elapsed);
         
     public abstract int getEstimateTimeHours();
-    
-//    public abstract String getEstimateTimeForDisplay();
-    
+        
     public abstract void setEstimatedTimeHours(int estimated);
 
     public abstract List<ITask> getChildren();
@@ -84,34 +84,23 @@ public interface ITask extends Serializable, ITaskListElement {
     
     public abstract void setPriority(String priority);
     
-    public abstract void setCategory(ITaskListCategory cat);
+    public abstract void setCategory(ITaskCategory cat);
     
-    public abstract ITaskListCategory getCategory();
+    public abstract ITaskCategory getCategory();
     
-    public abstract String getElapsedTimeForDisplay();
-	
     public abstract long getElapsedMillis();
     
-	public abstract Date getEndDate();
+	public abstract Date getCompletionDate();
 	
-	public abstract void setEndDate(String date);
+	public abstract void setCompletionDate(Date date);
 	
-	public abstract String getEndDateString();
-		
 	public abstract Date getCreationDate();
 	
-	public abstract void setCreationDate(String date);
-	
-	public abstract String getCreationDateString();
-	
-	
+	public abstract void setCreationDate(Date date);
+
 	public abstract void setReminderDate(Date date);
 	
-	public abstract void setReminderDate(String date);
-	
 	public abstract Date getReminderDate();
-	
-	public abstract String getReminderDateString(boolean forDisplay);
 	
 	public abstract boolean hasBeenReminded();
 	
@@ -121,3 +110,24 @@ public interface ITask extends Serializable, ITaskListElement {
 
 	public abstract boolean participatesInTaskHandles();
 }
+
+//public abstract void setEndDate(String date);
+//public abstract void setCreationDate(String date);
+//public abstract void setReminderDate(String date);	
+
+//public abstract String getElapsedTimeForDisplay();
+
+///** 
+// * @deprecated
+// */
+//public abstract String getEndDateForPersistance();
+
+///** 
+// * @deprecated
+// */
+//public abstract String getReminderDateString(boolean forDisplay);
+
+///** 
+// * @deprecated
+// */
+//public abstract String getCreationDateForPersistance();

@@ -61,7 +61,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
         List<BugzillaOpenStructure> l = new ArrayList<BugzillaOpenStructure>(1);
         l.add(new BugzillaOpenStructure(server, bugId, commentNumer));
         
-//        ITask task= MylarTasklistPlugin.getTaskListManager().getTaskForHandle(bugHandle);
+//        ITask task= MylarTaskListPlugin.getTaskListManager().getTaskForHandle(bugHandle);
 //        if (task != null && task instanceof BugzillaTask) {
 //            BugzillaTask bugzillaTask = (BugzillaTask)task;
 //            bugzillaTask.openTask(commentNumer);

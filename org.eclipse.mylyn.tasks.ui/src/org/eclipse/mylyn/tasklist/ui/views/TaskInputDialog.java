@@ -21,8 +21,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.contribution.DatePicker;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.TitleEvent;
@@ -150,7 +149,7 @@ public class TaskInputDialog extends Dialog {
 		String url = issueURLTextWidget.getText();
 		
 		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))){
-			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(MylarTasklistPlugin.DEFAULT_URL_PREFIX);
+			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(MylarTaskListPlugin.DEFAULT_URL_PREFIX);
 			if (url.equals(defaultPrefix)){
 				getDescButton.setEnabled(false);
 			}
@@ -175,7 +174,7 @@ public class TaskInputDialog extends Dialog {
 			return clipboardText;
 		}
 		
-		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(MylarTasklistPlugin.DEFAULT_URL_PREFIX);
+		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(MylarTaskListPlugin.DEFAULT_URL_PREFIX);
 		if (!defaultPrefix.equals("")){
 			return defaultPrefix;
 		}

@@ -13,17 +13,17 @@ import org.eclipse.mylar.core.util.TimerThread;
  * 
  * @author Wesley Coelho
  */
-public class SaveTimer implements ITimerThreadListener {
+public class BackgroundSaveTimer implements ITimerThreadListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
 	
 	private int saveInterval = DEFAULT_SAVE_INTERVAL;
 
-	private ISaveTimerListener listener = null;
+	private IBackgroundSaveListener listener = null;
 
 	private TimerThread timer = null;
 
-	public SaveTimer(ISaveTimerListener listener) {
+	public BackgroundSaveTimer(IBackgroundSaveListener listener) {
 		this.listener = listener;
 		timer = new TimerThread(saveInterval / 1000); // This constructor
 														// wants seconds
@@ -54,9 +54,9 @@ public class SaveTimer implements ITimerThreadListener {
 
 	/** Job that makes the save call */
 	private class SaveJob extends Job {
-		private ISaveTimerListener listener = null;
+		private IBackgroundSaveListener listener = null;
 
-		public SaveJob(String name, ISaveTimerListener listener) {
+		public SaveJob(String name, IBackgroundSaveListener listener) {
 			super(name);
 			this.listener = listener;
 		}

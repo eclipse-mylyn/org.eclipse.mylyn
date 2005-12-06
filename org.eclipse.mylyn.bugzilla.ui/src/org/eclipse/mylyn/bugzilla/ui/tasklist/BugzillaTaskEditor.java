@@ -21,9 +21,9 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
-import org.eclipse.mylar.tasklist.TasklistImages;
 import org.eclipse.mylar.tasklist.ui.MylarTaskEditor;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -51,7 +51,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	private BugzillaTaskEditorInput bugzillaEditorInput;
 	
-//    private TaskSummaryEditor taskSummaryEditor = new TaskSummaryEditor();
+//    private TaskInfoEditor taskSummaryEditor = new TaskInfoEditor();
     
 	protected IContentOutlinePage outlinePage = null;
 	
@@ -68,7 +68,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		super();
 
 		// get the workbench page and add a listener so we can detect when it closes
-//		IWorkbench wb = MylarTasklistPlugin.getDefault().getWorkbench();
+//		IWorkbench wb = MylarTaskListPlugin.getDefault().getWorkbench();
 //		IWorkbenchWindow aw = wb.getActiveWorkbenchWindow();
 //		IWorkbenchPage ap = aw.getActivePage();
 //		BugzillaTaskEditorListener listener = new BugzillaTaskEditorListener();
@@ -77,7 +77,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		bugzillaEditor = new ExistingBugEditor();
 		bugzillaEditor.setParentEditor(this);
 		bugzillaEditor.addAttributeListener(ATTRIBUTE_LISTENER);
-//        taskSummaryEditor = new TaskSummaryEditor();
+//        taskSummaryEditor = new TaskInfoEditor();
 //        taskSummaryEditor.setParentEditor(this);
 	}
 
@@ -85,7 +85,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
         return bugzillaEditor;
     }
     
-//    public TaskSummaryEditor getTaskEditor(){
+//    public TaskInfoEditor getTaskEditor(){
 //        return taskSummaryEditor;
 //    }
     
@@ -171,7 +171,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		// Set the title on the editor's tab
 //		this.setPartName("Bug #" + bugzillaEditorInput.getBugId());
 		this.setPartName(bugTask.getDescription(true));
-		this.setTitleImage(TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA));
+		this.setTitleImage(TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA));
 	}
 	
 	@Override

@@ -14,8 +14,8 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -29,16 +29,16 @@ public class TaskDeactivateAction extends Action {
 	public TaskDeactivateAction() {
 		setId(ID);
 		setText("Deactivate");
-		setImageDescriptor(TasklistImages.TASK_INACTIVE);
+		setImageDescriptor(TaskListImages.TASK_INACTIVE);
 	}
 	
 	public void run(ITask task) {
 		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
-        IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page == null) return;
 		try {
 			if (task != null) {
-				MylarTasklistPlugin.getTaskListManager().deactivateTask(task);
+				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
 				TaskListView.getDefault().getViewer().refresh();
 				TaskListView.getDefault().closeTaskEditors(task, page);
 			}

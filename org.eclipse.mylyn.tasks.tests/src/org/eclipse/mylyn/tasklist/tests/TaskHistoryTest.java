@@ -17,9 +17,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListManager;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
+import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
@@ -34,7 +34,7 @@ import org.eclipse.ui.PartInitException;
  */
 public class TaskHistoryTest extends TestCase {
 
-	protected TaskListManager manager = MylarTasklistPlugin.getTaskListManager(); 
+	protected TaskListManager manager = MylarTaskListPlugin.getTaskListManager(); 
 	protected TaskListView taskView = null;
 	
 	protected Task task1 = null;
@@ -48,7 +48,7 @@ public class TaskHistoryTest extends TestCase {
 		
 		
 		try {
-			MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.mylar.tasks.ui.views.TaskListView");
+			MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.mylar.tasks.ui.views.TaskListView");
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,11 +60,11 @@ public class TaskHistoryTest extends TestCase {
 		
 		resetHistory();
 		
-		task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
-		task2 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 2", true);
-		task3 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 3", true);
-		task4 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 4", true);
-		task5 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 5", true);
+		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		task2 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
+		task3 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
+		task4 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
+		task5 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 		
 		manager.addRootTask(task1);
 		manager.addRootTask(task2);

@@ -34,9 +34,9 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -330,8 +330,8 @@ public class BugzillaTask extends Task {
 		Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
-					if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
+					MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
+					if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
 						// if we can reach the server, get the latest for the bug
 						if (!isBugDownloaded() && offline) {
 							MessageDialog.openInformation(null, "Unable to open bug",
@@ -345,12 +345,12 @@ public class BugzillaTask extends Task {
 						}
 					}
 					// get the active workbench page
-					IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					if (page == null)
 						return;
 					page.openEditor(input, "org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor");
 
-					//					else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+					//					else if (mode == MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
 					//						String title = "Bug #" + BugzillaTask.getBugId(getHandle());
 					//						BugzillaUITools.openUrl(title, title, getBugUrl());	    			
 					//					}
@@ -562,15 +562,15 @@ public class BugzillaTask extends Task {
 	@Override
 	public Image getIcon() {
 		if (syncState == BugReportSyncState.OK) {
-			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA);
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
 		} else if (syncState == BugReportSyncState.OUTGOING) {
-			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA_OUTGOING);
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_OUTGOING);
 		} else if (syncState == BugReportSyncState.INCOMMING) {
-			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA_INCOMMING);
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_INCOMMING);
 		} else if (syncState == BugReportSyncState.CONFLICT) {
-			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA_CONFLICT);
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_CONFLICT);
 		} else {
-			return TasklistImages.getImage(BugzillaImages.TASK_BUGZILLA);
+			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
 		}
 
 	}
@@ -612,7 +612,7 @@ public class BugzillaTask extends Task {
 			return f;
 
 		if (getState() != BugzillaTask.BugTaskState.FREE || bugReport == null) {
-			return ITALIC;
+			return TaskListImages.ITALIC;
 		}
 		return null;
 	}

@@ -21,13 +21,13 @@ import org.eclipse.jface.action.Action;
 public class TaskEditorCopyAction extends Action {
 	
 	public TaskEditorCopyAction() {
-		setText("TaskSummaryEditor.copy.text");
+		setText("TaskInfoEditor.copy.text");
 	}
 	
 	@Override
 	public void run() {
-//		if (editorPart instanceof TaskSummaryEditor)
-//			((TaskSummaryEditor)editorPart).getCurrentText().copy();
+//		if (editorPart instanceof TaskInfoEditor)
+//			((TaskInfoEditor)editorPart).getCurrentText().copy();
 	}
 
 }

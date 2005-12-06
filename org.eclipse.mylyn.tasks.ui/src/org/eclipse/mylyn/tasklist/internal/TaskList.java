@@ -17,12 +17,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
 
 /**
  * @author Mik Kersten
@@ -33,41 +32,32 @@ public class TaskList implements Serializable {
 
 	private List<ITask> rootTasks = new ArrayList<ITask>();
 
-	private List<ITaskListCategory> categories = new ArrayList<ITaskListCategory>();
+	private List<ITaskCategory> categories = new ArrayList<ITaskCategory>();
 
 	private List<IQuery> queries = new ArrayList<IQuery>();
 
 	private transient List<ITask> activeTasks = new ArrayList<ITask>();
 
-	public void addRootTask(ITask task) {
+	void addRootTask(ITask task) {
 		rootTasks.add(task);
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
-		}
 	}
 
 	void internalAddRootTask(ITask task) {
 		rootTasks.add(task);
 	}
 
-	public void addCategory(ITaskListCategory cat) {
+	void addCategory(ITaskCategory cat) {
 		categories.add(cat);
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
-		}
 	}
 
-	public void addQuery(IQuery query) {
+	void addQuery(IQuery query) {
 		queries.add(query);
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
-		}
 	}
 
 	/**
 	 * XXX Only public so that other externalizers can use it
 	 */
-	public void internalAddCategory(ITaskListCategory cat) {
+	public void internalAddCategory(ITaskCategory cat) {
 		categories.add(cat);
 	}
 
@@ -88,7 +78,7 @@ public class TaskList implements Serializable {
 
 	}
 
-	public void deleteTask(ITask task) {
+	void deleteTask(ITask task) {
 		boolean deleted = deleteTaskHelper(rootTasks, task);
 		if (!deleted) {
 			for (TaskCategory cat : getTaskCategories()) {
@@ -97,9 +87,6 @@ public class TaskList implements Serializable {
 					return;
 				}
 			}
-		}
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
 
@@ -116,23 +103,17 @@ public class TaskList implements Serializable {
 		return false;
 	}
 
-	public void deleteCategory(ITaskListCategory category) {
+	void deleteCategory(ITaskCategory category) {
 		categories.remove(category);
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
-		}
 	}
 
-	public void deleteQuery(IQuery query) {
+	void deleteQuery(IQuery query) {
 		queries.remove(query);
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
-		}
 	}
 
 	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
 		ITask foundTask = null;
-		for (ITaskListCategory cat : categories) {
+		for (ITaskCategory cat : categories) {
 			if (!lookInArchives && cat.isArchive())
 				continue;
 			if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
@@ -180,14 +161,14 @@ public class TaskList implements Serializable {
 		return rootTasks;
 	}
 
-	public List<ITaskListCategory> getCategories() {
+	public List<ITaskCategory> getCategories() {
 		return categories;
 	}
 
-	public List<ITaskListCategory> getUserCategories() {
-		List<ITaskListCategory> included = new ArrayList<ITaskListCategory>();
-		for (ITaskListCategory category : categories) {
-			if (!category.getDescription(false).endsWith(DefaultTaskListExternalizer.LABEL_AUTOMATIC)) {
+	public List<ITaskCategory> getUserCategories() {
+		List<ITaskCategory> included = new ArrayList<ITaskCategory>();
+		for (ITaskCategory category : categories) {
+			if (!category.getDescription(false).endsWith(DelegatingLocalTaskExternalizer.LABEL_AUTOMATIC)) {
 				included.add(category);
 			}
 		}
@@ -228,7 +209,7 @@ public class TaskList implements Serializable {
 		List<Object> roots = new ArrayList<Object>();
 		for (ITask t : rootTasks)
 			roots.add(t);
-		for (ITaskListCategory cat : categories)
+		for (ITaskCategory cat : categories)
 			roots.add(cat);
 		for (IQuery query : queries)
 			roots.add(query);
@@ -237,7 +218,7 @@ public class TaskList implements Serializable {
 
 	public List<TaskCategory> getTaskCategories() {
 		List<TaskCategory> cats = new ArrayList<TaskCategory>();
-		for (ITaskListCategory cat : categories) {
+		for (ITaskCategory cat : categories) {
 			if (cat instanceof TaskCategory) {
 				cats.add((TaskCategory) cat);
 			}

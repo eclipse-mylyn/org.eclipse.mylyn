@@ -40,12 +40,12 @@ public class MoveTaskToRootAction extends Action {
 //	    		cat.removeTask(t);
 //	    		t.setCategory(null);
 //	    		t.setParent(null);
-//	    		MylarTasklistPlugin.getTaskListManager().getTaskList().addRootTask(t);
+//	    		MylarTaskListPlugin.getTaskListManager().getTaskList().addRootTask(t);
 //	    		this.view.getViewer().refresh();
 //	    	} else if (t.getParent() != null) {
 //	    		t.getParent().removeSubTask(t);
 //	    		t.setParent(null);
-//	    		MylarTasklistPlugin.getTaskListManager().getTaskList().addRootTask(t);
+//	    		MylarTaskListPlugin.getTaskListManager().getTaskList().addRootTask(t);
 //	    		this.view.getViewer().refresh();
 //	    	}
 //	    }		    

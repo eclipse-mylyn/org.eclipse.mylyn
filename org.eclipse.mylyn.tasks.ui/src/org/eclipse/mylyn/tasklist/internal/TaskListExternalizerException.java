@@ -8,14 +8,20 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.tasklist.internal;
 
 /**
- * @author Mik Kersten
+ * @author Mik Kersten and Ken Sueda
  */
-public interface ITaskInfo {
+public class TaskListExternalizerException extends Exception {
 
-    public String getHandle();
-    
+	private static final long serialVersionUID = 5804522104992031907L;
+
+	public TaskListExternalizerException() {
+		super();
+	}
+	
+	public TaskListExternalizerException(String detailMessage) {
+		super(detailMessage);
+	}
 }

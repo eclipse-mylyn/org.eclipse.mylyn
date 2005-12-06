@@ -6,7 +6,7 @@ package org.eclipse.mylar.tasklist.internal;
  * 
  * @author Wesley Coelho
  */
-public interface ISaveTimerListener {
+public interface IBackgroundSaveListener {
 
 	/** 
 	 * Called to notify the client of a PeriodicSaveTimer that

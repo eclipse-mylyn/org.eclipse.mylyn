@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Mik Kersten
  * @author Ken Sueda (original prototype)
  */
-public class MylarTaskPlannerWizardPage extends WizardPage {
+public class TaskPlannerWizardPage extends WizardPage {
 
 	private static final int DEFAULT_DAYS = 7;
 	private static final String TITLE = "Mylar Task Planner";
@@ -35,7 +35,7 @@ public class MylarTaskPlannerWizardPage extends WizardPage {
 	private Text numDays;
 	private int num = 0;
 	
-	public MylarTaskPlannerWizardPage() {
+	public TaskPlannerWizardPage() {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);

@@ -24,7 +24,7 @@ import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Shell;
@@ -49,7 +49,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 	@Override
 	public void run() {
 		
-		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
 		if(offline){
 			MessageDialog.openInformation(null, "Unable to create bug report", "Unable to create a new bug report since you are currently offline");
 			return;
@@ -91,7 +91,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    if(TaskListView.getDefault() != null)
 		    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
 	    	
-		    ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(newTask);
+		    ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(newTask);
 		    if(taskHandler != null){
 		    	ITask addedTask = taskHandler.taskAdded(newTask);
 		    	if(addedTask instanceof BugzillaTask){
@@ -105,7 +105,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    if (selectedObject instanceof TaskCategory){
 		        ((TaskCategory)selectedObject).addTask(newTask);
 		    } else { 
-		        MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);
+		        MylarTaskListPlugin.getTaskListManager().addRootTask(newTask);
 		    }
 		    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 		    newTask.openTaskInEditor(false);

@@ -15,11 +15,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,7 +37,7 @@ public class RemoveFromCategoryAction extends Action {
 		this.view = view;
 		setText("Remove From Category");
 		setId(ID);
-//        setImageDescriptor(TasklistImages.REMOVE);
+//        setImageDescriptor(TaskListImages.REMOVE);
 	}
 	
 	@Override
@@ -46,13 +46,13 @@ public class RemoveFromCategoryAction extends Action {
 			Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();		
 			
 			if (selectedObject instanceof ITaskListElement &&
-				MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null) {
+				MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null) {
 				
 				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
 				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
-				ITaskHandler handler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(selectedElement);
+				ITaskHandler handler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(selectedElement);
 				if (item.getParentItem() != null) {
-					handler.itemRemoved(selectedElement, (ITaskListCategory)item.getParentItem().getData());	
+					handler.itemRemoved(selectedElement, (ITaskCategory)item.getParentItem().getData());	
 				} 
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
@@ -62,7 +62,7 @@ public class RemoveFromCategoryAction extends Action {
 							"Task must be deactivated in order to remove from category.");
 					return;
 				}
-				ITaskListCategory cat = task.getCategory();
+				ITaskCategory cat = task.getCategory();
 				if (cat != null) {
 //					cat.removeTask(task);				
 //				} else {
@@ -73,11 +73,11 @@ public class RemoveFromCategoryAction extends Action {
 					if (!deleteConfirmed) 
 						return;
 											
-					MylarTasklistPlugin.getTaskListManager().deleteTask(task);
-					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
+					MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getContextPath());
 				}
 				
-				IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	
 				// if we couldn't get the page, get out of here
 				if (page != null) {

@@ -79,7 +79,7 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
 
             	// FIXME: decide whether to do leave the caching of searches in for now or not
                 // check if we have the info cached
-//                List<BugzillaReportNode> landmarkDoi = MylarTasklistPlugin.getBridge()
+//                List<BugzillaReportNode> landmarkDoi = MylarTaskListPlugin.getBridge()
 //                        .getFromLandmarksHash(m, scope);
 
 //                if (landmarkDoi != null) {

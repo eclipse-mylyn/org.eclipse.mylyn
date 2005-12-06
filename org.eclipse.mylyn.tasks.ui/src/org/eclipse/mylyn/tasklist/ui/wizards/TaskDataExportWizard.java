@@ -22,8 +22,8 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.ZipFileUtil;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -51,7 +51,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	private TaskDataExportWizardPage exportPage = null;
 
 	public TaskDataExportWizard() {
-		IDialogSettings masterSettings = MylarTasklistPlugin.getDefault().getDialogSettings();
+		IDialogSettings masterSettings = MylarTaskListPlugin.getDefault().getDialogSettings();
 		setDialogSettings(getSettingsSection(masterSettings));
 		setNeedsProgressMonitor(true);
 		setWindowTitle(WINDOW_TITLE);
@@ -103,7 +103,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			return false;
 		}
 
-		final File destTaskListFile = new File(destDir + File.separator + MylarTasklistPlugin.DEFAULT_TASK_LIST_FILE);
+		final File destTaskListFile = new File(destDir + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 				+ MylarContextManager.FILE_EXTENSION);
 		final File destZipFile = new File(destDir + File.separator + ZIP_FILE_NAME);
@@ -136,7 +136,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 				if (exportPage.exportTaskContexts()) {
 					for (ITask task : getAllTasks()) {
-						File destTaskFile = new File(destDir + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
+						File destTaskFile = new File(destDir + File.separator + task.getContextPath() + MylarContextManager.FILE_EXTENSION);
 						if (destTaskFile.exists()) {
 							if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "Task context files already exist in " + destDir
 									+ ". Do you want to overwrite them?")) {
@@ -210,9 +210,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			Map<String, String> filesToZipMap = new HashMap<String, String>();
 
 			if (exportTaskList) {
-				MylarTasklistPlugin.getTaskListManager().saveTaskList();
+				MylarTaskListPlugin.getTaskListManager().saveTaskList();
 
-				String sourceTaskListPath = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarTasklistPlugin.DEFAULT_TASK_LIST_FILE;
+				String sourceTaskListPath = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 				File sourceTaskListFile = new File(sourceTaskListPath);
 
 				if (zip) {
@@ -249,19 +249,19 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 												// messages
 				for (ITask task : tasks) {
 
-					if (!MylarPlugin.getContextManager().hasContext(task.getPath())) {
+					if (!MylarPlugin.getContextManager().hasContext(task.getContextPath())) {
 						continue; // Tasks without a context have no file to
 									// copy
 					}
 
-					File destTaskFile = new File(destinationDirectory + File.separator + task.getPath() + MylarContextManager.FILE_EXTENSION);
-					File sourceTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + task.getPath()
+					File destTaskFile = new File(destinationDirectory + File.separator + task.getContextPath() + MylarContextManager.FILE_EXTENSION);
+					File sourceTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + task.getContextPath()
 							+ MylarContextManager.FILE_EXTENSION);
 
 					if (zip) {
-						if (!filesToZipMap.containsKey(task.getPath())) {
+						if (!filesToZipMap.containsKey(task.getContextPath())) {
 							filesToZip.add(sourceTaskFile);
-							filesToZipMap.put(task.getPath(), null);
+							filesToZipMap.put(task.getContextPath(), null);
 						}
 					} else {
 						if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {
@@ -292,11 +292,11 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	/** Returns all tasks in the task list root or a category in the task list */
 	protected List<ITask> getAllTasks() {
 		List<ITask> allTasks = new ArrayList<ITask>();
-		TaskList taskList = MylarTasklistPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 
 		allTasks.addAll(taskList.getRootTasks());
 
-		for (ITaskListCategory category : taskList.getCategories()) {
+		for (ITaskCategory category : taskList.getCategories()) {
 			allTasks.addAll(category.getChildren());
 		}
 

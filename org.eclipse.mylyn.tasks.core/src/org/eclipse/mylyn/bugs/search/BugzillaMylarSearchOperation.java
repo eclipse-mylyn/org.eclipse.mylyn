@@ -40,7 +40,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.StackTrace;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -159,9 +159,9 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
         collector.setProgressMonitor(monitor);
         
         // get all of the root tasks and start the search
-        List<ITask> tasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getRootTasks();
+        List<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
         searchLocal(tasks, collector, elementName, monitor);
-		for (TaskCategory cat : MylarTasklistPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
+		for (TaskCategory cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
 			searchLocal(cat.getChildren(), collector, elementName,  monitor);
 		}
 		
@@ -185,9 +185,9 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 		collector.setProgressMonitor(monitor);
 		
 		// get all of the root tasks and start the search
-		List<ITask> tasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getRootTasks();
+		List<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
 		searchLocal(tasks, collector, elementName,  monitor);
-		for (TaskCategory cat : MylarTasklistPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
+		for (TaskCategory cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
 			searchLocal(cat.getChildren(), collector, elementName,  monitor);
 		}
 		// return the collector

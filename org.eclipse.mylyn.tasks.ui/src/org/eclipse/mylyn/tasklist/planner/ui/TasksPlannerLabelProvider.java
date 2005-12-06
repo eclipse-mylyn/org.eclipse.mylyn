@@ -20,7 +20,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.ui.views.TaskListLabelProvider;
+import org.eclipse.mylar.tasklist.ui.views.TasklistLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TasksPlannerLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
 	
-	private TaskListLabelProvider taskListLabelProvider = new TaskListLabelProvider();
+	private TasklistLabelProvider taskListLabelProvider = new TasklistLabelProvider();
 	
 	public Image getColumnImage(Object element, int columnIndex) {		
 		if (! (element instanceof ITaskListElement)) { 
@@ -59,8 +59,8 @@ public class TasksPlannerLabelProvider extends LabelProvider implements ITableLa
 						return "[unknown]";
 					}
 				case 4:
-					if (task.getEndDate() != null) {
-						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getEndDate());
+					if (task.getCompletionDate() != null) {
+						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCompletionDate());
 					} else{
 						return "";
 					}

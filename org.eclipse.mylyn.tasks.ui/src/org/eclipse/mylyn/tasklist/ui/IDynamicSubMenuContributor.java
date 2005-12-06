@@ -8,15 +8,15 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+package org.eclipse.mylar.tasklist.ui;
 
-package org.eclipse.mylar.tasklist;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
-import org.eclipse.swt.graphics.Color;
+public interface IDynamicSubMenuContributor {
 
-/**
- * @author Mik Kersten
- */
-public interface ITaskHighlighter {
-	
-	public Color getHighlightColor(ITask task);
+	public abstract MenuManager getSubMenuManager(TaskListView view,
+			ITaskListElement selection);
+
 }

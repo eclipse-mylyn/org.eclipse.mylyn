@@ -34,8 +34,8 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.IC
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -109,7 +109,7 @@ public class BugzillaQueryCategory implements IQuery {
 	}
 
 	public Image getIcon() {
-		return TasklistImages.getImage(BugzillaImages.CATEGORY_QUERY);
+		return TaskListImages.getImage(BugzillaImages.CATEGORY_QUERY);
 	}
 
 	public String getQueryString() {
@@ -219,7 +219,7 @@ public class BugzillaQueryCategory implements IQuery {
 				BugzillaHit hit = (BugzillaHit) child;
 				BugzillaTask task = hit.getAssociatedTask();
 				if (task != null && task.isActive()) {
-					return MylarTasklistPlugin.ACTIVE_TASK;
+					return MylarTaskListPlugin.ACTIVE_TASK;
 				}
 			}
 		}
@@ -232,7 +232,7 @@ public class BugzillaQueryCategory implements IQuery {
 				BugzillaHit hit = (BugzillaHit) child;
 				BugzillaTask task = hit.getAssociatedTask();
 				if (task != null && task.isActive()) {
-					return BOLD;
+					return TaskListImages.BOLD;
 				}
 			}
 		}

@@ -36,10 +36,10 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.dt.MylarWebRef;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.ComboSelectionDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -81,7 +81,7 @@ import org.eclipse.ui.part.EditorPart;
  * @author Wesley Coelho (added tasks in progress section, refactored-out
  *         similar code)
  */
-public class MylarTaskPlannerEditorPart extends EditorPart {
+public class TaskPlannerEditorPart extends EditorPart {
 
 	private static final String LABEL_DIALOG = "Summary";
 
@@ -517,8 +517,8 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 					planTableViewer.refresh();
 					return true;
 				} else if (selectedObject instanceof ITaskListElement) {
-					if (MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
-						ITask t = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(
+					if (MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
+						ITask t = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(
 								(ITaskListElement) selectedObject).dropItemToPlan((ITaskListElement) selectedObject);
 						planContentProvider.addTask(t);
 						updateEstimatedHours();
@@ -558,7 +558,7 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 				int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
 				if (element instanceof ITask) {
 					if (columnIndex == 4) {
-						return ((ITask) element).getReminderDateString(true);
+						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(((ITask)element).getReminderDate());
 					} else if (columnIndex == 3) {
 						return new Integer(Arrays.asList(ESTIMATE_TIMES).indexOf(
 								((ITask) element).getEstimateTimeHours()));
@@ -592,10 +592,10 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 	}
 
 	private void addPlannedTasksToCategory() {
-		List<ITaskListCategory> categories =  MylarTasklistPlugin.getTaskListManager().getTaskList().getUserCategories();
+		List<ITaskCategory> categories =  MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
 		String[] categoryNames = new String[categories.size()];
 		int i = 0;
-		for (ITaskListCategory category : categories) {
+		for (ITaskCategory category : categories) {
 			categoryNames[i++] = category.getDescription(true);
 		}
 		if (categories.size() > 0) {
@@ -607,8 +607,8 @@ public class MylarTaskPlannerEditorPart extends EditorPart {
 			int confirm = dialog.open();
 			if (confirm == ComboSelectionDialog.OK) {
 				String selected = dialog.getSelectedString();
-				ITaskListCategory destinationCategory = null;
-				for (ITaskListCategory category : categories) {
+				ITaskCategory destinationCategory = null;
+				for (ITaskCategory category : categories) {
 					if (category.getDescription(true).equals(selected)) {
 						destinationCategory = category; 
 						break; // will go to the first one

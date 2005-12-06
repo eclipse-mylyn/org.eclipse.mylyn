@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
@@ -31,7 +31,7 @@ public class PreviousTaskDropDownAction extends DropDownTaskNavigateAction {
         setToolTipText("Previous Task");
         setId(ID);
         setEnabled(true);
-        setImageDescriptor(TasklistImages.NAVIGATE_PREVIOUS);
+        setImageDescriptor(TaskListImages.NAVIGATE_PREVIOUS);
 	}
 	
 	protected void addActionsToMenu(){

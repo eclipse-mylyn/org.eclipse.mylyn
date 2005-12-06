@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.contribution;
+package org.eclipse.mylar.tasklist.ui.views;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;

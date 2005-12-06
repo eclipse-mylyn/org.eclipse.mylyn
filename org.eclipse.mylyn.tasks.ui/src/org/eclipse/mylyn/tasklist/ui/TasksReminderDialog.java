@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.ui;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -204,7 +205,7 @@ public class TasksReminderDialog extends Dialog {
 				case 1:
 					return task.getPriority();
 				case 2:
-					return task.getReminderDateString(true);
+					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getReminderDate());
 				}
 			}
 			return null;

@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasklist.planner.ui;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -24,10 +24,10 @@ import org.eclipse.ui.PartInitException;
 /**
  * @author Ken Sueda
  */
-public class MylarTaskPlannerWizard extends Wizard implements INewWizard {
+public class TaskPlannerWizard extends Wizard implements INewWizard {
 
-	private MylarTaskPlannerWizardPage planningGamePage = null;
-	public MylarTaskPlannerWizard() {
+	private TaskPlannerWizardPage planningGamePage = null;
+	public TaskPlannerWizard() {
 		super();
 		init();
 	}
@@ -36,13 +36,13 @@ public class MylarTaskPlannerWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		try {
 			int numDays = planningGamePage.getNumDays();
-			IWorkbenchPage page = MylarTasklistPlugin.getDefault()
+			IWorkbenchPage page = MylarTaskListPlugin.getDefault()
 					.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page == null)
 				return false;
 			IEditorInput input = new TasksPlannerEditorInput(numDays,
-					MylarTasklistPlugin.getTaskListManager().getTaskList());
-			page.openEditor(input, MylarTasklistPlugin.PLANNER_EDITOR_ID);
+					MylarTaskListPlugin.getTaskListManager().getTaskList());
+			page.openEditor(input, MylarTaskListPlugin.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {
 			MylarPlugin.log(ex, "couldn't open summary editor");
 		}
@@ -53,7 +53,7 @@ public class MylarTaskPlannerWizard extends Wizard implements INewWizard {
 	}
 
 	private void init() {
-		planningGamePage = new MylarTaskPlannerWizardPage();
+		planningGamePage = new TaskPlannerWizardPage();
 		super.setForcePreviousAndNextButtons(true);
 	}
 	

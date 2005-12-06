@@ -15,7 +15,7 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
-import org.eclipse.mylar.tasklist.ui.views.TaskListLabelProvider;
+import org.eclipse.mylar.tasklist.ui.views.TasklistLabelProvider;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
@@ -31,7 +31,7 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 	protected final TaskListView view;
 	protected TaskActivationHistory taskHistory;
 	protected Menu dropDownMenu = null;
-	protected TaskListLabelProvider labelProvider = new TaskListLabelProvider();
+	protected TasklistLabelProvider labelProvider = new TasklistLabelProvider();
 
 	/** Maximum number of items to appear in the drop-down menu */
 	protected final static int MAX_ITEMS_TO_DISPLAY = 10;

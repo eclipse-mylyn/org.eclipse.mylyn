@@ -10,22 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Ken Sueda
  */
 public interface ITaskListElement {
 	
-    public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
-    public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
-
-    public Color GRAY_LIGHT  = new Color(Display.getDefault(), 170, 170, 170); // TODO: use theme?
-    	
     /**
      * TODO: refactor to label decorator
      */

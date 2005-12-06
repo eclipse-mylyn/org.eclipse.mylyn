@@ -26,11 +26,11 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -59,7 +59,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 
 	@Override
 	public void run() {
-		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
 		if(offline){
 			MessageDialog.openInformation(null, "Unable to refresh query", "Unable to refresh the query since you are currently offline");
 			return;
@@ -69,11 +69,11 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 		// perform the update in an operation so that we get a progress monitor
 		// update the structure bridge cache with the reference provider cached
 		// bugs
-		for(ITask task: MylarTasklistPlugin.getTaskListManager().getTaskList().getActiveTasks()){
+		for(ITask task: MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()){
 			if(task instanceof BugzillaTask){
-				ITask found = MylarTasklistPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
+				ITask found = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
 				if(found == null){
-					MylarTasklistPlugin.getTaskListManager().addRootTask(task);
+					MylarTaskListPlugin.getTaskListManager().addRootTask(task);
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
 							BugzillaTask.getBugId(task.getHandleIdentifier()) + 
 							" has been moved to the root since it is activated and has disappeared from a query.");
@@ -100,11 +100,11 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 //// XXX refactored active search
 //				// clear the caches
 ////				Set<String> cachedHandles = new HashSet<String>();
-////				cachedHandles.addAll(MylarTasklistPlugin.getDefault().getStructureBridge().getCachedHandles());
-////				cachedHandles.addAll(MylarTasklistPlugin.getReferenceProvider().getCachedHandles());
-////				MylarTasklistPlugin.getDefault().getStructureBridge().clearCache();
-////				MylarTasklistPlugin.getReferenceProvider().clearCachedReports();
-////				BugzillaStructureBridge bridge = MylarTasklistPlugin.getDefault().getStructureBridge();
+////				cachedHandles.addAll(MylarTaskListPlugin.getDefault().getStructureBridge().getCachedHandles());
+////				cachedHandles.addAll(MylarTaskListPlugin.getReferenceProvider().getCachedHandles());
+////				MylarTaskListPlugin.getDefault().getStructureBridge().clearCache();
+////				MylarTaskListPlugin.getReferenceProvider().clearCachedReports();
+////				BugzillaStructureBridge bridge = MylarTaskListPlugin.getDefault().getStructureBridge();
 //				
 ////				monitor.beginTask("Downloading Bugs", cachedHandles.size());
 ////				for (String key : cachedHandles) {
@@ -154,14 +154,14 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 	}
 
 	private void refreshTasksAndQueries() {
-		List<ITask> tasks = MylarTasklistPlugin.getTaskListManager().getTaskList().getRootTasks();
+		List<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
 
 		for (ITask task : tasks) {
 			if (task instanceof BugzillaTask && !task.isCompleted()) {
 				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask)task);
 			}
 		}
-		for (ITaskListCategory cat : MylarTasklistPlugin.getTaskListManager().getTaskList().getCategories()) {
+		for (ITaskCategory cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getCategories()) {
 			
 			if (cat instanceof TaskCategory) {
 				for (ITask task : ((TaskCategory) cat).getChildren()) {
@@ -180,7 +180,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				}
 			}
 		}	
-		for(IQuery query: MylarTasklistPlugin
+		for(IQuery query: MylarTaskListPlugin
 				.getTaskListManager().getTaskList().getQueries()){
 			if(!(query instanceof BugzillaQueryCategory)){
 				continue;

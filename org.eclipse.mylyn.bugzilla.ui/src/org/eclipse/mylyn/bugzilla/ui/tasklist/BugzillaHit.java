@@ -17,13 +17,14 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Ken Sueda
+ * @author Mik Kersten (hardening of prototype)
  */
 public class BugzillaHit implements IQueryHit {
 
@@ -66,7 +67,7 @@ public class BugzillaHit implements IQueryHit {
 		if (hasCorrespondingActivatableTask()) {
     		return task.getStatusIcon();
     	} else {
-    		return TasklistImages.getImage(TasklistImages.TASK_INACTIVE);
+    		return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
     	}  
 	}
 
@@ -143,7 +144,7 @@ public class BugzillaHit implements IQueryHit {
 
 	public Color getForeground() {
         if ((task != null && task.isCompleted()) || isCompleted()){
-        	return GRAY_LIGHT;
+        	return TaskListImages.GRAY_LIGHT;
         } else {
         	return null;
         }

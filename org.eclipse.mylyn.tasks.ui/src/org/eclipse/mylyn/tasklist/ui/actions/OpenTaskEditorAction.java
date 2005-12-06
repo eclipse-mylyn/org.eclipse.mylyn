@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
@@ -36,7 +36,7 @@ public class OpenTaskEditorAction extends Action {
 	public OpenTaskEditorAction(TaskListView view) {
 		this.view = view;
 		setText("Open");
-		setToolTipText("Open Tasklist Element");
+		setToolTipText("Open TaskList Element");
 		setId(ID);
 	}
 
@@ -46,7 +46,7 @@ public class OpenTaskEditorAction extends Action {
 	    Object obj = ((IStructuredSelection)selection).getFirstElement();
 	    if (obj instanceof ITaskListElement) {
 	    	ITaskListElement element = (ITaskListElement)obj;
-	    	ITaskHandler taskHandler = MylarTasklistPlugin.getDefault().getTaskHandlerForElement(element);
+	    	ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(element);
 		    if(taskHandler != null){
 	    		taskHandler.itemOpened(element);
 	    	} else{

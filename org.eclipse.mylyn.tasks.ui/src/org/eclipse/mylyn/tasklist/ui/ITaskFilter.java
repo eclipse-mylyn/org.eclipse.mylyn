@@ -8,25 +8,11 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-
-package org.eclipse.mylar.tasklist;
-
-import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
+package org.eclipse.mylar.tasklist.ui;
 
 /**
- * TODO: move to UI
- * 
- * @author Mik Kersten
+ * @author Ken Sueda
  */
-public interface IContextEditorFactory {
-
-	public IEditorPart createEditor();
-	
-	public IEditorInput createEditorInput(IMylarContext context);
-
-	public String getTitle();
-
-	public void notifyEditorActivationChange(IEditorPart editor);
+public interface ITaskFilter {
+	public abstract boolean select(Object element);
 }

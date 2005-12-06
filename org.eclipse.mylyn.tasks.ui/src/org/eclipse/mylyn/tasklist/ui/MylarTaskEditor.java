@@ -19,9 +19,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -49,7 +48,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	protected ITask task;
 
-	private TaskSummaryEditor taskSummaryEditor;
+	private TaskInfoEditor taskSummaryEditor;
 
 	private Browser webBrowser;
 
@@ -89,12 +88,12 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	public MylarTaskEditor() {
 		super();
-		IWorkbench workbench = MylarTasklistPlugin.getDefault().getWorkbench();
+		IWorkbench workbench = MylarTaskListPlugin.getDefault().getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		IWorkbenchPage activePage = window.getActivePage();
 		TaskEditorListener listener = new TaskEditorListener();
 		activePage.addPartListener(listener);
-		taskSummaryEditor = new TaskSummaryEditor();
+		taskSummaryEditor = new TaskInfoEditor();
 	}
 
 	@Override
@@ -104,7 +103,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			if (task.getIssueReportURL().length() > 9) {
 				createTaskIssueWebPage();
 			}
-			for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
+			for (IContextEditorFactory factory : MylarTaskListPlugin.getDefault().getContextEditors()) {
 				taskSummaryEditor.setParentEditor(this);
 				IEditorPart editor = factory.createEditor();
 				editorsToNotifyOnChange.add(editor);
@@ -144,7 +143,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
 			webBrowser.setUrl(task.getIssueReportURL());
 
-			boolean openWithBrowser = MylarTasklistPlugin.getPrefs().getBoolean(MylarTasklistPlugin.REPORT_OPEN_INTERNAL);
+			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPlugin.REPORT_OPEN_INTERNAL);
 			if (task.isLocal() || openWithBrowser)
 				setActivePage(index);
 		} catch (SWTError e) {
@@ -269,7 +268,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	@Override
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
-		for (IContextEditorFactory factory : MylarTasklistPlugin.getDefault().getContextEditors()) {
+		for (IContextEditorFactory factory : MylarTaskListPlugin.getDefault().getContextEditors()) {
 			for (IEditorPart editor : editorsToNotifyOnChange) {
 				factory.notifyEditorActivationChange(editor);
 			}

@@ -11,7 +11,7 @@
 /*
  * Created on Apr 20, 2004
  */
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.tasklist.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,8 +19,11 @@ import java.net.URL;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -29,17 +32,21 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Mik Kersten
  */ 
-public class TasklistImages {
+public class TaskListImages {
 
-//    private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
     private static ImageRegistry imageRegistry = new ImageRegistry();
 	
     public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
     public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 190, 210, 238);
     
+    public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+    public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
+    public static final Color GRAY_LIGHT  = new Color(Display.getDefault(), 170, 170, 170); // TODO: use theme?
+    
+    
 	private static final String T_ELCL = "elcl16";
 	private static final String T_TOOL = "etool16";
-	private static final URL baseURL = MylarTasklistPlugin.getDefault().getBundle().getEntry("/icons/");
+	private static final URL baseURL = MylarTaskListPlugin.getDefault().getBundle().getEntry("/icons/");
 	
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 	

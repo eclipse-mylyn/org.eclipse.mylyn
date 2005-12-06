@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -32,7 +32,7 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 		setId(ID);
 		setText("Go Into Category");
 		setToolTipText("Go Into Category");
-		setImageDescriptor(TasklistImages.GO_INTO);
+		setImageDescriptor(TaskListImages.GO_INTO);
 	}
 
 	public void init(IViewPart view) {

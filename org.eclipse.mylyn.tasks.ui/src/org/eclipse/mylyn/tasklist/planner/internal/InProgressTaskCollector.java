@@ -38,7 +38,7 @@ public class InProgressTaskCollector implements ITasksCollector {
 	}
 	
 	protected boolean hasActivitySince(ITask task, Date startDate){
-		IMylarContext mylarContext = MylarPlugin.getContextManager().loadContext(task.getHandleIdentifier(),task.getPath());
+		IMylarContext mylarContext = MylarPlugin.getContextManager().loadContext(task.getHandleIdentifier(),task.getContextPath());
 		if (mylarContext != null){
 			List<InteractionEvent> events = mylarContext.getInteractionHistory();
 			if (events.size() > 0){

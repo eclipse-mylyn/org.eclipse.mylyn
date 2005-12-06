@@ -12,7 +12,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 public class WorkOfflineAction extends Action {
 
@@ -22,12 +22,12 @@ public class WorkOfflineAction extends Action {
 		setId(ID);
 		setText("Work Offline");
 		setToolTipText("Work Offline");
-		setChecked(MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE));
+		setChecked(MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE));
 	}
 	
 	@Override
 	public void run() {
-		boolean on = !MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
-		MylarTasklistPlugin.getPrefs().setValue(MylarPlugin.WORK_OFFLINE, on);
+		boolean on = !MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		MylarTaskListPlugin.getPrefs().setValue(MylarPlugin.WORK_OFFLINE, on);
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.part.DrillDownAdapter;
 
@@ -23,7 +23,7 @@ public class GoUpAction extends Action {
 		setText("Go Up To Root");
 		setToolTipText("Go Up To Root");
 		setId(ID);
-		setImageDescriptor(TasklistImages.GO_UP);
+		setImageDescriptor(TaskListImages.GO_UP);
 	}
 
 	@Override

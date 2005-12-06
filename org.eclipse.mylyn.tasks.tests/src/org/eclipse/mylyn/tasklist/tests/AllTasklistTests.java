@@ -20,9 +20,10 @@ import junit.framework.TestSuite;
 public class AllTasklistTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.mylar.tasklist.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasklist.tests");
+		
 		//$JUnit-BEGIN$
+		suite.addTestSuite(TaskListStandaloneTest.class);
         suite.addTestSuite(TaskListManagerTest.class);
         suite.addTestSuite(TaskListUiTest.class);
         suite.addTestSuite(TaskHistoryTest.class);

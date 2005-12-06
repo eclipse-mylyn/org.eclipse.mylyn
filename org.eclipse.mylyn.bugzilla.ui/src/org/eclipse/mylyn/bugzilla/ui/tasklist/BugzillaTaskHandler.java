@@ -27,9 +27,9 @@ import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
@@ -58,7 +58,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			if (!deleteConfirmed) 
 				return false;
 			BugzillaQueryCategory query = (BugzillaQueryCategory) element;
-			MylarTasklistPlugin.getTaskListManager().deleteQuery(query);
+			MylarTaskListPlugin.getTaskListManager().deleteQuery(query);
 		} else if (element instanceof BugzillaTask) {
 			BugzillaTask task = (BugzillaTask) element;
 			if (task.isActive()) {
@@ -76,9 +76,9 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				return false;  
 									
 //			task.removeReport();
-			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
-			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
-			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getContextPath());
+			IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			// if we couldn't get the page, get out of here
 			if (page == null)
@@ -99,14 +99,14 @@ public class BugzillaTaskHandler implements ITaskHandler {
 
 	public void itemOpened(ITaskListElement element) {
 
-		boolean offline = MylarTasklistPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
 		
 		if (element instanceof BugzillaTask) {
 			BugzillaTask t = (BugzillaTask) element;
-			MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
-			if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
+			MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
+			if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
 				t.openTaskInEditor(offline);
-			} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+			} else if (mode == MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
 				if(offline){
 					MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla task since you are currently offline");
 	    			return;
@@ -146,8 +146,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
         	}
 	    } else if(element instanceof BugzillaHit){
 	    	BugzillaHit hit = (BugzillaHit)element;
-	    	MylarTasklistPlugin.ReportOpenMode mode = MylarTasklistPlugin.getDefault().getReportMode();
-	    	if (mode == MylarTasklistPlugin.ReportOpenMode.EDITOR) {
+	    	MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
+	    	if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
 	    		if(hit.hasCorrespondingActivatableTask()){
 		    		hit.getAssociatedTask().openTaskInEditor(offline);
 		    	} else {
@@ -161,7 +161,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			    	ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
 					viewBugs.schedule();
 		    	}
-    		} else if (mode == MylarTasklistPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+    		} else if (mode == MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
     			if(offline){
     				MessageDialog.openInformation(null, "Unable to open bug", "Unable to open the selected bugzilla report since you are currently offline");
 	    			return;
@@ -257,7 +257,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		return false;
 	}
 
-	public void itemRemoved(ITaskListElement element, ITaskListCategory category) {
+	public void itemRemoved(ITaskListElement element, ITaskCategory category) {
 		if (element instanceof BugzillaTask){
 			BugzillaTask task = (BugzillaTask) element;
 			if (category != null) {
@@ -269,7 +269,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			            "Confirm delete", message);
 				if (!deleteConfirmed) 
 					return;
-				MylarTasklistPlugin.getTaskListManager().deleteTask(task);
+				MylarTaskListPlugin.getTaskListManager().deleteTask(task);
 			}
 		}
 	}

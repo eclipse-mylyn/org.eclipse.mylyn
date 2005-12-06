@@ -76,7 +76,7 @@ public class TaskSorter extends ViewerSorter {
 	}
 	
 	private int compareCompletedDate(ITask task1, ITask task2) {
-		return task2.getEndDate().compareTo(task1.getEndDate());
+		return task2.getCompletionDate().compareTo(task1.getCompletionDate());
 	}
 
 	private int compareEstimated(ITask task1, ITask task2) {

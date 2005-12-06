@@ -17,9 +17,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
@@ -37,15 +37,15 @@ public class DeleteAction extends Action {
 		this.view = view;
 		setText("Delete");
 		setId(ID);
-		setImageDescriptor(TasklistImages.REMOVE);
+		setImageDescriptor(TaskListImages.REMOVE);
 	}
 
 	@Override
 	public void run() {
 		//		MylarPlugin.getDefault().actionObserved(this);
 		Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();
-		if (selectedObject instanceof ITaskListElement && MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
-			boolean deleted = MylarTasklistPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
+		if (selectedObject instanceof ITaskListElement && MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
+			boolean deleted = MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
 			if (deleted) {
 				new RemoveFromCategoryAction(view).run(); // TODO: refactor category removal?
 			}
@@ -63,9 +63,9 @@ public class DeleteAction extends Action {
 				return;
 			}
 
-			MylarTasklistPlugin.getTaskListManager().deleteTask(task);
-			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
-			IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getContextPath());
+			IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 			if (page == null) {
 				return;
@@ -84,8 +84,8 @@ public class DeleteAction extends Action {
 
 			TaskCategory cat = (TaskCategory) selectedObject;
 			for (ITask task : cat.getChildren()) {
-				MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getPath());
-				IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getContextPath());
+				IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (page != null) {
 					try {
 						this.view.closeTaskEditors(task, page);
@@ -94,7 +94,7 @@ public class DeleteAction extends Action {
 					}
 				}
 			}
-			MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
+			MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
 			view.getViewer().refresh();
 		} else {
 			MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed", "Nothing selected.");

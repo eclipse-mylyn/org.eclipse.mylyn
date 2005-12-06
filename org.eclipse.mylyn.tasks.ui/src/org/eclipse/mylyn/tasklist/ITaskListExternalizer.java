@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tasklist;
 
-import org.eclipse.mylar.tasklist.internal.MylarExternalizerException;
+import org.eclipse.mylar.tasklist.internal.TaskListExternalizerException;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,12 +42,12 @@ public interface ITaskListExternalizer {
 	
 	public abstract String getQueryHitTagName();
 	
-	public abstract boolean canCreateElementFor(ITaskListCategory category);
+	public abstract boolean canCreateElementFor(ITaskCategory category);
 	
 	/**
 	 * @return the element that was created, null if failed
 	 */
-	public abstract Element createCategoryElement(ITaskListCategory category, Document doc, Element parent);
+	public abstract Element createCategoryElement(ITaskCategory category, Document doc, Element parent);
 
 	public abstract boolean canCreateElementFor(ITask task);
 	
@@ -58,11 +58,11 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadCategory(Node node);
 	
-	public abstract void readCategory(Node node, TaskList tlist) throws MylarExternalizerException;
+	public abstract void readCategory(Node node, TaskList tlist) throws TaskListExternalizerException;
 	
 	public abstract boolean canReadTask(Node node);
 	
-	public abstract ITask readTask(Node node, TaskList tlist, ITaskListCategory category, ITask parent) throws MylarExternalizerException;
+	public abstract ITask readTask(Node node, TaskList tlist, ITaskCategory category, ITask parent) throws TaskListExternalizerException;
 	
 	
 	
@@ -72,7 +72,7 @@ public interface ITaskListExternalizer {
 	
 	public abstract boolean canReadQuery(Node node);
 	
-	public abstract void readQuery(Node node, TaskList tlist) throws MylarExternalizerException;
+	public abstract void readQuery(Node node, TaskList tlist) throws TaskListExternalizerException;
 	
 	
 	public abstract boolean canCreateElementFor(IQueryHit queryHit);
@@ -81,5 +81,5 @@ public interface ITaskListExternalizer {
 	
 	public abstract boolean canReadQueryHit(Node node);
 	
-	public abstract void readQueryHit(Node node, TaskList tlist, IQuery query) throws MylarExternalizerException;
+	public abstract void readQueryHit(Node node, TaskList tlist, IQuery query) throws TaskListExternalizerException;
 }

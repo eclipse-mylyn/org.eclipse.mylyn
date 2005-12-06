@@ -19,16 +19,16 @@ import java.util.List;
  * @author Mik Kersten
  */
 public interface ITaskActivityListener {
-
+	
     public abstract void taskActivated(ITask task);
     
     public abstract void tasksActivated(List<ITask> tasks);
     
     public abstract void taskDeactivated(ITask task);
     
-    public abstract void tastChanged(ITask task);
+    public abstract void taskChanged(ITask task);
     
-//    public abstract void taskPropertyChanged(ITask task, String property);
-
 	public abstract void tasklistRead();
+
+	public abstract void tasklistModified();
 }

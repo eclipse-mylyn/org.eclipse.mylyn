@@ -15,10 +15,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskInputDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.internal.Workbench;
@@ -37,7 +37,7 @@ public class CreateTaskAction extends Action {
 		setText("Add Task");
         setToolTipText("Add Task");
         setId(ID);
-        setImageDescriptor(TasklistImages.TASK_NEW);
+        setImageDescriptor(TaskListImages.TASK_NEW);
 	}
 	
     @Override
@@ -46,8 +46,8 @@ public class CreateTaskAction extends Action {
 				.getActiveWorkbenchWindow().getShell());
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
-			Task newTask = new Task(MylarTasklistPlugin.getTaskListManager()
-					.genUniqueTaskId(), dialog.getTaskname(), true);
+			Task newTask = new Task(MylarTaskListPlugin.getTaskListManager()
+					.genUniqueTaskHandle(), dialog.getTaskname(), true);
 			newTask.setPriority(dialog.getSelectedPriority());
 			newTask.setReminderDate(dialog.getReminderDate());
 			newTask.setIssueReportURL(dialog.getIssueURL());
@@ -66,14 +66,15 @@ public class CreateTaskAction extends Action {
 					newTask.setCategory(view.getDrilledIntoCategory());
 					((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
 			 	} else {
-		            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
+		            MylarTaskListPlugin.getTaskListManager().addRootTask(newTask);                
 		        }
 			} else if (view.getDrilledIntoCategory() != null) {
 				newTask.setCategory(view.getDrilledIntoCategory());
 				((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
 		 	} else {
-	            MylarTasklistPlugin.getTaskListManager().addRootTask(newTask);                
+	            MylarTaskListPlugin.getTaskListManager().addRootTask(newTask);                
 	        }
+			newTask.openTaskInEditor(false);
 			view.getViewer().refresh();
 		}
     }

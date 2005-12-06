@@ -12,8 +12,8 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
@@ -30,14 +30,14 @@ public class FilterCompletedTasksAction extends Action {
 		setText("Filter Completed Tasks");
         setToolTipText("Filter Completed Tasks");
         setId(ID);
-        setImageDescriptor(TasklistImages.FILTER_COMPLETE);
-        setChecked(MylarTasklistPlugin.getDefault().isFilterCompleteMode());
+        setImageDescriptor(TaskListImages.FILTER_COMPLETE);
+        setChecked(MylarTaskListPlugin.getDefault().isFilterCompleteMode());
 	}
 	
 	@Override
 	public void run() {
 //        MylarPlugin.getDefault().actionObserved(this);
-		MylarTasklistPlugin.getDefault().setFilterCompleteMode(isChecked());
+		MylarTaskListPlugin.getDefault().setFilterCompleteMode(isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getCompleteFilter());
 //				filterInCompleteTask.setChecked(false); 

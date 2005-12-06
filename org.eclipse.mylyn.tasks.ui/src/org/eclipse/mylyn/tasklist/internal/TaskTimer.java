@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.tasklist.internal;
 
 import java.util.Date;
 
@@ -18,6 +18,7 @@ import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ITimerThreadListener;
 import org.eclipse.mylar.core.util.TimerThread;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.PlatformUI;
@@ -31,7 +32,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Shawn Minto
  * @author Wesley Coelho (Added correction for PC sleep/hibernation errors)
  */
-public class TaskActivityListener implements ITimerThreadListener, IInteractionEventListener, ShellListener {
+public class TaskTimer implements ITimerThreadListener, IInteractionEventListener, ShellListener {
 
 	/** Amount of time for which discrepencies between timer and timestamp values will be ignored */
 	private final static long SLOP_FACTOR_MILLIS = 1000 * 30; //30 seconds
@@ -41,7 +42,7 @@ public class TaskActivityListener implements ITimerThreadListener, IInteractionE
 	private boolean isTaskStalled = false;
 	private long windowDeactivationTime = 0;
 	
-	public TaskActivityListener(ITask task){
+	public TaskTimer(ITask task){
 		this.task = task;
 		timer = new TimerThread(MylarPlugin.getContextManager().getActivityTimeoutSeconds());
 		timer.addListener(this);
@@ -84,7 +85,7 @@ public class TaskActivityListener implements ITimerThreadListener, IInteractionE
 	public void shellActivated(ShellEvent e) {
 		if (!isTaskStalled){
 			long timeDifference = new Date().getTime() - windowDeactivationTime;
-			if (timeDifference > Task.INACTIVITY_TIME_MILLIS + SLOP_FACTOR_MILLIS){
+			if (timeDifference > TaskListManager.INACTIVITY_TIME_MILLIS + SLOP_FACTOR_MILLIS){
 				long newTime = task.getElapsedTimeLong() - timeDifference;
 				task.setElapsedTime("" + newTime);
 			}	

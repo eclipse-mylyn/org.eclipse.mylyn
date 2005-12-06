@@ -14,9 +14,9 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.internal.Workbench;
 
@@ -34,7 +34,7 @@ public class CreateCategoryAction extends Action {
 		setText("Add Category");
         setToolTipText("Add Category");
         setId(ID);
-        setImageDescriptor(TasklistImages.CATEGORY_NEW);
+        setImageDescriptor(TaskListImages.CATEGORY_NEW);
     }
     
     @Override
@@ -48,7 +48,7 @@ public class CreateCategoryAction extends Action {
     	int dialogResult = dialog.open();
     	if (dialogResult == Window.OK) {
     		TaskCategory cat = new TaskCategory(dialog.getValue());
-    		MylarTasklistPlugin.getTaskListManager().addCategory(cat);
+    		MylarTaskListPlugin.getTaskListManager().addCategory(cat);
             this.view.getViewer().refresh();
         }
     }

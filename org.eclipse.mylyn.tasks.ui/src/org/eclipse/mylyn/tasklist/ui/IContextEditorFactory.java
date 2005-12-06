@@ -8,18 +8,23 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist.internal;
 
-import org.eclipse.ui.internal.dialogs.PatternFilter;
+package org.eclipse.mylar.tasklist.ui;
 
-public class TaskListPatternFilter extends PatternFilter {
+import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 
-	@Override
-	public void setPattern(String patternString) {
-        if(patternString == null || patternString.startsWith("*")) {
-        	super.setPattern(patternString);
-        } else {
-        	super.setPattern("*" + patternString);
-        }
-    }
+/**
+ * @author Mik Kersten
+ */
+public interface IContextEditorFactory {
+
+	public IEditorPart createEditor();
+	
+	public IEditorInput createEditorInput(IMylarContext context);
+
+	public String getTitle();
+
+	public void notifyEditorActivationChange(IEditorPart editor);
 }

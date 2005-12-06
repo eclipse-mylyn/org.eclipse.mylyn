@@ -26,15 +26,19 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.internal.ISaveTimerListener;
-import org.eclipse.mylar.tasklist.internal.SaveTimer;
-import org.eclipse.mylar.tasklist.internal.TaskListExternalizer;
+import org.eclipse.mylar.tasklist.internal.BackgroundSaveTimer;
+import org.eclipse.mylar.tasklist.internal.IBackgroundSaveListener;
+import org.eclipse.mylar.tasklist.internal.TaskListExtensionReader;
+import org.eclipse.mylar.tasklist.internal.TaskListManager;
+import org.eclipse.mylar.tasklist.internal.TaskListSavePolicy;
+import org.eclipse.mylar.tasklist.internal.TaskListWriter;
 import org.eclipse.mylar.tasklist.planner.internal.ReminderRequiredCollector;
 import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.ui.IContextEditorFactory;
+import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
@@ -51,18 +55,20 @@ import org.osgi.framework.BundleContext;
  * 
  * TODO: this class is in serious need of refactoring
  */
-public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, ISaveTimerListener {
+public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup, IBackgroundSaveListener {
 
-	private static MylarTasklistPlugin INSTANCE;
+	private static MylarTaskListPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
-
-	private TaskListExternalizer externalizer;
 
 	private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO: use extension points
 
 	private List<IContextEditorFactory> contextEditors = new ArrayList<IContextEditorFactory>();
 
+	private TaskListSavePolicy taskListSavePolicy = new TaskListSavePolicy();
+		
+	private TaskListWriter taskListWriter;
+	
 	/** 
 	 * TODO: move to common color map.
 	 */
@@ -124,7 +130,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 
 	private ITaskHighlighter highlighter;
 	
-	private SaveTimer saveTimer = null;
+	private BackgroundSaveTimer saveTimer = null;
 	
 	private static boolean shouldAutoSave = true;
 
@@ -216,24 +222,29 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	private static ITaskActivityListener CONTEXT_MANAGER_TASK_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getPath());
+			MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getContextPath());
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
 			for (ITask task : tasks) {
-				MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getPath());
+				MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getContextPath());
 			}
 		}
 
 		public void taskDeactivated(ITask task) {
-			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier(), task.getPath());
+			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier(), task.getContextPath());
 		}
 
 		public void tasklistRead() {
 			// ignore
 		}
 
-		public void tastChanged(ITask task) {
+		public void taskChanged(ITask task) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void tasklistModified() {
 			// TODO Auto-generated method stub
 			
 		}
@@ -281,17 +292,29 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		}
 	};
 
-	public MylarTasklistPlugin() {
+	public MylarTaskListPlugin() {
 		super();
 		INSTANCE = this;
-		initializeDefaultPreferences(getPrefs());
-		externalizer = new TaskListExternalizer();
-
-		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
-		File taskListFile = new File(path);
-		taskListManager = new TaskListManager(taskListFile);
-		taskListManager.addListener(CONTEXT_MANAGER_TASK_LISTENER);
-		saveTimer = new SaveTimer(this);
+//		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
+		
+		try {
+			initializeDefaultPreferences(getPrefs());
+			 
+			taskListWriter = new TaskListWriter();
+			
+			String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
+			File taskListFile = new File(path);
+			
+			// TODO: decouple from core
+			int nextTaskId = 1;
+			if (MylarPlugin.getDefault() != null && MylarPlugin.getDefault().getPreferenceStore().contains(MylarTaskListPlugin.TASK_ID)) { // TODO: fix to MylarTaskListPlugin
+				nextTaskId = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarTaskListPlugin.TASK_ID);
+			} 
+			
+			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);	
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Mylar Task List initialization failed", false);
+		}
 	}
 
 	public void earlyStartup() {
@@ -299,15 +322,19 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					TaskListExtensionReader.initExtensions(taskListWriter);
+					
+					taskListManager.addListener(CONTEXT_MANAGER_TASK_LISTENER);
+					taskListManager.addListener(taskListSavePolicy);
+					saveTimer = new BackgroundSaveTimer(getDefault());
+					
 					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
-					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(new DisposeListener() {
-						public void widgetDisposed(DisposeEvent e) {
-							if (getDefault() != null)
-								getDefault().saveTaskListAndContexts();
-						}
-					});
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(taskListSavePolicy);
+										
+					restoreTaskHandlerState();
 					taskListManager.readTaskList();
+					restoreTaskHandlerState();
 				} catch (Exception e) {
 					MylarPlugin.fail(e, "Task List initialization failed", true);
 				}
@@ -325,6 +352,18 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		super.stop(context);
 		INSTANCE = null;
 		resourceBundle = null;
+		try {
+			taskListManager.removeListener(taskListSavePolicy);
+			if (MylarPlugin.getDefault() != null) {
+				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+			}
+			if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null) {
+				Workbench.getInstance().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
+				Workbench.getInstance().getActiveWorkbenchWindow().getShell().removeDisposeListener(taskListSavePolicy);
+			}
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "Mylar Java stop failed", false);
+		}
 	}
 
 	@Override
@@ -349,7 +388,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	/**
 	 * Returns the shared instance.
 	 */
-	public static MylarTasklistPlugin getDefault() {
+	public static MylarTaskListPlugin getDefault() {
 		return INSTANCE;
 	}
 
@@ -358,7 +397,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = MylarTasklistPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = MylarTaskListPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {
@@ -393,14 +432,14 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		getTaskListManager().createNewTaskList();
 		getTaskListManager().readTaskList();
 
-		TaskListView.getDefault().clearTaskHistory();
+		if (TaskListView.getDefault() != null) TaskListView.getDefault().clearTaskHistory();
 	}
 
 
 	public void saveTaskListAndContexts() {
 		taskListManager.saveTaskList();
 		for (ITask task : taskListManager.getTaskList().getActiveTasks()) {
-			MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier(), task.getPath());
+			MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier(), task.getContextPath());
 		}
 		//        lastSave = new Date();
 		//		INSTANCE.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
@@ -415,7 +454,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		//		}
 		Date currentTime = new Date();
 		if (currentTime.getTime() > lastBackup.getTime() + AUTOMATIC_BACKUP_SAVE_INTERVAL) {//TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE))) {
-			MylarTasklistPlugin.getDefault().createTaskListBackupFile();
+			MylarTaskListPlugin.getDefault().createTaskListBackupFile();
 			lastBackup = new Date();
 			//			INSTANCE.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE, lastSave.getTime());
 		}
@@ -424,7 +463,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	private void checkReminders() {
 		//    	if (getPrefs().getBoolean(REMINDER_CHECK)) {
 		//    		getPrefs().setValue(REMINDER_CHECK, false);
-		final TaskReportGenerator parser = new TaskReportGenerator(MylarTasklistPlugin.getTaskListManager().getTaskList());
+		final TaskReportGenerator parser = new TaskReportGenerator(MylarTaskListPlugin.getTaskListManager().getTaskList());
 		parser.addCollector(new ReminderRequiredCollector());
 		parser.collectTasks();
 		if (!parser.getAllCollectedTasks().isEmpty()) {
@@ -489,9 +528,9 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		//		} 
 	}
 
-	public TaskListExternalizer getTaskListExternalizer() {
-		return externalizer;
-	}
+//	public TaskListWriter getTaskListExternalizer() {
+//		return externalizer;
+//	}
 
 	public List<ITaskHandler> getTaskHandlers() {
 		return taskHandlers;
@@ -509,7 +548,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		taskHandlers.add(taskHandler);
 	}
 
-	public void restoreTaskHandlerState() {
+	private void restoreTaskHandlerState() {
 		for (ITaskHandler handler : taskHandlers) {
 			handler.restoreState(TaskListView.getDefault());
 		}
@@ -525,15 +564,15 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 		menuContributors.add(contributor);
 	}
 
-	private List<ITaskActivationListener> taskListListeners = new ArrayList<ITaskActivationListener>();
-
-	public List<ITaskActivationListener> getTaskListListeners() {
-		return taskListListeners;
-	}
-
-	public void addTaskListListener(ITaskActivationListener taskListListner) {
-		taskListListeners.add(taskListListner);
-	}
+//	private List<ITaskActivationListener> taskListListeners = new ArrayList<ITaskActivationListener>();
+//
+//	public List<ITaskActivationListener> getTaskListListeners() {
+//		return taskListListeners;
+//	}
+//
+//	public void addTaskListListener(ITaskActivationListener taskListListner) {
+//		taskListListeners.add(taskListListner);
+//	}
 
 	public void createTaskListBackupFile() {
 		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
@@ -629,7 +668,7 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	}
 
 	/** For testing only **/
-	public SaveTimer getSaveTimer() {
+	public BackgroundSaveTimer getSaveTimer() {
 		return saveTimer;
 	}
 
@@ -637,6 +676,6 @@ public class MylarTasklistPlugin extends AbstractUIPlugin implements IStartup, I
 	 * For testing.
 	 */
 	public void setShouldAutoSave(boolean shellActive) {
-		MylarTasklistPlugin.shouldAutoSave = shellActive;
+		MylarTaskListPlugin.shouldAutoSave = shellActive;
 	}
 }

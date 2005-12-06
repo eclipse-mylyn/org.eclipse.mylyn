@@ -19,13 +19,13 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskHighlighter;
 import org.eclipse.mylar.tasklist.ITaskListElement;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -33,7 +33,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskListLabelProvider extends LabelProvider implements IColorProvider, ITableLabelProvider, ITableColorProvider, ITableFontProvider {
+public class TasklistLabelProvider extends LabelProvider implements IColorProvider, ITableLabelProvider, ITableColorProvider, ITableFontProvider {
 
 	private Color backgroundColor = null;
 	
@@ -51,7 +51,7 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
 			case 1:
 				return null;
 			case 2:
-				if (element instanceof ITaskListCategory || element instanceof IQuery) {
+				if (element instanceof ITaskCategory || element instanceof IQuery) {
 					return null;
 				}
 				return element.getPriority();
@@ -62,18 +62,29 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
     	return null;
     }
    
+    public Image getIcon(ITask task) {
+    	String issueReportUrl = task.getIssueReportURL();
+		if (issueReportUrl != null && !issueReportUrl.trim().equals("") && !issueReportUrl.equals("http://")) {
+			return TaskListImages.getImage(TaskListImages.TASK_WEB);
+		} else {
+			return TaskListImages.getImage(TaskListImages.TASK);
+		}
+    }
+    
     public Image getColumnImage(Object element, int columnIndex) {        
         if (! (element instanceof ITaskListElement)) { 
         	return null;
         }
         if (columnIndex == 0) {
-        	if (element instanceof ITaskListCategory || element instanceof IQuery) {
+        	if (element instanceof ITaskCategory || element instanceof IQuery) {
+        	
         		return ((ITaskListElement)element).getIcon(); 
         	} else {
+//        		return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
         		return ((ITaskListElement)element).getStatusIcon();
         	}        	
         } else if (columnIndex == 1) {
-        	if (element instanceof ITaskListCategory || element instanceof IQuery) {
+        	if (element instanceof ITaskCategory || element instanceof IQuery) {
         		return null;
         	}
         	return ((ITaskListElement)element).getIcon();
@@ -98,14 +109,14 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
     	try {
 			  if (element instanceof ITask) {
 			      ITask task = (ITask)element;
-			      ITaskHighlighter highlighter = MylarTasklistPlugin.getDefault().getHighlighter();
+			      ITaskHighlighter highlighter = MylarTaskListPlugin.getDefault().getHighlighter();
 			      if (highlighter != null) {
 			    	  return highlighter.getHighlightColor(task); 
 			      }
-			  } else if (element instanceof ITaskListCategory) {
-				  ITaskListCategory category = (ITaskListCategory)element;
+			  } else if (element instanceof ITaskCategory) {
+				  ITaskCategory category = (ITaskCategory)element;
 				  if (category.isArchive()) {
-					  return TasklistImages.BACKGROUND_ARCHIVE;
+					  return TaskListImages.BACKGROUND_ARCHIVE;
 				  } else {
 					  return backgroundColor;
 				  }
@@ -115,7 +126,7 @@ public class TaskListLabelProvider extends LabelProvider implements IColorProvid
 		} catch (Exception e) {
 			MylarPlugin.fail(e, "Could not get background color", false);
 		}
-		return TasklistImages.BACKGROUND_WHITE;
+		return TaskListImages.BACKGROUND_WHITE;
   }
 
 	public Font getFont(Object element, int columnIndex) {

@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
@@ -31,7 +31,7 @@ public class NextTaskDropDownAction extends DropDownTaskNavigateAction {
         setToolTipText("Next Task");
         setId(ID);
         setEnabled(false);
-        setImageDescriptor(TasklistImages.NAVIGATE_NEXT);
+        setImageDescriptor(TaskListImages.NAVIGATE_NEXT);
 	}
 	
 	protected void addActionsToMenu(){

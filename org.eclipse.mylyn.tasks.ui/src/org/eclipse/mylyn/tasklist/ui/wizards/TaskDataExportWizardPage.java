@@ -3,7 +3,7 @@ package org.eclipse.mylar.tasklist.ui.wizards;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -40,7 +40,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	
 	//Key values for the dialog settings object
 	private final static String SETTINGS_SAVED = "Settings saved";
-	private final static String TASKLIST_SETTING = "Tasklist setting";
+	private final static String TASKLIST_SETTING = "TaskList setting";
 	private final static String ACTIVATION_HISTORY_SETTING = "Activation history setting";
 	private final static String CONTEXTS_SETTING = "Contexts setting";
 	private final static String DEST_DIR_SETTING = "Destination directory setting";
@@ -49,7 +49,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	public TaskDataExportWizardPage(){
 		super("org.eclipse.mylar.tasklist.exportPage", PAGE_TITLE, 
-				MylarTasklistPlugin.imageDescriptorFromPlugin(MylarTasklistPlugin.PLUGIN_ID, "icons/wizban/banner-export.gif"));
+				MylarTaskListPlugin.imageDescriptorFromPlugin(MylarTaskListPlugin.PLUGIN_ID, "icons/wizban/banner-export.gif"));
 		setPageComplete(false);
 	}
 	

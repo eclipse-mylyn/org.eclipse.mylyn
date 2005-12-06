@@ -22,8 +22,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Ken Sueda
  */
-public class PlannedTasksLabelProvider extends LabelProvider implements
-		ITableLabelProvider {
+public class PlannedTasksLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	// {".", "Description", "Priority", "Estimated Time", "Reminder Date"};
 	public Image getColumnImage(Object element, int columnIndex) {

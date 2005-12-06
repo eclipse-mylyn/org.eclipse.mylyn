@@ -16,8 +16,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -34,7 +34,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	public TaskActivateAction() {
 		setId(ID);
 		setText("Activate");
-		setImageDescriptor(TasklistImages.TASK_ACTIVE);
+		setImageDescriptor(TaskListImages.TASK_ACTIVE);
 	}
 	
 	public void init(IViewPart view) {
@@ -49,7 +49,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	
 	public void run(ITask task) {
 		if (task != null) {
-			MylarTasklistPlugin.getTaskListManager().activateTask(task);
+			MylarTaskListPlugin.getTaskListManager().activateTask(task);
 			if (TaskListView.getDefault() != null) {
 				TaskListView.getDefault().getViewer().refresh();
 			}

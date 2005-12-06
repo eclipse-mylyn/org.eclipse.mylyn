@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
 * @author Ken Sueda (original prototype)
@@ -81,7 +81,7 @@ public class TaskActivationHistory {
 	 */
 	protected ITask getHistoryTaskAt(int pos){
 		InteractionEvent event = MylarPlugin.getContextManager().getActivityHistory().getInteractionHistory().get(pos);
-		return MylarTasklistPlugin.getTaskListManager().getTaskForHandle(event.getStructureHandle(), false);
+		return MylarTaskListPlugin.getTaskListManager().getTaskForHandle(event.getStructureHandle(), false);
 	}
 	
 	public void addTask(ITask task) {

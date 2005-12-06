@@ -11,7 +11,7 @@
 /*
  * Created on Dec 26, 2004
  */
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.tasklist.internal;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,64 +20,77 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.internal.TaskList;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Mik Kersten
  */
 public class TaskListManager {
 
-	private Map<ITask, TaskActivityListener> listenerMap = new HashMap<ITask, TaskActivityListener>();
+	private Map<ITask, TaskTimer> timerMap = new HashMap<ITask, TaskTimer>();
 
+	private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
+	
+	private TaskListWriter taskListWriter;// = new TaskListWriter();
+	
 	private File taskListFile;
 
 	private TaskList taskList = new TaskList();
 
 	private boolean taskListRead = false;
 	
-	private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
-
 	private int nextTaskId;
 
-	public TaskListManager(File file) {
-		this.taskListFile = file;
-		if (MylarPlugin.getDefault() != null
-				&& MylarPlugin.getDefault().getPreferenceStore().contains(MylarTasklistPlugin.TASK_ID)) { // TODO: fix to MylarTasklistPlugin
-			nextTaskId = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarTasklistPlugin.TASK_ID);
+	private static final String PREFIX_TASK = "task-";
+	
+	public static final long INACTIVITY_TIME_MILLIS;
+	
+	static {
+		if (MylarPlugin.getContextManager() != null) {
+			INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getActivityTimeoutSeconds() * 1000;
 		} else {
-			nextTaskId = 1;
+			INACTIVITY_TIME_MILLIS = 1 * 60 * 1000;
 		}
 	}
+	
+//	public TaskListManager(File file) {
+//		this.taskListFile = file;
+//	}
 
+	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) { 
+		this.taskListFile = file;
+		this.taskListWriter = taskListWriter;
+		this.nextTaskId = startId;
+	}
+	
 	public TaskList createNewTaskList() {
 		taskList = new TaskList();
 		return taskList;
 	}
 
-	public String genUniqueTaskId() {
-		return "task-" + nextTaskId++;
+	public String genUniqueTaskHandle() {
+		return PREFIX_TASK + nextTaskId++;
 	}
 
 	public boolean readTaskList() {
-		MylarTasklistPlugin.getDefault().getTaskListExternalizer().initExtensions();
+//		taskListWriter.initExtensions();
 		try {
 			if (taskListFile.exists()) {
-				MylarTasklistPlugin.getDefault().getTaskListExternalizer().readTaskList(taskList, taskListFile);
+				taskListWriter.readTaskList(taskList, taskListFile);
 				int maxHandle = taskList.findLargestTaskHandle();
 				if (maxHandle >= nextTaskId) {
 					nextTaskId = maxHandle + 1;
 				}
-				for (ITaskActivityListener listener : listeners)
-					listener.tasksActivated(taskList.getActiveTasks());
+				for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
 			} else {
-				MylarTasklistPlugin.getTaskListManager().createNewTaskList();
-			}
-			if (TaskListView.getDefault() != null) {
-				TaskListView.getDefault().getViewer().refresh();
+				createNewTaskList();
 			}
 
-			MylarTasklistPlugin.getTaskListManager().setTaskListRead(true);
+			taskListRead = true;
 			for (ITaskActivityListener listener : listeners) listener.tasklistRead();
 		} catch (Exception e) {
 			MylarPlugin.log(e, "Could not read task list");
@@ -88,8 +101,8 @@ public class TaskListManager {
 
 	public void saveTaskList() {
 		try {
-			MylarTasklistPlugin.getDefault().getTaskListExternalizer().writeTaskList(taskList, taskListFile);
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTasklistPlugin.TASK_ID, nextTaskId);
+			taskListWriter.writeTaskList(taskList, taskListFile);
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTaskListPlugin.TASK_ID, nextTaskId);
 		} catch (Exception e) {
 			MylarPlugin.fail(e, "Could not save task list", true);
 		}
@@ -105,30 +118,36 @@ public class TaskListManager {
 
 	public void addRootTask(ITask task) {
 		taskList.addRootTask(task);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
-	public void addCategory(ITaskListCategory cat) {
+	public void addCategory(ITaskCategory cat) {
 		taskList.addCategory(cat);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
 	public void addQuery(IQuery cat) {
 		taskList.addQuery(cat);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
 	public void deleteTask(ITask task) {
-		TaskActivityListener activeListener = listenerMap.remove(task);
+		TaskTimer activeListener = timerMap.remove(task);
 		if (activeListener != null)
 			activeListener.stopTimer();
 		taskList.setActive(task, false, false);
 		taskList.deleteTask(task);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
-	public void deleteCategory(ITaskListCategory cat) {
+	public void deleteCategory(ITaskCategory cat) {
 		taskList.deleteCategory(cat);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
 	public void deleteQuery(IQuery query) {
 		taskList.deleteQuery(query);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
 	public void addListener(ITaskActivityListener listener) {
@@ -140,7 +159,7 @@ public class TaskListManager {
 	}
 
 	public void activateTask(ITask task) {
-		if (!MylarTasklistPlugin.getDefault().isMultipleMode()) {
+		if (!MylarTaskListPlugin.getDefault().isMultipleMode()) {
 			if (taskList.getActiveTasks().size() > 0
 					&& taskList.getActiveTasks().get(0).getHandleIdentifier().compareTo(task.getHandleIdentifier()) != 0) {
 				for (ITask t : taskList.getActiveTasks()) {
@@ -151,32 +170,26 @@ public class TaskListManager {
 			}
 		}
 		taskList.setActive(task, true, false);
-		TaskActivityListener activeListener = new TaskActivityListener(task);
-		listenerMap.put(task, activeListener);
-		for (ITaskActivityListener listener : listeners)
-			listener.taskActivated(task);
+		TaskTimer activeListener = new TaskTimer(task);
+		timerMap.put(task, activeListener);
+		for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
 	}
 
 	public void deactivateTask(ITask task) {
-		TaskActivityListener activeListener = listenerMap.remove(task);
+		TaskTimer activeListener = timerMap.remove(task);
 		if (activeListener != null)
 			activeListener.stopTimer();
 		taskList.setActive(task, false, false);
-		for (ITaskActivityListener listener : listeners)
-			listener.taskDeactivated(task);
+		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
 	}
 
 	/**
 	 * TODO: refactor into task deltas?
 	 */
 	public void notifyTaskChanged(ITask task) {
-		for (ITaskActivityListener listener : listeners) listener.tastChanged(task);
+		for (ITaskActivityListener listener : listeners) listener.taskChanged(task);
 	}
 	
-//	public void notifyTaskPropertyChanged(ITask task, String property) {
-//		for (ITaskActivityListener listener : listeners) listener.taskPropertyChanged(task, property);
-//	}
-
 	public void setTaskListFile(File f) {
 		this.taskListFile = f;
 	}
@@ -187,20 +200,28 @@ public class TaskListManager {
 		return taskList.getTaskForHandle(handle, lookInArchives);
 	}
 
-	public String toXmlString() {
-		try {
-			return MylarTasklistPlugin.getDefault().getTaskListExternalizer().getTaskListXml(taskList);
-		} catch (Exception e) {
-			MylarPlugin.fail(e, "Could not save task list", true);
-		}
-		return null;
-	}
-
 	public boolean isTaskListRead() {
 		return taskListRead;
 	}
 
-	public void setTaskListRead(boolean taskListRead) {
-		this.taskListRead = taskListRead;
+	public TaskListWriter getTaskListWriter() {
+		return taskListWriter;
 	}
+
+	public File getTaskListFile() {
+		return taskListFile;
+	}
+
+//	public void setTaskListRead(boolean taskListRead) {
+//		this.taskListRead = taskListRead;
+//	}
+	
+//	public String toXmlString() {
+//		try {
+//			return MylarTaskListPlugin.getDefault().getTaskListExternalizer().getTaskListXml(taskList);
+//		} catch (Exception e) {
+//			MylarPlugin.fail(e, "Could not save task list", true);
+//		}
+//		return null;
+//	}
 }

@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,12 +35,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,26 +54,45 @@ import org.xml.sax.SAXException;
  * @author Mik Kersten
  * @author Ken Sueda
  */
-public class TaskListExternalizer {
+public class TaskListWriter {
 
-	private List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
+	public static final String ATTRIBUTE_VERSION = "Version";
 
-	private DefaultTaskListExternalizer defaultExternalizer = new DefaultTaskListExternalizer();
+	public static final String ELEMENT_TASK_LIST = "TaskList";
+
+	private static final String VALUE_VERSION = "1.0.1";
+
+	private static final String VALUE_VERSION_1_0_0 = "1.0.0";
+
+	private static final String FILE_SUFFIX_SAVE = "save.xml";
+	
+	private List<ITaskListExternalizer> externalizers; //= new ArrayList<ITaskListExternalizer>();
+
+	private DelegatingLocalTaskExternalizer delagatingExternalizer = new DelegatingLocalTaskExternalizer();
 
 	private String readVersion = "";
 
 	private boolean hasCaughtException = false;
 
-	public void initExtensions() {
-		TaskListExtensionReader.initExtensions(externalizers, defaultExternalizer);
+	public TaskListWriter(){ //, List<ITaskListExternalizer> externalizers) {
+//		this.externalizers = externalizer.getExternalizers();
 	}
+	
+	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
+		this.externalizers = externalizers;
+		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
+	}
+	
+//	public void initExtensions() {
+//		TaskListExtensionReader.initExtensions(externalizers, delagatingExternalizer);
+//	}
 
-	public void removeExternalizer(ITaskListExternalizer externalizer) {
-		externalizers.remove(externalizer);
-	}
+//	public void removeExternalizer(ITaskListExternalizer externalizer) {
+//		externalizers.remove(externalizer);
+//	}
 
 	public void writeTaskList(TaskList tlist, File outFile) {
-		initExtensions();
+//		initExtensions();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc = null;
@@ -87,21 +105,21 @@ public class TaskListExternalizer {
 			e.printStackTrace();
 		}
 
-		Element root = doc.createElement("TaskList");
-		root.setAttribute("Version", "1.0.1");
-
+		Element root = doc.createElement(ELEMENT_TASK_LIST);
+		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
+		
 		for (ITaskListExternalizer externalizer : externalizers) {
 			externalizer.createRegistry(doc, root);
 		}
 
-		for (ITaskListCategory category : tlist.getCategories()) {
+		for (ITaskCategory category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category))
 					element = externalizer.createCategoryElement(category, doc, root);
 			}
-			if (element == null && defaultExternalizer.canCreateElementFor(category)) {
-				defaultExternalizer.createCategoryElement(category, doc, root);
+			if (element == null && delagatingExternalizer.canCreateElementFor(category)) {
+				delagatingExternalizer.createCategoryElement(category, doc, root);
 			} else if (element == null) {
 				MylarPlugin.log("Did not externalize: " + category, this);
 			}
@@ -113,8 +131,8 @@ public class TaskListExternalizer {
 				if (externalizer.canCreateElementFor(query))
 					element = externalizer.createQueryElement(query, doc, root);
 			}
-			if (element == null && defaultExternalizer.canCreateElementFor(query)) {
-				defaultExternalizer.createQueryElement(query, doc, root);
+			if (element == null && delagatingExternalizer.canCreateElementFor(query)) {
+				delagatingExternalizer.createQueryElement(query, doc, root);
 			} else if (element == null) {
 				MylarPlugin.log("Did not externalize: " + query, this);
 			}
@@ -127,8 +145,8 @@ public class TaskListExternalizer {
 					if (externalizer.canCreateElementFor(task))
 						element = externalizer.createTaskElement(task, doc, root);
 				}
-				if (element == null && defaultExternalizer.canCreateElementFor(task)) {
-					defaultExternalizer.createTaskElement(task, doc, root);
+				if (element == null && delagatingExternalizer.canCreateElementFor(task)) {
+					delagatingExternalizer.createTaskElement(task, doc, root);
 				} else if (element == null) {
 					MylarPlugin.log("Did not externalize: " + task, this);
 				}
@@ -156,7 +174,7 @@ public class TaskListExternalizer {
 			outputStream.flush();
 			outputStream.close();
 		} catch (Exception fnfe) {
-			MylarPlugin.log(fnfe, "Tasklist could not be found");
+			MylarPlugin.log(fnfe, "TaskList could not be found");
 		}
 	}
 
@@ -203,8 +221,8 @@ public class TaskListExternalizer {
 	 * TODO: fix this old mess
 	 */
 	public void readTaskList(TaskList tlist, File inFile) {
-		initExtensions();
-		MylarTasklistPlugin.getDefault().restoreTaskHandlerState();
+//		initExtensions();
+//		MylarTaskListPlugin.getDefault().restoreTaskHandlerState();
 		hasCaughtException = false;
 		try {
 			// parse file
@@ -213,15 +231,15 @@ public class TaskListExternalizer {
 				return;
 			Document doc = openAsDOM(inFile);
 			if (doc == null) {
-				handleException(inFile, null, new MylarExternalizerException("Tasklist was not well formed XML"));
+				handleException(inFile, null, new TaskListExternalizerException("TaskList was not well formed XML"));
 				return;
 			}
 			// read root node to get version number
 			//
 			Element root = doc.getDocumentElement();
-			readVersion = root.getAttribute("Version");
+			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
-			if (readVersion.equals("1.0.0")) {
+			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
 				MylarPlugin.log("version: " + readVersion + " not supported", this);
 				// NodeList list = root.getChildNodes();
 				// for (int i = 0; i < list.getLength(); i++) {
@@ -235,7 +253,7 @@ public class TaskListExternalizer {
 					Node child = list.item(i);
 					boolean wasRead = false;
 					try {
-						if (child.getNodeName().endsWith(DefaultTaskListExternalizer.TAG_CATEGORY)) {
+						if (child.getNodeName().endsWith(DelegatingLocalTaskExternalizer.TAG_CATEGORY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadCategory(child)) {
 									externalizer.readCategory(child, tlist);
@@ -243,13 +261,13 @@ public class TaskListExternalizer {
 									break;
 								}
 							}
-							if (!wasRead && defaultExternalizer.canReadCategory(child)) {
-								defaultExternalizer.readCategory(child, tlist);
+							if (!wasRead && delagatingExternalizer.canReadCategory(child)) {
+								delagatingExternalizer.readCategory(child, tlist);
 							} else {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
 							}
-						} else if (child.getNodeName().endsWith(DefaultTaskListExternalizer.TAG_QUERY)) {
+						} else if (child.getNodeName().endsWith(DelegatingLocalTaskExternalizer.TAG_QUERY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadQuery(child)) {
 									externalizer.readQuery(child, tlist);
@@ -257,8 +275,8 @@ public class TaskListExternalizer {
 									break;
 								}
 							}
-							if (!wasRead && defaultExternalizer.canReadCategory(child)) {
-								defaultExternalizer.readQuery(child, tlist);
+							if (!wasRead && delagatingExternalizer.canReadCategory(child)) {
+								delagatingExternalizer.readQuery(child, tlist);
 							} else {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
@@ -268,7 +286,7 @@ public class TaskListExternalizer {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-									ITaskHandler taskHandler = MylarTasklistPlugin.getDefault()
+									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault()
 											.getTaskHandlerForElement(newTask);
 									if (taskHandler != null) {
 										newTask = taskHandler.taskAdded(newTask);
@@ -279,8 +297,8 @@ public class TaskListExternalizer {
 									break;
 								}
 							}
-							if (!wasRead && defaultExternalizer.canReadTask(child)) {
-								tlist.internalAddRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
+								tlist.internalAddRootTask(delagatingExternalizer.readTask(child, tlist, null, null));
 							} else {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
@@ -306,7 +324,7 @@ public class TaskListExternalizer {
 			// we can lose bug reports.
 			writeTaskList(tlist, inFile);
 		}
-		MylarTasklistPlugin.getDefault().restoreTaskHandlerState();
+//		MylarTaskListPlugin.getDefault().restoreTaskHandlerState();
 	}
 
 	/**
@@ -332,7 +350,7 @@ public class TaskListExternalizer {
 			//
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException pce) {
-			inputFile.renameTo(new File(inputFile.getName() + "save.xml"));
+			inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
 			MylarPlugin.log(pce, "Failed to load XML file");
 		}
 		try {
@@ -340,7 +358,7 @@ public class TaskListExternalizer {
 			// and return a new DOM Document object. Also throws IOException
 			document = builder.parse(inputFile);
 		} catch (SAXException se) {
-			File backup = new File(MylarTasklistPlugin.getDefault().getBackupFilePath());
+			File backup = new File(MylarTaskListPlugin.getDefault().getBackupFilePath());
 			String message = "Restoring the tasklist failed.  Would you like to attempt to restore from the backup?\n\nTasklist XML File location: "
 					+ inputFile.getAbsolutePath()
 					+ "\n\nBackup tasklist XML file location: "
@@ -348,9 +366,9 @@ public class TaskListExternalizer {
 			if (backup.exists() && MessageDialog.openQuestion(null, "Restore From Backup", message)) {
 				try {
 					document = builder.parse(backup);
-					MylarTasklistPlugin.getDefault().reverseBackup();
+					MylarTaskListPlugin.getDefault().reverseBackup();
 				} catch (SAXException s) {
-					inputFile.renameTo(new File(inputFile.getName() + "save.xml"));
+					inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
 					MylarPlugin.log(s, "Failed to recover from backup restore");
 				}
 			}
@@ -401,9 +419,7 @@ public class TaskListExternalizer {
 	/*
 	 * 
 	 * 
-	 * 
 	 */
-
 	private Document openAsDOM(String input) throws IOException {
 
 		// A factory API that enables applications to obtain a parser
@@ -435,7 +451,7 @@ public class TaskListExternalizer {
 	}
 
 	public void readTaskList(TaskList tlist, String input) {
-		initExtensions();
+//		initExtensions();
 		try {
 
 			Document doc = openAsDOM(input);
@@ -445,9 +461,9 @@ public class TaskListExternalizer {
 			// read root node to get version number
 			//
 			Element root = doc.getDocumentElement();
-			readVersion = root.getAttribute("Version");
+			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
-			if (readVersion.equals("1.0.0")) {
+			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
 				MylarPlugin.log("version: " + readVersion + " not supported", this);
 				// NodeList list = root.getChildNodes();
 				// for (int i = 0; i < list.getLength(); i++) {
@@ -461,7 +477,7 @@ public class TaskListExternalizer {
 					Node child = list.item(i);
 					boolean wasRead = false;
 					try {
-						if (child.getNodeName().endsWith(DefaultTaskListExternalizer.TAG_CATEGORY)) {
+						if (child.getNodeName().endsWith(DelegatingLocalTaskExternalizer.TAG_CATEGORY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadCategory(child)) {
 									externalizer.readCategory(child, tlist);
@@ -469,8 +485,8 @@ public class TaskListExternalizer {
 									break;
 								}
 							}
-							if (!wasRead && defaultExternalizer.canReadCategory(child)) {
-								defaultExternalizer.readCategory(child, tlist);
+							if (!wasRead && delagatingExternalizer.canReadCategory(child)) {
+								delagatingExternalizer.readCategory(child, tlist);
 							} else {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
@@ -480,7 +496,7 @@ public class TaskListExternalizer {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-									ITaskHandler taskHandler = MylarTasklistPlugin.getDefault()
+									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault()
 											.getTaskHandlerForElement(newTask);
 									if (taskHandler != null) {
 										newTask = taskHandler.taskAdded(newTask);
@@ -491,8 +507,8 @@ public class TaskListExternalizer {
 									break;
 								}
 							}
-							if (!wasRead && defaultExternalizer.canReadTask(child)) {
-								tlist.internalAddRootTask(defaultExternalizer.readTask(child, tlist, null, null));
+							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
+								tlist.internalAddRootTask(delagatingExternalizer.readTask(child, tlist, null, null));
 							} else {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
@@ -522,21 +538,21 @@ public class TaskListExternalizer {
 			e.printStackTrace();
 		}
 
-		Element root = doc.createElement("TaskList");
-		root.setAttribute("Version", "1.0.1");
+		Element root = doc.createElement(ELEMENT_TASK_LIST);
+		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
 
 		for (ITaskListExternalizer externalizer : externalizers) {
 			externalizer.createRegistry(doc, root);
 		}
 
-		for (ITaskListCategory category : tlist.getCategories()) {
+		for (ITaskCategory category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category))
 					element = externalizer.createCategoryElement(category, doc, root);
 			}
-			if (element == null && defaultExternalizer.canCreateElementFor(category)) {
-				defaultExternalizer.createCategoryElement(category, doc, root);
+			if (element == null && delagatingExternalizer.canCreateElementFor(category)) {
+				delagatingExternalizer.createCategoryElement(category, doc, root);
 			} else if (element == null) {
 				MylarPlugin.log("Did not externalize: " + category, this);
 			}
@@ -548,8 +564,8 @@ public class TaskListExternalizer {
 					if (externalizer.canCreateElementFor(task))
 						element = externalizer.createTaskElement(task, doc, root);
 				}
-				if (element == null && defaultExternalizer.canCreateElementFor(task)) {
-					defaultExternalizer.createTaskElement(task, doc, root);
+				if (element == null && delagatingExternalizer.canCreateElementFor(task)) {
+					delagatingExternalizer.createTaskElement(task, doc, root);
 				} else if (element == null) {
 					MylarPlugin.log("Did not externalize: " + task, this);
 				}
@@ -575,291 +591,4 @@ public class TaskListExternalizer {
 		}
 		return sw.toString();
 	}
-
-	// private static ITask readTaskAndSubTasks(Node node, ITask root, TaskList
-	// tlist) {
-	// //extract node and create new sub task
-	// //
-	// Element e = (Element) node;
-	// ITask t;
-	// String handle = "";
-	// if (e.hasAttribute("ID")) {
-	// handle = e.getAttribute("ID");
-	// } else {
-	// handle = e.getAttribute("Handle");
-	// }
-	//		
-	// String label = e.getAttribute("Label");
-	// String priority = e.getAttribute("Priority");
-	//
-	// if (e.getAttribute("Bugzilla").compareTo("true") == 0) {
-	// t = new BugzillaTask(handle, label, true);
-	// BugzillaTask bt = (BugzillaTask) t;
-	// bt.setState(BugTaskState.FREE);
-	// bt.setLastRefresh(new Date(new Long(e.getAttribute("LastDate"))
-	// .longValue()));
-	// if (e.getAttribute("Dirty").compareTo("true") == 0) {
-	// bt.setDirty(true);
-	// } else {
-	// bt.setDirty(false);
-	// }
-	// if (bt.readBugReport() == false) {
-	// MylarPlugin.log("Failed to read bug report", null);
-	// }
-	// } else {
-	// t = new Task(handle, label);
-	// }
-	// t.setPriority(priority);
-	// t.setPath(e.getAttribute("Path"));
-	//		
-	// if (e.getAttribute("Active").compareTo("true") == 0) {
-	// t.setActive(true);
-	// tlist.setActive(t, true);
-	// } else {
-	// t.setActive(false);
-	// }
-	//
-	// if (e.getAttribute("Complete").compareTo("true") == 0) {
-	// t.setCompleted(true);
-	// } else {
-	// t.setCompleted(false);
-	// }
-	// if (e.getAttribute("IsCategory").compareTo("true") == 0) {
-	// t.setIsCategory(true);
-	// } else {
-	// t.setIsCategory(false);
-	// }
-	//
-	// if (e.hasAttribute("Notes")) {
-	// t.setNotes(e.getAttribute("Notes"));
-	// } else {
-	// t.setNotes("");
-	// }
-	// if (e.hasAttribute("Elapsed")) {
-	// t.setElapsedTime(e.getAttribute("Elapsed"));
-	// } else {
-	// t.setElapsedTime("");
-	// }
-	// if (e.hasAttribute("Estimated")) {
-	// t.setEstimatedTime(e.getAttribute("Estimated"));
-	// } else {
-	// t.setEstimatedTime("");
-	// }
-	//		
-	// int i = 0;
-	// while (e.hasAttribute("link"+i)) {
-	// t.getRelatedLinks().add(e.getAttribute("link"+i));
-	// i++;
-	// }
-	//				
-	// if (!readVersion.equals("1.0.0")) {
-	// // for newer revisions
-	// }
-	//
-	// i = 0;
-	// NodeList list = e.getChildNodes();
-	// for (i = 0; i < list.getLength(); i++) {
-	// Node child = list.item(i);
-	// t.addSubTask(readTaskAndSubTasks(child, t, tlist));
-	// }
-	// if (root != null) {
-	// t.setParent(root);
-	// }
-	// return t;
-	// }
-
-	// private void readTaskCategory(Node node, TaskList tlist) {
-	// Element e = (Element) node;
-	// TaskCategory cat = new TaskCategory(e.getAttribute("Name"));
-	// tlist.addCategory(cat);
-	// NodeList list = node.getChildNodes();
-	// for (int i = 0; i < list.getLength(); i++) {
-	// Node child = list.item(i);
-	// cat.addTask(readTask(child, tlist, cat, null));
-	// }
-	// }
-
-	// private ITask readTask(Node node, TaskList tlist, TaskCategory cat, ITask
-	// parent) {
-	// Element e = (Element) node;
-	// ITask t;
-	// String handle = e.getAttribute("Handle");
-	// String label = e.getAttribute("Label");
-	// String priority = e.getAttribute("Priority");
-	//
-	//
-	// } else {
-	// t = new Task(handle, label);
-	// }
-	// t.setPriority(priority);
-	// t.setPath(e.getAttribute("Path"));
-	//		
-	// if (e.getAttribute("Active").compareTo("true") == 0) {
-	// t.setActive(true);
-	// tlist.setActive(t, true);
-	// } else {
-	// t.setActive(false);
-	// }
-	// if (e.getAttribute("Complete").compareTo("true") == 0) {
-	// t.setCompleted(true);
-	// } else {
-	// t.setCompleted(false);
-	// }
-	// if (e.hasAttribute("Notes")) {
-	// t.setNotes(e.getAttribute("Notes"));
-	// } else {
-	// t.setNotes("");
-	// }
-	// if (e.hasAttribute("Elapsed")) {
-	// t.setElapsedTime(e.getAttribute("Elapsed"));
-	// } else {
-	// t.setElapsedTime("");
-	// }
-	// if (e.hasAttribute("Estimated")) {
-	// t.setEstimatedTime(e.getAttribute("Estimated"));
-	// } else {
-	// t.setEstimatedTime("");
-	// }
-	//		
-	// int i = 0;
-	// while (e.hasAttribute("link"+i)) {
-	// t.getRelatedLinks().add(e.getAttribute("link"+i));
-	// i++;
-	// }
-	// t.setCategory(cat);
-	// t.setParent(parent);
-	// NodeList list = e.getChildNodes();
-	// for (i = 0; i < list.getLength(); i++) {
-	// Node child = list.item(i);
-	// t.addSubTask(readTask(child, tlist, null, t));
-	// }
-	// return t;
-	// }
-
-	// private void readTasksToNewFormat(Node node, TaskList tlist) {
-	// Element e = (Element) node;
-	// ITask t;
-	// String handle = e.getAttribute("Handle");
-	// String label = e.getAttribute("Label");
-	//		
-	// if (e.getAttribute("IsCategory").compareTo("true") == 0) {
-	// TaskCategory c = new TaskCategory(label);
-	// NodeList list = e.getChildNodes();
-	// for (int i = 0; i < list.getLength(); i++) {
-	// Node child = list.item(i);
-	// readSubTasksToNewFormat(child, tlist, c);
-	// }
-	// tlist.addCategory(c);
-	// } else {
-	// String priority = e.getAttribute("Priority");
-	// if (e.getAttribute("Bugzilla").compareTo("true") == 0) {
-	// t = new BugzillaTask(handle, label, true);
-	// BugzillaTask bt = (BugzillaTask) t;
-	// bt.setState(BugTaskState.FREE);
-	// bt.setLastRefresh(new Date(new Long(e.getAttribute("LastDate"))
-	// .longValue()));
-	// if (e.getAttribute("Dirty").compareTo("true") == 0) {
-	// bt.setDirty(true);
-	// } else {
-	// bt.setDirty(false);
-	// }
-	// if (bt.readBugReport() == false) {
-	// MylarPlugin.log("Failed to read bug report", null);
-	// }
-	// } else {
-	// t = new Task(handle, label);
-	// }
-	// t.setPriority(priority);
-	// t.setPath(e.getAttribute("Path"));
-	// t.setNotes(e.getAttribute("Notes"));
-	// t.setElapsedTime(e.getAttribute("Elapsed"));
-	// t.setEstimatedTime(e.getAttribute("Estimated"));
-	//
-	// if (e.getAttribute("Active").compareTo("true") == 0) {
-	// t.setActive(true);
-	// tlist.setActive(t, true);
-	// } else {
-	// t.setActive(false);
-	// }
-	// if (e.getAttribute("Complete").compareTo("true") == 0) {
-	// t.setCompleted(true);
-	// } else {
-	// t.setCompleted(false);
-	// }
-	//
-	// int i = 0;
-	// while (e.hasAttribute("link" + i)) {
-	// t.getRelatedLinks().add(e.getAttribute("link" + i));
-	// i++;
-	// }
-	// tlist.addRootTask(t);
-	// i = 0;
-	// NodeList list = e.getChildNodes();
-	// for (i = 0; i < list.getLength(); i++) {
-	// Node child = list.item(i);
-	// readSubTasksToNewFormat(child, tlist, null);
-	// }
-	// }
-	// }
-	// private void readSubTasksToNewFormat(Node node, TaskList tlist,
-	// TaskCategory cat) {
-	// Element e = (Element) node;
-	// ITask t;
-	// String handle = e.getAttribute("Handle");
-	// String label = e.getAttribute("Label");
-	// String priority = e.getAttribute("Priority");
-	// if (e.getAttribute("Bugzilla").compareTo("true") == 0) {
-	// t = new BugzillaTask(handle, label, true);
-	// BugzillaTask bt = (BugzillaTask) t;
-	// bt.setState(BugTaskState.FREE);
-	// bt.setLastRefresh(new Date(new Long(e.getAttribute("LastDate"))
-	// .longValue()));
-	// if (e.getAttribute("Dirty").compareTo("true") == 0) {
-	// bt.setDirty(true);
-	// } else {
-	// bt.setDirty(false);
-	// }
-	// if (bt.readBugReport() == false) {
-	// MylarPlugin.log("Failed to read bug report", null);
-	// }
-	// } else {
-	// t = new Task(handle, label);
-	// }
-	// t.setPriority(priority);
-	// t.setPath(e.getAttribute("Path"));
-	// t.setNotes(e.getAttribute("Notes"));
-	// t.setElapsedTime(e.getAttribute("Elapsed"));
-	// t.setEstimatedTime(e.getAttribute("Estimated"));
-	//
-	// if (e.getAttribute("Active").compareTo("true") == 0) {
-	// t.setActive(true);
-	// tlist.setActive(t, true);
-	// } else {
-	// t.setActive(false);
-	// }
-	// if (e.getAttribute("Complete").compareTo("true") == 0) {
-	// t.setCompleted(true);
-	// } else {
-	// t.setCompleted(false);
-	// }
-	//
-	// int i = 0;
-	// while (e.hasAttribute("link" + i)) {
-	// t.getRelatedLinks().add(e.getAttribute("link" + i));
-	// i++;
-	// }
-	// if (cat == null) {
-	// tlist.addRootTask(t);
-	// } else {
-	// cat.addTask(t);
-	// t.setCategory(cat);
-	// }
-	//		
-	// i = 0;
-	// NodeList list = e.getChildNodes();
-	// for (i = 0; i < list.getLength(); i++) {
-	// Node child = list.item(i);
-	// readSubTasksToNewFormat(child, tlist, cat);
-	// }
-	// }
 }

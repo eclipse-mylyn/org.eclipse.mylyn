@@ -19,10 +19,10 @@ import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListCategory;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TasklistImages;
+import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.CategoryEditorInput;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -34,7 +34,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class TaskCategory implements ITaskListCategory, Serializable {
+public class TaskCategory implements ITaskCategory, Serializable {
 
 	private static final long serialVersionUID = 3834024740813027380L;
 
@@ -51,35 +51,35 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getDescription(boolean)
+	 * @see org.eclipse.mylar.tasklist.ITaskCategory#getDescription(boolean)
 	 */
 	public String getDescription(boolean label) {
 		return description;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getHandle()
+	 * @see org.eclipse.mylar.tasklist.ITaskCategory#getHandle()
 	 */
 	public String getHandleIdentifier() {
 		return handle;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#setDescription(java.lang.String)
+	 * @see org.eclipse.mylar.tasklist.ITaskCategory#setDescription(java.lang.String)
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#setHandle(java.lang.String)
+	 * @see org.eclipse.mylar.tasklist.ITaskCategory#setHandle(java.lang.String)
 	 */
 	public void setHandle(String handle) {
 		this.handle = handle;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskListCategory#getStatusIcon()
+	 * @see org.eclipse.mylar.tasklist.ITaskCategory#getStatusIcon()
 	 */
 	public Image getStatusIcon() {
 		return null;
@@ -87,9 +87,9 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 
 	public Image getIcon() {
 		if (isArchive()) {
-			return TasklistImages.getImage(TasklistImages.CATEGORY_ARCHIVE);
+			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
 		} else {
-			return TasklistImages.getImage(TasklistImages.CATEGORY);
+			return TaskListImages.getImage(TaskListImages.CATEGORY);
 		}
 	}
 
@@ -109,8 +109,8 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	public void addTask(ITask task) {
 		tasks.add(task);
 //		task.setCategory(this); 
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
+		if (MylarTaskListPlugin.getDefault() != null) {
+			MylarTaskListPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
 
@@ -123,8 +123,8 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 
 	public void removeTask(ITask task) {
 		tasks.remove(task);
-		if (MylarTasklistPlugin.getDefault() != null) {
-			MylarTasklistPlugin.getDefault().saveTaskListAndContexts();
+		if (MylarTaskListPlugin.getDefault() != null) {
+			MylarTaskListPlugin.getDefault().saveTaskListAndContexts();
 		}
 	}
 
@@ -167,7 +167,7 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	public Color getForeground() {
 		for (ITask child : getChildren()) {
 			if (child.isActive())
-				return MylarTasklistPlugin.ACTIVE_TASK;
+				return MylarTaskListPlugin.ACTIVE_TASK;
 		}
 		return null;
 	}
@@ -175,7 +175,7 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	public Font getFont() {
 		for (ITask child : getChildren()) {
 			if (child.isActive())
-				return BOLD;
+				return TaskListImages.BOLD;
 		}
 		return null;
 	}
@@ -214,14 +214,14 @@ public class TaskCategory implements ITaskListCategory, Serializable {
 	}
 
 	public void openCategory() {
-		IWorkbenchPage page = MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page == null) {
 			return;
 		}
 
 		IEditorInput input = new CategoryEditorInput(this);
 		try {
-			page.openEditor(input, MylarTasklistPlugin.CATEGORY_EDITOR_ID);
+			page.openEditor(input, MylarTaskListPlugin.CATEGORY_EDITOR_ID);
 		} catch (PartInitException ex) {
 			MylarPlugin.log(ex, "open failed");
 		}

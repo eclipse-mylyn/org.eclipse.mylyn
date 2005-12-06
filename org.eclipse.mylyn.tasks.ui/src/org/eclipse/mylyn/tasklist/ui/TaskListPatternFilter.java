@@ -8,16 +8,18 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+package org.eclipse.mylar.tasklist.ui;
 
-package org.eclipse.mylar.tasklist;
+import org.eclipse.ui.internal.dialogs.PatternFilter;
 
-/**
- * @author Mik Kersten
- * 
- */
-public interface ITaskActivationListener {
+public class TaskListPatternFilter extends PatternFilter {
 
-	public abstract void taskActivated(ITask task);
-
-	public abstract void taskDeactivated(ITask task);
+	@Override
+	public void setPattern(String patternString) {
+        if(patternString == null || patternString.startsWith("*")) {
+        	super.setPattern(patternString);
+        } else {
+        	super.setPattern("*" + patternString);
+        }
+    }
 }
