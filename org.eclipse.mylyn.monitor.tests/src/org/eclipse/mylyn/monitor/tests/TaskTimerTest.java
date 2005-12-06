@@ -7,9 +7,9 @@ import junit.framework.TestCase;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.Task;
-import org.eclipse.mylar.tasklist.TaskListManager;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.Task;
+import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -22,7 +22,7 @@ import org.eclipse.ui.PartInitException;
  */
 public class TaskTimerTest extends TestCase {
 
-	protected TaskListManager manager = MylarTasklistPlugin.getTaskListManager();
+	protected TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 
 	protected TaskListView taskView = null;
 
@@ -34,7 +34,7 @@ public class TaskTimerTest extends TestCase {
 		super.setUp();
 
 		try {
-			MylarTasklistPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+			MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
 					"org.eclipse.mylar.tasks.ui.views.TaskListView");
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
@@ -50,7 +50,7 @@ public class TaskTimerTest extends TestCase {
 		// Must be set before the task is created
 		MylarPlugin.getContextManager().setActivityTimeoutSeconds(1);
 
-		task1 = new Task(MylarTasklistPlugin.getTaskListManager().genUniqueTaskId(), "task 1", true);
+		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
 		manager.addRootTask(task1);
 
 	}
