@@ -29,8 +29,6 @@ import org.eclipse.mylar.core.util.ContextWriter;
 
 /**
  * @author Mik Kersten
- * 
- * TODO: stop using java.io ?
  */
 public class MylarContextExternalizer {
 
