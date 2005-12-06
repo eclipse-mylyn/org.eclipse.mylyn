@@ -28,9 +28,11 @@ import org.eclipse.mylar.monitor.reports.collectors.SummaryCollector;
 public class StatisticsLoggingTest extends ContextTest {
 
 	private File logFile;
+
 	private InteractionEventLogger logger;
+
 	private ReportGenerator report;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -38,7 +40,7 @@ public class StatisticsLoggingTest extends ContextTest {
 		logFile.delete();
 		logger = new InteractionEventLogger(logFile);
 		logger.start();
-    	List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
+		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
 		collectors.add(new SummaryCollector());
 		report = new ReportGenerator(logger, collectors);
 	}
@@ -54,13 +56,13 @@ public class StatisticsLoggingTest extends ContextTest {
 		mockUserDelay();
 		logger.interactionObserved(mockSelection());
 		logger.stop();
-		
+
 		List<InteractionEventSummary> summary = report.getStatisticsFromInteractionHistory(logFile).getSingleSummaries();
 		assertEquals(1, summary.size());
-		InteractionEventSummary first = (InteractionEventSummary)summary.get(0);
+		InteractionEventSummary first = (InteractionEventSummary) summary.get(0);
 		assertEquals(2, first.getUsageCount());
 	}
-	
+
 	/**
 	 * Delay enough to make replicated events different
 	 */
@@ -68,7 +70,7 @@ public class StatisticsLoggingTest extends ContextTest {
 		// TODO: Refactor into mylar.core.tests
 		try {
 			Thread.sleep(100);
-		} catch( InterruptedException ie ) {
+		} catch (InterruptedException ie) {
 			;
 		}
 	}
