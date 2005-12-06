@@ -28,9 +28,9 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
 import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
-import org.eclipse.mylar.tasklist.MylarTasklistPlugin;
-import org.eclipse.mylar.tasklist.TaskListManager;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.internal.TaskListManager;
 
 /*TEST CASES TO HANDLE
  * 1. what is here
@@ -209,9 +209,9 @@ public class BugzillaSearchPluginTest extends TestCase{
 
 		String bugPrefix = "Bugzilla-";
 		
-//		TaskList t = MylarTasklistPlugin.getTaskListManager().getTaskList();
-//		MylarTasklistPlugin.getTaskListManager().setTaskList(t);
-		TaskListManager manager = MylarTasklistPlugin.getTaskListManager();
+//		TaskList t = MylarTaskListPlugin.getTaskListManager().getTaskList();
+//		MylarTaskListPlugin.getTaskListManager().setTaskList(t);
+		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 		TaskCategory cat = new TaskCategory("Testing Category");
 		manager.addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix +94185, "<bugzilla info>", true);
@@ -261,7 +261,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		assertEquals("Results not the right size", 3, c.size());
 		
 		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
-        MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
+        MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
 	}
 	
 	//TODO need to test a bug that wraps...should fail since we can only search on a single line
@@ -271,9 +271,9 @@ public class BugzillaSearchPluginTest extends TestCase{
 		String bugPrefix = "Bugzilla-";
 		
 		
-//		TaskList t = MylarTasklistPlugin.getTaskListManager().getTaskList();
-//		MylarTasklistPlugin.getTaskListManager().setTaskList(t);
-		TaskListManager manager = MylarTasklistPlugin.getTaskListManager();
+//		TaskList t = MylarTaskListPlugin.getTaskListManager().getTaskList();
+//		MylarTaskListPlugin.getTaskListManager().setTaskList(t);
+		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 		TaskCategory cat = new TaskCategory("Testing Category");
 		manager.addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true);
@@ -319,7 +319,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		assertEquals("Results not the right size", 1, c.size());
 		
 		MylarBugsPlugin.getBridge().removeFromLandmarksHash(astNodeType);
-        MylarTasklistPlugin.getTaskListManager().deleteCategory(cat);
+        MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
 	}
 	
 }
