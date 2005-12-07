@@ -30,6 +30,7 @@ public class AllTasklistTests {
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(ChangeMainTaskDirTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
+//		suite.addTestSuite(TaskTimerTest.class);
 		//$JUnit-END$
 		return suite;
 	}

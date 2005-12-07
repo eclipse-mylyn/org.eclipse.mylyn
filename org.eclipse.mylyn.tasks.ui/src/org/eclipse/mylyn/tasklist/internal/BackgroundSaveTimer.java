@@ -23,14 +23,23 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 
 	private TimerThread timer = null;
 
+	private boolean forceSyncExec = false;
+	
 	public BackgroundSaveTimer(IBackgroundSaveListener listener) {
 		this.listener = listener;
-		timer = new TimerThread(saveInterval / 1000); // This constructor
-														// wants seconds
+		timer = new TimerThread(saveInterval / 1000); // This constructor wants seconds
 		timer.addListener(this);
-		timer.start();
 	}
 
+	public void start() {
+		timer.start();
+	}
+	
+
+	public void stop() {
+		timer.killTimer();
+	}
+	
 	public void setSaveIntervalMillis(int saveIntervalMillis) {
 		this.saveInterval = saveIntervalMillis;
 		timer.setTimeoutMillis(saveIntervalMillis);
@@ -41,12 +50,23 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 	}
 
 	/**
+	 * For testing
+	 */
+	public void setForceSyncExec(boolean forceSyncExec) {
+		this.forceSyncExec = forceSyncExec;
+	}
+
+	/**
 	 * Called by the ActivityTimerThread Calls save in a new job
 	 */
 	public void fireTimedOut() {
 		try {
-			final SaveJob job = new SaveJob("Saving Task Data", listener);
-			job.schedule();
+			if (!forceSyncExec) {
+				final SaveJob job = new SaveJob("Saving Task Data", listener);
+				job.schedule();
+			} else {
+				listener.saveRequested();
+			}
 		} catch (RuntimeException e) {
 			MylarPlugin.log("Could not schedule save job", this);
 		}

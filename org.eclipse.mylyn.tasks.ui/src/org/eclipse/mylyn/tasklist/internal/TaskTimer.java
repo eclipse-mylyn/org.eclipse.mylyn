@@ -69,7 +69,7 @@ public class TaskTimer implements ITimerThreadListener, IInteractionEventListene
 	public void start() {} 
 
 	public void stopTimer() {
-		timer.killThread();
+		timer.killTimer();
 		MylarPlugin.getDefault().removeInteractionListener(this);
 	}
 
