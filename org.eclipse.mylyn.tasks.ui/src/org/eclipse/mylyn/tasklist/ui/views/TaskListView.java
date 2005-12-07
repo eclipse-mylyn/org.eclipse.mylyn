@@ -78,7 +78,6 @@ import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
 import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskDropDownAction;
-import org.eclipse.mylar.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
@@ -173,7 +172,7 @@ public class TaskListView extends ViewPart {
 
 	private ManageEditorsAction autoClose;
 
-	private RemoveFromCategoryAction removeAction;
+//	private RemoveFromCategoryAction removeAction;
 
 	private TaskActivateAction activateAction = new TaskActivateAction();
 
@@ -985,9 +984,9 @@ public class TaskListView extends ViewPart {
 				}
 			}
 			// HACK: to avoid removing local tasks
-			if (!isLocal) {
-				addAction(removeAction, manager, element);
-			}
+//			if (!isLocal) {
+//				addAction(removeAction, manager, element);
+//			}
 		}
 		//        manager.add(new Separator("tasks"));
 		addAction(deleteAction, manager, element);
@@ -1110,7 +1109,7 @@ public class TaskListView extends ViewPart {
 
 		createTaskAction = new CreateTaskAction(this);
 		createCategoryAction = new CreateCategoryAction(this);
-		removeAction = new RemoveFromCategoryAction(this);
+//		removeAction = new RemoveFromCategoryAction(this);
 		rename = new RenameAction(this);
 
 		deleteAction = new DeleteAction(this);
