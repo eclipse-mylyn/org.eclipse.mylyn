@@ -28,7 +28,7 @@ public class ActiveTimerTest extends TestCase {
 
 		public void fireTimedOut() {
 			gotTimeOut = true;
-			thread.killThread();
+			thread.killTimer();
 		}
 		
 	};
@@ -74,7 +74,7 @@ public class ActiveTimerTest extends TestCase {
 				Thread.sleep(100);
 			} catch(InterruptedException e){}
 		}
-		thread.killThread();
+		thread.killTimer();
 		assertFalse("Too long of a wait", i > 12);
 		assertFalse("Too short of a wait", i < 10);	
 	}
