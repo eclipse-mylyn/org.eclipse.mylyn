@@ -215,23 +215,28 @@ public class BugzillaSearchPluginTest extends TestCase{
 		TaskCategory cat = new TaskCategory("Testing Category");
 		manager.addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix +94185, "<bugzilla info>", true);
-		cat.addTask(bugTask1);
+		
+		manager.moveToCategory(cat, bugTask1);
+//		cat.addTask(bugTask1);
 		while(bugTask1.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 3692, "<bugzilla info>", true);
-		cat.addTask(bugTask2);
+		manager.moveToCategory(cat, bugTask2);
+//		cat.addTask(bugTask2);
 		while(bugTask2.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
-		cat.addTask(bugTask3);
+		manager.moveToCategory(cat, bugTask3);
+//		cat.addTask(bugTask3);
 		while(bugTask3.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
 
 		BugzillaTask bugTask4 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
-		cat.addTask(bugTask4);
+		manager.moveToCategory(cat, bugTask4);
+//		cat.addTask(bugTask4);
 		while(bugTask4.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
@@ -277,18 +282,21 @@ public class BugzillaSearchPluginTest extends TestCase{
 		TaskCategory cat = new TaskCategory("Testing Category");
 		manager.addCategory(cat);
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true);
-		cat.addTask(bugTask1);
+		manager.moveToCategory(cat, bugTask1);
+//		cat.addTask(bugTask1);
 		while(bugTask1.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
 		
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
-		cat.addTask(bugTask2);
+		manager.moveToCategory(cat, bugTask2);
+//		cat.addTask(bugTask2);
 		while(bugTask2.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
-		cat.addTask(bugTask3);
+		manager.moveToCategory(cat, bugTask3);
+//		cat.addTask(bugTask3);
 		while(bugTask3.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
