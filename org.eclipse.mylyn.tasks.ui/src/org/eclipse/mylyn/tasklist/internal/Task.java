@@ -463,6 +463,7 @@ public class Task implements ITask {
 	}
 
 	public Date getCreationDate() {
+		if (creationDate == null) creationDate = new Date();
 		return creationDate;
 	}
 
