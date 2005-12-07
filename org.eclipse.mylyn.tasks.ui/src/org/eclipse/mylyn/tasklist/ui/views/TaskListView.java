@@ -43,18 +43,16 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.core.internal.dt.MylarWebRef;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
-import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -62,10 +60,10 @@ import org.eclipse.mylar.tasklist.internal.TaskCompleteFilter;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ui.ITaskFilter;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.TaskListPatternFilter;
-import org.eclipse.mylar.tasklist.ui.actions.ManageEditorsAction;
 import org.eclipse.mylar.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
@@ -74,6 +72,7 @@ import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoUpAction;
+import org.eclipse.mylar.tasklist.ui.actions.ManageEditorsAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
@@ -86,11 +85,8 @@ import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.WorkOfflineAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -131,7 +127,12 @@ public class TaskListView extends ViewPart {
  
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
-	public static final String[] PRIORITY_LEVELS = { "P1", "P2", "P3", "P4", "P5" };
+	public static final String[] PRIORITY_LEVELS = { 
+		MylarTaskListPlugin.PriorityLevel.P1.toString(), 
+		MylarTaskListPlugin.PriorityLevel.P2.toString(),
+		MylarTaskListPlugin.PriorityLevel.P3.toString(),
+		MylarTaskListPlugin.PriorityLevel.P4.toString(),
+		MylarTaskListPlugin.PriorityLevel.P5.toString() };
 	
 	private static final String SEPARATOR_ID_REPORTS = "reports";
 
@@ -242,7 +243,7 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void tasklistModified() {
-			// TODO: refactor refresh code to here
+			if (!getViewer().getControl().isDisposed()) getViewer().refresh();
 		}
 		
 	};
@@ -848,96 +849,9 @@ public class TaskListView extends ViewPart {
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), PluginTransfer.getInstance() };
 
-		getViewer().addDragSupport(DND.DROP_MOVE, types, new DragSourceListener() {
+		getViewer().addDragSupport(DND.DROP_MOVE, types, new TaskListDragSourceListener(this));
 
-			public void dragStart(DragSourceEvent event) {
-				if (((StructuredSelection) getViewer().getSelection()).isEmpty()) {
-					event.doit = false;
-				}
-			}
-
-			public void dragSetData(DragSourceEvent event) {
-				StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
-				if (selection.getFirstElement() instanceof ITaskListElement) {
-					ITaskListElement element = (ITaskListElement) selection.getFirstElement();
-
-					if (!selection.isEmpty() && element.isDragAndDropEnabled()) {
-						event.data = "" + element.getHandleIdentifier();
-					} else {
-						event.data = "null";
-					}
-				}
-			}
-
-			public void dragFinished(DragSourceEvent event) {
-				// don't care if the drag is done
-			}
-		});
-
-		getViewer().addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(getViewer()) {
-			{
-				setFeedbackEnabled(false);
-			}
-
-			@Override
-			public boolean performDrop(Object data) {
-				Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
-				if (selectedObject instanceof ITask) {
-					ITask source = (ITask) selectedObject;
-					if (source.getCategory() != null) {
-						source.getCategory().removeTask(source);
-					} else if (source.getParent() != null) {
-						source.getParent().removeSubTask(source);
-					} else {
-						MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks().remove(source);
-					}
-
-					if (getCurrentTarget() instanceof TaskCategory) {
-						((TaskCategory) getCurrentTarget()).addTask(source);
-						source.setCategory((TaskCategory) getCurrentTarget()); 
-					} else if (getCurrentTarget() instanceof ITask) {
-						ITask target = (ITask) getCurrentTarget();
-						source.setCategory(null);
-						target.addSubTask(source);
-						source.setParent(target);
-					}
-					//                    getViewer().setSelection(null);
-					getViewer().refresh();
-					if (MylarTaskListPlugin.getDefault() != null) {
-						MylarTaskListPlugin.getDefault().saveTaskListAndContexts();
-					}
-					return true;
-				} else if (selectedObject instanceof ITaskListElement
-						&& MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null
-						&& getCurrentTarget() instanceof TaskCategory) {
-
-					MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).dropItem((ITaskListElement) selectedObject,
-							(TaskCategory) getCurrentTarget());
-					//					getViewer().setSelection(null);
-					getViewer().refresh();
-					if (MylarTaskListPlugin.getDefault() != null) {
-						MylarTaskListPlugin.getDefault().saveTaskListAndContexts();
-					}
-					return true;
-				}
-				return false;
-			}
-
-			@Override
-			public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
-				Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
-				if (selectedObject instanceof ITaskListElement && ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
-					if (getCurrentTarget() != null && getCurrentTarget() instanceof TaskCategory) {
-						return true;
-					} else {
-						return false;
-					}
-				}
-
-				return TextTransfer.getInstance().isSupportedType(transferType);
-			}
-
-		});
+		getViewer().addDropSupport(DND.DROP_MOVE, types, new TaskListDropAdapter(getViewer()));
 	}
 
 	void expandToActiveTasks() {
@@ -1074,7 +988,7 @@ public class TaskListView extends ViewPart {
 	private void addAction(Action action, IMenuManager manager, ITaskListElement element) {
 		manager.add(action);
 		if (element != null) {
-			ITaskHandler handler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(element);
+			ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(element);
 			if (handler != null) {
 				action.setEnabled(handler.enableAction(action, element));
 			} else {
@@ -1220,7 +1134,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException {
-		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(task);
+		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(task);
 		if (taskHandler != null) {
 			taskHandler.taskClosed(task, page);
 		} else if (task instanceof Task) {

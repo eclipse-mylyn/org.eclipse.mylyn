@@ -287,18 +287,18 @@ public class TaskListWriter {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
 									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault()
-											.getTaskHandlerForElement(newTask);
+											.getHandlerForElement(newTask);
 									if (taskHandler != null) {
 										newTask = taskHandler.taskAdded(newTask);
 									}
-									tlist.internalAddRootTask(newTask);
+									tlist.addRootTask(newTask);
 
 									wasRead = true;
 									break;
 								}
 							}
 							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
-								tlist.internalAddRootTask(delagatingExternalizer.readTask(child, tlist, null, null));
+								tlist.addRootTask(delagatingExternalizer.readTask(child, tlist, null, null));
 							} else {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
@@ -497,18 +497,18 @@ public class TaskListWriter {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
 									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault()
-											.getTaskHandlerForElement(newTask);
+											.getHandlerForElement(newTask);
 									if (taskHandler != null) {
 										newTask = taskHandler.taskAdded(newTask);
 									}
-									tlist.internalAddRootTask(newTask);
+									tlist.addRootTask(newTask);
 
 									wasRead = true;
 									break;
 								}
 							}
 							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
-								tlist.internalAddRootTask(delagatingExternalizer.readTask(child, tlist, null, null));
+								tlist.addRootTask(delagatingExternalizer.readTask(child, tlist, null, null));
 							} else {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);

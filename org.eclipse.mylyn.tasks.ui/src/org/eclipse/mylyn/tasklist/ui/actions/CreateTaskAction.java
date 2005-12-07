@@ -55,24 +55,28 @@ public class CreateTaskAction extends Action {
 			Object selectedObject = ((IStructuredSelection)view.getViewer().getSelection()).getFirstElement();
 			
 			if (selectedObject instanceof TaskCategory) {
-				newTask.setCategory((TaskCategory) selectedObject);
-				((TaskCategory) selectedObject).addTask(newTask);
+				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)selectedObject, newTask);
+//				newTask.setCategory((TaskCategory) selectedObject);
+//				((TaskCategory) selectedObject).addTask(newTask);
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask)selectedObject;
 				if (task.getCategory() != null) {
-					newTask.setCategory(task.getCategory());
-					((TaskCategory)task.getCategory()).addTask(newTask);
+					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)task.getCategory(), newTask);
+//					newTask.setCategory(task.getCategory());
+//					((TaskCategory)task.getCategory()).addTask(newTask);
 				} else if (view.getDrilledIntoCategory() != null) {
-					newTask.setCategory(view.getDrilledIntoCategory());
-					((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
+					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)view.getDrilledIntoCategory(), newTask);
+//					newTask.setCategory(view.getDrilledIntoCategory());
+//					((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
 			 	} else {
-		            MylarTaskListPlugin.getTaskListManager().addRootTask(newTask);                
+		            MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);                
 		        }
 			} else if (view.getDrilledIntoCategory() != null) {
-				newTask.setCategory(view.getDrilledIntoCategory());
-				((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
+				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)view.getDrilledIntoCategory(), newTask);
+//				newTask.setCategory(view.getDrilledIntoCategory());
+//				((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
 		 	} else {
-	            MylarTaskListPlugin.getTaskListManager().addRootTask(newTask);                
+	            MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);                
 	        }
 			newTask.openTaskInEditor(false);
 			view.getViewer().refresh();

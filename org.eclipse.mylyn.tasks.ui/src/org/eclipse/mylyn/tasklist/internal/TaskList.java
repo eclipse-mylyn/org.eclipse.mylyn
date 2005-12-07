@@ -21,7 +21,7 @@ import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Mik Kersten
@@ -42,10 +42,10 @@ public class TaskList implements Serializable {
 		rootTasks.add(task);
 	}
 
-	void internalAddRootTask(ITask task) {
-		rootTasks.add(task);
+	void removeRootTask(ITask task) {
+		rootTasks.remove(task);
 	}
-
+	
 	void addCategory(ITaskCategory cat) {
 		categories.add(cat);
 	}

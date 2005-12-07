@@ -33,8 +33,8 @@ import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Color;
@@ -189,9 +189,9 @@ public class BugzillaQueryCategory implements IQuery {
 	}
 
 	public String getPriority() {
-		String highestPriority = "P5";
+		String highestPriority = MylarTaskListPlugin.PriorityLevel.P5.toString();
 		if (hits.isEmpty()) {
-			return "P1";
+			return MylarTaskListPlugin.PriorityLevel.P1.toString();
 		}
 		for (IQueryHit hit : hits) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {

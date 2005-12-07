@@ -78,7 +78,7 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 	    		"<bugzilla info>", true, true);				
 	    Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
     	
-	    ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(newTask);
+	    ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
 	    if(taskHandler != null){
 	    	ITask addedTask = taskHandler.taskAdded(newTask);
 	    	if(addedTask instanceof BugzillaTask){
@@ -93,10 +93,11 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
     	} else {
     		((BugzillaTask)newTask).scheduleDownloadReport();
     	}
-	    if (selectedObject instanceof TaskCategory){
-	        ((TaskCategory)selectedObject).addTask(newTask);
+	    if (selectedObject instanceof TaskCategory) {
+	    	MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory)selectedObject), newTask);
+//	        ((TaskCategory)selectedObject).addTask(newTask);
 	    } else { 
-	        MylarTaskListPlugin.getTaskListManager().addRootTask(newTask);
+	        MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 	    }
 	    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 //	    

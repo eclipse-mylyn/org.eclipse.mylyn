@@ -50,37 +50,22 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		this.description = description;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskCategory#getDescription(boolean)
-	 */
 	public String getDescription(boolean label) {
 		return description;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskCategory#getHandle()
-	 */
 	public String getHandleIdentifier() {
 		return handle;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskCategory#setDescription(java.lang.String)
-	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskCategory#setHandle(java.lang.String)
-	 */
 	public void setHandle(String handle) {
 		this.handle = handle;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.mylar.tasklist.ITaskCategory#getStatusIcon()
-	 */
 	public Image getStatusIcon() {
 		return null;
 	}
@@ -94,9 +79,9 @@ public class TaskCategory implements ITaskCategory, Serializable {
 	}
 
 	public String getPriority() {
-		String highestPriority = "P5";
+		String highestPriority = MylarTaskListPlugin.PriorityLevel.P5.toString();
 		if (tasks.isEmpty()) {
-			return "P1";
+			return MylarTaskListPlugin.PriorityLevel.P1.toString();
 		}
 		for (ITask task : tasks) {
 			if (highestPriority.compareTo(task.getPriority()) > 0) {
@@ -106,12 +91,8 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		return highestPriority;
 	}
 
-	public void addTask(ITask task) {
+	void addTask(ITask task) {
 		tasks.add(task);
-//		task.setCategory(this); 
-		if (MylarTaskListPlugin.getDefault() != null) {
-			MylarTaskListPlugin.getDefault().saveTaskListAndContexts();
-		}
 	}
 
 	/**
@@ -123,9 +104,6 @@ public class TaskCategory implements ITaskCategory, Serializable {
 
 	public void removeTask(ITask task) {
 		tasks.remove(task);
-		if (MylarTaskListPlugin.getDefault() != null) {
-			MylarTaskListPlugin.getDefault().saveTaskListAndContexts();
-		}
 	}
 
 	public List<ITask> getChildren() {

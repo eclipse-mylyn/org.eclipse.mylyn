@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.tasklist.ui;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -19,13 +19,12 @@ import org.eclipse.swt.graphics.Image;
  */
 public interface ITaskListElement {
 	
-    /**
-     * TODO: refactor to label decorator
-     */
 	public abstract Image getIcon();
+
+    public abstract Image getStatusIcon();
+ 
+	public abstract boolean isDragAndDropEnabled();
 	
-	public abstract Image getStatusIcon();
-    
     public abstract String getPriority();
     
     public abstract String getDescription(boolean truncate);
@@ -39,8 +38,6 @@ public interface ITaskListElement {
     public abstract boolean isLocal();
     
     public abstract boolean isActivatable();
-
-	public abstract boolean isDragAndDropEnabled();
 
 	public abstract Color getForeground();
 

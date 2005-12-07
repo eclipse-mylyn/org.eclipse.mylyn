@@ -12,12 +12,18 @@ package org.eclipse.mylar.tasklist;
 
 import java.util.List;
 
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
+/**
+ * Manipulate categories via TaskListManager
+ * 
+ * @author Mik Kersten
+ */
 public interface ITaskCategory extends ITaskListElement {
 
 	public List<ITask> getChildren();
 	
-	public void removeTask(ITask task);
+//	public void removeTask(ITask task);
 	
 	public boolean isArchive();
 

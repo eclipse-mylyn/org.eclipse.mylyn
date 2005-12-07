@@ -12,16 +12,16 @@ package org.eclipse.mylar.tasklist.internal;
 
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.ITaskFilter;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Ken Sueda
  */
 public class TaskPriorityFilter implements ITaskFilter {
 
-	private String priorityLevel = "P5";
+	private String priorityLevel = MylarTaskListPlugin.PriorityLevel.P5.toString();
 
 	public TaskPriorityFilter() {
 		displayPrioritiesAbove(MylarTaskListPlugin.getPriorityLevel());
