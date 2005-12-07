@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.eclipse.mylar.core.IDegreeOfInterest;
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.dt.MylarInterest;
+import org.eclipse.mylar.core.internal.dt.MylarInterest;
 
 
 /**

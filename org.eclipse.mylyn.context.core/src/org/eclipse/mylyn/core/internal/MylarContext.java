@@ -23,7 +23,7 @@ import java.util.Map;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.dt.MylarInterest;
+import org.eclipse.mylar.core.internal.dt.MylarInterest;
 
 /**
  * @author Mik Kersten
