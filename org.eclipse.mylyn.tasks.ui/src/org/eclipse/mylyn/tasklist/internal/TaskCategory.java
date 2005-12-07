@@ -96,7 +96,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 	}
 
 	/**
-	 * So it can be used by other externalizers
+	 * HACK: public so it can be used by other externalizers
 	 */
 	public void internalAddTask(ITask task) {
 		tasks.add(task);
@@ -203,5 +203,9 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		} catch (PartInitException ex) {
 			MylarPlugin.log(ex, "open failed");
 		}
+	}
+
+	public String toString() {
+		return getDescription(false);
 	}
 }

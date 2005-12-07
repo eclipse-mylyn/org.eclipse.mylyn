@@ -16,7 +16,6 @@ package org.eclipse.mylar.tasklist;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
@@ -87,6 +86,9 @@ public interface ITask extends ITaskListElement {
     
     public abstract void setCategory(ITaskCategory cat);
     
+    /**
+     * @return null if root task
+     */
     public abstract ITaskCategory getCategory();
     
     public abstract long getElapsedMillis();
@@ -107,10 +109,10 @@ public interface ITask extends ITaskListElement {
 	
 	public abstract void setReminded(boolean reminded);
 
-	abstract void internalSetCategory(TaskCategory category);
-
 	public abstract boolean participatesInTaskHandles();
 }
+
+//abstract void internalSetCategory(TaskCategory category);
 
 //public abstract void setEndDate(String date);
 //public abstract void setCreationDate(String date);

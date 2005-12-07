@@ -358,7 +358,7 @@ public class TaskListWriter {
 			// and return a new DOM Document object. Also throws IOException
 			document = builder.parse(inputFile);
 		} catch (SAXException se) {
-			File backup = new File(MylarTaskListPlugin.getDefault().getBackupFilePath());
+			File backup = new File(MylarTaskListPlugin.getDefault().getTaskListSaveManager().getBackupFilePath());
 			String message = "Restoring the tasklist failed.  Would you like to attempt to restore from the backup?\n\nTasklist XML File location: "
 					+ inputFile.getAbsolutePath()
 					+ "\n\nBackup tasklist XML file location: "
@@ -366,7 +366,7 @@ public class TaskListWriter {
 			if (backup.exists() && MessageDialog.openQuestion(null, "Restore From Backup", message)) {
 				try {
 					document = builder.parse(backup);
-					MylarTaskListPlugin.getDefault().reverseBackup();
+					MylarTaskListPlugin.getDefault().getTaskListSaveManager().reverseBackup();
 				} catch (SAXException s) {
 					inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
 					MylarPlugin.log(s, "Failed to recover from backup restore");

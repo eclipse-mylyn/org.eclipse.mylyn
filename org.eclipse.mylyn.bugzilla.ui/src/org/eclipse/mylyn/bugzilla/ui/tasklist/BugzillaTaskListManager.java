@@ -36,7 +36,7 @@ public class BugzillaTaskListManager implements IOfflineBugListener {
     public void addToBugzillaTaskRegistry(BugzillaTask task){
     	if(bugzillaTaskRegistry.get(task.getHandleIdentifier()) == null){
     		bugzillaTaskRegistry.put(task.getHandleIdentifier(), task);
-    		if(cat != null){
+    		if(cat != null) {
         		cat.internalAddTask(task);
         	}
     	}

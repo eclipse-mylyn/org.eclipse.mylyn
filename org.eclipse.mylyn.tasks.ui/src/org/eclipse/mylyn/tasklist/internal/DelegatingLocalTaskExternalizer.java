@@ -214,7 +214,9 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 			try {
 				for (ITaskListExternalizer externalizer : delegateExternalizers) {
 					if (externalizer.canReadTask(child)) {
-						category.internalAddTask(externalizer.readTask(child, tlist, category, null));
+						ITask task = externalizer.readTask(child, tlist, category, null);
+						category.addTask(task);
+						if (!category.isArchive()) task.setCategory(category);
 						read = true;
 					}
 				}
@@ -344,9 +346,9 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 			ii++;
 		}
 		if (category != null) {
-			task.internalSetCategory((TaskCategory) category);
+			task.setCategory((TaskCategory) category);
 		} else {
-			task.internalSetCategory(null);
+			task.setCategory(null);
 		}
 		task.setParent(parent);
 		NodeList list = element.getChildNodes();

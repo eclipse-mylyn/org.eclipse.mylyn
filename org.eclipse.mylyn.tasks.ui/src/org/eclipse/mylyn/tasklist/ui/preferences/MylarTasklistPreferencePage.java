@@ -116,9 +116,9 @@ public class MylarTasklistPreferencePage extends PreferencePage implements IWork
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
 		if (!taskDirectory.equals(MylarPlugin.getDefault().getMylarDataDirectory())) {
 			//Order matters:
-			MylarTaskListPlugin.getDefault().saveTaskListAndContexts();
+			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 			if (copyExistingDataCheckbox.getSelection()) {
-				MylarTaskListPlugin.getDefault().copyDataDirContentsTo(taskDirectory);
+				MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
 			}
 			getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
 			MylarTaskListPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getMylarDataDirectory());
