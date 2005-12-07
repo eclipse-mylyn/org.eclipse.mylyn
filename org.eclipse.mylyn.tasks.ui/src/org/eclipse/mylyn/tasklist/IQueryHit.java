@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist;
 
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+
 
 public interface IQueryHit extends ITaskListElement {
 

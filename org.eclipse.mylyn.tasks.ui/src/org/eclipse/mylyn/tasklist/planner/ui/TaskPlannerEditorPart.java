@@ -33,15 +33,16 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.mylar.core.internal.dt.MylarWebRef;
 import org.eclipse.mylar.core.util.DateUtil;
-import org.eclipse.mylar.dt.MylarWebRef;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.ComboSelectionDialog;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -503,7 +504,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 
 		planTableViewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(planTableViewer) {
-			{
+ 			{
 				setFeedbackEnabled(false);
 			}
 
@@ -517,13 +518,20 @@ public class TaskPlannerEditorPart extends EditorPart {
 					planTableViewer.refresh();
 					return true;
 				} else if (selectedObject instanceof ITaskListElement) {
-					if (MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
-						ITask t = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(
-								(ITaskListElement) selectedObject).dropItemToPlan((ITaskListElement) selectedObject);
-						planContentProvider.addTask(t);
-						updateEstimatedHours();
-						planTableViewer.refresh();
-						return true;
+					if (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
+						ITask task = null;
+						if (selectedObject instanceof ITask) {
+							task = (ITask)selectedObject;
+						} else if (selectedObject instanceof IQueryHit){
+							task = MylarTaskListPlugin.getDefault().getHandlerForElement(
+								(ITaskListElement) selectedObject).getCorrespondingTask((IQueryHit) selectedObject);
+						}
+						if (task != null) {
+							planContentProvider.addTask(task);
+							updateEstimatedHours();
+							planTableViewer.refresh();
+							return true;
+						}
 					}
 					return false;
 				}
@@ -618,8 +626,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 					TaskCategory taskCategory = (TaskCategory)destinationCategory;
 					for (ITask task : planContentProvider.getTasks()) {
 						if (!taskCategory.getChildren().contains(task)) {
-							taskCategory.addTask(task);
-							task.setCategory(taskCategory);
+							MylarTaskListPlugin.getTaskListManager().moveToCategory(taskCategory, task);
+//							taskCategory.addTask(task);
+//							task.setCategory(taskCategory);
 						}
 					}
 					if (TaskListView.getDefault() != null) TaskListView.getDefault().getViewer().refresh();

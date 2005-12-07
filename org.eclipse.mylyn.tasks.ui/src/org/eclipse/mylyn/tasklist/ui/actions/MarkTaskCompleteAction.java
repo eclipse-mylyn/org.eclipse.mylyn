@@ -40,8 +40,8 @@ public class MarkTaskCompleteAction extends Action {
 //        MylarPlugin.getDefault().actionObserved(this);
 	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
 	    if(selectedObject instanceof ITask &&
-	    		MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITask)selectedObject) != null) {
-	    	 MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITask)selectedObject).taskCompleted((ITask)selectedObject);
+	    		MylarTaskListPlugin.getDefault().getHandlerForElement((ITask)selectedObject) != null) {
+	    	 MylarTaskListPlugin.getDefault().getHandlerForElement((ITask)selectedObject).taskCompleted((ITask)selectedObject);
 	 	}else if (selectedObject instanceof Task){ 
 	    	((Task)selectedObject).setCompleted(true);
 	    	

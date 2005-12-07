@@ -16,7 +16,7 @@ import java.text.DateFormat;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.swt.graphics.Image;
 
 /**

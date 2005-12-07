@@ -20,10 +20,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.ui.ITaskFilter;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.swt.widgets.Text;
 
 /**

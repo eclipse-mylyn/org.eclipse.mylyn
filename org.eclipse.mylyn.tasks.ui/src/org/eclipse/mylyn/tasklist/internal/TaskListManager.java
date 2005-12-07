@@ -56,10 +56,6 @@ public class TaskListManager {
 			INACTIVITY_TIME_MILLIS = 1 * 60 * 1000;
 		}
 	}
-	
-//	public TaskListManager(File file) {
-//		this.taskListFile = file;
-//	}
 
 	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) { 
 		this.taskListFile = file;
@@ -116,8 +112,24 @@ public class TaskListManager {
 		this.taskList = taskList;
 	}
 
-	public void addRootTask(ITask task) {
-		taskList.addRootTask(task);
+	public void moveToRoot(ITask task) {
+		if (task.getCategory() instanceof TaskCategory) {
+			((TaskCategory)task.getCategory()).removeTask(task);
+		}
+		task.setCategory(null);
+		if (!taskList.getRootTasks().contains(task)) taskList.addRootTask(task);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+	}
+
+	public void moveToCategory(TaskCategory category, ITask task) {
+		taskList.removeRootTask(task);
+		if (task.getCategory() instanceof TaskCategory) {
+			((TaskCategory)task.getCategory()).removeTask(task);
+		}
+		if (!category.getChildren().contains(task)) {
+			category.addTask(task);
+		}
+		task.setCategory(category);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
@@ -125,7 +137,13 @@ public class TaskListManager {
 		taskList.addCategory(cat);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
-
+	
+	public void removeFromCategoryAndRoot(TaskCategory category, ITask task) {
+		category.removeTask(task);
+		taskList.addRootTask(task);
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+	}
+	
 	public void addQuery(IQuery cat) {
 		taskList.addQuery(cat);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();

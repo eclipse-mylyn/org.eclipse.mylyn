@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Ken Sueda

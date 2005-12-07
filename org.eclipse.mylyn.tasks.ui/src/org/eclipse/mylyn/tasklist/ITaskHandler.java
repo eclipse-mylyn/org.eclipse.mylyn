@@ -11,7 +11,7 @@
 package org.eclipse.mylar.tasklist;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -27,9 +27,6 @@ public interface ITaskHandler {
 
 	public abstract boolean acceptsItem(ITaskListElement element);
 
-	public abstract void dropItem(ITaskListElement element,
-			TaskCategory category);
-
 	public abstract ITask taskAdded(ITask newTask);
 
 	/**
@@ -41,5 +38,5 @@ public interface ITaskHandler {
 	
 	public abstract void itemRemoved(ITaskListElement element, ITaskCategory category);
 	
-	public abstract ITask dropItemToPlan(ITaskListElement element);
+	public abstract ITask getCorrespondingTask(IQueryHit element);
 }

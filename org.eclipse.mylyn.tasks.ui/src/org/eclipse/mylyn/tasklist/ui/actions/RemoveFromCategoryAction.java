@@ -18,8 +18,8 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
@@ -46,11 +46,11 @@ public class RemoveFromCategoryAction extends Action {
 			Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();		
 			
 			if (selectedObject instanceof ITaskListElement &&
-				MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement)selectedObject) != null) {
+				MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement)selectedObject) != null) {
 				
 				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
 				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
-				ITaskHandler handler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(selectedElement);
+				ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(selectedElement);
 				if (item.getParentItem() != null) {
 					handler.itemRemoved(selectedElement, (ITaskCategory)item.getParentItem().getData());	
 				} 

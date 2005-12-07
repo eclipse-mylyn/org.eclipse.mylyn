@@ -230,7 +230,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			}
 		}
 		
-		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(task);
+		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(task);
 	    if(taskHandler != null){
     		ITask addedTask = taskHandler.taskAdded(task);
     		if(addedTask instanceof BugzillaTask) task = (BugzillaTask)addedTask;

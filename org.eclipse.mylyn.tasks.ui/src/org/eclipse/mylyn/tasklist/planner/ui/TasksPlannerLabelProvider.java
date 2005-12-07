@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TasklistLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;

@@ -16,9 +16,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskListElement;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
@@ -44,8 +44,8 @@ public class DeleteAction extends Action {
 	public void run() {
 		//		MylarPlugin.getDefault().actionObserved(this);
 		Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();
-		if (selectedObject instanceof ITaskListElement && MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject) != null) {
-			boolean deleted = MylarTaskListPlugin.getDefault().getTaskHandlerForElement((ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
+		if (selectedObject instanceof ITaskListElement && MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
+			boolean deleted = MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
 			if (deleted) {
 				new RemoveFromCategoryAction(view).run(); // TODO: refactor category removal?
 			}

@@ -66,11 +66,11 @@ public class TaskHistoryTest extends TestCase {
 		task4 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
 		task5 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 		
-		manager.addRootTask(task1);
-		manager.addRootTask(task2);
-		manager.addRootTask(task3);
-		manager.addRootTask(task4);
-		manager.addRootTask(task5);
+		manager.moveToRoot(task1);
+		manager.moveToRoot(task2);
+		manager.moveToRoot(task3);
+		manager.moveToRoot(task4);
+		manager.moveToRoot(task5);
 		
 	}
 		

@@ -12,6 +12,8 @@ package org.eclipse.mylar.tasklist;
 
 import java.util.List;
 
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+
 public interface IQuery extends ITaskListElement{
 
 	public String getQueryString();

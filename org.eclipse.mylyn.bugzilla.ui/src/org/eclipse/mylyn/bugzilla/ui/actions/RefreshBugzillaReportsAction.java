@@ -73,7 +73,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 			if(task instanceof BugzillaTask){
 				ITask found = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(), false);
 				if(found == null){
-					MylarTaskListPlugin.getTaskListManager().addRootTask(task);
+					MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
 							BugzillaTask.getBugId(task.getHandleIdentifier()) + 
 							" has been moved to the root since it is activated and has disappeared from a query.");

@@ -37,6 +37,7 @@ import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
 import org.eclipse.mylar.tasklist.ui.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.events.ShellEvent;
@@ -536,7 +537,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup, I
 		return taskHandlers;
 	}
 
-	public ITaskHandler getTaskHandlerForElement(ITaskListElement element) {
+	public ITaskHandler getHandlerForElement(ITaskListElement element) {
 		for (ITaskHandler taskHandler : taskHandlers) {
 			if (taskHandler.acceptsItem(element))
 				return taskHandler;

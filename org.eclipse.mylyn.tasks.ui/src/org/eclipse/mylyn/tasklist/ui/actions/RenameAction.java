@@ -12,7 +12,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.tasklist.ITaskListElement;
+import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 
