@@ -51,7 +51,7 @@ public class TaskTimerTest extends TestCase {
 		MylarPlugin.getContextManager().setActivityTimeoutSeconds(1);
 
 		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
-		manager.addRootTask(task1);
+		manager.moveToRoot(task1);
 
 	}
 
