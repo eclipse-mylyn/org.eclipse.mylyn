@@ -240,11 +240,19 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void tasklistRead() {
-			if (!getViewer().getControl().isDisposed()) getViewer().refresh();
+			refresh();
 		}
 
 		public void tasklistModified() {
 			if (!getViewer().getControl().isDisposed()) getViewer().refresh();
+		}
+		
+		private void refresh() {
+			if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
+				getViewer().getControl().setRedraw(false);
+				getViewer().refresh();
+				getViewer().getControl().setRedraw(true);
+			}
 		}
 		
 	};
