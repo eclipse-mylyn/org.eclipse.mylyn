@@ -107,6 +107,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -125,6 +126,8 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class TaskListView extends ViewPart {
  
+	private static final String LABEL_NO_TASKS = "no task active";
+
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
 	public static final String[] PRIORITY_LEVELS = { 
@@ -220,18 +223,17 @@ public class TaskListView extends ViewPart {
 	private final ITaskActivityListener ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			// ignore
-			
+			updateDescription(task);
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
-			// ignore
-			
+			if (tasks.size() > 0) {
+				updateDescription(tasks.get(0));
+			}
 		}
 
 		public void taskDeactivated(ITask task) {
-			// ignore
-			
+			updateDescription(null);
 		}
 
 		public void taskChanged(ITask task) {
@@ -390,6 +392,35 @@ public class TaskListView extends ViewPart {
 	public TaskListView() {
 		INSTANCE = this;
 		MylarTaskListPlugin.getTaskListManager().addListener(ACTIVITY_LISTENER); // TODO: remove on close?
+	}
+
+	/**
+	 * TODO: should be updated when view mode switches to fast and vice-versa
+	 */
+	private void updateDescription(ITask task) {
+		if (getSite() == null || getSite().getPage() == null) return;
+		
+		IViewReference reference = getSite().getPage().findViewReference(ID);
+		boolean isFastView = false;
+		if (reference != null && reference.isFastView()) {
+			isFastView = true;
+		}
+		
+		if (task != null) {
+			setTitleToolTip(PART_NAME + " (" + task.getDescription(true) + ")");
+			if (isFastView) {
+				setContentDescription(task.getDescription(true));
+			} else {
+				setContentDescription("");
+			}
+		} else {
+			setTitleToolTip(PART_NAME);
+			if (isFastView) {
+				setContentDescription(LABEL_NO_TASKS);
+			} else {
+				setContentDescription("");
+			}
+		} 
 	}
 	
 	class TaskListCellModifier implements ICellModifier {
@@ -843,6 +874,11 @@ public class TaskListView extends ViewPart {
 		initDragAndDrop(parent);
 		expandToActiveTasks();
 		restoreState();
+		
+		List<ITask> activeTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks();
+		if (activeTasks.size() > 0) {
+			updateDescription(activeTasks.get(0));
+		}
 	}
 
 	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
@@ -1352,4 +1388,10 @@ public class TaskListView extends ViewPart {
 	public ITaskCategory getDrilledIntoCategory() {
 		return drilledIntoCategory;
 	}
+
+	
+//	@Override
+//	public String getTitleToolTip() {
+//		return "xxx";
+//	}
 }
