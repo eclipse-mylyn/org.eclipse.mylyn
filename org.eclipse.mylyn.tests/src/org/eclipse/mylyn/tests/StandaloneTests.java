@@ -25,6 +25,7 @@ public class StandaloneTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests not requiring Eclipse Workbench");
+		
 		//$JUnit-BEGIN$
 		suite.addTestSuite(DegreeOfInterestTest.class);
 		suite.addTestSuite(ContextTest.class);
