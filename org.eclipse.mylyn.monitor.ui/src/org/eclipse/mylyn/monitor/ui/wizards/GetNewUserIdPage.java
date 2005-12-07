@@ -12,7 +12,6 @@ package org.eclipse.mylar.monitor.ui.wizards;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -121,8 +120,8 @@ public class GetNewUserIdPage extends WizardPage {
             gd.heightHint = 200;
             gd.widthHint = 600;
             browser.setLayoutData(gd);
-        	Path path = new Path(MylarMonitorPlugin.getDefault().getStudyParameters().getFormsConsent());
-	        URL url = Platform.find(MylarMonitorPlugin.getDefault().getBundle(), path);
+            
+        	URL url = Platform.getBundle(MylarMonitorPlugin.getDefault().getCustomizingPlugin()).getEntry(MylarMonitorPlugin.getDefault().getStudyParameters().getFormsConsent());
 	        try {
 	        	URL localURL = Platform.asLocalURL(url);
 	        	 browser.setUrl(localURL.toString());

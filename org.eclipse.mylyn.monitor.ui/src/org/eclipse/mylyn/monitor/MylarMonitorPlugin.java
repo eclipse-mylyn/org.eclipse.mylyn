@@ -562,6 +562,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 					studyParameters.setQuestionnairePage(page);
 				}
 			} catch(CoreException throwable) {
+				MylarPlugin.fail(throwable, "could not load questionnaire", false);
 				MylarMonitorPlugin.getDefault().setQuestionnaireEnabled(false);
 			}
 
@@ -573,13 +574,12 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 					MylarMonitorPlugin.getDefault().setBackgroundEnabled(true);
 				}
 			} catch(CoreException throwable) {
+				MylarPlugin.fail(throwable, "could not load background page", false);
 				MylarMonitorPlugin.getDefault().setBackgroundEnabled(false);
 			}
-	
+
 			studyParameters.setFormsConsent(
-					"../" + 
-					element.getDeclaringExtension().getNamespace() + "/" +
-					element.getAttribute(ELEMENT_UI_CONSENT_FORM));
+					"/" + element.getAttribute(ELEMENT_UI_CONSENT_FORM));
 			
 		}
 		
