@@ -60,7 +60,7 @@ public class TaskListStandaloneTest extends TestCase {
 		Date start = Calendar.getInstance().getTime();
 		Task task = new Task("1", "task 1", true);
 		
-		manager.addRootTask(task);
+		manager.moveToRoot(task);
 		assertDatesCloseEnough(task.getCreationDate(), start);
 		
 		task.setCompleted(true);

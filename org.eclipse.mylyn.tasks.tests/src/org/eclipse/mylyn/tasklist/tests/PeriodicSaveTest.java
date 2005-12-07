@@ -39,7 +39,7 @@ public class PeriodicSaveTest extends TestCase {
 		assertNotNull(manager);
 		// Create a task and context with an interaction event to be saved
 		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "Periodic Save Task", true);
-		manager.addRootTask(task1);
+		manager.moveToRoot(task1);
 		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(task1.getHandleIdentifier(), task1.getContextPath());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
@@ -92,7 +92,8 @@ public class PeriodicSaveTest extends TestCase {
 			assertTrue(elapsedTimeAfterSave > elapsedTimeBeforeSave);
 			
 			//Checks that only one save has occured
-			assertTrue((elapsedTimeAfterSave - elapsedTimeBeforeSave) < 1100);
+			assertTrue("time was: " + (elapsedTimeAfterSave - elapsedTimeBeforeSave), 
+					(elapsedTimeAfterSave - elapsedTimeBeforeSave) < 1100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

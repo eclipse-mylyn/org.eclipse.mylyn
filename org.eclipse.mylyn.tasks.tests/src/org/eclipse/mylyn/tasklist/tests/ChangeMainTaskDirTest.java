@@ -61,7 +61,6 @@ public class ChangeMainTaskDirTest extends TestCase{
 		
 		//Check for other the tasklist file in the new dir
 		File destTaskListFile =  new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);	
-		System.err.println(">>>> " + destTaskListFile);
 		assertTrue(destTaskListFile.exists());
 		
 		//Switch back to the main task directory
@@ -83,7 +82,7 @@ public class ChangeMainTaskDirTest extends TestCase{
 		
 		//Create the task and add it to the root of the task list
 		ITask newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), taskName, true);
-		manager.addRootTask(newTask);
+		manager.moveToRoot(newTask);
 		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(newTask.getHandleIdentifier(), newTask.getContextPath());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT,"structureKind","handle","originId");
 		mockContext.parseEvent(event);
