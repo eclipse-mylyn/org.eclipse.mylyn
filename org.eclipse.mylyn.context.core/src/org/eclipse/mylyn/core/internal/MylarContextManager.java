@@ -123,7 +123,7 @@ public class MylarContextManager {
     	public void start() {} 
 
     	public void stopTimer() {
-    		timer.killThread();
+    		timer.killTimer();
     		MylarPlugin.getDefault().removeInteractionListener(this);
     	}
 
@@ -131,7 +131,7 @@ public class MylarContextManager {
     	
     	/** Currently used for testing only */
     	public void setTimeoutSeconds(int timeoutSeconds) {
-    		timer.killThread();
+    		timer.killTimer();
     		
     		timer = new TimerThread(timeoutSeconds); 
     		timer.setTimeoutSeconds(timeoutSeconds);

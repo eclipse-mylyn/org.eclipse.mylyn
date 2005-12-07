@@ -69,7 +69,7 @@ public class TimerThread extends Thread implements Runnable {
         }
     }
         
-    public void killThread(){
+    public void killTimer(){
     	killed = true;
     }
         
@@ -83,8 +83,8 @@ public class TimerThread extends Thread implements Runnable {
 
 	public void setTimeoutMillis(int timeoutInMillis) {
 		this.timeout = timeoutInMillis;
-		if (sleepInterval > timeoutInMillis){
-			sleepInterval = timeoutInMillis;
+		if (sleepInterval > timeoutInMillis) {
+			sleepInterval = timeoutInMillis-1;
 		}
 	}
 	
