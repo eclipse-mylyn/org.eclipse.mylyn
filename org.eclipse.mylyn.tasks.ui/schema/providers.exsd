@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.mylar.tasks">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasks" id="taskListContributor" name="taskListContributor"/>
+         <meta.schema plugin="org.eclipse.mylar.tasks" id="taskListContributor" name="Task List Contributor"/>
       </appInfo>
       <documentation>
          no description
@@ -45,6 +45,11 @@
    </element>
 
    <element name="taskHandler">
+      <annotation>
+         <appInfo>
+            <meta.element labelAttribute="name"/>
+         </appInfo>
+      </annotation>
       <complexType>
          <attribute name="externalizerClass" type="string" use="required">
             <annotation>
@@ -52,7 +57,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.mylar.tasklist.ITaskListExternalizer"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -62,7 +67,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.mylar.tasklist.ITaskHandler"/>
                </appInfo>
             </annotation>
          </attribute>
