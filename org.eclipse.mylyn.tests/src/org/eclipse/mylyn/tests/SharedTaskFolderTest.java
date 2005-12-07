@@ -143,7 +143,7 @@ public class SharedTaskFolderTest extends TestCase{
 		
 		//Create the task and add it to the root of the task list
 		ITask newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), taskName, true);
-		manager.addRootTask(newTask);
+		manager.moveToRoot(newTask);
 		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(newTask.getHandleIdentifier(), newTask.getContextPath());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT,"structureKind","handle","originId");
 		mockContext.parseEvent(event);
