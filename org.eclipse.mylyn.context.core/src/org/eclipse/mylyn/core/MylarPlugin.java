@@ -103,9 +103,12 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
 
-	public static final String MYLAR_DIR = "org.eclipse.mylar.model.dir";
-
-	public static final String MYLAR_DIR_NAME = ".mylar";
+	/**
+	 * Do not set this preference directly, use setter on this class instead.
+	 */
+	public static final String PREF_DATA_DIR = "org.eclipse.mylar.model.dir";
+ 
+	private static final String NAME_DATA_DIR = ".mylar";
 
 	/**
 	 * True if the shared data directory has been temporarily set for reporting
@@ -118,8 +121,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 	 * (for reporting)
 	 */
 	private String sharedDataDirectory = null;
-
-//	public static boolean started = false;
 	
 	private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
@@ -128,9 +129,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 		}
 
 		public String getHandleIdentifier(Object object) {
-			// MylarPlugin.log(this, "null bridge for object: " +
-			// object.getClass());
-			// return null;
 			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
@@ -148,7 +146,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 		public String getName(Object object) {
 			MylarPlugin.log("null bridge for object: " + object.getClass(), this);
 			return "";
-			// throw new RuntimeException("null adapter");
 		}
 
 		/**
@@ -156,18 +153,13 @@ public class MylarPlugin extends AbstractUIPlugin {
 		 */
 		public boolean canBeLandmark(String handle) {
 			return false;
-			// return false;
-			// throw new RuntimeException("null bridge: " + element);
 		}
 
 		public boolean acceptsObject(Object object) {
-			// return false;
 			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
 		public boolean canFilter(Object element) {
-			// MylarPlugin.log(this, "null bridge for element: " +
-			// element.getClass());
 			return false;
 		}
 
@@ -199,8 +191,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		}
 
 		public void setParentBridge(IMylarStructureBridge bridge) {
-			// TODO Auto-generated method stub
-
+			// ignore
 		}
 
 		public List<String> getChildHandles(String handle) {
@@ -218,12 +209,12 @@ public class MylarPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		getPreferenceStore().setDefault(MYLAR_DIR, getDefaultStoreDirectory());
+		getPreferenceStore().setDefault(PREF_DATA_DIR, getDefaultDataDirectory());
 		if (contextManager == null) contextManager = new MylarContextManager();
 	}
 
-	private String getDefaultStoreDirectory() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + File.separator + MYLAR_DIR_NAME;
+	public String getDefaultDataDirectory() {
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + File.separator + NAME_DATA_DIR;
 	}
 
 	/**
@@ -252,12 +243,16 @@ public class MylarPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public String getMylarDataDirectory() {
+	public String getDataDirectory() {
 		if (sharedDataDirectoryInUse) {
 			return sharedDataDirectory;
 		} else {
-			return getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
+			return getPreferenceStore().getString(MylarPlugin.PREF_DATA_DIR);
 		}
+	}
+	
+	public void setDataDirectory(String newPath) {
+		getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR, newPath);
 	}
 
 	/**
@@ -309,11 +304,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 
 	public static MylarContextManager getContextManager() {
-		// if (INSTANCE == null) {
-		// Thread.dumpStack();
-		// }
-		// if (contextManager == null) contextManager = new
-		// MylarContextManager();
 		return contextManager;
 	}
 
@@ -384,9 +374,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 		if (message == null)
 			message = "no message";
 		message += "\n";
-		// message += printStrackTrace(throwable);
-		// final String messageToUser = message + "\n" +
-		// printStrackTrace(throwable);
 
 		final Status status = new Status(Status.ERROR, MylarPlugin.IDENTIFIER, IStatus.OK, message, throwable);
 		log(status);

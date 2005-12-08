@@ -139,7 +139,7 @@ public class MylarContextManager {
     }
     
     public MylarContextManager() {
-        File storeDir = new File(MylarPlugin.getDefault().getMylarDataDirectory());
+        File storeDir = new File(MylarPlugin.getDefault().getDataDirectory());
         storeDir.mkdirs();
         
         activityHistory = externalizer.readContextFromXML(getFileForContext(CONTEXT_HISTORY_FILE_NAME));
@@ -530,7 +530,7 @@ public class MylarContextManager {
     }
     
     public File getFileForContext(String path) {
-        return new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + path + FILE_EXTENSION);
+        return new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + path + FILE_EXTENSION);
     }
     
     public IMylarContext getActiveContext() {
