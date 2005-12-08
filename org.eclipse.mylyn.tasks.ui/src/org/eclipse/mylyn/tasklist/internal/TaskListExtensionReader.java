@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
@@ -98,11 +98,11 @@ public class TaskListExtensionReader {
 			if (editor instanceof IContextEditorFactory) {
 				MylarTaskListPlugin.getDefault().addContextEditor((IContextEditorFactory) editor);
 			} else {
-				MylarPlugin.log("Could not load editor: " + editor.getClass().getCanonicalName() + " must implement "
+				ErrorLogger.log("Could not load editor: " + editor.getClass().getCanonicalName() + " must implement "
 						+ IContextEditorFactory.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
-			MylarPlugin.log(e, "Could not load tasklist listener extension");
+			ErrorLogger.log(e, "Could not load tasklist listener extension");
 		}
 	}
 
@@ -112,11 +112,11 @@ public class TaskListExtensionReader {
 			if (taskListener instanceof ITaskActivityListener) {
 				MylarTaskListPlugin.getTaskListManager().addListener((ITaskActivityListener) taskListener);
 			} else {
-				MylarPlugin.log("Could not load tasklist listener: " + taskListener.getClass().getCanonicalName()
+				ErrorLogger.log("Could not load tasklist listener: " + taskListener.getClass().getCanonicalName()
 						+ " must implement " + ITaskActivityListener.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
-			MylarPlugin.log(e, "Could not load tasklist listener extension");
+			ErrorLogger.log(e, "Could not load tasklist listener extension");
 		}
 	}
 
@@ -127,12 +127,12 @@ public class TaskListExtensionReader {
 				MylarTaskListPlugin.getDefault().addDynamicPopupContributor(
 						(IDynamicSubMenuContributor) dynamicPopupContributor);
 			} else {
-				MylarPlugin.log("Could not load dyanmic popup menu: "
+				ErrorLogger.log("Could not load dyanmic popup menu: "
 						+ dynamicPopupContributor.getClass().getCanonicalName() + " must implement "
 						+ IDynamicSubMenuContributor.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
-			MylarPlugin.log(e, "Could not load dynamic popup extension");
+			ErrorLogger.log(e, "Could not load dynamic popup extension");
 		}
 	}
 
@@ -142,7 +142,7 @@ public class TaskListExtensionReader {
 			if (externalizer instanceof ITaskListExternalizer) {
 				externalizers.add((ITaskListExternalizer) externalizer);
 			} else {
-				MylarPlugin.log("Could not load externalizer: " + externalizer.getClass().getCanonicalName()
+				ErrorLogger.log("Could not load externalizer: " + externalizer.getClass().getCanonicalName()
 						+ " must implement " + ITaskListExternalizer.class.getCanonicalName(), null);
 			}
 
@@ -151,11 +151,11 @@ public class TaskListExtensionReader {
 				MylarTaskListPlugin.getDefault().addTaskHandler((ITaskHandler) taskHandler);
 
 			} else {
-				MylarPlugin.log("Could not load contributor: " + taskHandler.getClass().getCanonicalName()
+				ErrorLogger.log("Could not load contributor: " + taskHandler.getClass().getCanonicalName()
 						+ " must implement " + ITaskHandler.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
-			MylarPlugin.log(e, "Could not load task handler extension");
+			ErrorLogger.log(e, "Could not load task handler extension");
 		}
 	}
 }

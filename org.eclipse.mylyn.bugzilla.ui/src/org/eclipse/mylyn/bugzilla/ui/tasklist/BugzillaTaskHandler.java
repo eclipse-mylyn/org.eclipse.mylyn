@@ -25,6 +25,7 @@ import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -87,7 +88,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			try {
 				TaskListView.getDefault().closeTaskEditors(task, page);
 			} catch (Exception e) {
-				MylarPlugin.log(e, " deletion failed");
+				ErrorLogger.log(e, " deletion failed");
 			}
 		}
 		TaskListView.getDefault().getViewer().refresh();
@@ -215,7 +216,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				page.closeEditor(editor, false);
 			}
 		} catch (Exception e){
-			MylarPlugin.log(e, "Error while trying to close a bugzilla task");
+			ErrorLogger.log(e, "Error while trying to close a bugzilla task");
 		}
 	}
 

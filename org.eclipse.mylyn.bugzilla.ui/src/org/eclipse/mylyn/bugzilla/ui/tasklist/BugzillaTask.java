@@ -34,6 +34,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
@@ -238,7 +239,7 @@ public class BugzillaTask extends Task {
 		try {
 			// XXX make sure to send in the server name if there are multiple repositories
 			if (BugzillaPlugin.getDefault() == null) {
-				MylarPlugin.log("Bug Beport download failed for: " + getBugId(getHandleIdentifier()) + " due to bugzilla core not existing", this);
+				ErrorLogger.log("Bug Beport download failed for: " + getBugId(getHandleIdentifier()) + " due to bugzilla core not existing", this);
 				return null;
 			}
 			return BugzillaRepository.getInstance().getBug(getBugId(getHandleIdentifier()));
@@ -376,7 +377,7 @@ public class BugzillaTask extends Task {
 						});
 					}
 				} catch (Exception ex) {
-					MylarPlugin.log(ex, "couldn't open bugzilla task");
+					ErrorLogger.log(ex, "couldn't open bugzilla task");
 					return;
 				}
 			}
@@ -414,7 +415,7 @@ public class BugzillaTask extends Task {
 				notifyTaskDataChange();
 				saveBugReport(true);
 			} catch (Exception e) {
-				MylarPlugin.fail(e, "Could not download report", false);
+				ErrorLogger.fail(e, "Could not download report", false);
 			}
 			if (BugzillaUiPlugin.getDefault() != null) {
 				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
@@ -438,7 +439,7 @@ public class BugzillaTask extends Task {
 			} 
 			this.setDescription(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandleIdentifier()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
-			MylarPlugin.fail(npe, "Task details update failed", false);
+			ErrorLogger.fail(npe, "Task details update failed", false);
 		}
 	}
 
@@ -468,7 +469,7 @@ public class BugzillaTask extends Task {
 				return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
 			} catch (Exception e) {
 				//				MessageDialog.openError(null, "Error Opening Bug", "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()));
-				MylarPlugin.fail(e, "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandleIdentifier()), true);
+				ErrorLogger.fail(e, "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandleIdentifier()), true);
 			}
 			return Status.CANCEL_STATUS;
 		}

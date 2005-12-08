@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -118,9 +119,9 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 		if (MylarTaskListPlugin.getDefault().isShellActive() || forceBackgroundSave) {
 			try {
 				saveTaskListAndContexts();
-				MylarPlugin.log("Automatically saved task list", this);
+				ErrorLogger.log("Automatically saved task list", this);
 			} catch (Exception e) {
-				MylarPlugin.fail(e, "Could not auto save task list", false);
+				ErrorLogger.fail(e, "Could not auto save task list", false);
 			}
 		}
 	}

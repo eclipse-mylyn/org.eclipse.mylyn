@@ -16,7 +16,7 @@ import java.util.Date;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
@@ -38,6 +38,10 @@ import org.w3c.dom.NodeList;
  * @author Mik Kersten and Ken Sueda
  */
 public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
+
+	private static final String STATUS_RESO = "RESO";
+
+	private static final String STATUS_NEW = "NEW";
 
 	public static final String BUGZILLA_ARCHIVE_LABEL = "Archived Reports "
 			+ DelegatingLocalTaskExternalizer.LABEL_AUTOMATIC;
@@ -74,7 +78,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			try {
 				createTaskElement(task, doc, node);
 			} catch (Exception e) {
-				MylarPlugin.log(e, e.getMessage());
+				ErrorLogger.log(e, e.getMessage());
 			}
 
 		}
@@ -172,23 +176,21 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
-		BugzillaTask bt = (BugzillaTask) task;
+		BugzillaTask bugzillaTask = (BugzillaTask) task;
 		node.setAttribute(BUGZILLA, TRUE);
-		if (bt.getLastRefresh() != null) {
-			node.setAttribute(LAST_DATE, new Long(bt.getLastRefresh().getTime()).toString());
+		if (bugzillaTask.getLastRefresh() != null) {
+			node.setAttribute(LAST_DATE, new Long(bugzillaTask.getLastRefresh().getTime()).toString());
 		} else {
 			node.setAttribute(LAST_DATE, new Long(new Date().getTime()).toString());
 		}
 
-		node.setAttribute(SYNC_STATE, bt.getSyncState().toString());
+		node.setAttribute(SYNC_STATE, bugzillaTask.getSyncState().toString());
 
-		if (bt.isDirty()) {
+		if (bugzillaTask.isDirty()) {
 			node.setAttribute(DIRTY, TRUE);
 		} else {
 			node.setAttribute(DIRTY, FALSE);
 		}
-		// bt.saveBugReport(false); // XXX don't think that this needs to be
-		// done, should be handled already
 		return node;
 	}
 
@@ -226,10 +228,10 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		}
 		try {
 			if (task.readBugReport() == false) {
-				MylarPlugin.log("Failed to read bug report", null);
+				ErrorLogger.log("Failed to read bug report", null);
 			}
 		} catch (Exception e) {
-			MylarPlugin.log(e, "Failed to read bug report");
+			ErrorLogger.log(e, "Failed to read bug report");
 		}
 
 		if (element.hasAttribute(SYNC_STATE)) {
@@ -282,9 +284,9 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		if (element.hasAttribute(COMPLETE)) {
 			status = element.getAttribute(COMPLETE);
 			if (status.equals(TRUE))
-				status = "RESO";
+				status = STATUS_RESO;
 			else
-				status = "NEW";
+				status = STATUS_NEW;
 		} else {
 			throw new TaskListExternalizerException("Description not stored for bug report");
 		}

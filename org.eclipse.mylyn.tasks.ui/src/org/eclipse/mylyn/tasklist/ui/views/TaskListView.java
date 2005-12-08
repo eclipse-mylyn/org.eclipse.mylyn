@@ -45,8 +45,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.dt.MylarWebRef;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
@@ -524,7 +524,7 @@ public class TaskListView extends ViewPart {
 					}
 				}
 			} catch (Exception e) {
-				MylarPlugin.log(e, e.getMessage());
+				ErrorLogger.log(e, e.getMessage());
 			}
 			return "";
 		}
@@ -610,7 +610,7 @@ public class TaskListView extends ViewPart {
 					}
 				}
 			} catch (Exception e) {
-				MylarPlugin.fail(e, e.getMessage(), true);
+				ErrorLogger.fail(e, e.getMessage(), true);
 			}
 			getViewer().refresh();
 		}

@@ -28,7 +28,7 @@ import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.internal.TaskListWriter;
 
 /**
- * Can be run standalone
+ * Can be run without workbench
  * 
  * @author Mik Kersten
  */
@@ -42,7 +42,10 @@ public class TaskListStandaloneTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
+		
+		// bugzilla externalizer requires workbench
 //		externalizers.add(new BugzillaTaskExternalizer());
+		
 		TaskListWriter writer = new TaskListWriter();
 		writer.setDelegateExternalizers(externalizers);
 		
@@ -79,6 +82,7 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.readTaskList();
 		
 		assertNotNull(manager.getTaskList());
+		System.err.println(">>> " + manager.getTaskList().getCategories());
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 
 		List<ITask> readList = manager.getTaskList().getRootTasks();
@@ -93,8 +97,4 @@ public class TaskListStandaloneTest extends TestCase {
 	public void assertDatesCloseEnough(Date first, Date second) {
 		assertTrue(second.getTime() - first.getTime() < 100);
 	}
-	
-//	private String formatDate(Date date) {
-//		return DateFormat.getDateInstance(DateFormat.MEDIUM).format(date);
-//	}
 }

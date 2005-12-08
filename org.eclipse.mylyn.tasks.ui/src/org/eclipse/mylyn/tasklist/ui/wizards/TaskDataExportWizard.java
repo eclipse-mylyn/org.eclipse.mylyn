@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.core.util.ZipFileUtil;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -98,7 +99,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		final File destDirFile = new File(destDir);
 		if (!destDirFile.exists() || !destDirFile.isDirectory()) {
 			// This should never happen
-			MylarPlugin
+			ErrorLogger
 					.fail(new Exception("File Export Exception"), "Could not export data because specified location does not exist or is not a folder", true);
 			return false;
 		}
@@ -156,9 +157,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		try {
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			MylarPlugin.fail(e, "Could not export files", true);
+			ErrorLogger.fail(e, "Could not export files", true);
 		} catch (InterruptedException e) {
-			MylarPlugin.fail(e, "Could not export files", true);
+			ErrorLogger.fail(e, "Could not export files", true);
 		}
 
 		exportPage.saveSettings();
@@ -219,7 +220,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 					filesToZip.add(sourceTaskListFile);
 				} else {
 					if (!copy(sourceTaskListFile, destTaskListFile)) {
-						MylarPlugin.fail(new Exception("Export Exception"), "Could not export task list file.", false);
+						ErrorLogger.fail(new Exception("Export Exception"), "Could not export task list file.", false);
 					}
 					monitor.worked(1);
 				}
@@ -240,7 +241,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 						monitor.worked(1);
 					}
 				} catch (RuntimeException e) {
-					MylarPlugin.fail(e, "Could not export activity history context file", true);
+					ErrorLogger.fail(e, "Could not export activity history context file", true);
 				}
 			}
 
@@ -265,7 +266,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 						}
 					} else {
 						if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {
-							MylarPlugin.fail(new Exception("Export Exception: " + sourceTaskFile.getPath() + " -> " + destTaskFile.getPath()),
+							ErrorLogger.fail(new Exception("Export Exception: " + sourceTaskFile.getPath() + " -> " + destTaskFile.getPath()),
 									"Could not export one or more task context files.", true);
 							errorDisplayed = true;
 						}
@@ -281,7 +282,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 					}
 					ZipFileUtil.createZipFile(destZipFile, filesToZip, monitor);
 				} catch (Exception e) {
-					MylarPlugin.fail(e, "Could not create zip file.", true);
+					ErrorLogger.fail(e, "Could not create zip file.", true);
 				}
 			}
 			monitor.done();

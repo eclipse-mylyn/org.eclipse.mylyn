@@ -56,7 +56,7 @@ import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlineNode;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -434,7 +434,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				try {
 					op.run(monitor);
 				} catch (Exception e) {
-					MylarPlugin.log(e, "Failed to submit bug");
+					ErrorLogger.log(e, "Failed to submit bug");
 					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR, "Failed to submit bug", e);
 				}
 

@@ -22,7 +22,7 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCacheFile;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 
 /**
  * @author Shawn Minto
@@ -68,7 +68,7 @@ public class BugzillaReportCache {
 					cache.put(BugzillaTools.getHandle(bug), (BugReport)bug);
 			}
 		} catch (Exception e) {
-		    MylarPlugin.log(e, "occurred while restoring saved offline Bugzilla reports.");
+		    ErrorLogger.log(e, "occurred while restoring saved offline Bugzilla reports.");
 		}
 	}
 

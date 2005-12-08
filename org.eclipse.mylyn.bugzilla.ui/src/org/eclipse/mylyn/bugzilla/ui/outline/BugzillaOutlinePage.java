@@ -20,7 +20,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
@@ -107,7 +107,7 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			viewer.setComparer(new BugzillaOutlineComparer());
 			viewer.expandAll();
 		} catch (Exception e) {  
-			MylarPlugin.fail(e, "could not create bugzilla outline", true);
+			ErrorLogger.fail(e, "could not create bugzilla outline", true);
 		}
 		getSite().getPage().addSelectionListener(selectionListener);
 	}

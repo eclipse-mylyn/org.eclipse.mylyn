@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -201,7 +201,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		try {
 			page.openEditor(input, MylarTaskListPlugin.CATEGORY_EDITOR_ID);
 		} catch (PartInitException ex) {
-			MylarPlugin.log(ex, "open failed");
+			ErrorLogger.log(ex, "open failed");
 		}
 	}
 

@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
@@ -124,7 +124,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 				  return backgroundColor;
 			  } 
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "Could not get background color", false);
+			ErrorLogger.fail(e, "Could not get background color", false);
 		}
 		return TaskListImages.BACKGROUND_WHITE;
   }

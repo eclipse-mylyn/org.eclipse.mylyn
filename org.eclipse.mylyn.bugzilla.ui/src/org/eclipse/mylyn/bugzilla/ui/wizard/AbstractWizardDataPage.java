@@ -23,7 +23,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -348,7 +348,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 					// do nothing
 				}
 			} catch (IllegalArgumentException e) {
-				MylarPlugin.fail(e, "could not set attribute: " + attribute, false);
+				ErrorLogger.fail(e, "could not set attribute: " + attribute, false);
 			}
 		}
 		wizard.attributeCompleted = true;
@@ -719,7 +719,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			if (bugzillaOS != null) opSysAttribute.setValue(bugzillaOS);
 			if (bugzillaPlatform != null) platformAttribute.setValue(bugzillaPlatform);
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "could not set platform options", false);
+			ErrorLogger.fail(e, "could not set platform options", false);
 		}
 	}
 

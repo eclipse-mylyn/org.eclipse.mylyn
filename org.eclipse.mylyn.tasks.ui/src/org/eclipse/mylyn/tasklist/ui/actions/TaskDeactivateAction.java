@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
@@ -43,7 +44,7 @@ public class TaskDeactivateAction extends Action {
 				TaskListView.getDefault().closeTaskEditors(task, page);
 			}
 		} catch (Exception e) {
-			MylarPlugin.log(e, " Closing task editor on task deactivation failed");
+			ErrorLogger.log(e, " Closing task editor on task deactivation failed");
 		}		
 	}
 	

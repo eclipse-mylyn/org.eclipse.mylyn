@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugs.java.OpenBugzillaReportJob;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.team.MylarContextChangeSet;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
@@ -66,7 +66,7 @@ public class OpenCorrespondingReportAction implements IViewActionDelegate {
 						try {
 							service.run(true, false, job);
 						} catch (Exception e) {
-							MylarPlugin.fail(e, "Could not open report", true);
+							ErrorLogger.fail(e, "Could not open report", true);
 						}
 						resolved = true;
 					} else if (url != null) {

@@ -33,7 +33,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
 import org.eclipse.swt.widgets.Display;
@@ -296,7 +296,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		try {
 			service.run(false, false, op);
 		} catch (Exception e) {
-			MylarPlugin.log(e, "Unable to submit bug");
+			ErrorLogger.log(e, "Unable to submit bug");
 		} 
 		return sentSuccessfully;
 	}

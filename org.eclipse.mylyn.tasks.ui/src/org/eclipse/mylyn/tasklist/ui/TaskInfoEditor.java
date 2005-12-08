@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -292,7 +293,7 @@ public class TaskInfoEditor extends EditorPart {
 			// createRelatedLinksSection(parent, toolkit);
 			createDetailsSection(parent, toolkit);
 		} catch (SWTException e) {
-			MylarPlugin.log(e, "content failed");
+			ErrorLogger.log(e, "content failed");
 		}
 		return null;
 	}
@@ -479,7 +480,7 @@ public class TaskInfoEditor extends EditorPart {
 		try {
 			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime());
 		} catch (RuntimeException e) {
-			MylarPlugin.fail(e, "Could not format reminder date", true);
+			ErrorLogger.fail(e, "Could not format reminder date", true);
 		}
 		Text reminder = toolkit.createText(container, elapsedTimeString, SWT.BORDER);
 		
@@ -497,7 +498,7 @@ public class TaskInfoEditor extends EditorPart {
 		try {
 			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
 		} catch (RuntimeException e) {
-			MylarPlugin.fail(e, "Could not format creation date", true);
+			ErrorLogger.fail(e, "Could not format creation date", true);
 		}
 
 		Text creationDate = toolkit.createText(container, creationDateString, SWT.BORDER);
@@ -515,7 +516,7 @@ public class TaskInfoEditor extends EditorPart {
 			try {
 				completionDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCompletionDate());
 			} catch (RuntimeException e) {
-				MylarPlugin.fail(e, "Could not format date", true);
+				ErrorLogger.fail(e, "Could not format date", true);
 			}
 		}
 		Text endDate = toolkit.createText(container, completionDateString, SWT.BORDER);

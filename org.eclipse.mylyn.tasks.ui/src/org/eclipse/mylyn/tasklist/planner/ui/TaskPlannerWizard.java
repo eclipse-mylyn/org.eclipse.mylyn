@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.planner.ui;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
@@ -44,7 +44,7 @@ public class TaskPlannerWizard extends Wizard implements INewWizard {
 					MylarTaskListPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, MylarTaskListPlugin.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {
-			MylarPlugin.log(ex, "couldn't open summary editor");
+			ErrorLogger.log(ex, "couldn't open summary editor");
 		}
 		return true;
 	}

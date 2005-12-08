@@ -38,7 +38,7 @@ import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.StackTrace;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -226,7 +226,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 					try{
 						searchCollector.accept(hit);
 					} catch(CoreException e){
-	                    MylarPlugin.log(e, "bug search failed");
+	                    ErrorLogger.log(e, "bug search failed");
 					}
 				}
 			}
@@ -288,8 +288,8 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 		    if (status.getCode() == IStatus.CANCEL) {
 		        return null;
 		    } else if (!status.isOK()) {
-		        MylarPlugin.log("search error", this);
-		        MylarPlugin.log(status);
+		        ErrorLogger.log("search error", this);
+		        ErrorLogger.log(status);
 		        return null;
 		    }
 		    return searchCollector;
@@ -449,7 +449,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation
 //                }
                 
             } catch (Exception e) {
-            	MylarPlugin.log(e, "search failed");
+            	ErrorLogger.log(e, "search failed");
             }
             finally{
                 doiList.add(info);

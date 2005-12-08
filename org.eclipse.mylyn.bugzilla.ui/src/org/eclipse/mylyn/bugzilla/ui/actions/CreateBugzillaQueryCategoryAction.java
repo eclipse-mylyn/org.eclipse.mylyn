@@ -22,6 +22,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCustomQuery;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryDialog;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -72,7 +73,7 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
 	            try {
 	            	service.run(true, true, op);
 	            } catch (Exception e) {
-	            	MylarPlugin.log(e, "There was a problem executing the query refresh");
+	            	ErrorLogger.log(e, "There was a problem executing the query refresh");
 	            }  
     		}
             if(TaskListView.getDefault() != null)

@@ -42,7 +42,7 @@ import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.ui.actions.AbstractOfflineReportsAction;
 import org.eclipse.mylar.bugzilla.ui.actions.DeleteOfflineReportAction;
 import org.eclipse.mylar.bugzilla.ui.actions.ViewOfflineReportAction;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -498,7 +498,7 @@ public class OfflineView extends ViewPart {
 						file.add(bug, saveChosen);
 						bug.setOfflineState(true);
 					} catch (CoreException e) {
-						MylarPlugin.fail(e, e.getMessage(), false);
+						ErrorLogger.fail(e, e.getMessage(), false);
 					}
 		//			file.sort(OfflineReportsFile.lastSel);
 				}

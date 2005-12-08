@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.internal.TaskListExtensionReader;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.internal.TaskListSaveManager;
@@ -297,7 +298,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			
 			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);	
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "Mylar Task List initialization failed", false);
+			ErrorLogger.fail(e, "Mylar Task List initialization failed", false);
 		}
 	}
 
@@ -319,7 +320,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListManager.readTaskList();
 					restoreTaskHandlerState();
 				} catch (Exception e) {
-					MylarPlugin.fail(e, "Task List initialization failed", true);
+					ErrorLogger.fail(e, "Task List initialization failed", true);
 				}
 			}
 		});
@@ -345,7 +346,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				Workbench.getInstance().getActiveWorkbenchWindow().getShell().removeDisposeListener(taskListSaveManager);
 			}
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "Mylar Java stop failed", false);
+			ErrorLogger.fail(e, "Mylar Java stop failed", false);
 		}
 	}
 
