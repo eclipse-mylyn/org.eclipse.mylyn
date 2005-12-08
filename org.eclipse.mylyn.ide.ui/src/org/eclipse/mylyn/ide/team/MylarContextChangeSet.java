@@ -20,7 +20,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.synchronize.SyncInfo;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
@@ -87,8 +86,8 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	
 	@Override
 	public String getComment() {
-		String completedPrefix = MylarTaskListPlugin.getPrefs().getString(MylarIdePlugin.COMMIT_PREFIX_COMPLETED);
-		String progressPrefix = MylarTaskListPlugin.getPrefs().getString(MylarIdePlugin.COMMIT_PREFIX_PROGRESS);
+		String completedPrefix = MylarIdePlugin.getDefault().getPreferenceStore().getString(MylarIdePlugin.COMMIT_PREFIX_COMPLETED);
+		String progressPrefix = MylarIdePlugin.getDefault().getPreferenceStore().getString(MylarIdePlugin.COMMIT_PREFIX_PROGRESS);
 		String comment = "";
 		comment = generateComment(task, completedPrefix, progressPrefix);
 		return comment;
