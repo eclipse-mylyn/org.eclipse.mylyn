@@ -33,6 +33,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
@@ -162,7 +163,7 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 	    	obfuscatedString = new String(Base64.encode(digest)).replace('/', '=');
 //			obfuscatedString = "" + new String(digest).hashCode();
 		} catch (NoSuchAlgorithmException e) {
-			MylarPlugin.log("SHA not available", this);
+			ErrorLogger.log("SHA not available", this);
 			obfuscatedString = "<failed to obfuscate>"; 
 		}
 		return obfuscatedString;
