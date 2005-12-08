@@ -25,6 +25,15 @@
           name="Active Search"/>
    </extension>
 
+ 	<extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="Team"
+         class="org.eclipse.mylar.ide.team.ui.preferences.MylarTeamPreferencePage"
+         id="org.eclipse.mylar.team.ui.preferences"
+         category="org.eclipse.mylar.ui.preferences">
+      </page>  
+   </extension>
+
     <extension point="org.eclipse.ui.viewActions"> 
 	  <viewContribution 
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 

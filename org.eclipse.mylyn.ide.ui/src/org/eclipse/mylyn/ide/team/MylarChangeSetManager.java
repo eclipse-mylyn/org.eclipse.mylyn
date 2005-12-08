@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ide;
+package org.eclipse.mylar.ide.team;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +25,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -37,6 +38,37 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
  * @author Mik Kersten
  */
 public class MylarChangeSetManager implements IMylarContextListener {
+
+	private final IChangeSetChangeListener CHANGE_SET_LISTENER = new IChangeSetChangeListener() {
+		public void setRemoved(ChangeSet set) {
+			if (set instanceof MylarContextChangeSet) {
+				MylarContextChangeSet contextChangeSet = (MylarContextChangeSet)set;
+				if (contextChangeSet.getTask().isActive()) {
+					collector.add(contextChangeSet); // put it back
+				}
+			}
+		}
+
+		public void setAdded(ChangeSet set) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void defaultSetChanged(ChangeSet previousDefault, ChangeSet set) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void nameChanged(ChangeSet set) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void resourcesChanged(ChangeSet set, IResource[] resources) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 
 	private SubscriberChangeSetCollector collector;
 	
@@ -79,46 +111,31 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 	};
 	
+	private boolean isEnabled = false;
+	
 	public MylarChangeSetManager() {
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
-		MylarTaskListPlugin.getTaskListManager().addListener(TASK_ACTIVITY_LISTENER); // TODO: remove on stop?
-		if (MylarTaskListPlugin.getTaskListManager().isTaskListRead()) {
-			initContextChangeSets(); // otherwise listener will do it
-		}  
-		collector.addListener(new IChangeSetChangeListener() {
-
-			public void setRemoved(ChangeSet set) {
-				if (set instanceof MylarContextChangeSet) {
-					MylarContextChangeSet contextChangeSet = (MylarContextChangeSet)set;
-					if (contextChangeSet.getTask().isActive()) {
-						collector.add(contextChangeSet); // put it back
-					}
-				}
-			}
-			
-			public void setAdded(ChangeSet set) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void defaultSetChanged(ChangeSet previousDefault, ChangeSet set) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void nameChanged(ChangeSet set) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void resourcesChanged(ChangeSet set, IResource[] resources) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
 	}
 
+	public void enable() {
+		if (!isEnabled) {
+			MylarPlugin.getContextManager().addListener(this);
+			MylarTaskListPlugin.getTaskListManager().addListener(TASK_ACTIVITY_LISTENER); 
+			if (MylarTaskListPlugin.getTaskListManager().isTaskListRead()) {
+				initContextChangeSets(); // otherwise listener will do it
+			}  
+			collector.addListener(CHANGE_SET_LISTENER);
+			isEnabled = true;
+		}
+	}
+	
+	public void disable() {
+		MylarPlugin.getContextManager().removeListener(this);
+		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_ACTIVITY_LISTENER); 
+		collector.removeListener(CHANGE_SET_LISTENER);
+		isEnabled = false;
+	}
+	
 	private void initContextChangeSets() {
 		ChangeSet[] sets = collector.getSets();
 		for (int i = 0; i < sets.length; i++) {

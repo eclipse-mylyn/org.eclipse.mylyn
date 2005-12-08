@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.MylarChangeSetManager;
-import org.eclipse.mylar.ide.MylarContextChangeSet;
 import org.eclipse.mylar.ide.MylarIdePlugin;
+import org.eclipse.mylar.ide.team.MylarChangeSetManager;
+import org.eclipse.mylar.ide.team.MylarContextChangeSet;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
@@ -35,69 +35,92 @@ import org.eclipse.team.internal.core.subscribers.SubscriberChangeSetCollector;
 public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	private MylarChangeSetManager changeSetManager;
-		
+
 	private SubscriberChangeSetCollector collector;
-	
-    @Override
-    protected void setUp() throws Exception {
-    	super.setUp();
-    	assertNotNull(MylarIdePlugin.getDefault());
-    	changeSetManager = MylarIdePlugin.getDefault().getChangeSetManager();
-    	collector = CVSUIPlugin.getPlugin().getChangeSetManager();
-    	assertNotNull(changeSetManager);
-    }
-    
-    @Override
-    protected void tearDown() throws Exception {
-    	super.tearDown();
-    }
-    
-    public void testSingleContextActivation() {
-    	ChangeSet[] sets = collector.getSets();
-    	for (int i = 0; i < sets.length; i++) {
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		assertNotNull(MylarIdePlugin.getDefault());
+		changeSetManager = MylarIdePlugin.getDefault().getChangeSetManager();
+		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
+		assertNotNull(changeSetManager);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+
+	public void testDisabledMode() {
+		ChangeSet[] sets = collector.getSets();
+		for (int i = 0; i < sets.length; i++) {
 			collector.remove(sets[i]);
 		}
-    	assertEquals(0, collector.getSets().length);
-    	manager.contextDeactivated(taskId, taskId);
-    	changeSetManager.clearActiveChangeSets();
-    	assertEquals(0, changeSetManager.getActiveChangeSets().size());
-    	
-    	Task task1 = new Task("task1", "label", true);
-    	MylarTaskListPlugin.getTaskListManager().activateTask(task1);
-    	assertEquals(1, changeSetManager.getActiveChangeSets().size()); 
-    	assertEquals(1, collector.getSets().length);
-    	
-    	MylarTaskListPlugin.getTaskListManager().deactivateTask(task1); 
-    	assertEquals(0, changeSetManager.getActiveChangeSets().size());
-    	assertEquals(0, collector.getSets().length); // deleted because no active resources
-    	MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-    	
-    	// TODO: test with resource
-    }
-    
-    public void testContentsAfterDecay() throws CoreException {
+		assertEquals(0, collector.getSets().length);
+		manager.contextDeactivated(taskId, taskId);
+		changeSetManager.clearActiveChangeSets();
+		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+
+		MylarIdePlugin.getDefault().getChangeSetManager().disable();
+		
+		Task task1 = new Task("task1", "label", true);
+		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
+		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+		assertEquals(0, collector.getSets().length);
+		
+		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		MylarIdePlugin.getDefault().getChangeSetManager().enable();
+	}
+
+	public void testSingleContextActivation() {
+		ChangeSet[] sets = collector.getSets();
+		for (int i = 0; i < sets.length; i++) {
+			collector.remove(sets[i]);
+		}
+		assertEquals(0, collector.getSets().length);
+		manager.contextDeactivated(taskId, taskId);
+		changeSetManager.clearActiveChangeSets();
+		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+
+		Task task1 = new Task("task1", "label", true);
+		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
+		assertEquals(1, changeSetManager.getActiveChangeSets().size());
+		assertEquals(1, collector.getSets().length);
+
+		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		assertEquals(0, changeSetManager.getActiveChangeSets().size());
+		assertEquals(0, collector.getSets().length); // deleted because no
+														// active resources
+		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+
+		// TODO: test with resource
+	}
+
+	public void testContentsAfterDecay() throws CoreException {
 		IFile file = project.getProject().getFile(new Path("foo.txt"));
 		file.create(null, true, null);
-		  
+
 		Task task1 = new Task("task1", "label", true);
-    	MylarTaskListPlugin.getTaskListManager().activateTask(task1);
-		
+		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
+
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
-		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
 		assertTrue(fileElement.getInterest().isInteresting());
-		
+
 		List<MylarContextChangeSet> changeSets = changeSetManager.getActiveChangeSets();
 		assertEquals(1, changeSets.size());
-		MylarContextChangeSet set = changeSets.get(0); 
+		MylarContextChangeSet set = changeSets.get(0);
 		IResource[] resources = set.getResources();
 		assertTrue(resources.length <= 2); // can have .project file in there
-		
-        for (int i = 0; i < 1/(scaling.getDecay().getValue())*3; i++) {
-            MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());            
-        }
-        assertTrue(fileElement.getInterest().getValue() < 0);
-        assertTrue(resources.length <= 2); // can have .project file in there
-        
-        MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-    }
+
+		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
+			MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());
+		}
+		assertTrue(fileElement.getInterest().getValue() < 0);
+		assertTrue(resources.length <= 2); // can have .project file in there
+
+		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+	}
 }

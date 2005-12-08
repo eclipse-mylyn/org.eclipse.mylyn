@@ -25,6 +25,7 @@ public class AllIdeTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ResourcesContextTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
+		suite.addTestSuite(CommitMessageTest.class);
 		//$JUnit-END$
 		
 		return suite;
