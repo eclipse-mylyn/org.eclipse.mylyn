@@ -104,12 +104,12 @@ public class DateUtil {
 			} else if (minutes != 1) {
 				min = minutes + " minutes ";
 			}
-//			seconds -= minutes * MIN;
-//			if (seconds == 1) {
-//				sec = seconds + " second";
-//			} else if (seconds > 1) {
-//				sec = seconds + " seconds";
-//			}
+			seconds -= minutes * MIN;
+			if (seconds == 1) {
+				sec = seconds + " second";
+			} else if (seconds > 1) {
+				sec = seconds + " seconds";
+			}
 			return hour + min + sec;
 		} else if (seconds >= MIN) {
 			minutes = seconds / MIN;
@@ -118,12 +118,12 @@ public class DateUtil {
 			} else if (minutes != 1) {
 				min = minutes + " minutes ";
 			}
-//			seconds -= minutes * MIN;
-//			if (seconds == 1) {
-//				sec = seconds + " second";
-//			} else if (seconds > 1) {
-//				sec = seconds + " seconds";
-//			}
+			seconds -= minutes * MIN;
+			if (seconds == 1) {
+				sec = seconds + " second";
+			} else if (seconds > 1) {
+				sec = seconds + " seconds";
+			}
 			return min + sec;
 		} else {
 //			if (seconds == 1) {

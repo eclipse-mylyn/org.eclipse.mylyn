@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on Jul 16, 2004
-  */
+ */
 package org.eclipse.mylar.core.util;
 
 import java.util.ArrayList;
@@ -24,58 +24,73 @@ import org.eclipse.mylar.core.MylarPlugin;
  */
 public class TimerThread extends Thread implements Runnable {
 
-    private static final int SECOND = 1000;
-    private int sleepInterval = 5 * SECOND;
-    private int timeout = 0;
-    private int elapsed = 0;
-    private List<ITimerThreadListener> listeners = new ArrayList<ITimerThreadListener>();
-    boolean killed = false;
-    
-    /** Currently used only for testing */
-    public TimerThread(int timeoutInMillis, int sleepInterval) {
-    	this.sleepInterval = sleepInterval;
-    	setTimeoutMillis(timeoutInMillis);
-    }
-    
-    public TimerThread(int timeoutInSeconds) {
-        setTimeoutMillis(timeoutInSeconds * SECOND);
-    }
+	private static final int SECOND = 1000;
 
-    public boolean addListener(ITimerThreadListener listener) {
-    	return listeners.add(listener);
-    }
-    
-    public boolean removeListener(ITimerThreadListener listener) {
-    	return listeners.remove(listener);
-    }
-    
-    public void run() {
-    	try {
-	    	while(!killed) {
-		    	while(elapsed < timeout && /*!stopped && */ !killed){
-			        elapsed += sleepInterval;
-			        sleep(sleepInterval);
-		    	}
-		        if (elapsed >= timeout && /*!stopped && */  !killed) {
-		            for (ITimerThreadListener listener : listeners) {
-		            	listener.fireTimedOut();
-		            	resetTimer();
-		            }
-		        }
-		        sleep(sleepInterval);
-	    	}
-        } catch (InterruptedException e) {
-        	MylarPlugin.log(e, "timer interrupted");
-        }
-    }
-        
-    public void killTimer(){
-    	killed = true;
-    }
-        
-    public void resetTimer(){
-    	elapsed = 0;
-    }
+	private int sleepInterval = 5 * SECOND;
+
+	private int timeout = 0;
+
+	private int elapsed = 0;
+	
+	private List<ITimerThreadListener> listeners = new ArrayList<ITimerThreadListener>();
+
+	private boolean suspended = false;
+	
+	boolean killed = false;
+
+	/** Currently used only for testing */
+	public TimerThread(int timeoutInMillis, int sleepInterval) {
+		this.sleepInterval = sleepInterval;
+		setTimeoutMillis(timeoutInMillis);
+	}
+
+	public TimerThread(int millis) {
+		setTimeoutMillis(millis);
+	}
+
+	public boolean addListener(ITimerThreadListener listener) {
+		return listeners.add(listener);
+	}
+
+	public boolean removeListener(ITimerThreadListener listener) {
+		return listeners.remove(listener);
+	}
+
+	public void run() {
+		try {
+			while (!killed) {
+				while (elapsed < timeout && /* !stopped && */!killed) {
+					elapsed += sleepInterval;
+					sleep(sleepInterval);
+				}
+				if (elapsed >= timeout && !suspended && !killed) {
+					for (ITimerThreadListener listener : listeners) {
+						listener.fireTimedOut();
+						resetTimer();
+					}
+				}
+				sleep(sleepInterval);
+			}
+		} catch (InterruptedException e) {
+			MylarPlugin.log(e, "timer interrupted");
+		}
+	}
+
+	public boolean isSuspended() {
+		return suspended;
+	}
+
+	public void setSuspended(boolean suspended) {
+		this.suspended = suspended;
+	}
+
+	public void killTimer() {
+		killed = true;
+	}
+	
+	public void resetTimer() {
+		elapsed = 0;
+	}
 
 	public int getTimeoutMillis() {
 		return timeout;
@@ -84,12 +99,7 @@ public class TimerThread extends Thread implements Runnable {
 	public void setTimeoutMillis(int timeoutInMillis) {
 		this.timeout = timeoutInMillis;
 		if (sleepInterval > timeoutInMillis) {
-			sleepInterval = timeoutInMillis-1;
+			sleepInterval = timeoutInMillis - 1;
 		}
 	}
-	
-	public void setTimeoutSeconds(int timeoutInSeconds){
-		setTimeoutMillis(timeoutInSeconds * SECOND);
-	}
-	
 }

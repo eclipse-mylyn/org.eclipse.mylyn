@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.tests.ChangeSetManagerTest;
+import org.eclipse.mylar.ide.tests.CommitMessageTest;
 import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
@@ -31,7 +32,7 @@ public class AllJavaTests {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylar.java.tests");
 		
 		//$JUnit-BEGIN$
-		suite.addTestSuite(TaskContextChangeSetTest.class);
+		suite.addTestSuite(CommitMessageTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(EditorManagementTest.class);
