@@ -47,13 +47,14 @@ public class ResourceInterestUpdater {
 	}
 
 	private void internalAddResourceToContext(IResource resource) {
+		if (!acceptResource(resource)) return;
+		
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
 		String handle = bridge.getHandleIdentifier(resource);
 
 		if (handle != null) {
 			IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
 			if (element != null && !element.getInterest().isInteresting()) {
-//				MylarPlugin.log("adding to context: " + resource, this);
 				InteractionEvent interactionEvent = new InteractionEvent(
 						InteractionEvent.Kind.SELECTION,
 						bridge.getContentType(), 
@@ -62,6 +63,10 @@ public class ResourceInterestUpdater {
 				MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent, true);
 			}
 		}
+	}
+	
+	private boolean acceptResource(IResource resource) {
+		return resource.isAccessible() && !resource.isDerived() && !resource.isPhantom();
 	}
 	
 	/**

@@ -38,9 +38,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
-					if (acceptResource(resource)) {
-						MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resource);
-					}
+					MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(resource);
 				}
 				return true;
 			}
@@ -50,12 +48,6 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		} catch (CoreException e) {
 			ErrorLogger.log(e, "could not accet marker visitor");
 		}	
-	}
-
-	private boolean acceptResource(IResource resource) {
-		return resource.isAccessible()
-			&& !resource.isDerived() 
-			&& !resource.isPhantom();
 	}
 
 	public boolean isEnabled() {
