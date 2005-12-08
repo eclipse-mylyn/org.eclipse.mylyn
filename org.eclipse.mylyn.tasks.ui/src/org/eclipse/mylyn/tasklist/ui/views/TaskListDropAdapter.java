@@ -85,7 +85,6 @@ class TaskListDropAdapter extends ViewerDropAdapter {
 			} else if (getCurrentTarget() instanceof ITaskListElement 
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER
 					   || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
-//				System.err.println(">>> " + getCurrentLocation());
 				return true;
 			} else {
 				return false;

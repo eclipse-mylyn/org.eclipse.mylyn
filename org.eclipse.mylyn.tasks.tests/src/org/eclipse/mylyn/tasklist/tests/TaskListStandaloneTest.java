@@ -82,7 +82,6 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.readTaskList();
 		
 		assertNotNull(manager.getTaskList());
-		System.err.println(">>> " + manager.getTaskList().getCategories());
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 
 		List<ITask> readList = manager.getTaskList().getRootTasks();

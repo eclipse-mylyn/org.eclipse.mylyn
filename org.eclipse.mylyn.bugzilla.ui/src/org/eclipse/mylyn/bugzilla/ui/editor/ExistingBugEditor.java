@@ -344,7 +344,6 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				// we have a hidden attribute and we should send it back.
 				form.add(a.getParameterName(), a.getValue());
 			}
-			//			System.err.println(">>> " + a.getParameterName());
 		}
 
 		// make sure that the comment is broken up into 80 character lines

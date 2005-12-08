@@ -397,7 +397,6 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createQueryElement(IQuery query, Document doc, Element parent) {
 		String queryTagName = getQueryTagNameForElement(query);
-//		System.err.println(">>>>>>>> " + delegateExternalizers);
 		Element node = doc.createElement(queryTagName);
 		node.setAttribute(NAME, query.getDescription(false));
 		node.setAttribute(MAX_HITS, query.getMaxHits() + "");
