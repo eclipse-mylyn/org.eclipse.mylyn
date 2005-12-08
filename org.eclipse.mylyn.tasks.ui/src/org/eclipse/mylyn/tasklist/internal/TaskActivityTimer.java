@@ -74,16 +74,15 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	}
 
 	public void shellClosed(ShellEvent e) {
-		// Do nothing, deactivated will fire
+		// ignore
 	}
 
 	public void shellDeiconified(ShellEvent e) {
-		// Do nothing, wait for interaction to signal that the task is
-		// continuing
+		// ignore
 	}
 
 	public void shellIconified(ShellEvent e) {
-		// Do nothing, deactivated will fire
+		// ignore
 	}
 	
 	public void startObserving() {
