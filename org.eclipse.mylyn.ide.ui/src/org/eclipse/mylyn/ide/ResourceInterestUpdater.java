@@ -20,8 +20,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * TODO: refactor into bridges?
- * 
  * @author Mik Kersten
  */
 public class ResourceInterestUpdater {
@@ -31,15 +29,19 @@ public class ResourceInterestUpdater {
 	private boolean syncExec = false;
 	
 	public void addResourceToContext(final IResource resource) {
-		if (syncExec) {
-			internalAddResourceToContext(resource);
-		} else {
-			final IWorkbench workbench = PlatformUI.getWorkbench();
-			workbench.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					internalAddResourceToContext(resource);
-				}
-			});
+		try {
+			if (syncExec) {
+				internalAddResourceToContext(resource);
+			} else {
+				final IWorkbench workbench = PlatformUI.getWorkbench();
+				workbench.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						internalAddResourceToContext(resource);
+					}
+				});
+			}
+		} catch (Throwable t) {
+			MylarPlugin.fail(t, "could not add resource to context: " + resource, false);
 		}
 	}
 
@@ -49,7 +51,7 @@ public class ResourceInterestUpdater {
 
 		if (handle != null) {
 			IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
-			if (!element.getInterest().isInteresting()) {
+			if (element != null && !element.getInterest().isInteresting()) {
 //				MylarPlugin.log("adding to context: " + resource, this);
 				InteractionEvent interactionEvent = new InteractionEvent(
 						InteractionEvent.Kind.SELECTION,

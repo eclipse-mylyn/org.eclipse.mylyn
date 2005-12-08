@@ -134,7 +134,7 @@ public class MylarContext implements IMylarContext, Serializable {
 
 	public List<IMylarElement> getInteresting() {
 		List<IMylarElement> elements = new ArrayList<IMylarElement>();
-		for (String key : nodes.keySet()) {
+		for (String key : new ArrayList<String>(nodes.keySet())) { // in case it changes
 			MylarContextElement info = nodes.get(key);
 			if (info.getInterest().isInteresting()) {
 				elements.add(info);

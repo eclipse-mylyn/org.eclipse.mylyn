@@ -52,7 +52,9 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	}
 
 	private boolean acceptResource(IResource resource) {
-		return resource.isAccessible() && !resource.isDerived() && !resource.isPhantom();
+		return resource.isAccessible()
+			&& !resource.isDerived() 
+			&& !resource.isPhantom();
 	}
 
 	public boolean isEnabled() {

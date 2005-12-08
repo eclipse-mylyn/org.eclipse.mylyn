@@ -16,9 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
@@ -179,13 +177,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			}
 		}  
 		return null;
-		
-//		MylarContextChangeSet changeSet = activeChangeSets.get(task);
-//		if (changeSet != null) {
-//			return changeSet.getResources();
-//		} else {
-//			return null;
-//		}
 	}
 	
 	public void contextActivated(IMylarContext context) {
@@ -195,7 +186,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				MylarPlugin.log("could not resolve task for context", this);
 			} else if (!activeChangeSets.containsKey(task.getHandleIdentifier())) { 
 				MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
-//				changeSet.add(changeSet.getResources());
 				List<IResource> interestingResources = MylarIdePlugin.getDefault().getInterestingResources();
 				contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 				
@@ -238,33 +228,46 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	
 	public void interestChanged(IMylarElement element) {
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element.getContentType());
-		if (bridge.isDocument(element.getHandleIdentifier())) {
-			IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
-			if (resource != null && resource.exists()) {
-				for (MylarContextChangeSet contextChangeSet: getActiveChangeSets()) {
-					try {
-						if (!contextChangeSet.contains(resource)) {
+		try { 
+			if (bridge.isDocument(element.getHandleIdentifier())) {
+				IResource resource = MylarIdePlugin.getDefault().getResourceForElement(element);
+				if (resource != null && resource.exists()) {
+					for (MylarContextChangeSet activeContextChangeSet: getActiveChangeSets()) {
+						if (!activeContextChangeSet.contains(resource)) {
 							if (element.getInterest().isInteresting()) {
-								contextChangeSet.add(new IResource[] { resource });
+								activeContextChangeSet.add(new IResource[] { resource });
 							} 
-						} else if (shouldRemove(element)) {
-							contextChangeSet.remove(resource);
-							
-							// HACK: touching ensures file is added outside of set
-							if (resource instanceof IFile) {
-								((IFile)resource).touch(new NullProgressMonitor());
-							}
-							if (!collector.contains(contextChangeSet)) {
-								collector.add(contextChangeSet);
+						} 
+					}
+					if (shouldRemove(element)) {
+						ChangeSet[] sets = collector.getSets();
+						for (int i = 0; i < sets.length; i++) {
+							if (sets[i] instanceof MylarContextChangeSet) {
+								sets[i].remove(resource);				
 							}
 						}
-					} catch (Exception e) {
-						MylarPlugin.fail(e, "could not add resource to change set", false);
 					}
 				}
 			}
+		} catch (Exception e) {
+			MylarPlugin.fail(e, "could not manipulate change set resources", false);
 		}
 	}
+
+//	private void touch(final IResource resource) throws CoreException {
+//		final IWorkbench workbench = PlatformUI.getWorkbench();
+//		workbench.getDisplay().asyncExec(new Runnable() {
+//			public void run() {
+//				if (resource instanceof IFile) {
+//					try {
+//						((IFile)resource).touch(new NullProgressMonitor());
+//					} catch (CoreException e) {
+//						MylarPlugin.fail(e, "failed to touch resource: " + resource, false);
+//					}
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Ignores decay.

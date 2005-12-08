@@ -51,7 +51,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-
+	
 	public void testDisabledMode() {
 		ChangeSet[] sets = collector.getSets();
 		for (int i = 0; i < sets.length; i++) {
