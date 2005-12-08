@@ -42,14 +42,9 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	 
 	private static final String CTX_TITLE = "title"; // HACK: copied from super
 
-//	private List<IResource> resources; // TODO: get rid of this?
-	
 	private boolean suppressInterestContribution = false;
 
 	private ITask task;
-
-	// private JavaStructureBridge javaStructureBridge = new
-	// JavaStructureBridge();
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.java.context.changeset.add";
 
@@ -169,7 +164,6 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	 * TODO: unnessary check context?
 	 */
 	public boolean contains(IResource local) {
-//		System.err.println(">>> " + getAllResourcesInChangeContext().contains(local) + " " + local);
 		return getAllResourcesInChangeContext().contains(local);
 	}
 
