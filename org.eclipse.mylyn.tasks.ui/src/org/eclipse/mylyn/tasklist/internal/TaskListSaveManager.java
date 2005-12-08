@@ -58,7 +58,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	 * the specified folder. Will overwrite.
 	 */
 	public void copyDataDirContentsTo(String targetFolderPath) {
-		File mainDataDir = new File(MylarPlugin.getDefault().getMylarDataDirectory());
+		File mainDataDir = new File(MylarPlugin.getDefault().getDataDirectory());
 
 		for (File currFile : mainDataDir.listFiles()) {
 			if (currFile.isFile()) {
@@ -69,19 +69,19 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	}
 	
 	public void createTaskListBackupFile() {
-		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
 		copy(taskListFile, new File(backup));
 	}
 	
 	public String getBackupFilePath() {
-		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 		return path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
 	}
 
 	public void reverseBackup() {
-		String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
 		copy(new File(backup), taskListFile);

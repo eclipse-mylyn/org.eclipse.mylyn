@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.ui.preferences;
 
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -109,14 +107,15 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	public boolean performOk() {
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
-		if (!taskDirectory.equals(MylarPlugin.getDefault().getMylarDataDirectory())) {
+		if (!taskDirectory.equals(MylarPlugin.getDefault().getDataDirectory())) {
 			//Order matters:
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 			if (copyExistingDataCheckbox.getSelection()) {
 				MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
 			}
-			getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
-			MylarTaskListPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getMylarDataDirectory());
+//			getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR, taskDirectory);
+			MylarPlugin.getDefault().setDataDirectory(taskDirectory);
+			MylarTaskListPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getDataDirectory());
 		}
 
 		getPreferenceStore().setValue(MylarTaskListPlugin.COPY_TASK_DATA, copyExistingDataCheckbox.getSelection());
@@ -143,11 +142,11 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	public void performDefaults() {
 		super.performDefaults();
 
-		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-		String taskDirectory = rootPath.toString() + "/" + MylarPlugin.MYLAR_DIR_NAME;
-		taskDirectoryText.setText(taskDirectory);
+//		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+//		String taskDirectory = rootPath.toString() + "/" + MylarPlugin.DATA_DIR_NAME;
+		taskDirectoryText.setText(MylarPlugin.getDefault().getDefaultDataDirectory());
 
-		copyExistingDataCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.COPY_TASK_DATA));
+//		copyExistingDataCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.COPY_TASK_DATA));
 		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.REPORT_OPEN_INTERNAL));
 		//		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
@@ -168,10 +167,12 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private void createTaskDirectoryControl(Composite parent) {
 		Group taskDirComposite = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		taskDirComposite.setText("Task Directory");
+		taskDirComposite.setText("Mylar Data Directory (task list and contexts)");
 		taskDirComposite.setLayout(new GridLayout(2, false));
 		taskDirComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		String taskDirectory = getPreferenceStore().getString(MylarPlugin.MYLAR_DIR);
+		
+		String taskDirectory = MylarPlugin.getDefault().getDataDirectory();
+//		String taskDirectory = getPreferenceStore().getString(MylarPlugin.PREF_DATA_DIR);
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
 		taskDirectoryText = new Text(taskDirComposite, SWT.BORDER);
 		taskDirectoryText.setText(taskDirectory);

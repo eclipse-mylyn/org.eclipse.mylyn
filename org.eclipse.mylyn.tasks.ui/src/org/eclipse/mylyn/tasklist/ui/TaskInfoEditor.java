@@ -582,7 +582,7 @@ public class TaskInfoEditor extends EditorPart {
 					String[] ext = { "*.xml" };
 					dialog.setFilterExtensions(ext);
 
-					String mylarDir = MylarPlugin.getDefault().getMylarDataDirectory() + "/";
+					String mylarDir = MylarPlugin.getDefault().getDataDirectory() + "/";
 					mylarDir = mylarDir.replaceAll("\\\\", "/");
 					dialog.setFilterPath(mylarDir);
 

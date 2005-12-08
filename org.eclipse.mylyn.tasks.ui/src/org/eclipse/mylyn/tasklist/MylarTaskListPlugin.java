@@ -286,7 +286,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			 
 			taskListWriter = new TaskListWriter();
 			
-			String path = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
+			String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
 			File taskListFile = new File(path);
 			
 			// TODO: decouple from core

@@ -40,7 +40,7 @@ public class TaskDataExportTest extends TestCase{
 		assertNotNull(wizardPage);
 		
 		//Create test export destination directory
-		destinationDir = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + "TestDir");
+		destinationDir = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
 		destinationDir.mkdir();
 		assertTrue(destinationDir.exists());
 		
@@ -54,7 +54,7 @@ public class TaskDataExportTest extends TestCase{
 
 		//Save the context file and check that it exists
 		MylarPlugin.getContextManager().saveContext(mockContext.getId(), task1.getContextPath());
-		File taskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + task1.getContextPath() + MylarContextManager.FILE_EXTENSION);
+		File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task1.getContextPath() + MylarContextManager.FILE_EXTENSION);
 		assertTrue(MylarPlugin.getContextManager().hasContext(task1.getContextPath()));
 		assertTrue(taskFile.exists());
 	}

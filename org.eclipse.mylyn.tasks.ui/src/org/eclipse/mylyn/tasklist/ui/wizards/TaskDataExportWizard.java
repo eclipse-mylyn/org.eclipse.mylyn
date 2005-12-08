@@ -212,7 +212,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			if (exportTaskList) {
 				MylarTaskListPlugin.getTaskListManager().saveTaskList();
 
-				String sourceTaskListPath = MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+				String sourceTaskListPath = MylarPlugin.getDefault().getDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 				File sourceTaskListFile = new File(sourceTaskListPath);
 
 				if (zip) {
@@ -228,7 +228,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 			if (exportActivationHistory) {
 				try {
-					File sourceActivationHistoryFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator
+					File sourceActivationHistoryFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
 							+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.FILE_EXTENSION);
 
 					MylarPlugin.getContextManager().saveActivityHistoryContext();
@@ -255,7 +255,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 					}
 
 					File destTaskFile = new File(destinationDirectory + File.separator + task.getContextPath() + MylarContextManager.FILE_EXTENSION);
-					File sourceTaskFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + File.separator + task.getContextPath()
+					File sourceTaskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task.getContextPath()
 							+ MylarContextManager.FILE_EXTENSION);
 
 					if (zip) {
