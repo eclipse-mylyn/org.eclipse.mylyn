@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
-import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -272,8 +272,8 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 			task.setActive(true);
 			tlist.setActive(task, true);
 			try {
-				// TODO: move this
-				new TaskActivateAction().run(task);
+//				 TODO: move this
+				MylarTaskListPlugin.getTaskListManager().activateTask(task);
 			} catch (Throwable t) {
 				// ignore an activation failure since it's a UI issue
 			}
@@ -293,7 +293,8 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		if (element.hasAttribute(ELAPSED)) {
 			long elapsed = 0;
 			try {
-				elapsed = Long.parseLong(element.getAttribute(ELAPSED));
+				long read = Long.parseLong(element.getAttribute(ELAPSED));
+				if (read > 0) elapsed = read;
 			} catch (NumberFormatException e) {
 				// ignore
 			}
