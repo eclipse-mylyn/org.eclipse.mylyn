@@ -68,8 +68,8 @@ public class TaskList implements Serializable {
 		queries.add(query);
 	}
 
-	public void setActive(ITask task, boolean active, boolean isStalled) {
-		task.setActive(active, isStalled);
+	public void setActive(ITask task, boolean active) {
+		task.setActive(active);
 		if (active && !activeTasks.contains(task)) {
 			activeTasks.add(task);
 		} else if (!active) {
@@ -234,7 +234,7 @@ public class TaskList implements Serializable {
 
 	public void clearActiveTasks() {
 		for (ITask task : activeTasks) {
-			task.setActive(false, false);
+			task.setActive(false);
 		}
 		activeTasks.clear();
 	}

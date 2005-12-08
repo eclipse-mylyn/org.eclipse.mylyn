@@ -65,7 +65,7 @@ public class Task implements ITask {
 
 	private ITaskCategory parentCategory = null;
 
-	private Date lastActivatedDate = null;
+//	private Date lastActivatedDate = null;
 
 	private long timeActive = 0;
 
@@ -127,39 +127,39 @@ public class Task implements ITask {
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
-
+	
 	/**
 	 * Package visible in order to prevent sets that don't update the index.
 	 */
-	public void setActive(boolean active, boolean isStalled) {
+	public void setActive(boolean active) {
 		this.active = active;
-		if (active && !isStalled) {
-			lastActivatedDate = new Date();
-		} else {
-			calculateElapsedTime(isStalled);
-			lastActivatedDate = null;
-		}
+//		if (active && !isStalled) {
+//			lastActivatedDate = new Date();
+//		} else {
+//			calculateElapsedTime(isStalled);
+//			lastActivatedDate = null;
+//		}
 	}
 
-	private void calculateElapsedTime(boolean isStalled) {
-		if (lastActivatedDate != null) {
-			timeActive += new Date().getTime() - lastActivatedDate.getTime();
-			if (isStalled) {
-				timeActive -= TaskListManager.INACTIVITY_TIME_MILLIS;
-			}
-			if (isActive()) {
-				lastActivatedDate = new Date();
-			} else {
-				lastActivatedDate = null;
-			}
-		}
-
-		if (timeActive < 0) {
-			MylarPlugin.fail(new RuntimeException("Elapsed time was less than zero for: " + getDescription(true)), "",
-					false);
-			timeActive = 0;
-		}
-	}
+//	private void calculateElapsedTime(boolean isStalled) {
+//		if (lastActivatedDate != null) {
+//			timeActive += new Date().getTime() - lastActivatedDate.getTime();
+//			if (isStalled) {
+//				timeActive -= TaskListManager.INACTIVITY_TIME_MILLIS;
+//			}
+//			if (isActive()) {
+//				lastActivatedDate = new Date();
+//			} else {
+//				lastActivatedDate = null;
+//			}
+//		}
+//
+//		if (timeActive < 0) {
+//			MylarPlugin.fail(new RuntimeException("Elapsed time was less than zero for: " + getDescription(true)), "",
+//					false);
+//			timeActive = 0;
+//		}
+//	}
 
 	public boolean isActive() {
 		return active;
@@ -301,26 +301,12 @@ public class Task implements ITask {
 		this.notes = notes;
 	}
 
-	public String getElapsedTime() {
-		if (isActive()) {
-			calculateElapsedTime(false);
-		}
-		return "" + timeActive;
-	}
-
-	public long getElapsedTimeLong() {
-		if (isActive()) {
-			calculateElapsedTime(false);
-		}
+	public long getElapsedTime() {
 		return timeActive;
 	}
-
-	public void setElapsedTime(String elapsedString) {
-		if (elapsedString.equals("")) {
-			timeActive = 0;
-		} else {
-			timeActive = Long.parseLong(elapsedString);
-		}
+	
+	public void setElapsedTime(long elapsedTime) {
+		this.timeActive = elapsedTime;
 	}
 
 	public int getEstimateTimeHours() {
@@ -391,11 +377,6 @@ public class Task implements ITask {
 				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
 			}
 		}
-	}
-
-	public long getElapsedMillis() {
-		calculateElapsedTime(false);
-		return timeActive;
 	}
 
 	public boolean canEditDescription() {

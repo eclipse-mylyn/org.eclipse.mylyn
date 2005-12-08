@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugs.java.OpenBugzillaReportJob;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.MylarContextChangeSet;
+import org.eclipse.mylar.ide.team.MylarContextChangeSet;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;

@@ -20,8 +20,7 @@ import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Mik Kersten
- * 
- * TODO: make IDs be handles, clean up
+
  */
 public interface ITask extends ITaskListElement {
     
@@ -33,7 +32,7 @@ public interface ITask extends ITaskListElement {
 
     public abstract boolean isActive();
     
-    public abstract void setActive(boolean active, boolean isStalled);
+    public abstract void setActive(boolean active);
 
 	/**
 	 * TODO: consider changing to java.net.URL
@@ -64,12 +63,14 @@ public interface ITask extends ITaskListElement {
     
     public abstract void setNotes(String notes);
     
-    public abstract String getElapsedTime();
-    
-    public abstract long getElapsedTimeLong();
-    
-    public abstract void setElapsedTime(String elapsed);
+    /**
+     * @param time in milliseconds
+     */
+    public abstract void setElapsedTime(long elapsed);
         
+    /**
+     * TODO: change to millis
+     */
     public abstract int getEstimateTimeHours();
         
     public abstract void setEstimatedTimeHours(int estimated);
@@ -91,7 +92,7 @@ public interface ITask extends ITaskListElement {
      */
     public abstract ITaskCategory getCategory();
     
-    public abstract long getElapsedMillis();
+    public abstract long getElapsedTime();
     
 	public abstract Date getCompletionDate();
 	

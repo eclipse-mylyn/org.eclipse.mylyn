@@ -160,7 +160,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 
 		node.setAttribute(ISSUEURL, task.getIssueReportURL());
 		node.setAttribute(NOTES, task.getNotes());
-		node.setAttribute(ELAPSED, task.getElapsedTime());
+		node.setAttribute(ELAPSED, "" + task.getElapsedTime());
 		node.setAttribute(ESTIMATED, "" + task.getEstimateTimeHours());
 		node.setAttribute(END_DATE, formatExternDate(task.getCompletionDate()));
 		node.setAttribute(CREATION_DATE, formatExternDate(task.getCreationDate()));
@@ -269,8 +269,8 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		}
 
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
-			task.setActive(true, false);
-			tlist.setActive(task, true, false);
+			task.setActive(true);
+			tlist.setActive(task, true);
 			try {
 				// TODO: move this
 				new TaskActivateAction().run(task);
@@ -278,7 +278,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 				// ignore an activation failure since it's a UI issue
 			}
 		} else {
-			task.setActive(false, false);
+			task.setActive(false);
 		}
 		if (element.hasAttribute(ISSUEURL)) {
 			task.setIssueReportURL(element.getAttribute(ISSUEURL));
@@ -291,9 +291,15 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 			task.setNotes("");
 		}
 		if (element.hasAttribute(ELAPSED)) {
-			task.setElapsedTime(element.getAttribute(ELAPSED));
+			long elapsed = 0;
+			try {
+				elapsed = Long.parseLong(element.getAttribute(ELAPSED));
+			} catch (NumberFormatException e) {
+				// ignore
+			}
+			task.setElapsedTime(elapsed);
 		} else {
-			task.setElapsedTime("");
+			task.setElapsedTime(0);
 		}
 		if (element.hasAttribute(ESTIMATED)) {
 			String est = element.getAttribute(ESTIMATED);

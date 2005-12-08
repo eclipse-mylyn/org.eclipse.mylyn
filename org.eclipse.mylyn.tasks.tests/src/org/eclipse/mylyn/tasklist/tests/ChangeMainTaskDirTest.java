@@ -98,7 +98,7 @@ public class ChangeMainTaskDirTest extends TestCase{
 	}
 	
 	
-	/** Copy (almost) of code that changes the task directory (MylarTasklistPreferencePage) */
+	/** Copy (almost) of code that changes the task directory (MylarTaskListPreferencePage) */
 	protected void switchMainTaskDirectory(String newDir){
 		//Order matters:
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
