@@ -13,9 +13,9 @@ import org.eclipse.mylar.tasklist.internal.TaskListManager;
  */
 public class TaskActivityTimingTest extends TestCase {
 
-	private static final int TIMEOUT = 100;
+	private static final int TIMEOUT = 20;
 
-	private static final int SLEEP = TIMEOUT * 5;
+	private static final int SLEEP = TIMEOUT * 10;
 	
 	protected TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 
@@ -55,12 +55,12 @@ public class TaskActivityTimingTest extends TestCase {
 		
 		MylarPlugin.getContextManager().setInactivityTimeout(SLEEP*2);
 		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
-		Thread.sleep(250);
+		Thread.sleep(SLEEP);
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
 		long elpasedAfterReactivation = task1.getElapsedTime();
 		
 		assertTrue("time: " + (elpasedAfterReactivation - elapsedAfterDeactivation), 
-				elpasedAfterReactivation - elapsedAfterDeactivation >= 250);
+				elpasedAfterReactivation - elapsedAfterDeactivation >= SLEEP);
 	}
 
 	protected void mockInteraction() {
