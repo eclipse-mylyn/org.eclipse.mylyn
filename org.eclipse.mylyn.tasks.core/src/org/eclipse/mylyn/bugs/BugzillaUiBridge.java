@@ -23,8 +23,11 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -58,18 +61,16 @@ public class BugzillaUiBridge implements IMylarUiBridge {
             bugHandle = bugHandle.substring(0, next);
         }
                 
-        List<BugzillaOpenStructure> l = new ArrayList<BugzillaOpenStructure>(1);
-        l.add(new BugzillaOpenStructure(server, bugId, commentNumer));
-        
-//        ITask task= MylarTaskListPlugin.getTaskListManager().getTaskForHandle(bugHandle);
-//        if (task != null && task instanceof BugzillaTask) {
-//            BugzillaTask bugzillaTask = (BugzillaTask)task;
-//            bugzillaTask.openTask(commentNumer);
-//        } else {
-            // open the bug in the editor
-            ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", l);
+        ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugzillaTask.getHandle(bugId), true);
+        if (task != null && task instanceof BugzillaTask) {
+            BugzillaTask bugzillaTask = (BugzillaTask)task;
+            bugzillaTask.openTask(commentNumer, true);
+        } else {
+            List<BugzillaOpenStructure> openList = new ArrayList<BugzillaOpenStructure>(1);
+            openList.add(new BugzillaOpenStructure(server, bugId, commentNumer));
+            ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", openList);
             viewBugs.schedule();
-//        }
+        }
     }
     
     public ILabelProvider getLabelProvider() {

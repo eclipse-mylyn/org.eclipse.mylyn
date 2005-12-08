@@ -52,6 +52,8 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class BugzillaTask extends Task {
 
+	public static final String BUGZILLA_HANDLE_PREFIX = "Bugzilla-";
+
 	private static final String PROGRESS_LABEL_DOWNLOAD = "Downloading Bugzilla Reports...";
 
 	public enum BugReportSyncState {
@@ -654,7 +656,11 @@ public class BugzillaTask extends Task {
 	}
 
 	public static String getHandle(IBugzillaBug bug) {
-		return "Bugzilla-" + bug.getId();
+		 return getHandle(bug.getId());
+	}
+	
+	public static String getHandle(int bugId) {
+		return BUGZILLA_HANDLE_PREFIX + bugId;
 	}
 
 	public BugReportSyncState getSyncState() {

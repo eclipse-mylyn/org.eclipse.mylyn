@@ -54,8 +54,12 @@ public class BugzillaTools {
     }
     
     public static String getHandle(IBugzillaBug bug) {
-		return bug.getServer() + ";" + bug.getId();
+		return getHandle(bug.getServer(), bug.getId());
 	}
+    
+    public static String getHandle(String server, int id) {
+    	return server + ";" + id;
+    }
     
     public static String getName(IBugzillaBug bug) {
         return bug.getServer() + ": Bug#: " + bug.getId() + ": " + bug.getSummary();

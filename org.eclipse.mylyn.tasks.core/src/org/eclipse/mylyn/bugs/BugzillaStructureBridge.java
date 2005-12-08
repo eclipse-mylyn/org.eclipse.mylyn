@@ -63,8 +63,8 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	 */
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof BugzillaOutlineNode) {
-			BugzillaOutlineNode n = (BugzillaOutlineNode) object;
-			return BugzillaTools.getHandle(n);
+			BugzillaOutlineNode node = (BugzillaOutlineNode) object;
+			return BugzillaTools.getHandle(node);
 		} else if (object instanceof BugzillaReportSelection) {
 			BugzillaReportSelection n = (BugzillaReportSelection) object;
 			return BugzillaTools.getHandle(n);
