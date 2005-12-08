@@ -105,10 +105,10 @@
   <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Task List"
-         class="org.eclipse.mylar.tasklist.ui.preferences.MylarTasklistPreferencePage"
+         class="org.eclipse.mylar.tasklist.ui.preferences.MylarTaskListPreferencePage"
          id="org.eclipse.mylar.tasklist.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
-      </page>  
+      </page> 
    </extension>
 
 <!--
