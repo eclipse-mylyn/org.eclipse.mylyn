@@ -32,13 +32,13 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 			f.delete();
 		}
 		InteractionEventLogger logger = new InteractionEventLogger(f);
-		logger.start();
+		logger.startObserving();
 		for (int i = 0; i < 100; i++) {
 			InteractionEvent event = mockSelection();
 			events.add(event);
 			logger.interactionObserved(event);
 		}
-		logger.stop();
+		logger.stopObserving();
 		
 		File infile = new File(PATH);
 		List<InteractionEvent> readEvents = logger.getHistoryFromFile(infile);

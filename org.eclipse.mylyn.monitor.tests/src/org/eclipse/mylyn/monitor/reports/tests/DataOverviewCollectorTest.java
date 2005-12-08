@@ -77,7 +77,7 @@ public class DataOverviewCollectorTest extends TestCase {
 		File logFile = new File("test-log.xml");
 		logFile.delete();
 		InteractionEventLogger logger = new InteractionEventLogger(logFile);
-		logger.start();
+		logger.startObserving();
 
 		// Prepare collectors
 		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();

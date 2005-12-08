@@ -117,27 +117,27 @@ public class MonitorTest extends TestCase {
 	
     public void testLogging() throws InterruptedException {
     	MylarMonitorPlugin.getDefault().startMonitoring();
-        logger.stop();
+        logger.stopObserving();
         MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
-        logger.start();
+        logger.startObserving();
          
         generateSelection();        
         commandMonitor.preExecute("foo.command", new ExecutionEvent(new HashMap(), "trigger", "context"));
         File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
         assertTrue(monitorFile.exists());
-        logger.stop();
+        logger.stopObserving();
         List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
         assertTrue(events.size() >= 2); 
         
-        logger.stop();
+        logger.stopObserving();
         events = logger.getHistoryFromFile(monitorFile);
         assertTrue(events.size() >= 0); 
         MylarMonitorPlugin.getDefault().getMonitorLogFile().delete();
-        logger.start();
+        logger.startObserving();
      
         generatePerspectiveSwitch();
         assertTrue(monitorFile.exists());
-        logger.stop();
+        logger.stopObserving();
         events = logger.getHistoryFromFile(monitorFile);
         assertTrue(events.size() >= 1); 
   }    

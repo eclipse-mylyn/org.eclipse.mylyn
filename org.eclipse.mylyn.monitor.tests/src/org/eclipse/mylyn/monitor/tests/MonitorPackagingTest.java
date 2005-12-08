@@ -32,7 +32,7 @@ import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 public class MonitorPackagingTest extends AbstractContextTest {
 
     public void testCreateUploadPackage() throws IOException, InterruptedException {
-        MylarMonitorPlugin.getDefault().getInteractionLogger().stop();
+        MylarMonitorPlugin.getDefault().getInteractionLogger().stopObserving();
 //        MylarMonitorPlugin.getDefault().stopLog();
                 
         File monitorFile = MylarMonitorPlugin.getDefault().getMonitorLogFile();
@@ -47,7 +47,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
         ZipFileUtil.createZipFile(zipFile, files);
 
 //        MylarMonitorPlugin.getDefault().startLog();
-        MylarMonitorPlugin.getDefault().getInteractionLogger().start();
+        MylarMonitorPlugin.getDefault().getInteractionLogger().startObserving();
         
         // pretend to upload
         Thread.sleep(1000);

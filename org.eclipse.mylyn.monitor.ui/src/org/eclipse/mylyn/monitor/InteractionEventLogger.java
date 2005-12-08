@@ -78,7 +78,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		}
 	}
 
-	public void start() {
+	public void startObserving() {
 		try {
 			if (!outputFile.exists())
 				outputFile.createNewFile();
@@ -95,7 +95,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		}
 	}
 
-	public void stop() {
+	public void stopObserving() {
 		try {
 			if (outputStream != null) {
 				outputStream.flush();
@@ -111,7 +111,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	}
 
 	public File moveOutputFile(String newPath) {
-		stop();
+		stopObserving();
 		File newFile = new File(newPath);
 		try {
 			if (outputFile.exists() && !newFile.exists()) {
@@ -123,7 +123,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		} catch (Exception e) {
 			MylarPlugin.fail(e, "Could not set logger output file", true);
 		}
-		start();
+		startObserving();
 		return newFile;
 	}
 
@@ -131,13 +131,13 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	 * @return	true if successfully cleared
 	 */
 	public synchronized void clearInteractionHistory() throws IOException {
-		stop();
+		stopObserving();
 		outputStream = new FileOutputStream(outputFile, false);
 		outputStream.flush();
 		outputStream.close();
 		outputFile.delete();
 		outputFile.createNewFile();
-		start();
+		startObserving();
 	}
 
 	public File getOutputFile() {

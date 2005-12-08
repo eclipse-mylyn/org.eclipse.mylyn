@@ -39,11 +39,11 @@ public class InteractionLoggerTest extends TestCase {
 	}
 	
 	public void testClearHistory() throws IOException {
-		logger.start();
+		logger.startObserving();
 		File monitorFile = logger.getOutputFile();
     	assertTrue(monitorFile.exists());
     	logger.interactionObserved(InteractionEvent.makeCommand("a", "b"));
-    	logger.stop();
+    	logger.stopObserving();
     	assertTrue(monitorFile.length() > 0);
         logger.clearInteractionHistory();
         assertEquals(monitorFile.length(), 0);

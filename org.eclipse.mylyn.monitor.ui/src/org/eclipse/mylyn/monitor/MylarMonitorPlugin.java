@@ -127,7 +127,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		
         public void shellDeactivated(ShellEvent arg0) {
         	if(!isPerformingUpload() && MylarPlugin.getDefault() != null) {
-        		for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.stop();
+        		for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.stopObserving();
         	}
         }
         
@@ -137,7 +137,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
         		checkForStatisticsUpload(); 
         	} 
         	if(!isPerformingUpload() && MylarPlugin.getDefault() != null) {
-        		for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.start();
+        		for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.startObserving();
         	}
         }
 
@@ -153,9 +153,9 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
             if (event.getProperty().equals(MylarPlugin.MYLAR_DIR)) {                
                 if (event.getOldValue() instanceof String) {
                     if(!isPerformingUpload()) {
-                    	for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.stop();
+                    	for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.stopObserving();
                     	interactionLogger.moveOutputFile(getMonitorLogFile().getAbsolutePath());
-		                for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.start();
+		                for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.startObserving();
                     }
                 }
             } else {
@@ -211,7 +211,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     	if (!getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED)) return;
     	IWorkbench workbench = PlatformUI.getWorkbench();
     	MylarPlugin.getDefault().removeInteractionListener(interactionLogger);
-    	interactionLogger.stop(); 
+    	interactionLogger.stopObserving(); 
     	
     	MylarPlugin.getDefault().getCommandMonitors().remove(keybindingCommandMonitor);
     	MylarPlugin.getDefault().getSelectionMonitors().remove(selectionMonitor);
@@ -238,7 +238,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     public void startMonitoring() {
     	if (getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED)) return;
     	IWorkbench workbench = PlatformUI.getWorkbench();
-        interactionLogger.start();
+        interactionLogger.startObserving();
         MylarPlugin.getDefault().addInteractionListener(interactionLogger);
         MylarPlugin.getDefault().getCommandMonitors().add(keybindingCommandMonitor);
         MylarPlugin.getDefault().getSelectionMonitors().add(selectionMonitor);
