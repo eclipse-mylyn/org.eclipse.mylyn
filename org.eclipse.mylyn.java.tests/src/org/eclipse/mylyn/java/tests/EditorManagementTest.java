@@ -85,9 +85,6 @@ public class EditorManagementTest extends AbstractJavaContextTest {
         assertEquals(0, page.getEditors().length);
         
         manager.contextActivated(taskId, taskId);
-//        for (int i = 0; i < page.getEditors().length; i++) {
-//			System.err.println(">>> " + page.getEditors()[i].getTitle());
-//		}
         assertTrue("num editors: " + page.getEditors().length, page.getEditors().length == 2 || page.getEditors().length == 3);
 	}
 	

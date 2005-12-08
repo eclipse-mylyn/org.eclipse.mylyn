@@ -237,7 +237,6 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 //private boolean shouldRefresh(StructuredViewer viewer, Object objectToRefresh, IMylarElement node) {
 ////	if (objectToRefresh == null) return false;
 //	if (viewer instanceof TreeViewer) {
-////		System.err.println(">>> " + node.getHandleIdentifier() + ".");
 //		TreeViewer treeViewer = (TreeViewer)viewer;
 ////		System.err.println(">> " + treeViewer.getTree().getItemCount());
 ////	&& viewer.testFindItem(objectToRefresh) == null) { // HACK: relying on testing method
