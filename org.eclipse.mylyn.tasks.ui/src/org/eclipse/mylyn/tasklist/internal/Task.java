@@ -306,7 +306,11 @@ public class Task implements ITask {
 	}
 	
 	public void setElapsedTime(long elapsedTime) {
-		this.timeActive = elapsedTime;
+		if (elapsedTime >= 0) {
+			this.timeActive = elapsedTime;
+		} else{
+			MylarPlugin.log("Attempt to set negative time on task: " + getDescription(true), false);
+		} 
 	}
 
 	public int getEstimateTimeHours() {

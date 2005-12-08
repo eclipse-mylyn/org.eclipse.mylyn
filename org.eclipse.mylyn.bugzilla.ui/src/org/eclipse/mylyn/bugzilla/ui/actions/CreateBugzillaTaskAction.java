@@ -45,7 +45,6 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 	
 	@Override
 	public void run() {
-//        MylarPlugin.getDefault().actionObserved(this);
 		if(TaskListView.getDefault() == null)
 			return;
 
@@ -61,17 +60,6 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 	        TaskListView.getDefault().showMessage("Please enter a valid report number");
 	        return;
 	    }
-		
-	    // XXX we don't care about duplicates since we use a registrey
-		// Check the existing tasks to see if the id is used already.
-		// This is to prevent the creation of mutliple Bugzilla tasks
-		//   for the same Bugzilla report.
-//			boolean doesIdExistAlready = false;
-//			doesIdExistAlready = lookForId("Bugzilla-" + bugId);				
-//			if (doesIdExistAlready) {
-//		        showMessage("A Bugzilla task with ID Bugzilla-" + bugId + " already exists.");
-//		        return;
-//			}
 	
 	    ITask newTask = new BugzillaTask(
 	    		BugzillaUiPlugin.getDefault().createBugHandleIdentifier(bugId), 
@@ -95,23 +83,11 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
     	}
 	    if (selectedObject instanceof TaskCategory) {
 	    	MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory)selectedObject), newTask);
-//	        ((TaskCategory)selectedObject).addTask(newTask);
 	    } else { 
 	        MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 	    }
 	    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
-//	    
-//	    BugzillaTask newBugTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");	
-//	    BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(newBugTask.getHandle());
-//		if(bugTask == null) {
-//			BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)bugTask);
-//		} 
-//	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
-//	    if (selectedObject instanceof TaskCategory){
-//	        ((TaskCategory)selectedObject).addTask((ITask)bugTask);
-//	    } else { 
-//	        MylarTaskListPlugin.getTaskListManager().getTaskList().addRootTask((ITask)bugTask);
-//	    }
+
 	    if(TaskListView.getDefault() != null)
 			TaskListView.getDefault().getViewer().refresh();
 	}
@@ -127,3 +103,27 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 		
 	}
 }
+
+// XXX we don't care about duplicates since we use a registrey
+// Check the existing tasks to see if the id is used already.
+// This is to prevent the creation of mutliple Bugzilla tasks
+//   for the same Bugzilla report.
+//	boolean doesIdExistAlready = false;
+//	doesIdExistAlready = lookForId("Bugzilla-" + bugId);				
+//	if (doesIdExistAlready) {
+//        showMessage("A Bugzilla task with ID Bugzilla-" + bugId + " already exists.");
+//        return;
+//	}
+
+//
+//BugzillaTask newBugTask = new BugzillaTask("Bugzilla-"+bugId, "<bugzilla info>");	
+//BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(newBugTask.getHandle());
+//if(bugTask == null) {
+//	BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)bugTask);
+//} 
+//Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
+//if (selectedObject instanceof TaskCategory){
+//    ((TaskCategory)selectedObject).addTask((ITask)bugTask);
+//} else { 
+//    MylarTaskListPlugin.getTaskListManager().getTaskList().addRootTask((ITask)bugTask);
+//}

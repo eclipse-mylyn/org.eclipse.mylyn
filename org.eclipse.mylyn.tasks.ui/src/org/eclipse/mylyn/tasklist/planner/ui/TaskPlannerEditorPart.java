@@ -91,7 +91,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private TasksPlannerEditorInput editorInput = null;
 
 	private String[] activityColumnNames = new String[] {  "  !", "Description", "Created", "Completed",
-			"Duration", "Estimated" };
+			"Elapsed", "Estimated" };
 
 	private int[] activityColumnWidths = new int[] { 30, 300, 90, 90, 70, 70 };
 
