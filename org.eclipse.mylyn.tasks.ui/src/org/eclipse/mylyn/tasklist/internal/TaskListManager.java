@@ -31,11 +31,11 @@ import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
  */
 public class TaskListManager {
 
-	private Map<ITask, TaskTimer> timerMap = new HashMap<ITask, TaskTimer>();
+	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
 
 	private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
 	
-	private TaskListWriter taskListWriter;// = new TaskListWriter();
+	private TaskListWriter taskListWriter;
 	
 	private File taskListFile;
 
@@ -47,15 +47,17 @@ public class TaskListManager {
 
 	private static final String PREFIX_TASK = "task-";
 	
-	public static final long INACTIVITY_TIME_MILLIS;
+//	private int inactivityTimoutMillis = 1 * 60 * 1000;
+//	
+//	public static final long INACTIVITY_TIME_MILLIS;
 	
-	static {
-		if (MylarPlugin.getContextManager() != null) {
-			INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getActivityTimeoutSeconds() * 1000;
-		} else {
-			INACTIVITY_TIME_MILLIS = 1 * 60 * 1000;
-		}
-	}
+//	static {
+//		if (MylarPlugin.getContextManager() != null) {
+//			INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getInactivityTimeout();
+//		} else {
+//			INACTIVITY_TIME_MILLIS = 1 * 60 * 1000;
+//		}
+//	}
 
 	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) { 
 		this.taskListFile = file;
@@ -150,10 +152,9 @@ public class TaskListManager {
 	}
 
 	public void deleteTask(ITask task) {
-		TaskTimer activeListener = timerMap.remove(task);
-		if (activeListener != null)
-			activeListener.stopTimer();
-		taskList.setActive(task, false, false);
+		TaskActivityTimer activityTimer = timerMap.remove(task);
+		if (activityTimer != null) activityTimer.stopTimer();
+		taskList.setActive(task, false);
 		taskList.deleteTask(task);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
@@ -187,17 +188,18 @@ public class TaskListManager {
 				taskList.clearActiveTasks();
 			}
 		}
-		taskList.setActive(task, true, false);
-		TaskTimer activeListener = new TaskTimer(task);
-		timerMap.put(task, activeListener);
+		taskList.setActive(task, true);
+		int timout = MylarPlugin.getContextManager().getInactivityTimeout();
+		TaskActivityTimer activityTimer = new TaskActivityTimer(task, timout);
+		activityTimer.startTimer();
+		timerMap.put(task, activityTimer);
 		for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
 	}
 
 	public void deactivateTask(ITask task) {
-		TaskTimer activeListener = timerMap.remove(task);
-		if (activeListener != null)
-			activeListener.stopTimer();
-		taskList.setActive(task, false, false);
+		TaskActivityTimer activeListener = timerMap.remove(task);
+		if (activeListener != null) activeListener.stopTimer();
+		taskList.setActive(task, false);
 		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
 	}
 

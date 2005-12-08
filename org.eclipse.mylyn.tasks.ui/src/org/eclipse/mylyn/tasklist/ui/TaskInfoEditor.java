@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -453,7 +454,7 @@ public class TaskInfoEditor extends EditorPart {
 			}
 		});
 
-		GridData estimatedSpinnerGridData = new org.eclipse.swt.layout.GridData();
+		GridData estimatedSpinnerGridData = new GridData();
 		estimatedSpinnerGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		estimatedSpinnerGridData.grabExcessHorizontalSpace = true;
 		estimatedSpinnerGridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -473,22 +474,21 @@ public class TaskInfoEditor extends EditorPart {
 
 		label = toolkit.createLabel(container, "Elapsed time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		String reminderDateString = "";
+		
+		String elapsedTimeString = "0";
 		try {
-			if (task.getReminderDate() != null) {
-				reminderDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(task.getReminderDate());
-			}
+			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime());
 		} catch (RuntimeException e) {
 			MylarPlugin.fail(e, "Could not format reminder date", true);
 		}
+		Text reminder = toolkit.createText(container, elapsedTimeString, SWT.BORDER);
 		
-		Text text2 = toolkit.createText(container, reminderDateString, SWT.BORDER);
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.grabHorizontal = true;
 		td.colspan = 2;
-		text2.setLayoutData(td);
-		text2.setEditable(false);
-		text2.setEnabled(false);
+		reminder.setLayoutData(td);
+		reminder.setEditable(false);
+		reminder.setEnabled(false);
 
 		label = toolkit.createLabel(container, "Creation date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));

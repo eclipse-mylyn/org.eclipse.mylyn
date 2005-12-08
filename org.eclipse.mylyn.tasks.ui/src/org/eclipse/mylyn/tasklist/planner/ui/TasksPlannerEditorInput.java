@@ -99,7 +99,7 @@ public class TasksPlannerEditorInput implements IEditorInput {
 	public long getTotalTimeSpentOnCompletedTasks() {
 		long duration = 0;
 		for (ITask t : completedTasks) {
-			duration += t.getElapsedTimeLong();
+			duration += t.getElapsedTime();
 		}
 		return duration;
 	}
@@ -107,7 +107,7 @@ public class TasksPlannerEditorInput implements IEditorInput {
 	public long getTotalTimeSpentOnInProgressTasks() {
 		long duration = 0;
 		for (ITask t : inProgressTasks) {
-			duration += t.getElapsedTimeLong();
+			duration += t.getElapsedTime();
 		}
 		return duration;
 	}

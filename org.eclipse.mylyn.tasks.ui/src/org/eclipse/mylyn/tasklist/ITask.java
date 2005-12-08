@@ -106,10 +106,19 @@ public interface ITask extends ITaskListElement {
 	
 	public abstract Date getReminderDate();
 	
+	/**
+	 * TODO: move
+	 */
 	public abstract boolean hasBeenReminded();
-	
+
+	/**
+	 * TODO: move
+	 */
 	public abstract void setReminded(boolean reminded);
 
+	/**
+	 * TODO: move
+	 */
 	public abstract boolean participatesInTaskHandles();
 }
 

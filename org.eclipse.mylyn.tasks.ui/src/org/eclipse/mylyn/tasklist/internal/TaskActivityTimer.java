@@ -66,7 +66,6 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	public void shellDeactivated(ShellEvent e) {
 		fireTimedOut();
 		timer.setSuspended(true);
-		// windowDeactivationTime = new Date().getTime();
 	}
 
 	public void shellActivated(ShellEvent e) {

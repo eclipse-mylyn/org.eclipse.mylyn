@@ -93,6 +93,6 @@ public class TaskSorter extends ViewerSorter {
 	}
 	
 	private int compareDuration(ITask task1, ITask task2) {
-		return task1.getElapsedTimeLong() < task2.getElapsedTimeLong() ? 1 : -1;
+		return task1.getElapsedTime() < task2.getElapsedTime() ? 1 : -1;
 	}
 }
