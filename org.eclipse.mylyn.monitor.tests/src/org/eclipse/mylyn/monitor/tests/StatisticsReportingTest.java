@@ -119,7 +119,6 @@ public class StatisticsReportingTest extends TestCase {
 		logger.stopObserving();
 		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
 		
-		//		System.err.println(">>> " + editRatioCollector.get);
 		// TODO: these are off from expected when test run alone, due to unknown element selections
 		assertEquals(0.5f, editRatioCollector.getBaselineRatio(-1));
 		assertEquals(2f, editRatioCollector.getMylarRatio(-1));

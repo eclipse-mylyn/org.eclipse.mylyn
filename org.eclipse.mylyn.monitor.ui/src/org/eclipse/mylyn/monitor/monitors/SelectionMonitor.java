@@ -129,7 +129,6 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
     			delta = SELECTION_DEFAULT;
     		} 
         }
-//        System.err.println(">>> "  + ": " + delta + ", " + node.getInterest().getValue());
         
         InteractionEvent event = new InteractionEvent(
         		interactionKind, 
