@@ -13,7 +13,7 @@ import org.eclipse.mylar.tasklist.internal.TaskListManager;
  */
 public class TaskActivityTimingTest extends TestCase {
 
-	private static final int TIMEOUT = 50;
+	private static final int TIMEOUT = 100;
 
 	private static final int SLEEP = TIMEOUT * 5;
 	
