@@ -7,20 +7,17 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
  * @author Mik Kersten (rewrite)
  */
 public class TaskActivityTimingTest extends TestCase {
 
-	private static final int SLEEP = 250;
+	private static final int TIMEOUT = 50;
 
-	private static final int TIMOUT = 50;
-
+	private static final int SLEEP = TIMEOUT * 5;
+	
 	protected TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
-
-//	protected TaskListView taskView = null;
 
 	protected Task task1 = null;
 
@@ -28,11 +25,9 @@ public class TaskActivityTimingTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-//		TaskListView.openInActivePerspective();
-		assertNotNull(TaskListView.getDefault());
 		task1 = new Task("t1", "t1", true);
 		originalActivityTimeout = MylarPlugin.getContextManager().getInactivityTimeout();
-		MylarPlugin.getContextManager().setInactivityTimeout(TIMOUT);
+		MylarPlugin.getContextManager().setInactivityTimeout(TIMEOUT);
 	}
 
 	public void tearDown() {
@@ -47,12 +42,12 @@ public class TaskActivityTimingTest extends TestCase {
 		Thread.sleep(SLEEP); 
 		
 		elapsed = task1.getElapsedTime();
-		assertTrue("should be bigger than timeout", elapsed > TIMOUT);
+		assertTrue("should be bigger than timeout", elapsed > TIMEOUT);
 
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
 		Thread.sleep(SLEEP); 
 		long elapsedAfterDeactivation =  task1.getElapsedTime();
-		assertTrue("should have accumulated some itme", elapsedAfterDeactivation > elapsed);
+		assertTrue("should have accumulated some time: ", elapsedAfterDeactivation > elapsed);
 
 		Thread.sleep(SLEEP); 
 		long elapsedAfterInactivity =  task1.getElapsedTime();
