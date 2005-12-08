@@ -31,7 +31,7 @@ import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
@@ -58,7 +58,7 @@ public class JavaUiBridge implements IMylarUiBridge {
             IEditorPart part = JavaUI.openInEditor(javaElement);
             JavaUI.revealInEditor(part, javaElement);
         } catch (Throwable t) {
-        	MylarPlugin.fail(t, "Could not open editor for: " + node, true);
+        	ErrorLogger.fail(t, "Could not open editor for: " + node, true);
         }
     }
     
@@ -89,7 +89,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 			try {
 				IDE.openEditor(activePage, (IFile)resource, false);
 			} catch (PartInitException e) {
-				MylarPlugin.fail(e, "failed to open editor for: " + resource, false);
+				ErrorLogger.fail(e, "failed to open editor for: " + resource, false);
 			}	
 		}	
 	}
@@ -105,7 +105,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                 for (int i = 0; i < references.length; i++) {
                     IEditorPart part = references[i].getEditor(false);
                     if (part != null  && part instanceof JavaEditor) {
-                    	MylarPlugin.log("editor closing not implemented", this);
+                    	ErrorLogger.log("editor closing not implemented", this);
 //                        JavaEditor editor = (JavaEditor)part;
 //                        String name = MylarJavaPlugin.getStructureBridge().getName(
 //                                MylarJavaPlugin.getStructureBridge().getObjectForHandle(node.getElementHandle()));
@@ -114,7 +114,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                 }
             }
         } catch (Throwable t) {
-            MylarPlugin.fail(t, "Could not auto close editor.", false);
+            ErrorLogger.fail(t, "Could not auto close editor.", false);
         } 
     }
 
@@ -135,7 +135,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                     field.setAccessible(true); 
                     viewers.add((TreeViewer)field.get(page));
                 } catch (Exception e) { 
-                	MylarPlugin.log(e, "could not get outline viewer");
+                	ErrorLogger.log(e, "could not get outline viewer");
                 } 
             }
         }

@@ -10,7 +10,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.core.MylarPlugin;
 
 /**
  * Contains utility methods for working with zip files
@@ -49,7 +48,7 @@ public class ZipFileUtil {
         			monitor.worked(1);
         		}
         	}catch (Exception e){
-        		MylarPlugin.log(e, "Could not add " + file.getName() + " to zip");
+        		ErrorLogger.log(e, "Could not add " + file.getName() + " to zip");
         	}
         }
     

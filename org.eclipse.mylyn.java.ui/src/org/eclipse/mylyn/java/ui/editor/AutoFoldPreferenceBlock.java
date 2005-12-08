@@ -12,7 +12,7 @@
 package org.eclipse.mylar.java.ui.editor;
 
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -66,7 +66,7 @@ public class AutoFoldPreferenceBlock
 
 			return inner;
 	    } catch (Throwable t) {
-	        MylarPlugin.fail(t, "Could not create folding preferences page", true);
+	        ErrorLogger.fail(t, "Could not create folding preferences page", true);
 	    } 
 	    return null;
 	}

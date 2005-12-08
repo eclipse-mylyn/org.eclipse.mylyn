@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
@@ -88,7 +88,7 @@ public class PdeUiBridge implements IMylarUiBridge {
          
             // if the editor is null, we had a problem and should return
             if(editor == null){
-                MylarPlugin.log("Unable to open editor for file: " + filename, this);
+                ErrorLogger.log("Unable to open editor for file: " + filename, this);
                 return;
             }
             
@@ -192,7 +192,7 @@ public class PdeUiBridge implements IMylarUiBridge {
                             }
                         }
                     }catch (Exception e) {
-                    	MylarPlugin.log(e, "failed to get tree viewers");
+                    	ErrorLogger.log(e, "failed to get tree viewers");
                         return null;
                     }
         		}
@@ -216,7 +216,7 @@ public class PdeUiBridge implements IMylarUiBridge {
                     }
                 }
             } catch (Exception e) {
-                MylarPlugin.log(e.getMessage(), this);
+                ErrorLogger.log(e.getMessage(), this);
                 return null;
             }
             

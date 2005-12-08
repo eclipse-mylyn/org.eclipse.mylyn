@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.core.util;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -26,9 +27,10 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
  */
 public class ErrorLogger {
 
-	public static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n" + "https://eclipse.org/mylar\n\n"
+	private static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n" + "https://eclipse.org/mylar\n\n"
 		+ "For details on this error please open the PDE Runtime -> Error Log view";
 
+	public static PrintStream logStream = null;
 	
 	/**
 	 * Logs the specified status with this plug-in's log.
@@ -57,11 +59,19 @@ public class ErrorLogger {
 	
 		if (MylarPlugin.getDefault() != null) {
 			MylarPlugin.getDefault().getLog().log(status);
-			if (MylarPlugin.getDefault().logStream != null)
-				MylarPlugin.getDefault().logStream.println(buffer.toString());
+			if (logStream != null)
+				logStream.println(buffer.toString());
 		}
 	}
 
+	public void setLogStream(PrintStream logStream) {
+		ErrorLogger.logStream = logStream;
+	}
+
+	public PrintStream getLogStream() {
+		return logStream;
+	}
+	
 	private static String printStrackTrace(Throwable t) {
 		StringWriter writer = new StringWriter();
 		t.printStackTrace(new PrintWriter(writer));

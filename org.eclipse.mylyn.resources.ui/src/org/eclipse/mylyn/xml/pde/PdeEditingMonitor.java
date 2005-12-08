@@ -20,7 +20,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
@@ -116,7 +116,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
                         super.handleElementSelection(part, xnode);
                     }
                 } catch (Exception e) {
-                	MylarPlugin.log(e, "couldn't resolve selection");
+                	ErrorLogger.log(e, "couldn't resolve selection");
                 }
             }
         }

@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.xml.ant.AntEditingMonitor;
 import org.eclipse.mylar.xml.pde.PdeEditingMonitor;
 import org.eclipse.ui.IWorkbench;
@@ -60,7 +61,7 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 	            	antEditingMonitor = new AntEditingMonitor();
 	            	MylarPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
 	    		} catch (Exception e) {
-	    			MylarPlugin.fail(e, "Mylar IDE stop failed", true);
+	    			ErrorLogger.fail(e, "Mylar IDE stop failed", true);
 	    		}
             }
         });
@@ -78,7 +79,7 @@ public class MylarXmlPlugin extends AbstractUIPlugin {
 	        MylarPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
 	        MylarPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "Mylar XML stop failed", false);
+			ErrorLogger.fail(e, "Mylar XML stop failed", false);
 		}
     }
 

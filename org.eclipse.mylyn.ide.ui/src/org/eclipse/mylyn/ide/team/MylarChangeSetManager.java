@@ -23,6 +23,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
@@ -151,7 +152,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 //						activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
 						collector.add(contextChangeSet);
 					} catch (Exception e) {
-						MylarPlugin.fail(e, "could not restore change set", false);
+						ErrorLogger.fail(e, "could not restore change set", false);
 					}
 				}
 			}
@@ -183,7 +184,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		try {
 			ITask task = getTask(context); 
 			if (task == null) {
-				MylarPlugin.log("could not resolve task for context", this);
+				ErrorLogger.log("could not resolve task for context", this);
 			} else if (!activeChangeSets.containsKey(task.getHandleIdentifier())) { 
 				MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
 				List<IResource> interestingResources = MylarIdePlugin.getDefault().getInterestingResources();
@@ -193,7 +194,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				if (!collector.contains(contextChangeSet)) collector.add(contextChangeSet);
 			}
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "could not update change set", false);
+			ErrorLogger.fail(e, "could not update change set", false);
 		}
 	}
 
@@ -250,7 +251,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 				}
 			}
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "could not manipulate change set resources", false);
+			ErrorLogger.fail(e, "could not manipulate change set resources", false);
 		}
 	}
 

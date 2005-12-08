@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
 
@@ -50,7 +51,7 @@ public class ResourceSelectionMonitor extends AbstractUserInteractionMonitor {
 	        			}
 	        		}
         		} catch (Throwable t) {
-        			MylarPlugin.fail(t, "failed to resolve resource edit", false);
+        			ErrorLogger.fail(t, "failed to resolve resource edit", false);
         		}
         	}
         }

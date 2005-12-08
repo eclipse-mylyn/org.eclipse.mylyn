@@ -34,6 +34,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.dt.MylarWebRef;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.ui.IEditorPart;
 
@@ -90,7 +91,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                         added = true;
                     }
                 } catch (Exception e) {
-                	MylarPlugin.log(e, "proposals problem");
+                	ErrorLogger.log(e, "proposals problem");
                 } 
                 if (!added) {
                 	if (proposal instanceof JavaCompletionProposal) {
@@ -121,7 +122,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                     } else if (sorted[i-1] instanceof LazyJavaCompletionProposal) {
                         replacementOffset = ((LazyJavaCompletionProposal)sorted[i-1]).getReplacementOffset();
                     } else {
-                        MylarPlugin.log("Could not create proposal separator for class: " + sorted[i-1].getClass(), this);
+                        ErrorLogger.log("Could not create proposal separator for class: " + sorted[i-1].getClass(), this);
                     }
                     sorted[i] = new JavaCompletionProposal(
                     		"", replacementOffset, 0, 
@@ -136,7 +137,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                 return Arrays.asList(sorted);
             }
         } catch (Throwable t) {
-        	MylarPlugin.log(t, "completion proposal filter and sort failed");
+        	ErrorLogger.log(t, "completion proposal filter and sort failed");
         }
         return null;
     } 

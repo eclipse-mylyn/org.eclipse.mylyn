@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.ui.wizards.MylarCommitWizard;
 import org.eclipse.mylar.tasklist.ITask;
@@ -66,7 +66,7 @@ public class CompleteTaskWizardAction implements IViewActionDelegate {
 				}
 			}
 		} catch (Exception e) {
-			MylarPlugin.fail(e, e.getMessage(), true);
+			ErrorLogger.fail(e, e.getMessage(), true);
 		}
 	}
 

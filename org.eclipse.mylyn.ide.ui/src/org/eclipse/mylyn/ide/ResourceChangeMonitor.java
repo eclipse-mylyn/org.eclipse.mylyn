@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 
 /**
  * @author Mik Kersten
@@ -47,7 +48,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		try {
 			rootDelta.accept(visitor);
 		} catch (CoreException e) {
-			MylarPlugin.log(e, "could not accet marker visitor");
+			ErrorLogger.log(e, "could not accet marker visitor");
 		}	
 	}
 

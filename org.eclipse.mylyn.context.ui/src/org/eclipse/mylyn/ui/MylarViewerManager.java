@@ -25,6 +25,7 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.internal.BrowseFilteredListener;
 import org.eclipse.ui.internal.Workbench;
@@ -163,7 +164,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 				}
 			}
     	} catch (Throwable t) {
-    		MylarPlugin.fail(t, "could not refresh viewer", false);
+    		ErrorLogger.fail(t, "could not refresh viewer", false);
     	}
 	} 
 

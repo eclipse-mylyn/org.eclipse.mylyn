@@ -13,7 +13,7 @@
   */
 package org.eclipse.mylar.core.tests;
 
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 
 /**
  * @author Mik Kersten
@@ -25,9 +25,9 @@ public class ManualUiTest extends AbstractManualTest {
             int i = 10 / 0;
             System.out.println(i);
         } catch (Throwable t ) {
-            MylarPlugin.fail(t, "whoops", true);
+            ErrorLogger.fail(t, "whoops", true);
         }
-        MylarPlugin.fail(null, "whoops", true);
+        ErrorLogger.fail(null, "whoops", true);
         assertTrue(confirmWithUser("Did an error dialog show up correctly?"));
     }
     

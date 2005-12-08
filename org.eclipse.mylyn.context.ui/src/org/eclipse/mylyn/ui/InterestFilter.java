@@ -22,6 +22,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.util.ErrorLogger;
 
 
 /**
@@ -69,7 +70,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
             	}
             } 
         } catch (Throwable t) {
-        	MylarPlugin.log(t, "interest filter failed on viewer: " + viewer.getClass());
+        	ErrorLogger.log(t, "interest filter failed on viewer: " + viewer.getClass());
         } 
         return false;
     }   
@@ -99,7 +100,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
             	}
             } 
         } catch (Throwable t) {
-        	MylarPlugin.log(t, "interest filter failed on viewer: " + viewer.getClass());
+        	ErrorLogger.log(t, "interest filter failed on viewer: " + viewer.getClass());
         } 
         return false;
 	}

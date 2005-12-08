@@ -38,7 +38,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -159,10 +159,10 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 								((AbstractMylarHyperlinkDetector) detector).setEditor(super.getEditor());
 								hyperlinkDetectors.add((AbstractMylarHyperlinkDetector) detector);
 							} else {
-								MylarPlugin.log("Could not load hyperlink detector: " + detector.getClass().getCanonicalName() + " must implement " + AbstractMylarHyperlinkDetector.class.getCanonicalName(), this);	
+								ErrorLogger.log("Could not load hyperlink detector: " + detector.getClass().getCanonicalName() + " must implement " + AbstractMylarHyperlinkDetector.class.getCanonicalName(), this);	
 							}
 						} catch (CoreException e){
-							MylarPlugin.log(e, "Could not load java editor contributor");
+							ErrorLogger.log(e, "Could not load java editor contributor");
 						}
 					}				}
 			}

@@ -32,6 +32,7 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.java.JavaStructureBridge;
 
 
@@ -64,7 +65,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 	            landmarkAdded(node);
 	        }
         } catch (Throwable t) {
-        	MylarPlugin.fail(t, "Could not update landmark markers", false);
+        	ErrorLogger.fail(t, "Could not update landmark markers", false);
         }
     } 
 
@@ -100,9 +101,9 @@ public class LandmarkMarkerManager implements IMylarContextListener {
                     }; 
                     if (resource != null) resource.getWorkspace().run(runnable, null);
                 } catch (JavaModelException e) { 
-                    MylarPlugin.fail(e, "couldn't update marker", false);
+                    ErrorLogger.fail(e, "couldn't update marker", false);
                 }catch (CoreException e) {
-                    MylarPlugin.fail(e, "couldn't update marker", false);
+                    ErrorLogger.fail(e, "couldn't update marker", false);
                 }
             }
         }
@@ -127,16 +128,16 @@ public class LandmarkMarkerManager implements IMylarContextListener {
                                 		if (marker != null) marker.delete();
                                 	}
                                 } catch (NullPointerException e) {
-                                	MylarPlugin.log(e, "could not update markers");
+                                	ErrorLogger.log(e, "could not update markers");
                                 }
                             }
                         }
                     };
                     resource.getWorkspace().run(runnable, null);
                 } catch (JavaModelException e) {
-                    MylarPlugin.fail(e, "couldn't update landmark marker", false);
+                    ErrorLogger.fail(e, "couldn't update landmark marker", false);
                 } catch (CoreException e) {
-                    MylarPlugin.fail(e, "couldn't update landmark marker", false);
+                    ErrorLogger.fail(e, "couldn't update landmark marker", false);
                 }
             }
         }

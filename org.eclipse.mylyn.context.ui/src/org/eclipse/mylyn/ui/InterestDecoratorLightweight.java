@@ -20,6 +20,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextRelation;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ui.internal.UiUtil;
 
 
@@ -65,7 +66,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
                 } 
             }
         } catch (Exception e) {
-        	MylarPlugin.log(e, "decoration failed");
+        	ErrorLogger.log(e, "decoration failed");
         }
     } 
   

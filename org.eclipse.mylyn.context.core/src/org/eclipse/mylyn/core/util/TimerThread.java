@@ -16,7 +16,6 @@ package org.eclipse.mylar.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.core.MylarPlugin;
 
 /**
  * @author Mik Kersten
@@ -72,7 +71,7 @@ public class TimerThread extends Thread implements Runnable {
 				sleep(sleepInterval);
 			}
 		} catch (InterruptedException e) {
-			MylarPlugin.log(e, "timer interrupted");
+			ErrorLogger.log(e, "timer interrupted");
 		}
 	}
 

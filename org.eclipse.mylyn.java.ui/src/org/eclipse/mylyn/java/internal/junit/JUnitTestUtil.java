@@ -24,6 +24,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 
@@ -61,7 +62,7 @@ public class JUnitTestUtil {
 				}
 			}
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "could not add all test types", false);
+			ErrorLogger.fail(e, "could not add all test types", false);
 		}
 		return testTypes;
 	}

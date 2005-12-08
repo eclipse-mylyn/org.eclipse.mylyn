@@ -37,7 +37,7 @@ import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -279,7 +279,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				MylarPlugin.fail(t, "Could not find element for: " + marker, false);
+				ErrorLogger.fail(t, "Could not find element for: " + marker, false);
 				return null;
 			}
 		} else if (resource instanceof IFile) {
@@ -304,7 +304,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 					return handle;
 				}
 			} catch (Exception e) {
-				MylarPlugin.log(e, "Unable to get handle for offset in object");
+				ErrorLogger.log(e, "Unable to get handle for offset in object");
 			}
 		}
 		return null;

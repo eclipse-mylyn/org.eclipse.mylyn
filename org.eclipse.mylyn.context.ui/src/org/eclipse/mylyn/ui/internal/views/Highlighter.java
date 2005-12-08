@@ -14,7 +14,7 @@ package org.eclipse.mylar.ui.internal.views;
 import java.util.*;
 
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -131,7 +131,7 @@ public class Highlighter {
 
 			highlightColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
 		} catch (Throwable t) {
-			MylarPlugin.log(t, "highlighter init failed");
+			ErrorLogger.log(t, "highlighter init failed");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class Highlighter {
 
 			landmarkColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
 		} catch (Throwable t) {
-			MylarPlugin.log(t, "landmark init failed");
+			ErrorLogger.log(t, "landmark init failed");
 		}
 	}
 
@@ -176,7 +176,7 @@ public class Highlighter {
 				green += greenStep;
 			}
 		} catch (Throwable t) {
-			MylarPlugin.log(t, "gradients failed");
+			ErrorLogger.log(t, "gradients failed");
 		}
 	}
 

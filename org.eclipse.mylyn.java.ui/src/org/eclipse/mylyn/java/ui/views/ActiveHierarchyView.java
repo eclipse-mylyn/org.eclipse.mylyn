@@ -44,6 +44,7 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.dt.MylarWebRef;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.ui.views.ActiveViewDelegatingDragAdapter;
 import org.eclipse.mylar.ide.ui.views.ActiveViewDropAdapter;
 import org.eclipse.mylar.ide.ui.views.ActiveViewResourceDragAdapter;
@@ -211,7 +212,7 @@ public class ActiveHierarchyView extends ViewPart {
 				});
             }
         } catch (Throwable t) {
-            MylarPlugin.fail(t, "Could not update viewer", false);
+            ErrorLogger.fail(t, "Could not update viewer", false);
         }
     }
 
@@ -238,7 +239,7 @@ public class ActiveHierarchyView extends ViewPart {
 			    viewer.getControl().setRedraw(true);
 			}
 	    } catch (Throwable t) {
-	        MylarPlugin.fail(t, "Could not update viewer", false);
+	        ErrorLogger.fail(t, "Could not update viewer", false);
 	    }
 	}
 
@@ -261,7 +262,7 @@ public class ActiveHierarchyView extends ViewPart {
 	                        IEditorPart part = JavaUI.openInEditor(element);
 	                        JavaUI.revealInEditor(part, element);
 	                    } catch (Throwable t) { 
-	                    	MylarPlugin.log(t, "Could not open type");
+	                    	ErrorLogger.log(t, "Could not open type");
 	                    }
 	                } 
                 }
@@ -272,7 +273,7 @@ public class ActiveHierarchyView extends ViewPart {
 			initDrop();
 			initDrag();
         } catch (Throwable t) {
-        	MylarPlugin.log(t, "create failed");
+        	ErrorLogger.log(t, "create failed");
         }
 	}
 

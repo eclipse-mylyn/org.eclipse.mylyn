@@ -29,8 +29,8 @@ import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.mylar.xml.XmlReferencesProvider;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
@@ -186,7 +186,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
                 String handle = new XmlNodeHelper(file.getFullPath().toString(), PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
                 return handle;
             }catch(Exception e){
-            	MylarPlugin.log(e, "pde handle failed");
+            	ErrorLogger.log(e, "pde handle failed");
             }
             
         }else if (object instanceof File) {
@@ -281,7 +281,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	            return null;
 	        }
 	        catch (Throwable t) {
-	            MylarPlugin.log(t, "Could not find element for: " + marker);
+	            ErrorLogger.log(t, "Could not find element for: " + marker);
 	            return null;
 	        }
     	} else if(resource instanceof IFile){
@@ -295,7 +295,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	                return handle;
 	            }
     		} catch(Exception e){
-    			MylarPlugin.log(e, "Unable to get handle for offset in object");
+    			ErrorLogger.log(e, "Unable to get handle for offset in object");
     		}
     	}
     	return null;

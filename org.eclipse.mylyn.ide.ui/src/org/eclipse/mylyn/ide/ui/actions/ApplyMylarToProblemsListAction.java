@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.ui.ProblemsListDoiSorter;
 import org.eclipse.mylar.ide.ui.ProblemsListInterestFilter;
 import org.eclipse.mylar.ide.ui.ProblemsListLabelProvider;
@@ -83,7 +83,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	    			updateLabelProvider(cachedProblemsTableViewer);           
 	            } 
 	        } catch (Exception e) {
-	        	MylarPlugin.log(e, "couldn't get problmes viewer");
+	        	ErrorLogger.log(e, "couldn't get problmes viewer");
 	        }
 		}
         if (cachedProblemsTableViewer != null) viewers.add(cachedProblemsTableViewer);
@@ -196,7 +196,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
         		}
             } 
         } catch (Exception e) {
-        	MylarPlugin.fail(e, "Couldn't toggle problem filter (not yet supported on Eclipse 3.2)", false);
+        	ErrorLogger.fail(e, "Couldn't toggle problem filter (not yet supported on Eclipse 3.2)", false);
         }
 	}
 

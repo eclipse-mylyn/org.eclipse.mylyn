@@ -45,6 +45,7 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
@@ -73,7 +74,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
     protected void findRelated(final IMylarElement node, int degreeOfSeparation) {
     	if (node == null) return;
     	if (node.getContentType() == null) {
-    		MylarPlugin.log("null content type for: " + node, this);
+    		ErrorLogger.log("null content type for: " + node, this);
     		return;
     	}
         if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) return;
@@ -303,9 +304,9 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
                 }
                 return runStatus;
             } catch (ConcurrentModificationException cme) {
-            	MylarPlugin.log(cme, "java search failed");
+            	ErrorLogger.log(cme, "java search failed");
             } catch (Throwable t) {
-            	MylarPlugin.log(t, "java search failed");
+            	ErrorLogger.log(t, "java search failed");
             } 
             
         	IStatus status = new Status(IStatus.WARNING,

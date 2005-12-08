@@ -20,6 +20,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.widgets.Event;
@@ -74,7 +75,7 @@ public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActi
                 javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER);
 			}
 	    } catch (Throwable t) {
-	        MylarPlugin.fail(t, "Could not enable editor management", true);
+	        ErrorLogger.fail(t, "Could not enable editor management", true);
 	    }
 	}
 

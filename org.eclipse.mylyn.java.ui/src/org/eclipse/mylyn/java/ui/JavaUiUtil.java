@@ -28,6 +28,7 @@ import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
@@ -86,7 +87,7 @@ public class JavaUiUtil {
     			ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
     		return null;  
     	} catch (Throwable t) {
-    	    MylarPlugin.fail(t, "Could not find element for: " + marker, false);
+    	    ErrorLogger.fail(t, "Could not find element for: " + marker, false);
     	    return null;
     	}
     }

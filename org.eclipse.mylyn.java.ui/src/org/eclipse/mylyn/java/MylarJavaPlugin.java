@@ -19,6 +19,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
@@ -140,7 +141,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 					JavaCore.addElementChangedListener(javaElementChangeListener);
 				} catch (Throwable t) {
-					MylarPlugin.fail(t, "Mylar Java plug-in initialization failed", true);
+					ErrorLogger.fail(t, "Mylar Java plug-in initialization failed", true);
 				}
 			}
 		});
@@ -177,7 +178,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 			// TODO: uninstall editor tracker
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "Mylar Java stop failed", false);
+			ErrorLogger.fail(e, "Mylar Java stop failed", false);
 		}
 	}
 

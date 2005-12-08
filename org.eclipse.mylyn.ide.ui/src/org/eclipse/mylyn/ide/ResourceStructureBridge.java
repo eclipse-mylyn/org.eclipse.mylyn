@@ -29,6 +29,7 @@ import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
 /**
@@ -74,7 +75,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 					}
 					return childHandles;
 				} catch (Exception e) {
-					MylarPlugin.fail(e, "could not get child", false);
+					ErrorLogger.fail(e, "could not get child", false);
 				}
 			} else if (resource instanceof IFile) {
 				// delegate to child bridges
@@ -108,7 +109,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
             try {
             	return workspace.getRoot().getProject(projectName);
             } catch (IllegalArgumentException e) {
-            	MylarPlugin.fail(e, "bad path for handle: " + handle, false);
+            	ErrorLogger.fail(e, "bad path for handle: " + handle, false);
             	return null;
             }
         } else if (path.segmentCount() > 1) {
@@ -157,7 +158,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
             return null;
         }
         catch (Throwable t) {
-            MylarPlugin.log(t, "Could not find element for: " + marker);
+            ErrorLogger.log(t, "Could not find element for: " + marker);
             return null;
         }
     }
