@@ -12,8 +12,6 @@ package org.eclipse.mylar.core;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,16 +30,11 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
-import org.eclipse.mylar.core.util.DateUtil;
-import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -63,9 +56,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 	public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
 
 	public static final String CONTENT_TYPE_ANY = "*";
-
-	private static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n" + "https://eclipse.org/mylar\n\n"
-			+ "For details on this error please open the PDE Runtime -> Error Log view";
 
 	private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
 
@@ -99,7 +89,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public static final String LOG_FILE_NAME = "mylar-log.txt";
 
-	private PrintStream logStream = null;
+	public PrintStream logStream = null;
 
 	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
 
@@ -133,18 +123,18 @@ public class MylarPlugin extends AbstractUIPlugin {
 		}
 
 		public Object getObjectForHandle(String handle) {
-			MylarPlugin.log("null bridge for handle: " + handle, this);
+			ErrorLogger.log("null bridge for handle: " + handle, this);
 			return null;
 			// throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
 		public String getParentHandle(String handle) {
-			MylarPlugin.log("null bridge for handle: " + handle, this);
+			ErrorLogger.log("null bridge for handle: " + handle, this);
 			return null;
 		}
 
 		public String getName(Object object) {
-			MylarPlugin.log("null bridge for object: " + object.getClass(), this);
+			ErrorLogger.log("null bridge for object: " + object.getClass(), this);
 			return "";
 		}
 
@@ -186,7 +176,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		}
 
 		public String getHandleForOffsetInObject(Object resource, int offset) {
-			MylarPlugin.log("null bridge for marker: " + resource.getClass(), this);
+			ErrorLogger.log("null bridge for marker: " + resource.getClass(), this);
 			return null;
 		}
 
@@ -239,7 +229,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 				}
 			}
 		} catch (Exception e) {
-			MylarPlugin.fail(e, "Mylar Core stop failed", false);
+			ErrorLogger.fail(e, "Mylar Core stop failed", false);
 		}
 	}
 
@@ -284,7 +274,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	 */
 	public void setSharedDataDirectoryEnabled(boolean enable) {
 		if (enable && sharedDataDirectory == null) {
-			MylarPlugin.fail(new Exception("EnableDataDirectoryException"),
+			ErrorLogger.fail(new Exception("EnableDataDirectoryException"),
 					"Could not enable shared data directory because no shared data directory was specifed.", true);
 			return;
 		}
@@ -309,82 +299,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 	public List<AbstractUserInteractionMonitor> getSelectionMonitors() {
 		return selectionMonitors;
-	}
-
-	/**
-	 * Logs the specified status with this plug-in's log.
-	 * 
-	 * @param status
-	 *            status to log
-	 */
-	public static void log(IStatus status) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("[");
-		buffer.append(DateUtil.getFormattedDate());
-		buffer.append(", ");
-		buffer.append(DateUtil.getFormattedTime());
-		buffer.append("] ");
-
-		if (WorkbenchPlugin.getDefault() != null) {
-			buffer.append("version: " + WorkbenchPlugin.getDefault().getBundle().getLocation() + ", ");
-		}
-
-		buffer.append(status.toString() + ", ");
-
-		if (status.getException() != null) {
-			buffer.append("exception: ");
-			buffer.append(printStrackTrace(status.getException()));
-		}
-
-		if (getDefault() != null) {
-			getDefault().getLog().log(status);
-			if (getDefault().logStream != null)
-				getDefault().logStream.println(buffer.toString());
-		}
-	}
-
-	private static String printStrackTrace(Throwable t) {
-		StringWriter writer = new StringWriter();
-		t.printStackTrace(new PrintWriter(writer));
-		return writer.toString();
-	}
-
-	public static void log(String message, Object source) {
-		if (source != null)
-			message += ", source: " + source.getClass().getName();
-
-		log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, message, null));
-	}
-
-	public static void log(Throwable throwable, String message) {
-		fail(throwable, message, false);
-	}
-
-	/**
-	 * Log a failure
-	 * 
-	 * @param throwable
-	 *            can be null
-	 * @param message
-	 *            The message to include
-	 * @param informUser
-	 *            if true dialog box will be popped up
-	 */
-	public static void fail(Throwable throwable, String message, boolean informUser) {
-		if (message == null)
-			message = "no message";
-		message += "\n";
-
-		final Status status = new Status(Status.ERROR, MylarPlugin.IDENTIFIER, IStatus.OK, message, throwable);
-		log(status);
-
-		if (informUser && Workbench.getInstance() != null) {
-			Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-				public void run() {
-					ErrorDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Mylar error", ERROR_MESSAGE, status);
-				}
-			});
-		}
 	}
 
 	public Map<String, IMylarStructureBridge> getStructureBridges() {
@@ -599,7 +513,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 							((IMylarStructureBridge) bridge).setParentBridge(((IMylarStructureBridge) parent));
 							// ((IMylarStructureBridge)parent).addChildBridge(((IMylarStructureBridge)bridge));
 						} else {
-							MylarPlugin.log("Could not load parent bridge: " + parent.getClass().getCanonicalName() + " must implement "
+							ErrorLogger.log("Could not load parent bridge: " + parent.getClass().getCanonicalName() + " must implement "
 									+ IMylarStructureBridge.class.getCanonicalName(), thisReader);
 						}
 					}
@@ -615,11 +529,11 @@ public class MylarPlugin extends AbstractUIPlugin {
 						MylarPlugin.getDefault().setActiveSearchLabel(bridge, label);
 					}
 				} else {
-					MylarPlugin.log("Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
+					ErrorLogger.log("Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
 							+ IMylarStructureBridge.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
-				MylarPlugin.log(e, "Could not load bridge extension");
+				ErrorLogger.log(e, "Could not load bridge extension");
 			}
 		}
 	}

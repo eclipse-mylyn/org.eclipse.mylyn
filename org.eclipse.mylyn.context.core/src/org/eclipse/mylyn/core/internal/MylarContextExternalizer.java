@@ -23,9 +23,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ContextReader;
 import org.eclipse.mylar.core.util.ContextWriter;
+import org.eclipse.mylar.core.util.ErrorLogger;
 
 /**
  * @author Mik Kersten
@@ -49,7 +49,7 @@ public class MylarContextExternalizer {
             writer.writeContextToStream(context);
             stream.close();
         } catch (IOException e) {
-        	MylarPlugin.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+        	ErrorLogger.fail(e, "Could not write: " + file.getAbsolutePath(), true);
         }
     }
     
@@ -58,7 +58,7 @@ public class MylarContextExternalizer {
             if (!file.exists()) return null;
             return reader.readContext(file);
         } catch (Exception e) {
-        	MylarPlugin.fail(e, "Could not read: " + file.getAbsolutePath(), true);
+        	ErrorLogger.fail(e, "Could not read: " + file.getAbsolutePath(), true);
         }
         return null;
     }
@@ -80,9 +80,9 @@ public class MylarContextExternalizer {
         } catch (InvalidClassException ice) {
             String saveFilePath = file.getAbsolutePath() + "-save";
             file.renameTo(new File(saveFilePath)); // TODO: this fails?
-            MylarPlugin.log("Found invalid taskscape, moved to: " + saveFilePath, this);
+            ErrorLogger.log("Found invalid taskscape, moved to: " + saveFilePath, this);
         } catch (Exception e) {
-            MylarPlugin.log(e, "Could not load taskscape");
+            ErrorLogger.log(e, "Could not load taskscape");
         } 
         return null;
     }
@@ -96,7 +96,7 @@ public class MylarContextExternalizer {
             stream.flush();
             stream.close();
         } catch (Exception e) {
-            MylarPlugin.log(e, "Could not save taskscape");
+            ErrorLogger.log(e, "Could not save taskscape");
         }
     }
 

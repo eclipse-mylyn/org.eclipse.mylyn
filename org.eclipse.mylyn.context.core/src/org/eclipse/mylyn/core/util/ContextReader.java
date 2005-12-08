@@ -22,7 +22,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.InteractionEvent.Kind;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.MylarContext;
@@ -59,7 +58,7 @@ public class ContextReader {
 			}
 			return t;
         } catch (Exception e) {
-            MylarPlugin.fail(e, "could not read context, recreating", false);
+            ErrorLogger.fail(e, "could not read context, recreating", false);
             file.renameTo(new File(file.getAbsolutePath() + "-save"));
             return null;
         }
@@ -74,9 +73,9 @@ public class ContextReader {
             builder = factory.newDocumentBuilder();
             document = builder.parse(inputFile); 
         } catch (SAXException se) {
-            MylarPlugin.log(se, "could not build");
+            ErrorLogger.log(se, "could not build");
         } catch (ParserConfigurationException e) {
-        	MylarPlugin.log(e, "could not parse");
+        	ErrorLogger.log(e, "could not parse");
 		}
         return document;
     }
@@ -102,7 +101,7 @@ public class ContextReader {
 					format.parse(endDate));
 			return ie;
 		} catch (ParseException e) {
-			MylarPlugin.log(e, "could not read interaction event");
+			ErrorLogger.log(e, "could not read interaction event");
 		}
     	return null;
     }
