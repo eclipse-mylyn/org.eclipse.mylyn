@@ -47,18 +47,6 @@ public class TaskListManager {
 
 	private static final String PREFIX_TASK = "task-";
 	
-//	private int inactivityTimoutMillis = 1 * 60 * 1000;
-//	
-//	public static final long INACTIVITY_TIME_MILLIS;
-	
-//	static {
-//		if (MylarPlugin.getContextManager() != null) {
-//			INACTIVITY_TIME_MILLIS = MylarPlugin.getContextManager().getInactivityTimeout();
-//		} else {
-//			INACTIVITY_TIME_MILLIS = 1 * 60 * 1000;
-//		}
-//	}
-
 	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) { 
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
@@ -75,7 +63,6 @@ public class TaskListManager {
 	}
 
 	public boolean readTaskList() {
-//		taskListWriter.initExtensions();
 		try {
 			if (taskListFile.exists()) {
 				taskListWriter.readTaskList(taskList, taskListFile);
@@ -231,17 +218,4 @@ public class TaskListManager {
 	public File getTaskListFile() {
 		return taskListFile;
 	}
-
-//	public void setTaskListRead(boolean taskListRead) {
-//		this.taskListRead = taskListRead;
-//	}
-	
-//	public String toXmlString() {
-//		try {
-//			return MylarTaskListPlugin.getDefault().getTaskListExternalizer().getTaskListXml(taskList);
-//		} catch (Exception e) {
-//			MylarPlugin.fail(e, "Could not save task list", true);
-//		}
-//		return null;
-//	}
 }
