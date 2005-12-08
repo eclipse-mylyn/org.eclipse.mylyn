@@ -207,7 +207,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 	public void testLocalBugUnqual() throws InterruptedException {
 		lists.clear();
 
-		String bugPrefix = "Bugzilla-";
+		String bugPrefix = BugzillaTask.BUGZILLA_HANDLE_PREFIX;
 		
 //		TaskList t = MylarTaskListPlugin.getTaskListManager().getTaskList();
 //		MylarTaskListPlugin.getTaskListManager().setTaskList(t);
