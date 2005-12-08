@@ -92,7 +92,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     public static final String MONITOR_LOG_NAME = "monitor-history";
     public static final String MONITOR_LOG_NAME_OLD = "workspace";
     
-    public static final String PREF_LOG_FILE = "org.eclipse.mylar.monitor.log.file";
+//    public static final String PREF_LOG_FILE = "org.eclipse.mylar.monitor.log.file";
 	public static final String PREF_MONITORING_ENABLED = "org.eclipse.mylar.monitor.enabled";
 	public static final String PREF_NUM_USER_EVENTS = "org.eclipse.mylar.monitor.events.observed";
 	public static final String PREF_PREVIOUS_TRANSMIT_DATE = "org.eclipse.mylar.monitor.upload.previousTransmit";
@@ -150,7 +150,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
  
     private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent event) {
-            if (event.getProperty().equals(MylarPlugin.MYLAR_DIR)) {                
+            if (event.getProperty().equals(MylarPlugin.PREF_DATA_DIR)) {                
                 if (event.getOldValue() instanceof String) {
                     if(!isPerformingUpload()) {
                     	for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.stopObserving();
@@ -175,11 +175,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
         workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {				
 				new MonitorExtensionPointReader().initExtensions();
-				getPreferenceStore().setDefault(PREF_LOG_FILE, 
-				MylarPlugin.getDefault().getMylarDataDirectory()
-	                + File.separator
-	                + MONITOR_LOG_NAME
-	                + MylarContextManager.FILE_EXTENSION);
+//				getPreferenceStore().setDefault(PREF_LOG_FILE, 
+//					MylarPlugin.getDefault().getMylarDataDirectory()
+//		                + File.separator
+//		                + MONITOR_LOG_NAME
+//		                + MylarContextManager.FILE_EXTENSION);
 				
 				interactionLogger = new InteractionEventLogger(getMonitorLogFile());
 		        preferenceMonitor = new PreferenceChangeMonitor();
@@ -313,9 +313,14 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 //    }
     
     public File getMonitorLogFile() { 
-        File file = new File(getPreferenceStore().getString(PREF_LOG_FILE));
+        File file = new File(
+        		MylarPlugin.getDefault().getDataDirectory()
+                + File.separator
+                + MONITOR_LOG_NAME
+                + MylarContextManager.FILE_EXTENSION);
+        
         File oldFile = new File(
-                MylarPlugin.getDefault().getMylarDataDirectory()
+                MylarPlugin.getDefault().getDataDirectory()
                 + File.separator
                 + MONITOR_LOG_NAME_OLD
                 + MylarContextManager.FILE_EXTENSION);        

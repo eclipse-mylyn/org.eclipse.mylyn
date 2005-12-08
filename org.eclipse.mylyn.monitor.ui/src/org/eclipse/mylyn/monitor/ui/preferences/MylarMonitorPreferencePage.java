@@ -169,7 +169,8 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 	
 	public void performDefaults() {
 		super.performDefaults();
-		logFileText.setText(getPreferenceStore().getDefaultString(MylarMonitorPlugin.PREF_LOG_FILE));
+		logFileText.setText(MylarMonitorPlugin.getDefault().getMonitorLogFile().getPath());
+//		logFileText.setText(getPreferenceStore().getDefaultString(MylarMonitorPlugin.PREF_LOG_FILE));
 	}
 	
 	@Override
@@ -180,9 +181,9 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 			MylarMonitorPlugin.getDefault().stopMonitoring();
 		}
 		
-		String taskDirectory = logFileText.getText();
-		taskDirectory = taskDirectory.replaceAll("\\\\", "/");		
-		getPreferenceStore().setValue(MylarPlugin.MYLAR_DIR, taskDirectory);
+//		String taskDirectory = logFileText.getText();
+//		taskDirectory = taskDirectory.replaceAll("\\\\", "/");	
+//		getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR, taskDirectory);
 		
 		int uidNum = -1;
 		try {

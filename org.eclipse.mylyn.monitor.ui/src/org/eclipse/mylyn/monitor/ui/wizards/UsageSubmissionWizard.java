@@ -756,7 +756,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         List<File> files = new ArrayList<File>();
         files.add(monitorFile);
         
-        File zipFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + "/mylarUpload.zip");
+        File zipFile = new File(MylarPlugin.getDefault().getDataDirectory() + "/mylarUpload.zip");
         
         try{
        	 ZipFileUtil.createZipFile(zipFile, files);

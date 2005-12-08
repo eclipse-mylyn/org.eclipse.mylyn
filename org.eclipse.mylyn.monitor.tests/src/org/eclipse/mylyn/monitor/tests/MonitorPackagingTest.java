@@ -42,7 +42,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
         files.add(monitorFile);
 //        files.add(logFile);
         
-        File zipFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + "/mylarUpload.zip");
+        File zipFile = new File(MylarPlugin.getDefault().getDataDirectory() + "/mylarUpload.zip");
         
         ZipFileUtil.createZipFile(zipFile, files);
 
@@ -53,7 +53,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
         Thread.sleep(1000);
         
 
-        zipFile = new File(MylarPlugin.getDefault().getMylarDataDirectory() + "/mylarUpload.zip");
+        zipFile = new File(MylarPlugin.getDefault().getDataDirectory() + "/mylarUpload.zip");
         
         // Open the ZIP file
         ZipFile zf = new ZipFile(zipFile);
