@@ -41,18 +41,11 @@ public class CompleteTaskWizardAction implements IViewActionDelegate {
 
 	public void run(IAction action) {
 		ITask task = TaskListView.getDefault().getSelectedTask();
-		if (!task.isActive()) {
-			MessageDialog.openInformation(null, 
-					"Mylar Information", 
-					"This action can only be run on an active task.");
-			return;
-		}
-		
 		IResource[] resources = MylarIdePlugin.getDefault().getChangeSetManager().getResources(task);
 		if (resources == null || resources.length == 0){
 			MessageDialog.openInformation(null, 
 					"Mylar Information", 
-					"There are no interesting resources in the active task context.");
+					"There are no interesting resources in the corresponding change set.\nRefer to Synchronize view.");
 			return;
 		}
 		

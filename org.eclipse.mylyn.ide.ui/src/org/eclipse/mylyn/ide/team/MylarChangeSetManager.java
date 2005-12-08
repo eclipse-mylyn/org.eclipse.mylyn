@@ -168,12 +168,24 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 	
 	public IResource[] getResources(ITask task) {
-		MylarContextChangeSet changeSet = activeChangeSets.get(task);
-		if (changeSet != null) {
-			return changeSet.getResources();
-		} else {
-			return null;
-		}
+		ChangeSet[] sets = collector.getSets();
+		for (int i = 0; i < sets.length; i++) {
+			ChangeSet set = sets[i];
+			if (set instanceof MylarContextChangeSet) {
+				MylarContextChangeSet contextChangeSet = (MylarContextChangeSet)set;
+				if (contextChangeSet.getTask().equals(task)) {
+					return contextChangeSet.getResources();
+				}
+			}
+		}  
+		return null;
+		
+//		MylarContextChangeSet changeSet = activeChangeSets.get(task);
+//		if (changeSet != null) {
+//			return changeSet.getResources();
+//		} else {
+//			return null;
+//		}
 	}
 	
 	public void contextActivated(IMylarContext context) {
