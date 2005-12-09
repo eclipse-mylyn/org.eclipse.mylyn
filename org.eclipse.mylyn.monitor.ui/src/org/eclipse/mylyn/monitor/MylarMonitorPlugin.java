@@ -180,7 +180,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 //					MylarPlugin.getDefault().getMylarDataDirectory()
 //		                + File.separator
 //		                + MONITOR_LOG_NAME
-//		                + MylarContextManager.FILE_EXTENSION);
+//		                + MylarContextManager.CONTEXT_FILE_EXTENSION);
 				
 				interactionLogger = new InteractionEventLogger(getMonitorLogFile());
 		        preferenceMonitor = new PreferenceChangeMonitor();
@@ -318,13 +318,13 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
         		MylarPlugin.getDefault().getDataDirectory()
                 + File.separator
                 + MONITOR_LOG_NAME
-                + MylarContextManager.FILE_EXTENSION);
+                + MylarContextManager.CONTEXT_FILE_EXTENSION);
         
         File oldFile = new File(
                 MylarPlugin.getDefault().getDataDirectory()
                 + File.separator
                 + MONITOR_LOG_NAME_OLD
-                + MylarContextManager.FILE_EXTENSION);        
+                + MylarContextManager.CONTEXT_FILE_EXTENSION);        
         if (oldFile.exists()) {
         	oldFile.renameTo(file);
         } else if (!file.exists() || !file.canWrite()) {

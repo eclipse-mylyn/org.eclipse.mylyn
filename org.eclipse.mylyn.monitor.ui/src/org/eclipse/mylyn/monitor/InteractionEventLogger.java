@@ -118,7 +118,11 @@ public class InteractionEventLogger implements IInteractionEventListener {
 				outputFile.renameTo(newFile);
 			} else if (!newFile.exists()) {
 				newFile.createNewFile();
+				outputFile.delete();
+			} else {
+				outputFile.delete();
 			}
+//			System.err.println(">>> " + outputFile.getAbsolutePath() + ": " + outputFile.exists());
 			this.outputFile = newFile;
 		} catch (Exception e) {
 			ErrorLogger.fail(e, "Could not set logger output file", true);
