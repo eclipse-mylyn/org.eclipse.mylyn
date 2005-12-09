@@ -32,6 +32,8 @@ import org.eclipse.swt.events.DisposeListener;
  */
 public class TaskListSaveManager implements ITaskActivityListener, DisposeListener, IBackgroundSaveListener {
 
+	private final static int DEFAULT_SAVE_INTERVAL = 3 * 60 * 1000;
+	
 	private static final String FILE_SUFFIX_BACKUP = "-backup.xml";
 
 	private BackgroundSaveTimer saveTimer = null;
@@ -43,6 +45,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	
 	public TaskListSaveManager() {
 		saveTimer = new BackgroundSaveTimer(this);
+		saveTimer.setSaveIntervalMillis(DEFAULT_SAVE_INTERVAL);
 	} 
 	
 	public void saveTaskListAndContexts() {
