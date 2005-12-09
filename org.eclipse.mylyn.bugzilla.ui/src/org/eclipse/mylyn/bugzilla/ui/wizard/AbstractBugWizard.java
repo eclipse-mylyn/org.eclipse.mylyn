@@ -176,9 +176,11 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
 					public void run() {
 						BugPost form = new BugPost();
-						form.setPrefix("Bug ");
-						form.setPostfix1(" posted");
-						form.setPostfix2(" Submitted");
+						form.setPrefix(BugPost.FORM_PREFIX_BUG_218);
+						form.setPrefix(BugPost.FORM_PREFIX_BUG_220);
+						
+						form.setPostfix(BugPost.FORM_POSTFIX_216);
+						form.setPostfix2(BugPost.FORM_POSTFIX_218);
 
 						try {
 							setURL(form, "post_bug.cgi");

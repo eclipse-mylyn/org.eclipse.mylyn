@@ -38,27 +38,38 @@ import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 /**
  * 
  * @author Shawn Minto
+ * @author Mik Kersten (minor fixes)
  * 
  * Class to handle the positing of a bug
  */
 public class BugPost {
 
+	public static final String FORM_POSTFIX_218 = " Submitted";
+
+	public static final String FORM_POSTFIX_216 = " posted";
+
+	public static final String FORM_PREFIX_BUG_218 = "Bug ";
+
+	public static final String FORM_PREFIX_BUG_220 = "Issue ";
+	
 	/** The fields that are to be changed/maintained */
-	Map<String, String> fields = new HashMap<String, String>();
+	private Map<String, String> fields = new HashMap<String, String>();
 
 	/** The url to post the bug to */
-	URL anURL;
+	private URL anURL;
 
 	/** The prefix for how to find the bug number from the return */
-	String prefix;
+	private String prefix;
+
+	private String prefix2;
 
 	/** The postfix for how to find the bug number from the return */
-	String postfix1;
+	private String postfix;
 
 	/** An alternate postfix for how to find the bug number from the return */
-	String postfix2;
+	private String postfix2;
 
-	String error = null;
+	private String error = null;
 
 	/**
 	 * Add a value to be posted to the bug
@@ -148,7 +159,8 @@ public class BugPost {
 
 			int responseCode = postConnection.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_OK && responseCode != HttpURLConnection.HTTP_CREATED) {
-				throw new BugzillaException("Server returned HTTP error: " + responseCode + " - " + postConnection.getResponseMessage());
+				throw new BugzillaException("Server returned HTTP error: " + responseCode + " - "
+						+ postConnection.getResponseMessage());
 			}
 
 			// open a stream to receive response from bugzilla
@@ -166,19 +178,31 @@ public class BugPost {
 				error += aString == null ? "" : aString + "\n";
 
 				// // check if we have run into an error
-				if (result == null && (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf("error") != -1)) {
+				if (result == null
+						&& (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf(
+								"error") != -1)) {
 					// error handling is now passed up
 					// throw new LoginException("Bugzilla login problem");
-				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO: make this configurable
+				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO:
+																					// make
+																					// this
+																					// configurable
 						|| aString.toLowerCase().matches(".*defect\\s+processed.*")) {
 					possibleFailure = false;
 				}
 				// // get the bug number if it is required
-				if (prefix != null && postfix1 != null && postfix2 != null && result == null) {
-					int startIndex = aString.toLowerCase().indexOf(prefix.toLowerCase());
-					if (startIndex > -1) {
-						startIndex = startIndex + prefix.length();
-						int stopIndex = aString.toLowerCase().indexOf(postfix1.toLowerCase(), startIndex);
+				if (prefix != null && prefix2 != null && postfix != null && postfix2 != null && result == null) {
+					int startIndex = -1;
+					int startIndexPrefix = aString.toLowerCase().indexOf(prefix.toLowerCase());
+					int startIndexPrefix2 = aString.toLowerCase().indexOf(prefix2.toLowerCase());
+					
+					if (startIndexPrefix != -1 || startIndexPrefix2 != -1) {
+						if (startIndexPrefix != -1) {
+							startIndex = startIndexPrefix + prefix.length();
+						} else {
+							startIndex = startIndexPrefix2 + prefix2.length();
+						}
+						int stopIndex = aString.toLowerCase().indexOf(postfix.toLowerCase(), startIndex);
 						if (stopIndex == -1)
 							stopIndex = aString.toLowerCase().indexOf(postfix2.toLowerCase(), startIndex);
 						if (stopIndex > -1) {
@@ -190,7 +214,8 @@ public class BugPost {
 				aString = in.readLine();
 			}
 
-			if ((result == null || result.compareTo("") == 0) && (prefix != null && postfix1 != null && postfix2 != null)) {
+			if ((result == null || result.compareTo("") == 0)
+					&& (prefix != null && prefix2 == null && postfix != null && postfix2 != null)) {
 				throw new PossibleBugzillaFailureException("Could not find bug number for new bug.");
 			} else if (possibleFailure) {
 				throw new PossibleBugzillaFailureException("Could not find \"Bug Processed\".");
@@ -212,10 +237,11 @@ public class BugPost {
 				if (in != null)
 					in.close();
 				if (out != null)
-					out.close(); 
+					out.close();
 
 			} catch (IOException e) {
-				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "Problem posting the bug", e));
+				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
+						"Problem posting the bug", e));
 			}
 		}
 	}
@@ -263,8 +289,8 @@ public class BugPost {
 	 * 
 	 * @return Returns a String
 	 */
-	public String getPostfix1() {
-		return postfix1;
+	public String getPostfix() {
+		return postfix;
 	}
 
 	/**
@@ -273,8 +299,8 @@ public class BugPost {
 	 * @param postfix
 	 *            The postfix to set
 	 */
-	public void setPostfix1(String postfix) {
-		this.postfix1 = postfix;
+	public void setPostfix(String postfix) {
+		this.postfix = postfix;
 	}
 
 	/**
@@ -312,8 +338,10 @@ public class BugPost {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.A) {
 
-				} else if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.FORM) {
-					for (Token token2 = tokenizer.nextToken(); token2.getType() != Token.EOF; token2 = tokenizer.nextToken()) {
+				} else if (token.getType() == Token.TAG
+						&& ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.FORM) {
+					for (Token token2 = tokenizer.nextToken(); token2.getType() != Token.EOF; token2 = tokenizer
+							.nextToken()) {
 						if (token2.getType() == Token.TAG) {
 							HtmlTag tag = (HtmlTag) token2.getValue();
 							if (tag.getTagType() == HtmlTag.Type.FORM && tag.isEndTag())
@@ -329,5 +357,13 @@ public class BugPost {
 			newError = error;
 		}
 		return newError;
+	}
+
+	public String getPrefix2() {
+		return prefix2;
+	}
+
+	public void setPrefix2(String prefix2) {
+		this.prefix2 = prefix2;
 	}
 }
