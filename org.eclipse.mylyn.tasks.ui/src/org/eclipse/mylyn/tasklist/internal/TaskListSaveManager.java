@@ -56,7 +56,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 		if (MylarTaskListPlugin.getDefault().isShellActive() || forceBackgroundSave) {
 			try {
 				saveTaskListAndContexts();
-				ErrorLogger.log("Automatically saved task list", this);
+//				ErrorLogger.log("Automatically saved task list", this);
 			} catch (Exception e) {
 				ErrorLogger.fail(e, "Could not auto save task list", false);
 			}
