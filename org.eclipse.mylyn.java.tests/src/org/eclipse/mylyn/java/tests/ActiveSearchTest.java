@@ -56,7 +56,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
     
     public void testViewRecursion() throws JavaModelException, PartInitException {
     	view = (ActiveSearchView)JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
-    	ActiveSearchView.getFromActivePerspective().setAsyncRefreshMode(false); 
+    	ActiveSearchView.getFromActivePerspective().setSyncExecForTesting(false); 
     	
     	for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
 			assertTrue(provider.isEnabled());

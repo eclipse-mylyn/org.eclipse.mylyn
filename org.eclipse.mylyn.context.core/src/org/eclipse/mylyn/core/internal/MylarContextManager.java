@@ -58,7 +58,7 @@ public class MylarContextManager {
     
     public static final String SOURCE_ID_MODEL_ERROR = "org.eclipse.mylar.core.model.interest.propagation";
     public static final String CONTAINMENT_PROPAGATION_ID = "org.eclipse.mylar.core.model.edges.containment";
-    public static final String FILE_EXTENSION = ".xml";
+    public static final String CONTEXT_FILE_EXTENSION = ".xml";
     private static final int MAX_PROPAGATION = 17; // TODO: parametrize this
     
     private int numInterestingErrors = 0;
@@ -531,7 +531,7 @@ public class MylarContextManager {
     }
     
     public File getFileForContext(String path) {
-        return new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + path + FILE_EXTENSION);
+        return new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + path + CONTEXT_FILE_EXTENSION);
     }
     
     public IMylarContext getActiveContext() {

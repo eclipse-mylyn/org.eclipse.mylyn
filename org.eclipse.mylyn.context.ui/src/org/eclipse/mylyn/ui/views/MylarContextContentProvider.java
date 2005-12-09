@@ -82,7 +82,6 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 				if (object != null) resolvedNodes.add(object);
             }
             return resolvedNodes.toArray();
-//            return nodes.toArray(); 
         } 
         return getChildren(parent);
     }
@@ -117,12 +116,11 @@ public class MylarContextContentProvider implements IStructuredContentProvider, 
 	        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(parent);
 	        	node = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(parent));
         	}
-//            if (rootItems.contains(parent)) { // to avoid infinite recursion
-//            	rootItems.remove(parent);
+        	if (node != null) {
                 return getAllEdgeTypes(node.getRelations()); 
-//            } else {
-//            	return new Object[0];
-//            }
+            } else {
+            	return new Object[0];
+            }
         }
     } 
     

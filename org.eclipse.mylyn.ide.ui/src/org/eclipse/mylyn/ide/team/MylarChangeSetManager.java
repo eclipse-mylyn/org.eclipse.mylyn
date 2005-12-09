@@ -184,7 +184,8 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		try {
 			ITask task = getTask(context); 
 			if (task == null) {
-				ErrorLogger.log("could not resolve task for context", this);
+				// ignore
+//				ErrorLogger.log("could not resolve task for context", this);
 			} else if (!activeChangeSets.containsKey(task.getHandleIdentifier())) { 
 				MylarContextChangeSet contextChangeSet = new MylarContextChangeSet(task, collector);
 				List<IResource> interestingResources = MylarIdePlugin.getDefault().getInterestingResources();

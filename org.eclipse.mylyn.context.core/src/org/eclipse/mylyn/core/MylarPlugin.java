@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.core;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -201,7 +200,8 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 
 	public String getDefaultDataDirectory() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + File.separator + NAME_DATA_DIR;
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() 
+			+ '/' + NAME_DATA_DIR;
 	}
 
 	/**

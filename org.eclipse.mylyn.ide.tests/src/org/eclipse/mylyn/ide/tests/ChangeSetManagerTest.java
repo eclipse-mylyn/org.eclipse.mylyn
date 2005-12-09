@@ -45,6 +45,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager = MylarIdePlugin.getDefault().getChangeSetManager();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
+		assertEquals(0, MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks().size());
 	}
 
 	@Override
@@ -113,13 +114,13 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(1, changeSets.size());
 		MylarContextChangeSet set = changeSets.get(0);
 		IResource[] resources = set.getResources();
-		assertTrue(resources.length <= 2); // can have .project file in there
+		assertTrue("length: " + resources.length, resources.length <= 2); // can have .project file in there
 
 		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
 			MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());
 		}
 		assertTrue(fileElement.getInterest().getValue() < 0);
-		assertTrue(resources.length <= 2); // can have .project file in there
+		assertTrue("length: " + resources.length, resources.length <= 2); // can have .project file in there
 
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
 	}

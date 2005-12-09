@@ -78,7 +78,7 @@ public class ActiveSearchView extends ViewPart {
     /**
      * For testing.
      */
-	private boolean asyncRefreshMode = true;
+	private boolean syncExecForTesting = true;
     
     private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
         public void interestChanged(IMylarElement node) { 
@@ -164,7 +164,7 @@ public class ActiveSearchView extends ViewPart {
 	 * @param updateLabels
 	 */
     void refresh(final IMylarElement node, final boolean updateLabels) {
-        if (!asyncRefreshMode) { // for testing
+        if (!syncExecForTesting) { // for testing
         	if (viewer != null && !viewer.getTree().isDisposed()) {
         		internalRefresh(node, updateLabels);
         	}
@@ -188,14 +188,19 @@ public class ActiveSearchView extends ViewPart {
 			toRefresh = bridge.getObjectForHandle(node.getHandleIdentifier());
 		}
 		if (viewer != null && !viewer.getTree().isDisposed()) {
-			viewer.getControl().setRedraw(false);
-        	if (toRefresh != null && containsNode(viewer.getTree(), toRefresh)) {
-        		viewer.refresh(toRefresh, updateLabels);
-        	} else if (node == null) {
-        		viewer.refresh();
-        	} 
-			viewer.expandToLevel(3);
-			viewer.getControl().setRedraw(true);
+			if (!syncExecForTesting) {
+				viewer.refresh();
+				viewer.expandToLevel(3);
+			} else {
+				viewer.getControl().setRedraw(false);
+	        	if (toRefresh != null && containsNode(viewer.getTree(), toRefresh)) {
+	        		viewer.refresh(toRefresh, updateLabels);
+	        	} else if (node == null) {
+	        		viewer.refresh();
+	        	} 
+				viewer.expandToLevel(3);
+				viewer.getControl().setRedraw(true);
+			}
 		}
 	}
     
@@ -332,8 +337,8 @@ public class ActiveSearchView extends ViewPart {
 	/**
 	 * Set to false for testing
 	 */
-	public void setAsyncRefreshMode(boolean asyncRefreshMode) {
-		this.asyncRefreshMode = asyncRefreshMode;
+	public void setSyncExecForTesting(boolean asyncRefreshMode) {
+		this.syncExecForTesting = asyncRefreshMode;
 	}
 
 	public void setQualifiedNameMode(boolean qualifiedNameMode) {
