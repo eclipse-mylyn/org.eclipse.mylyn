@@ -141,7 +141,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	public void performDefaults() {
 		super.performDefaults();
-
+		copyExistingDataCheckbox.setSelection(true);
 //		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 //		String taskDirectory = rootPath.toString() + "/" + MylarPlugin.DATA_DIR_NAME;
 		taskDirectoryText.setText(MylarPlugin.getDefault().getDefaultDataDirectory());
