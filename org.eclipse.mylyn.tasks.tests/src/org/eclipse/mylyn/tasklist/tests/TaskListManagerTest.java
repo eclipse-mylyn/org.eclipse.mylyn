@@ -37,15 +37,18 @@ public class TaskListManagerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = MylarTaskListPlugin.getTaskListManager();
+		manager.createNewTaskList();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.createNewTaskList();
+		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 	}
 
 	public void testMoves() {
+        assertEquals(0, manager.getTaskList().getRootTasks().size());
 		Task task1 = new Task("t1", "t1", true);
         manager.moveToRoot(task1);
         assertEquals(1, manager.getTaskList().getRootTasks().size());

@@ -106,7 +106,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		final File destTaskListFile = new File(destDir + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-				+ MylarContextManager.FILE_EXTENSION);
+				+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 		final File destZipFile = new File(destDir + File.separator + ZIP_FILE_NAME);
 
 		// Prompt the user to confirm if ANY of the save operations will cause
@@ -137,7 +137,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 				if (exportPage.exportTaskContexts()) {
 					for (ITask task : getAllTasks()) {
-						File destTaskFile = new File(destDir + File.separator + task.getContextPath() + MylarContextManager.FILE_EXTENSION);
+						File destTaskFile = new File(destDir + File.separator + task.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
 						if (destTaskFile.exists()) {
 							if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "Task context files already exist in " + destDir
 									+ ". Do you want to overwrite them?")) {
@@ -230,7 +230,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			if (exportActivationHistory) {
 				try {
 					File sourceActivationHistoryFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator
-							+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.FILE_EXTENSION);
+							+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION);
 
 					MylarPlugin.getContextManager().saveActivityHistoryContext();
 
@@ -255,9 +255,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 									// copy
 					}
 
-					File destTaskFile = new File(destinationDirectory + File.separator + task.getContextPath() + MylarContextManager.FILE_EXTENSION);
+					File destTaskFile = new File(destinationDirectory + File.separator + task.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
 					File sourceTaskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task.getContextPath()
-							+ MylarContextManager.FILE_EXTENSION);
+							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 
 					if (zip) {
 						if (!filesToZipMap.containsKey(task.getContextPath())) {

@@ -266,7 +266,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	};
 
-	private static IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(MULTIPLE_ACTIVE_TASKS)) {
@@ -274,6 +274,19 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				TaskListView.getDefault().toggleNextAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
 				TaskListView.getDefault().clearTaskHistory();
 			}
+            if (event.getProperty().equals(MylarPlugin.PREF_DATA_DIR)) {                
+                if (event.getOldValue() instanceof String) {
+                	String newDirPath = MylarPlugin.getDefault().getDataDirectory();
+            		String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
+            		
+            		getTaskListSaveManager().saveTaskListAndContexts();
+            		getTaskListManager().setTaskListFile(new File(taskListFilePath));
+            		getTaskListManager().createNewTaskList();
+            		getTaskListManager().readTaskList();
+
+            		if (TaskListView.getDefault() != null) TaskListView.getDefault().clearTaskHistory();
+                }
+            } 
 		}
 	};
 
@@ -403,18 +416,18 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return MylarPlugin.getDefault().getPreferenceStore();
 	}
 
-	/**
-	 * Sets the directory containing the task list file to use.
-	 * Switches immediately to use the data at that location.
-	 */
-	public void setDataDirectory(String newDirPath) {
-		String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
-		getTaskListManager().setTaskListFile(new File(taskListFilePath));
-		getTaskListManager().createNewTaskList();
-		getTaskListManager().readTaskList();
-
-		if (TaskListView.getDefault() != null) TaskListView.getDefault().clearTaskHistory();
-	}
+//	/**
+//	 * Sets the directory containing the task list file to use.
+//	 * Switches immediately to use the data at that location.
+//	 */
+//	public void setDataDirectory(String newDirPath) {
+//		String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
+//		getTaskListManager().setTaskListFile(new File(taskListFilePath));
+//		getTaskListManager().createNewTaskList();
+//		getTaskListManager().readTaskList();
+//
+//		if (TaskListView.getDefault() != null) TaskListView.getDefault().clearTaskHistory();
+//	}
 
 	private void checkTaskListBackup() {
 		//    	if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {

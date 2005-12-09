@@ -28,7 +28,6 @@ public class AllTasklistTests {
         suite.addTestSuite(TaskListUiTest.class);
         suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
-		suite.addTestSuite(ChangeMainTaskDirTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
 		//$JUnit-END$

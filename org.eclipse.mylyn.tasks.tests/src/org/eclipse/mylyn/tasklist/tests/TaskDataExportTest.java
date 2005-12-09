@@ -54,7 +54,7 @@ public class TaskDataExportTest extends TestCase{
 
 		//Save the context file and check that it exists
 		MylarPlugin.getContextManager().saveContext(mockContext.getId(), task1.getContextPath());
-		File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task1.getContextPath() + MylarContextManager.FILE_EXTENSION);
+		File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(MylarPlugin.getContextManager().hasContext(task1.getContextPath()));
 		assertTrue(taskFile.exists());
 	}
@@ -88,11 +88,11 @@ public class TaskDataExportTest extends TestCase{
 		File destActivationHistoryFile = new File(destinationDir
 				+ File.separator
 				+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-				+ MylarContextManager.FILE_EXTENSION);
+				+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(destActivationHistoryFile.exists());
 		
 		//Check that the task context file created in setUp() was exported
-		File destTaskContextFile = new File(destinationDir + File.separator + task1.getContextPath() + MylarContextManager.FILE_EXTENSION);
+		File destTaskContextFile = new File(destinationDir + File.separator + task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(destTaskContextFile.exists());
 	}
 	
