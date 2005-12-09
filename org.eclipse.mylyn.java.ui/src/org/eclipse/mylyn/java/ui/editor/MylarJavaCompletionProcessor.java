@@ -47,17 +47,26 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 
     private static final String LABEL_SEPARATOR = " -----------------------------------";
 
+    private Method resolveMemberMethod;
+    
 	public MylarJavaCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
-        super(editor, assistant, partition); 
+        super(editor, assistant, partition);
+        try {
+			resolveMemberMethod = MemberProposalInfo.class.getDeclaredMethod("resolveMember", new Class[] { } );
+	        resolveMemberMethod.setAccessible(true);
+        } catch (SecurityException e) {
+			ErrorLogger.fail(e, "could not install content assist, reflection denied", false);
+		} catch (NoSuchMethodException e) {
+	    	ErrorLogger.fail(e, "could not install content assist, wrong Eclipse version", false);
+		}
     }
 
 	@MylarWebRef(name="Reflection documentation", url="http://www.onjava.com/pub/a/onjava/2003/11/12/reflection.html?page=last")
     @Override
 	protected List filterAndSortProposals(List proposals, IProgressMonitor monitor, TextContentAssistInvocationContext context) {
 		super.filterAndSortProposals(proposals, monitor, context);
+		if (resolveMemberMethod == null || !MylarPlugin.getContextManager().hasActiveContext()) return proposals;
         try {
-            Method method = MemberProposalInfo.class.getDeclaredMethod("resolveMember", new Class[] { } );
-            method.setAccessible(true);
             TreeMap<Float, ICompletionProposal> interesting = new TreeMap<Float, ICompletionProposal>();
             List<ICompletionProposal> rest = new ArrayList<ICompletionProposal>();
             int unresolvedProposals = 0;
@@ -70,12 +79,11 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                     info = ((LazyJavaCompletionProposal)proposal).getProposalInfo();
                 } 
                 boolean added = false;
-                try { // HACK
+                try {
                     if (info != null) {
-                        IMember member = null; 
-                        if (info instanceof MemberProposalInfo) member = (IMember)method.invoke(info, new Object[] { });
+                        IMember member = null; // HACK: using reflection to get member
+                        if (info instanceof MemberProposalInfo) member = (IMember)resolveMemberMethod.invoke(info, new Object[] { });
                         if (member == null || MylarPlugin.getContextManager().getActiveContext() == null) {
-                            // nothing for now
                         	rest.add(proposal);
                         } else {
                         	IMylarElement node = MylarPlugin.getContextManager().getElement(member.getHandleIdentifier()); 
@@ -86,6 +94,8 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 	                            } else {
 	                            	rest.add(proposal);
 	                            }
+                            } else {
+                            	rest.add(proposal);
                             }
                         } 
                         added = true;
@@ -108,13 +118,9 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
                 ICompletionProposal[] sorted = new ICompletionProposal[interesting.keySet().size() + rest.size() + 1];
                 int i = 0;
                 for (Entry<Float, ICompletionProposal> entry : interesting.entrySet()) {
-                    sorted[i] = entry.getValue();//interesting.get(f);
+                    sorted[i] = entry.getValue();
                     i++; 
-                }  
-//                for (Float f : interesting.keySet()) {
-//                    sorted[i] = interesting.get(f);
-//                    i++; 
-//                }  
+                } 
                 if (interesting.keySet().size() > 0) {
                     int replacementOffset = -1;
                     if (sorted[i-1] instanceof JavaCompletionProposal) {
