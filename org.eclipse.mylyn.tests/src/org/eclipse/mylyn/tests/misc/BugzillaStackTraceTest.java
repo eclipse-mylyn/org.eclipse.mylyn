@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 ////Created on Oct 12, 2004
-package org.eclipse.mylar.tests.bugs;
+package org.eclipse.mylar.tests.misc;
 
 import java.io.File;
 import java.io.FileReader;

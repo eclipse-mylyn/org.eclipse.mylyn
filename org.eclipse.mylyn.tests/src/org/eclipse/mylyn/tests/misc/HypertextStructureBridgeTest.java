@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.hypertext;
+package org.eclipse.mylar.tests.misc;
 
 import junit.framework.TestCase;
 

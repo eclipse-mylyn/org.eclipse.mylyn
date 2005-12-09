@@ -11,7 +11,7 @@
 /*
  * Created on Nov 19, 2004
  */
-package org.eclipse.mylar.tests.bugs;
+package org.eclipse.mylar.tests.misc;
 
 import java.util.ArrayList;
 import java.util.List;

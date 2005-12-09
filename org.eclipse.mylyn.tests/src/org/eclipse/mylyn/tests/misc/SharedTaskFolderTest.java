@@ -1,4 +1,4 @@
-package org.eclipse.mylar.tests;
+package org.eclipse.mylar.tests.misc;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -151,7 +151,7 @@ public class SharedTaskFolderTest extends TestCase{
 
 		//Save the context file and check that it exists
 		MylarPlugin.getContextManager().saveContext(mockContext.getId(), newTask.getContextPath());
-		File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + newTask.getContextPath() + MylarContextManager.FILE_EXTENSION);
+		File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + newTask.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(MylarPlugin.getContextManager().hasContext(newTask.getContextPath()));
 		assertTrue(taskFile.exists());			
 		

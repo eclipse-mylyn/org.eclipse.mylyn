@@ -16,11 +16,14 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylar.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylar.core.tests.AllCoreTests;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.tests.AllIdeTests;
 import org.eclipse.mylar.java.tests.AllJavaTests;
 import org.eclipse.mylar.monitor.tests.AllMonitorTests;
 import org.eclipse.mylar.tasklist.tests.AllTasklistTests;
+import org.eclipse.mylar.tests.integration.AllIntegrationTests;
+import org.eclipse.mylar.tests.misc.AllMiscTests;
 import org.eclipse.mylar.xml.tests.AllXmlTests;
 	
 /**
@@ -31,11 +34,13 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
 
+        ErrorLogger.setDumpErrors(true);
         MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
         
         // NOTE: the order of these tests matters
         // TODO: make tests clear workbench state on completion
         //$JUnit-BEGIN$        
+        suite.addTest(AllIntegrationTests.suite());
         suite.addTest(AllMonitorTests.suite()); 
         suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
         suite.addTest(AllIdeTests.suite());
@@ -43,7 +48,7 @@ public class AllTests {
         suite.addTest(AllCoreTests.suite());
         suite.addTest(AllTasklistTests.suite());
         suite.addTest(AllBugzillaTests.suite());
-        suite.addTest(MiscTests.suite());
+        suite.addTest(AllMiscTests.suite());
         //$JUnit-END$ 
         return suite;
     }

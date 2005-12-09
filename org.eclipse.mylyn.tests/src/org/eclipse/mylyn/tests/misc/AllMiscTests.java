@@ -9,26 +9,22 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylar.tests.misc;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylar.tests.bugs.BugzillaSearchPluginTest;
-import org.eclipse.mylar.tests.bugs.BugzillaStackTraceTest;
-import org.eclipse.mylar.tests.hypertext.HypertextStructureBridgeTest;
-
 /**
  * @author Mik Kersten
  */
-public class MiscTests {
+public class AllMiscTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
 				"Test for org.eclipse.mylar.tests");
 		//$JUnit-BEGIN$
+//		suite.addTestSuite(SharedTaskFolderTest.class);
         suite.addTestSuite(HypertextStructureBridgeTest.class);
-		suite.addTestSuite(SharedTaskFolderTest.class);
 		suite.addTestSuite(BugzillaSearchPluginTest.class);
 		suite.addTestSuite(BugzillaStackTraceTest.class);
 		//$JUnit-END$
