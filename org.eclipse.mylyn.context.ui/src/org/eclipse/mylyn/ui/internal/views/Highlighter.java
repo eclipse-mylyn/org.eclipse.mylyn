@@ -235,7 +235,7 @@ public class Highlighter {
 		this.initializeLandmark();
 	}
 
-	public String getType() {
+	public String getHighlightKind() {
 		String res = "";
 		if (this.isGradient) {
 			res = LABEL_GRADIENT;
@@ -251,7 +251,7 @@ public class Highlighter {
 		Integer r = new Integer(this.core.getRed());
 		Integer g = new Integer(this.core.getGreen());
 		Integer b = new Integer(this.core.getBlue());
-		return r.toString() + ";" + g.toString() + ";" + b.toString() + ";" + this.name + ";" + this.getType();
+		return r.toString() + ";" + g.toString() + ";" + b.toString() + ";" + this.name + ";" + this.getHighlightKind();
 	}
 
 	private void initializeFromString(String attributes) {
