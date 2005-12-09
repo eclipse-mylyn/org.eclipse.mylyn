@@ -17,12 +17,14 @@
 	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> </p>
 <p><b>Contents</b></p>
 <ul>
+	<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
 	<li><a href="#install-failure">Why does Mylar fail to install?</a></li>
+	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
 	<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
 	<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
 </ul>
-<h3><a name="install-failure">Why does Mylar fail to install, update, or show my 
-tasks?</a></h3>
+<h3>&nbsp;</h3>
+	<h3><a name="install-failure">Why does Mylar fail to install or update?</a></h3>
 <p>The most likely reason is that you are using an <b>incompatible VM </b>(e.g. JDK 
 1.4), in which case you'll errors like the following in your log file.&nbsp; To 
 check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
@@ -65,17 +67,53 @@ and after that automatically or manually updating will install the correct
 version.</p>
 <p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
+	<p>
+&nbsp;</p>
+<h3><a name="tasklist-blank">Why did my tasks disappear?</a></h3>
+<p>Either because Mylar failed to <a href="#install-failure">install or update</a>, 
+or because there was a problem reading the task list.&nbsp; By default Mylar 
+keeps your task list in &lt;workspace&gt;/.mylar/tasklist.xml.&nbsp; If you move 
+workspaces, and have not changed the Mylar data directory via the Task List 
+preference page, the new location will be used when Eclipse restarts.&nbsp; If 
+your tasks ever disappear due to a bug, first check the .mylar folder for a 
+tasklist-backup.xml file, which will contain the previous state task list.&nbsp; 
+Make sure to grab it before adding any tasks or queries or restarting Eclipse 
+because it will get overwritten on any modification.</p>
+	<p>If your workspace folder is not backed up it is a good idea to backup the 
+	task list periodically via File -&gt; Import/Export -&gt; &nbsp;Other -&gt; Mylar Task 
+	Data. Before overwriting the tasklist.xml file you should first close 
+	Eclipse.</p>
+	<p>
+	<img border="0" src="images/faq/tasklist-backup.gif" width="525" height="310"></p>
 
 <h3>&nbsp;</h3>
-<h3><a name="filtering-declarations0">What is the effect of Mylar on Eclipse 
+<h3><a name="performance-summary">What are the effects of Mylar on Eclipse 
 performance?</a></h3>
-<p>...</p>
+<p>The goal is for Mylar to have no noticeable effect on Eclipse's speed or 
+memory usage, and any performance issue should be
+<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">reported as 
+a bug</a>.&nbsp; The current performance profile is:</p>
+<ol>
+	<li>Mylar only runs if a task is active, and has no impact on Eclipse if no 
+	task is active.</li>
+	<li>Task context models have negligible memory overhead.&nbsp; </li>
+	<li>The time to activate a task context is dominated by the time it takes 
+	Eclipse to open the editors in the context.&nbsp; You can set the preference 
+	for how many editors to open in the Mylar preference page (e.g. setting to 1 
+	will dramatically reduce activation time).&nbsp; You can also turn off 
+	editor management entirely in the Mylar Tasks view pull-down.</li>
+	<li>Eclipse startup is slowed down by (3) if a task is active when Eclipse 
+	is shut down.</li>
+</ol>
 <h3>&nbsp;</h3>
-	<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
+<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
 <p>If you don't like Mylar's constant showing of Java members in the 
 			Package Explorer, select the drop-down menu, then &quot;Filters...&quot; and 
 			enable the &quot;Mylar Java Declarations Filter&quot;.&nbsp; It will then 
-			stick in the menu in case you want to toggle between modes.</p>
+			stick in the menu in case you want to toggle between modes.&nbsp; 
+Note that this will hide interest information about members that aren't in your 
+current file (e.g. showing you which methods are landmarks) so this mode is not 
+recommended, but can be useful for 1024x768 screen resolutions.</p>
 			<p>
 			<img border="0" src="images/filtering-declarations.gif" width="441" height="211"></p>
 <p>
