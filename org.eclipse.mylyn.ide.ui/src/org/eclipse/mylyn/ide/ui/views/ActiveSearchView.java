@@ -165,9 +165,18 @@ public class ActiveSearchView extends ViewPart {
 	 */
     void refresh(final IMylarElement node, final boolean updateLabels) {
         if (!syncExecForTesting) { // for testing
-        	if (viewer != null && !viewer.getTree().isDisposed()) {
-        		internalRefresh(node, updateLabels);
-        	}
+//        	if (viewer != null && !viewer.getTree().isDisposed()) {
+//        		internalRefresh(node, updateLabels);
+//        	}
+	        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+	            public void run() { 
+	                try {  
+	                    internalRefresh(node, updateLabels);
+	                } catch (Throwable t) {
+	                	ErrorLogger.log(t, "active searchrefresh failed");
+	                }
+	            }
+	        });
         } else {
 	        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 	            public void run() { 
@@ -188,19 +197,14 @@ public class ActiveSearchView extends ViewPart {
 			toRefresh = bridge.getObjectForHandle(node.getHandleIdentifier());
 		}
 		if (viewer != null && !viewer.getTree().isDisposed()) {
-			if (!syncExecForTesting) {
-				viewer.refresh();
-				viewer.expandToLevel(3);
-			} else {
-				viewer.getControl().setRedraw(false);
-	        	if (toRefresh != null && containsNode(viewer.getTree(), toRefresh)) {
-	        		viewer.refresh(toRefresh, updateLabels);
-	        	} else if (node == null) {
-	        		viewer.refresh();
-	        	} 
-				viewer.expandToLevel(3);
-				viewer.getControl().setRedraw(true);
-			}
+			viewer.getControl().setRedraw(false);
+        	if (toRefresh != null && containsNode(viewer.getTree(), toRefresh)) {
+        		viewer.refresh(toRefresh, updateLabels);
+        	} else if (node == null) {
+        		viewer.refresh();
+        	} 
+			viewer.expandToLevel(3);
+			viewer.getControl().setRedraw(true);
 		}
 	}
     
