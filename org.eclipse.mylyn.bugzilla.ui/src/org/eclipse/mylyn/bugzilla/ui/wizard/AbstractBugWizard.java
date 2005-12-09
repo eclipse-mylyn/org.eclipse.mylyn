@@ -177,7 +177,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 					public void run() {
 						BugPost form = new BugPost();
 						form.setPrefix(BugPost.FORM_PREFIX_BUG_218);
-						form.setPrefix(BugPost.FORM_PREFIX_BUG_220);
+						form.setPrefix2(BugPost.FORM_PREFIX_BUG_220);
 						
 						form.setPostfix(BugPost.FORM_POSTFIX_216);
 						form.setPostfix2(BugPost.FORM_POSTFIX_218);
@@ -235,6 +235,10 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 							
 							// dummy target milestone
 							form.add("target_milestone", "---");
+							
+							if (BugzillaPlugin.getDefault().isServerCompatability220()) {
+								form.add("bug_status", "NEW"); 
+							}
 
 							// format the description of the bug so that it is roughly in 80
 							// character lines

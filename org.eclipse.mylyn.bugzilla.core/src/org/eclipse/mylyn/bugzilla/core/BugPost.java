@@ -183,10 +183,7 @@ public class BugPost {
 								"error") != -1)) {
 					// error handling is now passed up
 					// throw new LoginException("Bugzilla login problem");
-				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO:
-																					// make
-																					// this
-																					// configurable
+				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO: make this configurable
 						|| aString.toLowerCase().matches(".*defect\\s+processed.*")) {
 					possibleFailure = false;
 				}
