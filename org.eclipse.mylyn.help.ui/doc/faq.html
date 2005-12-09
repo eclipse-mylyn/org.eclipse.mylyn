@@ -17,8 +17,8 @@
 	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> </p>
 <p><b>Contents</b></p>
 <ul>
-	<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
 	<li><a href="#install-failure">Why does Mylar fail to install?</a></li>
+	<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
 	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
 	<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
 	<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
@@ -75,10 +75,12 @@ or because there was a problem reading the task list.&nbsp; By default Mylar
 keeps your task list in &lt;workspace&gt;/.mylar/tasklist.xml.&nbsp; If you move 
 workspaces, and have not changed the Mylar data directory via the Task List 
 preference page, the new location will be used when Eclipse restarts.&nbsp; If 
-your tasks ever disappear due to a bug, first check the .mylar folder for a 
-tasklist-backup.xml file, which will contain the previous state task list.&nbsp; 
-Make sure to copy it somewhere it before adding any tasks or queries or 
-restarting Eclipse because it will get overwritten on any modification.</p>
+your tasks ever disappear please
+<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">report this 
+as a critical bug</a>, and check the .mylar folder for a tasklist-backup.xml 
+file, which will contain the previous state task list.&nbsp; Make sure to copy 
+it somewhere it before adding any tasks or queries or restarting Eclipse because 
+it will get overwritten on any modification.</p>
 	<p>If your workspace folder is not backed up it is a good idea to either 
 	backup the tasklist.xml file manually or periodically use File -&gt; 
 	Import/Export -&gt; &nbsp;Other -&gt; Mylar Task Data.&nbsp; Note that when restoring 
