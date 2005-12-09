@@ -155,7 +155,7 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected void submitBug() {
 		final BugPost form = new BugPost(); 
 		form.setPrefix(BugPost.FORM_PREFIX_BUG_218);
-		form.setPrefix(BugPost.FORM_PREFIX_BUG_220);
+		form.setPrefix2(BugPost.FORM_PREFIX_BUG_220);
 		
 		form.setPostfix(BugPost.FORM_POSTFIX_216);
 		form.setPostfix2(BugPost.FORM_POSTFIX_218);
