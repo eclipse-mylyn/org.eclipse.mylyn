@@ -56,6 +56,9 @@ public class TaskPlanSorter extends TaskActivitySorter {
 	}
 
 	private int compareReminder(ITask task1, ITask task2) {
+		if (task2.getReminderDate() == null) return -1;
+		if (task1.getReminderDate() == null) return 1;
+		if (task1.getReminderDate() == null && task2.getReminderDate() == null) return 0;
 		return task2.getReminderDate().compareTo(task1.getReminderDate());
 	}
 

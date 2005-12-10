@@ -9,73 +9,51 @@
 <title>Mylar New & Noteworthy</title>
 </head>
 <body>
-<h2>New and Noteworthy for Mylar 0.4.4</h2>
-<p>Released December 2nd, 2005. Send questions to <a href="mailto:mylar-users@eclipse.org">mylar-users@eclipse.org</a>.&nbsp; 
+<h2>New and Noteworthy for Mylar 0.4.5</h2>
+<p>Released December 9th, 2005. Send questions to <a href="mailto:mylar-users@eclipse.org">mylar-users@eclipse.org</a>.&nbsp; 
 Submit feature requests to
 <a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">Bugzilla</a>.<br>
-Items added since Mylar 0.4.3 <span style="background-color: #E0D0E6">&nbsp;are 
+Items added since Mylar 0.4.4 <span style="background-color: #E0D0E6">&nbsp;are 
 highlighted&nbsp; </span></p>
 <h4><a href="new-0.3.html">New and Noteworthy covering Mylar 0.3</a></h4>
 
 <h3>Task Context</h3>
 
-<table cellpadding="10" cellspacing="0" width="600" id="table114">
+<table cellpadding="10" cellspacing="0" width="600" id="table111">
+		<tr>
+			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
+			<p align="right"><b>Improved Task Manipulation</b></p>
+			</td>
+			<td valign="top" width="70%">
+			Dragging and dropping items to categories moves them, and items can 
+			be dragged into the root.&nbsp; Note that there is still a 
+			limitation of not being able to make multiple selections in the 
+			Tasks view. Also, if the Mylar Tasks view is in fast view mode the 
+			active task will be indicated when you mouse over the icon and on 
+			the view description bar<p>&nbsp;<img border="0" src="images/faq/tasklist-drag.gif" width="303" height="172"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table119">
 		<tr>
 			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
 			<p align="right"><b>Task Planner</b></p>
 			</td>
 			<td valign="top" width="70%">
-			Still experimental, but getting used internally for planning so feel 
-			free to comment.<p>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table113">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Active Change Sets</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Can be disabled...<p>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table111">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Direct Manipulation of Task List</b></p>
-			</td>
-			<td valign="top" width="70%">
-			better drag-and-drop in Task view...<p>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table112">
-		<tr>
-			<td align="left" valign="top" width="30%" bgcolor="#E0D0E6">
-			<p align="right"><b>Active task indicated on list</b></p>
-			</td>
-			<td valign="top" width="70%">
-			Visible both in the view and as the tooltip... if the view is in 
-			fast mode the tooltip and contents description will be updated 
-			accordingly. If it is not in fast mode only the view tooltip will be 
-			updated so that the additional content description line (see search 
-			results view) does not appear on the task list...<p>&nbsp;</td>
+			The Task Planner is still experimental, but the UI is becoming more 
+			usable and it is being used internally.&nbsp; Invoke it via File -&gt; 
+			New -&gt; Other -&gt; Mylar Task Planner, specify the number of days, and 
+			you will see a report of your past activity.&nbsp; You can drag 
+			tasks from the task list into the plan (e.g. from a Bugzilla query), 
+			and set their reminders and estimates.&nbsp; All tasks in the plan 
+			can be automatically added to a category.&nbsp;
+			<p>
+			<img border="0" src="images/faq/taskist-planner.gif" width="603" height="407"></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -167,7 +145,7 @@ highlighted&nbsp; </span></p>
 			action to navigate to the corresponding issue (either Bugzilla 
 			report or Web Link).&nbsp; The same action is available for 
 			navigating from commit messages to reports in the CVS Resource 
-			History view.<p>
+			History view. <p>
 			<img border="0" src="images/0.4.3/synchronize-change-sets.gif" width="593" height="206"></p>
 			<p>
 			<img border="0" src="images/0.4.3/cvs-resource-history-open.gif" width="476" height="163"></td>
@@ -304,6 +282,84 @@ highlighted&nbsp; </span></p>
 		</tr>
 </table>
 
+<h3>Task List</h3>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table114">
+		<tr>
+			<td align="left" valign="top" width="30%">
+			<p align="right"><b>Improved Task List actions and shortcuts</b></p>
+			</td>
+			<td valign="top" width="70%">
+			The Task List popup menu has been improved to be more context 
+			sensitive and to always create items in the category that is 
+			currently in focus.&nbsp; Tooltip behavior has been improved.&nbsp; 
+			Common actions are now keyboard shortcuts:<br>
+			- New Task: ins<br>
+			- Delete: del<br>
+			- Rename: F2<br>
+			- Copy Description: Ctrl+C<p>
+			<img border="0" src="images/tasklist-popup.gif" width="231" height="297"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table115">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Links to web reports</b></p>
+			</td>
+			<td width="70%" valign="top">
+			Tasks can be linked to web 
+			pages.&nbsp; For example, if you want a task to correspond to a Wiki 
+			page or to a bug report copy the URL of the report, click the New 
+			Task button on the Task List, and the URL will automatically be 
+			inserted in the Web Link field.&nbsp; If you click Get Description 
+			the title of the page will be inserted into the Description field.&nbsp; 
+			The task will appear with a Web icon decorator, and will 
+			automatically bring up a Task Editor page that loads the web link 
+			when opened.&nbsp;
+			<p>
+			<img border="0" src="images/tasklist-weblink.gif" width="528" height="155"></p>
+			<p>
+			<img border="0" src="images/tasklist-weblink-editor.gif" width="585" height="195"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table116">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table117">
+		<tr>
+			<td width="30%" valign="top" align="left">
+			<p align="right"><b>Task context data&nbsp; export</b></p>
+			</td>
+			<td width="70%" valign="top">
+			The Mylar Task List and 
+			related data can be exported, e.g. for backup purposes.&nbsp;
+			You can now export to an 
+			archive file.<p>
+			<img border="0" src="images/tasklist-export.gif" width="555" height="343"></td>
+		</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" width="600" id="table118">
+		<tr>
+			<td>
+			<hr>
+			</td>
+		</tr>
+</table>
+
+<h3>&nbsp;</h3>
 <h3>Bugzilla Client</h3>
 
 <table cellpadding="10" cellspacing="0" width="600" id="table106">
@@ -376,83 +432,6 @@ highlighted&nbsp; </span></p>
 		</tr>
 		<tr>
 			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<h3>Task List</h3>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table86">
-		<tr>
-			<td align="left" valign="top" width="30%">
-			<p align="right"><b>Improved Task List actions and shortcuts</b></p>
-			</td>
-			<td valign="top" width="70%">
-			The Task List popup menu has been improved to be more context 
-			sensitive and to always create items in the category that is 
-			currently in focus.&nbsp; Tooltip behavior has been improved.&nbsp; 
-			Common actions are now keyboard shortcuts:<br>
-			- New Task: ins<br>
-			- Delete: del<br>
-			- Rename: F2<br>
-			- Copy Description: Ctrl+C<p>
-			<img border="0" src="images/tasklist-popup.gif" width="231" height="297"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table87">
-		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Links to web reports</b></p>
-			</td>
-			<td width="70%" valign="top">
-			Tasks can be linked to web 
-			pages.&nbsp; For example, if you want a task to correspond to a Wiki 
-			page or to a bug report copy the URL of the report, click the New 
-			Task button on the Task List, and the URL will automatically be 
-			inserted in the Web Link field.&nbsp; If you click Get Description 
-			the title of the page will be inserted into the Description field.&nbsp; 
-			The task will appear with a Web icon decorator, and will 
-			automatically bring up a Task Editor page that loads the web link 
-			when opened.&nbsp;
-			<p>
-			<img border="0" src="images/tasklist-weblink.gif" width="528" height="155"></p>
-			<p>
-			<img border="0" src="images/tasklist-weblink-editor.gif" width="585" height="195"></td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table88">
-		<tr>
-			<td>
-			<hr>
-			</td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table89">
-		<tr>
-			<td width="30%" valign="top" align="left">
-			<p align="right"><b>Task context data&nbsp; export</b></p>
-			</td>
-			<td width="70%" valign="top">
-			The Mylar Task List and 
-			related data can be exported, e.g. for backup purposes.&nbsp;
-			You can now export to an 
-			archive file.<p>
-			<img border="0" src="images/tasklist-export.gif" width="555" height="343"></td>
-		</tr>
-</table>
-
-<table cellpadding="10" cellspacing="0" width="600" id="table81">
-		<tr>
-			<td>
 			<hr>
 			</td>
 		</tr>

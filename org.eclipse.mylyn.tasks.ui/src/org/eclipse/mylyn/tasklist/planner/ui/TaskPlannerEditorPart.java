@@ -105,7 +105,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private int[] planSortConstants = new int[] { TaskPlanSorter.ICON, TaskPlanSorter.PRIORITY,
 			TaskPlanSorter.DESCRIPTION, TaskPlanSorter.DURATION, TaskPlanSorter.ESTIMATED, TaskPlanSorter.REMINDER };
 
-	private int[] planColumnWidths = new int[] { 20, 30, 340, 90, 90, 120 };
+	private int[] planColumnWidths = new int[] { 20, 30, 340, 90, 90, 100 };
 
 	private static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours",
 			"4 Hours", "5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
@@ -255,10 +255,10 @@ public class TaskPlannerEditorPart extends EditorPart {
 		CellEditor[] editors = new CellEditor[planColumnNames.length + 1];
 		final ComboBoxCellEditor estimatedEditor = new ComboBoxCellEditor(planTable, ESTIMATE_TIMES, SWT.READ_ONLY);
 		final ReminderCellEditor reminderEditor = new ReminderCellEditor(planTable);
-		editors[0] = reminderEditor; // not used
-		editors[1] = reminderEditor;// not used
-		editors[2] = reminderEditor;// not used
-		editors[3] = reminderEditor;// not used
+		editors[0] = null; // not used
+		editors[1] = null;// not used
+		editors[2] = null;// not used
+		editors[3] = null;// not used
 		editors[4] = estimatedEditor;
 		editors[5] = reminderEditor;
 		reminderEditor.addListener(new ICellEditorListener() {
@@ -492,7 +492,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		public boolean canModify(Object element, String property) {
 			int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
-			System.err.println(">>> " + property);
 			if (columnIndex == 5 || columnIndex == 4) {
 				return true;
 			}
@@ -504,8 +503,12 @@ public class TaskPlannerEditorPart extends EditorPart {
 				int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
 				if (element instanceof ITask) {
 					if (columnIndex == 5) {
-						return DateFormat.getDateInstance(DateFormat.MEDIUM)
+						if (((ITask) element).getReminderDate() != null) {
+							return DateFormat.getDateInstance(DateFormat.MEDIUM)
 								.format(((ITask) element).getReminderDate());
+						} else {
+							return null;
+						}
 					} else if (columnIndex == 4) {
 						return new Integer(Arrays.asList(ESTIMATE_TIMES).indexOf(
 								((ITask) element).getEstimateTimeHours()));
