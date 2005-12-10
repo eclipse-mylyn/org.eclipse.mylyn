@@ -52,7 +52,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
         assertNotNull(viewer.testFindItem(m1));
         assertNotNull(viewer.testFindItem(m1.getParent()));
 
-        manager.contextDeactivated(taskId, taskId);
+        manager.contextDeactivated(taskId);
         ApplyMylarToPackageExplorerAction.getDefault().update(true);
         assertTrue("num items: " + countItemsInTree(viewer.getTree()), countItemsInTree(viewer.getTree()) == 0);
         ApplyMylarToPackageExplorerAction.getDefault().update();

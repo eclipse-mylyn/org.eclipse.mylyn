@@ -117,10 +117,10 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     	assertNotNull(history);
     	assertEquals(0, manager.getActivityHistory().getInteractionHistory().size());
     	
-    	manager.contextActivated(manager.loadContext("1", "1"));
+    	manager.contextActivated(manager.loadContext("1"));
     	assertEquals(1, manager.getActivityHistory().getInteractionHistory().size());
     	
-    	manager.contextDeactivated("2", "2");
+    	manager.contextDeactivated("2");
     	assertEquals(2, manager.getActivityHistory().getInteractionHistory().size());
     }
     
@@ -138,15 +138,15 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     	manager.getFileForContext("1").delete();
     	assertFalse(manager.getFileForContext("1").exists());
     	assertFalse(manager.hasContext("1"));
-    	manager.contextActivated(manager.loadContext("1", "1"));
+    	manager.contextActivated(manager.loadContext("1"));
     	assertTrue(manager.hasActiveContext());
     	
-    	manager.contextDeactivated("1", "1");
+    	manager.contextDeactivated("1");
     	assertFalse(manager.hasContext("1")); 
     	
-    	manager.contextActivated(manager.loadContext("1", "1"));
+    	manager.contextActivated(manager.loadContext("1"));
         manager.handleInteractionEvent(mockSelection());
-        manager.contextDeactivated("1", "1");
+        manager.contextDeactivated("1");
         assertTrue(manager.hasContext("1"));
         manager.getFileForContext("1").delete();
     }

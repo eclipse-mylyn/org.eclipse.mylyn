@@ -60,8 +60,8 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 	protected void tearDown() throws Exception {
 		context.reset();
 		assertTrue(context.getInteresting().isEmpty());
-		manager.contextDeactivated(taskId, taskId);
-		manager.contextDeleted(taskId, taskId);
+		manager.contextDeactivated(taskId);
+		manager.contextDeleted(taskId);
 		manager.getFileForContext(taskId).delete();
 		ResourceTestUtil.deleteProject(project.getProject());
 	}

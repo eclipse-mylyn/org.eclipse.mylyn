@@ -394,11 +394,11 @@ public class MylarContextManager {
     	return new ArrayList<MylarContext>(currentContext.getContextMap().values());
     }
     
-    public void contextActivated(String id, String path) {
+    public void contextActivated(String handleIdentifier) {
     	try {
 		    suppressListenerNotification = true;
-		    MylarContext context = currentContext.getContextMap().get(id);
-		    if (context == null) context = loadContext(id, path);
+		    MylarContext context = currentContext.getContextMap().get(handleIdentifier);
+		    if (context == null) context = loadContext(handleIdentifier);
 		    if (context != null) {
 		    	contextActivated(context);
 		        for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
@@ -427,15 +427,12 @@ public class MylarContextManager {
 		return contextFile.exists() && contextFile.length() > 0;
 	}
     
-    /**
-     * @param id
-     */
-    public void contextDeactivated(String id, String path) {
+    public void contextDeactivated(String handleIdentifier) {
     	try {
-	        IMylarContext context = currentContext.getContextMap().get(id);    
+	        IMylarContext context = currentContext.getContextMap().get(handleIdentifier);    
 	        if (context != null) {
-	            saveContext(id, path); 
-	            currentContext.getContextMap().remove(id);
+	            saveContext(handleIdentifier); 
+	            currentContext.getContextMap().remove(handleIdentifier);
 	            
 	            setContextCapturePaused(true);
 	            for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
@@ -451,7 +448,7 @@ public class MylarContextManager {
 		        activityHistory.parseEvent(
 		            	new InteractionEvent(InteractionEvent.Kind.COMMAND,
 		            			ACTIVITY_KIND,
-		            			id,
+		            			handleIdentifier,
 		            			ACTIVITY_ID,
 		            			null,
 		            			ACTIVITY_DEACTIVATED,
@@ -463,9 +460,9 @@ public class MylarContextManager {
     	}
     }
 
-	public void contextDeleted(String id, String path) {
-        IMylarContext context = currentContext.getContextMap().get(id);
-        eraseContext(id, false);
+	public void contextDeleted(String handleIdentifier) {
+        IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
+        eraseContext(handleIdentifier, false);
         if (context != null) { // TODO: this notification is redundant with eraseContext's
         	setContextCapturePaused(true);
         	for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
@@ -474,7 +471,7 @@ public class MylarContextManager {
         	setContextCapturePaused(false);
         }
         try {
-	        File file = getFileForContext(path);
+	        File file = getFileForContext(handleIdentifier);
 	        if (file.exists()) {
 	        	file.delete();
 	        }
@@ -496,22 +493,22 @@ public class MylarContextManager {
      /**
        * @return false if the map could not be read for any reason
        */
-    public MylarContext loadContext(String id, String path) {
-        MylarContext loadedContext = externalizer.readContextFromXML(getFileForContext(path));
+    public MylarContext loadContext(String handleIdentifier) {
+        MylarContext loadedContext = externalizer.readContextFromXML(getFileForContext(handleIdentifier));
         if (loadedContext == null) {
-            return new MylarContext(id, MylarContextManager.getScalingFactors());
+            return new MylarContext(handleIdentifier, MylarContextManager.getScalingFactors());
         } else {
             return loadedContext;
         }
     }
  
-    public void saveContext(String id, String path) {
+    public void saveContext(String handleIdentifier) {
     	try {
     		setContextCapturePaused(true);
-	        MylarContext context = currentContext.getContextMap().get(id);
+	        MylarContext context = currentContext.getContextMap().get(handleIdentifier);
 	        if (context == null) return;
 	    	context.collapse();
-	        externalizer.writeContextToXML(context, getFileForContext(path));
+	        externalizer.writeContextToXML(context, getFileForContext(handleIdentifier));
 		} catch (Throwable t) {
 			ErrorLogger.fail(t, "could now save context", false);
 		} finally {
@@ -530,8 +527,8 @@ public class MylarContextManager {
 		}
     }
     
-    public File getFileForContext(String path) {
-        return new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + path + CONTEXT_FILE_EXTENSION);
+    public File getFileForContext(String handleIdentifier) {
+    	return new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + handleIdentifier + CONTEXT_FILE_EXTENSION);
     }
     
     public IMylarContext getActiveContext() {

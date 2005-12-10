@@ -59,7 +59,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 			collector.remove(sets[i]);
 		}
 		assertEquals(0, collector.getSets().length);
-		manager.contextDeactivated(taskId, taskId);
+		manager.contextDeactivated(taskId);
 		changeSetManager.clearActiveChangeSets();
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 
@@ -80,7 +80,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 			collector.remove(sets[i]);
 		}
 		assertEquals(0, collector.getSets().length);
-		manager.contextDeactivated(taskId, taskId);
+		manager.contextDeactivated(taskId);
 		changeSetManager.clearActiveChangeSets();
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 

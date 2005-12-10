@@ -64,27 +64,27 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		bridge.open(element);
 		
 		assertEquals(1, page.getEditors().length);
-		manager.contextDeactivated(taskId, taskId);
+		manager.contextDeactivated(taskId);
 		assertEquals(0, page.getEditors().length);
 	}
 	
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException {
-		manager.contextDeleted(taskId, taskId);
+		manager.contextDeleted(taskId);
 		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		
-		manager.contextActivated(taskId, taskId);
+		manager.contextActivated(taskId);
 //		assertEquals(0, page.getEditors().length);
 		
 		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }" );
 		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }" );
 		monitor.selectionChanged(view, new StructuredSelection(typeA));
         monitor.selectionChanged(view, new StructuredSelection(typeB));
-        manager.contextDeactivated(taskId, taskId);
+        manager.contextDeactivated(taskId);
         assertEquals(0, page.getEditors().length);
         
-        manager.contextActivated(taskId, taskId);
+        manager.contextActivated(taskId);
         assertTrue("num editors: " + page.getEditors().length, page.getEditors().length == 2 || page.getEditors().length == 3);
 	}
 	

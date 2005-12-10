@@ -74,14 +74,14 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
     protected void tearDown() throws Exception {
         context.reset(); 
         assertTrue(context.getInteresting().isEmpty());
-        manager.contextDeactivated(taskId, taskId);
-        manager.contextDeleted(taskId, taskId);
+        manager.contextDeactivated(taskId);
+        manager.contextDeleted(taskId);
         manager.getFileForContext(taskId).delete(); 
         
         ResourceTestUtil.deleteProject(project.getProject());
         
         for (MylarContext context: manager.getActiveContexts()) {
-			manager.contextDeactivated(context.getId(), context.getId());
+			manager.contextDeactivated(context.getId());
 		}
         if (manager.hasActiveContext()) System.err.println("> still active: " + manager.getActiveContext().getInteresting());
         assertFalse(manager.hasActiveContext());
