@@ -27,6 +27,7 @@ public class TaskActivitySorter extends ViewerSorter {
 	public final static int COMPLETED_DATE = 4;
 	public final static int DURATION = 5;
 	public final static int ESTIMATED = 6;
+	public static final int ICON = 0;
 	
 	private int criteria;
 

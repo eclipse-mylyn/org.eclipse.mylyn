@@ -22,7 +22,10 @@ import java.util.Locale;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -88,21 +91,21 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private TaskPlannerEditorInput editorInput = null;
 
-	private String[] activityColumnNames = new String[] { "  !", "Description", "Created", "Completed", "Elapsed",
+	private String[] activityColumnNames = new String[] { " ", " !", "Description", "Created", "Completed", "Elapsed",
 			"Estimated" };
 
-	private int[] activityColumnWidths = new int[] { 30, 300, 90, 90, 70, 70 };
+	private int[] activityColumnWidths = new int[] { 20, 30, 300, 90, 90, 70, 70 };
 
-	private int[] activitySortConstants = new int[] { TaskActivitySorter.PRIORITY, TaskActivitySorter.DESCRIPTION,
-			TaskActivitySorter.CREATION_DATE, TaskActivitySorter.COMPLETED_DATE, TaskActivitySorter.DURATION, TaskActivitySorter.ESTIMATED };
+	private int[] activitySortConstants = new int[] { TaskActivitySorter.ICON, TaskActivitySorter.PRIORITY,
+			TaskActivitySorter.DESCRIPTION, TaskActivitySorter.CREATION_DATE, TaskActivitySorter.COMPLETED_DATE,
+			TaskActivitySorter.DURATION, TaskActivitySorter.ESTIMATED };
 
-	private String[] planColumnNames = new String[] { // " ",
-	" !", "Description", "Elapsed", "Estimated", "Reminder" };
+	private String[] planColumnNames = new String[] { " ", " !", "Description", "Elapsed", "Estimated", "Reminder" };
 
-	private int[] planSortConstants = new int[] { TaskPlanSorter.PRIORITY, TaskPlanSorter.DESCRIPTION, TaskPlanSorter.DURATION,
-			TaskPlanSorter.ESTIMATED, TaskPlanSorter.REMINDER };
+	private int[] planSortConstants = new int[] { TaskPlanSorter.ICON, TaskPlanSorter.PRIORITY,
+			TaskPlanSorter.DESCRIPTION, TaskPlanSorter.DURATION, TaskPlanSorter.ESTIMATED, TaskPlanSorter.REMINDER };
 
-	private int[] planColumnWidths = new int[] {30, 340, 90, 90, 120 };
+	private int[] planColumnWidths = new int[] { 20, 30, 340, 90, 90, 120 };
 
 	private static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours",
 			"4 Hours", "5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
@@ -148,28 +151,31 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate());
 		String label = LABEL_TASK_ACTIVITY;
-		
+
 		List<ITask> allTasks = new ArrayList<ITask>();
 		allTasks.addAll(editorInput.getCompletedTasks());
 		allTasks.addAll(editorInput.getInProgressTasks());
-		
+
 		TaskActivityContentProvider activityContentProvider = new TaskActivityContentProvider(allTasks);
-//		ViewerSorter activitySorter = new TaskActivitySorter(activitySortConstants);
-		TableViewer activityViewer = createTableSection(editorComposite, toolkit, label, activityColumnNames, activityColumnWidths, activitySortConstants);
+		// ViewerSorter activitySorter = new
+		// TaskActivitySorter(activitySortConstants);
+		TableViewer activityViewer = createTableSection(editorComposite, toolkit, label, activityColumnNames,
+				activityColumnWidths, activitySortConstants);
 		activityViewer.setContentProvider(activityContentProvider);
 		activityViewer.setLabelProvider(new TaskActivityLabelProvider());
-		activityViewer.setInput(editorInput);
 		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTable(), activityViewer, false);
-		
+		activityViewer.setInput(editorInput);
+
 		TaskPlanContentProvider planContentProvider = new TaskPlanContentProvider();
 		TableViewer planViewer = createTableSection(editorComposite, toolkit, "Task Plan", planColumnNames,
 				planColumnWidths, planSortConstants);
 		planViewer.setContentProvider(planContentProvider);
 		planViewer.setLabelProvider(new TaskPlanLabelProvider());
+		createPlanCellEditorListener(planViewer.getTable(), planViewer, planContentProvider);
 		planViewer.setCellModifier(new PlannedTasksCellModifier(planViewer));
-		planViewer.setInput(editorInput);
 		initDrop(planViewer, planContentProvider);
 		setSorters(planColumnNames, planSortConstants, planViewer.getTable(), planViewer, true);
+		planViewer.setInput(editorInput);
 
 		totalEstimatedHoursLabel = toolkit.createLabel(editorComposite, LABEL_ESTIMATED + "0 hours  ", SWT.NULL);
 		createButtons(editorComposite, toolkit, planViewer, planContentProvider);
@@ -193,15 +199,15 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		String fomratString = "yyyy-MM-dd, HH:mm:ss";
 		SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
-		
+
 		if (startDate != null) {
 			String dateLabel = "Activity since " + format.format(startDate);
-//			DateFormat.getDateInstance(DateFormat.MEDIUM).format(reportStartDate) 
+			// DateFormat.getDateInstance(DateFormat.MEDIUM).format(reportStartDate)
 			Label startLabel = toolkit.createLabel(summaryContainer, dateLabel, SWT.NULL);
 			startLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 			toolkit.createLabel(summaryContainer, "", SWT.NULL);
 		}
-		
+
 		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();
 		Label label = toolkit.createLabel(summaryContainer, numComplete, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -244,6 +250,55 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	}
 
+	private void createPlanCellEditorListener(final Table planTable, final TableViewer planTableViewer,
+			final TaskPlanContentProvider contentProvider) {
+		CellEditor[] editors = new CellEditor[planColumnNames.length + 1];
+		final ComboBoxCellEditor estimatedEditor = new ComboBoxCellEditor(planTable, ESTIMATE_TIMES, SWT.READ_ONLY);
+		final ReminderCellEditor reminderEditor = new ReminderCellEditor(planTable);
+		editors[0] = reminderEditor; // not used
+		editors[1] = reminderEditor;// not used
+		editors[2] = reminderEditor;// not used
+		editors[3] = reminderEditor;// not used
+		editors[4] = estimatedEditor;
+		editors[5] = reminderEditor;
+		reminderEditor.addListener(new ICellEditorListener() {
+			public void applyEditorValue() {
+				Object selection = ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
+				if (selection instanceof ITask) {
+					((ITask) selection).setReminderDate(reminderEditor.getReminderDate());
+					planTableViewer.refresh();
+				}
+			}
+
+			public void cancelEditor() {
+			}
+
+			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+			}
+
+		});
+		estimatedEditor.addListener(new ICellEditorListener() {
+			public void applyEditorValue() {
+				Object selection = ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
+				if (selection instanceof ITask) {
+					ITask task = (ITask) selection;
+					int estimate = (Integer) estimatedEditor.getValue();
+					task.setEstimatedTimeHours(estimate);
+					updateEstimatedHours(contentProvider);
+					planTableViewer.refresh();
+				}
+			}
+
+			public void cancelEditor() {
+			}
+
+			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+			}
+
+		});
+		planTableViewer.setCellEditors(editors);
+	}
+
 	private String getTotalTime() {
 		return DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
 				+ editorInput.getTotalTimeSpentOnInProgressTasks());
@@ -264,7 +319,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 		return createTable(detailContainer, toolkit, columnNames, columnWidths, sortConstants);
 	}
 
-	private TableViewer createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths, int[] sortConstants) {
+	private TableViewer createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths,
+			int[] sortConstants) {
 		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 		Table table = toolkit.createTable(parent, style);
 		TableLayout tlayout = new TableLayout();
@@ -278,20 +334,20 @@ public class TaskPlannerEditorPart extends EditorPart {
 		table.setHeaderVisible(true);
 		table.setEnabled(true);
 
-		TableColumn firstColumn = new TableColumn(table, SWT.LEFT, 0);
-		firstColumn.setText(" ");
-		firstColumn.setWidth(30);
+		// TableColumn firstColumn = new TableColumn(table, SWT.LEFT, 0);
+		// firstColumn.setText(" ");
+		// firstColumn.setWidth(30);
 
 		for (int i = 0; i < columnNames.length; i++) {
-			TableColumn column = new TableColumn(table, SWT.LEFT, i + 1);
+			TableColumn column = new TableColumn(table, SWT.LEFT, i);
 			column.setText(columnNames[i]);
 			column.setWidth(columnWidths[i]);
 		}
 
 		TableViewer tableViewer = new TableViewer(table);
 		tableViewer.setUseHashlookup(true);
-		tableViewer.setColumnProperties(activityColumnNames);
-	
+		tableViewer.setColumnProperties(columnNames);
+
 		final OpenTaskEditorAction openAction = new OpenTaskEditorAction(tableViewer);
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -302,16 +358,18 @@ public class TaskPlannerEditorPart extends EditorPart {
 		return tableViewer;
 	}
 
-	private void setSorters(String[] columnNames, int[] sortConstants, Table table, TableViewer tableViewer, boolean plan) {
+	private void setSorters(String[] columnNames, int[] sortConstants, Table table, TableViewer tableViewer,
+			boolean plan) {
 		for (int i = 0; i < columnNames.length; i++) {
-			TableColumn column = table.getColumn(i + 1);
+			TableColumn column = table.getColumn(i);
 			addColumnSelectionListener(tableViewer, column, sortConstants[i], plan);
 		}
 	}
 
-	private void addColumnSelectionListener(final TableViewer tableViewer, TableColumn column, final int sorterConstant, final boolean plan) {
+	private void addColumnSelectionListener(final TableViewer tableViewer, TableColumn column,
+			final int sorterConstant, final boolean plan) {
 		column.addSelectionListener(new SelectionAdapter() {
-			 
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (plan) { // TODO: bad modularity
@@ -326,7 +384,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 	/**
 	 * TODO: refactor into seperate actions?
 	 */
-	private void createButtons(Composite parent, FormToolkit toolkit, final TableViewer viewer, final TaskPlanContentProvider contentProvider) {
+	private void createButtons(Composite parent, FormToolkit toolkit, final TableViewer viewer,
+			final TaskPlanContentProvider contentProvider) {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(parent.getBackground());
 		GridLayout layout = new GridLayout();
@@ -360,7 +419,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				for (Object object : ((IStructuredSelection) viewer.getSelection()).toList()) {
 					if (object instanceof ITask) {
-						ITask task = (ITask)object;
+						ITask task = (ITask) object;
 						if (task != null) {
 							contentProvider.removeTask(task);
 						}
@@ -426,14 +485,15 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private class PlannedTasksCellModifier implements ICellModifier {
 
 		private TableViewer tableViewer;
-		
+
 		public PlannedTasksCellModifier(TableViewer tableViewer) {
 			this.tableViewer = tableViewer;
 		}
-		
+
 		public boolean canModify(Object element, String property) {
 			int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
-			if (columnIndex == 4 || columnIndex == 3) {
+			System.err.println(">>> " + property);
+			if (columnIndex == 5 || columnIndex == 4) {
 				return true;
 			}
 			return false;
@@ -443,10 +503,10 @@ public class TaskPlannerEditorPart extends EditorPart {
 			if (element instanceof ITask) {
 				int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
 				if (element instanceof ITask) {
-					if (columnIndex == 4) {
+					if (columnIndex == 5) {
 						return DateFormat.getDateInstance(DateFormat.MEDIUM)
 								.format(((ITask) element).getReminderDate());
-					} else if (columnIndex == 3) {
+					} else if (columnIndex == 4) {
 						return new Integer(Arrays.asList(ESTIMATE_TIMES).indexOf(
 								((ITask) element).getEstimateTimeHours()));
 					}
@@ -460,7 +520,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 			int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
 			if (element instanceof ITask) {
 				ITask task = (ITask) element;
-				if (columnIndex == 3) {
+				if (columnIndex == 4) {
 					if (value instanceof Integer) {
 						task.setEstimatedTimeHours(((Integer) value).intValue() * 10);
 						tableViewer.refresh();
@@ -519,13 +579,13 @@ public class TaskPlannerEditorPart extends EditorPart {
 	}
 
 	public class OpenTaskEditorAction extends Action {
-		
+
 		private TableViewer viewer;
-		
+
 		public OpenTaskEditorAction(TableViewer viewer) {
 			this.viewer = viewer;
 		}
-		
+
 		@Override
 		public void run() {
 			ISelection selection = viewer.getSelection();

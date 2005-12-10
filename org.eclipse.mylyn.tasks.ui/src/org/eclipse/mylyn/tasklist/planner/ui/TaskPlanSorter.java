@@ -25,6 +25,7 @@ public class TaskPlanSorter extends TaskActivitySorter {
 	public final static int DURATION = 3;
 	public final static int ESTIMATE = 4;
 	public final static int REMINDER = 5;
+	public static final int ICON = 0;
 
 	private int criteria;
 
