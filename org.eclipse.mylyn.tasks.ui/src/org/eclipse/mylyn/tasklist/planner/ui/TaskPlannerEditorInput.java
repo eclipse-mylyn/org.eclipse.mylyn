@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.tasklist.planner.ui;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * @author Ken Sueda
  */
-public class TasksPlannerEditorInput implements IEditorInput {
+public class TaskPlannerEditorInput implements IEditorInput {
 
 	private List<ITask> completedTasks = null;
 
@@ -41,7 +42,7 @@ public class TasksPlannerEditorInput implements IEditorInput {
 
 	private Date reportStartDate = null;
 
-	public TasksPlannerEditorInput(int prevDays, TaskList tlist) {
+	public TaskPlannerEditorInput(int prevDays, TaskList tlist) {
 		parser = new TaskReportGenerator(tlist);
 
 		ITasksCollector completedTaskCollector = new CompletedTaskCollector(prevDays);
@@ -57,7 +58,14 @@ public class TasksPlannerEditorInput implements IEditorInput {
 
 		prevDaysToReport = prevDays;
 
-		reportStartDate = new Date(new Date().getTime() - prevDaysToReport * DAY);
+		long today = new Date().getTime();
+		long lastDay = prevDaysToReport * DAY;
+
+		int offsetToday = Calendar.getInstance().get(Calendar.HOUR) * 60 * 60 * 1000
+			+ Calendar.getInstance().get(Calendar.MINUTE) * 60 * 1000
+			+ Calendar.getInstance().get(Calendar.SECOND) * 1000;
+//		System.err.println(">>> " + offsetToday);
+		reportStartDate = new Date(today - offsetToday - lastDay);
 	}
 
 	// IEditorInput interface methods

@@ -12,24 +12,21 @@
 package org.eclipse.mylar.tasklist.planner.ui;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -81,6 +78,7 @@ import org.eclipse.ui.part.EditorPart;
  * @author Ken Sueda (original prototype)
  * @author Wesley Coelho (added tasks in progress section, refactored-out
  *         similar code)
+ * @author Mik Kersten (rewrite)
  */
 public class TaskPlannerEditorPart extends EditorPart {
 
@@ -88,30 +86,23 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private static final String LABEL_TASK_ACTIVITY = "Task Activity";
 
-	private TasksPlannerEditorInput editorInput = null;
+	private TaskPlannerEditorInput editorInput = null;
 
-	private String[] activityColumnNames = new String[] {  "  !", "Description", "Created", "Completed",
-			"Elapsed", "Estimated" };
+	private String[] activityColumnNames = new String[] { "  !", "Description", "Created", "Completed", "Elapsed",
+			"Estimated" };
 
 	private int[] activityColumnWidths = new int[] { 30, 300, 90, 90, 70, 70 };
 
-	private int[] activitySorterConstants = new int[] { 
-			TaskSorter.PRIORITY, TaskSorter.DESCRIPTION, 
-			TaskSorter.CREATION_DATE, TaskSorter.COMPLETED_DATE, 
-			TaskSorter.DURATION,
-			TaskSorter.ESTIMATED }; 
-	
-	private String[] planColumnNames = new String[] { " ", " !", "Description", "Estimated", "Reminder" };
+	private int[] activitySortConstants = new int[] { TaskActivitySorter.PRIORITY, TaskActivitySorter.DESCRIPTION,
+			TaskActivitySorter.CREATION_DATE, TaskActivitySorter.COMPLETED_DATE, TaskActivitySorter.DURATION, TaskActivitySorter.ESTIMATED };
 
-	private int[] planColumnWidths = new int[] { 30, 30, 340, 90, 120 };
+	private String[] planColumnNames = new String[] { // " ",
+	" !", "Description", "Elapsed", "Estimated", "Reminder" };
 
-	private List<TableViewer> tableViewers = new ArrayList<TableViewer>();
+	private int[] planSortConstants = new int[] { TaskPlanSorter.PRIORITY, TaskPlanSorter.DESCRIPTION, TaskPlanSorter.DURATION,
+			TaskPlanSorter.ESTIMATED, TaskPlanSorter.REMINDER };
 
-	private Table planTable;
-
-	private TableViewer planTableViewer;
-
-	private PlannedTasksContentProvider planContentProvider = new PlannedTasksContentProvider();
+	private int[] planColumnWidths = new int[] {30, 340, 90, 90, 120 };
 
 	private static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours",
 			"4 Hours", "5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
@@ -119,8 +110,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private static final String LABEL_ESTIMATED = "Total estimated: ";
 
 	private Label totalEstimatedHoursLabel;
-	
-	private OpenTaskEditorAction doubleClickAction = new OpenTaskEditorAction();
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -135,7 +124,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
 		setInput(input);
-		editorInput = (TasksPlannerEditorInput)input;
+		editorInput = (TaskPlannerEditorInput) input;
 		setPartName(editorInput.getName());
 		setTitleToolTip(editorInput.getToolTipText());
 	}
@@ -157,31 +146,41 @@ public class TaskPlannerEditorPart extends EditorPart {
 		sform.getBody().setLayout(new TableWrapLayout());
 		Composite editorComposite = sform.getBody();
 
-		createSummarySection(editorComposite, toolkit);
-
+		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate());
+		String label = LABEL_TASK_ACTIVITY;
+		
 		List<ITask> allTasks = new ArrayList<ITask>();
 		allTasks.addAll(editorInput.getCompletedTasks());
 		allTasks.addAll(editorInput.getInProgressTasks());
 		
-		String label = LABEL_TASK_ACTIVITY;
-		Date reportStartDate = editorInput.getReportStartDate();
-		if (reportStartDate != null) {
-			label += " (since " + DateFormat.getDateInstance(DateFormat.MEDIUM).format(reportStartDate) + ")";
-		}
+		TaskActivityContentProvider activityContentProvider = new TaskActivityContentProvider(allTasks);
+//		ViewerSorter activitySorter = new TaskActivitySorter(activitySortConstants);
+		TableViewer activityViewer = createTableSection(editorComposite, toolkit, label, activityColumnNames, activityColumnWidths, activitySortConstants);
+		activityViewer.setContentProvider(activityContentProvider);
+		activityViewer.setLabelProvider(new TaskActivityLabelProvider());
+		activityViewer.setInput(editorInput);
+		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTable(), activityViewer, false);
 		
-		IStructuredContentProvider completedTasksProvider = new TasksContentProvider(allTasks);
-		createTableSection(editorComposite, toolkit, label, activityColumnNames,
-				activityColumnWidths, activitySorterConstants, completedTasksProvider,
-				new TasksPlannerLabelProvider());
+		TaskPlanContentProvider planContentProvider = new TaskPlanContentProvider();
+		TableViewer planViewer = createTableSection(editorComposite, toolkit, "Task Plan", planColumnNames,
+				planColumnWidths, planSortConstants);
+		planViewer.setContentProvider(planContentProvider);
+		planViewer.setLabelProvider(new TaskPlanLabelProvider());
+		planViewer.setCellModifier(new PlannedTasksCellModifier(planViewer));
+		planViewer.setInput(editorInput);
+		initDrop(planViewer, planContentProvider);
+		setSorters(planColumnNames, planSortConstants, planViewer.getTable(), planViewer, true);
 
-		createPlannedTasksSection(editorComposite, toolkit);
+		totalEstimatedHoursLabel = toolkit.createLabel(editorComposite, LABEL_ESTIMATED + "0 hours  ", SWT.NULL);
+		createButtons(editorComposite, toolkit, planViewer, planContentProvider);
+
 	}
 
 	@Override
 	public void setFocus() {
 	}
 
-	private void createSummarySection(Composite parent, FormToolkit toolkit) {
+	private void createSummarySection(Composite parent, FormToolkit toolkit, Date startDate) {
 		Section summarySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		summarySection.setText(LABEL_DIALOG);
 		summarySection.setLayout(new TableWrapLayout());
@@ -192,53 +191,66 @@ public class TaskPlannerEditorPart extends EditorPart {
 		layout.numColumns = 2;
 		summaryContainer.setLayout(layout);
 
+		String fomratString = "yyyy-MM-dd, HH:mm:ss";
+		SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
+		
+		if (startDate != null) {
+			String dateLabel = "Activity since " + format.format(startDate);
+//			DateFormat.getDateInstance(DateFormat.MEDIUM).format(reportStartDate) 
+			Label startLabel = toolkit.createLabel(summaryContainer, dateLabel, SWT.NULL);
+			startLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+			toolkit.createLabel(summaryContainer, "", SWT.NULL);
+		}
+		
 		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();
 		Label label = toolkit.createLabel(summaryContainer, numComplete, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
-		String totalCompletedTaskTime = "Total time completed tasks: "
-			+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks());
+		String totalCompletedTaskTime = "Total time on completed: "
+				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks());
 		label = toolkit.createLabel(summaryContainer, totalCompletedTaskTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-				
+
 		String numInProgress = "Number in progress: " + editorInput.getInProgressTasks().size();
 		label = toolkit.createLabel(summaryContainer, numInProgress, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
-		String totalInProgressTaskTime = "Total time in progress: "
+
+		String totalInProgressTaskTime = "Total time on incomplete: "
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks());
 		label = toolkit.createLabel(summaryContainer, totalInProgressTaskTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
-//		int length = editorInput.getCompletedTasks().size();
-//		String avgTime = "Average completion time: ";
-//		if (length > 0) {
-//			avgTime = avgTime
-//					+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
-//							/ editorInput.getCompletedTasks().size());
-//		} else {
-//			avgTime = avgTime + 0;
-//		}
-//		label = toolkit.createLabel(summaryContainer, avgTime, SWT.NULL);
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
+		// int length = editorInput.getCompletedTasks().size();
+		// String avgTime = "Average completion time: ";
+		// if (length > 0) {
+		// avgTime = avgTime
+		// +
+		// DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
+		// / editorInput.getCompletedTasks().size());
+		// } else {
+		// avgTime = avgTime + 0;
+		// }
+		// label = toolkit.createLabel(summaryContainer, avgTime, SWT.NULL);
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+
 		String spacer = "        ";
-		String totalEstimated = "Total estimated time: " 
-			+ editorInput.getTotalTimeEstimated() + " hours" + spacer;
+		String totalEstimated = "Total estimated time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		label = toolkit.createLabel(summaryContainer, totalEstimated, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
-		String grandTotalTime = "Total time: "
-				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
-						+ editorInput.getTotalTimeSpentOnInProgressTasks());
+
+		String grandTotalTime = "Total time: " + getTotalTime();
 		label = toolkit.createLabel(summaryContainer, grandTotalTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 	}
 
-	private void createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
-			int[] columnWidths, int[] sorterConstants, IStructuredContentProvider contentProvider,
-			LabelProvider labelProvider) {
+	private String getTotalTime() {
+		return DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
+				+ editorInput.getTotalTimeSpentOnInProgressTasks());
+	}
+
+	private TableViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
+			int[] columnWidths, int[] sortConstants) {
 		Section detailSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		detailSection.setText(title);
 		detailSection.setLayout(new TableWrapLayout());
@@ -249,16 +261,11 @@ public class TaskPlannerEditorPart extends EditorPart {
 		layout.numColumns = 2;
 		detailContainer.setLayout(layout);
 
-		createTable(detailContainer, toolkit, columnNames, columnWidths, sorterConstants, contentProvider,
-				labelProvider);
-
-//		toolkit.createLabel(parent, FONT_COLOR_EXPLANATION_NOTE);
+		return createTable(detailContainer, toolkit, columnNames, columnWidths, sortConstants);
 	}
 
-	/** TODO: Comment parameters */
-	private Table createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths,
-			final int[] sorterConstants, IStructuredContentProvider contentProvider, LabelProvider labelProvider) {
-		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+	private TableViewer createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths, int[] sortConstants) {
+		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 		Table table = toolkit.createTable(parent, style);
 		TableLayout tlayout = new TableLayout();
 		table.setLayout(tlayout);
@@ -281,81 +288,60 @@ public class TaskPlannerEditorPart extends EditorPart {
 			column.setWidth(columnWidths[i]);
 		}
 
-		TableViewer tableViewer = createTableViewer(table, contentProvider, labelProvider);
-
-		for (int i = 0; i < columnNames.length; i++) {
-			TableColumn column = table.getColumn(i + 1);
-			addColumnSelectionListener(tableViewer, column, sorterConstants[i]);
-		}
-
-		return table;
-	}
-
-	private void addColumnSelectionListener(final TableViewer tableViewer, TableColumn column, final int sorterConstant) {
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new TaskSorter(sorterConstant));
-			}
-		});
-	}
-
-	private TableViewer createTableViewer(Table table, IStructuredContentProvider contentProvider,
-			LabelProvider labelProvider) {
 		TableViewer tableViewer = new TableViewer(table);
 		tableViewer.setUseHashlookup(true);
 		tableViewer.setColumnProperties(activityColumnNames);
+	
+		final OpenTaskEditorAction openAction = new OpenTaskEditorAction(tableViewer);
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				openAction.run();
+			}
+		});
 
-		tableViewer.setContentProvider(contentProvider);
-		tableViewer.setLabelProvider(labelProvider);
-		tableViewer.setInput(editorInput);
-
-		tableViewers.add(tableViewer);
 		return tableViewer;
 	}
 
-	private void createPlannedTasksSection(Composite parent, FormToolkit toolkit) {
-		Section planSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		planSection.setText("Task Plan");
-		planSection.setLayout(new TableWrapLayout());
-		planSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		
-		Composite planContainer = toolkit.createComposite(planSection);
-		planSection.setClient(planContainer);
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 1;
-		planContainer.setLayout(layout);
+	private void setSorters(String[] columnNames, int[] sortConstants, Table table, TableViewer tableViewer, boolean plan) {
+		for (int i = 0; i < columnNames.length; i++) {
+			TableColumn column = table.getColumn(i + 1);
+			addColumnSelectionListener(tableViewer, column, sortConstants[i], plan);
+		}
+	}
 
-//		 needs padding for hours to be added in case hours grow
-		totalEstimatedHoursLabel = toolkit.createLabel(planContainer, LABEL_ESTIMATED + "0 hours  ", SWT.NULL);
-
-		createPlanTable(planContainer, toolkit);
-		createPlanTableViewer();
-		
-		createButtons(planContainer, toolkit);
-		hookDoubleClickAction();
-		
+	private void addColumnSelectionListener(final TableViewer tableViewer, TableColumn column, final int sorterConstant, final boolean plan) {
+		column.addSelectionListener(new SelectionAdapter() {
+			 
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (plan) { // TODO: bad modularity
+					tableViewer.setSorter(new TaskPlanSorter(sorterConstant));
+				} else {
+					tableViewer.setSorter(new TaskActivitySorter(sorterConstant));
+				}
+			}
+		});
 	}
 
 	/**
 	 * TODO: refactor into seperate actions?
 	 */
-	private void createButtons(Composite parent, FormToolkit toolkit) {
+	private void createButtons(Composite parent, FormToolkit toolkit, final TableViewer viewer, final TaskPlanContentProvider contentProvider) {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(parent.getBackground());
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
-		layout.numColumns = 3;		
-		
+		layout.numColumns = 3;
+
 		Button addIncomplete = toolkit.createButton(container, "Add Incomplete", SWT.PUSH | SWT.CENTER);
 		addIncomplete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				List<ITask> incompleteTasks = editorInput.getInProgressTasks();
 				for (ITask task : incompleteTasks) {
-					planContentProvider.addTask(task);
-					planTableViewer.refresh();
-					updateEstimatedHours();
+					contentProvider.addTask(task);
+					viewer.refresh();
+					updateEstimatedHours(contentProvider);
 				}
 			}
 		});
@@ -364,147 +350,33 @@ public class TaskPlannerEditorPart extends EditorPart {
 		addToCategory.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				addPlannedTasksToCategory();
+				addPlannedTasksToCategory(contentProvider);
 			}
 		});
-		
+
 		Button delete = toolkit.createButton(container, "Remove Selected", SWT.PUSH | SWT.CENTER);
 		delete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ITask task = (ITask) ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
-				if (task != null) {
-					planContentProvider.removeTask(task);
-					planTableViewer.refresh();
+				for (Object object : ((IStructuredSelection) viewer.getSelection()).toList()) {
+					if (object instanceof ITask) {
+						ITask task = (ITask)object;
+						if (task != null) {
+							contentProvider.removeTask(task);
+						}
+					}
 				}
+				viewer.refresh();
 			}
 		});
-	}
-
-	private void createPlanTable(Composite parent, FormToolkit toolkit) {
-		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-		planTable = toolkit.createTable(parent, style);
-		TableLayout tlayout = new TableLayout();
-		planTable.setLayout(tlayout);
-		TableWrapData wd = new TableWrapData(TableWrapData.FILL_GRAB);
-		wd.heightHint = 200;
-		wd.grabVertical = true;
-		planTable.setLayoutData(wd);
-
-		planTable.setLinesVisible(true);
-		planTable.setHeaderVisible(true);
-		planTable.setEnabled(true);
-
-		TableColumn column = new TableColumn(planTable, SWT.LEFT, 0);
-		column.setText(planColumnNames[0]);
-		column.setWidth(planColumnWidths[0]);
-
-		column = new TableColumn(planTable, SWT.LEFT, 1);
-		column.setText(planColumnNames[1]);
-		column.setWidth(planColumnWidths[1]);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.PRIORITY));
-			}
-		});
-
-		column = new TableColumn(planTable, SWT.LEFT, 2);
-		column.setText(planColumnNames[2]);
-		column.setWidth(planColumnWidths[2]);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.DESCRIPTION));
-			}
-		});
-
-		column = new TableColumn(planTable, SWT.LEFT, 3);
-		column.setText(planColumnNames[3]);
-		column.setWidth(planColumnWidths[3]);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.ESTIMATE));
-			}
-		});
-
-		column = new TableColumn(planTable, SWT.LEFT, 4);
-		column.setText(planColumnNames[4]);
-		column.setWidth(planColumnWidths[4]);
-		column.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				planTableViewer.setSorter(new TaskSorter(PlannedTasksSorter.REMINDER));
-			}
-		});
-
-	}
-	
-	private void createPlanTableViewer() {
-		CellEditor[] editors = new CellEditor[planColumnNames.length];
-		final ComboBoxCellEditor estimatedEditor = new ComboBoxCellEditor(planTable, ESTIMATE_TIMES, SWT.READ_ONLY);
-		final ReminderCellEditor reminderEditor = new ReminderCellEditor(planTable);
-		editors[0] = reminderEditor; // not used
-		editors[1] = reminderEditor;// not used
-		editors[2] = reminderEditor;// not used
-		editors[3] = estimatedEditor;
-		editors[4] = reminderEditor;
-		reminderEditor.addListener(new ICellEditorListener() {
-			public void applyEditorValue() {
-				Object selection = ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
-				if (selection instanceof ITask) {
-					((ITask) selection).setReminderDate(reminderEditor.getReminderDate());
-					planTableViewer.refresh();
-				}
-			}
-
-			public void cancelEditor() {
-			}
-
-			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
-			}
-
-		});
-		estimatedEditor.addListener(new ICellEditorListener() {
-			public void applyEditorValue() {
-				Object selection = ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
-				if (selection instanceof ITask) {
-					ITask task = (ITask)selection;
-					int estimate = (Integer)estimatedEditor.getValue();
-					task.setEstimatedTimeHours(estimate);
-					updateEstimatedHours();
-					planTableViewer.refresh();
-				}
-			}
-
-			public void cancelEditor() {
-			}
-
-			public void editorValueChanged(boolean oldValidState, boolean newValidState) {
-			}
-
-		});
-		
-		planTableViewer = new TableViewer(planTable);
-		planTableViewer.setCellEditors(editors);
-		planTableViewer.setUseHashlookup(true);
-		planTableViewer.setColumnProperties(planColumnNames);
-
-		planTableViewer.setContentProvider(planContentProvider);
-		planTableViewer.setLabelProvider(new PlannedTasksLabelProvider());
-		planTableViewer.setCellModifier(new PlannedTasksCellModifier());
-		planTableViewer.setInput(editorInput);
-
-		initDrop();
 	}
 
 	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
-	private void initDrop() {
+	private void initDrop(final TableViewer tableViewer, final TaskPlanContentProvider contentProvider) {
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 
-		planTableViewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(planTableViewer) {
- 			{
+		tableViewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(tableViewer) {
+			{
 				setFeedbackEnabled(false);
 			}
 
@@ -513,23 +385,23 @@ public class TaskPlannerEditorPart extends EditorPart {
 				Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
 						.getFirstElement();
 				if (selectedObject instanceof ITask) {
-					planContentProvider.addTask((ITask) selectedObject);
-					updateEstimatedHours();
-					planTableViewer.refresh();
+					contentProvider.addTask((ITask) selectedObject);
+					updateEstimatedHours(contentProvider);
+					tableViewer.refresh();
 					return true;
 				} else if (selectedObject instanceof ITaskListElement) {
 					if (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
 						ITask task = null;
 						if (selectedObject instanceof ITask) {
-							task = (ITask)selectedObject;
-						} else if (selectedObject instanceof IQueryHit){
+							task = (ITask) selectedObject;
+						} else if (selectedObject instanceof IQueryHit) {
 							task = MylarTaskListPlugin.getDefault().getHandlerForElement(
-								(ITaskListElement) selectedObject).getCorrespondingTask((IQueryHit) selectedObject);
+									(ITaskListElement) selectedObject).getCorrespondingTask((IQueryHit) selectedObject);
 						}
 						if (task != null) {
-							planContentProvider.addTask(task);
-							updateEstimatedHours();
-							planTableViewer.refresh();
+							contentProvider.addTask(task);
+							updateEstimatedHours(contentProvider);
+							tableViewer.refresh();
 							return true;
 						}
 					}
@@ -553,6 +425,12 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private class PlannedTasksCellModifier implements ICellModifier {
 
+		private TableViewer tableViewer;
+		
+		public PlannedTasksCellModifier(TableViewer tableViewer) {
+			this.tableViewer = tableViewer;
+		}
+		
 		public boolean canModify(Object element, String property) {
 			int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
 			if (columnIndex == 4 || columnIndex == 3) {
@@ -566,7 +444,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 				int columnIndex = Arrays.asList(planColumnNames).indexOf(property);
 				if (element instanceof ITask) {
 					if (columnIndex == 4) {
-						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(((ITask)element).getReminderDate());
+						return DateFormat.getDateInstance(DateFormat.MEDIUM)
+								.format(((ITask) element).getReminderDate());
 					} else if (columnIndex == 3) {
 						return new Integer(Arrays.asList(ESTIMATE_TIMES).indexOf(
 								((ITask) element).getEstimateTimeHours()));
@@ -584,82 +463,77 @@ public class TaskPlannerEditorPart extends EditorPart {
 				if (columnIndex == 3) {
 					if (value instanceof Integer) {
 						task.setEstimatedTimeHours(((Integer) value).intValue() * 10);
-						planTableViewer.refresh();
+						tableViewer.refresh();
 					}
 				}
 			}
 		}
 	}
 
-	private void hookDoubleClickAction() {
-		planTableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
-	}
-
-	private void addPlannedTasksToCategory() {
-		List<ITaskCategory> categories =  MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
+	private void addPlannedTasksToCategory(TaskPlanContentProvider contentProvider) {
+		List<ITaskCategory> categories = MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
 		String[] categoryNames = new String[categories.size()];
 		int i = 0;
 		for (ITaskCategory category : categories) {
 			categoryNames[i++] = category.getDescription(true);
 		}
 		if (categories.size() > 0) {
-			ComboSelectionDialog dialog = new ComboSelectionDialog(
-					Display.getCurrent().getActiveShell(), 
-					LABEL_DIALOG, 
-					"Select destination category: ", 
-					categoryNames, 0);
+			ComboSelectionDialog dialog = new ComboSelectionDialog(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
+					"Select destination category: ", categoryNames, 0);
 			int confirm = dialog.open();
 			if (confirm == ComboSelectionDialog.OK) {
 				String selected = dialog.getSelectedString();
 				ITaskCategory destinationCategory = null;
 				for (ITaskCategory category : categories) {
 					if (category.getDescription(true).equals(selected)) {
-						destinationCategory = category; 
+						destinationCategory = category;
 						break; // will go to the first one
 					}
 				}
 				if (destinationCategory != null && destinationCategory instanceof TaskCategory) {
-					TaskCategory taskCategory = (TaskCategory)destinationCategory;
-					for (ITask task : planContentProvider.getTasks()) {
+					TaskCategory taskCategory = (TaskCategory) destinationCategory;
+					for (ITask task : contentProvider.getTasks()) {
 						if (!taskCategory.getChildren().contains(task)) {
 							MylarTaskListPlugin.getTaskListManager().moveToCategory(taskCategory, task);
-//							taskCategory.addTask(task);
-//							task.setCategory(taskCategory);
 						}
 					}
-					if (TaskListView.getDefault() != null) TaskListView.getDefault().getViewer().refresh();
+					if (TaskListView.getDefault() != null)
+						TaskListView.getDefault().getViewer().refresh();
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG, 
-						"Can not add plan tasks into a query category.");
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
+							"Can not add plan tasks into a query category.");
 				}
 			}
 		} else {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG, 
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
 					"No categories in task list.");
 		}
 	}
 
-	private void updateEstimatedHours() {
+	private void updateEstimatedHours(TaskPlanContentProvider contentProvider) {
 		int total = 0;
-		for (ITask task: planContentProvider.getTasks()) {
+		for (ITask task : contentProvider.getTasks()) {
 			total += task.getEstimateTimeHours();
 		}
 		totalEstimatedHoursLabel.setText(LABEL_ESTIMATED + total + " hours");
 	}
 
 	public class OpenTaskEditorAction extends Action {
+		
+		private TableViewer viewer;
+		
+		public OpenTaskEditorAction(TableViewer viewer) {
+			this.viewer = viewer;
+		}
+		
 		@Override
 		public void run() {
-			ISelection selection = planTableViewer.getSelection();
+			ISelection selection = viewer.getSelection();
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
 			if (obj instanceof Task) {
 				((Task) obj).openTaskInEditor(false);
 			}
-			planTableViewer.refresh(obj);
+			viewer.refresh(obj);
 		}
 	}
 }

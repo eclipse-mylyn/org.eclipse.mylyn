@@ -15,6 +15,7 @@ import java.text.DateFormat;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.swt.graphics.Image;
@@ -22,7 +23,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Ken Sueda
  */
-public class PlannedTasksLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class TaskPlanLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	// {".", "Description", "Priority", "Estimated Time", "Reminder Date"};
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -44,10 +45,12 @@ public class PlannedTasksLabelProvider extends LabelProvider implements ITableLa
 			case 1:
 				return task.getPriority();
 			case 2: 
-				return task.getDescription(true);				
+				return task.getDescription(true);
 			case 3:
-				return task.getEstimateTimeHours() + " hours";
+				return DateUtil.getFormattedDurationShort(task.getElapsedTime());
 			case 4:
+				return task.getEstimateTimeHours() + " hours";
+			case 5:
 				if (task.getReminderDate() != null) {
 					return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getReminderDate());
 				} else {

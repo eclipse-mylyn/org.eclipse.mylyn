@@ -17,12 +17,10 @@ import org.eclipse.mylar.tasklist.ITask;
 
 /**
  * @author Ken Sueda
+ * @author Mik Kersten
  */
-public class TaskSorter extends ViewerSorter {
-	/**
-	 * Constructor argument values that indicate to sort items by 
-	 * different columns.
-	 */
+public class TaskActivitySorter extends ViewerSorter {
+
 	public final static int DESCRIPTION = 1;
 	public final static int PRIORITY = 2;
 	public final static int CREATION_DATE = 3;
@@ -30,16 +28,9 @@ public class TaskSorter extends ViewerSorter {
 	public final static int DURATION = 5;
 	public final static int ESTIMATED = 6;
 	
-	// Criteria that the instance uses 
 	private int criteria;
 
-	/**
-	 * Creates a resource sorter that will use the given sort criteria.
-	 *
-	 * @param criteria the sort criterion to use: one of <code>NAME</code> or 
-	 *   <code>TYPE</code>
-	 */
-	public TaskSorter(int criteria) {
+	public TaskActivitySorter(int criteria) {
 		super();
 		this.criteria = criteria;
 	}
@@ -67,23 +58,23 @@ public class TaskSorter extends ViewerSorter {
 		}
 	}
 	
-	private int compareDescription(ITask task1, ITask task2) {
+	protected int compareDescription(ITask task1, ITask task2) {
 		return task1.getDescription(false).compareTo(task2.getDescription(false));
 	}
 	
-	private int comparePriority(ITask task1, ITask task2) {
+	protected int comparePriority(ITask task1, ITask task2) {
 		return task1.getPriority().compareTo(task2.getPriority());
 	}
 	
-	private int compareCompletedDate(ITask task1, ITask task2) {
+	protected int compareCompletedDate(ITask task1, ITask task2) {
 		return task2.getCompletionDate().compareTo(task1.getCompletionDate());
 	}
 
-	private int compareEstimated(ITask task1, ITask task2) {
+	protected int compareEstimated(ITask task1, ITask task2) {
 		return task2.getEstimateTimeHours() - task1.getEstimateTimeHours();
 	}
 	
-	private int compareCreationDate(ITask task1, ITask task2) {
+	protected int compareCreationDate(ITask task1, ITask task2) {
 		if(task1.getCreationDate() == null)
 			return 1;
 		else if(task2.getCreationDate() == null)
@@ -92,7 +83,7 @@ public class TaskSorter extends ViewerSorter {
 			return task2.getCreationDate().compareTo(task1.getCreationDate());
 	}
 	
-	private int compareDuration(ITask task1, ITask task2) {
+	protected int compareDuration(ITask task1, ITask task2) {
 		return task1.getElapsedTime() < task2.getElapsedTime() ? 1 : -1;
 	}
 }
