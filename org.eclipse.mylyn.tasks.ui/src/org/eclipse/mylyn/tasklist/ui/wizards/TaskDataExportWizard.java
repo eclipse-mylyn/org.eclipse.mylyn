@@ -7,9 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,6 +39,7 @@ import org.eclipse.ui.progress.IProgressService;
  * a single page: TaskDataExportWizardPage
  * 
  * @author Wesley Coelho
+ * @author Mik Kersten
  */
 public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
@@ -45,12 +49,23 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	 */
 	private final static String SETTINGS_SECTION = "org.eclipse.mylar.tasklist.ui.exportWizard";
 
-	public final static String ZIP_FILE_NAME = TaskDataExportWizardPage.ZIP_FILE_NAME;
+	private final static String ZIP_FILE_PREFIX = "mylardata";
+	
+	private final static String ZIP_FILE_EXTENSION = ".zip";
+	
+//	public final static String ZIP_FILE_NAME = TaskDataExportWizardPage.ZIP_FILE_NAME;
 
 	private final static String WINDOW_TITLE = "Export";
 
 	private TaskDataExportWizardPage exportPage = null;
 
+	public static String getZipFileName() {
+		String fomratString = "yyyy-MM-dd";
+		SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
+		String date = format.format(new Date());
+		return ZIP_FILE_PREFIX + "-" + date + ZIP_FILE_EXTENSION;
+	}
+	
 	public TaskDataExportWizard() {
 		IDialogSettings masterSettings = MylarTaskListPlugin.getDefault().getDialogSettings();
 		setDialogSettings(getSettingsSection(masterSettings));
@@ -107,7 +122,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		final File destTaskListFile = new File(destDir + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator + MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 				+ MylarContextManager.CONTEXT_FILE_EXTENSION);
-		final File destZipFile = new File(destDir + File.separator + ZIP_FILE_NAME);
+		final File destZipFile = new File(destDir + File.separator + getZipFileName());
 
 		// Prompt the user to confirm if ANY of the save operations will cause
 		// an overwrite
@@ -137,7 +152,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 				if (exportPage.exportTaskContexts()) {
 					for (ITask task : getAllTasks()) {
-						File destTaskFile = new File(destDir + File.separator + task.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
+						File contextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+						File destTaskFile = new File(destDir + File.separator + contextFile.getName());
 						if (destTaskFile.exists()) {
 							if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "Task context files already exist in " + destDir
 									+ ". Do you want to overwrite them?")) {
@@ -250,19 +266,22 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 												// messages
 				for (ITask task : tasks) {
 
-					if (!MylarPlugin.getContextManager().hasContext(task.getContextPath())) {
+					if (!MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
 						continue; // Tasks without a context have no file to
 									// copy
 					}
 
-					File destTaskFile = new File(destinationDirectory + File.separator + task.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
-					File sourceTaskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task.getContextPath()
-							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
+					File contextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+					
+					File destTaskFile = new File(destinationDirectory + File.separator + contextFile.getName());
+					File sourceTaskFile = contextFile;
+//						new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task.getContextPath()
+//							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 
 					if (zip) {
-						if (!filesToZipMap.containsKey(task.getContextPath())) {
+						if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
 							filesToZip.add(sourceTaskFile);
-							filesToZipMap.put(task.getContextPath(), null);
+							filesToZipMap.put(task.getHandleIdentifier(), null);
 						}
 					} else {
 						if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {

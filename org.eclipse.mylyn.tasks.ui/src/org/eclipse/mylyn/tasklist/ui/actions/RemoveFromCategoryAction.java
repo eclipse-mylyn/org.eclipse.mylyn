@@ -75,7 +75,7 @@ public class RemoveFromCategoryAction extends Action {
 						return;
 											
 					MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier(), task.getContextPath());
+					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());//, task.getContextPath());
 				}
 				
 				IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();

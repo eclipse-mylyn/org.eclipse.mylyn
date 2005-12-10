@@ -207,17 +207,17 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static ITaskActivityListener CONTEXT_MANAGER_TASK_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getContextPath());
+			MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier());//, task.getContextPath());
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
 			for (ITask task : tasks) {
-				MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier(), task.getContextPath());
+				MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier());//, task.getContextPath());
 			}
 		}
 
 		public void taskDeactivated(ITask task) {
-			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier(), task.getContextPath());
+			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier());//, task.getContextPath());
 		}
 
 		public void tasklistRead() {

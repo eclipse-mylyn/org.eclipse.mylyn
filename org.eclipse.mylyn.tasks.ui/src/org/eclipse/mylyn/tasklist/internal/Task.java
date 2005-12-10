@@ -46,7 +46,7 @@ public class Task implements ITask {
 
 	private boolean hasReminded = false;
 
-	private String contextPath;
+//	private String contextPath;
 
 	private String label;
 
@@ -88,22 +88,22 @@ public class Task implements ITask {
 		return label;
 	}
 
-	public String getContextPath() {
-		return contextPath;
-	}
-
-	public void setContextPath(String path) {
-		if (path.startsWith(".mylar")) { // HACK: remove this
-			this.contextPath = path.substring(path.lastIndexOf('/') + 1, path.length());
-		} else if (!path.equals("")) {
-			this.contextPath = path;
-		}
-	}
+//	public String getRemoteContextPath() {
+//		return contextPath;
+//	}
+//
+//	public void setRemoteContextPath(String path) {
+//		if (path.startsWith(".mylar")) { // HACK: remove this
+//			this.contextPath = path.substring(path.lastIndexOf('/') + 1, path.length());
+//		} else if (!path.equals("")) {
+//			this.contextPath = path;
+//		}
+//	}
 
 	public Task(String handle, String label, boolean newTask) {
 		this.handle = handle;
 		this.label = label;
-		this.contextPath = handle;
+//		this.contextPath = handle;
 		if (newTask) {
 			creationDate = new Date();
 		}
@@ -376,7 +376,7 @@ public class Task implements ITask {
 		if (isActive()) {
 			return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
 		} else {
-			if (MylarPlugin.getContextManager().hasContext(getContextPath())) {
+			if (MylarPlugin.getContextManager().hasContext(handle)) {
 				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
 			} else {
 				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);

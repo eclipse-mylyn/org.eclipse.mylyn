@@ -141,7 +141,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(getTaskTagName());
-		node.setAttribute(PATH, task.getContextPath());
+//		node.setAttribute(PATH, task.getRemoteContextPath());
 		node.setAttribute(LABEL, task.getDescription(false));
 		node.setAttribute(HANDLE, task.getHandleIdentifier());
 		node.setAttribute(PRIORITY, task.getPriority());
@@ -262,11 +262,11 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			task.setPriority(DEFAULT_PRIORITY);
 		}
-		if (element.hasAttribute(PATH)) {
-			task.setContextPath(element.getAttribute(PATH));
-		} else {
-			task.setContextPath(task.getHandleIdentifier());
-		}
+//		if (element.hasAttribute(PATH)) {
+//			task.setRemoteContextPath(element.getAttribute(PATH));
+//		} else {
+//			task.setRemoteContextPath(task.getHandleIdentifier());
+//		}
 
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true);

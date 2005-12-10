@@ -67,7 +67,15 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 		if (MylarTaskListPlugin.getDefault() != null) {
 			MylarTaskListPlugin.getTaskListManager().saveTaskList();
 			for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
-				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier(), task.getContextPath());
+//				String path = task.getContextPath();
+//				File file = MylarPlugin.getContextManager().getFileForContext(task.getContextPath());
+//				System.err.println(">>> canWrite: " + file.canWrite());
+//				if (!file.canWrite()) {
+//					ErrorLogger.fail(new Exception(), "could not write context path, resetting: " + path, true);
+//					task.setContextPath(task.getHandleIdentifier());
+//					path = task.getHandleIdentifier();
+//				}
+				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());//, path);
 			}
 		}
 	}

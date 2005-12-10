@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.tasklist.ui;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
@@ -196,12 +196,12 @@ public class TaskInfoEditor extends EditorPart {
 		// }
 		// }
 		// "<MylarDir>/" + res + ".xml"
-		String path = pathText.getText();
-		path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
-		task.setContextPath(path);
-		if (datePicker != null && datePicker.getDate() != null) {
-			task.setReminderDate(datePicker.getDate().getTime());
-		}
+//		String path = pathText.getText();
+//		path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
+//		task.setContextPath(path);
+//		if (datePicker != null && datePicker.getDate() != null) {
+//			task.setReminderDate(datePicker.getDate().getTime());
+//		}
 		refreshTaskListView(task);
 		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
 		markDirty(false);
@@ -557,12 +557,15 @@ public class TaskInfoEditor extends EditorPart {
 
 		Label l2 = toolkit.createLabel(container, "Task context file:");
 		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		String contextPath = MylarPlugin.getDefault().getDataDirectory() 
-			+ '/' + task.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION;
-		pathText = toolkit.createText(container, contextPath, SWT.BORDER);
-		pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		pathText.setEditable(false);
-		pathText.setEnabled(false);
+		File contextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+//		String contextPath = MylarPlugin.getDefault().getDataDirectory() 
+//			+ '/' + task.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION;
+		if (contextFile != null) {
+			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.BORDER);
+			pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+			pathText.setEditable(false);
+			pathText.setEnabled(false);
+		}
 
 //		browse = toolkit.createButton(container, "Change", SWT.PUSH | SWT.CENTER);
 //		if (task.isActive()) {

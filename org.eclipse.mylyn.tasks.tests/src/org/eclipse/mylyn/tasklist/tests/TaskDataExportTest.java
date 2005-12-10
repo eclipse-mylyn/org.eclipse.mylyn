@@ -47,15 +47,16 @@ public class TaskDataExportTest extends TestCase{
 		//Create a task and context with an interaction event to be saved
 		task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "Export Test Task", true);
 		manager.moveToRoot(task1);
-		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(task1.getHandleIdentifier(), task1.getContextPath());
+		MylarContext mockContext = MylarPlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT,"structureKind","handle","originId");
 		mockContext.parseEvent(event);
 		MylarPlugin.getContextManager().contextActivated(mockContext);
 
 		//Save the context file and check that it exists
-		MylarPlugin.getContextManager().saveContext(mockContext.getId(), task1.getContextPath());
-		File taskFile = new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
-		assertTrue(MylarPlugin.getContextManager().hasContext(task1.getContextPath()));
+		MylarPlugin.getContextManager().saveContext(mockContext.getId());
+		File taskFile = MylarPlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
+//			new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
+		assertTrue(MylarPlugin.getContextManager().hasContext(task1.getHandleIdentifier()));
 		assertTrue(taskFile.exists());
 	}
 
@@ -68,7 +69,7 @@ public class TaskDataExportTest extends TestCase{
 		
 		//Check that the task list file was exported
 		File destZipFile =  new File(destinationDir + File.separator
-				+ TaskDataExportWizard.ZIP_FILE_NAME);	
+				+ TaskDataExportWizard.getZipFileName());	
 		assertTrue(destZipFile.exists());
 	}
 
@@ -92,7 +93,8 @@ public class TaskDataExportTest extends TestCase{
 		assertTrue(destActivationHistoryFile.exists());
 		
 		//Check that the task context file created in setUp() was exported
-		File destTaskContextFile = new File(destinationDir + File.separator + task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
+		File destTaskContextFile = MylarPlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
+//		File destTaskContextFile = new File(destinationDir + File.separator + task1.getContextPath() + MylarContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(destTaskContextFile.exists());
 	}
 	
