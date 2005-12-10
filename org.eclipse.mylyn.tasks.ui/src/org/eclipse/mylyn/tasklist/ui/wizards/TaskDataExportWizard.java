@@ -53,8 +53,6 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	
 	private final static String ZIP_FILE_EXTENSION = ".zip";
 	
-//	public final static String ZIP_FILE_NAME = TaskDataExportWizardPage.ZIP_FILE_NAME;
-
 	private final static String WINDOW_TITLE = "Export";
 
 	private TaskDataExportWizardPage exportPage = null;
