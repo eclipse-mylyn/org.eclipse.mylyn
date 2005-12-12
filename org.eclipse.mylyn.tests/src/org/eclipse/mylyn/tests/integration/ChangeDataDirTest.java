@@ -52,6 +52,7 @@ public class ChangeDataDirTest extends TestCase {
 	}
 	
 	public void testMonitorFileMove() {
+		MylarMonitorPlugin.getDefault().startMonitoring();
 		MylarMonitorPlugin.getDefault().getInteractionLogger().interactionObserved(InteractionEvent.makeCommand("id", "delta"));
 		String oldPath = MylarMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().getAbsolutePath();
 		assertTrue(new File(oldPath).exists());
@@ -69,6 +70,7 @@ public class ChangeDataDirTest extends TestCase {
 		
 		List<String> filesLeft = Arrays.asList(new File(defaultDir).list());
 		assertFalse(filesLeft.toString(), filesLeft.contains(monitorFileName)); 
+		MylarMonitorPlugin.getDefault().stopMonitoring();
 	}
 
 	public void testDefaultDataDirectoryMove() {
