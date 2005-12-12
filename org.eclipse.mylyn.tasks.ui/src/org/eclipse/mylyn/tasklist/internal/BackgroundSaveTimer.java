@@ -37,7 +37,7 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 	
 
 	public void stop() {
-		timer.killTimer();
+		timer.kill();
 	}
 	
 	public void setSaveIntervalMillis(int saveIntervalMillis) {

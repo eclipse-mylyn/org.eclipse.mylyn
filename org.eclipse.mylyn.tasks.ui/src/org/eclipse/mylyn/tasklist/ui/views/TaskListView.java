@@ -617,7 +617,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void addTaskToHistory(ITask task) {
-		if (!MylarTaskListPlugin.getDefault().isMultipleMode()) {
+		if (!MylarTaskListPlugin.getDefault().isMultipleActiveTasksMode()) {
 			taskHistory.addTask(task);
 			nextTaskAction.setEnabled(taskHistory.hasNext());
 			previousTaskAction.setEnabled(taskHistory.hasPrevious());
@@ -749,7 +749,7 @@ public class TaskListView extends ViewPart {
 		//        	MylarTaskListPlugin.getTaskListManager().getTaskList().addFilter(inCompleteFilter);
 		if (MylarTaskListPlugin.getDefault().isFilterCompleteMode())
 			addFilter(COMPLETE_FILTER);
-		if (MylarTaskListPlugin.getDefault().isMultipleMode()) {
+		if (MylarTaskListPlugin.getDefault().isMultipleActiveTasksMode()) {
 			togglePreviousAction(false);
 			toggleNextAction(false);
 		}

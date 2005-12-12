@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.planner.ui;
+package org.eclipse.mylar.tasklist.internal.planner.ui;
 
 import java.text.DateFormat;
 

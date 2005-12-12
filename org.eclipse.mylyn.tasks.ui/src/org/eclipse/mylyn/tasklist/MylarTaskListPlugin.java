@@ -26,8 +26,8 @@ import org.eclipse.mylar.tasklist.internal.TaskListExtensionReader;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.internal.TaskListSaveManager;
 import org.eclipse.mylar.tasklist.internal.TaskListWriter;
-import org.eclipse.mylar.tasklist.planner.internal.ReminderRequiredCollector;
-import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.internal.planner.ReminderRequiredCollector;
+import org.eclipse.mylar.tasklist.internal.planner.TaskReportGenerator;
 import org.eclipse.mylar.tasklist.ui.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
@@ -558,7 +558,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 //		taskListListeners.add(taskListListner);
 //	}
 
-	public boolean isMultipleMode() {
+	public boolean isMultipleActiveTasksMode() {
 		return getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS);
 	}
 

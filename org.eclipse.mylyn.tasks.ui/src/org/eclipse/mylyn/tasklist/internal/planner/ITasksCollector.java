@@ -9,33 +9,18 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.planner.ui;
+package org.eclipse.mylar.tasklist.internal.planner;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.tasklist.ITask;
 
 /**
  * @author Ken Sueda
- * @author Mik Kersten
  */
-public class TaskActivityContentProvider implements IStructuredContentProvider {
-
-	private List<ITask> tasks = null;
-
-	public TaskActivityContentProvider(List<ITask> tasks) {
-		this.tasks = tasks;
-	}
-
-	public Object[] getElements(Object inputElement) {
-		return tasks.toArray();
-	}
-
-	public void dispose() {
-	}
-
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+public interface ITasksCollector {
+	
+	public abstract void consumeTask(ITask task);
+	
+	public abstract List<ITask> getTasks();
 }

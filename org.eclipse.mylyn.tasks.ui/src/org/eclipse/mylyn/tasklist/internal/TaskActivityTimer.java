@@ -32,49 +32,64 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 
 	private ITask task;
 
-	private long lastTimeout;
+	private long lastActivity;
 
+	private boolean started;
+	
 	public TaskActivityTimer(ITask task, int timeout) {
 		this.task = task;
 		timer = new TimerThread(timeout);
-	}
-
-	public void fireTimedOut() {
-		long elapsed = Calendar.getInstance().getTimeInMillis() - lastTimeout;
-		task.setElapsedTime(task.getElapsedTime() + elapsed);
-		lastTimeout = Calendar.getInstance().getTimeInMillis();
-	}
-
-	public void interactionObserved(InteractionEvent event) {
-		timer.resetTimer();
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(this);
+		MylarPlugin.getDefault().addInteractionListener(this);
+		timer.addListener(this);
 	}
 
 	public void startTimer() {
-		lastTimeout = Calendar.getInstance().getTimeInMillis();
-		timer.addListener(this);
-		MylarPlugin.getDefault().addInteractionListener(this);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(this);
+		lastActivity = Calendar.getInstance().getTimeInMillis();
 		timer.start();
+		started = true;
 	}
 
 	public void stopTimer() {
-		fireTimedOut();
-		timer.killTimer();
+		addElapsedToActivityTime();
+		timer.kill();
+		timer.removeListener(this);
 		MylarPlugin.getDefault().removeInteractionListener(this);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(this);
+		started = false;
 	}
-
+	
+	public void fireTimedOut() {
+		suspendTiming();
+	}
+	
 	public void shellDeactivated(ShellEvent e) {
-		fireTimedOut();
-		timer.setSuspended(true);
+		suspendTiming();
+	}
+	
+	public void interactionObserved(InteractionEvent event) {
+//		lastActivity = Calendar.getInstance().getTimeInMillis();
+		timer.resetTimer();
 	}
 
 	public void shellActivated(ShellEvent e) {
-		timer.setSuspended(false);
-		lastTimeout = Calendar.getInstance().getTimeInMillis();
+		timer.resetTimer();
+		lastActivity = Calendar.getInstance().getTimeInMillis();
 	}
 
+	private void suspendTiming() {
+		addElapsedToActivityTime();
+		timer.setSuspended(true);
+	}
+	
+	private void addElapsedToActivityTime() {
+		long elapsed = Calendar.getInstance().getTimeInMillis() - lastActivity;
+		task.setElapsedTime(task.getElapsedTime() + elapsed);
+		lastActivity = Calendar.getInstance().getTimeInMillis();		
+	}
+	
 	public void shellClosed(ShellEvent e) {
-		// ignore
+		timer.kill();
 	}
 
 	public void shellDeiconified(ShellEvent e) {
@@ -91,5 +106,16 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	
 	public void stopObserving() { 
 		
+	}
+
+	/**
+	 * Public for testing
+	 */
+	public boolean isStarted() {
+		return started;
+	}
+
+	public String toString() {
+		return "timer for task: " + task.toString();
 	}
 }

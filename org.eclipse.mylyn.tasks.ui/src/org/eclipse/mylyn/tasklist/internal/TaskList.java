@@ -68,14 +68,13 @@ public class TaskList implements Serializable {
 		queries.add(query);
 	}
 
-	public void setActive(ITask task, boolean active) {
+	void setActive(ITask task, boolean active) {
 		task.setActive(active);
 		if (active && !activeTasks.contains(task)) {
 			activeTasks.add(task);
 		} else if (!active) {
 			activeTasks.remove(task);
 		}
-
 	}
 
 	void deleteTask(ITask task) {
@@ -232,10 +231,10 @@ public class TaskList implements Serializable {
 		rootTasks.clear();
 	}
 
-	public void clearActiveTasks() {
-		for (ITask task : activeTasks) {
-			task.setActive(false);
-		}
-		activeTasks.clear();
-	}
+//	public void clearActiveTasks() {
+//		for (ITask task : activeTasks) {
+//			task.setActive(false);
+//		}
+//		activeTasks.clear();
+//	}
 }

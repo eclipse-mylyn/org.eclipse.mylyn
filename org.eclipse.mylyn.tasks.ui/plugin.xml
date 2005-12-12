@@ -39,7 +39,7 @@
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.tasklist.planner.ui.TaskPlannerWizard"
+            class="org.eclipse.mylar.tasklist.internal.planner.ui.TaskPlannerWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
             name="Mylar Task Planner (experimental)">
@@ -96,7 +96,7 @@
            id="org.eclipse.mylar.tasklist.ui.catEditor"/>
     <editor
            icon="icons/eview16/task-list.gif"
-           class="org.eclipse.mylar.tasklist.planner.ui.TaskPlannerEditorPart"
+           class="org.eclipse.mylar.tasklist.internal.planner.ui.TaskPlannerEditorPart"
            name="Mylar Task Planner"
            id="org.eclipse.mylar.tasklist.ui.planner.editor"/>           
            

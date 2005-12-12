@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.planner.ui;
+package org.eclipse.mylar.tasklist.internal.planner.ui;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,10 +18,10 @@ import java.util.List;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.internal.TaskList;
-import org.eclipse.mylar.tasklist.planner.internal.CompletedTaskCollector;
-import org.eclipse.mylar.tasklist.planner.internal.ITasksCollector;
-import org.eclipse.mylar.tasklist.planner.internal.InProgressTaskCollector;
-import org.eclipse.mylar.tasklist.planner.internal.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.internal.planner.CompletedTaskCollector;
+import org.eclipse.mylar.tasklist.internal.planner.ITasksCollector;
+import org.eclipse.mylar.tasklist.internal.planner.InProgressTaskCollector;
+import org.eclipse.mylar.tasklist.internal.planner.TaskReportGenerator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 

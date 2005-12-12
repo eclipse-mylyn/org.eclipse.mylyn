@@ -140,8 +140,8 @@ public class TaskListManager {
 	}
 
 	public void deleteTask(ITask task) {
-		TaskActivityTimer activityTimer = timerMap.remove(task);
-		if (activityTimer != null) activityTimer.stopTimer();
+		TaskActivityTimer taskTimer = timerMap.remove(task);
+		if (taskTimer != null) taskTimer.stopTimer();
 		taskList.setActive(task, false);
 		taskList.deleteTask(task);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
@@ -165,29 +165,28 @@ public class TaskListManager {
 		listeners.remove(listener);
 	}
 
+	/**
+	 * Deactivates previously active tasks if not in multiple active mode.
+	 * @param task
+	 */
 	public void activateTask(ITask task) {
-		if (!MylarTaskListPlugin.getDefault().isMultipleMode()) {
-			if (taskList.getActiveTasks().size() > 0
-					&& taskList.getActiveTasks().get(0).getHandleIdentifier().compareTo(task.getHandleIdentifier()) != 0) {
-				for (ITask t : taskList.getActiveTasks()) {
-					for (ITaskActivityListener listener : listeners)
-						listener.taskDeactivated(t);
-				}
-				taskList.clearActiveTasks();
+		if (!MylarTaskListPlugin.getDefault().isMultipleActiveTasksMode()) {
+			for (ITask activeTask : new ArrayList<ITask>(taskList.getActiveTasks())) {
+				deactivateTask(activeTask);
 			}
 		}
 		taskList.setActive(task, true);
-		int timout = MylarPlugin.getContextManager().getInactivityTimeout();
-		TaskActivityTimer activityTimer = new TaskActivityTimer(task, timout);
+		int timeout = MylarPlugin.getContextManager().getInactivityTimeout();
+		TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout);
 		activityTimer.startTimer();
 		timerMap.put(task, activityTimer);
 		for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
 	}
 
 	public void deactivateTask(ITask task) {
-		TaskActivityTimer activeListener = timerMap.remove(task);
-		if (activeListener != null) activeListener.stopTimer();
-		taskList.setActive(task, false);
+		TaskActivityTimer taskTimer = timerMap.remove(task);
+		if (taskTimer != null) taskTimer.stopTimer();
+		taskList.setActive(task, false); 
 		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
 	}
 
@@ -219,4 +218,12 @@ public class TaskListManager {
 	public File getTaskListFile() {
 		return taskListFile;
 	}
+
+	/**
+	 * Public for testing
+	 */
+	public Map<ITask, TaskActivityTimer> getTimerMap() {
+		return timerMap;
+	}
+
 }
