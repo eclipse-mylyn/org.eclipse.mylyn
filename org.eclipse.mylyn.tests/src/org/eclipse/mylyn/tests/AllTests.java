@@ -37,11 +37,10 @@ public class AllTests {
         ErrorLogger.setDumpErrors(true);
         MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
         
-        // NOTE: the order of these tests matters
-        // TODO: make tests clear workbench state on completion
+        // TODO: the order of these tests matters, but shouldn't
         //$JUnit-BEGIN$        
-        suite.addTest(AllIntegrationTests.suite());
         suite.addTest(AllMonitorTests.suite()); 
+        suite.addTest(AllIntegrationTests.suite());
         suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
         suite.addTest(AllIdeTests.suite());
         suite.addTest(AllJavaTests.suite());
