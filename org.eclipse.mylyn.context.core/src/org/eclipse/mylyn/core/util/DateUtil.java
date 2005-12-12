@@ -78,13 +78,14 @@ public class DateUtil {
     	return hourString + ":" + minuteString;
     }
      
-    public static String getFormattedDuration(long duration) {
+    public static String getFormattedDuration(long duration, boolean includeSeconds) {
     	long seconds = duration / 1000;
 		long minutes = 0;
 		long hours = 0;
 //		final long SECOND = 1000;
 		final long MIN = 60;
 		final long HOUR = MIN * 60;
+		String formatted = "";
 		
 		String hour = "";
 		String min = "";
@@ -110,7 +111,8 @@ public class DateUtil {
 			} else if (seconds > 1) {
 				sec = seconds + " seconds";
 			}
-			return hour + min + sec;
+			formatted += hour + min;
+			if (includeSeconds) formatted += sec;
 		} else if (seconds >= MIN) {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
@@ -124,15 +126,16 @@ public class DateUtil {
 			} else if (seconds > 1) {
 				sec = seconds + " seconds";
 			}
-			return min + sec;
+			formatted += min;
+			if (includeSeconds) formatted += sec;
 		} else {
 			if (seconds == 1) {
 				sec = seconds + " second";
 			} else if (seconds > 1) {
 				sec = seconds + " seconds";
 			}
-			return sec;
-//			return "0 minutes";
+			if (includeSeconds) formatted += sec;
 		}
+		return formatted;
     }
 }
