@@ -126,12 +126,13 @@ public class DateUtil {
 			}
 			return min + sec;
 		} else {
-//			if (seconds == 1) {
-//				sec = seconds + " second";
-//			} else if (seconds > 1) {
-//				sec = seconds + " seconds";
-//			}
-			return "0 minutes";
+			if (seconds == 1) {
+				sec = seconds + " second";
+			} else if (seconds > 1) {
+				sec = seconds + " seconds";
+			}
+			return sec;
+//			return "0 minutes";
 		}
     }
 }

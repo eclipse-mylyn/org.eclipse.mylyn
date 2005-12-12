@@ -58,15 +58,15 @@ public class TimerThread extends Thread implements Runnable {
 	public void run() {
 		try {
 			while (!killed) {
-				while (elapsed < timeout && /* !stopped && */!killed) {
+				while (elapsed < timeout && !killed) {
 					elapsed += sleepInterval;
 					sleep(sleepInterval);
 				}
-				if (elapsed >= timeout && !suspended && !killed) {
-					for (ITimerThreadListener listener : listeners) {
-						listener.fireTimedOut();
-						resetTimer();
-					}
+				if (elapsed >= timeout && !killed) {
+					if (!suspended) {
+						for (ITimerThreadListener listener : listeners) listener.fireTimedOut();
+					} 
+					resetTimer();
 				}
 				sleep(sleepInterval);
 			}
@@ -83,11 +83,12 @@ public class TimerThread extends Thread implements Runnable {
 		this.suspended = suspended;
 	}
 
-	public void killTimer() {
+	public void kill() {
 		killed = true;
 	}
 	
 	public void resetTimer() {
+		suspended = false;
 		elapsed = 0;
 	}
 

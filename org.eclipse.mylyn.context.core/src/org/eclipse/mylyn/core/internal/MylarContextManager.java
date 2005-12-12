@@ -49,7 +49,7 @@ public class MylarContextManager {
 	private static final String ACTIVITY_ID = "org.eclipse.mylar.core";
 	private static final String ACTIVITY_HANDLE = "attention";
 	private static final String ACTIVITY_KIND = "context";
-	private static final int ACTIVITY_TIMEOUT_MILLIS = 3 * 60 * 1000; 
+	private static final int INACTIVITY_TIMEOUT_MILLIS = 2 * 60 * 1000; 
 	
 	public static final String CONTEXT_HISTORY_FILE_NAME = "context-history";
 	public static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylar.core.model.interest.propagation";
@@ -68,7 +68,7 @@ public class MylarContextManager {
     private CompositeContext currentContext = new CompositeContext();
     private MylarContext activityHistory = null;
     private ActivityListener activityListener;
-    private int inactivityTimeout = ACTIVITY_TIMEOUT_MILLIS;
+    private int inactivityTimeout = INACTIVITY_TIMEOUT_MILLIS;
     
 	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
 	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
@@ -124,14 +124,14 @@ public class MylarContextManager {
     	public void startObserving() {} 
 
     	public void stopTimer() {
-    		timer.killTimer();
+    		timer.kill();
     		MylarPlugin.getDefault().removeInteractionListener(this);
     	}
 
     	public void stopObserving() {}
     	
     	public void setTimeout(int millis) {
-    		timer.killTimer();
+    		timer.kill();
     		
     		timer = new TimerThread(millis);
     		timer.addListener(this);
@@ -148,7 +148,7 @@ public class MylarContextManager {
         	resetActivityHistory();
         } 
         
-        activityListener = new ActivityListener(ACTIVITY_TIMEOUT_MILLIS);//ACTIVITY_TIMEOUT_MILLIS);
+        activityListener = new ActivityListener(INACTIVITY_TIMEOUT_MILLIS);//INACTIVITY_TIMEOUT_MILLIS);
         activityListener.startObserving();
     }
     
