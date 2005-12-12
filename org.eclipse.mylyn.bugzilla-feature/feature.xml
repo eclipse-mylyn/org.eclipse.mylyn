@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="Mylar Bugzilla Client"
-      version="0.4.4.1"
+      version="0.4.5"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar.bugzilla.core">
 
@@ -240,35 +240,35 @@ litigation.
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.4.4.1"
+         version="0.4.5"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.4.4.1"
+         version="0.4.5"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.core"
          download-size="0"
          install-size="0"
-         version="0.4.4.1"
+         version="0.4.5"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasklist"
          download-size="0"
          install-size="0"
-         version="0.4.4.1"
+         version="0.4.5"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugs"
          download-size="0"
          install-size="0"
-         version="0.4.4.1"
+         version="0.4.5"
          unpack="false"/>
 
 </feature>
