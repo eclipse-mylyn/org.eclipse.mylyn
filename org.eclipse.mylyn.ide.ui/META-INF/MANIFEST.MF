@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Ide Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.ide;singleton:=true
-Bundle-Version: 0.4.4.1
+Bundle-Version: 0.4.5
 Bundle-Activator: org.eclipse.mylar.ide.MylarIdePlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
