@@ -56,13 +56,12 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 	
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		List<ITask> roots = tasklist.getRootTasks();
-		monitor.beginTask("Mylar Task Planner", 1 + tasklist.getCategories().size());
+		monitor.beginTask("Mylar Task Planner", tasklist.getRoots().size() * (1+tasklist.getCategories().size())); //
 		for(int i = 0; i < roots.size(); i++) {
 			ITask task = (ITask) roots.get(i);
 			for (ITaskCollector collector : collectors) {
 				collector.consumeTask(task);
 			}	
-			monitor.worked(1);
 		}
 		for (TaskCategory cat : tasklist.getTaskCategories()) {
 			List<? extends ITaskListElement> sub = cat.getChildren();
@@ -71,6 +70,7 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 					ITask element = (ITask) sub.get(j);
 					for (ITaskCollector collector : collectors) {
 						collector.consumeTask(element);
+						monitor.worked(1);
 					}
 				}
 			}
