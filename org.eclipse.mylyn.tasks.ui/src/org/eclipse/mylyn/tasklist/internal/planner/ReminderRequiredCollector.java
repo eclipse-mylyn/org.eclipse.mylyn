@@ -20,7 +20,7 @@ import org.eclipse.mylar.tasklist.ITask;
 /**
  * @author Ken Sueda
  */
-public class ReminderRequiredCollector implements ITasksCollector {
+public class ReminderRequiredCollector implements ITaskCollector {
 
 	private List<ITask> tasks = new ArrayList<ITask>();
 	private Date curr = null;

@@ -18,7 +18,7 @@ import org.eclipse.mylar.tasklist.ITask;
 /**
  * @author Ken Sueda
  */
-public interface ITasksCollector {
+public interface ITaskCollector {
 	
 	public abstract void consumeTask(ITask task);
 	

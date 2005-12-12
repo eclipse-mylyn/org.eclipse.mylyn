@@ -22,7 +22,7 @@ import org.eclipse.mylar.tasklist.ITask;
 /**
  * @author Ken Sueda
  */
-public class CompletedTaskCollector implements ITasksCollector {
+public class CompletedTaskCollector implements ITaskCollector {
 
 	private Map<String, ITask> completedTasks = new HashMap<String, ITask>();
 	private Date periodStartDate;

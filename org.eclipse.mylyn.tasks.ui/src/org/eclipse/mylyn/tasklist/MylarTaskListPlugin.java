@@ -445,8 +445,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private void checkReminders() {
-		//    	if (getPrefs().getBoolean(REMINDER_CHECK)) {
-		//    		getPrefs().setValue(REMINDER_CHECK, false);
 		final TaskReportGenerator parser = new TaskReportGenerator(MylarTaskListPlugin.getTaskListManager().getTaskList());
 		parser.addCollector(new ReminderRequiredCollector());
 		parser.collectTasks();
@@ -459,7 +457,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			});
 		}
-		//    	}
 	}
 
 	public static void setPriorityLevel(PriorityLevel pl) {

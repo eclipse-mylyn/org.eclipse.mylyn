@@ -18,7 +18,7 @@ import org.eclipse.mylar.tasklist.ITask;
  * @author Wesley Coelho (Adapted from CompletedTaskCollector by Key Sueda)
  * @author Mik Kersten
  */
-public class InProgressTaskCollector implements ITasksCollector {
+public class InProgressTaskCollector implements ITaskCollector {
 
 	private Map<String, ITask> inProgressTasks = new HashMap<String, ITask>();
 	private Date periodStartDate ;

@@ -11,19 +11,23 @@
 
 package org.eclipse.mylar.tasklist.internal.planner.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.mylar.tasklist.internal.planner.CompletedTaskCollector;
-import org.eclipse.mylar.tasklist.internal.planner.ITasksCollector;
+import org.eclipse.mylar.tasklist.internal.planner.ITaskCollector;
 import org.eclipse.mylar.tasklist.internal.planner.InProgressTaskCollector;
 import org.eclipse.mylar.tasklist.internal.planner.TaskReportGenerator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Ken Sueda
@@ -33,8 +37,8 @@ public class TaskPlannerEditorInput implements IEditorInput {
 	private List<ITask> completedTasks = null;
 
 	private List<ITask> inProgressTasks = null;
-
-	private TaskReportGenerator parser = null;
+  
+	private TaskReportGenerator taskReportGenerator = null;
 
 	private int prevDaysToReport = -1;
 
@@ -52,21 +56,29 @@ public class TaskPlannerEditorInput implements IEditorInput {
 			+ Calendar.getInstance().get(Calendar.SECOND) * 1000;
 		reportStartDate = new Date(today - offsetToday - lastDay);
 		
-		parser = new TaskReportGenerator(tlist);
+		taskReportGenerator = new TaskReportGenerator(tlist);
 
-		ITasksCollector completedTaskCollector = new CompletedTaskCollector(reportStartDate);
-		parser.addCollector(completedTaskCollector);
+		ITaskCollector completedTaskCollector = new CompletedTaskCollector(reportStartDate);
+		taskReportGenerator.addCollector(completedTaskCollector);
 
-		ITasksCollector inProgressTaskCollector = new InProgressTaskCollector(reportStartDate);
-		parser.addCollector(inProgressTaskCollector);
+		ITaskCollector inProgressTaskCollector = new InProgressTaskCollector(reportStartDate);
+		taskReportGenerator.addCollector(inProgressTaskCollector);
 
-		parser.collectTasks();
+		try {
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			service.run(true, true, taskReportGenerator);
+
+			while (!taskReportGenerator.isFinished()) Thread.sleep(1000);
+		} catch (InvocationTargetException e) {
+			// operation was canceled
+		} catch (InterruptedException e) {
+			ErrorLogger.log(e, "Could not generate report");
+		}
+//		taskReportGenerator.collectTasks();
 
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
 	}
-
-	// IEditorInput interface methods
 
 	public boolean exists() {
 		return true;
@@ -119,7 +131,7 @@ public class TaskPlannerEditorInput implements IEditorInput {
 	}
 
 	public TaskReportGenerator getReportGenerator() {
-		return parser;
+		return taskReportGenerator;
 	}
 
 	public boolean createdDuringReportPeriod(ITask task) {
