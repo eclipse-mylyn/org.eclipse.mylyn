@@ -48,13 +48,11 @@ public class MonitorTest extends TestCase {
     @Override
 	protected void setUp() throws Exception {
 		super.setUp();
-//		MylarMonitorPlugin.getDefault().startMonitoring();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-//		MylarMonitorPlugin.getDefault().stopMonitoring();
 	}
 	
 	public void testEnablement() throws IOException {
@@ -77,6 +75,7 @@ public class MonitorTest extends TestCase {
         MylarMonitorPlugin.getDefault().startMonitoring();
         generateSelection();
         assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
+		MylarMonitorPlugin.getDefault().stopMonitoring();
     }
     
 //    public void testLogFileMove() throws IOException {

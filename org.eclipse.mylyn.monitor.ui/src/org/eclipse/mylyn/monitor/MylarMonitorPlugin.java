@@ -121,7 +121,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     private static boolean performingUpload = false;
 	private boolean questionnaireEnabled = true;
 	private boolean backgroundEnabled = false;
-    
+	
 	private StudyParameters studyParameters = new StudyParameters();
 	
 	private ShellListener SHELL_LISTENER = new ShellListener() {		
@@ -210,9 +210,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     
     public void stopMonitoring() {
     	if (!getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED)) return;
+    	interactionLogger.stopObserving(); 
+    	for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.stopObserving();
+    	
     	IWorkbench workbench = PlatformUI.getWorkbench();
     	MylarPlugin.getDefault().removeInteractionListener(interactionLogger);
-    	interactionLogger.stopObserving(); 
     	
     	MylarPlugin.getDefault().getCommandMonitors().remove(keybindingCommandMonitor);
     	MylarPlugin.getDefault().getSelectionMonitors().remove(selectionMonitor);
@@ -238,8 +240,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
     
     public void startMonitoring() {
     	if (getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED)) return;
+    	interactionLogger.startObserving();
+    	for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners()) listener.startObserving();
+    	
     	IWorkbench workbench = PlatformUI.getWorkbench();
-        interactionLogger.startObserving();
         MylarPlugin.getDefault().addInteractionListener(interactionLogger);
         MylarPlugin.getDefault().getCommandMonitors().add(keybindingCommandMonitor);
         MylarPlugin.getDefault().getSelectionMonitors().add(selectionMonitor);
