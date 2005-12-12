@@ -66,9 +66,8 @@ public class TaskPlannerEditorInput implements IEditorInput {
 
 		try {
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
-			service.run(true, true, taskReportGenerator);
-
-			while (!taskReportGenerator.isFinished()) Thread.sleep(1000);
+			service.run(false, true, taskReportGenerator);
+			while (!taskReportGenerator.isFinished()) Thread.sleep(500);
 		} catch (InvocationTargetException e) {
 			// operation was canceled
 		} catch (InterruptedException e) {
