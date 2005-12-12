@@ -475,7 +475,7 @@ public class TaskInfoEditor extends EditorPart {
 		
 		String elapsedTimeString = "0";
 		try {
-			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime());
+			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
 		} catch (RuntimeException e) {
 			ErrorLogger.fail(e, "Could not format reminder date", true);
 		}

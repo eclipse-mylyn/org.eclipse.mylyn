@@ -213,7 +213,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String totalCompletedTaskTime = "Total time on completed: "
-				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks());
+				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks(), false);
 		label = toolkit.createLabel(summaryContainer, totalCompletedTaskTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
@@ -222,7 +222,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String totalInProgressTaskTime = "Total time on incomplete: "
-				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks());
+				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks(), false);
 		label = toolkit.createLabel(summaryContainer, totalInProgressTaskTime, SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
@@ -301,7 +301,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private String getTotalTime() {
 		return DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks()
-				+ editorInput.getTotalTimeSpentOnInProgressTasks());
+				+ editorInput.getTotalTimeSpentOnInProgressTasks(), false);
 	}
 
 	private TableViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,

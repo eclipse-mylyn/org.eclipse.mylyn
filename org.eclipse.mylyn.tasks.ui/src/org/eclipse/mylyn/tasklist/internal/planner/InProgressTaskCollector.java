@@ -16,15 +16,17 @@ import org.eclipse.mylar.tasklist.ITask;
  * on during the specified number of previous days.
  * 
  * @author Wesley Coelho (Adapted from CompletedTaskCollector by Key Sueda)
+ * @author Mik Kersten
  */
 public class InProgressTaskCollector implements ITasksCollector {
 
 	private Map<String, ITask> inProgressTasks = new HashMap<String, ITask>();
-	private Date periodStartDate = null;
-	private long DAY = 24*3600*1000;
+	private Date periodStartDate ;
+//	private long DAY = 24*3600*1000;
 	
-	public InProgressTaskCollector(int prevDays) {
-		periodStartDate = new Date(new Date().getTime() - prevDays * DAY);
+	public InProgressTaskCollector(Date periodStartDate) {
+//		periodStartDate = new Date(new Date().getTime() - prevDays * DAY);
+		this.periodStartDate = periodStartDate;
 	}
 	
 	public String getLabel() {
@@ -32,12 +34,12 @@ public class InProgressTaskCollector implements ITasksCollector {
 	}
 
 	public void consumeTask(ITask task) {
-		if (!task.isCompleted() && hasActivitySince(task, periodStartDate)  && !inProgressTasks.containsKey(task.getHandleIdentifier())){
+		if (!task.isCompleted() && hasActivitySince(task, periodStartDate)  && !inProgressTasks.containsKey(task.getHandleIdentifier())) {
 			inProgressTasks.put(task.getHandleIdentifier(), task);
 		}
 	}
 	
-	protected boolean hasActivitySince(ITask task, Date startDate){
+	protected boolean hasActivitySince(ITask task, Date startDate) {
 		IMylarContext mylarContext = MylarPlugin.getContextManager().loadContext(task.getHandleIdentifier());//,task.getContextPath());
 		if (mylarContext != null){
 			List<InteractionEvent> events = mylarContext.getInteractionHistory();

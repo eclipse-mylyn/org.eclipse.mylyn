@@ -25,11 +25,12 @@ import org.eclipse.mylar.tasklist.ITask;
 public class CompletedTaskCollector implements ITasksCollector {
 
 	private Map<String, ITask> completedTasks = new HashMap<String, ITask>();
-	private Date cutOffDate = null;
-	private long DAY = 24*3600*1000;
+	private Date periodStartDate;
+//	private long DAY = 24*3600*1000;
 	
-	public CompletedTaskCollector(int prevDays) {
-		cutOffDate = new Date(new Date().getTime() - prevDays * DAY);
+	public CompletedTaskCollector(Date periodStartDate) {
+		this.periodStartDate = periodStartDate;
+//		cutOffDate = new Date(new Date().getTime() - prevDays * DAY);
 	}
 	
 	public String getLabel() {
@@ -37,7 +38,7 @@ public class CompletedTaskCollector implements ITasksCollector {
 	}
 
 	public void consumeTask(ITask task) {
-		if (task.isCompleted() && task.getCompletionDate() != null && task.getCompletionDate().compareTo(cutOffDate) > 0 && !completedTasks.containsKey(task.getHandleIdentifier())) {
+		if (task.isCompleted() && task.getCompletionDate() != null && task.getCompletionDate().compareTo(periodStartDate) > 0 && !completedTasks.containsKey(task.getHandleIdentifier())) {
 			completedTasks.put(task.getHandleIdentifier(), task);
 		}
 	}

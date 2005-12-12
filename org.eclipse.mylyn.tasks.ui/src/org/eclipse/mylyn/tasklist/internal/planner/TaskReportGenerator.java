@@ -40,9 +40,9 @@ public class TaskReportGenerator {
 	public void collectTasks() {
 		List<ITask> roots = tasklist.getRootTasks();
 		for(int i = 0; i < roots.size(); i++) {
-			ITask t = (ITask) roots.get(i);
+			ITask task = (ITask) roots.get(i);
 			for (ITasksCollector collector : collectors) {
-				collector.consumeTask(t);
+				collector.consumeTask(task);
 			}			
 		}
 		for (TaskCategory cat : tasklist.getTaskCategories()) {

@@ -43,29 +43,27 @@ public class TaskPlannerEditorInput implements IEditorInput {
 	private Date reportStartDate = null;
 
 	public TaskPlannerEditorInput(int prevDays, TaskList tlist) {
-		parser = new TaskReportGenerator(tlist);
-
-		ITasksCollector completedTaskCollector = new CompletedTaskCollector(prevDays);
-		parser.addCollector(completedTaskCollector);
-
-		ITasksCollector inProgressTaskCollector = new InProgressTaskCollector(prevDays);
-		parser.addCollector(inProgressTaskCollector);
-
-		parser.collectTasks();
-
-		completedTasks = completedTaskCollector.getTasks();
-		inProgressTasks = inProgressTaskCollector.getTasks();
-
 		prevDaysToReport = prevDays;
-
 		long today = new Date().getTime();
 		long lastDay = prevDaysToReport * DAY;
 
 		int offsetToday = Calendar.getInstance().get(Calendar.HOUR) * 60 * 60 * 1000
 			+ Calendar.getInstance().get(Calendar.MINUTE) * 60 * 1000
 			+ Calendar.getInstance().get(Calendar.SECOND) * 1000;
-//		System.err.println(">>> " + offsetToday);
 		reportStartDate = new Date(today - offsetToday - lastDay);
+		
+		parser = new TaskReportGenerator(tlist);
+
+		ITasksCollector completedTaskCollector = new CompletedTaskCollector(reportStartDate);
+		parser.addCollector(completedTaskCollector);
+
+		ITasksCollector inProgressTaskCollector = new InProgressTaskCollector(reportStartDate);
+		parser.addCollector(inProgressTaskCollector);
+
+		parser.collectTasks();
+
+		completedTasks = completedTaskCollector.getTasks();
+		inProgressTasks = inProgressTaskCollector.getTasks();
 	}
 
 	// IEditorInput interface methods
