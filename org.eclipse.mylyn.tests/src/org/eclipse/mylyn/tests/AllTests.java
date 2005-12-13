@@ -41,11 +41,11 @@ public class AllTests {
         //$JUnit-BEGIN$        
         suite.addTest(AllMonitorTests.suite()); 
         suite.addTest(AllIntegrationTests.suite());
-        suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
+        suite.addTest(AllCoreTests.suite());
         suite.addTest(AllIdeTests.suite());
         suite.addTest(AllJavaTests.suite());
-        suite.addTest(AllCoreTests.suite());
         suite.addTest(AllTasklistTests.suite());
+        suite.addTest(AllXmlTests.suite());  // HACK: first because it doesn't clean up properly
         suite.addTest(AllBugzillaTests.suite());
         suite.addTest(AllMiscTests.suite());
         //$JUnit-END$ 
