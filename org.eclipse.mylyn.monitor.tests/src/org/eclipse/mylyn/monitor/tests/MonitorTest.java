@@ -126,7 +126,7 @@ public class MonitorTest extends TestCase {
         assertTrue(monitorFile.exists());
         logger.stopObserving();
         List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
-        assertTrue(events.size() >= 2); 
+        assertTrue(""+events.size(), events.size() >= 2); 
         
         logger.stopObserving();
         events = logger.getHistoryFromFile(monitorFile);
