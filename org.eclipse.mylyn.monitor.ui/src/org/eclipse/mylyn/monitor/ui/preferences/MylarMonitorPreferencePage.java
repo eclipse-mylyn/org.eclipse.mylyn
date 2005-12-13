@@ -15,6 +15,7 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.MylarPrefContstants;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -140,7 +141,7 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 
 		userStudyId = new IntegerFieldEditor("", " Feedback User ID:", group); // HACK
 		userStudyId.setErrorMessage("Your user id must be an integer");
-		int uidNum = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPlugin.USER_ID);
+		int uidNum = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPrefContstants.USER_ID);
 		if (uidNum > 0) {
 			userStudyId.setStringValue(uidNum + "");	
 			userStudyId.setEmptyStringAllowed(false);
@@ -214,14 +215,14 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 					"The user study id must be a posative integer");
 			return false;
 		}
-		MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uidNum);
+		MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPrefContstants.USER_ID, uidNum);
 		return true;
 	}
 	
 	@Override
 	public boolean performCancel() {
 		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));
-		userStudyId.setStringValue(MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPlugin.USER_ID)+"");
+		userStudyId.setStringValue(MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPrefContstants.USER_ID)+"");
 		return true;
 	}
 

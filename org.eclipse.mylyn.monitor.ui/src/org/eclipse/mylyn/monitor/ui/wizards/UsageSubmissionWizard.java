@@ -42,6 +42,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.MylarPrefContstants;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.core.util.ZipFileUtil;
@@ -101,7 +102,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 	private void init(boolean performUpload) {
 		this.performUpload = performUpload;
 		setNeedsProgressMonitor(true);
-        uid = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPlugin.USER_ID);
+        uid = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPrefContstants.USER_ID);
         if(uid == 0) {
             uid = -1;
         }
@@ -469,7 +470,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
                     int rc = d.open();
                     if(rc == InputDialog.OK){
                         uid = Integer.parseInt(d.getValue());
-                        MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uid);
+                        MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPrefContstants.USER_ID, uid);
                         return uid;
                     } else {
                     	return -1;
@@ -562,7 +563,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             else{
                 resp = resp.substring(resp.indexOf(":")+1).trim();
                 uid = Integer.parseInt(resp);
-                MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uid);
+                MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPrefContstants.USER_ID, uid);
                 return uid;
             }
             
@@ -620,7 +621,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
                     int rc = d.open();
                     if(rc == InputDialog.OK){
                         uid = Integer.parseInt(d.getValue());
-                        MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uid);
+                        MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPrefContstants.USER_ID, uid);
                         return uid;
                     }
                 }
@@ -705,7 +706,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             else{
                 resp = resp.substring(resp.indexOf(":")+1).trim();
                 uid = Integer.parseInt(resp);
-                MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPlugin.USER_ID, uid);
+                MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPrefContstants.USER_ID, uid);
                 return uid;
             }
             
