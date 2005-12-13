@@ -57,14 +57,16 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
     	type2 = WorkspaceSetupHelper.getType(jp2, "org.eclipse.mylar.tests.project2.builder.ToggleNatureAction");
     	plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
     	
-    	MylarContext t = WorkspaceSetupHelper.getTaskscape();
-    	MylarPlugin.getContextManager().contextActivated(t.getId());
+    	MylarContext context = WorkspaceSetupHelper.getContext();
+    	MylarPlugin.getContextManager().contextActivated(context.getId());
     	helper = new SearchPluginTestHelper(this);
     }
     
     @Override
     protected void tearDown() throws Exception {
         WorkspaceSetupHelper.clearDoiModel();
+        MylarPlugin.getContextManager().contextDeactivated(WorkspaceSetupHelper.getContext().getId());
+        assertFalse(MylarPlugin.getContextManager().hasActiveContext());
     }
 	
 	public void testJavaReferencesSearchDOS1() throws IOException, CoreException {

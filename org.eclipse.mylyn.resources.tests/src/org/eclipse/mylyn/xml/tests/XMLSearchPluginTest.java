@@ -74,14 +74,16 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     	tocNoRefs = WorkspaceSetupHelper.getFile(jp1, "toc-no-refs.xml");
     	plugin2 = WorkspaceSetupHelper.getFile(jp2, "plugin.xml");
     	
-    	MylarContext t = WorkspaceSetupHelper.getTaskscape();
-    	MylarPlugin.getContextManager().contextActivated(t.getId());//, t.getId());
+    	MylarContext t = WorkspaceSetupHelper.getContext();
+    	MylarPlugin.getContextManager().contextActivated(t.getId());
     	helper = new SearchPluginTestHelper(this);
     }
     
     @Override
     protected void tearDown() throws Exception {
         WorkspaceSetupHelper.clearDoiModel();
+        MylarPlugin.getContextManager().contextDeactivated(WorkspaceSetupHelper.getContext().getId());
+        assertFalse(MylarPlugin.getContextManager().hasActiveContext());
     }
   
     public void testXMLSearchDOS1() throws IOException, CoreException{

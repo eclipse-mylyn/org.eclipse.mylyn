@@ -65,27 +65,27 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		bridge.open(element);
 		
 		assertEquals(1, page.getEditors().length);
-		manager.contextDeactivated(taskId);
+		manager.contextDeactivated(contextId);
 		assertEquals(0, page.getEditors().length);
 	}
 	
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException {
-		manager.contextDeleted(taskId);
+		manager.contextDeleted(contextId);
 		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		
-		manager.contextActivated(taskId);
+		manager.contextActivated(contextId);
 //		assertEquals(0, page.getEditors().length);
 		
 		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }" );
 		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }" );
 		monitor.selectionChanged(view, new StructuredSelection(typeA));
         monitor.selectionChanged(view, new StructuredSelection(typeB));
-        manager.contextDeactivated(taskId);
+        manager.contextDeactivated(contextId);
         assertEquals(0, page.getEditors().length);
         
-        manager.contextActivated(taskId);
+        manager.contextActivated(contextId);
         assertTrue("num editors: " + page.getEditors().length, page.getEditors().length == 2 || page.getEditors().length == 3);
 	}
 	
@@ -99,7 +99,7 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 //			IEditorPart editor = page.getEditors()[i];
 			
 //			if (editor instanceof AbstractDecoratedTextEditor) {
-//				manager.contextDeactivated(taskId, taskId);
+//				manager.contextDeactivated(contextId, contextId);
 //				assertEquals(0, page.getEditors().length);
 //			}
 //		}

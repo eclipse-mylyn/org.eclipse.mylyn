@@ -55,9 +55,8 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 	
 	public void testDisabledMode() {
 		ChangeSet[] sets = collector.getSets();
-		for (int i = 0; i < sets.length; i++) {
-			collector.remove(sets[i]);
-		}
+		for (int i = 0; i < sets.length; i++) collector.remove(sets[i]);
+		
 		assertEquals(0, collector.getSets().length);
 		manager.contextDeactivated(taskId);
 		changeSetManager.clearActiveChangeSets();
@@ -76,9 +75,8 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	public void testSingleContextActivation() {
 		ChangeSet[] sets = collector.getSets();
-		for (int i = 0; i < sets.length; i++) {
-			collector.remove(sets[i]);
-		}
+		for (int i = 0; i < sets.length; i++) collector.remove(sets[i]);
+		
 		assertEquals(0, collector.getSets().length);
 		manager.contextDeactivated(taskId);
 		changeSetManager.clearActiveChangeSets();
@@ -90,9 +88,9 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(1, collector.getSets().length);
 
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		assertFalse(MylarPlugin.getContextManager().hasActiveContext());
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
-		assertEquals(0, collector.getSets().length); // deleted because no
-														// active resources
+		assertEquals(0, collector.getSets().length); // deleted because no active resources
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
 
 		// TODO: test with resource
@@ -119,7 +117,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
 			MylarPlugin.getContextManager().handleInteractionEvent(mockSelection());
 		}
-		assertTrue(fileElement.getInterest().getValue() < 0);
+		assertTrue(""+fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);
 		assertTrue("length: " + resources.length, resources.length <= 2); // can have .project file in there
 
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);

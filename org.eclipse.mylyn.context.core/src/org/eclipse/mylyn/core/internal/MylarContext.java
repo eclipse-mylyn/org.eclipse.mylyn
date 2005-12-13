@@ -32,7 +32,7 @@ public class MylarContext implements IMylarContext, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String id;
+	private String handleIdentifier;
 
 	private List<InteractionEvent> interactionHistory = new ArrayList<InteractionEvent>();
 
@@ -66,7 +66,7 @@ public class MylarContext implements IMylarContext, Serializable {
 	}
 
 	public MylarContext(String id, ScalingFactors scaling) {
-		this.id = id;
+		this.handleIdentifier = id;
 		this.scaling = scaling;
 		parseInteractionHistory();
 	}
@@ -159,9 +159,6 @@ public class MylarContext implements IMylarContext, Serializable {
 		return activeNode;
 	}
 
-	/**
-	 * @param handleIdentifier
-	 */
 	public void delete(IMylarElement node) {
 		landmarks.remove(node.getHandleIdentifier());
 		nodes.remove(node.getHandleIdentifier());
@@ -172,12 +169,12 @@ public class MylarContext implements IMylarContext, Serializable {
 	}
 
 	public String getId() {
-		return id;
+		return handleIdentifier;
 	}
 
 	@Override
 	public String toString() {
-		return id;
+		return handleIdentifier;
 	}
 
 	public void reset() {

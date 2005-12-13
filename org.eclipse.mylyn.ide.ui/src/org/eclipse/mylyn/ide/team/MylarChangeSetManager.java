@@ -256,21 +256,6 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 	}
 
-//	private void touch(final IResource resource) throws CoreException {
-//		final IWorkbench workbench = PlatformUI.getWorkbench();
-//		workbench.getDisplay().asyncExec(new Runnable() {
-//			public void run() {
-//				if (resource instanceof IFile) {
-//					try {
-//						((IFile)resource).touch(new NullProgressMonitor());
-//					} catch (CoreException e) {
-//						MylarPlugin.fail(e, "failed to touch resource: " + resource, false);
-//					}
-//				}
-//			}
-//		});
-//	}
-
 	/**
 	 * Ignores decay.
 	 */
@@ -311,3 +296,18 @@ public class MylarChangeSetManager implements IMylarContextListener {
 	}
 
 }
+
+//private void touch(final IResource resource) throws CoreException {
+//final IWorkbench workbench = PlatformUI.getWorkbench();
+//workbench.getDisplay().asyncExec(new Runnable() {
+//	public void run() {
+//		if (resource instanceof IFile) {
+//			try {
+//				((IFile)resource).touch(new NullProgressMonitor());
+//			} catch (CoreException e) {
+//				MylarPlugin.fail(e, "failed to touch resource: " + resource, false);
+//			}
+//		}
+//	}
+//});
+//}

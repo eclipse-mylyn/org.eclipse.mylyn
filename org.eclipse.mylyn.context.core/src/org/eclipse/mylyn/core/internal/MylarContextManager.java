@@ -387,7 +387,7 @@ public class MylarContextManager {
 	}
 
 	/**
-	 * For testing
+	 * Public for testing, activiate via handle
 	 */
 	public void contextActivated(MylarContext context) {
 		currentContext.getContextMap().put(context.getId(), context);
@@ -465,8 +465,8 @@ public class MylarContextManager {
 	public void contextDeleted(String handleIdentifier) {
 		IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		eraseContext(handleIdentifier, false);
-		if (context != null) { // TODO: this notification is redundant with
-								// eraseContext's
+		if (context != null) { 
+			// TODO: this notification is redundant with eraseContext's
 			setContextCapturePaused(true);
 			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 				listener.contextDeactivated(context);

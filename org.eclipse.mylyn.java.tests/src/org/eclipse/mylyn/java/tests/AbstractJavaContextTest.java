@@ -47,18 +47,19 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
     protected TestJavaProject project;
     protected IPackageFragment p1;
     protected IType type1;
-    protected String taskId = this.getClass().getSimpleName();
+    protected String contextId = this.getClass().getSimpleName();
     protected MylarContext context;
     protected ScalingFactors scaling = new ScalingFactors();
      
     @Override
     protected void setUp() throws Exception {
+    	super.setUp();
     	assertNotNull(JavaPlugin.getDefault());
     	assertNotNull(MylarJavaPlugin.getDefault());
     	project = new TestJavaProject(this.getClass().getSimpleName());// + "-" + projectCounter++);
         p1 = project.createPackage("p1");
         type1 = project.createType(p1, "Type1.java", "public class Type1 { }" );
-        context = new MylarContext(taskId, scaling);
+        context = new MylarContext(contextId, scaling);
         context.reset();
 //        assertTrue(manager.getActiveContext().getInteresting().toString(), manager.getActiveContext().getInteresting().isEmpty());
         manager.contextActivated(context);
@@ -74,9 +75,9 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
     protected void tearDown() throws Exception {
         context.reset(); 
         assertTrue(context.getInteresting().isEmpty());
-        manager.contextDeactivated(taskId);
-        manager.contextDeleted(taskId);
-        manager.getFileForContext(taskId).delete(); 
+        manager.contextDeactivated(contextId);
+        manager.contextDeleted(contextId);
+        manager.getFileForContext(contextId).delete(); 
         
         ResourceTestUtil.deleteProject(project.getProject());
         
@@ -86,6 +87,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
         if (manager.hasActiveContext()) System.err.println("> still active: " + manager.getActiveContext().getInteresting());
         assertFalse(manager.hasActiveContext());
         waitForAutoBuild();
+        super.tearDown();
     }
 	
 	public static void waitForAutoBuild() {

@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
@@ -32,6 +33,20 @@ public abstract class AbstractContextTest extends TestCase {
 
 	private static final String MOCK_KIND = "java";
 
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
+				MylarPlugin.getContextManager().hasActiveContext());
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
+				MylarPlugin.getContextManager().hasActiveContext());
+	}
+	
 	protected InteractionEvent mockSelection(String handle) {
 		return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, handle, MOCK_ORIGIN);
 	}

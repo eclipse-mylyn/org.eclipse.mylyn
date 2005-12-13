@@ -46,6 +46,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
 		assertNotNull(MylarIdePlugin.getDefault());
 		project = new TestProject(this.getClass().getName());
 		context = new MylarContext(taskId, scaling);
@@ -64,5 +65,6 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		manager.contextDeleted(taskId);
 		manager.getFileForContext(taskId).delete();
 		ResourceTestUtil.deleteProject(project.getProject());
+		super.tearDown();
 	}
 }
