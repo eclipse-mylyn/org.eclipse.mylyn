@@ -11,8 +11,8 @@
 package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 
 public class WorkOfflineAction extends Action {
 
@@ -22,12 +22,12 @@ public class WorkOfflineAction extends Action {
 		setId(ID);
 		setText("Work Offline");
 		setToolTipText("Work Offline");
-		setChecked(MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE));
+		setChecked(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.WORK_OFFLINE));
 	}
 	
 	@Override
 	public void run() {
-		boolean on = !MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
-		MylarTaskListPlugin.getPrefs().setValue(MylarPlugin.WORK_OFFLINE, on);
+		boolean on = !MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.WORK_OFFLINE);
+		MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.WORK_OFFLINE, on);
 	}
 }

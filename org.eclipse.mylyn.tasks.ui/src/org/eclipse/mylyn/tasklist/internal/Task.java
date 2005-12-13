@@ -20,6 +20,7 @@ import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -193,7 +194,7 @@ public class Task implements ITask {
 		IEditorInput input = new TaskEditorInput(this);
 		try {
 			// try to open an editor on the input task
-			page.openEditor(input, MylarTaskListPlugin.TASK_EDITOR_ID);
+			page.openEditor(input, MylarTaskListPrefConstants.TASK_EDITOR_ID);
 
 		} catch (PartInitException ex) {
 			ErrorLogger.log(ex, "open failed");
@@ -412,7 +413,7 @@ public class Task implements ITask {
 		if (isCompleted()) {
 			return TaskListImages.GRAY_LIGHT;
 		} else if (isActive()) {
-			return MylarTaskListPlugin.ACTIVE_TASK;
+			return MylarTaskListPrefConstants.ACTIVE_TASK;
 		} else {
 			return null;
 		}

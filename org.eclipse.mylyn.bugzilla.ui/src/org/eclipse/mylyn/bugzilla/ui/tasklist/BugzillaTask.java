@@ -422,7 +422,7 @@ public class BugzillaTask extends Task {
 			if (BugzillaUiPlugin.getDefault() != null) {
 				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
 			}
-			return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
+			return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
 		}
 	}
 
@@ -468,7 +468,7 @@ public class BugzillaTask extends Task {
 
 				//				state = BugTaskState.FREE;
 				//				notifyTaskDataChange();
-				return new Status(IStatus.OK, MylarPlugin.IDENTIFIER, IStatus.OK, "", null);
+				return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
 			} catch (Exception e) {
 				//				MessageDialog.openError(null, "Error Opening Bug", "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandle()));
 				ErrorLogger.fail(e, "Unable to open Bug report: " + BugzillaTask.getBugId(bugTask.getHandleIdentifier()), true);

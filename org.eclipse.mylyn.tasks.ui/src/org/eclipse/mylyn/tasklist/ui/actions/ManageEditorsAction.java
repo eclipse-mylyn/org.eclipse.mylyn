@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
@@ -27,7 +28,7 @@ public class ManageEditorsAction extends Action {
 	public ManageEditorsAction() {
 		super("Manage Editors with Context", IAction.AS_CHECK_BOX);
 		setId(ID);
-		update(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPlugin.AUTO_MANAGE_EDITORS));
+		update(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS));
 	}
 	
 	@Override
@@ -37,7 +38,7 @@ public class ManageEditorsAction extends Action {
     
     public void update(boolean on) {
     	setChecked(on);
-    	MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPlugin.AUTO_MANAGE_EDITORS, on);
+    	MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, on);
 		
     	if (on) {
 			boolean previousValue = WorkbenchPlugin.getDefault().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);

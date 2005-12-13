@@ -21,9 +21,9 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCustomQuery;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryDialog;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -61,7 +61,7 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
         		queryCategory = new BugzillaCustomQuery(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
         	}
     		MylarTaskListPlugin.getTaskListManager().addQuery(queryCategory);
-        	boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarPlugin.WORK_OFFLINE);
+        	boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.WORK_OFFLINE);
     		if(!offline){
 	            WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 	            	protected void execute(IProgressMonitor monitor) throws CoreException {

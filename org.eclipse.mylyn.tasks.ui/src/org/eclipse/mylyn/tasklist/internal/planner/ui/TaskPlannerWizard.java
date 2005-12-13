@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -42,7 +43,7 @@ public class TaskPlannerWizard extends Wizard implements INewWizard {
 				return false;
 			IEditorInput input = new TaskPlannerEditorInput(numDays,
 					MylarTaskListPlugin.getTaskListManager().getTaskList());
-			page.openEditor(input, MylarTaskListPlugin.PLANNER_EDITOR_ID);
+			page.openEditor(input, MylarTaskListPrefConstants.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {
 			ErrorLogger.log(ex, "couldn't open summary editor");
 		}

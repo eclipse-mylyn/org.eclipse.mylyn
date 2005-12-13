@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.MylarPrefContstants;
 import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.internal.TaskListExtensionReader;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
@@ -36,8 +37,6 @@ import org.eclipse.mylar.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -52,6 +51,8 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
+	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
+	
 	private static MylarTaskListPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
@@ -64,50 +65,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListWriter taskListWriter;
 	
-	/** 
-	 * TODO: move to common color map.
-	 */
-	public static final Color ACTIVE_TASK = new Color(Display.getDefault(), 36, 22, 50);
-
-	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ui.editors.auto.manage";
-	
-	public static final String PLANNER_WIZARD_ID = "org.eclipse.mylar.tasklist.ui.planner.wizard";
-
-	public static final String PLANNER_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.planner.editor";
-
-	public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylar.tasklist.report.open.editor";
-
-	public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylar.tasklist.report.open.internal";
-
-	public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylar.tasklist.report.open.external";
-
-	public static final String MULTIPLE_ACTIVE_TASKS = "org.eclipse.mylar.tasklist.active.multipe";
-
-	public static final String COPY_TASK_DATA = "org.eclipse.mylar.tasklist.preferences.copyTaskData";
-
-	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
-
 	public static final String FILE_EXTENSION = ".xml";
 
-	public static final String TASK_ID = "org.eclipse.mylar.tasklist.userid";
-
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
-
-	public static final String TASK_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.taskEditor";
-
-	public static final String CATEGORY_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.catEditor";
-
-	public static final String SELECTED_PRIORITY = "org.eclipse.mylar.tasklist.filter.priority";
-
-	public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.complete";
-
-	public static final String FILTER_INCOMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.incomplete";
-
-	public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylar.tasklist.save.mode";
-
-	public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
-
-	public static final String DEFAULT_URL_PREFIX = "org.eclipse.mylar.tasklist.defaultUrlPrefix";
 
 	private ResourceBundle resourceBundle;
 
@@ -269,12 +229,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(MULTIPLE_ACTIVE_TASKS)) {
-				TaskListView.getDefault().togglePreviousAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
-				TaskListView.getDefault().toggleNextAction(!getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS));
+			if (event.getProperty().equals(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS)) {
+				TaskListView.getDefault().togglePreviousAction(!getPrefs().getBoolean(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS));
+				TaskListView.getDefault().toggleNextAction(!getPrefs().getBoolean(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS));
 				TaskListView.getDefault().clearTaskHistory();
 			}
-            if (event.getProperty().equals(MylarPlugin.PREF_DATA_DIR)) {                
+            if (event.getProperty().equals(MylarPrefContstants.PREF_DATA_DIR)) {                
                 if (event.getOldValue() instanceof String) {
                 	String newDirPath = MylarPlugin.getDefault().getDataDirectory();
             		String taskListFilePath = newDirPath + File.separator + DEFAULT_TASK_LIST_FILE;
@@ -305,8 +265,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			
 			// TODO: decouple from core
 			int nextTaskId = 1;
-			if (MylarPlugin.getDefault() != null && MylarPlugin.getDefault().getPreferenceStore().contains(MylarTaskListPlugin.TASK_ID)) { // TODO: fix to MylarTaskListPlugin
-				nextTaskId = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarTaskListPlugin.TASK_ID);
+			if (MylarPlugin.getDefault() != null && MylarPlugin.getDefault().getPreferenceStore().contains(MylarTaskListPrefConstants.TASK_ID)) { // TODO: fix to MylarTaskListPlugin
+				nextTaskId = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarTaskListPrefConstants.TASK_ID);
 			} 
 			
 			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);	
@@ -365,14 +325,14 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(AUTO_MANAGE_EDITORS, true);
-		store.setDefault(SELECTED_PRIORITY, "P5");
-		store.setDefault(REPORT_OPEN_EDITOR, true);
-		store.setDefault(REPORT_OPEN_INTERNAL, false);
-		store.setDefault(REPORT_OPEN_EXTERNAL, false);
-		store.setDefault(MULTIPLE_ACTIVE_TASKS, false);
+		store.setDefault(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, true);
+		store.setDefault(MylarTaskListPrefConstants.SELECTED_PRIORITY, "P5");
+		store.setDefault(MylarTaskListPrefConstants.REPORT_OPEN_EDITOR, true);
+		store.setDefault(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL, false);
+		store.setDefault(MylarTaskListPrefConstants.REPORT_OPEN_EXTERNAL, false);
+		store.setDefault(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS, false);
 
-		store.setDefault(SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
+		store.setDefault(MylarTaskListPrefConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
 	}
 
 	public static TaskListManager getTaskListManager() {
@@ -460,36 +420,36 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public static void setPriorityLevel(PriorityLevel pl) {
-		getPrefs().setValue(SELECTED_PRIORITY, pl.toString());
+		getPrefs().setValue(MylarTaskListPrefConstants.SELECTED_PRIORITY, pl.toString());
 	}
 
 	public static String getPriorityLevel() {
-		if (getPrefs().contains(SELECTED_PRIORITY)) {
-			return getPrefs().getString(SELECTED_PRIORITY);
+		if (getPrefs().contains(MylarTaskListPrefConstants.SELECTED_PRIORITY)) {
+			return getPrefs().getString(MylarTaskListPrefConstants.SELECTED_PRIORITY);
 		} else {
 			return PriorityLevel.P5.toString();
 		}
 	}
 
 	public void setFilterCompleteMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_COMPLETE_MODE, isFilterOn);
+		getPrefs().setValue(MylarTaskListPrefConstants.FILTER_COMPLETE_MODE, isFilterOn);
 	}
 
 	public boolean isFilterCompleteMode() {
-		if (getPrefs().contains(FILTER_COMPLETE_MODE)) {
-			return getPrefs().getBoolean(FILTER_COMPLETE_MODE);
+		if (getPrefs().contains(MylarTaskListPrefConstants.FILTER_COMPLETE_MODE)) {
+			return getPrefs().getBoolean(MylarTaskListPrefConstants.FILTER_COMPLETE_MODE);
 		} else {
 			return false;
 		}
 	}
 
 	public void setFilterInCompleteMode(boolean isFilterOn) {
-		getPrefs().setValue(FILTER_INCOMPLETE_MODE, isFilterOn);
+		getPrefs().setValue(MylarTaskListPrefConstants.FILTER_INCOMPLETE_MODE, isFilterOn);
 	}
 
 	public boolean isFilterInCompleteMode() {
-		if (getPrefs().contains(FILTER_INCOMPLETE_MODE)) {
-			return getPrefs().getBoolean(FILTER_INCOMPLETE_MODE);
+		if (getPrefs().contains(MylarTaskListPrefConstants.FILTER_INCOMPLETE_MODE)) {
+			return getPrefs().getBoolean(MylarTaskListPrefConstants.FILTER_INCOMPLETE_MODE);
 		} else {
 			return false;
 		}
@@ -556,7 +516,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 //	}
 
 	public boolean isMultipleActiveTasksMode() {
-		return getPrefs().getBoolean(MULTIPLE_ACTIVE_TASKS);
+		return getPrefs().getBoolean(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS);
 	}
 
 	public String[] getSaveOptions() {

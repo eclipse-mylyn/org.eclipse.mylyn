@@ -26,6 +26,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 
 /**
  * @author Mik Kersten
@@ -88,7 +89,7 @@ public class TaskListManager {
 	public void saveTaskList() {
 		try {
 			taskListWriter.writeTaskList(taskList, taskListFile);
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTaskListPlugin.TASK_ID, nextTaskId);
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTaskListPrefConstants.TASK_ID, nextTaskId);
 		} catch (Exception e) {
 			ErrorLogger.fail(e, "Could not save task list", true);
 		}

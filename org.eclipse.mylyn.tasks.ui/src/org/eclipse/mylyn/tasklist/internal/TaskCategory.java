@@ -21,6 +21,7 @@ import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.ui.CategoryEditorInput;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
@@ -145,7 +146,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 	public Color getForeground() {
 		for (ITask child : getChildren()) {
 			if (child.isActive())
-				return MylarTaskListPlugin.ACTIVE_TASK;
+				return MylarTaskListPrefConstants.ACTIVE_TASK;
 		}
 		return null;
 	}
@@ -199,7 +200,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 
 		IEditorInput input = new CategoryEditorInput(this);
 		try {
-			page.openEditor(input, MylarTaskListPlugin.CATEGORY_EDITOR_ID);
+			page.openEditor(input, MylarTaskListPrefConstants.CATEGORY_EDITOR_ID);
 		} catch (PartInitException ex) {
 			ErrorLogger.log(ex, "open failed");
 		}

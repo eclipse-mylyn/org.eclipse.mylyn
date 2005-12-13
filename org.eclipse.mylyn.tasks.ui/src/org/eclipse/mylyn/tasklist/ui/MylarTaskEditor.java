@@ -22,6 +22,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -144,7 +145,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
 			webBrowser.setUrl(task.getIssueReportURL());
 
-			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPlugin.REPORT_OPEN_INTERNAL);
+			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL);
 			if (task.isLocal() || openWithBrowser)
 				setActivePage(index);
 		} catch (SWTError e) {
