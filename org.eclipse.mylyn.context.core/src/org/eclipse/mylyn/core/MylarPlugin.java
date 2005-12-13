@@ -41,20 +41,12 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarPlugin extends AbstractUIPlugin {
 
-	public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.core.context";
-
-	public static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
-
-	public static final String ELEMENT_STRUCTURE_BRIDGE_CLASS = "class";
-
-	public static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
-
-	public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon";
-
-	public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
-
+	public static final String PLUGIN_ID = "org.eclipse.mylar.core";
+	
 	public static final String CONTENT_TYPE_ANY = "*";
 
+	private static final String NAME_DATA_DIR = ".mylar";
+	
 	private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
 
 	private Map<IMylarStructureBridge, ImageDescriptor> activeSearchIcons = new HashMap<IMylarStructureBridge, ImageDescriptor>();
@@ -75,39 +67,12 @@ public class MylarPlugin extends AbstractUIPlugin {
 	 */
 	private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
 
-	public static final String USER_ID = "org.eclipse.mylar.user.id";
-
 	private static MylarPlugin INSTANCE;
 
 	private static MylarContextManager contextManager;
 
 	private ResourceBundle resourceBundle;
 
-	public static final String IDENTIFIER = "org.eclipse.mylar.core";
-
-	public static final String LOG_FILE_NAME = "mylar-log.txt";
-
-	public static final String WORK_OFFLINE = "org.eclipse.mylar.tasklist.work.offline";
-
-	/**
-	 * Do not set this preference directly, use setter on this class instead.
-	 */
-	public static final String PREF_DATA_DIR = "org.eclipse.mylar.model.dir";
- 
-	private static final String NAME_DATA_DIR = ".mylar";
-
-	/**
-	 * True if the shared data directory has been temporarily set for reporting
-	 * purposes
-	 */
-	private boolean sharedDataDirectoryInUse = false;
-
-	/**
-	 * Path of the data directory to temporarily use as the MylarDataDirectory
-	 * (for reporting)
-	 */
-	private String sharedDataDirectory = null;
-	
 	private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
 		public String getContentType() {
@@ -121,7 +86,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 		public Object getObjectForHandle(String handle) {
 			ErrorLogger.log("null bridge for handle: " + handle, this);
 			return null;
-			// throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
 		public String getParentHandle(String handle) {
@@ -134,9 +98,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 			return "";
 		}
 
-		/**
-		 * TODO: this behavir is depended on, move?
-		 */
 		public boolean canBeLandmark(String handle) {
 			return false;
 		}
@@ -190,12 +151,12 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Initialization order is critical.
+	 * Initialization order is important.
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		getPreferenceStore().setDefault(PREF_DATA_DIR, getDefaultDataDirectory());
+		getPreferenceStore().setDefault(MylarPrefContstants.PREF_DATA_DIR, getDefaultDataDirectory());
 		if (contextManager == null) contextManager = new MylarContextManager();
 	}
 
@@ -204,9 +165,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 			+ '/' + NAME_DATA_DIR;
 	}
 
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
@@ -231,59 +189,11 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 
 	public String getDataDirectory() {
-		if (sharedDataDirectoryInUse) {
-			return sharedDataDirectory;
-		} else {
-			return getPreferenceStore().getString(MylarPlugin.PREF_DATA_DIR);
-		}
+		return getPreferenceStore().getString(MylarPrefContstants.PREF_DATA_DIR);
 	}
 	
 	public void setDataDirectory(String newPath) {
-		getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR, newPath);
-	}
-
-	/**
-	 * Sets the path of a shared data directory to be temporarily used (for
-	 * reporting). Call useMainDataDirectory() to return to using the main data
-	 * directory.
-	 */
-	public void setSharedDataDirectory(String dirPath) {
-		sharedDataDirectory = dirPath;
-	}
-
-	/**
-	 * Returns the shared data directory path if one has been set. If not, the
-	 * empty string is returned. Note that the directory may not currently be in
-	 * use.
-	 */
-	public String getSharedDataDirectory() {
-		if (sharedDataDirectory != null) {
-			return sharedDataDirectory;
-		} else {
-			return "";
-		}
-	}
-
-	/**
-	 * Set to true to use the shared data directory set with
-	 * setSharedDataDirectory(String) Set to false to return to using the main
-	 * data directory
-	 */
-	public void setSharedDataDirectoryEnabled(boolean enable) {
-		if (enable && sharedDataDirectory == null) {
-			ErrorLogger.fail(new Exception("EnableDataDirectoryException"),
-					"Could not enable shared data directory because no shared data directory was specifed.", true);
-			return;
-		}
-		sharedDataDirectoryInUse = enable;
-	}
-
-	/**
-	 * True if a shared data directory rather than the main data directory is
-	 * currently in use
-	 */
-	public boolean isSharedDataDirectoryEnabled() {
-		return sharedDataDirectoryInUse;
+		getPreferenceStore().setValue(MylarPrefContstants.PREF_DATA_DIR, newPath);
 	}
 
 	public static MylarPlugin getDefault() {
@@ -476,12 +386,12 @@ public class MylarPlugin extends AbstractUIPlugin {
 			// deprecated code
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarPlugin.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(CoreExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().compareTo(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE) == 0) {
+						if (elements[j].getName().compareTo(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
 							readBridge(elements[j]);
 						}
 					}
@@ -492,12 +402,12 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 		private static void readBridge(IConfigurationElement element) {
 			try {
-				Object object = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_CLASS);
+				Object object = element.createExecutableExtension(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_CLASS);
 				if (object instanceof IMylarStructureBridge) {
 					IMylarStructureBridge bridge = (IMylarStructureBridge) object;
 					MylarPlugin.getDefault().internalAddBridge(bridge);
-					if (element.getAttribute(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
-						Object parent = element.createExecutableExtension(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_PARENT);
+					if (element.getAttribute(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
+						Object parent = element.createExecutableExtension(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
 						if (parent instanceof IMylarStructureBridge) {
 							((IMylarStructureBridge) bridge).setParentBridge(((IMylarStructureBridge) parent));
 							// ((IMylarStructureBridge)parent).addChildBridge(((IMylarStructureBridge)bridge));
@@ -506,14 +416,14 @@ public class MylarPlugin extends AbstractUIPlugin {
 									+ IMylarStructureBridge.class.getCanonicalName(), thisReader);
 						}
 					}
-					String iconPath = element.getAttribute(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
+					String iconPath = element.getAttribute(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getNamespace(), iconPath);
 						if (descriptor != null) {
 							MylarPlugin.getDefault().setActiveSearchIcon(bridge, descriptor);
 						}
 					}
-					String label = element.getAttribute(MylarPlugin.ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
+					String label = element.getAttribute(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
 					if (label != null) {
 						MylarPlugin.getDefault().setActiveSearchLabel(bridge, label);
 					}
@@ -525,5 +435,17 @@ public class MylarPlugin extends AbstractUIPlugin {
 				ErrorLogger.log(e, "Could not load bridge extension");
 			}
 		}
+
+		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.core.context";
+
+		public static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
+
+		public static final String ELEMENT_STRUCTURE_BRIDGE_CLASS = "class";
+
+		public static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
+
+		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon";
+
+		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
 	}
 }

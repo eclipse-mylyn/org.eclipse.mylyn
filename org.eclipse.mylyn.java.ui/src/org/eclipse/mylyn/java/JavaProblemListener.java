@@ -54,8 +54,8 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (MylarJavaPlugin.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
-			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS)) {
+		if (MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
+			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
 				enable();
 			} else {
 				disable();

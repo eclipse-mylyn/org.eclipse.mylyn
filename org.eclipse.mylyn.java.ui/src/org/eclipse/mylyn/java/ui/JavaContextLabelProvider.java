@@ -26,7 +26,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.JavaStructureBridge;
-import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.java.search.AbstractJavaRelationProvider;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
@@ -109,7 +109,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
         } else if (relationshipHandle.equals(JavaImplementorsProvider.ID)) {
             return MylarImages.EDGE_INHERITANCE; 
         } else if (relationshipHandle.equals(JUnitReferencesProvider.ID)) {
-            return MylarJavaPlugin.EDGE_REF_JUNIT; 
+            return MylarJavaPrefConstants.EDGE_REF_JUNIT; 
         } else if (relationshipHandle.equals(JavaWriteAccessProvider.ID)) {
             return MylarImages.EDGE_ACCESS_WRITE; 
         } else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {

@@ -21,6 +21,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -86,9 +87,9 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 		
 		if( preferencePage.closeEditors()){
-			MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPlugin.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
+			MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
 		} else {
-			MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPlugin.AUTO_MANAGE_EDITORS, false); //$NON-NLS-1$
+			MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, false); //$NON-NLS-1$
 		}
 		
 		if(preferencePage.isWorkingSet()){

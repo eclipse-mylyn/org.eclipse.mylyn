@@ -48,6 +48,8 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarJavaPlugin extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.mylar.java";
+
 	private static MylarJavaPlugin plugin;
 
 	private ResourceBundle resourceBundle;
@@ -66,22 +68,12 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.java";
-
-	public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
-
-	public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
-
-	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.predicted.errors";
-
-	public static final String PACKAGE_EXPLORER_AUTO_EXPAND = "org.eclipse.mylar.java.explorer.auto.exapand";
-
-	public static final ImageDescriptor EDGE_REF_JUNIT = getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
-
 	public static final String FIRST_USE = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"http://eclipse.org/mylar/doc/style.css\"/></head>"
-			+ "<body bgcolor=\"#ffffff\">" + "<p>If this is your first time using Mylar make sure to watch the \n"
+			+ "<body bgcolor=\"#ffffff\">"
+			+ "<p>If this is your first time using Mylar make sure to watch the \n"
 			+ "<a target=\"_blank\" href=\"http://eclipse.org/mylar/doc/demo/mylar-demo-04.html\">\n"
-			+ "<b>3 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n" + "Help-&gt;Help Contents.</p>" + "</body></html>";
+			+ "<b>3 minute online flash demo</b></a>.</p><p>Mylar documentation is under \n"
+			+ "Help-&gt;Help Contents.</p>" + "</body></html>";
 
 	public MylarJavaPlugin() {
 		super();
@@ -100,17 +92,18 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 				try {
 					setPreferenceDefaults();
 					savePluginPreferences();
-					
+
 					MylarPlugin.getContextManager().addListener(packageExplorerManager);
 					MylarPlugin.getContextManager().addListener(typeHistoryManager);
 					MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
 
-					if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
+					if (getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
 					}
 					getPreferenceStore().addPropertyChangeListener(problemListener);
 
-					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow()
+							.getSelectionService();
 					service.addPostSelectionListener(packageExplorerManager);
 
 					javaEditingMonitor = new JavaEditingMonitor();
@@ -128,7 +121,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 						ApplyMylarToBrowsingPerspectiveAction.getDefault().update();
 					}
 
-					if (!MylarPlugin.getDefault().suppressWizardsOnStartup() && !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
+					if (!MylarPlugin.getDefault().suppressWizardsOnStartup()
+							&& !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
 						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
 						Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 						if (wizard != null && shell != null && !shell.isDisposed()) {
@@ -148,9 +142,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	}
 
 	private void setPreferenceDefaults() {
-		getPreferenceStore().setDefault(PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
-		getPreferenceStore().setDefault(PACKAGE_EXPLORER_AUTO_EXPAND, true);
-		getPreferenceStore().setDefault(PREDICTED_INTEREST_ERRORS, false);
+		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, true);
+		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND, true);
+		getPreferenceStore().setDefault(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS, false);
 	}
 
 	@Override
@@ -159,18 +153,19 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			plugin = null;
 			resourceBundle = null;
-	
+
 			MylarPlugin.getContextManager().removeListener(packageExplorerManager);
 			MylarPlugin.getContextManager().removeListener(typeHistoryManager);
 			MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
-	
+
 			MylarPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
-	
+
 			if (ApplyMylarToPackageExplorerAction.getDefault() != null) {
 				getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
 			}
-	
-			if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null && !Workbench.getInstance().isClosing()) {
+
+			if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null
+					&& !Workbench.getInstance().isClosing()) {
 				ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
 				service.removePostSelectionListener(packageExplorerManager);
 			}
@@ -261,7 +256,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		IEditorDescriptor desc = editorRegistry.getDefaultEditor("*.java");
 		// return "AspectJ/Java Editor".equals(desc.getLabel());
 
-		return MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
+		return MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID.equals(desc.getLabel());
 	}
 
 	public static void setDefaultEditorForJavaFiles(boolean mylar) {
@@ -280,8 +275,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 		if (mylar) {
 
-			if (!(defaultEditor.equals(MYLAR_JAVA_EDITOR_ID))) {
-				editorRegistry.setDefaultEditor("*.java", MYLAR_JAVA_EDITOR_ID);
+			if (!(defaultEditor.equals(MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID))) {
+				editorRegistry.setDefaultEditor("*.java", MylarJavaPrefConstants.MYLAR_JAVA_EDITOR_ID);
 				editorRegistry.saveAssociations();
 			}
 		} else {

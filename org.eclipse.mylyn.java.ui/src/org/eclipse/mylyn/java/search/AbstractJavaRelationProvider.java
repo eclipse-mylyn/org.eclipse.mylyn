@@ -310,7 +310,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
             } 
             
         	IStatus status = new Status(IStatus.WARNING,
-                    MylarPlugin.IDENTIFIER,
+                    MylarPlugin.PLUGIN_ID,
                     IStatus.OK,
                     "could not run Java search",
                     null); 

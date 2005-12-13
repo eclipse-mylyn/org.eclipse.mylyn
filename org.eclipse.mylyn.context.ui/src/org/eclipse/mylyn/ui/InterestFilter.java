@@ -146,7 +146,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (MylarUiPlugin.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
+		if (MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
 			&& event.getNewValue() instanceof String) {
 
 			excludedMatches = (String)event.getNewValue();

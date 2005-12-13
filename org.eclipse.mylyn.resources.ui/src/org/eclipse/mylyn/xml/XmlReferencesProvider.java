@@ -322,7 +322,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
                 }
                 return Status.OK_STATUS;
             } catch (Throwable t) {  
-                return new Status(IStatus.WARNING, MylarPlugin.IDENTIFIER, 0, "skipped xml search", null);
+                return new Status(IStatus.WARNING, MylarPlugin.PLUGIN_ID, 0, "skipped xml search", null);
             }
         }
         /**

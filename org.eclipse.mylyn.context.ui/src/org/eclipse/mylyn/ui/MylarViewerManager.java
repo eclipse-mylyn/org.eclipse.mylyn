@@ -190,7 +190,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
     }
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (MylarUiPlugin.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())) {
+		if (MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())) {
 			refreshViewers();
 		}
 	}

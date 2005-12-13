@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.MylarUiPrefContstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -73,7 +74,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		
 		label = new Label(composite, SWT.WRAP);
 		label.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
-		label.setFont(MylarUiPlugin.BOLD);
+		label.setFont(MylarUiPrefContstants.BOLD);
 		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 

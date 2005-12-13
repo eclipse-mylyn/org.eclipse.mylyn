@@ -20,6 +20,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
@@ -60,13 +61,13 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE.equals(event.getProperty())) {
+		if (MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE.equals(event.getProperty())) {
 			configureAction();
 		}
 	}
 
 	private void configureAction() {
-		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
+		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
 			MylarUiPlugin.getDefault().getViewerManager().addManagedAction(this);
 		} else {
 			MylarUiPlugin.getDefault().getViewerManager().removeManagedAction(this);

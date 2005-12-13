@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -168,13 +169,13 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX,
+		getPreferenceStore().setValue(MylarUiPrefContstants.HIGHLIGHTER_PREFIX,
 				MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
-		getPreferenceStore().setValue(MylarUiPlugin.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
+		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
 
 		int value = autoOpenEditorsNum.getIntValue();
 		if (value > 0) {
-			getPreferenceStore().setValue(MylarUiPlugin.MANAGE_EDITORS_AUTO_OPEN_NUM, value);
+			getPreferenceStore().setValue(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM, value);
 		}
 
 		// ColorMap.GammaSetting gm = null;
@@ -205,7 +206,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	@Override
 	public boolean performCancel() {
-		String highlighters = getPreferenceStore().getString(MylarUiPlugin.HIGHLIGHTER_PREFIX);
+		String highlighters = getPreferenceStore().getString(MylarUiPrefContstants.HIGHLIGHTER_PREFIX);
 		MylarUiPlugin.getDefault().getHighlighterList().internalizeFromString(highlighters);
 
 		contentProvider = new HighlighterContentProvider();
@@ -689,7 +690,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		exclusionFieldEditor = new StringFieldEditor("", "", StringFieldEditor.UNLIMITED, exclusionControl);
 
-		String text = getPreferenceStore().getString(MylarUiPlugin.INTEREST_FILTER_EXCLUSION);
+		String text = getPreferenceStore().getString(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION);
 		if (text != null)
 			exclusionFieldEditor.setStringValue(text);
 		return;
@@ -707,7 +708,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		autoOpenEditorsNum = new IntegerFieldEditor("", "Max number of editors to open on context activation:", group);
 		autoOpenEditorsNum.setErrorMessage("Your user id must be an integer");
-		int num = getPreferenceStore().getInt(MylarUiPlugin.MANAGE_EDITORS_AUTO_OPEN_NUM);
+		int num = getPreferenceStore().getInt(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM);
 		if (num > 0) {
 			autoOpenEditorsNum.setStringValue(num + "");
 			autoOpenEditorsNum.setEmptyStringAllowed(false);

@@ -12,6 +12,7 @@ package org.eclipse.mylar.java.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.java.MylarJavaPlugin;
+import org.eclipse.mylar.java.MylarJavaPrefConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -64,36 +65,36 @@ public class MylarJavaPreferencePage extends PreferencePage implements
 		
 		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
 		autoEnableExplorerFilter.setText("Automatically toggle interest filter on task activation/deactivation.");
-		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));		
+		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));		
 		
 		autoExpandExplorer = new Button(group, SWT.CHECK);
 		autoExpandExplorer.setText("Automatically keep the package explorer expanded when filtered.");
-		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND));		
+		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND));		
 				
 		enableErrorInterest = new Button(group, SWT.CHECK);
 		enableErrorInterest.setText("Enable predicted interest of errors (significantly increases view refresh).");
-		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS));
+		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS));
 	}
 	
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, autoEnableExplorerFilter.getSelection());
-		getPreferenceStore().setValue(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND, autoExpandExplorer.getSelection());
-		getPreferenceStore().setValue(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS, enableErrorInterest.getSelection());
+		getPreferenceStore().setValue(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE, autoEnableExplorerFilter.getSelection());
+		getPreferenceStore().setValue(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND, autoExpandExplorer.getSelection());
+		getPreferenceStore().setValue(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS, enableErrorInterest.getSelection());
 		return true;
 	}
 	
 	@Override
 	public boolean performCancel() {
-		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));
-		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND));
-		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS));
+		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE));
+		autoExpandExplorer.setSelection(getPreferenceStore().getBoolean(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND));
+		enableErrorInterest.setSelection(getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS));
 		return true;
 	}
 	
 	public void performDefaults() {
 		super.performDefaults();
-		autoExpandExplorer.setSelection(getPreferenceStore().getDefaultBoolean(MylarJavaPlugin.PACKAGE_EXPLORER_AUTO_EXPAND));
-		enableErrorInterest.setSelection(getPreferenceStore().getDefaultBoolean(MylarJavaPlugin.PREDICTED_INTEREST_ERRORS));
+		autoExpandExplorer.setSelection(getPreferenceStore().getDefaultBoolean(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND));
+		enableErrorInterest.setSelection(getPreferenceStore().getDefaultBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS));
 	}
 }

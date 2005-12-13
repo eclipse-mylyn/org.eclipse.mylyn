@@ -23,6 +23,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IViewPart;
@@ -45,7 +46,7 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
-		assertTrue(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPlugin.AUTO_MANAGE_EDITORS));
+		assertTrue(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS));
 	}
 
 	@Override

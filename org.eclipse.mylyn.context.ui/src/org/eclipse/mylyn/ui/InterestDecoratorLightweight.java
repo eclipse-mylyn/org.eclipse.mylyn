@@ -62,7 +62,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
                     && !node.getInterest().isPropagated()
                     && !node.getInterest().isPredicted()
                     ) {
-                    decoration.setFont(MylarUiPlugin.BOLD);
+                    decoration.setFont(MylarUiPrefContstants.BOLD);
                 } 
             }
         } catch (Exception e) {

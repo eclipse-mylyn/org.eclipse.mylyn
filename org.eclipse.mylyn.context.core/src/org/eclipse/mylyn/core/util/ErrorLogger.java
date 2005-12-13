@@ -85,7 +85,7 @@ public class ErrorLogger {
 		if (source != null)
 			message += ", source: " + source.getClass().getName();
 	
-		log(new Status(IStatus.INFO, MylarPlugin.IDENTIFIER, IStatus.OK, message, null));
+		log(new Status(IStatus.INFO, MylarPlugin.PLUGIN_ID, IStatus.OK, message, null));
 	}
 
 	public static void log(Throwable throwable, String message) {
@@ -107,7 +107,7 @@ public class ErrorLogger {
 			message = "no message";
 		message += "\n";
 	
-		final Status status = new Status(Status.ERROR, MylarPlugin.IDENTIFIER, IStatus.OK, message, throwable);
+		final Status status = new Status(Status.ERROR, MylarPlugin.PLUGIN_ID, IStatus.OK, message, throwable);
 		log(status);
 	
 		if (informUser && Workbench.getInstance() != null) {

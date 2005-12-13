@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -43,7 +42,6 @@ import org.eclipse.mylar.ui.internal.ContentOutlineManager;
 import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.mylar.ui.internal.views.HighlighterList;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
@@ -59,36 +57,6 @@ import org.osgi.framework.BundleContext;
 public class MylarUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.ui";
-
-	public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.ui.context";
-
-	public static final String ELEMENT_UI_BRIDGE = "uiBridge";
-
-	public static final String ELEMENT_UI_CLASS = "class";
-
-	public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider";
-
-	public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType";
-
-	public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";
-
-	public static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters.task.";
-
-	public static final String INTEREST_FILTER_EXCLUSION = "org.eclipse.mylar.ui.interest.filter.exclusion";
-
-	public static final String MANAGE_EDITORS_AUTO_OPEN_NUM = "org.eclipse.mylar.ide.ui.editors.auto.open.num";
-	
-	public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
-
-	public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylar.ui.gamma.darkened";
-
-	public static final String GAMMA_SETTING_STANDARD = "org.eclipse.mylar.ui.gamma.standard";
-
-	public static final String GAMMA_SETTING_LIGHTENED = "org.eclipse.mylar.ui.gamma.lightened";
-
-	public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.interest.filter.global";
-
-	public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.interest.intersection";
 
 	private Map<String, IMylarUiBridge> bridges = new HashMap<String, IMylarUiBridge>();
 
@@ -109,10 +77,6 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	private MylarViewerManager viewerManager = new MylarViewerManager();
 
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
-
-	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
-
-	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
 	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
 		public Color getHighlightColor(ITask task) {
@@ -251,7 +215,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void initializeHighlighters() {
-		String hlist = getPrefs().getString(MylarUiPlugin.HIGHLIGHTER_PREFIX);
+		String hlist = getPrefs().getString(MylarUiPrefContstants.HIGHLIGHTER_PREFIX);
 		if (hlist != null && hlist.length() != 0) {
 			highlighters = new HighlighterList(hlist);
 		} else {
@@ -259,24 +223,24 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			// mylar. load default colors
 			highlighters = new HighlighterList();
 			highlighters.setToDefaultList();
-			getPrefs().setValue(MylarUiPlugin.HIGHLIGHTER_PREFIX, this.highlighters.externalizeToString());
+			getPrefs().setValue(MylarUiPrefContstants.HIGHLIGHTER_PREFIX, this.highlighters.externalizeToString());
 		}
 	}
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(MANAGE_EDITORS_AUTO_OPEN_NUM, 8);
+		store.setDefault(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM, 8);
 		
-		store.setDefault(GAMMA_SETTING_LIGHTENED, false);
-		store.setDefault(GAMMA_SETTING_STANDARD, true);
-		store.setDefault(GAMMA_SETTING_DARKENED, false);
+		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
+		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_STANDARD, true);
+		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_DARKENED, false);
 
-		if (!store.contains(GLOBAL_FILTERING))
-			store.setDefault(GLOBAL_FILTERING, true);
+		if (!store.contains(MylarUiPrefContstants.GLOBAL_FILTERING))
+			store.setDefault(MylarUiPrefContstants.GLOBAL_FILTERING, true);
 	}
 
 	public void setHighlighterMapping(String id, String name) {
-		String prefId = TASK_HIGHLIGHTER_PREFIX + id;
+		String prefId = MylarUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
 		getPrefs().putValue(prefId, name);
 	}
 
@@ -416,7 +380,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	}
 
 	public Highlighter getHighlighterForContextId(String id) {
-		String prefId = TASK_HIGHLIGHTER_PREFIX + id;
+		String prefId = MylarUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
 		String highlighterName = getPrefs().getString(prefId);
 		return getHighlighter(highlighterName);
 	}
@@ -448,19 +412,19 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	}
 
 	public boolean isGlobalFoldingEnabled() {
-		return getPrefs().getBoolean(GLOBAL_FILTERING);
+		return getPrefs().getBoolean(MylarUiPrefContstants.GLOBAL_FILTERING);
 	}
 
 	public void setGlobalFilteringEnabled(boolean globalFilteringEnabled) {
-		getPrefs().setValue(GLOBAL_FILTERING, globalFilteringEnabled);
+		getPrefs().setValue(MylarUiPrefContstants.GLOBAL_FILTERING, globalFilteringEnabled);
 	}
 
 	public boolean isIntersectionMode() {
-		return getPrefs().getBoolean(INTERSECTION_MODE);
+		return getPrefs().getBoolean(MylarUiPrefContstants.INTERSECTION_MODE);
 	}
 
 	public void setIntersectionMode(boolean isIntersectionMode) {
-		getPrefs().setValue(INTERSECTION_MODE, isIntersectionMode);
+		getPrefs().setValue(MylarUiPrefContstants.INTERSECTION_MODE, isIntersectionMode);
 	}
 
 	public MylarViewerManager getViewerManager() {
@@ -479,14 +443,14 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			// deprecated code
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry.getExtensionPoint(MylarUiPlugin.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().compareTo(MylarUiPlugin.ELEMENT_UI_BRIDGE) == 0) {
+						if (elements[j].getName().compareTo(UiExtensionPointReader.ELEMENT_UI_BRIDGE) == 0) {
 							readBridge(elements[j]);
-						} else if (elements[j].getName().compareTo(MylarUiPlugin.ELEMENT_UI_CONTEXT_LABEL_PROVIDER) == 0) {
+						} else if (elements[j].getName().compareTo(UiExtensionPointReader.ELEMENT_UI_CONTEXT_LABEL_PROVIDER) == 0) {
 							readLabelProvider(elements[j]);
 						}
 					}
@@ -497,8 +461,8 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 
 		private static void readLabelProvider(IConfigurationElement element) {
 			try {
-				Object provider = element.createExecutableExtension(MylarUiPlugin.ELEMENT_UI_CLASS);
-				Object contentType = element.getAttribute(MylarUiPlugin.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
+				Object provider = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_UI_CLASS);
+				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (provider instanceof ILabelProvider && contentType != null) {
 					MylarUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType, (ILabelProvider) provider);
 				} else {
@@ -512,8 +476,8 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 
 		private static void readBridge(IConfigurationElement element) {
 			try {
-				Object bridge = element.createExecutableExtension(MylarUiPlugin.ELEMENT_UI_CLASS);
-				Object contentType = element.getAttribute(MylarUiPlugin.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
+				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_UI_CLASS);
+				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (bridge instanceof IMylarUiBridge && contentType != null) {
 					MylarUiPlugin.getDefault().internalAddBridge((String) contentType, (IMylarUiBridge) bridge);
 				} else {
@@ -524,5 +488,15 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				ErrorLogger.log(e, "Could not load bridge extension");
 			}
 		}
+
+		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.ui.context";
+
+		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
+
+		public static final String ELEMENT_UI_CLASS = "class";
+
+		public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider";
+
+		public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType";
 	}
 }
