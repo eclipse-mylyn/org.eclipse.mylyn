@@ -164,20 +164,20 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	private static ITaskActivityListener CONTEXT_MANAGER_TASK_LISTENER = new ITaskActivityListener() {
+	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier());//, task.getContextPath());
+			MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier());
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
 			for (ITask task : tasks) {
-				MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier());//, task.getContextPath());
+				MylarPlugin.getContextManager().contextActivated(task.getHandleIdentifier());
 			}
 		}
 
 		public void taskDeactivated(ITask task) {
-			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier());//, task.getContextPath());
+			MylarPlugin.getContextManager().contextDeactivated(task.getHandleIdentifier());
 		}
 
 		public void tasklistRead() {
@@ -282,7 +282,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				try {
 					TaskListExtensionReader.initExtensions(taskListWriter);
 					
-					taskListManager.addListener(CONTEXT_MANAGER_TASK_LISTENER);
+					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.addListener(taskListSaveManager);
 					
 					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);

@@ -91,12 +91,11 @@ public class TaskActivityTimingTest extends TestCase {
 		
 		elapsed = task1.getElapsedTime();
 		assertTrue("should be bigger than timeout", elapsed > TIMEOUT);
-
+		
+		Thread.sleep(SLEEP);
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-		Thread.sleep(SLEEP); 
 		long elapsedAfterDeactivation =  task1.getElapsedTime();
-		assertTrue("should have accumulated some time: " + elapsedAfterDeactivation, 
-				elapsedAfterDeactivation > elapsed);
+		assertTrue("" + elapsedAfterDeactivation, elapsedAfterDeactivation > elapsed);
 
 		Thread.sleep(SLEEP); 
 		long elapsedAfterInactivity =  task1.getElapsedTime();

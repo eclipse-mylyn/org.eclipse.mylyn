@@ -49,8 +49,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * TODO: fix this old mess
- * 
  * @author Mik Kersten
  * @author Ken Sueda
  */
@@ -66,33 +64,20 @@ public class TaskListWriter {
 
 	private static final String FILE_SUFFIX_SAVE = "save.xml";
 	
-	private List<ITaskListExternalizer> externalizers; //= new ArrayList<ITaskListExternalizer>();
+	private List<ITaskListExternalizer> externalizers; 
 
 	private DelegatingLocalTaskExternalizer delagatingExternalizer = new DelegatingLocalTaskExternalizer();
 
 	private String readVersion = "";
 
 	private boolean hasCaughtException = false;
-
-	public TaskListWriter(){ //, List<ITaskListExternalizer> externalizers) {
-//		this.externalizers = externalizer.getExternalizers();
-	}
 	
 	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
 		this.externalizers = externalizers;
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
 	}
-	
-//	public void initExtensions() {
-//		TaskListExtensionReader.initExtensions(externalizers, delagatingExternalizer);
-//	}
-
-//	public void removeExternalizer(ITaskListExternalizer externalizer) {
-//		externalizers.remove(externalizer);
-//	}
 
 	public void writeTaskList(TaskList tlist, File outFile) {
-//		initExtensions();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc = null;
