@@ -72,7 +72,9 @@ public class TaskListManager {
 				if (maxHandle >= nextTaskId) {
 					nextTaskId = maxHandle + 1;
 				}
-				for (ITaskActivityListener listener : listeners) listener.tasksActivated(taskList.getActiveTasks());
+				for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+					listener.tasksActivated(taskList.getActiveTasks());
+				}
 			} else {
 				createNewTaskList();
 			}
