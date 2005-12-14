@@ -576,4 +576,8 @@ public class TaskListWriter {
 		}
 		return sw.toString();
 	}
+
+	public void setDelegatingExternalizer(DelegatingLocalTaskExternalizer delagatingExternalizer) {
+		this.delagatingExternalizer = delagatingExternalizer;
+	}
 }
