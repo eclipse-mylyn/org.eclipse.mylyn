@@ -50,6 +50,17 @@ public class JavaUiBridge implements IMylarUiBridge {
 	
 	private boolean explorerLinked = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_PACKAGES_TO_EDITOR);
 	
+	private Field javaOutlineField = null;
+	
+	public JavaUiBridge() {
+		try {
+			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer");
+            javaOutlineField.setAccessible(true); 
+		} catch (Exception e) {
+			ErrorLogger.fail(e, "could not get install Mylar on Outline viewer", true);
+		} 
+	}
+	
     public void open(IMylarElement node) {
         //get the element and open it in an editor
         IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
@@ -123,22 +134,19 @@ public class JavaUiBridge implements IMylarUiBridge {
     }
 
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
-        if (editorPart == null) return null;
+        if (editorPart == null || javaOutlineField == null) return null;
         List<TreeViewer> viewers = new ArrayList<TreeViewer>();
         Object out = editorPart.getAdapter(IContentOutlinePage.class);
         if (out instanceof JavaOutlinePage) {
             JavaOutlinePage page = (JavaOutlinePage)out;
             if (page != null && page.getControl() != null) {
                 try {
-                    Class clazz = page.getClass();
-                    Field field = clazz.getDeclaredField("fOutlineViewer"); 
-                    field.setAccessible(true); 
-                    viewers.add((TreeViewer)field.get(page));
+                    viewers.add((TreeViewer)javaOutlineField.get(page));
                 } catch (Exception e) { 
                 	ErrorLogger.log(e, "could not get outline viewer");
                 } 
-            }
-        }
+            } 
+        } 
         return viewers;
     }
 

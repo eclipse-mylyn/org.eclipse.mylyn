@@ -516,7 +516,7 @@ public class MylarContextManager {
 			context.collapse();
 			externalizer.writeContextToXML(context, getFileForContext(handleIdentifier));
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "could now save context", false);
+			ErrorLogger.fail(t, "could not save context", false);
 		} finally {
 			setContextCapturePaused(false);
 		}
@@ -527,7 +527,7 @@ public class MylarContextManager {
 			setContextCapturePaused(true);
 			externalizer.writeContextToXML(activityHistory, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "could now save activity history", false);
+			ErrorLogger.fail(t, "could not save activity history", false);
 		} finally {
 			setContextCapturePaused(false);
 		}

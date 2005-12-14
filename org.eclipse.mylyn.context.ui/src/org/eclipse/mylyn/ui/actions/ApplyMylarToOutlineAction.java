@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -37,6 +38,21 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 		INSTANCE = this;
 	}
 
+	/**
+	 * TODO: refactor this optimization?
+	 */
+	public void update(IEditorPart editorPart) {
+		boolean on = MylarPlugin.getDefault().getPreferenceStore().getBoolean(getPrefId());
+
+		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+		List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(editorPart);
+		
+		for (TreeViewer viewer : outlineViewers) {
+			MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
+			installInterestFilter(on, viewer);
+		}
+	} 
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public List<StructuredViewer> getViewers() {
