@@ -37,6 +37,14 @@ public class ContextTest extends AbstractContextTest {
 		super.tearDown();
 	}
 
+	public void testEquality() {
+		MylarContext context1 = new MylarContext("1", scaling);
+		context1.parseEvent(mockSelection("1"));
+		MylarContext context2 = new MylarContext("2", scaling);
+		context2.parseEvent(mockSelection("2"));
+		assertFalse(context1.equals(context2));
+	}
+	
 	public void testReset() {
 		context.parseEvent(mockSelection());
 		// MylarPlugin.getContextManager().contextDeleted(taskId, taskId);

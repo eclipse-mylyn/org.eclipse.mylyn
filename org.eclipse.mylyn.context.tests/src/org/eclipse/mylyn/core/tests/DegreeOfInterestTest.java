@@ -17,13 +17,14 @@ import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.internal.DegreeOfInterest;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.internal.ScalingFactors;
 
 /**
  * @author Mik Kersten
  */
 public class DegreeOfInterestTest extends TestCase {
 
-	private MylarContext mockContext = new MylarContext();
+	private MylarContext mockContext = new MylarContext("doitest", new ScalingFactors());
 	
     @Override
     protected void setUp() throws Exception {

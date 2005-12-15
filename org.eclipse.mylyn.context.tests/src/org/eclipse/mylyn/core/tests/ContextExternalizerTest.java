@@ -13,16 +13,21 @@ package org.eclipse.mylar.core.tests;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextExternalizer;
+import org.eclipse.mylar.core.internal.SaxContextReader;
 import org.eclipse.mylar.core.internal.ScalingFactors;
+import org.eclipse.mylar.core.tests.support.DomContextReader;
+import org.eclipse.mylar.core.tests.support.DomContextWriter;
+import org.eclipse.mylar.core.tests.support.FileTool;
 
 /**
  * @author Mik Kersten
  */
-public class ContextExternalizationTest extends AbstractContextTest {
+public class ContextExternalizerTest extends AbstractContextTest {
 
 	private MylarContext context;
 
@@ -40,6 +45,38 @@ public class ContextExternalizationTest extends AbstractContextTest {
 		super.tearDown();
 	}
 
+	public void testSaxExternalizationAgainstDom() {
+		File file = FileTool.getFileInPlugin(MylarCoreTestsPlugin.getDefault(), 
+				new Path("testdata/externalizer/testcontext.xml"));
+		assertTrue(file.getAbsolutePath(), file.exists());
+		MylarContextExternalizer externalizer = new MylarContextExternalizer();
+		externalizer.setReader(new DomContextReader());
+		MylarContext domReadContext = externalizer.readContextFromXML(file);
+		
+		externalizer.setReader(new SaxContextReader());
+		MylarContext saxReadContext = externalizer.readContextFromXML(file);
+		assertEquals(284, saxReadContext.getInteractionHistory().size()); // known from testdata
+		assertEquals(domReadContext, saxReadContext);
+	
+		externalizer.setWriter(new DomContextWriter());
+		File domOut = new File("dom-out.xml");
+		domOut.deleteOnExit();
+		externalizer.writeContextToXML(saxReadContext, domOut);
+
+		externalizer.setWriter(new DomContextWriter());
+		File saxOut = new File("sax-out.xml");
+		saxOut.deleteOnExit();
+		externalizer.writeContextToXML(saxReadContext, saxOut);
+		assertEquals(domOut.length(), saxOut.length());
+		
+		externalizer.setReader(new DomContextReader());
+		MylarContext domReadAfterWrite = externalizer.readContextFromXML(file);
+		externalizer.setReader(new SaxContextReader());
+		MylarContext saxReadAfterWrite = externalizer.readContextFromXML(file);
+		
+		assertEquals(domReadAfterWrite, saxReadAfterWrite);
+	}
+	
 	public void testContextSize() {
 		MylarContextExternalizer externalizer = new MylarContextExternalizer();
 		String path = "extern.xml";

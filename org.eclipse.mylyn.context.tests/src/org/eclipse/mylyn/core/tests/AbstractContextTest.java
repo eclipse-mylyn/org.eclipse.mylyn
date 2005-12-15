@@ -36,15 +36,19 @@ public abstract class AbstractContextTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
-				MylarPlugin.getContextManager().hasActiveContext());
+		if (MylarPlugin.getContextManager() != null) {
+			assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
+					MylarPlugin.getContextManager().hasActiveContext());
+		}
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
-				MylarPlugin.getContextManager().hasActiveContext());
+		if (MylarPlugin.getContextManager() != null) {
+			assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
+					MylarPlugin.getContextManager().hasActiveContext());
+		}
 	}
 	
 	protected InteractionEvent mockSelection(String handle) {
