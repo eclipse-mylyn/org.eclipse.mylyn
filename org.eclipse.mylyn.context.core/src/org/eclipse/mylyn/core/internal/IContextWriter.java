@@ -8,29 +8,17 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jul 15, 2004
- */
-package org.eclipse.mylar.core.util;
 
-/**
- * Check against the system clock--doesn't need to run as thread.
- * 
- * @author Mik Kersten
- */
-public class PassiveTimer {
+package org.eclipse.mylar.core.internal;
 
-	private long elapsed = 0;
+import java.io.IOException;
+import java.io.OutputStream;
 
-	private long lastStartTime = System.currentTimeMillis();
 
-	public void restart() {
-		lastStartTime = System.currentTimeMillis();
-		elapsed = 0;
-	}
+public interface IContextWriter {
 
-	public long getElapsedInSeconds() {
-		elapsed = System.currentTimeMillis() - lastStartTime;
-		return elapsed / 1000;
-	}
+	public abstract void setOutputStream(OutputStream outputStream);
+
+	public abstract void writeContextToStream(MylarContext context) throws IOException;
+
 }

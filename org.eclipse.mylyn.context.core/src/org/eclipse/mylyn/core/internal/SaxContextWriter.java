@@ -9,11 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.util;
+package org.eclipse.mylar.core.internal;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -22,7 +21,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.util.XmlStringConverter;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -36,10 +35,9 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author Brock Janiczak
+ * @author Mik Kersten (minor refactoring)
  */
-public class SaxContextWriter {
-
-	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S z");
+public class SaxContextWriter implements IContextWriter {
 
 	private OutputStream outputStream;
 
@@ -141,32 +139,32 @@ public class SaxContextWriter {
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();
-			rootAttributes.addAttribute("", "Version", "Version", "", "1");
-			rootAttributes.addAttribute("", "Id", "Id", "", context.getId());
+			rootAttributes.addAttribute("", MylarContextExternalizer.ATR_ID, MylarContextExternalizer.ATR_ID, "", context.getId());
+			rootAttributes.addAttribute("", MylarContextExternalizer.ATR_VERSION, MylarContextExternalizer.ATR_VERSION, "", "1");
 
-			handler.startElement("", "InteractionHistory", "InteractionHistory", rootAttributes);
+			handler.startElement("", MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
 			for (InteractionEvent ie : context.getInteractionHistory()) {
 				AttributesImpl ieAttributes = new AttributesImpl();
 
-				ieAttributes.addAttribute("", "Delta", "Delta", "", XmlStringConverter
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_DELTA, MylarContextExternalizer.ATR_DELTA, "", XmlStringConverter
 						.convertToXmlString(ie.getDelta()));
-				ieAttributes.addAttribute("", "EndDate", "EndDate", "", DATE_FORMAT.format(ie.getEndDate()));
-				ieAttributes.addAttribute("", "Interest", "Interest", "", Float.toString(ie.getInterestContribution()));
-				ieAttributes.addAttribute("", "Kind", "Kind", "", ie.getKind().toString());
-				ieAttributes.addAttribute("", "Navigation", "Navigation", "", XmlStringConverter.convertToXmlString(ie
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_END_DATE, MylarContextExternalizer.ATR_END_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie.getEndDate()));
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_INTEREST, MylarContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_KIND, MylarContextExternalizer.ATR_KIND, "", ie.getKind().toString());
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_NAVIGATION, MylarContextExternalizer.ATR_NAVIGATION, "", XmlStringConverter.convertToXmlString(ie
 						.getNavigation()));
-				ieAttributes.addAttribute("", "OriginId", "OriginId", "", XmlStringConverter.convertToXmlString(ie
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_ORIGIN_ID, MylarContextExternalizer.ATR_ORIGIN_ID, "", XmlStringConverter.convertToXmlString(ie
 						.getOriginId()));
-				ieAttributes.addAttribute("", "StartDate", "StartDate", "", DATE_FORMAT.format(ie.getDate()));
-				ieAttributes.addAttribute("", "StructureHandle", "StructureHandle", "", XmlStringConverter
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_START_DATE, MylarContextExternalizer.ATR_START_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie.getDate()));
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_HANDLE, MylarContextExternalizer.ATR_STRUCTURE_HANDLE, "", XmlStringConverter
 						.convertToXmlString(ie.getStructureHandle()));
-				ieAttributes.addAttribute("", "StructureKind", "StructureKind", "", XmlStringConverter
+				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_KIND, MylarContextExternalizer.ATR_STRUCTURE_KIND, "", XmlStringConverter
 						.convertToXmlString(ie.getContentType()));
 
-				handler.startElement("", "InteractionEvent", "InteractionEvent", ieAttributes);
-				handler.endElement("", "InteractionEvent", "InteractionEvent");
+				handler.startElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, ieAttributes);
+				handler.endElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT);
 			}
-			handler.endElement("", "InteractionHistory", "InteractionHistory");
+			handler.endElement("", MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, MylarContextExternalizer.ELMNT_INTERACTION_HISTORY);
 
 			handler.endDocument();
 		}

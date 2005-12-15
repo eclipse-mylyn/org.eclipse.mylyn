@@ -9,20 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.util;
+package org.eclipse.mylar.core.internal;
 
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.eclipse.mylar.core.internal.MylarContext;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Brock Janiczak
+ * @author Mik Kersten (minor refactoring)
  */
-public class SaxContextReader {
+public class SaxContextReader implements IContextReader {
 
 	public MylarContext readContext(File file) {
 		if (!file.exists())

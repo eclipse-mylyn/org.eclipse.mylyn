@@ -13,7 +13,6 @@
  */
 package org.eclipse.mylar.core.internal;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,34 +27,28 @@ import org.eclipse.mylar.core.internal.dt.MylarInterest;
 /**
  * @author Mik Kersten
  */
-public class MylarContext implements IMylarContext, Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class MylarContext implements IMylarContext {
 
 	private String handleIdentifier;
 
 	private List<InteractionEvent> interactionHistory = new ArrayList<InteractionEvent>();
 
-	protected transient Map<String, MylarContextElement> nodes = new HashMap<String, MylarContextElement>();
+	protected Map<String, MylarContextElement> nodes = new HashMap<String, MylarContextElement>();
 
-	protected transient MylarContextElement activeNode = null;
+	protected MylarContextElement activeNode = null;
 
-	protected transient List tempRaised = new ArrayList();
+	protected List tempRaised = new ArrayList();
 
-	protected transient Map<String, IMylarElement> landmarks;
+	protected Map<String, IMylarElement> landmarks;
 
-	protected transient ScalingFactors scaling;
+	private InteractionEvent lastEdgeEvent = null;
 
-	private transient InteractionEvent lastEdgeEvent = null;
+	private MylarContextElement lastEdgeNode = null;
 
-	private transient MylarContextElement lastEdgeNode = null;
+	private int numUserEvents = 0;
 
-	private transient int numUserEvents = 0;
-
-	public MylarContext() {
-		// only needed for serialization
-	}
-
+	protected ScalingFactors scaling;
+	
 	void parseInteractionHistory() {
 		nodes = new HashMap<String, MylarContextElement>();
 		landmarks = new HashMap<String, IMylarElement>();
@@ -134,7 +127,11 @@ public class MylarContext implements IMylarContext, Serializable {
 
 	public List<IMylarElement> getInteresting() {
 		List<IMylarElement> elements = new ArrayList<IMylarElement>();
-		for (String key : new ArrayList<String>(nodes.keySet())) { // in case it changes during update
+		for (String key : new ArrayList<String>(nodes.keySet())) { // in case
+			// it
+			// changes
+			// during
+			// update
 			MylarContextElement info = nodes.get(key);
 			if (info.getInterest().isInteresting()) {
 				elements.add(info);
@@ -212,5 +209,35 @@ public class MylarContext implements IMylarContext, Serializable {
 		if (node != null) {
 			collapsedHistory.addAll(((DegreeOfInterest) node.getInterest()).getCollapsedEvents());
 		}
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object == null || !(object instanceof MylarContext))
+			return false;
+		MylarContext context = (MylarContext) object;
+		
+		return (handleIdentifier == null ? context.handleIdentifier == null : handleIdentifier.equals(context.handleIdentifier)) 
+			&& (interactionHistory == null ? context.interactionHistory == null : interactionHistory.equals(context.interactionHistory)) 
+			&& (nodes == null ? context.nodes == null : nodes.equals(context.nodes)) 
+			&& (activeNode == null ? context.activeNode == null : activeNode.equals(context.activeNode))
+			&& (tempRaised == null ? context.tempRaised == null : tempRaised.equals(context.tempRaised))
+			&& (landmarks == null ? context.landmarks == null : landmarks.equals(context.landmarks))
+			&& (scaling == null ? context.scaling == null : scaling.equals(context.scaling))
+			&& (numUserEvents == context.numUserEvents);
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = 0; 
+		if (handleIdentifier != null) hashCode += handleIdentifier.hashCode();
+		if (interactionHistory != null) hashCode += interactionHistory.hashCode();
+		if (nodes != null) hashCode += nodes.hashCode();
+		if (activeNode != null) hashCode += activeNode.hashCode();
+		if (tempRaised != null) hashCode += tempRaised.hashCode();
+		if (landmarks != null) hashCode += landmarks.hashCode();
+		if (scaling != null) hashCode += scaling.hashCode();
+		hashCode += 37*numUserEvents;
+		return hashCode;
 	}
 }
