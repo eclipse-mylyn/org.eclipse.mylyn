@@ -27,7 +27,7 @@ public class AllStandaloneTests {
 		TestSuite suite = new TestSuite("Tests not requiring Eclipse Workbench");
 		
 		//$JUnit-BEGIN$
-//		suite.addTestSuite(ContextExternalizationTest.class);
+//		suite.addTestSuite(ContextExternalizerTest.class);
 		suite.addTestSuite(DegreeOfInterestTest.class);
 		suite.addTestSuite(ContextTest.class);
 		suite.addTestSuite(TaskListStandaloneTest.class);
