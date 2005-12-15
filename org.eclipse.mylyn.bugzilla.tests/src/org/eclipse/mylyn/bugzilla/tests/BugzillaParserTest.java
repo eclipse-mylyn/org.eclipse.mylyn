@@ -38,7 +38,7 @@ public class BugzillaParserTest extends TestCase {
 
 	public void testFullReportBug1() throws Exception {
 		
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/bug-1-full.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/bug-1-full.html"));
 		
 		Reader in = new FileReader(f);
 		

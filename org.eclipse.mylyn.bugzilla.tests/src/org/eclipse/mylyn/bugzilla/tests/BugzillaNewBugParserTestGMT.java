@@ -40,7 +40,7 @@ public class BugzillaNewBugParserTestGMT extends TestCase {
 
 	public void testProductGMT() throws Exception {
 
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/gmt-page.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/gmt-page.html"));
 		
 		Reader in = new FileReader(f);
 

@@ -48,7 +48,7 @@ public class BugzillaProductParserTest extends TestCase {
 				IBugzillaConstants.SERVER_VERSION, 
 				IBugzillaConstants.SERVER_220);
 
-		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/test-products-220.html"));
+		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/test-products-220.html"));
 		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
 		productList = new ProductParser(in).getProducts();
@@ -66,7 +66,7 @@ public class BugzillaProductParserTest extends TestCase {
 				IBugzillaConstants.SERVER_VERSION, 
 				IBugzillaConstants.SERVER_218);
 
-		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/test-products-218.html"));
+		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/test-products-218.html"));
 		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
 		productList = new ProductParser(in).getProducts();
@@ -85,7 +85,7 @@ public class BugzillaProductParserTest extends TestCase {
 				IBugzillaConstants.SERVER_VERSION, 
 				IBugzillaConstants.SERVER_218);
 		 
-		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/product-page.html"));
+		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/product-page.html"));
 		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
 		productList = new ProductParser(in).getProducts();

@@ -40,7 +40,7 @@ public class BugzillaNewBugParserTestEquinox extends TestCase {
 
 	public void testProductEquinox() throws Exception {
 
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/equinox-page.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/equinox-page.html"));
 		
 		Reader in = new FileReader(f);
 

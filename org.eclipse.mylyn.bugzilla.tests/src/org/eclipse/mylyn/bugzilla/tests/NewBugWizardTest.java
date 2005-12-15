@@ -32,7 +32,7 @@ public class NewBugWizardTest extends TestCase {
 	
 	public void testPlatformOptions() throws Exception {
 		
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/cdt-page.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/cdt-page.html"));
 		Reader in = new FileReader(f);
 		
 		NewBugModel model = new NewBugModel();

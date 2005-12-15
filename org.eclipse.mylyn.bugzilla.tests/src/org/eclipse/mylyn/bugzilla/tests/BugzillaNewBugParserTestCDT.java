@@ -40,7 +40,7 @@ public class BugzillaNewBugParserTestCDT extends TestCase {
 
 	public void testProductCDT() throws Exception {
 
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/cdt-page.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/cdt-page.html"));
 		
 		Reader in = new FileReader(f);
 

@@ -36,7 +36,7 @@ public class BugzillaParserTestNoBug extends TestCase {
 
 	public void testBugNotFound() throws Exception {
 
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/bug-not-found-eclipse.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/bug-not-found-eclipse.html"));
 		
 		Reader in = new FileReader(f);
 

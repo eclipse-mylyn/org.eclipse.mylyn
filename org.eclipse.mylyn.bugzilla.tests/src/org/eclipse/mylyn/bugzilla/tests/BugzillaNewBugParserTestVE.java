@@ -39,7 +39,7 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 	}
 
 	public void testProductVE() throws Exception {
-		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("TestPages/ve-page.html"));
+		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/ve-page.html"));
 		
 		Reader in = new FileReader(f);
 
