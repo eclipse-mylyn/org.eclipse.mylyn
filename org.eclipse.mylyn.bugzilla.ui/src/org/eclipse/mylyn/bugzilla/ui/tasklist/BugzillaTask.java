@@ -433,8 +433,10 @@ public class BugzillaTask extends Task {
 			if (bugReport == null)
 				return;
 			setPriority(bugReport.getAttribute("Priority").getValue());
+			
+			// TODO: this part might be redundant with overridden isCompleted()
 			String status = bugReport.getAttribute("Status").getValue();
-			if (status.equals("RESOLVED") || status.equals("CLOSED") || status.equals("VERIFIED")) {
+			if (bugReport.isResolved()) {
 				setCompleted(true);
 			} else if (status.equals("REOPENED")) {
 				setCompleted(false);
@@ -530,21 +532,6 @@ public class BugzillaTask extends Task {
 		}
 	}
 
-//	public void removeReport() {
-//		// XXX do we really want to do this???
-//		// XXX remove from registry too??
-//		IBugzillaBug tempBug = OfflineView.find(getBugId(getHandleIdentifier()));
-////		OfflineView.removeReport(tempBug);
-//		//    	OfflineReportsFile offlineReports = BugzillaPlugin.getDefault().getOfflineReports();
-//		//    	int location = offlineReports.find(getBugId(getHandle()));
-//		//    	if(location != -1){
-//		//	    	IBugzillaBug tmpBugReport = offlineReports.elements().get(location);
-//		//	    	List<IBugzillaBug> l = new ArrayList<IBugzillaBug>(1);
-//		//	    	l.add(tmpBugReport);
-//		//	    	offlineReports.remove(l);
-//		//    	}
-//	}
-
 	public static String getServerName(String handle) {
 		int index = handle.lastIndexOf('-');
 		if (index != -1) {
@@ -576,6 +563,15 @@ public class BugzillaTask extends Task {
 			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
 		}
 
+	}
+
+	@Override
+	public boolean isCompleted() {
+		if (bugReport != null) {
+			return bugReport.isResolved();
+		} else {
+			return super.isCompleted();
+		}
 	}
 
 	public String getBugUrl() {

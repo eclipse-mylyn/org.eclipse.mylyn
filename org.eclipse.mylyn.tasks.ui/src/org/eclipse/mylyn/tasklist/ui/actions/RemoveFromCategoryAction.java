@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
@@ -52,14 +53,22 @@ public class RemoveFromCategoryAction extends Action {
 				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
 				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
 				ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(selectedElement);
+
+				if (item.getParentItem().getData() instanceof IQuery) {
+					MessageDialog.openInformation(Workbench.getInstance()
+							.getActiveWorkbenchWindow().getShell(), "Mylar Tasks",
+							"Tasks can not be deleted from a query.");
+					return;
+				}
+				
 				if (item.getParentItem() != null) {
 					handler.itemRemoved(selectedElement, (ITaskCategory)item.getParentItem().getData());	
 				} 
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask) selectedObject;
 				if (task.isActive()) {
-					MessageDialog.openError(Workbench.getInstance()
-							.getActiveWorkbenchWindow().getShell(), "Remove failed",
+					MessageDialog.openInformation(Workbench.getInstance()
+							.getActiveWorkbenchWindow().getShell(), "Mylar Tasks",
 							"Task must be deactivated in order to remove from category.");
 					return;
 				}

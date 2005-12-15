@@ -28,6 +28,14 @@ import org.eclipse.core.runtime.Status;
  */
 public class BugReport implements Serializable, IBugzillaBug {
 
+	public static final String ATTR_STATUS = "Status";
+
+	public static final String VAL_STATUS_VERIFIED = "VERIFIED";
+
+	public static final String VAL_STATUS_CLOSED = "CLOSED";
+
+	public static final String VAL_STATUS_RESOLVED = "RESOLVED";
+
 	private static final long serialVersionUID = 3258693199936631348L;
 	
 	/** Bug id */
@@ -268,7 +276,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	 * @return The bugs status
 	 */
 	public String getStatus() {
-		return getAttribute("Status").getValue();
+		return getAttribute(ATTR_STATUS).getValue();
 	}
 
 	/**
@@ -414,5 +422,14 @@ public class BugReport implements Serializable, IBugzillaBug {
 
 	public void setHasChanged(boolean b) {
 		hasChanges = b;
+	}
+
+	public boolean isResolved() {
+		String status = getAttribute(ATTR_STATUS).getValue();
+		if (status != null) {
+			return status.equals(VAL_STATUS_RESOLVED) || status.equals(VAL_STATUS_CLOSED) || status.equals(VAL_STATUS_VERIFIED);
+		} else {
+			return false;
+		}
 	}
 }
