@@ -201,7 +201,12 @@ public class PdeUiBridge implements IMylarUiBridge {
             try {
                 // get the current page of the outline
                 Class clazz = PDEFormEditor.class;
-                Field field = clazz.getDeclaredField("formOutline");
+                Field field = null;
+                try {
+                	field = clazz.getDeclaredField("formOutline");
+                } catch (NoSuchFieldException e) {
+                	field = clazz.getDeclaredField("fFormOutline");
+                }
                 field.setAccessible(true);
                 Object f = field.get(editor);
                 if (f != null && f instanceof FormOutlinePage) {
