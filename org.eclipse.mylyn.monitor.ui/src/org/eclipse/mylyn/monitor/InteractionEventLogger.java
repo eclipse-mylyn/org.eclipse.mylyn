@@ -181,7 +181,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		String xml;
 		int index;
 		String buf = "";
-		String tag = "</" + MylarContextExternalizer.INTERACTION_EVENT_ID + ">";
+		String tag = "</" + MylarContextExternalizer.ELMNT_INTERACTION_HISTORY_OLD + ">";
 		String endl = "\r\n";
 		byte[] buffer = new byte[1000];
 		int bytesRead = 0;
