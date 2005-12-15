@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.bugs.search.BugzillaMylarSearchOperation;
 import org.eclipse.mylar.bugzilla.core.internal.BugParser;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.bugzilla.tests.BugzillaTestPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.bugzilla.ui.tasklist.StackTrace;
-import org.eclipse.mylar.core.tests.MylarCoreTestsPlugin;
 import org.eclipse.mylar.core.tests.support.FileTool;
 
 
@@ -35,7 +35,7 @@ import org.eclipse.mylar.core.tests.support.FileTool;
  */
 public class BugzillaStackTraceTest extends TestCase {
 
-    private static final String TEST_FILE_LOC = "testdata/BugzillaBridgeData/";
+    private static final String TEST_FILE_LOC = "testdata/reports-stacktrace/";
     
     private static final String BUGZILLA_SERVER_NAME = "https://bugs.eclipse.org/bugs";
     
@@ -144,7 +144,7 @@ public class BugzillaStackTraceTest extends TestCase {
 	    try {
 	        
 	        // read the bug in from a file
-	   		File f = FileTool.getFileInPlugin(MylarCoreTestsPlugin.getDefault(), new Path(TEST_FILE_LOC+bugFileName));     	// used if run as a plugin test
+	   		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path(TEST_FILE_LOC+bugFileName));     	// used if run as a plugin test
 //    		File f = new File(TEST_FILE_LOC+bugFileName); // used if run as a standalone test
 	        Reader reader = new FileReader(f);
             doi.setBug(BugParser.parseBug(reader, hit.getId(), BUGZILLA_SERVER_NAME, true, null, null));
