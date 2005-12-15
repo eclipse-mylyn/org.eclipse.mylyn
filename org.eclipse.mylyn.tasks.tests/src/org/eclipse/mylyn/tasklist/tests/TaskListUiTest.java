@@ -56,9 +56,7 @@ public class TaskListUiTest extends TestCase {
 	public void setUp() throws PartInitException{
 		try {
 		MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.mylar.tasks.ui.views.TaskListView");
-//		File file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
-        TaskListManager manager = MylarTaskListPlugin.getTaskListManager();        
-//        tlist = manager.getTaskList();        
+        TaskListManager manager = MylarTaskListPlugin.getTaskListManager();              
         cat1 = new TaskCategory("First Category");
         
         cat1task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
@@ -66,7 +64,6 @@ public class TaskListUiTest extends TestCase {
         cat1task1.setCompleted(true);
         cat1task1.setCategory(cat1);
         manager.moveToCategory(cat1, cat1task1);
-//		cat1.addTask(cat1task1);
 		
 		cat1task1sub1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "sub task 1", true);
 		cat1task1sub1.setPriority(MylarTaskListPlugin.PriorityLevel.P1.toString());
@@ -78,27 +75,23 @@ public class TaskListUiTest extends TestCase {
 		cat1task2.setPriority(MylarTaskListPlugin.PriorityLevel.P2.toString());
 		cat1task2.setCategory(cat1);
 		manager.moveToCategory(cat1, cat1task2);
-//		cat1.addTask(cat1task2);		
 		
 		cat1task3 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
 		cat1task3.setPriority(MylarTaskListPlugin.PriorityLevel.P3.toString());
 		cat1task3.setCompleted(true);
 		cat1task3.setCategory(cat1);
 		manager.moveToCategory(cat1, cat1task3);
-//		cat1.addTask(cat1task3);
 		
 		cat1task4 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
 		cat1task4.setPriority(MylarTaskListPlugin.PriorityLevel.P4.toString());
 		cat1task4.setCategory(cat1);
 		manager.moveToCategory(cat1, cat1task4);
-//		cat1.addTask(cat1task4);
 		
 		cat1task5 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 		cat1task5.setPriority(MylarTaskListPlugin.PriorityLevel.P5.toString());
 		cat1task5.setCompleted(true);
 		cat1task5.setCategory(cat1);
 		manager.moveToCategory(cat1, cat1task5);
-//		cat1.addTask(cat1task5);
 		
 		manager.addCategory(cat1);
 		assertEquals(cat1.getChildren().size(), 5);
@@ -109,7 +102,6 @@ public class TaskListUiTest extends TestCase {
         cat2task1.setPriority(MylarTaskListPlugin.PriorityLevel.P1.toString());
         cat2task1.setCategory(cat2);
         manager.moveToCategory(cat2, cat2task1);
-//		cat2.addTask(cat2task1);
 		
 		cat2task1sub1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "sub task 1", true);
 		cat2task1sub1.setPriority(MylarTaskListPlugin.PriorityLevel.P1.toString());
@@ -121,26 +113,22 @@ public class TaskListUiTest extends TestCase {
 		cat2task2.setCompleted(true);
 		cat2task2.setCategory(cat2);
 		manager.moveToCategory(cat2, cat2task2);
-//		cat2.addTask(cat2task2);
 		
 		cat2task3 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
 		cat2task3.setPriority(MylarTaskListPlugin.PriorityLevel.P3.toString());
 		cat2task3.setCategory(cat2);
 		manager.moveToCategory(cat2, cat2task3);
-//		cat2.addTask(cat2task3);
 		
 		cat2task4 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
 		cat2task4.setPriority(MylarTaskListPlugin.PriorityLevel.P4.toString());
 		cat2task4.setCompleted(true);
 		cat2task4.setCategory(cat2);
 		manager.moveToCategory(cat2, cat2task4);
-//		cat2.addTask(cat2task4);
 		
 		cat2task5 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
 		cat2task5.setPriority(MylarTaskListPlugin.PriorityLevel.P5.toString());
 		cat2task5.setCategory(cat2);
 		manager.moveToCategory(cat2, cat2task5);
-//		cat2.addTask(cat2task5);
 		
 		manager.addCategory(cat2);
 		manager.saveTaskList();
@@ -243,98 +231,4 @@ public class TaskListUiTest extends TestCase {
 		return true;
 	}
 	
-//	class ContentProvider implements IStructuredContentProvider, ITreeContentProvider {
-//		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-//        	// don't care if the input changes
-//        }
-//        public void dispose() {
-//        	// don't care if we are disposed
-//        }
-//        public Object[] getElements(Object parent) {
-//            return applyFilter(MylarTaskListPlugin.getTaskListManager().getTaskList().getRoots()).toArray();
-//        }
-//        public Object getParent(Object child) {
-//            if (child instanceof ITask) {
-//            	if (((ITask)child).getParent() != null) {
-//            		return ((ITask)child).getParent();
-//            	} else {
-//            		return ((ITask)child).getCategory();
-//            	}
-//                
-//            }
-//            return null;
-//        }
-//        public Object [] getChildren(Object parent) {
-//        	return getFilteredChildrenFor(parent).toArray();
-//        }
-//        public boolean hasChildren(Object parent) {  
-//            if (parent instanceof AbstractCategory) {
-//            	AbstractCategory cat = (AbstractCategory)parent;
-//                return cat.getChildren() != null && cat.getChildren().size() > 0;
-//            }  else if (parent instanceof Task) {
-//            	Task t = (Task) parent;
-//            	return t.getChildren() != null && t.getChildren().size() > 0;
-//            } 
-//            return false;
-//        }
-//        private List<Object> applyFilter(List<Object> list) {
-//        	List<Object> filteredRoots = new ArrayList<Object>();
-//        	for (int i = 0; i < list.size(); i++) {
-//        		if (list.get(i) instanceof ITask) {
-//        			if (!filter(list.get(i))) {
-//        				filteredRoots.add(list.get(i));
-//        			}
-//        		} else if (list.get(i) instanceof AbstractCategory) {
-//        			if (selectCategory((AbstractCategory)list.get(i))) {
-//        				filteredRoots.add(list.get(i));
-//        			}
-//        		}
-//        	}
-//        	return filteredRoots;
-//        }
-//        
-//        private boolean selectCategory(AbstractCategory cat) {
-//        	List<? extends ITaskListElement> list = cat.getChildren();
-//        	if (list.size() == 0) {
-//        		return true;
-//        	}
-//        	for (int i = 0; i < list.size(); i++) {
-//        		if (!filter(list.get(i))) {
-//        			return true;
-//        		}    		
-//        	}
-//        	return false;
-//        }
-//        
-//        private List<Object> getFilteredChildrenFor(Object parent) {
-//        	List<Object> children = new ArrayList<Object>();
-//        	if (parent instanceof AbstractCategory) {
-//        		List<? extends ITaskListElement> list = ((AbstractCategory)parent).getChildren();
-//        		for (int i = 0; i < list.size(); i++) {
-//            		if (!filter(list.get(i))) {
-//            			children.add(list.get(i));
-//            		}    		
-//            	}
-//        		return children;
-//        	} else if (parent instanceof Task) {
-//        		List<ITask> subTasks = ((Task)parent).getChildren();
-//        		for (ITask t : subTasks) {
-//        			if (!filter(t)) {
-//        				children.add(t);
-//        			}
-//        		}
-//        		return children;
-//        	}
-//        	return new ArrayList<Object>();
-//        }
-//        
-//        private boolean filter(Object obj){
-//        	for (ITaskFilter filter : filters) {
-//    			if (!filter.select(obj)) {
-//    				return true;
-//    			}
-//    		} 
-//        	return false;
-//        }
-//    }
 }

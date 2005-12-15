@@ -36,12 +36,9 @@ public class FilterCompletedTasksAction extends Action {
 	
 	@Override
 	public void run() {
-//        MylarPlugin.getDefault().actionObserved(this);
 		MylarTaskListPlugin.getDefault().setFilterCompleteMode(isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getCompleteFilter());
-//				filterInCompleteTask.setChecked(false); 
-//				viewer.removeFilter(inCompleteFilter);
 		} else {
 			view.removeFilter(view.getCompleteFilter());        			
 		}

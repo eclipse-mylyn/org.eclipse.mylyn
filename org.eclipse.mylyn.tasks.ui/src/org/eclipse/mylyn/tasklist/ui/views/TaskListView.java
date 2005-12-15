@@ -764,9 +764,8 @@ public class TaskListView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		tree = new FilteredTree(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
-		//    	addToolTipHandler();
-
-		//    	((Text)tree.getFilterControl()).setText(FILTER_LABEL);
+		tree.setInitialText("");
+		
 		getViewer().getTree().setHeaderVisible(true);
 		getViewer().getTree().setLinesVisible(true);
 		getViewer().setColumnProperties(columnNames);
