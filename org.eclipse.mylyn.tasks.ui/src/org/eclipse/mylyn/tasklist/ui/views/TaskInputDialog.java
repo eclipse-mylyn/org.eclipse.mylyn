@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Ken Sueda
  * @author Wesley Coelho (Extended to allow URL input)
+ * @author Mik Kersten
  */
 public class TaskInputDialog extends Dialog {
 

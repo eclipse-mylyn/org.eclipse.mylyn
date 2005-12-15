@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasklist.internal.planner.ui;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +30,7 @@ import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Ken Sueda
+ * @author Mik Kersten
  */
 public class TaskPlannerEditorInput implements IEditorInput {
 
@@ -40,22 +40,12 @@ public class TaskPlannerEditorInput implements IEditorInput {
   
 	private TaskReportGenerator taskReportGenerator = null;
 
-	private int prevDaysToReport = -1;
-
-	private long DAY = 24 * 3600 * 1000;
+//	private int prevDaysToReport = -1;
 
 	private Date reportStartDate = null;
 
-	public TaskPlannerEditorInput(int prevDays, TaskList tlist) {
-		prevDaysToReport = prevDays;
-		long today = new Date().getTime();
-		long lastDay = prevDaysToReport * DAY;
-
-		int offsetToday = Calendar.getInstance().get(Calendar.HOUR) * 60 * 60 * 1000
-			+ Calendar.getInstance().get(Calendar.MINUTE) * 60 * 1000
-			+ Calendar.getInstance().get(Calendar.SECOND) * 1000;
-		reportStartDate = new Date(today - offsetToday - lastDay);
-		
+	public TaskPlannerEditorInput(Date reportStartDate, TaskList tlist) {
+		this.reportStartDate = reportStartDate;
 		taskReportGenerator = new TaskReportGenerator(tlist);
 
 		ITaskCollector completedTaskCollector = new CompletedTaskCollector(reportStartDate);
@@ -73,7 +63,6 @@ public class TaskPlannerEditorInput implements IEditorInput {
 		} catch (InterruptedException e) {
 			ErrorLogger.log(e, "Could not generate report");
 		}
-//		taskReportGenerator.collectTasks();
 
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
@@ -102,8 +91,6 @@ public class TaskPlannerEditorInput implements IEditorInput {
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
-
-	// Methods
 
 	public List<ITask> getCompletedTasks() {
 		return completedTasks;

@@ -24,6 +24,7 @@ import org.eclipse.ui.PartInitException;
 
 /**
  * @author Ken Sueda
+ * @author Mik Kersten
  */
 public class TaskPlannerWizard extends Wizard implements INewWizard {
 
@@ -36,12 +37,13 @@ public class TaskPlannerWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			int numDays = planningGamePage.getNumDays();
+//			int numDays = planningGamePage.getReportStartDate();
 			IWorkbenchPage page = MylarTaskListPlugin.getDefault()
 					.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page == null)
 				return false;
-			IEditorInput input = new TaskPlannerEditorInput(numDays,
+			IEditorInput input = new TaskPlannerEditorInput(
+					planningGamePage.getReportStartDate(),
 					MylarTaskListPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, MylarTaskListPrefConstants.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {

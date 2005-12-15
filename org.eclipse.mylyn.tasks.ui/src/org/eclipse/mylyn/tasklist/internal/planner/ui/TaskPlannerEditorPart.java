@@ -197,7 +197,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		layout.numColumns = 2;
 		summaryContainer.setLayout(layout);
 
-		String fomratString = "yyyy-MM-dd, HH:mm:ss";
+		String fomratString = "yyyy-MM-dd, h:mm a";
 		SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
 
 		if (startDate != null) {

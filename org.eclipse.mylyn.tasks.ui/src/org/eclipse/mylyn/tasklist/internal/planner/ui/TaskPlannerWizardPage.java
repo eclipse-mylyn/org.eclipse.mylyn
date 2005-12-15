@@ -11,10 +11,16 @@
 
 package org.eclipse.mylar.tasklist.internal.planner.ui;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.tasklist.ui.views.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -32,8 +38,12 @@ public class TaskPlannerWizardPage extends WizardPage {
 	private static final String DESCRIPTION = 
 		"Summarizes task activity and assists planning future tasks.";
 	
+	private long DAY = 24 * 3600 * 1000;
+	
+	private Date reportStartDate = null;
+	
 	private Text numDays;
-	private int num = 0;
+	private int numDaysToReport = 0;
 	
 	public TaskPlannerWizardPage() {
 		super(TITLE);
@@ -50,27 +60,55 @@ public class TaskPlannerWizardPage extends WizardPage {
 		GridData gd = new GridData();
 		gd.widthHint = 50;
 		
-		Label l = new Label(container, SWT.NULL);
-		l.setText("Number of past days to report on: ");
+		Label label = new Label(container, SWT.NULL);
+		label.setText("Specify number of days to report on: ");
 		numDays = new Text(container, SWT.BORDER);
 		numDays.setLayoutData(gd);
 		numDays.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				try{
-					num = Integer.parseInt(numDays.getText());
+					numDaysToReport = Integer.parseInt(numDays.getText());
 					setErrorMessage(null);
 				} catch (Exception ex) {
 					setErrorMessage("Must be integer");
-					num = 0;
+					numDaysToReport = 0;
 				}
 			}			
 		});		
 		numDays.setText("" + DEFAULT_DAYS);
-		num = DEFAULT_DAYS;
+		numDaysToReport = DEFAULT_DAYS;
+		
+		Label label2 = new Label(container, SWT.NULL);
+		label2.setText("Or provide report start date: ");
+        final DatePicker datePicker = new DatePicker(container, SWT.NULL);	
+//        datePicker.setDateText("<reminder>");
+		datePicker.addPickerSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent arg0) {
+				if (datePicker.getDate() != null) {
+					reportStartDate = datePicker.getDate().getTime();
+					numDays.setEnabled(false);
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// ignore
+			}
+		});
+		
 		setControl(container);
 	}
 	
-	public int getNumDays() {
-		return num;
+	public Date getReportStartDate() {
+		if (reportStartDate != null) {
+			return reportStartDate;
+		} else {
+			long today = new Date().getTime();
+			long lastDay = numDaysToReport * DAY;
+	
+			int offsetToday = Calendar.getInstance().get(Calendar.HOUR) * 60 * 60 * 1000
+				+ Calendar.getInstance().get(Calendar.MINUTE) * 60 * 1000
+				+ Calendar.getInstance().get(Calendar.SECOND) * 1000;
+			return new Date(today - offsetToday - lastDay);
+		}
 	}
 }
