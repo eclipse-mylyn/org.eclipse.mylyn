@@ -28,7 +28,9 @@ public class PreferenceChangeMonitor implements IPropertyChangeListener {
                 event.getProperty(),
                 newValue
         ); 
-        MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+        if (MylarPlugin.getDefault() != null) {
+        	MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+        }
 	}
 
 	private String obfuscateValueIfContainsPath(String preferenceValue) {
