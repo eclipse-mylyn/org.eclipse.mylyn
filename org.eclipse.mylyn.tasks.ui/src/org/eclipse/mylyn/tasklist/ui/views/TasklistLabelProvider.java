@@ -113,14 +113,19 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
     				}
     			}
     		}
-    	} else if (object instanceof ITaskListElement) {
+    	} else if (object instanceof IQueryHit) {
+        	IQueryHit hit = (IQueryHit)object;
+        	if (hit.isCompleted()) {
+        		return TaskListImages.COLOR_TASK_COMPLETED;
+        	}
+        } else if (object instanceof ITaskListElement) {
         	ITask task = getAssociatedTask((ITaskListElement)object);
         	if (task != null) {
         		if (task.isCompleted()) {
-        			return TaskListImages.GRAY_LIGHT;
+        			return TaskListImages.COLOR_TASK_COMPLETED;
         		} else if (task.isActive()) {
         			return TaskListImages.COLOR_TASK_ACTIVE;
-        		} else if (task.isOverdue()) {
+        		} else if (task.isPastReminder()) {
         			return TaskListImages.COLOR_TASK_OVERDUE;
         		}
         	}

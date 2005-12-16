@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
@@ -153,15 +152,15 @@ public class BugzillaHit implements IQueryHit {
 	}
 
 	public boolean isCompleted() {
-		if (status != null) {
-			return BugReport.isResolvedStatus(status);
-		} else {
-			return false;
+//		if (status != null) {
+//			return BugReport.isResolvedStatus(status);
+//		} 
+		// TODO: move to BugReport?
+		if (status != null && (status.startsWith("RESO") || status.startsWith("CLO") 
+				|| status.startsWith("VERI") || status.startsWith("FIXED"))) {
+			return true;
 		}
-//		if (status != null && (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI"))) {
-//			return true;
-//		}
-//		return false;
+		return false;
 	}
 
 	public String getToolTipText() {

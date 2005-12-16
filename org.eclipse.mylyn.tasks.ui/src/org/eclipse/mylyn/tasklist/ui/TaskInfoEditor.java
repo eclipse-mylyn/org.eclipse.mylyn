@@ -418,8 +418,6 @@ public class TaskInfoEditor extends EditorPart {
 				// ignore
 			}
 		});
-//		label = toolkit.createLabel(container, " ");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		removeReminder = toolkit.createButton(container, "Clear", SWT.PUSH | SWT.CENTER);
 		if (task.isActive()) {
