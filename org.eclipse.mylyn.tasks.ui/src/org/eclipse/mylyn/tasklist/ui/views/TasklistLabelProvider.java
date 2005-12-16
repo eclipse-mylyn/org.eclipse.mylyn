@@ -113,7 +113,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
     				}
     			}
     		}
-    	} else if (object instanceof IQueryHit) {
+    	} else if (object instanceof IQueryHit && ((IQueryHit)object).getCorrespondingTask() == null) {
         	IQueryHit hit = (IQueryHit)object;
         	if (hit.isCompleted()) {
         		return TaskListImages.COLOR_TASK_COMPLETED;
