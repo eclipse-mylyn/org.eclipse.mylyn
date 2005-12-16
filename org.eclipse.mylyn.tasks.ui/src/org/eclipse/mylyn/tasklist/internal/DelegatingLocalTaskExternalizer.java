@@ -25,7 +25,6 @@ import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -271,12 +270,6 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true);
 			tlist.setActive(task, true);
-			try {
-//				 TODO: move this
-				MylarTaskListPlugin.getTaskListManager().activateTask(task);
-			} catch (Throwable t) {
-				// ignore an activation failure since it's a UI issue
-			}
 		} else {
 			task.setActive(false);
 		}

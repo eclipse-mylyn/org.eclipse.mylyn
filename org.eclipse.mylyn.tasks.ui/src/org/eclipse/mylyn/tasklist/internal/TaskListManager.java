@@ -72,15 +72,14 @@ public class TaskListManager {
 				if (maxHandle >= nextTaskId) {
 					nextTaskId = maxHandle + 1;
 				}
-				for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
-					listener.tasksActivated(taskList.getActiveTasks());
-				}
 			} else {
 				createNewTaskList();
 			}
-
 			taskListRead = true;
 			for (ITaskActivityListener listener : listeners) listener.tasklistRead();
+			for (ITask active: taskList.getActiveTasks()) {
+				activateTask(active);
+			}
 		} catch (Exception e) {
 			ErrorLogger.log(e, "Could not read task list");
 			return false;
