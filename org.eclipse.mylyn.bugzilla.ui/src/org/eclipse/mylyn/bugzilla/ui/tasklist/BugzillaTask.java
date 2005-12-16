@@ -435,12 +435,12 @@ public class BugzillaTask extends Task {
 			setPriority(bugReport.getAttribute("Priority").getValue());
 			
 			// TODO: this part might be redundant with overridden isCompleted()
-			String status = bugReport.getAttribute("Status").getValue();
-			if (bugReport.isResolved()) {
-				setCompleted(true);
-			} else if (status.equals("REOPENED")) {
-				setCompleted(false);
-			} 
+//			String status = bugReport.getAttribute("Status").getValue();
+//			if (bugReport.isResolved()) {
+//				setCompleted(true);
+//			} else if (status.equals("REOPENED")) {
+//				setCompleted(false);
+//			} 
 			this.setDescription(HtmlStreamTokenizer.unescape(BugzillaTask.getBugId(getHandleIdentifier()) + ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
 			ErrorLogger.fail(npe, "Task details update failed", false);
@@ -587,11 +587,6 @@ public class BugzillaTask extends Task {
 	@Override
 	public boolean canEditDescription() {
 		return false;
-	}
-
-	@Override
-	public String getDeleteConfirmationMessage() {
-		return "Remove this report from the task list, and discard any task context or local notes?";
 	}
 
 	@Override

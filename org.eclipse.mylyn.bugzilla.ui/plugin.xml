@@ -124,7 +124,7 @@
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
   		
   		<action
-               class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction"
+               class="org.eclipse.mylar.bugzilla.ui.actions.SynchronizeReportsAction"
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
@@ -152,7 +152,7 @@
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
          <action
-               class="org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaAction"
+               class="org.eclipse.mylar.bugzilla.ui.actions.SynchronizeReportsAction"
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"

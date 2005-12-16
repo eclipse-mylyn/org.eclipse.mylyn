@@ -23,23 +23,24 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 public class MarkTaskIncompleteAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.incomplete";
-		
+
 	private final TaskListView view;
-	
+
 	public MarkTaskIncompleteAction(TaskListView view) {
 		this.view = view;
 		setText("Mark Incomplete");
-        setToolTipText("Mark Incomplete");
-        setId(ID);
-        setImageDescriptor(TaskListImages.TASK_INCOMPLETE);
+		setToolTipText("Mark Incomplete");
+		setId(ID);
+		setImageDescriptor(TaskListImages.TASK_INCOMPLETE);
 	}
+
 	@Override
-	public void run() {         
-//        MylarPlugin.getDefault().actionObserved(this);
-	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
-	    if (selectedObject instanceof Task){ 
-	    	((Task)selectedObject).setCompleted(false);                	
-	    } 
-	    this.view.getViewer().refresh();
+	public void run() {
+		for (Object selectedObject : ((IStructuredSelection)this.view.getViewer().getSelection()).toList()) {
+			if (selectedObject instanceof Task) {
+				((Task) selectedObject).setCompleted(false);
+			}
+		}
+		this.view.getViewer().refresh();
 	}
 }

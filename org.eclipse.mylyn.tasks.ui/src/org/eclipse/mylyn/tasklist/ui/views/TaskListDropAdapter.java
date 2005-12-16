@@ -11,6 +11,10 @@
 
 package org.eclipse.mylar.tasklist.ui.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -36,44 +40,38 @@ class TaskListDropAdapter extends ViewerDropAdapter {
 
 	@Override
 	public boolean performDrop(Object data) {
-		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
+//		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
+		ISelection selection = ((TreeViewer)getViewer()).getSelection();
 		Object currentTarget = getCurrentTarget();
-		ITask taskToMove = null;
-		if (selectedObject instanceof ITask) {
-			taskToMove = (ITask)selectedObject;
-		} else if (selectedObject instanceof IQueryHit) { 
-			ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement((IQueryHit)selectedObject);
-			if (handler != null) {
-				taskToMove = handler.getCorrespondingTask((IQueryHit)selectedObject);
-			}			
-		} 
-			
-		if (taskToMove != null) {
+		List<ITask> tasksToMove = new ArrayList<ITask>();
+		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
+			ITask toMove = null;
+			if (selectedObject instanceof ITask) {
+				toMove = (ITask)selectedObject;
+			} else if (selectedObject instanceof IQueryHit) { 
+				ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement((IQueryHit)selectedObject);
+				if (handler != null) {
+					toMove = handler.getCorrespondingTask((IQueryHit)selectedObject);
+				}			
+			} 
+			if (toMove != null) {
+				tasksToMove.add(toMove);
+			}
+		}
+		
+		for (ITask task : tasksToMove) {
 			if (currentTarget instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) currentTarget, taskToMove);
+				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) currentTarget, task);
 			} else if (currentTarget instanceof ITask) {
 				ITask targetTask = (ITask)currentTarget;
 				if (targetTask.getCategory() == null) {
-					MylarTaskListPlugin.getTaskListManager().moveToRoot(taskToMove);
+					MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
 				} else {
-					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)targetTask.getCategory(), taskToMove);
+					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)targetTask.getCategory(), task);
 				}
 			}
-			return true;
 		}
-//		} else if (selectedObject instanceof ITaskListElement
-//				&& MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
-//
-//			if (currentTargetObject instanceof TaskCategory) 
-//			
-//			// delegate the drop
-//			MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject).dropItem(
-//					(ITaskListElement) selectedObject, 
-//					(TaskCategory) currentTargetObject);
-//			// getViewer().setSelection(null);
-//			return true;
-//		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -94,3 +92,16 @@ class TaskListDropAdapter extends ViewerDropAdapter {
 		return TextTransfer.getInstance().isSupportedType(transferType);
 	}
 }
+
+//} else if (selectedObject instanceof ITaskListElement
+//		&& MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
+//
+//	if (currentTargetObject instanceof TaskCategory) 
+//	
+//	// delegate the drop
+//	MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject).dropItem(
+//			(ITaskListElement) selectedObject, 
+//			(TaskCategory) currentTargetObject);
+//	// getViewer().setSelection(null);
+//	return true;
+//}

@@ -74,9 +74,7 @@ public class RemoveFromCategoryAction extends Action {
 				}
 				ITaskCategory cat = task.getCategory();
 				if (cat != null) {
-//					cat.removeTask(task);				
-//				} else {
-					String message = task.getDeleteConfirmationMessage();			
+					String message = DeleteAction.genDeleteConfirmationMessage(task);		
 					boolean deleteConfirmed = MessageDialog.openQuestion(
 				            Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
 				            "Confirm delete", message);

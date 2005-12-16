@@ -25,27 +25,29 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 public class MarkTaskCompleteAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.completed";
-		
+
 	private final TaskListView view;
-	
+
 	public MarkTaskCompleteAction(TaskListView view) {
 		this.view = view;
 		setText("Mark Complete");
-        setToolTipText("Mark Complete");
-        setId(ID);
-        setImageDescriptor(TaskListImages.TASK_COMPLETE);
+		setToolTipText("Mark Complete");
+		setId(ID);
+		setImageDescriptor(TaskListImages.TASK_COMPLETE);
 	}
+
 	@Override
-	public void run() {   
-//        MylarPlugin.getDefault().actionObserved(this);
-	    Object selectedObject = ((IStructuredSelection)this.view.getViewer().getSelection()).getFirstElement();
-	    if(selectedObject instanceof ITask &&
-	    		MylarTaskListPlugin.getDefault().getHandlerForElement((ITask)selectedObject) != null) {
-	    	 MylarTaskListPlugin.getDefault().getHandlerForElement((ITask)selectedObject).taskCompleted((ITask)selectedObject);
-	 	}else if (selectedObject instanceof Task){ 
-	    	((Task)selectedObject).setCompleted(true);
-	    	
-	    } 
-	    this.view.getViewer().refresh();
+	public void run() {
+		for (Object selectedObject : ((IStructuredSelection)this.view.getViewer().getSelection()).toList()) {
+			if (selectedObject instanceof ITask
+					&& MylarTaskListPlugin.getDefault().getHandlerForElement((ITask) selectedObject) != null) {
+				MylarTaskListPlugin.getDefault().getHandlerForElement((ITask) selectedObject).taskCompleted(
+						(ITask) selectedObject);
+			} else if (selectedObject instanceof Task) {
+				((Task) selectedObject).setCompleted(true);
+	
+			}
+		}
+//		this.view.getViewer().refresh();
 	}
 }
