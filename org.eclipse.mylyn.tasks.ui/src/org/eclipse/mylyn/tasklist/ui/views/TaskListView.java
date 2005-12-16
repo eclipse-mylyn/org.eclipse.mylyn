@@ -435,30 +435,9 @@ public class TaskListView extends ViewPart {
 				return ((ITaskListElement) element).isActivatable();
 			} else if (columnIndex == 2 && element instanceof ITask) {
 				return ((ITask) element).isLocal();
-			}
-			//            int columnIndex = Arrays.asList(columnNames).indexOf(property);
-			//            if (element instanceof ITask) {
-			//            	ITask task = (ITask)element;
-			//                switch (columnIndex) {
-			//                case 0: return true;
-			//                case 1: return false;
-			//                case 2: return task.isDirectlyModifiable();
-			//                case 3: return task.isDirectlyModifiable();
-			//                }
-			//            } else if (element instanceof AbstractCategory) {
-			//                switch (columnIndex) {
-			//                case 0:
-			//                case 1: 
-			//                case 2:
-			//                	return false;
-			//                case 3: return ((AbstractCategory)element).isDirectlyModifiable();
-			//                } 
-			else if (element instanceof ITaskListElement && isInRenameAction) {
+			} else if (element instanceof ITaskListElement && isInRenameAction) {
 				ITaskListElement taskListElement = (ITaskListElement) element;
 				switch (columnIndex) {
-				//            	case 0: return taskListElement.isActivatable();
-				//            	case 1: return false;
-				//            	case 2: return taskListElement.isDirectlyModifiable();
 				case 3:
 					return taskListElement.isLocal();
 				}
@@ -490,7 +469,8 @@ public class TaskListView extends ViewPart {
 						return "";
 					case 2:
 						String priorityString = taskListElement.getPriority().substring(1);
-						return new Integer(priorityString);
+						int priorityInt = new Integer(priorityString);
+						return priorityInt-1; 
 					case 3:
 						return taskListElement.getDescription(true);
 					}
@@ -533,7 +513,6 @@ public class TaskListView extends ViewPart {
 					ITaskCategory cat = (ITaskCategory) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
-						//						getViewer().setSelection(null);
 						break;
 					case 1:
 						break;
@@ -541,14 +520,12 @@ public class TaskListView extends ViewPart {
 						break;
 					case 3:
 						cat.setDescription(((String) value).trim());
-						//						getViewer().setSelection(null);
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof IQuery) {
 					IQuery cat = (IQuery) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
-						//						getViewer().setSelection(null);
 						break;
 					case 1:
 						break;
@@ -556,7 +533,6 @@ public class TaskListView extends ViewPart {
 						break;
 					case 3:
 						cat.setDescription(((String) value).trim());
-						//						getViewer().setSelection(null);
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
@@ -584,7 +560,6 @@ public class TaskListView extends ViewPart {
 								new TaskActivateAction().run();
 								addTaskToHistory(task);
 							}
-							//							getViewer().setSelection(null);
 						}
 						break;
 					case 1:
@@ -593,7 +568,6 @@ public class TaskListView extends ViewPart {
 						if (task.isLocal()) {
 							Integer intVal = (Integer) value;
 							task.setPriority("P" + (intVal + 1));
-							//							getViewer().setSelection(null);
 						}
 						break;
 					case 3:
@@ -863,7 +837,6 @@ public class TaskListView extends ViewPart {
 					updateActionEnablement(rename, (ITaskListElement) selectedObject);
 				}
 			}
-
 		});
 
 		makeActions();
