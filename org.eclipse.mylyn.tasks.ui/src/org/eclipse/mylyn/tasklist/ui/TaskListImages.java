@@ -38,12 +38,14 @@ public class TaskListImages {
 	
     public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
     public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 190, 210, 238);
+    public static final Color GRAY_LIGHT  = new Color(Display.getDefault(), 170, 170, 170); // TODO: use theme?
+    
+    public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
+	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 200, 10, 30);
     
     public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
     public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
-    public static final Color GRAY_LIGHT  = new Color(Display.getDefault(), 170, 170, 170); // TODO: use theme?
-    
-    
+        
 	private static final String T_ELCL = "elcl16";
 	private static final String T_TOOL = "etool16";
 	private static final URL baseURL = MylarTaskListPlugin.getDefault().getBundle().getEntry("/icons/");
@@ -185,7 +187,4 @@ public class TaskListImages {
 		
 	}
 
-	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
-
-	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 200, 10, 30);
 }

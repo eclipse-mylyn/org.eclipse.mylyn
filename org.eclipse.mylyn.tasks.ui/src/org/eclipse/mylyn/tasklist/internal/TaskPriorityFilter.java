@@ -21,30 +21,33 @@ import org.eclipse.mylar.tasklist.ui.ITaskListElement;
  */
 public class TaskPriorityFilter implements ITaskFilter {
 
+	private static final String PRIORITY_PREFIX = "P";
+
 	private String priorityLevel = MylarTaskListPlugin.PriorityLevel.P5.toString();
 
 	public TaskPriorityFilter() {
 		displayPrioritiesAbove(MylarTaskListPlugin.getPriorityLevel());
 	}
-	
-	public void displayPrioritiesAbove(String p) {
-		priorityLevel = p;
+
+	public void displayPrioritiesAbove(String level) {
+		priorityLevel = level;
 	}
+
 	public boolean select(Object element) {
-//		System.out.println("Priority: " + priorityLevel);
+		// System.out.println("Priority: " + priorityLevel);
 		if (element instanceof ITaskListElement) {
-			if(element instanceof IQueryHit && ((IQueryHit)element).getCorrespondingTask() != null){
-				element = ((IQueryHit)element).getCorrespondingTask();
+			if (element instanceof IQueryHit && ((IQueryHit) element).getCorrespondingTask() != null) {
+				element = ((IQueryHit) element).getCorrespondingTask();
 			}
-				
-			if (element instanceof ITask && ((ITask)element).isActive()) {
+
+			if (element instanceof ITask && (((ITask) element).isActive() || ((ITask) element).isOverdue())) {
 				return true;
 			}
-			String priority = ((ITaskListElement)element).getPriority();
-			if (priority == null || !(priority.startsWith("P"))) {
+			String priority = ((ITaskListElement) element).getPriority();
+			if (priority == null || !(priority.startsWith(PRIORITY_PREFIX))) {
 				return true;
 			}
-			if (priorityLevel.compareTo(((ITaskListElement)element).getPriority()) >= 0) {
+			if (priorityLevel.compareTo(((ITaskListElement) element).getPriority()) >= 0) {
 				return true;
 			}
 			return false;

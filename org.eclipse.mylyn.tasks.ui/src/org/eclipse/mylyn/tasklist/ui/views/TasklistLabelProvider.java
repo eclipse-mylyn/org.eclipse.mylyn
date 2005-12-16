@@ -120,7 +120,9 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
         			return TaskListImages.GRAY_LIGHT;
         		} else if (task.isActive()) {
         			return TaskListImages.COLOR_TASK_ACTIVE;
-        		} 
+        		} else if (task.isOverdue()) {
+        			return TaskListImages.COLOR_TASK_OVERDUE;
+        		}
         	}
         } 
         return null;

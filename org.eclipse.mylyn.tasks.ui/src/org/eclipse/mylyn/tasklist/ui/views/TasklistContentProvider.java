@@ -132,7 +132,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 	private boolean selectCategory(ITaskCategory cat) {
 		if (cat.isArchive()) {
 			for (ITask task : cat.getChildren()) {
-				if (task.isActive()) {
+				if (task.isActive() || task.isOverdue()) {
 					ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(),
 							false);
 					if (t == null)
@@ -160,7 +160,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 			if (parent instanceof ITaskCategory) {
 				if (((ITaskCategory) parent).isArchive()) {
 					for (ITask task : ((ITaskCategory) parent).getChildren()) {
-						if (task.isActive()) {
+						if (task.isActive() || task.isOverdue()) {
 							ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(
 									task.getHandleIdentifier(), false);
 							if (t == null)

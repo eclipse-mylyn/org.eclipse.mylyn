@@ -23,14 +23,14 @@ public class TaskCompleteFilter implements ITaskFilter {
 	public boolean select(Object element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			if (task.isActive()) {
+			if (task.isActive() || task.isOverdue()) {
 				return true;
 			}
 			return !task.isCompleted();
 		} else if (element instanceof IQueryHit) {
 			IQueryHit hit = (IQueryHit)element;
 			if (hit.getCorrespondingTask() != null) {
-				if (hit.getCorrespondingTask().isActive()) {
+				if (hit.getCorrespondingTask().isActive() || hit.getCorrespondingTask().isOverdue()) {
 					return true;
 				}
 			}

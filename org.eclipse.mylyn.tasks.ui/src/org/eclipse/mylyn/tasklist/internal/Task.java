@@ -471,6 +471,19 @@ public class Task implements ITask {
 	public void setCompletionDate(Date completionDate) {
 		this.completionDate = completionDate;
 	}
+
+	public boolean isOverdue() {
+		if (reminderDate == null) {
+			return false;
+		} else {
+			Date now = new Date();
+			if (reminderDate.compareTo(now) < 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 }
 
 /**
