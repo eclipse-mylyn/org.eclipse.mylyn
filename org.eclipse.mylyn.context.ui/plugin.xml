@@ -38,7 +38,7 @@
            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
         <action
               class="org.eclipse.mylar.ui.actions.ClearContextAction"
-              enablesFor="*"
+              enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
               id="org.eclipse.mylar.ui.clear.context"
               label="Clear Task Context"
