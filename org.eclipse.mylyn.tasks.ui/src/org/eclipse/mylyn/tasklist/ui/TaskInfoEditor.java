@@ -188,20 +188,9 @@ public class TaskInfoEditor extends EditorPart {
 		String note = notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
-		// links.clear();
-		// TableItem[] items = table.getItems();
-		// for (int i = 0; i < items.length; i++) {
-		// if (items[i].getData() instanceof String) {
-		// links.add((String)items[i].getData());
-		// }
-		// }
-		// "<MylarDir>/" + res + ".xml"
-//		String path = pathText.getText();
-//		path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
-//		task.setContextPath(path);
-//		if (datePicker != null && datePicker.getDate() != null) {
-//			task.setReminderDate(datePicker.getDate().getTime());
-//		}
+		if (datePicker != null && datePicker.getDate() != null) {
+			task.setReminderDate(datePicker.getDate().getTime());
+		}
 		refreshTaskListView(task);
 		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
 		markDirty(false);
@@ -209,7 +198,7 @@ public class TaskInfoEditor extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
-		// don't support saving
+		// don't support saving as
 	}
 
 	@SuppressWarnings("deprecation")

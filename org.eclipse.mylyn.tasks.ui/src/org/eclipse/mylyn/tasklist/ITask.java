@@ -111,6 +111,8 @@ public interface ITask extends ITaskListElement {
 	 * TODO: move
 	 */
 	public abstract boolean participatesInTaskHandles();
+
+	public abstract boolean isOverdue();
 }
 
 //public abstract String getRemoteContextPath();
