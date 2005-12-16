@@ -20,7 +20,6 @@ import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
-import org.eclipse.mylar.tasklist.ui.views.TasklistContentProvider;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
@@ -31,7 +30,7 @@ import org.eclipse.ui.PartInitException;
  *
  */
 public class TaskListUiTest extends TestCase {	
-//	private TaskList tlist = null;
+
 	private TaskCategory cat1 = null;
 	private Task cat1task1 = null;
 	private Task cat1task2 = null;
@@ -145,24 +144,12 @@ public class TaskListUiTest extends TestCase {
 		try {
 		assertNotNull(TaskListView.getDefault());  
 		TreeViewer viewer = TaskListView.getDefault().getViewer();
-		viewer.setContentProvider(new TasklistContentProvider(TaskListView.getDefault()));
-		viewer.refresh();
 		TaskListView.getDefault().addFilter(TaskListView.getDefault().getCompleteFilter());
 		viewer.refresh();
 		viewer.expandAll();
 		TreeItem[] items = viewer.getTree().getItems();
 		assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
 		TaskListView.getDefault().removeFilter(TaskListView.getDefault().getCompleteFilter());
-		
-		
-//		MylarTaskListPlugin.getTaskListManager().getTaskList().addFilter(TaskListView.getDefault().getInCompleteFilter());
-//		viewer.refresh();
-//		viewer.expandAll();
-//		items = viewer.getTree().getItems();
-//		assertTrue(checkFilter(CHECK_INCOMPLETE_FILTER, items));
-//		MylarTaskListPlugin.getTaskListManager().getTaskList().removeFilter(TaskListView.getDefault().getInCompleteFilter());
-		// check incomplte tasks
-		
 		
 		TaskPriorityFilter filter = (TaskPriorityFilter)TaskListView.getDefault().getPriorityFilter();
 		filter.displayPrioritiesAbove("P2");
@@ -188,7 +175,7 @@ public class TaskListUiTest extends TestCase {
 	}
 	
 	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
-		assertEquals(2, items.length);
+		assertEquals(2, items.length); 
 		int count = 0;
 		for (int i = 0; i < items.length; i++) {
 			assertTrue(items[i].getData() instanceof TaskCategory);

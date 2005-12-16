@@ -13,13 +13,13 @@ package org.eclipse.mylar.tasklist.internal;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.ui.ITaskFilter;
+import org.eclipse.mylar.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Ken Sueda
  */
-public class TaskPriorityFilter implements ITaskFilter {
+public class TaskPriorityFilter extends AbstractTaskFilter {
 
 	private static final String PRIORITY_PREFIX = "P";
 
@@ -40,8 +40,11 @@ public class TaskPriorityFilter implements ITaskFilter {
 				element = ((IQueryHit) element).getCorrespondingTask();
 			}
 
-			if (element instanceof ITask && (((ITask) element).isActive() || ((ITask) element).isOverdue())) {
-				return true;
+			if (element instanceof ITask) {
+				ITask task = (ITask)element;
+				if (shouldAlwaysShow(task)) {
+					return true;
+				}
 			}
 			String priority = ((ITaskListElement) element).getPriority();
 			if (priority == null || !(priority.startsWith(PRIORITY_PREFIX))) {

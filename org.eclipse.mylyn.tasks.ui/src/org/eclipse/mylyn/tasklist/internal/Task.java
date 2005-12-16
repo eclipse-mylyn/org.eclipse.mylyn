@@ -472,7 +472,7 @@ public class Task implements ITask {
 		this.completionDate = completionDate;
 	}
 
-	public boolean isOverdue() {
+	public boolean isPastReminder() {
 		if (reminderDate == null) {
 			return false;
 		} else {

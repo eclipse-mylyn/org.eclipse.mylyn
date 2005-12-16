@@ -59,7 +59,7 @@ import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskCompleteFilter;
 import org.eclipse.mylar.tasklist.internal.TaskPriorityFilter;
 import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.tasklist.ui.ITaskFilter;
+import org.eclipse.mylar.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
@@ -191,7 +191,7 @@ public class TaskListView extends ViewPart {
 
 	private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
 
-	List<ITaskFilter> filters = new ArrayList<ITaskFilter>();
+	List<AbstractTaskFilter> filters = new ArrayList<AbstractTaskFilter>();
 
 	static final String FILTER_LABEL = "<filter>";
 
@@ -1271,12 +1271,12 @@ public class TaskListView extends ViewPart {
 		return PRIORITY_FILTER;
 	}
 
-	public void addFilter(ITaskFilter filter) {
+	public void addFilter(AbstractTaskFilter filter) {
 		if (!filters.contains(filter))
 			filters.add(filter);
 	}
 
-	public void removeFilter(ITaskFilter filter) {
+	public void removeFilter(AbstractTaskFilter filter) {
 		filters.remove(filter);
 	}
 

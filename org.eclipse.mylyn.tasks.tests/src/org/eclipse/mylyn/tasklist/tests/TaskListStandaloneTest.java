@@ -59,14 +59,18 @@ public class TaskListStandaloneTest extends TestCase {
 		super.tearDown();
 	}
 
-	public void testOverdue() {
+	public void testPastReminder() {
 		ITask task = new Task("1", "1", true);
 		long now = new Date().getTime();
 		task.setReminderDate(new Date(now - 1000));
-		assertTrue(task.isOverdue());	
+		assertTrue(task.isPastReminder());	
 		
 		task.setReminderDate(new Date(now + 1000));
-		assertFalse(task.isOverdue());
+		assertFalse(task.isPastReminder());
+		
+		task.setReminderDate(new Date(now - 1000));
+		task.setCompleted(true);
+		assertTrue(task.isPastReminder());
 	}
 	
 	public void testDates() {

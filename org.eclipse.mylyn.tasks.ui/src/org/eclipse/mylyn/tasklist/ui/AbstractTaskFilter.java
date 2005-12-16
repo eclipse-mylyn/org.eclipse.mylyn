@@ -10,9 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.ui;
 
+import org.eclipse.mylar.tasklist.ITask;
+
 /**
  * @author Ken Sueda
  */
-public interface ITaskFilter {
+public abstract class AbstractTaskFilter {
+	
 	public abstract boolean select(Object element);
+
+	protected boolean shouldAlwaysShow(ITask task) {
+		return task.isActive() || (task.isPastReminder() && !task.isCompleted());
+	}
 }

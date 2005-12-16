@@ -12,25 +12,26 @@ package org.eclipse.mylar.tasklist.internal;
 
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ui.ITaskFilter;
+import org.eclipse.mylar.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Ken Sueda
  */
-public class TaskCompleteFilter implements ITaskFilter {
+public class TaskCompleteFilter extends AbstractTaskFilter {
 
 	public boolean select(Object element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			if (task.isActive() || task.isOverdue()) {
+			if (shouldAlwaysShow(task)) {
 				return true;
 			}
 			return !task.isCompleted();
 		} else if (element instanceof IQueryHit) {
 			IQueryHit hit = (IQueryHit)element;
 			if (hit.getCorrespondingTask() != null) {
-				if (hit.getCorrespondingTask().isActive() || hit.getCorrespondingTask().isOverdue()) {
+				if (shouldAlwaysShow(hit.getCorrespondingTask())) {
+//				if (hit.getCorrespondingTask().isActive() || hit.getCorrespondingTask().isPastReminder()) {
 					return true;
 				}
 			}

@@ -30,11 +30,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -91,6 +93,8 @@ public class TaskInfoEditor extends EditorPart {
 
 //	private Button browse;
 
+	private Button removeReminder;
+	
 	private Text pathText;
 
 	private ScrolledForm form;
@@ -190,6 +194,8 @@ public class TaskInfoEditor extends EditorPart {
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
 			task.setReminderDate(datePicker.getDate().getTime());
+		} else {
+			task.setReminderDate(null);
 		}
 		refreshTaskListView(task);
 		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
@@ -412,9 +418,24 @@ public class TaskInfoEditor extends EditorPart {
 				// ignore
 			}
 		});
-		label = toolkit.createLabel(container, " ");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		label = toolkit.createLabel(container, " ");
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
+		removeReminder = toolkit.createButton(container, "Clear", SWT.PUSH | SWT.CENTER);
+		if (task.isActive()) {
+			removeReminder.setEnabled(false);
+		} else {
+			removeReminder.setEnabled(true);
+		}
+		removeReminder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				datePicker.setDate(null);
+				datePicker.setDateText("");
+				TaskInfoEditor.this.markDirty(true);
+			}
+		});		
+		
 		label = toolkit.createLabel(container, "Estimated time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 

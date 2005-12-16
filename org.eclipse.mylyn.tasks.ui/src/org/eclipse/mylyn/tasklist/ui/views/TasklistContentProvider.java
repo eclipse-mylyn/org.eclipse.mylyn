@@ -22,7 +22,7 @@ import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
-import org.eclipse.mylar.tasklist.ui.ITaskFilter;
+import org.eclipse.mylar.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.swt.widgets.Text;
 
@@ -32,7 +32,21 @@ import org.eclipse.swt.widgets.Text;
 public class TasklistContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
 	private final TaskListView view;
+	
+	private static class ContentTaskFilter extends AbstractTaskFilter {
+		@Override
+		public boolean select(Object element) {
+			return true;
+		}
 
+		@Override
+		public boolean shouldAlwaysShow(ITask task) {
+			return super.shouldAlwaysShow(task);
+		}
+	};
+	
+	private ContentTaskFilter contentTaskFilter = new ContentTaskFilter();
+	
 	public TasklistContentProvider(TaskListView view) {
 		this.view = view;
 	}
@@ -59,7 +73,6 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 			} else {
 				return ((ITask) child).getCategory();
 			}
-
 		}
 		return null;
 	}
@@ -132,7 +145,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 	private boolean selectCategory(ITaskCategory cat) {
 		if (cat.isArchive()) {
 			for (ITask task : cat.getChildren()) {
-				if (task.isActive() || task.isOverdue()) {
+				if (contentTaskFilter.shouldAlwaysShow(task)) {
 					ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(task.getHandleIdentifier(),
 							false);
 					if (t == null)
@@ -160,7 +173,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 			if (parent instanceof ITaskCategory) {
 				if (((ITaskCategory) parent).isArchive()) {
 					for (ITask task : ((ITaskCategory) parent).getChildren()) {
-						if (task.isActive() || task.isOverdue()) {
+						if (contentTaskFilter.shouldAlwaysShow(task)) {
 							ITask t = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(
 									task.getHandleIdentifier(), false);
 							if (t == null)
@@ -210,7 +223,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean filter(Object obj) {
-		for (ITaskFilter filter : this.view.filters) {
+		for (AbstractTaskFilter filter : this.view.filters) {
 			if (!filter.select(obj)) {
 				return true;
 			}

@@ -112,7 +112,7 @@ public interface ITask extends ITaskListElement {
 	 */
 	public abstract boolean participatesInTaskHandles();
 
-	public abstract boolean isOverdue();
+	public abstract boolean isPastReminder();
 }
 
 //public abstract String getRemoteContextPath();
