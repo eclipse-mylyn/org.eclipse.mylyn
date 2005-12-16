@@ -253,13 +253,13 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private void createPlanCellEditorListener(final Table planTable, final TableViewer planTableViewer,
 			final TaskPlanContentProvider contentProvider) {
 		CellEditor[] editors = new CellEditor[planColumnNames.length + 1];
-		final ComboBoxCellEditor estimatedEditor = new ComboBoxCellEditor(planTable, ESTIMATE_TIMES, SWT.READ_ONLY);
+		final ComboBoxCellEditor estimateEditor = new ComboBoxCellEditor(planTable, ESTIMATE_TIMES, SWT.READ_ONLY);
 		final ReminderCellEditor reminderEditor = new ReminderCellEditor(planTable);
 		editors[0] = null; // not used
 		editors[1] = null;// not used
 		editors[2] = null;// not used
 		editors[3] = null;// not used
-		editors[4] = estimatedEditor;
+		editors[4] = estimateEditor;
 		editors[5] = reminderEditor;
 		reminderEditor.addListener(new ICellEditorListener() {
 			public void applyEditorValue() {
@@ -277,12 +277,16 @@ public class TaskPlannerEditorPart extends EditorPart {
 			}
 
 		});
-		estimatedEditor.addListener(new ICellEditorListener() {
+		estimateEditor.addListener(new ICellEditorListener() {
 			public void applyEditorValue() {
 				Object selection = ((IStructuredSelection) planTableViewer.getSelection()).getFirstElement();
 				if (selection instanceof ITask) {
 					ITask task = (ITask) selection;
-					int estimate = (Integer) estimatedEditor.getValue();
+					int estimate = (Integer) estimateEditor.getValue();
+					if (estimate == -1) {
+						estimate = 0;
+					}
+					System.err.println(">>>> " + estimate);
 					task.setEstimatedTimeHours(estimate);
 					updateEstimatedHours(contentProvider);
 					planTableViewer.refresh();
