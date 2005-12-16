@@ -286,7 +286,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 					if (estimate == -1) {
 						estimate = 0;
 					}
-					System.err.println(">>>> " + estimate);
 					task.setEstimatedTimeHours(estimate);
 					updateEstimatedHours(contentProvider);
 					planTableViewer.refresh();
