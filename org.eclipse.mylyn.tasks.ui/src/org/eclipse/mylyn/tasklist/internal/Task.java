@@ -24,7 +24,6 @@ import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -47,8 +46,6 @@ public class Task implements ITask {
 
 	private boolean hasReminded = false;
 
-//	private String contextPath;
-
 	private String label;
 
 	private String priority = "P3";
@@ -66,8 +63,6 @@ public class Task implements ITask {
 	private String issueReportURL = "";
 
 	private ITaskCategory parentCategory = null;
-
-//	private Date lastActivatedDate = null;
 
 	private long timeActive = 0;
 
@@ -389,10 +384,6 @@ public class Task implements ITask {
 		return true;
 	}
 
-	public String getDeleteConfirmationMessage() {
-		return "Delete the selected task and discard task context?";
-	}
-
 	public boolean isLocal() {
 		return true;
 	}
@@ -409,15 +400,17 @@ public class Task implements ITask {
 		return true;
 	}
 
-	public Color getForeground() {
-		if (isCompleted()) {
-			return TaskListImages.GRAY_LIGHT;
-		} else if (isActive()) {
-			return MylarTaskListPrefConstants.ACTIVE_TASK;
-		} else {
-			return null;
-		}
-	}
+//	public Color getForeground() {
+//		if (isCompleted()) {
+//			return TaskListImages.GRAY_LIGHT;
+//		} else if (isActive()) {
+//			return TaskListImages.COLOR_TASK_ACTIVE;
+//		} else if (isOverdue()) {
+//			return TaskListImages.COLOR_TASK_OVERDUE;
+//		} else {
+//			return null;
+//		}
+//	}
 
 	public Font getFont() {
 		if (isActive())

@@ -135,8 +135,8 @@ public class TaskList implements Serializable {
 					return (ITask) element; 
 			} else if (element instanceof IQueryHit) {
 				IQueryHit hit = (IQueryHit) element;
-				if (hit.getHandleIdentifier().compareTo(handle) == 0 && hit.hasCorrespondingActivatableTask()) {
-					return hit.getOrCreateCorrespondingTask();
+				if (hit.getHandleIdentifier().compareTo(handle) == 0 && hit.getCorrespondingTask() != null) {
+					return hit.getCorrespondingTask();
 				}
 			}
 

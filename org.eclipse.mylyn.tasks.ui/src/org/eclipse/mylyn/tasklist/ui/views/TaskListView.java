@@ -91,16 +91,12 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
@@ -479,8 +475,8 @@ public class TaskListView extends ViewPart {
 					if (taskListElement instanceof ITask) {
 						task = (ITask) taskListElement;
 					} else if (taskListElement instanceof IQueryHit) {
-						if (((IQueryHit) taskListElement).hasCorrespondingActivatableTask()) {
-							task = ((IQueryHit) taskListElement).getOrCreateCorrespondingTask();
+						if (((IQueryHit) taskListElement).getCorrespondingTask() != null) {
+							task = ((IQueryHit) taskListElement).getCorrespondingTask();
 						}
 					}
 					switch (columnIndex) {
@@ -570,8 +566,8 @@ public class TaskListView extends ViewPart {
 					if (taskListElement instanceof ITask) {
 						task = (ITask) taskListElement;
 					} else if (taskListElement instanceof IQueryHit) {
-						if (((IQueryHit) taskListElement).hasCorrespondingActivatableTask()) {
-							task = ((IQueryHit) taskListElement).getOrCreateCorrespondingTask();
+						if (((IQueryHit) taskListElement).getCorrespondingTask() != null) {
+							task = ((IQueryHit) taskListElement).getCorrespondingTask();
 						}
 					}
 					switch (columnIndex) {
@@ -763,7 +759,7 @@ public class TaskListView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		tree = new FilteredTree(parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
+		tree = new FilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 		tree.setInitialText("");
 		
 		getViewer().getTree().setHeaderVisible(true);
@@ -839,28 +835,28 @@ public class TaskListView extends ViewPart {
 
 		});
 
-		// HACK to support right click anywhere to select an item
-		getViewer().getTree().addMouseListener(new MouseListener() {
+		// HACK: to support right click anywhere to select an item
+//		getViewer().getTree().addMouseListener(new MouseListener() {
+//
+//			public void mouseDoubleClick(MouseEvent e) {
+//			}
+//
+//			public void mouseDown(MouseEvent e) {
+//				Tree t = getViewer().getTree();
+//				TreeItem item = t.getItem(new Point(e.x, e.y));
+//				if (e.button == 3 && item != null) {
+//					getViewer().setSelection(new StructuredSelection(item.getData()));
+//				} else if (item == null) {
+//					getViewer().setSelection(new StructuredSelection());
+//				}
+//			}
+//
+//			public void mouseUp(MouseEvent e) {
+//			}
+//		});
 
-			public void mouseDoubleClick(MouseEvent e) {
-			}
-
-			public void mouseDown(MouseEvent e) {
-				Tree t = getViewer().getTree();
-				TreeItem item = t.getItem(new Point(e.x, e.y));
-				if (e.button == 3 && item != null) {
-					getViewer().setSelection(new StructuredSelection(item.getData()));
-				} else if (item == null) {
-					getViewer().setSelection(new StructuredSelection());
-				}
-			}
-
-			public void mouseUp(MouseEvent e) {
-			}
-		});
-
+		// HACK: shouldn't need to update explicitly
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 				if (selectedObject instanceof ITaskListElement) {

@@ -70,15 +70,13 @@ public interface ITask extends ITaskListElement {
 
 	public abstract List<ITask> getChildren();
 
-	public abstract void addSubTask(ITask t);
+	public abstract void addSubTask(ITask task);
 
-	public abstract void removeSubTask(ITask t);
-
-	public abstract String getDeleteConfirmationMessage();
+	public abstract void removeSubTask(ITask task);
 
 	public abstract void setPriority(String priority);
 
-	public abstract void setCategory(ITaskCategory cat);
+	public abstract void setCategory(ITaskCategory category);
 
 	/**
 	 * @return null if root task

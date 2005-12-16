@@ -33,8 +33,8 @@ public class TaskPriorityFilter implements ITaskFilter {
 	public boolean select(Object element) {
 //		System.out.println("Priority: " + priorityLevel);
 		if (element instanceof ITaskListElement) {
-			if(element instanceof IQueryHit && ((IQueryHit)element).hasCorrespondingActivatableTask()){
-				element = ((IQueryHit)element).getOrCreateCorrespondingTask();
+			if(element instanceof IQueryHit && ((IQueryHit)element).getCorrespondingTask() != null){
+				element = ((IQueryHit)element).getCorrespondingTask();
 			}
 				
 			if (element instanceof ITask && ((ITask)element).isActive()) {

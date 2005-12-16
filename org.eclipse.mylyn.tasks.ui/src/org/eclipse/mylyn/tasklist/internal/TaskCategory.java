@@ -24,7 +24,6 @@ import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.ui.CategoryEditorInput;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -141,14 +140,6 @@ public class TaskCategory implements ITaskCategory, Serializable {
 
 	public boolean isDragAndDropEnabled() {
 		return false;
-	}
-
-	public Color getForeground() {
-		for (ITask child : getChildren()) {
-			if (child.isActive())
-				return MylarTaskListPrefConstants.ACTIVE_TASK;
-		}
-		return null;
 	}
 
 	public Font getFont() {

@@ -425,7 +425,13 @@ public class BugReport implements Serializable, IBugzillaBug {
 	}
 
 	public boolean isResolved() {
-		String status = getAttribute(ATTR_STATUS).getValue();
+		return isResolvedStatus(getAttribute(ATTR_STATUS).getValue());
+	}
+
+	/**
+	 * TODO: move?
+	 */
+	public static boolean isResolvedStatus(String status) {
 		if (status != null) {
 			return status.equals(VAL_STATUS_RESOLVED) || status.equals(VAL_STATUS_CLOSED) || status.equals(VAL_STATUS_VERIFIED);
 		} else {

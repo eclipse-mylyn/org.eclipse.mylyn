@@ -189,8 +189,8 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 			BugzillaQueryCategory bqc = (BugzillaQueryCategory) query;
 			bqc.refreshBugs();
 			for(IQueryHit hit: bqc.getChildren()){
-				if(hit.hasCorrespondingActivatableTask()){
-					BugzillaTask task = ((BugzillaTask)hit.getOrCreateCorrespondingTask());
+				if(hit.getCorrespondingTask() != null){
+					BugzillaTask task = ((BugzillaTask)hit.getCorrespondingTask());
 					if(!task.isCompleted()){
 						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(task);
 //									task.refresh();

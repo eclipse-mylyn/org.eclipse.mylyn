@@ -12,12 +12,14 @@ package org.eclipse.mylar.tasklist;
 
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
-
+/**
+ * @author Mik Kersten
+ */
 public interface IQueryHit extends ITaskListElement {
 
 	public ITask getOrCreateCorrespondingTask();
-	
-	public abstract boolean hasCorrespondingActivatableTask();
 
-	public void setAssociatedTask(ITask task);
+	public ITask getCorrespondingTask();
+	
+	public void setCorrespondingTask(ITask task);
 }

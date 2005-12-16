@@ -10,15 +10,18 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.ui;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * TODO: refactor UI stuff out?
+ * 
  * @author Ken Sueda
  */
 public interface ITaskListElement {
 	
+	public abstract boolean isCompleted();
+		
 	public abstract Image getIcon();
 
     public abstract Image getStatusIcon();
@@ -39,13 +42,11 @@ public interface ITaskListElement {
     
     public abstract boolean isActivatable();
 
-	public abstract Color getForeground();
+//	public abstract Color getForeground();
 
 	public abstract Font getFont();
 	
 	public abstract String getToolTipText();
 	
-	public abstract boolean isCompleted();
-
 	public abstract String getStringForSortingDescription();
 }

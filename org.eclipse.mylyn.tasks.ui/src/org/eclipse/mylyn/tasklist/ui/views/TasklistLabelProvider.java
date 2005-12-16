@@ -19,9 +19,10 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.util.ErrorLogger;
-import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
@@ -97,12 +98,42 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
     	this.backgroundColor = c;
     }
 
-	public Color getForeground(Object element, int columnIndex) {
-        if (element instanceof ITaskListElement) {
-        	ITaskListElement task = (ITaskListElement)element;
-        	return task.getForeground();
+	public Color getForeground(Object object, int columnIndex) {
+    	if (object instanceof ITaskCategory) {
+    		for (ITask child : ((ITaskCategory)object).getChildren()) {
+    			if (child.isActive())
+    				return TaskListImages.COLOR_TASK_ACTIVE;
+    		}
+    	} else if (object instanceof IQuery) {
+    		for (ITaskListElement child : ((IQuery)object).getChildren()) {
+    			if (child instanceof IQueryHit) {
+    				ITask task = ((IQueryHit)child).getCorrespondingTask();
+    				if (task != null && task.isActive()) {
+    					return TaskListImages.COLOR_TASK_ACTIVE;
+    				}
+    			}
+    		}
+    	} else if (object instanceof ITaskListElement) {
+        	ITask task = getAssociatedTask((ITaskListElement)object);
+        	if (task != null) {
+        		if (task.isCompleted()) {
+        			return TaskListImages.GRAY_LIGHT;
+        		} else if (task.isActive()) {
+        			return TaskListImages.COLOR_TASK_ACTIVE;
+        		} 
+        	}
         } 
         return null;
+	}
+
+	private ITask getAssociatedTask(ITaskListElement element) {
+		if (element instanceof ITask) {
+    		return (ITask)element;
+    	} else if (element instanceof IQueryHit) {
+    		return ((IQueryHit)element).getCorrespondingTask();
+    	} else {
+    		return null;
+    	}
 	}
 
 	public Color getBackground(Object element, int columnIndex) {

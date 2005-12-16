@@ -22,24 +22,23 @@ public class TaskCompleteFilter implements ITaskFilter {
 
 	public boolean select(Object element) {
 		if (element instanceof ITask) {
-			ITask task = (ITask)element;
+			ITask task = (ITask) element;
 			if (task.isActive()) {
 				return true;
 			}
 			return !task.isCompleted();
-		} else if(element instanceof IQueryHit){
-			if(((IQueryHit)element).hasCorrespondingActivatableTask()){
-				ITask task = ((IQueryHit)element).getOrCreateCorrespondingTask();
-				if (task.isActive()) {
+		} else if (element instanceof IQueryHit) {
+			IQueryHit hit = (IQueryHit)element;
+			if (hit.getCorrespondingTask() != null) {
+				if (hit.getCorrespondingTask().isActive()) {
 					return true;
 				}
 			}
-			IQueryHit hit = (IQueryHit)element;
 			return !hit.isCompleted();
-		} else if(element instanceof ITaskListElement){
-			ITaskListElement taskElement = (ITaskListElement)element;
+		} else if (element instanceof ITaskListElement) {
+			ITaskListElement taskElement = (ITaskListElement) element;
 			return !taskElement.isCompleted();
-		} 
+		}
 		return false;
 	}
 }

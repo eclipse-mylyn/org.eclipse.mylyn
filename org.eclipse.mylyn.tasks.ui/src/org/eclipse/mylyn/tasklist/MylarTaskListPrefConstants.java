@@ -11,15 +11,10 @@
 
 package org.eclipse.mylar.tasklist;
 
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
-
 /**
  * @author Mik Kersten
  */
 public class MylarTaskListPrefConstants {
-
-	public static final Color ACTIVE_TASK = new Color(Display.getDefault(), 36, 22, 50);
 
 	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ui.editors.auto.manage";
 

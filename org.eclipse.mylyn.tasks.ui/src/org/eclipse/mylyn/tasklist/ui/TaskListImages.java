@@ -184,4 +184,8 @@ public class TaskListImages {
 		}
 		
 	}
+
+	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
+
+	public static final Color COLOR_TASK_OVERDUE = new Color(Display.getDefault(), 36, 22, 50);
 }
