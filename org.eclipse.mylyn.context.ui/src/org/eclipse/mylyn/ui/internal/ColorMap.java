@@ -13,7 +13,7 @@
   */
 package org.eclipse.mylar.ui.internal;
 
-import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ColorMap {
 
-	public Color LANDMARK  = MylarTaskListPrefConstants.ACTIVE_TASK; 
+	public Color LANDMARK  = TaskListImages.COLOR_TASK_ACTIVE; 
     
     public Color HYPERLINK  = new Color(Display.getDefault(), 0, 0, 255); // TODO: use theme?
     public Color PACKAGE_LABEL = new Color(Display.getDefault(), 100, 100, 100);

@@ -47,10 +47,8 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 						if (selectedElement instanceof ITask) {
 							task = (ITask) selectedElement;
 						} else if (selectedElement instanceof IQueryHit) {
-							if (((IQueryHit) selectedElement)
-									.hasCorrespondingActivatableTask()) {
-								task = ((IQueryHit) selectedElement)
-										.getOrCreateCorrespondingTask();
+							if (((IQueryHit) selectedElement).getCorrespondingTask() != null) {
+								task = ((IQueryHit) selectedElement).getCorrespondingTask();
 							}
 						}
 
