@@ -29,9 +29,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.ListenerList;
-import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.util.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -104,6 +102,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * 
  * @author Mik Kersten (some hardening of prototype)
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	public static final int WRAP_LENGTH = 90;
