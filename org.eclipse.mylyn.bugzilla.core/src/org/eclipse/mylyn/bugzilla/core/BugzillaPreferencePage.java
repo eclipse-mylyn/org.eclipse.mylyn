@@ -227,8 +227,17 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 
 		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY,
 				refreshQueries.getBooleanValue());
-		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS,
-				maxResults.getIntValue());
+		
+		try {
+			int numMaxResults = maxResults.getIntValue();
+			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS,
+					numMaxResults);
+		} catch (NumberFormatException nfe) {
+			// ignore and leave as default
+			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS,
+					BugzillaPlugin.getDefault().getPreferenceStore().getDefaultInt(IBugzillaConstants.MAX_RESULTS));
+		} 
+		
 		String oldBugzillaServer = BugzillaPlugin.getDefault().getServerName();
 		ProductConfiguration configuration = null;
 
