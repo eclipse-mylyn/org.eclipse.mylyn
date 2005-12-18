@@ -25,8 +25,7 @@ import org.eclipse.swt.graphics.Image;
  */ 
 public class MylarImages {
 
-//    private static Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
-    private static ImageRegistry imageRegistry = new ImageRegistry(); 
+	private static ImageRegistry imageRegistry; 
 	
 	public static final String T_ELCL = "elcl16";
 	public static final String T_TOOL = "etool16";
@@ -112,10 +111,20 @@ public class MylarImages {
 		return new URL(baseURL, buffer.toString());
 	}	
 	
+	private static ImageRegistry getImageRegistry() {
+		if (imageRegistry == null) {
+			imageRegistry = new ImageRegistry();
+		}
+		
+		return imageRegistry;
+	}
+	
 	/**
 	 * Lazily initializes image map.
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
+		ImageRegistry imageRegistry = getImageRegistry();
+		
 	    Image image = imageRegistry.get(""+imageDescriptor.hashCode());
 	    if (image == null) {
 	        image = imageDescriptor.createImage();
