@@ -46,7 +46,6 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 		List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(editorPart);
-		
 		for (TreeViewer viewer : outlineViewers) {
 			MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
 			installInterestFilter(on, viewer);
