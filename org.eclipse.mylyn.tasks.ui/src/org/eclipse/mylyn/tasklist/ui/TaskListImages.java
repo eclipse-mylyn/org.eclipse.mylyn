@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
  */ 
 public class TaskListImages {
 
-    private static ImageRegistry imageRegistry = new ImageRegistry();
+    private static ImageRegistry imageRegistry;
 	
     public static final Color BACKGROUND_WHITE = new Color(Display.getDefault(), 255, 255, 255);
     public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 190, 210, 238);
@@ -107,12 +107,22 @@ public class TaskListImages {
 		buffer.append('/');
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());
-	}	
+	}
+	
+	private static ImageRegistry getImageRegistry() {
+		if (imageRegistry == null) {
+			imageRegistry = new ImageRegistry();
+		}
+		
+		return imageRegistry;
+	}
 	
 	/**
 	 * Lazily initializes image map.
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
+		ImageRegistry imageRegistry = getImageRegistry();
+		
 	    Image image = imageRegistry.get(""+imageDescriptor.hashCode());
 	    if (image == null) {
 	        image = imageDescriptor.createImage();
