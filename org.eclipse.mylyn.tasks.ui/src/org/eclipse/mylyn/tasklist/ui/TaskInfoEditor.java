@@ -33,7 +33,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -408,7 +407,8 @@ public class TaskInfoEditor extends EditorPart {
 			calendar.setTime(task.getReminderDate());
 			datePicker.setDate(calendar);
 		}
-		datePicker.setBackground(new Color(Display.getDefault(), 255, 255, 255));
+		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+//		datePicker.setBackground(new Color(Display.getDefault(), 255, 255, 255));
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				TaskInfoEditor.this.markDirty(true);
