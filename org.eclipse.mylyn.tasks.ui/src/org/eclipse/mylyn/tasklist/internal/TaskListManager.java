@@ -182,21 +182,27 @@ public class TaskListManager {
 		TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout);
 		activityTimer.startTimer();
 		timerMap.put(task, activityTimer);
-		for (ITaskActivityListener listener : listeners) listener.taskActivated(task);
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+			listener.taskActivated(task);
+		}
 	}
 
 	public void deactivateTask(ITask task) {
 		TaskActivityTimer taskTimer = timerMap.remove(task);
 		if (taskTimer != null) taskTimer.stopTimer();
 		taskList.setActive(task, false); 
-		for (ITaskActivityListener listener : listeners) listener.taskDeactivated(task);
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+			listener.taskDeactivated(task);
+		}
 	}
 
 	/**
 	 * TODO: refactor into task deltas?
 	 */
 	public void notifyTaskChanged(ITask task) {
-		for (ITaskActivityListener listener : listeners) listener.taskChanged(task);
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+			listener.taskChanged(task);
+		}
 	}
 	
 	public void setTaskListFile(File f) {
