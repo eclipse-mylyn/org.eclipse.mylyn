@@ -22,7 +22,7 @@
           class="org.eclipse.mylar.ide.ui.views.ActiveSearchView"
           icon="icons/eview16/active-search.gif"
           id="org.eclipse.mylar.ui.views.active.search"
-          name="Active Search"/>
+          name="Active Search (Experimental)"/>
    </extension>
 
  	<extension point="org.eclipse.ui.preferencePages">
@@ -82,7 +82,7 @@
             id="org.eclipse.mylar.java.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
         <action
-              class="org.eclipse.mylar.ide.ui.actions.CompleteTaskWizardAction"
+              class="org.eclipse.mylar.ide.ui.actions.CommitContextAction"
               enablesFor="*"
               icon="icons/elcl16/cvs_persp.gif"
               id="org.eclipse.mylar.ui.clear.context"

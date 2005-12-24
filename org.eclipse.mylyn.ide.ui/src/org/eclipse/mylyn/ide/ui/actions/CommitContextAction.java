@@ -30,28 +30,26 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class CompleteTaskWizardAction implements IViewActionDelegate {
+public class CommitContextAction implements IViewActionDelegate {
 
 	private static final String WIZARD_LABEL = "Commit Resources in Task Context";
 
 	public void init(IViewPart view) {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void run(IAction action) {
 		ITask task = TaskListView.getDefault().getSelectedTask();
 		IResource[] resources = MylarIdePlugin.getDefault().getChangeSetManager().getResources(task);
-		if (resources == null || resources.length == 0){
-			MessageDialog.openInformation(null, 
-					"Mylar Information", 
+		if (resources == null || resources.length == 0) {
+			MessageDialog.openInformation(null, "Mylar Information",
 					"There are no interesting resources in the corresponding change set.\nRefer to Synchronize view.");
 			return;
 		}
-		
+
 		try {
 			MylarCommitWizard wizard = new MylarCommitWizard(resources, task);
-			
+
 			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				wizard.loadSize();
@@ -60,7 +58,7 @@ public class CompleteTaskWizardAction implements IViewActionDelegate {
 				dialog.create();
 				dialog.setTitle(WIZARD_LABEL);
 				dialog.setBlockOnOpen(true);
-				if(dialog.open() == Dialog.CANCEL){
+				if (dialog.open() == Dialog.CANCEL) {
 					dialog.close();
 					return;
 				}
@@ -72,7 +70,5 @@ public class CompleteTaskWizardAction implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
-
 	}
-
 }
