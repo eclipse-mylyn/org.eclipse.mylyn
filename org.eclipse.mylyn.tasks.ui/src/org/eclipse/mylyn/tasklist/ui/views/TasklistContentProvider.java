@@ -90,7 +90,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 			return t.getChildren() != null && t.getChildren().size() > 0;
 		} else if (parent instanceof IQuery) {
 			IQuery t = (IQuery) parent;
-			return t.getChildren() != null && t.getChildren().size() > 0;
+			return t.getHits() != null && t.getHits().size() > 0;
 		}
 		return false;
 	}
@@ -130,7 +130,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean selectQuery(IQuery cat) {
-		List<? extends ITaskListElement> list = cat.getChildren();
+		List<? extends ITaskListElement> list = cat.getHits();
 		if (list.size() == 0) {
 			return true;
 		}
@@ -190,7 +190,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 				}
 				return children;
 			} else if (parent instanceof IQuery) {
-				List<? extends ITaskListElement> list = ((IQuery) parent).getChildren();
+				List<? extends ITaskListElement> list = ((IQuery) parent).getHits();
 				for (int i = 0; i < list.size(); i++) {
 					if (!filter(list.get(i))) {
 						children.add(list.get(i));
@@ -212,7 +212,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 				children.addAll(((ITaskCategory) parent).getChildren());
 				return children;
 			} else if (parent instanceof IQuery) {
-				children.addAll(((IQuery) parent).getChildren());
+				children.addAll(((IQuery) parent).getHits());
 				return children;
 			} else if (parent instanceof Task) {
 				children.addAll(((Task) parent).getChildren());

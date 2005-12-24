@@ -53,9 +53,11 @@ public class TaskListImages {
 	
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 	
+	public static final ImageDescriptor REPOSITORY = create("eview16", "task-repository.gif");
+	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "task-repository-new.gif");
+	public static final ImageDescriptor REPOSITORIES = create("eview16", "task-repositories.gif");
+		
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
-	public static final ImageDescriptor ERASE_TASKSCAPE = create(T_ELCL, "context-clear.gif");
-
     public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
     public static final ImageDescriptor FILTER_PRIORITY = create(T_ELCL, "filter-priority.gif");
     

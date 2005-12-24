@@ -10,7 +10,20 @@
             id="org.eclipse.mylar.bugzilla.ui.tasklist"
             name="Bugzilla Contributor">
       </taskHandler>
+   </extension>
+   
+   <extension
+         id="org.eclipse.mylar.bugzilla.repository"
+         name="Bugzilla Repository"
+         point="org.eclipse.mylar.tasklist.repositories">
+
+      <repositoryClient
+            class="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskRepositoryClient"
+            id="org.eclipse.mylar.bugzilla.tasklist.repositories"
+            name="Bugzilla Client"
+            type="bugzilla"/>
    </extension> 
+  
    
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
@@ -170,7 +183,7 @@
           
           
         <action
-           class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaQueryCategoryAction"
+           class="org.eclipse.mylar.bugzilla.ui.actions.AddBugzillaQueryAction"
            enablesFor="*"
            icon="icons/etool16/category-query-new.gif"
            id="org.eclipse.mylar.bugzilla.tasklist.addQuery"

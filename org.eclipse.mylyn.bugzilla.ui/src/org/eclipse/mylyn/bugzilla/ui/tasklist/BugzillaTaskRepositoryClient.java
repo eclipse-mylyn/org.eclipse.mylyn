@@ -8,26 +8,27 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist;
 
-import java.util.List;
+package org.eclipse.mylar.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
 
 /**
  * @author Mik Kersten
  */
-public interface IQuery extends ITaskListElement{
+public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 
-	public String getQueryUrl();
+	public String getLabel() {
+		return "Bugzilla Client (supports uncustomized 2.16-2.20)";
+	}
 	
-	public void setQueryUrl(String query);
-	
-	public List<IQueryHit> getHits();
-	
-	public int getMaxHits();
-	
-	public void setMaxHits(int maxHits);
-	
-	public void addHit(IQueryHit hit);
+	public String toString() {
+		return getLabel();
+	}
+
+	public IWizardPage getSettingsPage() {
+		return new BugzillaRepositorySettingsPage();
+	}
+
 }

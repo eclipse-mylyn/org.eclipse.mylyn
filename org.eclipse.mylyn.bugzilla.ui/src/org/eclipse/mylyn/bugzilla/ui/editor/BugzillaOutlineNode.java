@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.ui.outline;
+package org.eclipse.mylar.bugzilla.ui.editor;
 
 import java.util.ArrayList;
 import java.util.Iterator;

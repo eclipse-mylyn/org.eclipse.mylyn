@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.ui.query;
+package org.eclipse.mylar.bugzilla.ui.search;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +18,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -33,21 +32,19 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
-
 /**
  * Dialog to display, manage and run stored queries.
  */
-public class GetQueryDialog extends Dialog
-{
-	
+public class GetQueryDialog extends Dialog {
+
 	/** The Ok button. */
 	private Button okButton;
 
 	/** The title of the dialog. */
 	private String title;
-	
+
 	private SavedQueryFile input;
-	
+
 	public GetQueryDialog(Shell parentShell, String dialogTitle, SavedQueryFile in) {
 		super(parentShell);
 		this.title = dialogTitle;
@@ -74,29 +71,29 @@ public class GetQueryDialog extends Dialog
 	 */
 	@Override
 	final protected Control createDialogArea(Composite parent) {
-		Composite composite = (Composite)super.createDialogArea(parent);
-		
- 		createMainDialogArea(composite);
+		Composite composite = (Composite) super.createDialogArea(parent);
+
+		createMainDialogArea(composite);
 
 		return composite;
 	}
-	
+
 	protected void createMainDialogArea(Composite parent) {
 		Label label = new Label(parent, SWT.LEFT);
 		label.setText("Select a saved query:");
 		rememberPattern = new List(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER);
 		ArrayList<String> names = input.getNames();
 		int pos = 0;
-		
-		for (Iterator<String> it = names.iterator(); it.hasNext(); ) { 
+
+		for (Iterator<String> it = names.iterator(); it.hasNext();) {
 			rememberPattern.add(it.next(), pos);
 			pos++;
 		}
-		
+
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 5;
 		gd.heightHint = 60;
-		
+
 		rememberPattern.setLayoutData(gd);
 		rememberPattern.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -128,7 +125,7 @@ public class GetQueryDialog extends Dialog
 			okButton.setEnabled(complete);
 		}
 	}
-	
+
 	private String queryNameText;
 
 	private List rememberPattern;
@@ -136,20 +133,20 @@ public class GetQueryDialog extends Dialog
 	public String getText() {
 		return queryNameText;
 	}
-	
+
 	/**
 	 * Deletes a selected named query.
 	 */
 	private void remove() {
 		int index = rememberPattern.getSelectionIndex();
-		if(index != -1)
-			BugzillaSearchPage.getInput().remove(new int []{index});
+		if (index != -1)
+			BugzillaSearchPage.getInput().remove(new int[] { index });
 		rememberPattern.remove(index);
 		rememberPattern.setSelection(-1);
 		selIndex = -1;
 		okButton.setEnabled(false);
 	}
-	
+
 	private void removeAll() {
 		BugzillaSearchPage.getInput().removeAll();
 		rememberPattern.removeAll();
@@ -157,33 +154,33 @@ public class GetQueryDialog extends Dialog
 		selIndex = -1;
 		okButton.setEnabled(false);
 	}
-	
+
 	/** Index of the selected query, or -1 if none. */
 	int selIndex = -1;
-	
-	/** 
+
+	/**
 	 * Returns index of the selected query or -1 if none are selected.
 	 */
 	public int getSelected() {
 		return selIndex;
 	}
-	
+
 	private class RunQueryAction extends Action {
 		RunQueryAction(String text) {
 			super(text);
 		}
-		
+
 		@Override
 		public void run() {
 			GetQueryDialog.this.okPressed();
 		}
 	}
-		
+
 	private class RemoveAction extends Action {
 		RemoveAction(String text) {
 			super(text);
 		}
-		
+
 		@Override
 		public void run() {
 			GetQueryDialog.this.remove();
@@ -194,7 +191,7 @@ public class GetQueryDialog extends Dialog
 		RemoveAllAction(String text) {
 			super(text);
 		}
-		
+
 		@Override
 		public void run() {
 			GetQueryDialog.this.removeAll();

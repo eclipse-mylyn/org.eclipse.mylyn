@@ -120,7 +120,7 @@ public class TaskList implements Serializable {
 			}
 		}
 		for (IQuery query : queries) {
-			if ((foundTask = findTaskHelper(query.getChildren(), handle)) != null) {
+			if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
 				return foundTask;
 			}
 		}

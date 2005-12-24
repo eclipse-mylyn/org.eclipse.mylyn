@@ -47,8 +47,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BugzillaQueryCategory implements IQuery {
 
-	private static final long serialVersionUID = 5517146402031743253L;
-
 	private String queryString;
 
 	private int maxHits;
@@ -111,11 +109,11 @@ public class BugzillaQueryCategory implements IQuery {
 		return TaskListImages.getImage(BugzillaImages.CATEGORY_QUERY);
 	}
 
-	public String getQueryString() {
+	public String getQueryUrl() {
 		return queryString;
 	}
 
-	public List<IQueryHit> getChildren() {
+	public List<IQueryHit> getHits() {
 		return hits;
 	}
 
@@ -138,7 +136,7 @@ public class BugzillaQueryCategory implements IQuery {
 					TaskListView.getDefault().getViewer().refresh();
 			}
 		});
-		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(getQueryString(), maxHits);
+		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(getQueryUrl(), maxHits);
 		catSearch.addResultsListener(listener);
 		final IStatus[] status = new IStatus[1];
 
@@ -183,7 +181,7 @@ public class BugzillaQueryCategory implements IQuery {
 		return;
 	}
 
-	public void setQueryString(String url) {
+	public void setQueryUrl(String url) {
 		this.queryString = url;
 	}
 
@@ -213,7 +211,7 @@ public class BugzillaQueryCategory implements IQuery {
 	}
 
 	public Font getFont() {
-		for (ITaskListElement child : getChildren()) {
+		for (ITaskListElement child : getHits()) {
 			if (child instanceof BugzillaHit) {
 				BugzillaHit hit = (BugzillaHit) child;
 				BugzillaTask task = hit.getCorrespondingTask();

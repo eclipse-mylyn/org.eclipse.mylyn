@@ -119,14 +119,14 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			} else {
 				// not supported
 			}
-		} else if (element instanceof BugzillaCustomQuery) {
-			BugzillaCustomQuery queryCategory = (BugzillaCustomQuery) element;
+		} else if (element instanceof BugzillaCustomQueryCategory) {
+			BugzillaCustomQueryCategory queryCategory = (BugzillaCustomQueryCategory) element;
 			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
-					queryCategory.getQueryString(), queryCategory.getDescription(false), queryCategory.getMaxHits()
+					queryCategory.getQueryUrl(), queryCategory.getDescription(false), queryCategory.getMaxHits()
 							+ "");
 			if (sqd.open() == Dialog.OK) {
 				queryCategory.setDescription(sqd.getName());
-				queryCategory.setQueryString(sqd.getUrl());
+				queryCategory.setQueryUrl(sqd.getUrl());
 				int maxHits = -1;
 				try {
 					maxHits = Integer.parseInt(sqd.getMaxHits());
@@ -139,10 +139,10 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		} else if (element instanceof BugzillaQueryCategory) {
 			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory) element;
 			BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(), queryCategory
-					.getQueryString(), queryCategory.getDescription(false), queryCategory.getMaxHits() + "");
+					.getQueryUrl(), queryCategory.getDescription(false), queryCategory.getMaxHits() + "");
 			if (sqd.open() == Dialog.OK) {
 				queryCategory.setDescription(sqd.getName());
-				queryCategory.setQueryString(sqd.getUrl());
+				queryCategory.setQueryUrl(sqd.getUrl());
 				int maxHits = -1;
 				try {
 					maxHits = Integer.parseInt(sqd.getMaxHits());
@@ -200,22 +200,6 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		}
 	}
 
-	// public void dropItem(ITaskListElement element, TaskCategory cat) {
-	// if (element instanceof BugzillaHit) {
-	// BugzillaHit bugzillaHit = (BugzillaHit) element;
-	// if (bugzillaHit.getAssociatedTask() != null) {
-	// MylarTaskListPlugin.getTaskListManager().moveToCategory(cat,
-	// bugzillaHit.getAssociatedTask());
-	// } else {
-	// BugzillaTask bugzillaTask = new BugzillaTask(bugzillaHit, true);
-	// bugzillaHit.setAssociatedTask(bugzillaTask);
-	// MylarTaskListPlugin.getTaskListManager().moveToCategory(cat,
-	// bugzillaTask);
-	// BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry(bugzillaTask);
-	// }
-	// }
-	// }
-
 	public void taskClosed(ITask element, IWorkbenchPage page) {
 		try {
 			IEditorInput input = null;
@@ -272,7 +256,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				return true;
 			} else if (action instanceof GoIntoAction) {
 				BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
-				if (cat.getChildren().size() > 0) {
+				if (cat.getHits().size() > 0) {
 					return true;
 				}
 			} else {
@@ -300,3 +284,19 @@ public class BugzillaTaskHandler implements ITaskHandler {
 	}
 
 }
+
+// public void dropItem(ITaskListElement element, TaskCategory cat) {
+// if (element instanceof BugzillaHit) {
+// BugzillaHit bugzillaHit = (BugzillaHit) element;
+// if (bugzillaHit.getAssociatedTask() != null) {
+// MylarTaskListPlugin.getTaskListManager().moveToCategory(cat,
+// bugzillaHit.getAssociatedTask());
+// } else {
+// BugzillaTask bugzillaTask = new BugzillaTask(bugzillaHit, true);
+// bugzillaHit.setAssociatedTask(bugzillaTask);
+// MylarTaskListPlugin.getTaskListManager().moveToCategory(cat,
+// bugzillaTask);
+// BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry(bugzillaTask);
+// }
+// }
+// }

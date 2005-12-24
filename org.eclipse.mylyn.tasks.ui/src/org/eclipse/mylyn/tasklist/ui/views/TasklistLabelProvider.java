@@ -105,7 +105,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
     				return TaskListImages.COLOR_TASK_ACTIVE;
     		}
     	} else if (object instanceof IQuery) {
-    		for (ITaskListElement child : ((IQuery)object).getChildren()) {
+    		for (ITaskListElement child : ((IQuery)object).getHits()) {
     			if (child instanceof IQueryHit) {
     				ITask task = ((IQueryHit)child).getCorrespondingTask();
     				if (task != null && task.isActive()) {

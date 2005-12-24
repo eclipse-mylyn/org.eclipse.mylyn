@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.ui.query;
+package org.eclipse.mylar.bugzilla.ui.search;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

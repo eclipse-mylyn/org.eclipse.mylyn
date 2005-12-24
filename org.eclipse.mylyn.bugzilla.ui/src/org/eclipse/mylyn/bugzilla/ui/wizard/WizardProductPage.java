@@ -46,7 +46,7 @@ public class WizardProductPage extends AbstractWizardListPage {
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n" +
 		"Press the Update button if you do not see the desired product.";
 
-	private static final String LABEL_UPDATE = "Update Options from Bugzilla Server";
+	private static final String LABEL_UPDATE = "Update Products";
 
 	/** The list of products to submit a bug report for */
 	static List<String> products = null;

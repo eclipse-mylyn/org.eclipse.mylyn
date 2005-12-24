@@ -29,6 +29,7 @@ import org.eclipse.mylar.tasklist.internal.TaskListSaveManager;
 import org.eclipse.mylar.tasklist.internal.TaskListWriter;
 import org.eclipse.mylar.tasklist.internal.planner.ReminderRequiredCollector;
 import org.eclipse.mylar.tasklist.internal.planner.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
@@ -56,6 +57,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static MylarTaskListPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
+	
+	private static TaskRepositoryManager taskRepositoryManager;
 
 	private TaskListSaveManager taskListSaveManager = new TaskListSaveManager();
 		
@@ -268,8 +271,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			if (MylarPlugin.getDefault() != null && MylarPlugin.getDefault().getPreferenceStore().contains(MylarTaskListPrefConstants.TASK_ID)) { // TODO: fix to MylarTaskListPlugin
 				nextTaskId = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarTaskListPrefConstants.TASK_ID);
 			} 
-			
+
 			taskListManager = new TaskListManager(taskListWriter, taskListFile, nextTaskId);	
+			taskRepositoryManager = new TaskRepositoryManager();
 		} catch (Exception e) {
 			ErrorLogger.fail(e, "Mylar Task List initialization failed", false);
 		}
@@ -505,16 +509,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		menuContributors.add(contributor);
 	}
 
-//	private List<ITaskActivationListener> taskListListeners = new ArrayList<ITaskActivationListener>();
-//
-//	public List<ITaskActivationListener> getTaskListListeners() {
-//		return taskListListeners;
-//	}
-//
-//	public void addTaskListListener(ITaskActivationListener taskListListner) {
-//		taskListListeners.add(taskListListner);
-//	}
-
 	public boolean isMultipleActiveTasksMode() {
 		return getPrefs().getBoolean(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS);
 	}
@@ -540,12 +534,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		if (contextEditor != null)
 			this.contextEditors.add(contextEditor);
 	}
-//	/**
-//	 * For testing.
-//	 */
-//	public void setShouldAutoSave(boolean shellActive) {
-//		shouldAutoSave = shellActive;
-//	}
 
 	public TaskListSaveManager getTaskListSaveManager() {
 		return taskListSaveManager;
@@ -554,4 +542,18 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public boolean isShellActive() {
 		return MylarTaskListPlugin.shellActive;
 	}
+
+	public static TaskRepositoryManager getRepositoryManager() {
+		return taskRepositoryManager;
+	}
 }
+
+//private List<ITaskActivationListener> taskListListeners = new ArrayList<ITaskActivationListener>();
+//
+//	public List<ITaskActivationListener> getTaskListListeners() {
+//		return taskListListeners;
+//	}
+//
+//	public void addTaskListListener(ITaskActivationListener taskListListner) {
+//		taskListListeners.add(taskListListner);
+//	}

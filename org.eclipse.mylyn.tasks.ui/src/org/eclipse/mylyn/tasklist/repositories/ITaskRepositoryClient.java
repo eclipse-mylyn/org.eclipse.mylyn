@@ -8,26 +8,17 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist;
 
-import java.util.List;
+package org.eclipse.mylar.tasklist.repositories;
 
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * @author Mik Kersten
  */
-public interface IQuery extends ITaskListElement{
+public interface ITaskRepositoryClient {
 
-	public String getQueryUrl();
-	
-	public void setQueryUrl(String query);
-	
-	public List<IQueryHit> getHits();
-	
-	public int getMaxHits();
-	
-	public void setMaxHits(int maxHits);
-	
-	public void addHit(IQueryHit hit);
+	public String getLabel();
+
+	public IWizardPage getSettingsPage();
 }

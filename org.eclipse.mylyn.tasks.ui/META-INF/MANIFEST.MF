@@ -17,6 +17,7 @@ Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: mylar-tasklist.jar
 Export-Package: org.eclipse.mylar.tasklist,
  org.eclipse.mylar.tasklist.internal,
+ org.eclipse.mylar.tasklist.repositories,
  org.eclipse.mylar.tasklist.ui,
  org.eclipse.mylar.tasklist.ui.actions,
  org.eclipse.mylar.tasklist.ui.preferences,

@@ -3,18 +3,19 @@
 <schema targetNamespace="org.eclipse.mylar.tasklist">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.tasklist" id="providers" name="Task List Providers"/>
+         <meta.schema plugin="org.eclipse.mylar.tasklist" id="repositories" name="Repositories"/>
       </appInfo>
       <documentation>
-         no description
+         [Enter description of this extension point.]
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="taskHandler" minOccurs="0" maxOccurs="unbounded"/>
-            <element ref="dynamicPopupMenu" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="repositoryClient"/>
+            <element ref="queryPage"/>
+            <element ref="settingsPage"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -43,54 +44,7 @@
       </complexType>
    </element>
 
-   <element name="taskHandler">
-      <annotation>
-         <appInfo>
-            <meta.element labelAttribute="name"/>
-         </appInfo>
-      </annotation>
-      <complexType>
-         <attribute name="externalizerClass" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.mylar.tasklist.ITaskListExternalizer"/>
-               </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="taskHandlerClass" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.mylar.tasklist.ITaskHandler"/>
-               </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="id" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="name" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appInfo>
-                  <meta.attribute translatable="true"/>
-               </appInfo>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="dynamicPopupMenu">
+   <element name="repositoryClient">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -98,8 +52,15 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasklist.repositories.ITaskRepository"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
@@ -109,14 +70,69 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string">
+         <attribute name="type" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="queryPage">
+      <complexType>
+         <attribute name="class" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
-                  <meta.attribute translatable="true"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasklist.repositories.IQueryPage"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="settingsPage">
+      <complexType>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasklist.repositories.IRepositorySettingsPage"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
@@ -127,7 +143,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         
+         [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
@@ -136,7 +152,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         
+         [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
@@ -145,7 +161,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         
+         [Enter API information here.]
       </documentation>
    </annotation>
 
@@ -154,7 +170,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         
+         [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
 

@@ -18,7 +18,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCustomQuery;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCustomQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryDialog;
 import org.eclipse.mylar.core.util.ErrorLogger;
@@ -35,11 +35,11 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class CreateBugzillaQueryCategoryAction extends Action implements IViewActionDelegate {
+public class AddBugzillaQueryAction extends Action implements IViewActionDelegate {
     
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.bug.query";
 	
-	public CreateBugzillaQueryCategoryAction() {
+	public AddBugzillaQueryAction() {
 		setText("Add Bugzilla Query");
         setToolTipText("Add Bugzilla Query");
         setId(ID);
@@ -48,9 +48,8 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
     
     @Override
     public void run() {
-
-    	// ask the user for the query string and a name
-//        MylarPlugin.getDefault().actionObserved(this);
+    	
+    	
     	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
     	if(sqd.open() == Dialog.OK){
     		
@@ -58,7 +57,7 @@ public class CreateBugzillaQueryCategoryAction extends Action implements IViewAc
         	if(!sqd.isCustom()){
         		queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
         	} else {
-        		queryCategory = new BugzillaCustomQuery(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
+        		queryCategory = new BugzillaCustomQueryCategory(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
         	}
     		MylarTaskListPlugin.getTaskListManager().addQuery(queryCategory);
         	boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.WORK_OFFLINE);

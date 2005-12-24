@@ -24,8 +24,6 @@ Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylar.bugzilla.ui,
  org.eclipse.mylar.bugzilla.ui.actions,
  org.eclipse.mylar.bugzilla.ui.editor,
- org.eclipse.mylar.bugzilla.ui.outline,
- org.eclipse.mylar.bugzilla.ui.query,
  org.eclipse.mylar.bugzilla.ui.search,
  org.eclipse.mylar.bugzilla.ui.tasklist,
  org.eclipse.mylar.bugzilla.ui.wizard

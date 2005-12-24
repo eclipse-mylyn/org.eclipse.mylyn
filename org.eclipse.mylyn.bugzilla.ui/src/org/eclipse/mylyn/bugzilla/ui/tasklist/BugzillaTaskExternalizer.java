@@ -103,7 +103,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	}
 
 	public String getQueryTagNameForElement(IQuery query) {
-		if (query instanceof BugzillaCustomQuery) {
+		if (query instanceof BugzillaCustomQueryCategory) {
 			return TAG_BUGZILLA_CUSTOM_QUERY;
 		} else if (query instanceof BugzillaQueryCategory) {
 			return TAG_BUGZILLA_QUERY;
@@ -120,7 +120,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		Element element = (Element) node;
 		IQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
-			cat = new BugzillaCustomQuery(element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
+			cat = new BugzillaCustomQueryCategory(element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
 					.getAttribute(MAX_HITS));
 		} else if (node.getNodeName().equals(TAG_BUGZILLA_QUERY)) {
 			cat = new BugzillaQueryCategory(element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element

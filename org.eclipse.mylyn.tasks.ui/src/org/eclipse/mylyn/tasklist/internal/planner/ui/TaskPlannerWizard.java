@@ -28,23 +28,22 @@ import org.eclipse.ui.PartInitException;
  */
 public class TaskPlannerWizard extends Wizard implements INewWizard {
 
-	private TaskPlannerWizardPage planningGamePage = null;
+	private TaskPlannerWizardPage planningGamePage;
+
 	public TaskPlannerWizard() {
 		super();
 		init();
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		try {
-//			int numDays = planningGamePage.getReportStartDate();
-			IWorkbenchPage page = MylarTaskListPlugin.getDefault()
-					.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage();
 			if (page == null)
 				return false;
-			IEditorInput input = new TaskPlannerEditorInput(
-					planningGamePage.getReportStartDate(),
-					MylarTaskListPlugin.getTaskListManager().getTaskList());
+			IEditorInput input = new TaskPlannerEditorInput(planningGamePage.getReportStartDate(), MylarTaskListPlugin
+					.getTaskListManager().getTaskList());
 			page.openEditor(input, MylarTaskListPrefConstants.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {
 			ErrorLogger.log(ex, "couldn't open summary editor");
@@ -59,8 +58,8 @@ public class TaskPlannerWizard extends Wizard implements INewWizard {
 		planningGamePage = new TaskPlannerWizardPage();
 		super.setForcePreviousAndNextButtons(true);
 	}
-	
-	 @Override
+
+	@Override
 	public void addPages() {
 		addPage(planningGamePage);
 	}

@@ -78,7 +78,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 						@Override
 						protected IStatus run(IProgressMonitor monitor) {
 							cat.refreshBugs();
-							for (IQueryHit hit : cat.getChildren()) {
+							for (IQueryHit hit : cat.getHits()) {
 								if (hit.getCorrespondingTask() != null && hit instanceof BugzillaHit) {
 									BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
 											(BugzillaTask) hit.getCorrespondingTask());

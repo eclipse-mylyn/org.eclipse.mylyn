@@ -2,29 +2,13 @@
 <?eclipse version="3.0"?>
 <plugin>
     <extension-point id="providers" name="Tasklist Providers" schema="schema/providers.exsd"/>
+    <extension-point id="repositories" name="Task Repositories" schema="schema/repositories.exsd"/>
     <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
 
    <extension
          name="Mylar Task List Startup"
          point="org.eclipse.ui.startup">
    </extension>
-
-<!--
-  	<extension point = "org.eclipse.ui.popupMenus">
-     <objectContribution
-        id="org.eclipse.mylar.tasklist.ui"
-        objectClass="org.eclipse.mylar.tasklist.ITaskCategory">
-     	<action  
-  		  	label="Go Into Category" 
-	  		tooltip="Go Into Category"
-	  		menubarPath="tasks" 
-	  		id="org.eclipse.mylar.tasklist.actions.category.gointo" 
-	  		class="org.eclipse.mylar.tasklist.ui.actions.GoIntoAction"
-	  		icon="icons/etool16/go-into.gif"
-	  		enablesFor="1"/>
-	 </objectContribution>
-	</extension>
--->
 
 	<extension
          id="org.eclipse.mylar.helpDocs"
@@ -59,6 +43,25 @@
     </extension> 
 
 
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+         allowMultiple="false"
+         category="org.eclipse.mylar"
+         class="org.eclipse.mylar.tasklist.ui.views.TaskListView"
+         icon="icons/eview16/task-list.gif"
+         id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+         name="Mylar Tasks"/> 
+      <view
+            allowMultiple="false"
+            category="org.eclipse.mylar"
+            class="org.eclipse.mylar.tasklist.ui.views.TaskRepositoriesView"
+            icon="icons/eview16/task-repositories.gif"
+            id="org.eclipse.mylar.tasklist.repositories"
+            name="Task Repositories (Experimental)">
+      </view>
+  	</extension>
+
     <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
@@ -69,18 +72,16 @@
 		  <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
           </perspectiveExtension>
+      	<perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.eclipse.mylar.tasklist.repositories">
+         </view>
+      </perspectiveExtension>
 	</extension>
-
-
-  	<extension point="org.eclipse.ui.views">
-	  <view
-         allowMultiple="false"
-         category="org.eclipse.mylar"
-         class="org.eclipse.mylar.tasklist.ui.views.TaskListView"
-         icon="icons/eview16/task-list.gif"
-         id="org.eclipse.mylar.tasks.ui.views.TaskListView"
-         name="Mylar Tasks"/> 
-  	</extension>
 
   	<extension
         point="org.eclipse.ui.editors">
@@ -98,9 +99,24 @@
            icon="icons/eview16/task-list.gif"
            class="org.eclipse.mylar.tasklist.internal.planner.ui.TaskPlannerEditorPart"
            name="Mylar Task Planner"
-           id="org.eclipse.mylar.tasklist.ui.planner.editor"/>           
-           
+           id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
   </extension>
+
+  	<extension point = "org.eclipse.ui.popupMenus">
+       <objectContribution
+             id="org.eclipse.mylar.tasklist.objectContribution"
+             objectClass="org.eclipse.mylar.tasklist.ui.ITaskListElement">
+        <action
+              class="org.eclipse.mylar.tasklist.repositories.ui.AddQueryAction"
+              enablesFor="*"
+              icon="icons/etool16/category-query-new.gif"
+              id="org.eclipse.mylar.tasklist.actions.addQuery"
+              label="Add Query"
+              style="push"
+              tooltip="Add Query"> 
+  		</action>
+     </objectContribution>
+     </extension>
 
   <extension point="org.eclipse.ui.preferencePages">
       <page 
@@ -133,3 +149,15 @@
       </key>
   </extension>
 </plugin>
+
+
+<!--	
+     	<action  
+  		  	label="Go Into Category" 
+	  		tooltip="Go Into Category"
+	  		menubarPath="tasks" 
+	  		id="org.eclipse.mylar.tasklist.actions.category.gointo" 
+	  		class="org.eclipse.mylar.tasklist.ui.actions.GoIntoAction"
+	  		icon="icons/etool16/go-into.gif"
+	  		enablesFor="1"/>
+-->
