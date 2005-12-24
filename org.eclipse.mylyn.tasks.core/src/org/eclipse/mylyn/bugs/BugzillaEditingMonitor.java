@@ -16,7 +16,7 @@ package org.eclipse.mylar.bugs;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
-import org.eclipse.mylar.bugzilla.ui.outline.BugzillaReportSelection;
+import org.eclipse.mylar.bugzilla.ui.editor.BugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;

@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
-import org.eclipse.mylar.bugzilla.ui.outline.BugzillaOutlinePage;
+import org.eclipse.mylar.bugzilla.ui.editor.BugzillaOutlinePage;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.core.IMylarElement;
