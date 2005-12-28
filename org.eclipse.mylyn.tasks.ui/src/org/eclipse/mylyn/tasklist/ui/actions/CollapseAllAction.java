@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.tasklist.ui.actions;
 
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.internal.ui.packageview.PackagesMessages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -22,18 +20,19 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
  */
 public class CollapseAllAction extends Action {
 	
+	private static final String LABEL = "Collapse All";
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.collapse.all";
 	
 	private TaskListView taskListView;
 	
 	public CollapseAllAction(TaskListView taskListView) {
-		super(PackagesMessages.CollapseAllAction_label); 
+		super(LABEL); 
 		this.taskListView = taskListView;
 		setId(ID);
-		setText("Collapse All");
-		setToolTipText("Collapse All");
+		setText(LABEL);
+		setToolTipText(LABEL);
 		setImageDescriptor(TaskListImages.COLLAPSE_ALL);
-		JavaPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$
 	}
  
 	public void run() { 

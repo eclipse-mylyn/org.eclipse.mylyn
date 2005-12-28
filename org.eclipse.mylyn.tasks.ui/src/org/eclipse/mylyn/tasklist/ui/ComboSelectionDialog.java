@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist.ui;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -20,10 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-
-import org.eclipse.jface.dialogs.Dialog;
-
-import org.eclipse.jdt.internal.corext.Assert;
 
 /**
  * General purpose dialog for selecting an item from a combo box.
