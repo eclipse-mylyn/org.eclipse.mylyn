@@ -15,7 +15,7 @@
          <sequence>
             <element ref="repositoryClient"/>
             <element ref="queryPage"/>
-            <element ref="settingsPage"/>
+            <element ref="settingsPage" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -52,7 +52,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasklist.repositories.ITaskRepository"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasklist.repositories.TaskRepository"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
 
 /**
  * @author Mik Kersten
@@ -28,7 +29,7 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 	}
 
 	public IWizardPage getSettingsPage() {
-		return new BugzillaRepositorySettingsPage();
+		return new RepositorySettingsPage();
 	}
 
 }

@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.tasklist.repositories;
 
-import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * @author Mik Kersten
@@ -20,5 +19,5 @@ public interface ITaskRepositoryClient {
 
 	public String getLabel();
 
-	public IWizardPage getSettingsPage();
+//	public IWizardPage getSettingsPage();
 }

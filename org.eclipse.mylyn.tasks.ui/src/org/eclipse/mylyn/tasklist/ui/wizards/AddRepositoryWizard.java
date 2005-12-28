@@ -13,7 +13,9 @@ package org.eclipse.mylar.tasklist.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -22,32 +24,42 @@ import org.eclipse.ui.IWorkbench;
  */
 public class AddRepositoryWizard extends Wizard implements INewWizard {
 
-	private SelectRepositoryWizardPage repositoryWizardPage;
+	private SelectRepositoryPage selectRepositoryPage = new SelectRepositoryPage(this);
+	
+	private RepositorySettingsPage repositorySettingsPage = new RepositorySettingsPage();
 
 	private ITaskRepositoryClient repositoryClient;
 
 	public AddRepositoryWizard() {
 		super();
-		init();
+		super.setForcePreviousAndNextButtons(true);
 	}
 
 	@Override
 	public boolean performFinish() {
-		
-		return true;
+		if (canFinish()) {
+			TaskRepository repository = new TaskRepository(repositorySettingsPage.getServerUrl());
+			if (repository != null) {
+				repository.setAuthenticationCredentials(repositorySettingsPage.getUserName(), repositorySettingsPage.getPassword());
+				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+				return true;
+			} 
+		} 
+		return false;
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
-	private void init() {
-		repositoryWizardPage = new SelectRepositoryWizardPage(this);
-		super.setForcePreviousAndNextButtons(true);
+	@Override
+	public void addPages() {
+		addPage(selectRepositoryPage);
+		addPage(repositorySettingsPage);
 	}
 
 	@Override
-	public void addPages() {
-		addPage(repositoryWizardPage);
+	public boolean canFinish() {
+		return selectRepositoryPage.isPageComplete() && repositorySettingsPage.isPageComplete();
 	}
 
 	public void setRepositoryClient(ITaskRepositoryClient repository) {

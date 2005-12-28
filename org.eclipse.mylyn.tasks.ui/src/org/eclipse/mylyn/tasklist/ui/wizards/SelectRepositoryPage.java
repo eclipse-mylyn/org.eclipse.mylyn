@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
@@ -29,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Mik Kersten
  */
-public class SelectRepositoryWizardPage extends WizardPage {
+public class SelectRepositoryPage extends WizardPage {
 
 	private static final String DESCRIPTION = "You can connect to an existing accounts using one of the following clients.";
 
@@ -52,7 +51,7 @@ public class SelectRepositoryWizardPage extends WizardPage {
 		}
 	}
 	
-	public SelectRepositoryWizardPage(AddRepositoryWizard wizard) {
+	public SelectRepositoryPage(AddRepositoryWizard wizard) {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
@@ -80,7 +79,7 @@ public class SelectRepositoryWizardPage extends WizardPage {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				if (selection.getFirstElement() instanceof ITaskRepositoryClient) {
 					wizard.setRepositoryClient((ITaskRepositoryClient)selection.getFirstElement());
-					SelectRepositoryWizardPage.this.setPageComplete(true);
+					SelectRepositoryPage.this.setPageComplete(true);
 				}
 			}
 			
@@ -88,14 +87,14 @@ public class SelectRepositoryWizardPage extends WizardPage {
 		setControl(container);
 	}
 
-	@Override
-	public IWizardPage getNextPage() {
-		if (isPageComplete()) {
-			IWizardPage nextPage = wizard.getRepositoryClient().getSettingsPage();
-			nextPage.setWizard(wizard);
-			return nextPage;
-		} else {
-			return super.getNextPage();
-		}
-	}
+//	@Override
+//	public IWizardPage getNextPage() {
+//		if (isPageComplete()) {
+//			IWizardPage nextPage = wizard.getRepositoryClient().getSettingsPage();
+//			nextPage.setWizard(wizard);
+//			return nextPage;
+//		} else {
+//			return super.getNextPage();
+//		}
+//	}
 }

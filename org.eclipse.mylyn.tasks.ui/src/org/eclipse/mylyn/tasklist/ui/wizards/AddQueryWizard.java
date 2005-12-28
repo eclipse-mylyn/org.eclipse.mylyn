@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbench;
  */
 public class AddQueryWizard extends Wizard implements INewWizard {
 
-	private SelectRepositoryWizardPage repositoryWizardPage;
+	private SelectRepositoryPage repositoryWizardPage;
 
 	public AddQueryWizard() {
 		super();
@@ -38,7 +38,7 @@ public class AddQueryWizard extends Wizard implements INewWizard {
 	}
 
 	private void init() {
-//		repositoryWizardPage = new SelectRepositoryWizardPage();
+//		repositoryWizardPage = new SelectRepositoryPage();
 		super.setForcePreviousAndNextButtons(true);
 	}
 
