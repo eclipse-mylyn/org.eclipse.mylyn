@@ -16,3 +16,4 @@ Export-Package: org.eclipse.mylar.core,
  org.eclipse.mylar.core.internal.dt,
  org.eclipse.mylar.core.search,
  org.eclipse.mylar.core.util
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -45,3 +45,4 @@ Export-Package: org.eclipse.mylar.java,
  org.eclipse.mylar.java.ui.views,
  org.eclipse.mylar.java.ui.wizards
 Bundle-ClassPath: mylar-java.jar
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

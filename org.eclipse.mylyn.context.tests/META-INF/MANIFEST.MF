@@ -19,3 +19,4 @@ Bundle-ClassPath: mylar-core-tests.jar
 Export-Package: org.eclipse.mylar.core.tests,
  org.eclipse.mylar.core.tests.support,
  org.eclipse.mylar.core.tests.support.search
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

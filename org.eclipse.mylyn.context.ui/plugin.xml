@@ -2,15 +2,8 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="context" name="context" schema="schema/context.exsd"/>
+    <extension-point id="context" name="context" schema="schema/context.exsd"/>
  
- <!--
-   <extension
-         name="Mylar UI startup"
-         point="org.eclipse.ui.startup">
-   </extension>
--->
-
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
         id="org.eclipse.mylar.ui.interest"

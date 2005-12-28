@@ -20,3 +20,4 @@ Export-Package: org.eclipse.mylar.ui,
  org.eclipse.mylar.ui.internal.views,
  org.eclipse.mylar.ui.preferences,
  org.eclipse.mylar.ui.views
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
