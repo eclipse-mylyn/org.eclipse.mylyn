@@ -34,3 +34,4 @@ Export-Package: org.apache.commons.httpclient,
  org.eclipse.mylar.monitor.ui,
  org.eclipse.mylar.monitor.ui.preferences,
  org.eclipse.mylar.monitor.ui.wizards
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
