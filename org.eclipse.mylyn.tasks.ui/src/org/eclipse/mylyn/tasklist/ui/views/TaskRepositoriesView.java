@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.ui.AddTaskRepositoryAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -39,7 +40,8 @@ public class TaskRepositoriesView extends ViewPart {
 		}
 
 		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
+			return MylarTaskListPlugin.getRepositoryManager().getRepositories().toArray();
+//			return new String[] { "One", "Two", "Three" };
 		}
 	}
 
@@ -128,10 +130,6 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		});
 	}
-
-//	private void showMessage(String message) {
-//		MessageDialog.openInformation(viewer.getControl().getShell(), "Sample View", message);
-//	}
 
 	/**
 	 * Passing the focus request to the viewer's control.

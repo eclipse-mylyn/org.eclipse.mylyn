@@ -79,4 +79,12 @@ public class TaskRepositoryManager {
 		
 		MylarTaskListPlugin.getPrefs().setValue(PREF_REPOSITORIES, store);
 	}
+
+	public List<TaskRepository> getRepositories() {
+		return repositories;
+	}
+
+	public void setRepositories(List<TaskRepository> repositories) {
+		this.repositories = repositories;
+	}
 }

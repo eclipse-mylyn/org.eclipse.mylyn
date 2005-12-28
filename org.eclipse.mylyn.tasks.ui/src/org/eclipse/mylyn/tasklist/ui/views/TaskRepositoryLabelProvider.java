@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.ui.views;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -23,8 +23,8 @@ import org.eclipse.swt.graphics.Image;
 public class TaskRepositoryLabelProvider extends LabelProvider implements ITableLabelProvider {
 	
 	public String getColumnText(Object object, int index) {
-		if (object instanceof ITaskRepositoryClient) {
-			return ((ITaskRepositoryClient)object).getLabel();
+		if (object instanceof TaskRepository) {
+			return ((TaskRepository)object).getServerUrl().toExternalForm();
 		} else {
 			return getText(object);
 		}
