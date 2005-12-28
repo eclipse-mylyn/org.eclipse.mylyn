@@ -101,8 +101,11 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 	public Color getForeground(Object object, int columnIndex) {
     	if (object instanceof ITaskCategory) {
     		for (ITask child : ((ITaskCategory)object).getChildren()) {
-    			if (child.isActive())
+    			if (child.isActive()) {
     				return TaskListImages.COLOR_TASK_ACTIVE;
+    			} else if (child.isPastReminder()) {
+    				return TaskListImages.COLOR_TASK_OVERDUE;
+    			}
     		}
     	} else if (object instanceof IQuery) {
     		for (ITaskListElement child : ((IQuery)object).getHits()) {
