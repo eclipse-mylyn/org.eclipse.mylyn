@@ -22,41 +22,45 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
 /**
- * This abstract class contains some common code used by
- * NextTaskDropDownAction and PreviousTaskDropDownAction
+ * This abstract class contains some common code used by NextTaskDropDownAction
+ * and PreviousTaskDropDownAction
  * 
  * @author Wesley Coelho
+ * @author Mik Kersten
  */
-public abstract class DropDownTaskNavigateAction extends Action implements IMenuCreator{
+public abstract class TaskNavigateDropDownAction extends Action implements IMenuCreator {
 	protected final TaskListView view;
+
 	protected TaskActivationHistory taskHistory;
+
 	protected Menu dropDownMenu = null;
+
 	protected TasklistLabelProvider labelProvider = new TasklistLabelProvider();
 
 	/** Maximum number of items to appear in the drop-down menu */
-	protected final static int MAX_ITEMS_TO_DISPLAY = 10;
-		
-	public DropDownTaskNavigateAction(TaskListView view, TaskActivationHistory history){
-    	super();
+	protected final static int MAX_ITEMS_TO_DISPLAY = 12;
+
+	public TaskNavigateDropDownAction(TaskListView view, TaskActivationHistory history) {
+		super();
 		this.view = view;
-    	taskHistory = history;
-        setMenuCreator(this);
+		taskHistory = history;
+		setMenuCreator(this);
 	}
-	
+
 	/**
-	 * Action for navigating to a specified task.
-	 * This class should be protected but has been
-	 * made public for testing only
+	 * Action for navigating to a specified task. This class should be protected
+	 * but has been made public for testing only
 	 */
 	public class TaskNavigateAction extends Action {
-		
+
 		private ITask targetTask;
+
 		private static final int MAX_LABEL_LENGTH = 40;
-		
-		public TaskNavigateAction(ITask task){
+
+		public TaskNavigateAction(ITask task) {
 			targetTask = task;
 			String taskDescription = task.getDescription(true);
-			if(taskDescription.length() > MAX_LABEL_LENGTH){
+			if (taskDescription.length() > MAX_LABEL_LENGTH) {
 				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "...";
 			}
 			setText(taskDescription);
@@ -65,23 +69,23 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 			Image image = labelProvider.getColumnImage(task, 1);
 			setImageDescriptor(ImageDescriptor.createFromImage(image));
 		}
-		
-		public void run(){
+
+		public void run() {
 			new TaskActivateAction().run(targetTask);
-			taskHistory.navigatedToTask(targetTask); //Notify the task history of arbitrary history navigation
+			taskHistory.navigatedToTask(targetTask); 
 			setButtonStatus();
 			view.getViewer().refresh();
 		}
 	}
-	
-	public void dispose() {			
+
+	public void dispose() {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
 			dropDownMenu = null;
 		}
 	}
 
-	public Menu getMenu(Control parent) {			
+	public Menu getMenu(Control parent) {
 		if (dropDownMenu != null) {
 			dropDownMenu.dispose();
 		}
@@ -99,11 +103,11 @@ public abstract class DropDownTaskNavigateAction extends Action implements IMenu
 		return dropDownMenu;
 	}
 
-	protected void setButtonStatus(){
+	protected void setButtonStatus() {
 		view.getPreviousTaskAction().setEnabled(taskHistory.hasPrevious());
-		view.getNextTaskAction().setEnabled(taskHistory.hasNext());		
+		view.getNextTaskAction().setEnabled(taskHistory.hasNext());
 	}
-	
+
 	protected abstract void addActionsToMenu();
-	
+
 }

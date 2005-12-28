@@ -1264,18 +1264,12 @@ public class TaskListView extends ViewPart {
 		} else {
 			goUpAction.setEnabled(false);
 		}
-		//		if(drillDownAdapter.canGoInto()){
-		//			canEnableGoInto = true;
-		//		} else {
-		//			canEnableGoInto  = false;
-		//		}
 	}
 
 	/**
 	 * HACK: This is used for the copy action 
-	 * @return
 	 */
-	public Composite getFakeComposite() {
+	public Composite getDummyComposite() {
 		return tree;
 	}
 

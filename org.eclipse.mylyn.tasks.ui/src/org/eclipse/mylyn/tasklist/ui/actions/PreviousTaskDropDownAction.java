@@ -22,7 +22,7 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 /**
  * @author Wesley Coelho
  */
-public class PreviousTaskDropDownAction extends DropDownTaskNavigateAction {
+public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.navigate.previous";
 
 	public PreviousTaskDropDownAction(TaskListView view, TaskActivationHistory history){

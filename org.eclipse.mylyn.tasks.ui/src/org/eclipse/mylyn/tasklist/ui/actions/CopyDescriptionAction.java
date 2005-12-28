@@ -45,7 +45,7 @@ public class CopyDescriptionAction extends Action {
 	    	String description = DESCRIPTION_PREFIX + element.getDescription(true);
 	    	
 	    	// HACK: this should be done using proper copying
-	    	StyledText styledText = new StyledText(view.getFakeComposite(), SWT.NULL);
+	    	StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
 	    	styledText.setText(description);
 	    	styledText.selectAll();
 	    	styledText.copy();

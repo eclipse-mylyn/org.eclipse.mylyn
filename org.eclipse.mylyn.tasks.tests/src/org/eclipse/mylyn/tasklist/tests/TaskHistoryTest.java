@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasklist.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.tasklist.ui.actions.DropDownTaskNavigateAction.TaskNavigateAction;
+import org.eclipse.mylar.tasklist.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.PartInitException;
