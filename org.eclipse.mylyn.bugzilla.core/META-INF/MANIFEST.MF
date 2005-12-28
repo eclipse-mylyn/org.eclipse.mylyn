@@ -22,3 +22,4 @@ Export-Package: org.eclipse.mylar.bugzilla.core,
  org.eclipse.mylar.bugzilla.core.internal,
  org.eclipse.mylar.bugzilla.core.offline,
  org.eclipse.mylar.bugzilla.core.search
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

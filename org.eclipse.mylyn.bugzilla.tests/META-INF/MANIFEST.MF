@@ -18,3 +18,4 @@ Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar
 Export-Package: org.eclipse.mylar.bugzilla.tests
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
