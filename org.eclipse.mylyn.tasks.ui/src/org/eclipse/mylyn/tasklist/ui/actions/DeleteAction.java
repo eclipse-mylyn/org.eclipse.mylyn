@@ -41,7 +41,6 @@ public class DeleteAction extends Action {
 		setText("Delete");
 		setId(ID); 
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
-//		setImageDescriptor(TaskListImages.REMOVE);
 	}
 
 	@Override
