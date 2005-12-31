@@ -6,4 +6,3 @@ Bundle-Version: 0.4.6.1
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Bundle-ClassPath: mylar-doc.jar
