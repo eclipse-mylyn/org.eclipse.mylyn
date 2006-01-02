@@ -15,7 +15,6 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.internal.views.Highlighter;
 import org.eclipse.swt.graphics.Color;
 
  /**

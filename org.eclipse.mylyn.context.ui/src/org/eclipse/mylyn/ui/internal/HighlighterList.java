@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.ui.internal.views;
+package org.eclipse.mylar.ui.internal;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,8 +17,6 @@ import java.util.List;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.internal.ColorCoordinatesChange;
-import org.eclipse.mylar.ui.internal.ColorMap;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 

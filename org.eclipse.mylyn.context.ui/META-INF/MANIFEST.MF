@@ -17,7 +17,6 @@ Bundle-ClassPath: mylar-ui.jar
 Export-Package: org.eclipse.mylar.ui,
  org.eclipse.mylar.ui.actions,
  org.eclipse.mylar.ui.internal,
- org.eclipse.mylar.ui.internal.views,
  org.eclipse.mylar.ui.preferences,
  org.eclipse.mylar.ui.views
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui.internal.views;
+package org.eclipse.mylar.ui.internal;
 
 import java.util.*;
 

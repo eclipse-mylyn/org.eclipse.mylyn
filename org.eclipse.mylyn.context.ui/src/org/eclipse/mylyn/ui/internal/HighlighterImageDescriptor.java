@@ -11,7 +11,7 @@
 /*
  * Created on Dec 29, 2004
   */
-package org.eclipse.mylar.ui.internal.views;
+package org.eclipse.mylar.ui.internal;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.*;
