@@ -15,12 +15,15 @@ package org.eclipse.mylar.ide.ui;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.util.ErrorLogger;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
+import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
@@ -61,6 +64,19 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 
 	public void contextActivated(IMylarContext taskscape) {
 		refresh(null);
+    	try {
+	    	if (MylarPlugin.getContextManager().hasActiveContext()
+	    		&& ApplyMylarToNavigatorAction.getDefault() != null
+	        	&& ApplyMylarToNavigatorAction.getDefault().isChecked()) {
+	    		
+				TreeViewer viewer = getResourceNavigator().getTreeViewer();
+				if (viewer != null) { 
+					viewer.expandAll();
+				}
+	    	}	
+    	} catch (Throwable t) {
+    		ErrorLogger.log(t, "Could not update package explorer");
+    	}
 	}
 
 	public void contextDeactivated(IMylarContext taskscape) {
