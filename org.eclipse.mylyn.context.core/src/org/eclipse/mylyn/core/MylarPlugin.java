@@ -107,7 +107,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		}
 
 		public boolean canFilter(Object element) {
-			return false;
+			return true;
 		}
 
 		public boolean isDocument(String handle) {
@@ -261,8 +261,10 @@ public class MylarPlugin extends AbstractUIPlugin {
 			CoreExtensionPointReader.initExtensions();
 
 		IMylarStructureBridge bridge = null;
-		if (bridges.size() == 0)
-			return null;
+//		if (bridges.size() == 0) {
+//			ErrorLogger.log("no bridges installed", this);
+//			return DEFAULT_BRIDGE;
+//		}
 		for (IMylarStructureBridge structureBridge : bridges.values()) {
 			if (structureBridge.acceptsObject(object)) {
 				bridge = structureBridge;
@@ -378,12 +380,9 @@ public class MylarPlugin extends AbstractUIPlugin {
 
 		private static boolean extensionsRead = false;
 
-		private static CoreExtensionPointReader thisReader = new CoreExtensionPointReader();
-
-		// read the extensions and load the required plugins
 		public static void initExtensions() {
-			// code from "contributing to eclipse" with modifications for
-			// deprecated code
+			// based on Contributing to Eclipse
+//			ErrorLogger.log("reading extensions", null);
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
 				IExtensionPoint extensionPoint = registry.getExtensionPoint(CoreExtensionPointReader.EXTENSION_ID_CONTEXT);
@@ -403,6 +402,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 		private static void readBridge(IConfigurationElement element) {
 			try {
 				Object object = element.createExecutableExtension(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_CLASS);
+//				ErrorLogger.log("> reading bridge: " + object.getClass(), null);				
 				if (object instanceof IMylarStructureBridge) {
 					IMylarStructureBridge bridge = (IMylarStructureBridge) object;
 					MylarPlugin.getDefault().internalAddBridge(bridge);
@@ -413,7 +413,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 							// ((IMylarStructureBridge)parent).addChildBridge(((IMylarStructureBridge)bridge));
 						} else {
 							ErrorLogger.log("Could not load parent bridge: " + parent.getClass().getCanonicalName() + " must implement "
-									+ IMylarStructureBridge.class.getCanonicalName(), thisReader);
+									+ IMylarStructureBridge.class.getCanonicalName(), null);
 						}
 					}
 					String iconPath = element.getAttribute(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
@@ -429,7 +429,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 					}
 				} else {
 					ErrorLogger.log("Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
-							+ IMylarStructureBridge.class.getCanonicalName(), thisReader);
+							+ IMylarStructureBridge.class.getCanonicalName(), null);
 				}
 			} catch (CoreException e) {
 				ErrorLogger.log(e, "Could not load bridge extension");
