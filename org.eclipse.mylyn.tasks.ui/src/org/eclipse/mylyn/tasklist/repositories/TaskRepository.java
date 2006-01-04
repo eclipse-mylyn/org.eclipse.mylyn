@@ -97,4 +97,8 @@ public class TaskRepository {
 			return super.hashCode();
 		}
 	}
+	
+	public String toString() {
+		return serverUrl.toExternalForm();
+	}
 }

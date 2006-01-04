@@ -28,8 +28,6 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class AddTaskRepositoryAction extends Action {
     
-//	private static final String WIZARD_LABEL = "Add or modify task query";
-
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
 
 	public AddTaskRepositoryAction() {
@@ -39,8 +37,7 @@ public class AddTaskRepositoryAction extends Action {
 	}
 	
 	public void init(IViewPart view) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
 	
 	public void run() {

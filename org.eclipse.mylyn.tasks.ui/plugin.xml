@@ -26,7 +26,7 @@
             class="org.eclipse.mylar.tasklist.internal.planner.ui.TaskPlannerWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
-            name="Mylar Task Planner (experimental)">
+            name="Mylar Task Planner (Experimental)">
       </wizard>
 	</extension>
 
@@ -55,7 +55,7 @@
       <view
             allowMultiple="false"
             category="org.eclipse.mylar"
-            class="org.eclipse.mylar.tasklist.ui.views.TaskRepositoriesView"
+            class="org.eclipse.mylar.tasklist.repositories.ui.TaskRepositoriesView"
             icon="icons/eview16/task-repositories.gif"
             id="org.eclipse.mylar.tasklist.repositories"
             name="Task Repositories (Experimental)">

@@ -32,7 +32,7 @@ public class RepositorySettingsPage extends WizardPage {
 
 	private final String TITLE = "Enter repository settings";
 	
-	private final String LABEL_WARNING = "Note: do not include index.cgi in URL (e.g. https://bugs.eclipse.org/bugs)";
+	private final String LABEL_WARNING = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
 	private static final String LABEL_SERVER = "Server: ";
 	

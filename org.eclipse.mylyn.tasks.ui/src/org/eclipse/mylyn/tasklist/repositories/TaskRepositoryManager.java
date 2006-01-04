@@ -14,7 +14,9 @@ package org.eclipse.mylar.tasklist.repositories;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.mylar.core.util.ErrorLogger;
@@ -29,7 +31,9 @@ public class TaskRepositoryManager {
 	
 	private List<ITaskRepositoryClient> repositoryClients = new ArrayList<ITaskRepositoryClient>();
 
-	private List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+	private Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+	
+	private Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
 	
 	private static final String STORE_DELIM = ", ";
 	
@@ -53,7 +57,20 @@ public class TaskRepositoryManager {
 		saveRepositories();
 	}
 
-	public List<TaskRepository> readRepositories() {
+	public void removeRepository(TaskRepository repository) {
+		repositories.remove(repository);
+		saveRepositories();
+	}
+	
+	public void addListener(ITaskRepositoryListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void removeListener(ITaskRepositoryListener listener) {
+		listeners.remove(listener);
+	}
+	
+	public Set<TaskRepository> readRepositories() {
 		repositories.clear();
 		String read = MylarTaskListPlugin.getPrefs().getString(PREF_REPOSITORIES);
 		if (read != null) {
@@ -68,6 +85,9 @@ public class TaskRepositoryManager {
 				}
 			}
 		}
+		for (ITaskRepositoryListener listener : listeners) {
+			listener.repositorySetUpdated();
+		}
 		return repositories;
 	}
 	
@@ -78,13 +98,18 @@ public class TaskRepositoryManager {
 		}
 		
 		MylarTaskListPlugin.getPrefs().setValue(PREF_REPOSITORIES, store);
+		
+		for (ITaskRepositoryListener listener : listeners) {
+			listener.repositorySetUpdated();
+		}
 	}
 
-	public List<TaskRepository> getRepositories() {
+	public Set<TaskRepository> getRepositories() {
 		return repositories;
 	}
 
-	public void setRepositories(List<TaskRepository> repositories) {
-		this.repositories = repositories;
+	public void clearRepositories() {
+		repositories.clear();
+		saveRepositories();
 	}
 }
