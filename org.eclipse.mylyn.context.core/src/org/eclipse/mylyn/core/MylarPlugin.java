@@ -283,6 +283,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 
 	private void internalAddBridge(IMylarStructureBridge bridge) {
+//		ErrorLogger.log("> adding: " + bridge.getClass(), this);
 		if (bridge.getRelationshipProviders() != null) {
 			for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
 				getContextManager().addListener(provider);
