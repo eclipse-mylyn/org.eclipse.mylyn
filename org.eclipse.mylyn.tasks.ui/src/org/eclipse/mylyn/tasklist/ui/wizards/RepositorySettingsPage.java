@@ -17,6 +17,7 @@ import java.net.URL;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -50,6 +51,8 @@ public class RepositorySettingsPage extends WizardPage {
 
 	private RepositoryStringFieldEditor passwordEditor;
 	
+	private TaskRepository repository;
+	
 	public RepositorySettingsPage() {
 		super(LABEL);
 		super.setTitle(TITLE);
@@ -60,7 +63,7 @@ public class RepositorySettingsPage extends WizardPage {
 		Composite container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
-		
+
 		serverUrlEditor = new StringFieldEditor("", LABEL_SERVER,
 				StringFieldEditor.UNLIMITED, container) {
 
@@ -75,18 +78,17 @@ public class RepositorySettingsPage extends WizardPage {
 				getWizard().getContainer().updateButtons();
 			}
 		};
-
-		// set the error message for if the server name check fails
 		serverUrlEditor.setErrorMessage("Server path must be a valid http(s):// url");
-
+		
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
 		passwordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, container);
 		passwordEditor.getTextControl().setEchoChar('*');
 		
-		// put the password and user name values into the field editors
-//		getCachedData();
-//		userNameEditor.setStringValue(user);
-//		passwordEditor.setStringValue(password);
+		if (repository != null) {
+			serverUrlEditor.setStringValue(repository.getServerUrl().toExternalForm());
+			userNameEditor.setStringValue(repository.getUserName());
+			passwordEditor.setStringValue(repository.getPassword());
+		}
 		
 		setControl(container);
 	}
@@ -151,5 +153,9 @@ public class RepositorySettingsPage extends WizardPage {
 	@Override
 	public boolean isPageComplete() {
 		return isValidURl(serverUrlEditor.getStringValue());
-	}	
+	}
+
+	public void setRepository(TaskRepository repository) {
+		this.repository = repository;
+	}
 }

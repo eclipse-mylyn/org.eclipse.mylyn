@@ -65,7 +65,7 @@ public class DeleteAction extends Action {
 
 				String message = genDeleteConfirmationMessage(task);
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-						.getShell(), "Confirm delete", message);
+						.getShell(), "Confirm Delete", message);
 				if (!deleteConfirmed) {
 					return;
 				}
@@ -86,7 +86,7 @@ public class DeleteAction extends Action {
 				view.getViewer().refresh();
 			} else if (selectedObject instanceof TaskCategory) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-						.getShell(), "Confirm delete", "Delete the selected category and all contained tasks?");
+						.getShell(), "Confirm Delete", "Delete the selected category and all contained tasks?");
 				if (!deleteConfirmed)
 					return;
 

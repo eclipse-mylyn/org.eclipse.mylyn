@@ -36,6 +36,8 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private Action deleteRepositoryAction = new DeleteTaskRepositoryAction(this);
 
+	private Action repositoryPropertiesAction = new TaskRepositoryPropertiesAction(this);
+	
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
 		public void repositorySetUpdated() {
@@ -106,6 +108,8 @@ public class TaskRepositoriesView extends ViewPart {
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(addRepositoryAction);
 		manager.add(deleteRepositoryAction);
+		manager.add(new Separator());
+		manager.add(repositoryPropertiesAction);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 

@@ -23,7 +23,7 @@
    
    <extension point="org.eclipse.ui.preferencePages">
    	  <page
-   	  		name="Bugzilla"
+   	  		name="Bugzilla Client"
    	  		class="org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage"
    	  		id="org.eclipse.mylar.bugzilla.bugzillaPreferences"
    	  		category="org.eclipse.mylar.ui.preferences"/>

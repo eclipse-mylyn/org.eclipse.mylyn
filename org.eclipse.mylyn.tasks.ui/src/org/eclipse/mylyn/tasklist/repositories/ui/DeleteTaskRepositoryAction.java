@@ -47,13 +47,13 @@ public class DeleteTaskRepositoryAction extends Action {
 	public void run() {
 		try {
 			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-					.getShell(), "Confirm delete", "Delete the selected task repositories?");
-			if (!deleteConfirmed)
-				return;
-			IStructuredSelection selection = (IStructuredSelection)repositoriesView.getViewer().getSelection();
-			for (Object selectedObject: selection.toList()) {
-				if (selectedObject instanceof TaskRepository) {
-					MylarTaskListPlugin.getRepositoryManager().removeRepository((TaskRepository)selectedObject);
+					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
+			if (deleteConfirmed) {
+				IStructuredSelection selection = (IStructuredSelection)repositoriesView.getViewer().getSelection();
+				for (Object selectedObject: selection.toList()) {
+					if (selectedObject instanceof TaskRepository) {
+						MylarTaskListPlugin.getRepositoryManager().removeRepository((TaskRepository)selectedObject);
+					}
 				}
 			}
 		} catch (Exception e) {
