@@ -41,7 +41,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 
 	public void dragSetData(DragSourceEvent event) {
 		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
-		String data = null;
+		String data = "";
 		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 			if (selectedObject instanceof ITaskListElement) {
 				ITaskListElement element = (ITaskListElement) selectedObject;

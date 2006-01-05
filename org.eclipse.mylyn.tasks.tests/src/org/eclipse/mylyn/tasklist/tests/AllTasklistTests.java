@@ -27,6 +27,7 @@ public class AllTasklistTests {
 		suite.addTestSuite(TaskListStandaloneTest.class);
         suite.addTestSuite(TaskListManagerTest.class);
         suite.addTestSuite(TaskListUiTest.class);
+        suite.addTestSuite(TaskListDnDTest.class);
         suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
