@@ -15,11 +15,14 @@ import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 
+/**
+ * TODO: usage should be refactored to TaskListManager
+ * 
+ * @author Mik Kersten
+ */
 public interface ITaskHandler {
 
 	public abstract boolean deleteElement(ITaskListElement element);
-
-	public abstract void taskCompleted(ITask task);
 
 	public abstract void itemOpened(ITaskListElement element);
 

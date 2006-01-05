@@ -234,4 +234,11 @@ public class TaskListManager {
 		return timerMap;
 	}
 
+	public void markComplete(ITask task, boolean complete) {
+		task.setCompleted(complete);
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+			listener.taskChanged(task);
+		}
+	}
+
 }

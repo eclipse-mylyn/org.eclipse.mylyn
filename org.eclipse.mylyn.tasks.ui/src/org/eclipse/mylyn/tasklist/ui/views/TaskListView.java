@@ -233,22 +233,26 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void taskChanged(ITask task) {
-			// ignore
+			refresh(task);
 		}
 
 		public void tasklistRead() {
-			refresh();
+			refresh(null);
 		}
 
 		public void tasklistModified() {
 			if (!getViewer().getControl().isDisposed()) getViewer().refresh();
 		}
 		
-		private void refresh() {
+		private void refresh(ITaskListElement element) {
 			if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-				getViewer().getControl().setRedraw(false);
-				getViewer().refresh();
-				getViewer().getControl().setRedraw(true);
+				if (element == null) {
+					getViewer().getControl().setRedraw(false);
+					getViewer().refresh();
+					getViewer().getControl().setRedraw(true);
+				} else {
+					getViewer().refresh(element, true);
+				}
 			}
 		}
 		

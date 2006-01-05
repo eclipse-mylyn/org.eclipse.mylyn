@@ -15,12 +15,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
 public class MarkTaskCompleteAction extends Action {
 
@@ -39,15 +38,9 @@ public class MarkTaskCompleteAction extends Action {
 	@Override
 	public void run() {
 		for (Object selectedObject : ((IStructuredSelection)this.view.getViewer().getSelection()).toList()) {
-			if (selectedObject instanceof ITask
-					&& MylarTaskListPlugin.getDefault().getHandlerForElement((ITask) selectedObject) != null) {
-				MylarTaskListPlugin.getDefault().getHandlerForElement((ITask) selectedObject).taskCompleted(
-						(ITask) selectedObject);
-			} else if (selectedObject instanceof Task) {
-				((Task) selectedObject).setCompleted(true);
-	
+			if (selectedObject instanceof ITask) {
+				MylarTaskListPlugin.getTaskListManager().markComplete(((ITask)selectedObject), true);
 			}
 		}
-//		this.view.getViewer().refresh();
 	}
 }

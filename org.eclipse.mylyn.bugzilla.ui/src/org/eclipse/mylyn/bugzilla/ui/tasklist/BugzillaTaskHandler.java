@@ -95,10 +95,6 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		return true;
 	}
 
-	public void taskCompleted(ITask task) {
-		// TODO can't do this
-	}
-
 	public void itemOpened(ITaskListElement element) {
 
 		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.WORK_OFFLINE);
