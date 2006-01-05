@@ -19,7 +19,6 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -56,6 +55,8 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 
 /**
  * Bugzilla search page
+ * 
+ * @author Mik Kersten (hardening of prototype)
  */
 public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
@@ -72,6 +73,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	private boolean firstTime = true;
 
 	private IDialogSettings fDialogSettings;
+
+	protected Text maxHitsText;
 
 	private static final String[] patternOperationText = { "all words", "any word", "regexp" };
 
@@ -155,14 +158,14 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		createTextSearchComposite(control);
 		createComment(control);
-		createProductAttributes(control);
-		createLists(control);
-		createLastDays(control);
+		createOptionsGroup(control);
+
 		createEmail(control);
+		createLastDays(control);
 		// createSaveQuery(control);
-		createMaxHits(control);
+		// createMaxHits(control);
 		input = new SavedQueryFile(BugzillaPlugin.getDefault().getStateLocation().toString(), "/queries");
-		createUpdate(control);
+		// createUpdate(control);
 
 		setControl(control);
 		WorkbenchHelpSystem.getInstance().setHelp(control, IBugzillaConstants.SEARCH_PAGE_CONTEXT);
@@ -173,7 +176,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		Label label;
 
 		Composite group = new Composite(control, SWT.NONE);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(3, false);
 		group.setLayout(layout);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -183,9 +186,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		// Info text
 		label = new Label(group, SWT.LEFT);
-		label.setText("Bug id or summary search terms");
+		label.setText("Summary or ID contains: ");
 		gd = new GridData(GridData.BEGINNING);
-		gd.horizontalSpan = 2;
+		gd.horizontalSpan = 1;
 		label.setLayoutData(gd);
 
 		// Pattern combo
@@ -232,11 +235,6 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		gd = new GridData(GridData.BEGINNING);
 		label.setLayoutData(gd);
 
-		commentOperation = new Combo(group, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
-		commentOperation.setItems(patternOperationText);
-		commentOperation.setText(patternOperationText[0]);
-		commentOperation.select(0);
-
 		// Comment pattern combo
 		commentPattern = new Combo(group, SWT.SINGLE | SWT.BORDER);
 		commentPattern.addModifyListener(new ModifyListener() {
@@ -254,6 +252,27 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		commentPattern.setLayoutData(gd);
 
+		commentOperation = new Combo(group, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		commentOperation.setItems(patternOperationText);
+		commentOperation.setText(patternOperationText[0]);
+		commentOperation.select(0);
+
+		return group;
+	}
+
+	protected Control createOptionsGroup(Composite control) {
+		Group group = new Group(control, SWT.NONE);
+//		group.setText("Bug Attributes");
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		group.setLayout(layout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 5;
+		group.setLayoutData(gd);
+
+		createProductAttributes(group);
+		createLists(group);
+		createUpdate(group);
 		return group;
 	}
 
@@ -261,11 +280,12 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	 * Creates the area for selection on product/component/version.
 	 */
 	protected Control createProductAttributes(Composite control) {
+
 		GridData gd;
 		GridLayout layout;
 
 		// Search expression
-		Group group = new Group(control, SWT.NONE);
+		Composite group = new Composite(control, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 4;
 		group.setLayout(layout);
@@ -318,7 +338,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridLayout layout;
 
 		// Search expression
-		Group group = new Group(control, SWT.NONE);
+		Composite group = new Composite(control, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 6;
 		group.setLayout(layout);
@@ -386,7 +406,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridData gd;
 
 		Group group = new Group(control, SWT.NONE);
-		layout = new GridLayout(3, false);
+		layout = new GridLayout(6, false);
 		group.setLayout(layout);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
@@ -420,31 +440,14 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 			}
 		});
 		label = new Label(group, SWT.LEFT);
-		label.setText(" Days.");
+		label.setText(" days.");
 
-		return group;
-	}
-
-	protected Text maxHitsText;
-
-	protected Control createMaxHits(Composite control) {
-		GridLayout layout;
-		GridData gd;
-
-		Group group = new Group(control, SWT.NONE);
-		layout = new GridLayout(3, false);
-		group.setLayout(layout);
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		group.setLayoutData(gd);
-
-		Label label = new Label(group, SWT.LEFT);
-		label.setText("Show a maximum of ");
+		label = new Label(group, SWT.LEFT);
+		label.setText("  Show a maximum of ");
 
 		// operation combo
 		maxHitsText = new Text(group, SWT.BORDER);
-		maxHitsText.setTextLimit(5);
+		maxHitsText.setTextLimit(6);
 		maxHitsText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String maxHitss = maxHitsText.getText();
@@ -469,16 +472,70 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 			}
 		});
 		gd = new GridData();
-		gd.widthHint = 20;
+		gd.widthHint = 30;
 		maxHitsText.setLayoutData(gd);
 		label = new Label(group, SWT.LEFT);
-		label.setText(" Hits. (-1 means all hits are returned)");
+		label.setText(" hits.");
 
 		maxHits = "100";
 		maxHitsText.setText(maxHits);
 
 		return group;
 	}
+
+	// protected Control createMaxHits(Composite control) {
+	// GridLayout layout;
+	// GridData gd;
+	//
+	// Group group = new Group(control, SWT.NONE);
+	// layout = new GridLayout(3, false);
+	// group.setLayout(layout);
+	// group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	// gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL |
+	// GridData.GRAB_HORIZONTAL);
+	// gd.horizontalSpan = 2;
+	// group.setLayoutData(gd);
+	//
+	// Label label = new Label(group, SWT.LEFT);
+	// label.setText("Show a maximum of ");
+	//
+	// // operation combo
+	// maxHitsText = new Text(group, SWT.BORDER);
+	// maxHitsText.setTextLimit(5);
+	// maxHitsText.addModifyListener(new ModifyListener() {
+	// public void modifyText(ModifyEvent e) {
+	// String maxHitss = maxHitsText.getText();
+	// if (maxHitss.length() == 0)
+	// return;
+	// for (int i = maxHitss.length() - 1; i >= 0; i--) {
+	// try {
+	// if (maxHitss.equals("") || Integer.parseInt(maxHitss) > -1) {
+	// if (i == maxHitss.length() - 1) {
+	// maxHits = maxHitss;
+	// return;
+	// } else {
+	// break;
+	// }
+	// }
+	// } catch (NumberFormatException ex) {
+	// maxHitss = maxHitss.substring(0, i);
+	// }
+	// }
+	//
+	// BugzillaSearchPage.this.maxHits = maxHitss;
+	// }
+	// });
+	// gd = new GridData();
+	// gd.widthHint = 20;
+	// maxHitsText.setLayoutData(gd);
+	// label = new Label(group, SWT.LEFT);
+	// label.setText(" Hits. (-1 means all hits are returned)");
+	//
+	// maxHits = "100";
+	// maxHitsText.setText(maxHits);
+	//
+	// return group;
+	// }
 
 	protected String maxHits;
 
@@ -493,36 +550,15 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridData gd;
 
 		Group group = new Group(control, SWT.NONE);
-		layout = new GridLayout(3, false);
+		layout = new GridLayout(7, false);
 		group.setLayout(layout);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);
 
-		Composite buttons = new Composite(group, SWT.NONE);
-		layout = new GridLayout(4, false);
-		buttons.setLayout(layout);
-		buttons.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		gd = new GridData(GridData.BEGINNING);
-		gd.horizontalSpan = 3;
-		buttons.setLayoutData(gd);
-
-		emailButton = new Button[emailText.length];
-		for (int i = 0; i < emailButton.length; i++) {
-			Button button = new Button(buttons, SWT.CHECK);
-			button.setText(emailText[i]);
-			emailButton[i] = button;
-		}
-
 		Label label = new Label(group, SWT.LEFT);
-		label.setText("Email contains: ");
-
-		// operation combo
-		emailOperation = new Combo(group, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
-		emailOperation.setItems(emailOperationText);
-		emailOperation.setText(emailOperationText[0]);
-		emailOperation.select(0);
+		label.setText("Email: ");
 
 		// pattern combo
 		emailPattern = new Combo(group, SWT.SINGLE | SWT.BORDER);
@@ -540,6 +576,27 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		});
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		emailPattern.setLayoutData(gd);
+
+		// operation combo
+		emailOperation = new Combo(group, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		emailOperation.setItems(emailOperationText);
+		emailOperation.setText(emailOperationText[0]);
+		emailOperation.select(0);
+
+		// Composite buttons = new Composite(group, SWT.NONE);
+		// layout = new GridLayout(4, false);
+		// buttons.setLayout(layout);
+		// buttons.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		// gd = new GridData(GridData.BEGINNING);
+		// gd.horizontalSpan = 3;
+		// buttons.setLayoutData(gd);
+
+		emailButton = new Button[emailText.length];
+		for (int i = 0; i < emailButton.length; i++) {
+			Button button = new Button(group, SWT.CHECK);
+			button.setText(emailText[i]);
+			emailButton[i] = button;
+		}
 
 		return group;
 	}
@@ -560,52 +617,57 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);
 
-		loadButton = new Button(group, SWT.PUSH | SWT.LEFT);
-		loadButton.setText("Saved Queries...");
-		final BugzillaSearchPage bsp = this;
-		loadButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				GetQueryDialog qd = new GetQueryDialog(getShell(), "Saved Queries", input);
-				if (qd.open() == InputDialog.OK) {
-					selIndex = qd.getSelected();
-					if (selIndex != -1) {
-						rememberedQuery = true;
-						performAction();
-						bsp.getShell().close();
-					}
-				}
-			}
-		});
-		loadButton.setEnabled(true);
-		loadButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-
-		saveButton = new Button(group, SWT.PUSH | SWT.LEFT);
-		saveButton.setText("Remember...");
-		saveButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				SaveQueryDialog qd = new SaveQueryDialog(getShell(), "Remember Query");
-				if (qd.open() == InputDialog.OK) {
-					String qName = qd.getText();
-					if (qName != null && qName.compareTo("") != 0) {
-						try {
-							input.add(getQueryParameters().toString(), qName, summaryPattern.getText());
-						} catch (UnsupportedEncodingException e) {
-							/*
-							 * Do nothing. Every implementation of the Java
-							 * platform is required to support the standard
-							 * charset "UTF-8"
-							 */
-						}
-					}
-				}
-			}
-		});
-		saveButton.setEnabled(true);
-		saveButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+		// loadButton = new Button(group, SWT.PUSH | SWT.LEFT);
+		// loadButton.setText("Saved Queries...");
+		// final BugzillaSearchPage bsp = this;
+		// loadButton.addSelectionListener(new SelectionAdapter() {
+		//
+		// @Override
+		// public void widgetSelected(SelectionEvent event) {
+		// GetQueryDialog qd = new GetQueryDialog(getShell(), "Saved Queries",
+		// input);
+		// if (qd.open() == InputDialog.OK) {
+		// selIndex = qd.getSelected();
+		// if (selIndex != -1) {
+		// rememberedQuery = true;
+		// performAction();
+		// bsp.getShell().close();
+		// }
+		// }
+		// }
+		// });
+		// loadButton.setEnabled(true);
+		// loadButton.setLayoutData(new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+		//
+		// saveButton = new Button(group, SWT.PUSH | SWT.LEFT);
+		// saveButton.setText("Remember...");
+		// saveButton.addSelectionListener(new SelectionAdapter() {
+		//
+		// @Override
+		// public void widgetSelected(SelectionEvent event) {
+		// SaveQueryDialog qd = new SaveQueryDialog(getShell(), "Remember
+		// Query");
+		// if (qd.open() == InputDialog.OK) {
+		// String qName = qd.getText();
+		// if (qName != null && qName.compareTo("") != 0) {
+		// try {
+		// input.add(getQueryParameters().toString(), qName,
+		// summaryPattern.getText());
+		// } catch (UnsupportedEncodingException e) {
+		// /*
+		// * Do nothing. Every implementation of the Java
+		// * platform is required to support the standard
+		// * charset "UTF-8"
+		// */
+		// }
+		// }
+		// }
+		// }
+		// });
+		// saveButton.setEnabled(true);
+		// saveButton.setLayoutData(new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 
 		return group;
 	}
@@ -616,7 +678,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	protected Control createUpdate(final Composite control) {
 		GridData gd;
-		Label label;
+		// Label label;
 
 		Composite group = new Composite(control, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
@@ -628,13 +690,13 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		group.setLayoutData(gd);
 
 		// Info text
-		label = new Label(group, SWT.LEFT);
-		label.setText("Update search options from server:");
-		gd = new GridData(GridData.BEGINNING);
-		label.setLayoutData(gd);
+		// label = new Label(group, SWT.LEFT);
+		// label.setText("Update search options from server:");
+		// gd = new GridData(GridData.BEGINNING);
+		// label.setLayoutData(gd);
 
 		updateButton = new Button(group, SWT.LEFT | SWT.PUSH);
-		updateButton.setText("Update Products");
+		updateButton.setText("Update Attributes from Bugzilla Server");
 
 		updateButton.setLayoutData(new GridData());
 
@@ -1046,11 +1108,11 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	/** File containing saved queries */
 	protected static SavedQueryFile input;
 
-	/** "Remember query" button */
-	protected Button saveButton;
+	// /** "Remember query" button */
+	// protected Button saveButton;
 
-	/** "Saved queries..." button */
-	protected Button loadButton;
+	// /** "Saved queries..." button */
+	// protected Button loadButton;
 
 	/** Run a remembered query */
 	protected boolean rememberedQuery = false;

@@ -17,17 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.bugzilla.ui.search.GetQueryDialog;
-import org.eclipse.mylar.bugzilla.ui.search.SaveQueryDialog;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -421,8 +417,8 @@ public class BugzillaQueryDialog extends Dialog {
 			for(Button b: emailButton){
 				b.setEnabled(enabled);
 			}
-			saveButton.setEnabled(enabled);
-			loadButton.setEnabled(enabled);
+//			saveButton.setEnabled(enabled);
+//			loadButton.setEnabled(enabled);
 			updateButton.setEnabled(enabled);
 			summaryPattern.setEnabled(enabled);
 			daysText.setEnabled(enabled);
@@ -445,77 +441,77 @@ public class BugzillaQueryDialog extends Dialog {
 			return "";
 		}
 		
-		@Override
-		protected Control createSaveQuery(Composite control) {
-			GridLayout layout;
-			GridData gd;
-
-			Group group = new Group(control, SWT.NONE);
-			layout = new GridLayout(3, false);
-			group.setLayout(layout);
-			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-			gd.horizontalSpan = 2;
-			group.setLayoutData(gd);
-			
-			loadButton = new Button(group, SWT.PUSH | SWT.LEFT);
-			loadButton.setText("Saved Queries...");
-			loadButton.addSelectionListener(new SelectionAdapter() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent event) {
-					GetQueryDialog qd = new GetQueryDialog(getShell(),
-							"Saved Queries", input){
-						@Override
-						protected void createButtonsForButtonBar(Composite parent) {
-							super.createButtonsForButtonBar(parent);
-							Button okButton = super.getButton(IDialogConstants.OK_ID);
-							if(okButton != null)
-								okButton.setText("Select");
-						}
-					};
-					
-					if (qd.open() == InputDialog.OK) {
-						selIndex = qd.getSelected();
-						if (selIndex != -1) {
-							rememberedQuery = true;
-						}
-					} else {
-						rememberedQuery = false;
-					}
-				}
-			});
-			loadButton.setEnabled(true);
-			loadButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-			
-			saveButton = new Button(group, SWT.PUSH | SWT.LEFT);
-			saveButton.setText("Remember...");
-			saveButton.addSelectionListener(new SelectionAdapter() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent event) {
-					SaveQueryDialog qd = new SaveQueryDialog(getShell(),
-							"Remember Query");
-					if (qd.open() == InputDialog.OK) {
-						String qName = qd.getText();
-						if (qName != null && qName.compareTo("") != 0) {
-							try {
-								input.add(getQueryParameters().toString(), qName, summaryPattern.getText());
-							}
-							catch (UnsupportedEncodingException e) {
-								/*
-								 * Do nothing. Every implementation of the Java platform is required
-								 * to support the standard charset "UTF-8"
-								 */
-							}
-						}
-					}
-				}
-			});
-			saveButton.setEnabled(true);
-			saveButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-			
-			return group;
-		}
+//		@Override
+//		protected Control createSaveQuery(Composite control) {
+//			GridLayout layout;
+//			GridData gd;
+//
+//			Group group = new Group(control, SWT.NONE);
+//			layout = new GridLayout(3, false);
+//			group.setLayout(layout);
+//			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//			gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+//			gd.horizontalSpan = 2;
+//			group.setLayoutData(gd);
+//			
+//			loadButton = new Button(group, SWT.PUSH | SWT.LEFT);
+//			loadButton.setText("Saved Queries...");
+//			loadButton.addSelectionListener(new SelectionAdapter() {
+//				
+//				@Override
+//				public void widgetSelected(SelectionEvent event) {
+//					GetQueryDialog qd = new GetQueryDialog(getShell(),
+//							"Saved Queries", input){
+//						@Override
+//						protected void createButtonsForButtonBar(Composite parent) {
+//							super.createButtonsForButtonBar(parent);
+//							Button okButton = super.getButton(IDialogConstants.OK_ID);
+//							if(okButton != null)
+//								okButton.setText("Select");
+//						}
+//					};
+//					
+//					if (qd.open() == InputDialog.OK) {
+//						selIndex = qd.getSelected();
+//						if (selIndex != -1) {
+//							rememberedQuery = true;
+//						}
+//					} else {
+//						rememberedQuery = false;
+//					}
+//				}
+//			});
+//			loadButton.setEnabled(true);
+//			loadButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+//			
+//			saveButton = new Button(group, SWT.PUSH | SWT.LEFT);
+//			saveButton.setText("Remember...");
+//			saveButton.addSelectionListener(new SelectionAdapter() {
+//				
+//				@Override
+//				public void widgetSelected(SelectionEvent event) {
+//					SaveQueryDialog qd = new SaveQueryDialog(getShell(),
+//							"Remember Query");
+//					if (qd.open() == InputDialog.OK) {
+//						String qName = qd.getText();
+//						if (qName != null && qName.compareTo("") != 0) {
+//							try {
+//								input.add(getQueryParameters().toString(), qName, summaryPattern.getText());
+//							}
+//							catch (UnsupportedEncodingException e) {
+//								/*
+//								 * Do nothing. Every implementation of the Java platform is required
+//								 * to support the standard charset "UTF-8"
+//								 */
+//							}
+//						}
+//					}
+//				}
+//			});
+//			saveButton.setEnabled(true);
+//			saveButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+//			
+//			return group;
+//		}
 	}
 }
