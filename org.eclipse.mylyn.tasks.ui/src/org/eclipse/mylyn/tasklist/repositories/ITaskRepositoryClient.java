@@ -19,5 +19,10 @@ public interface ITaskRepositoryClient {
 
 	public String getLabel();
 
+	/**
+	 * @return the unique type of the repository, e.g. "bugzilla"
+	 */
+	public String getKind();
+	
 //	public IWizardPage getSettingsPage();
 }

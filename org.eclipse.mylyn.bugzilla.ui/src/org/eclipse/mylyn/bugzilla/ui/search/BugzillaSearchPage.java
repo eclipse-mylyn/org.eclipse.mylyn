@@ -156,8 +156,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
 
-		createTextSearchComposite(control);
-		createComment(control);
+		createRepositoryGroup(control);
+		createSearchGroup(control);
 		createOptionsGroup(control);
 
 		createEmail(control);
@@ -169,6 +169,24 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		setControl(control);
 		WorkbenchHelpSystem.getInstance().setHelp(control, IBugzillaConstants.SEARCH_PAGE_CONTEXT);
+	}
+
+	private void createRepositoryGroup(Composite control) {
+//		String[] repositories = 
+		
+	}
+
+	private void createSearchGroup(Composite control) {
+		Group group = new Group(control, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		group.setLayout(layout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 5;
+		group.setLayoutData(gd);
+		
+		createTextSearchComposite(group);
+		createComment(group); 
 	}
 
 	protected Control createTextSearchComposite(Composite control) {

@@ -19,32 +19,58 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
+ * 
+ * @author Mik Kersten (hardening of prototype)
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	private BugzillaTaskListManager bugzillaTaskListManager;
+
 	private BugzillaRefreshManager bugzillaRefreshManager;
-	
-    private static BugzillaUiPlugin plugin;
-		
-	
-	/**
-	 * The constructor.
-	 */
+
+	private static BugzillaUiPlugin plugin;
+
 	public BugzillaUiPlugin() {
 		plugin = this;
 	}
-	
-	/**
-	 * This method is called upon plug-in activation
-	 */
+
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
 		bugzillaTaskListManager = new BugzillaTaskListManager();
 		bugzillaRefreshManager = new BugzillaRefreshManager();
 		BugzillaPlugin.getDefault().addOfflineStatusListener(bugzillaTaskListManager);
+		
+//		migrateDefaultAuthenticationData();
 	}
+
+//	@SuppressWarnings("unchecked")
+//	private void migrateDefaultAuthenticationData() {
+//		String serverUrl = BugzillaPlugin.getDefault().getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);
+//		String user = "";
+//		String password = "";
+//		Map<String, String> map = Platform.getAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla", BugzillaPreferencePage.AUTH_SCHEME);
+//
+//		// get the information from the map and save it
+//		if (map != null) {
+//			String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
+//			if (username != null) user = username;
+//			
+//			String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
+//			if (pwd != null) password = pwd;
+//		}
+//		
+//		if (serverUrl != null && serverUrl.trim() != "") {
+//			TaskRepository repository;
+//			try {
+//				repository = new TaskRepository(new URL(serverUrl));
+//				repository.setAuthenticationCredentials(user, password);
+//				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+//			} catch (MalformedURLException e) {
+//				ErrorLogger.fail(e, "could not create default repository", true);
+//			}
+//		}
+//	}
 
 	/**
 	 * This method is called when the plug-in is stopped
@@ -63,25 +89,26 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
+	 * 
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui", path);
 	}
-	
+
 	public BugzillaTaskListManager getBugzillaTaskListManager() {
 		return bugzillaTaskListManager;
 	}
-	
+
 	public BugzillaRefreshManager getBugzillaRefreshManager() {
 		return bugzillaRefreshManager;
 	}
-	
+
 	public String createBugHandleIdentifier(int bugId) {
-		return "Bugzilla-"+bugId;
+		return "Bugzilla-" + bugId;
 	}
 }

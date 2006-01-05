@@ -20,6 +20,8 @@ import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
  */
 public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 
+	public static final String KIND = "bugzilla";
+	
 	public String getLabel() {
 		return "Bugzilla Client (supports uncustomized 2.16-2.20)";
 	}
@@ -30,6 +32,10 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 
 	public IWizardPage getSettingsPage() {
 		return new RepositorySettingsPage();
+	}
+
+	public String getKind() {
+		return KIND;
 	}
 
 }

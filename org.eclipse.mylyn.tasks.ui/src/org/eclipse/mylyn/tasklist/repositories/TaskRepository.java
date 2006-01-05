@@ -32,7 +32,7 @@ public class TaskRepository {
 	private static final String AUTH_REALM = "";
 	
 	private URL serverUrl;
-
+	
 	public TaskRepository(URL serverUrl) {
 		this.serverUrl = serverUrl;
 	}
