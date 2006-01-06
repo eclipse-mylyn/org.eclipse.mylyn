@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
@@ -109,7 +109,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
             	return ((BrowserViewer)browserObject).getBrowser();
             } 
         } catch (Exception e) {
-        	ErrorLogger.log(e, "could not add browser listener");
+        	MylarStatusHandler.log(e, "could not add browser listener");
         }
         return null;
 	}

@@ -31,7 +31,7 @@ import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.InteractionEvent.Kind;
 import org.eclipse.mylar.core.internal.MylarContextExternalizer;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.XmlStringConverter;
 import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer.Token;
@@ -72,9 +72,9 @@ public class InteractionEventLogger implements IInteractionEventListener {
 			}
 			eventAccumulartor++;
 		} catch (NullPointerException e) {
-			ErrorLogger.log(e, "could not log interaction event");
+			MylarStatusHandler.log(e, "could not log interaction event");
 		} catch (Throwable t) {
-			ErrorLogger.log(t, "could not log interaction event");
+			MylarStatusHandler.log(t, "could not log interaction event");
 		}
 	}
 
@@ -89,9 +89,9 @@ public class InteractionEventLogger implements IInteractionEventListener {
 				interactionObserved(queuedEvent);
 			queue.clear();
 		} catch (FileNotFoundException e) {
-			ErrorLogger.log(e, "could not resolve file");
+			MylarStatusHandler.log(e, "could not resolve file");
 		} catch (Throwable t) {
-			ErrorLogger.log(t, "could not create new file");
+			MylarStatusHandler.log(t, "could not create new file");
 		}
 	}
 
@@ -106,7 +106,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 				MylarMonitorPlugin.getDefault().incrementObservedEvents(eventAccumulartor);
 			eventAccumulartor = 0;
 		} catch (IOException e) {
-			ErrorLogger.fail(e, "could not close interaction event stream", false);
+			MylarStatusHandler.fail(e, "could not close interaction event stream", false);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 //			System.err.println(">>> " + outputFile.getAbsolutePath() + ": " + outputFile.exists());
 			this.outputFile = newFile;
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "Could not set logger output file", true);
+			MylarStatusHandler.fail(e, "Could not set logger output file", true);
 		}
 		startObserving();
 		return newFile;
@@ -165,7 +165,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 			}
 
 		} catch (Exception e) {
-			ErrorLogger.log("could not read interaction history", this);
+			MylarStatusHandler.log("could not read interaction history", this);
 			e.printStackTrace();
 		}
 		return events;

@@ -14,7 +14,7 @@ package org.eclipse.mylar.monitor.monitors;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
@@ -71,7 +71,7 @@ public class MenuCommandMonitor implements Listener {
 	        
 
 		} catch(Throwable t) {	
-				ErrorLogger.fail(t, "Could not log selection", false);
+				MylarStatusHandler.fail(t, "Could not log selection", false);
 		}
 	}
 

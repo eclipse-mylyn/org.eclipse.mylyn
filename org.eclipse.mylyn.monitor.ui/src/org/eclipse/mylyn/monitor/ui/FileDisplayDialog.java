@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -96,7 +96,7 @@ public class FileDisplayDialog extends MessageDialog{
                fileContents += s + "\n";
            }
        } catch (IOException e) {
-           ErrorLogger.log(e, "couldn't get contents");
+           MylarStatusHandler.log(e, "couldn't get contents");
        }
        return fileContents;
    }

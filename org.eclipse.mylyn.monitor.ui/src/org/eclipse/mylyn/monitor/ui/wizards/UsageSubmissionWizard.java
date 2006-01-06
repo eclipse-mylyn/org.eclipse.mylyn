@@ -44,7 +44,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.MylarPrefContstants;
 import org.eclipse.mylar.core.util.DateUtil;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.ZipFileUtil;
 import org.eclipse.mylar.monitor.IBackgroundPage;
 import org.eclipse.mylar.monitor.IQuestionnairePage;
@@ -164,7 +164,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 					op.run(monitor);
 					return Status.OK_STATUS;
 				} catch (Exception e){
-					ErrorLogger.log(e, "Error uploading statistics");
+					MylarStatusHandler.log(e, "Error uploading statistics");
 					return new Status(Status.ERROR, MylarMonitorPlugin.PLUGIN_ID, Status.ERROR, "Error uploading statistics", e);
 				}
 			}
@@ -226,7 +226,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         	
             // clear the files
             if(!monitorFile.delete()){
-            	ErrorLogger.log("Unable to delete the monitor file", this);
+            	MylarStatusHandler.log("Unable to delete the monitor file", this);
             }
         }
         
@@ -367,7 +367,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 				            		e.getClass().getCanonicalName());
 						}
 	        		});
-	            	ErrorLogger.log(e, "failed to upload");
+	            	MylarStatusHandler.log(e, "failed to upload");
 	        	}
 	        }
 			monitor.worked(1);
@@ -429,7 +429,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 			            		e.getClass().getCanonicalName());
 					}
         		});
-            	ErrorLogger.log(e, "error uploading");
+            	MylarStatusHandler.log(e, "error uploading");
         	}
         }
     }
@@ -535,7 +535,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 						            		e.getClass().getCanonicalName() + e.getMessage());
 								}
 			        		});
-			            	ErrorLogger.log(e, "error uploading");
+			            	MylarStatusHandler.log(e, "error uploading");
 			        	}
 			        }
 					monitor.worked(1);
@@ -587,7 +587,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 			            		e.getClass().getCanonicalName());
 					}
         		});
-            	ErrorLogger.log(e, "error uploading");
+            	MylarStatusHandler.log(e, "error uploading");
         	}
         }
         return -1;
@@ -682,7 +682,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
 			        		MessageDialog.openError(null, "Error Communicating", 
 				            		"There was an error getting a new user id: \n" +
 				            		e.getClass().getCanonicalName() + e.getMessage());
-			            	ErrorLogger.log(e, "error uploading");
+			            	MylarStatusHandler.log(e, "error uploading");
 			        	}
 			        }
 					monitor.worked(1);
@@ -722,7 +722,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         		MessageDialog.openError(null, "Error Uploading", 
 	            		"There was an error getting a new user id: \n" +
 	            		e.getClass().getCanonicalName());
-            	ErrorLogger.log(e, "error uploading");
+            	MylarStatusHandler.log(e, "error uploading");
         	}
         }
         return -1;
@@ -736,7 +736,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
             while((s = br.readLine()) != null)
                     data += s;
         } catch (IOException e) {
-        	ErrorLogger.log(e, "error uploading");
+        	MylarStatusHandler.log(e, "error uploading");
         }
         return data;
     }
@@ -763,7 +763,7 @@ public class UsageSubmissionWizard extends Wizard implements INewWizard {
         try{
        	 ZipFileUtil.createZipFile(zipFile, files);
         }catch(Exception e){
-       	 ErrorLogger.log(e, "error uploading");
+       	 MylarStatusHandler.log(e, "error uploading");
        	 return null;
         }
 

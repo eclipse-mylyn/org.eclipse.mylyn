@@ -37,7 +37,7 @@ import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.MylarPrefContstants;
 import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.monitor.internal.StudyParameters;
 import org.eclipse.mylar.monitor.monitors.ActionExecutionMonitor;
 import org.eclipse.mylar.monitor.monitors.ActivityChangeMonitor;
@@ -378,7 +378,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				ErrorLogger.log(e, "could not create monitor file");
+				MylarStatusHandler.log(e, "could not create monitor file");
 			}
 		}
 		return file;
@@ -608,7 +608,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 			} catch (Throwable t) {
-				ErrorLogger.fail(t, "could not read monitor extension", false);
+				MylarStatusHandler.fail(t, "could not read monitor extension", false);
 			}
 		}
 
@@ -636,7 +636,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 					studyParameters.setQuestionnairePage(page);
 				}
 			} catch (CoreException throwable) {
-				ErrorLogger.fail(throwable, "could not load questionnaire", false);
+				MylarStatusHandler.fail(throwable, "could not load questionnaire", false);
 				MylarMonitorPlugin.getDefault().setQuestionnaireEnabled(false);
 			}
 
@@ -648,7 +648,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 					MylarMonitorPlugin.getDefault().setBackgroundEnabled(true);
 				}
 			} catch (CoreException throwable) {
-				ErrorLogger.fail(throwable, "could not load background page", false);
+				MylarStatusHandler.fail(throwable, "could not load background page", false);
 				MylarMonitorPlugin.getDefault().setBackgroundEnabled(false);
 			}
 
