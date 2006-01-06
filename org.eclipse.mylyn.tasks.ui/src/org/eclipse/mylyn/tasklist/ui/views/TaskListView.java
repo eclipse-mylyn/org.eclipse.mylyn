@@ -945,7 +945,6 @@ public class TaskListView extends ViewPart {
 		addAction(openTaskEditor, manager, element);
 		if ((element instanceof ITask) || (element instanceof IQueryHit)) {
 			ITask task = null;
-			boolean isLocal = element.getClass().equals(Task.class); // HACK
 			if (element instanceof IQueryHit) {
 				task = ((IQueryHit) element).getOrCreateCorrespondingTask();
 			} else {
@@ -954,7 +953,7 @@ public class TaskListView extends ViewPart {
 
 			addAction(openUrlInExternal, manager, element);
 
-			if (isLocal) {
+			if (task.isLocal()) {
 				if (task.isCompleted()) {
 					addAction(markCompleteAction, manager, element);
 				} else {
@@ -968,8 +967,7 @@ public class TaskListView extends ViewPart {
 				manager.add(activateAction);
 			}
 
-			// HACK: to avoid removing local tasks
-			if (!isLocal) {
+			if (!task.isLocal()) {
 				addAction(removeFromCategoryAction, manager, element);
 			}
 		}
@@ -1077,7 +1075,7 @@ public class TaskListView extends ViewPart {
 					action.setEnabled(false);
 				}
 			} else if (action instanceof OpenTaskEditorAction) {
-				action.setEnabled(false);
+				action.setEnabled(true);
 			} else if (action instanceof CopyDescriptionAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {

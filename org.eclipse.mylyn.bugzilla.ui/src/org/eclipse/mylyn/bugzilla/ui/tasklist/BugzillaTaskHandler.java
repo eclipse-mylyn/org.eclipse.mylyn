@@ -22,17 +22,14 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
-import org.eclipse.mylar.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
+import org.eclipse.mylar.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ErrorLogger;
-import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
-import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
@@ -188,14 +185,14 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				|| element instanceof BugzillaQueryCategory;
 	}
 
-	public ITask getCorrespondingTask(IQueryHit queryHit) {
-		if (queryHit instanceof BugzillaHit) {
-			BugzillaHit hit = (BugzillaHit) queryHit;
-			return hit.getOrCreateCorrespondingTask();
-		} else {
-			return null;
-		}
-	}
+//	public ITask getCorrespondingTask(IQueryHit queryHit) {
+//		if (queryHit instanceof BugzillaHit) {
+//			BugzillaHit hit = (BugzillaHit) queryHit;
+//			return hit.getOrCreateCorrespondingTask();
+//		} else {
+//			return null;
+//		}
+//	}
 
 	public void taskClosed(ITask element, IWorkbenchPage page) {
 		try {
@@ -273,22 +270,22 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		return false;
 	}
 
-	public void itemRemoved(ITaskListElement element, ITaskCategory category) {
-		if (element instanceof BugzillaTask) {
-			BugzillaTask task = (BugzillaTask) element;
-			if (category instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().removeFromCategoryAndRoot((TaskCategory) category, task);
-				// category.removeTask(task);
-			} else {
-				String message = MESSAGE_CONFIRM_DELETE;
-				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-						.getShell(), "Confirm delete", message);
-				if (!deleteConfirmed)
-					return;
-				MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-			}
-		}
-	}
+//	public void itemRemoved(ITaskListElement element, ITaskCategory category) {
+//		if (element instanceof BugzillaTask) {
+//			BugzillaTask task = (BugzillaTask) element;
+//			if (category instanceof TaskCategory) {
+//				MylarTaskListPlugin.getTaskListManager().removeFromCategoryAndRoot((TaskCategory) category, task);
+//				// category.removeTask(task);
+//			} else {
+//				String message = MESSAGE_CONFIRM_DELETE;
+//				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+//						.getShell(), "Confirm delete", message);
+//				if (!deleteConfirmed)
+//					return;
+//				MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+//			}
+//		}
+//	}
 
 }
 

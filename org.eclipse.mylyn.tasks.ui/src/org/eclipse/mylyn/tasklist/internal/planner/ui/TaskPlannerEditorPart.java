@@ -457,8 +457,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 						if (selectedObject instanceof ITask) {
 							task = (ITask) selectedObject;
 						} else if (selectedObject instanceof IQueryHit) {
-							task = MylarTaskListPlugin.getDefault().getHandlerForElement(
-									(ITaskListElement) selectedObject).getCorrespondingTask((IQueryHit) selectedObject);
+							task = ((IQueryHit)selectedObject).getOrCreateCorrespondingTask();
+//							task = MylarTaskListPlugin.getDefault().getHandlerForElement(
+//									(ITaskListElement) selectedObject).getCorrespondingTask((IQueryHit) selectedObject);
 						}
 						if (task != null) {
 							contentProvider.addTask(task);

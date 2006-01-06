@@ -39,7 +39,7 @@ public interface ITaskHandler {
 
 	public abstract boolean enableAction(Action action, ITaskListElement element);
 	
-	public abstract void itemRemoved(ITaskListElement element, ITaskCategory category);
+//	public abstract void itemRemoved(ITaskListElement element, ITaskCategory category);
 	
-	public abstract ITask getCorrespondingTask(IQueryHit element);
+//	public abstract ITask getCorrespondingTask(IQueryHit element);
 }

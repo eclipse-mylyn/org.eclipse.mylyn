@@ -42,7 +42,7 @@ public class TaskList implements Serializable {
 		rootTasks.add(task);
 	}
 
-	void removeRootTask(ITask task) {
+	void removeFromRoot(ITask task) {
 		rootTasks.remove(task);
 	}
 	

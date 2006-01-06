@@ -114,7 +114,7 @@ public class TaskListManager {
 	}
 
 	public void moveToCategory(TaskCategory category, ITask task) {
-		taskList.removeRootTask(task);
+		taskList.removeFromRoot(task);
 		if (task.getCategory() instanceof TaskCategory) {
 			((TaskCategory)task.getCategory()).removeTask(task);
 		}
@@ -130,9 +130,16 @@ public class TaskListManager {
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 	
-	public void removeFromCategoryAndRoot(TaskCategory category, ITask task) {
-		category.removeTask(task);
-		taskList.addRootTask(task);
+	public void removeFromCategory(TaskCategory category, ITask task) {
+		if (!category.isArchive()) {
+			category.removeTask(task);
+			task.setCategory(null);
+		}
+		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+	}
+	
+	public void removeFromRoot(ITask task) {
+		taskList.removeFromRoot(task);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 	

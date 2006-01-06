@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -50,18 +49,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			ISelection selection = ((TreeViewer) getViewer()).getSelection();
 			Object currentTarget = getCurrentTarget();
 			List<ITask> tasksToMove = new ArrayList<ITask>();
-			for (Object selectedObject : ((IStructuredSelection) selection)
-					.toList()) {
+			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 				ITask toMove = null;
 				if (selectedObject instanceof ITask) {
 					toMove = (ITask) selectedObject;
 				} else if (selectedObject instanceof IQueryHit) {
-					ITaskHandler handler = MylarTaskListPlugin.getDefault()
-							.getHandlerForElement((IQueryHit) selectedObject);
-					if (handler != null) {
-						toMove = handler
-								.getCorrespondingTask((IQueryHit) selectedObject);
-					}
+					toMove = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
 				}
 				if (toMove != null) {
 					tasksToMove.add(toMove);
@@ -70,19 +63,14 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 			for (ITask task : tasksToMove) {
 				if (currentTarget instanceof TaskCategory) {
-					MylarTaskListPlugin.getTaskListManager().moveToCategory(
-							(TaskCategory) currentTarget, task);
+					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) currentTarget, task);
 				} else if (currentTarget instanceof ITask) {
 					ITask targetTask = (ITask) currentTarget;
 					if (targetTask.getCategory() == null) {
-						MylarTaskListPlugin.getTaskListManager().moveToRoot(
-								task);
+						MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
 					} else {
-						MylarTaskListPlugin
-								.getTaskListManager()
-								.moveToCategory(
-										(TaskCategory) targetTask.getCategory(),
-										task);
+						MylarTaskListPlugin.getTaskListManager().moveToCategory(
+								(TaskCategory) targetTask.getCategory(), task);
 					}
 				}
 			}
@@ -91,8 +79,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	/**
-	 * @param data
-	 *            String
 	 * @return true if string is a http(s) url
 	 */
 	public boolean isUrl(Object data) {
@@ -132,8 +118,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			urlTitle = urlTransfer[1];
 		}
 
-		Task newTask = new Task(MylarTaskListPlugin.getTaskListManager()
-				.genUniqueTaskHandle(), urlTitle, true);
+		Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle, true);
 
 		if (newTask == null) {
 			return false;
@@ -150,7 +135,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		// Make this new task the current selection in the view
 		StructuredSelection ss = new StructuredSelection(newTask);
 		getViewer().setSelection(ss);
-		
+
 		getViewer().refresh();
 
 		return true;
@@ -158,12 +143,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	@Override
-	public boolean validateDrop(Object targetObject, int operation,
-			TransferData transferType) {
-		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer())
-				.getSelection()).getFirstElement();
-		if (selectedObject instanceof ITaskListElement
-				&& ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
+	public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
+		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
+		if (selectedObject instanceof ITaskListElement && ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
 			if (getCurrentTarget() instanceof TaskCategory) {
 				return true;
 			} else if (getCurrentTarget() instanceof ITaskListElement

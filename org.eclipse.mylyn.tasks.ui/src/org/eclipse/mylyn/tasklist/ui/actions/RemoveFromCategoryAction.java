@@ -16,12 +16,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.ErrorLogger;
-import org.eclipse.mylar.tasklist.IQuery;
-import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
@@ -39,7 +38,7 @@ public class RemoveFromCategoryAction extends Action {
 		this.view = view;
 		setText("Remove From Category");
 		setId(ID);
-//        setImageDescriptor(TaskListImages.REMOVE);
+        setImageDescriptor(TaskListImages.REMOVE);
 	}
 	
 	@Override
@@ -47,30 +46,41 @@ public class RemoveFromCategoryAction extends Action {
 		try {
 			Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();		
 			
-			if (selectedObject instanceof ITaskListElement &&
-				MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement)selectedObject) != null) {
-				
-				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
-				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
-				ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(selectedElement);
-
-				if (item.getParentItem().getData() instanceof IQuery) {
-					MessageDialog.openInformation(Workbench.getInstance()
-							.getActiveWorkbenchWindow().getShell(), "Mylar Tasks",
-							"Tasks can not be deleted from a query.");
-					return;
-				}
-				
-				if (item.getParentItem() != null) {
-					handler.itemRemoved(selectedElement, (ITaskCategory)item.getParentItem().getData());	
-				} 
-			} else if (selectedObject instanceof ITask) {
-				ITask task = (ITask) selectedObject;
+//			if (selectedObject instanceof ITaskListElement &&
+//				MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement)selectedObject) != null) {
+//				
+//				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
+//				ITaskListElement selectedElement = (ITaskListElement)selectedObject;
+//				ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(selectedElement);
+//
+//				if (item.getParentItem() != null) {
+//					if (item.getParentItem().getData() instanceof IQuery) {
+//						MessageDialog.openInformation(Workbench.getInstance()
+//								.getActiveWorkbenchWindow().getShell(), "Mylar Tasks",
+//								"Tasks can not be deleted from a query.");
+//						return;
+//					}
+//				
+//					handler.itemRemoved(selectedElement, (ITaskCategory)item.getParentItem().getData());	
+//				} else {
+//					handler.itemRemoved(selectedElement, (ITaskCategory)item.getParentItem().getData());						
+//				}
+//			} else 
+			if (selectedObject instanceof ITask && !((ITask)selectedObject).isLocal()) {
+				ITask task = (ITask) selectedObject; 
 				if (task.isActive()) {
 					MessageDialog.openInformation(Workbench.getInstance()
 							.getActiveWorkbenchWindow().getShell(), "Mylar Tasks",
 							"Task must be deactivated in order to remove from category.");
 					return;
+				}
+				
+				TreeItem item = this.view.getViewer().getTree().getSelection()[0];
+				if (item.getParentItem() != null && item.getParentItem().getData() instanceof TaskCategory) {
+					TaskCategory category = (TaskCategory)item.getParentItem().getData();
+					MylarTaskListPlugin.getTaskListManager().removeFromCategory(category, task);
+				} else {
+					MylarTaskListPlugin.getTaskListManager().removeFromRoot(task);
 				}
 				ITaskCategory cat = task.getCategory();
 				if (cat != null) {

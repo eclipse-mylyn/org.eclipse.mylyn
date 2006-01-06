@@ -102,6 +102,7 @@
            id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
   </extension>
 
+<!--
   	<extension point = "org.eclipse.ui.popupMenus">
        <objectContribution
              id="org.eclipse.mylar.tasklist.objectContribution"
@@ -117,6 +118,7 @@
   		</action>
      </objectContribution>
      </extension>
+-->
 
   <extension point="org.eclipse.ui.preferencePages">
       <page 
