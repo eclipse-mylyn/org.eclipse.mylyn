@@ -36,6 +36,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -90,8 +91,6 @@ public class TaskInfoEditor extends EditorPart {
 
 	private static final String pasteActionDefId = "org.eclipse.ui.edit.paste";
 
-//	private Button browse;
-
 	private Button removeReminder;
 	
 	private Text pathText;
@@ -101,6 +100,8 @@ public class TaskInfoEditor extends EditorPart {
 	private Text description;
 
 	private Text issueReportURL;
+	
+	private Combo priorityCombo;
 
 	private Text notes;
 
@@ -196,6 +197,8 @@ public class TaskInfoEditor extends EditorPart {
 		} else {
 			task.setReminderDate(null);
 		}
+		task.setPriority(priorityCombo.getItem(priorityCombo.getSelectionIndex()));
+		
 		refreshTaskListView(task);
 		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
 		markDirty(false);
@@ -334,11 +337,42 @@ public class TaskInfoEditor extends EditorPart {
 		// issueReportURL.setForeground(HYPERLINK);
 
 		if (!task.isLocal()) {
-			issueReportURL.setEnabled(false);
+			issueReportURL.setEditable(false);
 		} else {
 			issueReportURL.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					markDirty(true);
+				}
+			});
+		}		
+
+		Label priorityLabel = toolkit.createLabel(container, "Priority:");
+		priorityLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		Composite priorityComposite = toolkit.createComposite(container);
+		
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		priorityComposite.setLayout(gridLayout);
+		priorityCombo = new Combo(priorityComposite, SWT.DROP_DOWN);
+				
+		// Populate the combo box with priority levels
+		for(String priorityLevel : TaskListView.PRIORITY_LEVELS) {
+			priorityCombo.add(priorityLevel);	
+		}		
+		
+		int selectionIndex = priorityCombo.indexOf(task.getPriority());
+		priorityCombo.select(selectionIndex);
+		
+		if (!task.isLocal()) {
+			priorityCombo.setEnabled(false);
+		} else {
+			priorityCombo.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					TaskInfoEditor.this.markDirty(true);
 				}
 			});
 		}
@@ -408,7 +442,6 @@ public class TaskInfoEditor extends EditorPart {
 			datePicker.setDate(calendar);
 		}
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-//		datePicker.setBackground(new Color(Display.getDefault(), 255, 255, 255));
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				TaskInfoEditor.this.markDirty(true);
@@ -494,7 +527,6 @@ public class TaskInfoEditor extends EditorPart {
 		td.colspan = 2;
 		reminder.setLayoutData(td);
 		reminder.setEditable(false);
-		reminder.setEnabled(false);
 
 		label = toolkit.createLabel(container, "Creation date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -512,7 +544,7 @@ public class TaskInfoEditor extends EditorPart {
 		td.colspan = 2;
 		creationDate.setLayoutData(td);
 		creationDate.setEditable(false);
-		creationDate.setEnabled(false);
+//		creationDate.setEnabled(false);
 
 		label = toolkit.createLabel(container, "Completion date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -530,7 +562,7 @@ public class TaskInfoEditor extends EditorPart {
 		td.colspan = 2;
 		endDate.setLayoutData(td);
 		endDate.setEditable(false);
-		endDate.setEnabled(false);
+//		endDate.setEnabled(false);
 	}
 
 	private void createDetailsSection(Composite parent, FormToolkit toolkit) {
