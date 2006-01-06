@@ -245,7 +245,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
             		getTaskListSaveManager().saveTaskListAndContexts();
             		getTaskListManager().setTaskListFile(new File(taskListFilePath));
             		getTaskListManager().createNewTaskList();
-            		getTaskListManager().readTaskList();
+            		getTaskListManager().readOrCreateTaskList();
 
             		if (TaskListView.getDefault() != null) TaskListView.getDefault().clearTaskHistory();
                 }
@@ -294,7 +294,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(taskListSaveManager);
 										
 					restoreTaskHandlerState();
-					taskListManager.readTaskList();
+					taskListManager.readOrCreateTaskList();
 					restoreTaskHandlerState();
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Task List initialization failed", true);

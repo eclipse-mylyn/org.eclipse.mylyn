@@ -80,7 +80,7 @@ public class TaskListManagerTest extends TestCase {
         assertNotNull(manager.getTaskList());
         TaskList list = new TaskList();
         manager.setTaskList(list);
-        manager.readTaskList();
+        manager.readOrCreateTaskList();
         assertNotNull(manager.getTaskList());
 
     	List<ITask> readList = manager.getTaskList().getRootTasks();
@@ -134,7 +134,7 @@ public class TaskListManagerTest extends TestCase {
         assertNotNull(manager.getTaskList());
         TaskList list = new TaskList();
         manager.setTaskList(list);
-        manager.readTaskList();
+        manager.readOrCreateTaskList();
                 
         assertNotNull(manager.getTaskList());
         assertEquals(3, manager.getTaskList().getRootTasks().size()); // contains archived reports category

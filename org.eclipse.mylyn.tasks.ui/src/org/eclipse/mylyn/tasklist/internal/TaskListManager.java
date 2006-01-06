@@ -43,7 +43,7 @@ public class TaskListManager {
 
 	private TaskList taskList = new TaskList();
 
-	private boolean taskListRead = false;
+	private boolean taskListInitialized = false;
 	
 	private int nextTaskId;
 
@@ -64,7 +64,7 @@ public class TaskListManager {
 		return PREFIX_TASK + nextTaskId++;
 	}
 
-	public boolean readTaskList() {
+	public boolean readOrCreateTaskList() {
 		try {
 			if (taskListFile.exists()) {
 				taskListWriter.readTaskList(taskList, taskListFile);
@@ -75,7 +75,7 @@ public class TaskListManager {
 			} else {
 				createNewTaskList();
 			}
-			taskListRead = true;
+			taskListInitialized = true;
 			for (ITaskActivityListener listener : listeners) listener.tasklistRead();
 			for (ITask active: taskList.getActiveTasks()) {
 				activateTask(active);
@@ -89,13 +89,14 @@ public class TaskListManager {
 
 	public void saveTaskList() {
 		try {
-			if (taskListRead) {
+			if (taskListInitialized) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
 				MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTaskListPrefConstants.TASK_ID, nextTaskId);
 			} else {
-				MylarStatusHandler.log("task list save attempted before read", this);
+				MylarStatusHandler.log("task list save attempted before initialization", this);
 			}
 		} catch (Exception e) {
+			Thread.dumpStack();
 			MylarStatusHandler.fail(e, "Could not save task list", true);
 		}
 	}
@@ -226,8 +227,8 @@ public class TaskListManager {
 		return taskList.getTaskForHandle(handle, lookInArchives);
 	}
 
-	public boolean isTaskListRead() {
-		return taskListRead;
+	public boolean isTaskListInitialized() {
+		return taskListInitialized;
 	}
 
 	public TaskListWriter getTaskListWriter() {

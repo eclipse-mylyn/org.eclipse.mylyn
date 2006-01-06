@@ -52,6 +52,8 @@ public class TaskListStandaloneTest extends TestCase {
 		file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
 		file.deleteOnExit();
 		manager = new TaskListManager(writer, file, 1);
+		manager.readOrCreateTaskList();
+		assertEquals(0, manager.getTaskList().getRootTasks().size());
 	}
 
 	@Override
@@ -93,7 +95,7 @@ public class TaskListStandaloneTest extends TestCase {
 		TaskList list = new TaskList();
 		manager.setTaskList(list);
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		manager.readTaskList();
+		manager.readOrCreateTaskList();
 		
 		assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
