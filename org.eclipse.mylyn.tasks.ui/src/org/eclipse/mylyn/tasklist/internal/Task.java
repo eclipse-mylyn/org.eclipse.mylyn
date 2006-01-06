@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -194,7 +194,7 @@ public class Task implements ITask {
 			page.openEditor(input, MylarTaskListPrefConstants.TASK_EDITOR_ID);
 
 		} catch (PartInitException ex) {
-			ErrorLogger.log(ex, "open failed");
+			MylarStatusHandler.log(ex, "open failed");
 		}
 	}
 
@@ -308,7 +308,7 @@ public class Task implements ITask {
 		if (elapsedTime >= 0) {
 			this.timeActive = elapsedTime;
 		} else{
-			ErrorLogger.log("Attempt to set negative time on task: " + getDescription(true), this);
+			MylarStatusHandler.log("Attempt to set negative time on task: " + getDescription(true), this);
 		} 
 	}
 

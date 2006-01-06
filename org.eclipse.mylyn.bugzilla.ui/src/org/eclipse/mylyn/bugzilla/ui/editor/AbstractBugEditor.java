@@ -49,7 +49,7 @@ import org.eclipse.mylar.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -1204,7 +1204,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			changeDirtyStatus(false);
 			OfflineView.saveOffline(getBug(), true);
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "bug save offline failed", true);
+			MylarStatusHandler.fail(e, "bug save offline failed", true);
 		}
 		//		OfflineView.checkWindow();
 		//		OfflineView.refreshView();

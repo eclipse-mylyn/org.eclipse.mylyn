@@ -16,7 +16,7 @@ import java.net.URL;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -57,7 +57,7 @@ public class OpenTaskUrlInExternalBrowser extends Action {
 						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 						support.getExternalBrowser().openURL(url);
 					} catch (Exception e) {
-						ErrorLogger.fail(e, "could not open task url", true);
+						MylarStatusHandler.fail(e, "could not open task url", true);
 					}
 				}
 			}

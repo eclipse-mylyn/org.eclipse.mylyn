@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.ITimerThreadListener;
 import org.eclipse.mylar.core.util.TimerThread;
 
@@ -68,7 +68,7 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 				listener.saveRequested();
 			}
 		} catch (RuntimeException e) {
-			ErrorLogger.log("Could not schedule save job", this);
+			MylarStatusHandler.log("Could not schedule save job", this);
 		}
 	}
 

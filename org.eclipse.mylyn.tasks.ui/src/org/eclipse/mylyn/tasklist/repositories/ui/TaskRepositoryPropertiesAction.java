@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.wizards.EditRepositoryWizard;
 import org.eclipse.swt.widgets.Shell;
@@ -61,7 +61,7 @@ public class TaskRepositoryPropertiesAction extends Action {
 				}
 			}
 		} catch (Exception e) {
-			ErrorLogger.fail(e, e.getMessage(), true);
+			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
 	}
 

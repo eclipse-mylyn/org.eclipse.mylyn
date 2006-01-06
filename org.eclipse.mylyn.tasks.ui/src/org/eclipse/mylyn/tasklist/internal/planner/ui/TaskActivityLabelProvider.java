@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.util.DateUtil;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TasklistLabelProvider;
@@ -55,7 +55,7 @@ public class TaskActivityLabelProvider extends LabelProvider implements ITableLa
 					if (task.getCreationDate() != null){
 						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
 					} else{
-						ErrorLogger.log("Task has no creation date: " + task.getDescription(true), this);
+						MylarStatusHandler.log("Task has no creation date: " + task.getDescription(true), this);
 						return "[unknown]";
 					}
 				case 4:
@@ -71,7 +71,7 @@ public class TaskActivityLabelProvider extends LabelProvider implements ITableLa
 				}	
 			}
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "Could not produce completed task label", false);
+			MylarStatusHandler.fail(e, "Could not produce completed task label", false);
 			return "";
 		}		
 		return null;

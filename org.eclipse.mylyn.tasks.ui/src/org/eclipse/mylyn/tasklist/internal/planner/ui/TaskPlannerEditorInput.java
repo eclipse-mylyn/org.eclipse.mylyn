@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.mylar.tasklist.internal.planner.CompletedTaskCollector;
@@ -61,7 +61,7 @@ public class TaskPlannerEditorInput implements IEditorInput {
 		} catch (InvocationTargetException e) {
 			// operation was canceled
 		} catch (InterruptedException e) {
-			ErrorLogger.log(e, "Could not generate report");
+			MylarStatusHandler.log(e, "Could not generate report");
 		}
 
 		completedTasks = completedTaskCollector.getTasks();

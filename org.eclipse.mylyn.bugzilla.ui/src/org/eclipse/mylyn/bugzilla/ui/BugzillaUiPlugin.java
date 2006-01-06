@@ -67,7 +67,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 //				repository.setAuthenticationCredentials(user, password);
 //				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 //			} catch (MalformedURLException e) {
-//				ErrorLogger.fail(e, "could not create default repository", true);
+//				MylarStatusHandler.fail(e, "could not create default repository", true);
 //			}
 //		}
 //	}

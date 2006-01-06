@@ -2,7 +2,7 @@ package org.eclipse.mylar.tasklist.ui.wizards;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -90,7 +90,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 			setPageComplete(validate());
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "Could not create export wizard page", true);
+			MylarStatusHandler.fail(e, "Could not create export wizard page", true);
 		}
 	}
 

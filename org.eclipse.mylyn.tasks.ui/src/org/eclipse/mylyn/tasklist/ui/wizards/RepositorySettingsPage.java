@@ -16,7 +16,7 @@ import java.net.URL;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -97,7 +97,7 @@ public class RepositorySettingsPage extends WizardPage {
 		try {
 			return new URL(serverUrlEditor.getStringValue());
 		} catch (MalformedURLException e) {
-			ErrorLogger.fail(e, "could not create url", true);
+			MylarStatusHandler.fail(e, "could not create url", true);
 			return null;
 		}
 	}

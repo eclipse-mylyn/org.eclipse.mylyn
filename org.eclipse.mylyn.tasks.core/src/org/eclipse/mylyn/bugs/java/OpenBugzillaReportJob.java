@@ -19,7 +19,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -40,7 +40,7 @@ public class OpenBugzillaReportJob implements IRunnableWithProgress {
 			new ViewBugzillaAction("Open Bug " + id, list).run(monitor);
 			monitor.done();
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "Unable to open Bug report: " + id, true);
+			MylarStatusHandler.fail(e, "Unable to open Bug report: " + id, true);
 		}
 	}
 }

@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -81,7 +81,7 @@ public class DeleteAction extends Action {
 				try {
 					view.closeTaskEditors((ITask) selectedObject, page);
 				} catch (Exception e) {
-					ErrorLogger.log(e, "closing editors failed");
+					MylarStatusHandler.log(e, "closing editors failed");
 				}
 				view.getViewer().refresh();
 			} else if (selectedObject instanceof TaskCategory) {
@@ -99,7 +99,7 @@ public class DeleteAction extends Action {
 						try {
 							this.view.closeTaskEditors(task, page);
 						} catch (Exception e) {
-							ErrorLogger.log(e, " deletion failed");
+							MylarStatusHandler.log(e, " deletion failed");
 						}
 					}
 				}

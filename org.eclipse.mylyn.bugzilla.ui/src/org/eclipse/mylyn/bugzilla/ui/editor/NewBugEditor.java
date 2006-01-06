@@ -32,7 +32,7 @@ import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -269,7 +269,7 @@ public class NewBugEditor extends AbstractBugEditor {
 				try{
 					op.run(monitor);
 				} catch (Exception e){
-					ErrorLogger.log(e, "Failed to submit bug");
+					MylarStatusHandler.log(e, "Failed to submit bug");
 					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR, "Failed to submit bug", e);
 				}
 				

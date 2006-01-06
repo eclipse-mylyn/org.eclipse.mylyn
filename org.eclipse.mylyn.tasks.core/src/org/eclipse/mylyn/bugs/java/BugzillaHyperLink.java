@@ -12,7 +12,7 @@ package org.eclipse.mylar.bugs.java;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -45,7 +45,7 @@ public class BugzillaHyperLink implements IHyperlink {
 		try {
 			service.run(true, false, job);
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "Could not open report", true);
+			MylarStatusHandler.fail(e, "Could not open report", true);
 		}
 	}
 }

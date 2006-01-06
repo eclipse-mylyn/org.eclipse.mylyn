@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
@@ -126,7 +126,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 				if (element == null)
 					createTaskElement(task, doc, node);
 			} catch (Exception e) {
-				ErrorLogger.log(e, e.getMessage());
+				MylarStatusHandler.log(e, e.getMessage());
 			}
 
 		}
@@ -367,7 +367,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		try {
 			date = format.parse(dateString);
 		} catch (ParseException e) {
-			ErrorLogger.fail(e, "Could not parse end date", false);
+			MylarStatusHandler.fail(e, "Could not parse end date", false);
 		}
 		return date;
 	}
@@ -404,7 +404,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 				if (element == null)
 					createQueryHitElement(hit, doc, node);
 			} catch (Exception e) {
-				ErrorLogger.log(e, e.getMessage());
+				MylarStatusHandler.log(e, e.getMessage());
 			}
 		}
 		parent.appendChild(node);

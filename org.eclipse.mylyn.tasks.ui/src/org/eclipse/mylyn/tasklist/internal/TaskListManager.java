@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
@@ -81,7 +81,7 @@ public class TaskListManager {
 				activateTask(active);
 			}
 		} catch (Exception e) {
-			ErrorLogger.log(e, "Could not read task list");
+			MylarStatusHandler.log(e, "Could not read task list");
 			return false;
 		}
 		return true;
@@ -89,10 +89,14 @@ public class TaskListManager {
 
 	public void saveTaskList() {
 		try {
-			taskListWriter.writeTaskList(taskList, taskListFile);
-			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTaskListPrefConstants.TASK_ID, nextTaskId);
+			if (taskListRead) {
+				taskListWriter.writeTaskList(taskList, taskListFile);
+				MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTaskListPrefConstants.TASK_ID, nextTaskId);
+			} else {
+				MylarStatusHandler.log("task list save attempted before read", this);
+			}
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "Could not save task list", true);
+			MylarStatusHandler.fail(e, "Could not save task list", true);
 		}
 	}
 

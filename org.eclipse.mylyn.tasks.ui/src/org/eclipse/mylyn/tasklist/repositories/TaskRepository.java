@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -76,7 +76,7 @@ public class TaskRepository {
 			// write the map to the keyring
 			Platform.addAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME, map);
 		} catch (CoreException e) {
-			ErrorLogger.fail(e, "could not set authorization", true);
+			MylarStatusHandler.fail(e, "could not set authorization", true);
 		}
 	}
 

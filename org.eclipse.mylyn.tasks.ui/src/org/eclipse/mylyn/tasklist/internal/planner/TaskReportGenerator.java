@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
@@ -50,7 +50,7 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 		} catch (InvocationTargetException e) {
 			// operation was canceled
 		} catch (InterruptedException e) {
-			ErrorLogger.log(e, "Could not collect tasks");
+			MylarStatusHandler.log(e, "Could not collect tasks");
 		}
 	}
 	

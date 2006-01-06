@@ -16,7 +16,7 @@ import java.util.Date;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
@@ -78,7 +78,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			try {
 				createTaskElement(task, doc, node);
 			} catch (Exception e) {
-				ErrorLogger.log(e, e.getMessage());
+				MylarStatusHandler.log(e, e.getMessage());
 			}
 
 		}
@@ -228,10 +228,10 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		}
 		try {
 			if (task.readBugReport() == false) {
-				ErrorLogger.log("Failed to read bug report", null);
+				MylarStatusHandler.log("Failed to read bug report", null);
 			}
 		} catch (Exception e) {
-			ErrorLogger.log(e, "Failed to read bug report");
+			MylarStatusHandler.log(e, "Failed to read bug report");
 		}
 
 		if (element.hasAttribute(SYNC_STATE)) {

@@ -21,7 +21,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -201,7 +201,7 @@ public class TaskInputDialog extends Dialog {
 			job.schedule();
 			
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not open task web page", false);
+			MylarStatusHandler.fail(e, "could not open task web page", false);
 		}		
 	}
 	
@@ -280,7 +280,7 @@ public class TaskInputDialog extends Dialog {
 				try {
 					Thread.sleep(SLEEP_INTERVAL_MILLIS);
 				} catch (InterruptedException e) {
-					ErrorLogger.fail(e, "Thread interrupted during sleep", false);
+					MylarStatusHandler.fail(e, "Thread interrupted during sleep", false);
 				}
 				timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
 			}

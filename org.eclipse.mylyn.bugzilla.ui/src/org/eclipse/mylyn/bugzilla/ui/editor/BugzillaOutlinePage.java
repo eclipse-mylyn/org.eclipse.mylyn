@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
@@ -106,7 +106,7 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			viewer.setComparer(new BugzillaOutlineComparer());
 			viewer.expandAll();
 		} catch (Exception e) {  
-			ErrorLogger.fail(e, "could not create bugzilla outline", true);
+			MylarStatusHandler.fail(e, "could not create bugzilla outline", true);
 		}
 		getSite().getPage().addSelectionListener(selectionListener);
 	}

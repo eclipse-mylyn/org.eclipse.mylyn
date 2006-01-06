@@ -34,7 +34,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.IQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
@@ -86,7 +86,7 @@ public class TaskListWriter {
 			db = dbf.newDocumentBuilder();
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
-			ErrorLogger.log(e, "could not create document");
+			MylarStatusHandler.log(e, "could not create document");
 			e.printStackTrace();
 		}
 
@@ -106,7 +106,7 @@ public class TaskListWriter {
 			if (element == null && delagatingExternalizer.canCreateElementFor(category)) {
 				delagatingExternalizer.createCategoryElement(category, doc, root);
 			} else if (element == null) {
-				ErrorLogger.log("Did not externalize: " + category, this);
+				MylarStatusHandler.log("Did not externalize: " + category, this);
 			}
 		}
 
@@ -119,7 +119,7 @@ public class TaskListWriter {
 			if (element == null && delagatingExternalizer.canCreateElementFor(query)) {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 			} else if (element == null) {
-				ErrorLogger.log("Did not externalize: " + query, this);
+				MylarStatusHandler.log("Did not externalize: " + query, this);
 			}
 		}
 
@@ -133,10 +133,10 @@ public class TaskListWriter {
 				if (element == null && delagatingExternalizer.canCreateElementFor(task)) {
 					delagatingExternalizer.createTaskElement(task, doc, root);
 				} else if (element == null) {
-					ErrorLogger.log("Did not externalize: " + task, this);
+					MylarStatusHandler.log("Did not externalize: " + task, this);
 				}
 			} catch (Exception e) {
-				ErrorLogger.log(e, e.getMessage());
+				MylarStatusHandler.log(e, e.getMessage());
 			}
 		}
 		doc.appendChild(root);
@@ -159,7 +159,7 @@ public class TaskListWriter {
 			outputStream.flush();
 			outputStream.close();
 		} catch (Exception fnfe) {
-			ErrorLogger.log(fnfe, "TaskList could not be found");
+			MylarStatusHandler.log(fnfe, "TaskList could not be found");
 		}
 	}
 
@@ -225,7 +225,7 @@ public class TaskListWriter {
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
-				ErrorLogger.log("version: " + readVersion + " not supported", this);
+				MylarStatusHandler.log("version: " + readVersion + " not supported", this);
 				// NodeList list = root.getChildNodes();
 				// for (int i = 0; i < list.getLength(); i++) {
 				// Node child = list.item(i);
@@ -336,7 +336,7 @@ public class TaskListWriter {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException pce) {
 			inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
-			ErrorLogger.log(pce, "Failed to load XML file");
+			MylarStatusHandler.log(pce, "Failed to load XML file");
 		}
 		try {
 			// Parse the content of the given file as an XML document
@@ -354,7 +354,7 @@ public class TaskListWriter {
 					MylarTaskListPlugin.getDefault().getTaskListSaveManager().reverseBackup();
 				} catch (SAXException s) {
 					inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
-					ErrorLogger.log(s, "Failed to recover from backup restore");
+					MylarStatusHandler.log(s, "Failed to recover from backup restore");
 				}
 			}
 		}
@@ -376,9 +376,9 @@ public class TaskListWriter {
 			inFile.renameTo(new File(name));
 		}
 		if (child == null) {
-			ErrorLogger.log(e, "Could not read task list");
+			MylarStatusHandler.log(e, "Could not read task list");
 		} else {
-			ErrorLogger.log(e, "Tasks may have been lost from " + child.getNodeName());
+			MylarStatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
 		}
 	}
 
@@ -421,7 +421,7 @@ public class TaskListWriter {
 			//
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException pce) {
-			ErrorLogger.log(pce, "Failed to load XML file");
+			MylarStatusHandler.log(pce, "Failed to load XML file");
 		}
 		try {
 			// Parse the content of the given file as an XML document
@@ -430,7 +430,7 @@ public class TaskListWriter {
 			InputSource in = new InputSource(s);
 			document = builder.parse(in);
 		} catch (SAXException se) {
-			ErrorLogger.log(se, "Failed to parse XML file");
+			MylarStatusHandler.log(se, "Failed to parse XML file");
 		}
 		return document;
 	}
@@ -449,7 +449,7 @@ public class TaskListWriter {
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
-				ErrorLogger.log("version: " + readVersion + " not supported", this);
+				MylarStatusHandler.log("version: " + readVersion + " not supported", this);
 				// NodeList list = root.getChildNodes();
 				// for (int i = 0; i < list.getLength(); i++) {
 				// Node child = list.item(i);
@@ -500,12 +500,12 @@ public class TaskListWriter {
 							}
 						}
 					} catch (Exception e) {
-						ErrorLogger.log(e, "can't read xml string");
+						MylarStatusHandler.log(e, "can't read xml string");
 					}
 				}
 			}
 		} catch (Exception e) {
-			ErrorLogger.log(e, "can't read xml string");
+			MylarStatusHandler.log(e, "can't read xml string");
 		}
 	}
 
@@ -519,7 +519,7 @@ public class TaskListWriter {
 			db = dbf.newDocumentBuilder();
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
-			ErrorLogger.log(e, "could not create document");
+			MylarStatusHandler.log(e, "could not create document");
 			e.printStackTrace();
 		}
 
@@ -539,7 +539,7 @@ public class TaskListWriter {
 			if (element == null && delagatingExternalizer.canCreateElementFor(category)) {
 				delagatingExternalizer.createCategoryElement(category, doc, root);
 			} else if (element == null) {
-				ErrorLogger.log("Did not externalize: " + category, this);
+				MylarStatusHandler.log("Did not externalize: " + category, this);
 			}
 		}
 		for (ITask task : tlist.getRootTasks()) {
@@ -552,10 +552,10 @@ public class TaskListWriter {
 				if (element == null && delagatingExternalizer.canCreateElementFor(task)) {
 					delagatingExternalizer.createTaskElement(task, doc, root);
 				} else if (element == null) {
-					ErrorLogger.log("Did not externalize: " + task, this);
+					MylarStatusHandler.log("Did not externalize: " + task, this);
 				}
 			} catch (Exception e) {
-				ErrorLogger.log(e, e.getMessage());
+				MylarStatusHandler.log(e, e.getMessage());
 			}
 		}
 		doc.appendChild(root);

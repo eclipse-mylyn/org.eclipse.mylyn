@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
@@ -113,7 +113,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				setPageText(index++, factory.getTitle());
 			}
 		} catch (PartInitException e) {
-			ErrorLogger.fail(e, "failed to create task editor pages", false);
+			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			setPageText(index, TASK_INFO_PAGE_LABEL);
 			return index;
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not add task editor", false);
+			MylarStatusHandler.fail(e, "could not add task editor", false);
 		}
 		return 0;
 	}
@@ -149,9 +149,9 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			if (task.isLocal() || openWithBrowser)
 				setActivePage(index);
 		} catch (SWTError e) {
-			ErrorLogger.fail(e, "Could not create Browser page: " + e.getMessage(), true);
+			MylarStatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not create issue report page", false);
+			MylarStatusHandler.fail(e, "could not create issue report page", false);
 		}
 	}
 

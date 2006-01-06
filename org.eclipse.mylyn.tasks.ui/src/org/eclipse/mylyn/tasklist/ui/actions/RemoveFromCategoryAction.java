@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -102,13 +102,13 @@ public class RemoveFromCategoryAction extends Action {
 					try {
 						this.view.closeTaskEditors((ITask) selectedObject, page);
 					} catch (Exception e) {
-						ErrorLogger.log(e, " remove failed");
+						MylarStatusHandler.log(e, " remove failed");
 					}
 				}
 			}
 			this.view.getViewer().refresh();
 		} catch (NullPointerException npe) {
-			ErrorLogger.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
+			MylarStatusHandler.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
 		}
 	}
 }

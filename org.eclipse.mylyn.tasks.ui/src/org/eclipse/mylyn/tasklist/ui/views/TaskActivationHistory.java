@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
@@ -103,7 +103,7 @@ public class TaskActivationHistory {
 			history.add(task);
 			currentIndex++;
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not add task to history", false);
+			MylarStatusHandler.fail(e, "could not add task to history", false);
 		}
 	}
 	
@@ -119,7 +119,7 @@ public class TaskActivationHistory {
 				return null;
 			}
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not get previous task from history", false);
+			MylarStatusHandler.fail(e, "could not get previous task from history", false);
 			return null;
 		}		
 	}
@@ -145,7 +145,7 @@ public class TaskActivationHistory {
 				return history.subList(0, currentIndex + 1);
 			}
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not get previous tasks from history", false);
+			MylarStatusHandler.fail(e, "could not get previous tasks from history", false);
 			return new ArrayList<ITask>();
 		}
 	}
@@ -161,7 +161,7 @@ public class TaskActivationHistory {
 		try {
 			return history.subList(currentIndex + 1, history.size());
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not get next tasks from history", false);
+			MylarStatusHandler.fail(e, "could not get next tasks from history", false);
 			return new ArrayList<ITask>();
 		}
 	}
@@ -191,7 +191,7 @@ public class TaskActivationHistory {
 			
 			return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could determine previous task", false);
+			MylarStatusHandler.fail(e, "could determine previous task", false);
 			return false;
 		}			
 	}
@@ -204,7 +204,7 @@ public class TaskActivationHistory {
 				return null;
 			}
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not get next task", false);
+			MylarStatusHandler.fail(e, "could not get next task", false);
 			return null;
 		}		
 	}
@@ -213,7 +213,7 @@ public class TaskActivationHistory {
 		try {
 			return currentIndex < history.size() - 1;
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not get next task", false);
+			MylarStatusHandler.fail(e, "could not get next task", false);
 			return false;
 		}
 	}
@@ -223,7 +223,7 @@ public class TaskActivationHistory {
 			history.clear();
 			currentIndex = -1;
 		} catch (RuntimeException e) {
-			ErrorLogger.fail(e, "could not clear history", false);
+			MylarStatusHandler.fail(e, "could not clear history", false);
 		}
 	}
 }

@@ -20,7 +20,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -56,9 +56,9 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 		if (MylarTaskListPlugin.getDefault().isShellActive() || forceBackgroundSave) {
 			try {
 				saveTaskListAndContexts();
-//				ErrorLogger.log("Automatically saved task list", this);
+//				MylarStatusHandler.log("Automatically saved task list", this);
 			} catch (Exception e) {
-				ErrorLogger.fail(e, "Could not auto save task list", false);
+				MylarStatusHandler.fail(e, "Could not auto save task list", false);
 			}
 		}
 	}
@@ -71,7 +71,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 //				File file = MylarPlugin.getContextManager().getFileForContext(task.getContextPath());
 //				System.err.println(">>> canWrite: " + file.canWrite());
 //				if (!file.canWrite()) {
-//					ErrorLogger.fail(new Exception(), "could not write context path, resetting: " + path, true);
+//					MylarStatusHandler.fail(new Exception(), "could not write context path, resetting: " + path, true);
 //					task.setContextPath(task.getHandleIdentifier());
 //					path = task.getHandleIdentifier();
 //				}

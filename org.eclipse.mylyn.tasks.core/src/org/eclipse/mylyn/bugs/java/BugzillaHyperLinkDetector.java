@@ -32,7 +32,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.java.ui.editor.AbstractMylarHyperlinkDetector;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -83,7 +83,7 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 					comment = getStringFromComment(c, region.getOffset(), commentString);
 					commentStart = getLocationFromComment(c, comment, commentString) + c.getStartPosition();
 				} catch (BadLocationException e) {
-					ErrorLogger.log(e, "Failed to get text for comment");
+					MylarStatusHandler.log(e, "Failed to get text for comment");
 				}
 			}
 		}

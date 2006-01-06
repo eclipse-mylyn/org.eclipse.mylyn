@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
@@ -81,7 +81,7 @@ public class TaskRepositoryManager {
 					URL url = new URL(urlString);
 					repositories.add(new TaskRepository(url));
 				} catch (MalformedURLException e) {
-					ErrorLogger.fail(e, "could not restore URL: " + urlString, false);
+					MylarStatusHandler.fail(e, "could not restore URL: " + urlString, false);
 				}
 			}
 		}

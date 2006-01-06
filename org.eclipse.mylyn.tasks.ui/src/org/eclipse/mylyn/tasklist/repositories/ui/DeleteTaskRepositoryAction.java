@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.ui.ISharedImages;
@@ -57,7 +57,7 @@ public class DeleteTaskRepositoryAction extends Action {
 				}
 			}
 		} catch (Exception e) {
-			ErrorLogger.fail(e, e.getMessage(), true);
+			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
 	}
 
