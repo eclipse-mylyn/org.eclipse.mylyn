@@ -120,7 +120,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		if (!isEnabled) {
 			MylarPlugin.getContextManager().addListener(this);
 			MylarTaskListPlugin.getTaskListManager().addListener(TASK_ACTIVITY_LISTENER); 
-			if (MylarTaskListPlugin.getTaskListManager().isTaskListRead()) {
+			if (MylarTaskListPlugin.getTaskListManager().isTaskListInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}  
 			collector.addListener(CHANGE_SET_LISTENER);
