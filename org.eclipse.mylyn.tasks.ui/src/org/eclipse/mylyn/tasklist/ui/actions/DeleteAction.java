@@ -17,10 +17,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
@@ -47,19 +48,30 @@ public class DeleteAction extends Action {
 	public void run() {
 		ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-			if (selectedObject instanceof ITaskListElement
-					&& MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
-				boolean deleted = MylarTaskListPlugin.getDefault().getHandlerForElement(
-						(ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
-				if (deleted) {
-					// TODO: refactor category removal?
-					new RemoveFromCategoryAction(view).run(); 
+//			if (selectedObject instanceof ITaskListElement
+//					&& MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
+//				boolean deleted = MylarTaskListPlugin.getDefault().getHandlerForElement(
+//						(ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
+//				if (deleted) {
+//					// TODO: refactor category removal?
+//					new RemoveFromCategoryAction(view).run(); 
+//				}
+//			} else 
+			if (selectedObject instanceof ITask || selectedObject instanceof IQueryHit) {
+				ITask task = null;
+				if (selectedObject instanceof IQueryHit) {
+					task = ((IQueryHit)selectedObject).getCorrespondingTask();
+				} else {
+					task = (ITask) selectedObject;
 				}
-			} else if (selectedObject instanceof ITask) {
-				ITask task = (ITask) selectedObject;
+				if (task == null) {
+					MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+							"Mylar Tasks", "No task data to delte.");
+					return;
+				}
 				if (task.isActive()) {
 					MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-							"Delete failed", "Task must be deactivated in order to delete.");
+							"Mylar Tasks", "Task must be deactivated in order to delete.");
 					return;
 				}
 
@@ -79,11 +91,17 @@ public class DeleteAction extends Action {
 					return;
 				}
 				try {
-					view.closeTaskEditors((ITask) selectedObject, page);
+					view.closeTaskEditors(task, page);
 				} catch (Exception e) {
 					MylarStatusHandler.log(e, "closing editors failed");
 				}
 				view.getViewer().refresh();
+			} else if (selectedObject instanceof ITaskQuery) {
+				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
+				if (deleteConfirmed) {
+					MylarTaskListPlugin.getTaskListManager().deleteQuery((ITaskQuery)selectedObject);
+				}
 			} else if (selectedObject instanceof TaskCategory) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
 						.getShell(), "Confirm Delete", "Delete the selected category and all contained tasks?");

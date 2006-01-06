@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugPost;
+import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
@@ -1273,10 +1273,10 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	/**
 	 * function to set the url to post the bug to
-	 * @param form A reference to a BugPost that the bug is going to be posted to
+	 * @param form A reference to a BugReportPostHandler that the bug is going to be posted to
 	 * @param formName The form that we wish to use to submit the bug
 	 */
-	protected void setURL(BugPost form, String formName) {
+	protected void setURL(BugReportPostHandler form, String formName) {
 		String baseURL = BugzillaPlugin.getDefault().getServerName();
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";

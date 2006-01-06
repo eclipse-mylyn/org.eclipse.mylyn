@@ -335,8 +335,8 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
 			proxy = new Proxy(Type.HTTP, sockAddr);
 		}
-		URLConnection cntx = url.openConnection(proxy);
-		return cntx;
+		URLConnection connection = url.openConnection(proxy);
+		return connection;
 	}
 
     private static IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter = null;

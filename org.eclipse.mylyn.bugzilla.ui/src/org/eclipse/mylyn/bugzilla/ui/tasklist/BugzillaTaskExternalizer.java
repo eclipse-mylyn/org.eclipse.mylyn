@@ -18,7 +18,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -102,7 +102,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		}
 	}
 
-	public String getQueryTagNameForElement(IQuery query) {
+	public String getQueryTagNameForElement(ITaskQuery query) {
 		if (query instanceof BugzillaCustomQueryCategory) {
 			return TAG_BUGZILLA_CUSTOM_QUERY;
 		} else if (query instanceof BugzillaQueryCategory) {
@@ -118,7 +118,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	public void readQuery(Node node, TaskList tlist) throws TaskListExternalizerException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
-		IQuery cat = null;
+		ITaskQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			cat = new BugzillaCustomQueryCategory(element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
 					.getAttribute(MAX_HITS));
@@ -260,7 +260,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		return node.getNodeName().equals(getQueryHitTagName());
 	}
 
-	public void readQueryHit(Node node, TaskList tlist, IQuery query) throws TaskListExternalizerException {
+	public void readQueryHit(Node node, TaskList tlist, ITaskQuery query) throws TaskListExternalizerException {
 		Element element = (Element) node;
 		String handle;
 		String label;

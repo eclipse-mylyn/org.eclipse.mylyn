@@ -38,11 +38,11 @@ import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 /**
  * 
  * @author Shawn Minto
- * @author Mik Kersten (minor fixes)
+ * @author Mik Kersten (hardening of prototype)
  * 
  * Class to handle the positing of a bug
  */
-public class BugPost {
+public class BugReportPostHandler {
 
 	public static final String FORM_POSTFIX_218 = " Submitted";
 
@@ -55,8 +55,9 @@ public class BugPost {
 	/** The fields that are to be changed/maintained */
 	private Map<String, String> fields = new HashMap<String, String>();
 
-	/** The url to post the bug to */
-	private URL anURL;
+	private URL postUrl;
+	
+	private String charset;
 
 	/** The prefix for how to find the bug number from the return */
 	private String prefix;
@@ -97,7 +98,7 @@ public class BugPost {
 	 *            The url to post the bug to
 	 */
 	public void setURL(String urlString) throws MalformedURLException {
-		anURL = new URL(urlString);
+		postUrl = new URL(urlString);
 	}
 
 	/**
@@ -108,26 +109,12 @@ public class BugPost {
 	 * @throws PossibleBugzillaFailureException
 	 */
 	public String post() throws BugzillaException, LoginException, PossibleBugzillaFailureException {
-		return post(false);
-	}
-
-	/**
-	 * Post the bug to the bugzilla server
-	 * 
-	 * @param isDebug
-	 *            Whether we are debugging or not - if it is debug, we get the
-	 *            respose printed to std out
-	 * @throws BugzillaException
-	 * @throws LoginException
-	 * @throws PossibleBugzillaFailureException
-	 */
-	public String post(boolean isDebug) throws BugzillaException, LoginException, PossibleBugzillaFailureException {
 		BufferedOutputStream out = null;
 		BufferedReader in = null;
 
 		try {
 			// connect to the bugzilla server
-			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(anURL);
+			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(postUrl);
 			if (cntx == null || !(cntx instanceof HttpURLConnection))
 				return null;
 
@@ -135,23 +122,19 @@ public class BugPost {
 
 			// set the connection method
 			postConnection.setRequestMethod("POST");
-			postConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			String contentTypeString = "application/x-www-form-urlencoded";
+			if (charset != null) {
+				contentTypeString += ";charset=" + charset;
+			}
+			postConnection.setRequestProperty("Content-Type", contentTypeString);
 			// get the url for the update with all of the changed values
-			byte[] body = getPostBody().getBytes();
+			byte[] body = getPostBody().getBytes(); 
 			postConnection.setRequestProperty("Content-Length", String.valueOf(body.length));
 
 			// allow outgoing streams and open a stream to post to
 			postConnection.setDoOutput(true);
 
 			out = new BufferedOutputStream(postConnection.getOutputStream());
-
-			// print out debug methods if we are debugging
-			if (isDebug) {
-				System.out.println("SENDING: ");
-				System.out.println("URL: " + anURL);
-
-				System.out.println("Body: \n" + new String(body));
-			}
 
 			// write the data and close the stream
 			out.write(body);
@@ -167,8 +150,6 @@ public class BugPost {
 			in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
 			String result = null;
 
-			if (isDebug)
-				System.out.println("RECEIVING:");
 			String aString = in.readLine();
 
 			boolean possibleFailure = true;
@@ -254,8 +235,8 @@ public class BugPost {
 		// go through all of the attributes and add them to the body of the post
 		Iterator<Map.Entry<String, String>> anIterator = fields.entrySet().iterator();
 		while (anIterator.hasNext()) {
-			Map.Entry<String, String> anEntry = anIterator.next();
-			postBody = postBody + anEntry.getKey() + "=" + anEntry.getValue();
+			Map.Entry<String, String> entry = anIterator.next();
+			postBody = postBody + entry.getKey() + "=" + entry.getValue();
 			if (anIterator.hasNext())
 				postBody = postBody + "&";
 		}
@@ -362,5 +343,9 @@ public class BugPost {
 
 	public void setPrefix2(String prefix2) {
 		this.prefix2 = prefix2;
+	}
+
+	public void setCharset(String charset) {
+		this.charset = charset;
 	}
 }

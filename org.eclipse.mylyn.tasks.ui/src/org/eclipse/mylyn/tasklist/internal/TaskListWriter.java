@@ -35,7 +35,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -110,7 +110,7 @@ public class TaskListWriter {
 			}
 		}
 
-		for (IQuery query : tlist.getQueries()) {
+		for (ITaskQuery query : tlist.getQueries()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(query))

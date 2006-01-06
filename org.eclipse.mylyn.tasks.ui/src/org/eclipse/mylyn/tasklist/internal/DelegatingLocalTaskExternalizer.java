@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -384,11 +384,11 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		// nothing to do
 	}
 
-	public boolean canCreateElementFor(IQuery category) {
+	public boolean canCreateElementFor(ITaskQuery category) {
 		return true;
 	}
 
-	public Element createQueryElement(IQuery query, Document doc, Element parent) {
+	public Element createQueryElement(ITaskQuery query, Document doc, Element parent) {
 		String queryTagName = getQueryTagNameForElement(query);
 		Element node = doc.createElement(queryTagName);
 		node.setAttribute(NAME, query.getDescription(false));
@@ -420,7 +420,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 
 	}
 
-	public String getQueryTagNameForElement(IQuery query) {
+	public String getQueryTagNameForElement(ITaskQuery query) {
 		return "";
 	}
 
@@ -450,7 +450,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		return false;
 	}
 
-	public void readQueryHit(Node node, TaskList tlist, IQuery query) throws TaskListExternalizerException {
+	public void readQueryHit(Node node, TaskList tlist, ITaskQuery query) throws TaskListExternalizerException {
 		// doesn't know how to read a query hit
 	}
 

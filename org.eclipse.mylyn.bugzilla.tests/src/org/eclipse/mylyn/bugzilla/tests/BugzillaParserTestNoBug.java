@@ -40,7 +40,7 @@ public class BugzillaParserTestNoBug extends TestCase {
 		
 		Reader in = new FileReader(f);
 
-		BugReport bug = BugParser.parseBug(in, 666, "<server>", false, null, null);
+		BugReport bug = BugParser.parseBug(in, 666, "<server>", false, null, null, null);
 		assertNull(bug);
 	}
 }

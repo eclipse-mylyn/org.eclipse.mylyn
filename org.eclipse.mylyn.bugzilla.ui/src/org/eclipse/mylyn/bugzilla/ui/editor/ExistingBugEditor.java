@@ -37,7 +37,7 @@ import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugPost;
+import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
@@ -322,11 +322,15 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected void submitBug() {
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
-		final BugPost form = new BugPost();
+		final BugReportPostHandler form = new BugReportPostHandler();
 
 		// set the url for the bug to be submitted to
 		setURL(form, "process_bug.cgi");
 
+		if (bug.getCharset() != null) {
+			form.setCharset(bug.getCharset());
+		}
+		
 		//Add the user's address to the CC list if they haven't specified a CC
 		setDefaultCCValue();
 
@@ -335,7 +339,6 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			Attribute a = it.next();
 			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
 				String value = a.getNewValue();
-
 				// add the attribute to the bug post
 				form.add(a.getParameterName(), checkText(value));
 			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && a.isHidden()) {
@@ -348,7 +351,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		bug.setNewNewComment(formatText(bug.getNewNewComment()));
 
 		// add the summary to the bug post
-		form.add("short_desc", bug.getAttribute("Summary").getNewValue());
+		form.add("short_desc", bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
 
 		if (removeCC != null && removeCC.size() > 0) {
 			String[] s = new String[removeCC.size()];

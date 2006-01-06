@@ -24,7 +24,6 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.bugzilla.ui.actions.SynchronizeReportsAction;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
@@ -43,55 +42,54 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten and Ken Sueda
  */
 public class BugzillaTaskHandler implements ITaskHandler {
 
-	private static final String MESSAGE_CONFIRM_DELETE = "Remove this report from the task list, and discard any task context or local notes?";
+//	private static final String MESSAGE_CONFIRM_DELETE = "Remove this report from the task list, and discard any task context or local notes?";
 
-	public boolean deleteElement(ITaskListElement element) {
-		if (element instanceof BugzillaQueryCategory) {
-			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-					.getShell(), "Confirm delete", "Delete the selected query and all contained tasks?");
-			if (!deleteConfirmed)
-				return false;
-			BugzillaQueryCategory query = (BugzillaQueryCategory) element;
-			MylarTaskListPlugin.getTaskListManager().deleteQuery(query);
-		} else if (element instanceof BugzillaTask) {
-			BugzillaTask task = (BugzillaTask) element;
-			if (task.isActive()) {
-				MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed",
-						"Task must be deactivated in order to delete.");
-				return false;
-			}
-
-			// String message = task.getDeleteConfirmationMessage();
-			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-					.getShell(), "Confirm delete", MESSAGE_CONFIRM_DELETE);
-			if (!deleteConfirmed)
-				return false;
-
-			// task.removeReport();
-			MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
-			IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage();
-
-			// if we couldn't get the page, get out of here
-			if (page == null)
-				return true;
-			try {
-				TaskListView.getDefault().closeTaskEditors(task, page);
-			} catch (Exception e) {
-				MylarStatusHandler.log(e, " deletion failed");
-			}
-		}
-		TaskListView.getDefault().getViewer().refresh();
-		return true;
-	}
+//	public boolean deleteElement(ITaskListElement element) {
+//		if (element instanceof BugzillaQueryCategory) {
+//			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+//					.getShell(), "Confirm delete", "Delete the selected query and all contained tasks?");
+//			if (!deleteConfirmed)
+//				return false;
+//			BugzillaQueryCategory query = (BugzillaQueryCategory) element;
+//			MylarTaskListPlugin.getTaskListManager().deleteQuery(query);
+//		} else if (element instanceof BugzillaTask) {
+//			BugzillaTask task = (BugzillaTask) element;
+//			if (task.isActive()) {
+//				MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed",
+//						"Task must be deactivated in order to delete.");
+//				return false;
+//			}
+//
+//			// String message = task.getDeleteConfirmationMessage();
+//			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+//					.getShell(), "Confirm delete", MESSAGE_CONFIRM_DELETE);
+//			if (!deleteConfirmed)
+//				return false;
+//
+//			// task.removeReport();
+//			MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+//			MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
+//			IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+//					.getActivePage();
+//
+//			// if we couldn't get the page, get out of here
+//			if (page == null)
+//				return true;
+//			try {
+//				TaskListView.getDefault().closeTaskEditors(task, page);
+//			} catch (Exception e) {
+//				MylarStatusHandler.log(e, " deletion failed");
+//			}
+//		}
+//		TaskListView.getDefault().getViewer().refresh();
+//		return true;
+//	}
 
 	public void itemOpened(ITaskListElement element) {
 
@@ -177,7 +175,6 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				// not supported
 			}
 		}
-
 	}
 
 	public boolean acceptsItem(ITaskListElement element) {

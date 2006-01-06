@@ -22,8 +22,6 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public interface ITaskHandler {
 
-	public abstract boolean deleteElement(ITaskListElement element);
-
 	public abstract void itemOpened(ITaskListElement element);
 
 	public abstract void taskClosed(ITask element, IWorkbenchPage page);
@@ -38,6 +36,8 @@ public interface ITaskHandler {
 	public abstract void restoreState(TaskListView taskListView);
 
 	public abstract boolean enableAction(Action action, ITaskListElement element);
+
+//	public abstract boolean deleteElement(ITaskListElement element);
 	
 //	public abstract void itemRemoved(ITaskListElement element, ITaskCategory category);
 	

@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -52,7 +52,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 			case 1:
 				return null;
 			case 2:
-				if (element instanceof ITaskCategory || element instanceof IQuery) {
+				if (element instanceof ITaskCategory || element instanceof ITaskQuery) {
 					return null;
 				}
 				return element.getPriority();
@@ -77,7 +77,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
         	return null;
         }
         if (columnIndex == 0) {
-        	if (element instanceof ITaskCategory || element instanceof IQuery) {
+        	if (element instanceof ITaskCategory || element instanceof ITaskQuery) {
         	
         		return ((ITaskListElement)element).getIcon(); 
         	} else {
@@ -85,7 +85,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
         		return ((ITaskListElement)element).getStatusIcon();
         	}        	
         } else if (columnIndex == 1) {
-        	if (element instanceof ITaskCategory || element instanceof IQuery) {
+        	if (element instanceof ITaskCategory || element instanceof ITaskQuery) {
         		return null;
         	}
         	return ((ITaskListElement)element).getIcon();
@@ -107,8 +107,8 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
     				return TaskListImages.COLOR_TASK_OVERDUE;
     			}
     		}
-    	} else if (object instanceof IQuery) {
-    		for (ITaskListElement child : ((IQuery)object).getHits()) {
+    	} else if (object instanceof ITaskQuery) {
+    		for (ITaskListElement child : ((ITaskQuery)object).getHits()) {
     			if (child instanceof IQueryHit) {
     				ITask task = ((IQueryHit)child).getCorrespondingTask();
     				if (task != null && task.isActive()) {
@@ -161,7 +161,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 				  } else {
 					  return backgroundColor;
 				  }
-			  } else if (element instanceof IQuery) {
+			  } else if (element instanceof ITaskQuery) {
 				  return backgroundColor;
 			  } 
 		} catch (Exception e) {

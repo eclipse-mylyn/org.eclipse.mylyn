@@ -162,6 +162,7 @@ public class BugzillaQueryPageParser
 			
 			URL url = new URL(this.urlString);	
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
+			
 			if(cntx != null){
 				InputStream input = cntx.getInputStream();
 				if(input != null) {

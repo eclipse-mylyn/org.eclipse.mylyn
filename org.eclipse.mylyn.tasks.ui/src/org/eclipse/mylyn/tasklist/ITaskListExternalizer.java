@@ -38,7 +38,7 @@ public interface ITaskListExternalizer {
 	
 	public abstract String getTaskTagName();
 	
-	public abstract String getQueryTagNameForElement(IQuery query);
+	public abstract String getQueryTagNameForElement(ITaskQuery query);
 	
 	public abstract String getQueryHitTagName();
 	
@@ -66,9 +66,9 @@ public interface ITaskListExternalizer {
 	
 	
 	
-	public abstract boolean canCreateElementFor(IQuery category);
+	public abstract boolean canCreateElementFor(ITaskQuery category);
 	
-	public abstract Element createQueryElement(IQuery query, Document doc, Element parent);
+	public abstract Element createQueryElement(ITaskQuery query, Document doc, Element parent);
 	
 	public abstract boolean canReadQuery(Node node);
 	
@@ -81,5 +81,5 @@ public interface ITaskListExternalizer {
 	
 	public abstract boolean canReadQueryHit(Node node);
 	
-	public abstract void readQueryHit(Node node, TaskList tlist, IQuery query) throws TaskListExternalizerException;
+	public abstract void readQueryHit(Node node, TaskList tlist, ITaskQuery query) throws TaskListExternalizerException;
 }

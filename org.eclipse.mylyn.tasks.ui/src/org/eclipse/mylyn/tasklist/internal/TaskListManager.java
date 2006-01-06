@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -148,7 +148,7 @@ public class TaskListManager {
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 	
-	public void addQuery(IQuery cat) {
+	public void addQuery(ITaskQuery cat) {
 		taskList.addQuery(cat);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
@@ -166,7 +166,7 @@ public class TaskListManager {
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}
 
-	public void deleteQuery(IQuery query) {
+	public void deleteQuery(ITaskQuery query) {
 		taskList.deleteQuery(query);
 		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
 	}

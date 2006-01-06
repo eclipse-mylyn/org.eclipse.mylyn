@@ -22,7 +22,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugPost;
+import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
@@ -175,12 +175,12 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
 					public void run() {
-						BugPost form = new BugPost();
-						form.setPrefix(BugPost.FORM_PREFIX_BUG_218);
-						form.setPrefix2(BugPost.FORM_PREFIX_BUG_220);
+						BugReportPostHandler form = new BugReportPostHandler();
+						form.setPrefix(BugReportPostHandler.FORM_PREFIX_BUG_218);
+						form.setPrefix2(BugReportPostHandler.FORM_PREFIX_BUG_220);
 						
-						form.setPostfix(BugPost.FORM_POSTFIX_216);
-						form.setPostfix2(BugPost.FORM_POSTFIX_218);
+						form.setPostfix(BugReportPostHandler.FORM_POSTFIX_216);
+						form.setPostfix2(BugReportPostHandler.FORM_POSTFIX_218);
 
 						try {
 							setURL(form, "post_bug.cgi");
@@ -343,11 +343,11 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	 * Function to set the url to post the bug to.
 	 * 
 	 * @param form
-	 *            A reference to a BugPost that the bug is going to be posted to
+	 *            A reference to a BugReportPostHandler that the bug is going to be posted to
 	 * @param formName
 	 *            The form that we wish to use to submit the bug
 	 */
-	protected void setURL(BugPost form, String formName)
+	protected void setURL(BugReportPostHandler form, String formName)
 			throws MalformedURLException {
 
 		String baseURL = BugzillaPlugin.getDefault().getServerName();

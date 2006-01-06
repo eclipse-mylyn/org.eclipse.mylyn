@@ -31,7 +31,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
@@ -45,7 +45,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Shawn Minto
  */
-public class BugzillaQueryCategory implements IQuery {
+public class BugzillaQueryCategory implements ITaskQuery {
 
 	private String queryString;
 

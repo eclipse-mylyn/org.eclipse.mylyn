@@ -54,7 +54,7 @@ public class RemoveFromCategoryAction extends Action {
 //				ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(selectedElement);
 //
 //				if (item.getParentItem() != null) {
-//					if (item.getParentItem().getData() instanceof IQuery) {
+//					if (item.getParentItem().getData() instanceof ITaskQuery) {
 //						MessageDialog.openInformation(Workbench.getInstance()
 //								.getActiveWorkbenchWindow().getShell(), "Mylar Tasks",
 //								"Tasks can not be deleted from a query.");

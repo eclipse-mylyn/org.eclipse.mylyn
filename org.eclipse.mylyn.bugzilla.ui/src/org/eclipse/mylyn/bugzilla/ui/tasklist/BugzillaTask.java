@@ -60,7 +60,6 @@ public class BugzillaTask extends Task {
 		OUTGOING, OK, INCOMMING, CONFLICT
 	}
 	
-
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */

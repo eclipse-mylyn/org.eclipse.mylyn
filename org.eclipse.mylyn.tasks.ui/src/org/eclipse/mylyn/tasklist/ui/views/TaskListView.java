@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.core.internal.dt.MylarWebRef;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
@@ -491,8 +491,8 @@ public class TaskListView extends ViewPart {
 					case 3:
 						return cat.getDescription(true);
 					}
-				} else if (element instanceof IQuery) {
-					IQuery cat = (IQuery) element;
+				} else if (element instanceof ITaskQuery) {
+					ITaskQuery cat = (ITaskQuery) element;
 					switch (columnIndex) {
 					case 0:
 						return new Boolean(false);
@@ -527,8 +527,8 @@ public class TaskListView extends ViewPart {
 						cat.setDescription(((String) value).trim());
 						break;
 					}
-				} else if (((TreeItem) element).getData() instanceof IQuery) {
-					IQuery cat = (IQuery) ((TreeItem) element).getData();
+				} else if (((TreeItem) element).getData() instanceof ITaskQuery) {
+					ITaskQuery cat = (ITaskQuery) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
 						break;
@@ -618,14 +618,14 @@ public class TaskListView extends ViewPart {
 		 */
 		@Override
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
-			if (o1 instanceof ITaskCategory || o1 instanceof IQuery) {
-				if (o2 instanceof ITaskCategory || o2 instanceof IQuery) {
+			if (o1 instanceof ITaskCategory || o1 instanceof ITaskQuery) {
+				if (o2 instanceof ITaskCategory || o2 instanceof ITaskQuery) {
 					return ((ITaskListElement) o1).getDescription(false).compareTo(((ITaskListElement) o2).getDescription(false));
 				} else {
 					return -1;
 				}
 			} else if (o1 instanceof ITaskListElement) {
-				if (o2 instanceof ITaskCategory || o2 instanceof IQuery) {
+				if (o2 instanceof ITaskCategory || o2 instanceof ITaskQuery) {
 					return -1;
 				} else if (o2 instanceof ITaskListElement) {
 					ITaskListElement element1 = (ITaskListElement) o1;

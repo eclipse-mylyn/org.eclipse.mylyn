@@ -23,7 +23,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugPost;
+import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
@@ -151,12 +151,12 @@ public class NewBugEditor extends AbstractBugEditor {
 	
 	@Override
 	protected void submitBug() {
-		final BugPost form = new BugPost(); 
-		form.setPrefix(BugPost.FORM_PREFIX_BUG_218);
-		form.setPrefix2(BugPost.FORM_PREFIX_BUG_220);
+		final BugReportPostHandler form = new BugReportPostHandler(); 
+		form.setPrefix(BugReportPostHandler.FORM_PREFIX_BUG_218);
+		form.setPrefix2(BugReportPostHandler.FORM_PREFIX_BUG_220);
 		
-		form.setPostfix(BugPost.FORM_POSTFIX_216);
-		form.setPostfix2(BugPost.FORM_POSTFIX_218);
+		form.setPostfix(BugReportPostHandler.FORM_POSTFIX_216);
+		form.setPostfix2(BugReportPostHandler.FORM_POSTFIX_218);
 		updateBug();
 
 		setURL(form, "post_bug.cgi");

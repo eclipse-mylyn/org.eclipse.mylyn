@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.tasklist.IQuery;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -34,7 +34,7 @@ public class TaskList implements Serializable {
 
 	private List<ITaskCategory> categories = new ArrayList<ITaskCategory>();
 
-	private List<IQuery> queries = new ArrayList<IQuery>();
+	private List<ITaskQuery> queries = new ArrayList<ITaskQuery>();
 
 	private transient List<ITask> activeTasks = new ArrayList<ITask>();
 
@@ -50,7 +50,7 @@ public class TaskList implements Serializable {
 		categories.add(cat);
 	}
 
-	void addQuery(IQuery query) {
+	void addQuery(ITaskQuery query) {
 		queries.add(query);
 	}
 
@@ -64,7 +64,7 @@ public class TaskList implements Serializable {
 	/**
 	 * XXX Only public so that other externalizers can use it
 	 */
-	public void internalAddQuery(IQuery query) {
+	public void internalAddQuery(ITaskQuery query) {
 		queries.add(query);
 	}
 
@@ -106,7 +106,7 @@ public class TaskList implements Serializable {
 		categories.remove(category);
 	}
 
-	void deleteQuery(IQuery query) {
+	void deleteQuery(ITaskQuery query) {
 		queries.remove(query);
 	}
 
@@ -119,7 +119,7 @@ public class TaskList implements Serializable {
 				return foundTask;
 			}
 		}
-		for (IQuery query : queries) {
+		for (ITaskQuery query : queries) {
 			if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
 				return foundTask;
 			}
@@ -174,7 +174,7 @@ public class TaskList implements Serializable {
 		return included;
 	}
 	
-	public List<IQuery> getQueries() {
+	public List<ITaskQuery> getQueries() {
 		return queries;
 	}
 
@@ -210,7 +210,7 @@ public class TaskList implements Serializable {
 			roots.add(t);
 		for (ITaskCategory cat : categories)
 			roots.add(cat);
-		for (IQuery query : queries)
+		for (ITaskQuery query : queries)
 			roots.add(query);
 		return roots;
 	}

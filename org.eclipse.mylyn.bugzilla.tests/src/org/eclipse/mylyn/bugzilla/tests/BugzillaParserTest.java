@@ -42,7 +42,7 @@ public class BugzillaParserTest extends TestCase {
 		
 		Reader in = new FileReader(f);
 		
-		BugReport bug = BugParser.parseBug(in, 1, "<server>", false, null, null);
+		BugReport bug = BugParser.parseBug(in, 1, "<server>", false, null, null, null);
 
 //		displayBug(bug);
 		assertEquals("Bug id", 1, bug.getId());
