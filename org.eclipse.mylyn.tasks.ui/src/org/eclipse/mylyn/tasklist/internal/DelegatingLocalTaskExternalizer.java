@@ -157,7 +157,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		}
 		node.setAttribute(BUGZILLA, FALSE); // TODO: this is not great
 
-		node.setAttribute(ISSUEURL, task.getIssueReportURL());
+		node.setAttribute(ISSUEURL, task.getUrl());
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, "" + task.getElapsedTime());
 		node.setAttribute(ESTIMATED, "" + task.getEstimateTimeHours());
@@ -274,9 +274,9 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 			task.setActive(false);
 		}
 		if (element.hasAttribute(ISSUEURL)) {
-			task.setIssueReportURL(element.getAttribute(ISSUEURL));
+			task.setUrl(element.getAttribute(ISSUEURL));
 		} else {
-			task.setIssueReportURL("");
+			task.setUrl("");
 		}
 		if (element.hasAttribute(NOTES)) {
 			task.setNotes(element.getAttribute(NOTES));

@@ -187,7 +187,7 @@ public class TaskInfoEditor extends EditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		String label = description.getText();
 		task.setDescription(label);
-		task.setIssueReportURL(issueReportURL.getText());
+		task.setUrl(issueReportURL.getText());
 		String note = notes.getText();
 		task.setNotes(note);
 		task.setEstimatedTimeHours(estimated.getSelection());
@@ -329,7 +329,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		Label urlLabel = toolkit.createLabel(container, "Web Link:");
 		urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		issueReportURL = toolkit.createText(container, task.getIssueReportURL(), SWT.BORDER);
+		issueReportURL = toolkit.createText(container, task.getUrl(), SWT.BORDER);
 		issueReportURL.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		// issueReportURL.setForeground(HYPERLINK);
 

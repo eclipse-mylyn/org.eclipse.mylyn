@@ -58,8 +58,8 @@ public class BugzillaTask extends Task {
 
 	public enum BugReportSyncState {
 		OUTGOING, OK, INCOMMING, CONFLICT
-
 	}
+	
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -148,7 +148,7 @@ public class BugzillaTask extends Task {
 		int id = BugzillaTask.getBugId(getHandleIdentifier());
 		String url = BugzillaRepository.getBugUrlWithoutLogin(id);
 		if (url != null)
-			super.setIssueReportURL(url);
+			super.setUrl(url);
 	}
 
 	@Override
@@ -574,14 +574,10 @@ public class BugzillaTask extends Task {
 		}
 	}
 
-	public String getBugUrl() {
+	@Override
+	public String getUrl(){
 		// fix for bug 103537 - should login automatically, but dont want to show the login info in the query string
 		return BugzillaRepository.getBugUrlWithoutLogin(getBugId(handle));
-	}
-
-	@Override
-	public String getIssueReportURL(){
-		return getBugUrl();
 	}
 	
 	@Override

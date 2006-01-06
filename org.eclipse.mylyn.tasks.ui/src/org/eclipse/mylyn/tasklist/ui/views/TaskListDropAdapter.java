@@ -140,7 +140,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		}
 
 		newTask.setPriority(MylarTaskListPlugin.PriorityLevel.P3.toString());
-		newTask.setIssueReportURL(url);
+		newTask.setUrl(url);
 
 		// Place new Task at root of task list
 		MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);

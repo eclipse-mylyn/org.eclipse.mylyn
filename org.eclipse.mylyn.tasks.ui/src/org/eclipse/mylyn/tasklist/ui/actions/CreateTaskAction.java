@@ -50,7 +50,7 @@ public class CreateTaskAction extends Action {
 					.genUniqueTaskHandle(), dialog.getTaskname(), true);
 			newTask.setPriority(dialog.getSelectedPriority());
 			newTask.setReminderDate(dialog.getReminderDate());
-			newTask.setIssueReportURL(dialog.getIssueURL());
+			newTask.setUrl(dialog.getIssueURL());
 			
 			Object selectedObject = ((IStructuredSelection)view.getViewer().getSelection()).getFirstElement();
 			

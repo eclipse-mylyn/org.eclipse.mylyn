@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.tasklist.internal;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +62,7 @@ public class Task implements ITask {
 
 	private List<String> plans = new ArrayList<String>();
 
-	private String issueReportURL = "";
+	private String url = "";
 
 	private ITaskCategory parentCategory = null;
 
@@ -270,20 +272,20 @@ public class Task implements ITask {
 		this.links = relatedLinks;
 	}
 
-	public void addLink(String url) {
-		links.add(url);
+	public void addLink(String link) {
+		links.add(link);
 	}
 
-	public void removeLink(String url) {
-		links.remove(url);
+	public void removeLink(String link) {
+		links.remove(link);
 	}
 
-	public void setIssueReportURL(String url) {
-		issueReportURL = url;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public String getIssueReportURL() {
-		return issueReportURL;
+	public String getUrl() {
+		return url;
 	}
 
 	public String getNotes() {
@@ -358,7 +360,7 @@ public class Task implements ITask {
 	 * TODO: tasks shouldn't know about images, or the context manager
 	 */
 	public Image getIcon() {
-		if (issueReportURL != null && !issueReportURL.trim().equals("") && !issueReportURL.equals("http://")) {
+		if (url != null && !url.trim().equals("") && !url.equals("http://")) {
 			return TaskListImages.getImage(TaskListImages.TASK_WEB);
 		} else {
 			return TaskListImages.getImage(TaskListImages.TASK);
@@ -483,6 +485,19 @@ public class Task implements ITask {
 				return false;
 			}
 		}
+	}
+
+	public boolean hasValidUrl() {
+		String taskUrl = getUrl();
+		if (taskUrl != null && !taskUrl.equals("") && !taskUrl.equals("http://") && !taskUrl.equals("https://") ) {
+			try {
+				new URL(taskUrl);
+				return true;
+			} catch (MalformedURLException e) {
+				return false;
+			}
+		}
+		return false;
 	}
 }
 

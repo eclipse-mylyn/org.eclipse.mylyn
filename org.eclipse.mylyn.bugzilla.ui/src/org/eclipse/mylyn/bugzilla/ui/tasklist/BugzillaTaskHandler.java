@@ -38,6 +38,7 @@ import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.ui.actions.OpenTaskUrlInExternalBrowser;
 import org.eclipse.mylar.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -111,7 +112,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 					return;
 				}
 				String title = "Bug #" + BugzillaTask.getBugId(t.getHandleIdentifier());
-				BugzillaUITools.openUrl(title, title, t.getBugUrl());
+				BugzillaUITools.openUrl(title, title, t.getUrl());
 			} else {
 				// not supported
 			}
@@ -238,9 +239,19 @@ public class BugzillaTaskHandler implements ITaskHandler {
 	public boolean enableAction(Action action, ITaskListElement element) {
 
 		if (element instanceof BugzillaHit) {
+			BugzillaHit hit = (BugzillaHit)element;
+			if (hit.getCorrespondingTask() != null && hit.getCorrespondingTask().hasValidUrl()) {
+				return true;
+			}
 			return false;
 		} else if (element instanceof BugzillaTask) {
-			if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
+			if (action instanceof OpenTaskUrlInExternalBrowser) {
+				if (((ITask)element).hasValidUrl()) {
+					return true;
+				} else {
+					return false;
+				} 
+			} else if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
 					|| action instanceof OpenTaskEditorAction || action instanceof RemoveFromCategoryAction) {
 				return true;
 			} else {

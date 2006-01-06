@@ -48,9 +48,11 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void removeLink(String url);
 
-	public abstract void setIssueReportURL(String url);
+	public abstract boolean hasValidUrl();	
 
-	public abstract String getIssueReportURL();
+	public abstract void setUrl(String url);
+
+	public abstract String getUrl();
 
 	public abstract String getNotes();
 

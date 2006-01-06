@@ -68,7 +68,7 @@ public class TaskListDnDTest extends TestCase {
 		assertNotNull(tasks);		
 		assertEquals(1, tasks.size());
 		assertEquals(title, tasks.get(0).getDescription(false));
-		assertEquals(url, tasks.get(0).getIssueReportURL());
+		assertEquals(url, tasks.get(0).getUrl());
 	}
 		
 	

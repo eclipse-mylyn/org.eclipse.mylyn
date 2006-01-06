@@ -64,7 +64,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
     }
    
     public Image getIcon(ITask task) {
-    	String issueReportUrl = task.getIssueReportURL();
+    	String issueReportUrl = task.getUrl();
 		if (issueReportUrl != null && !issueReportUrl.trim().equals("") && !issueReportUrl.equals("http://")) {
 			return TaskListImages.getImage(TaskListImages.TASK_WEB);
 		} else {

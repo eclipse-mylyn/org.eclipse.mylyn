@@ -8,6 +8,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
+ org.eclipse.ui.browser,
  org.eclipse.ui.forms,
  org.eclipse.mylar.core
 Eclipse-AutoStart: true

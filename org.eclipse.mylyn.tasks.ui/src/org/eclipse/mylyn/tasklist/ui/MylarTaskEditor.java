@@ -102,7 +102,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	protected void createPages() {
 		try {
 			int index = createTaskSummaryPage();
-			if (task.getIssueReportURL().length() > 9) {
+			if (task.getUrl().length() > 9) {
 				createTaskIssueWebPage();
 			}
 			for (IContextEditorFactory factory : MylarTaskListPlugin.getDefault().getContextEditors()) {
@@ -143,7 +143,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			webBrowser = new Browser(getContainer(), SWT.NONE);
 			int index = addPage(webBrowser);
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
-			webBrowser.setUrl(task.getIssueReportURL());
+			webBrowser.setUrl(task.getUrl());
 
 			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL);
 			if (task.isLocal() || openWithBrowser)
@@ -159,8 +159,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		taskSummaryEditor.doSave(monitor);
 		if (webBrowser != null) {
-			webBrowser.setUrl(task.getIssueReportURL());
-		} else if (task.getIssueReportURL().length() > 9) {
+			webBrowser.setUrl(task.getUrl());
+		} else if (task.getUrl().length() > 9) {
 			createTaskIssueWebPage();
 		}
 	}
