@@ -41,7 +41,7 @@ public class CommitMessageTest extends TestCase {
 	@SuppressWarnings("serial")
 	public void testLocalTaskCommentParsing() {
 		ITask task = new Task("handle", "foo", false);
-		task.setIssueReportURL("http://eclipse.org/mylar");
+		task.setUrl("http://eclipse.org/mylar");
 		String comment = MylarContextChangeSet.generateComment(
 				task, 
 				MylarIdePlugin.DEFAULT_PREFIX_COMPLETED, 
@@ -51,7 +51,7 @@ public class CommitMessageTest extends TestCase {
 		String url = MylarContextChangeSet.getUrlFromComment(comment);
 		assertEquals("http://eclipse.org/mylar", url);
 		
-		task.setIssueReportURL("http://eclipse.org/mylar bla \n bla");
+		task.setUrl("http://eclipse.org/mylar bla \n bla");
 		String comment2 = MylarContextChangeSet.generateComment(
 				task, 
 				MylarIdePlugin.DEFAULT_PREFIX_COMPLETED, 

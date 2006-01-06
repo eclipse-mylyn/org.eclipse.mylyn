@@ -178,7 +178,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		} else { // bug report
 			comment += LABEL_BUG + task.getDescription(false);
 		}
-		String url = task.getIssueReportURL();
+		String url = task.getUrl();
 		if (url != null && !url.equals("") && !url.endsWith("//")) {
 			comment += " \n" + url;
 		}
