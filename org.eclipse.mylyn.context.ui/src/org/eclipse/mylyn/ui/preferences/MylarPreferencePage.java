@@ -253,6 +253,10 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	 */
 	public void applyEditorValue() {
 		Object obj = colorDialogEditor.getValue();
+		if (!colorDialogEditor.isDirty() || !colorDialogEditor.isValueValid()) {
+			return;
+		}
+		
 		if (obj instanceof RGB) {
 			// create new color
 			RGB rgb = (RGB) obj;
@@ -407,7 +411,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 					break;
 				case 1: // COLOR_COLUMN
 					selection = hl;
-					return null;
+					return selection.getCore().getRGB();
 				case 2: // KIND_COLUMN
 					// return index of current value
 					if (hl.isGradient()) {
