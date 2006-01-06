@@ -147,7 +147,7 @@ public class BugzillaStackTraceTest extends TestCase {
 	   		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path(TEST_FILE_LOC+bugFileName));     	// used if run as a plugin test
 //    		File f = new File(TEST_FILE_LOC+bugFileName); // used if run as a standalone test
 	        Reader reader = new FileReader(f);
-            doi.setBug(BugParser.parseBug(reader, hit.getId(), BUGZILLA_SERVER_NAME, true, null, null));
+            doi.setBug(BugParser.parseBug(reader, hit.getId(), BUGZILLA_SERVER_NAME, true, null, null, null));
             reader.close();
         } catch (Exception e) {
             e.printStackTrace();
