@@ -15,7 +15,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.internal.Workbench;
 
@@ -34,7 +34,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
             ICommandService commandService = (ICommandService)Workbench.getInstance().getActiveWorkbenchWindow().getWorkbench().getAdapter(ICommandService.class);
             commandService.addExecutionListener(this);
         } catch (NullPointerException npe) {
-            ErrorLogger.log("Monitors can not be instantiated until the workbench is active: ", this);  
+            MylarStatusHandler.log("Monitors can not be instantiated until the workbench is active: ", this);  
         }
     }
     
@@ -43,7 +43,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
             ICommandService commandService = (ICommandService)Workbench.getInstance().getActiveWorkbenchWindow().getWorkbench().getAdapter(ICommandService.class);
             commandService.removeExecutionListener(this);
         } catch (NullPointerException npe) {
-            ErrorLogger.log(npe, "Could not dispose monitor.");  
+            MylarStatusHandler.log(npe, "Could not dispose monitor.");  
         }
     }
     

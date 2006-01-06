@@ -71,7 +71,7 @@ public class TimerThread extends Thread implements Runnable {
 				sleep(sleepInterval);
 			}
 		} catch (InterruptedException e) {
-			ErrorLogger.log(e, "timer interrupted");
+			MylarStatusHandler.log(e, "timer interrupted");
 		}
 	}
 

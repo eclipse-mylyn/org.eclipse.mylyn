@@ -19,7 +19,7 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -106,7 +106,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 		    			MylarPlugin.getContextManager().updateDegreesOfSeparation(bridge.getRelationshipProviders(), degreeOfSeparation);
 	    			} catch (NumberFormatException e){
 	    				// ignore this for now
-	    				ErrorLogger.fail(e, "invalid degree of separation", false);
+	    				MylarStatusHandler.fail(e, "invalid degree of separation", false);
 	    			}
 				}
 			};  

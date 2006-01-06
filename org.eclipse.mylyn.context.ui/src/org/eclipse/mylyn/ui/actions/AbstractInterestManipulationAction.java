@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -72,7 +72,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				if (node != null) {
 					MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
 				} else {
-					ErrorLogger.log("no element for interest manipulation", this);
+					MylarStatusHandler.log("no element for interest manipulation", this);
 				}
 			}
 		} else {
@@ -80,7 +80,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 			if (node != null) {
 				MylarPlugin.getContextManager().manipulateInterestForNode(node, increment, false, SOURCE_ID);
 			} else {
-				ErrorLogger.log("no active element for interest manipulation", this);
+				MylarStatusHandler.log("no active element for interest manipulation", this);
 			}
 		}
     }

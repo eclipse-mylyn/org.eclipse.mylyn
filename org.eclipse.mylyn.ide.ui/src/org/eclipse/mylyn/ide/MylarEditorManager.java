@@ -18,7 +18,7 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.ui.IMylarUiBridge;
@@ -59,7 +59,7 @@ public class MylarEditorManager implements IMylarContextListener {
 		            MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
 		        }
 			} catch (Exception e) {
-				ErrorLogger.fail(e, "failed to open editors on activation", false);
+				MylarStatusHandler.fail(e, "failed to open editors on activation", false);
 			} finally {				
 				MylarPlugin.getContextManager().setContextCapturePaused(false);
 				for (IMylarUiBridge bridge : MylarUiPlugin.getDefault().getUiBridges()) {
@@ -81,7 +81,7 @@ public class MylarEditorManager implements IMylarContextListener {
             IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
             if (page != null) page.closeAllEditors(true);
         } catch (Throwable t) {
-            ErrorLogger.fail(t, "Could not auto close editor.", false);
+            MylarStatusHandler.fail(t, "Could not auto close editor.", false);
         } 
 	}
 	

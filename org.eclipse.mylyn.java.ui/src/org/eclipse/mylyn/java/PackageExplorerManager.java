@@ -31,7 +31,7 @@ import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.java.ui.MembersFilter;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.ui.ISelectionListener;
@@ -106,7 +106,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 				}
     		}
 	    } catch (Throwable t) {
-			ErrorLogger.log(t, "Could not update package explorer");
+			MylarStatusHandler.log(t, "Could not update package explorer");
 		}
 	}
 	
@@ -122,7 +122,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 				}
 	    	}	
     	} catch (Throwable t) {
-    		ErrorLogger.log(t, "Could not update package explorer");
+    		MylarStatusHandler.log(t, "Could not update package explorer");
     	}
     }
 

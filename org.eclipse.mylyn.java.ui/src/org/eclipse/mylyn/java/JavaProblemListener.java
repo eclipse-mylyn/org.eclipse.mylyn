@@ -20,7 +20,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -49,7 +49,7 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 				}
 			}
 		} catch (Exception e) {
-			ErrorLogger.log(e, "could not update on marker change");
+			MylarStatusHandler.log(e, "could not update on marker change");
 		}
 	}
 

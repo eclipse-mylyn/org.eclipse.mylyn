@@ -17,7 +17,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchView;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarImages;
@@ -79,7 +79,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 	                }
 				}
 		    } catch (Throwable t) {
-				ErrorLogger.log(t, "Could not update package explorer");
+				MylarStatusHandler.log(t, "Could not update package explorer");
 			}
 		}
 	}

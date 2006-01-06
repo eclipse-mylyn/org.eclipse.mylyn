@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -58,7 +58,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 				if (element != null) delete(element);
 			} 
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "delta update failed", false);
+			MylarStatusHandler.fail(t, "delta update failed", false);
 		}
 	}
 

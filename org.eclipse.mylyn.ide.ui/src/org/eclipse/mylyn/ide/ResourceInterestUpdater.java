@@ -16,7 +16,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -42,7 +42,7 @@ public class ResourceInterestUpdater {
 				});
 			}
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "could not add resource to context: " + resource, false);
+			MylarStatusHandler.fail(t, "could not add resource to context: " + resource, false);
 		}
 	}
 

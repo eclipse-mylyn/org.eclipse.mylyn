@@ -12,7 +12,7 @@
 package org.eclipse.mylar.ide.ui.wizards;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.ui.wizards.CommitWizard;
@@ -31,7 +31,7 @@ public class MylarCommitWizard extends CommitWizard {
 		try {
 			super.dispose();	
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "failure on disposing commit wizard", false);
+			MylarStatusHandler.fail(e, "failure on disposing commit wizard", false);
 		}
 	}
 	

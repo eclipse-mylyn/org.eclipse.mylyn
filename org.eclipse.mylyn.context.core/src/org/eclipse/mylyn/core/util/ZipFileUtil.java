@@ -48,7 +48,7 @@ public class ZipFileUtil {
         			monitor.worked(1);
         		}
         	}catch (Exception e){
-        		ErrorLogger.log(e, "Could not add " + file.getName() + " to zip");
+        		MylarStatusHandler.log(e, "Could not add " + file.getName() + " to zip");
         	}
         }
     

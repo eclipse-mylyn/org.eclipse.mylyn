@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 
 /**
@@ -140,7 +140,7 @@ public class XmlNodeHelper {
                 contents += s;
             }
         } catch (IOException e) {
-            ErrorLogger.log(e, "couldn't get contents");
+            MylarStatusHandler.log(e, "couldn't get contents");
         }
         return contents;
     }

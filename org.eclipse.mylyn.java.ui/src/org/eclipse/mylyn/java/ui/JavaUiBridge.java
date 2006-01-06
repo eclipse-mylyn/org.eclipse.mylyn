@@ -31,7 +31,7 @@ import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction;
@@ -57,7 +57,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer");
             javaOutlineField.setAccessible(true); 
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "could not get install Mylar on Outline viewer", true);
+			MylarStatusHandler.fail(e, "could not get install Mylar on Outline viewer", true);
 		} 
 	}
 	
@@ -69,7 +69,7 @@ public class JavaUiBridge implements IMylarUiBridge {
             IEditorPart part = JavaUI.openInEditor(javaElement);
             JavaUI.revealInEditor(part, javaElement);
         } catch (Throwable t) {
-        	ErrorLogger.fail(t, "Could not open editor for: " + node, true);
+        	MylarStatusHandler.fail(t, "Could not open editor for: " + node, true);
         }
     }
     
@@ -100,7 +100,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 			try {
 				IDE.openEditor(activePage, (IFile)resource, false);
 			} catch (PartInitException e) {
-				ErrorLogger.fail(e, "failed to open editor for: " + resource, false);
+				MylarStatusHandler.fail(e, "failed to open editor for: " + resource, false);
 			}	
 		}	
 	}
@@ -116,7 +116,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                 for (int i = 0; i < references.length; i++) {
                     IEditorPart part = references[i].getEditor(false);
                     if (part != null  && part instanceof JavaEditor) {
-                    	ErrorLogger.log("editor closing not implemented", this);
+                    	MylarStatusHandler.log("editor closing not implemented", this);
 //                        JavaEditor editor = (JavaEditor)part;
 //                        String name = MylarJavaPlugin.getStructureBridge().getName(
 //                                MylarJavaPlugin.getStructureBridge().getObjectForHandle(node.getElementHandle()));
@@ -125,7 +125,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                 }
             }
         } catch (Throwable t) {
-            ErrorLogger.fail(t, "Could not auto close editor.", false);
+            MylarStatusHandler.fail(t, "Could not auto close editor.", false);
         } 
     }
 
@@ -143,7 +143,7 @@ public class JavaUiBridge implements IMylarUiBridge {
                 try {
                     viewers.add((TreeViewer)javaOutlineField.get(page));
                 } catch (Exception e) { 
-                	ErrorLogger.log(e, "could not get outline viewer");
+                	MylarStatusHandler.log(e, "could not get outline viewer");
                 } 
             } 
         } 

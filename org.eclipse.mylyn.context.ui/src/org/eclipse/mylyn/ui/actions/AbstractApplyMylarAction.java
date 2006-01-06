@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -100,7 +100,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				installInterestFilter(on, viewer);
 			}
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "Could not install viewer manager on: " + prefId, false);
+			MylarStatusHandler.fail(t, "Could not install viewer manager on: " + prefId, false);
 		} finally {
 			MylarPlugin.getContextManager().setContextCapturePaused(false);
 		}
@@ -146,10 +146,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 					return true;
 				} 
 			} else {
-				ErrorLogger.log("Could not install interest filter", this);
+				MylarStatusHandler.log("Could not install interest filter", this);
 			}
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "Could not install viewer fitler on: " + prefId, false);
+			MylarStatusHandler.fail(t, "Could not install viewer fitler on: " + prefId, false);
 		}
 		return false;
 	}
@@ -165,7 +165,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				}
 			}
 		} else {
-			ErrorLogger.log("Could not uninstall interest filter", this);
+			MylarStatusHandler.log("Could not uninstall interest filter", this);
 		}
 	}
 

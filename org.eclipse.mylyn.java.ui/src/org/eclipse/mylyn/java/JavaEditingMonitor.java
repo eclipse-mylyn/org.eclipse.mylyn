@@ -23,7 +23,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.ui.IWorkbenchPart;
@@ -118,7 +118,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
             }   
             if (selectedElement != null) lastSelectedElement = selectedElement;
         } catch (Throwable t) {
-            ErrorLogger.log(t, "Failed to update model based on selection."); 
+            MylarStatusHandler.log(t, "Failed to update model based on selection."); 
         }
     }
 

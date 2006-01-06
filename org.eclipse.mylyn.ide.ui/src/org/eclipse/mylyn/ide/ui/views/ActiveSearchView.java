@@ -37,7 +37,7 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.dt.MylarWebRef;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.ide.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylar.ui.MylarImages;
@@ -173,7 +173,7 @@ public class ActiveSearchView extends ViewPart {
 	                try {  
 	                    internalRefresh(node, updateLabels);
 	                } catch (Throwable t) {
-	                	ErrorLogger.log(t, "active searchrefresh failed");
+	                	MylarStatusHandler.log(t, "active searchrefresh failed");
 	                }
 	            }
 	        });
@@ -183,7 +183,7 @@ public class ActiveSearchView extends ViewPart {
 	                try {  
 	                    internalRefresh(node, updateLabels);
 	                } catch (Throwable t) {
-	                	ErrorLogger.log(t, "active searchrefresh failed");
+	                	MylarStatusHandler.log(t, "active searchrefresh failed");
 	                }
 	            }
 	        });

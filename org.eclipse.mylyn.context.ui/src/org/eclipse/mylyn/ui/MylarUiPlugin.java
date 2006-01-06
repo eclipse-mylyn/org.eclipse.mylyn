@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.ui.ITaskHighlighter;
@@ -163,7 +163,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		} catch (Throwable t) {
-			ErrorLogger.log(t, "plug-in intialization failed");
+			MylarStatusHandler.log(t, "plug-in intialization failed");
 		}
 		initializeHighlighters();
 		initializeDefaultPreferences(getPrefs());
@@ -191,7 +191,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 						ApplyMylarToOutlineAction.getDefault().update();
 					MylarTaskListPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 				} catch (Exception e) {
-					ErrorLogger.fail(e, "Mylar UI initialization failed", true);
+					MylarStatusHandler.fail(e, "Mylar UI initialization failed", true);
 				}
 			}
 		});
@@ -206,7 +206,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			MylarPlugin.getContextManager().removeListener(viewerManager);
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "Mylar UI stop failed", false);
+			MylarStatusHandler.fail(e, "Mylar UI stop failed", false);
 		}
 	}
 
@@ -466,11 +466,11 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				if (provider instanceof ILabelProvider && contentType != null) {
 					MylarUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType, (ILabelProvider) provider);
 				} else {
-					ErrorLogger.log("Could not load label provider: " + provider.getClass().getCanonicalName() + " must implement "
+					MylarStatusHandler.log("Could not load label provider: " + provider.getClass().getCanonicalName() + " must implement "
 							+ ILabelProvider.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
-				ErrorLogger.log(e, "Could not load label provider extension");
+				MylarStatusHandler.log(e, "Could not load label provider extension");
 			}
 		}
 
@@ -481,11 +481,11 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				if (bridge instanceof IMylarUiBridge && contentType != null) {
 					MylarUiPlugin.getDefault().internalAddBridge((String) contentType, (IMylarUiBridge) bridge);
 				} else {
-					ErrorLogger.log("Could not load bridge: " + bridge.getClass().getCanonicalName() + " must implement "
+					MylarStatusHandler.log("Could not load bridge: " + bridge.getClass().getCanonicalName() + " must implement "
 							+ IMylarUiBridge.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
-				ErrorLogger.log(e, "Could not load bridge extension");
+				MylarStatusHandler.log(e, "Could not load bridge extension");
 			}
 		}
 

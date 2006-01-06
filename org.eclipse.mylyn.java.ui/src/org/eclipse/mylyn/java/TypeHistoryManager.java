@@ -34,7 +34,7 @@ import org.eclipse.jdt.internal.corext.util.TypeInfoHistory;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -71,7 +71,7 @@ public class TypeHistoryManager implements IMylarContextListener {
 					}
 				}
 			} catch (JavaModelException e) {
-				ErrorLogger.log(e, "failed to update history for a type");
+				MylarStatusHandler.log(e, "failed to update history for a type");
 			}
 		}
 	}

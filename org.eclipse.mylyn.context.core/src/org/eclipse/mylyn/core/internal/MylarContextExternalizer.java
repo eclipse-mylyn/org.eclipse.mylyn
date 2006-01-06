@@ -20,7 +20,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -74,7 +74,7 @@ public class MylarContextExternalizer {
 			writer.writeContextToStream(context);
 			stream.close();
 		} catch (IOException e) {
-			ErrorLogger.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+			MylarStatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class MylarContextExternalizer {
 				return null;
 			return reader.readContext(file);
 		} catch (Exception e) {
-			ErrorLogger.fail(e, "Could not read: " + file.getAbsolutePath(), true);
+			MylarStatusHandler.fail(e, "Could not read: " + file.getAbsolutePath(), true);
 		}
 		return null;
 	}

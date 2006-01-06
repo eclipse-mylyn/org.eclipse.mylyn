@@ -21,7 +21,7 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.ui.IViewPart;
@@ -75,7 +75,7 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 				}
 	    	}	
     	} catch (Throwable t) {
-    		ErrorLogger.log(t, "Could not update package explorer");
+    		MylarStatusHandler.log(t, "Could not update package explorer");
     	}
 	}
 

@@ -44,7 +44,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.ResourceStructureBridge;
 import org.eclipse.mylar.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.java.search.JavaImplementorsProvider;
@@ -110,7 +110,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 					
 					return childHandles;
 				} catch (Exception e) {
-					ErrorLogger.fail(e, "could not get child", false);
+					MylarStatusHandler.fail(e, "could not get child", false);
 				}
 			}
 		} 
@@ -121,7 +121,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
     	try {
     		return JavaCore.create(handle);
     	} catch (Throwable t) {
-    		ErrorLogger.log("Could not create java element for handle: " + handle, this);
+    		MylarStatusHandler.log("Could not create java element for handle: " + handle, this);
     		return null;
     	}
     }
@@ -249,7 +249,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
                 ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
             return null;  
         } catch (Throwable t) {
-            ErrorLogger.fail(t, "Could not find element for: " + marker, false);
+            MylarStatusHandler.fail(t, "Could not find element for: " + marker, false);
             return null;
         }
     }

@@ -59,7 +59,7 @@ import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -545,7 +545,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 							try {
 								unit.reconcile(ICompilationUnit.NO_AST, false, null, null);
 							} catch (JavaModelException e) {
-								ErrorLogger.log(e, "could not initialize");
+								MylarStatusHandler.log(e, "could not initialize");
 							}
 						}
 					}
@@ -665,9 +665,9 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 				}
 			}
 		} catch (JavaModelException e) {
-			ErrorLogger.log(e, "");
+			MylarStatusHandler.log(e, "");
 		} catch (InvalidInputException e) {
-			ErrorLogger.log(e, "");
+			MylarStatusHandler.log(e, "");
 		}
 
 		return null;
@@ -754,7 +754,7 @@ public class AutoFoldingStructureProvider implements IProjectionListener, IJavaF
 			}
 
 		} catch (BadLocationException e) {
-			ErrorLogger.log(e, "");
+			MylarStatusHandler.log(e, "");
 		}
 
 		return null;

@@ -26,7 +26,7 @@ import org.eclipse.mylar.core.InteractionEvent.Kind;
 import org.eclipse.mylar.core.internal.IContextReader;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.XmlStringConverter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,7 +61,7 @@ public class DomContextReader implements IContextReader {
 			}
 			return t;
         } catch (Exception e) {
-            ErrorLogger.fail(e, "could not read context, recreating", false);
+            MylarStatusHandler.fail(e, "could not read context, recreating", false);
             file.renameTo(new File(file.getAbsolutePath() + "-save"));
             return null;
         }
@@ -76,9 +76,9 @@ public class DomContextReader implements IContextReader {
             builder = factory.newDocumentBuilder();
             document = builder.parse(inputFile); 
         } catch (SAXException se) {
-            ErrorLogger.log(se, "could not build");
+            MylarStatusHandler.log(se, "could not build");
         } catch (ParserConfigurationException e) {
-        	ErrorLogger.log(e, "could not parse");
+        	MylarStatusHandler.log(e, "could not parse");
 		}
         return document;
     }
@@ -104,7 +104,7 @@ public class DomContextReader implements IContextReader {
 					format.parse(endDate));
 			return ie;
 		} catch (ParseException e) {
-			ErrorLogger.log(e, "could not read interaction event");
+			MylarStatusHandler.log(e, "could not read interaction event");
 		}
     	return null;
     }

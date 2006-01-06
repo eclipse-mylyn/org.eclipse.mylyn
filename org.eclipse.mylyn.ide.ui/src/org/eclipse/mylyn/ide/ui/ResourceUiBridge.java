@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
@@ -50,7 +50,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 	            try {
 	                if (page != null) IDE.openEditor(page, (IFile)resource, true);
 	            } catch (PartInitException e) { 
-	            	ErrorLogger.log(e, "open failed");
+	            	MylarStatusHandler.log(e, "open failed");
 	            }
 	        }
         }
@@ -68,7 +68,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 			try {
 				IDE.openEditor(activePage, (IFile)resource, false);
 			} catch (PartInitException e) {
-				ErrorLogger.fail(e, "failed to open editor for: " + resource, false);
+				MylarStatusHandler.fail(e, "failed to open editor for: " + resource, false);
 			}	
 		}
 	}

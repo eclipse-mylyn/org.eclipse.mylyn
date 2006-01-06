@@ -25,7 +25,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 /**
  * @author Mik Kersten
  */
-public class ErrorLogger {
+public class MylarStatusHandler {
 
 	private static boolean dumpErrors = false;
 	
@@ -68,7 +68,7 @@ public class ErrorLogger {
 	}
 
 	public void setLogStream(PrintStream logStream) {
-		ErrorLogger.logStream = logStream;
+		MylarStatusHandler.logStream = logStream;
 	}
 
 	public PrintStream getLogStream() {
@@ -93,8 +93,6 @@ public class ErrorLogger {
 	}
 
 	/**
-	 * Log a failure
-	 * 
 	 * @param throwable
 	 *            can be null
 	 * @param message
@@ -111,15 +109,19 @@ public class ErrorLogger {
 		log(status);
 	
 		if (informUser && Workbench.getInstance() != null) {
-			Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-				public void run() {
-					ErrorDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Mylar error", ErrorLogger.ERROR_MESSAGE, status);
-				}
-			});
+			try {
+				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						ErrorDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Mylar error", MylarStatusHandler.ERROR_MESSAGE, status);
+					}
+				});
+			} catch (Throwable t) {
+				throwable.printStackTrace();
+			}
 		}
 	}
 
 	public static void setDumpErrors(boolean dumpErrors) {
-		ErrorLogger.dumpErrors = dumpErrors;
+		MylarStatusHandler.dumpErrors = dumpErrors;
 	}
 }

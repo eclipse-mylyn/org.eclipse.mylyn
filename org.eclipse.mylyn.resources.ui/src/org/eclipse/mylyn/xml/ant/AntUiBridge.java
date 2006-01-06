@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.xml.MylarXmlPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -69,7 +69,7 @@ public class AntUiBridge implements IMylarUiBridge {
          
             // if the editor is null, we had a problem and should return
             if(editor == null){
-                ErrorLogger.log("Unable to open editor for file: " + filename, this);
+                MylarStatusHandler.log("Unable to open editor for file: " + filename, this);
                 return;
             }
             
@@ -94,7 +94,7 @@ public class AntUiBridge implements IMylarUiBridge {
             
 
         } catch(Exception e){
-            ErrorLogger.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
+            MylarStatusHandler.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
         }
     }
     
@@ -162,7 +162,7 @@ public class AntUiBridge implements IMylarUiBridge {
                 method.setAccessible(true);
                 viewers.add((TreeViewer)method.invoke(outline, new Object[] { }));
             } catch (Exception e) {
-            	ErrorLogger.log(e, "couldn't get outline");
+            	MylarStatusHandler.log(e, "couldn't get outline");
             }
         }
         return viewers;

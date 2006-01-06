@@ -18,7 +18,7 @@ import java.util.*;
 import org.eclipse.mylar.core.IDegreeOfInterest;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -100,7 +100,7 @@ public class CompositeContextElement implements IMylarElement {
         if (edges.size() == 0) {
             return null;
         } else if (edges.size() > 1) {
-            ErrorLogger.log("Multiple edges found in composite, not supported", this);
+            MylarStatusHandler.log("Multiple edges found in composite, not supported", this);
         }
         return edges.iterator().next();
     }

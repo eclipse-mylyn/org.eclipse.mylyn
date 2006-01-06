@@ -32,7 +32,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.internal.IContextWriter;
 import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.XmlStringConverter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,7 +55,7 @@ public class DomContextWriter implements IContextWriter {
 			dbf = DocumentBuilderFactory.newInstance();
 			doc = dbf.newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
-			ErrorLogger.log(e, "could not create xml writer");
+			MylarStatusHandler.log(e, "could not create xml writer");
 		}
 	}
 	
@@ -136,7 +136,7 @@ public class DomContextWriter implements IContextWriter {
     	try {
     		this.doc = dbf.newDocumentBuilder().newDocument();
     	} catch(ParserConfigurationException e) {
-    		ErrorLogger.log(e, "could not clear document");
+    		MylarStatusHandler.log(e, "could not clear document");
     	}
     	
     }

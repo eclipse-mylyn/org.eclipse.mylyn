@@ -30,7 +30,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.core.tests.MylarCoreTestsPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.pde.internal.PDE;
 import org.eclipse.pde.internal.PluginProject;
 
@@ -59,7 +59,7 @@ public class ResourceHelper {
 						i= MAX_RETRY;
 					} catch (CoreException e) {
 						if (i == MAX_RETRY - 1) {
-							ErrorLogger.log(e.getStatus());
+							MylarStatusHandler.log(e.getStatus());
 							throw e;
 						}
 						System.gc(); // help windows to really close file locks

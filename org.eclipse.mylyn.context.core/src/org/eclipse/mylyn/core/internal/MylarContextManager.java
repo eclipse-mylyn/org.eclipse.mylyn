@@ -32,7 +32,7 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.ITimerThreadListener;
 import org.eclipse.mylar.core.util.TimerThread;
 import org.eclipse.swt.widgets.Display;
@@ -364,7 +364,7 @@ public class MylarContextManager {
 					listeners.add(listener);
 			}
 		} else {
-			ErrorLogger.log("attempted to add null lisetener", this);
+			MylarStatusHandler.log("attempted to add null lisetener", this);
 		}
 	}
 
@@ -413,17 +413,17 @@ public class MylarContextManager {
 					try {
 						listener.contextActivated(context);
 					} catch (Exception e) {
-						ErrorLogger.fail(e, "context listener failed", false);
+						MylarStatusHandler.fail(e, "context listener failed", false);
 					}
 				}
 				refreshRelatedElements();
 			} else {
-				ErrorLogger.log("Could not load context", this);
+				MylarStatusHandler.log("Could not load context", this);
 			}
 			suppressListenerNotification = false;
 			listeners.addAll(waitingListeners);
 		} catch (Throwable t) {
-			ErrorLogger.log(t, "Could not activate context");
+			MylarStatusHandler.log(t, "Could not activate context");
 		}
 	}
 
@@ -447,7 +447,7 @@ public class MylarContextManager {
 					try {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
-						ErrorLogger.fail(e, "context listener failed", false);
+						MylarStatusHandler.fail(e, "context listener failed", false);
 					}
 				}
 				setContextCapturePaused(false);
@@ -458,7 +458,7 @@ public class MylarContextManager {
 			}
 			saveActivityHistoryContext();
 		} catch (Throwable t) {
-			ErrorLogger.log(t, "Could not deactivate context");
+			MylarStatusHandler.log(t, "Could not deactivate context");
 		}
 	}
 
@@ -479,7 +479,7 @@ public class MylarContextManager {
 				file.delete();
 			}
 		} catch (SecurityException e) {
-			ErrorLogger.fail(e, "Could not delete context file", false);
+			MylarStatusHandler.fail(e, "Could not delete context file", false);
 		}
 	}
 
@@ -516,7 +516,7 @@ public class MylarContextManager {
 			context.collapse();
 			externalizer.writeContextToXML(context, getFileForContext(handleIdentifier));
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "could not save context", false);
+			MylarStatusHandler.fail(t, "could not save context", false);
 		} finally {
 			setContextCapturePaused(false);
 		}
@@ -527,7 +527,7 @@ public class MylarContextManager {
 			setContextCapturePaused(true);
 			externalizer.writeContextToXML(activityHistory, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "could not save activity history", false);
+			MylarStatusHandler.fail(t, "could not save activity history", false);
 		} finally {
 			setContextCapturePaused(false);
 		}
@@ -582,7 +582,7 @@ public class MylarContextManager {
 				}
 			}
 		} catch (Throwable t) {
-			ErrorLogger.fail(t, "Could not refresn related elements", false);
+			MylarStatusHandler.fail(t, "Could not refresn related elements", false);
 		}
 	}
 

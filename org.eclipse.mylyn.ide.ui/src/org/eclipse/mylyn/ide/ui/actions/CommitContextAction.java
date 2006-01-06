@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.ui.wizards.MylarCommitWizard;
 import org.eclipse.mylar.tasklist.ITask;
@@ -64,11 +64,11 @@ public class CommitContextAction implements IViewActionDelegate {
 				}
 			}
 		} catch (Exception e) {
-			ErrorLogger.fail(e, e.getMessage(), true);
+			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		// ignore
 	}
 }

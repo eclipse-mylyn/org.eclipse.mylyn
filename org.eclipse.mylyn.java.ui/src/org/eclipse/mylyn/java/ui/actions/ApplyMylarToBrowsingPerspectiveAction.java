@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
@@ -131,7 +131,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
         	            	}
         	            }
         	        } catch (Exception e) {
-        	        	ErrorLogger.log(e, "couldn't get " + id + " view tree viewer");
+        	        	MylarStatusHandler.log(e, "couldn't get " + id + " view tree viewer");
         	            return null;
         	        }
         		} else {
@@ -140,7 +140,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
         	
             } 
         } catch (Exception e) {
-        	ErrorLogger.log(e, "couldn't get problmes viewer");
+        	MylarStatusHandler.log(e, "couldn't get problmes viewer");
         }
         return null;
     }
