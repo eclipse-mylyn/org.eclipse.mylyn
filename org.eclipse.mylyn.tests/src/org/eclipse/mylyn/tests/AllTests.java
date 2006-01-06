@@ -16,7 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylar.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylar.core.tests.AllCoreTests;
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ide.tests.AllIdeTests;
 import org.eclipse.mylar.java.tests.AllJavaTests;
@@ -34,7 +34,7 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
 
-        ErrorLogger.setDumpErrors(true);
+        MylarStatusHandler.setDumpErrors(true);
         MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
         
         // TODO: the order of these tests matters, but shouldn't

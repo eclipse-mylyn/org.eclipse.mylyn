@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tests.integration;
 
-import org.eclipse.mylar.core.util.ErrorLogger;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -23,7 +23,7 @@ public class AllIntegrationTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.integration");
 
-		ErrorLogger.setDumpErrors(true);
+		MylarStatusHandler.setDumpErrors(true);
 		
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ChangeDataDirTest.class);
