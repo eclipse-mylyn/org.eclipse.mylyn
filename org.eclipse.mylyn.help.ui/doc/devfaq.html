@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>
+      Mylar FAQ
+    </title>
+  </head>
+  <body>
+    <h1>
+      Mylar Developer FAQ</h1>
+<p><b>Contents</b></p>
+<ul>
+	<li><a href="#started">Getting started</a></li>
+	<li><a href="#writingPatches">Writing patches</a></li>
+<!--	<li>Building</li>-->
+	<li><a href="#writingTests">Writing tests</a></li>
+<!--	<li>Change sets</li>-->
+	<li><a href="#submittingPatches">Submit patches</a></li>
+</ul>
+
+<h3>&nbsp;</h3>
+	<h3><a name="started">Getting Started</a></h3>
+<blockquote>
+	<h4>Workspace Setup</h4>- Building Mylar feature from HEAD requires 
+	<a href="http://download.eclipse.org/eclipse/downloads/drops/S-3.2M4-200512151506/">Eclipse 
+		SDK 3.2M4</a> and <a href="http://java.sun.com/j2se/1.5.0/download.jsp">JDK 1.5</a>.&nbsp; 
+	<br><br>- To get the Mylar source code, in the CVS Repositories view, add the following CVS location: 
+	<b>HOST =</b> dev.eclipse.org&nbsp; <b>Repository Path</b>: 
+		/home/technology.<br>If you do not have an account you may enter <b>anonymous</b> for the user name 
+and leave the password blank.<p>- Check out all of the projects under org.eclipse.mylar (except mylar.aspectj, 
+		mylar.sandbox, mylar.viz, and mylar.zest which have additional 
+		dependencies).</p>
+	<h4>Building from HEAD</h4>- Associate the J2SE-1.5 with your installed JRE on the Execution Environments preference page.
+	<br>
+	<h4>Building the Eclipse 3.1 Branch</h4>- Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
+		project, Team -&gt; Switch to Another Branch..., then 
+		Refresh the Branches and select e_3_1 </p>
+	<h4>The Initial Test</h4>
+	<p>-
+
+Now that you have the source, the first thing to do is confirm that it all compiles without failing any of the unit tests.
+In the <i>org.eclipse.mylar.tests</i> project there is a test suite class (<i>org.eclipse.mylar.tests.AllTests</i>) that aggregates all tests in the Mylar project.
+	Note that this test must be run as a <b>JUnit Plug-in Test</b>. Execution of this test suite should result in a 
+	<b><font color="#008000">GREEN</font></b> bar 
+	(no failures) and there should not be any output in the console view as a 
+result of running these tests. The HEAD repository is maintained so that it 
+always passes this test suite.</p>
+</blockquote>
+<p>
+<br>
+		
+		</p>
+<h3><a name="writingPatches">Writing Patches</a>&nbsp;&nbsp;&nbsp; </h3>
+<blockquote>
+	<p>- Write a failing unit test first (see <a href="#writingTests">Writing 
+	Tests</a> below).</p>
+	<p>- Try to minimize the amount of changes to existing code. </p>
+	<p>- Synchronize when patches have been applied so that you don't have a 
+merge/synchronize problem. Using the Synchronize view in Incoming Mode
+	<img border="0" src="../images/developer/IncomingChanges.jpg">, you can 
+	update your local copy of the source with the most recent changes to the 
+	Mylar source repository. Synchronize frequently when working and prior to 
+	submitting a patch.</p>
+</blockquote>
+<p>&nbsp;</p>
+<a name="writingTests"><h3>Writing Tests</h3>
+</a></p>
+
+<blockquote>
+
+- Mylar is maintained using test driven development. When writing patches, each 
+added feature in the patch must be accompanied by a test case.<br>You will notice that most packages in the Mylar code base have an associated 
+test package. For example, the unit tests for the <i>org.eclipse.mylar.tasklist</i> 
+package are located in the<br><i>org.eclipse.mylar.tasklist.tests</i> package. Within these '<i>tests</i>' 
+packages you will find a single test suite class that should reference all unit 
+tests within that package. In the case of our chosen example the class <i>AllTasklistTests.java</i> does the job. If a new unit test is added 
+to this package, a reference to the new unit test must be added to <i>AllTasklistTests.java</i>.<p>- Where unit tests already cover code related to 
+your own, try to add test cases to these existing unit tests rather than 
+creating entirely new classes.</p>
+<p>- Mylar Active Plug-in Suite is a run environment for executing all unit 
+tests currently within your active Mylar task context. By setting one of these 
+run environments you can quickly execute whatever tests you are currently 
+working on.</p>
+<p>&nbsp;</p>
+</blockquote>
+<a name="submittingPatches"><h3>Submitting Patches</h3></a>
+	<blockquote>
+		<p>- Before patching check the Synchronize view in OUTGOING mode (press 
+		Change Set button to enable change set mode) to see what you have 
+		added/changed.<br>
+		Look over you code in this view for extraneous debug code such as <i>
+		System.out.println</i> etc. [Note that by right-clicking on the change 
+		set you can create patches from this view.]</p>
+		<p>- Eliminate all problems (Problems view) before submitting.</p>
+		<p>- The <i>org.eclipse.mylar.tests.AllTests </i>test suite must pass before submitting the patch.</p>
+		<p>- When using Bugzilla, open the bug report and submit the patch using 
+		the &quot;Create New Attachment&quot; link. Specify the patch file and denote it 
+		as a patch. Add any pertinent comments.</p>
+		<p>&nbsp;</p>
+	</blockquote>
+<p>&nbsp;</p>
+</body></html>
