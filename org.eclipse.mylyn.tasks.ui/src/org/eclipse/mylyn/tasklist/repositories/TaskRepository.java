@@ -33,8 +33,11 @@ public class TaskRepository {
 	
 	private URL serverUrl;
 	
-	public TaskRepository(URL serverUrl) {
+	private String kind;
+	
+	public TaskRepository(URL serverUrl, String kind) {
 		this.serverUrl = serverUrl;
+		this.kind = kind;
 	}
 	
 	public URL getServerUrl() {
@@ -100,5 +103,9 @@ public class TaskRepository {
 	
 	public String toString() {
 		return serverUrl.toExternalForm();
+	}
+
+	public String getKind() {
+		return kind;
 	}
 }

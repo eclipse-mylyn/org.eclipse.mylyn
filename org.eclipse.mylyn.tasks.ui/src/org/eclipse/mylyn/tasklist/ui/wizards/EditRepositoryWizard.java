@@ -35,7 +35,8 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository repository = new TaskRepository(repositorySettingsPage.getServerUrl());
+			TaskRepository repository = new TaskRepository(repositorySettingsPage.getServerUrl(),
+					repositorySettingsPage.getRepository().getKind());
 			if (repository != null) {
 				repository.setAuthenticationCredentials(repositorySettingsPage.getUserName(), repositorySettingsPage.getPassword());
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);

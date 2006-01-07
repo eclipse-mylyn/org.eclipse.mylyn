@@ -53,7 +53,7 @@ public class TaskRepositoriesView extends ViewPart {
 		}
 
 		public Object[] getElements(Object parent) {
-			return MylarTaskListPlugin.getRepositoryManager().getRepositories().toArray();
+			return MylarTaskListPlugin.getRepositoryManager().getAllRepositories().toArray();
 		}
 	}
 

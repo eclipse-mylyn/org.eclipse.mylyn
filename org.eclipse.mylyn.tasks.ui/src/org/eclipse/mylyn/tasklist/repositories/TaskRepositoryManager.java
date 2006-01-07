@@ -14,8 +14,10 @@ package org.eclipse.mylar.tasklist.repositories;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -27,11 +29,11 @@ import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
  */
 public class TaskRepositoryManager {
 	
-	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.urls";
+	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.";
 	
 	private List<ITaskRepositoryClient> repositoryClients = new ArrayList<ITaskRepositoryClient>();
 
-	private Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+	private Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 	
 	private Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
 	
@@ -53,12 +55,20 @@ public class TaskRepositoryManager {
 	}
 
 	public void addRepository(TaskRepository repository) {
+		Set<TaskRepository> repositories = repositoryMap.get(repository.getKind());
+		if (repositories == null) {
+			repositories = new HashSet<TaskRepository>();
+			repositoryMap.put(repository.getKind(), repositories);
+		}
 		repositories.add(repository);
 		saveRepositories();
 	}
 
 	public void removeRepository(TaskRepository repository) {
-		repositories.remove(repository);
+		Set<TaskRepository> repositories = repositoryMap.get(repository.getKind());
+		if (repositories != null) {
+			repositories.remove(repository);
+		}
 		saveRepositories();
 	}
 	
@@ -70,46 +80,62 @@ public class TaskRepositoryManager {
 		listeners.remove(listener);
 	}
 	
-	public Set<TaskRepository> readRepositories() {
-		repositories.clear();
-		String read = MylarTaskListPlugin.getPrefs().getString(PREF_REPOSITORIES);
-		if (read != null) {
-			StringTokenizer st = new StringTokenizer(read, STORE_DELIM);
-			while (st.hasMoreTokens()) {
-				String urlString = st.nextToken();
-				try {
-					URL url = new URL(urlString);
-					repositories.add(new TaskRepository(url));
-				} catch (MalformedURLException e) {
-					MylarStatusHandler.fail(e, "could not restore URL: " + urlString, false);
+	public Map<String, Set<TaskRepository>> readRepositories() {
+		repositoryMap.clear();
+		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
+			String read = MylarTaskListPlugin.getPrefs().getString(PREF_REPOSITORIES + repositoryClient.getKind());
+			Set<TaskRepository> repositories  = new HashSet<TaskRepository>();
+			if (read != null) {
+				StringTokenizer st = new StringTokenizer(read, STORE_DELIM);
+				while (st.hasMoreTokens()) {
+					String urlString = st.nextToken();
+					try {
+						URL url = new URL(urlString);
+						repositoryMap.put(repositoryClient.getKind(), repositories);
+						repositories.add(new TaskRepository(url, repositoryClient.getKind()));
+					} catch (MalformedURLException e) {
+						MylarStatusHandler.fail(e, "could not restore URL: " + urlString, false);
+					}
 				}
 			}
 		}
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
 		}
-		return repositories;
+		return repositoryMap;
 	}
 	
 	private void saveRepositories() {
 		String store = "";
-		for (TaskRepository repository : repositories) {
-			store += repository.getServerUrl().toExternalForm() + STORE_DELIM;
+		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
+			if (repositoryMap.containsKey(repositoryClient.getKind())) {
+				for (TaskRepository repository : repositoryMap.get(repositoryClient.getKind())) {
+					store += repository.getServerUrl().toExternalForm() + STORE_DELIM;
+				}
+				String prefId = PREF_REPOSITORIES + repositoryClient.getKind();
+				MylarTaskListPlugin.getPrefs().setValue(prefId, store);
+			}
 		}
 		
-		MylarTaskListPlugin.getPrefs().setValue(PREF_REPOSITORIES, store);
+		System.err.println(">>> " + repositoryMap);
 		
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
 		}
 	}
 
-	public Set<TaskRepository> getRepositories() {
+	public List<TaskRepository> getAllRepositories() {
+		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
+			if (repositoryMap.containsKey(repositoryClient.getKind())) {
+				repositories.addAll(repositoryMap.get(repositoryClient.getKind()));
+			}
+		}
 		return repositories;
 	}
 
 	public void clearRepositories() {
-		repositories.clear();
+		repositoryMap.clear();
 		saveRepositories();
 	}
 }

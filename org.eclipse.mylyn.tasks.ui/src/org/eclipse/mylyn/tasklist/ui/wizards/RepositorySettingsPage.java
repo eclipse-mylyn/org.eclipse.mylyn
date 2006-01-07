@@ -158,4 +158,8 @@ public class RepositorySettingsPage extends WizardPage {
 	public void setRepository(TaskRepository repository) {
 		this.repository = repository;
 	}
+
+	public TaskRepository getRepository() {
+		return repository;
+	}
 }

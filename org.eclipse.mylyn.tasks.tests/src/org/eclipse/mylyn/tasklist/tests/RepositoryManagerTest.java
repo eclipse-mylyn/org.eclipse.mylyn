@@ -13,8 +13,8 @@ package org.eclipse.mylar.tasklist.tests;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -44,23 +44,24 @@ public class RepositoryManagerTest extends TestCase {
 	}
 
 	public void testMultipleNotAdded() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(new URL("http://eclipse.org"));
+		TaskRepository repository = new TaskRepository(new URL("http://eclipse.org"), "bugzilla");
 		manager.addRepository(repository);
-		TaskRepository repository2 = new TaskRepository(new URL("http://eclipse.org"));
+		TaskRepository repository2 = new TaskRepository(new URL("http://eclipse.org"), "bugzilla");
 		manager.addRepository(repository2);
-		assertEquals(1, manager.getRepositories().size());
+		assertEquals(1, manager.getAllRepositories().size());
 	}
 	
 	public void testRepositoryPersistance() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 		
-		TaskRepository repository = new TaskRepository(new URL("http://eclipse.org"));
+		TaskRepository repository = new TaskRepository(new URL("http://eclipse.org"), "bugzilla");
 		manager.addRepository(repository);
 		
 		assertNotNull(MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 		
-		Set<TaskRepository> repositoryList = new HashSet<TaskRepository>();
+		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository);
-		assertEquals(repositoryList, manager.readRepositories());
+		manager.readRepositories();
+		assertEquals(repositoryList, manager.getAllRepositories());
 	}
 }
