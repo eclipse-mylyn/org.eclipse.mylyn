@@ -50,8 +50,10 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 
 	protected void refresh(IMylarElement node) {
 		ResourceNavigator navigator = getResourceNavigator();
-		if (navigator == null || navigator.getTreeViewer() == null)
+		if (navigator == null || navigator.getTreeViewer() == null
+				|| navigator.getTreeViewer().getControl().isDisposed()) {
 			return;
+		}
 
 		if (node != null) {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
@@ -113,6 +115,6 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 	}
 
 	public void edgesChanged(IMylarElement node) {
-		refresh(null);
+//		refresh(null);
 	}
 }
