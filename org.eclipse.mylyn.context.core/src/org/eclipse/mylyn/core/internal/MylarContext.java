@@ -127,11 +127,8 @@ public class MylarContext implements IMylarContext {
 
 	public List<IMylarElement> getInteresting() {
 		List<IMylarElement> elements = new ArrayList<IMylarElement>();
-		for (String key : new ArrayList<String>(nodes.keySet())) { // in case
-			// it
-			// changes
-			// during
-			// update
+			
+		for (String key : new ArrayList<String>(nodes.keySet())) { 
 			MylarContextElement info = nodes.get(key);
 			if (info.getInterest().isInteresting()) {
 				elements.add(info);
