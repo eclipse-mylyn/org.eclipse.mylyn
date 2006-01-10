@@ -122,7 +122,6 @@ public class InteractionEventLogger implements IInteractionEventListener {
 			} else {
 				outputFile.delete();
 			}
-//			System.err.println(">>> " + outputFile.getAbsolutePath() + ": " + outputFile.exists());
 			this.outputFile = newFile;
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not set logger output file", true);
