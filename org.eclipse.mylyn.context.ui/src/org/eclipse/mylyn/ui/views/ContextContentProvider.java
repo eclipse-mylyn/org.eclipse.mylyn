@@ -33,20 +33,20 @@ import org.eclipse.ui.IViewSite;
 /**
  * @author Mik Kersten
  */
-public class MylarContextContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+public class ContextContentProvider implements IStructuredContentProvider, ITreeContentProvider {
         
     private IViewSite site = null;
     private Tree tree;
     private Shell shell = null;
     private boolean landmarkOnlyMode;
     
-    public MylarContextContentProvider(Tree tree, IViewSite site, boolean landmarkOnlyMode) {
+    public ContextContentProvider(Tree tree, IViewSite site, boolean landmarkOnlyMode) {
         this.tree = tree;
     	this.site = site;
         this.landmarkOnlyMode = landmarkOnlyMode;
     }
     
-    public MylarContextContentProvider(Shell shell, boolean landmarkOnlyMode) {
+    public ContextContentProvider(Shell shell, boolean landmarkOnlyMode) {
         this.shell = shell;
         this.landmarkOnlyMode = landmarkOnlyMode;
     } 

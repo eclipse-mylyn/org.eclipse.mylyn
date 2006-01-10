@@ -42,9 +42,9 @@ import org.eclipse.mylar.ide.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.ide.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.mylar.ui.actions.ToggleRelationshipProviderAction;
-import org.eclipse.mylar.ui.views.MylarContextContentProvider;
-import org.eclipse.mylar.ui.views.MylarDelegatingContextLabelProvider;
-import org.eclipse.mylar.ui.views.TaskscapeNodeClickListener;
+import org.eclipse.mylar.ui.views.ContextContentProvider;
+import org.eclipse.mylar.ui.views.DelegatingContextLabelProvider;
+import org.eclipse.mylar.ui.views.ContextNodeOpenListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -73,7 +73,7 @@ public class ActiveSearchView extends ViewPart {
 	
     private TreeViewer viewer;
     private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
-    private MylarDelegatingContextLabelProvider labelProvider = new MylarDelegatingContextLabelProvider();
+    private DelegatingContextLabelProvider labelProvider = new DelegatingContextLabelProvider();
     
     /**
      * For testing.
@@ -244,7 +244,7 @@ public class ActiveSearchView extends ViewPart {
         
     	viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         viewer.setUseHashlookup(true);
-        viewer.setContentProvider(new MylarContextContentProvider(viewer.getTree(), this.getViewSite(), true));
+        viewer.setContentProvider(new ContextContentProvider(viewer.getTree(), this.getViewSite(), true));
 //        viewer.setLabelProvider(labelProvider);
         viewer.setLabelProvider(new DecoratingLabelProvider(
         		labelProvider,
@@ -255,7 +255,7 @@ public class ActiveSearchView extends ViewPart {
         initDrop();
         initDrag();
         
-        viewer.addOpenListener(new TaskscapeNodeClickListener(viewer));
+        viewer.addOpenListener(new ContextNodeOpenListener(viewer));
         
         contributeToActionBars();
         viewer.expandToLevel(2);
@@ -346,7 +346,7 @@ public class ActiveSearchView extends ViewPart {
 	}
 
 	public void setQualifiedNameMode(boolean qualifiedNameMode) {
-		MylarDelegatingContextLabelProvider.setQualifyNamesMode(qualifiedNameMode);
+		DelegatingContextLabelProvider.setQualifyNamesMode(qualifiedNameMode);
 		refresh(null, true); 
 	}
 }

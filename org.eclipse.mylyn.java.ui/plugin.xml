@@ -194,7 +194,7 @@
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>
-  </extension>
+  </extension>   
 
   <extension point="org.eclipse.ui.actionSets">
 	<actionSet
@@ -353,8 +353,14 @@
    </extension>
 
    <extension point="org.eclipse.ui.bindings">   
+        <key
+            sequence="M1+M2+M3+ARROW_RIGHT"
+            contextId="org.eclipse.ui.globalScope"
+            commandId="org.eclipse.mylar.ui.interest.increment"
+            schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
 	  <key
-            sequence="M2+M3+G"
+            sequence="M1+M2+M3+G"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.java.ui.search.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">

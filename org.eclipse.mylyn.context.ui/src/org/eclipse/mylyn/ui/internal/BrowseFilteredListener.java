@@ -37,6 +37,14 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		this.viewer = viewer;
 	}
 	
+	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
+		if (targetObject != null) {
+			filter.setTemporarilyUnfiltered(targetObject);
+			treeViewer.refresh(targetObject, true);
+			treeViewer.expandToLevel(targetObject, 2);
+		}
+	}
+	
 	public void keyPressed(KeyEvent event) {
 		final InterestFilter filter = getFilter(viewer);
 		if (filter == null) return;
@@ -54,17 +62,8 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		}
 	}
 
-	private void unfilter(final InterestFilter filter, final TreeViewer treeViewer, Object targetObject) {
-		if (targetObject != null) {
-			filter.setTemporarilyUnfiltered(targetObject);
-			treeViewer.refresh(targetObject, true);
-			treeViewer.expandToLevel(targetObject, 2);
-		}
-	}
-
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	public void mouseDown(MouseEvent event) {
@@ -103,6 +102,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	}
 
 	private boolean keyboardInteractionAccepted(KeyEvent event) {
+		System.err.println(">>> " + event);
 		return event.keyCode == SWT.ARROW_RIGHT;
 	}
 	

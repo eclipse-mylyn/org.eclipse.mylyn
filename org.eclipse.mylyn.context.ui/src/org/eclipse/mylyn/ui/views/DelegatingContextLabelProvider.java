@@ -22,13 +22,12 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * TODO: refactor edge stuff
  * 
  * @author Mik Kersten
  */
-public class MylarDelegatingContextLabelProvider implements ILabelProvider {
+public class DelegatingContextLabelProvider implements ILabelProvider {
 
 	private static boolean qualifyNamesMode = false; // TODO: make non-static
 	

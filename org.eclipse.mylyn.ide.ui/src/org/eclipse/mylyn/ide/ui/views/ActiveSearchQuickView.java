@@ -29,9 +29,9 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.ide.ui.views.ActiveSearchView.DoiOrderSorter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.mylar.ui.views.MylarContextContentProvider;
-import org.eclipse.mylar.ui.views.MylarDelegatingContextLabelProvider;
-import org.eclipse.mylar.ui.views.TaskscapeNodeClickListener;
+import org.eclipse.mylar.ui.views.ContextContentProvider;
+import org.eclipse.mylar.ui.views.DelegatingContextLabelProvider;
+import org.eclipse.mylar.ui.views.ContextNodeOpenListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -168,7 +168,7 @@ public class ActiveSearchQuickView {
         installFilter();        
         addListenersToShell();
         
-        viewer.addOpenListener(new TaskscapeNodeClickListener(viewer));
+        viewer.addOpenListener(new ContextNodeOpenListener(viewer));
         viewer.setSorter(new DoiOrderSorter()); 
         createContents();
         initializeBounds();
@@ -232,10 +232,10 @@ public class ActiveSearchQuickView {
 //        XReferenceContentProvider contentProvider = new XReferenceContentProvider();
 //        viewer.setContentProvider(contentProvider);
         
-        viewer.setContentProvider(new MylarContextContentProvider(dialogShell, true)); 
+        viewer.setContentProvider(new ContextContentProvider(dialogShell, true)); 
 //        viewer.setLabelProvider(new TaskscapeNodeLabelProvider());
         viewer.setLabelProvider(new DecoratingLabelProvider(
-                new MylarDelegatingContextLabelProvider(),
+                new DelegatingContextLabelProvider(),
                 PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 //        viewer.setLabelProvider(new MylarAppearanceAwareLabelProvider(viewer)); 
         

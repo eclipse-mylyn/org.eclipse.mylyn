@@ -195,7 +195,7 @@
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.ui.show.filtered"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
+      </key> 
       <key
             sequence="M1+M2+M3+ARROW_LEFT"
             contextId="org.eclipse.ui.globalScope"

@@ -34,7 +34,7 @@ import org.eclipse.mylar.java.search.JavaReadAccessProvider;
 import org.eclipse.mylar.java.search.JavaReferencesProvider;
 import org.eclipse.mylar.java.search.JavaWriteAccessProvider;
 import org.eclipse.mylar.ui.MylarImages;
-import org.eclipse.mylar.ui.views.MylarDelegatingContextLabelProvider;
+import org.eclipse.mylar.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -71,7 +71,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	private String getTextForElement(IJavaElement element) {
-    	if (MylarDelegatingContextLabelProvider.isQualifyNamesMode()) {
+    	if (DelegatingContextLabelProvider.isQualifyNamesMode()) {
     		if (element instanceof IMember && !(element instanceof IType)) {
     			String parentName = ((IMember)element).getParent().getElementName();
     			if (parentName != null && parentName != "" ) {

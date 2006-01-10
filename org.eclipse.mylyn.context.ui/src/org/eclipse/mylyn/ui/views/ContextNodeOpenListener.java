@@ -23,11 +23,11 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
 /**
  * @author Mik Kersten
  */
-public class TaskscapeNodeClickListener implements IOpenListener {
+public class ContextNodeOpenListener implements IOpenListener {
     
     private final Viewer viewer;
 
-    public TaskscapeNodeClickListener(Viewer viewer) {
+    public ContextNodeOpenListener(Viewer viewer) {
         this.viewer = viewer;
     }
 
