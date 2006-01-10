@@ -117,8 +117,6 @@ public class TaskRepositoryManager {
 			}
 		}
 		
-		System.err.println(">>> " + repositoryMap);
-		
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
 		}

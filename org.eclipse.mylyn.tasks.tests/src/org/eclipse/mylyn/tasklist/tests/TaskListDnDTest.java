@@ -28,13 +28,14 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 public class TaskListDnDTest extends TestCase {
 
 	private TaskListDropAdapter dropAdapter;
+
 	private TaskListManager manager;
-	
+
 	@Override
-	protected void setUp() throws Exception {		
+	protected void setUp() throws Exception {
 		manager = MylarTaskListPlugin.getTaskListManager();
 		manager.createNewTaskList();
-		
+
 		TreeViewer viewer = TaskListView.getDefault().getViewer();
 		assertNotNull(viewer);
 		dropAdapter = new TaskListDropAdapter(viewer);
@@ -47,7 +48,6 @@ public class TaskListDnDTest extends TestCase {
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 	}
 
-		
 	public void testisUrl() {
 		String url = "http://eclipse.org";
 		String title = "Title";
@@ -56,20 +56,19 @@ public class TaskListDnDTest extends TestCase {
 		assertTrue(dropAdapter.isUrl(url));
 		assertTrue(dropAdapter.isUrl(urlData));
 	}
-	
+
 	public void testUrlDrop() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		
+
 		String url = "http://eclipse.org ";
 		String title = "Title";
 		String urlData = url + "\n" + title;
 		dropAdapter.performDrop(urlData);
 		List<ITask> tasks = manager.getTaskList().getRootTasks();
-		assertNotNull(tasks);		
+		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
 		assertEquals(title, tasks.get(0).getDescription(false));
 		assertEquals(url, tasks.get(0).getUrl());
 	}
-		
-	
+
 }

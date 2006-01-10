@@ -868,7 +868,7 @@ public class TaskListView extends ViewPart {
 
 		getViewer().addDragSupport(DND.DROP_MOVE, types, new TaskListDragSourceListener(this));
 
-		getViewer().addDropSupport(DND.DROP_MOVE, types, new TaskListDropAdapter(getViewer()));
+		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, types, new TaskListDropAdapter(getViewer()));
 	}
 
 	void expandToActiveTasks() {

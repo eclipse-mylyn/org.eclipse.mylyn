@@ -995,10 +995,6 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	//			try {
 	//				int line= document.getLineOfOffset(problem.getOffset()) + 1;
 	//				String word= document.get(problem.getOffset(), problem.getLength());
-	//				System.out.println(word);
-	//				for(ICompletionProposal proposal : problem.getProposals()){
-	//					System.out.println(">>>" + proposal.getDisplayString());
-	//				}
 	//				
 	//				spellingDialog.open(word, problem.getProposals());
 	//				

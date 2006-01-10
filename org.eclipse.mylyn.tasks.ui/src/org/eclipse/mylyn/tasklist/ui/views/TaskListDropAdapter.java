@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -34,6 +35,8 @@ import org.eclipse.swt.dnd.TransferData;
  * @author Robert Elves (added task creation support)
  */
 public class TaskListDropAdapter extends ViewerDropAdapter {
+
+	private Task newTask = null;
 
 	public TaskListDropAdapter(Viewer viewer) {
 		super(viewer);
@@ -118,7 +121,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			urlTitle = urlTransfer[1];
 		}
 
-		Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle, true);
+		if (urlTransfer.length < 2) { // no title provided
+			retrieveTaskDescription(url);
+		}
+
+		newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle, true);
 
 		if (newTask == null) {
 			return false;
@@ -158,4 +165,127 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		return TextTransfer.getInstance().isSupportedType(transferType);
 	}
+
+	/**
+	 * Attempts to set the task pageTitle to the title from the specified url
+	 */
+	protected void retrieveTaskDescription(final String url) {
+
+		try {
+//			final Shell shell = new Shell(Display.getDefault());
+//			shell.setVisible(false);
+//			Browser browser = new Browser(shell, SWT.NONE);
+
+//			RetrievePageTitleFromUrlJob job = new RetrievePageTitleFromUrlJob("Retrieving task description", url) {
+//
+//				@Override
+//				public void setTitle(String title) {
+//					if (newTask != null) {
+//						newTask.setDescription(title);
+//						MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(newTask);
+//					}
+//				}
+//			};
+//			browser.addTitleListener(job);
+//			browser.setUrl(url);
+//			job.schedule();
+			
+			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
+
+				@Override
+				protected void setTitle(final String pageTitle) {
+					newTask.setDescription(pageTitle);
+					MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(newTask);
+				}
+
+			};
+			job.schedule();
+
+		} catch (RuntimeException e) {
+			MylarStatusHandler.fail(e, "could not open task web page", false);
+		}
+	}
+
+//	/**
+//	 * Waits for the title from the browser
+//	 * 
+//	 * @author Wesley Coelho
+//	 */
+//	private class RetrievePageTitleFromUrlJob extends Job implements TitleListener {
+//
+//		private final static long MAX_WAIT_TIME_MILLIS = 1000 * 30; // (30
+//																	// Seconds)
+//
+//		private final static long SLEEP_INTERVAL_MILLIS = 500;
+//
+//		private String taskURL = null;
+//
+//		private String pageTitle = null;
+//
+//		private boolean retrievalFailed = false;
+//
+//		private long timeWaitedMillis = 0;
+//
+//		/**
+//		 * Determines when to ignore the second call to changed()
+//		 */
+//		boolean ignoreChangeCall = false; 
+//
+//		public RetrievePageTitleFromUrlJob(String name, String url) {
+//			super(name);
+//			taskURL = url;
+//		}
+//
+//		@Override
+//		protected IStatus run(IProgressMonitor monitor) {
+//
+//			while (pageTitle == null && !retrievalFailed && (timeWaitedMillis <= MAX_WAIT_TIME_MILLIS)) {
+//
+//				try {
+//					Thread.sleep(SLEEP_INTERVAL_MILLIS);
+//				} catch (InterruptedException e) {
+//					MylarStatusHandler.fail(e, "Thread interrupted during sleep", false);
+//				}
+//				timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
+//			}
+//
+//			if (pageTitle != null) {
+//				Display.getDefault().asyncExec(new Runnable() {
+//					public void run() {
+//						newTask.setDescription(pageTitle);
+//						getViewer().refresh();
+//					}
+//				});
+//				return Status.OK_STATUS;
+//			} else {
+//				Display.getDefault().asyncExec(new Runnable() {
+//					public void run() {
+//						MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error",
+//								"Could not retrieve a description from the specified web page.");
+//					}
+//				});
+//				return Status.CANCEL_STATUS;
+//			}
+//
+//		}
+//
+//		public void changed(TitleEvent event) {
+//			if (!ignoreChangeCall) {
+//				if (event.title.equals(taskURL)) {
+//					return;
+//				} else {
+//					ignoreChangeCall = true;
+//					// Last one is bugzilla-specific
+//					if (event.title.equals(taskURL + "/") || event.title.equals("Object not found!")
+//							|| event.title.equals("No page to display") || event.title.equals("Cannot find server")
+//							|| event.title.equals("Invalid Bug ID")) {
+//						retrievalFailed = true;
+//					} else {
+//						pageTitle = event.title;
+//					}
+//				}
+//			}
+//		}
+//	}
+
 }

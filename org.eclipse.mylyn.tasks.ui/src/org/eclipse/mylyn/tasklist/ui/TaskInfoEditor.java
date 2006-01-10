@@ -140,6 +140,8 @@ public class TaskInfoEditor extends EditorPart {
 			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				if (!description.isDisposed()) {
 					description.setText(updateTask.getDescription(false));
+					TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
+					parentEditor.updatePartName();
 				}
 //				if (!pathText.isDisposed() && !updateTask.getContextPath().equals(task.getContextPath())) {
 //					pathText.setText(MylarPlugin.getDefault().getDataDirectory() + '/' + task.getContextPath());
@@ -155,7 +157,6 @@ public class TaskInfoEditor extends EditorPart {
 
 	public TaskInfoEditor() {
 		super();
-
 		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
 		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
 		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));

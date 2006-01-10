@@ -53,7 +53,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	 * Called periodically by the save timer 
 	 */
 	public void saveRequested() {
-		if (MylarTaskListPlugin.getDefault().isShellActive() || forceBackgroundSave) {
+		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isShellActive() || forceBackgroundSave) {
 			try {
 				saveTaskListAndContexts();
 //				MylarStatusHandler.log("Automatically saved task list", this);
@@ -69,7 +69,6 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 			for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
 //				String path = task.getContextPath();
 //				File file = MylarPlugin.getContextManager().getFileForContext(task.getContextPath());
-//				System.err.println(">>> canWrite: " + file.canWrite());
 //				if (!file.canWrite()) {
 //					MylarStatusHandler.fail(new Exception(), "could not write context path, resetting: " + path, true);
 //					task.setContextPath(task.getHandleIdentifier());
