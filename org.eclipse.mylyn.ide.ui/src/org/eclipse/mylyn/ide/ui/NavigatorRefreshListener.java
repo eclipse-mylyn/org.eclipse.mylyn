@@ -58,7 +58,10 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 		if (node != null) {
 			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
 			Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
-			getResourceNavigator().getTreeViewer().refresh(object);
+			if (object != null) {
+				getResourceNavigator().getTreeViewer().update(object, null);
+//					new String[]{IBasicPropertyConstants.P_TEXT});
+			}
 		} else {
 			getResourceNavigator().getTreeViewer().refresh();
 		}
