@@ -8,7 +8,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskHandler;
 import org.eclipse.mylar.core.InteractionEvent;
@@ -19,6 +18,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 
 /**
  * Tests changes to the main mylar data directory location.
@@ -97,7 +97,7 @@ public class ChangeDataDirTest extends TestCase {
 	}
 	
 	public void testBugzillaTaskMove() {
-		String handle = BugzillaUiPlugin.getDefault().createBugHandleIdentifier(1);
+		String handle = TaskRepositoryManager.getHandle("server", 1);
 		BugzillaTask bugzillaTask = new BugzillaTask(handle, "bug1", true, true);
 		addBugzillaTask(bugzillaTask);
 		Date refreshDate = new Date();

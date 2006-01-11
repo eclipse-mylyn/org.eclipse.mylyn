@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugs.search.BugzillaMylarSearch;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
@@ -50,8 +51,8 @@ import org.eclipse.mylar.tasklist.internal.TaskListManager;
  * Test the bugzilla search functionality of the bridge
  * @author Shawn Minto
  */
-public class BugzillaSearchPluginTest extends TestCase{
-    
+public class BugzillaSearchPluginTest extends TestCase {
+	    
 	//SHAWNTODO Add tests for the different types of searches (local qual, local unqual, fully qual, unqual) and mock up a bugs db for testing
 	 
     /** The expected number of results when searching for astNode */
@@ -111,7 +112,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 				}
 			};
 			
-		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.UNQUAL, astNodeType);
+		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.UNQUAL, astNodeType, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 			
 		// add the first listener
 		s.addListener(l1);		
@@ -135,7 +136,7 @@ public class BugzillaSearchPluginTest extends TestCase{
  	 */
 	public void testBridge() {
 		lists.clear();
-		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.UNQUAL, astNodeType);
+		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.UNQUAL, astNodeType, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		
 		IActiveSearchListener l = new IActiveSearchListener() {
 	 			private boolean gathered = false; 
@@ -171,7 +172,7 @@ public class BugzillaSearchPluginTest extends TestCase{
   	*/
 	public void testSaveResults() {
 		lists.clear();
-		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.UNQUAL, astNodeType);
+		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.UNQUAL, astNodeType, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		
 		IActiveSearchListener l = new IActiveSearchListener() {
  			private boolean gathered = false; 
@@ -207,7 +208,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 	public void testLocalBugUnqual() throws InterruptedException {
 		lists.clear();
 
-		String bugPrefix = BugzillaTask.BUGZILLA_HANDLE_PREFIX;
+		String bugPrefix = "<server>-";
 		
 //		TaskList t = MylarTaskListPlugin.getTaskListManager().getTaskList();
 //		MylarTaskListPlugin.getTaskListManager().setTaskList(t);
@@ -241,7 +242,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 			Thread.sleep(500);
 		}
 		
-		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.LOCAL_UNQUAL, astNodeType);
+		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.LOCAL_UNQUAL, astNodeType, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		
 		IActiveSearchListener l = new IActiveSearchListener() {
  			private boolean gathered = false; 
@@ -302,7 +303,7 @@ public class BugzillaSearchPluginTest extends TestCase{
 		}
 
 		
-		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.LOCAL_QUAL, astNodeType);
+		BugzillaMylarSearch s = new BugzillaMylarSearch(BugzillaMylarSearch.LOCAL_QUAL, astNodeType, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		
 		IActiveSearchListener l = new IActiveSearchListener() {
  			private boolean gathered = false; 
