@@ -21,6 +21,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.ui.IPersistableElement;
 
 
@@ -38,10 +39,10 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	private boolean offline;
 
 	public BugzillaTaskEditorInput(BugzillaTask bugTask, boolean offline) throws LoginException, IOException {
-        super(BugzillaTask.getBugId(bugTask.getHandleIdentifier()), offline);
+        super(bugTask.getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier()), offline);
 		this.bugTask = bugTask;
 		offlineBug = bugTask.getBugReport();
-		bugId = BugzillaTask.getBugId(bugTask.getHandleIdentifier());
+		bugId = TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier());
 		bugTitle = "";
 		this.offline = offline;
 	}
@@ -89,7 +90,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	/**
 	 * Returns the online server bug for this input
 	 * 
-	 * @see BugzillaRepository
+	 * @see BugzillaRepositoryUtil
 	 * @see BugReport
 	 */
 //	public BugReport getServerBug() {

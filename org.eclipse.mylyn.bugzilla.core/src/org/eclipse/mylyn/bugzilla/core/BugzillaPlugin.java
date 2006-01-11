@@ -20,7 +20,10 @@ import java.net.Proxy.Type;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -34,28 +37,29 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
-import org.eclipse.mylar.bugzilla.core.favorites.FavoritesFile;
+import org.eclipse.mylar.bugzilla.core.internal.FavoritesFile;
+import org.eclipse.mylar.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfigurationFactory;
-import org.eclipse.mylar.bugzilla.core.offline.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.core.UpdateCore;
 import org.eclipse.update.internal.ui.UpdateUI;
 import org.osgi.framework.BundleContext;
 
-
-/**
- * @author kvesik
- *
- * Created on Mar 26, 2003
- */
-
 /**
  * The main plugin class to be used in the desktop.
+ * 
+ * @author Mik Kersten (added support for multiple repositories)
  */
 public class BugzillaPlugin extends AbstractUIPlugin {
+	
+	public static final String REPOSITORY_KIND = "bugzilla";
+
+	public static final String ENCODING_UTF_8 = "UTF-8";
 	
 	/** Singleton instance of the plug-in */
 	private static BugzillaPlugin plugin;
@@ -69,18 +73,17 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	private List<IOfflineBugListener> listeners = new ArrayList<IOfflineBugListener>();
 	
 	/** Product configuration for the current server */
-	private ProductConfiguration productConfiguration;
+	private Map<String, ProductConfiguration> productConfigurations = new HashMap<String, ProductConfiguration>();
+
+	private Authenticator authenticator = null;
 	
 	/**
 	 * Constructor
 	 * @param descriptor passed in when the plugin is loaded
 	 */
-	public BugzillaPlugin() 
-	{
+	public BugzillaPlugin() {
 		super();
 	}
-
-	Authenticator authenticator = null;
 	
 	/**
 	 * Get the singleton instance for the plugin
@@ -96,16 +99,23 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		plugin = this;
 
 		authenticator = UpdateUI.getDefault().getAuthenticator();
-		if(authenticator == null)
+		if(authenticator == null) {
 			authenticator = new BugzillaAuthenticator();
+		}
 		Authenticator.setDefault(authenticator);
+		
+		setDefaultQueryOptions();
 		
 		readFavoritesFile();
 		readOfflineReportsFile();
-		readCachedProductConfiguration();
+		
+		Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(REPOSITORY_KIND);
+		System.err.println(">>>> should have repository: " + repositories);
+		for (TaskRepository repository : repositories) {
+			readCachedProductConfiguration(repository.getServerUrl().toExternalForm());
+		}
 	}
 
 	@Override
@@ -141,13 +151,13 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	}
 	
 	/**
-	 * Get the name of the bugzilla server
-	 * 
-	 * @return A string containing the prefered name of the bugzilla server
-	 */
-	public String getServerName() {
-		return plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);		
-	}
+//	 * Get the name of the bugzilla server
+//	 * 
+//	 * @return A string containing the prefered name of the bugzilla server
+//	 */
+//	public String getServerName() {
+//		return plugin.getPreferenceStore().getString(IBugzillaConstants.BUGZILLA_SERVER);		
+//	}
 	
     public boolean isServerCompatability218(){
         return IBugzillaConstants.SERVER_218.equals(getPreferenceStore().getString(IBugzillaConstants.SERVER_VERSION))
@@ -168,18 +178,13 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		return plugin.getPreferenceStore().getString(IBugzillaConstants.MOST_RECENT_QUERY);
 	}
 
-	/**
-	 * Returns the current product configuration or <code>null</code> if it is unknown.
-	 */
-	public ProductConfiguration getProductConfiguration() {
-		return productConfiguration;
+	public ProductConfiguration getProductConfiguration(String serverUrl) {
+		return productConfigurations.get(serverUrl);
 	}
 
-	/**
-	 * Sets the current product configuration.
-	 */
-	protected void setProductConfiguration(ProductConfiguration productConfiguration) {
-		this.productConfiguration = productConfiguration;
+	protected void setProductConfiguration(String serverUrl, ProductConfiguration productConfiguration) {
+		productConfigurations.put(serverUrl, productConfiguration);
+		//		this.productConfiguration = productConfiguration;
 	}
 
 	/**
@@ -230,15 +235,17 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	/**
 	 * Reads cached product configuration and stores it in the <code>productConfiguration</code> field.
 	 */
-	private void readCachedProductConfiguration() {
-		IPath configFile = getProductConfigurationCachePath();
+	private void readCachedProductConfiguration(String serverUrl) {
+		// XXX: removed cached product configurations
+		
+		IPath configFile = getProductConfigurationCachePath(serverUrl);
 
 		try {
-			productConfiguration = ProductConfigurationFactory.getInstance().readConfiguration(configFile.toFile());
+			productConfigurations.put(serverUrl, ProductConfigurationFactory.getInstance().readConfiguration(configFile.toFile()));
 		} catch (IOException ex) {
 			try {
 				log(ex);
-				productConfiguration = ProductConfigurationFactory.getInstance().getConfiguration(getServerName());
+				productConfigurations.put(serverUrl, ProductConfigurationFactory.getInstance().getConfiguration(serverUrl));
 			} catch (IOException e) {
 				log(e);
 				MessageDialog.openInformation(null, "Bugzilla product attributes check", 
@@ -255,9 +262,9 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the path to the file cacheing the product configuration.
 	 */
-	protected IPath getProductConfigurationCachePath() {
+	protected IPath getProductConfigurationCachePath(String serverUrl) {
 		IPath stateLocation = Platform.getPluginStateLocation(BugzillaPlugin.getDefault());
-		IPath configFile = stateLocation.append("productConfig");
+		IPath configFile = stateLocation.append("productConfig." + serverUrl.replace('/', '-'));
 		return configFile;
 	}
 	
@@ -379,5 +386,42 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 				}				
 			}
 		});
+	}
+	
+	private void setDefaultQueryOptions() {
+		// get the preferences store for the bugzilla preferences
+		IPreferenceStore prefs = getPreferenceStore();
+
+		prefs.setDefault(IBugzillaConstants.VALUES_STATUS,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_STATUS_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_PRESELECTED_STATUS_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_RESOLUTION,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_RESOLUTION_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_SEVERITY,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_SEVERITY_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_PRIORITY,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_PRIORITY_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_HARDWARE,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_HARDWARE_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_OS, BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_OS_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_PRODUCT,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_PRODUCT_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_COMPONENT,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_COMPONENT_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_VERSION,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_VERSION_VALUES));
+
+		prefs.setDefault(IBugzillaConstants.VALUES_TARGET,
+				BugzillaRepositoryUtil.queryOptionsToString(IBugzillaConstants.DEFAULT_TARGET_VALUES));
 	}
 }

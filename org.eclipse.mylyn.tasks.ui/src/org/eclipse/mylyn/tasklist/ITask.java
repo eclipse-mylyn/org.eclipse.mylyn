@@ -20,7 +20,6 @@ import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Mik Kersten
- * 
  */
 public interface ITask extends ITaskListElement {
 
@@ -54,6 +53,10 @@ public interface ITask extends ITaskListElement {
 
 	public abstract String getUrl();
 
+	public abstract String getRepositoryUrl();
+
+	public abstract void setRepositoryUrl(String repositoryUrl);
+	
 	public abstract String getNotes();
 
 	public abstract void setNotes(String notes);
@@ -116,7 +119,3 @@ public interface ITask extends ITaskListElement {
 
 	public abstract boolean isPastReminder();
 }
-
-//public abstract String getRemoteContextPath();
-//
-//	public abstract void setRemoteContextPath(String path);

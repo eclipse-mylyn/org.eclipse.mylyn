@@ -21,6 +21,7 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaQueryPageParser;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 /**
  * This class is used to parse the available products to log a bug for
@@ -39,14 +40,15 @@ public class ProductParser
     
 	/**
 	 * Parse the product page for the valid products that a bug can be logged for
+	 * @param repository 
 	 * @param in The input stream for the products page
 	 * @return A list of the products that we can enter bugs for
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public List<String> getProducts() throws IOException, ParseException, LoginException
+	public List<String> getProducts(TaskRepository repository) throws IOException, ParseException, LoginException
 	{
-		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(new NullProgressMonitor());
+		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, new NullProgressMonitor());
 		if (!parser.wasSuccessful()) {
 			throw new RuntimeException("Couldn't get products");
 		} else {

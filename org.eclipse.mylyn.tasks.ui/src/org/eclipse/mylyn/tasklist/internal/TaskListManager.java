@@ -248,7 +248,7 @@ public class TaskListManager {
 
 	public void markComplete(ITask task, boolean complete) {
 		task.setCompleted(complete);
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {			
 			listener.tasklistModified(); // to ensure comleted filter notices
 		}
 	}

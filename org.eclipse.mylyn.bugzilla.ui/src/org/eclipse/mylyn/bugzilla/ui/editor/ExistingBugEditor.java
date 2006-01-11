@@ -37,12 +37,11 @@ import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
@@ -57,6 +56,8 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -120,8 +121,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
 	 */
-	public ExistingBugEditor() {
-		super();
+	public ExistingBugEditor(TaskRepository repository) {
+		super(repository);
 
 		// Set up the input for comparing the bug report to the server
 		CompareConfiguration config = new CompareConfiguration();
@@ -441,7 +442,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null) {
-							String handle = BugzillaUiPlugin.getDefault().createBugHandleIdentifier(bug.getId());
+							String handle = TaskRepositoryManager.getHandle(bug.getServer(), bug.getId());
 							ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 							if (task instanceof BugzillaTask) {
 								BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
@@ -731,7 +732,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		protected IStatus run(IProgressMonitor monitor) {
 			final BugReport serverBug;
 			try {
-				serverBug = BugzillaRepository.getInstance().getBug(bug.getId());
+				serverBug = BugzillaRepositoryUtil.getBug(bug.getServer(), bug.getId());
 				// If no bug was found on the server, throw an exception so that the
 				// user gets the same message that appears when there is a problem reading the server.
 				if (serverBug == null)
@@ -954,14 +955,14 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		Attribute owner = bug.getAttribute("Assigned To");
 
 		//Don't add the cc if the user is the bug owner
-		if (owner != null && owner.getValue().indexOf(BugzillaPreferencePage.getUserName()) > -1) {
+		if (owner != null && owner.getValue().indexOf(repository.getUserName()) > -1) {
 			return;
 		}
 
 		//Add the user to the cc list
 		if (newCCattr != null) {
 			if (newCCattr.getNewValue().equals("")) {
-				newCCattr.setNewValue(BugzillaPreferencePage.getUserName());
+				newCCattr.setNewValue(repository.getUserName());
 			}
 		}
 	}

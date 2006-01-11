@@ -12,10 +12,16 @@ package org.eclipse.mylar.bugs.java;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
+/**
+ * @author Mik Kersten
+ */
 public class BugzillaHyperLink implements IHyperlink {
 
 	private IRegion region;
@@ -40,7 +46,8 @@ public class BugzillaHyperLink implements IHyperlink {
 	}
 
 	public void open() {
-		OpenBugzillaReportJob job = new OpenBugzillaReportJob(id);
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getServerUrl().toExternalForm(), id);
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
 			service.run(true, false, job);

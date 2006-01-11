@@ -19,8 +19,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 
 /**
@@ -37,12 +38,12 @@ public class NewBugWizard extends AbstractBugWizard {
 	/** The wizard page where the attributes are selected and the bug is submitted */
 	WizardAttributesPage attributePage;
 
-	public NewBugWizard(){
-		this(false);
+	public NewBugWizard(TaskRepository repository) {
+		this(repository, false);
 	}
 	
-	public NewBugWizard(boolean fromDialog){
-		super();
+	public NewBugWizard(TaskRepository repository, boolean fromDialog){
+		super(repository);
 		this.fromDialog = fromDialog;
 	}
 	
@@ -53,7 +54,7 @@ public class NewBugWizard extends AbstractBugWizard {
 		// try to get the list of products from the server
 		if (!model.hasParsedProducts()) {
 			try {
-				WizardProductPage.products = BugzillaRepository.getInstance().getProductList();
+				WizardProductPage.products = BugzillaRepositoryUtil.getProductList(repository.getServerUrl().toExternalForm());
 				model.setConnected(true);
 				model.setParsedProductsStatus(true);
 			} catch (Exception e) {
@@ -79,7 +80,7 @@ public class NewBugWizard extends AbstractBugWizard {
 
 					// use ProductConfiguration to get products instead
 					String[] products = BugzillaPlugin.getDefault()
-							.getProductConfiguration().getProducts();
+							.getProductConfiguration(repository.getServerUrl().toExternalForm()).getProducts();
 
 					// add products from ProductConfiguration to product page's
 					// product list
@@ -104,9 +105,9 @@ public class NewBugWizard extends AbstractBugWizard {
 //				// There wasn't a list of products so there must only be 1
 //				if (!model.hasParsedAttributes()) {
 //					if (model.isConnected()) {
-//						BugzillaRepository.getInstance().getnewBugAttributes(model, true);
+//						BugzillaRepositoryUtil.getInstance().getnewBugAttributes(model, true);
 //					} else { 
-//						BugzillaRepository.getInstance().getProdConfigAttributes(model);
+//						BugzillaRepositoryUtil.getInstance().getProdConfigAttributes(model);
 //					}
 //					model.setParsedAttributesStatus(true);
 //				}

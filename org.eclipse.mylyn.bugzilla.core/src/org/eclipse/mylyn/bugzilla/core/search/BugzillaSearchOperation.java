@@ -15,80 +15,78 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * An operation to perform Bugzilla search query.
+ * 
+ * @author Mik Kersten (hardening of prototype
  */
-public class BugzillaSearchOperation extends WorkspaceModifyOperation implements IBugzillaSearchOperation 
-{
-	/** The url of the bugzilla server */
-	private String url;
-	
+public class BugzillaSearchOperation extends WorkspaceModifyOperation implements IBugzillaSearchOperation {
+	private String queryUrl;
+
 	/** The bugzilla collector for the search */
 	private IBugzillaSearchResultCollector collector;
-	
+
 	/** The bugzilla search query */
 	private BugzillaSearchQuery query;
-	
+
 	/** The status of the search operation */
 	private IStatus status;
-	
+
 	/** The LoginException that was thrown when trying to do the search */
 	private LoginException loginException = null;
-	
+
 	private int maxHits;
-	
-	/**
-	 * Constructor
-	 * @param url The url of the bugzilla server
-	 * @param collector The bugzilla search collector to use for this search
-	 */
-	public BugzillaSearchOperation(String url, IBugzillaSearchResultCollector collector, String maxHits) 
-	{
-		this.url = url;
+
+	private TaskRepository repository;
+
+	public BugzillaSearchOperation(TaskRepository repository, String queryUrl,
+			IBugzillaSearchResultCollector collector, String maxHits) {
+		this.repository = repository;
+		this.queryUrl = queryUrl;
 		this.collector = collector;
 		collector.setOperation(this);
-		try{
+		try {
 			this.maxHits = Integer.parseInt(maxHits);
-		} catch (Exception e){
+		} catch (Exception e) {
 			this.maxHits = -1;
 		}
 	}
 
 	@Override
 	public void execute(IProgressMonitor monitor) {
-		// set the progress monitor for the search collector and start the search
+		// set the progress monitor for the search collector and start the
+		// search
 		collector.setProgressMonitor(monitor);
-		BugzillaSearchEngine engine = new BugzillaSearchEngine(url);
-		try
-		{
-			status = engine.search(collector, 0 , maxHits);
-		}
-		catch(LoginException e) {
-			//save this exception to throw later
+		BugzillaSearchEngine engine = new BugzillaSearchEngine(repository, queryUrl);
+		try {
+			status = engine.search(collector, 0, maxHits);
+		} catch (LoginException e) {
+			// save this exception to throw later
 			this.loginException = e;
 		}
 	}
-	
+
 	/**
 	 * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation#getImageDescriptor()
 	 */
-    public ImageDescriptor getImageDescriptor() {
+	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
-	
+
 	/**
 	 * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation#getStatus()
 	 */
-    public IStatus getStatus() throws LoginException {
+	public IStatus getStatus() throws LoginException {
 		// if a LoginException was thrown while trying to search, throw this
 		if (loginException == null)
 			return status;
 		else
 			throw loginException;
 	}
-	
+
 	/**
 	 * @see org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation#getQuery()
 	 */

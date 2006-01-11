@@ -29,8 +29,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.ui.NewSearchUI;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
@@ -57,17 +57,21 @@ public class BugzillaSearchEngine {
 	protected static final RegularExpression reOld = new RegularExpression("<a href=\"show_bug.cgi\\?id=(\\d+)\">\\d+</a>\\s*<td class=severity><nobr>([^>]+)</nobr><td class=priority><nobr>([^>]+)</nobr><td class=platform><nobr>([^>]*)</nobr><td class=owner><nobr>([^>]*)</nobr><td class=status><nobr>([^>]*)</nobr><td class=resolution><nobr>([^>]*)</nobr><td class=summary>(.*)$", "i");
 	
 	private String urlString;
+	
+	private TaskRepository repository;
 
 	private boolean maxReached = false;
 	
-	public BugzillaSearchEngine(String url) {
-		this.urlString = url;
+	public BugzillaSearchEngine(TaskRepository repository, String queryUrl) {
+		urlString = queryUrl;
+		this.repository = repository;
 
-		// use the username and password if we have it to log into bugzilla
-		if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
-		{
+		if (repository.hasCredentials()) {
 			try {
-				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
+				urlString += "&GoAheadAndLogIn=1&Bugzilla_login=" 
+					+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) 
+					+ "&Bugzilla_password=" 
+					+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			} catch (UnsupportedEncodingException e) {
 				/*
 				 * Do nothing. Every implementation of the Java platform is required
@@ -75,6 +79,18 @@ public class BugzillaSearchEngine {
 				 */
 			}
 		}
+		// use the username and password if we have it to log into bugzilla
+//		if(BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("") && BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals(""))
+//		{
+//			try {
+//				url += "&GoAheadAndLogIn=1&Bugzilla_login=" + URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password=" + URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8");
+//			} catch (UnsupportedEncodingException e) {
+//				/*
+//				 * Do nothing. Every implementation of the Java platform is required
+//				 * to support the standard charset "UTF-8"
+//				 */
+//			}
+//		}
 	}
 	
 	/**
@@ -156,7 +172,7 @@ public class BugzillaSearchEngine {
 			if(responseCode != HttpURLConnection.HTTP_OK) {
 				String msg;
 				if(responseCode == -1 || responseCode == HttpURLConnection.HTTP_FORBIDDEN)
-					msg = BugzillaPlugin.getDefault().getServerName() + " does not seem to be a valid Bugzilla server.  Check Bugzilla preferences.";
+					msg = repository.getServerUrl().toExternalForm() + " does not seem to be a valid Bugzilla server.  Check Bugzilla preferences.";
 				else
 					msg = "HTTP Error " + responseCode + " (" + connect.getResponseMessage() + ") while querying Bugzilla Server.  Check Bugzilla preferences.";
 
@@ -211,9 +227,10 @@ public class BugzillaSearchEngine {
 					if (query == null)
 						query = "";
 					
-					String server = BugzillaPlugin.getDefault().getServerName();
+//					String server = BugzillaPlugin.getDefault().getServerName();
+					String server = repository.getServerUrl().toExternalForm();
 					
-					BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
+					BugzillaSearchHit hit = new BugzillaSearchHit(server, id, description, severity, priority, platform, state, result, owner, query);
 					collector.accept(hit);
 					numCollected++;
 					
@@ -226,7 +243,7 @@ public class BugzillaSearchEngine {
 					}
 					
 					int id = Integer.parseInt(match.getCapturedText(1));
-					BugzillaSearchHit hit = createHit(regularExpression, monitor, in, match, id);
+					BugzillaSearchHit hit = createHit(regularExpression, monitor, in, match, repository.getServerUrl().toExternalForm(), id);
 					collector.accept(hit);
 					numCollected++;
 				}
@@ -235,7 +252,8 @@ public class BugzillaSearchEngine {
 				}
 			}
 		}catch (CoreException e) {
-			status = new MultiStatus( IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "Core Exception occurred while querying Bugzilla Server " + BugzillaPlugin.getDefault().getServerName() + ".\n"
+			status = new MultiStatus( IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, "Core Exception occurred while querying Bugzilla Server " 
+					+ repository.getServerUrl().toExternalForm() + ".\n"
 									  + "\nClick Details for more information.", e);	
 			((MultiStatus)status).add(e.getStatus());
 			
@@ -245,7 +263,8 @@ public class BugzillaSearchEngine {
 		    status = new Status(IStatus.CANCEL, IBugzillaConstants.PLUGIN_ID, 
 		            IStatus.CANCEL, "", null);
 		} catch (Exception e) {
-			status = new MultiStatus( IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getClass().toString() + " occurred while querying Bugzilla Server " + BugzillaPlugin.getDefault().getServerName() + ".\n"
+			status = new MultiStatus( IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getClass().toString() + " occurred while querying Bugzilla Server " 
+					+ repository.getServerUrl().toExternalForm() + ".\n"
 									  + "\nClick Details or see log for more information.", e);
 
 			IStatus s = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR, e.getClass().toString() + ":  ", e);
@@ -282,7 +301,7 @@ public class BugzillaSearchEngine {
 			return status;
 	}
 
-	public static BugzillaSearchHit createHit(RegularExpression regularExpression, IProgressMonitor monitor, BufferedReader in, Match match, int id) throws IOException {
+	public static BugzillaSearchHit createHit(RegularExpression regularExpression, IProgressMonitor monitor, BufferedReader in, Match match, String serverUrl, int id) throws IOException {
 		String line;
 		String severity = null;
 		String priority = null;
@@ -329,16 +348,16 @@ public class BugzillaSearchEngine {
 		if (line != null) description = line.substring(8);
 		
 		String query = "";
-		String server = "<unknown server>";
+//		String server = "<unknown server>";
 		try {
 			String recentQuery = BugzillaPlugin.getMostRecentQuery();
 			if (recentQuery != null) query = recentQuery;
-			server = BugzillaPlugin.getDefault().getServerName();
+//			server = BugzillaPlugin.getDefault().getServerName();
 		} catch (Exception e) {
 			// ignore, for testing
 		}
 		
-		BugzillaSearchHit hit = new BugzillaSearchHit(id, description, severity, priority, platform, state, result, owner, query, server);
+		BugzillaSearchHit hit = new BugzillaSearchHit(serverUrl, id, description, severity, priority, platform, state, result, owner, query);
 		return hit;
 	}
 

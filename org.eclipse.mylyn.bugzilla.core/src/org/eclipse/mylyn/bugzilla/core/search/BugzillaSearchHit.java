@@ -46,7 +46,7 @@ public class BugzillaSearchHit
 	
 	/** The query that the bug was a result of */
 	private String query;
-
+	
 	/**
 	 * Constructor
 	 * @param id The id of the bug
@@ -59,8 +59,8 @@ public class BugzillaSearchHit
 	 * @param owner The owner of the bug
 	 * @param query the query that the bug was a result of
 	 */
-	public BugzillaSearchHit(int id, String description, String severity, String priority, String platform, String state, String result, String owner, String query, String server) 
-	{
+	public BugzillaSearchHit(String server, int id, String description, String severity, String priority, String platform, String state, String result, String owner, String query) {
+		this.server = server;
 		this.id = id;
 		this.description = description;
 		this.severity = severity;
@@ -70,7 +70,6 @@ public class BugzillaSearchHit
 		this.result = result;
 		this.owner = owner;
 		this.query = query;
-		this.server = server;
 	}
 	
 	/**

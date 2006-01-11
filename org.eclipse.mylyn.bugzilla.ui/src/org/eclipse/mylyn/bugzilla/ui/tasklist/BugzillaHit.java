@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
@@ -28,6 +28,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class BugzillaHit implements IQueryHit {
 
+	private String repositoryUrl;
+	
 	private String description;
 
 	private String priority;
@@ -38,9 +40,10 @@ public class BugzillaHit implements IQueryHit {
 
 	private String status;
 
-	public BugzillaHit(String description, String priority, int id, BugzillaTask task, String status) {
+	public BugzillaHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task, String status) {
 		this.description = description;
 		this.priority = priority;
+		this.repositoryUrl = repositoryUrl;
 		this.id = id;
 		this.task = task;
 		this.status = status;
@@ -100,20 +103,20 @@ public class BugzillaHit implements IQueryHit {
 	}
 
 	public String getHandleIdentifier() {
-		return getServerName() + "-" + getId();
+		return "Bugzilla" + "-" + getId();
 	}
 
-	public String getServerName() {
-		// TODO need the right server name - get from the handle
-		return "Bugzilla";
-	}
+//	public String getServerName() {
+//		// TODO need the right server name - get from the handle
+//		return "Bugzilla";
+//	}
 
 	public int getId() {
 		return id;
 	}
 
 	public String getBugUrl() {
-		return BugzillaRepository.getBugUrlWithoutLogin(id);
+		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
 	}
 
 	public boolean isLocal() {
@@ -181,5 +184,9 @@ public class BugzillaHit implements IQueryHit {
 
 	public void setHandle(String id) {
 		// can't change the handle
+	}
+
+	public String getRepositoryUrl() {
+		return repositoryUrl;
 	}
 }

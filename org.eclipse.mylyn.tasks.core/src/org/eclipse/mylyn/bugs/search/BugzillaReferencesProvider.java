@@ -28,11 +28,14 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.bugs.BugzillaSearchManager;
 import org.eclipse.mylar.bugs.BugzillaStructureBridge;
 import org.eclipse.mylar.bugs.MylarBugsPlugin;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 
 
@@ -70,7 +73,9 @@ public class BugzillaReferencesProvider extends AbstractRelationProvider {
 	@Override
 	public IMylarSearchOperation getSearchOperation(IMylarElement node, int limitTo, int degreeOfSepatation) {
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
-		return new BugzillaMylarSearch(degreeOfSepatation, javaElement); 
+		
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		return new BugzillaMylarSearch(degreeOfSepatation, javaElement, repository.getServerUrl().toExternalForm());
 	}
     
 	private void runJob(final IMylarElement node,  final int degreeOfSeparation) {

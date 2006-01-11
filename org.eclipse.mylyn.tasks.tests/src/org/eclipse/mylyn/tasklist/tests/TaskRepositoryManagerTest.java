@@ -18,6 +18,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
@@ -25,36 +26,57 @@ import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 /**
  * @author Mik Kersten
  */
-public class RepositoryManagerTest extends TestCase {
+public class TaskRepositoryManagerTest extends TestCase {
 
+	private static final String DEFAULT_KIND = "bugzilla";
+	private static final String DEFAULT_URL = "http://eclipse.org";
 	private TaskRepositoryManager manager;
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = MylarTaskListPlugin.getRepositoryManager();
+		manager.clearRepositories();
 		assertNotNull(manager);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
 		super.tearDown();
 		manager.clearRepositories();
 	}
 
+	public void testHandles() {
+		String url = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
+		String id = "123"; 
+		String handle = TaskRepositoryManager.getHandle(url, id);
+		assertEquals(url, TaskRepositoryManager.getRepositoryUrl(handle));
+		assertEquals(id, TaskRepositoryManager.getTaskId(handle));
+		assertEquals(123, TaskRepositoryManager.getTaskIdAsInt(handle));
+	}
+	
 	public void testMultipleNotAdded() throws MalformedURLException {
-		TaskRepository repository = new TaskRepository(new URL("http://eclipse.org"), "bugzilla");
+		TaskRepository repository = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
 		manager.addRepository(repository);
-		TaskRepository repository2 = new TaskRepository(new URL("http://eclipse.org"), "bugzilla");
+		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
 		manager.addRepository(repository2);
 		assertEquals(1, manager.getAllRepositories().size());
+	}
+
+	public void testGet() throws MalformedURLException {
+		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
+		
+		TaskRepository repository = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
+		manager.addRepository(repository);
+		assertEquals(repository, manager.getRepository(DEFAULT_KIND, DEFAULT_URL));
+		assertNull(manager.getRepository(DEFAULT_KIND, "foo"));
+		assertNull(manager.getRepository("foo", DEFAULT_URL));
 	}
 	
 	public void testRepositoryPersistance() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
 		
-		TaskRepository repository = new TaskRepository(new URL("http://eclipse.org"), "bugzilla");
+		TaskRepository repository = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
 		manager.addRepository(repository);
 		
 		assertNotNull(MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));

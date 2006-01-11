@@ -279,12 +279,17 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
+	/**
+	 * Startup order is critical
+	 */
 	public void earlyStartup() {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
 					TaskListExtensionReader.initExtensions(taskListWriter);
+					
+					taskRepositoryManager.readRepositories();
 					
 					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.addListener(taskListSaveManager);

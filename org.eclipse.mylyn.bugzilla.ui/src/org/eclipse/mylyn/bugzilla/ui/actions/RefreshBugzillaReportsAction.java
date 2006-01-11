@@ -25,13 +25,14 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -75,7 +76,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				if(found == null){
 					MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Task Moved To Root", "Bugzilla Task " + 
-							BugzillaTask.getBugId(task.getHandleIdentifier()) + 
+							TaskRepositoryManager.getTaskIdAsInt(task.getHandleIdentifier()) + 
 							" has been moved to the root since it is activated and has disappeared from a query.");
 				}
 			}
@@ -111,7 +112,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 ////					try {
 ////						String[] parts = key.split(";");
 ////						final int id = Integer.parseInt(parts[1]);
-////						BugReport bug = BugzillaRepository.getInstance().getCurrentBug(id);
+////						BugReport bug = BugzillaRepositoryUtil.getInstance().getCurrentBug(id);
 ////						if (bug != null) {
 ////							bridge.cache(key, bug);
 ////						}							

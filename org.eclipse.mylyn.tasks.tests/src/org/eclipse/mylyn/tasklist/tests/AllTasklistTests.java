@@ -24,7 +24,7 @@ public class AllTasklistTests {
 		
 		//$JUnit-BEGIN$
 		suite.addTestSuite(TaskTest.class);
-		suite.addTestSuite(RepositoryManagerTest.class);
+		suite.addTestSuite(TaskRepositoryManagerTest.class);
 		suite.addTestSuite(TaskListStandaloneTest.class);
         suite.addTestSuite(TaskListManagerTest.class);
         suite.addTestSuite(TaskListUiTest.class);

@@ -21,14 +21,17 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 
 /**
  * Utilities methods for the BugzillaMylarBridge
  * 
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class Util {
 
@@ -43,11 +46,11 @@ public class Util {
     /**
      * List of all of the resolutions that we can have <br> FIXED, INVALID, WONTFIX, LATER, REMIND, DUPLICATE, WORKSFORME, MOVED, ---
      */
-    private static String[] resolutionValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.RESOLUTION_VALUES));
+    private static String[] resolutionValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs.getString(IBugzillaConstants.VALUES_RESOLUTION));
     /**
      * List of all of the statuses that we can have <br> UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED
      */
-    private static String[] statusValues = BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.STATUS_VALUES));
+    private static String[] statusValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs.getString(IBugzillaConstants.VALUES_STATUS));
 
     /**
      * Get the bugzilla url used for searching for exact matches
@@ -56,8 +59,8 @@ public class Util {
      *            The IMember to create the query string for
      * @return A url string for the search
      */
-    public static String getExactSearchURL(IMember je) {
-        StringBuffer sb = getQueryURLStart();
+    public static String getExactSearchURL(String repositoryUrl, IMember je) {
+        StringBuffer sb = getQueryURLStart(repositoryUrl);
     
         String long_desc = "";
     
@@ -83,8 +86,8 @@ public class Util {
      *            The IMember to create the query string for
      * @return A url string for the search
      */
-    public static String getInexactSearchURL(IMember je) {
-        StringBuffer sb = getQueryURLStart();
+    public static String getInexactSearchURL(String repositoryUrl, IMember je) {
+        StringBuffer sb = getQueryURLStart(repositoryUrl);
     
     
         String long_desc = "";
@@ -135,32 +138,32 @@ public class Util {
      * @return The start of the query url as a StringBuffer <br>
      *         Example: https://bugs.eclipse.org/bugs/buglist.cgi?long_desc_type=allwordssubstr&long_desc=
      */
-    public static StringBuffer getQueryURLStart() {
-        StringBuffer sb = new StringBuffer(BugzillaPlugin.getDefault()
-                .getServerName());
+    public static StringBuffer getQueryURLStart(String repositoryUrl) {
+        StringBuffer sb = new StringBuffer(repositoryUrl);
     
         if (sb.charAt(sb.length() - 1) != '/') {
             sb.append('/');
         }
         sb.append("buglist.cgi?");
     
-        // use the username and password if we have it
-        if (BugzillaPreferencePage.getUserName() != null
-                && !BugzillaPreferencePage.getUserName().equals("")
-                && BugzillaPreferencePage.getPassword() != null
-                && !BugzillaPreferencePage.getPassword().equals("")) {
+        TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+        if (repository != null && repository.hasCredentials()) {
+//        if (BugzillaPreferencePage.getUserName() != null
+//                && !BugzillaPreferencePage.getUserName().equals("")
+//                && BugzillaPreferencePage.getPassword() != null
+//                && !BugzillaPreferencePage.getPassword().equals("")) {
             try{
                 sb.append("GoAheadAndLogIn=1&Bugzilla_login="
-                    + URLEncoder.encode(BugzillaPreferencePage.getUserName(), Charset.defaultCharset().toString())
+                    + URLEncoder.encode(repository.getUserName(), //BugzillaPreferencePage.getUserName(), 
+                    		Charset.defaultCharset().toString())
                     + "&Bugzilla_password="
-                    + URLEncoder.encode(BugzillaPreferencePage.getPassword(), Charset.defaultCharset().toString())
+                    + URLEncoder.encode(repository.getPassword(), //BugzillaPreferencePage.getPassword(), 
+                    		Charset.defaultCharset().toString())
                     + "&");
-            } catch (UnsupportedEncodingException e)
-            {
+            } catch (UnsupportedEncodingException e) {
                 // should never get here since we are using the default encoding
             }
         }
-        
         // add the description search type
         sb.append("long_desc_type=");
         sb.append(patternOperationValues[0]); // search for all words

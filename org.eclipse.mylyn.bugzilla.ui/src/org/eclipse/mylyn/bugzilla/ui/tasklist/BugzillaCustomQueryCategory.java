@@ -16,7 +16,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
  */
 public class BugzillaCustomQueryCategory extends BugzillaQueryCategory {
 
-	public BugzillaCustomQueryCategory(String description, String maxHits, String queryString) {
-		super(description, maxHits, queryString);
+	public BugzillaCustomQueryCategory(String repositoryUrl, String description, String maxHits, String queryString) {
+		super(repositoryUrl, maxHits, description, queryString);
 	}
 }

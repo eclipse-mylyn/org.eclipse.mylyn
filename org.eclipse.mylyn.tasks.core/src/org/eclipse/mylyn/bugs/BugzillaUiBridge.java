@@ -45,7 +45,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
     public void open(IMylarElement node) {
         String handle = node.getHandleIdentifier();
         String bugHandle = handle;
-        String server =handle.substring(0, handle.indexOf(";"));
+        String server = handle.substring(0, handle.indexOf(";"));
                
         handle = handle.substring(handle.indexOf(";") + 1);
         int next = handle.indexOf(";");
@@ -60,8 +60,9 @@ public class BugzillaUiBridge implements IMylarUiBridge {
             commentNumer = Integer.parseInt(handle.substring(handle.indexOf(";") + 1));
             bugHandle = bugHandle.substring(0, next);
         }
-                
-        ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugzillaTask.getHandle(bugId), true);
+        
+        ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
+//        ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugTaskUtil.getHandle(bugId), true);
         if (task != null && task instanceof BugzillaTask) {
             BugzillaTask bugzillaTask = (BugzillaTask)task;
             bugzillaTask.openTask(commentNumer, true);

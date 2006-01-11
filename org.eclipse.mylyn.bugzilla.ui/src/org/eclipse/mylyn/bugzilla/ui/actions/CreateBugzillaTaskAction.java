@@ -15,6 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
@@ -22,6 +23,8 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -61,8 +64,9 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 	        return;
 	    }
 	
+	    TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 	    ITask newTask = new BugzillaTask(
-	    		BugzillaUiPlugin.getDefault().createBugHandleIdentifier(bugId), 
+	    		TaskRepositoryManager.getHandle(repository.getServerUrl().toExternalForm(), bugId), 
 	    		"<bugzilla info>", true, true);				
 	    Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
     	

@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCustomQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
@@ -24,6 +25,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryDialog;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -49,15 +51,16 @@ public class AddBugzillaQueryAction extends Action implements IViewActionDelegat
     @Override
     public void run() {
     	
+    	TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
     	
     	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
     	if(sqd.open() == Dialog.OK){
     		
         	final BugzillaQueryCategory queryCategory;
         	if(!sqd.isCustom()){
-        		queryCategory = new BugzillaQueryCategory(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
+        		queryCategory = new BugzillaQueryCategory(repository.getServerUrl().toExternalForm(), sqd.getUrl(), sqd.getName(), sqd.getMaxHits());
         	} else {
-        		queryCategory = new BugzillaCustomQueryCategory(sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
+        		queryCategory = new BugzillaCustomQueryCategory(repository.getServerUrl().toExternalForm(), sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
         	}
     		MylarTaskListPlugin.getTaskListManager().addQuery(queryCategory);
         	boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.WORK_OFFLINE);

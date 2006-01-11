@@ -23,6 +23,10 @@ public interface ITaskQuery extends ITaskListElement{
 	
 	public void setQueryUrl(String query);
 	
+	public String getRepositoryUrl();
+	
+	public void setRepositoryUrl(String url);
+	
 	public List<IQueryHit> getHits();
 	
 	public int getMaxHits();

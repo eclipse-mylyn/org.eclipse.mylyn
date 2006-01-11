@@ -23,7 +23,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchOperation;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchQuery;
@@ -31,6 +31,9 @@ import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResultCollector;
 import org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
@@ -47,6 +50,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -89,38 +93,38 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 
-	private String[] statusValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.STATUS_VALUES));
+	private String[] statusValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_STATUS));
 
-	protected String[] preselectedStatusValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES));
+	protected String[] preselectedStatusValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUSE_STATUS_PRESELECTED));
 
-	private String[] resolutionValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.RESOLUTION_VALUES));
+	private String[] resolutionValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_RESOLUTION));
 
-	private String[] severityValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.SEVERITY_VALUES));
+	private String[] severityValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_SEVERITY));
 
-	private String[] priorityValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.PRIORITY_VALUES));
+	private String[] priorityValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_PRIORITY));
 
-	private String[] hardwareValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.HARDWARE_VALUES));
+	private String[] hardwareValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_HARDWARE));
 
-	private String[] osValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.OS_VALUES));
+	private String[] osValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_OS));
 
-	private String[] productValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.PRODUCT_VALUES));
+	private String[] productValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_PRODUCT));
 
-	private String[] componentValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.COMPONENT_VALUES));
+	private String[] componentValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_COMPONENT));
 
-	private String[] versionValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VERSION_VALUES));
+	private String[] versionValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_VERSION));
 
-	private String[] targetValues = BugzillaPreferencePage.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.TARGET_VALUES));
+	private String[] targetValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
+			.getString(IBugzillaConstants.VALUES_TARGET));
 
 	private static class BugzillaSearchData {
 		/** Pattern to match on */
@@ -728,40 +732,41 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				monitor.beginTask("Updating search options...", 55);
 
 				try {
-					BugzillaPreferencePage.updateQueryOptions(monitor);
+					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+					BugzillaRepositoryUtil.updateQueryOptions(repository, monitor);
 
-					product.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.PRODUCT_VALUES)));
+					product.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_PRODUCT)));
 					monitor.worked(1);
-					component.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.COMPONENT_VALUES)));
+					component.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_COMPONENT)));
 					monitor.worked(1);
-					version.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VERSION_VALUES)));
+					version.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_VERSION)));
 					monitor.worked(1);
-					target.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.TARGET_VALUES)));
+					target.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_TARGET)));
 					monitor.worked(1);
-					status.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.STATUS_VALUES)));
+					status.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_STATUS)));
 					monitor.worked(1);
-					status.setSelection(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.PRESELECTED_STATUS_VALUES)));
+					status.setSelection(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUSE_STATUS_PRESELECTED)));
 					monitor.worked(1);
-					resolution.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.RESOLUTION_VALUES)));
+					resolution.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_RESOLUTION)));
 					monitor.worked(1);
-					severity.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.SEVERITY_VALUES)));
+					severity.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_SEVERITY)));
 					monitor.worked(1);
-					priority.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.PRIORITY_VALUES)));
+					priority.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_PRIORITY)));
 					monitor.worked(1);
-					hardware.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.HARDWARE_VALUES)));
+					hardware.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_HARDWARE)));
 					monitor.worked(1);
-					os.setItems(BugzillaPreferencePage.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.OS_VALUES)));
+					os.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
+							.getString(IBugzillaConstants.VALUES_OS)));
 					monitor.worked(1);
 				} catch (LoginException exception) {
 					// we had a problem that seems to have been caused from bad
@@ -793,23 +798,26 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		operation.setText(operation.getItem(patternData.operation));
 	}
 
-	/**
-	 * @see ISearchPage#performAction()
-	 */
 	public boolean performAction() {
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		if (repository == null) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information", "No repository available, please add one.");
+			return false;
+		}
+				
 		getPatternData(summaryPattern, summaryOperation, previousSummaryPatterns);
 		getPatternData(commentPattern, commentOperation, previousCommentPatterns);
 		getPatternData(this.emailPattern, emailOperation, previousEmailPatterns);
 
 		String summaryText;
-		String url;
+		String queryUrl;
 		if (rememberedQuery == true) {
-			url = getQueryURL(new StringBuffer(input.getQueryParameters(selIndex)));
+			queryUrl = getQueryURL(repository, new StringBuffer(input.getQueryParameters(selIndex)));
 			summaryText = input.getSummaryText(selIndex);
 		} else {
 			try {
 				StringBuffer params = getQueryParameters();
-				url = getQueryURL(params);
+				queryUrl = getQueryURL(repository, params);
 				summaryText = summaryPattern.getText();
 			} catch (UnsupportedEncodingException e) {
 				/*
@@ -817,7 +825,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				 * implementation of the Java platform is required to support
 				 * the standard charset "UTF-8"
 				 */
-				url = "";
+				queryUrl = "";
 				summaryText = "";
 			}
 		}
@@ -825,7 +833,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		try {
 			// if the summary contains a single bug id, open the bug directly
 			int id = Integer.parseInt(summaryText);
-			return BugzillaUITools.show(id);
+			return BugzillaUITools.show(repository.getServerUrl().toExternalForm(), id);
 		} catch (NumberFormatException ignored) {
 			// ignore this since this means that the text is not a bug id
 		}
@@ -839,7 +847,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		IBugzillaSearchResultCollector collector = new BugzillaSearchResultCollector();
 
-		IBugzillaSearchOperation op = new BugzillaSearchOperation(url, collector, maxHits);
+		IBugzillaSearchOperation op = new BugzillaSearchOperation(repository, queryUrl, collector, maxHits);
 
 		BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(op);
 		NewSearchUI.runQueryInBackground(searchQuery);
@@ -937,8 +945,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		return patterns;
 	}
 
-	protected String getQueryURL(StringBuffer params) {
-		StringBuffer url = new StringBuffer(getQueryURLStart().toString());
+	protected String getQueryURL(TaskRepository repository, StringBuffer params) {
+		StringBuffer url = new StringBuffer(getQueryURLStart(repository).toString());
 		url.append(params);
 
 		// HACK make sure that the searches come back sorted by priority. This
@@ -952,8 +960,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	 * 
 	 * Example: https://bugs.eclipse.org/bugs/buglist.cgi?
 	 */
-	private StringBuffer getQueryURLStart() {
-		StringBuffer sb = new StringBuffer(BugzillaPlugin.getDefault().getServerName());
+	private StringBuffer getQueryURLStart(TaskRepository repository) {
+//		StringBuffer sb = new StringBuffer(BugzillaPlugin.getDefault().getServerName());
+		StringBuffer sb = new StringBuffer(repository.getServerUrl().toExternalForm());
 
 		if (sb.charAt(sb.length() - 1) != '/') {
 			sb.append('/');
@@ -961,17 +970,13 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		sb.append("buglist.cgi?");
 
 		// use the username and password if we have it
-		if (BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("")
-				&& BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals("")) {
+		if (repository.hasCredentials()) {
 			try {
 				sb.append("GoAheadAndLogIn=1&Bugzilla_login="
-						+ URLEncoder.encode(BugzillaPreferencePage.getUserName(), "UTF-8") + "&Bugzilla_password="
-						+ URLEncoder.encode(BugzillaPreferencePage.getPassword(), "UTF-8") + "&");
+						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) + "&Bugzilla_password="
+						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8) + "&");
 			} catch (UnsupportedEncodingException e) {
-				/*
-				 * Do nothing. Every implementation of the Java platform is
-				 * required to support the standard charset "UTF-8"
-				 */
+				MylarStatusHandler.fail(e, "unsupported encoding", false);
 			}
 		}
 

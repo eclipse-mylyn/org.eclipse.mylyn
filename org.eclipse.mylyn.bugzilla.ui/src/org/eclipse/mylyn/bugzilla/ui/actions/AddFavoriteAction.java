@@ -22,10 +22,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.core.favorites.Favorite;
+import org.eclipse.mylar.bugzilla.core.internal.Favorite;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.FavoritesView;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 
 /**
@@ -99,8 +101,10 @@ public class AddFavoriteAction extends AbstractFavoritesAction {
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY, marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY));
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_STATE, marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE));
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_RESULT, marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT));
-					
-					Favorite favorite = new Favorite(BugzillaPlugin.getDefault().getServerName(), attributeId.intValue(), description, query, attributes);
+										
+
+					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+					Favorite favorite = new Favorite(repository.getServerUrl().toExternalForm(), attributeId.intValue(), description, query, attributes);
 					selected.add(favorite);
 				}
 				catch (CoreException ignored) 

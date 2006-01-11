@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +28,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 /**
  * Tests for parsing Product Page for new Bugzilla reports
@@ -35,10 +38,21 @@ import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
  */
 public class BugzillaProductParserTest extends TestCase {
 
-	public BugzillaProductParserTest() {
-		super();
+	private TaskRepository repository;
+	
+    @Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
+		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
+	}
+	
 	public BugzillaProductParserTest(String arg0) {
 		super(arg0);
 	}
@@ -51,7 +65,8 @@ public class BugzillaProductParserTest extends TestCase {
 		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/test-products-220.html"));
 		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
-		productList = new ProductParser(in).getProducts();
+		System.err.println(">>>> " + repository.getServerUrl());
+		productList = new ProductParser(in).getProducts(repository);
 		
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
@@ -69,7 +84,7 @@ public class BugzillaProductParserTest extends TestCase {
 		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/test-products-218.html"));
 		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
-		productList = new ProductParser(in).getProducts();
+		productList = new ProductParser(in).getProducts(repository);
 		
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
@@ -88,7 +103,7 @@ public class BugzillaProductParserTest extends TestCase {
 		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/product-page.html"));
 		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
-		productList = new ProductParser(in).getProducts();
+		productList = new ProductParser(in).getProducts(repository);
 
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());

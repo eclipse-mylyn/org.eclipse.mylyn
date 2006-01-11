@@ -13,18 +13,26 @@
   */
 package org.eclipse.mylar.tasklist.tests;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 
 /**
  * @author Mik Kersten
@@ -33,11 +41,23 @@ public class TaskListManagerTest extends TestCase {
 	
 	private TaskListManager manager;
 	
+	private TaskRepository repository;
+	
+	public TaskListManagerTest() {
+		try {
+			repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
+		} catch (MalformedURLException e) {
+			fail();
+			e.printStackTrace();
+		}
+	}
+	
     @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = MylarTaskListPlugin.getTaskListManager();
 		manager.createNewTaskList();
+		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 	}
 
 	@Override
@@ -45,8 +65,29 @@ public class TaskListManagerTest extends TestCase {
 		super.tearDown();
 		manager.createNewTaskList();
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
+		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
+    public void testRepositoryUrlHandles() {
+    	
+    	String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
+    	String id = "123";
+    	String handle = TaskRepositoryManager.getHandle(repository, id);
+        BugzillaTask bugTask = new BugzillaTask(handle, "label 124", true);
+        assertEquals(repository, bugTask.getRepositoryUrl());
+        
+        manager.moveToRoot(bugTask);
+
+        manager.saveTaskList();
+        TaskList list = new TaskList();
+        manager.setTaskList(list);
+        manager.readOrCreateTaskList();
+                
+    	BugzillaTask readReport = (BugzillaTask)manager.getTaskList().getRootTasks().get(0);
+    	assertEquals(readReport.getDescription(true), readReport.getDescription(true)); 
+    	assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
+    }
+	
 	public void testMoves() {
         assertEquals(0, manager.getTaskList().getRootTasks().size());
 		Task task1 = new Task("t1", "t1", true);
@@ -89,12 +130,25 @@ public class TaskListManagerTest extends TestCase {
     	assertTrue(task.getPlans().get(0).equals("default"));
     }
 	
-    public void testCreationAndExternalization() {
-//        File file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
-//        file.deleteOnExit();
-//        TaskListManager manager = new TaskListManager(file);
+	public void testQueryExternalization() {
+		ITaskQuery query = new BugzillaQueryCategory("repositoryUrl", "queryUrl", "label", "1");
+        assertEquals("repositoryUrl", query.getRepositoryUrl());
+        assertEquals("queryUrl", query.getQueryUrl());
+		manager.addQuery(query);
+		manager.saveTaskList();
+        assertNotNull(manager.getTaskList());
         
-        TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+        TaskList list = new TaskList();
+        manager.setTaskList(list);
+        manager.readOrCreateTaskList();
+        assertEquals(1, manager.getTaskList().getQueries().size());
+        ITaskQuery readQuery = manager.getTaskList().getQueries().get(0);
+        assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
+        assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
+        assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
+	}
+	
+    public void testCreationAndExternalization() {
 		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1", true);
         manager.moveToRoot(task1);
         Task sub1 = new Task(manager.genUniqueTaskHandle(), "sub 1", true);
@@ -121,7 +175,7 @@ public class TaskListManagerTest extends TestCase {
         Task task6 = new Task(manager.genUniqueTaskHandle(), "task 6", true);
         manager.moveToCategory(cat2, task6);
         
-        BugzillaTask report = new BugzillaTask("123", "label 123", true);
+        BugzillaTask report = new BugzillaTask("123", "label 123", true);;
         manager.moveToCategory(cat2, report);
         assertEquals(cat2, report.getCategory());
         
@@ -144,6 +198,8 @@ public class TaskListManagerTest extends TestCase {
     	assertTrue(readList.get(0).getChildren().get(0).getDescription(true).equals("sub 1"));
     	assertTrue(readList.get(1).getDescription(true).equals("task 2"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
+    	BugzillaTask readReport = (BugzillaTask)readList.get(2);
+    	assertEquals(report2.getDescription(true), readReport.getDescription(true)); 
     	
     	List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
     	assertTrue(readCats.get(0).getDescription(true).equals(BugzillaTaskExternalizer.BUGZILLA_ARCHIVE_LABEL));

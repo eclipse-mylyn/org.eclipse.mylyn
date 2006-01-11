@@ -22,8 +22,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.swt.SWT;
@@ -56,7 +55,7 @@ public class WizardProductPage extends AbstractWizardListPage {
 
 	/** String to hold previous product; determines if attribute option values need to be updated */
 	private String prevProduct;
-
+	
 	/**
 	 * Constructor for WizardProductPage
 	 * 
@@ -91,10 +90,10 @@ public class WizardProductPage extends AbstractWizardListPage {
 				monitor.beginTask("Updating search options...", 55);
 
 				try {
-					BugzillaPreferencePage.updateQueryOptions(monitor);
+					BugzillaRepositoryUtil.updateQueryOptions(bugWizard.getRepository(), monitor);
 					
 					products = new ArrayList<String>();
-					for(String product : BugzillaPreferencePage.queryOptionsToArray(prefs.getString(IBugzillaConstants.PRODUCT_VALUES))){
+					for(String product : BugzillaRepositoryUtil.queryOptionsToArray(prefs.getString(IBugzillaConstants.VALUES_PRODUCT))){
 						products.add(product);
 					}
 					monitor.worked(1);
@@ -141,11 +140,12 @@ public class WizardProductPage extends AbstractWizardListPage {
 		// try to get the attributes from the bugzilla server
 		try	{
 			if (!model.hasParsedAttributes() || !prevProduct.equals(model.getProduct())) {
+				String serverUrl = bugWizard.getRepository().getServerUrl().toExternalForm();
 				if (model.isConnected()) { 
-					BugzillaRepository.getInstance().getnewBugAttributes(model, false);
+					BugzillaRepositoryUtil.getnewBugAttributes(serverUrl, model, false);
 				}
 	 			else {
-	 				BugzillaRepository.getInstance().getProdConfigAttributes(model);
+	 				BugzillaRepositoryUtil.getProdConfigAttributes(serverUrl, model);
 	 			}
 				model.setParsedAttributesStatus(true);
 				if (prevProduct == null) {

@@ -35,7 +35,7 @@ public class TaskRepository {
 	
 	private String kind;
 	
-	public TaskRepository(URL serverUrl, String kind) {
+	public TaskRepository(String kind, URL serverUrl) {
 		this.serverUrl = serverUrl;
 		this.kind = kind;
 	}
@@ -45,20 +45,34 @@ public class TaskRepository {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Map<String, String> getAuthorizationCredentials() {
+	public Map<String, String> getCredentials() {
 		return Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
+	}
+	
+	public boolean hasCredentials() {
+		String username = getUserName();
+		String password = getPassword();
+		return username != null && !username.equals("") && password != null && !password.equals("");
 	}
 	
 	@SuppressWarnings("unchecked")
 	public String getUserName() {
 		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
-		return map.get(AUTH_USERNAME);
+		if (map != null && map.containsKey(AUTH_USERNAME)) {
+			return map.get(AUTH_USERNAME);
+		} else {
+			return null;
+		}
 	}
-	
+		
 	@SuppressWarnings("unchecked")
 	public String getPassword() {
 		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
-		return map.get(AUTH_PASSWORD);
+		if (map != null && map.containsKey(AUTH_PASSWORD)) {
+			return map.get(AUTH_PASSWORD);
+		} else {
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

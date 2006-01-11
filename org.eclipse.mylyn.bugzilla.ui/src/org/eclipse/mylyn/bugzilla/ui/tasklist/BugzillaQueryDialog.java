@@ -19,9 +19,13 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchPage;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -162,11 +166,17 @@ public class BugzillaQueryDialog extends Dialog {
 	}
 
 	@Override
-	protected void okPressed(){
+	protected void okPressed() {
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		if (repository == null) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information", "No repository available, please add one.");
+			return;
+		}
+		
 		if(customButton != null && customButton.getSelection()){
 			url = queryText.getText();
 		} else {
-			url = searchOptionPage.getSearchURL();
+			url = searchOptionPage.getSearchURL(repository);
 		}
 		if(url == null || url.equals("")){
 			/*
@@ -425,12 +435,12 @@ public class BugzillaQueryDialog extends Dialog {
 			
 		}
 		
-		public String getSearchURL() {
-			try{
+		public String getSearchURL(TaskRepository repository) {
+			try {
 				if(rememberedQuery){
-					return getQueryURL(new StringBuffer(input.getQueryParameters(selIndex)));
+					return getQueryURL(repository, new StringBuffer(input.getQueryParameters(selIndex)));
 				} else {
-					return getQueryURL(getQueryParameters());
+					return getQueryURL(repository, getQueryParameters());
 				}
 			} catch (UnsupportedEncodingException e){
 				/*

@@ -62,7 +62,7 @@ public class ViewBugzillaAction extends UIJob {
 
 			try {
 				// try to open a new editor on the bug
-				ExistingBugEditorInput editorInput = new ExistingBugEditorInput(bugId.intValue());
+				ExistingBugEditorInput editorInput = new ExistingBugEditorInput(bos.getServer(), bugId.intValue());
 
 				// if the bug could not be found, then tell the user that the
 				// server settings are wrong

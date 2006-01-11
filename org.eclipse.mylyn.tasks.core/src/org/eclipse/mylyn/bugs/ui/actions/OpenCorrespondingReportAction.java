@@ -16,9 +16,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugs.java.OpenBugzillaReportJob;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.team.MylarContextChangeSet;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
@@ -38,6 +41,9 @@ public class OpenCorrespondingReportAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
+//		 HACK: determine appropriate repository
+		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+				
 		if (action instanceof ObjectPluginAction) {
     		ObjectPluginAction objectAction = (ObjectPluginAction)action;
     		if (objectAction.getSelection() instanceof StructuredSelection) {
@@ -61,7 +67,7 @@ public class OpenCorrespondingReportAction implements IViewActionDelegate {
 						// ignore
 					}
 					if (id != -1) {
-						OpenBugzillaReportJob job = new OpenBugzillaReportJob(id);
+						OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getServerUrl().toExternalForm(), id);
 						IProgressService service = PlatformUI.getWorkbench().getProgressService();
 						try {
 							service.run(true, false, job);

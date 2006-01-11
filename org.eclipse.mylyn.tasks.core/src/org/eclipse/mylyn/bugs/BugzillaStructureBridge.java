@@ -20,7 +20,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.bugzilla.core.BugReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
@@ -31,6 +32,8 @@ import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IDegreeOfSeparation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.internal.DegreeOfSeparation;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -80,6 +83,9 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	public Object getObjectForHandle(final String handle) {
 		result = null;
 
+		// HACK: determine appropriate repository
+		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		
 		String[] parts = handle.split(";");
 		if (parts.length >= 2) {
 			String server = parts[0];
@@ -117,7 +123,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 					public void run(IProgressMonitor monitor) {
 						monitor.beginTask("Downloading Bug# " + id, IProgressMonitor.UNKNOWN);
 						try {
-							result = BugzillaRepository.getInstance().getCurrentBug(id);
+							result = BugzillaRepositoryUtil.getCurrentBug(repository.getServerUrl().toExternalForm(), id);
 							if (result != null) {
 								MylarBugsPlugin.getDefault().getCache().cache(bugHandle, result);
 							}

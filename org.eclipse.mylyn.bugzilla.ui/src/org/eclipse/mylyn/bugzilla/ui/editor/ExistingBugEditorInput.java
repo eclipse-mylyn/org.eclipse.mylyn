@@ -15,7 +15,7 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 
 
 /**
@@ -23,8 +23,8 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
  * 
  * @author Mik Kersten (some hardening of initial prototype)
  */
-public class ExistingBugEditorInput extends AbstractBugEditorInput
-{
+public class ExistingBugEditorInput extends AbstractBugEditorInput {
+		
 	protected int bugId;
 
 	protected BugReport bug;
@@ -47,20 +47,20 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput
 	 * @throws LoginException
 	 * @throws IOException
 	 */
-	public ExistingBugEditorInput(int bugId) throws LoginException, IOException {
+	public ExistingBugEditorInput(String repositoryUrl, int bugId) throws LoginException, IOException {
 		this.bugId = bugId;
 		// get the bug from the server if it exists
-		bug = BugzillaRepository.getInstance().getBug(bugId);
+		bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);
 	}
 	
-	public ExistingBugEditorInput(int bugId, boolean offline) throws LoginException, IOException {
+	public ExistingBugEditorInput(String repositoryUrl, int bugId, boolean offline) throws LoginException, IOException {
 		this.bugId = bugId;
 		
 		if(!offline){
 			try {
-				bug = BugzillaRepository.getInstance().getBug(bugId);
+				bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);
 			} catch (IOException e) {
-				bug = BugzillaRepository.getInstance().getCurrentBug(bugId);
+				bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, bugId);
 //    			IWorkbench workbench = PlatformUI.getWorkbench();
 //    			workbench.getDisplay().asyncExec(new Runnable() {
 //    	            public void run() {
@@ -73,13 +73,10 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput
 //    	        });
 			}
 		} else {
-			bug = BugzillaRepository.getInstance().getCurrentBug(bugId);
+			bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, bugId);
 		}
 	}
 
-	/*
-	 * @see IEditorInput#getName()
-	 */
 	public String getName() {
 		return bug.getLabel();
 	}

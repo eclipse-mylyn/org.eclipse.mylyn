@@ -28,6 +28,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -37,8 +38,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaAttributeListener;
@@ -50,6 +50,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -101,6 +102,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 @SuppressWarnings("deprecation")
 public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
+	protected TaskRepository repository;
+	
 	public static final int WRAP_LENGTH = 90;
 
 	protected Display display;
@@ -270,8 +273,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * Creates a new <code>AbstractBugEditor</code>. Sets up the default fonts and
 	 * cut/copy/paste actions.
 	 */
-	public AbstractBugEditor() {
-
+	public AbstractBugEditor(TaskRepository repository) {
+		this.repository = repository;
+		
 		// set the scroll increments so the editor scrolls normally with the scroll wheel
 		FontData[] fd = TEXT_FONT.getFontData();
 		int cushion = 4;
@@ -1128,7 +1132,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				}
 
 				public void mouseDown(MouseEvent e) {
-					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepository.getBugUrlWithoutLogin(bugzillaInput.getBug().getId()));
+					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil.getBugUrlWithoutLogin(bugzillaInput.getBug().getServer(), bugzillaInput.getBug().getId()));
 					if (e.stateMask == SWT.MOD3) {
 						// XXX come back to look at this ui
 						close();
@@ -1277,7 +1281,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * @param formName The form that we wish to use to submit the bug
 	 */
 	protected void setURL(BugReportPostHandler form, String formName) {
-		String baseURL = BugzillaPlugin.getDefault().getServerName();
+//		String baseURL = BugzillaPlugin.getDefault().getServerName();
+		String baseURL = repository.getServerUrl().toExternalForm();
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		try {
@@ -1287,8 +1292,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		}
 
 		// add the login information to the bug post
-		form.add("Bugzilla_login", BugzillaPreferencePage.getUserName());
-		form.add("Bugzilla_password", BugzillaPreferencePage.getPassword());
+		form.add("Bugzilla_login", repository.getUserName());
+		form.add("Bugzilla_password", repository.getPassword());
 	}
 
 	@Override

@@ -21,9 +21,10 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
-
 
 /**
  * This class is used to open a bug report in an editor.
@@ -47,7 +48,7 @@ public class OpenBugsAction extends Action {
 	 * Open the selected bug reports in their own editors. 
 	 */
     @SuppressWarnings("unchecked")
-    @Override
+	@Override
 	public void run() {
 		
 		// Get the selected items
@@ -59,8 +60,10 @@ public class OpenBugsAction extends Action {
 			for (Iterator<IMarker> it = selection.iterator(); it.hasNext();) {
 				IMarker marker = it.next();
 				try {
+
+					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 					Integer id = (Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
-					BugzillaUITools.show(id.intValue());
+					BugzillaUITools.show(repository.getServerUrl().toExternalForm(), id.intValue());
 				}
 				catch (CoreException e) {
 					// if an error occurs, handle and log it

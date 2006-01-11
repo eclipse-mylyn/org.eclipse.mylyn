@@ -43,6 +43,8 @@ public class Task implements ITask {
 	private boolean active = false;
 
 	protected String handle = "-1";
+	
+	protected String repositoryUrl = null;
 
 	private boolean category = false;
 
@@ -73,7 +75,7 @@ public class Task implements ITask {
 	private Date creationDate = null;
 
 	private Date reminderDate = null;
-
+	
 	/**
 	 * @return null if root
 	 */
@@ -86,22 +88,9 @@ public class Task implements ITask {
 		return label;
 	}
 
-//	public String getRemoteContextPath() {
-//		return contextPath;
-//	}
-//
-//	public void setRemoteContextPath(String path) {
-//		if (path.startsWith(".mylar")) { // HACK: remove this
-//			this.contextPath = path.substring(path.lastIndexOf('/') + 1, path.length());
-//		} else if (!path.equals("")) {
-//			this.contextPath = path;
-//		}
-//	}
-
 	public Task(String handle, String label, boolean newTask) {
 		this.handle = handle;
 		this.label = label;
-//		this.contextPath = handle;
 		if (newTask) {
 			creationDate = new Date();
 		}
@@ -122,43 +111,13 @@ public class Task implements ITask {
 	public void setParent(ITask parent) {
 		this.parent = parent;
 	}
-
-	public Object getAdapter(Class adapter) {
-		return null;
-	}
 	
 	/**
 	 * Package visible in order to prevent sets that don't update the index.
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
-//		if (active && !isStalled) {
-//			lastActivatedDate = new Date();
-//		} else {
-//			calculateElapsedTime(isStalled);
-//			lastActivatedDate = null;
-//		}
 	}
-
-//	private void calculateElapsedTime(boolean isStalled) {
-//		if (lastActivatedDate != null) {
-//			timeActive += new Date().getTime() - lastActivatedDate.getTime();
-//			if (isStalled) {
-//				timeActive -= TaskListManager.INACTIVITY_TIME_MILLIS;
-//			}
-//			if (isActive()) {
-//				lastActivatedDate = new Date();
-//			} else {
-//				lastActivatedDate = null;
-//			}
-//		}
-//
-//		if (timeActive < 0) {
-//			MylarPlugin.fail(new RuntimeException("Elapsed time was less than zero for: " + getDescription(true)), "",
-//					false);
-//			timeActive = 0;
-//		}
-//	}
 
 	public boolean isActive() {
 		return active;
@@ -183,16 +142,13 @@ public class Task implements ITask {
 		IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
 				.getActivePage();
 
-		// if we couldn't get a page, get out
 		if (page == null) {
 			return;
 		}
 
 		IEditorInput input = new TaskEditorInput(this);
 		try {
-			// try to open an editor on the input task
 			page.openEditor(input, MylarTaskListPrefConstants.TASK_EDITOR_ID);
-
 		} catch (PartInitException ex) {
 			MylarStatusHandler.log(ex, "open failed");
 		}
@@ -499,65 +455,12 @@ public class Task implements ITask {
 		}
 		return false;
 	}
+
+	public String getRepositoryUrl() {
+		return repositoryUrl;
+	}
+
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
 }
-
-/**
-// * Clients should use getElapsedTime() and perform their own formatting
-// * 
-// * @deprecated
-// */
-//public String getElapsedTimeForDisplay() {
-//	calculateElapsedTime(false);
-//	return DateUtil.getFormattedDuration(timeActive);
-//}
-
-// private String getReminderDateForDisplay() {
-// if (reminderDate != null) {
-//			
-// String f = "EEE, yyyy-MM-dd";
-// SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
-// return format.format(reminderDate);
-// } else {
-// return "";
-// }
-// }
-
-// /**
-// * Clients should use getElapsedTime() and perform
-// * their own formatting
-// * @deprecated
-// */
-// public String getEstimateTimeForDisplay() {
-// return estimatedTimeHours / 10 + " Hours";
-// }
-
-//public void setReminderDate(String date) {
-//if (!date.equals("")) {
-//	String formatString = "yyyy-MM-dd HH:mm:ss.S z";
-//	SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
-//	try {
-//		reminderDate = format.parse(date);
-//	} catch (ParseException e) {
-//		MylarPlugin.log(e, "Could not parse end date");
-//		reminderDate = null;
-//	}
-//} else {
-//	reminderDate = null;
-//}
-//}
-
-// public void setCreationDate(String date) {
-// if (!date.equals("")) {
-// String formatString = "yyyy-MM-dd HH:mm:ss.S z";
-// SimpleDateFormat format = new SimpleDateFormat(formatString,
-// Locale.ENGLISH);
-// try {
-// creationDate = format.parse(date);
-// } catch (ParseException e) {
-// MylarPlugin.log(e, "Could not parse end date");
-// creationDate = null;
-// }
-// } else {
-//
-// }
-// }

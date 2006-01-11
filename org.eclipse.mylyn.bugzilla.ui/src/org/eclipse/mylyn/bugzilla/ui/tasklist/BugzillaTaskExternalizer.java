@@ -17,15 +17,16 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.DelegatingLocalTaskExternalizer;
-import org.eclipse.mylar.tasklist.internal.TaskListExternalizerException;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
+import org.eclipse.mylar.tasklist.internal.TaskListExternalizerException;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,7 +56,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	private static final String SYNC_STATE = "offlineSyncState";
 
 	private static final String DESCRIPTION = "Description";
-
+	
 	private static final String URL = "URL";
 
 	private static final String BUGZILLA_TASK_REGISTRY = "BugzillaTaskRegistry" + TAG_CATEGORY;
@@ -92,11 +93,11 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 	@Override
 	public void readCategory(Node node, TaskList taskList) throws TaskListExternalizerException {
-		Element e = (Element) node;
-		if (e.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
+		Element element = (Element) node;
+		if (element.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
 			readRegistry(node, taskList);
 		} else {
-			BugzillaQueryCategory cat = new BugzillaQueryCategory(e.getAttribute(DESCRIPTION), e.getAttribute(URL), e
+			BugzillaQueryCategory cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(URL), element.getAttribute(DESCRIPTION), element
 					.getAttribute(MAX_HITS));
 			taskList.internalAddQuery(cat);
 		}
@@ -120,10 +121,10 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		Element element = (Element) node;
 		ITaskQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
-			cat = new BugzillaCustomQueryCategory(element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
+			cat = new BugzillaCustomQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
 					.getAttribute(MAX_HITS));
 		} else if (node.getNodeName().equals(TAG_BUGZILLA_QUERY)) {
-			cat = new BugzillaQueryCategory(element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
+			cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(QUERY_STRING), element.getAttribute(NAME), element
 					.getAttribute(MAX_HITS));
 		}
 		if (cat != null) {
@@ -290,7 +291,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		} else {
 			throw new TaskListExternalizerException("Description not stored for bug report");
 		}
-		BugzillaHit hit = new BugzillaHit(label, priority, BugzillaTask.getBugId(handle), null, status);
+		BugzillaHit hit = new BugzillaHit(label, priority, query.getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(handle), null, status);
 		query.addHit(hit);
 	}
 

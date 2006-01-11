@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
@@ -26,6 +27,8 @@ import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -56,7 +59,9 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		}
 //        MylarPlugin.getDefault().actionObserved(this);
 		
-		NewBugWizard wizard= new NewBugWizard(true);
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		
+		NewBugWizard wizard= new NewBugWizard(repository, true);
 		Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
 
@@ -83,9 +88,10 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		        return;
 		    }
 		
-		    
+//		    TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 		    BugzillaTask newTask = new BugzillaTask(
-		    		BugzillaUiPlugin.getDefault().createBugHandleIdentifier(bugId), 
+		    		TaskRepositoryManager.getHandle(
+		    				repository.getServerUrl().toExternalForm(), bugId), 
 		    		"<bugzilla info>", true, true);				
 		    Object selectedObject = null;
 		    if(TaskListView.getDefault() != null)

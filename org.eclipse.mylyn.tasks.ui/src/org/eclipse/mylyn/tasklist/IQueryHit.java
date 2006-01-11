@@ -17,6 +17,8 @@ import org.eclipse.mylar.tasklist.ui.ITaskListElement;
  */
 public interface IQueryHit extends ITaskListElement {
 
+	public String getRepositoryUrl();
+	
 	public ITask getOrCreateCorrespondingTask();
 
 	public ITask getCorrespondingTask();

@@ -29,6 +29,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
@@ -106,7 +107,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 							"Unable to open the selected bugzilla task since you are currently offline");
 					return;
 				}
-				String title = "Bug #" + BugzillaTask.getBugId(t.getHandleIdentifier());
+				String title = "Bug #" + TaskRepositoryManager.getTaskIdAsInt(t.getHandleIdentifier());
 				BugzillaUITools.openUrl(title, title, t.getUrl());
 			} else {
 				// not supported
@@ -156,7 +157,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 								"Unable to open the selected bugzilla report since you are currently offline");
 						return;
 					}
-					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaHit) element).getServerName(),
+					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaHit) element).getRepositoryUrl(),
 							((BugzillaHit) element).getId(), -1);
 					List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
 					selectedBugs.add(open);
@@ -169,7 +170,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 							"Unable to open the selected bugzilla report since you are currently offline");
 					return;
 				}
-				String title = "Bug #" + BugzillaTask.getBugId(hit.getHandleIdentifier());
+				String title = "Bug #" + TaskRepositoryManager.getTaskIdAsInt(hit.getHandleIdentifier());
 				BugzillaUITools.openUrl(title, title, hit.getBugUrl());
 			} else {
 				// not supported

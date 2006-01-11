@@ -11,16 +11,9 @@
 package org.eclipse.mylar.bugzilla.core;
 
 /**
- * @author kvesik
- *
- * Created on Mar 26, 2003
+ * @author Mik Kersten (hardening of prototype
  */
-
-/**
- * Interface for holding Bugzilla constants.
- */
-public interface IBugzillaConstants 
-{
+public interface IBugzillaConstants {
 	
 	// The bugzilla plugin id
 	static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla";
@@ -50,8 +43,9 @@ public interface IBugzillaConstants
 	static final int ERROR_CODE = 1;
 	
 	//	Bugzilla Preferences keys
-	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
-	static final String MOST_RECENT_QUERY = "MOST_RECENT_QUERY";
+//	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
+//	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
+	static final String MOST_RECENT_QUERY = "org.eclipse.mylar.bugzilla.query.last";
 	
 	static final String SERVER_VERSION = "org.eclipse.mylar.bugzilla.server.version";
 	static final String SERVER_220 = "2.20";
@@ -62,24 +56,24 @@ public interface IBugzillaConstants
 //	static final String IS_218 = "BUGZILLA_IS_218";
 //	static final String IS_220 = "BUGZILLA_IS_220";
 	
-	static final String REFRESH_QUERY = "REFRESH_QUERY";
-	static final String MAX_RESULTS = "MAX_BUGZILLA_RESULTS";
+	static final String REFRESH_QUERY = "org.eclipse.mylar.bugzilla.query.refresh";
+	static final String MAX_RESULTS = "org.eclipse.mylar.bugzilla.search.results.max";
     
 	// names for the resources used to hold the different attributes of a bug
-	static final String STATUS_VALUES = "STATUS_VALUES";
-	static final String PRESELECTED_STATUS_VALUES = "PRESELECTED_STATUS_VALUES";
-	static final String RESOLUTION_VALUES = "RESOLUTION_VALUES";
-	static final String SEVERITY_VALUES = "SEVERITY_VALUES";
-	static final String PRIORITY_VALUES = "PRIORITY_VALUES";
-	static final String HARDWARE_VALUES = "HARDWARE_VALUES";
-	static final String OS_VALUES = "OS_VALUES";
-	static final String PRODUCT_VALUES = "PRODUCT_VALUES";
-	static final String COMPONENT_VALUES = "COMPONENT_VALUES";
-	static final String VERSION_VALUES = "VERSION_VALUES";
-	static final String TARGET_VALUES = "TARGET_VALUES";
+	static final String VALUES_STATUS = "org.eclipse.mylar.bugzilla.values.status";
+	static final String VALUSE_STATUS_PRESELECTED = "org.eclipse.mylar.bugzilla.values.status.preselected";
+	static final String VALUES_RESOLUTION = "org.eclipse.mylar.bugzilla.values.resolution";
+	static final String VALUES_SEVERITY = "org.eclipse.mylar.bugzilla.values.severity";
+	static final String VALUES_PRIORITY = "org.eclipse.mylar.bugzilla.values.priority";
+	static final String VALUES_HARDWARE = "org.eclipse.mylar.bugzilla.values.hardware";
+	static final String VALUES_OS = "org.eclipse.mylar.bugzilla.values.os";
+	static final String VALUES_PRODUCT = "org.eclipse.mylar.bugzilla.values.product";
+	static final String VALUES_COMPONENT = "org.eclipse.mylar.bugzilla.values.component";
+	static final String VALUES_VERSION = "org.eclipse.mylar.bugzilla.values.version";
+	static final String VALUES_TARGET = "org.eclipse.mylar.bugzilla.values.target";
 	
 	// Default values for keys
-	static final String DEFAULT_BUGZILLA_SERVER = "https://bugs.eclipse.org/bugs";
+	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
 	
 	static final String[] DEFAULT_STATUS_VALUES = {"Unconfirmed", "New", "Assigned", "Reopened", "Resolved", "Verified", "Closed"};
 	static final String[] DEFAULT_PRESELECTED_STATUS_VALUES = {"New", "Assigned", "Reopened"};
@@ -90,14 +84,8 @@ public interface IBugzillaConstants
 	static final String[] DEFAULT_OS_VALUES = {"All", "AIX Motif", "Windows 95", "Windows 98", "Windows CE", "Windows ME", "Windows 2000",
 			"Windows NT", "Windows XP", "Windows All", "MacOS X", "Linux", "Linux-GTK", "Linux-Motif", "HP-UX", "Neutrino",
 			"QNX-Photon", "Solaris", "Unix All", "other"};
-	static final String[] DEFAULT_PRODUCT_VALUES = {"AJDT", "AspectJ", "CDT", "EMF", "Equinox", "GEF", "JDT", "PDE", "Platform", "Stellation", "XSD"};
-	static final String[] DEFAULT_COMPONENT_VALUES = {"Access Control", "Ant", "Commandline", "Compare", "Compiler", "Core", "Cpp-Extensions", "Debug", 
-			"Doc", "Docs", "draw2d", "Dynamic Plugins", "Fine-Grained", "GEF", "Generic-Extensions", "Help", "IDE", "Launcher", "LPEX", "Plugins", 
-			"Releng", "Repository", "Script Tests", "Scripting", "Search", "Server", "SWT", "Text", "UI", "Unit Tests", "Update", "VCM",
-			"WebDAV", "Windows Support"};
-	static final String[] DEFAULT_VERSION_VALUES = {"0.5", "1.0", "2.0", "2.0.1", "2.0.2", "2.1", "2.2", "unspecified"};
-	static final String[] DEFAULT_TARGET_VALUES = {"2.0 M1", "Alpha1", "Alpha2", "Alpha3", "Alpha4", "1.0", "1.0 - 20020308", "1.0 - Release", 
-			"2.0 M2", "2.0 - 20020308", "2.0 M3", "2.0 - 20020408", "2.0 M4", "2.0 - 20020508", "2.0 M5", "2.0 - Release", "2.0 M6",
-			"2.0 F1", "2.0 F2", "2.0 F3", "2.0 F4", "2.0.1", "2.0.2", 
-			"2.1", "2.1 M1", "2.1 M2", "2.1 M3", "2.1 M4", "2.1 M5", "2.1 RC1", "2.1 RC2", "2.1 RC3", "2.2", "Future"};
+	static final String[] DEFAULT_PRODUCT_VALUES = { };
+	static final String[] DEFAULT_COMPONENT_VALUES = { };
+	static final String[] DEFAULT_VERSION_VALUES = { };
+	static final String[] DEFAULT_TARGET_VALUES = { };
 }

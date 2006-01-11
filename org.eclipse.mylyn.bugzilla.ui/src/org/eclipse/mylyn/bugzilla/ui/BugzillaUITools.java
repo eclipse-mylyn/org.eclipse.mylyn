@@ -50,21 +50,21 @@ public class BugzillaUITools {
 	 * Convenience method for opening a bug in an editor.
 	 * @param id The bug id of the bug to open in the editor
 	 */
-	public static boolean show(int id) 
+	public static boolean show(String repositoryUrl, int id) 
 	{
 		// determine if the editor is to be reused or not and call the appropriate
 		// function to show the bug
 		if (NewSearchUI.reuseEditor())
-			return showWithReuse(id);
+			return showWithReuse(repositoryUrl, id);
 		else
-			return showWithoutReuse(id);
+			return showWithoutReuse(repositoryUrl, id);
 	}
 
 	/**
 	 * Show the bug in the same editor window
 	 * @param id The id of the bug to show
 	 */
-	private static boolean showWithReuse(int id) 
+	private static boolean showWithReuse(String repositoryUrl, int id) 
 	{
 		// get the active page so that we can reuse it
 		IWorkbenchPage page = SearchPlugin.getActivePage();
@@ -77,7 +77,7 @@ public class BugzillaUITools {
 			IEditorInput input = null;
 	
 			// try to get an editor input on the bug
-			input = new ExistingBugEditorInput(id);
+			input = new ExistingBugEditorInput(repositoryUrl, id);
 			
 			// check if we found a valid bug
 			if(((ExistingBugEditorInput)input).getBug() == null)
@@ -148,8 +148,7 @@ public class BugzillaUITools {
 	 * Show the bug in a new editor window
 	 * @param id The id of the bug to show
 	 */
-	private static boolean showWithoutReuse(int id) 
-	{
+	private static boolean showWithoutReuse(String repositoryUrl, int id) {
 		// get the active workbench page
 		IWorkbenchPage page = SearchPlugin.getActivePage();
 		try 
@@ -162,7 +161,7 @@ public class BugzillaUITools {
 			String editorId = IBugzillaConstants.EXISTING_BUG_EDITOR_ID;
 
 			// get a new editor input on the bug that we want to open
-			input = new ExistingBugEditorInput(id);
+			input = new ExistingBugEditorInput(repositoryUrl, id);
 			
 			// check if we found a valid bug
 			if(((ExistingBugEditorInput)input).getBug() == null)

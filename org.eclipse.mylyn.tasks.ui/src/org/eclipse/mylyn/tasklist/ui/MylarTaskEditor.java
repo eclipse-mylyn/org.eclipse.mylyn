@@ -253,8 +253,9 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		}
 	}
 
-	public void updatePartName() {
-		firePropertyChange(PROP_DIRTY);
+	public void updatePartName() {	
+		this.setPartName(taskEditorInput.getTask().getDescription(true));
+		firePropertyChange(PROP_DIRTY);		
 		return;
 	}
 

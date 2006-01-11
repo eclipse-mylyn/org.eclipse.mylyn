@@ -25,7 +25,6 @@ import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.core.PossibleBugzillaFailureException;
@@ -34,6 +33,7 @@ import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
 import org.eclipse.swt.widgets.Display;
@@ -54,6 +54,11 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
+	protected TaskRepository repository;
+
+	/** The ID of the posted bug report. */
+	private String id;
+	
 	protected boolean fromDialog = false;
 	
 	/** The model used to store all of the data for the wizard */
@@ -68,14 +73,9 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	/** The workbench instance */
 	protected IWorkbench workbenchInstance;
 
-	/** The ID of the posted bug report. */
-	private String id;
-
-	/**
-	 * Constructor for AbstractBugWizard
-	 */
-	public AbstractBugWizard() {
+	public AbstractBugWizard(TaskRepository repository) {
 		super();
+		this.repository = repository;
 		model = new NewBugModel();
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
@@ -96,7 +96,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		try {
 			// check Bugzilla preferences to see if user has supplied a username
-			if (BugzillaPreferencePage.getUserName().equals(""))
+			if (repository.getUserName().equals(""))
 				throw new LoginException(
 						"A Bugzilla User Name has not been provided."
 								+ "  Please check your Bugzilla Preferences information.");
@@ -314,7 +314,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 		IEditorInput input = null;
 		try {
-			input = new ExistingBugEditorInput(Integer.parseInt(id));
+			input = new ExistingBugEditorInput(repository.getServerUrl().toExternalForm(), Integer.parseInt(id));
 			BugzillaPlugin.getDefault().getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage().openEditor(
 							input, IBugzillaConstants.EXISTING_BUG_EDITOR_ID, false);
@@ -350,14 +350,14 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	protected void setURL(BugReportPostHandler form, String formName)
 			throws MalformedURLException {
 
-		String baseURL = BugzillaPlugin.getDefault().getServerName();
+//		String baseURL = BugzillaPlugin.getDefault().getServerName();
+		String baseURL = repository.getServerUrl().toExternalForm();
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		form.setURL(baseURL + formName);
 
-		// add the login information to the bug post
-		form.add("Bugzilla_login", BugzillaPreferencePage.getUserName());
-		form.add("Bugzilla_password", BugzillaPreferencePage.getPassword());
+		form.add("Bugzilla_login", repository.getUserName());
+		form.add("Bugzilla_password", repository.getPassword());
 	}
 
 	/**
@@ -403,4 +403,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	 * @return the last page of this wizard
 	 */
 	abstract protected AbstractWizardDataPage getWizardDataPage();
+
+	public TaskRepository getRepository() {
+		return repository;
+	}
 }

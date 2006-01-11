@@ -47,7 +47,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	protected final int id;
 
 	/** The bug's server */
-	protected final String server;
+	protected final String repositoryUrl;
 
 	/** Description of the bug */
 	protected String description;
@@ -99,7 +99,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	 */
 	public BugReport(int id, String server) {
 		this.id = id;
-		this.server = server;
+		this.repositoryUrl = server;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	}
 
 	public String getServer() {
-		return server;
+		return repositoryUrl;
 	}
 
 	public String getLabel() {

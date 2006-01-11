@@ -52,6 +52,8 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String HANDLE = "Handle";
 
+	public static final String REPOSITORY_URL = "RepositoryUrl";
+	
 	public static final String TAG_CATEGORY = "Category";
 
 	public static final String TAG_TASK = "Task";
@@ -155,9 +157,14 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			node.setAttribute(ACTIVE, FALSE);
 		}
-		node.setAttribute(BUGZILLA, FALSE); // TODO: this is not great
+		node.setAttribute(BUGZILLA, FALSE); // TODO: get rid of this
 
-		node.setAttribute(ISSUEURL, task.getUrl());
+		if (task.getUrl() != null) {
+			node.setAttribute(ISSUEURL, task.getUrl());
+		}
+		if (task.getRepositoryUrl() != null) {
+			node.setAttribute(REPOSITORY_URL, task.getRepositoryUrl());
+		}
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, "" + task.getElapsedTime());
 		node.setAttribute(ESTIMATED, "" + task.getEstimateTimeHours());
@@ -394,6 +401,8 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(NAME, query.getDescription(false));
 		node.setAttribute(MAX_HITS, query.getMaxHits() + "");
 		node.setAttribute(QUERY_STRING, query.getQueryUrl());
+		node.setAttribute(REPOSITORY_URL, query.getRepositoryUrl());
+		
 		for (IQueryHit hit : query.getHits()) {
 			try {
 				Element element = null;

@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasklist.repositories;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,9 +37,13 @@ public class TaskRepositoryManager {
 	private Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 	
 	private Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
+
+	public static final String HANDLE_DELIM = "-";
+
+	public static final String MISSING_REPOSITORY_HANDLE = "Bugzilla" + HANDLE_DELIM;
 	
 	private static final String STORE_DELIM = ", ";
-	
+		
 	public List<ITaskRepositoryClient> getRepositoryClients() {
 		return repositoryClients;
 	}
@@ -47,7 +52,6 @@ public class TaskRepositoryManager {
 		if (!repositoryClients.contains(repositoryClient)) {
 			repositoryClients.add(repositoryClient);
 		}
-		readRepositories();
 	}
 	
 	public void removeRepositoryClient(ITaskRepositoryClient repositoryClient) {
@@ -55,10 +59,12 @@ public class TaskRepositoryManager {
 	}
 
 	public void addRepository(TaskRepository repository) {
-		Set<TaskRepository> repositories = repositoryMap.get(repository.getKind());
-		if (repositories == null) {
+		Set<TaskRepository> repositories;
+		if (!repositoryMap.containsKey(repository.getKind())) {
 			repositories = new HashSet<TaskRepository>();
 			repositoryMap.put(repository.getKind(), repositories);
+		} else {
+			repositories = repositoryMap.get(repository.getKind());
 		}
 		repositories.add(repository);
 		saveRepositories();
@@ -80,8 +86,54 @@ public class TaskRepositoryManager {
 		listeners.remove(listener);
 	}
 	
+	public TaskRepository getRepository(String kind, String urlString) {
+//		if (!repositoriesRead) readRepositories();
+		
+		if (repositoryMap.containsKey(kind)) {
+			for (TaskRepository repository : repositoryMap.get(kind)) {
+				if (repository.getServerUrl().toExternalForm().equals(urlString)) {
+					return repository;
+				}
+			}
+		}
+		return null;
+	}
+
+	public Set<TaskRepository> getRepositories(String kind) {
+//		if (!repositoriesRead) readRepositories();
+		
+		if (repositoryMap.containsKey(kind)) {
+			return repositoryMap.get(kind);
+		} else {
+			return Collections.emptySet();
+		} 
+	}
+	
+	public List<TaskRepository> getAllRepositories() {
+//		if (!repositoriesRead) readRepositories();
+		
+		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
+		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
+			if (repositoryMap.containsKey(repositoryClient.getKind())) {
+				repositories.addAll(repositoryMap.get(repositoryClient.getKind()));
+			}
+		}
+		return repositories;
+	}
+	
+	@Deprecated
+	public TaskRepository getDefaultRepository(String kind) {
+		// HACK: returns first repository found
+		if (repositoryMap.containsKey(kind)) {
+			for (TaskRepository repository : repositoryMap.get(kind)) {
+				return repository;
+			}
+		}
+		return null;
+	}
+	
 	public Map<String, Set<TaskRepository>> readRepositories() {
-		repositoryMap.clear();
+		System.err.println(">>> " + repositoryClients);
 		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
 			String read = MylarTaskListPlugin.getPrefs().getString(PREF_REPOSITORIES + repositoryClient.getKind());
 			Set<TaskRepository> repositories  = new HashSet<TaskRepository>();
@@ -92,7 +144,7 @@ public class TaskRepositoryManager {
 					try {
 						URL url = new URL(urlString);
 						repositoryMap.put(repositoryClient.getKind(), repositories);
-						repositories.add(new TaskRepository(url, repositoryClient.getKind()));
+						repositories.add(new TaskRepository(repositoryClient.getKind(), url));
 					} catch (MalformedURLException e) {
 						MylarStatusHandler.fail(e, "could not restore URL: " + urlString, false);
 					}
@@ -102,6 +154,7 @@ public class TaskRepositoryManager {
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
 		}
+		System.err.println("> read repositories: " + repositoryMap);
 		return repositoryMap;
 	}
 	
@@ -122,18 +175,46 @@ public class TaskRepositoryManager {
 		}
 	}
 
-	public List<TaskRepository> getAllRepositories() {
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
-			if (repositoryMap.containsKey(repositoryClient.getKind())) {
-				repositories.addAll(repositoryMap.get(repositoryClient.getKind()));
-			}
-		}
-		return repositories;
-	}
-
 	public void clearRepositories() {
 		repositoryMap.clear();
 		saveRepositories();
+	}
+ 
+	public static String getRepositoryUrl(String handle) {
+		int index = handle.lastIndexOf(HANDLE_DELIM);
+		if (index != -1) {
+			return handle.substring(0, index);
+		}
+		return null;
+	}
+
+	public static String getTaskId(String taskHandle) {
+		int index = taskHandle.lastIndexOf(HANDLE_DELIM);
+		if (index != -1) {
+			String id = taskHandle.substring(index + 1);
+			return id;
+		}
+		return null;	
+	}
+	
+	public static int getTaskIdAsInt(String taskHandle) {
+		String idString = getTaskId(taskHandle);
+		if (idString != null) {
+			return Integer.parseInt(idString);
+		} else {
+			return -1;
+		}
+	}
+ 
+	public static String getHandle(String repositoryUrl, String taskId) {
+		if (repositoryUrl == null) {
+			return MISSING_REPOSITORY_HANDLE + taskId;
+		} else {
+			return repositoryUrl + HANDLE_DELIM + taskId;
+		}
+	}
+	
+	public static String getHandle(String repositoryUrl, int taskId) {
+		return getHandle(repositoryUrl, "" + taskId);
 	}
 }

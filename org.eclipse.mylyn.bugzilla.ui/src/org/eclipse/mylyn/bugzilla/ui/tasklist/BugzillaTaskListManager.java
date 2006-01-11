@@ -20,6 +20,7 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
@@ -70,7 +71,7 @@ public class BugzillaTaskListManager implements IOfflineBugListener {
 			return;
 		}
 		
-		String handle = BugzillaTask.getHandle(bug);
+		String handle = TaskRepositoryManager.getHandle(bug.getServer(), bug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
 		if(task != null && task instanceof BugzillaTask){
 			BugzillaTask bugTask = (BugzillaTask) task;

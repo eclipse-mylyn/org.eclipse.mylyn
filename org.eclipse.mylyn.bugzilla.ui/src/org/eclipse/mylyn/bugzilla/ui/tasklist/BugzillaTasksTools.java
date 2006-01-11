@@ -15,7 +15,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
-
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 
 /**
  * @author Mik Kersten
@@ -29,8 +29,7 @@ public class BugzillaTasksTools {
     public static String getBugzillaDescription(BugzillaTask bugTask) {
 		if (bugTask == null) return "<no info>";
 		
-		String prefix = //((bugTask.isDirty()) ? ">" : "") +
-					    BugzillaTask.getBugId(bugTask.getHandleIdentifier()) + ": ";
+		String prefix = TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier()) + ": ";
     	
 		if (bugTask.getState() == BugzillaTask.BugTaskState.DOWNLOADING) {
 			return prefix + "<Downloading bug report from server...>";
@@ -51,5 +50,4 @@ public class BugzillaTasksTools {
 			return prefix + "<Could not find bug>";
 		}
     }
-
 }

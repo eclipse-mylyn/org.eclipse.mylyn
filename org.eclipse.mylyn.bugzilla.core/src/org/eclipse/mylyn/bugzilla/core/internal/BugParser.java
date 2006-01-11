@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.BugzillaRepository;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.Operation;
@@ -85,7 +84,7 @@ public class BugParser {
 	 * @throws IOException
 	 */
 	private static void parseAttributeValue(BugReport bug, String attributeName, HtmlStreamTokenizer tokenizer,
-			String userName, String password) throws IOException, ParseException {
+			String serverUrl, String userName, String password) throws IOException, ParseException {
 
 		Token token = tokenizer.nextToken();
 		if (token.getType() == Token.TAG) {
@@ -110,7 +109,7 @@ public class BugParser {
 				String parameterName = tag.getAttribute("name");
 				parseSelect(bug, attributeName, parameterName, tokenizer);
 			} else if (tag.getTagType() == HtmlTag.Type.INPUT && !tag.isEndTag()) {
-				parseInput(bug, attributeName, tag, userName, password);
+				parseInput(bug, attributeName, tag, serverUrl, userName, password);
 			} else if (!tag.isEndTag() || attributeName.equalsIgnoreCase("resolution")) {
 				if (tag.isEndTag() && attributeName.equalsIgnoreCase("resolution")) {
 					Attribute a = new Attribute(attributeName);
@@ -274,7 +273,7 @@ public class BugParser {
 	 *            The INPUT tag
 	 * @throws IOException
 	 */
-	private static void parseInput(BugReport bug, String attributeName, HtmlTag tag, String userName, String password)
+	private static void parseInput(BugReport bug, String attributeName, HtmlTag tag, String serverUrl, String userName, String password)
 			throws IOException {
 
 		Attribute a = new Attribute(attributeName);
@@ -298,7 +297,7 @@ public class BugParser {
 			a.setValue(value);
 			bug.addAttribute(a);
 
-			if (attributeName.equalsIgnoreCase("keywords") && BugzillaRepository.getURL() != null) {
+			if (attributeName.equalsIgnoreCase("keywords") && serverUrl != null) {
 
 				BufferedReader input = null;
 				try {
@@ -319,7 +318,7 @@ public class BugParser {
 					}
 
 					// connect to the bugzilla server to get the keyword list
-					URL url = new URL(BugzillaRepository.getURL() + "/" + keywordsUrl + urlText);
+					URL url = new URL(serverUrl + "/" + keywordsUrl + urlText);
 					URLConnection urlConnection = BugzillaPlugin.getDefault().getUrlConnection(url);
 					input = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
@@ -515,10 +514,10 @@ public class BugParser {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public static BugReport parseBug(Reader in, int id, String serverName, boolean is218, String userName,
+	public static BugReport parseBug(Reader in, int id, String serverUrl, boolean is218, String userName,
 			String password, String contentType) throws IOException, ParseException, LoginException {
 		// create a new bug report and set the parser state to the start state
-		BugReport bug = new BugReport(id, serverName);
+		BugReport bug = new BugReport(id, serverUrl);
 		boolean contentTypeResolved = false;
 		if (contentType != null) {
 			String charsetFromContentType = getCharsetFromString(contentType);
@@ -651,7 +650,7 @@ public class BugParser {
 				HtmlTag tag = (HtmlTag) token.getValue();
 				if (tag.getTagType() == HtmlTag.Type.TD) {
 					// parse the attribute values
-					parseAttributeValue(bug, attribute, tokenizer, userName, password);
+					parseAttributeValue(bug, attribute, tokenizer, serverUrl, userName, password);
 
 					state = ParserState.ATT_NAME;
 					attribute = null;

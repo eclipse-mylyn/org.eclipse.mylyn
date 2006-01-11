@@ -49,13 +49,16 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
 	
     private String handle = "";
     
+    private String serverUrl = "";
+    
 	/**
 	 * Constructor
 	 * @param scope The scope of this search
 	 */
-	public BugzillaMylarSearch(int scope, IJavaElement element) {
+	public BugzillaMylarSearch(int scope, IJavaElement element, String serverUrl) {
 		this.scope = scope;
 		this.element = element;
+		this.serverUrl = serverUrl;
 	}
 
 	public IStatus run(IProgressMonitor monitor){
@@ -175,5 +178,9 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
 
         return memberLandmarks;
     }
+
+	public String getServerUrl() {
+		return serverUrl;
+	}
     
 }

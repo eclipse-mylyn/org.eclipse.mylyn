@@ -31,9 +31,11 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.IQueryHit;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -44,10 +46,13 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class BugzillaQueryCategory implements ITaskQuery {
 
-	private String queryString;
+	private String repositoryUrl;
+	
+	private String queryUrl;
 
 	private int maxHits;
 
@@ -72,16 +77,22 @@ public class BugzillaQueryCategory implements ITaskQuery {
 		public void searchCompleted(BugzillaResultCollector collector) {
 			for (BugzillaSearchHit hit : collector.getResults()) {
 
-				// HACK need the server name and handle properly
-				addHit(new BugzillaHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(), hit.getId(), null, hit.getState()));
+				addHit(new BugzillaHit(
+						hit.getId() + ": " + hit.getDescription(), 
+						hit.getPriority(), 
+						repositoryUrl,
+						hit.getId(), 
+						null,
+						hit.getState()));
 			}
 		}
 
 	}
 
-	public BugzillaQueryCategory(String label, String url, String maxHits) {
+	public BugzillaQueryCategory(String repositoryUrl, String queryUrl, String label, String maxHits) {
 		this.description = label;
-		this.queryString = url;
+		this.queryUrl = queryUrl;
+		this.repositoryUrl = repositoryUrl;
 		try {
 			this.maxHits = Integer.parseInt(maxHits);
 		} catch (Exception e) {
@@ -110,7 +121,7 @@ public class BugzillaQueryCategory implements ITaskQuery {
 	}
 
 	public String getQueryUrl() {
-		return queryString;
+		return queryUrl;
 	}
 
 	public List<IQueryHit> getHits() {
@@ -118,7 +129,8 @@ public class BugzillaQueryCategory implements ITaskQuery {
 	}
 
 	public void addHit(IQueryHit hit) {
-		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(hit.getHandleIdentifier());
+		BugzillaTask task = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getFromBugzillaTaskRegistry(
+				hit.getHandleIdentifier());
 		hit.setCorrespondingTask(task);
 		hits.add(hit);
 	}
@@ -136,53 +148,56 @@ public class BugzillaQueryCategory implements ITaskQuery {
 					TaskListView.getDefault().getViewer().refresh();
 			}
 		});
-		final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(getQueryUrl(), maxHits);
-		catSearch.addResultsListener(listener);
-		final IStatus[] status = new IStatus[1];
 
-		try {
-			// execute the search operation
-			catSearch.execute(new NullProgressMonitor());
-			isMaxReached = catSearch.isMaxReached();
-			hasBeenRefreshed = true;
-			lastRefresh = new Date();
-
-			// get the status of the search operation
-			status[0] = catSearch.getStatus();
-
-			// determine if there was an error, if it was cancelled, or if it is
-			// ok
-			if (status[0].getCode() == IStatus.CANCEL) {
-				// it was cancelled, so just return
-				status[0] = Status.OK_STATUS;
-				//			                return status[0];
-				return;
-			} else if (!status[0].isOK()) {
-				// there was an error, so display an error message
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						ErrorDialog.openError(null, "Bugzilla Search Error", null, status[0]);
-					}
-				});
-				status[0] = Status.OK_STATUS;
-				return;
-				//			                return status[0];
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+		if (repository == null) {
+			MylarStatusHandler.fail(null, "could not find repository for url: " + repositoryUrl, true);
+		} else {
+			final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(
+					repository, getQueryUrl(), maxHits);
+			catSearch.addResultsListener(listener);
+			final IStatus[] status = new IStatus[1];
+	
+			try {
+				// execute the search operation
+				catSearch.execute(new NullProgressMonitor());
+				isMaxReached = catSearch.isMaxReached();
+				hasBeenRefreshed = true;
+				lastRefresh = new Date();
+	
+				// get the status of the search operation
+				status[0] = catSearch.getStatus();
+	
+				// determine if there was an error, if it was cancelled, or if it is
+				// ok
+				if (status[0].getCode() == IStatus.CANCEL) {
+					// it was cancelled, so just return
+					status[0] = Status.OK_STATUS;
+				} else if (!status[0].isOK()) {
+					// there was an error, so display an error message
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							ErrorDialog.openError(null, "Bugzilla Search Error", null, status[0]);
+						}
+					});
+					status[0] = Status.OK_STATUS;
+				}
+			} catch (LoginException e) {
+				// we had a problem while searching that seems like a login info
+				// problem
+				// thrown in BugzillaSearchOperation
+				MessageDialog
+						.openError(
+								Display.getDefault().getActiveShell(),
+								"Login Error",
+								"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+				BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));
 			}
-		} catch (LoginException e) {
-			// we had a problem while searching that seems like a login info
-			// problem
-			// thrown in BugzillaSearchOperation
-			MessageDialog
-					.openError(Display.getDefault().getActiveShell(),
-							"Login Error",
-							"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", e));
 		}
-		return;
 	}
 
 	public void setQueryUrl(String url) {
-		this.queryString = url;
+		this.queryUrl = url;
 	}
 
 	public String getPriority() {
@@ -264,5 +279,13 @@ public class BugzillaQueryCategory implements ITaskQuery {
 
 	public void setHandle(String id) {
 		this.handle = id;
+	}
+
+	public String getRepositoryUrl() {
+		return repositoryUrl;
+	}
+
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
 	}
 }
