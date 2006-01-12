@@ -1314,7 +1314,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		if (parentEditor == null) {
 			firePropertyChange(PROP_DIRTY);
 		} else {
-			parentEditor.updatePartName();
+			parentEditor.markDirty();
 		}
 
 	}

@@ -11,10 +11,13 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
@@ -140,6 +143,9 @@ public class TaskListUiTest extends TestCase {
 		// clear everything
 	}
 	
+	
+	
+
 	public void testUiFilter() {
 		try {
 		assertNotNull(TaskListView.getDefault());  
@@ -164,6 +170,42 @@ public class TaskListUiTest extends TestCase {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Tests that TaskEditors remove all listeners when closed
+	 */
+	public void testListenersRemoved() {
+
+		int numListenersBefore = 0;
+		int numListenersDuring = 0;
+		int numListenersAfter = 0;
+
+		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+		List<ITaskActivityListener> listeners = manager.getListeners();
+		numListenersBefore = listeners.size();
+
+		// open a task in editor
+		cat1task1.setForceSyncOpen(true);
+		cat1task1.openTaskInEditor(false);
+		cat1task2.setForceSyncOpen(true);
+		cat1task2.openTaskInEditor(false);
+
+		listeners = manager.getListeners();
+		numListenersDuring = listeners.size();
+
+		assertEquals(numListenersDuring, numListenersBefore + 2);
+
+		MylarTaskListPlugin.getDefault().getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage().closeAllEditors(
+						false);
+
+		listeners = manager.getListeners();
+		numListenersAfter = listeners.size();
+		assertEquals(numListenersBefore, numListenersAfter);
+
+	}
+	
+	
 	
 	public boolean checkFilter(int type, TreeItem[] items) {
 		switch(type) {

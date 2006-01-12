@@ -253,12 +253,18 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		}
 	}
 
-	public void updatePartName() {	
+	/**
+	 * Updates the tab titile
+	 */
+	public void changeTitle() {
 		this.setPartName(taskEditorInput.getTask().getDescription(true));
+	}
+	
+	public void markDirty() {		
 		firePropertyChange(PROP_DIRTY);		
 		return;
 	}
-
+	
 	@Override
 	public void setFocus() {
 		// taskSummaryEditor.setFocus();
@@ -277,4 +283,14 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			}
 		}
 	}
+	
+	public void dispose() {
+		for(IEditorPart part : editorsToNotifyOnChange) {
+			part.dispose();
+		}
+		if(taskSummaryEditor != null) taskSummaryEditor.dispose();
+		if(webBrowser!= null) webBrowser.dispose();		
+		
+	}
+	
 }

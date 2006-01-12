@@ -122,7 +122,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	 */
 	public ExistingBugEditor() {
 		super();
-
+		
 		// Set up the input for comparing the bug report to the server
 		CompareConfiguration config = new CompareConfiguration();
 		config.setLeftEditable(false);
@@ -140,6 +140,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		if (!(input instanceof ExistingBugEditorInput))
 			throw new PartInitException("Invalid Input: Must be ExistingBugEditorInput");
 		ExistingBugEditorInput ei = (ExistingBugEditorInput) input;
+		System.err.println(">>>>>>>>>> " + repository);
+		repository = ei.getRepository();
+		
 		setSite(site);
 		setInput(input);
 		bugzillaInput = ei;

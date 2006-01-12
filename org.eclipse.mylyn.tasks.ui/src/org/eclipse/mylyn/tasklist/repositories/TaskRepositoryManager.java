@@ -47,8 +47,7 @@ public class TaskRepositoryManager {
 
 
 	public static final String PREFIX_REPOSITORY_OLD = "Bugzilla";
-	public static final String MISSING_REPOSITORY_HANDLE = PREFIX_REPOSITORY_OLD
-			+ MylarContextManager.CONTEXT_HANDLE_DELIM;
+	public static final String MISSING_REPOSITORY_HANDLE = "unknown" + MylarContextManager.CONTEXT_HANDLE_DELIM;
 
 	private static final String PREF_STORE_DELIM = ", ";
 
@@ -154,8 +153,7 @@ public class TaskRepositoryManager {
 		}
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
-		}
-		System.err.println("> read repositories: " + repositoryMap);
+		} 
 		return repositoryMap;
 	}
 
@@ -219,6 +217,7 @@ public class TaskRepositoryManager {
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY_HANDLE + taskId;
 		} else {
+//			System.err.println(">> handle: " + repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
 			return repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId;
 		}
 	}

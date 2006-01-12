@@ -22,7 +22,9 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchPage;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
@@ -80,9 +82,11 @@ public class BugzillaQueryDialog extends Dialog {
 		newShell.setText(title);
 	}
 
-	public BugzillaQueryDialog(Shell parentShell, String startingUrl, String name, String maxHits) {
+	public BugzillaQueryDialog(Shell parentShell, String repositoryUrl, String startingUrl, String name, String maxHits) {
 		super(parentShell);
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 		searchOptionPage = new BugzillaSearchOptionPage();
+		searchOptionPage.setRepository(repository);
 		this.startingUrl = startingUrl;
 		this.maxHits = maxHits;
 		this.name = name;
@@ -193,10 +197,8 @@ public class BugzillaQueryDialog extends Dialog {
 			url = searchOptionPage.getSearchURL(repository);
 		}
 		if (url == null || url.equals("")) {
-			/*
-			 * Should never get here. Every implementation of the Java platform
-			 * is required to support the standard charset "UTF-8"
-			 */
+			// Should never get here. Every implementation of the Java platform
+			// is required to support the standard charset "UTF-8"
 			return;
 		}
 		maxHits = searchOptionPage.getMaxHits();
@@ -216,7 +218,6 @@ public class BugzillaQueryDialog extends Dialog {
 		getNameDialog.setBlockOnOpen(true);
 		if (getNameDialog.open() == InputDialog.OK) {
 			name = getNameDialog.getValue();
-
 			super.okPressed();
 		} else {
 			super.cancelPressed();
@@ -473,10 +474,7 @@ public class BugzillaQueryDialog extends Dialog {
 					return getQueryURL(repository, getQueryParameters());
 				}
 			} catch (UnsupportedEncodingException e) {
-				/*
-				 * Do nothing. Every implementation of the Java platform is
-				 * required to support the standard charset "UTF-8"
-				 */
+				// ignore
 			}
 			return "";
 		}

@@ -57,11 +57,12 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		this.bugId = bugId;
 		// get the bug from the server if it exists
 		bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);
+		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 	}
 	
 	public ExistingBugEditorInput(String repositoryUrl, int bugId, boolean offline) throws LoginException, IOException {
 		this.bugId = bugId;
-		
+		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 		if(!offline){
 			try {
 				bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);

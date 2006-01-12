@@ -852,14 +852,22 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				commentPattern.setItems(getPreviousPatterns(previousCommentPatterns));
 				emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
 
+				if (repository == null) {
+					repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+				}
 				Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(
 						BugzillaPlugin.REPOSITORY_KIND);
 				String[] repositoryUrls = new String[repositories.size()];
 				int i = 0;
+				int indexToSelect = 0;
 				for (Iterator<TaskRepository> iter = repositories.iterator(); iter.hasNext();) {
 					TaskRepository currRepsitory = iter.next(); 
-					if (i == 0) {
-						repository = currRepsitory;
+//					if (i == 0 && repository == null) {
+//						repository = currRepsitory;
+//						indexToSelect = 0;
+//					}
+					if (repository != null && repository.equals(currRepsitory)) {
+						indexToSelect = i;
 					}
 					repositoryUrls[i] = currRepsitory.getUrl().toExternalForm();
 					i++;
@@ -869,8 +877,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
 						"No repository available, please add one.");
 				} else {
-					repositoryCombo.select(0);
-					updateAttributesFromRepository(repositoryCombo.getItem(0), false);
+					repositoryCombo.select(indexToSelect);
+					updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), false);
 				}
 //				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
 //						BugzillaPlugin.REPOSITORY_KIND);
@@ -1278,5 +1286,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	public TaskRepository getRepository() {
 		return repository;
+	}
+
+	public void setRepository(TaskRepository repository) {
+		this.repository = repository;
 	}
 }
