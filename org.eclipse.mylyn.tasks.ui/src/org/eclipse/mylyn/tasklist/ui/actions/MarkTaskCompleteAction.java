@@ -40,7 +40,6 @@ public class MarkTaskCompleteAction extends Action {
 		for (Object selectedObject : ((IStructuredSelection)this.view.getViewer().getSelection()).toList()) {
 			if (selectedObject instanceof ITask) {
 				MylarTaskListPlugin.getTaskListManager().markComplete(((ITask)selectedObject), true);
-				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged((ITask)selectedObject);
 			}
 		}
 	}

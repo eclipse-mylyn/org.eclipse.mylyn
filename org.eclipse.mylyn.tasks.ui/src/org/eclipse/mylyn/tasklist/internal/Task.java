@@ -38,6 +38,24 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class Task implements ITask {
 
+	public enum TaskStatus {
+		NOT_STARTED, IN_PROGRESS, COMPLETED;
+		
+		@Override
+		public String toString() {
+			switch (this) {
+			case NOT_STARTED:
+				return "Not Started";
+			case IN_PROGRESS:
+				return "In Progress";
+			case COMPLETED:
+				return "Completed";
+			default:
+				return "null";
+			}
+		}
+	}
+	
 	public static final int MAX_LABEL_LENGTH = 50;
 
 	private boolean active = false;
@@ -462,5 +480,13 @@ public class Task implements ITask {
 
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+	}
+
+	public TaskStatus getStatus() {
+		if (isCompleted()) {
+			return TaskStatus.COMPLETED;
+		} else {
+			return TaskStatus.NOT_STARTED;
+		}
 	}
 }

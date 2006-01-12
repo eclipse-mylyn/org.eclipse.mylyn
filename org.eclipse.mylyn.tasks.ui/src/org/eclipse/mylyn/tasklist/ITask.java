@@ -16,6 +16,7 @@ package org.eclipse.mylar.tasklist;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.mylar.tasklist.internal.Task.TaskStatus;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
@@ -37,6 +38,8 @@ public interface ITask extends ITaskListElement {
 
 	public List<String> getPlans();
 
+	public abstract TaskStatus getStatus();
+	
 	public abstract void setCompleted(boolean completed);
 
 	public abstract List<String> getRelatedLinks();

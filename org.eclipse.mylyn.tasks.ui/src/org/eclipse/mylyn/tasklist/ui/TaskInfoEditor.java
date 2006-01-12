@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
@@ -68,6 +69,7 @@ import org.eclipse.ui.part.EditorPart;
  * 
  * @author Mik Kersten
  * @author Ken Sueda (initial prototype)
+ * @author Rob Elves (added additional fields)
  */
 public class TaskInfoEditor extends EditorPart {
 
@@ -145,18 +147,14 @@ public class TaskInfoEditor extends EditorPart {
 		}
 
 		public void taskChanged(ITask updateTask) {
-			if (updateTask != null
-					&& updateTask.getHandleIdentifier().equals(
-							task.getHandleIdentifier())) {
+			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				if (!description.isDisposed()) {
 					description.setText(updateTask.getDescription(false));
-					TaskInfoEditor.this.setPartName(updateTask
-							.getDescription(true));
+					TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
 					parentEditor.updatePartName();
 				}
 				if (!priorityCombo.isDisposed()) {
-					int selectionIndex = priorityCombo.indexOf(updateTask
-							.getPriority());
+					int selectionIndex = priorityCombo.indexOf(updateTask.getPriority());
 					priorityCombo.select(selectionIndex);
 				}
 				if (!completedCheckbox.isDisposed()) {
@@ -180,25 +178,18 @@ public class TaskInfoEditor extends EditorPart {
 
 	public TaskInfoEditor() {
 		super();
-		cutAction = new RetargetAction(ActionFactory.CUT.getId(),
-				WorkbenchMessages.Workbench_cut);
+		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
 		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
-		cutAction.setImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setHoverImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setDisabledImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
+		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+		cutAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+		cutAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
 		cutAction.setAccelerator(SWT.CTRL | 'x');
 		cutAction.setActionDefinitionId(cutActionDefId);
 
-		pasteAction = new RetargetAction(ActionFactory.PASTE.getId(),
-				WorkbenchMessages.Workbench_paste);
+		pasteAction = new RetargetAction(ActionFactory.PASTE.getId(), WorkbenchMessages.Workbench_paste);
 		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);
-		pasteAction.setImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setHoverImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setDisabledImageDescriptor(WorkbenchImages
 				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		pasteAction.setAccelerator(SWT.CTRL | 'v');
@@ -206,17 +197,13 @@ public class TaskInfoEditor extends EditorPart {
 
 		copyAction = new TaskEditorCopyAction();
 		copyAction.setText(WorkbenchMessages.Workbench_copy);
-		copyAction.setImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setHoverImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setDisabledImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
+		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 		copyAction.setAccelerator(SWT.CTRL | 'c');
 
 		copyAction.setEnabled(false);
-		MylarTaskListPlugin.getTaskListManager()
-				.addListener(TASK_LIST_LISTENER);
+		MylarTaskListPlugin.getTaskListManager().addListener(TASK_LIST_LISTENER);
 	}
 
 	@Override
@@ -232,11 +219,9 @@ public class TaskInfoEditor extends EditorPart {
 		} else {
 			task.setReminderDate(null);
 		}
-		task.setPriority(priorityCombo.getItem(priorityCombo
-				.getSelectionIndex()));
+		task.setPriority(priorityCombo.getItem(priorityCombo.getSelectionIndex()));
 
-		MylarTaskListPlugin.getTaskListManager().markComplete(task,
-				completedCheckbox.getSelection());
+		MylarTaskListPlugin.getTaskListManager().markComplete(task, completedCheckbox.getSelection());
 
 		refreshTaskListView(task);
 		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
@@ -251,11 +236,9 @@ public class TaskInfoEditor extends EditorPart {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof TaskEditorInput)) {
-			throw new PartInitException(
-					"Invalid Input: Must be TaskEditorInput");
+			throw new PartInitException("Invalid Input: Must be TaskEditorInput");
 		}
 		setSite(site);
 		setInput(input);
@@ -318,8 +301,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		task = taskEditorInput.getTask();
 		if (task == null) {
-			MessageDialog.openError(parent.getShell(), "No such task",
-					"No task exists with this id");
+			MessageDialog.openError(parent.getShell(), "No such task", "No task exists with this id");
 			return null;
 		}
 
@@ -336,8 +318,7 @@ public class TaskInfoEditor extends EditorPart {
 	}
 
 	private void createOverviewSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent,
-				ExpandableComposite.TITLE_BAR);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText(DESCRIPTION_OVERVIEW);
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
@@ -360,8 +341,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		Label l = toolkit.createLabel(container, "Description:");
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		description = toolkit.createText(container, task.getDescription(true),
-				SWT.BORDER);
+		description = toolkit.createText(container, task.getDescription(true), SWT.BORDER);
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
 		// td.colspan = 2;
 		description.setLayoutData(td);
@@ -377,10 +357,8 @@ public class TaskInfoEditor extends EditorPart {
 
 		Label urlLabel = toolkit.createLabel(container, "Web Link:");
 		urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		issueReportURL = toolkit.createText(container, task.getUrl(),
-				SWT.BORDER);
-		issueReportURL
-				.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		issueReportURL = toolkit.createText(container, task.getUrl(), SWT.BORDER);
+		issueReportURL.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		// issueReportURL.setForeground(HYPERLINK);
 
 		if (!task.isLocal()) {
@@ -392,81 +370,35 @@ public class TaskInfoEditor extends EditorPart {
 				}
 			});
 		}
-	}
+		
+		Composite completedComposite = toolkit.createComposite(container);
+		completedComposite.setLayout(new GridLayout(2, false));
+		Label label = toolkit.createLabel(completedComposite, "Completed:");
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		completedCheckbox = toolkit.createButton(completedComposite, "", SWT.CHECK);
+		completedCheckbox.setSelection(task.isCompleted());
 
-	private void createDocumentationSection(Composite parent,
-			FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent,
-				ExpandableComposite.TITLE_BAR);
-		section.setText("Documentation");
-		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-		Composite container = toolkit.createComposite(section);
-		section.setClient(container);
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 1;
-		container.setLayout(layout);
-
-		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER
-				| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
-		tablewrap.heightHint = 200;
-		tablewrap.grabVertical = true;
-		notes.setLayoutData(tablewrap);
-		notes.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				markDirty(true);
+		completedCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!completedCheckbox.getSelection()) {
+					if (!endDate.isDisposed()) {
+						endDate.setText("");
+					}
+				} else {
+					if (!endDate.isDisposed()) {
+						endDate.setText(getTaskDateString(task));
+					}
+				}
+				TaskInfoEditor.this.markDirty(true);
 			}
 		});
-
-		toolkit.paintBordersFor(container);
-	}
-
-	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
-
-		Section section = toolkit.createSection(parent,
-				ExpandableComposite.TITLE_BAR);
-		section.setText("Planning");
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		section.setLayout(new TableWrapLayout());
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-
-		Composite sectionClient = toolkit.createComposite(section);
-
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;
-
-		sectionClient.setLayout(layout);
-		sectionClient.setLayoutData(TableWrapData.FILL);
-
-		section.setClient(sectionClient);
-
-		// /////// Priority
-
-		Composite priorityComposite = toolkit.createComposite(sectionClient);
+		
+		Composite priorityComposite = toolkit.createComposite(container);
 		priorityComposite.setLayout(new GridLayout(2, false));
 
-		Label priorityLabel = toolkit.createLabel(priorityComposite,
-				"Priority:");
-		priorityLabel.setForeground(toolkit.getColors().getColor(
-				FormColors.TITLE));
+		Label priorityLabel = toolkit.createLabel(priorityComposite, "Priority:");
+		priorityLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		priorityCombo = new Combo(priorityComposite, SWT.DROP_DOWN);
 
@@ -487,6 +419,67 @@ public class TaskInfoEditor extends EditorPart {
 				}
 			});
 		}
+	}
+
+	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		section.setText("Documentation");
+		section.setLayout(new TableWrapLayout());
+		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		Composite container = toolkit.createComposite(section);
+		section.setClient(container);
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 1;
+		container.setLayout(layout);
+
+		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
+		tablewrap.heightHint = 200;
+		tablewrap.grabVertical = true;
+		notes.setLayoutData(tablewrap);
+		notes.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				markDirty(true);
+			}
+		});
+
+		toolkit.paintBordersFor(container);
+	}
+
+	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
+
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		section.setText("Planning");
+		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.setLayout(new TableWrapLayout());
+		section.addExpansionListener(new IExpansionListener() {
+			public void expansionStateChanging(ExpansionEvent e) {
+				form.reflow(true);
+			}
+
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+
+		Composite sectionClient = toolkit.createComposite(section);
+
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 2;
+
+		sectionClient.setLayout(layout);
+		sectionClient.setLayoutData(TableWrapData.FILL_GRAB);
+
+		section.setClient(sectionClient);
 
 		// Reminder
 		Composite reminderComposite = toolkit.createComposite(sectionClient);
@@ -500,8 +493,7 @@ public class TaskInfoEditor extends EditorPart {
 			calendar.setTime(task.getReminderDate());
 			datePicker.setDate(calendar);
 		}
-		datePicker.setBackground(Display.getDefault().getSystemColor(
-				SWT.COLOR_WHITE));
+		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				TaskInfoEditor.this.markDirty(true);
@@ -512,8 +504,7 @@ public class TaskInfoEditor extends EditorPart {
 			}
 		});
 
-		removeReminder = toolkit.createButton(reminderComposite, "Clear",
-				SWT.PUSH | SWT.CENTER);
+		removeReminder = toolkit.createButton(reminderComposite, "Clear", SWT.PUSH | SWT.CENTER);
 		if (task.isActive()) {
 			removeReminder.setEnabled(false);
 		} else {
@@ -527,18 +518,12 @@ public class TaskInfoEditor extends EditorPart {
 				TaskInfoEditor.this.markDirty(true);
 			}
 		});
-
+		Label blankSpacer = toolkit.createLabel(sectionClient, "");
+		
 		// ///////////////
 
 		Composite estimatedComposite = toolkit.createComposite(sectionClient);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
-		gridLayout.horizontalSpacing = 2;
-		gridLayout.verticalSpacing = 2;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 2;
-		gridLayout.makeColumnsEqualWidth = false;
-		estimatedComposite.setLayout(gridLayout);
+		estimatedComposite.setLayout(new GridLayout(3, false));
 		label = toolkit.createLabel(estimatedComposite, "Estimated time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
@@ -570,31 +555,31 @@ public class TaskInfoEditor extends EditorPart {
 
 		Composite elapsedTimeComposite = toolkit.createComposite(sectionClient);
 		TableWrapLayout elapsedLayout = new TableWrapLayout();
-		gridLayout.numColumns = 2;
+		elapsedLayout.numColumns = 2;
 		elapsedTimeComposite.setLayout(elapsedLayout);
+//		Composite elapsedTimeComposite = toolkit.createComposite(sectionClient);
+//		elapsedTimeComposite.setLayout(new GridLayout(2, false));
+		
 		label = toolkit.createLabel(elapsedTimeComposite, "Elapsed time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String elapsedTimeString = "0";
 		try {
-			elapsedTimeString = DateUtil.getFormattedDuration(task
-					.getElapsedTime(), true);
+			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
 			if (elapsedTimeString.equals(""))
 				elapsedTimeString = "0";
 		} catch (RuntimeException e) {
 			MylarStatusHandler.fail(e, "Could not format reminder date", true);
 		}
 
-		Text reminderText = toolkit.createText(elapsedTimeComposite,
-				elapsedTimeString, SWT.BORDER);
+		Text reminderText = toolkit.createText(elapsedTimeComposite, elapsedTimeString, SWT.BORDER);
 
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.grabHorizontal = true;
 		reminderText.setLayoutData(td);
 		reminderText.setEditable(false);
 
-		Composite creationDateComposite = toolkit
-				.createComposite(sectionClient);
+		Composite creationDateComposite = toolkit.createComposite(sectionClient);
 		TableWrapLayout creationLayout = new TableWrapLayout();
 		creationLayout.numColumns = 2;
 		creationDateComposite.setLayout(creationLayout);
@@ -603,58 +588,29 @@ public class TaskInfoEditor extends EditorPart {
 
 		String creationDateString = "";
 		try {
-			creationDateString = DateFormat.getDateInstance(DateFormat.LONG)
-					.format(task.getCreationDate());
+			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
 		} catch (RuntimeException e) {
 			MylarStatusHandler.fail(e, "Could not format creation date", true);
 		}
 
-		Text creationDate = toolkit.createText(creationDateComposite,
-				creationDateString, SWT.BORDER);
+		Text creationDate = toolkit.createText(creationDateComposite, creationDateString, SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.grabHorizontal = true;
 		creationDate.setLayoutData(td);
 		creationDate.setEditable(false);
 		creationDate.setEnabled(false);
 
-		Composite completedComposite = toolkit.createComposite(sectionClient);
-		completedComposite.setLayout(new GridLayout(2, false));
-		label = toolkit.createLabel(completedComposite, "Completed:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		completedCheckbox = toolkit.createButton(completedComposite, "",
-				SWT.CHECK);
-		completedCheckbox.setSelection(task.isCompleted());
-
-		completedCheckbox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (!completedCheckbox.getSelection()) {
-					if (!endDate.isDisposed()) {
-						endDate.setText("");
-					}
-				} else {
-					if (!endDate.isDisposed()) {
-						endDate.setText(getTaskDateString(task));
-					}
-				}
-				TaskInfoEditor.this.markDirty(true);
-			}
-		});
-
-		Composite completionDateComposite = toolkit
-				.createComposite(sectionClient);
+		Composite completionDateComposite = toolkit.createComposite(sectionClient);
 		TableWrapLayout completionLayout = new TableWrapLayout();
 		completionLayout.numColumns = 2;
 		completionDateComposite.setLayout(completionLayout);
-		label = toolkit
-				.createLabel(completionDateComposite, "Completion date:");
+		label = toolkit.createLabel(completionDateComposite, "Completion date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		String completionDateString = "";
 		if (task.isCompleted()) {
 			completionDateString = getTaskDateString(task);
 		}
-		endDate = toolkit.createText(completionDateComposite,
-				completionDateString, SWT.BORDER);
+		endDate = toolkit.createText(completionDateComposite, completionDateString, SWT.BORDER);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.grabHorizontal = true;
 		endDate.setLayoutData(td);
@@ -667,8 +623,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		String completionDateString = "";
 		try {
-			completionDateString = DateFormat.getDateInstance(DateFormat.LONG)
-					.format(task.getCompletionDate());
+			completionDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCompletionDate());
 		} catch (RuntimeException e) {
 			MylarStatusHandler.fail(e, "Could not format date", true);
 			return completionDateString;
@@ -677,8 +632,7 @@ public class TaskInfoEditor extends EditorPart {
 	}
 
 	private void createDetailsSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent,
-				ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Resources");
 		section.setLayout(new TableWrapLayout());
 		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
@@ -710,14 +664,12 @@ public class TaskInfoEditor extends EditorPart {
 
 		Label l2 = toolkit.createLabel(container, "Task context file:");
 		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		File contextFile = MylarPlugin.getContextManager().getFileForContext(
-				task.getHandleIdentifier());
+		File contextFile = MylarPlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		// String contextPath = MylarPlugin.getDefault().getDataDirectory()
 		// + '/' + task.getContextPath() +
 		// MylarContextManager.CONTEXT_FILE_EXTENSION;
 		if (contextFile != null) {
-			pathText = toolkit.createText(container, contextFile
-					.getAbsolutePath(), SWT.BORDER);
+			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.BORDER);
 			pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 			pathText.setEditable(false);
 			pathText.setEnabled(false);
