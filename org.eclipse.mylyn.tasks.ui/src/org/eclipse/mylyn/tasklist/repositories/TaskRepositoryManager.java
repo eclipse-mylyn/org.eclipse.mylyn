@@ -45,8 +45,8 @@ public class TaskRepositoryManager {
 	
 	public static final String HANDLE_DELIM = "-";
 
-	public static final String PREFIX_REPOSITORY_OLD = "Bugzilla";
 
+	public static final String PREFIX_REPOSITORY_OLD = "Bugzilla";
 	public static final String MISSING_REPOSITORY_HANDLE = PREFIX_REPOSITORY_OLD
 			+ MylarContextManager.CONTEXT_HANDLE_DELIM;
 

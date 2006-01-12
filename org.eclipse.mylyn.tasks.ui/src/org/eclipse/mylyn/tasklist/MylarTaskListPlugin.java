@@ -29,6 +29,7 @@ import org.eclipse.mylar.tasklist.internal.TaskListSaveManager;
 import org.eclipse.mylar.tasklist.internal.TaskListWriter;
 import org.eclipse.mylar.tasklist.internal.planner.ReminderRequiredCollector;
 import org.eclipse.mylar.tasklist.internal.planner.TaskReportGenerator;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
@@ -315,20 +316,25 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
 			if (dataDir.exists() && dataDir.isDirectory()) {
 				for (File file : dataDir.listFiles()) {
-//					System.err.println(">>> file: " + file.getAbsolutePath());
-					if (file.getName().startsWith(TaskRepositoryManager.PREFIX_LOCAL_OLD)) {
-						String id = TaskRepositoryManager.getTaskId(file.getName());
-						String newPath = TaskRepositoryManager.PREFIX_LOCAL + id;
-						File newFile = new File(dataDir, newPath);
-//						file.renameTo(dest)
-//						System.err.println("> renaming to: " + newFile.getAbsolutePath());
-					} else if (file.getName().startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
-						String id = TaskRepositoryManager.getTaskId(file.getName());
-//						String url = TaskRepositoryManager.get
+//					if (file.getName().startsWith(TaskRepositoryManager.PREFIX_LOCAL_OLD)) {
+//						String id = TaskRepositoryManager.getTaskId(file.getName());
+//						String newPath = TaskRepositoryManager.PREFIX_LOCAL + id;
+//						File newFile = new File(dataDir, newPath);
+//						file.renameTo(newFile);
+//					} else 
+					if (file.getName().startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
+						String id = TaskRepositoryManager.getTaskId(file.getName().substring(0, file.getName().lastIndexOf('.')));
+						TaskRepository repository = taskRepositoryManager.getDefaultRepository(TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
+						if (repository != null) {
+							String handle = TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(), id);
+							File newFile = MylarPlugin.getContextManager().getFileForContext(handle);
+							file.renameTo(newFile);
+						}
 					}
 				}
 			}
-//			getPrefs().setValue(MylarTaskListPrefConstants.CONTEXTS_MIGRATED, true);
+			MylarStatusHandler.log("Migrated context files to repository-aware paths", this);
+			getPrefs().setValue(MylarTaskListPrefConstants.CONTEXTS_MIGRATED, true);
 		}
 	}
 
