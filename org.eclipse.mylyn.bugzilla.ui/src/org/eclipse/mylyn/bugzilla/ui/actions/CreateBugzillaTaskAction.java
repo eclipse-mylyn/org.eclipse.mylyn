@@ -66,7 +66,7 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 	
 	    TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 	    ITask newTask = new BugzillaTask(
-	    		TaskRepositoryManager.getHandle(repository.getServerUrl().toExternalForm(), bugId), 
+	    		TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(), bugId), 
 	    		"<bugzilla info>", true, true);				
 	    Object selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
     	

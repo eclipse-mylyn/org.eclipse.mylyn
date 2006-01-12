@@ -47,7 +47,7 @@ public class BugzillaHyperLink implements IHyperlink {
 
 	public void open() {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-		OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getServerUrl().toExternalForm(), id);
+		OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getUrl().toExternalForm(), id);
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
 			service.run(true, false, job);

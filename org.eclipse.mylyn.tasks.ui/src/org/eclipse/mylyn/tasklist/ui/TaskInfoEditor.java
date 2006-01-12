@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.DateUtil;
 import org.eclipse.mylar.core.util.MylarStatusHandler;

@@ -103,21 +103,23 @@
   </extension>
 
 <!--
-  	<extension point = "org.eclipse.ui.popupMenus">
-       <objectContribution
-             id="org.eclipse.mylar.tasklist.objectContribution"
-             objectClass="org.eclipse.mylar.tasklist.ui.ITaskListElement">
-        <action
+  <extension point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="org.eclipse.mylar.tasklist.ui.viewerContribution"
+            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+          
+		<action
               class="org.eclipse.mylar.tasklist.repositories.ui.AddQueryAction"
               enablesFor="*"
               icon="icons/etool16/category-query-new.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
+              menubarPath="reports"
               label="Add Query"
               style="push"
               tooltip="Add Query"> 
   		</action>
-     </objectContribution>
-     </extension>
+      </viewerContribution>
+   </extension>
 -->
 
   <extension point="org.eclipse.ui.preferencePages">

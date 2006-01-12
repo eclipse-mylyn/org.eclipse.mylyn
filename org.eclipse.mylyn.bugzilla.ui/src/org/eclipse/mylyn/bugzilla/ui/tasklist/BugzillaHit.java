@@ -17,6 +17,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -103,7 +104,8 @@ public class BugzillaHit implements IQueryHit {
 	}
 
 	public String getHandleIdentifier() {
-		return "Bugzilla" + "-" + getId();
+		return TaskRepositoryManager.getHandle(repositoryUrl, id);
+//		return "Bugzilla" + "-" + getId();
 	}
 
 //	public String getServerName() {

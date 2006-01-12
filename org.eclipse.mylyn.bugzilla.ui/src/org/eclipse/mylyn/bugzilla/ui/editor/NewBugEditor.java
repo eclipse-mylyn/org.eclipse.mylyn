@@ -64,7 +64,7 @@ public class NewBugEditor extends AbstractBugEditor {
 	 * Creates a new <code>NewBugEditor</code>.
 	 */
 	public NewBugEditor(TaskRepository repository) {
-		super(repository);
+		super.repository = repository;
 	}
 
 	@Override

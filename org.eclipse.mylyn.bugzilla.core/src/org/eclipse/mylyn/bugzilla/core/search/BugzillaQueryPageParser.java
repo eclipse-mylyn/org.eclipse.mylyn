@@ -88,7 +88,7 @@ public class BugzillaQueryPageParser {
 		this.monitor = monitor;
 
 		// get the servers url
-		urlString = repository.getServerUrl().toExternalForm() + "/query.cgi";
+		urlString = repository.getUrl().toExternalForm() + "/query.cgi";
 
 		// if we are dealing with 2.18 we need to use the folowing in the
 		// query string to get the right search page

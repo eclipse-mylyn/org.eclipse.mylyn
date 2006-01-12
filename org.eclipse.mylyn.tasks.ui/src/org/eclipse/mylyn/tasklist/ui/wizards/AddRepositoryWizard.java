@@ -12,23 +12,15 @@
 package org.eclipse.mylar.tasklist.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 /**
  * @author Mik Kersten
  */
-public class AddRepositoryWizard extends Wizard implements INewWizard {
-
-	private SelectRepositoryPage selectRepositoryPage = new SelectRepositoryPage(this);
-	
+public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	private RepositorySettingsPage repositorySettingsPage = new RepositorySettingsPage();
-
-	private ITaskRepositoryClient repositoryClient;
 
 	public AddRepositoryWizard() {
 		super();
@@ -53,20 +45,12 @@ public class AddRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		addPage(selectRepositoryPage);
+		super.addPages();
 		addPage(repositorySettingsPage);
 	}
 
 	@Override
 	public boolean canFinish() {
-		return selectRepositoryPage.isPageComplete() && repositorySettingsPage.isPageComplete();
-	}
-
-	public void setRepositoryClient(ITaskRepositoryClient repository) {
-		this.repositoryClient = repository;
-	}
-
-	public ITaskRepositoryClient getRepositoryClient() {
-		return repositoryClient;
+		return super.canFinish() && repositorySettingsPage.isPageComplete();
 	}
 }

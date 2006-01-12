@@ -15,7 +15,10 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 
 /**
@@ -24,7 +27,9 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
  * @author Mik Kersten (some hardening of initial prototype)
  */
 public class ExistingBugEditorInput extends AbstractBugEditorInput {
-		
+
+	private TaskRepository repository;
+	
 	protected int bugId;
 
 	protected BugReport bug;
@@ -36,6 +41,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 	public ExistingBugEditorInput(BugReport bug) {
 		this.bug = bug;
 		this.bugId = bug.getId();
+		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bug.getServer());
 	}
 
 	/**
@@ -104,5 +110,9 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 			return getBugId() == input.getBugId();
 		}
 		return false;
+	}
+
+	public TaskRepository getRepository() {
+		return repository;
 	}
 }

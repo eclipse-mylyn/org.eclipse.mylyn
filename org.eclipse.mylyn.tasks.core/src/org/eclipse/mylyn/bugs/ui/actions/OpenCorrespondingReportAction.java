@@ -41,7 +41,6 @@ public class OpenCorrespondingReportAction implements IViewActionDelegate {
 	}
 
 	public void run(IAction action) {
-//		 HACK: determine appropriate repository
 		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 				
 		if (action instanceof ObjectPluginAction) {
@@ -67,7 +66,7 @@ public class OpenCorrespondingReportAction implements IViewActionDelegate {
 						// ignore
 					}
 					if (id != -1) {
-						OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getServerUrl().toExternalForm(), id);
+						OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getUrl().toExternalForm(), id);
 						IProgressService service = PlatformUI.getWorkbench().getProgressService();
 						try {
 							service.run(true, false, job);

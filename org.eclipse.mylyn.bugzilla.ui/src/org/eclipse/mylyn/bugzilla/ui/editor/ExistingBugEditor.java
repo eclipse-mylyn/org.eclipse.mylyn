@@ -56,7 +56,6 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
@@ -121,8 +120,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	/**
 	 * Creates a new <code>ExistingBugEditor</code>.
 	 */
-	public ExistingBugEditor(TaskRepository repository) {
-		super(repository);
+	public ExistingBugEditor() {
+		super();
 
 		// Set up the input for comparing the bug report to the server
 		CompareConfiguration config = new CompareConfiguration();

@@ -41,94 +41,35 @@ import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 /**
- * Singleton class that creates <code>BugReport</code> objects by fetching
- * bug's state and contents from the Bugzilla server.
- * 
- * @author Mik Kersten (hardening of initial prototype)
+ * @author Mik Kersten (some rewriting)
  */
 public class BugzillaRepositoryUtil {
 
-//	/**
-//	 * Test method.
-//	 */
-//	public static void main(String[] args) throws Exception {
-//		instance = new BugzillaRepositoryUtil(BugzillaPlugin.getDefault().getServerName() + "/long_list.cgi?buglist=");
-//		BugReport bug = instance.getBug(16161);
-//		System.out.println("Bug " + bug.getId() + ": " + bug.getSummary());
-//		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-//			Attribute attribute = it.next();
-//			System.out.println(attribute.getName() + ": " + attribute.getValue());
-//		}
-//		System.out.println(bug.getDescription());
-//		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
-//			Comment comment = it.next();
-//			System.out
-//					.println(comment.getAuthorName() + "<" + comment.getAuthor() + "> (" + comment.getCreated() + ")");
-//			System.out.print(comment.getText());
-//			System.out.println();
-//		}
-//	}
+	private static final String POST_ARGS_PASSWORD = "&Bugzilla_password=";
 
-//	/** URL of the Bugzilla server */
-//	private static String bugzillaUrl;
+	public static final char PREF_DELIM_REPOSITORY = ':';
 
-//	private static BugzillaRepositoryUtil INSTANCE = new BugzillaRepositoryUtil();
-
-	private static final char PREF_DELIM_REPOSITORY = ':';
 	private static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
-	/**
-	 * Constructor
-	 * 
-	 * @param bugzillaUrl -
-	 *            the url of the bugzilla repository
-	 */
-//	private BugzillaRepositoryUtil(String bugzillaUrl) {
-//		BugzillaRepositoryUtil.bugzillaUrl = bugzillaUrl;
-//	}
 
+	private static final String POST_ARGS_LOGIN_FIRST = "?GoAheadAndLogIn=1&Bugzilla_login=";
+	
 	private static final String POST_ARGS_LOGIN = "&GoAheadAndLogIn=1&Bugzilla_login=";
 
-	/**
-	 * Get the singleton instance of the <code>BugzillaRepositoryUtil</code>
-	 * 
-	 * @return The instance of the repository
-	 */
-//	public synchronized static BugzillaRepositoryUtil getInstance() {
-//		if (instance == null) {
-//			// if the instance hasn't been created yet, create one
-//			instance = new BugzillaRepositoryUtil(BugzillaPlugin.getDefault().getServerName());
-//		}
-//
-//		if (!BugzillaRepositoryUtil.bugzillaUrl.equals(BugzillaPlugin.getDefault().getServerName())) {
-//			BugzillaRepositoryUtil.bugzillaUrl = BugzillaPlugin.getDefault().getServerName();
-//		}
-
-//		return INSTANCE;
-//	}
-
-	public static BugReport getBug(String repositoryUrl, int id) throws IOException, MalformedURLException, LoginException {
+	public static BugReport getBug(String repositoryUrl, int id) throws IOException, MalformedURLException,
+			LoginException {
 
 		BufferedReader in = null;
 		try {
 
 			// create a new input stream for getting the bug
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-			
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+
 			String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
 
-			// allow the use to only see the operations that they can do to a
-			// bug if they have their user name and password in the preferences
-//			if (BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("")
-//					&& BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals("")) {
 			if (repository.hasCredentials()) {
-			/*
-				 * The UnsupportedEncodingException exception for
-				 * URLEncoder.encode() should not be thrown, since every
-				 * implementation of the Java platform is required to support
-				 * the standard charset "UTF-8"
-				 */
-				url += POST_ARGS_LOGIN
-						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) + "&Bugzilla_password="
+				url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			}
 
@@ -140,12 +81,9 @@ public class BugzillaRepositoryUtil {
 					in = new BufferedReader(new InputStreamReader(input));
 
 					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, 
-							repository.getServerUrl().toExternalForm(),
-							BugzillaPlugin.getDefault().isServerCompatability218(), 
-							repository.getUserName(), 
-							repository.getPassword(),
-							connection.getContentType());
+					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(),
+							BugzillaPlugin.getDefault().isServerCompatability218(), repository.getUserName(),
+							repository.getPassword(), connection.getContentType());
 					return bug;
 				}
 			}
@@ -158,10 +96,6 @@ public class BugzillaRepositoryUtil {
 		} catch (LoginException e) {
 			throw e;
 		} catch (Exception e) {
-			// throw an exception if there is a problem reading the bug from the
-			// server
-			// e.printStackTrace();
-			// throw new IOException(e.getMessage());
 			BugzillaPlugin.log(new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.ERROR,
 					"Problem getting report", e));
 			return null;
@@ -187,7 +121,8 @@ public class BugzillaRepositoryUtil {
 	 * @throws IOException,
 	 *             MalformedURLException, LoginException
 	 */
-	public static BugReport getCurrentBug(String serverUrl, int id) throws MalformedURLException, LoginException, IOException {
+	public static BugReport getCurrentBug(String serverUrl, int id) throws MalformedURLException, LoginException,
+			IOException {
 		// Look among the offline reports for a bug with the given id.
 		OfflineReportsFile reportsFile = BugzillaPlugin.getDefault().getOfflineReports();
 		int offlineId = reportsFile.find(id);
@@ -214,31 +149,22 @@ public class BugzillaRepositoryUtil {
 	public static List<String> getProductList(String repositoryUrl) throws IOException, LoginException, Exception {
 		BufferedReader in = null;
 		try {
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 			String urlText = "";
 			if (repository.hasCredentials()) {
-			// use the usename and password to get into bugzilla if we have it
-//			if (BugzillaPreferencePage.getUserName() != null && !BugzillaPreferencePage.getUserName().equals("")
-//					&& BugzillaPreferencePage.getPassword() != null && !BugzillaPreferencePage.getPassword().equals("")) {
-				/*
-				 * The UnsupportedEncodingException exception for
-				 * URLEncoder.encode() should not be thrown, since every
-				 * implementation of the Java platform is required to support
-				 * the standard charset "UTF-8"
-				 */
-				urlText += "?GoAheadAndLogIn=1&Bugzilla_login="
-						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) + "&Bugzilla_password="
+				urlText += POST_ARGS_LOGIN_FIRST
+						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			}
 
-			URL url = new URL(repository.getServerUrl().toExternalForm() + "/enter_bug.cgi" + urlText);
+			URL url = new URL(repository.getUrl().toExternalForm() + "/enter_bug.cgi" + urlText);
 
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(url);
 			if (cntx != null) {
 				InputStream input = cntx.getInputStream();
 				if (input != null) {
-
-					// create a new input stream for getting the bug
 					in = new BufferedReader(new InputStreamReader(input));
 
 					return new ProductParser(in).getProducts(repository);
@@ -263,14 +189,15 @@ public class BugzillaRepositoryUtil {
 	 *            A reference to a NewBugModel to store all of the data
 	 * @throws Exception
 	 */
-	public static void getnewBugAttributes(String serverUrl, NewBugModel nbm, boolean getProd) throws Exception {
+	public static void setupNewBugAttributes(String serverUrl, NewBugModel nbm, boolean getProd) throws Exception {
 		BufferedReader in = null;
 		try {
 			// create a new input stream for getting the bug
 			String prodname = URLEncoder.encode(nbm.getProduct(), BugzillaPlugin.ENCODING_UTF_8);
 
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, serverUrl);
-			String url = repository.getServerUrl().toExternalForm() + "/enter_bug.cgi";
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+					BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+			String url = repository.getUrl().toExternalForm() + "/enter_bug.cgi";
 
 			// use the proper url if we dont know the product yet
 			if (!getProd)
@@ -278,9 +205,8 @@ public class BugzillaRepositoryUtil {
 			else
 				url += "?";
 
-			url += POST_ARGS_LOGIN
-					+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) + "&Bugzilla_password="
-					+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
+			url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+					+ POST_ARGS_PASSWORD + URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 
 			URL bugUrl = new URL(url);
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(bugUrl);
@@ -301,7 +227,7 @@ public class BugzillaRepositoryUtil {
 						"Unable to connect to Bugzilla server.\n"
 								+ "Bug report will be created offline and saved for submission later.")) {
 					nbm.setConnected(false);
-					getProdConfigAttributes(serverUrl, nbm);
+					setupProdConfigAttributes(serverUrl, nbm);
 				} else
 					throw new Exception("Bug report will not be created.");
 			} else
@@ -318,22 +244,13 @@ public class BugzillaRepositoryUtil {
 	}
 
 	/**
-	 * Get the bugzilla url that the repository is using
-	 * 
-	 * @return A <code>String</code> containing the url of the bugzilla server
-	 */
-//	public static String getURL() {
-//		return bugzillaUrl;
-//	}
-
-	/**
 	 * Method to get attributes from ProductConfiguration if unable to connect
 	 * to Bugzilla server
 	 * 
 	 * @param model -
 	 *            the NewBugModel to store the attributes
 	 */
-	public static void getProdConfigAttributes(String serverUrl, NewBugModel model) {
+	public static void setupProdConfigAttributes(String serverUrl, NewBugModel model) {
 
 		HashMap<String, Attribute> attributes = new HashMap<String, Attribute>();
 
@@ -399,12 +316,13 @@ public class BugzillaRepositoryUtil {
 	}
 
 	public static String getBugUrl(String repositoryUrl, int id) {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-		String url = repository.getServerUrl().toExternalForm() + POST_ARGS_SHOW_BUG + id;
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+		String url = repository.getUrl().toExternalForm() + POST_ARGS_SHOW_BUG + id;
 		try {
 			if (repository.hasCredentials()) {
-				url += POST_ARGS_LOGIN
-						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) + "&Bugzilla_password="
+				url += POST_ARGS_LOGIN + URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+						+ POST_ARGS_PASSWORD
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			}
 		} catch (UnsupportedEncodingException e) {
@@ -426,16 +344,21 @@ public class BugzillaRepositoryUtil {
 			buffer.append(array[i]);
 			buffer.append("!");
 		}
-	
+
 		// return the buffer converted to a string
 		return buffer.toString();
 	}
-
-	public static String[] queryOptionsToArray(String values) {
+	
+	public static String[] getQueryOptions(String prefId, String repositoryUrl) {
+		IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
+		return convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY + repositoryUrl));
+	}
+	
+	private static String[] convertQueryOptionsToArray(String values) {
 		// create a new string buffer and array list
 		StringBuffer buffer = new StringBuffer();
 		List<String> options = new ArrayList<String>();
-	
+
 		char[] chars = values.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
 			if (chars[i] == '!') {
@@ -445,10 +368,10 @@ public class BugzillaRepositoryUtil {
 				buffer.append(chars[i]);
 			}
 		}
-	
+
 		// create a new string array with the same size as the array list
 		String[] array = new String[options.size()];
-	
+
 		// put each element from the list into the array
 		for (int j = 0; j < options.size(); j++)
 			array[j] = options.get(j);
@@ -462,47 +385,106 @@ public class BugzillaRepositoryUtil {
 	 *            A reference to a progress monitor
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) throws LoginException {
-		
-		String repositoryUrl = repository.getServerUrl().toExternalForm();
+
+		String repositoryUrl = repository.getUrl().toExternalForm();
 		BugzillaQueryPageParser parser = new BugzillaQueryPageParser(repository, monitor);
 		if (!parser.wasSuccessful())
 			return;
-	
+
 		// get the preferences store so that we can change the data in it
 		IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
-	
-		prefs.setValue(IBugzillaConstants.VALUES_STATUS + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getStatusValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_STATUS + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getStatusValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUSE_STATUS_PRESELECTED + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser
-				.getPreselectedStatusValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUSE_STATUS_PRESELECTED + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getPreselectedStatusValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_RESOLUTION + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getResolutionValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_RESOLUTION + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getResolutionValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_SEVERITY + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getSeverityValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_SEVERITY + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getSeverityValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_PRIORITY + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getPriorityValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_PRIORITY + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getPriorityValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_HARDWARE + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getHardwareValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_HARDWARE + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getHardwareValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_OS + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getOSValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_OS + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getOSValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_PRODUCT + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getProductValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_PRODUCT + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getProductValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getComponentValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_COMPONENT + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getComponentValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getVersionValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_VERSION + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getVersionValues()));
 		monitor.worked(1);
-	
-		prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl, queryOptionsToString(parser.getTargetValues()));
+
+		prefs.setValue(IBugzillaConstants.VALUES_TARGET + PREF_DELIM_REPOSITORY + repositoryUrl,
+				queryOptionsToString(parser.getTargetValues()));
 		monitor.worked(1);
 	}
 }
+
+/**
+ * Get the singleton instance of the <code>BugzillaRepositoryUtil</code>
+ * 
+ * @return The instance of the repository
+ */
+// public synchronized static BugzillaRepositoryUtil getInstance() {
+// if (instance == null) {
+// // if the instance hasn't been created yet, create one
+// instance = new
+// BugzillaRepositoryUtil(BugzillaPlugin.getDefault().getServerName());
+// }
+//
+// if
+// (!BugzillaRepositoryUtil.bugzillaUrl.equals(BugzillaPlugin.getDefault().getServerName()))
+// {
+// BugzillaRepositoryUtil.bugzillaUrl =
+// BugzillaPlugin.getDefault().getServerName();
+// }
+// return INSTANCE;
+// }
+// /**
+// * Test method.
+// */
+// public static void main(String[] args) throws Exception {
+// instance = new
+// BugzillaRepositoryUtil(BugzillaPlugin.getDefault().getServerName() +
+// "/long_list.cgi?buglist=");
+// BugReport bug = instance.getBug(16161);
+// System.out.println("Bug " + bug.getId() + ": " + bug.getSummary());
+// for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();)
+// {
+// Attribute attribute = it.next();
+// System.out.println(attribute.getName() + ": " + attribute.getValue());
+// }
+// System.out.println(bug.getDescription());
+// for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
+// Comment comment = it.next();
+// System.out
+// .println(comment.getAuthorName() + "<" + comment.getAuthor() + "> (" +
+// comment.getCreated() + ")");
+// System.out.print(comment.getText());
+// System.out.println();
+// }
+// }
+// /** URL of the Bugzilla server */
+// private static String bugzillaUrl;
+// private static BugzillaRepositoryUtil INSTANCE = new
+// BugzillaRepositoryUtil();

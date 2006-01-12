@@ -8,7 +8,7 @@
             taskHandlerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskHandler"
             externalizerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
             id="org.eclipse.mylar.bugzilla.ui.tasklist"
-            name="Bugzilla Contributor">
+            >
       </taskHandler>
    </extension>
    
@@ -41,7 +41,7 @@
    </category>
    <wizard
          category="org.eclipse.mylar.bugzilla.wizard.category"
-         class="org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard"
+         class="org.eclipse.mylar.bugzilla.ui.wizard.NewBugzillaReportWizard"
          icon="icons/elcl16/bug-new.gif"
          id="org.eclipse.mylar.bugzilla.bugWizard"
          name="New Bug Report">

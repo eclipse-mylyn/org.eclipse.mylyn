@@ -197,7 +197,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 			if (element instanceof IMarker) {
 				Integer id = (Integer) ((IMarker)element).getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-				BugzillaUITools.show(repository.getServerUrl().toExternalForm(), id.intValue());
+				BugzillaUITools.show(repository.getUrl().toExternalForm(), id.intValue());
 			}
 		}
 		catch (CoreException e) {

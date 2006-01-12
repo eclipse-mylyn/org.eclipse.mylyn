@@ -29,9 +29,12 @@ import org.eclipse.ui.IWorkbench;
  * Class that contains shared functions for the first page of the wizards that
  * submit bug reports. This page provides the user with a list of items to
  * choose from.
+ * 
+ * TODO: get rid of this unused abstraction?
+ * 
+ * @author Mik Kersten (hardening of prototype)
  */
-public abstract class AbstractWizardListPage extends WizardPage implements
-		Listener {
+public abstract class AbstractWizardListPage extends WizardPage implements Listener {
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -42,20 +45,7 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 	/** Status variable for the possible errors on this page */
 	protected IStatus listStatus;
 
-	/**
-	 * Constructor for AbstractWizardListPage
-	 * 
-	 * @param pageName
-	 *            the name of the page
-	 * @param title
-	 *            the title of the page
-	 * @param description
-	 *            the description text for the page
-	 * @param workbench
-	 *            the instance of the workbench
-	 */
-	public AbstractWizardListPage(String pageName, String title,
-			String description, IWorkbench workbench) {
+	public AbstractWizardListPage(String pageName, String title, String description, IWorkbench workbench) {
 		super(pageName);
 		setTitle(title);
 		setDescription(description);
@@ -66,12 +56,7 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 	}
 
 	public abstract void createAdditionalControls(Composite parent);
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
+
 	public void createControl(Composite parent) {
 		// create the composite to hold the widgets
 		GridData gd;
@@ -96,17 +81,16 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 		// create the list of bug reports
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = 200;
-		listBox = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY
-				| SWT.V_SCROLL);
+		listBox = new List(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
 		listBox.setLayoutData(gd);
 
 		createLine(composite, ncol);
 
 		// Each wizard has different types of items to add to the list
-		populateList();
-		
+		populateList(true);
+
 		createAdditionalControls(composite);
-		
+
 		// set the composite as the control for this page
 		setControl(composite);
 		addListeners();
@@ -117,7 +101,7 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 	/**
 	 * Populate the list of items
 	 */
-	abstract protected void populateList();
+	abstract protected void populateList(boolean init);
 
 	/*
 	 * (non-Javadoc)
@@ -142,8 +126,7 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 		// corresponding status
 		if (event.widget == listBox) {
 			if (listBox.getSelectionIndex() == -1)
-				status = new Status(IStatus.ERROR, "not_used", 0, errorMessage,
-						null);
+				status = new Status(IStatus.ERROR, "not_used", 0, errorMessage, null);
 			listStatus = status;
 		}
 
@@ -191,8 +174,7 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 	 *            The number of columns to span
 	 */
 	protected void createLine(Composite parent, int ncol) {
-		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL
-				| SWT.BOLD);
+		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = ncol;
 		line.setLayoutData(gridData);
@@ -213,5 +195,4 @@ public abstract class AbstractWizardListPage extends WizardPage implements
 	protected void addListeners() {
 		listBox.addListener(SWT.Selection, this);
 	}
-
 }

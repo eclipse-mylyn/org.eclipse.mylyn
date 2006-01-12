@@ -65,7 +65,6 @@ public class BugzillaProductParserTest extends TestCase {
 		File file = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/test-products-220.html"));
 		Reader in = new FileReader(file);
 		List<String> productList = new ArrayList<String>();
-		System.err.println(">>>> " + repository.getServerUrl());
 		productList = new ProductParser(in).getProducts(repository);
 		
 		Iterator<String> itr = productList.iterator();

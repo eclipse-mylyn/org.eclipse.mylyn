@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCustomQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
@@ -35,7 +35,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
 public class AddBugzillaQueryAction extends Action implements IViewActionDelegate {
     
@@ -51,16 +51,22 @@ public class AddBugzillaQueryAction extends Action implements IViewActionDelegat
     @Override
     public void run() {
     	
-    	TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+//    	TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
     	
-    	BugzillaQueryDialog sqd = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
-    	if(sqd.open() == Dialog.OK){
+    	BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
+    	if(queryDialog.open() == Dialog.OK){
+    		TaskRepository repository = queryDialog.getTaskRepository();
+    		if (repository == null) {
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
+						"No repository available, please add one.");
+				return;
+    		}    		
     		
         	final BugzillaQueryCategory queryCategory;
-        	if(!sqd.isCustom()){
-        		queryCategory = new BugzillaQueryCategory(repository.getServerUrl().toExternalForm(), sqd.getUrl(), sqd.getName(), sqd.getMaxHits());
+        	if(!queryDialog.isCustom()){
+        		queryCategory = new BugzillaQueryCategory(repository.getUrl().toExternalForm(), queryDialog.getUrl(), queryDialog.getName(), queryDialog.getMaxHits());
         	} else {
-        		queryCategory = new BugzillaCustomQueryCategory(repository.getServerUrl().toExternalForm(), sqd.getName(), sqd.getUrl(), sqd.getMaxHits());
+        		queryCategory = new BugzillaCustomQueryCategory(repository.getUrl().toExternalForm(), queryDialog.getName(), queryDialog.getUrl(), queryDialog.getMaxHits());
         	}
     		MylarTaskListPlugin.getTaskListManager().addQuery(queryCategory);
         	boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.WORK_OFFLINE);
@@ -78,8 +84,11 @@ public class AddBugzillaQueryAction extends Action implements IViewActionDelegat
 	            	MylarStatusHandler.log(e, "There was a problem executing the query refresh");
 	            }  
     		}
-            if(TaskListView.getDefault() != null)
-    			TaskListView.getDefault().getViewer().refresh();
+            if(TaskListView.getDefault() != null) {
+            	// TODO: remove
+            	TaskListView.getDefault().getViewer().refresh();
+            }
+    			
     	}
     }
 

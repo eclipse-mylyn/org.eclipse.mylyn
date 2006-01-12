@@ -19,7 +19,6 @@ import java.nio.charset.Charset;
 
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
@@ -42,15 +41,11 @@ public class Util {
     /**
      * Sugzilla preferences so that we can get the search params 
      */
-    private static IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
-    /**
-     * List of all of the resolutions that we can have <br> FIXED, INVALID, WONTFIX, LATER, REMIND, DUPLICATE, WORKSFORME, MOVED, ---
-     */
-    private static String[] resolutionValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs.getString(IBugzillaConstants.VALUES_RESOLUTION));
-    /**
-     * List of all of the statuses that we can have <br> UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED
-     */
-    private static String[] statusValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs.getString(IBugzillaConstants.VALUES_STATUS));
+//    private static IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
+    
+//    private static String[] resolutionValues = BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs.getString(IBugzillaConstants.VALUES_RESOLUTION));
+//   
+//    private static String[] statusValues = BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs.getString(IBugzillaConstants.VALUES_STATUS));
 
     /**
      * Get the bugzilla url used for searching for exact matches
@@ -74,7 +69,7 @@ public class Util {
         {
             // should never get here since we are using the default encoding
         }
-        sb.append(getQueryURLEnd());
+        sb.append(getQueryURLEnd(repositoryUrl));
     
         return sb.toString();
     }
@@ -104,7 +99,7 @@ public class Util {
         {
             // should never get here since we are using the default encoding
         }
-        sb.append(getQueryURLEnd());
+        sb.append(getQueryURLEnd(repositoryUrl));
     
         return sb.toString();
     }
@@ -113,9 +108,13 @@ public class Util {
      * Create the end of the bugzilla query URL with all of the status' and resolutions that we want
      * @return StringBuffer with the end of the query URL in it
      */
-    public static StringBuffer getQueryURLEnd(){
+    public static StringBuffer getQueryURLEnd(String repositoryUrl){
         
         StringBuffer sb = new StringBuffer();
+        
+        String[] resolutionValues = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION, repositoryUrl);
+      
+        String[] statusValues = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS, repositoryUrl);
         
         // add the status and resolutions that we care about
         sb.append("&bug_status=" + statusValues[0]); // UNCONFIRMED

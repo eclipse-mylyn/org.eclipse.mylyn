@@ -13,6 +13,8 @@ package org.eclipse.mylar.bugzilla.ui.search;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
@@ -64,7 +66,13 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
  */
 public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
+	private static final int HEIGHT_ATTRIBUTE_COMBO = 60;
+
+	private TaskRepository repository = null;
+	
 	protected Combo summaryPattern = null;
+
+	protected Combo repositoryCombo = null;
 
 	private static ArrayList<BugzillaSearchData> previousSummaryPatterns = new ArrayList<BugzillaSearchData>(20);
 
@@ -93,38 +101,49 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 
-	private String[] statusValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_STATUS));
-
-	protected String[] preselectedStatusValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUSE_STATUS_PRESELECTED));
-
-	private String[] resolutionValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_RESOLUTION));
-
-	private String[] severityValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_SEVERITY));
-
-	private String[] priorityValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_PRIORITY));
-
-	private String[] hardwareValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_HARDWARE));
-
-	private String[] osValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_OS));
-
-	private String[] productValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_PRODUCT));
-
-	private String[] componentValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_COMPONENT));
-
-	private String[] versionValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_VERSION));
-
-	private String[] targetValues = BugzillaRepositoryUtil.queryOptionsToArray(prefs
-			.getString(IBugzillaConstants.VALUES_TARGET));
+	// private String[] statusValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_STATUS));
+	//
+	// protected String[] preselectedStatusValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUSE_STATUS_PRESELECTED));
+	//
+	// private String[] resolutionValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_RESOLUTION));
+	//
+	// private String[] severityValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_SEVERITY));
+	//
+	// private String[] priorityValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_PRIORITY));
+	//
+	// private String[] hardwareValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_HARDWARE));
+	//
+	// private String[] osValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_OS));
+	//
+	// private String[] productValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_PRODUCT));
+	//
+	// private String[] componentValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_COMPONENT));
+	//
+	// private String[] versionValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_VERSION));
+	//
+	// private String[] targetValues =
+	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
+	// .getString(IBugzillaConstants.VALUES_TARGET));
 
 	private static class BugzillaSearchData {
 		/** Pattern to match on */
@@ -139,18 +158,10 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		}
 	}
 
-	/**
-	 * The constructor.
-	 */
 	public BugzillaSearchPage() {
 		super();
 	}
 
-	/**
-	 * Insert the method's description here.
-	 * 
-	 * @see DialogPage#createControl
-	 */
 	public void createControl(Composite parent) {
 		readConfiguration();
 
@@ -176,8 +187,26 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	}
 
 	private void createRepositoryGroup(Composite control) {
-//		String[] repositories = 
-		
+		Group group = new Group(control, SWT.NONE);
+		group.setText("Select Repository");
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		group.setLayout(layout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(gd);
+
+		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
+		repositoryCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String repositoryUrl = repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
+				repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND , repositoryUrl);
+				updateAttributesFromRepository(repositoryUrl, false);
+				//				handleWidgetSelected(summaryPattern, summaryOperation, previousSummaryPatterns);
+			}
+		});
+		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+		repositoryCombo.setLayoutData(gd);
 	}
 
 	private void createSearchGroup(Composite control) {
@@ -188,9 +217,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 5;
 		group.setLayoutData(gd);
-		
+
 		createTextSearchComposite(group);
-		createComment(group); 
+		createComment(group);
 	}
 
 	protected Control createTextSearchComposite(Composite control) {
@@ -208,7 +237,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		// Info text
 		label = new Label(group, SWT.LEFT);
-		label.setText("Summary or ID contains: ");
+		label.setText("Summary contains: ");
 		gd = new GridData(GridData.BEGINNING);
 		gd.horizontalSpan = 1;
 		label.setLayoutData(gd);
@@ -284,7 +313,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	protected Control createOptionsGroup(Composite control) {
 		Group group = new Group(control, SWT.NONE);
-//		group.setText("Bug Attributes");
+		// group.setText("Bug Attributes");
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		group.setLayout(layout);
@@ -331,22 +360,22 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		// Lists
 		product = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = 40;
+		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		product.setLayoutData(gd);
 
 		component = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = 40;
+		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		component.setLayoutData(gd);
 
 		version = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = 40;
+		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		version.setLayoutData(gd);
 
 		target = new List(group, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = 40;
+		gd.heightHint = HEIGHT_ATTRIBUTE_COMBO;
 		target.setLayoutData(gd);
 
 		return group;
@@ -718,7 +747,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		// label.setLayoutData(gd);
 
 		updateButton = new Button(group, SWT.LEFT | SWT.PUSH);
-		updateButton.setText("Update Attributes from Bugzilla Server");
+		updateButton.setText("Update Attributes from Repository");
 
 		updateButton.setLayoutData(new GridData());
 
@@ -726,60 +755,11 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-
-				monitorDialog.open();
-				IProgressMonitor monitor = monitorDialog.getProgressMonitor();
-				monitor.beginTask("Updating search options...", 55);
-
-				try {
-					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-					BugzillaRepositoryUtil.updateQueryOptions(repository, monitor);
-
-					product.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_PRODUCT)));
-					monitor.worked(1);
-					component.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_COMPONENT)));
-					monitor.worked(1);
-					version.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_VERSION)));
-					monitor.worked(1);
-					target.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_TARGET)));
-					monitor.worked(1);
-					status.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_STATUS)));
-					monitor.worked(1);
-					status.setSelection(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUSE_STATUS_PRESELECTED)));
-					monitor.worked(1);
-					resolution.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_RESOLUTION)));
-					monitor.worked(1);
-					severity.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_SEVERITY)));
-					monitor.worked(1);
-					priority.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_PRIORITY)));
-					monitor.worked(1);
-					hardware.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_HARDWARE)));
-					monitor.worked(1);
-					os.setItems(BugzillaRepositoryUtil.queryOptionsToArray(prefs
-							.getString(IBugzillaConstants.VALUES_OS)));
-					monitor.worked(1);
-				} catch (LoginException exception) {
-					// we had a problem that seems to have been caused from bad
-					// login info
-					MessageDialog
-							.openError(
-									null,
-									"Login Error",
-									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-					BugzillaPlugin.log(exception);
-				} finally {
-					monitor.done();
-					monitorDialog.close();
+				if (repository != null) {
+					updateAttributesFromRepository(repository.getUrl().toExternalForm(), true);
+				} else {
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
+						"No repository available, please add one.");
 				}
 			}
 		});
@@ -799,12 +779,12 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	}
 
 	public boolean performAction() {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information", "No repository available, please add one.");
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
+					"No repository available, please add one.");
 			return false;
 		}
-				
+
 		getPatternData(summaryPattern, summaryOperation, previousSummaryPatterns);
 		getPatternData(commentPattern, commentOperation, previousCommentPatterns);
 		getPatternData(this.emailPattern, emailOperation, previousEmailPatterns);
@@ -833,7 +813,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		try {
 			// if the summary contains a single bug id, open the bug directly
 			int id = Integer.parseInt(summaryText);
-			return BugzillaUITools.show(repository.getServerUrl().toExternalForm(), id);
+			return BugzillaUITools.show(repository.getUrl().toExternalForm(), id);
 		} catch (NumberFormatException ignored) {
 			// ignore this since this means that the text is not a bug id
 		}
@@ -872,18 +852,75 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				commentPattern.setItems(getPreviousPatterns(previousCommentPatterns));
 				emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
 
-				product.setItems(productValues);
-				component.setItems(componentValues);
-				version.setItems(versionValues);
-				target.setItems(targetValues);
+				Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(
+						BugzillaPlugin.REPOSITORY_KIND);
+				String[] repositoryUrls = new String[repositories.size()];
+				int i = 0;
+				for (Iterator<TaskRepository> iter = repositories.iterator(); iter.hasNext();) {
+					TaskRepository currRepsitory = iter.next(); 
+					if (i == 0) {
+						repository = currRepsitory;
+					}
+					repositoryUrls[i] = currRepsitory.getUrl().toExternalForm();
+					i++;
+				}
+				repositoryCombo.setItems(repositoryUrls);
+				if (repositoryUrls.length == 0) {
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
+						"No repository available, please add one.");
+				} else {
+					repositoryCombo.select(0);
+					updateAttributesFromRepository(repositoryCombo.getItem(0), false);
+				}
+//				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+//						BugzillaPlugin.REPOSITORY_KIND);
+//				String repositoryUrl = repository.getUrl().toExternalForm();
+//				product.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
+//						repositoryUrl));
+//
+//				component.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
+//						repositoryUrl));
+//
+//				version.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_VERSION,
+//						repositoryUrl));
+//
+//				target
+//						.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_TARGET,
+//								repositoryUrl));
+//
+//				status
+//						.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS,
+//								repositoryUrl));
+//
+//				status.setSelection(BugzillaRepositoryUtil.getQueryOptions(
+//						IBugzillaConstants.VALUSE_STATUS_PRESELECTED, repositoryUrl));
+//
+//				resolution.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
+//						repositoryUrl));
+//
+//				severity.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY,
+//						repositoryUrl));
+//
+//				priority.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY,
+//						repositoryUrl));
+//
+//				hardware.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE,
+//						repositoryUrl));
+//
+//				os.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_OS, repositoryUrl));
 
-				status.setItems(statusValues);
-				status.setSelection(preselectedStatusValues);
-				resolution.setItems(resolutionValues);
-				severity.setItems(severityValues);
-				priority.setItems(priorityValues);
-				hardware.setItems(hardwareValues);
-				os.setItems(osValues);
+				// product.setItems(productValues);
+				// component.setItems(componentValues);
+				// version.setItems(versionValues);
+				// target.setItems(targetValues);
+				//
+				// status.setItems(statusValues);
+				// status.setSelection(preselectedStatusValues);
+				// resolution.setItems(resolutionValues);
+				// severity.setItems(severityValues);
+				// priority.setItems(priorityValues);
+				// hardware.setItems(hardwareValues);
+				// os.setItems(osValues);
 			}
 			summaryPattern.setFocus();
 			scontainer.setPerformActionEnabled(canQuery());
@@ -961,8 +998,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	 * Example: https://bugs.eclipse.org/bugs/buglist.cgi?
 	 */
 	private StringBuffer getQueryURLStart(TaskRepository repository) {
-//		StringBuffer sb = new StringBuffer(BugzillaPlugin.getDefault().getServerName());
-		StringBuffer sb = new StringBuffer(repository.getServerUrl().toExternalForm());
+		// StringBuffer sb = new
+		// StringBuffer(BugzillaPlugin.getDefault().getServerName());
+		StringBuffer sb = new StringBuffer(repository.getUrl().toExternalForm());
 
 		if (sb.charAt(sb.length() - 1) != '/') {
 			sb.append('/');
@@ -973,7 +1011,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		if (repository.hasCredentials()) {
 			try {
 				sb.append("GoAheadAndLogIn=1&Bugzilla_login="
-						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) + "&Bugzilla_password="
+						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+						+ "&Bugzilla_password="
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8) + "&");
 			} catch (UnsupportedEncodingException e) {
 				MylarStatusHandler.fail(e, "unsupported encoding", false);
@@ -1166,5 +1205,78 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	 */
 	private void readConfiguration() {
 		getDialogSettings();
+	}
+
+	private void updateAttributesFromRepository(String repositoryUrl, boolean connect) {
+		monitorDialog.open();
+		IProgressMonitor monitor = monitorDialog.getProgressMonitor();
+		monitor.beginTask("Updating search options...", 55);
+
+		try {
+//			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+//					BugzillaPlugin.REPOSITORY_KIND);
+//			String repositoryUrl = repository.getUrl().toExternalForm();
+			if (connect) {
+				BugzillaRepositoryUtil.updateQueryOptions(repository, monitor);
+			}
+			product.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
+					repositoryUrl));
+			monitor.worked(1);
+
+			component.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
+					repositoryUrl));
+			monitor.worked(1);
+
+			version.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_VERSION,
+					repositoryUrl));
+			monitor.worked(1);
+
+			target.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_TARGET,
+					repositoryUrl));
+			monitor.worked(1);
+
+			status.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS,
+					repositoryUrl));
+			monitor.worked(1);
+
+			status.setSelection(BugzillaRepositoryUtil.getQueryOptions(
+					IBugzillaConstants.VALUSE_STATUS_PRESELECTED, repositoryUrl));
+			monitor.worked(1);
+
+			resolution.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
+					repositoryUrl));
+			monitor.worked(1);
+
+			severity.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY,
+					repositoryUrl));
+			monitor.worked(1);
+
+			priority.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY,
+					repositoryUrl));
+			monitor.worked(1);
+
+			hardware.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE,
+					repositoryUrl));
+			monitor.worked(1);
+
+			os.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_OS, repositoryUrl));
+			monitor.worked(1);
+		} catch (LoginException exception) {
+			// we had a problem that seems to have been caused from bad
+			// login info
+			MessageDialog
+					.openError(
+							null,
+							"Login Error",
+							"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
+			BugzillaPlugin.log(exception);
+		} finally {
+			monitor.done();
+			monitorDialog.close();
+		}
+	}
+
+	public TaskRepository getRepository() {
+		return repository;
 	}
 }

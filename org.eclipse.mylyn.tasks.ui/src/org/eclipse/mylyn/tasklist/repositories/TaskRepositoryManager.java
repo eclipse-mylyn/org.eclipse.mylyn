@@ -40,7 +40,9 @@ public class TaskRepositoryManager {
 
 	public static final String HANDLE_DELIM = "-";
 
-	public static final String MISSING_REPOSITORY_HANDLE = "Bugzilla" + HANDLE_DELIM;
+	public static final String MISSING_REPOSITORY_URL = "Bugzilla";
+	
+	public static final String MISSING_REPOSITORY_HANDLE = MISSING_REPOSITORY_URL + HANDLE_DELIM;
 	
 	private static final String STORE_DELIM = ", ";
 		
@@ -87,11 +89,9 @@ public class TaskRepositoryManager {
 	}
 	
 	public TaskRepository getRepository(String kind, String urlString) {
-//		if (!repositoriesRead) readRepositories();
-		
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
-				if (repository.getServerUrl().toExternalForm().equals(urlString)) {
+				if (repository.getUrl().toExternalForm().equals(urlString)) {
 					return repository;
 				}
 			}
@@ -100,8 +100,6 @@ public class TaskRepositoryManager {
 	}
 
 	public Set<TaskRepository> getRepositories(String kind) {
-//		if (!repositoriesRead) readRepositories();
-		
 		if (repositoryMap.containsKey(kind)) {
 			return repositoryMap.get(kind);
 		} else {
@@ -110,8 +108,6 @@ public class TaskRepositoryManager {
 	}
 	
 	public List<TaskRepository> getAllRepositories() {
-//		if (!repositoriesRead) readRepositories();
-		
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
 			if (repositoryMap.containsKey(repositoryClient.getKind())) {
@@ -133,7 +129,6 @@ public class TaskRepositoryManager {
 	}
 	
 	public Map<String, Set<TaskRepository>> readRepositories() {
-		System.err.println(">>> " + repositoryClients);
 		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
 			String read = MylarTaskListPlugin.getPrefs().getString(PREF_REPOSITORIES + repositoryClient.getKind());
 			Set<TaskRepository> repositories  = new HashSet<TaskRepository>();
@@ -163,7 +158,7 @@ public class TaskRepositoryManager {
 		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
 			if (repositoryMap.containsKey(repositoryClient.getKind())) {
 				for (TaskRepository repository : repositoryMap.get(repositoryClient.getKind())) {
-					store += repository.getServerUrl().toExternalForm() + STORE_DELIM;
+					store += repository.getUrl().toExternalForm() + STORE_DELIM;
 				}
 				String prefId = PREF_REPOSITORIES + repositoryClient.getKind();
 				MylarTaskListPlugin.getPrefs().setValue(prefId, store);

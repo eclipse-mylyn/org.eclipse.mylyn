@@ -25,7 +25,7 @@ public class TaskRepositoryLabelProvider extends LabelProvider implements ITable
 	public String getColumnText(Object object, int index) {
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository)object;
-			return repository.getKind() + ": " + repository.getServerUrl().toExternalForm();
+			return repository.getKind() + ": " + repository.getUrl().toExternalForm();
 		} else {
 			return getText(object);
 		}

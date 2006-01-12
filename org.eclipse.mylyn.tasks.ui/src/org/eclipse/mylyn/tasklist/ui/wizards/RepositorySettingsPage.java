@@ -69,7 +69,7 @@ public class RepositorySettingsPage extends WizardPage {
 
 			@Override
 			protected boolean doCheckState() {
-				return isValidURl(getStringValue());
+				return isValidUrl(getStringValue());
 			}
 
 			@Override
@@ -85,7 +85,7 @@ public class RepositorySettingsPage extends WizardPage {
 		passwordEditor.getTextControl().setEchoChar('*');
 		
 		if (repository != null) {
-			serverUrlEditor.setStringValue(repository.getServerUrl().toExternalForm());
+			serverUrlEditor.setStringValue(repository.getUrl().toExternalForm());
 			userNameEditor.setStringValue(repository.getUserName());
 			passwordEditor.setStringValue(repository.getPassword());
 		}
@@ -110,7 +110,7 @@ public class RepositorySettingsPage extends WizardPage {
 		return passwordEditor.getStringValue();
 	}
 	
-	private boolean isValidURl(String name) {
+	private boolean isValidUrl(String name) {
 		if (name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) {
 			try {
 				new URL(name);
@@ -152,7 +152,7 @@ public class RepositorySettingsPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		return isValidURl(serverUrlEditor.getStringValue());
+		return isValidUrl(serverUrlEditor.getStringValue());
 	}
 
 	public void setRepository(TaskRepository repository) {

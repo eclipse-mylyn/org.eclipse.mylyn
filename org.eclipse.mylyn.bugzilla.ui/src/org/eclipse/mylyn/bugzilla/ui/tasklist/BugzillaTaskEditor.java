@@ -21,7 +21,6 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.MylarTaskEditor;
 import org.eclipse.mylar.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
@@ -65,7 +64,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		}
     };    
     
-	public BugzillaTaskEditor(TaskRepository repository) {
+	public BugzillaTaskEditor() {
 		super();
 
 		// get the workbench page and add a listener so we can detect when it closes
@@ -75,7 +74,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 //		BugzillaTaskEditorListener listener = new BugzillaTaskEditorListener();
 //		ap.addPartListener(listener);
 		
-		bugzillaEditor = new ExistingBugEditor(repository);
+		bugzillaEditor = new ExistingBugEditor();
 		bugzillaEditor.setParentEditor(this);
 		bugzillaEditor.addAttributeListener(ATTRIBUTE_LISTENER);
 //        taskSummaryEditor = new TaskInfoEditor();

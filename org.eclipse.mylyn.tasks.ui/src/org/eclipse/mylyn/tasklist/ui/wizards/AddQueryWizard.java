@@ -12,16 +12,12 @@
 package org.eclipse.mylar.tasklist.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 /**
  * @author Mik Kersten
  */
-public class AddQueryWizard extends Wizard implements INewWizard {
-
-	private SelectRepositoryPage repositoryWizardPage;
+public class AddQueryWizard extends AbstractRepositoryWizard {
 
 	public AddQueryWizard() {
 		super();
@@ -30,7 +26,6 @@ public class AddQueryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		
 		return true;
 	}
 
@@ -38,12 +33,11 @@ public class AddQueryWizard extends Wizard implements INewWizard {
 	}
 
 	private void init() {
-//		repositoryWizardPage = new SelectRepositoryPage();
 		super.setForcePreviousAndNextButtons(true);
 	}
 
 	@Override
 	public void addPages() {
-		addPage(repositoryWizardPage);
+		super.addPages();
 	}
 }

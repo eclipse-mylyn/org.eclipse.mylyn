@@ -99,7 +99,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * 
  * @author Mik Kersten (some hardening of prototype)
  */
-@SuppressWarnings("deprecation")
 public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected TaskRepository repository;
@@ -110,12 +109,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	public static final Font TITLE_FONT = JFaceResources.getHeaderFont();
 
-	// TODO: don't use hard-coded font
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
 	public static final Font COMMENT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
-
-	//		new Font(null, "Courier New", 9, SWT.NORMAL);
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
@@ -233,6 +229,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		}
 	};
 
+	@SuppressWarnings("deprecation")
 	protected ListenerList selectionChangedListeners = new ListenerList();
 
 	protected HashMap<Combo, String> comboListenerMap = new HashMap<Combo, String>();
@@ -273,9 +270,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * Creates a new <code>AbstractBugEditor</code>. Sets up the default fonts and
 	 * cut/copy/paste actions.
 	 */
-	public AbstractBugEditor(TaskRepository repository) {
-		this.repository = repository;
-		
+	public AbstractBugEditor() {
 		// set the scroll increments so the editor scrolls normally with the scroll wheel
 		FontData[] fd = TEXT_FONT.getFontData();
 		int cushion = 4;
@@ -1282,7 +1277,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 */
 	protected void setURL(BugReportPostHandler form, String formName) {
 //		String baseURL = BugzillaPlugin.getDefault().getServerName();
-		String baseURL = repository.getServerUrl().toExternalForm();
+		String baseURL = repository.getUrl().toExternalForm();
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
 		try {

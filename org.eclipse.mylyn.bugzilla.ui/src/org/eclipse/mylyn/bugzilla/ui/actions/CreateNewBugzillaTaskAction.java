@@ -18,16 +18,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.bugzilla.ui.wizard.NewBugWizard;
+import org.eclipse.mylar.bugzilla.ui.wizard.NewBugzillaReportWizard;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Shell;
@@ -57,11 +55,9 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 			MessageDialog.openInformation(null, "Unable to create bug report", "Unable to create a new bug report since you are currently offline");
 			return;
 		}
-//        MylarPlugin.getDefault().actionObserved(this);
+//		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 		
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-		
-		NewBugWizard wizard= new NewBugWizard(repository, true);
+		NewBugzillaReportWizard wizard = new NewBugzillaReportWizard(true);
 		Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
 
@@ -91,7 +87,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 //		    TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 		    BugzillaTask newTask = new BugzillaTask(
 		    		TaskRepositoryManager.getHandle(
-		    				repository.getServerUrl().toExternalForm(), bugId), 
+		    				wizard.getRepository().getUrl().toExternalForm(), bugId), 
 		    		"<bugzilla info>", true, true);				
 		    Object selectedObject = null;
 		    if(TaskListView.getDefault() != null)

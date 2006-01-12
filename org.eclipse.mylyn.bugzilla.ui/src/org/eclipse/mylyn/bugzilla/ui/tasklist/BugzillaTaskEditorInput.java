@@ -27,6 +27,7 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * @author Eric Booth
+ * @author Mik Kersten
  */
 public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
@@ -39,7 +40,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	private boolean offline;
 
 	public BugzillaTaskEditorInput(BugzillaTask bugTask, boolean offline) throws LoginException, IOException {
-        super(bugTask.getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier()), offline);
+		super(bugTask.getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier()), offline);
 		this.bugTask = bugTask;
 		offlineBug = bugTask.getBugReport();
 		bugId = TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier());

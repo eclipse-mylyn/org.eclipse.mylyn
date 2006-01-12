@@ -22,58 +22,59 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.bugzilla.ui.editor.NewBugEditorInput;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 
-
 /**
  * View a bug from the offlineReports menu
+ * 
+ * @author Mik Kersten (hardening of prototype)
  */
-public class ViewOfflineReportAction extends AbstractOfflineReportsAction 
-{
-	
+public class ViewOfflineReportAction extends AbstractOfflineReportsAction {
+
 	/** The view to get the result to launch a viewer on */
 	private OfflineView view;
-	
+
 	/**
 	 * Constructor
-	 * @param resultsView The view to launch a viewer on
+	 * 
+	 * @param resultsView
+	 *            The view to launch a viewer on
 	 */
-	public ViewOfflineReportAction(OfflineView resultsView ) 
-	{
-		setToolTipText( "View Selected Offline Reports" );
-		setText( "View Selected" );
+	public ViewOfflineReportAction(OfflineView resultsView) {
+		setToolTipText("View Selected Offline Reports");
+		setText("View Selected");
 		setImageDescriptor(BugzillaImages.OPEN);
 		view = resultsView;
 	}
-	
-	/**
-	 * View the selected bugs in the editor window
-	 * @see org.eclipse.jface.action.IAction#run()
-	 */
+
 	@Override
-	public void run() 
-	{
+	public void run() {
 		OfflineView.checkWindow();
 		List<IBugzillaBug> selectedBugs = view.getSelectedBugs();
-		
+
 		// if there are some selected bugs view the bugs in the editor window
-		if (!selectedBugs.isEmpty()) 
-		{
+		if (!selectedBugs.isEmpty()) {
 			IWorkbenchPage page = BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			for (Iterator<IBugzillaBug> it = selectedBugs.iterator(); it.hasNext(); ) {
+			for (Iterator<IBugzillaBug> it = selectedBugs.iterator(); it.hasNext();) {
 				IBugzillaBug bug = it.next();
 				if (bug instanceof BugReport) {
-					ExistingBugEditorInput editorInput = new ExistingBugEditorInput((BugReport)bug);
-					try {
-						page.openEditor(editorInput, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
-					} catch (PartInitException e) {
-						BugzillaPlugin.log(e);
+					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+							BugzillaPlugin.REPOSITORY_KIND, bug.getServer());
+					if (repository != null) {
+						ExistingBugEditorInput editorInput = new ExistingBugEditorInput((BugReport)bug);
+						try {
+							page.openEditor(editorInput, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
+						} catch (PartInitException e) {
+							BugzillaPlugin.log(e);
+						}
 					}
 					continue;
 				}
 				if (bug instanceof NewBugModel) {
-					NewBugEditorInput editorInput = new NewBugEditorInput((NewBugModel)bug);
+					NewBugEditorInput editorInput = new NewBugEditorInput((NewBugModel) bug);
 					try {
 						page.openEditor(editorInput, IBugzillaConstants.NEW_BUG_EDITOR_ID);
 					} catch (PartInitException e) {

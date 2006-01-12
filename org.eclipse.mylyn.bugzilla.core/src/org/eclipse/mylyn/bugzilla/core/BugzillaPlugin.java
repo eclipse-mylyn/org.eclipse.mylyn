@@ -112,9 +112,8 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		readOfflineReportsFile();
 		
 		Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(REPOSITORY_KIND);
-		System.err.println(">>>> should have repository: " + repositories);
 		for (TaskRepository repository : repositories) {
-			readCachedProductConfiguration(repository.getServerUrl().toExternalForm());
+			readCachedProductConfiguration(repository.getUrl().toExternalForm());
 		}
 	}
 

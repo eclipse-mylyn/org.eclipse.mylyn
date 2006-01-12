@@ -104,7 +104,7 @@ public class AddFavoriteAction extends AbstractFavoritesAction {
 										
 
 					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-					Favorite favorite = new Favorite(repository.getServerUrl().toExternalForm(), attributeId.intValue(), description, query, attributes);
+					Favorite favorite = new Favorite(repository.getUrl().toExternalForm(), attributeId.intValue(), description, query, attributes);
 					selected.add(favorite);
 				}
 				catch (CoreException ignored) 

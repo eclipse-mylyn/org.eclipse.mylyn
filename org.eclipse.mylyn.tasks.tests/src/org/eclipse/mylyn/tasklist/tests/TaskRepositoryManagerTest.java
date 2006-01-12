@@ -18,6 +18,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
@@ -28,7 +29,7 @@ import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
  */
 public class TaskRepositoryManagerTest extends TestCase {
 
-	private static final String DEFAULT_KIND = "bugzilla";
+	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
 	private static final String DEFAULT_URL = "http://eclipse.org";
 	private TaskRepositoryManager manager;
 	

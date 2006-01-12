@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -28,17 +28,15 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Mik Kersten
  */
-public class SelectRepositoryPage extends WizardPage {
+public class SelectRepositoryClientPage extends WizardPage {
 
-	private static final String DESCRIPTION = "Select a repository";
+	private static final String DESCRIPTION = "You can connect to an existing accounts using one of the following clients.";
 
-	private static final String TITLE = "Select a repository";
+	private static final String TITLE = "Select a repository client";
 
 	private TableViewer viewer;
 	
-	private AbstractRepositoryWizard wizard;
-	
-	private String repositoryKind = null;
+	private AbstractRepositoryClientWizard wizard;
 	
 	class RepositoryContentProvider implements IStructuredContentProvider {
 		
@@ -49,15 +47,11 @@ public class SelectRepositoryPage extends WizardPage {
 		}
 
 		public Object[] getElements(Object parent) {
-			if (repositoryKind != null) {
-				return MylarTaskListPlugin.getRepositoryManager().getRepositories(repositoryKind).toArray();
-			} else {
-				return MylarTaskListPlugin.getRepositoryManager().getAllRepositories().toArray();
-			}
+			return MylarTaskListPlugin.getRepositoryManager().getRepositoryClients().toArray();
 		}
 	}
 	
-	public SelectRepositoryPage(AbstractRepositoryWizard wizard) {
+	public SelectRepositoryClientPage(AbstractRepositoryClientWizard wizard) {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
@@ -65,14 +59,9 @@ public class SelectRepositoryPage extends WizardPage {
 		super.setWizard(wizard);
 	}
 	
-	public SelectRepositoryPage(AbstractRepositoryWizard wizard, String repositoryKind) {
-		this(wizard);
-		this.repositoryKind = repositoryKind;
-	}
-	
 	@Override
 	public boolean canFlipToNextPage() {
-		return wizard.getRepository() != null;
+		return wizard.getRepositoryClient() != null;
 	}
 
 	public void createControl(Composite parent) {
@@ -88,13 +77,25 @@ public class SelectRepositoryPage extends WizardPage {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-				if (selection.getFirstElement() instanceof TaskRepository) {
-					wizard.setRepository((TaskRepository)selection.getFirstElement());
-					SelectRepositoryPage.this.setPageComplete(true);
+				if (selection.getFirstElement() instanceof ITaskRepositoryClient) {
+					wizard.setRepositoryClient((ITaskRepositoryClient)selection.getFirstElement());
+					SelectRepositoryClientPage.this.setPageComplete(true);
 					wizard.getContainer().updateButtons();
 				}
 			}
+			
 		});
 		setControl(container);
 	}
+
+//	@Override
+//	public IWizardPage getNextPage() {
+//		if (isPageComplete()) {
+//			IWizardPage nextPage = wizard.getRepositoryClient().getSettingsPage();
+//			nextPage.setWizard(wizard);
+//			return nextPage;
+//		} else {
+//			return super.getNextPage();
+//		}
+//	}
 }

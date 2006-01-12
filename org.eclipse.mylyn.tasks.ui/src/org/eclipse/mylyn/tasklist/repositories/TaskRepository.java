@@ -40,7 +40,7 @@ public class TaskRepository {
 		this.kind = kind;
 	}
 	
-	public URL getServerUrl() {
+	public URL getUrl() {
 		return serverUrl;
 	}
 	
@@ -100,7 +100,7 @@ public class TaskRepository {
 	@Override
 	public boolean equals(Object object) {
 		if (serverUrl != null && object instanceof TaskRepository) {
-			return serverUrl.equals(((TaskRepository)object).getServerUrl());
+			return serverUrl.equals(((TaskRepository)object).getUrl());
 		} else {
 			return super.equals(object);
 		}
