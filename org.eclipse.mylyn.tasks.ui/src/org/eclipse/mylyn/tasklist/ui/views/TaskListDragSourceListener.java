@@ -11,9 +11,7 @@
 
 package org.eclipse.mylar.tasklist.ui.views;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
@@ -40,21 +38,23 @@ class TaskListDragSourceListener implements DragSourceListener {
 	}
 
 	public void dragSetData(DragSourceEvent event) {
-		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
-		String data = "";
-		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-			if (selectedObject instanceof ITaskListElement) {
-				ITaskListElement element = (ITaskListElement) selectedObject;
-				if (element.isDragAndDropEnabled()) {
-					data += element.getHandleIdentifier() + DELIM;
-				}
-			}
-		}
-		if (data != null) {
-			event.data = data;
-		} else {
-			event.data = "null";
-		}
+		event.data = "task-drag";
+//		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
+//		String data = "task-drag";
+//		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
+//			if (selectedObject instanceof ITaskListElement) {
+//				ITaskListElement element = (ITaskListElement) selectedObject;
+//				if (element.isDragAndDropEnabled()) {
+//					data += "task"
+//					data += element.getHandleIdentifier() + DELIM;
+//				}
+//			}
+//		}
+//		if (data != null) {
+//			event.data = data;
+//		} else {
+//			event.data = "null";
+//		}
 	}
 
 	public void dragFinished(DragSourceEvent event) {

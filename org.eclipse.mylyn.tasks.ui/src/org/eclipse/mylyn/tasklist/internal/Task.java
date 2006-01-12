@@ -101,6 +101,11 @@ public class Task implements ITask {
 
 	private List<ITask> children = new ArrayList<ITask>();
 
+	/**
+	 * For testing
+	 */
+	private boolean forceSyncOpen;
+
 	@Override
 	public String toString() {
 		return label;
@@ -142,11 +147,15 @@ public class Task implements ITask {
 	}
 
 	public void openTaskInEditor(boolean offline) {
-		Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				openTaskEditor();
-			}
-		});
+		if (forceSyncOpen) {
+			openTaskEditor();
+		} else {
+			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					openTaskEditor();
+				}
+			});
+		}
 	}
 
 	/**
@@ -488,5 +497,13 @@ public class Task implements ITask {
 		} else {
 			return TaskStatus.NOT_STARTED;
 		}
+	}
+
+	/**
+	 * For testing
+	 * TODO: move
+	 */
+	public void setForceSyncOpen(boolean forceSyncOpen) {
+		this.forceSyncOpen = forceSyncOpen;
 	}
 }

@@ -15,6 +15,8 @@ package org.eclipse.mylar.tasklist.internal;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,14 @@ public class TaskListManager {
 		return taskList;
 	}
 
+	/**
+	 * Exposed for unit testing
+	 * @return unmodifiable collection of ITaskActivityListeners
+	 */
+	public List<ITaskActivityListener> getListeners() {
+		return Collections.unmodifiableList(listeners);
+	}
+	
 	public String genUniqueTaskHandle() {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextTaskId++;
 	}
