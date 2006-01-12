@@ -103,7 +103,7 @@ public class MylarContextManager {
 
 	private boolean activationHistorySuppressed = false;
 
-	public static final String CONTEXT_HANDLE_DELIM = "#";
+	public static final String CONTEXT_HANDLE_DELIM = "-";
 
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
@@ -437,6 +437,7 @@ public class MylarContextManager {
 	 * Could load in the context and inspect it, but this is cheaper.
 	 */
 	public boolean hasContext(String path) {
+//		System.err.println(">>>> " + path);
 		File contextFile = getFileForContext(path);
 		return contextFile.exists() && contextFile.length() > 0;
 	}
@@ -544,8 +545,9 @@ public class MylarContextManager {
 		try {
 			encoded = URLEncoder.encode(handleIdentifier, CONTEXT_FILENAME_ENCODING);
 			String dataDirectory = MylarPlugin.getDefault().getDataDirectory();
-
-			return new File(dataDirectory + File.separator + encoded + CONTEXT_FILE_EXTENSION);
+			File contextFile = new File(dataDirectory + File.separator + encoded + CONTEXT_FILE_EXTENSION);
+//			System.err.println(">>>>>> " + contextFile.getAbsolutePath());
+			return contextFile;
 		} catch (UnsupportedEncodingException e) {
 			MylarStatusHandler.fail(e, "Could not determine path for context", false);
 		}
