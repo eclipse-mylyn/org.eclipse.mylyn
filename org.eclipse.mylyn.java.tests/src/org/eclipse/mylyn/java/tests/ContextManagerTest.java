@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.java.tests;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContext;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.java.JavaProblemListener;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.ui.IViewPart;
@@ -98,6 +100,14 @@ public class ContextManagerTest extends AbstractJavaContextTest {
         	// don't care about this event
         }
     }    
+    
+    public void testHandleToPathConversion() throws IOException {
+    	String handle = "https://bugs.eclipse.org/bugs" + MylarContextManager.CONTEXT_HANDLE_DELIM + "123";
+    	File file = manager.getFileForContext(handle);
+    	assertFalse(file.exists());
+    	file.createNewFile();
+    	assertTrue(file.exists());
+    }
     
     public void testPauseAndResume() throws JavaModelException {
     	MylarPlugin.getContextManager().setContextCapturePaused(true);

@@ -12,6 +12,8 @@
 package org.eclipse.mylar.core.internal;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,8 +34,8 @@ import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.ITimerThreadListener;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.core.util.TimerThread;
 import org.eclipse.swt.widgets.Display;
 
@@ -43,6 +45,8 @@ import org.eclipse.swt.widgets.Display;
  * @author Mik Kersten
  */
 public class MylarContextManager {
+
+	private static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
 
 	private static final String ACTIVITY_DEACTIVATED = "deactivated";
 
@@ -98,6 +102,8 @@ public class MylarContextManager {
 	private MylarContextExternalizer externalizer = new MylarContextExternalizer();
 
 	private boolean activationHistorySuppressed = false;
+
+	public static final String CONTEXT_HANDLE_DELIM = "#";
 
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
@@ -534,8 +540,16 @@ public class MylarContextManager {
 	}
 
 	public File getFileForContext(String handleIdentifier) {
-		return new File(MylarPlugin.getDefault().getDataDirectory() + File.separator + handleIdentifier
-				+ CONTEXT_FILE_EXTENSION);
+		String encoded;
+		try {
+			encoded = URLEncoder.encode(handleIdentifier, CONTEXT_FILENAME_ENCODING);
+			String dataDirectory = MylarPlugin.getDefault().getDataDirectory();
+
+			return new File(dataDirectory + File.separator + encoded + CONTEXT_FILE_EXTENSION);
+		} catch (UnsupportedEncodingException e) {
+			MylarStatusHandler.fail(e, "Could not determine path for context", false);
+		}
+		return null;
 	}
 
 	public IMylarContext getActiveContext() {
@@ -822,5 +836,4 @@ public class MylarContextManager {
 	public void setContextCapturePaused(boolean paused) {
 		this.contextCapturePaused = paused;
 	}
-
 }
