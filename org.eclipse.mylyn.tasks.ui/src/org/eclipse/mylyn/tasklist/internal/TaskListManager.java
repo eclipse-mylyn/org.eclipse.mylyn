@@ -27,6 +27,7 @@ import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 
 /**
  * @author Mik Kersten
@@ -47,8 +48,6 @@ public class TaskListManager {
 	
 	private int nextTaskId;
 
-	private static final String PREFIX_TASK = "task-";
-	
 	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) { 
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
@@ -61,7 +60,7 @@ public class TaskListManager {
 	}
 
 	public String genUniqueTaskHandle() {
-		return PREFIX_TASK + nextTaskId++;
+		return TaskRepositoryManager.PREFIX_LOCAL + nextTaskId++;
 	}
 
 	public boolean readOrCreateTaskList() {

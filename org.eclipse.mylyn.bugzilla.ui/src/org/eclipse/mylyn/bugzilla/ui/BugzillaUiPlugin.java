@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.ui;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaPreferencePage;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaRefreshManager;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskListManager;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;

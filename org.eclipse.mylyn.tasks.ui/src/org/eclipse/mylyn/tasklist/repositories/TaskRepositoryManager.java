@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
@@ -29,33 +30,38 @@ import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
  * @author Mik Kersten
  */
 public class TaskRepositoryManager {
-	
+
 	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.";
-	
+
 	private List<ITaskRepositoryClient> repositoryClients = new ArrayList<ITaskRepositoryClient>();
 
 	private Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
-	
+
 	private Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
 
+	public static final String PREFIX_LOCAL_OLD = "task-";
+	
+	public static final String PREFIX_LOCAL = "local-";
+	
 	public static final String HANDLE_DELIM = "-";
 
-	public static final String MISSING_REPOSITORY_URL = "Bugzilla";
-	
-	public static final String MISSING_REPOSITORY_HANDLE = MISSING_REPOSITORY_URL + HANDLE_DELIM;
-	
-	private static final String STORE_DELIM = ", ";
-		
+	public static final String PREFIX_REPOSITORY_OLD = "Bugzilla";
+
+	public static final String MISSING_REPOSITORY_HANDLE = PREFIX_REPOSITORY_OLD
+			+ MylarContextManager.CONTEXT_HANDLE_DELIM;
+
+	private static final String PREF_STORE_DELIM = ", ";
+
 	public List<ITaskRepositoryClient> getRepositoryClients() {
 		return repositoryClients;
 	}
-	
+
 	public void addRepositoryClient(ITaskRepositoryClient repositoryClient) {
 		if (!repositoryClients.contains(repositoryClient)) {
 			repositoryClients.add(repositoryClient);
 		}
 	}
-	
+
 	public void removeRepositoryClient(ITaskRepositoryClient repositoryClient) {
 		repositoryClients.remove(repositoryClient);
 	}
@@ -79,15 +85,15 @@ public class TaskRepositoryManager {
 		}
 		saveRepositories();
 	}
-	
+
 	public void addListener(ITaskRepositoryListener listener) {
 		listeners.add(listener);
 	}
-	
+
 	public void removeListener(ITaskRepositoryListener listener) {
 		listeners.remove(listener);
 	}
-	
+
 	public TaskRepository getRepository(String kind, String urlString) {
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
@@ -104,9 +110,9 @@ public class TaskRepositoryManager {
 			return repositoryMap.get(kind);
 		} else {
 			return Collections.emptySet();
-		} 
+		}
 	}
-	
+
 	public List<TaskRepository> getAllRepositories() {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
@@ -116,7 +122,7 @@ public class TaskRepositoryManager {
 		}
 		return repositories;
 	}
-	
+
 	@Deprecated
 	public TaskRepository getDefaultRepository(String kind) {
 		// HACK: returns first repository found
@@ -127,13 +133,13 @@ public class TaskRepositoryManager {
 		}
 		return null;
 	}
-	
+
 	public Map<String, Set<TaskRepository>> readRepositories() {
 		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
 			String read = MylarTaskListPlugin.getPrefs().getString(PREF_REPOSITORIES + repositoryClient.getKind());
-			Set<TaskRepository> repositories  = new HashSet<TaskRepository>();
+			Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 			if (read != null) {
-				StringTokenizer st = new StringTokenizer(read, STORE_DELIM);
+				StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 				while (st.hasMoreTokens()) {
 					String urlString = st.nextToken();
 					try {
@@ -152,19 +158,19 @@ public class TaskRepositoryManager {
 		System.err.println("> read repositories: " + repositoryMap);
 		return repositoryMap;
 	}
-	
+
 	private void saveRepositories() {
 		String store = "";
 		for (ITaskRepositoryClient repositoryClient : repositoryClients) {
 			if (repositoryMap.containsKey(repositoryClient.getKind())) {
 				for (TaskRepository repository : repositoryMap.get(repositoryClient.getKind())) {
-					store += repository.getUrl().toExternalForm() + STORE_DELIM;
+					store += repository.getUrl().toExternalForm() + PREF_STORE_DELIM;
 				}
 				String prefId = PREF_REPOSITORIES + repositoryClient.getKind();
 				MylarTaskListPlugin.getPrefs().setValue(prefId, store);
 			}
 		}
-		
+
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
 		}
@@ -174,14 +180,6 @@ public class TaskRepositoryManager {
 		repositoryMap.clear();
 		saveRepositories();
 	}
- 
-	public static String getRepositoryUrl(String handle) {
-		int index = handle.lastIndexOf(HANDLE_DELIM);
-		if (index != -1) {
-			return handle.substring(0, index);
-		}
-		return null;
-	}
 
 	public static String getTaskId(String taskHandle) {
 		int index = taskHandle.lastIndexOf(HANDLE_DELIM);
@@ -189,9 +187,25 @@ public class TaskRepositoryManager {
 			String id = taskHandle.substring(index + 1);
 			return id;
 		}
-		return null;	
+		return null;
 	}
-	
+
+	public static String getRepositoryUrl(String contextHandle) {
+		int index = contextHandle.lastIndexOf(HANDLE_DELIM);
+		String url = null;
+		if (index != -1) {
+			url = contextHandle.substring(0, index);
+		}
+		if (url != null && url.equals(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
+			String repositoryKind = TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase();
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
+			if (repository != null) {
+				url = repository.getUrl().toExternalForm();
+			}
+		}
+		return url;
+	}
+
 	public static int getTaskIdAsInt(String taskHandle) {
 		String idString = getTaskId(taskHandle);
 		if (idString != null) {
@@ -200,15 +214,15 @@ public class TaskRepositoryManager {
 			return -1;
 		}
 	}
- 
+
 	public static String getHandle(String repositoryUrl, String taskId) {
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY_HANDLE + taskId;
 		} else {
-			return repositoryUrl + HANDLE_DELIM + taskId;
+			return repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId;
 		}
 	}
-	
+
 	public static String getHandle(String repositoryUrl, int taskId) {
 		return getHandle(repositoryUrl, "" + taskId);
 	}

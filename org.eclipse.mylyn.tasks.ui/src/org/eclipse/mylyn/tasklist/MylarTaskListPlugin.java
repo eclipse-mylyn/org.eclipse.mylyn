@@ -287,9 +287,11 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					
 					TaskListExtensionReader.initExtensions(taskListWriter);
 					
 					taskRepositoryManager.readRepositories();
+					migrateOldContextFiles();
 					
 					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.addListener(taskListSaveManager);
@@ -306,6 +308,28 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			}
 		});
+	}
+
+	private void migrateOldContextFiles() {
+		if (!getPrefs().getBoolean(MylarTaskListPrefConstants.CONTEXTS_MIGRATED)) {
+			File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
+			if (dataDir.exists() && dataDir.isDirectory()) {
+				for (File file : dataDir.listFiles()) {
+//					System.err.println(">>> file: " + file.getAbsolutePath());
+					if (file.getName().startsWith(TaskRepositoryManager.PREFIX_LOCAL_OLD)) {
+						String id = TaskRepositoryManager.getTaskId(file.getName());
+						String newPath = TaskRepositoryManager.PREFIX_LOCAL + id;
+						File newFile = new File(dataDir, newPath);
+//						file.renameTo(dest)
+//						System.err.println("> renaming to: " + newFile.getAbsolutePath());
+					} else if (file.getName().startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
+						String id = TaskRepositoryManager.getTaskId(file.getName());
+//						String url = TaskRepositoryManager.get
+					}
+				}
+			}
+//			getPrefs().setValue(MylarTaskListPrefConstants.CONTEXTS_MIGRATED, true);
+		}
 	}
 
 	@Override

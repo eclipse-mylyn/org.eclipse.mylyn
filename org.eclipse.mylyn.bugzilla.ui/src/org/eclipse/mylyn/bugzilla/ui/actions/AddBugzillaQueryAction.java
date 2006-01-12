@@ -50,9 +50,6 @@ public class AddBugzillaQueryAction extends Action implements IViewActionDelegat
     
     @Override
     public void run() {
-    	
-//    	TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-    	
     	BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
     	if(queryDialog.open() == Dialog.OK){
     		TaskRepository repository = queryDialog.getTaskRepository();

@@ -34,6 +34,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
@@ -146,13 +147,7 @@ public class BugzillaTask extends Task {
 	private void initFromHandle() {
 		int id = TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier());
 		repositoryUrl = TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
-		System.err.println(">>> rep: " + repositoryUrl + ".");
-		if (repositoryUrl == null && !repositoryUrl.equals(TaskRepositoryManager.MISSING_REPOSITORY_URL)) {
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-			if (repository != null) {
-				repositoryUrl = repository.getUrl().toExternalForm();
-			}
-		}
+//		System.err.println(">>> handle: " + getHandleIdentifier());
 		if (repositoryUrl != null) {
 			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
 			if (url != null) {
