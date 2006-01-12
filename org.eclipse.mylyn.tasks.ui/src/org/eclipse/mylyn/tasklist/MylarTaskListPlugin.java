@@ -312,6 +312,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private void migrateOldContextFiles() {
+		boolean migrated = false;
 		if (!getPrefs().getBoolean(MylarTaskListPrefConstants.CONTEXTS_MIGRATED)) {
 			File dataDir = new File(MylarPlugin.getDefault().getDataDirectory());
 			if (dataDir.exists() && dataDir.isDirectory()) {
@@ -326,6 +327,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 						String id = TaskRepositoryManager.getTaskId(file.getName().substring(0, file.getName().lastIndexOf('.')));
 						TaskRepository repository = taskRepositoryManager.getDefaultRepository(TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase());
 						if (repository != null) {
+							migrated = true;
 							String handle = TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(), id);
 							File newFile = MylarPlugin.getContextManager().getFileForContext(handle);
 							file.renameTo(newFile);
@@ -333,8 +335,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 			}
+		}
+		if (migrated) {
 			MylarStatusHandler.log("Migrated context files to repository-aware paths", this);
-			getPrefs().setValue(MylarTaskListPrefConstants.CONTEXTS_MIGRATED, true);
+			getPrefs().setValue(MylarTaskListPrefConstants.CONTEXTS_MIGRATED, true); 
 		}
 	}
 
