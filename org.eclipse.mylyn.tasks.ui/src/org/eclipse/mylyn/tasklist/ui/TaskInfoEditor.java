@@ -24,7 +24,6 @@ import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin.PriorityLevel;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.Task.TaskStatus;
 import org.eclipse.mylar.tasklist.ui.views.DatePicker;
@@ -38,7 +37,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -98,8 +96,6 @@ public class TaskInfoEditor extends EditorPart {
 	private static final String pasteActionDefId = "org.eclipse.ui.edit.paste";
 
 	private Button removeReminder;
-
-	private Button completedCheckbox;
 
 	private Text pathText;
 

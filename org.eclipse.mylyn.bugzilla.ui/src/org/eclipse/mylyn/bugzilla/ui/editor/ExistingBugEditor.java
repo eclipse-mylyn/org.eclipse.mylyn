@@ -140,7 +140,6 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		if (!(input instanceof ExistingBugEditorInput))
 			throw new PartInitException("Invalid Input: Must be ExistingBugEditorInput");
 		ExistingBugEditorInput ei = (ExistingBugEditorInput) input;
-		System.err.println(">>>>>>>>>> " + repository);
 		repository = ei.getRepository();
 		
 		setSite(site);
