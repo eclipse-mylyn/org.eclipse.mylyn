@@ -146,7 +146,6 @@ public class BugzillaTask extends Task {
 		int id = TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier());
 		String repositoryUrl = getRepositoryUrl();
 //		repositoryUrl = TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
-//		System.err.println(">>> handle: " + getHandleIdentifier());
 		if (repositoryUrl != null) {
 			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
 			if (url != null) {

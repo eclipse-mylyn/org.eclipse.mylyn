@@ -92,7 +92,6 @@ public abstract class RepositorySettingsPage extends WizardPage {
 
 	public URL getServerUrl() {
 		try {
-			System.err.println(">>> " + serverUrlEditor);
 			return new URL(serverUrlEditor.getStringValue());
 		} catch (MalformedURLException e) {
 			MylarStatusHandler.fail(e, "could not create url", true);

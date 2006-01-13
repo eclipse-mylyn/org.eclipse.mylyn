@@ -105,7 +105,6 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				}
 				queryCategory.setMaxHits(maxHits);
 
-				System.err.println(">>> syncrhonizing");
 				new SynchronizeReportsAction(queryCategory).run();
 			}
 		} else if (element instanceof BugzillaQueryHit) {

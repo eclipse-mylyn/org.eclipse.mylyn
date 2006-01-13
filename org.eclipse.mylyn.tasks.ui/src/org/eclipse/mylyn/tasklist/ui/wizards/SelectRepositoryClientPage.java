@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
@@ -88,14 +89,15 @@ public class SelectRepositoryClientPage extends WizardPage {
 		setControl(container);
 	}
 
-//	@Override
-//	public IWizardPage getNextPage() {
-//		if (isPageComplete()) {
-//			IWizardPage nextPage = wizard.getRepositoryClient().getSettingsPage();
-//			nextPage.setWizard(wizard);
-//			return nextPage;
-//		} else {
-//			return super.getNextPage();
-//		}
-//	}
+	@Override
+	public IWizardPage getNextPage() {
+		if (isPageComplete()) {
+			RepositorySettingsPage nextPage = wizard.getRepositoryClient().getSettingsPage();
+			wizard.setRepositorySettingsPage(nextPage);
+			nextPage.setWizard(wizard);
+			return nextPage;
+		} else {
+			return super.getNextPage();
+		}
+	}
 }
