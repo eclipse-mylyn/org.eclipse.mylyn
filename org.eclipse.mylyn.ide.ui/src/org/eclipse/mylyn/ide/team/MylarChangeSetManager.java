@@ -104,7 +104,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			// ignore
 		}
 
-		public void tasklistModified() {
+		public void taskListModified() {
 			// TODO Auto-generated method stub
 			
 		}
