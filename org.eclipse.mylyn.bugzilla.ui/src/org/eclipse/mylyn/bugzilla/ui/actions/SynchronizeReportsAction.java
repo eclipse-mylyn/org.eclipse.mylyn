@@ -41,9 +41,11 @@ import org.eclipse.ui.IViewPart;
  */
 public class SynchronizeReportsAction extends Action implements IViewActionDelegate {
 
+	private static final String LABEL_SYNCHRONIZE_JOB = "Bugzilla Query Refresh";
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.refresh.bugzilla";
 
-	private BugzillaQueryCategory cat = null;
+	private BugzillaQueryCategory categoryToSynchronize = null;
 
 	public SynchronizeReportsAction() {
 		setText("Refresh Refresh");
@@ -55,7 +57,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 	public SynchronizeReportsAction(BugzillaQueryCategory cat) {
 		this();
 		assert (cat != null);
-		this.cat = cat;
+		this.categoryToSynchronize = cat;
 	}
 
 	@Override
@@ -68,47 +70,14 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 			return;
 		}
 
-//		Object obj = cat;
-		if (cat == null && TaskListView.getDefault() != null) {
+		if (categoryToSynchronize != null) {
+			synchronizeCategory(categoryToSynchronize);
+		} else if (TaskListView.getDefault() != null) {
 			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 			for (Object obj : ((IStructuredSelection) selection).toList()) {
 				if (obj instanceof BugzillaQueryCategory) {
-					final BugzillaQueryCategory cat = (BugzillaQueryCategory) obj;
-					Job j = new Job("Bugzilla Category Refresh") {
-
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							cat.refreshBugs();
-							for (IQueryHit hit : cat.getHits()) {
-								if (hit.getCorrespondingTask() != null && hit instanceof BugzillaHit) {
-									BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
-											(BugzillaTask) hit.getCorrespondingTask());
-								}
-							}
-							Display.getDefault().asyncExec(new Runnable() {
-								public void run() {
-									if (TaskListView.getDefault() != null)
-										TaskListView.getDefault().getViewer().refresh();
-								}
-							});
-							return Status.OK_STATUS;
-						}
-
-					};
-
-					j.schedule();
-					// // Use the progess service to execute the runnable
-					// IProgressService service =
-					// PlatformUI.getWorkbench().getProgressService();
-					// try {
-					// service.run(true, false, op);
-					// } catch (InvocationTargetException e) {
-					// // Operation was canceled
-					// MylarPlugin.log(e, e.getMessage());
-					// } catch (InterruptedException e) {
-					// // Handle the wrapped exception
-					// MylarPlugin.log(e, e.getMessage());
-					// }
+					BugzillaQueryCategory currCategory = (BugzillaQueryCategory) obj;
+					synchronizeCategory(currCategory);
 				} else if (obj instanceof TaskCategory) {
 					TaskCategory cat = (TaskCategory) obj;
 					for (ITask task : cat.getChildren()) {
@@ -150,6 +119,32 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					TaskListView.getDefault().getViewer().refresh();
 			}
 		});
+	}
+
+	private void synchronizeCategory(final BugzillaQueryCategory cat) {
+		Job j = new Job(LABEL_SYNCHRONIZE_JOB) {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				cat.refreshBugs();
+				for (IQueryHit hit : cat.getHits()) {
+					if (hit.getCorrespondingTask() != null && hit instanceof BugzillaHit) {
+						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
+								(BugzillaTask) hit.getCorrespondingTask());
+					}
+				}
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (TaskListView.getDefault() != null)
+							TaskListView.getDefault().getViewer().refresh();
+					}
+				});
+				return Status.OK_STATUS;
+			}
+
+		};
+
+		j.schedule();
 	}
 
 	public void init(IViewPart view) {

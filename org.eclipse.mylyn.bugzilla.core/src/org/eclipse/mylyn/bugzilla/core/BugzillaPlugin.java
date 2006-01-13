@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugzilla.core;
 import java.io.IOException;
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,6 +29,7 @@ import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -42,6 +44,7 @@ import org.eclipse.mylar.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
+import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.swt.widgets.Display;
@@ -111,12 +114,48 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		readFavoritesFile();
 		readOfflineReportsFile();
 		
-		Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(REPOSITORY_KIND);
+		final Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(REPOSITORY_KIND);
 		for (TaskRepository repository : repositories) {
 			readCachedProductConfiguration(repository.getUrl().toExternalForm());
 		}
+		
+		migrateOldAuthenticationData();
 	}
 
+	@SuppressWarnings("unchecked")
+	private void migrateOldAuthenticationData() {
+		String serverUrl = BugzillaPlugin.getDefault().getPreferenceStore().getString("BUGZILLA_SERVER");
+		String user = "";
+		String password = "";
+		Map<String, String> map = Platform.getAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla", BugzillaPreferencePage.AUTH_SCHEME);
+		
+		// get the information from the map and save it
+		if (map != null && !map.isEmpty()) {
+			String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
+			if (username != null) user = username;
+			
+			String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
+			if (pwd != null) password = pwd;
+		}
+		
+		if (serverUrl != null && serverUrl.trim() != "") {
+			TaskRepository repository;
+			try {
+				repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(serverUrl));
+				repository.setAuthenticationCredentials(user, password);
+				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+			} catch (MalformedURLException e) {
+				MylarStatusHandler.fail(e, "could not create default repository", true);
+			}
+		}
+		try {
+			// reset the authorization
+			Platform.addAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla", BugzillaPreferencePage.AUTH_SCHEME, new HashMap<String, String>());
+		} catch (CoreException e) {
+			// ignore
+		}
+	}
+	
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -233,10 +272,10 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	
 	/**
 	 * Reads cached product configuration and stores it in the <code>productConfiguration</code> field.
+	 * 
+	 * TODO remove this?
 	 */
 	private void readCachedProductConfiguration(String serverUrl) {
-		// XXX: removed cached product configurations
-		
 		IPath configFile = getProductConfigurationCachePath(serverUrl);
 
 		try {

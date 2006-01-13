@@ -62,7 +62,7 @@ public class Task implements ITask {
 
 	protected String handle = "-1";
 	
-	protected String repositoryUrl = null;
+//	protected String repositoryUrl = null;
 
 	private boolean category = false;
 
@@ -123,7 +123,7 @@ public class Task implements ITask {
 		return handle;
 	}
 
-	public void setHandle(String id) {
+	public void setHandleIdentifier(String id) {
 		this.handle = id;
 	}
 
@@ -483,13 +483,13 @@ public class Task implements ITask {
 		return false;
 	}
 
-	public String getRepositoryUrl() {
-		return repositoryUrl;
-	}
-
-	public void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
-	}
+//	public String getRepositoryUrl() {
+//		return repositoryUrl;
+//	}
+//
+//	public void setRepositoryUrl(String repositoryUrl) {
+//		this.repositoryUrl = repositoryUrl;
+//	}
 
 	public TaskStatus getStatus() {
 		if (isCompleted()) {

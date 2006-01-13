@@ -56,9 +56,9 @@ public interface ITask extends ITaskListElement {
 
 	public abstract String getUrl();
 
-	public abstract String getRepositoryUrl();
+//	public abstract String getRepositoryUrl();
 
-	public abstract void setRepositoryUrl(String repositoryUrl);
+//	public abstract void setRepositoryUrl(String repositoryUrl);
 	
 	public abstract String getNotes();
 

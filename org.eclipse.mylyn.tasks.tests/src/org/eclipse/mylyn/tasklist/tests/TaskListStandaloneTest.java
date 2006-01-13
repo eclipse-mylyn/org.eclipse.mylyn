@@ -53,7 +53,8 @@ public class TaskListStandaloneTest extends TestCase {
 		file.deleteOnExit();
 		manager = new TaskListManager(writer, file, 1);
 		manager.readOrCreateTaskList();
-		assertEquals(0, manager.getTaskList().getRootTasks().size());
+		assertEquals("should be empty: " + manager.getTaskList().getRootTasks(), 
+				0, manager.getTaskList().getRootTasks().size());
 	}
 
 	@Override

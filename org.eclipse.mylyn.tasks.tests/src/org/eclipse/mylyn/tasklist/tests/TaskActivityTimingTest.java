@@ -10,7 +10,7 @@ import org.eclipse.mylar.tasklist.internal.TaskActivityTimer;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
 
 /**
- * @author Mik Kersten (rewrite)
+ * @author Mik Kersten
  */
 public class TaskActivityTimingTest extends TestCase {
 

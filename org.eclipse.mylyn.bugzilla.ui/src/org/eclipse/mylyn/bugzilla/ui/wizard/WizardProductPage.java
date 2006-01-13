@@ -130,7 +130,6 @@ public class WizardProductPage extends AbstractWizardListPage {
 			String repositoryUrl = bugWizard.getRepository().getUrl().toExternalForm();
 			try {
 //				ProductConfiguration productConfiguration = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl);
-//				System.err.println(">>>>> stored config: " + productConfiguration);
 				String[] storedProducts = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
 						repositoryUrl);
 				if (storedProducts.length > 0) {

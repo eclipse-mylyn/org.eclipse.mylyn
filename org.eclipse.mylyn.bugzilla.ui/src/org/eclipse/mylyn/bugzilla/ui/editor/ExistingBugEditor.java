@@ -139,14 +139,14 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof ExistingBugEditorInput))
 			throw new PartInitException("Invalid Input: Must be ExistingBugEditorInput");
-		ExistingBugEditorInput ei = (ExistingBugEditorInput) input;
-		repository = ei.getRepository();
+		ExistingBugEditorInput editorInput = (ExistingBugEditorInput) input;
+		repository = editorInput.getRepository();
 		
 		setSite(site);
 		setInput(input);
-		bugzillaInput = ei;
+		bugzillaInput = editorInput;
 		model = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
-		bug = ei.getBug();
+		bug = editorInput.getBug();
 		restoreBug();
 		isDirty = false;
 		updateEditorTitle();

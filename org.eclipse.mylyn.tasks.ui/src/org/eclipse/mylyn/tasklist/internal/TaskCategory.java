@@ -62,7 +62,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		this.description = description;
 	}
 
-	public void setHandle(String handle) {
+	public void setHandleIdentifier(String handle) {
 		this.handle = handle;
 	}
 

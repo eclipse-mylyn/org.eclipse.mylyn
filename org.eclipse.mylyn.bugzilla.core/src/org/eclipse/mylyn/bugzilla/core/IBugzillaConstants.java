@@ -41,8 +41,8 @@ public interface IBugzillaConstants {
 	
 	// Error code
 	static final int ERROR_CODE = 1;
-	
-	//	Bugzilla Preferences keys
+		
+//	Bugzilla Preferences keys
 //	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
 //	static final String BUGZILLA_SERVER = "BUGZILLA_SERVER";
 	static final String MOST_RECENT_QUERY = "org.eclipse.mylar.bugzilla.query.last";
@@ -88,4 +88,6 @@ public interface IBugzillaConstants {
 	static final String[] DEFAULT_COMPONENT_VALUES = { };
 	static final String[] DEFAULT_VERSION_VALUES = { };
 	static final String[] DEFAULT_TARGET_VALUES = { };
+
+	public static final String TITLE_MESSAGE_DIALOG = "Mylar Bugzilla Client";
 }

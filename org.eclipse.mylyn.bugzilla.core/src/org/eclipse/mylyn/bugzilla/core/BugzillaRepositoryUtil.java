@@ -39,6 +39,9 @@ import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaQueryPageParser;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten (some rewriting)
@@ -52,7 +55,7 @@ public class BugzillaRepositoryUtil {
 	private static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
 
 	private static final String POST_ARGS_LOGIN_FIRST = "?GoAheadAndLogIn=1&Bugzilla_login=";
-	
+
 	private static final String POST_ARGS_LOGIN = "&GoAheadAndLogIn=1&Bugzilla_login=";
 
 	public static BugReport getBug(String repositoryUrl, int id) throws IOException, MalformedURLException,
@@ -64,6 +67,15 @@ public class BugzillaRepositoryUtil {
 			// create a new input stream for getting the bug
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+			if (repository == null) {
+				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+					}
+				});
+				return null;
+			}
 
 			String url = repositoryUrl + POST_ARGS_SHOW_BUG + id;
 
@@ -81,9 +93,9 @@ public class BugzillaRepositoryUtil {
 					in = new BufferedReader(new InputStreamReader(input));
 
 					// get the actual bug fron the server and return it
-					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(),
-							BugzillaPlugin.getDefault().isServerCompatability218(), repository.getUserName(),
-							repository.getPassword(), connection.getContentType());
+					BugReport bug = BugParser.parseBug(in, id, repository.getUrl().toExternalForm(), BugzillaPlugin
+							.getDefault().isServerCompatability218(), repository.getUserName(), repository
+							.getPassword(), connection.getContentType());
 					return bug;
 				}
 			}
@@ -348,12 +360,12 @@ public class BugzillaRepositoryUtil {
 		// return the buffer converted to a string
 		return buffer.toString();
 	}
-	
+
 	public static String[] getQueryOptions(String prefId, String repositoryUrl) {
 		IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 		return convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY + repositoryUrl));
 	}
-	
+
 	private static String[] convertQueryOptionsToArray(String values) {
 		// create a new string buffer and array list
 		StringBuffer buffer = new StringBuffer();

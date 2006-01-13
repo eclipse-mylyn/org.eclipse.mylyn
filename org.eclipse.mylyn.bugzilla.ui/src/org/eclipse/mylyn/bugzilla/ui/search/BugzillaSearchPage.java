@@ -36,6 +36,7 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
@@ -758,8 +759,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				if (repository != null) {
 					updateAttributesFromRepository(repository.getUrl().toExternalForm(), true);
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
-						"No repository available, please add one.");
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+							TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 				}
 			}
 		});
@@ -780,8 +781,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	public boolean performAction() {
 		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
-					"No repository available, please add one.");
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return false;
 		}
 
@@ -874,8 +875,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				}
 				repositoryCombo.setItems(repositoryUrls);
 				if (repositoryUrls.length == 0) {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
-						"No repository available, please add one.");
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+							TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 				} else {
 					repositoryCombo.select(indexToSelect);
 					updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), false);

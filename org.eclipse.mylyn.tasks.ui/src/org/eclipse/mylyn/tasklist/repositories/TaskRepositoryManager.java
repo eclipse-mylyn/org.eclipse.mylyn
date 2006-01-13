@@ -24,6 +24,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
@@ -39,15 +40,17 @@ public class TaskRepositoryManager {
 
 	private Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
 
+	public static final String MESSAGE_NO_REPOSITORY = "No repository available, please add one using the Task Repositories view.";
+
 	public static final String PREFIX_LOCAL_OLD = "task-";
-	
+
 	public static final String PREFIX_LOCAL = "local-";
-	
+
 	public static final String HANDLE_DELIM = "-";
 
-
 	public static final String PREFIX_REPOSITORY_OLD = "Bugzilla";
-	public static final String MISSING_REPOSITORY_HANDLE = "unknown" + MylarContextManager.CONTEXT_HANDLE_DELIM;
+
+	public static final String MISSING_REPOSITORY_HANDLE = "norepository" + MylarContextManager.CONTEXT_HANDLE_DELIM;
 
 	private static final String PREF_STORE_DELIM = ", ";
 
@@ -122,6 +125,22 @@ public class TaskRepositoryManager {
 		return repositories;
 	}
 
+	public TaskRepository getRepositoryForActiveTask(String repositoryKind) {
+		List<ITask> activeTasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks();
+		if (activeTasks.size() == 1) {
+			ITask activeTask = activeTasks.get(0);
+			if (!activeTask.isLocal()) {
+				String repositoryUrl = getRepositoryUrl(activeTask.getHandleIdentifier());
+				for (TaskRepository repository : getRepositories(repositoryKind)) {
+					if (repository.getUrl().toExternalForm().equals(repositoryUrl)) {
+						return repository;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
 	@Deprecated
 	public TaskRepository getDefaultRepository(String kind) {
 		// HACK: returns first repository found
@@ -153,7 +172,7 @@ public class TaskRepositoryManager {
 		}
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
-		} 
+		}
 		return repositoryMap;
 	}
 
@@ -217,7 +236,8 @@ public class TaskRepositoryManager {
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY_HANDLE + taskId;
 		} else {
-//			System.err.println(">> handle: " + repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
+			// MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
+			// System.err.println(">> handle: " + repositoryUrl +
 			return repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId;
 		}
 	}

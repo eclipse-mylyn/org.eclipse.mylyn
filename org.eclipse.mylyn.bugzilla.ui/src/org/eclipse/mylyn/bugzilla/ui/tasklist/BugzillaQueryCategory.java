@@ -31,7 +31,6 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -43,6 +42,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Shawn Minto
@@ -151,7 +151,14 @@ public class BugzillaQueryCategory implements ITaskQuery {
 
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 		if (repository == null) {
-			MylarStatusHandler.fail(null, "could not find repository for url: " + repositoryUrl, true);
+            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+                public void run() {
+                	MessageDialog.openInformation(
+        					Display.getDefault().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+        					"No task repository associated with this query. Open the query to associate it with a repository.");  
+                }
+            });
+//			MylarStatusHandler.fail(null, "could not find repository for url: " + repositoryUrl, true);
 		} else {
 			final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(
 					repository, getQueryUrl(), maxHits);
@@ -277,7 +284,7 @@ public class BugzillaQueryCategory implements ITaskQuery {
 		return getDescription(true);
 	}
 
-	public void setHandle(String id) {
+	public void setHandleIdentifier(String id) {
 		this.handle = id;
 	}
 

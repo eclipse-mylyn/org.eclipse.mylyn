@@ -184,7 +184,7 @@ public class BugzillaHit implements IQueryHit {
 		return getId() + "";
 	}
 
-	public void setHandle(String id) {
+	public void setHandleIdentifier(String id) {
 		// can't change the handle
 	}
 

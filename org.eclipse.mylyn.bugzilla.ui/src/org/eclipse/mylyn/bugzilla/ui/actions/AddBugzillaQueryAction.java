@@ -26,6 +26,7 @@ import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -52,10 +53,10 @@ public class AddBugzillaQueryAction extends Action implements IViewActionDelegat
     public void run() {
     	BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell());
     	if(queryDialog.open() == Dialog.OK){
-    		TaskRepository repository = queryDialog.getTaskRepository();
+    		TaskRepository repository = queryDialog.getRepository();
     		if (repository == null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
-						"No repository available, please add one.");
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylar Bugzilla Client",
+						TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 				return;
     		}    		
     		

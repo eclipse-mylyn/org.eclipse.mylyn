@@ -23,9 +23,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -181,13 +183,13 @@ public class BugzillaQueryDialog extends Dialog {
 	protected void okPressed() {
 		TaskRepository repository = searchOptionPage.getRepository();
 		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
-					"No repository available, please add one.");
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return;
 		}
 		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Bugzilla Client Information",
-					"No repository available, please add one.");
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return;
 		}
 
@@ -266,6 +268,9 @@ public class BugzillaQueryDialog extends Dialog {
 			};
 		}
 
+		/** 
+		 * TODO: get rid of this?
+		 */
 		public void updateDefaults(String startingUrl, String maxHits) throws UnsupportedEncodingException {
 			// String serverName = startingUrl.substring(0,
 			// startingUrl.indexOf("?"));
@@ -480,7 +485,7 @@ public class BugzillaQueryDialog extends Dialog {
 		}
 	}
 
-	public TaskRepository getTaskRepository() {
+	public TaskRepository getRepository() {
 		return searchOptionPage.getRepository();
 	}
 }

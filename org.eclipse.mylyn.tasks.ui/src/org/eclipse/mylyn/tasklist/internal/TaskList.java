@@ -15,12 +15,14 @@ package org.eclipse.mylar.tasklist.internal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
@@ -215,6 +217,15 @@ public class TaskList implements Serializable {
 		return roots;
 	}
 
+	public Set<ITask> getAllTasks() {
+		Set<ITask> allTasks = new HashSet<ITask>();
+		allTasks.addAll(rootTasks);
+		for (ITaskCategory cat : categories) {
+			allTasks.addAll(cat.getChildren());
+		}
+		return allTasks;
+	}
+	
 	public List<TaskCategory> getTaskCategories() {
 		List<TaskCategory> cats = new ArrayList<TaskCategory>();
 		for (ITaskCategory cat : categories) {

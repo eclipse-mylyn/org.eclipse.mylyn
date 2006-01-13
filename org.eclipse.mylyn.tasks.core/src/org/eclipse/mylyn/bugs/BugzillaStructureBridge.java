@@ -84,7 +84,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 		result = null;
 
 		// HACK: determine appropriate repository
-		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(BugzillaPlugin.REPOSITORY_KIND);
 		
 		String[] parts = handle.split(";");
 		if (parts.length >= 2) {

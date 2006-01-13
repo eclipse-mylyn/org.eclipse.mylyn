@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * TODO: refactor UI stuff out?
  * 
- * @author Ken Sueda
+ * @author Mik Kersten
  */
 public interface ITaskListElement {
 	
@@ -36,13 +36,11 @@ public interface ITaskListElement {
     
     public abstract String getHandleIdentifier();
     
-    public abstract void setHandle(String id);
+    public abstract void setHandleIdentifier(String id);
 	
     public abstract boolean isLocal();
     
     public abstract boolean isActivatable();
-
-//	public abstract Color getForeground();
 
 	public abstract Font getFont();
 	
@@ -50,3 +48,5 @@ public interface ITaskListElement {
 	
 	public abstract String getStringForSortingDescription();
 }
+
+//public abstract Color getForeground();

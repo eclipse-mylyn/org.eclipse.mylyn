@@ -144,7 +144,8 @@ public class BugzillaTask extends Task {
 
 	private void initFromHandle() {
 		int id = TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier());
-		repositoryUrl = TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
+		String repositoryUrl = getRepositoryUrl();
+//		repositoryUrl = TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
 //		System.err.println(">>> handle: " + getHandleIdentifier());
 		if (repositoryUrl != null) {
 			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
@@ -256,7 +257,7 @@ public class BugzillaTask extends Task {
 						+ " due to bugzilla core not existing", this);
 				return null;
 			}
-			return BugzillaRepositoryUtil.getBug(repositoryUrl, TaskRepositoryManager
+			return BugzillaRepositoryUtil.getBug(getRepositoryUrl(), TaskRepositoryManager
 					.getTaskIdAsInt(getHandleIdentifier()));
 		} catch (LoginException e) {
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
@@ -579,12 +580,16 @@ public class BugzillaTask extends Task {
 		}
 	}
 
+	public String getRepositoryUrl() {
+		return TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
+	}
+	
 	@Override
 	public String getUrl() {
 		// fix for bug 103537 - should login automatically, but dont want to
 		// show the login info in the query string
 		return BugzillaRepositoryUtil
-				.getBugUrlWithoutLogin(repositoryUrl, TaskRepositoryManager.getTaskIdAsInt(handle));
+				.getBugUrlWithoutLogin(getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(handle));
 	}
 
 	@Override

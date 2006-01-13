@@ -90,20 +90,22 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			}
 		} else if (element instanceof BugzillaQueryCategory) {
 			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory) element;
-			BugzillaQueryDialog sqd = new BugzillaQueryDialog(
+			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(
 					Display.getCurrent().getActiveShell(), 
 					queryCategory.getRepositoryUrl(),
 					queryCategory.getQueryUrl(), queryCategory.getDescription(false), queryCategory.getMaxHits() + "");
-			if (sqd.open() == Dialog.OK) {
-				queryCategory.setDescription(sqd.getName());
-				queryCategory.setQueryUrl(sqd.getUrl());
+			if (queryDialog.open() == Dialog.OK) {
+				queryCategory.setDescription(queryDialog.getName());
+				queryCategory.setQueryUrl(queryDialog.getUrl());
+				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl().toExternalForm());
 				int maxHits = -1;
 				try {
-					maxHits = Integer.parseInt(sqd.getMaxHits());
+					maxHits = Integer.parseInt(queryDialog.getMaxHits());
 				} catch (Exception e) {
 				}
 				queryCategory.setMaxHits(maxHits);
 
+				System.err.println(">>> syncrhonizing");
 				new SynchronizeReportsAction(queryCategory).run();
 			}
 		} else if (element instanceof BugzillaHit) {

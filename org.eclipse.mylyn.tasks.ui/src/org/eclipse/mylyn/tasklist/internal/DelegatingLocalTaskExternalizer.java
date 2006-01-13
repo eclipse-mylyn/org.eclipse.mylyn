@@ -162,9 +162,9 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		if (task.getUrl() != null) {
 			node.setAttribute(ISSUEURL, task.getUrl());
 		}
-		if (task.getRepositoryUrl() != null) {
-			node.setAttribute(REPOSITORY_URL, task.getRepositoryUrl());
-		}
+//		if (task.getRepositoryUrl() != null) {
+//			node.setAttribute(REPOSITORY_URL, task.getRepositoryUrl());
+//		}
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, "" + task.getElapsedTime());
 		node.setAttribute(ESTIMATED, "" + task.getEstimateTimeHours());
