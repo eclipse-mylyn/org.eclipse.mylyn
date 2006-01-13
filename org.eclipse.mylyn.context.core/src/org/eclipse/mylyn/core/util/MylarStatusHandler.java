@@ -82,7 +82,8 @@ public class MylarStatusHandler {
 	}
 
 	public static void log(String message, Object source) {
-		if (source != null)
+		message = "Mylar: " + message;
+		if (source != null) 
 			message += ", source: " + source.getClass().getName();
 	
 		log(new Status(IStatus.INFO, MylarPlugin.PLUGIN_ID, IStatus.OK, message, null));

@@ -439,6 +439,7 @@ public class MylarContextManager {
 	public boolean hasContext(String path) {
 //		System.err.println(">>>> " + path);
 		File contextFile = getFileForContext(path);
+//		System.err.println(">>>> " + contextFile.getAbsolutePath());
 		return contextFile.exists() && contextFile.length() > 0;
 	}
 
@@ -546,7 +547,6 @@ public class MylarContextManager {
 			encoded = URLEncoder.encode(handleIdentifier, CONTEXT_FILENAME_ENCODING);
 			String dataDirectory = MylarPlugin.getDefault().getDataDirectory();
 			File contextFile = new File(dataDirectory + File.separator + encoded + CONTEXT_FILE_EXTENSION);
-//			System.err.println(">>>>>> " + contextFile.getAbsolutePath());
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
 			MylarStatusHandler.fail(e, "Could not determine path for context", false);
