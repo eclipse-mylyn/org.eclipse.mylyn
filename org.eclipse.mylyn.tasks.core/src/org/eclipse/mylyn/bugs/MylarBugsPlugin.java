@@ -54,8 +54,8 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(new Runnable() {
             public void run() {
-            	bugzillaEditingMonitor = new BugzillaEditingMonitor();
-            	MylarPlugin.getDefault().getSelectionMonitors().add(bugzillaEditingMonitor);   
+//            	bugzillaEditingMonitor = new BugzillaEditingMonitor();
+//            	MylarPlugin.getDefault().getSelectionMonitors().add(bugzillaEditingMonitor);   
             }
         });
 	}
@@ -66,13 +66,7 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-		MylarPlugin.getDefault().getSelectionMonitors().remove(bugzillaEditingMonitor); 
-//        List<AbstractRelationProvider> providers = structureBridge.getProviders();
-//        if(providers != null){
-//	        for(AbstractRelationProvider provider: providers){
-//	        	provider.stopAllRunningJobs();
-//	        }
-//        }
+//		MylarPlugin.getDefault().getSelectionMonitors().remove(bugzillaEditingMonitor); 
 	}
 
 	/**
