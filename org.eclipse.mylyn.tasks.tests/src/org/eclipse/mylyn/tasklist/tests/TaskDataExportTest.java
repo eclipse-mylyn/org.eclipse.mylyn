@@ -1,7 +1,11 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContext;
@@ -11,6 +15,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.tasklist.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.swt.widgets.Shell;
@@ -35,9 +40,22 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private MylarContext mockContext;
 
+	private TaskRepository repository;
+	
+	public TaskDataExportTest() {
+		try {
+			repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
+		} catch (MalformedURLException e) {
+			fail();
+			e.printStackTrace();
+		}
+	}
+	
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+		
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
 		wizard.addPages();
@@ -74,6 +92,8 @@ public class TaskDataExportTest extends AbstractContextTest {
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
 		MylarPlugin.getContextManager().contextDeactivated(mockContext.getId());
+		
+		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 		super.tearDown();
 	}
 
