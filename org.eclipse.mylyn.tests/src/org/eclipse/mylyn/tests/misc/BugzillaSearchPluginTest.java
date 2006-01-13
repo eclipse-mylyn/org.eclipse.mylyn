@@ -13,6 +13,7 @@
  */
 package org.eclipse.mylar.tests.misc;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.bugs.MylarBugsPlugin;
 import org.eclipse.mylar.bugs.search.BugzillaMylarSearch;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
@@ -32,6 +34,7 @@ import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
+import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 /*TEST CASES TO HANDLE
  * 1. what is here
@@ -53,6 +56,8 @@ import org.eclipse.mylar.tasklist.internal.TaskListManager;
  */
 public class BugzillaSearchPluginTest extends TestCase {
 	    
+	private TaskRepository repository;
+	
 	//SHAWNTODO Add tests for the different types of searches (local qual, local unqual, fully qual, unqual) and mock up a bugs db for testing
 	 
     /** The expected number of results when searching for astNode */
@@ -69,6 +74,9 @@ public class BugzillaSearchPluginTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
     	WorkspaceSetupHelper.setupWorkspace();
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
+		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+    	
     	IJavaProject jp = WorkspaceSetupHelper.getJdtCoreDomProject();
     	astNodeType = WorkspaceSetupHelper.getType(jp, "org.eclipse.jdt.core.dom.ASTNode");
     }
@@ -76,6 +84,7 @@ public class BugzillaSearchPluginTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
     	WorkspaceSetupHelper.clearDoiModel();
+    	MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
     }
     
     /**
