@@ -27,7 +27,7 @@ public interface IBugzillaBug extends Serializable {
 	/**
 	 * @return the server for this bug.
 	 */
-	public String getServer();
+	public String getRepository();
 	
 	/**
 	 * @return the title label for this bug.

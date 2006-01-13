@@ -71,7 +71,7 @@ public class BugzillaTaskListManager implements IOfflineBugListener {
 			return;
 		}
 		
-		String handle = TaskRepositoryManager.getHandle(bug.getServer(), bug.getId());
+		String handle = TaskRepositoryManager.getHandle(bug.getRepository(), bug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
 		if(task != null && task instanceof BugzillaTask){
 			BugzillaTask bugTask = (BugzillaTask) task;

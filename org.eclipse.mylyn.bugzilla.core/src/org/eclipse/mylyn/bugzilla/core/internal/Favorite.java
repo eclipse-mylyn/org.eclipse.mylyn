@@ -46,7 +46,7 @@ public class Favorite implements Serializable {
 	 *            The bug this favorite represents.
 	 */
 	public Favorite(BugReport bug) {
-		this(bug.getServer(), bug.getId(), bug.getSummary(), "", BugzillaSearchResultCollector.getAttributeMap(bug));
+		this(bug.getRepository(), bug.getId(), bug.getSummary(), "", BugzillaSearchResultCollector.getAttributeMap(bug));
 	}
 	
 	/**

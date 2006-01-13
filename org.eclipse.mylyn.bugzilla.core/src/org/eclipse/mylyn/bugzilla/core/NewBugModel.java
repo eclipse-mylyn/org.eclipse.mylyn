@@ -97,7 +97,7 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 		return id;
 	}
 
-	public String getServer() {
+	public String getRepository() {
 		return BugzillaTools.OFFLINE_SERVER_DEFAULT;
 	}
 	

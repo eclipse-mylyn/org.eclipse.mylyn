@@ -26,8 +26,6 @@ import org.eclipse.mylar.bugzilla.core.internal.Favorite;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.FavoritesView;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 
 
 /**
@@ -90,6 +88,8 @@ public class AddFavoriteAction extends AbstractFavoritesAction {
 				{
 					// try to get the attribute for the marker
 					Integer attributeId = (Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
+					String repositoryUrl = (String) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
+					
 					// add the selected item to the list of items that are selected
 					String description = (String) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC);
 					String query = (String) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_QUERY);
@@ -97,14 +97,13 @@ public class AddFavoriteAction extends AbstractFavoritesAction {
 					// create a map to add attributes to so that the favorites file can sort
 					HashMap<String, Object> attributes = new HashMap<String, Object>();
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_ID, attributeId);
+					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, repositoryUrl);
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY, marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY));
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY, marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY));
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_STATE, marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE));
 					attributes.put(IBugzillaConstants.HIT_MARKER_ATTR_RESULT, marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT));
-										
 
-					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-					Favorite favorite = new Favorite(repository.getUrl().toExternalForm(), attributeId.intValue(), description, query, attributes);
+					Favorite favorite = new Favorite(repositoryUrl, attributeId.intValue(), description, query, attributes);
 					selected.add(favorite);
 				}
 				catch (CoreException ignored) 

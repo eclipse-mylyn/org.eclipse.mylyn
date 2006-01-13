@@ -50,7 +50,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	protected ITask task;
 
-	private TaskInfoEditor taskSummaryEditor;
+	private TaskInfoEditor taskInfoEditor;
 
 	private Browser webBrowser;
 
@@ -95,7 +95,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		IWorkbenchPage activePage = window.getActivePage();
 		TaskEditorListener listener = new TaskEditorListener();
 		activePage.addPartListener(listener);
-		taskSummaryEditor = new TaskInfoEditor();
+		taskInfoEditor = new TaskInfoEditor();
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				createTaskIssueWebPage();
 			}
 			for (IContextEditorFactory factory : MylarTaskListPlugin.getDefault().getContextEditors()) {
-				taskSummaryEditor.setParentEditor(this);
+				taskInfoEditor.setParentEditor(this);
 				IEditorPart editor = factory.createEditor();
 				editorsToNotifyOnChange.add(editor);
 				index = addPage(editor, factory.createEditorInput(MylarPlugin.getContextManager().getActiveContext()));
@@ -123,9 +123,9 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	private int createTaskSummaryPage() throws PartInitException {
 		try {
-			taskSummaryEditor.createPartControl(getContainer());
-			taskSummaryEditor.setParentEditor(this);
-			int index = addPage(taskSummaryEditor.getControl());
+			taskInfoEditor.createPartControl(getContainer());
+			taskInfoEditor.setParentEditor(this);
+			int index = addPage(taskInfoEditor.getControl());
 			setPageText(index, TASK_INFO_PAGE_LABEL);
 			return index;
 		} catch (RuntimeException e) {
@@ -157,7 +157,11 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		taskSummaryEditor.doSave(monitor);
+		if (!taskInfoEditor.getControl().isDisposed()) {
+			taskInfoEditor.doSave(monitor);
+		} else {
+			MylarStatusHandler.log("attempted to save disposed editor: " + taskInfoEditor, this);
+		}
 		if (webBrowser != null) {
 			webBrowser.setUrl(task.getUrl());
 		} else if (task.getUrl().length() > 9) {
@@ -196,8 +200,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		 */
 		task = taskEditorInput.getTask();
 		try {
-			taskSummaryEditor.init(this.getEditorSite(), this.getEditorInput());
-			taskSummaryEditor.setTask(task);
+			taskInfoEditor.init(this.getEditorSite(), this.getEditorInput());
+			taskInfoEditor.setTask(task);
 			// Set the title on the editor's tab
 			this.setPartName(taskEditorInput.getLabel());
 		} catch (Exception e) {
@@ -212,7 +216,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public boolean isDirty() {
-		return taskSummaryEditor.isDirty();
+		return taskInfoEditor.isDirty();
 	}
 
 	private static class TaskEditorListener implements IPartListener {
@@ -267,7 +271,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	
 	@Override
 	public void setFocus() {
-		// taskSummaryEditor.setFocus();
+		// taskInfoEditor.setFocus();
 	}
 
 	public Browser getWebBrowser() {
@@ -288,7 +292,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		for(IEditorPart part : editorsToNotifyOnChange) {
 			part.dispose();
 		}
-		if(taskSummaryEditor != null) taskSummaryEditor.dispose();
+		if(taskInfoEditor != null) taskInfoEditor.dispose();
 		if(webBrowser!= null) webBrowser.dispose();		
 		
 	}

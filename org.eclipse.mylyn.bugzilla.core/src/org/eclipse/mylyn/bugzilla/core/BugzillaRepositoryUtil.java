@@ -52,7 +52,7 @@ public class BugzillaRepositoryUtil {
 
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
-	private static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
+	public static final String POST_ARGS_SHOW_BUG = "/show_bug.cgi?id=";
 
 	private static final String POST_ARGS_LOGIN_FIRST = "?GoAheadAndLogIn=1&Bugzilla_login=";
 

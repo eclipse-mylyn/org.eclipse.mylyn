@@ -76,7 +76,7 @@ public class BugzillaSearchHit
 	 * Get the bugs server
 	 * @return The server the bug resides on
 	 */
-	public String getServer() 
+	public String getRepository() 
 	{
 		return server;
 	}

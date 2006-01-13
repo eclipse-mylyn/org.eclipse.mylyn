@@ -34,8 +34,6 @@ import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.actions.AddFavoriteAction;
 import org.eclipse.mylar.bugzilla.ui.actions.BugzillaSortAction;
 import org.eclipse.mylar.bugzilla.ui.actions.OpenBugsAction;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.internal.ui.SearchPreferencePage;
@@ -195,9 +193,10 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 		try {
 			Object element = getCurrentMatch().getElement();
 			if (element instanceof IMarker) {
+				
+				String repositoryUrl = (String)((IMarker)element).getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
 				Integer id = (Integer) ((IMarker)element).getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
-				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-				BugzillaUITools.show(repository.getUrl().toExternalForm(), id.intValue());
+				BugzillaUITools.show(repositoryUrl, id.intValue());
 			}
 		}
 		catch (CoreException e) {

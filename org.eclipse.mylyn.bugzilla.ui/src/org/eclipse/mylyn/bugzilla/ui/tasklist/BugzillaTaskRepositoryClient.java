@@ -12,6 +12,7 @@
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
 
@@ -19,8 +20,6 @@ import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
  * @author Mik Kersten
  */
 public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
-
-	public static final String KIND = "bugzilla";
 	
 	public String getLabel() {
 		return "Bugzilla (supports uncustomized 2.16-2.20)";
@@ -35,7 +34,7 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 	}
 
 	public String getKind() {
-		return KIND;
+		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
 }

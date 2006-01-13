@@ -111,7 +111,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 		return id;
 	}
 
-	public String getServer() {
+	public String getRepository() {
 		return repositoryUrl;
 	}
 

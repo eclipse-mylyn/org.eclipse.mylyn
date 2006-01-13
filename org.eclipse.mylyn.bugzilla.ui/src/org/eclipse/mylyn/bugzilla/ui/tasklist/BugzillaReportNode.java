@@ -110,7 +110,7 @@ public class BugzillaReportNode {
 	public BugReport getBug() throws MalformedURLException, LoginException, IOException {
 		if (bug == null) {
 			// get the bug report
-			bug = BugzillaRepositoryUtil.getBug(hit.getServer(), hit.getId());
+			bug = BugzillaRepositoryUtil.getBug(hit.getRepository(), hit.getId());
 		}
 		return bug;
 	}
@@ -179,6 +179,6 @@ public class BugzillaReportNode {
 	}
 
 	public String getElementHandle() {
-		return hit.getServer() + ";" + hit.getId();
+		return hit.getRepository() + ";" + hit.getId();
 	}
 }

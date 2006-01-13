@@ -208,7 +208,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 */
 	protected static BugzillaOutlineNode parseBugReport(NewBugModel bug) {
 		int bugId = bug.getId();
-		String bugServer = bug.getServer();
+		String bugServer = bug.getRepository();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
 		Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
 		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());
@@ -233,7 +233,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	protected static BugzillaOutlineNode parseBugReport(BugReport bug) {
 
 		int bugId = bug.getId();
-		String bugServer = bug.getServer();
+		String bugServer = bug.getRepository();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
 		Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
 		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());

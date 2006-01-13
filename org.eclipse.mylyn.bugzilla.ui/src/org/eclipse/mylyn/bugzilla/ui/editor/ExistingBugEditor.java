@@ -443,7 +443,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null) {
-							String handle = TaskRepositoryManager.getHandle(bug.getServer(), bug.getId());
+							String handle = TaskRepositoryManager.getHandle(bug.getRepository(), bug.getId());
 							ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 							if (task instanceof BugzillaTask) {
 								BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
@@ -733,7 +733,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		protected IStatus run(IProgressMonitor monitor) {
 			final BugReport serverBug;
 			try {
-				serverBug = BugzillaRepositoryUtil.getBug(bug.getServer(), bug.getId());
+				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepository(), bug.getId());
 				// If no bug was found on the server, throw an exception so that the
 				// user gets the same message that appears when there is a problem reading the server.
 				if (serverBug == null)
@@ -809,7 +809,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(),
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
 					"Description", true, bug.getSummary()))));
 		}
 	}
@@ -831,7 +831,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		}
 
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(),
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
 					comment.getCreated().toString(), comment, bug.getSummary()))));
 		}
 	}
@@ -842,7 +842,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	 */
 	protected class NewCommentListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(),
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
 					"New Comment", false, bug.getSummary()))));
 		}
 	}

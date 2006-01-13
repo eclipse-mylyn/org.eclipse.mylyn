@@ -62,7 +62,7 @@ public class ViewOfflineReportAction extends AbstractOfflineReportsAction {
 				IBugzillaBug bug = it.next();
 				if (bug instanceof BugReport) {
 					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
-							BugzillaPlugin.REPOSITORY_KIND, bug.getServer());
+							BugzillaPlugin.REPOSITORY_KIND, bug.getRepository());
 					if (repository != null) {
 						ExistingBugEditorInput editorInput = new ExistingBugEditorInput((BugReport)bug);
 						try {

@@ -28,6 +28,7 @@ public interface IBugzillaConstants {
 	
 	// The is's for hit markers used in the label provider and sorters
 	static final String HIT_MARKER_ATTR_ID = "id";
+	static final String HIT_MARKER_ATTR_REPOSITORY = "repository";
 	static final String HIT_MARKER_ATTR_HREF = "href";
 	static final String HIT_MARKER_ATTR_DESC = "description";
 	static final String HIT_MARKER_ATTR_LABEL = "label";

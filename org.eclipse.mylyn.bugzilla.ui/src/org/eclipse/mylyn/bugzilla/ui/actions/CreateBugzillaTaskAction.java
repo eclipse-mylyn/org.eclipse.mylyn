@@ -33,7 +33,7 @@ import org.eclipse.ui.IViewPart;
  * @author Mik Kersten
  * @author Ken Sueda
  */
-public class CreateBugzillaTaskAction extends Action implements IViewActionDelegate{
+public class CreateBugzillaTaskAction extends Action implements IViewActionDelegate {
 	
 	private static final String LABEL = "Add Existing Bugzilla Report";
 

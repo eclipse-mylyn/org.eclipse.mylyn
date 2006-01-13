@@ -21,8 +21,6 @@ import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
 
@@ -61,9 +59,9 @@ public class OpenBugsAction extends Action {
 				IMarker marker = it.next();
 				try {
 
-					TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+					String repositoryUrl = (String) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
 					Integer id = (Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
-					BugzillaUITools.show(repository.getUrl().toExternalForm(), id.intValue());
+					BugzillaUITools.show(repositoryUrl, id.intValue());
 				}
 				catch (CoreException e) {
 					// if an error occurs, handle and log it

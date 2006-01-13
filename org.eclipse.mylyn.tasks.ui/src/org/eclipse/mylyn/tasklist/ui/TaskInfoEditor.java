@@ -754,4 +754,10 @@ public class TaskInfoEditor extends EditorPart {
 		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_LIST_LISTENER);
 	}
 
+	@Override
+	public String toString() {
+		return "(info editor for task: " + task + ")";
+	}
+
+	
 }

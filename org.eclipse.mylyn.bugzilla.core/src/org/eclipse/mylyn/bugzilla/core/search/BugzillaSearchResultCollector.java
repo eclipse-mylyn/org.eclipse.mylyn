@@ -92,6 +92,8 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	{
 		// set the markers to have the bugs attributes
 		IMarker marker = resource.createMarker(IBugzillaConstants.HIT_MARKER_ID);
+		
+		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, hit.getRepository());
 		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID, new Integer(hit.getId()));
 		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC, hit.getDescription());
 		marker.setAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY, mapValue(hit.getSeverity(), severity));
@@ -125,6 +127,7 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	public static Map<String, Object> getAttributeMap(BugReport bug) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_ID, new Integer(bug.getId()));
+		map.put(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, bug.getRepository());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_DESC, bug.getDescription());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY, mapValue(bug.getAttribute("Severity").getValue(), severity));
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY, mapValue(bug.getAttribute("Priority").getValue(), priority));

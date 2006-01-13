@@ -1127,7 +1127,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				}
 
 				public void mouseDown(MouseEvent e) {
-					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil.getBugUrlWithoutLogin(bugzillaInput.getBug().getServer(), bugzillaInput.getBug().getId()));
+					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil.getBugUrlWithoutLogin(bugzillaInput.getBug().getRepository(), bugzillaInput.getBug().getId()));
 					if (e.stateMask == SWT.MOD3) {
 						// XXX come back to look at this ui
 						close();
@@ -1403,7 +1403,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected class GenericListener implements Listener {
 		public void handleEvent(Event event) {
 			IBugzillaBug bug = getBug();
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getServer(),
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
 					bug.getLabel(), false, bug.getSummary()))));
 		}
 	}

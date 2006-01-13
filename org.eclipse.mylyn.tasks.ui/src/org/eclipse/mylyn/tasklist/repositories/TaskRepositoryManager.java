@@ -141,7 +141,6 @@ public class TaskRepositoryManager {
 		return null;
 	}
 	
-	@Deprecated
 	public TaskRepository getDefaultRepository(String kind) {
 		// HACK: returns first repository found
 		if (repositoryMap.containsKey(kind)) {
