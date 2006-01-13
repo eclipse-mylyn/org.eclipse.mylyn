@@ -102,7 +102,6 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	}
 
 	private boolean keyboardInteractionAccepted(KeyEvent event) {
-		System.err.println(">>> " + event);
 		return event.keyCode == SWT.ARROW_RIGHT;
 	}
 	
