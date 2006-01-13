@@ -437,9 +437,7 @@ public class MylarContextManager {
 	 * Could load in the context and inspect it, but this is cheaper.
 	 */
 	public boolean hasContext(String path) {
-//		System.err.println(">>>> " + path);
 		File contextFile = getFileForContext(path);
-//		System.err.println(">>>> " + contextFile.getAbsolutePath());
 		return contextFile.exists() && contextFile.length() > 0;
 	}
 
