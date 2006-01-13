@@ -57,6 +57,7 @@ public class TaskListManager {
 	
 	public TaskList createNewTaskList() {
 		taskList = new TaskList();
+		taskListInitialized = true;
 		return taskList;
 	}
 
