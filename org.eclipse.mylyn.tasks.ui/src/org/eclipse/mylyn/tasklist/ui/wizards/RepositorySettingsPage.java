@@ -52,7 +52,7 @@ public class RepositorySettingsPage extends WizardPage {
 	private RepositoryStringFieldEditor passwordEditor;
 	
 	private TaskRepository repository;
-	
+		
 	public RepositorySettingsPage() {
 		super(LABEL);
 		super.setTitle(TITLE);
@@ -152,6 +152,32 @@ public class RepositorySettingsPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
+//		String urlString = serverUrlEditor.getStringValue();
+//		try {
+//			URL serverURL = new URL(urlString);// + "/show_bug.cgi");
+//			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
+//			if (cntx == null || !(cntx instanceof HttpURLConnection))
+//				return false;
+//
+//			HttpURLConnection serverConnection = (HttpURLConnection) cntx;
+//
+//			serverConnection.connect();
+//
+//			int responseCode = serverConnection.getResponseCode();
+//
+//			if (responseCode != HttpURLConnection.HTTP_OK) {
+//				if (!MessageDialog.openQuestion(null, "Mylar Task Repositories", 
+//						"Error validating server.\n\n"
+//						+ "\n\nKeep specified server location anyway?")) {
+//					return false;
+//				}
+//			}
+//		} catch (Exception e) {
+//			if (!MessageDialog.openQuestion(null, "Bugzilla Server Error", "Error validating Bugzilla Server.\n\n"
+//					+ e.getMessage() + "\n\nKeep specified server location anyway?")) {
+//				return false;
+//			}
+//		}
 		return isValidUrl(serverUrlEditor.getStringValue());
 	}
 

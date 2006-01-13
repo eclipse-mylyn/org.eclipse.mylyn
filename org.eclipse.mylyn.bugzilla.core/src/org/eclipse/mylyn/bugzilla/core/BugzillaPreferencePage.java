@@ -32,31 +32,9 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class BugzillaPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-//	private static final String LABEL_WARNING = "Note: do not include index.cgi in URL (e.g. use https://bugs.eclipse.org/bugs)";
-
-//	/** Secure http server prefix */
-//	private static final String httpsPrefix = "https://";
-//
-//	/** http prefix */
-//	private static final String httpPrefix = "http://";
-
-	/** The text to put into the label for the bugzilla server text box */
-//	private static final String bugzillaServerLabel = "Bugzilla Server: ";
-
-	/** Field editor for the bugzilla server in the preferences page */
-//	private StringFieldEditor bugzillaServer;
-
-//	private static final String bugzillaUserLabel = "Bugzilla User Name: ";
-
-//	private static final String bugzillaPasswordLabel = "Bugzilla Password: ";
-
 	private RadioGroupFieldEditor bugzillaVersionEditor;
 
 	private static final String bugzillaMaxResultsLabel = "Maximum returned results: ";
-
-//	private StringFieldEditor bugzillaUser;
-//
-//	private MyStringFieldEditor bugzillaPassword;
 
 	private IntegerFieldEditor maxResults;
 
@@ -74,12 +52,6 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 
 	@Override
 	protected Control createContents(Composite parent) {
-//		Composite container = new Composite(parent, SWT.NULL);
-//		GridLayout layout = new GridLayout(1, false);
-//		container.setLayout (layout);
-//		Label label = new Label(parent, SWT.NULL);
-//		label.setText(LABEL_WARNING);
-
 		return super.createContents(parent);
 	}
 
@@ -103,23 +75,6 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 
 	@Override
 	protected void createFieldEditors() {
-		// create a new field editor for the bugzilla server
-//		bugzillaServer = new StringFieldEditor(IBugzillaConstants.BUGZILLA_SERVER, bugzillaServerLabel,
-//				StringFieldEditor.UNLIMITED, getFieldEditorParent()) {
-//
-//			@Override
-//			protected boolean doCheckState() {
-//				return checkServerName(getStringValue());
-//			}
-//		};
-//
-//		// set the error message for if the server name check fails
-//		bugzillaServer.setErrorMessage("Server path must be a valid http(s):// url");
-
-//		bugzillaUser = new StringFieldEditor("", bugzillaUserLabel, StringFieldEditor.UNLIMITED, getFieldEditorParent());
-//		bugzillaPassword = new MyStringFieldEditor("", bugzillaPasswordLabel, StringFieldEditor.UNLIMITED,
-//				getFieldEditorParent());
-//		bugzillaPassword.getTextControl().setEchoChar('*');
 
 		maxResults = new IntegerFieldEditor(IBugzillaConstants.MAX_RESULTS, bugzillaMaxResultsLabel,
 				getFieldEditorParent());
@@ -129,50 +84,18 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 				new String[][] { { IBugzillaConstants.SERVER_220, IBugzillaConstants.SERVER_VERSION },
 						{ IBugzillaConstants.SERVER_218, IBugzillaConstants.SERVER_VERSION },
 						{ IBugzillaConstants.SERVER_216, IBugzillaConstants.SERVER_VERSION } }, getFieldEditorParent());
-
-		// bugzillaVersionEditor.setPropertyChangeListener(new
-		// IPropertyChangeListener() {)
-		// bugzilla218 = new BooleanFieldEditor(IBugzillaConstants.IS_218,
-		// bugzilla218Label, BooleanFieldEditor.DEFAULT,
-		// getFieldEditorParent());
-
 		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY,
 				"Automatically refresh Bugzilla reports and queries on startup", BooleanFieldEditor.DEFAULT,
 				getFieldEditorParent());
 
-		// add the field editor to the preferences page
-//		addField(bugzillaServer);
-//		addField(bugzillaUser);
-//		addField(bugzillaPassword);
 		addField(maxResults);
 		addField(bugzillaVersionEditor);
-		// addField(bugzilla218);
 		addField(refreshQueries);
-
-		// put the password and user name values into the field editors
-//		getCachedData();
-//		bugzillaUser.setStringValue(user);
-//		bugzillaPassword.setStringValue(password);
 	}
 
-	/**
-	 * Initialize the preferences page with the default values
-	 * 
-	 * @param store
-	 *            The preferences store that is used to store the information
-	 *            about the preferences page
-	 */
 	public static void initDefaults(IPreferenceStore store) {
-		// set the default values for the bugzilla server and the
-		// most recent query
-//		getCachedData();
-
-//		store.setDefault(IBugzillaConstants.BUGZILLA_SERVER, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		store.setDefault(IBugzillaConstants.MOST_RECENT_QUERY, "");
-
 		store.setDefault(IBugzillaConstants.SERVER_VERSION, IBugzillaConstants.SERVER_220);
-		// store.setDefault(IBugzillaConstants.IS_218, true);
-
 		store.setDefault(IBugzillaConstants.REFRESH_QUERY, false);
 		store.setDefault(IBugzillaConstants.MAX_RESULTS, 100);
 	}
@@ -180,14 +103,6 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
-
-		/*
-		 * set user and password to the new default values and then give these
-		 * values to storeCache() to update the keyring
-		 */
-//		user = bugzillaUser.getStringValue();
-//		password = bugzillaPassword.getStringValue();
-//		storeCache(user, password, true);
 	}
 
 	@Override
@@ -278,21 +193,10 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 		// refreshQueries.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REFRESH_QUERIES));
 		return true;
 	}
-
-//	private boolean checkServerName(String name) {
-//		if (name.startsWith(httpsPrefix) || name.startsWith(httpPrefix))
-//			return true;
-//		return false;
-//	}
-
+	
 	@Override
 	protected void initialize() {
 		super.initialize();
-
-		// put the password and user name values into the field editors
-//		getCachedData();
-//		bugzillaUser.setStringValue(user);
-//		bugzillaPassword.setStringValue(password);
 	}
 
 	public void init(IWorkbench workbench) {

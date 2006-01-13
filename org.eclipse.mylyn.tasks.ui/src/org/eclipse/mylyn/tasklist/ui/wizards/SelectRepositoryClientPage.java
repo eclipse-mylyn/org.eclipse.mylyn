@@ -30,9 +30,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class SelectRepositoryClientPage extends WizardPage {
 
-	private static final String DESCRIPTION = "You can connect to an existing accounts using one of the following clients.";
+	private static final String DESCRIPTION = "You can connect to an existing account using one of the following clients.";
 
-	private static final String TITLE = "Select a repository client";
+	private static final String TITLE = "Select a repository kind";
 
 	private TableViewer viewer;
 	
