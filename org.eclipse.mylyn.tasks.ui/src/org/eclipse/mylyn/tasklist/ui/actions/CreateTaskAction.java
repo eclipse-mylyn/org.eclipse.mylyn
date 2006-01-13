@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -79,6 +80,8 @@ public class CreateTaskAction extends Action {
 	            MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);                
 	        }
 			newTask.openTaskInEditor(false);
+			// Make this new task the current selection in the view
+			view.getViewer().setSelection(new StructuredSelection(newTask));
 			view.getViewer().refresh();
 		}
     }

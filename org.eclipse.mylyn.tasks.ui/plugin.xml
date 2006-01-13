@@ -81,6 +81,26 @@
                id="org.eclipse.mylar.tasklist.repositories">
          </view>
       </perspectiveExtension>
+      
+       <perspectiveExtension targetID="org.eclipse.team.cvs.ui.cvsPerspective">
+        <view
+              id="org.eclipse.mylar.tasklist.repositories"
+              ratio="0.7"
+              relationship="bottom"
+              relative="org.eclipse.team.ccvs.ui.RepositoriesView"
+              visible="true"/>
+        <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
+     </perspectiveExtension>
+     <perspectiveExtension targetID="org.eclipse.team.ui.TeamSynchronizingPerspective">
+        <view
+              id="org.eclipse.mylar.tasklist.repositories"
+              ratio="0.8"
+              relationship="bottom"
+              relative="org.eclipse.team.sync.views.SynchronizeView"
+              visible="true"/>
+        <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
+     </perspectiveExtension>
+      
 	</extension>
 
   	<extension

@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
@@ -116,8 +117,10 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 		    if(!newTask.isBugDownloaded())
 		    	newTask.scheduleDownloadReport();
 
-		    if(TaskListView.getDefault() != null)
+		    if(TaskListView.getDefault() != null) {
+				TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
 				TaskListView.getDefault().getViewer().refresh();
+		    }
 		} else {
 			// TODO handle not good
 		}

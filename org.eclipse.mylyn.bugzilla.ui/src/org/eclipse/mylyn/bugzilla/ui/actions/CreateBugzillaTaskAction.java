@@ -15,6 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
@@ -92,8 +93,11 @@ public class CreateBugzillaTaskAction extends Action implements IViewActionDeleg
 	    }
 	    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
 
-	    if(TaskListView.getDefault() != null)
+	    if(TaskListView.getDefault() != null) {
+			// Make this new task the current selection in the view
+			TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
 			TaskListView.getDefault().getViewer().refresh();
+	    }
 	}
 
 	public void init(IViewPart view) {
