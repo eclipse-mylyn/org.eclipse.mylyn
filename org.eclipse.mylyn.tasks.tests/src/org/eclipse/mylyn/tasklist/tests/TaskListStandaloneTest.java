@@ -52,13 +52,14 @@ public class TaskListStandaloneTest extends TestCase {
 		file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
 		file.deleteOnExit();
 		manager = new TaskListManager(writer, file, 1);
-		manager.readOrCreateTaskList();
+		manager.createNewTaskList();
 		assertEquals("should be empty: " + manager.getTaskList().getRootTasks(), 
 				0, manager.getTaskList().getRootTasks().size());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		manager.setTaskList(new TaskList());
 		super.tearDown();
 	}
 
@@ -78,6 +79,7 @@ public class TaskListStandaloneTest extends TestCase {
 	
 	public void testDates() {
 		Date start = Calendar.getInstance().getTime();
+		Date creation = new Date();
 		Task task = new Task("1", "task 1", true);
 		
 		manager.moveToRoot(task);
@@ -93,19 +95,18 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.saveTaskList();
 		
 		assertNotNull(manager.getTaskList());
-		TaskList list = new TaskList();
-		manager.setTaskList(list);
-		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		manager.readOrCreateTaskList();
-		
-		assertNotNull(manager.getTaskList());
+//		TaskList list = new TaskList();
+//		manager.setTaskList(list);
+//		assertEquals(0, manager.getTaskList().getRootTasks().size());
+//		manager.readOrCreateTaskList();
+//		assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 
 		List<ITask> readList = manager.getTaskList().getRootTasks();
 		ITask readTask = readList.get(0);
 		assertTrue(readTask.getDescription(true).equals("task 1"));
 		
-		assertEquals(task.getCreationDate(), readTask.getCreationDate());
+		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());
 		assertEquals(task.getCompletionDate(), readTask.getCompletionDate());
 		assertEquals(task.getReminderDate(), readTask.getReminderDate());
 	}

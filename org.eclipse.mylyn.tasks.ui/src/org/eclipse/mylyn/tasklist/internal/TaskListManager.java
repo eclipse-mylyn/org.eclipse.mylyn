@@ -72,7 +72,7 @@ public class TaskListManager {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextTaskId++;
 	}
 
-	public boolean readOrCreateTaskList() {
+	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
 				taskList = new TaskList();

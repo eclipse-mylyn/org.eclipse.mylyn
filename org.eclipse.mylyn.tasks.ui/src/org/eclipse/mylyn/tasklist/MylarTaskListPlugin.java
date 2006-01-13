@@ -254,7 +254,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					getTaskListSaveManager().saveTaskListAndContexts();
 					getTaskListManager().setTaskListFile(new File(taskListFilePath));
 					getTaskListManager().createNewTaskList();
-					getTaskListManager().readOrCreateTaskList();
+					getTaskListManager().readExistingOrCreateNewList();
 
 					if (TaskListView.getDefault() != null)
 						TaskListView.getDefault().clearTaskHistory();
@@ -316,7 +316,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 							taskListSaveManager);
 
 					restoreTaskHandlerState();
-					taskListManager.readOrCreateTaskList();
+					taskListManager.readExistingOrCreateNewList();
 					restoreTaskHandlerState();
 
 					migrateHandlesToRepositorySupport();
@@ -363,7 +363,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 				taskListManager.saveTaskList();
-				taskListManager.readOrCreateTaskList();
+				taskListManager.readExistingOrCreateNewList();
 			}
 		}
 		if (migrated) {

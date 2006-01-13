@@ -81,7 +81,7 @@ public class TaskListManagerTest extends TestCase {
         manager.saveTaskList();
         TaskList list = new TaskList();
         manager.setTaskList(list);
-        manager.readOrCreateTaskList();
+        manager.readExistingOrCreateNewList();
                 
     	BugzillaTask readReport = (BugzillaTask)manager.getTaskList().getRootTasks().get(0);
     	assertEquals(readReport.getDescription(true), readReport.getDescription(true)); 
@@ -121,7 +121,7 @@ public class TaskListManagerTest extends TestCase {
         assertNotNull(manager.getTaskList());
         TaskList list = new TaskList();
         manager.setTaskList(list);
-        manager.readOrCreateTaskList();
+        manager.readExistingOrCreateNewList();
         assertNotNull(manager.getTaskList());
 
     	List<ITask> readList = manager.getTaskList().getRootTasks();
@@ -140,7 +140,7 @@ public class TaskListManagerTest extends TestCase {
         
         TaskList list = new TaskList();
         manager.setTaskList(list);
-        manager.readOrCreateTaskList();
+        manager.readExistingOrCreateNewList();
         assertEquals(1, manager.getTaskList().getQueries().size());
         ITaskQuery readQuery = manager.getTaskList().getQueries().get(0);
         assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
@@ -188,7 +188,7 @@ public class TaskListManagerTest extends TestCase {
         assertNotNull(manager.getTaskList());
         TaskList list = new TaskList();
         manager.setTaskList(list);
-        manager.readOrCreateTaskList();
+        manager.readExistingOrCreateNewList();
                 
         assertNotNull(manager.getTaskList());
         assertEquals(3, manager.getTaskList().getRootTasks().size()); // contains archived reports category
