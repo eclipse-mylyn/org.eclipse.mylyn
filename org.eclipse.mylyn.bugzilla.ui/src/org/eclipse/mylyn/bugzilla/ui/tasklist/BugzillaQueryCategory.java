@@ -77,7 +77,7 @@ public class BugzillaQueryCategory implements ITaskQuery {
 		public void searchCompleted(BugzillaResultCollector collector) {
 			for (BugzillaSearchHit hit : collector.getResults()) {
 
-				addHit(new BugzillaHit(
+				addHit(new BugzillaQueryHit(
 						hit.getId() + ": " + hit.getDescription(), 
 						hit.getPriority(), 
 						repositoryUrl,
@@ -135,7 +135,7 @@ public class BugzillaQueryCategory implements ITaskQuery {
 		hits.add(hit);
 	}
 
-	public void removeHit(BugzillaHit hit) {
+	public void removeHit(BugzillaQueryHit hit) {
 		hits.remove(hit);
 	}
 
@@ -234,8 +234,8 @@ public class BugzillaQueryCategory implements ITaskQuery {
 
 	public Font getFont() {
 		for (ITaskListElement child : getHits()) {
-			if (child instanceof BugzillaHit) {
-				BugzillaHit hit = (BugzillaHit) child;
+			if (child instanceof BugzillaQueryHit) {
+				BugzillaQueryHit hit = (BugzillaQueryHit) child;
 				BugzillaTask task = hit.getCorrespondingTask();
 				if (task != null && task.isActive()) {
 					return TaskListImages.BOLD;

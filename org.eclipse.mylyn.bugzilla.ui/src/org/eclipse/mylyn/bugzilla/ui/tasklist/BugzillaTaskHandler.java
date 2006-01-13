@@ -108,8 +108,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				System.err.println(">>> syncrhonizing");
 				new SynchronizeReportsAction(queryCategory).run();
 			}
-		} else if (element instanceof BugzillaHit) {
-			BugzillaHit hit = (BugzillaHit) element;
+		} else if (element instanceof BugzillaQueryHit) {
+			BugzillaQueryHit hit = (BugzillaQueryHit) element;
 			MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
 			if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
 				if (hit.getCorrespondingTask() != null) {
@@ -120,8 +120,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 								"Unable to open the selected bugzilla report since you are currently offline");
 						return;
 					}
-					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaHit) element).getRepositoryUrl(),
-							((BugzillaHit) element).getId(), -1);
+					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaQueryHit) element).getRepositoryUrl(),
+							((BugzillaQueryHit) element).getId(), -1);
 					List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
 					selectedBugs.add(open);
 					ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
@@ -142,7 +142,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 	}
 
 	public boolean acceptsItem(ITaskListElement element) {
-		return element instanceof BugzillaTask || element instanceof BugzillaHit
+		return element instanceof BugzillaTask || element instanceof BugzillaQueryHit
 				|| element instanceof BugzillaQueryCategory;
 	}
 
@@ -187,8 +187,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 
 	public boolean enableAction(Action action, ITaskListElement element) {
 
-		if (element instanceof BugzillaHit) {
-			BugzillaHit hit = (BugzillaHit)element;
+		if (element instanceof BugzillaQueryHit) {
+			BugzillaQueryHit hit = (BugzillaQueryHit)element;
 			if (hit.getCorrespondingTask() != null && hit.getCorrespondingTask().hasValidUrl()) {
 				return true;
 			}
@@ -225,8 +225,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 }
 
 //public ITask getCorrespondingTask(IQueryHit queryHit) {
-//if (queryHit instanceof BugzillaHit) {
-//	BugzillaHit hit = (BugzillaHit) queryHit;
+//if (queryHit instanceof BugzillaQueryHit) {
+//	BugzillaQueryHit hit = (BugzillaQueryHit) queryHit;
 //	return hit.getOrCreateCorrespondingTask();
 //} else {
 //	return null;
@@ -294,8 +294,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 //}
 
 // public void dropItem(ITaskListElement element, TaskCategory cat) {
-// if (element instanceof BugzillaHit) {
-// BugzillaHit bugzillaHit = (BugzillaHit) element;
+// if (element instanceof BugzillaQueryHit) {
+// BugzillaQueryHit bugzillaHit = (BugzillaQueryHit) element;
 // if (bugzillaHit.getAssociatedTask() != null) {
 // MylarTaskListPlugin.getTaskListManager().moveToCategory(cat,
 // bugzillaHit.getAssociatedTask());

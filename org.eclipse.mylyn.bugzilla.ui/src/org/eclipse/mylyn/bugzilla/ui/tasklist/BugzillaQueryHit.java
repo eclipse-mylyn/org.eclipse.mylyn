@@ -27,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Ken Sueda
  * @author Mik Kersten (hardening of prototype)
  */
-public class BugzillaHit implements IQueryHit {
+public class BugzillaQueryHit implements IQueryHit {
 
 	private String repositoryUrl;
 	
@@ -41,7 +41,7 @@ public class BugzillaHit implements IQueryHit {
 
 	private String status;
 
-	public BugzillaHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task, String status) {
+	public BugzillaQueryHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task, String status) {
 		this.description = description;
 		this.priority = priority;
 		this.repositoryUrl = repositoryUrl;
@@ -103,6 +103,10 @@ public class BugzillaHit implements IQueryHit {
 		}
 	}
 
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
+	
 	public String getHandleIdentifier() {
 		return TaskRepositoryManager.getHandle(repositoryUrl, id);
 //		return "Bugzilla" + "-" + getId();

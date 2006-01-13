@@ -136,7 +136,7 @@ public class BugzillaTask extends Task {
 		initFromHandle();
 	}
 
-	public BugzillaTask(BugzillaHit hit, boolean newTask) {
+	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
 		this(hit.getHandleIdentifier(), hit.getDescription(false), newTask);
 		setPriority(hit.getPriority());
 		initFromHandle();

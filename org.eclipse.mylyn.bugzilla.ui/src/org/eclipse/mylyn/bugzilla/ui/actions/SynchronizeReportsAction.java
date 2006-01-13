@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaHit;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.tasklist.IQueryHit;
@@ -88,8 +88,8 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					}
 				} else if (obj instanceof BugzillaTask) {
 					BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask) obj);
-				} else if (obj instanceof BugzillaHit) {
-					BugzillaHit hit = (BugzillaHit) obj;
+				} else if (obj instanceof BugzillaQueryHit) {
+					BugzillaQueryHit hit = (BugzillaQueryHit) obj;
 					if (hit.getCorrespondingTask() != null) {
 						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
 								hit.getCorrespondingTask());
@@ -128,7 +128,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 			protected IStatus run(IProgressMonitor monitor) {
 				cat.refreshBugs();
 				for (IQueryHit hit : cat.getHits()) {
-					if (hit.getCorrespondingTask() != null && hit instanceof BugzillaHit) {
+					if (hit.getCorrespondingTask() != null && hit instanceof BugzillaQueryHit) {
 						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
 								(BugzillaTask) hit.getCorrespondingTask());
 					}
