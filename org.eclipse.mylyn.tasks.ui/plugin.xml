@@ -53,11 +53,11 @@
          id="org.eclipse.mylar.tasks.ui.views.TaskListView"
          name="Mylar Tasks"/> 
       <view
+            id="org.eclipse.mylar.tasklist.repositories"
             allowMultiple="false"
             category="org.eclipse.mylar"
             class="org.eclipse.mylar.tasklist.repositories.ui.TaskRepositoriesView"
             icon="icons/eview16/task-repositories.gif"
-            id="org.eclipse.mylar.tasklist.repositories"
             name="Task Repositories (Experimental)">
       </view>
   	</extension>
