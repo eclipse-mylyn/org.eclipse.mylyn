@@ -24,8 +24,8 @@ public class AllMiscTests {
 				"Test for org.eclipse.mylar.tests");
 		//$JUnit-BEGIN$
 //		suite.addTestSuite(SharedTaskFolderTest.class);
+//		suite.addTestSuite(BugzillaSearchPluginTest.class);
         suite.addTestSuite(HypertextStructureBridgeTest.class);
-		suite.addTestSuite(BugzillaSearchPluginTest.class);
 		suite.addTestSuite(BugzillaStackTraceTest.class);
 		//$JUnit-END$
 		return suite;
