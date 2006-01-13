@@ -65,10 +65,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO:
 
-	// use
-	// extension
-	// points
-
 	private List<IContextEditorFactory> contextEditors = new ArrayList<IContextEditorFactory>();
 
 	private TaskListWriter taskListWriter;
@@ -80,8 +76,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private ResourceBundle resourceBundle;
 
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1 * 3600 * 1000; // every
-
-	// hour
 
 	private static Date lastBackup = new Date();
 
@@ -450,21 +444,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return MylarPlugin.getDefault().getPreferenceStore();
 	}
 
-	// /**
-	// * Sets the directory containing the task list file to use.
-	// * Switches immediately to use the data at that location.
-	// */
-	// public void setDataDirectory(String newDirPath) {
-	// String taskListFilePath = newDirPath + File.separator +
-	// DEFAULT_TASK_LIST_FILE;
-	// getTaskListManager().setTaskListFile(new File(taskListFilePath));
-	// getTaskListManager().createNewTaskList();
-	// getTaskListManager().readTaskList();
-	//
-	// if (TaskListView.getDefault() != null)
-	// TaskListView.getDefault().clearTaskHistory();
-	// }
-
 	private void checkTaskListBackup() {
 		// if (getPrefs().contains(PREVIOUS_SAVE_DATE)) {
 		// lastSave = new Date(getPrefs().getLong(PREVIOUS_SAVE_DATE));
@@ -624,6 +603,21 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		return taskRepositoryManager;
 	}
 }
+
+// /**
+// * Sets the directory containing the task list file to use.
+// * Switches immediately to use the data at that location.
+// */
+// public void setDataDirectory(String newDirPath) {
+// String taskListFilePath = newDirPath + File.separator +
+// DEFAULT_TASK_LIST_FILE;
+// getTaskListManager().setTaskListFile(new File(taskListFilePath));
+// getTaskListManager().createNewTaskList();
+// getTaskListManager().readTaskList();
+//
+// if (TaskListView.getDefault() != null)
+// TaskListView.getDefault().clearTaskHistory();
+// }
 
 // private List<ITaskActivationListener> taskListListeners = new
 // ArrayList<ITaskActivationListener>();
