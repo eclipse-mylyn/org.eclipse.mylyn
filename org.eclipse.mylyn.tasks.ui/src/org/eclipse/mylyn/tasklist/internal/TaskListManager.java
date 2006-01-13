@@ -75,6 +75,7 @@ public class TaskListManager {
 	public boolean readOrCreateTaskList() {
 		try {
 			if (taskListFile.exists()) {
+				taskList = new TaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
 				int maxHandle = taskList.findLargestTaskHandle();
 				if (maxHandle >= nextTaskId) {
@@ -123,7 +124,7 @@ public class TaskListManager {
 		}
 		task.setCategory(null);
 		if (!taskList.getRootTasks().contains(task)) taskList.addRootTask(task);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 
 	public void moveToCategory(TaskCategory category, ITask task) {
@@ -135,12 +136,12 @@ public class TaskListManager {
 			category.addTask(task);
 		}
 		task.setCategory(category);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 
 	public void addCategory(ITaskCategory cat) {
 		taskList.addCategory(cat);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 	
 	public void removeFromCategory(TaskCategory category, ITask task) {
@@ -148,17 +149,17 @@ public class TaskListManager {
 			category.removeTask(task);
 			task.setCategory(null);
 		}
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 	
 	public void removeFromRoot(ITask task) {
 		taskList.removeFromRoot(task);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 	
 	public void addQuery(ITaskQuery cat) {
 		taskList.addQuery(cat);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 
 	public void deleteTask(ITask task) {
@@ -166,17 +167,17 @@ public class TaskListManager {
 		if (taskTimer != null) taskTimer.stopTimer();
 		taskList.setActive(task, false);
 		taskList.deleteTask(task);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 
 	public void deleteCategory(ITaskCategory cat) {
 		taskList.deleteCategory(cat);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 
 	public void deleteQuery(ITaskQuery query) {
 		taskList.deleteQuery(query);
-		for (ITaskActivityListener listener : listeners) listener.tasklistModified();
+		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 
 	public void addListener(ITaskActivityListener listener) {
@@ -222,6 +223,12 @@ public class TaskListManager {
 	public void notifyTaskChanged(ITask task) {
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
 			listener.taskChanged(task);
+		}
+	}
+	
+	public void notifyListUpdated() {
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+			listener.taskListModified();
 		}
 	}
 	

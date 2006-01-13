@@ -23,7 +23,7 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 	public static final String KIND = "bugzilla";
 	
 	public String getLabel() {
-		return "Bugzilla (uncustomized 2.16-2.20)";
+		return "Bugzilla (supports uncustomized 2.16-2.20)";
 	}
 	
 	public String toString() {

@@ -170,7 +170,7 @@ public class TaskInfoEditor extends EditorPart {
 			}
 		}
 
-		public void tasklistModified() {
+		public void taskListModified() {
 			// TODO Auto-generated method stub
 
 		}

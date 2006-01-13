@@ -199,7 +199,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 		}
 
-		public void tasklistModified() {
+		public void taskListModified() {
 			// TODO Auto-generated method stub
 
 		}
@@ -362,6 +362,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 						hit.setRepositoryUrl(repositoryUrl);
 					}
 				}
+				taskListManager.saveTaskList();
+				taskListManager.readOrCreateTaskList();
 			}
 		}
 		if (migrated) {

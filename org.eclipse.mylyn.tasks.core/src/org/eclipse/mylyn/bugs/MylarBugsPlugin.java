@@ -12,7 +12,6 @@ package org.eclipse.mylar.bugs;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -28,12 +27,17 @@ import org.osgi.framework.BundleContext;
 public class MylarBugsPlugin extends AbstractUIPlugin {
 
 	public static ImageDescriptor EDGE_REF_BUGZILLA = getImageDescriptor("icons/elcl16/edge-ref-bug.gif");
-	private BugzillaEditingMonitor bugzillaEditingMonitor;
-	private static BugzillaSearchManager bridge = null;
-    private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
-	private static MylarBugsPlugin plugin;
-	private BugzillaReportCache cache;
+
+	// private BugzillaEditingMonitor bugzillaEditingMonitor;
 	
+	private static BugzillaSearchManager bridge = null;
+
+	private static BugzillaReferencesProvider referencesProvider = new BugzillaReferencesProvider();
+
+	private static MylarBugsPlugin plugin;
+
+	private BugzillaReportCache cache;
+
 	public MylarBugsPlugin() {
 		plugin = this;
 	}
@@ -45,19 +49,19 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 		super.start(context);
 		cache = new BugzillaReportCache();
 		cache.readCacheFile();
-        
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (window != null) {
-            // create a new bridge and initialize it
-            bridge = new BugzillaSearchManager();
-        }
+
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			// create a new bridge and initialize it
+			bridge = new BugzillaSearchManager();
+		}
 		final IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(new Runnable() {
-            public void run() {
-//            	bugzillaEditingMonitor = new BugzillaEditingMonitor();
-//            	MylarPlugin.getDefault().getSelectionMonitors().add(bugzillaEditingMonitor);   
-            }
-        });
+		workbench.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				// bugzillaEditingMonitor = new BugzillaEditingMonitor();
+				// MylarPlugin.getDefault().getSelectionMonitors().add(bugzillaEditingMonitor);
+			}
+		});
 	}
 
 	/**
@@ -66,7 +70,7 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-//		MylarPlugin.getDefault().getSelectionMonitors().remove(bugzillaEditingMonitor); 
+		// MylarPlugin.getDefault().getSelectionMonitors().remove(bugzillaEditingMonitor);
 	}
 
 	/**
@@ -77,27 +81,28 @@ public class MylarBugsPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
+	 * 
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugs.bridge", path);
 	}
-	
-    public static BugzillaSearchManager getBridge() {
-        // make sure that the bridge initialized, if not, make a new one
-        if (bridge == null) {
-            bridge = new BugzillaSearchManager();
-        }
-        return bridge;
-    }
+
+	public static BugzillaSearchManager getBridge() {
+		// make sure that the bridge initialized, if not, make a new one
+		if (bridge == null) {
+			bridge = new BugzillaSearchManager();
+		}
+		return bridge;
+	}
 
 	public static BugzillaReferencesProvider getReferenceProvider() {
 		return referencesProvider;
-		
+
 	}
 
 	public BugzillaReportCache getCache() {

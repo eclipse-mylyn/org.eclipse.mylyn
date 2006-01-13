@@ -30,5 +30,5 @@ public interface ITaskActivityListener {
     
 	public abstract void tasklistRead();
 
-	public abstract void tasklistModified();
+	public abstract void taskListModified();
 }

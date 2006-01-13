@@ -242,7 +242,7 @@ public class TaskListView extends ViewPart {
 			refresh(null);
 		}
 
-		public void tasklistModified() {
+		public void taskListModified() {
 			if (!getViewer().getControl().isDisposed())
 				getViewer().refresh();
 		}
