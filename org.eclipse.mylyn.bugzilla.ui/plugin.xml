@@ -176,7 +176,7 @@
                <or>
                     <objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask"/>
 					<objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory"/>
-               		<objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaHit"/>
+               		<objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryHit"/>
                </or>
             </enablement>
          </action>

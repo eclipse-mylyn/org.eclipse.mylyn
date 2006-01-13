@@ -19,6 +19,8 @@ public interface IQueryHit extends ITaskListElement {
 
 	public String getRepositoryUrl();
 	
+	public void setRepositoryUrl(String repositoryUrl);
+	
 	public ITask getOrCreateCorrespondingTask();
 
 	public ITask getCorrespondingTask();

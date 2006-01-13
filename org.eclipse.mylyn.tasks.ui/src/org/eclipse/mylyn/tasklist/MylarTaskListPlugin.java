@@ -358,21 +358,22 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 				for (ITaskQuery query : taskListManager.getTaskList().getQueries()) {
 					query.setRepositoryUrl(repositoryUrl);
-					// for (IQueryHit hit : query.getHits()) {
-					// String id =
-					// TaskRepositoryManager.getTaskId(hit.getHandleIdentifier());
-					// String newHandle =
-					// TaskRepositoryManager.getHandle(repositoryUrl, id);
-					// hit.setHandleIdentifier(newHandle);
-					// System.err.println(">>> hit: " +
-					// hit.getHandleIdentifier() );
-					// }
+					 for (IQueryHit hit : query.getHits()) {
+//						String id = TaskRepositoryManager.getTaskId(hit.getHandleIdentifier());
+//						String newHandle = TaskRepositoryManager.getHandle(repositoryUrl, id);
+						hit.setRepositoryUrl(repositoryUrl);
+						//						hit.setHandleIdentifier(newHandle);
+//						System.err.println(">>> hit: " + hit.getHandleIdentifier());
+					}
 				}
 			}
 		}
 		if (migrated) {
 			MylarStatusHandler.log("Migrated context files to repository-aware paths", this);
 			getPreferenceStore().setValue(MylarTaskListPrefConstants.CONTEXTS_MIGRATED, false);
+//			taskListManager.saveTaskList(); 
+//			taskListManager.readOrCreateTaskList();
+//			restoreTaskHandlerState();
 		}
 	}
 
