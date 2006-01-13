@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
 
@@ -29,8 +29,8 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 		return getLabel();
 	}
 
-	public IWizardPage getSettingsPage() {
-		return new RepositorySettingsPage();
+	public RepositorySettingsPage getSettingsPage() {
+		return new BugzillaRepositorySettingsPage();
 	}
 
 	public String getKind() {

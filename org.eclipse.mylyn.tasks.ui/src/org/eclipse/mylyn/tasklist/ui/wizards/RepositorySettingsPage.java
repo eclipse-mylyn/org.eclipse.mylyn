@@ -27,36 +27,30 @@ import org.eclipse.ui.IWorkbench;
 /**
  * @author Mik Kersten
  */
-public class RepositorySettingsPage extends WizardPage {
+public abstract class RepositorySettingsPage extends WizardPage {
 
-	private static final String LABEL = "Repository Settings";
-
-	private final String TITLE = "Enter repository settings";
+	protected static final String LABEL_SERVER = "Server: ";
 	
-	private final String LABEL_WARNING = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
+	protected static final String LABEL_USER = "User Name: ";
 
-	private static final String LABEL_SERVER = "Server: ";
+	protected static final String LABEL_PASSWORD = "Password: ";
 	
-	private static final String LABEL_USER = "User Name: ";
+	protected static final String URL_PREFIX_HTTPS = "https://";
 
-	private static final String LABEL_PASSWORD = "Password: ";
+	protected static final String URL_PREFIX_HTTP = "http://";
 	
-	private static final String URL_PREFIX_HTTPS = "https://";
+	protected StringFieldEditor serverUrlEditor;
+ 
+	protected StringFieldEditor userNameEditor;
 
-	private static final String URL_PREFIX_HTTP = "http://";
+	protected RepositoryStringFieldEditor passwordEditor;
 	
-	private StringFieldEditor serverUrlEditor;
-
-	private StringFieldEditor userNameEditor;
-
-	private RepositoryStringFieldEditor passwordEditor;
-	
-	private TaskRepository repository;
+	protected TaskRepository repository;
 		
-	public RepositorySettingsPage() {
-		super(LABEL);
-		super.setTitle(TITLE);
-		super.setDescription(LABEL_WARNING);
+	public RepositorySettingsPage(String title, String description) {
+		super(title);
+		super.setTitle(title);
+		super.setDescription(description);
 	}
 
 	public void createControl(Composite parent) {
@@ -90,11 +84,15 @@ public class RepositorySettingsPage extends WizardPage {
 			passwordEditor.setStringValue(repository.getPassword());
 		}
 		
+		createAdditionalControls(container);
 		setControl(container);
 	}
 	
+	protected abstract void createAdditionalControls(Composite parent);
+
 	public URL getServerUrl() {
 		try {
+			System.err.println(">>> " + serverUrlEditor);
 			return new URL(serverUrlEditor.getStringValue());
 		} catch (MalformedURLException e) {
 			MylarStatusHandler.fail(e, "could not create url", true);
@@ -130,7 +128,6 @@ public class RepositorySettingsPage extends WizardPage {
 	/**
 	 * Hack private class to make StringFieldEditor.refreshValidState() a
 	 * publicly acessible method.
-	 * 
 	 * @see org.eclipse.jface.preference.StringFieldEditor#refreshValidState()
 	 */
 	private static class RepositoryStringFieldEditor extends StringFieldEditor {
@@ -152,32 +149,6 @@ public class RepositorySettingsPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-//		String urlString = serverUrlEditor.getStringValue();
-//		try {
-//			URL serverURL = new URL(urlString);// + "/show_bug.cgi");
-//			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
-//			if (cntx == null || !(cntx instanceof HttpURLConnection))
-//				return false;
-//
-//			HttpURLConnection serverConnection = (HttpURLConnection) cntx;
-//
-//			serverConnection.connect();
-//
-//			int responseCode = serverConnection.getResponseCode();
-//
-//			if (responseCode != HttpURLConnection.HTTP_OK) {
-//				if (!MessageDialog.openQuestion(null, "Mylar Task Repositories", 
-//						"Error validating server.\n\n"
-//						+ "\n\nKeep specified server location anyway?")) {
-//					return false;
-//				}
-//			}
-//		} catch (Exception e) {
-//			if (!MessageDialog.openQuestion(null, "Bugzilla Server Error", "Error validating Bugzilla Server.\n\n"
-//					+ e.getMessage() + "\n\nKeep specified server location anyway?")) {
-//				return false;
-//			}
-//		}
 		return isValidUrl(serverUrlEditor.getStringValue());
 	}
 

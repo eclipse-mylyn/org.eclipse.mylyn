@@ -20,7 +20,8 @@ import org.eclipse.ui.IWorkbench;
  * @author Mik Kersten
  */
 public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
-	private RepositorySettingsPage repositorySettingsPage = new RepositorySettingsPage();
+
+//	private RepositorySettingsPage repositorySettingsPage;// = new RepositorySettingsPage();
 
 	public AddRepositoryWizard() {
 		super();
@@ -30,13 +31,14 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository repository = new TaskRepository(repositoryClient.getKind(), repositorySettingsPage.getServerUrl());
+			TaskRepository repository = new TaskRepository(repositoryClient.getKind(), super.repositorySettingsPage.getServerUrl());
 			if (repository != null) {
-				repository.setAuthenticationCredentials(repositorySettingsPage.getUserName(), repositorySettingsPage.getPassword());
+				repository.setAuthenticationCredentials(repositorySettingsPage.getUserName(), repositorySettingsPage
+						.getPassword());
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				return true;
-			} 
-		} 
+			}
+		}
 		return false;
 	}
 
@@ -46,11 +48,19 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-		addPage(repositorySettingsPage);
+//		addPage(repositorySettingsPage);
+	}
+
+	public RepositorySettingsPage getRepositorySettingsPage() {
+		return repositorySettingsPage;
+	}
+
+	public void setRepositorySettingsPage(RepositorySettingsPage repositorySettingsPage) {
+		this.repositorySettingsPage = repositorySettingsPage;
 	}
 
 	@Override
 	public boolean canFinish() {
-		return super.canFinish() && repositorySettingsPage.isPageComplete();
+		return super.canFinish() && repositorySettingsPage != null && repositorySettingsPage.isPageComplete();
 	}
 }

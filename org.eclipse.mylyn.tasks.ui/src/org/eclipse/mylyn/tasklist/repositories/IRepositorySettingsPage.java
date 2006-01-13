@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,20 +11,9 @@
 
 package org.eclipse.mylar.tasklist.repositories;
 
-import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
-
-
 /**
- * @author Mik Kersten
+ * @author beatmik
  */
-public interface ITaskRepositoryClient {
+public interface IRepositorySettingsPage {
 
-	public String getLabel();
-
-	/**
-	 * @return the unique type of the repository, e.g. "bugzilla"
-	 */
-	public String getKind();
-	
-	public RepositorySettingsPage getSettingsPage();
 }
