@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class SelectRepositoryPage extends WizardPage {
 
-	private static final String DESCRIPTION = "Select a repository";
+	private static final String DESCRIPTION = "Select a repository, or add a new one using the Task Repositories view.";
 
 	private static final String TITLE = "Select a repository";
 
