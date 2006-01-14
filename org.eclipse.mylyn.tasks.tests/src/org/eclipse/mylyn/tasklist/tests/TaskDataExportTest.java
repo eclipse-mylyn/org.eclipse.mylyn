@@ -1,7 +1,6 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
@@ -42,18 +41,10 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private TaskRepository repository;
 	
-	public TaskDataExportTest() {
-		try {
-			repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
-		} catch (MalformedURLException e) {
-			fail();
-			e.printStackTrace();
-		}
-	}
-	
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 		
 		// Create the export wizard

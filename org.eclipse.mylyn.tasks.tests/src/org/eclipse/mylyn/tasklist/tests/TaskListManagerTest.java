@@ -13,7 +13,6 @@
   */
 package org.eclipse.mylar.tasklist.tests;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -43,20 +42,13 @@ public class TaskListManagerTest extends TestCase {
 	
 	private TaskRepository repository;
 	
-	public TaskListManagerTest() {
-		try {
-			repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
-		} catch (MalformedURLException e) {
-			fail();
-			e.printStackTrace();
-		}
-	}
-	
-    @Override
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = MylarTaskListPlugin.getTaskListManager();
 		manager.createNewTaskList();
+		
+		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL));
 		MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 	}
 
