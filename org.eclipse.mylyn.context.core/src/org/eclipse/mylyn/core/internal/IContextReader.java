@@ -16,6 +16,6 @@ import java.io.File;
 
 public interface IContextReader {
 
-	public abstract MylarContext readContext(File file);
+	public abstract MylarContext readContext(String handleIdentifier, File file);
 
 }

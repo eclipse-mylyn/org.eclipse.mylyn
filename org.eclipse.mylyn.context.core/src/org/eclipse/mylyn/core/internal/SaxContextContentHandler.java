@@ -23,8 +23,13 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	private MylarContext context;
 
+	private String contextHandleIdentifier;
+	
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
 
+	public SaxContextContentHandler(String contextHandleIdentifier) {
+		this.contextHandleIdentifier = contextHandleIdentifier;
+	}
 	public MylarContext getContext() {
 		return context;
 	}
@@ -33,9 +38,9 @@ public class SaxContextContentHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		switch (state) {
 		case EXPECTING_ROOT:
-			String id = attributes.getValue(MylarContextExternalizer.ATR_ID);
+//			String id = attributes.getValue(MylarContextExternalizer.ATR_ID);
 			// String version = attributes.getValue(1);
-			context = new MylarContext(id, MylarContextManager.getScalingFactors());
+			context = new MylarContext(contextHandleIdentifier, MylarContextManager.getScalingFactors());
 			state = EXPECTING_EVENT;
 			break;
 		case EXPECTING_EVENT:

@@ -43,14 +43,14 @@ public class DomContextReader implements IContextReader {
     
 //	private int readVersion; 
     
-    public MylarContext readContext(File file) {
+    public MylarContext readContext(String handle, File file) {
         if (!file.exists()) return null;
         try {
             Document doc = openAsDOM(file);
             Element root = doc.getDocumentElement();
 //            readVersion = Integer.parseInt(root.getAttribute("Version"));
-            String id = root.getAttribute("Id");
-            MylarContext t = new MylarContext(id, MylarContextManager.getScalingFactors());
+//            String id = root.getAttribute("Id");
+            MylarContext t = new MylarContext(handle, MylarContextManager.getScalingFactors());
 			NodeList list = root.getChildNodes();
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);

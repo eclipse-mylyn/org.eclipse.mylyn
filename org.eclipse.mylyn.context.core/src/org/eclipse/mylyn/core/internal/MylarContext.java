@@ -162,7 +162,7 @@ public class MylarContext implements IMylarContext {
 		return new ArrayList<IMylarElement>(nodes.values());
 	}
 
-	public String getId() {
+	public String getHandleIdentifier() {
 		return handleIdentifier;
 	}
 

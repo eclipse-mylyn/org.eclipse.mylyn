@@ -43,7 +43,7 @@ public class SearchPluginTestHelper extends TestCase {
 		List<?> results = test.search(dos, searchNode);
 		assertNotNull("Results Null", results);
 		assertEquals("Wrong number search results", expected, results.size());
-		notifier.clearTaskscape();
+		notifier.clearContext();
     }
 	
 	public void searchResultsNotNullInteresting(ActiveSearchNotifier notifier, String handle, String kind, IMylarElement searchNode, int dos, int expected) throws IOException, CoreException{
@@ -52,14 +52,14 @@ public class SearchPluginTestHelper extends TestCase {
 		List<?> results = test.search(dos, searchNode);
 		assertNotNull("Results Null", results);
 		assertEquals("Wrong number search results", expected, results.size());
-		notifier.clearTaskscape();
+		notifier.clearContext();
     }
     
     public void searchResultsNotNull(ActiveSearchNotifier notifier, IMylarElement searchNode, int dos, int expected) throws IOException, CoreException{
 		List<?> results = test.search(dos, searchNode);
 		assertNotNull("Results Null", results);
 		assertEquals("Wrong number search results", expected, results.size());
-		notifier.clearTaskscape();
+		notifier.clearContext();
     }
         
     public void searchResultsNull(ActiveSearchNotifier notifier, String handle, String kind, IMylarElement searchNode, int dos) throws IOException, CoreException{
@@ -67,13 +67,13 @@ public class SearchPluginTestHelper extends TestCase {
 		
 		List<?> results = test.search(dos, searchNode);
 		assertNull("Results Not Null", results);
-		notifier.clearTaskscape();
+		notifier.clearContext();
     }
         
     public void searchResultsNull(ActiveSearchNotifier notifier, IMylarElement searchNode, int dos) throws IOException, CoreException{
 		List<?> results = test.search(dos, searchNode);
 		assertNull("Results Not Null", results);
-		notifier.clearTaskscape();
+		notifier.clearContext();
     }
 
 	/**

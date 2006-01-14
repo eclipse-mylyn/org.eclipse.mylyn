@@ -139,7 +139,7 @@ public class SaxContextWriter implements IContextWriter {
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();
-			rootAttributes.addAttribute("", MylarContextExternalizer.ATR_ID, MylarContextExternalizer.ATR_ID, "", context.getId());
+			rootAttributes.addAttribute("", MylarContextExternalizer.ATR_ID, MylarContextExternalizer.ATR_ID, "", context.getHandleIdentifier());
 			rootAttributes.addAttribute("", MylarContextExternalizer.ATR_VERSION, MylarContextExternalizer.ATR_VERSION, "", "1");
 
 			handler.startElement("", MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);

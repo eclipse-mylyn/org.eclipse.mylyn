@@ -161,7 +161,7 @@ public class MylarContextManager {
 		File storeDir = new File(MylarPlugin.getDefault().getDataDirectory());
 		storeDir.mkdirs();
 
-		activityHistory = externalizer.readContextFromXML(getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+		activityHistory = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		if (activityHistory == null) {
 			resetActivityHistory();
 		}
@@ -396,10 +396,10 @@ public class MylarContextManager {
 	 * Public for testing, activiate via handle
 	 */
 	public void contextActivated(MylarContext context) {
-		currentContext.getContextMap().put(context.getId(), context);
+		currentContext.getContextMap().put(context.getHandleIdentifier(), context);
 		if (!activationHistorySuppressed) {
 			activityHistory.parseEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_KIND, context
-					.getId(), ACTIVITY_ID, null, ACTIVITY_ACTIVATED, 1f));
+					.getHandleIdentifier(), ACTIVITY_ID, null, ACTIVITY_ACTIVATED, 1f));
 		}
 	}
 
@@ -441,7 +441,7 @@ public class MylarContextManager {
 		return contextFile.exists() && contextFile.length() > 0;
 	}
 
-	public void contextDeactivated(String handleIdentifier) {
+	public void contextDeactivated(String handleIdentifier) {	
 		try {
 			IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
@@ -505,7 +505,7 @@ public class MylarContextManager {
 	 * @return false if the map could not be read for any reason
 	 */
 	public MylarContext loadContext(String handleIdentifier) {
-		MylarContext loadedContext = externalizer.readContextFromXML(getFileForContext(handleIdentifier));
+		MylarContext loadedContext = externalizer.readContextFromXML(handleIdentifier, getFileForContext(handleIdentifier));
 		if (loadedContext == null) {
 			return new MylarContext(handleIdentifier, MylarContextManager.getScalingFactors());
 		} else {
@@ -800,7 +800,7 @@ public class MylarContextManager {
 			dominantNode = node;
 		}
 		if (node != null) {
-			return ((MylarContextElement) dominantNode).getContext().getId();
+			return ((MylarContextElement) dominantNode).getContext().getHandleIdentifier();
 		} else {
 			return null;
 		}

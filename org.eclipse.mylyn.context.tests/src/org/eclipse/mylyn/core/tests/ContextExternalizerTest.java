@@ -51,10 +51,10 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertTrue(file.getAbsolutePath(), file.exists());
 		MylarContextExternalizer externalizer = new MylarContextExternalizer();
 		externalizer.setReader(new DomContextReader());
-		MylarContext domReadContext = externalizer.readContextFromXML(file);
+		MylarContext domReadContext = externalizer.readContextFromXML("handle", file);
 		
 		externalizer.setReader(new SaxContextReader());
-		MylarContext saxReadContext = externalizer.readContextFromXML(file);
+		MylarContext saxReadContext = externalizer.readContextFromXML("handle", file);
 		assertEquals(284, saxReadContext.getInteractionHistory().size()); // known from testdata
 		assertEquals(domReadContext, saxReadContext);
 	
@@ -70,9 +70,9 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(domOut.length(), saxOut.length());
 		
 		externalizer.setReader(new DomContextReader());
-		MylarContext domReadAfterWrite = externalizer.readContextFromXML(file);
+		MylarContext domReadAfterWrite = externalizer.readContextFromXML("handle", file);
 		externalizer.setReader(new SaxContextReader());
-		MylarContext saxReadAfterWrite = externalizer.readContextFromXML(file);
+		MylarContext saxReadAfterWrite = externalizer.readContextFromXML("handle", file);
 		
 		assertEquals(domReadAfterWrite, saxReadAfterWrite);
 	}
@@ -124,7 +124,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals("2", context.getActiveNode().getHandleIdentifier());
 
 		externalizer.writeContextToXML(context, file);
-		MylarContext loaded = externalizer.readContextFromXML(file);
+		MylarContext loaded = externalizer.readContextFromXML("handle", file);
 		assertNotNull(loaded);
 		assertEquals(3, loaded.getInteractionHistory().size());
 		IMylarElement loadedNode = loaded.get("1");

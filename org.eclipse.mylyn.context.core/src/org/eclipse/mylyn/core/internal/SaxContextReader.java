@@ -24,15 +24,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class SaxContextReader implements IContextReader {
 
-	public MylarContext readContext(File file) {
+	public MylarContext readContext(String handleIdentifier, File file) {
 		if (!file.exists())
 			return null;
 		try {
 
-			SaxContextContentHandler contentHandler = new SaxContextContentHandler();
+			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
-
 			reader.parse(new InputSource(new FileInputStream(file)));
 			return contentHandler.getContext();
 

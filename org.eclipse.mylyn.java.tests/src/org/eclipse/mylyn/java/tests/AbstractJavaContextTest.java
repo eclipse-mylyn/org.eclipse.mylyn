@@ -82,7 +82,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
         ResourceTestUtil.deleteProject(project.getProject());
         
         for (MylarContext context: manager.getActiveContexts()) {
-			manager.contextDeactivated(context.getId());
+			manager.contextDeactivated(context.getHandleIdentifier());
 		}
         if (manager.hasActiveContext()) System.err.println("> still active: " + manager.getActiveContext().getInteresting());
         assertFalse(manager.hasActiveContext());

@@ -68,7 +68,7 @@ public class DomContextWriter implements IContextWriter {
 		clearDocument();
 		root = doc.createElement("InteractionHistory");
 		root.setAttribute("Version", "1");
-		root.setAttribute("Id", context.getId());
+		root.setAttribute("Id", context.getHandleIdentifier());
 
 		for (InteractionEvent ie : context.getInteractionHistory()) {
 			writeInteractionEvent(ie);
