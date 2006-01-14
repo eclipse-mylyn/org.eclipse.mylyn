@@ -77,7 +77,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		MylarPlugin.getContextManager().contextActivated(mockContext);
 
 		// Save the context file and check that it exists
-		MylarPlugin.getContextManager().saveContext(mockContext.getId());
+		MylarPlugin.getContextManager().saveContext(mockContext.getHandleIdentifier());
 		File taskFile = MylarPlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
 		assertTrue(MylarPlugin.getContextManager().hasContext(task1.getHandleIdentifier()));
 		assertTrue(taskFile.exists());
@@ -91,7 +91,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
-		MylarPlugin.getContextManager().contextDeactivated(mockContext.getId());
+		MylarPlugin.getContextManager().contextDeactivated(mockContext.getHandleIdentifier());
 		
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 		super.tearDown();

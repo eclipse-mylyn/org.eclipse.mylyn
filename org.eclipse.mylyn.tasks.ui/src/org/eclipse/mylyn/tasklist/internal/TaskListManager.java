@@ -87,8 +87,10 @@ public class TaskListManager {
 			}
 			taskListInitialized = true;
 			for (ITaskActivityListener listener : listeners) listener.tasklistRead();
-			for (ITask active: taskList.getActiveTasks()) {
-				activateTask(active);
+			// only activate the first task to avoid confusion of mutliple active tasks on startup
+			List<ITask> activeTasks = taskList.getActiveTasks();
+			if (activeTasks.size() > 0) {
+				activateTask(activeTasks.get(0));
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "Could not read task list");
