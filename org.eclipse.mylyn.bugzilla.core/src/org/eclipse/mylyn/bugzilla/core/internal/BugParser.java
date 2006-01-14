@@ -727,7 +727,7 @@ public class BugParser {
 		// problem, assume that there was a login problem
 		if (bug.getCreated() == null && bug.getAttributes().isEmpty()) {
 			if (possibleBadLogin) {
-				throw new LoginException("Bugzilla login information incorrect");
+				throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE);
 			} else {
 				return null;
 			}

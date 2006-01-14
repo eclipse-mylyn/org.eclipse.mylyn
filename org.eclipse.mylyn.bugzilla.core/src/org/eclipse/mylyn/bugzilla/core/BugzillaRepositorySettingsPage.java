@@ -40,7 +40,7 @@ public class BugzillaRepositorySettingsPage extends RepositorySettingsPage {
 
 	protected void createAdditionalControls(Composite parent) {
 		validateServerButton = new Button(parent, SWT.PUSH);
-		validateServerButton.setText("Validate Bugzilla Server");
+		validateServerButton.setText("Validate Server URL");
 		validateServerButton.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {

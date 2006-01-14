@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 
 /**
@@ -111,7 +112,7 @@ public class KeywordParser {
 		// if we don't have any keywords and suspect that there was a login
 		// problem, assume we had a login problem
 		if (keywords == null && possibleBadLogin)
-			throw new LoginException("Bugzilla login information incorrect");
+			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE);
 		return keywords;
 	}
 

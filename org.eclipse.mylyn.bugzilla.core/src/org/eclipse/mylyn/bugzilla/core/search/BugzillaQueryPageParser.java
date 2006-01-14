@@ -438,7 +438,7 @@ public class BugzillaQueryPageParser {
 		// if all of the lists are empty and we suspect bad login info, assume
 		// that it was a bad login
 		if (possibleBadLogin && allListsEmpty())
-			throw new LoginException("Bugzilla login information incorrect");
+			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE);
 	}
 
 	/**

@@ -114,7 +114,7 @@ public class ProductParser
 //		
 //		// if we have no products and we suspect a login error, assume that it was a login error
 //		if(products == null && possibleBadLogin)
-//			throw new LoginException("Bugzilla login information incorrect");
+//			throw new LoginException(IBugzillaConstants.MESSAGE_LOGIN_FAILURE);
 //		return products;
 	}
 
