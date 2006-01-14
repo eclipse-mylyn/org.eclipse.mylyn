@@ -203,7 +203,6 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				String repositoryUrl = repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
 				repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND , repositoryUrl);
 				updateAttributesFromRepository(repositoryUrl, false);
-				//				handleWidgetSelected(summaryPattern, summaryOperation, previousSummaryPatterns);
 			}
 		});
 		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
