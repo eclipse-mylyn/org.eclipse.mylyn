@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -444,33 +445,39 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 			@Override
 			public boolean performDrop(Object data) {
-				Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
-						.getFirstElement();
-				if (selectedObject instanceof ITask) {
-					contentProvider.addTask((ITask) selectedObject);
-					updateEstimatedHours(contentProvider);
-					tableViewer.refresh();
-					return true;
-				} else if (selectedObject instanceof ITaskListElement) {
-					if (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
-						ITask task = null;
-						if (selectedObject instanceof ITask) {
-							task = (ITask) selectedObject;
-						} else if (selectedObject instanceof IQueryHit) {
-							task = ((IQueryHit)selectedObject).getOrCreateCorrespondingTask();
-//							task = MylarTaskListPlugin.getDefault().getHandlerForElement(
-//									(ITaskListElement) selectedObject).getCorrespondingTask((IQueryHit) selectedObject);
+				
+				IStructuredSelection selection = ((IStructuredSelection) TaskListView
+						.getDefault().getViewer().getSelection());
+
+				for (Iterator iter = selection.iterator(); iter.hasNext();) {
+					Object selectedObject = iter.next();
+					if (selectedObject instanceof ITask) {
+						contentProvider.addTask((ITask) selectedObject);
+						updateEstimatedHours(contentProvider);
+						continue;
+					} else if (selectedObject instanceof ITaskListElement) {
+						if (MylarTaskListPlugin.getDefault()
+								.getHandlerForElement(
+										(ITaskListElement) selectedObject) != null) {
+							ITask task = null;
+							if (selectedObject instanceof ITask) {
+								task = (ITask) selectedObject;
+							} else if (selectedObject instanceof IQueryHit) {
+								task = ((IQueryHit) selectedObject)
+										.getOrCreateCorrespondingTask();
+							}
+							if (task != null) {
+								contentProvider.addTask(task);
+								updateEstimatedHours(contentProvider);
+								continue;
+							}
 						}
-						if (task != null) {
-							contentProvider.addTask(task);
-							updateEstimatedHours(contentProvider);
-							tableViewer.refresh();
-							return true;
-						}
+					} else {
+						return false;
 					}
-					return false;
 				}
-				return false;
+				tableViewer.refresh();
+				return true;				
 			}
 
 			@Override
@@ -481,7 +488,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 						&& ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
 					return true;
 				}
-				return TextTransfer.getInstance().isSupportedType(transferType);
+				return false;
 			}
 		});
 	}
