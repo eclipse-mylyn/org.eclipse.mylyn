@@ -37,7 +37,7 @@ import org.eclipse.swt.dnd.TransferData;
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	private Task newTask = null;
-
+	
 	public TaskListDropAdapter(Viewer viewer) {
 		super(viewer);
 		setFeedbackEnabled(true);
@@ -46,39 +46,54 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	@Override
 	public boolean performDrop(Object data) {
 
-		if (isUrl(data)) {
-			return createTaskFromUrl(data);
+		Object currentTarget = getCurrentTarget();
+		List<ITask> tasksToMove = new ArrayList<ITask>();
+
+		if (isUrl(data) && createTaskFromUrl(data)) {
+			tasksToMove.add(newTask);
 		} else {
 			ISelection selection = ((TreeViewer) getViewer()).getSelection();
-			Object currentTarget = getCurrentTarget();
-			List<ITask> tasksToMove = new ArrayList<ITask>();
-			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
+			for (Object selectedObject : ((IStructuredSelection) selection)
+					.toList()) {
 				ITask toMove = null;
 				if (selectedObject instanceof ITask) {
 					toMove = (ITask) selectedObject;
 				} else if (selectedObject instanceof IQueryHit) {
-					toMove = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
+					toMove = ((IQueryHit) selectedObject)
+							.getOrCreateCorrespondingTask();
 				}
 				if (toMove != null) {
 					tasksToMove.add(toMove);
 				}
 			}
-
-			for (ITask task : tasksToMove) {
-				if (currentTarget instanceof TaskCategory) {
-					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) currentTarget, task);
-				} else if (currentTarget instanceof ITask) {
-					ITask targetTask = (ITask) currentTarget;
-					if (targetTask.getCategory() == null) {
-						MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
-					} else {
-						MylarTaskListPlugin.getTaskListManager().moveToCategory(
-								(TaskCategory) targetTask.getCategory(), task);
-					}
-				}
-			}
-			return true;
 		}
+		
+		for (ITask task : tasksToMove) {
+			if (currentTarget instanceof TaskCategory) {
+				MylarTaskListPlugin.getTaskListManager().moveToCategory(
+						(TaskCategory) currentTarget, task);
+			} else if (currentTarget instanceof ITask) {
+				ITask targetTask = (ITask) currentTarget;
+				if (targetTask.getCategory() == null) {
+					MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
+				} else {
+					MylarTaskListPlugin.getTaskListManager().moveToCategory(
+							(TaskCategory) targetTask.getCategory(), task);
+				}
+			} else if (currentTarget == null) {
+				MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
+			}
+		}
+
+		// Make new task the current selection in the view
+		if (newTask != null) {
+			StructuredSelection ss = new StructuredSelection(newTask);
+			getViewer().setSelection(ss);
+			getViewer().refresh();
+		}
+
+		return true;
+		
 	}
 
 	/**
@@ -116,15 +131,17 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		}
 
-		// If a Title is provided, use it.
-		if (urlTransfer.length > 1) {
-			urlTitle = urlTransfer[1];
-		}
-
-		if (urlTransfer.length < 2) { // no title provided
+		
+//		 REMOVED in order to default to retrieving title from url rather than accepting
+//		 what was sent by the brower's DnD code. (see bug 114401)
+		// If a Title is provided, use it.		
+//		if (urlTransfer.length > 1) {
+//			urlTitle = urlTransfer[1];
+//		}
+//		if (urlTransfer.length < 2) { // no title provided
 			retrieveTaskDescription(url);
-		}
-
+//		}
+			
 		newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle, true);
 
 		if (newTask == null) {
@@ -133,18 +150,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		newTask.setPriority(MylarTaskListPlugin.PriorityLevel.P3.toString());
 		newTask.setUrl(url);
-
-		// Place new Task at root of task list
-		MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
-
 		newTask.openTaskInEditor(true);
-
-		// Make this new task the current selection in the view
-		StructuredSelection ss = new StructuredSelection(newTask);
-		getViewer().setSelection(ss);
-
-		getViewer().refresh();
-
+		
 		return true;
 
 	}
@@ -165,6 +172,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		return TextTransfer.getInstance().isSupportedType(transferType);
 	}
+	
 
 	/**
 	 * Attempts to set the task pageTitle to the title from the specified url
@@ -172,24 +180,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	protected void retrieveTaskDescription(final String url) {
 
 		try {
-//			final Shell shell = new Shell(Display.getDefault());
-//			shell.setVisible(false);
-//			Browser browser = new Browser(shell, SWT.NONE);
-
-//			RetrievePageTitleFromUrlJob job = new RetrievePageTitleFromUrlJob("Retrieving task description", url) {
-//
-//				@Override
-//				public void setTitle(String title) {
-//					if (newTask != null) {
-//						newTask.setDescription(title);
-//						MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(newTask);
-//					}
-//				}
-//			};
-//			browser.addTitleListener(job);
-//			browser.setUrl(url);
-//			job.schedule();
-			
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
 
 				@Override
@@ -205,87 +195,4 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			MylarStatusHandler.fail(e, "could not open task web page", false);
 		}
 	}
-
-//	/**
-//	 * Waits for the title from the browser
-//	 * 
-//	 * @author Wesley Coelho
-//	 */
-//	private class RetrievePageTitleFromUrlJob extends Job implements TitleListener {
-//
-//		private final static long MAX_WAIT_TIME_MILLIS = 1000 * 30; // (30
-//																	// Seconds)
-//
-//		private final static long SLEEP_INTERVAL_MILLIS = 500;
-//
-//		private String taskURL = null;
-//
-//		private String pageTitle = null;
-//
-//		private boolean retrievalFailed = false;
-//
-//		private long timeWaitedMillis = 0;
-//
-//		/**
-//		 * Determines when to ignore the second call to changed()
-//		 */
-//		boolean ignoreChangeCall = false; 
-//
-//		public RetrievePageTitleFromUrlJob(String name, String url) {
-//			super(name);
-//			taskURL = url;
-//		}
-//
-//		@Override
-//		protected IStatus run(IProgressMonitor monitor) {
-//
-//			while (pageTitle == null && !retrievalFailed && (timeWaitedMillis <= MAX_WAIT_TIME_MILLIS)) {
-//
-//				try {
-//					Thread.sleep(SLEEP_INTERVAL_MILLIS);
-//				} catch (InterruptedException e) {
-//					MylarStatusHandler.fail(e, "Thread interrupted during sleep", false);
-//				}
-//				timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
-//			}
-//
-//			if (pageTitle != null) {
-//				Display.getDefault().asyncExec(new Runnable() {
-//					public void run() {
-//						newTask.setDescription(pageTitle);
-//						getViewer().refresh();
-//					}
-//				});
-//				return Status.OK_STATUS;
-//			} else {
-//				Display.getDefault().asyncExec(new Runnable() {
-//					public void run() {
-//						MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Description Error",
-//								"Could not retrieve a description from the specified web page.");
-//					}
-//				});
-//				return Status.CANCEL_STATUS;
-//			}
-//
-//		}
-//
-//		public void changed(TitleEvent event) {
-//			if (!ignoreChangeCall) {
-//				if (event.title.equals(taskURL)) {
-//					return;
-//				} else {
-//					ignoreChangeCall = true;
-//					// Last one is bugzilla-specific
-//					if (event.title.equals(taskURL + "/") || event.title.equals("Object not found!")
-//							|| event.title.equals("No page to display") || event.title.equals("Cannot find server")
-//							|| event.title.equals("Invalid Bug ID")) {
-//						retrievalFailed = true;
-//					} else {
-//						pageTitle = event.title;
-//					}
-//				}
-//			}
-//		}
-//	}
-
 }

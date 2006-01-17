@@ -23,6 +23,9 @@ public interface IQueryHit extends ITaskListElement {
 	
 	public ITask getOrCreateCorrespondingTask();
 
+	/**
+	 * @return	null	if there is no corresponding report
+	 */
 	public ITask getCorrespondingTask();
 	
 	public void setCorrespondingTask(ITask task);
