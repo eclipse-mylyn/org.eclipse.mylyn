@@ -31,7 +31,6 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.core.internal.dt.MylarWebRef;
@@ -46,12 +45,14 @@ import org.eclipse.mylar.tasklist.ui.ComboSelectionDialog;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -67,7 +68,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 
@@ -146,10 +146,18 @@ public class TaskPlannerEditorPart extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		ScrolledForm sform = toolkit.createScrolledForm(parent);
-		sform.getBody().setLayout(new TableWrapLayout());
+		ScrolledForm sform = toolkit.createScrolledForm(parent);		
 		Composite editorComposite = sform.getBody();
 
+		editorComposite.setLayout(new GridLayout());
+		GridData gridData = new GridData();
+ 		gridData.horizontalAlignment = GridData.FILL_BOTH;
+ 		gridData.grabExcessHorizontalSpace = true;
+ 		gridData.grabExcessVerticalSpace = true;
+ 		editorComposite.setLayoutData(gridData);
+	
+		
+		
 		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate());
 		String label = LABEL_TASK_ACTIVITY;
 
@@ -157,18 +165,39 @@ public class TaskPlannerEditorPart extends EditorPart {
 		allTasks.addAll(editorInput.getCompletedTasks());
 		allTasks.addAll(editorInput.getInProgressTasks());
 
+		SashForm sashForm = new SashForm(editorComposite, SWT.VERTICAL);
+
+		sashForm.setLayout(new GridLayout());
+		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+	
+
+		Composite activityContainer = toolkit.createComposite(sashForm);
+		GridLayout activityLayout = new GridLayout();
+		activityLayout.marginBottom = 10;
+		activityContainer.setLayout(activityLayout);
+
+			
 		TaskActivityContentProvider activityContentProvider = new TaskActivityContentProvider(allTasks);
 		// ViewerSorter activitySorter = new
 		// TaskActivitySorter(activitySortConstants);
-		TableViewer activityViewer = createTableSection(editorComposite, toolkit, label, activityColumnNames,
-				activityColumnWidths, activitySortConstants);
+		TableViewer activityViewer = createTableSection(activityContainer, toolkit, label, activityColumnNames,
+				activityColumnWidths, activitySortConstants);		
 		activityViewer.setContentProvider(activityContentProvider);
 		activityViewer.setLabelProvider(new TaskActivityLabelProvider());
 		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTable(), activityViewer, false);
 		activityViewer.setInput(editorInput);
+		
 
+		Composite planContainer = toolkit.createComposite(sashForm);
+		GridLayout planLayout = new GridLayout();
+		planLayout.marginTop = 10;
+		planContainer.setLayout(planLayout);
+
+	
+		
 		TaskPlanContentProvider planContentProvider = new TaskPlanContentProvider();
-		TableViewer planViewer = createTableSection(editorComposite, toolkit, "Task Plan", planColumnNames,
+		TableViewer planViewer = createTableSection(planContainer, toolkit, "Task Plan", planColumnNames,
 				planColumnWidths, planSortConstants);
 		planViewer.setContentProvider(planContentProvider);
 		planViewer.setLabelProvider(new TaskPlanLabelProvider());
@@ -190,8 +219,10 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private void createSummarySection(Composite parent, FormToolkit toolkit, Date startDate) {
 		Section summarySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		summarySection.setText(LABEL_DIALOG);
-		summarySection.setLayout(new TableWrapLayout());
-		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+//		summarySection.setLayout(new TableWrapLayout());
+//		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		summarySection.setLayout(new GridLayout());
+		summarySection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Composite summaryContainer = toolkit.createComposite(summarySection);
 		summarySection.setClient(summaryContainer);
 		TableWrapLayout layout = new TableWrapLayout();
@@ -310,29 +341,28 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private TableViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
 			int[] columnWidths, int[] sortConstants) {
-		Section detailSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		detailSection.setText(title);
-		detailSection.setLayout(new TableWrapLayout());
-		detailSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		Composite detailContainer = toolkit.createComposite(detailSection);
-		detailSection.setClient(detailContainer);
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;
-		detailContainer.setLayout(layout);
+		Section tableSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
+		tableSection.setText(title);
+		tableSection.setExpanded(true);
+		tableSection.setLayout(new GridLayout());
+		tableSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		Composite detailContainer = toolkit.createComposite(tableSection);
+		tableSection.setClient(detailContainer);
+		detailContainer.setLayout(new GridLayout());
+		detailContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+
 
 		return createTable(detailContainer, toolkit, columnNames, columnWidths, sortConstants);
 	}
 
 	private TableViewer createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths,
 			int[] sortConstants) {
-		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.FILL;
 		Table table = toolkit.createTable(parent, style);
-		TableLayout tlayout = new TableLayout();
-		table.setLayout(tlayout);
-		TableWrapData wd = new TableWrapData(TableWrapData.FILL_GRAB);
-		wd.heightHint = 200;
-		wd.grabVertical = true;
-		table.setLayoutData(wd);
+		
+		table.setLayout(new GridLayout());
+		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -350,7 +380,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		TableViewer tableViewer = new TableViewer(table);
 		tableViewer.setUseHashlookup(true);
-		tableViewer.setColumnProperties(columnNames);
+		tableViewer.setColumnProperties(columnNames);		
 
 		final OpenTaskEditorAction openAction = new OpenTaskEditorAction(tableViewer);
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {

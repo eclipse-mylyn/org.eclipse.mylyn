@@ -37,6 +37,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -59,8 +60,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.part.EditorPart;
@@ -264,21 +263,10 @@ public class TaskInfoEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		form.getBody().setLayout(new TableWrapLayout());
-		editorComposite = form.getBody();
 
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.bottomMargin = 10;
-		layout.topMargin = 10;
-		layout.leftMargin = 10;
-		layout.rightMargin = 10;
-		layout.numColumns = 1;
-		layout.makeColumnsEqualWidth = true;
-		layout.verticalSpacing = 20;
-		layout.horizontalSpacing = 10;
-		editorComposite.setLayout(layout);
-		// editorComposite.setLayoutData(new
-		// TableWrapData(TableWrapData.FILL_GRAB));
+		editorComposite = form.getBody();
+		editorComposite.setLayout(new GridLayout());
+		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		// Put the info onto the editor
 		createContent(editorComposite, toolkit);
@@ -310,27 +298,28 @@ public class TaskInfoEditor extends EditorPart {
 		}
 
 		try {
-			createOverviewSection(parent, toolkit);
+			createSummarySection(parent, toolkit);
 			createPlanningSection(parent, toolkit);
 			createDocumentationSection(parent, toolkit);
-			// createRelatedLinksSection(parent, toolkit);
-			createDetailsSection(parent, toolkit);
+			//// createRelatedLinksSection(parent, toolkit);
+			createResourcesSection(parent, toolkit);
 		} catch (SWTException e) {
 			MylarStatusHandler.log(e, "content failed");
 		}
 		return null;
 	}
 
-	private void createOverviewSection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
+	private void createSummarySection(Composite parent, FormToolkit toolkit) {
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | Section.TWISTIE);
 		section.setText(DESCRIPTION_OVERVIEW);
-
+		section.setExpanded(true);
 		if (!task.isLocal()) {
 			section.setDescription("To modify these fields use the repository editor.");
 		}
 
-		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
 				form.reflow(true);
@@ -343,18 +332,17 @@ public class TaskInfoEditor extends EditorPart {
 
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;
-		container.setLayout(layout);
-		container.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		GridLayout compLayout = new GridLayout();
+		compLayout.numColumns = 2;
+		container.setLayout(compLayout);
+		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
 
 		Label l = toolkit.createLabel(container, "Description:");
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		description = toolkit.createText(container, task.getDescription(true), SWT.BORDER);
-		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
-
-		description.setLayoutData(td);
-
+		description = toolkit.createText(container, task.getDescription(true), SWT.BORDER);		
+		description.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
 		if (!task.isLocal()) {
 			description.setEnabled(false);
 		} else {
@@ -376,8 +364,7 @@ public class TaskInfoEditor extends EditorPart {
 		Label urlLabel = toolkit.createLabel(container, "Web Link:");
 		urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		issueReportURL = toolkit.createText(container, task.getUrl(), SWT.BORDER);
-		issueReportURL.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		// issueReportURL.setForeground(HYPERLINK);
+		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		if (!task.isLocal()) {
 			issueReportURL.setEditable(false);
@@ -452,8 +439,9 @@ public class TaskInfoEditor extends EditorPart {
 	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		section.setText("Documentation");
-		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.setExpanded(true);
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_BOTH));		
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
 				form.reflow(true);
@@ -465,15 +453,13 @@ public class TaskInfoEditor extends EditorPart {
 		});
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);
-		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 1;
-		container.setLayout(layout);
+		container.setLayout(new GridLayout());
 
-		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		TableWrapData tablewrap = new TableWrapData(TableWrapData.FILL_GRAB);
-		tablewrap.heightHint = 200;
-		tablewrap.grabVertical = true;
-		notes.setLayoutData(tablewrap);
+		notes = toolkit.createText(container, task.getNotes(), SWT.BORDER
+				| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		
+		GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
+		notes.setLayoutData(notesDataLayout);
 		notes.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				markDirty(true);
@@ -485,10 +471,11 @@ public class TaskInfoEditor extends EditorPart {
 
 	private void createPlanningSection(Composite parent, FormToolkit toolkit) {
 
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Planning");
-		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		section.setExpanded(true);
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
 				form.reflow(true);
@@ -501,11 +488,11 @@ public class TaskInfoEditor extends EditorPart {
 
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
-		TableWrapLayout layout = new TableWrapLayout();
+		GridLayout layout = new GridLayout();
 		layout.numColumns = 5;
-		layout.rightMargin = 50;
+		layout.marginRight = 100;
 		sectionClient.setLayout(layout);
-		sectionClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Reminder
 		Label label = toolkit.createLabel(sectionClient, "Reminder:");
@@ -529,7 +516,8 @@ public class TaskInfoEditor extends EditorPart {
 			}
 		});
 
-		datePicker.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		datePicker.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
 
 		removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		if (task.isActive()) {
@@ -560,18 +548,18 @@ public class TaskInfoEditor extends EditorPart {
 		estimated.setDigits(0);
 		estimated.setMaximum(100);
 		estimated.setMinimum(0);
-		estimated.setIncrement(1);
+		estimated.setIncrement(1);		
 		estimated.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				TaskInfoEditor.this.markDirty(true);
 			}
 		});
 
-		estimated.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		estimated.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		label = toolkit.createLabel(sectionClient, "hours ");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		label.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Creation date
 		label = toolkit.createLabel(sectionClient, "Creation date:");
@@ -585,8 +573,7 @@ public class TaskInfoEditor extends EditorPart {
 		}
 
 		Text creationDate = toolkit.createText(sectionClient, creationDateString, SWT.BORDER);
-		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.grabHorizontal = true;
+		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		creationDate.setLayoutData(td);
 		creationDate.setEditable(false);
 		creationDate.setEnabled(false);
@@ -606,8 +593,8 @@ public class TaskInfoEditor extends EditorPart {
 
 		Text elapsedTimeText = toolkit.createText(sectionClient, elapsedTimeString, SWT.BORDER);
 
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.grabHorizontal = true;
+		td = new GridData(GridData.FILL_HORIZONTAL);
+		
 		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
 
@@ -623,8 +610,8 @@ public class TaskInfoEditor extends EditorPart {
 			completionDateString = getTaskDateString(task);
 		}
 		endDate = toolkit.createText(sectionClient, completionDateString, SWT.BORDER);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		td.grabHorizontal = true;
+		td = new GridData(GridData.FILL_HORIZONTAL);
+
 		endDate.setLayoutData(td);
 		endDate.setEditable(false);
 		endDate.setEnabled(false);
@@ -648,11 +635,11 @@ public class TaskInfoEditor extends EditorPart {
 		return completionDateString;
 	}
 
-	private void createDetailsSection(Composite parent, FormToolkit toolkit) {
+	private void createResourcesSection(Composite parent, FormToolkit toolkit) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Resources");
-		section.setLayout(new TableWrapLayout());
-		section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		section.setLayout(new GridLayout());
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
 				form.reflow(true);
@@ -665,10 +652,10 @@ public class TaskInfoEditor extends EditorPart {
 
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);
-		TableWrapLayout layout = new TableWrapLayout();
+		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		container.setLayout(layout);
-
+		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// Label l = toolkit.createLabel(container, "Task Handle:");
 		// l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		// Text handle = toolkit.createText(container,
@@ -687,7 +674,7 @@ public class TaskInfoEditor extends EditorPart {
 		// MylarContextManager.CONTEXT_FILE_EXTENSION;
 		if (contextFile != null) {
 			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.BORDER);
-			pathText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+			pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			pathText.setEditable(false);
 			pathText.setEnabled(false);
 		}
