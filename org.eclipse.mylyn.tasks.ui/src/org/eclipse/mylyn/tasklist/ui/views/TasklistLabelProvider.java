@@ -78,7 +78,6 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
         }
         if (columnIndex == 0) {
         	if (element instanceof ITaskCategory || element instanceof ITaskQuery) {
-        	
         		return ((ITaskListElement)element).getIcon(); 
         	} else {
 //        		return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
@@ -103,7 +102,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
     		for (ITask child : ((ITaskCategory)object).getChildren()) {
     			if (child.isActive()) {
     				return TaskListImages.COLOR_TASK_ACTIVE;
-    			} else if (child.isPastReminder()) {
+    			} else if (child.isPastReminder() && !child.isCompleted()) {
     				return TaskListImages.COLOR_TASK_OVERDUE;
     			}
     		}
