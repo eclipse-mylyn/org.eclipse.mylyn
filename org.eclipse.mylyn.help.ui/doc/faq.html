@@ -95,6 +95,10 @@ a bug</a>.&nbsp; The current performance profile is:</p>
 	<li>Mylar only runs if a task is active, and has no impact on Eclipse if no 
 	task is active.</li>
 	<li>Task context models have negligible memory overhead.&nbsp; </li>
+	<li>When a task is active, additional view refresh is required to update the 
+	views based on interest model changes.&nbsp; This should not be noticeable 
+	on Windows where refresh is very quick, but could be more noticeable on 
+	other platforms.</li>
 	<li>The time to activate a task context is dominated by the time it takes 
 	Eclipse to open the editors in the context.&nbsp; You can set the preference 
 	for how many editors to open in the Mylar preference page (e.g. setting to 1 
