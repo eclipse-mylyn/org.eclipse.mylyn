@@ -18,11 +18,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -55,6 +59,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	private Browser webBrowser;
 
 	private TaskEditorInput taskEditorInput;
+	
+	private TaskEditorListener partListener;
 
 	private List<IEditorPart> editorsToNotifyOnChange = new ArrayList<IEditorPart>();
 
@@ -93,9 +99,10 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		IWorkbench workbench = MylarTaskListPlugin.getDefault().getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		IWorkbenchPage activePage = window.getActivePage();
-		TaskEditorListener listener = new TaskEditorListener();
-		activePage.addPartListener(listener);
+		partListener = new TaskEditorListener();
+		activePage.addPartListener(partListener);
 		taskInfoEditor = new TaskInfoEditor();
+		
 	}
 
 	@Override
@@ -200,7 +207,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		 */
 		task = taskEditorInput.getTask();
 		try {
-			taskInfoEditor.init(this.getEditorSite(), this.getEditorInput());
+			taskInfoEditor.init(this.getEditorSite(), this.getEditorInput());			
 			taskInfoEditor.setTask(task);
 			// Set the title on the editor's tab
 			this.setPartName(taskEditorInput.getLabel());
@@ -219,13 +226,27 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		return taskInfoEditor.isDirty();
 	}
 
-	private static class TaskEditorListener implements IPartListener {
+	private class TaskEditorListener implements IPartListener {
 
 		/**
 		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
 		 */
 		public void partActivated(IWorkbenchPart part) {
-			// don't care about this event
+			if (part.equals(MylarTaskEditor.this)) {				
+				ITask task = taskEditorInput.getTask();
+				IQueryHit hit = null;
+				MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(task.getHandleIdentifier());
+				
+				Viewer viewer = TaskListView.getDefault().getViewer();				
+				viewer.setSelection(new StructuredSelection(task));
+				// if no task exists, select the query hit if exists
+				if (viewer.getSelection().isEmpty()
+						&& (hit = MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(
+								task.getHandleIdentifier())) != null) {
+					viewer.setSelection(new StructuredSelection(hit));
+				} 
+				viewer.refresh();
+			}
 		}
 
 		/**
@@ -289,12 +310,27 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	}
 	
 	public void dispose() {
-		for(IEditorPart part : editorsToNotifyOnChange) {
+		for (IEditorPart part : editorsToNotifyOnChange) {
 			part.dispose();
 		}
-		if(taskInfoEditor != null) taskInfoEditor.dispose();
-		if(webBrowser!= null) webBrowser.dispose();		
-		
+		if (taskInfoEditor != null)
+			taskInfoEditor.dispose();
+		if (webBrowser != null)
+			webBrowser.dispose();
+
+		IWorkbench workbench = MylarTaskListPlugin.getDefault().getWorkbench();
+		IWorkbenchWindow window = null;
+		IWorkbenchPage activePage = null;
+		if (workbench != null) {
+			window = workbench.getActiveWorkbenchWindow();
+		}
+		if (window != null) {
+			activePage = window.getActivePage();
+		}
+		if (activePage != null) {
+			activePage.removePartListener(partListener);
+		}
+
 	}
 	
 }

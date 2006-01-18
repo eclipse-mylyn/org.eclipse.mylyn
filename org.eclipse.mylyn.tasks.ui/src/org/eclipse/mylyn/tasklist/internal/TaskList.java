@@ -129,6 +129,20 @@ public class TaskList implements Serializable {
 		return findTaskHelper(rootTasks, handle);
 	}
 
+	private IQueryHit findQueryHitHelper(List<? extends ITaskListElement> elements, String handle) {
+		if (handle == null)
+			return null;
+		for (ITaskListElement element : elements) {
+			if (element instanceof IQueryHit) {
+				IQueryHit hit = (IQueryHit) element;
+				if (hit.getHandleIdentifier().compareTo(handle) == 0) {
+					return hit;
+				}
+			}
+		}
+		return null;
+	}
+		
 	private ITask findTaskHelper(List<? extends ITaskListElement> elements, String handle) {
 		if (handle == null) return null;
 		for (ITaskListElement element : elements) {
@@ -240,6 +254,22 @@ public class TaskList implements Serializable {
 		activeTasks.clear();
 		categories.clear();
 		rootTasks.clear();
+	}
+
+	/**
+	 * Use to obtain the QueryHit object associated with a particular
+	 * task handle if it exists. 
+	 * @param handle handle of task 
+	 * @return IQueryHit corresponding to the first hit found in all queries
+	 */
+	public IQueryHit getQueryHitForHandle(String handle) {
+		IQueryHit foundHit = null;		
+		for (ITaskQuery query : queries) {
+			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
+				return foundHit;
+			}
+		}
+		return foundHit;
 	}
 
 //	public void clearActiveTasks() {

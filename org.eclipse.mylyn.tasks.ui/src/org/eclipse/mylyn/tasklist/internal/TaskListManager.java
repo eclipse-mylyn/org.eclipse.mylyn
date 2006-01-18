@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskCategory;
@@ -245,6 +246,18 @@ public class TaskListManager {
 		return taskList.getTaskForHandle(handle, lookInArchives);
 	}
 
+	/**
+	 * Use to obtain the QueryHit object associated with a particular
+	 * task handle  if it exists. 
+	 * @param handle handle of task 
+	 * @return IQueryHit corresponding to the first hit found in all queries
+	 */
+	public IQueryHit getQueryHitForHandle(String handle) {
+		if (handle == null)
+			return null;
+		return taskList.getQueryHitForHandle(handle);
+	}
+	
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;
 	}
