@@ -36,7 +36,8 @@ import org.w3c.dom.NodeList;
  * The wierd thing here is that the registry gets read in as a normal category,
  * but gets written out by createRegistry
  * 
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
+ * @author Ken Sueda
  */
 public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
@@ -171,6 +172,10 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		return false;
 	}
 
+	public boolean canCreateElementFor(ITaskQuery category) {
+		return category instanceof BugzillaQueryCategory;
+	}
+	
 	public boolean canCreateElementFor(ITask task) {
 		return task instanceof BugzillaTask;
 	}
