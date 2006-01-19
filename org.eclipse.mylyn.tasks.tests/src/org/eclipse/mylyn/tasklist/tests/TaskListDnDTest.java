@@ -11,9 +11,12 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListDropAdapter;
@@ -55,18 +58,19 @@ public class TaskListDnDTest extends TestCase {
 		assertTrue(dropAdapter.isUrl(urlData));
 	}
 
-	// XXX: Failing due to asynchronous retrieval of title from url
-//	public void testUrlDrop() {
-//		assertEquals(0, manager.getTaskList().getRootTasks().size());
-//		String url = "http://eclipse.org/mylar";
-//		String title = "Mylar Technology Project";
-//		String urlData = url + "\n" + title;
-//		dropAdapter.performDrop(urlData);
-//		List<ITask> tasks = manager.getTaskList().getRootTasks();
-//		assertNotNull(tasks);
-//		assertEquals(1, tasks.size());
-//		assertEquals(title, tasks.get(0).getDescription(false));
-//		assertEquals(url, tasks.get(0).getUrl());
-//	}
-
+	public void testUrlDrop() {
+		assertEquals(0, manager.getTaskList().getRootTasks().size());
+		String url = "http://eclipse.org/mylar";
+		String title = "Mylar Technology Project";
+		String urlData = url + "\n" + title;
+		
+		dropAdapter.performDrop(urlData);
+		List<ITask> tasks = manager.getTaskList().getRootTasks();
+		assertNotNull(tasks);
+		assertEquals(1, tasks.size());
+		assertEquals(url, tasks.get(0).getUrl());
+		
+		// TODO: Failing due to asynchronous retrieval of title from url
+		// assertEquals(title, tasks.get(0).getDescription(false));
+	}
 }

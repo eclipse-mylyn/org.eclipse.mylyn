@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.tasklist.ui.views.RetrieveTitleFromUrlJob;
 
 /**
@@ -22,9 +23,8 @@ import org.eclipse.mylar.tasklist.ui.views.RetrieveTitleFromUrlJob;
  */
 public class RetrieveTitleFromUrlTest extends TestCase {
 
+	// XXX broken due to hang that causes the scheduled job to never complete
 	public void testRetrieve() throws InterruptedException, InvocationTargetException {
-		// XXX broken due to hang that causes the scheduled job to never complete
-		
 		final String url = "http://eclipse.org/mylar/index.php";
 		final String knownTitle = "Mylar Technology Project";
 		
@@ -33,14 +33,10 @@ public class RetrieveTitleFromUrlTest extends TestCase {
 			public void setTitle(String title) {
 				assertEquals(knownTitle, title);
 			}
-
 		};
-		job.schedule();
-			
-		do {
-			Thread.sleep(100); 
-		} while (!job.isTitleRetrieved());
+		job.run(new NullProgressMonitor());
+		
 		assertTrue(job.isTitleRetrieved());
+		assertEquals(knownTitle, job.getPageTitle());
 	}
-	
 }

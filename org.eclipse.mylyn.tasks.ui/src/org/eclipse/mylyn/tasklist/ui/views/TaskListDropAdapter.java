@@ -32,7 +32,7 @@ import org.eclipse.swt.dnd.TransferData;
 
 /**
  * @author Mik Kersten
- * @author Robert Elves (added task creation support)
+ * @author Robert Elves (added URL based task creation support)
  */
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
@@ -53,32 +53,29 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			tasksToMove.add(newTask);
 		} else {
 			ISelection selection = ((TreeViewer) getViewer()).getSelection();
-			for (Object selectedObject : ((IStructuredSelection) selection)
-					.toList()) {
+			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
 				ITask toMove = null;
 				if (selectedObject instanceof ITask) {
 					toMove = (ITask) selectedObject;
 				} else if (selectedObject instanceof IQueryHit) {
-					toMove = ((IQueryHit) selectedObject)
-							.getOrCreateCorrespondingTask();
+					toMove = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
 				}
 				if (toMove != null) {
 					tasksToMove.add(toMove);
 				}
 			}
 		}
-		
+
 		for (ITask task : tasksToMove) {
 			if (currentTarget instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().moveToCategory(
-						(TaskCategory) currentTarget, task);
+				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) currentTarget, task);
 			} else if (currentTarget instanceof ITask) {
 				ITask targetTask = (ITask) currentTarget;
 				if (targetTask.getCategory() == null) {
 					MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
 				} else {
-					MylarTaskListPlugin.getTaskListManager().moveToCategory(
-							(TaskCategory) targetTask.getCategory(), task);
+					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory) targetTask.getCategory(),
+							task);
 				}
 			} else if (currentTarget == null) {
 				MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
@@ -93,7 +90,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		}
 
 		return true;
-		
+
 	}
 
 	/**
@@ -123,7 +120,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		String[] urlTransfer = ((String) data).split("\n");
 
 		String url = "";
-		String urlTitle = "";
+		String urlTitle = "<retrieving from URL>";
 
 		if (urlTransfer.length > 0) {
 			url = urlTransfer[0];
@@ -131,17 +128,17 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		}
 
+		// Removed in order to default to retrieving title from url rather than
+		// accepting what was sent by the brower's DnD code. (see bug 114401)
+		// If a Title is provided, use it.
+		// if (urlTransfer.length > 1) {
+		// urlTitle = urlTransfer[1];
+		// }
+		// if (urlTransfer.length < 2) { // no title provided
+		// retrieveTaskDescription(url);
+		// }
+		retrieveTaskDescription(url);
 		
-//		 REMOVED in order to default to retrieving title from url rather than accepting
-//		 what was sent by the brower's DnD code. (see bug 114401)
-		// If a Title is provided, use it.		
-//		if (urlTransfer.length > 1) {
-//			urlTitle = urlTransfer[1];
-//		}
-//		if (urlTransfer.length < 2) { // no title provided
-			retrieveTaskDescription(url);
-//		}
-			
 		newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle, true);
 
 		if (newTask == null) {
@@ -151,7 +148,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		newTask.setPriority(MylarTaskListPlugin.PriorityLevel.P3.toString());
 		newTask.setUrl(url);
 		newTask.openTaskInEditor(true);
-		
+
 		return true;
 
 	}
@@ -172,7 +169,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		return TextTransfer.getInstance().isSupportedType(transferType);
 	}
-	
 
 	/**
 	 * Attempts to set the task pageTitle to the title from the specified url
@@ -181,16 +177,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		try {
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
-
 				@Override
 				protected void setTitle(final String pageTitle) {
 					newTask.setDescription(pageTitle);
 					MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(newTask);
 				}
-
 			};
 			job.schedule();
-
 		} catch (RuntimeException e) {
 			MylarStatusHandler.fail(e, "could not open task web page", false);
 		}

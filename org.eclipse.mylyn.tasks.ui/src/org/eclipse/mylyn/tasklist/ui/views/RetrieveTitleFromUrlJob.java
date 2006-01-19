@@ -23,7 +23,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 
 	public static final String LABEL_TITLE = "Retrieving description from URL";
 
-	private final static long MAX_WAIT_TIME_MILLIS = 1000 * 30; // (30 Seconds)
+	private final static long MAX_WAIT_TIME_MILLIS = 1000 * 10; // (10 Seconds)
 
 	private final static long SLEEP_INTERVAL_MILLIS = 500;
 
@@ -47,7 +47,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 	protected abstract void setTitle(String pageTitle);
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	public IStatus run(IProgressMonitor monitor) {
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -60,7 +60,6 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 		});
 
 		while (pageTitle == null && !retrievalFailed && (timeWaitedMillis <= MAX_WAIT_TIME_MILLIS)) {
-
 			try {
 				Thread.sleep(SLEEP_INTERVAL_MILLIS);
 			} catch (InterruptedException e) {
@@ -110,4 +109,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 		return titleRetrieved;
 	}
 
+	public String getPageTitle() {
+		return pageTitle;
+	}
 }
