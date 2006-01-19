@@ -107,8 +107,8 @@ public class StackTrace {
         String regexSkip = ".*\\.\\..*";
 
         // get all of the individual lines for the string
-        String[] lines = s.split("\r\n");
-
+        String[] lines = s.split("\r\n|\n");
+        
         // the character start of the current stack trace
         int charStackStart = 0;
 
