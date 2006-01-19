@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
@@ -113,7 +114,11 @@ public class MylarStatusHandler {
 			try {
 				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Mylar error", MylarStatusHandler.ERROR_MESSAGE, status);
+						Shell shell = null;
+						if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null) {
+							shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+						}
+						ErrorDialog.openError(shell, "Mylar error", MylarStatusHandler.ERROR_MESSAGE, status);
 					}
 				});
 			} catch (Throwable t) {
