@@ -159,8 +159,9 @@ public class ToolTipHandler {
 
 			@Override
 			public void mouseExit(MouseEvent e) {
-				if (tipShell.isVisible())
+				if (tipShell != null && tipShell.isVisible()) {
 					tipShell.setVisible(false);
+				}
 				tipWidget = null;
 			}
 

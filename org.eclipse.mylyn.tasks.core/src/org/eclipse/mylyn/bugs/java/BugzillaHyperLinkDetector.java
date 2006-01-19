@@ -40,7 +40,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
  * @author Shawn Minto
- * 
  */
 public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 

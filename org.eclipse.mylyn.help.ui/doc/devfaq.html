@@ -40,7 +40,7 @@ and leave the password blank.</li>
 	<p><b><i>Tip</i></b><i>: When writing comments, Bugzilla will 
 		automatically convert the text &quot;bug 1234&quot; to a hyperlink which will 
 		direct the reader to bug 1234.</i></p>
-	<h3><a name="writingPatches">Writing Patches</a>&nbsp;&nbsp;&nbsp; </h3>
+	<h3><a name="writingPatches">Writing patches</a> </h3>
 	<ul>
 		<li>All changes to Mylar should be made using the latest development 
 		release of Mylar, and need to have a corresponding bug report activated.&nbsp; 
@@ -71,11 +71,21 @@ and leave the password blank.</li>
 	<p><i><b>Tip</b>: Looking for a good place in the code to start? Browse the
 		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&keywords_type=allwords&keywords=helpwanted&bug_">Help Wanted</a> list 
 	of Bugzilla reports.</i></p>
-	<h3>Building the Eclipse 3.1 Branch</h3>
+	<h3>Building the Eclipse 3.1 branch</h3>
 	<ul>
 		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
 		project, Team -&gt; Switch to Another Branch..., then 
 		Refresh the Branches and select e_3_1 </li>
+		<li>Merge...</li>
 	</ul>
-<p>&nbsp;</p>
+<h3>Extending the Task List to other providers</h3>
+	<p>Mylar 0.4.7has preliminary support for multiple repositories, and the 
+	Bugzilla plug-in extends this via some very preliminary APIs and extension 
+	points. However, there is considerably more work that needs to go into 
+	improving and eventually stabilizing those APIs and extension points. 
+	Currently the only guarantee is that they need to change over the next few 
+	weeks, with JIRA support as the current driver. We're using the following 
+	report to track progress on this, so add yourself to the CC list (it's a bit 
+	of a monster with 35 comments, but summarizes the current thinking): <br>
+	https://bugs.eclipse.org/bugs/show_bug.cgi?id=120952</p>
 </body></html>

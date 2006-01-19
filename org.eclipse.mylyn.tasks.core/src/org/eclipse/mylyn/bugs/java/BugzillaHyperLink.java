@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugs.java;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.repositories.TaskRepository;
@@ -46,13 +48,19 @@ public class BugzillaHyperLink implements IHyperlink {
 	}
 
 	public void open() {
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(BugzillaPlugin.REPOSITORY_KIND);
-		OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getUrl().toExternalForm(), id);
-		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-		try {
-			service.run(true, false, job);
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not open report", true);
+//		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(BugzillaPlugin.REPOSITORY_KIND);
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		if (repository != null) {
+			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getUrl().toExternalForm(), id);
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.run(true, false, job);
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "Could not open report", true);
+			}
+		} else {
+			MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
+					"Could not determine repository for report");
 		}
 	}
 }
