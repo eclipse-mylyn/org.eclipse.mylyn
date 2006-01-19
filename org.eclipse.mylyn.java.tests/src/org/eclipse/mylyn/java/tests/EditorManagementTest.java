@@ -21,7 +21,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
+import org.eclipse.mylar.java.JavaEditorTracker;
 import org.eclipse.mylar.java.JavaStructureBridge;
+import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.ui.IMylarUiBridge;
@@ -52,6 +54,30 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+	}
+	
+	public void testEditorTrackerListenerRegistration() throws JavaModelException {
+		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		
+		JavaEditorTracker tracker = MylarJavaPlugin.getDefault().getEditorTracker();
+		assertTrue(tracker.getEditorListenerMap().isEmpty());
+		
+		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
+        IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
+        monitor.selectionChanged(view, new StructuredSelection(m1));
+		
+        int numListeners = MylarPlugin.getContextManager().getListeners().size();
+        IMylarElement element = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		bridge.open(element);
+		
+		assertEquals(numListeners+1, MylarPlugin.getContextManager().getListeners().size());
+		assertEquals(1, page.getEditorReferences().length);
+		assertEquals(1, tracker.getEditorListenerMap().size());
+		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+		
+		assertEquals(numListeners, MylarPlugin.getContextManager().getListeners().size());
+		assertEquals(0, page.getEditorReferences().length);
+		assertEquals(0, tracker.getEditorListenerMap().size());
 	}
 	
 	@SuppressWarnings("deprecation")

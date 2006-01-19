@@ -836,4 +836,11 @@ public class MylarContextManager {
 	public void setContextCapturePaused(boolean paused) {
 		this.contextCapturePaused = paused;
 	}
+
+	/**
+	 * For testing.
+	 */
+	public List<IMylarContextListener> getListeners() {
+		return listeners;
+	}
 }

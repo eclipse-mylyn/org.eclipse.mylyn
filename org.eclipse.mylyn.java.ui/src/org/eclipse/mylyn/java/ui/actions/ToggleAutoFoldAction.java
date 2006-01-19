@@ -13,15 +13,12 @@
   */
 package org.eclipse.mylar.java.ui.actions;
 
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider;
+import org.eclipse.mylar.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.ui.MylarImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
@@ -34,13 +31,13 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
 	
-    private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
+//    private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
     
-    public static final String PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
+//    public static final String PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
 
     private static ToggleAutoFoldAction INSTANCE;
     
-    private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
+//    private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
     
     private IAction parentAction = null;
     
@@ -65,15 +62,20 @@ public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActi
 	private void valueChanged(IAction action, final boolean on, boolean store) {
 	    try {
 			action.setChecked(on);
-			if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
+			if (store) MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, on); 
 			
             if (on) {
-	            javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, on); 
-            	javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);    
+//            	MylarJavaPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, on);
+//	            javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, on); 
+//            	javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);
+//            	javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER);
             } else {
+
+//            	MylarJavaPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, on);
+//            	javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, on); 
                 // TODO: put back functionality of reverting to non-standard provider
-                javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER);
-			}
+//                javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER);
+			} 
 	    } catch (Throwable t) {
 	        MylarStatusHandler.fail(t, "Could not enable editor management", true);
 	    }
@@ -89,7 +91,7 @@ public class ToggleAutoFoldAction extends Action implements IWorkbenchWindowActi
 
 	public void init(IAction action) {
 		this.parentAction = action;
-		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID), true);
+		valueChanged(action, MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED), true);
 	}
 
 	public void dispose() {

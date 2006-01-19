@@ -22,13 +22,13 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public abstract class AbstractMylarHyperlinkDetector implements IHyperlinkDetector {
 
 	private ITextEditor editor;
-		
+
 	public ITextEditor getEditor() {
-		return editor; 
+		return editor;
 	}
-	
-	public abstract IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			IRegion region, boolean canShowMultipleHyperlinks);
+
+	public abstract IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region,
+			boolean canShowMultipleHyperlinks);
 
 	public void setEditor(ITextEditor editor) {
 		this.editor = editor;

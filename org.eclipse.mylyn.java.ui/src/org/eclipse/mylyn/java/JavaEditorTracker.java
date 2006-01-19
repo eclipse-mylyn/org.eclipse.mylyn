@@ -18,7 +18,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.AbstractEditorTracker;
 import org.eclipse.mylar.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -41,20 +40,28 @@ public class JavaEditorTracker extends AbstractEditorTracker {
         if (editorListenerMap.containsKey(editor)) {
             return;
         } else {
-            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-                public void run() { 
+//            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//                public void run() { 
                 	ActiveFoldingListener listener = new ActiveFoldingListener(editor);
                 	editorListenerMap.put(editor, listener);
                 	MylarPlugin.getContextManager().addListener(listener);
-                }
-            });
+//                }
+//            });
         }        
     }
     
     public void unregisterEditor(JavaEditor editor) {
         ActiveFoldingListener listener = editorListenerMap.get(editor);
-        MylarPlugin.getContextManager().removeListener(listener);
+        listener.dispose();
         editorListenerMap.remove(editor);
+        MylarPlugin.getContextManager().removeListener(listener);
     }
+
+    /**
+     * For testing.
+     */
+	public Map<JavaEditor, ActiveFoldingListener> getEditorListenerMap() {
+		return editorListenerMap;
+	}
 
 }

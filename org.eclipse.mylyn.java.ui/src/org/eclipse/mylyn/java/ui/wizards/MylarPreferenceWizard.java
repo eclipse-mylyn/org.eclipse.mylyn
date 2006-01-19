@@ -19,7 +19,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.java.MylarJavaPlugin;
-import org.eclipse.mylar.java.ui.editor.AutoFoldingStructureProvider;
+import org.eclipse.mylar.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -37,7 +37,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 
 	private MylarPreferenceWizardPage preferencePage;
 	
-	public static final String AUTO_FOLD_PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
+//	public static final String AUTO_FOLD_PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
 	
 	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylar.ui.first.run";
 	
@@ -79,9 +79,10 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 		
 		if(preferencePage.isAutoFolding()){
-			MylarPlugin.getDefault().getPreferenceStore().setValue(AUTO_FOLD_PREF_ID, true); //$NON-NLS-1$
-		    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);    
-            javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true); 
+			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, true); //$NON-NLS-1$
+//		    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);    
+            
+		    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true); 
 		} else {
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, false);
 		}
