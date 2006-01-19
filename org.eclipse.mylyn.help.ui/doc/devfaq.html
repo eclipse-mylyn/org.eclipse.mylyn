@@ -52,9 +52,12 @@ and leave the password blank.</li>
 		Before creating a new JUnit test class class check the components test 
 		suite (e.g. <tt>AllTasklistTests</tt>) for similar test cases (e.g. 
 		<tt>AllTasklistTests.suite()</tt>).</li>
-		<li>Minimize the amount of changes to existing code to make 
-		review easier.&nbsp; Format code using Eclipse's formatter (Ctrl+Shift+F) 
+		<li>Set the formatter by importing org.eclipse.mylar/developer/javaFormatterSettings.xml 
+		into Window -&gt; Preferences -&gt; Java -&gt; Code Style -&gt; Formatter.&nbsp; 
+		Format code using Eclipse's formatter (Ctrl+Shift+F) 
 		and ensure that no&nbsp; have been added.</li>
+		<li>Minimize the amount of changes to existing code to make review 
+		easier.&nbsp; </li>
 		<li>To submit a patch<ul>
 		<li>Ensure there are no build errors, warnings, or <tt>println(..)</tt> 
 		calls, and that <tt>org.eclipse.mylar.tests.AllTests</tt> passes.</li>
