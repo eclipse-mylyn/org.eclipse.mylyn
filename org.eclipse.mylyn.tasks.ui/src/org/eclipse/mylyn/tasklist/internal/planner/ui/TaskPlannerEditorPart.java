@@ -21,7 +21,10 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -29,7 +32,6 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -39,8 +41,9 @@ import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.internal.planner.ui.actions.OpenTaskEditorAction;
+import org.eclipse.mylar.tasklist.internal.planner.ui.actions.RemoveTaskAction;
 import org.eclipse.mylar.tasklist.ui.ComboSelectionDialog;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -58,10 +61,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -177,16 +182,31 @@ public class TaskPlannerEditorPart extends EditorPart {
 		activityLayout.marginBottom = 10;
 		activityContainer.setLayout(activityLayout);
 
+		
 			
-		TaskActivityContentProvider activityContentProvider = new TaskActivityContentProvider(allTasks);
+		TaskPlannerContentProvider activityContentProvider = new TaskPlannerContentProvider(allTasks);
 		// ViewerSorter activitySorter = new
 		// TaskActivitySorter(activitySortConstants);
-		TableViewer activityViewer = createTableSection(activityContainer, toolkit, label, activityColumnNames,
+		final TableViewer activityViewer = createTableSection(activityContainer, toolkit, label, activityColumnNames,
 				activityColumnWidths, activitySortConstants);		
 		activityViewer.setContentProvider(activityContentProvider);
 		activityViewer.setLabelProvider(new TaskActivityLabelProvider());
 		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTable(), activityViewer, false);
 		activityViewer.setInput(editorInput);
+		
+		
+		
+		MenuManager activityContextMenuMgr = new MenuManager("#ActivityPlannerPopupMenu");
+		activityContextMenuMgr.setRemoveAllWhenShown(true);
+		activityContextMenuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				TaskPlannerEditorPart.this.fillContextMenu(activityViewer, manager);
+				
+			}
+		});
+		Menu menu = activityContextMenuMgr.createContextMenu(activityViewer.getControl());
+		activityViewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(activityContextMenuMgr, activityViewer);
 		
 
 		Composite planContainer = toolkit.createComposite(sashForm);
@@ -196,8 +216,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	
 		
-		TaskPlanContentProvider planContentProvider = new TaskPlanContentProvider();
-		TableViewer planViewer = createTableSection(planContainer, toolkit, "Task Plan", planColumnNames,
+		TaskPlannerContentProvider planContentProvider = new TaskPlannerContentProvider();
+		final TableViewer planViewer = createTableSection(planContainer, toolkit, "Task Plan", planColumnNames,
 				planColumnWidths, planSortConstants);
 		planViewer.setContentProvider(planContentProvider);
 		planViewer.setLabelProvider(new TaskPlanLabelProvider());
@@ -206,12 +226,33 @@ public class TaskPlannerEditorPart extends EditorPart {
 		initDrop(planViewer, planContentProvider);
 		setSorters(planColumnNames, planSortConstants, planViewer.getTable(), planViewer, true);
 		planViewer.setInput(editorInput);
+		
+		MenuManager  planContextMenuMgr = new MenuManager("#PlanPlannerPopupMenu");
+		planContextMenuMgr.setRemoveAllWhenShown(true);
+		planContextMenuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				TaskPlannerEditorPart.this.fillContextMenu(planViewer, manager);
+			}
+		});
+		Menu planMenu = planContextMenuMgr.createContextMenu(planViewer.getControl());
+		planViewer.getControl().setMenu(planMenu);
+		getSite().registerContextMenu(planContextMenuMgr, planViewer);
 
 		totalEstimatedHoursLabel = toolkit.createLabel(editorComposite, LABEL_ESTIMATED + "0 hours  ", SWT.NULL);
 		createButtons(editorComposite, toolkit, planViewer, planContentProvider);
-
 	}
 
+	
+
+	private void fillContextMenu(TableViewer viewer, IMenuManager manager) {
+		if(!viewer.getSelection().isEmpty()) {			
+			manager.add(new OpenTaskEditorAction(viewer));
+			manager.add(new RemoveTaskAction(viewer));
+			manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		}
+	}
+	
+	
 	@Override
 	public void setFocus() {
 	}
@@ -283,7 +324,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 	}
 
 	private void createPlanCellEditorListener(final Table planTable, final TableViewer planTableViewer,
-			final TaskPlanContentProvider contentProvider) {
+			final TaskPlannerContentProvider contentProvider) {
 		CellEditor[] editors = new CellEditor[planColumnNames.length + 1];
 		final ComboBoxCellEditor estimateEditor = new ComboBoxCellEditor(planTable, ESTIMATE_TIMES, SWT.READ_ONLY);
 		final ReminderCellEditor reminderEditor = new ReminderCellEditor(planTable);
@@ -358,12 +399,12 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private TableViewer createTable(Composite parent, FormToolkit toolkit, String[] columnNames, int[] columnWidths,
 			int[] sortConstants) {
-		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.FILL;
+		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 		Table table = toolkit.createTable(parent, style);
 		
 		table.setLayout(new GridLayout());
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+		
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setEnabled(true);
@@ -419,7 +460,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 	 * TODO: refactor into seperate actions?
 	 */
 	private void createButtons(Composite parent, FormToolkit toolkit, final TableViewer viewer,
-			final TaskPlanContentProvider contentProvider) {
+			final TaskPlannerContentProvider contentProvider) {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setBackground(parent.getBackground());
 		GridLayout layout = new GridLayout();
@@ -447,25 +488,25 @@ public class TaskPlannerEditorPart extends EditorPart {
 			}
 		});
 
-		Button delete = toolkit.createButton(container, "Remove Selected", SWT.PUSH | SWT.CENTER);
-		delete.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				for (Object object : ((IStructuredSelection) viewer.getSelection()).toList()) {
-					if (object instanceof ITask) {
-						ITask task = (ITask) object;
-						if (task != null) {
-							contentProvider.removeTask(task);
-						}
-					}
-				}
-				viewer.refresh();
-			}
-		});
+//		Button delete = toolkit.createButton(container, "Remove Selected", SWT.PUSH | SWT.CENTER);
+//		delete.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				for (Object object : ((IStructuredSelection) viewer.getSelection()).toList()) {
+//					if (object instanceof ITask) {
+//						ITask task = (ITask) object;
+//						if (task != null) {
+//							contentProvider.removeTask(task);
+//						}
+//					}
+//				}
+//				viewer.refresh();
+//			}
+//		});
 	}
 
 	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
-	private void initDrop(final TableViewer tableViewer, final TaskPlanContentProvider contentProvider) {
+	private void initDrop(final TableViewer tableViewer, final TaskPlannerContentProvider contentProvider) {
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 
 		tableViewer.addDropSupport(DND.DROP_MOVE, types, new ViewerDropAdapter(tableViewer) {
@@ -574,7 +615,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		}
 	}
 
-	private void addPlannedTasksToCategory(TaskPlanContentProvider contentProvider) {
+	private void addPlannedTasksToCategory(TaskPlannerContentProvider contentProvider) {
 		List<ITaskCategory> categories = MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
 		String[] categoryNames = new String[categories.size()];
 		int i = 0;
@@ -614,7 +655,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		}
 	}
 
-	private void updateEstimatedHours(TaskPlanContentProvider contentProvider) {
+	private void updateEstimatedHours(TaskPlannerContentProvider contentProvider) {
 		int total = 0;
 		for (ITask task : contentProvider.getTasks()) {
 			total += task.getEstimateTimeHours();
@@ -622,22 +663,22 @@ public class TaskPlannerEditorPart extends EditorPart {
 		totalEstimatedHoursLabel.setText(LABEL_ESTIMATED + total + " hours");
 	}
 
-	public class OpenTaskEditorAction extends Action {
-
-		private TableViewer viewer;
-
-		public OpenTaskEditorAction(TableViewer viewer) {
-			this.viewer = viewer;
-		}
-
-		@Override
-		public void run() {
-			ISelection selection = viewer.getSelection();
-			Object obj = ((IStructuredSelection) selection).getFirstElement();
-			if (obj instanceof Task) {
-				((Task) obj).openTaskInEditor(false);
-			}
-			viewer.refresh(obj);
-		}
-	}
+//	public class OpenTaskEditorAction extends Action {
+//
+//		private TableViewer viewer;
+//
+//		public OpenTaskEditorAction(TableViewer viewer) {
+//			this.viewer = viewer;
+//		}
+//
+//		@Override
+//		public void run() {
+//			ISelection selection = viewer.getSelection();
+//			Object obj = ((IStructuredSelection) selection).getFirstElement();
+//			if (obj instanceof Task) {
+//				((Task) obj).openTaskInEditor(false);
+//			}
+//			viewer.refresh(obj);
+//		}
+//	}
 }

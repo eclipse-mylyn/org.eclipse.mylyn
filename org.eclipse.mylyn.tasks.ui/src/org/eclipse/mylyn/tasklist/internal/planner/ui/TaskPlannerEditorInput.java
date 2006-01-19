@@ -44,9 +44,9 @@ public class TaskPlannerEditorInput implements IEditorInput {
 
 	private Date reportStartDate = null;
 
-	public TaskPlannerEditorInput(Date reportStartDate, TaskList tlist) {
+	public TaskPlannerEditorInput(Date reportStartDate, List<Object> chosenCategories, TaskList tlist) {
 		this.reportStartDate = reportStartDate;
-		taskReportGenerator = new TaskReportGenerator(tlist);
+		taskReportGenerator = new TaskReportGenerator(tlist, chosenCategories);
 
 		ITaskCollector completedTaskCollector = new CompletedTaskCollector(reportStartDate);
 		taskReportGenerator.addCollector(completedTaskCollector);

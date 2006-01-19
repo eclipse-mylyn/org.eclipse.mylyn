@@ -42,7 +42,7 @@ public class TaskPlannerWizard extends Wizard implements INewWizard {
 					.getActivePage();
 			if (page == null)
 				return false;
-			IEditorInput input = new TaskPlannerEditorInput(planningGamePage.getReportStartDate(), MylarTaskListPlugin
+			IEditorInput input = new TaskPlannerEditorInput(planningGamePage.getReportStartDate(), planningGamePage.getSelectedFilters(), MylarTaskListPlugin
 					.getTaskListManager().getTaskList());
 			page.openEditor(input, MylarTaskListPrefConstants.PLANNER_EDITOR_ID);
 		} catch (PartInitException ex) {

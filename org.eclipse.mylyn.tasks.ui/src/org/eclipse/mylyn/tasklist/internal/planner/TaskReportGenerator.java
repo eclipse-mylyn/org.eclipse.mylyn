@@ -19,29 +19,41 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.internal.TaskCategory;
+import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskList;
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 
 /**
  * @author Ken Sueda
  * @author Mik Kersten
+ * @author Rob Elves (scope report to specific categories and queries)
  */
 public class TaskReportGenerator implements IRunnableWithProgress {
-	// NOTE: might want a map of tasks instead of a flattened list of tasks
-	
-	private List<ITaskCollector> collectors = new ArrayList<ITaskCollector>();
-	private List<ITask> tasks = new ArrayList<ITask>();
-	private TaskList tasklist = null;
+
 	private boolean finished;
-	
+
+	private TaskList tasklist = null;
+
+	private List<ITaskCollector> collectors = new ArrayList<ITaskCollector>();
+
+	private List<ITask> tasks = new ArrayList<ITask>();
+
+	private List<Object> filterCategories;
+
 	public TaskReportGenerator(TaskList tlist) {
-		tasklist = tlist;		
+		this(tlist, null);
 	}
-	
+
+	public TaskReportGenerator(TaskList tlist, List<Object> filterCategories) {
+		tasklist = tlist;
+		this.filterCategories = filterCategories != null ? filterCategories : new ArrayList<Object>();
+	}
+
 	public void addCollector(ITaskCollector collector) {
-		collectors.add(collector);		
+		collectors.add(collector);
 	}
 
 	public void collectTasks() {
@@ -53,38 +65,56 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 			MylarStatusHandler.log(e, "Could not collect tasks");
 		}
 	}
-	
+
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		List<ITask> roots = tasklist.getRootTasks();
-		monitor.beginTask("Mylar Task Planner", tasklist.getRoots().size() * (1+tasklist.getCategories().size())); //
-		for(int i = 0; i < roots.size(); i++) {
-			ITask task = (ITask) roots.get(i);
-			for (ITaskCollector collector : collectors) {
-				collector.consumeTask(task);
-			}	
+
+		List<Object> rootElements;
+		if (filterCategories.size() == 0) {
+			rootElements = tasklist.getRoots();
+		} else {
+			rootElements = filterCategories;
 		}
-		for (TaskCategory cat : tasklist.getTaskCategories()) {
-			List<? extends ITaskListElement> sub = cat.getChildren();
-			for (int j = 0; j < sub.size(); j++) {
-				if (sub.get(j) instanceof ITask) {					
-					ITask element = (ITask) sub.get(j);
+
+		int estimatedItemsToProcess = rootElements.size();
+		monitor.beginTask("Mylar Task Planner", estimatedItemsToProcess); 
+
+		for (Object element : rootElements) {
+			monitor.worked(1);
+			if (element instanceof ITaskCategory) {
+				ITaskCategory cat = (ITaskCategory) element;
+				for (ITask task : cat.getChildren())
 					for (ITaskCollector collector : collectors) {
-						collector.consumeTask(element);
-						monitor.worked(1);
+						collector.consumeTask(task);
+					}
+
+			} else if (element instanceof Task) {
+				Task task = (Task) element;
+				for (ITaskCollector collector : collectors) {
+					collector.consumeTask(task);
+				}
+
+			} else if (element instanceof ITaskQuery) {
+				// process queries
+				ITaskQuery taskQuery = (ITaskQuery) element;
+				for (IQueryHit hit : taskQuery.getHits()) {
+					ITask correspondingTask = hit.getCorrespondingTask();
+					if (correspondingTask != null) {
+						for (ITaskCollector collector : collectors) {
+							collector.consumeTask(correspondingTask);
+						}
 					}
 				}
 			}
-			monitor.worked(1);
 		}
-				
+		// Put the results all into one list (tasks)
 		for (ITaskCollector collector : collectors) {
 			tasks.addAll(collector.getTasks());
 		}
 		finished = true;
 		monitor.done();
 	}
-	
-	public List<ITask> getAllCollectedTasks() {		
+
+	public List<ITask> getAllCollectedTasks() {
 		return tasks;
 	}
 

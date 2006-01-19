@@ -11,25 +11,35 @@
 
 package org.eclipse.mylar.tasklist.internal.planner.ui;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.ui.views.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Mik Kersten
  * @author Ken Sueda (original prototype)
+ * @author Rob Elves (categories)
  */
 public class TaskPlannerWizardPage extends WizardPage {
 
@@ -39,13 +49,23 @@ public class TaskPlannerWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Summarizes task activity and assists planning future tasks.";
 
+	private static final String LIST_LABEL = "Choose specific categories:";
+
 	private long DAY = 24 * 3600 * 1000;
+	
+	protected String[] columnNames = new String[] { "", "Description" };
 
 	private Date reportStartDate = null;
 
 	private Text numDays;
 
 	private int numDaysToReport = 0;
+	
+    private Label filtersLabel;
+
+	private Table filtersTable;
+
+
 
 	public TaskPlannerWizardPage() {
 		super(TITLE);
@@ -96,9 +116,94 @@ public class TaskPlannerWizardPage extends WizardPage {
 				// ignore
 			}
 		});
-
+		
+		addCategorySelection(container);
+		
 		setControl(container);
 	}
+	
+	/**
+	 * Selection of specific category
+	 * to report on in the Task Planner
+	 * @param composite container to add categories combo box to
+	 */
+	private void addCategorySelection(Composite composite) {
+		
+		createFilterTable(composite, true);
+		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
+		if(manager == null) {
+			filtersTable.setEnabled(false);
+			return;
+		}
+		// populate categories
+		for (ITaskCategory category : manager.getTaskList().getTaskCategories()) {
+			if(category.isArchive()) continue;
+			TableItem item = new TableItem(filtersTable, SWT.NONE);
+			item.setImage(category.getIcon());
+			item.setText(category.getDescription(true));
+			item.setChecked(false);
+			item.setData(category);
+		}		
+		// populate qeries
+		for (ITaskQuery query : manager.getTaskList().getQueries()) {			
+			TableItem item = new TableItem(filtersTable, SWT.NONE);
+			item.setImage(query.getIcon());
+			item.setText(query.getDescription(true));
+			item.setChecked(false);
+			item.setData(query);
+		}
+		for (int i=0; i<columnNames.length; i++) {
+			filtersTable.getColumn (i).pack();
+		}	
+	}
+	
+	 private void createFilterTable(Composite composite, boolean enabled) {
+
+	        Font font = composite.getFont();
+
+	        this.filtersLabel = new Label(composite, SWT.NONE);
+	        this.filtersLabel.setText(LIST_LABEL);
+	        this.filtersLabel.setEnabled(enabled);
+	        GridData gridData = new GridData();
+	        gridData.verticalAlignment = GridData.FILL;
+//	        gridData.horizontalSpan = 2;
+	        
+	        this.filtersLabel.setLayoutData(gridData);
+	        this.filtersLabel.setFont(font);
+
+	        this.filtersTable = new Table(composite, SWT.BORDER | SWT.MULTI | SWT.CHECK  | SWT.H_SCROLL | SWT.V_SCROLL);
+	        this.filtersTable.setEnabled(enabled);
+	        GridData data = new GridData();
+	        //Set heightHint with a small value so the list size will be defined by 
+	        //the space available in the dialog instead of resizing the dialog to
+	        //fit all the items in the list.
+	        data.heightHint = filtersTable.getItemHeight();
+	        data.verticalAlignment = GridData.FILL;
+	        data.horizontalAlignment = GridData.FILL;
+	        data.grabExcessHorizontalSpace = true;
+	        data.grabExcessVerticalSpace = true;
+	        this.filtersTable.setLayoutData(data);
+	        this.filtersTable.setFont(font);
+
+	        
+	        for (int i=0; i<columnNames.length; i++) {
+				TableColumn column = new TableColumn (filtersTable, SWT.NONE);
+				column.setText (columnNames [i]);
+			}
+	        
+	    }
+	
+	 public java.util.List<Object> getSelectedFilters() {
+		 java.util.List<Object> result = new ArrayList<Object>();
+		 TableItem[] items = filtersTable.getItems();
+		 for(TableItem item : items) {
+			 if(item.getChecked()) {
+				result.add(item.getData());
+			 }
+		 }
+		 return result;
+	 }
+
 
 	public Date getReportStartDate() {
 		if (reportStartDate != null) {
@@ -113,4 +218,5 @@ public class TaskPlannerWizardPage extends WizardPage {
 			return new Date(today - offsetToday - lastDay);
 		}
 	}
+
 }
