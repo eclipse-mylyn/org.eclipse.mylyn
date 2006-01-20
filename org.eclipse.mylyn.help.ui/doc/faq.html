@@ -15,6 +15,8 @@
 	<li><a href="#install-failure">Why does Mylar fail to install?</a></li>
 	<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li> 
 	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
+	<li><a href="#configuration-eclipse">What is the recommended Eclipse configuration 
+	for running Mylar?</a></li>
 	<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
 	<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
 </ul>
@@ -112,7 +114,23 @@ a bug</a>.&nbsp; The current performance profile is:</p>
 	can be noticeable on slower machines.</li>
 </ol>
 <h3>&nbsp;</h3>
-<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
+<h3><a name="configuration-eclipse">What is the recommended Eclipse 
+configuration for running Mylar?</a></h3>
+<p>The following preferences settings are recommended:</p>
+	<ul>
+		<li>Use flat layout in the Package Explorer (local pull down -&gt; Layout 
+		-&gt; Flat). </li>
+		<li>Link the Package Explorer with the editor (toolbar -&gt; Link with 
+		Editor).&nbsp; This mode works well when Mylar is applied to the Package 
+		Explorer&nbsp; </li>
+		<li>Turn comment folding on to reduce clutter when using auto folding 
+		(Preferences -&gt; Java -&gt; Editor -&gt; Folding)</li>
+		<li>Use graphical CVS decorators only (Team -&gt; CVS -&gt; Label Decorations 
+		-&gt; Text Decorations -&gt; clear all but Project; Icon Decorations -&gt; enable 
+		all).&nbsp; This helps reduce visual clutter.</li>
+	</ul>
+<h3>&nbsp;</h3>
+	<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
 <p>If you don't like Mylar's constant showing of Java members in the 
 			Package Explorer, select the drop-down menu, then &quot;Filters...&quot; and 
 			enable the &quot;Mylar Java Declarations Filter&quot;.&nbsp; It will then 
