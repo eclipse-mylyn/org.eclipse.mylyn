@@ -167,11 +167,11 @@ public class TaskListManagerTest extends TestCase {
         Task task6 = new Task(manager.genUniqueTaskHandle(), "task 6", true);
         manager.moveToCategory(cat2, task6);
         
-        BugzillaTask report = new BugzillaTask("123", "label 123", true);;
+        BugzillaTask report = new BugzillaTask("123", "label 123", true, true);;
         manager.moveToCategory(cat2, report);
         assertEquals(cat2, report.getCategory());
         
-        BugzillaTask report2 = new BugzillaTask("124", "label 124", true);
+        BugzillaTask report2 = new BugzillaTask("124", "label 124", true, true);
         manager.moveToRoot(report2);
         
         assertEquals(5, manager.getTaskList().getRoots().size());

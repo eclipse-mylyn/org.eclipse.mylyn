@@ -248,8 +248,6 @@ public class BugzillaTask extends Task {
 	 */
 	public BugReport downloadReport() {
 		try {
-			// XXX make sure to send in the server name if there are multiple
-			// repositories
 			if (BugzillaPlugin.getDefault() == null) {
 				MylarStatusHandler.log("Bug Beport download failed for: "
 						+ TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier())
