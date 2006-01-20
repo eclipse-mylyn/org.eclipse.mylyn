@@ -291,20 +291,20 @@ public class BugzillaSearchPluginTest extends TestCase {
 		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
 		TaskCategory cat = new TaskCategory("Testing Category");
 		manager.addCategory(cat);
-		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true);
+		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true, true);
 		manager.moveToCategory(cat, bugTask1);
 //		cat.addTask(bugTask1);
 		while(bugTask1.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
 		
-		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
+		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true, true);
 		manager.moveToCategory(cat, bugTask2);
 //		cat.addTask(bugTask2);
 		while(bugTask2.getState() != BugTaskState.FREE){
 			Thread.sleep(500);
 		}
-		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
+		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true, true);
 		manager.moveToCategory(cat, bugTask3);
 //		cat.addTask(bugTask3);
 		while(bugTask3.getState() != BugTaskState.FREE){
