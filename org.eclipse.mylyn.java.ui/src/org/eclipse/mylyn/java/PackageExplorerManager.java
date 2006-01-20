@@ -48,7 +48,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 	public void selectionChanged(IWorkbenchPart part, ISelection changedSelection) {
 		if (MylarPlugin.getContextManager().isContextCapturePaused()) return;
 	    try {
-    		if (!(MylarPlugin.getContextManager().hasActiveContext()
+    		if (!(MylarPlugin.getContextManager().isContextActive()
 		    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
 		    		&& ApplyMylarToPackageExplorerAction.getDefault().isChecked())) return; 
     		Object elementToSelect = null;
@@ -112,7 +112,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 	
     public void contextActivated(IMylarContext taskscape) {
     	try {
-	    	if (MylarPlugin.getContextManager().hasActiveContext()
+	    	if (MylarPlugin.getContextManager().isContextActive()
 	    		&& ApplyMylarToPackageExplorerAction.getDefault() != null
 	        	&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
 	    		

@@ -73,7 +73,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 	protected List filterAndSortProposals(List proposals, IProgressMonitor monitor,
 			TextContentAssistInvocationContext context) {
 		super.filterAndSortProposals(proposals, monitor, context);
-		if (resolveMemberMethod == null || !MylarPlugin.getContextManager().hasActiveContext())
+		if (resolveMemberMethod == null || !MylarPlugin.getContextManager().isContextActive())
 			return proposals;
 		try {
 			TreeMap<Float, ICompletionProposal> interesting = new TreeMap<Float, ICompletionProposal>();

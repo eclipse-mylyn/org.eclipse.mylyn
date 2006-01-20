@@ -32,7 +32,7 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		try {
-			if (!MylarPlugin.getContextManager().hasActiveContext() || MylarPlugin.getContextManager().isContextCapturePaused())
+			if (!MylarPlugin.getContextManager().isContextActive() || MylarPlugin.getContextManager().isContextCapturePaused())
 				return;
 			for (int i = 0; i < changedResources.length; i++) {
 				IResource resource = changedResources[i];

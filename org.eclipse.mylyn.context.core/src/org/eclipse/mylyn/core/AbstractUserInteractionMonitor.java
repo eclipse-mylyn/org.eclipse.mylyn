@@ -52,7 +52,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
     
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection == null || selection.isEmpty()) return;
-        if (!MylarPlugin.getContextManager().hasActiveContext()) {
+        if (!MylarPlugin.getContextManager().isContextActive()) {
             return;
         } else {
             handleWorkbenchPartSelection(part, selection);

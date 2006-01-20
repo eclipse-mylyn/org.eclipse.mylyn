@@ -38,7 +38,7 @@ public abstract class AbstractContextTest extends TestCase {
 		super.setUp();
 		if (MylarPlugin.getContextManager() != null) {
 			assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
-					MylarPlugin.getContextManager().hasActiveContext());
+					MylarPlugin.getContextManager().isContextActive());
 		}
 	}
 
@@ -47,7 +47,7 @@ public abstract class AbstractContextTest extends TestCase {
 		super.tearDown();
 		if (MylarPlugin.getContextManager() != null) {
 			assertFalse(""+MylarPlugin.getContextManager().getActiveContexts(),
-					MylarPlugin.getContextManager().hasActiveContext());
+					MylarPlugin.getContextManager().isContextActive());
 		}
 	}
 	

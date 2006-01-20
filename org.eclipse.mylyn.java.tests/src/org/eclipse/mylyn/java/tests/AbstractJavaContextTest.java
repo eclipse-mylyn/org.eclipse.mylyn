@@ -84,8 +84,8 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
         for (MylarContext context: manager.getActiveContexts()) {
 			manager.contextDeactivated(context.getHandleIdentifier());
 		}
-        if (manager.hasActiveContext()) System.err.println("> still active: " + manager.getActiveContext().getInteresting());
-        assertFalse(manager.hasActiveContext());
+        if (manager.isContextActive()) System.err.println("> still active: " + manager.getActiveContext().getInteresting());
+        assertFalse(manager.isContextActive());
         waitForAutoBuild();
         super.tearDown();
     }

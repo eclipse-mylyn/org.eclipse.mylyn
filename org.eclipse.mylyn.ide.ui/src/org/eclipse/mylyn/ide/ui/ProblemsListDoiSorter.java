@@ -71,7 +71,7 @@ public class ProblemsListDoiSorter extends TableSorter {
 	        	&& marker1.getSeverity() < IMarker.SEVERITY_ERROR) {
 	        	return 1;
 	        } else {
-	       	 	if (MylarPlugin.getContextManager().hasActiveContext()) {
+	       	 	if (MylarPlugin.getContextManager().isContextActive()) {
 	       	 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(marker1.getResource().getFileExtension());
 		            IMylarElement node1 =  MylarPlugin.getContextManager().getElement(bridge.getHandleForOffsetInObject(marker1, 0));
 		            IMylarElement node2 =  MylarPlugin.getContextManager().getElement(bridge.getHandleForOffsetInObject(marker2, 0));

@@ -47,7 +47,7 @@ public class ProblemsListInterestFilter extends InterestFilter {
 				&& ((ProblemMarker)marker).getSeverity() == IMarker.SEVERITY_ERROR) {
 				return true;
 			} else {
-				if (!MylarPlugin.getContextManager().hasActiveContext()) {
+				if (!MylarPlugin.getContextManager().isContextActive()) {
 					return false;
 				}
 				return isInteresting(marker, viewer, parent);

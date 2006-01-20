@@ -149,7 +149,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
     	assertFalse(manager.getFileForContext("1").exists());
     	assertFalse(manager.hasContext("1"));
     	manager.contextActivated(manager.loadContext("1"));
-    	assertTrue(manager.hasActiveContext());
+    	assertTrue(manager.isContextActive());
     	
     	manager.contextDeactivated("1");
     	assertFalse(manager.hasContext("1")); 

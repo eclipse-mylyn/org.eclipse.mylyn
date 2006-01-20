@@ -28,7 +28,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	
 	public void resourceChanged(IResourceChangeEvent event) {
 		if (!enabled 
-			|| !MylarPlugin.getContextManager().hasActiveContext()
+			|| !MylarPlugin.getContextManager().isContextActive()
 			|| MylarPlugin.getContextManager().isContextCapturePaused()) return;
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) return;
 		IResourceDelta rootDelta = event.getDelta();

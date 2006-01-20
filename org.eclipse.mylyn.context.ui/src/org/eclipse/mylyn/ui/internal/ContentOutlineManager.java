@@ -34,7 +34,7 @@ import org.eclipse.ui.PlatformUI;
 public class ContentOutlineManager implements IPartListener, IPageListener {
 
 	public void partBroughtToTop(IWorkbenchPart part) {
-		if (!MylarPlugin.getContextManager().hasActiveContext()
+		if (!MylarPlugin.getContextManager().isContextActive()
 				|| MylarPlugin.getContextManager().isContextCapturePaused())
 			return;
 

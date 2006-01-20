@@ -88,7 +88,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(1, collector.getSets().length);
 
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-		assertFalse(MylarPlugin.getContextManager().hasActiveContext());
+		assertFalse(MylarPlugin.getContextManager().isContextActive());
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 		assertEquals(0, collector.getSets().length); // deleted because no active resources
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);

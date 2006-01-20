@@ -244,7 +244,7 @@ public class MylarContextManager {
 	 */
 	public IMylarElement handleInteractionEvent(InteractionEvent event, boolean propagateToParents,
 			boolean notifyListeners) {
-		if (contextCapturePaused || event.getKind() == InteractionEvent.Kind.COMMAND || !hasActiveContext()
+		if (contextCapturePaused || event.getKind() == InteractionEvent.Kind.COMMAND || !isContextActive()
 				|| suppressListenerNotification)
 			return null;
 
@@ -654,7 +654,7 @@ public class MylarContextManager {
 	// }
 	// }
 
-	public boolean hasActiveContext() {
+	public boolean isContextActive() {
 		return currentContext.getContextMap().values().size() > 0;
 	}
 

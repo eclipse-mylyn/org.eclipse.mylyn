@@ -70,7 +70,7 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 	public void contextActivated(IMylarContext taskscape) {
 		refresh(null);
     	try {
-	    	if (MylarPlugin.getContextManager().hasActiveContext()
+	    	if (MylarPlugin.getContextManager().isContextActive()
 	    		&& ApplyMylarToNavigatorAction.getDefault() != null
 	        	&& ApplyMylarToNavigatorAction.getDefault().isChecked()) {
 	    		

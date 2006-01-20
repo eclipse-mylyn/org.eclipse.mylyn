@@ -83,7 +83,7 @@ public class XMLSearchPluginTest extends TestCase implements ISearchPluginTest{
     protected void tearDown() throws Exception {
         WorkspaceSetupHelper.clearDoiModel();
         MylarPlugin.getContextManager().contextDeactivated(WorkspaceSetupHelper.getContext().getHandleIdentifier());
-        assertFalse(MylarPlugin.getContextManager().hasActiveContext());
+        assertFalse(MylarPlugin.getContextManager().isContextActive());
     }
   
     public void testXMLSearchDOS1() throws IOException, CoreException{

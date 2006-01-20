@@ -66,7 +66,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
     protected void tearDown() throws Exception {
         WorkspaceSetupHelper.clearDoiModel();
         MylarPlugin.getContextManager().contextDeactivated(WorkspaceSetupHelper.getContext().getHandleIdentifier());
-        assertFalse(MylarPlugin.getContextManager().hasActiveContext());
+        assertFalse(MylarPlugin.getContextManager().isContextActive());
     }
 	
 	public void testJavaReferencesSearchDOS1() throws IOException, CoreException {

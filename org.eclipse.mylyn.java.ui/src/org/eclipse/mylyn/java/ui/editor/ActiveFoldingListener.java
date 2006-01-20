@@ -98,7 +98,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void updateFolding() {
-		if (!enabled) {
+		if (!enabled || !MylarPlugin.getContextManager().isContextActive()) {
 			editor.resetProjection();
 		} else if (editor.getEditorInput() == null) {
 			return;
@@ -167,11 +167,15 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void contextActivated(IMylarContext context) {
-		updateFolding();
+		if (MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED)) {
+			updateFolding();
+		}
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		updateFolding();
+		if (MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED)) {
+			updateFolding();
+		}
 	}
 
 	public void presentationSettingsChanging(IMylarContextListener.UpdateKind kind) {
