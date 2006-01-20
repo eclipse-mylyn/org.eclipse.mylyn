@@ -34,4 +34,5 @@ public interface ITaskQuery extends ITaskListElement{
 	public void setMaxHits(int maxHits);
 	
 	public void addHit(IQueryHit hit);
+	
 }

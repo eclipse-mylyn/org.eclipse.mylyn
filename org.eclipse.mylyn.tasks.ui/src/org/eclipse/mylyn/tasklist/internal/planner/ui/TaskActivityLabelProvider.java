@@ -50,12 +50,12 @@ public class TaskActivityLabelProvider extends LabelProvider implements ITableLa
 				case 1:
 					return task.getPriority();
 				case 2: 
-					return task.getDescription(true);				
+					return task.getDescription();				
 				case 3:
 					if (task.getCreationDate() != null){
 						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
 					} else{
-						MylarStatusHandler.log("Task has no creation date: " + task.getDescription(true), this);
+						MylarStatusHandler.log("Task has no creation date: " + task.getDescription(), this);
 						return "[unknown]";
 					}
 				case 4:

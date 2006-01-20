@@ -421,9 +421,9 @@ public class TaskListView extends ViewPart {
 		}
 
 		if (task != null) {
-			setTitleToolTip(PART_NAME + " (" + task.getDescription(true) + ")");
+			setTitleToolTip(PART_NAME + " (" + task.getDescription() + ")");
 			if (isFastView) {
-				setContentDescription(task.getDescription(true));
+				setContentDescription(task.getDescription());
 			} else {
 				setContentDescription("");
 			}
@@ -482,7 +482,7 @@ public class TaskListView extends ViewPart {
 						int priorityInt = new Integer(priorityString);
 						return priorityInt - 1;
 					case 3:
-						return taskListElement.getDescription(true);
+						return taskListElement.getDescription();
 					}
 				} else if (element instanceof ITaskCategory) {
 					ITaskCategory cat = (ITaskCategory) element;
@@ -494,7 +494,7 @@ public class TaskListView extends ViewPart {
 					case 2:
 						return "";
 					case 3:
-						return cat.getDescription(true);
+						return cat.getDescription();
 					}
 				} else if (element instanceof ITaskQuery) {
 					ITaskQuery cat = (ITaskQuery) element;
@@ -506,7 +506,7 @@ public class TaskListView extends ViewPart {
 					case 2:
 						return "";
 					case 3:
-						return cat.getDescription(true);
+						return cat.getDescription();
 					}
 				}
 			} catch (Exception e) {
@@ -627,8 +627,8 @@ public class TaskListView extends ViewPart {
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
 			if (o1 instanceof ITaskCategory || o1 instanceof ITaskQuery) {
 				if (o2 instanceof ITaskCategory || o2 instanceof ITaskQuery) {
-					return ((ITaskListElement) o1).getDescription(false).compareTo(
-							((ITaskListElement) o2).getDescription(false));
+					return ((ITaskListElement) o1).getDescription().compareTo(
+							((ITaskListElement) o2).getDescription());
 				} else {
 					return -1;
 				}
@@ -657,8 +657,8 @@ public class TaskListView extends ViewPart {
 					} else if (column == columnNames[2]) {
 						return element1.getPriority().compareTo(element2.getPriority());
 					} else if (column == columnNames[3]) {
-						String c1 = element1.getStringForSortingDescription();
-						String c2 = element2.getStringForSortingDescription();
+						String c1 = element1.getDescription();
+						String c2 = element2.getDescription();
 						try {
 							return new Integer(c1).compareTo(new Integer(c2));
 						} catch (Exception e) {
@@ -860,8 +860,8 @@ public class TaskListView extends ViewPart {
 		hookOpenAction();
 		contributeToActionBars();
 
-		ToolTipHandler toolTipHandler = new ToolTipHandler(getViewer().getControl().getShell());
-		toolTipHandler.activateHoverHelp(getViewer().getControl());
+		TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler(getViewer().getControl().getShell());
+		taskListToolTipHandler.activateHoverHelp(getViewer().getControl());
 
 		initDragAndDrop(parent);
 		expandToActiveTasks();

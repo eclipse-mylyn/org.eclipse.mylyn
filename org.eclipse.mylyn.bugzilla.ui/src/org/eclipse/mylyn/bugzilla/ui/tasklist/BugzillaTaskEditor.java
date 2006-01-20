@@ -170,7 +170,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		
 		// Set the title on the editor's tab
 //		this.setPartName("Bug #" + bugzillaEditorInput.getBugId());
-		this.setPartName(bugTask.getDescription(true));
+		this.setPartName(bugTask.getDescription());
 		this.setTitleImage(TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA));
 	}
 	

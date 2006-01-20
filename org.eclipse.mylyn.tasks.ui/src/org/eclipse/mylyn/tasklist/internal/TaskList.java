@@ -183,7 +183,7 @@ public class TaskList implements Serializable {
 	public List<ITaskCategory> getUserCategories() {
 		List<ITaskCategory> included = new ArrayList<ITaskCategory>();
 		for (ITaskCategory category : categories) {
-			if (!category.getDescription(false).endsWith(DelegatingLocalTaskExternalizer.LABEL_AUTOMATIC)) {
+			if (!category.getDescription().endsWith(DelegatingLocalTaskExternalizer.LABEL_AUTOMATIC)) {
 				included.add(category);
 			}
 		}

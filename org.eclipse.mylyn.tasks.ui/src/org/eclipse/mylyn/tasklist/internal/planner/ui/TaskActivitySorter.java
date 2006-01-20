@@ -60,7 +60,7 @@ public class TaskActivitySorter extends ViewerSorter {
 	}
 	
 	protected int compareDescription(ITask task1, ITask task2) {
-		return task1.getDescription(false).compareTo(task2.getDescription(false));
+		return task1.getDescription().compareTo(task2.getDescription());
 	}
 	
 	protected int comparePriority(ITask task1, ITask task2) {

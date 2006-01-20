@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Widget;
  * @author Mik Kersten
  * @author Eric Booth
  */
-public class ToolTipHandler {
+public class TaskListToolTipHandler {
 
 	private Shell tipShell;
 
@@ -53,7 +53,7 @@ public class ToolTipHandler {
 
 	protected Point widgetPosition; // the position hovered over in the Widget;
 
-	public ToolTipHandler(Shell parentShell) {
+	public TaskListToolTipHandler(Shell parentShell) {
 		if (parentShell != null) {
 			tipShell = createTipShell(parentShell);
 		}

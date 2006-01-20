@@ -104,7 +104,7 @@ public class TaskListStandaloneTest extends TestCase {
 
 		List<ITask> readList = manager.getTaskList().getRootTasks();
 		ITask readTask = readList.get(0);
-		assertTrue(readTask.getDescription(true).equals("task 1"));
+		assertTrue(readTask.getDescription().equals("task 1"));
 		
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());
 		assertEquals(task.getCompletionDate(), readTask.getCompletionDate());

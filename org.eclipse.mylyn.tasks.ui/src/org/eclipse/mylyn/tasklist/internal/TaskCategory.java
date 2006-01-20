@@ -50,7 +50,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		this.description = description;
 	}
 
-	public String getDescription(boolean label) {
+	public String getDescription() {
 		return description;
 	}
 
@@ -116,7 +116,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 			return false;
 		if (object instanceof TaskCategory) {
 			TaskCategory compare = (TaskCategory) object;
-			return this.getDescription(false).equals(compare.getDescription(false));
+			return this.getDescription().equals(compare.getDescription());
 		} else {
 			return false;
 		}
@@ -172,7 +172,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 	}
 
 	public String getStringForSortingDescription() {
-		return getDescription(true);
+		return getDescription();
 	}
 
 	public void openCategoryInEditor(boolean offline) {
@@ -198,6 +198,6 @@ public class TaskCategory implements ITaskCategory, Serializable {
 	}
 
 	public String toString() {
-		return getDescription(false);
+		return getDescription();
 	}
 }

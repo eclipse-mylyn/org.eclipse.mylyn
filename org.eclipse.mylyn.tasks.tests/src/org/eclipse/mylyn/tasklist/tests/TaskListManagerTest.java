@@ -76,7 +76,7 @@ public class TaskListManagerTest extends TestCase {
         manager.readExistingOrCreateNewList();
                 
     	BugzillaTask readReport = (BugzillaTask)manager.getTaskList().getRootTasks().get(0);
-    	assertEquals(readReport.getDescription(true), readReport.getDescription(true)); 
+    	assertEquals(readReport.getDescription(), readReport.getDescription()); 
     	assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
     }
 	
@@ -186,29 +186,29 @@ public class TaskListManagerTest extends TestCase {
         assertEquals(3, manager.getTaskList().getRootTasks().size()); // contains archived reports category
 
     	List<ITask> readList = manager.getTaskList().getRootTasks();
-    	assertTrue(readList.get(0).getDescription(true).equals("task 1"));
-    	assertTrue(readList.get(0).getChildren().get(0).getDescription(true).equals("sub 1"));
-    	assertTrue(readList.get(1).getDescription(true).equals("task 2"));
+    	assertTrue(readList.get(0).getDescription().equals("task 1"));
+    	assertTrue(readList.get(0).getChildren().get(0).getDescription().equals("sub 1"));
+    	assertTrue(readList.get(1).getDescription().equals("task 2"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
     	BugzillaTask readReport = (BugzillaTask)readList.get(2);
-    	assertEquals(report2.getDescription(true), readReport.getDescription(true)); 
+    	assertEquals(report2.getDescription(), readReport.getDescription()); 
     	
     	List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
-    	assertTrue(readCats.get(0).getDescription(true).equals(BugzillaTaskExternalizer.BUGZILLA_ARCHIVE_LABEL));
+    	assertTrue(readCats.get(0).getDescription().equals(BugzillaTaskExternalizer.BUGZILLA_ARCHIVE_LABEL));
         
     	assertEquals(3, manager.getTaskList().getCategories().size());
     	
     	TaskCategory readCat = readCats.get(1);
     	readList = readCat.getChildren();
-    	assertTrue(readList.get(0).getDescription(true).equals("task 3"));
+    	assertTrue(readList.get(0).getDescription().equals("task 3"));
     	assertEquals(readCat, readList.get(0).getCategory());
-    	assertTrue(readList.get(0).getChildren().get(0).getDescription(true).equals("sub 2"));
-    	assertTrue(readList.get(1).getDescription(true).equals("task 4"));
+    	assertTrue(readList.get(0).getChildren().get(0).getDescription().equals("sub 2"));
+    	assertTrue(readList.get(1).getDescription().equals("task 4"));
     	
     	TaskCategory readCat2 = readCats.get(2);
     	readList = readCat2.getChildren();
-    	assertTrue(readList.get(0).getDescription(true).equals("task 5"));
-    	assertTrue(readList.get(1).getDescription(true).equals("task 6"));
+    	assertTrue(readList.get(0).getDescription().equals("task 5"));
+    	assertTrue(readList.get(1).getDescription().equals("task 6"));
     	assertTrue(readList.get(2) instanceof BugzillaTask);
         assertEquals(readCat2, readList.get(2).getCategory());
     }

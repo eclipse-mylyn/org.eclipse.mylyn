@@ -51,7 +51,7 @@ public class CategoryEditorInput implements IEditorInput {
 	}
 
 	public String getCategoryName() {
-		return category.getDescription(false);
+		return category.getDescription();
 	}
 	
 	public void setCategoryName(String description) {

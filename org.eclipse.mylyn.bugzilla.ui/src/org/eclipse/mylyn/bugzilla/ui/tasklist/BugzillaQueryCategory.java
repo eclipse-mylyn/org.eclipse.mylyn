@@ -58,7 +58,7 @@ public class BugzillaQueryCategory implements ITaskQuery {
 
 	private List<IQueryHit> hits = new ArrayList<IQueryHit>();
 
-	private boolean hasBeenRefreshed = false;
+//	private boolean hasBeenRefreshed = false;
 
 	protected Date lastRefresh;
 
@@ -68,7 +68,7 @@ public class BugzillaQueryCategory implements ITaskQuery {
 
 	private ICategorySearchListener listener = new BugzillaQueryCategorySearchListener();
 
-	private boolean isMaxReached = false;
+	private boolean maxHitsReached = false;
 
 	public class BugzillaQueryCategorySearchListener implements ICategorySearchListener {
 
@@ -100,20 +100,8 @@ public class BugzillaQueryCategory implements ITaskQuery {
 		}
 	}
 
-	public String getDescription(boolean label) {
-		if (hits.size() > 0 || !label) {
-			if (!hasBeenRefreshed && label) {
-				return description + " <needs refresh>";
-			} else if (isMaxReached && label) {
-				return description + " <first " + maxHits + " hits>";
-			} else {
-				return description;
-			}
-		} else if (!hasBeenRefreshed) {
-			return description + " <needs refresh>";
-		} else {
-			return description + " <no hits>";
-		}
+	public String getDescription() {
+		return description;
 	}
 
 	public Image getIcon() {
@@ -168,8 +156,8 @@ public class BugzillaQueryCategory implements ITaskQuery {
 			try {
 				// execute the search operation
 				catSearch.execute(new NullProgressMonitor());
-				isMaxReached = catSearch.isMaxReached();
-				hasBeenRefreshed = true;
+				maxHitsReached = catSearch.isMaxReached();
+//				hasBeenRefreshed = true;
 				lastRefresh = new Date();
 	
 				// get the status of the search operation
@@ -256,8 +244,25 @@ public class BugzillaQueryCategory implements ITaskQuery {
 		} else {
 			tooltip += hits.size() + " hits";
 		}
+		if (maxHitsReached) {
+			tooltip += " MAX REACHED";
+		}
+		tooltip += " (max set to: " + maxHits + ")";
 		tooltip += BugzillaTask.getLastRefreshTime(lastRefresh);
 		return tooltip;
+//		if (hits.size() > 0 || !label) {
+//		if (!hasBeenRefreshed && label) {
+//			return description + " <needs refresh>";
+//		} else if (maxHitsReached && label) {
+//			return description + " <first " + maxHits + " hits>";
+//		} else {
+//			return description;
+//		}
+//	} else if (!hasBeenRefreshed) {
+//		return description + " <needs refresh>";
+//	} else {
+//		return description + " <no hits>";
+//	}
 	}
 
 	public int getMaxHits() {
@@ -280,9 +285,9 @@ public class BugzillaQueryCategory implements ITaskQuery {
 		this.description = description;
 	}
 
-	public String getStringForSortingDescription() {
-		return getDescription(true);
-	}
+//	public String getStringForSortingDescription() {
+//		return getDescription(true);
+//	}
 
 	public void setHandleIdentifier(String id) {
 		this.handle = id;

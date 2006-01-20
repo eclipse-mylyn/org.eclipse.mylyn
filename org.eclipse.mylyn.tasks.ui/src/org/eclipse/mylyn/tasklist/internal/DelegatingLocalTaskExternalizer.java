@@ -115,7 +115,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		if (category.isArchive())
 			return parent;
 		Element node = doc.createElement(getCategoryTagName());
-		node.setAttribute(NAME, category.getDescription(false));
+		node.setAttribute(NAME, category.getDescription());
 
 		for (ITask task : ((TaskCategory) category).getChildren()) {
 			try {
@@ -143,7 +143,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(getTaskTagName());
 //		node.setAttribute(PATH, task.getRemoteContextPath());
-		node.setAttribute(LABEL, task.getDescription(false));
+		node.setAttribute(LABEL, task.getDescription());
 		node.setAttribute(HANDLE, task.getHandleIdentifier());
 		node.setAttribute(PRIORITY, task.getPriority());
 
@@ -398,7 +398,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	public Element createQueryElement(ITaskQuery query, Document doc, Element parent) {
 		String queryTagName = getQueryTagNameForElement(query);
 		Element node = doc.createElement(queryTagName);
-		node.setAttribute(NAME, query.getDescription(false));
+		node.setAttribute(NAME, query.getDescription());
 		node.setAttribute(MAX_HITS, query.getMaxHits() + "");
 		node.setAttribute(QUERY_STRING, query.getQueryUrl());
 		node.setAttribute(REPOSITORY_URL, query.getRepositoryUrl());
@@ -443,7 +443,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createQueryHitElement(IQueryHit queryHit, Document doc, Element parent) {
 		Element node = doc.createElement(getQueryHitTagName());
-		node.setAttribute(NAME, queryHit.getDescription(false));
+		node.setAttribute(NAME, queryHit.getDescription());
 		node.setAttribute(HANDLE, queryHit.getHandleIdentifier());
 		node.setAttribute(PRIORITY, queryHit.getPriority());
 		if (queryHit.isCompleted()) {

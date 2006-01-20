@@ -24,6 +24,8 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class TaskEditorInput implements IEditorInput {
 
+	private static final int MAX_LABEL_LENGTH = 60;
+	
 	private ITask task;
 	
 	private String id;
@@ -33,13 +35,19 @@ public class TaskEditorInput implements IEditorInput {
 	public TaskEditorInput(ITask task) {
 		this.task = task;
 		id = task.getHandleIdentifier();
-		label = task.getDescription(true);
+		label = truncateDescription(task.getDescription());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IEditorInput#exists()
-	 */
-	public boolean exists() {
+	private String truncateDescription(String description) {
+		if (description == null || description.length() <= MAX_LABEL_LENGTH) {
+			return description;
+		} else {
+			return description.substring(0, MAX_LABEL_LENGTH) + "...";
+		}
+	}
+	
+	
+ 	public boolean exists() {
 		return true;
 	}
 
@@ -96,6 +104,7 @@ public class TaskEditorInput implements IEditorInput {
 	 * @return Returns the label.
 	 */
 	public String getLabel() {
+		label = truncateDescription(task.getDescription());
 		return label;
 	}
 	

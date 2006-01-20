@@ -55,8 +55,6 @@ public class Task implements ITask {
 			}
 		}
 	}
-	
-	public static final int MAX_LABEL_LENGTH = 50;
 
 	private boolean active = false;
 
@@ -68,7 +66,7 @@ public class Task implements ITask {
 
 	private boolean hasReminded = false;
 
-	private String label;
+	private String description;
 
 	private String priority = "P3";
 
@@ -108,12 +106,12 @@ public class Task implements ITask {
 
 	@Override
 	public String toString() {
-		return label;
+		return description;
 	}
 
 	public Task(String handle, String label, boolean newTask) {
 		this.handle = handle;
-		this.label = label;
+		this.description = label;
 		if (newTask) {
 			creationDate = new Date();
 		}
@@ -199,7 +197,7 @@ public class Task implements ITask {
 	}
 
 	public String getToolTipText() {
-		return getDescription(true);
+		return getDescription();
 	}
 
 	@Override
@@ -291,7 +289,7 @@ public class Task implements ITask {
 		if (elapsedTime >= 0) {
 			this.timeActive = elapsedTime;
 		} else{
-			MylarStatusHandler.log("Attempt to set negative time on task: " + getDescription(true), this);
+			MylarStatusHandler.log("Attempt to set negative time on task: " + getDescription(), this);
 		} 
 	}
 
@@ -327,16 +325,8 @@ public class Task implements ITask {
 		return parentCategory;
 	}
 
-	public String getDescription(boolean truncate) {
-		if (!truncate) {
-			return label;
-		} else {
-			if (label == null || label.length() <= MAX_LABEL_LENGTH) {
-				return label;
-			} else {
-				return label.substring(0, MAX_LABEL_LENGTH) + "...";
-			}
-		}
+	public String getDescription() {
+		return description;
 	}
 
 	/**
@@ -437,11 +427,11 @@ public class Task implements ITask {
 	}
 
 	public void setDescription(String description) {
-		this.label = description;
+		this.description = description;
 	}
 
 	public String getStringForSortingDescription() {
-		return getDescription(true);
+		return getDescription();
 	}
 
 	public void addPlan(String plan) {

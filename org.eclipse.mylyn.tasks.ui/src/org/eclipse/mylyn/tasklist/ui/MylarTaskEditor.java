@@ -282,7 +282,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	 * Updates the tab titile
 	 */
 	public void changeTitle() {
-		this.setPartName(taskEditorInput.getTask().getDescription(true));
+		this.setPartName(taskEditorInput.getLabel());
 	}
 	
 	public void markDirty() {		

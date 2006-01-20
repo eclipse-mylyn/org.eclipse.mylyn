@@ -609,7 +609,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		String[] categoryNames = new String[categories.size()];
 		int i = 0;
 		for (ITaskCategory category : categories) {
-			categoryNames[i++] = category.getDescription(true);
+			categoryNames[i++] = category.getDescription();
 		}
 		if (categories.size() > 0) {
 			ComboSelectionDialog dialog = new ComboSelectionDialog(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
@@ -619,7 +619,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 				String selected = dialog.getSelectedString();
 				ITaskCategory destinationCategory = null;
 				for (ITaskCategory category : categories) {
-					if (category.getDescription(true).equals(selected)) {
+					if (category.getDescription().equals(selected)) {
 						destinationCategory = category;
 						break; // will go to the first one
 					}

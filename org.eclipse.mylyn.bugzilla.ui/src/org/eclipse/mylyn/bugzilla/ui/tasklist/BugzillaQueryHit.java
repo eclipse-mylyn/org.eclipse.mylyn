@@ -12,7 +12,6 @@
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.tasklist.IQueryHit;
@@ -87,19 +86,12 @@ public class BugzillaQueryHit implements IQueryHit {
 		}
 	}
 
-	public String getDescription(boolean label) {
-		if (label) {
-			if (task != null) {
-				return task.getDescription(label);
-			} else {
-				return HtmlStreamTokenizer.unescape(description);
-			}
+	public String getDescription() {
+//		return HtmlStreamTokenizer.unescape(description);
+		if (task != null) {
+			return task.getDescription();
 		} else {
-			if (task != null) {
-				return task.getDescription(label);
-			} else {
-				return description;
-			}
+			return description;
 		}
 	}
 
@@ -176,7 +168,7 @@ public class BugzillaQueryHit implements IQueryHit {
 		if (task != null) {
 			return task.getToolTipText();
 		} else {
-			return getDescription(true);
+			return getDescription();
 		}
 	}
 

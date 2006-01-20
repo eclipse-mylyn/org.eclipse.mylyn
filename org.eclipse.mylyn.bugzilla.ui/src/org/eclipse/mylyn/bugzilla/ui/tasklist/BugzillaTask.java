@@ -137,7 +137,7 @@ public class BugzillaTask extends Task {
 	}
 
 	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
-		this(hit.getHandleIdentifier(), hit.getDescription(false), newTask);
+		this(hit.getHandleIdentifier(), hit.getDescription(), newTask);
 		setPriority(hit.getPriority());
 		initFromHandle();
 	}
@@ -155,9 +155,9 @@ public class BugzillaTask extends Task {
 	}
 
 	@Override
-	public String getDescription(boolean truncate) {
-		if (this.isBugDownloaded() || !super.getDescription(truncate).startsWith("<")) {
-			return super.getDescription(truncate);
+	public String getDescription() {
+		if (this.isBugDownloaded() || !super.getDescription().startsWith("<")) {
+			return super.getDescription();
 		} else {
 			if (getState() == BugzillaTask.BugTaskState.FREE) {
 				return TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()) + ": <Could not find bug>";
@@ -503,7 +503,7 @@ public class BugzillaTask extends Task {
 		if (lastRefresh == null)
 			return "";
 
-		String toolTip = getDescription(true);
+		String toolTip = getDescription();
 
 		toolTip += getLastRefreshTime(lastRefresh);
 

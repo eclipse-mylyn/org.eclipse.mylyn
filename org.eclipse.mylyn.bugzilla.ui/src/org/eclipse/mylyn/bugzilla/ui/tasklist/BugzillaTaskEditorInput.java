@@ -65,7 +65,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	@Override
 	public String getName() {
-		return bugTask.getDescription(true); 
+		return bugTask.getDescription(); 
 	}
 
 	@Override

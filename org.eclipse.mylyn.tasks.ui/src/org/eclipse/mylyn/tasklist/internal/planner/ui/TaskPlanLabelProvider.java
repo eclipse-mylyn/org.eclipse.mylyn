@@ -45,7 +45,7 @@ public class TaskPlanLabelProvider extends LabelProvider implements ITableLabelP
 			case 1:
 				return task.getPriority();
 			case 2: 
-				return task.getDescription(true);
+				return task.getDescription();
 			case 3:
 				return DateUtil.getFormattedDurationShort(task.getElapsedTime());
 			case 4:

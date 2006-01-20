@@ -150,7 +150,7 @@ public class TaskInfoEditor extends EditorPart {
 		public void taskChanged(ITask updateTask) {
 			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				if (!description.isDisposed()) {
-					description.setText(updateTask.getDescription(false));
+					description.setText(updateTask.getDescription());
 					// TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
 					parentEditor.changeTitle();
 				}
@@ -340,7 +340,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		Label l = toolkit.createLabel(container, "Description:");
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		description = toolkit.createText(container, task.getDescription(true), SWT.BORDER);		
+		description = toolkit.createText(container, task.getDescription(), SWT.BORDER);		
 		description.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		if (!task.isLocal()) {

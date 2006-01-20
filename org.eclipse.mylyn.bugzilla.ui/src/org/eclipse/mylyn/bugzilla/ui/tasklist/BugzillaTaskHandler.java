@@ -74,7 +74,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		} else if (element instanceof BugzillaCustomQueryCategory) {
 			BugzillaCustomQueryCategory queryCategory = (BugzillaCustomQueryCategory) element;
 			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
-					queryCategory.getQueryUrl(), queryCategory.getDescription(false), queryCategory.getMaxHits()
+					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits()
 							+ "");
 			if (sqd.open() == Dialog.OK) {
 				queryCategory.setDescription(sqd.getName());
@@ -93,7 +93,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(
 					Display.getCurrent().getActiveShell(), 
 					queryCategory.getRepositoryUrl(),
-					queryCategory.getQueryUrl(), queryCategory.getDescription(false), queryCategory.getMaxHits() + "");
+					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
 			if (queryDialog.open() == Dialog.OK) {
 				queryCategory.setDescription(queryDialog.getName());
 				queryCategory.setQueryUrl(queryDialog.getUrl());

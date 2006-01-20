@@ -140,7 +140,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 			if(category.isArchive()) continue;
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(category.getIcon());
-			item.setText(category.getDescription(true));
+			item.setText(category.getDescription());
 			item.setChecked(false);
 			item.setData(category);
 		}		
@@ -148,7 +148,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		for (ITaskQuery query : manager.getTaskList().getQueries()) {			
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(query.getIcon());
-			item.setText(query.getDescription(true));
+			item.setText(query.getDescription());
 			item.setChecked(false);
 			item.setData(query);
 		}

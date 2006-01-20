@@ -57,7 +57,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 				}
 				return element.getPriority();
 			case 3:
-				return element.getDescription(false);
+				return element.getDescription();
 			}
 		}
     	return null;

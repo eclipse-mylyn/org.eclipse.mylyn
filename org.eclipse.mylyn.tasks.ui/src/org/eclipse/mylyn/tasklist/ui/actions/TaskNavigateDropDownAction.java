@@ -59,13 +59,13 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 
 		public TaskNavigateAction(ITask task) {
 			targetTask = task;
-			String taskDescription = task.getDescription(true);
+			String taskDescription = task.getDescription();
 			if (taskDescription.length() > MAX_LABEL_LENGTH) {
 				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "...";
 			}
 			setText(taskDescription);
 			setEnabled(true);
-			setToolTipText(task.getDescription(true));
+			setToolTipText(task.getDescription());
 			Image image = labelProvider.getColumnImage(task, 1);
 			setImageDescriptor(ImageDescriptor.createFromImage(image));
 		}
