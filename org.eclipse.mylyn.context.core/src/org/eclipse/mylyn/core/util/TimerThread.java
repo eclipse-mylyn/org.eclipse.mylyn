@@ -25,7 +25,9 @@ public class TimerThread extends Thread implements Runnable {
 
 	private static final int SECOND = 1000;
 
-	private int sleepInterval = 5 * SECOND;
+	public static final int DEFAULT_SLEEP_INTERVAL = 5 * SECOND;
+		
+	private int sleepInterval;
 
 	private int timeout = 0;
 
@@ -37,14 +39,13 @@ public class TimerThread extends Thread implements Runnable {
 	
 	boolean killed = false;
 
-	/** Currently used only for testing */
 	public TimerThread(int timeoutInMillis, int sleepInterval) {
 		this.sleepInterval = sleepInterval;
 		setTimeoutMillis(timeoutInMillis);
 	}
 
 	public TimerThread(int millis) {
-		setTimeoutMillis(millis);
+		this(millis, DEFAULT_SLEEP_INTERVAL);
 	}
 
 	public boolean addListener(ITimerThreadListener listener) {
@@ -66,7 +67,7 @@ public class TimerThread extends Thread implements Runnable {
 					if (!suspended) {
 						for (ITimerThreadListener listener : listeners) listener.fireTimedOut();
 					} 
-					resetTimer();
+					elapsed = 0;
 				}
 				sleep(sleepInterval);
 			}
