@@ -41,7 +41,7 @@ import org.eclipse.ui.IWorkbench;
  * 
  * The first page of the new bug wizard where the user chooses the bug's product
  */
-public class WizardProductPage extends AbstractWizardListPage {
+public class BugzillaProductPage extends AbstractWizardListPage {
 
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
 			+ "Press the Update button if you do not see the desired product.";
@@ -64,14 +64,14 @@ public class WizardProductPage extends AbstractWizardListPage {
 	private String prevProduct;
 
 	/**
-	 * Constructor for WizardProductPage
+	 * Constructor for BugzillaProductPage
 	 * 
 	 * @param workbench
 	 *            The instance of the workbench
 	 * @param bugWiz
 	 *            The bug wizard which created this page
 	 */
-	public WizardProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz) {
+	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz) {
 		super("Page1", "New Bug Report", DESCRIPTION, workbench);
 		this.bugWizard = bugWiz;
 	}
@@ -176,6 +176,7 @@ public class WizardProductPage extends AbstractWizardListPage {
 				listBox.add(prod);
 			}
 		}
+		listBox.setFocus();
 	}
 
 	@Override
@@ -201,12 +202,12 @@ public class WizardProductPage extends AbstractWizardListPage {
 				}
 				model.setParsedAttributesStatus(true);
 				if (prevProduct == null) {
-					bugWizard.attributePage = new WizardAttributesPage(workbench);
-					bugWizard.addPage(bugWizard.attributePage);
+					bugWizard.setAttributePage(new WizardAttributesPage(workbench));
+					bugWizard.addPage(bugWizard.getAttributePage());
 				} else {
 					// selected product has changed
 					// will createControl again with new attributes in model
-					bugWizard.attributePage.setControl(null);
+					bugWizard.getAttributePage().setControl(null);
 				}
 			}
 		} catch (Exception e) {

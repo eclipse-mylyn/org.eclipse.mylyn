@@ -146,11 +146,20 @@ public class TaskRepositoryManager {
 		return null;
 	}
 	
+	/**
+	 * TODO: implement default support, this just returns first found
+	 */
 	public TaskRepository getDefaultRepository(String kind) {
 		// HACK: returns first repository found
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
 				return repository;
+			}
+		} else {
+			Collection values = repositoryMap.values();
+			if (!values.isEmpty()) {
+				HashSet repoistorySet = (HashSet)values.iterator().next();
+				return (TaskRepository)repoistorySet.iterator().next();
 			}
 		}
 		return null;

@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -84,17 +85,28 @@ public class SelectRepositoryPage extends WizardPage {
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
 		viewer.setInput(MylarTaskListPlugin.getRepositoryManager().getRepositoryClients());
+		
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				if (selection.getFirstElement() instanceof TaskRepository) {
 					wizard.setRepository((TaskRepository)selection.getFirstElement());
 					SelectRepositoryPage.this.setPageComplete(true);
-					wizard.getContainer().updateButtons();
+					try {
+						wizard.getContainer().updateButtons();
+					} catch (NullPointerException npe) {
+						// ignore, back button couldn't be updated
+						// TODO: remove this catch block
+					}
 				}
 			}
-		});
+		}); 
+		viewer.getTable().setFocus();
+		TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
+		if (defaultRepository != null) {
+			 viewer.setSelection(new StructuredSelection(defaultRepository));
+		}
+		
 		setControl(container);
 	}
 }
