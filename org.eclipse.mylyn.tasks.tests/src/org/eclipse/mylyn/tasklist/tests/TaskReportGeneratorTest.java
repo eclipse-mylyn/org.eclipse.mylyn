@@ -12,19 +12,25 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
+import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
 import org.eclipse.mylar.tasklist.internal.planner.CompletedTaskCollector;
 import org.eclipse.mylar.tasklist.internal.planner.TaskReportGenerator;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class TaskReportGeneratorTest extends TestCase {
 
@@ -51,15 +57,110 @@ public class TaskReportGeneratorTest extends TestCase {
 		manager.moveToRoot(task1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
-		TaskReportGenerator genertor = new TaskReportGenerator(manager.getTaskList());
-		genertor.addCollector(collector);
-		genertor.run(new NullProgressMonitor());
-		assertEquals(0, collector.getTasks().size());
+		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList());
+		generator.addCollector(collector);
+		generator.run(new NullProgressMonitor());
+		assertEquals(0, generator.getAllCollectedTasks().size());
 
 		task1.setCompleted(true);
-		genertor.run(new NullProgressMonitor());
-		assertEquals(1, collector.getTasks().size());
-		assertEquals(task1, collector.getTasks().get(0));
+		generator.run(new NullProgressMonitor());
+		assertEquals(1, generator.getAllCollectedTasks().size());
+		assertEquals(task1, generator.getAllCollectedTasks().get(0));
 	}
 
+	public void testCompletedBugzillaTasksRetrieved() throws InvocationTargetException, InterruptedException {
+		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(),
+				"bugzillatask 1", true);
+		manager.moveToRoot(task1);
+
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList());
+		generator.addCollector(collector);
+		generator.run(new NullProgressMonitor());
+		assertEquals(0, generator.getAllCollectedTasks().size());
+
+		task1.setCompleted(true);
+		generator.run(new NullProgressMonitor());
+		assertEquals(1, generator.getAllCollectedTasks().size());
+		assertEquals(task1, generator.getAllCollectedTasks().get(0));
+	}
+
+	public void testCompletedTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
+		Task task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		manager.moveToRoot(task1);
+		task1.setCompleted(true);
+		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
+		manager.addCategory(cat1);
+
+		ArrayList<Object> catagories = new ArrayList<Object>();
+		catagories.add(cat1);
+
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList(), catagories);
+		generator.addCollector(collector);
+		generator.run(new NullProgressMonitor());
+		assertEquals(0, generator.getAllCollectedTasks().size());
+
+		manager.moveToCategory(cat1, task1);
+
+		generator.run(new NullProgressMonitor());
+		assertEquals(1, generator.getAllCollectedTasks().size());
+		assertEquals(task1, generator.getAllCollectedTasks().get(0));
+	}
+
+	public void testCompletedBugzillaTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
+		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
+				true);
+		manager.moveToRoot(task1);
+		task1.setCompleted(true);
+		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
+		manager.addCategory(cat1);
+
+		ArrayList<Object> catagories = new ArrayList<Object>();
+		catagories.add(cat1);
+
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList(), catagories);
+		generator.addCollector(collector);
+		generator.run(new NullProgressMonitor());
+		assertEquals(0, generator.getAllCollectedTasks().size());
+
+		manager.moveToCategory(cat1, task1);
+
+		generator.run(new NullProgressMonitor());
+		assertEquals(1, generator.getAllCollectedTasks().size());
+		assertEquals(task1, generator.getAllCollectedTasks().get(0));
+	}
+
+	public void testCompletedBugzillaTasksInQueryRetrieved() throws InvocationTargetException, InterruptedException {
+		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
+				true);
+		manager.moveToRoot(task1);
+		task1.setCompleted(false);
+		
+		BugzillaQueryCategory bugQuery = new BugzillaQueryCategory("repositoryUrl", "queryUrl",
+				"TaskReportGeneratorBugzillaQueryCategory", "maxHits");
+
+		manager.addQuery(bugQuery);
+
+		ArrayList<Object> catagories = new ArrayList<Object>();
+		catagories.add(bugQuery);
+
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
+		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList(), catagories);
+		generator.addCollector(collector);
+		generator.run(new NullProgressMonitor());
+		assertEquals(0, generator.getAllCollectedTasks().size());
+
+		bugQuery.addHit(new BugzillaQueryHit("task1description", "low", "repositoryURL", 1, task1, "FIXED"));
+
+		generator.run(new NullProgressMonitor());
+		assertEquals(0, generator.getAllCollectedTasks().size());
+		
+		task1.setCompleted(true);
+		
+		generator.run(new NullProgressMonitor());
+		assertEquals(1, generator.getAllCollectedTasks().size());
+		assertEquals(task1, generator.getAllCollectedTasks().get(0));
+	}
 }
