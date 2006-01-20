@@ -489,10 +489,11 @@ public class TaskInfoEditor extends EditorPart {
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 5;
-		layout.marginRight = 100;
+		layout.numColumns = 6;
+		layout.makeColumnsEqualWidth = false;
 		sectionClient.setLayout(layout);
-		sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData clientDataLayout = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		sectionClient.setLayoutData(clientDataLayout);
 
 		// Reminder
 		Label label = toolkit.createLabel(sectionClient, "Reminder:");
@@ -514,10 +515,7 @@ public class TaskInfoEditor extends EditorPart {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				// ignore
 			}
-		});
-
-		datePicker.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+		});	
 
 		removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		if (task.isActive()) {
@@ -533,10 +531,12 @@ public class TaskInfoEditor extends EditorPart {
 				TaskInfoEditor.this.markDirty(true);
 			}
 		});
-
-		// 2 Blank columns after Reminder clear button
-		toolkit.createLabel(sectionClient, "");
-		toolkit.createLabel(sectionClient, "");
+		
+		// 3 Blank columns after Reminder clear button
+		Label dummy = toolkit.createLabel(sectionClient, "");
+		GridData dummyLabelDataLayout = new GridData(GridData.FILL_HORIZONTAL);
+		dummyLabelDataLayout.horizontalSpan = 3;
+		dummy.setLayoutData(dummyLabelDataLayout);
 
 		// Estimated time
 
@@ -555,12 +555,21 @@ public class TaskInfoEditor extends EditorPart {
 			}
 		});
 
-		estimated.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData estimatedDataLayout = new GridData();
+		estimatedDataLayout.widthHint = 105;
+		estimated.setLayoutData(estimatedDataLayout);
 
 		label = toolkit.createLabel(sectionClient, "hours ");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
 
+		// 1 Blank column
+		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
+		GridData blankLabl2Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+		blankLabl2Layout.horizontalSpan = 1;
+		blankLabl2Layout.widthHint = 25;
+		blankLabel2.setLayoutData(blankLabl2Layout);
+		
 		// Creation date
 		label = toolkit.createLabel(sectionClient, "Creation date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -573,8 +582,6 @@ public class TaskInfoEditor extends EditorPart {
 		}
 
 		Text creationDate = toolkit.createText(sectionClient, creationDateString, SWT.BORDER);
-		GridData td = new GridData(GridData.FILL_HORIZONTAL);
-		creationDate.setLayoutData(td);
 		creationDate.setEditable(false);
 		creationDate.setEnabled(false);
 
@@ -593,14 +600,20 @@ public class TaskInfoEditor extends EditorPart {
 
 		Text elapsedTimeText = toolkit.createText(sectionClient, elapsedTimeString, SWT.BORDER);
 
-		td = new GridData(GridData.FILL_HORIZONTAL);
-		
+		GridData td = new GridData();
+		td.widthHint = 105;
 		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
 
 		// Blank Column
 		toolkit.createLabel(sectionClient, "");
-
+		// 1 Blank column
+		Label blankLabel3 = toolkit.createLabel(sectionClient, "");
+		GridData blankLabl3Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+		blankLabl3Layout.horizontalSpan = 1;
+		blankLabl3Layout.widthHint = 25;
+		blankLabel3.setLayoutData(blankLabl2Layout);
+		
 		// Completion date
 		label = toolkit.createLabel(sectionClient, "Completion date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -610,9 +623,6 @@ public class TaskInfoEditor extends EditorPart {
 			completionDateString = getTaskDateString(task);
 		}
 		endDate = toolkit.createText(sectionClient, completionDateString, SWT.BORDER);
-		td = new GridData(GridData.FILL_HORIZONTAL);
-
-		endDate.setLayoutData(td);
 		endDate.setEditable(false);
 		endDate.setEnabled(false);
 

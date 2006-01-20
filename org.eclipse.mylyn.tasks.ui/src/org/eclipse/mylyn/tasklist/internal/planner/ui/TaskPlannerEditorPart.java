@@ -174,20 +174,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		sashForm.setLayout(new GridLayout());
 		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-	
-
-		Composite activityContainer = toolkit.createComposite(sashForm);
-		GridLayout activityLayout = new GridLayout();
-		activityLayout.marginBottom = 10;
-		activityContainer.setLayout(activityLayout);
-
-		
 			
 		TaskPlannerContentProvider activityContentProvider = new TaskPlannerContentProvider(allTasks);
-		// ViewerSorter activitySorter = new
-		// TaskActivitySorter(activitySortConstants);
-		final TableViewer activityViewer = createTableSection(activityContainer, toolkit, label, activityColumnNames,
+		final TableViewer activityViewer = createTableSection(sashForm, toolkit, label, activityColumnNames,
 				activityColumnWidths, activitySortConstants);		
 		activityViewer.setContentProvider(activityContentProvider);
 		activityViewer.setLabelProvider(new TaskActivityLabelProvider());
