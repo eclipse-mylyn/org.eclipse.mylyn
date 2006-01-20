@@ -36,9 +36,9 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 
 	private boolean started;
 	
-	public TaskActivityTimer(ITask task, int timeout) {
+	public TaskActivityTimer(ITask task, int timeout, int sleepInterval) {
 		this.task = task;
-		timer = new TimerThread(timeout);
+		timer = new TimerThread(timeout, sleepInterval);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(this);
 		MylarPlugin.getDefault().addInteractionListener(this);
 		timer.addListener(this);
@@ -51,7 +51,9 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	}
 
 	public void stopTimer() {
-		addElapsedToActivityTime();
+		if(!timer.isSuspended()) {
+			addElapsedToActivityTime();
+		}
 		timer.kill();
 		timer.removeListener(this);
 		MylarPlugin.getDefault().removeInteractionListener(this);
@@ -117,5 +119,8 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 
 	public String toString() {
 		return "timer for task: " + task.toString();
+	}
+	public boolean isSuspended() {
+		return timer.isSuspended();
 	}
 }

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.core.util.TimerThread;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
@@ -35,7 +36,7 @@ import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
  * @author Mik Kersten
  */
 public class TaskListManager {
-
+	
 	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
 
 	private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
@@ -50,6 +51,8 @@ public class TaskListManager {
 	
 	private int nextTaskId;
 
+	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
+	
 	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) { 
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
@@ -204,7 +207,7 @@ public class TaskListManager {
 		}
 		taskList.setActive(task, true);
 		int timeout = MylarPlugin.getContextManager().getInactivityTimeout();
-		TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout);
+		TaskActivityTimer activityTimer = new TaskActivityTimer(task, timeout, timerSleepInterval);
 		activityTimer.startTimer();
 		timerMap.put(task, activityTimer);
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
@@ -284,4 +287,10 @@ public class TaskListManager {
 		}
 	}
 
+	/**
+	 * For testing
+	 */
+	public void setTimerSleepInterval(int timerSleepInterval) {
+		this.timerSleepInterval = timerSleepInterval;
+	}
 }
