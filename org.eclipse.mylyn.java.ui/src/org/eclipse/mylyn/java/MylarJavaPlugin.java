@@ -54,7 +54,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private ResourceBundle resourceBundle;
 
-	private JavaEditorTracker editorTracker;
+	private ActiveFoldingEditorTracker editorTracker;
 
 	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
 
@@ -178,7 +178,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	}
 
 	private void installEditorTracker(IWorkbench workbench) {
-		editorTracker = new JavaEditorTracker();
+		editorTracker = new ActiveFoldingEditorTracker();
 		workbench.addWindowListener(editorTracker);
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (int i = 0; i < windows.length; i++) {
@@ -289,7 +289,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	/**
 	 * For testing.
 	 */
-	public JavaEditorTracker getEditorTracker() {
+	public ActiveFoldingEditorTracker getEditorTracker() {
 		return editorTracker;
 	}
 }

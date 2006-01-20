@@ -363,7 +363,7 @@ public class MylarContextManager {
 
 	public void addListener(IMylarContextListener listener) {
 		if (listener != null) {
-			if (suppressListenerNotification) {
+			if (suppressListenerNotification && !waitingListeners.contains(listener)) {
 				waitingListeners.add(listener);
 			} else {
 				if (!listeners.contains(listener))
@@ -428,6 +428,7 @@ public class MylarContextManager {
 			}
 			suppressListenerNotification = false;
 			listeners.addAll(waitingListeners);
+			waitingListeners.clear(); 
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "Could not activate context");
 		}
@@ -841,6 +842,6 @@ public class MylarContextManager {
 	 * For testing.
 	 */
 	public List<IMylarContextListener> getListeners() {
-		return listeners;
+		return Collections.unmodifiableList(listeners);
 	}
 }

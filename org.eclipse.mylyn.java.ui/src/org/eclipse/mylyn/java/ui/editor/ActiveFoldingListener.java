@@ -68,9 +68,10 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	 */
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
+    	MylarPlugin.getContextManager().addListener(this);
 		JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-
+		
 		enabled = MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED);
 		try {
 			Field field = JavaEditor.class.getDeclaredField("fProjectionModelUpdater");
@@ -86,6 +87,8 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void dispose() {
+		MylarPlugin.getContextManager().removeListener(this);
+		
 		JavaPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
@@ -97,11 +100,9 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	public void updateFolding() {
 		if (!enabled) {
 			editor.resetProjection();
+		} else if (editor.getEditorInput() == null) {
+			return;
 		} else {
-			if (editor.getEditorInput() == null) {
-				MylarStatusHandler.log("null input on: " + this.toString(), this);
-				return;
-			}
 			try {
 				List<IJavaElement> toExpand = new ArrayList<IJavaElement>();
 				List<IJavaElement> toCollapse = new ArrayList<IJavaElement>();
@@ -144,15 +145,17 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void interestChanged(IMylarElement element) {
-		if (updater == null)
+		if (updater == null || !enabled) {
 			return;
-		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
-		if (object instanceof IMember) {
-			IMember member = (IMember) object;
-			if (element.getInterest().isInteresting()) {
-				updater.expandElements(new IJavaElement[] { member });
-			} else {
-				updater.collapseElements(new IJavaElement[] { member });
+		} else {
+			Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
+			if (object instanceof IMember) {
+				IMember member = (IMember) object;
+				if (element.getInterest().isInteresting()) {
+					updater.expandElements(new IJavaElement[] { member });
+				} else {
+					updater.collapseElements(new IJavaElement[] { member });
+				}
 			}
 		}
 	}
@@ -172,7 +175,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void presentationSettingsChanging(IMylarContextListener.UpdateKind kind) {
-		// don't care when the presentation settings are changing
+		// ignore
 	}
 
 	public void presentationSettingsChanged(IMylarContextListener.UpdateKind kind) {
@@ -180,20 +183,19 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void landmarkAdded(IMylarElement element) {
-		// don't care when a landmark is added
+		// ignore
 	}
 
 	public void landmarkRemoved(IMylarElement element) {
-		// don't are when a landmark is removed
+		// ignore 
 	}
 
 	public void edgesChanged(IMylarElement node) {
-		// don't care when relationships change
+		// ignore
 	}
 
 	public void nodeDeleted(IMylarElement node) {
-		// hardRefresh();
-		// foldingController.updateFolding(false);
+		// ignore
 	}
 }
 

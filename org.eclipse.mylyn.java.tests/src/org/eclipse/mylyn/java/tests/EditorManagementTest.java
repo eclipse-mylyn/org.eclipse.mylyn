@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.ide.MylarIdePlugin;
-import org.eclipse.mylar.java.JavaEditorTracker;
+import org.eclipse.mylar.java.ActiveFoldingEditorTracker;
 import org.eclipse.mylar.java.JavaStructureBridge;
 import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -38,12 +38,13 @@ import org.eclipse.ui.internal.Workbench;
 public class EditorManagementTest extends AbstractJavaContextTest {
 
 	private IWorkbenchPage page;
+
 	private IViewPart view;
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();	
+		super.setUp();
 		page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
@@ -56,87 +57,116 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		super.tearDown();
 	}
 	
+	public void testWaitingListenersDoNotLeakOnEditorActivation() throws JavaModelException {
+		manager.contextDeleted(contextId);
+		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
+
+		int initialNumListeners = manager.getListeners().size();
+		manager.contextActivated(contextId);
+		assertEquals(initialNumListeners, manager.getListeners().size());
+
+		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
+		monitor.selectionChanged(view, new StructuredSelection(typeA));
+		manager.contextDeactivated(contextId);
+		assertEquals(initialNumListeners, manager.getListeners().size());
+
+		manager.contextActivated(contextId);
+		assertEquals(initialNumListeners+1, manager.getListeners().size());
+		manager.contextDeactivated(contextId);
+		assertEquals(initialNumListeners, manager.getListeners().size());
+
+		manager.contextActivated(contextId);
+		manager.contextDeactivated(contextId);
+		assertEquals(initialNumListeners, manager.getListeners().size());
+
+		manager.contextActivated(contextId);
+		manager.contextDeactivated(contextId);
+		assertEquals(initialNumListeners, manager.getListeners().size());
+	}
+
 	public void testEditorTrackerListenerRegistration() throws JavaModelException {
 		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
-		
-		JavaEditorTracker tracker = MylarJavaPlugin.getDefault().getEditorTracker();
+
+		ActiveFoldingEditorTracker tracker = MylarJavaPlugin.getDefault().getEditorTracker();
 		assertTrue(tracker.getEditorListenerMap().isEmpty());
-		
+
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
-        IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
-        monitor.selectionChanged(view, new StructuredSelection(m1));
-		
-        int numListeners = MylarPlugin.getContextManager().getListeners().size();
-        IMylarElement element = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
+		monitor.selectionChanged(view, new StructuredSelection(m1));
+
+		int numListeners = MylarPlugin.getContextManager().getListeners().size();
+		IMylarElement element = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
-		
-		assertEquals(numListeners+1, MylarPlugin.getContextManager().getListeners().size());
+
+		assertEquals(numListeners + 1, MylarPlugin.getContextManager().getListeners().size());
 		assertEquals(1, page.getEditorReferences().length);
 		assertEquals(1, tracker.getEditorListenerMap().size());
 		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
-		
+
 		assertEquals(numListeners, MylarPlugin.getContextManager().getListeners().size());
 		assertEquals(0, page.getEditorReferences().length);
 		assertEquals(0, tracker.getEditorListenerMap().size());
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testAutoClose() throws JavaModelException, InvocationTargetException, InterruptedException {
 		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
-        IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
-        monitor.selectionChanged(view, new StructuredSelection(m1));
+		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
+		monitor.selectionChanged(view, new StructuredSelection(m1));
 		IMylarElement element = MylarPlugin.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
-		
+
 		assertEquals(1, page.getEditors().length);
 		manager.contextDeactivated(contextId);
 		assertEquals(0, page.getEditors().length);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException {
 		manager.contextDeleted(contextId);
 		MylarIdePlugin.getDefault().getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
-		
+
 		manager.contextActivated(contextId);
-//		assertEquals(0, page.getEditors().length);
-		
-		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }" );
-		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }" );
+		// assertEquals(0, page.getEditors().length);
+
+		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
+		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
 		monitor.selectionChanged(view, new StructuredSelection(typeA));
-        monitor.selectionChanged(view, new StructuredSelection(typeB));
-        manager.contextDeactivated(contextId);
-        assertEquals(0, page.getEditors().length);
-        
-        manager.contextActivated(contextId);
-        assertTrue("num editors: " + page.getEditors().length, page.getEditors().length == 2 || page.getEditors().length == 3);
+		monitor.selectionChanged(view, new StructuredSelection(typeB));
+		manager.contextDeactivated(contextId);
+		assertEquals(0, page.getEditors().length);
+
+		manager.contextActivated(contextId);
+		assertTrue("num editors: " + page.getEditors().length, page.getEditors().length == 2
+				|| page.getEditors().length == 3);
 	}
-	
+
 	public void testCloseOnUninteresting() {
-//		fail();
+		// fail();
 	}
 
-//	private int getNumActiveEditors() {
-//		return ;
-//		for (int i = 0; i < page.getEditors().length; i++) {
-//			IEditorPart editor = page.getEditors()[i];
-			
-//			if (editor instanceof AbstractDecoratedTextEditor) {
-//				manager.contextDeactivated(contextId, contextId);
-//				assertEquals(0, page.getEditors().length);
-//			}
-//		}
-//	}
-	
-//	assertEquals(1, page.getEditors().length);
-//	WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-//		protected void execute(IProgressMonitor monitor) throws CoreException {
+	// private int getNumActiveEditors() {
+	// return ;
+	// for (int i = 0; i < page.getEditors().length; i++) {
+	// IEditorPart editor = page.getEditors()[i];
 
-//		}
-//	};
-//	IProgressService service = PlatformUI.getWorkbench().getProgressService();
-//	service.run(true, true, op);
+	// if (editor instanceof AbstractDecoratedTextEditor) {
+	// manager.contextDeactivated(contextId, contextId);
+	// assertEquals(0, page.getEditors().length);
+	// }
+	// }
+	// }
+
+	// assertEquals(1, page.getEditors().length);
+	// WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+	// protected void execute(IProgressMonitor monitor) throws CoreException {
+
+	// }
+	// };
+	// IProgressService service =
+	// PlatformUI.getWorkbench().getProgressService();
+	// service.run(true, true, op);
 }
