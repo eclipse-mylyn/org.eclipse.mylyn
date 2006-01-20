@@ -55,9 +55,9 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 
 	public void initTitle() {
 		if (task.isLocal()) {
-			super.setTitle(LABEL_PREFIX + ": " + this.task.getDescription(true));
+			super.setTitle(LABEL_PREFIX + ": " + this.task.getDescription());
 		} else {
-			super.setTitle(LABEL_PREFIX + ": " + LABEL_BUG + this.task.getDescription(true));
+			super.setTitle(LABEL_PREFIX + ": " + LABEL_BUG + this.task.getDescription());
 		}
 	}
 
@@ -174,9 +174,9 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 			comment = progressPrefix + " ";
 		}
 		if (task.isLocal()) {
-			comment += task.getDescription(false);
+			comment += task.getDescription();
 		} else { // bug report
-			comment += LABEL_BUG + task.getDescription(false);
+			comment += LABEL_BUG + task.getDescription();
 		}
 		String url = task.getUrl();
 		if (url != null && !url.equals("") && !url.endsWith("//")) {
