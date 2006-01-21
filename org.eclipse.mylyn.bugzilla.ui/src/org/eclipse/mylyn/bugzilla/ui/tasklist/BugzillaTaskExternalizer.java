@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.util.Date;
 
+import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
@@ -26,7 +27,8 @@ import org.eclipse.mylar.tasklist.internal.DelegatingLocalTaskExternalizer;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.mylar.tasklist.internal.TaskListExternalizerException;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.internal.TaskListManager;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,8 +47,8 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-	public static final String BUGZILLA_ARCHIVE_LABEL = "Archived Reports "
-			+ DelegatingLocalTaskExternalizer.LABEL_AUTOMATIC;
+	public static final String BUGZILLA_ARCHIVE_LABEL = TaskListManager.ARCHIVE_CATEGORY_DESCRIPTION
+			+ " (" + BugzillaPlugin.REPOSITORY_KIND + ")";
 
 	private static final String BUGZILLA = "Bugzilla";
 
@@ -255,7 +257,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(task);
 		if (taskHandler != null) {
-			ITask addedTask = taskHandler.taskAdded(task);
+			ITask addedTask = taskHandler.addTaskToRegistry(task);
 			if (addedTask instanceof BugzillaTask)
 				task = (BugzillaTask) addedTask;
 		}

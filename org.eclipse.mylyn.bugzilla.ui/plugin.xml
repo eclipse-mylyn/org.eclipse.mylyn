@@ -203,7 +203,7 @@
            style="push"
            tooltip="Add New Bugzilla Report"> 
   			</action>
-	   		
+	   	<!--
   			<action
            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
            enablesFor="*"
@@ -214,6 +214,7 @@
            style="push"
            tooltip="Add Existing Bugzilla Report"> 
   			</action>
+  			-->
       </viewerContribution>
    </extension>
 </plugin>

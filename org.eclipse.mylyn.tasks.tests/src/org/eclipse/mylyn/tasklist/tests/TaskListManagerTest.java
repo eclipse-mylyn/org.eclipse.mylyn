@@ -26,12 +26,12 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
 import org.eclipse.mylar.tasklist.internal.TaskList;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 
 /**
  * @author Mik Kersten

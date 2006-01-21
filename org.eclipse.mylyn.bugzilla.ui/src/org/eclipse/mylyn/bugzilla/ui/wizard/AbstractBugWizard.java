@@ -32,7 +32,7 @@ import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.wizards.AbstractRepositoryWizard;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
@@ -84,34 +84,8 @@ public abstract class AbstractBugWizard extends AbstractRepositoryWizard impleme
 	@Override
 	public void addPages() {
 		super.addPages();
-		// try {
-		// // check Bugzilla preferences to see if user has supplied a username
-		// // if (repository.getUserName().equals(""))
-		// // throw new LoginException("A Bugzilla User Name has not been
-		// provided."
-		// // + " Please check your Bugzilla Preferences information.");
-		// // Each wizard has its own way of creating and adding the page
-		// addPagesHelper();
-		// } catch (LoginException e) {
-		// MessageDialog.openError(Display.getDefault().getActiveShell(),
-		// "Posting Error",
-		// "Cannot proceed because your login name or password is incorrect."
-		// + "\nPlease check your settings in the Bugzilla preferences. ");
-		// } catch (Exception e) {
-		// BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e,
-		// "occurred.", "Bugzilla Error");
-		// }
 	}
-
-	// /**
-	// * A helper function for "addPages" that creates and adds the first page
-	// to
-	// * the wizard
-	// *
-	// * @throws Exception
-	// */
-	// abstract protected void addPagesHelper() throws Exception;
-
+	
 	@Override
 	public boolean performFinish() {
 		if (getWizardDataPage().serverSelected()) {

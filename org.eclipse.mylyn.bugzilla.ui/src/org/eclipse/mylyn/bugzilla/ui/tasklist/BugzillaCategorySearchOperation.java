@@ -26,7 +26,7 @@ import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchQuery;
 import org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchOperation;
 import org.eclipse.mylar.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**

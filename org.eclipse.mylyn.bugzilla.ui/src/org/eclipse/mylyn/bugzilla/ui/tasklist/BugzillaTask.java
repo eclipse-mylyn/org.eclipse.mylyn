@@ -37,7 +37,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Font;

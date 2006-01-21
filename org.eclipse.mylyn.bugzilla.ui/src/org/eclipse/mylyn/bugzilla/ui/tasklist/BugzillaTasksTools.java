@@ -15,7 +15,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 
 /**
  * @author Mik Kersten

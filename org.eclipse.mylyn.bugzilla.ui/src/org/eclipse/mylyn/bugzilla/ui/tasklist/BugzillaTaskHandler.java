@@ -29,13 +29,13 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
-import org.eclipse.mylar.tasklist.ui.actions.OpenTaskUrlInExternalBrowser;
+import org.eclipse.mylar.tasklist.ui.actions.OpenTaskInExternalBrowserAction;
 import org.eclipse.mylar.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
@@ -74,8 +74,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		} else if (element instanceof BugzillaCustomQueryCategory) {
 			BugzillaCustomQueryCategory queryCategory = (BugzillaCustomQueryCategory) element;
 			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
-					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits()
-							+ "");
+					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
 			if (sqd.open() == Dialog.OK) {
 				queryCategory.setDescription(sqd.getName());
 				queryCategory.setQueryUrl(sqd.getUrl());
@@ -90,10 +89,9 @@ public class BugzillaTaskHandler implements ITaskHandler {
 			}
 		} else if (element instanceof BugzillaQueryCategory) {
 			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory) element;
-			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(
-					Display.getCurrent().getActiveShell(), 
-					queryCategory.getRepositoryUrl(),
-					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
+			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
+					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
+					queryCategory.getMaxHits() + "");
 			if (queryDialog.open() == Dialog.OK) {
 				queryCategory.setDescription(queryDialog.getName());
 				queryCategory.setQueryUrl(queryDialog.getUrl());
@@ -119,8 +117,8 @@ public class BugzillaTaskHandler implements ITaskHandler {
 								"Unable to open the selected bugzilla report since you are currently offline");
 						return;
 					}
-					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaQueryHit) element).getRepositoryUrl(),
-							((BugzillaQueryHit) element).getId(), -1);
+					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaQueryHit) element)
+							.getRepositoryUrl(), ((BugzillaQueryHit) element).getId(), -1);
 					List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
 					selectedBugs.add(open);
 					ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
@@ -161,7 +159,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 		}
 	}
 
-	public ITask taskAdded(ITask newTask) {
+	public ITask addTaskToRegistry(ITask newTask) {
 		if (newTask instanceof BugzillaTask) {
 			BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager()
 					.getFromBugzillaTaskRegistry(newTask.getHandleIdentifier());
@@ -187,18 +185,18 @@ public class BugzillaTaskHandler implements ITaskHandler {
 	public boolean enableAction(Action action, ITaskListElement element) {
 
 		if (element instanceof BugzillaQueryHit) {
-			BugzillaQueryHit hit = (BugzillaQueryHit)element;
+			BugzillaQueryHit hit = (BugzillaQueryHit) element;
 			if (hit.getCorrespondingTask() != null && hit.getCorrespondingTask().hasValidUrl()) {
 				return true;
 			}
 			return false;
 		} else if (element instanceof BugzillaTask) {
-			if (action instanceof OpenTaskUrlInExternalBrowser) {
-				if (((ITask)element).hasValidUrl()) {
+			if (action instanceof OpenTaskInExternalBrowserAction) {
+				if (((ITask) element).hasValidUrl()) {
 					return true;
 				} else {
 					return false;
-				} 
+				}
 			} else if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
 					|| action instanceof OpenTaskEditorAction || action instanceof RemoveFromCategoryAction) {
 				return true;
@@ -223,74 +221,82 @@ public class BugzillaTaskHandler implements ITaskHandler {
 
 }
 
-//public ITask getCorrespondingTask(IQueryHit queryHit) {
-//if (queryHit instanceof BugzillaQueryHit) {
-//	BugzillaQueryHit hit = (BugzillaQueryHit) queryHit;
-//	return hit.getOrCreateCorrespondingTask();
-//} else {
-//	return null;
-//}
-//}
+// public ITask getCorrespondingTask(IQueryHit queryHit) {
+// if (queryHit instanceof BugzillaQueryHit) {
+// BugzillaQueryHit hit = (BugzillaQueryHit) queryHit;
+// return hit.getOrCreateCorrespondingTask();
+// } else {
+// return null;
+// }
+// }
 
-//public void itemRemoved(ITaskListElement element, ITaskCategory category) {
-//if (element instanceof BugzillaTask) {
-//	BugzillaTask task = (BugzillaTask) element;
-//	if (category instanceof TaskCategory) {
-//		MylarTaskListPlugin.getTaskListManager().removeFromCategoryAndRoot((TaskCategory) category, task);
-//		// category.removeTask(task);
-//	} else {
-//		String message = MESSAGE_CONFIRM_DELETE;
-//		boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-//				.getShell(), "Confirm delete", message);
-//		if (!deleteConfirmed)
-//			return;
-//		MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-//	}
-//}
-//}
+// public void itemRemoved(ITaskListElement element, ITaskCategory category) {
+// if (element instanceof BugzillaTask) {
+// BugzillaTask task = (BugzillaTask) element;
+// if (category instanceof TaskCategory) {
+// MylarTaskListPlugin.getTaskListManager().removeFromCategoryAndRoot((TaskCategory)
+// category, task);
+// // category.removeTask(task);
+// } else {
+// String message = MESSAGE_CONFIRM_DELETE;
+// boolean deleteConfirmed =
+// MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+// .getShell(), "Confirm delete", message);
+// if (!deleteConfirmed)
+// return;
+// MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+// }
+// }
+// }
 
-//private static final String MESSAGE_CONFIRM_DELETE = "Remove this report from the task list, and discard any task context or local notes?";
+// private static final String MESSAGE_CONFIRM_DELETE = "Remove this report from
+// the task list, and discard any task context or local notes?";
 
-//public boolean deleteElement(ITaskListElement element) {
-//	if (element instanceof BugzillaQueryCategory) {
-//		boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-//				.getShell(), "Confirm delete", "Delete the selected query and all contained tasks?");
-//		if (!deleteConfirmed)
-//			return false;
-//		BugzillaQueryCategory query = (BugzillaQueryCategory) element;
-//		MylarTaskListPlugin.getTaskListManager().deleteQuery(query);
-//	} else if (element instanceof BugzillaTask) {
-//		BugzillaTask task = (BugzillaTask) element;
-//		if (task.isActive()) {
-//			MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed",
-//					"Task must be deactivated in order to delete.");
-//			return false;
-//		}
+// public boolean deleteElement(ITaskListElement element) {
+// if (element instanceof BugzillaQueryCategory) {
+// boolean deleteConfirmed =
+// MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+// .getShell(), "Confirm delete", "Delete the selected query and all contained
+// tasks?");
+// if (!deleteConfirmed)
+// return false;
+// BugzillaQueryCategory query = (BugzillaQueryCategory) element;
+// MylarTaskListPlugin.getTaskListManager().deleteQuery(query);
+// } else if (element instanceof BugzillaTask) {
+// BugzillaTask task = (BugzillaTask) element;
+// if (task.isActive()) {
+// MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+// "Delete failed",
+// "Task must be deactivated in order to delete.");
+// return false;
+// }
 //
-//		// String message = task.getDeleteConfirmationMessage();
-//		boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
-//				.getShell(), "Confirm delete", MESSAGE_CONFIRM_DELETE);
-//		if (!deleteConfirmed)
-//			return false;
+// // String message = task.getDeleteConfirmationMessage();
+// boolean deleteConfirmed =
+// MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+// .getShell(), "Confirm delete", MESSAGE_CONFIRM_DELETE);
+// if (!deleteConfirmed)
+// return false;
 //
-//		// task.removeReport();
-//		MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-//		MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
-//		IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-//				.getActivePage();
+// // task.removeReport();
+// MylarTaskListPlugin.getTaskListManager().deleteTask(task);
+// MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
+// IWorkbenchPage page =
+// MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+// .getActivePage();
 //
-//		// if we couldn't get the page, get out of here
-//		if (page == null)
-//			return true;
-//		try {
-//			TaskListView.getDefault().closeTaskEditors(task, page);
-//		} catch (Exception e) {
-//			MylarStatusHandler.log(e, " deletion failed");
-//		}
-//	}
-//	TaskListView.getDefault().getViewer().refresh();
-//	return true;
-//}
+// // if we couldn't get the page, get out of here
+// if (page == null)
+// return true;
+// try {
+// TaskListView.getDefault().closeTaskEditors(task, page);
+// } catch (Exception e) {
+// MylarStatusHandler.log(e, " deletion failed");
+// }
+// }
+// TaskListView.getDefault().getViewer().refresh();
+// return true;
+// }
 
 // public void dropItem(ITaskListElement element, TaskCategory cat) {
 // if (element instanceof BugzillaQueryHit) {

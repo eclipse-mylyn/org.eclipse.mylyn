@@ -27,7 +27,7 @@ import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -96,7 +96,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 	    	
 		    ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
 		    if(taskHandler != null){
-		    	ITask addedTask = taskHandler.taskAdded(newTask);
+		    	ITask addedTask = taskHandler.addTaskToRegistry(newTask);
 		    	if(addedTask instanceof BugzillaTask){
 			    	BugzillaTask newTask2 = (BugzillaTask)addedTask;
 		    		if(newTask2 != newTask){

@@ -21,7 +21,7 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaQueryPageParser;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**
  * This class is used to parse the available products to log a bug for

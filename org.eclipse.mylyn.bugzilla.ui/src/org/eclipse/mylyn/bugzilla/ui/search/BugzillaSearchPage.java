@@ -35,8 +35,8 @@ import org.eclipse.mylar.bugzilla.core.search.IBugzillaSearchResultCollector;
 import org.eclipse.mylar.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.TaskRepository;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
@@ -470,6 +470,9 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		// operation combo
 		daysText = new Text(group, SWT.BORDER);
 		daysText.setTextLimit(5);
+		GridData daysLayoutData = new GridData();
+		daysLayoutData.widthHint = 30;
+		daysText.setLayoutData(daysLayoutData);
 		daysText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String days = daysText.getText();
