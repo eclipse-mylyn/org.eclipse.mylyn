@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.repositories.ui;
+package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.ui.wizards.AddQueryWizard;
+import org.eclipse.mylar.tasklist.ui.wizards.NewQueryWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -26,23 +26,20 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class AddQueryAction extends Action implements IViewActionDelegate {
+public class NewQueryAction extends Action implements IViewActionDelegate {
     
 	private static final String WIZARD_LABEL = "Add or modify task query";
 
 	public void init(IViewPart view) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
 
 	public void run(IAction action) {
 		try {
-			AddQueryWizard wizard = new AddQueryWizard();
+			NewQueryWizard wizard = new NewQueryWizard();
 			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
-//				wizard.loadSize();
 				WizardDialog dialog = new WizardDialog(shell, wizard);
-//				dialog.setMinimumPageSize(wizard.loadSize());
 				dialog.create();
 				dialog.setTitle(WIZARD_LABEL);
 				dialog.setBlockOnOpen(true);
@@ -57,6 +54,6 @@ public class AddQueryAction extends Action implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		// ignore
 	}
 }

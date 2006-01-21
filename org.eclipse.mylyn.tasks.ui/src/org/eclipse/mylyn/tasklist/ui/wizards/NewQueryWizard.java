@@ -17,9 +17,9 @@ import org.eclipse.ui.IWorkbench;
 /**
  * @author Mik Kersten
  */
-public class AddQueryWizard extends AbstractRepositoryWizard {
+public class NewQueryWizard extends AbstractRepositoryWizard {
 
-	public AddQueryWizard() {
+	public NewQueryWizard() {
 		super();
 		init();
 	}

@@ -56,7 +56,7 @@
             id="org.eclipse.mylar.tasklist.repositories"
             allowMultiple="false"
             category="org.eclipse.mylar"
-            class="org.eclipse.mylar.tasklist.repositories.ui.TaskRepositoriesView"
+            class="org.eclipse.mylar.tasklist.ui.TaskRepositoriesView"
             icon="icons/eview16/task-repositories.gif"
             name="Task Repositories (Experimental)">
       </view>
@@ -122,14 +122,23 @@
            id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
   </extension>
 
-<!--
   <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.eclipse.mylar.tasklist.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-          
+
 		<action
-              class="org.eclipse.mylar.tasklist.repositories.ui.AddQueryAction"
+              class="org.eclipse.mylar.tasklist.ui.actions.AddRepositoryTaskAction"
+              enablesFor="*"
+              icon="icons/etool16/task-new.gif"
+              id="org.eclipse.mylar.tasklist.actions.addQuery"
+              menubarPath="reports"
+              label="Add Repository Task"
+              style="push"
+              tooltip="Add Repository Task"> 
+  		</action>          
+		<action
+              class="org.eclipse.mylar.tasklist.ui.actions.NewQueryAction"
               enablesFor="*"
               icon="icons/etool16/category-query-new.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
@@ -140,7 +149,6 @@
   		</action>
       </viewerContribution>
    </extension>
--->
 
   <extension point="org.eclipse.ui.preferencePages">
       <page 

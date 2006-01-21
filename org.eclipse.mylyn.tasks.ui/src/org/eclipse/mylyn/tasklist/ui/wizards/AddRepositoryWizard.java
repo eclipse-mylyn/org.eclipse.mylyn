@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.ui.IWorkbench;
 
 /**

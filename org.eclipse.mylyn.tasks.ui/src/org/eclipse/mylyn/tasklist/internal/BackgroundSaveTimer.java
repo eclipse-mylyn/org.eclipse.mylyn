@@ -87,4 +87,8 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 		}
 	}
 
+	public void intervalElapsed() {
+		// ignore
+	}
+
 }

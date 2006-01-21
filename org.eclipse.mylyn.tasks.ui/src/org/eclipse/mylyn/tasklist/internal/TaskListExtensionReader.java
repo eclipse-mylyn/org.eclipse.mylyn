@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
+import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.ui.IContextEditorFactory;
 import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
 

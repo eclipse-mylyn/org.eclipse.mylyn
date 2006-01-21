@@ -63,15 +63,15 @@ public class TaskListWriter {
 	private static final String VALUE_VERSION_1_0_0 = "1.0.0";
 
 	private static final String FILE_SUFFIX_SAVE = "save.xml";
-	
-	private List<ITaskListExternalizer> externalizers; 
+
+	private List<ITaskListExternalizer> externalizers;
 
 	private DelegatingLocalTaskExternalizer delagatingExternalizer = new DelegatingLocalTaskExternalizer();
 
 	private String readVersion = "";
 
 	private boolean hasCaughtException = false;
-	
+
 	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
 		this.externalizers = externalizers;
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
@@ -92,7 +92,7 @@ public class TaskListWriter {
 
 		Element root = doc.createElement(ELEMENT_TASK_LIST);
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
-		
+
 		for (ITaskListExternalizer externalizer : externalizers) {
 			externalizer.createRegistry(doc, root);
 		}
@@ -206,8 +206,8 @@ public class TaskListWriter {
 	 * TODO: fix this old mess
 	 */
 	public void readTaskList(TaskList tlist, File inFile) {
-//		initExtensions();
-//		MylarTaskListPlugin.getDefault().restoreTaskHandlerState();
+		// initExtensions();
+		// MylarTaskListPlugin.getDefault().restoreTaskHandlerState();
 		hasCaughtException = false;
 		try {
 			// parse file
@@ -271,10 +271,10 @@ public class TaskListWriter {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault()
-											.getHandlerForElement(newTask);
+									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(
+											newTask);
 									if (taskHandler != null) {
-										newTask = taskHandler.taskAdded(newTask);
+										newTask = taskHandler.addTaskToRegistry(newTask);
 									}
 									tlist.addRootTask(newTask);
 
@@ -309,7 +309,7 @@ public class TaskListWriter {
 			// we can lose bug reports.
 			writeTaskList(tlist, inFile);
 		}
-//		MylarTaskListPlugin.getDefault().restoreTaskHandlerState();
+		// MylarTaskListPlugin.getDefault().restoreTaskHandlerState();
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class TaskListWriter {
 	}
 
 	public void readTaskList(TaskList tlist, String input) {
-//		initExtensions();
+		// initExtensions();
 		try {
 
 			Document doc = openAsDOM(input);
@@ -481,10 +481,10 @@ public class TaskListWriter {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault()
-											.getHandlerForElement(newTask);
+									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(
+											newTask);
 									if (taskHandler != null) {
-										newTask = taskHandler.taskAdded(newTask);
+										newTask = taskHandler.addTaskToRegistry(newTask);
 									}
 									tlist.addRootTask(newTask);
 

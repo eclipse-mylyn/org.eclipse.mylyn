@@ -12,7 +12,7 @@
 package org.eclipse.mylar.tasklist.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.ui.INewWizard;
 
 /**

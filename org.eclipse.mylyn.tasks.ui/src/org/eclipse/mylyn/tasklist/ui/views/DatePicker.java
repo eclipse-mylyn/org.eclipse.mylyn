@@ -86,12 +86,12 @@ public class DatePicker extends Composite {
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.verticalSpacing = 2;
 		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 2;
+		gridLayout.marginHeight = 0;
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
 
-		setSize(new org.eclipse.swt.graphics.Point(135, 28));
-		dateText = new Text(this, SWT.BORDER | SWT.READ_ONLY);
+		setSize(new org.eclipse.swt.graphics.Point(135, 18));//28
+		dateText = new Text(this, SWT.READ_ONLY);
 		dateText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		dateText.setLayoutData(dateTextGridData);
 		pickButton = new Button(this, SWT.ARROW | SWT.DOWN);

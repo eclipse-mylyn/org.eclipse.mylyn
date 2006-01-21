@@ -52,7 +52,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 	private static final String LIST_LABEL = "Choose specific categories:";
 
 	private long DAY = 24 * 3600 * 1000;
-	
+
 	protected String[] columnNames = new String[] { "", "Description" };
 
 	private Date reportStartDate = null;
@@ -60,12 +60,10 @@ public class TaskPlannerWizardPage extends WizardPage {
 	private Text numDays;
 
 	private int numDaysToReport = 0;
-	
-    private Label filtersLabel;
+
+	private Label filtersLabel;
 
 	private Table filtersTable;
-
-
 
 	public TaskPlannerWizardPage() {
 		super(TITLE);
@@ -98,12 +96,12 @@ public class TaskPlannerWizardPage extends WizardPage {
 			}
 		});
 		numDays.setText("" + DEFAULT_DAYS);
+		numDays.setFocus();
 		numDaysToReport = DEFAULT_DAYS;
 
 		Label label2 = new Label(container, SWT.NULL);
 		label2.setText("Or provide report start date: ");
 		final DatePicker datePicker = new DatePicker(container, SWT.NULL);
-		// datePicker.setDateText("<reminder>");
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {
@@ -116,94 +114,94 @@ public class TaskPlannerWizardPage extends WizardPage {
 				// ignore
 			}
 		});
-		
+
 		addCategorySelection(container);
-		
+
 		setControl(container);
 	}
-	
+
 	/**
-	 * Selection of specific category
-	 * to report on in the Task Planner
-	 * @param composite container to add categories combo box to
+	 * Selection of specific category to report on in the Task Planner
+	 * 
+	 * @param composite
+	 *            container to add categories combo box to
 	 */
 	private void addCategorySelection(Composite composite) {
-		
+
 		createFilterTable(composite, true);
 		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
-		if(manager == null) {
+		if (manager == null) {
 			filtersTable.setEnabled(false);
 			return;
 		}
 		// populate categories
 		for (ITaskCategory category : manager.getTaskList().getTaskCategories()) {
-			if(category.isArchive()) continue;
+			if (category.isArchive())
+				continue;
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(category.getIcon());
 			item.setText(category.getDescription());
 			item.setChecked(false);
 			item.setData(category);
-		}		
+		}
 		// populate qeries
-		for (ITaskQuery query : manager.getTaskList().getQueries()) {			
+		for (ITaskQuery query : manager.getTaskList().getQueries()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(query.getIcon());
 			item.setText(query.getDescription());
 			item.setChecked(false);
 			item.setData(query);
 		}
-		for (int i=0; i<columnNames.length; i++) {
-			filtersTable.getColumn (i).pack();
-		}	
+		for (int i = 0; i < columnNames.length; i++) {
+			filtersTable.getColumn(i).pack();
+		}
 	}
-	
-	 private void createFilterTable(Composite composite, boolean enabled) {
 
-	        Font font = composite.getFont();
+	private void createFilterTable(Composite composite, boolean enabled) {
 
-	        this.filtersLabel = new Label(composite, SWT.NONE);
-	        this.filtersLabel.setText(LIST_LABEL);
-	        this.filtersLabel.setEnabled(enabled);
-	        GridData gridData = new GridData();
-	        gridData.verticalAlignment = GridData.FILL;
-//	        gridData.horizontalSpan = 2;
-	        
-	        this.filtersLabel.setLayoutData(gridData);
-	        this.filtersLabel.setFont(font);
+		Font font = composite.getFont();
 
-	        this.filtersTable = new Table(composite, SWT.BORDER | SWT.MULTI | SWT.CHECK  | SWT.H_SCROLL | SWT.V_SCROLL);
-	        this.filtersTable.setEnabled(enabled);
-	        GridData data = new GridData();
-	        //Set heightHint with a small value so the list size will be defined by 
-	        //the space available in the dialog instead of resizing the dialog to
-	        //fit all the items in the list.
-	        data.heightHint = filtersTable.getItemHeight();
-	        data.verticalAlignment = GridData.FILL;
-	        data.horizontalAlignment = GridData.FILL;
-	        data.grabExcessHorizontalSpace = true;
-	        data.grabExcessVerticalSpace = true;
-	        this.filtersTable.setLayoutData(data);
-	        this.filtersTable.setFont(font);
+		this.filtersLabel = new Label(composite, SWT.NONE);
+		this.filtersLabel.setText(LIST_LABEL);
+		this.filtersLabel.setEnabled(enabled);
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		// gridData.horizontalSpan = 2;
 
-	        
-	        for (int i=0; i<columnNames.length; i++) {
-				TableColumn column = new TableColumn (filtersTable, SWT.NONE);
-				column.setText (columnNames [i]);
-			}
-	        
-	    }
-	
-	 public java.util.List<Object> getSelectedFilters() {
-		 java.util.List<Object> result = new ArrayList<Object>();
-		 TableItem[] items = filtersTable.getItems();
-		 for(TableItem item : items) {
-			 if(item.getChecked()) {
+		this.filtersLabel.setLayoutData(gridData);
+		this.filtersLabel.setFont(font);
+
+		this.filtersTable = new Table(composite, SWT.BORDER | SWT.MULTI | SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL);
+		this.filtersTable.setEnabled(enabled);
+		GridData data = new GridData();
+		// Set heightHint with a small value so the list size will be defined by
+		// the space available in the dialog instead of resizing the dialog to
+		// fit all the items in the list.
+		data.heightHint = filtersTable.getItemHeight();
+		data.verticalAlignment = GridData.FILL;
+		data.horizontalAlignment = GridData.FILL;
+		data.grabExcessHorizontalSpace = true;
+		data.grabExcessVerticalSpace = true;
+		this.filtersTable.setLayoutData(data);
+		this.filtersTable.setFont(font);
+
+		for (int i = 0; i < columnNames.length; i++) {
+			TableColumn column = new TableColumn(filtersTable, SWT.NONE);
+			column.setText(columnNames[i]);
+		}
+
+	}
+
+	public java.util.List<Object> getSelectedFilters() {
+		java.util.List<Object> result = new ArrayList<Object>();
+		TableItem[] items = filtersTable.getItems();
+		for (TableItem item : items) {
+			if (item.getChecked()) {
 				result.add(item.getData());
-			 }
-		 }
-		 return result;
-	 }
-
+			}
+		}
+		return result;
+	}
 
 	public Date getReportStartDate() {
 		if (reportStartDate != null) {

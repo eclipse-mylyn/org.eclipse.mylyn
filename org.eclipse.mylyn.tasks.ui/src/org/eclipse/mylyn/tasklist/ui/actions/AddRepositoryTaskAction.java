@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.repositories.ui;
+package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -17,37 +17,31 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.tasklist.ui.wizards.AddRepositoryWizard;
+import org.eclipse.mylar.tasklist.ui.wizards.AddRepositoryTaskWizard;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
  */
-public class AddTaskRepositoryAction extends Action {
+public class AddRepositoryTaskAction extends Action implements IViewActionDelegate {
     
-	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
+	private static final String WIZARD_LABEL = "Add an existing repository task/issue";
 
-	public AddTaskRepositoryAction() {
-		setImageDescriptor(TaskListImages.REPOSITORY_NEW);
-		setText("Add Repository");
-		setId(ID);
-	}
-	
 	public void init(IViewPart view) {
 		// ignore
 	}
-	
-	public void run() {
+
+	public void run(IAction action) {
 		try {
-			AddRepositoryWizard wizard = new AddRepositoryWizard();
+			AddRepositoryTaskWizard wizard = new AddRepositoryTaskWizard();
 			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
-//				dialog.getShell().setText("Mylar Tasks");
+				dialog.setTitle(WIZARD_LABEL);
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Dialog.CANCEL) {
 					dialog.close();
@@ -60,6 +54,6 @@ public class AddTaskRepositoryAction extends Action {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		// ignore
 	}
 }

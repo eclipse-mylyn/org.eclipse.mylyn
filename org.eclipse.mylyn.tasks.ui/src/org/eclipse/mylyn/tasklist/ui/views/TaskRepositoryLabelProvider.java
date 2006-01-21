@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.ui.views;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
+import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Image;
 

@@ -9,17 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.repositories.ui;
+package org.eclipse.mylar.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.repositories.TaskRepository;
-import org.eclipse.mylar.tasklist.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylar.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.tasklist.ui.wizards.AddRepositoryWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.Workbench;
@@ -27,15 +26,13 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class TaskRepositoryPropertiesAction extends Action {
+public class AddRepositoryAction extends Action {
+    
+	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
 
-	private static final String ID = "org.eclipse.mylar.tasklist.repositories.properties";
-
-	private TaskRepositoriesView repositoriesView;
-	
-	public TaskRepositoryPropertiesAction(TaskRepositoriesView repositoriesView) {
-		this.repositoriesView = repositoriesView;
-		setText("Properties");
+	public AddRepositoryAction() {
+		setImageDescriptor(TaskListImages.REPOSITORY_NEW);
+		setText("Add Repository");
 		setId(ID);
 	}
 	
@@ -45,19 +42,16 @@ public class TaskRepositoryPropertiesAction extends Action {
 	
 	public void run() {
 		try {
-			IStructuredSelection selection = (IStructuredSelection)repositoriesView.getViewer().getSelection();
-			if (selection.getFirstElement() instanceof TaskRepository) {
-				EditRepositoryWizard wizard = new EditRepositoryWizard((TaskRepository)selection.getFirstElement());
-				Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
-				if (wizard != null && shell != null && !shell.isDisposed()) {
-					WizardDialog dialog = new WizardDialog(shell, wizard);
-					dialog.create();
-//					dialog.getShell().setText("Mylar Tasks");
-					dialog.setBlockOnOpen(true);
-					if (dialog.open() == Dialog.CANCEL) {
-						dialog.close();
-						return;
-					}
+			AddRepositoryWizard wizard = new AddRepositoryWizard();
+			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+			if (wizard != null && shell != null && !shell.isDisposed()) {
+				WizardDialog dialog = new WizardDialog(shell, wizard);
+				dialog.create();
+//				dialog.getShell().setText("Mylar Tasks");
+				dialog.setBlockOnOpen(true);
+				if (dialog.open() == Dialog.CANCEL) {
+					dialog.close();
+					return;
 				}
 			}
 		} catch (Exception e) {

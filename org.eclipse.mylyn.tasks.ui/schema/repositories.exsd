@@ -52,7 +52,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasklist.repositories.TaskRepository"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.tasklist.TaskRepository"/>
                </appInfo>
             </annotation>
          </attribute>

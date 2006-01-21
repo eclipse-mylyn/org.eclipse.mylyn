@@ -28,7 +28,7 @@ public interface ITaskHandler {
 
 	public abstract boolean acceptsItem(ITaskListElement element);
 
-	public abstract ITask taskAdded(ITask newTask);
+	public abstract ITask addTaskToRegistry(ITask newTask);
 
 	/**
 	 *  This is called both before and after the tasklist is read

@@ -27,11 +27,11 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * @author Mik Kersten
  * @author Robert Elves
  */
-public class OpenTaskUrlInExternalBrowser extends Action {
+public class OpenTaskInExternalBrowserAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.external";
 
-	public OpenTaskUrlInExternalBrowser() {
+	public OpenTaskInExternalBrowserAction() {
 		setText("Open in External Browser"); 
 		setToolTipText("Open in External Browser");
 		setId(ID);

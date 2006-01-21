@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.repositories;
+package org.eclipse.mylar.tasklist.internal;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,7 +26,10 @@ import java.util.StringTokenizer;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.ITaskRepositoryListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten

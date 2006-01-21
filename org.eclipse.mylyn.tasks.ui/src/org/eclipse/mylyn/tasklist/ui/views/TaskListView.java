@@ -66,8 +66,8 @@ import org.eclipse.mylar.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ui.TaskListPatternFilter;
 import org.eclipse.mylar.tasklist.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.tasklist.ui.actions.CopyDescriptionAction;
-import org.eclipse.mylar.tasklist.ui.actions.CreateCategoryAction;
-import org.eclipse.mylar.tasklist.ui.actions.CreateTaskAction;
+import org.eclipse.mylar.tasklist.ui.actions.NewCategoryAction;
+import org.eclipse.mylar.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.tasklist.ui.actions.GoIntoAction;
@@ -77,7 +77,7 @@ import org.eclipse.mylar.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.tasklist.ui.actions.NextTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.OpenTaskEditorAction;
-import org.eclipse.mylar.tasklist.ui.actions.OpenTaskUrlInExternalBrowser;
+import org.eclipse.mylar.tasklist.ui.actions.OpenTaskInExternalBrowserAction;
 import org.eclipse.mylar.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.tasklist.ui.actions.RenameAction;
@@ -153,11 +153,11 @@ public class TaskListView extends ViewPart {
 
 	private OpenTaskEditorAction openTaskEditor;
 
-	private OpenTaskUrlInExternalBrowser openUrlInExternal;
+	private OpenTaskInExternalBrowserAction openUrlInExternal;
 
-	private CreateTaskAction createTaskAction;
+	private NewLocalTaskAction newLocalTaskAction;
 
-	private CreateCategoryAction createCategoryAction;
+	private NewCategoryAction newCategoryAction;
 
 	private RenameAction rename;
 
@@ -816,7 +816,7 @@ public class TaskListView extends ViewPart {
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
 				} else if (e.keyCode == SWT.INSERT) {
-					createTaskAction.run();
+					newLocalTaskAction.run();
 				}
 			}
 
@@ -917,8 +917,8 @@ public class TaskListView extends ViewPart {
 		updateDrillDownActions();
 		// manager.add(new Separator("reports"));
 		// manager.add(new Separator("local"));
-		// manager.add(createTaskAction);
-		// manager.add(createCategoryAction);
+		// manager.add(newLocalTaskAction);
+		// manager.add(newCategoryAction);
 		manager.add(goUpAction);
 		manager.add(collapseAll);
 		// manager.add(new Separator());
@@ -931,8 +931,8 @@ public class TaskListView extends ViewPart {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(SEPARATOR_ID_REPORTS));
-		manager.add(createTaskAction);
-		// manager.add(createCategoryAction);
+		manager.add(newLocalTaskAction);
+		// manager.add(newCategoryAction);
 		manager.add(new Separator());
 		manager.add(filterCompleteTask);
 		manager.add(filterOnPriority);
@@ -994,8 +994,8 @@ public class TaskListView extends ViewPart {
 		// addAction(copyDescriptionAction, manager, element);
 
 		manager.add(new Separator("local"));
-		manager.add(createTaskAction);
-		manager.add(createCategoryAction);
+		manager.add(newLocalTaskAction);
+		manager.add(newCategoryAction);
 		manager.add(new Separator("reports"));
 
 		manager.add(new Separator("context"));
@@ -1040,7 +1040,7 @@ public class TaskListView extends ViewPart {
 				} else {
 					action.setEnabled(true);
 				}
-			} else if (action instanceof OpenTaskUrlInExternalBrowser) {
+			} else if (action instanceof OpenTaskInExternalBrowserAction) {
 				if (((ITask) element).hasValidUrl()) {
 					action.setEnabled(true);
 				} else {
@@ -1054,7 +1054,7 @@ public class TaskListView extends ViewPart {
 				}
 			} else if (action instanceof DeleteAction) {
 				action.setEnabled(true);
-			} else if (action instanceof CreateTaskAction) {
+			} else if (action instanceof NewLocalTaskAction) {
 				action.setEnabled(false);
 			} else if (action instanceof OpenTaskEditorAction) {
 				action.setEnabled(true);
@@ -1073,7 +1073,7 @@ public class TaskListView extends ViewPart {
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
-			} else if (action instanceof CreateTaskAction) {
+			} else if (action instanceof NewLocalTaskAction) {
 				if (((ITaskCategory) element).isArchive())
 					action.setEnabled(false);
 				else
@@ -1111,8 +1111,8 @@ public class TaskListView extends ViewPart {
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
 
-		createTaskAction = new CreateTaskAction(this);
-		createCategoryAction = new CreateCategoryAction(this);
+		newLocalTaskAction = new NewLocalTaskAction(this);
+		newCategoryAction = new NewCategoryAction(this);
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		rename = new RenameAction(this);
 
@@ -1122,7 +1122,7 @@ public class TaskListView extends ViewPart {
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskEditorAction(this);
-		openUrlInExternal = new OpenTaskUrlInExternalBrowser();
+		openUrlInExternal = new OpenTaskInExternalBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterOnPriority = new PriorityDropDownAction();
 		previousTaskAction = new PreviousTaskDropDownAction(this, taskHistory);

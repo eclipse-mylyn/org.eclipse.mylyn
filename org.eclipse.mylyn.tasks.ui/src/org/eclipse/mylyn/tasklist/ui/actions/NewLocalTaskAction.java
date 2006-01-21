@@ -25,15 +25,15 @@ import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.internal.Workbench;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
-public class CreateTaskAction extends Action {
+public class NewLocalTaskAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.task";
 		
 	private final TaskListView view;
 
-	public CreateTaskAction(TaskListView view) {
+	public NewLocalTaskAction(TaskListView view) {
 		this.view = view;
 		setText("Add Task");
         setToolTipText("Add Task");
@@ -57,30 +57,21 @@ public class CreateTaskAction extends Action {
 			
 			if (selectedObject instanceof TaskCategory) {
 				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)selectedObject, newTask);
-//				newTask.setCategory((TaskCategory) selectedObject);
-//				((TaskCategory) selectedObject).addTask(newTask);
 			} else if (selectedObject instanceof ITask) {
 				ITask task = (ITask)selectedObject;
 				if (task.getCategory() != null) {
 					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)task.getCategory(), newTask);
-//					newTask.setCategory(task.getCategory());
-//					((TaskCategory)task.getCategory()).addTask(newTask);
 				} else if (view.getDrilledIntoCategory() != null) {
 					MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)view.getDrilledIntoCategory(), newTask);
-//					newTask.setCategory(view.getDrilledIntoCategory());
-//					((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
 			 	} else {
 		            MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);                
 		        }
 			} else if (view.getDrilledIntoCategory() != null) {
 				MylarTaskListPlugin.getTaskListManager().moveToCategory((TaskCategory)view.getDrilledIntoCategory(), newTask);
-//				newTask.setCategory(view.getDrilledIntoCategory());
-//				((TaskCategory)view.getDrilledIntoCategory()).addTask(newTask);
 		 	} else {
 	            MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);                
 	        }
 			newTask.openTaskInEditor(false);
-			// Make this new task the current selection in the view
 			view.getViewer().setSelection(new StructuredSelection(newTask));
 			view.getViewer().refresh();
 		}

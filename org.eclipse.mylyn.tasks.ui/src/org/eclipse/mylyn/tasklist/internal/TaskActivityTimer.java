@@ -123,4 +123,8 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	public boolean isSuspended() {
 		return timer.isSuspended();
 	}
+
+	public void intervalElapsed() {
+		addElapsedToActivityTime();		
+	}
 }

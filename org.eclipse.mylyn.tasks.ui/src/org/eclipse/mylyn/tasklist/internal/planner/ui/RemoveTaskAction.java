@@ -9,13 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.internal.planner.ui.actions;
+package org.eclipse.mylar.tasklist.internal.planner.ui;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.internal.planner.ui.TaskPlannerContentProvider;
 import org.eclipse.mylar.tasklist.ui.TaskListImages;
 
 /**

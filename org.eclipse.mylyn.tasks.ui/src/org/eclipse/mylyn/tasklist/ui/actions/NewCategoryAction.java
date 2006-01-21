@@ -23,13 +23,13 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten and Ken Sueda
  */
-public class CreateCategoryAction extends Action {        
+public class NewCategoryAction extends Action {        
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.create.category";
 		
 	private final TaskListView view;
 
-	public CreateCategoryAction(TaskListView view) {
+	public NewCategoryAction(TaskListView view) {
     	this.view = view;
 		setText("Add Category");
         setToolTipText("Add Category");

@@ -1,4 +1,4 @@
-package org.eclipse.mylar.tasklist.repositories.ui;
+package org.eclipse.mylar.tasklist.ui;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -10,8 +10,11 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.tasklist.ITaskRepositoryListener;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.repositories.ITaskRepositoryListener;
+import org.eclipse.mylar.tasklist.ui.actions.AddRepositoryAction;
+import org.eclipse.mylar.tasklist.ui.actions.DeleteTaskRepositoryAction;
+import org.eclipse.mylar.tasklist.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylar.tasklist.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -32,11 +35,11 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private TableViewer viewer;
 
-	private Action addRepositoryAction = new AddTaskRepositoryAction();
+	private Action addRepositoryAction = new AddRepositoryAction();
 
 	private Action deleteRepositoryAction = new DeleteTaskRepositoryAction(this);
 
-	private Action repositoryPropertiesAction = new TaskRepositoryPropertiesAction(this);
+	private Action repositoryPropertiesAction = new EditRepositoryPropertiesAction(this);
 	
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 

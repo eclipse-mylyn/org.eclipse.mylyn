@@ -30,12 +30,13 @@ import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.MylarTaskListPrefConstants;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
 
 /**
  * @author Mik Kersten
  */
 public class TaskListManager {
+	
+	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archived Reports";
 	
 	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
 

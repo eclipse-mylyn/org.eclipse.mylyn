@@ -42,8 +42,6 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.TaskCategory;
-import org.eclipse.mylar.tasklist.internal.planner.ui.actions.OpenTaskEditorAction;
-import org.eclipse.mylar.tasklist.internal.planner.ui.actions.RemoveTaskAction;
 import org.eclipse.mylar.tasklist.ui.ComboSelectionDialog;
 import org.eclipse.mylar.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ui.views.TaskListView;
