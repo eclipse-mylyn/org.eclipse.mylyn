@@ -22,6 +22,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.java.MylarJavaPlugin;
 import org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
@@ -31,7 +32,6 @@ import org.eclipse.mylar.monitor.reports.ReportGenerator;
 import org.eclipse.mylar.monitor.reports.internal.MylarUsageAnalysisCollector;
 import org.eclipse.mylar.monitor.reports.internal.MylarViewUsageCollector;
 import org.eclipse.mylar.monitor.reports.ui.views.UsageStatisticsSummary;
-import org.eclipse.mylar.tasklist.ui.actions.TaskActivateAction;
 
 /**
  * @author Mik Kersten
