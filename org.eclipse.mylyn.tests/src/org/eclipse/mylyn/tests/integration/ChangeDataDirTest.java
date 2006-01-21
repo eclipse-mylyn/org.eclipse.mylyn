@@ -18,7 +18,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.internal.Task;
 import org.eclipse.mylar.tasklist.internal.TaskListManager;
-import org.eclipse.mylar.tasklist.repositories.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 
 /**
  * Tests changes to the main mylar data directory location.
@@ -118,7 +118,7 @@ public class ChangeDataDirTest extends TestCase {
 	
 	private void addBugzillaTask(BugzillaTask newTask) {
 		BugzillaTaskHandler handler = new BugzillaTaskHandler();
-		handler.taskAdded(newTask);
+		handler.addTaskToRegistry(newTask);
 		MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 	}
 	
