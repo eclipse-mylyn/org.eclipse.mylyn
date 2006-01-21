@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class MylarCompilationUnitEditor extends CompilationUnitEditor {
  
+	
+	
     @Override
     protected void initializeEditor() {
         super.initializeEditor();
