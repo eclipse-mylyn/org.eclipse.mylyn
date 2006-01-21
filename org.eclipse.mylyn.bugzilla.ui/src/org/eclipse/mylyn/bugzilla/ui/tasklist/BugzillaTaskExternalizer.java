@@ -28,7 +28,7 @@ import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskHandler;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -106,7 +106,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		}
 	}
 
-	public String getQueryTagNameForElement(ITaskQuery query) {
+	public String getQueryTagNameForElement(IRepositoryQuery query) {
 		if (query instanceof BugzillaCustomQueryCategory) {
 			return TAG_BUGZILLA_CUSTOM_QUERY;
 		} else if (query instanceof BugzillaQueryCategory) {
@@ -122,7 +122,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	public void readQuery(Node node, TaskList tlist) throws TaskListExternalizerException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
-		ITaskQuery cat = null;
+		IRepositoryQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			cat = new BugzillaCustomQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
 					.getAttribute(MAX_HITS));
@@ -174,7 +174,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		return false;
 	}
 
-	public boolean canCreateElementFor(ITaskQuery category) {
+	public boolean canCreateElementFor(IRepositoryQuery category) {
 		return category instanceof BugzillaQueryCategory;
 	}
 	
@@ -268,7 +268,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		return node.getNodeName().equals(getQueryHitTagName());
 	}
 
-	public void readQueryHit(Node node, TaskList tlist, ITaskQuery query) throws TaskListExternalizerException {
+	public void readQueryHit(Node node, TaskList tlist, IRepositoryQuery query) throws TaskListExternalizerException {
 		Element element = (Element) node;
 		String handle;
 		String label;

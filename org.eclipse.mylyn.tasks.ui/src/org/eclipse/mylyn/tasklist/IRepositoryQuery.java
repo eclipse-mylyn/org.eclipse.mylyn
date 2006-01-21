@@ -17,7 +17,7 @@ import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 /**
  * @author Mik Kersten
  */
-public interface ITaskQuery extends ITaskListElement{
+public interface IRepositoryQuery extends ITaskListElement{
 
 	public String getQueryUrl();
 	

@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 
 /**
  * @author Mik Kersten
@@ -36,7 +36,7 @@ public class TaskList implements Serializable {
 
 	private List<ITaskCategory> categories = new ArrayList<ITaskCategory>();
 
-	private List<ITaskQuery> queries = new ArrayList<ITaskQuery>();
+	private List<IRepositoryQuery> queries = new ArrayList<IRepositoryQuery>();
 
 	private transient List<ITask> activeTasks = new ArrayList<ITask>();
 
@@ -52,7 +52,7 @@ public class TaskList implements Serializable {
 		categories.add(cat);
 	}
 
-	void addQuery(ITaskQuery query) {
+	void addQuery(IRepositoryQuery query) {
 		queries.add(query);
 	}
 
@@ -66,7 +66,7 @@ public class TaskList implements Serializable {
 	/**
 	 * XXX Only public so that other externalizers can use it
 	 */
-	public void internalAddQuery(ITaskQuery query) {
+	public void internalAddQuery(IRepositoryQuery query) {
 		queries.add(query);
 	}
 
@@ -108,7 +108,7 @@ public class TaskList implements Serializable {
 		categories.remove(category);
 	}
 
-	void deleteQuery(ITaskQuery query) {
+	void deleteQuery(IRepositoryQuery query) {
 		queries.remove(query);
 	}
 
@@ -121,7 +121,7 @@ public class TaskList implements Serializable {
 				return foundTask;
 			}
 		}
-		for (ITaskQuery query : queries) {
+		for (IRepositoryQuery query : queries) {
 			if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
 				return foundTask;
 			}
@@ -190,7 +190,7 @@ public class TaskList implements Serializable {
 		return included;
 	}
 	
-	public List<ITaskQuery> getQueries() {
+	public List<IRepositoryQuery> getQueries() {
 		return queries;
 	}
 
@@ -226,7 +226,7 @@ public class TaskList implements Serializable {
 			roots.add(t);
 		for (ITaskCategory cat : categories)
 			roots.add(cat);
-		for (ITaskQuery query : queries)
+		for (IRepositoryQuery query : queries)
 			roots.add(query);
 		return roots;
 	}
@@ -264,7 +264,7 @@ public class TaskList implements Serializable {
 	 */
 	public IQueryHit getQueryHitForHandle(String handle) {
 		IQueryHit foundHit = null;		
-		for (ITaskQuery query : queries) {
+		for (IRepositoryQuery query : queries) {
 			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
 				return foundHit;
 			}

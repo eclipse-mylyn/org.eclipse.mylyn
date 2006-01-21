@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -145,7 +145,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 			item.setData(category);
 		}
 		// populate qeries
-		for (ITaskQuery query : manager.getTaskList().getQueries()) {
+		for (IRepositoryQuery query : manager.getTaskList().getQueries()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(query.getIcon());
 			item.setText(query.getDescription());

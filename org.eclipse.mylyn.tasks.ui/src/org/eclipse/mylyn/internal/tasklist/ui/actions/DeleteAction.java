@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
@@ -96,11 +96,11 @@ public class DeleteAction extends Action {
 					MylarStatusHandler.log(e, "closing editors failed");
 				}
 				view.getViewer().refresh();
-			} else if (selectedObject instanceof ITaskQuery) {
+			} else if (selectedObject instanceof IRepositoryQuery) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
 						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
 				if (deleteConfirmed) {
-					MylarTaskListPlugin.getTaskListManager().deleteQuery((ITaskQuery)selectedObject);
+					MylarTaskListPlugin.getTaskListManager().deleteQuery((IRepositoryQuery)selectedObject);
 				}
 			} else if (selectedObject instanceof TaskCategory) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()

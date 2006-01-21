@@ -30,7 +30,7 @@ import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**
@@ -123,7 +123,7 @@ public class TaskListManagerTest extends TestCase {
     }
 	
 	public void testQueryExternalization() {
-		ITaskQuery query = new BugzillaQueryCategory("repositoryUrl", "queryUrl", "label", "1");
+		IRepositoryQuery query = new BugzillaQueryCategory("repositoryUrl", "queryUrl", "label", "1");
         assertEquals("repositoryUrl", query.getRepositoryUrl());
         assertEquals("queryUrl", query.getQueryUrl());
 		manager.addQuery(query);
@@ -134,7 +134,7 @@ public class TaskListManagerTest extends TestCase {
         manager.setTaskList(list);
         manager.readExistingOrCreateNewList();
         assertEquals(1, manager.getTaskList().getQueries().size());
-        ITaskQuery readQuery = manager.getTaskList().getQueries().get(0);
+        IRepositoryQuery readQuery = manager.getTaskList().getQueries().get(0);
         assertEquals(query.getQueryUrl(), readQuery.getQueryUrl());
         assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
         assertEquals("repositoryUrl", readQuery.getRepositoryUrl());

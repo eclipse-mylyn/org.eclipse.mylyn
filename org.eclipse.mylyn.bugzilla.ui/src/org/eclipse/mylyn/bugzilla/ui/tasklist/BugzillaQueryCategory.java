@@ -36,7 +36,7 @@ import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.IQueryHit;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -48,7 +48,7 @@ import org.eclipse.ui.internal.Workbench;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class BugzillaQueryCategory implements ITaskQuery {
+public class BugzillaQueryCategory implements IRepositoryQuery {
 
 	private String repositoryUrl;
 	

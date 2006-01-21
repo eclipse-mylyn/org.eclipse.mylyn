@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -88,8 +88,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 		} else if (parent instanceof Task) {
 			Task t = (Task) parent;
 			return t.getChildren() != null && t.getChildren().size() > 0;
-		} else if (parent instanceof ITaskQuery) {
-			ITaskQuery t = (ITaskQuery) parent;
+		} else if (parent instanceof IRepositoryQuery) {
+			IRepositoryQuery t = (IRepositoryQuery) parent;
 			return t.getHits() != null && t.getHits().size() > 0;
 		}
 		return false;
@@ -110,8 +110,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 					if (selectCategory((ITaskCategory) list.get(i))) {
 						filteredRoots.add(list.get(i));
 					}
-				} else if (list.get(i) instanceof ITaskQuery) {
-					if (selectQuery((ITaskQuery) list.get(i))) {
+				} else if (list.get(i) instanceof IRepositoryQuery) {
+					if (selectQuery((IRepositoryQuery) list.get(i))) {
 						filteredRoots.add(list.get(i));
 					}
 				}
@@ -129,7 +129,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 		return filterText == null || filterText.length() == 0;
 	}
 
-	private boolean selectQuery(ITaskQuery cat) {
+	private boolean selectQuery(IRepositoryQuery cat) {
 		List<? extends ITaskListElement> list = cat.getHits();
 		if (list.size() == 0) {
 			return true;
@@ -189,8 +189,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 					}
 				}
 				return children;
-			} else if (parent instanceof ITaskQuery) {
-				List<? extends ITaskListElement> list = ((ITaskQuery) parent).getHits();
+			} else if (parent instanceof IRepositoryQuery) {
+				List<? extends ITaskListElement> list = ((IRepositoryQuery) parent).getHits();
 				for (int i = 0; i < list.size(); i++) {
 					if (!filter(list.get(i))) {
 						children.add(list.get(i));
@@ -211,8 +211,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 			if (parent instanceof ITaskCategory) {
 				children.addAll(((ITaskCategory) parent).getChildren());
 				return children;
-			} else if (parent instanceof ITaskQuery) {
-				children.addAll(((ITaskQuery) parent).getHits());
+			} else if (parent instanceof IRepositoryQuery) {
+				children.addAll(((IRepositoryQuery) parent).getHits());
 				return children;
 			} else if (parent instanceof Task) {
 				children.addAll(((Task) parent).getChildren());

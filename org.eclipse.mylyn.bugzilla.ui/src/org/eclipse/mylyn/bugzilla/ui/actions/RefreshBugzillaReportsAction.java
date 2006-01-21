@@ -33,7 +33,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -181,7 +181,7 @@ public class RefreshBugzillaReportsAction extends Action implements IViewActionD
 				}
 			}
 		}	
-		for(ITaskQuery query: MylarTaskListPlugin
+		for(IRepositoryQuery query: MylarTaskListPlugin
 				.getTaskListManager().getTaskList().getQueries()){
 			if(!(query instanceof BugzillaQueryCategory)){
 				continue;

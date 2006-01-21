@@ -24,7 +24,7 @@ import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 
 /**
  * @author Ken Sueda
@@ -93,10 +93,10 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 					collector.consumeTask(task);
 				}
 
-			} else if (element instanceof ITaskQuery) {
+			} else if (element instanceof IRepositoryQuery) {
 				// process queries
-				ITaskQuery taskQuery = (ITaskQuery) element;
-				for (IQueryHit hit : taskQuery.getHits()) {
+				IRepositoryQuery repositoryQuery = (IRepositoryQuery) element;
+				for (IQueryHit hit : repositoryQuery.getHits()) {
 					ITask correspondingTask = hit.getCorrespondingTask();
 					if (correspondingTask != null) {
 						for (ITaskCollector collector : collectors) {

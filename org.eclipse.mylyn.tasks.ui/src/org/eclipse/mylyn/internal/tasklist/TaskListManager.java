@@ -27,7 +27,7 @@ import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 
 /**
  * @author Mik Kersten
@@ -163,7 +163,7 @@ public class TaskListManager {
 		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 	
-	public void addQuery(ITaskQuery cat) {
+	public void addQuery(IRepositoryQuery cat) {
 		taskList.addQuery(cat);
 		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
@@ -181,7 +181,7 @@ public class TaskListManager {
 		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}
 
-	public void deleteQuery(ITaskQuery query) {
+	public void deleteQuery(IRepositoryQuery query) {
 		taskList.deleteQuery(query);
 		for (ITaskActivityListener listener : listeners) listener.taskListModified();
 	}

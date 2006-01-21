@@ -173,7 +173,7 @@
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
                label="Synchronize Report(s)"
                menubarPath="reports"
-               tooltip="Synchronize Reports">
+               tooltip="Synchronize Report(s)">
             <enablement>
                <or>
                     <objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask"/>
@@ -183,7 +183,7 @@
             </enablement>
          </action>
           
-          
+          <!--
         <action
            class="org.eclipse.mylar.bugzilla.ui.actions.AddBugzillaQueryAction"
            enablesFor="*"
@@ -194,13 +194,14 @@
            style="push"
            tooltip="Add Bugzilla Query"> 
   			</action>
+  		  -->
   			
   			<action
            class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
            enablesFor="*"
            icon="icons/etool16/task-bug-new.gif"
            id="org.eclipse.mylar.bugzilla.tasklist.addNew"
-           label="Add New Bugzilla Report"
+           label="New Bugzilla Task"
            menubarPath="reports"
            style="push"
            tooltip="Add New Bugzilla Report"> 

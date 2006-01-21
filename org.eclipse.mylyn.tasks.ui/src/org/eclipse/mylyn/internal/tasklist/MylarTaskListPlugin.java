@@ -35,7 +35,7 @@ import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskHandler;
-import org.eclipse.mylar.tasklist.ITaskQuery;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
@@ -350,7 +350,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 
-				for (ITaskQuery query : taskListManager.getTaskList().getQueries()) {
+				for (IRepositoryQuery query : taskListManager.getTaskList().getQueries()) {
 					query.setRepositoryUrl(repositoryUrl);
 					 for (IQueryHit hit : query.getHits()) {
 						hit.setRepositoryUrl(repositoryUrl);
