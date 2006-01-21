@@ -45,6 +45,7 @@ import org.eclipse.ui.IWorkingSet;
 
 /**
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class BugzillaQueryDialog extends Dialog {
 

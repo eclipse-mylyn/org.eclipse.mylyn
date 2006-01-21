@@ -237,15 +237,17 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				IQueryHit hit = null;
 				MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(task.getHandleIdentifier());
 				
-				Viewer viewer = TaskListView.getDefault().getViewer();				
-				viewer.setSelection(new StructuredSelection(task));
-				// if no task exists, select the query hit if exists
-				if (viewer.getSelection().isEmpty()
-						&& (hit = MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(
-								task.getHandleIdentifier())) != null) {
-					viewer.setSelection(new StructuredSelection(hit));
-				} 
-				viewer.refresh();
+				if (TaskListView.getDefault() != null) {
+					Viewer viewer = TaskListView.getDefault().getViewer();				
+					viewer.setSelection(new StructuredSelection(task));
+					// if no task exists, select the query hit if exists
+					if (viewer.getSelection().isEmpty()
+							&& (hit = MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(
+									task.getHandleIdentifier())) != null) {
+						viewer.setSelection(new StructuredSelection(hit));
+					} 
+					viewer.refresh();
+				}
 			}
 		}
 

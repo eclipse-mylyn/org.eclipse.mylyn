@@ -52,7 +52,7 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 				return null;
 			}
 		} catch (NumberFormatException nfe) {
-			TaskListView.getDefault().showMessage("Please enter a valid report number");
+			TaskListView.getDefault().showMessage("Invalid report id.");
 			return null;
 		}
 
