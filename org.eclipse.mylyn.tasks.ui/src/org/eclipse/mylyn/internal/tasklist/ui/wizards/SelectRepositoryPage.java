@@ -37,7 +37,7 @@ public class SelectRepositoryPage extends WizardPage {
 
 	private TableViewer viewer;
 	
-	private AbstractRepositoryWizard wizard;
+	protected AbstractRepositoryWizard wizard;
 	
 	private String repositoryKind = null;
 	

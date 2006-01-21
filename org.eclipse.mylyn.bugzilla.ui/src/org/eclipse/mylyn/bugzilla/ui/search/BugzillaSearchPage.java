@@ -70,7 +70,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 60;
 
 	private TaskRepository repository = null;
-	
+
 	protected Combo summaryPattern = null;
 
 	protected Combo repositoryCombo = null;
@@ -102,49 +102,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	protected IPreferenceStore prefs = BugzillaPlugin.getDefault().getPreferenceStore();
 
-	// private String[] statusValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_STATUS));
-	//
-	// protected String[] preselectedStatusValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUSE_STATUS_PRESELECTED));
-	//
-	// private String[] resolutionValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_RESOLUTION));
-	//
-	// private String[] severityValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_SEVERITY));
-	//
-	// private String[] priorityValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_PRIORITY));
-	//
-	// private String[] hardwareValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_HARDWARE));
-	//
-	// private String[] osValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_OS));
-	//
-	// private String[] productValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_PRODUCT));
-	//
-	// private String[] componentValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_COMPONENT));
-	//
-	// private String[] versionValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_VERSION));
-	//
-	// private String[] targetValues =
-	// BugzillaRepositoryUtil.convertQueryOptionsToArray(prefs
-	// .getString(IBugzillaConstants.VALUES_TARGET));
+//	private TaskRepository selectedRepository = null;
 
 	private static class BugzillaSearchData {
 		/** Pattern to match on */
@@ -161,6 +119,11 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	public BugzillaSearchPage() {
 		super();
+	}
+
+	public BugzillaSearchPage(TaskRepository repository) {
+		super();
+		this.repository = repository;		
 	}
 
 	public void createControl(Composite parent) {
@@ -201,7 +164,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String repositoryUrl = repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
-				repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND , repositoryUrl);
+				repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
+						repositoryUrl);
 				updateAttributesFromRepository(repositoryUrl, false);
 			}
 		});
@@ -761,8 +725,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				if (repository != null) {
 					updateAttributesFromRepository(repository.getUrl().toExternalForm(), true);
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-							TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+							IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 				}
 			}
 		});
@@ -783,8 +747,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 	public boolean performAction() {
 		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+					IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return false;
 		}
 
@@ -856,7 +820,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				emailPattern.setItems(getPreviousPatterns(previousEmailPatterns));
 
 				if (repository == null) {
-					repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+					repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+							BugzillaPlugin.REPOSITORY_KIND);
 				}
 				Set<TaskRepository> repositories = MylarTaskListPlugin.getRepositoryManager().getRepositories(
 						BugzillaPlugin.REPOSITORY_KIND);
@@ -864,74 +829,27 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 				int i = 0;
 				int indexToSelect = 0;
 				for (Iterator<TaskRepository> iter = repositories.iterator(); iter.hasNext();) {
-					TaskRepository currRepsitory = iter.next(); 
-//					if (i == 0 && repository == null) {
-//						repository = currRepsitory;
-//						indexToSelect = 0;
-//					}
+					TaskRepository currRepsitory = iter.next();
+					// if (i == 0 && repository == null) {
+					// repository = currRepsitory;
+					// indexToSelect = 0;
+					// }
 					if (repository != null && repository.equals(currRepsitory)) {
 						indexToSelect = i;
 					}
 					repositoryUrls[i] = currRepsitory.getUrl().toExternalForm();
 					i++;
 				}
-				repositoryCombo.setItems(repositoryUrls);
-				if (repositoryUrls.length == 0) {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-							TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
-				} else {
-					repositoryCombo.select(indexToSelect);
-					updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), false);
+				if (repositoryCombo != null) {
+					repositoryCombo.setItems(repositoryUrls);
+					if (repositoryUrls.length == 0) {
+						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+					} else {
+						repositoryCombo.select(indexToSelect);
+						updateAttributesFromRepository(repositoryCombo.getItem(indexToSelect), false);
+					}
 				}
-//				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-//						BugzillaPlugin.REPOSITORY_KIND);
-//				String repositoryUrl = repository.getUrl().toExternalForm();
-//				product.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-//						repositoryUrl));
-//
-//				component.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
-//						repositoryUrl));
-//
-//				version.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_VERSION,
-//						repositoryUrl));
-//
-//				target
-//						.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_TARGET,
-//								repositoryUrl));
-//
-//				status
-//						.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS,
-//								repositoryUrl));
-//
-//				status.setSelection(BugzillaRepositoryUtil.getQueryOptions(
-//						IBugzillaConstants.VALUSE_STATUS_PRESELECTED, repositoryUrl));
-//
-//				resolution.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
-//						repositoryUrl));
-//
-//				severity.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY,
-//						repositoryUrl));
-//
-//				priority.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY,
-//						repositoryUrl));
-//
-//				hardware.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE,
-//						repositoryUrl));
-//
-//				os.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_OS, repositoryUrl));
-
-				// product.setItems(productValues);
-				// component.setItems(componentValues);
-				// version.setItems(versionValues);
-				// target.setItems(targetValues);
-				//
-				// status.setItems(statusValues);
-				// status.setSelection(preselectedStatusValues);
-				// resolution.setItems(resolutionValues);
-				// severity.setItems(severityValues);
-				// priority.setItems(priorityValues);
-				// hardware.setItems(hardwareValues);
-				// os.setItems(osValues);
 			}
 			summaryPattern.setFocus();
 			scontainer.setPerformActionEnabled(canQuery());
@@ -1224,50 +1142,47 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		monitor.beginTask("Updating search options...", 55);
 
 		try {
-//			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
-//					BugzillaPlugin.REPOSITORY_KIND);
-//			String repositoryUrl = repository.getUrl().toExternalForm();
+			// TaskRepository repository =
+			// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+			// BugzillaPlugin.REPOSITORY_KIND);
+			// String repositoryUrl = repository.getUrl().toExternalForm();
 			if (connect) {
 				BugzillaRepositoryUtil.updateQueryOptions(repository, monitor);
 			}
-			product.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-					repositoryUrl));
+			product.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, repositoryUrl));
 			monitor.worked(1);
 
 			component.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_COMPONENT,
 					repositoryUrl));
 			monitor.worked(1);
 
-			version.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_VERSION,
-					repositoryUrl));
+			version.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_VERSION, repositoryUrl));
 			monitor.worked(1);
 
-			target.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_TARGET,
-					repositoryUrl));
+			target.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_TARGET, repositoryUrl));
 			monitor.worked(1);
 
-			status.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS,
-					repositoryUrl));
+			status.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_STATUS, repositoryUrl));
 			monitor.worked(1);
 
-			status.setSelection(BugzillaRepositoryUtil.getQueryOptions(
-					IBugzillaConstants.VALUSE_STATUS_PRESELECTED, repositoryUrl));
+			status.setSelection(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUSE_STATUS_PRESELECTED,
+					repositoryUrl));
 			monitor.worked(1);
 
 			resolution.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_RESOLUTION,
 					repositoryUrl));
 			monitor.worked(1);
 
-			severity.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY,
-					repositoryUrl));
+			severity
+					.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_SEVERITY, repositoryUrl));
 			monitor.worked(1);
 
-			priority.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY,
-					repositoryUrl));
+			priority
+					.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY, repositoryUrl));
 			monitor.worked(1);
 
-			hardware.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE,
-					repositoryUrl));
+			hardware
+					.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_HARDWARE, repositoryUrl));
 			monitor.worked(1);
 
 			os.setItems(BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_OS, repositoryUrl));

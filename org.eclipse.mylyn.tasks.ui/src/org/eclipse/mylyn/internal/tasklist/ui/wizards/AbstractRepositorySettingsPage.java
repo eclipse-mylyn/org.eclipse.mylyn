@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbench;
 /**
  * @author Mik Kersten
  */
-public abstract class RepositorySettingsPage extends WizardPage {
+public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String LABEL_SERVER = "Server: ";
 	
@@ -47,7 +47,7 @@ public abstract class RepositorySettingsPage extends WizardPage {
 	
 	protected TaskRepository repository;
 		
-	public RepositorySettingsPage(String title, String description) {
+	public AbstractRepositorySettingsPage(String title, String description) {
 		super(title);
 		super.setTitle(title);
 		super.setDescription(description);

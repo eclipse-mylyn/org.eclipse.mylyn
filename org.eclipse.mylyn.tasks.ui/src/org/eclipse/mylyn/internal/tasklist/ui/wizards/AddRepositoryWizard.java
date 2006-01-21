@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbench;
  */
 public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 
-//	private RepositorySettingsPage repositorySettingsPage;// = new RepositorySettingsPage();
+//	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;// = new AbstractRepositorySettingsPage();
 
 	public AddRepositoryWizard() {
 		super();
@@ -31,9 +31,9 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository repository = new TaskRepository(repositoryClient.getKind(), super.repositorySettingsPage.getServerUrl());
+			TaskRepository repository = new TaskRepository(repositoryClient.getKind(), super.abstractRepositorySettingsPage.getServerUrl());
 			if (repository != null) {
-				repository.setAuthenticationCredentials(repositorySettingsPage.getUserName(), repositorySettingsPage
+				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage
 						.getPassword());
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				return true;
@@ -48,19 +48,19 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-//		addPage(repositorySettingsPage);
+//		addPage(abstractRepositorySettingsPage);
 	}
 
-	public RepositorySettingsPage getRepositorySettingsPage() {
-		return repositorySettingsPage;
+	public AbstractRepositorySettingsPage getRepositorySettingsPage() {
+		return abstractRepositorySettingsPage;
 	}
 
-	public void setRepositorySettingsPage(RepositorySettingsPage repositorySettingsPage) {
-		this.repositorySettingsPage = repositorySettingsPage;
+	public void setRepositorySettingsPage(AbstractRepositorySettingsPage abstractRepositorySettingsPage) {
+		this.abstractRepositorySettingsPage = abstractRepositorySettingsPage;
 	}
 
 	@Override
 	public boolean canFinish() {
-		return super.canFinish() && repositorySettingsPage != null && repositorySettingsPage.isPageComplete();
+		return super.canFinish() && abstractRepositorySettingsPage != null && abstractRepositorySettingsPage.isPageComplete();
 	}
 }

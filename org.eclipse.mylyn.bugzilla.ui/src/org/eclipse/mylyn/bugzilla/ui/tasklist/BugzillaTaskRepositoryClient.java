@@ -16,7 +16,8 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.RepositorySettingsPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractNewQueryPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
@@ -35,7 +36,7 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 		return getLabel();
 	}
 
-	public RepositorySettingsPage getSettingsPage() {
+	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new BugzillaRepositorySettingsPage();
 	}
 
@@ -76,5 +77,9 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 		}
 //		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask) newTask);
 		return newTask;
+	}
+
+	public AbstractNewQueryPage getQueryPage(TaskRepository repository) {
+		return new BugzillaQueryWizardPage(repository);
 	}
 }

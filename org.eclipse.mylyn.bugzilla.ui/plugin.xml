@@ -30,8 +30,9 @@
                <newWizardShortcut id="org.eclipse.mylar.bugzilla.bugWizard"/>
           </perspectiveExtension>
 	</extension>
-      
-   <extension
+
+<!--      
+<extension
       id="org.eclipse.mylar.bugzilla.wizards"
       name="Bug Wizard"
       point="org.eclipse.ui.newWizards">
@@ -50,6 +51,7 @@
       </description>
    </wizard>
 </extension>
+-->
    
    <extension
          id="org.eclipse.mylar.bugzilla.help.browser"

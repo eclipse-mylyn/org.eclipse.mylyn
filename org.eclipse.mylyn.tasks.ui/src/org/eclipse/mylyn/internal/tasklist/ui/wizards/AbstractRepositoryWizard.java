@@ -21,13 +21,17 @@ import org.eclipse.ui.INewWizard;
 public abstract class AbstractRepositoryWizard extends Wizard implements INewWizard {
 
 	private SelectRepositoryPage selectRepositoryPage;
-
+	
 	protected TaskRepository repository;
 
 	public AbstractRepositoryWizard() {
 		selectRepositoryPage = new SelectRepositoryPage(this);	
 	}
 
+	public AbstractRepositoryWizard(SelectRepositoryPage page) {
+		selectRepositoryPage = page;	
+	}
+	
 	public AbstractRepositoryWizard(String repositoryKind) {
 		selectRepositoryPage = new SelectRepositoryPage(this, repositoryKind);	
 	}
@@ -48,5 +52,9 @@ public abstract class AbstractRepositoryWizard extends Wizard implements INewWiz
 	@Override
 	public boolean canFinish() {
 		return selectRepositoryPage.isPageComplete();
+	}
+
+	public void setSelectRepositoryPage(SelectRepositoryPage selectRepositoryPage) {
+		this.selectRepositoryPage = selectRepositoryPage;
 	}
 }

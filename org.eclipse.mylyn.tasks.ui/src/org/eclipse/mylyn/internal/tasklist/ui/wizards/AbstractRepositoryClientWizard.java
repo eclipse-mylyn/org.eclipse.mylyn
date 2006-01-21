@@ -22,7 +22,7 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 
 	private SelectRepositoryClientPage selectRepositoryClientPage = new SelectRepositoryClientPage(this);
 
-	protected RepositorySettingsPage repositorySettingsPage;
+	protected AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 	
 	protected ITaskRepositoryClient repositoryClient;
 	
@@ -44,7 +44,7 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 		return selectRepositoryClientPage.isPageComplete();
 	}
 
-	public void setRepositorySettingsPage(RepositorySettingsPage repositorySettingsPage) {
-		this.repositorySettingsPage = repositorySettingsPage;
+	public void setRepositorySettingsPage(AbstractRepositorySettingsPage abstractRepositorySettingsPage) {
+		this.abstractRepositorySettingsPage = abstractRepositorySettingsPage;
 	}
 }

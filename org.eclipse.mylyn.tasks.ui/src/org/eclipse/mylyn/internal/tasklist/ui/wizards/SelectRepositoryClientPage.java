@@ -92,7 +92,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (isPageComplete()) {
-			RepositorySettingsPage nextPage = wizard.getRepositoryClient().getSettingsPage();
+			AbstractRepositorySettingsPage nextPage = wizard.getRepositoryClient().getSettingsPage();
 			wizard.setRepositorySettingsPage(nextPage);
 			nextPage.setWizard(wizard);
 			return nextPage;

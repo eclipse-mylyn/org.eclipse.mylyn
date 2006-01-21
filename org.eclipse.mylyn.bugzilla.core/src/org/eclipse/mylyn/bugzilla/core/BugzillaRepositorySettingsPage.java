@@ -16,7 +16,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.RepositorySettingsPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Mik Kersten
  */
-public class BugzillaRepositorySettingsPage extends RepositorySettingsPage {
+public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private static final String TITLE = "Bugzilla Repository Settings";
 	

@@ -71,14 +71,23 @@ public class BugzillaQueryDialog extends Dialog {
 
 	private String title;
 
+	public BugzillaQueryDialog(TaskRepository repository) {
+		super(Display.getDefault().getActiveShell());
+		isNew = true;
+		isCustom = false;
+		searchOptionPage = new BugzillaSearchOptionPage(repository);
+		title = "New Bugzilla Query";
+	}
+	
+	
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
 		isNew = true;
 		isCustom = false;
-		searchOptionPage = new BugzillaSearchOptionPage();
+		searchOptionPage = new BugzillaSearchOptionPage(null);
 		title = "New Bugzilla Query";
 	}
-
+	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -87,8 +96,9 @@ public class BugzillaQueryDialog extends Dialog {
 
 	public BugzillaQueryDialog(Shell parentShell, String repositoryUrl, String startingUrl, String name, String maxHits) {
 		super(parentShell);
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-		searchOptionPage = new BugzillaSearchOptionPage();
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+		searchOptionPage = new BugzillaSearchOptionPage(repository);
 		searchOptionPage.setRepository(repository);
 		this.startingUrl = startingUrl;
 		this.maxHits = maxHits;
@@ -119,26 +129,26 @@ public class BugzillaQueryDialog extends Dialog {
 		searchOptionPage.setVisible(true);
 
 		if (isNew) {
-			
+
 			Group custom = new Group(parent, SWT.NONE);
 			GridLayout layout = new GridLayout(2, false);
 			custom.setLayout(layout);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			custom.setLayoutData(gd);
-			
-//			Group custom = new Group(parent, SWT.NONE);
-//			GridLayout gl = new GridLayout(2, false);
-//			custom.setLayout(gl);
+
+			// Group custom = new Group(parent, SWT.NONE);
+			// GridLayout gl = new GridLayout(2, false);
+			// custom.setLayout(gl);
 
 			customButton = new Button(custom, SWT.CHECK);
 			customButton.setText("Custom Query");
-//			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-//			customButton.setLayoutData(gd);
+			// GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			// customButton.setLayoutData(gd);
 
-//			Label l = new Label(custom, SWT.NONE);
-//
-//			l = new Label(custom, SWT.NONE);
-//			l.setText("Query URL");
+			// Label l = new Label(custom, SWT.NONE);
+			//
+			// l = new Label(custom, SWT.NONE);
+			// l.setText("Query URL");
 
 			queryText = new Text(custom, SWT.BORDER | SWT.SINGLE);
 			if (startingUrl != null)
@@ -167,7 +177,7 @@ public class BugzillaQueryDialog extends Dialog {
 				}
 			});
 		}
-		
+
 		Control control = super.createContents(parent);
 		if (startingUrl != null) {
 			try {
@@ -181,16 +191,16 @@ public class BugzillaQueryDialog extends Dialog {
 	}
 
 	@Override
-	protected void okPressed() {
+	public void okPressed() {
 		TaskRepository repository = searchOptionPage.getRepository();
 		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+					IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return;
 		}
 		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+					IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 			return;
 		}
 
@@ -229,8 +239,8 @@ public class BugzillaQueryDialog extends Dialog {
 
 	private class BugzillaSearchOptionPage extends BugzillaSearchPage {
 
-		public BugzillaSearchOptionPage() {
-
+		public BugzillaSearchOptionPage(TaskRepository repository) {
+			super(repository);
 			// preselectedStatusValues = new String[0];
 
 			scontainer = new ISearchPageContainer() {
@@ -269,7 +279,7 @@ public class BugzillaQueryDialog extends Dialog {
 			};
 		}
 
-		/** 
+		/**
 		 * TODO: get rid of this?
 		 */
 		public void updateDefaults(String startingUrl, String maxHits) throws UnsupportedEncodingException {
@@ -393,33 +403,33 @@ public class BugzillaQueryDialog extends Dialog {
 					sel = new String[selList.size()];
 					os.setSelection(selList.toArray(sel));
 				} else if (key.equals("emailassigned_to1")) { // HACK: email
-																// buttons
-																// assumed to be
-																// in same
-																// position
+					// buttons
+					// assumed to be
+					// in same
+					// position
 					if (value.equals("1"))
 						emailButton[0].setSelection(true);
 					else
 						emailButton[0].setSelection(false);
 				} else if (key.equals("emailreporter1")) { // HACK: email
-															// buttons assumed
-															// to be in same
-															// position
+					// buttons assumed
+					// to be in same
+					// position
 					if (value.equals("1"))
 						emailButton[1].setSelection(true);
 					else
 						emailButton[1].setSelection(false);
 				} else if (key.equals("emailcc1")) { // HACK: email buttons
-														// assumed to be in same
-														// position
+					// assumed to be in same
+					// position
 					if (value.equals("1"))
 						emailButton[2].setSelection(true);
 					else
 						emailButton[2].setSelection(false);
 				} else if (key.equals("emaillongdesc1")) { // HACK: email
-															// buttons assumed
-															// to be in same
-															// position
+					// buttons assumed
+					// to be in same
+					// position
 					if (value.equals("1"))
 						emailButton[3].setSelection(true);
 					else
@@ -446,7 +456,9 @@ public class BugzillaQueryDialog extends Dialog {
 
 		public void setControlsEnabled(boolean enabled) {
 			summaryOperation.setEnabled(enabled);
-			repositoryCombo.setEnabled(enabled);
+			if (repositoryCombo != null) {
+				repositoryCombo.setEnabled(enabled);
+			}
 			product.setEnabled(enabled);
 			os.setEnabled(enabled);
 			hardware.setEnabled(enabled);

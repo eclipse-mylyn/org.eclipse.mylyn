@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Mik Kersten
  */
-public class EnterTaskHandleWizardPage extends WizardPage {
+public class ExistingTaskWizardPage extends WizardPage {
 
 	private static final String TITLE = "Add Existing Task";
 
@@ -32,7 +32,7 @@ public class EnterTaskHandleWizardPage extends WizardPage {
 
 	private Text taskIdText;
 
-	public EnterTaskHandleWizardPage() {
+	public ExistingTaskWizardPage() {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);

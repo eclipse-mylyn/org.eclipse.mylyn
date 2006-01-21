@@ -24,24 +24,24 @@ import org.eclipse.ui.IWorkbench;
  */
 public class EditRepositoryWizard extends Wizard implements INewWizard {
 
-	private RepositorySettingsPage repositorySettingsPage;// = new RepositorySettingsPage();
+	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;// = new AbstractRepositorySettingsPage();
 	
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
 //		super.setForcePreviousAndNextButtons(true);
 		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(repository.getKind());
-		repositorySettingsPage = client.getSettingsPage();
-		repositorySettingsPage.setRepository(repository);
-		repositorySettingsPage.setWizard(this);
+		abstractRepositorySettingsPage = client.getSettingsPage();
+		abstractRepositorySettingsPage.setRepository(repository);
+		abstractRepositorySettingsPage.setWizard(this);
 	}
 
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository repository = new TaskRepository(repositorySettingsPage.getRepository().getKind(),
-					repositorySettingsPage.getServerUrl());
+			TaskRepository repository = new TaskRepository(abstractRepositorySettingsPage.getRepository().getKind(),
+					abstractRepositorySettingsPage.getServerUrl());
 			if (repository != null) {
-				repository.setAuthenticationCredentials(repositorySettingsPage.getUserName(), repositorySettingsPage.getPassword());
+				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				return true;
 			} 
@@ -54,11 +54,11 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		addPage(repositorySettingsPage);
+		addPage(abstractRepositorySettingsPage);
 	}
 
 	@Override
 	public boolean canFinish() {
-		return repositorySettingsPage.isPageComplete();
+		return abstractRepositorySettingsPage.isPageComplete();
 	}
 }

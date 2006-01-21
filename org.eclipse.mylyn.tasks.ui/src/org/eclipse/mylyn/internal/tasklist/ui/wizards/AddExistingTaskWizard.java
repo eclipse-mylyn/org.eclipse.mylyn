@@ -23,18 +23,18 @@ import org.eclipse.ui.IWorkbench;
 /**
  * @author Mik Kersten
  */
-public class AddRepositoryTaskWizard extends AbstractRepositoryWizard {
+public class AddExistingTaskWizard extends AbstractRepositoryWizard {
 
-	private EnterTaskHandleWizardPage enterTaskHandleWizardPage = new EnterTaskHandleWizardPage();
+	private ExistingTaskWizardPage existingTaskWizardPage = new ExistingTaskWizardPage();
 	
-	public AddRepositoryTaskWizard() {
+	public AddExistingTaskWizard() {
 		super();
 		init();
 	}
 
 	@Override
 	public boolean performFinish() {
-		String handle = enterTaskHandleWizardPage.getTaskId();
+		String handle = existingTaskWizardPage.getTaskId();
 		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(super.repository.getKind());
 		ITask newTask = client.createTaskFromExistingId(super.repository, handle);
 		
@@ -46,10 +46,8 @@ public class AddRepositoryTaskWizard extends AbstractRepositoryWizard {
 			} else {
 				MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 			}
-
 			if (TaskListView.getDefault() != null) {
 				TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
-//				TaskListView.getDefault().getViewer().refresh();
 			}
 		}
 		
@@ -66,11 +64,11 @@ public class AddRepositoryTaskWizard extends AbstractRepositoryWizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-		addPage(enterTaskHandleWizardPage);
+		addPage(existingTaskWizardPage);
 	}
 
 	@Override
 	public boolean canFinish() {
-		return super.canFinish() && enterTaskHandleWizardPage.isPageComplete();
+		return super.canFinish() && existingTaskWizardPage.isPageComplete();
 	}
 }

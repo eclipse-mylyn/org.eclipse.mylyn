@@ -28,7 +28,7 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class NewQueryAction extends Action implements IViewActionDelegate {
     
-	private static final String WIZARD_LABEL = "Add or modify task query";
+	private static final String WIZARD_LABEL = "Add or modify repository query";
 
 	public void init(IViewPart view) {
 		// ignore
