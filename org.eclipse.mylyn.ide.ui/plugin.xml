@@ -90,7 +90,7 @@
               menubarPath="context"
               tooltip="Commit All ">
            <enablement>
-              <or>
+              <or> 
                  <objectClass name="org.eclipse.mylar.tasklist.ITask"/>
               </or>
            </enablement>

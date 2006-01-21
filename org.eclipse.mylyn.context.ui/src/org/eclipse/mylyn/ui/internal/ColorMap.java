@@ -13,7 +13,7 @@
   */
 package org.eclipse.mylar.ui.internal;
 
-import org.eclipse.mylar.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 

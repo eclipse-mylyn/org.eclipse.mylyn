@@ -18,11 +18,11 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.mylar.ui.actions.EditHighlightersAction;
 

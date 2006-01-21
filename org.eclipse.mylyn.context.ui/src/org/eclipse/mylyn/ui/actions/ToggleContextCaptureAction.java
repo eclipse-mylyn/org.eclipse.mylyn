@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
