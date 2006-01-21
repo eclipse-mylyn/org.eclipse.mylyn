@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasklist;
 
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 
 /**
  * @author Mik Kersten

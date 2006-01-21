@@ -23,7 +23,7 @@
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.tasklist.internal.planner.ui.TaskPlannerWizard"
+            class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.report.ui.planningGameWizard"
             name="Mylar Task Planner (Experimental)">
@@ -34,7 +34,7 @@
       <wizard 
          id="org.eclipse.mylar.tasklist.ui.exportWizard" 
          name="Mylar Task Data" 
-         class="org.eclipse.mylar.tasklist.ui.wizards.TaskDataExportWizard"
+         class="org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizard"
          icon="icons/eview16/task-list.gif"> 
          <description> 
             Export Mylar task data files to the file system.
@@ -48,7 +48,7 @@
       <view
          allowMultiple="false"
          category="org.eclipse.mylar"
-         class="org.eclipse.mylar.tasklist.ui.views.TaskListView"
+         class="org.eclipse.mylar.internal.tasklist.ui.views.TaskListView"
          icon="icons/eview16/task-list.gif"
          id="org.eclipse.mylar.tasks.ui.views.TaskListView"
          name="Mylar Tasks"/> 
@@ -56,7 +56,7 @@
             id="org.eclipse.mylar.tasklist.repositories"
             allowMultiple="false"
             category="org.eclipse.mylar"
-            class="org.eclipse.mylar.tasklist.ui.TaskRepositoriesView"
+            class="org.eclipse.mylar.internal.tasklist.ui.TaskRepositoriesView"
             icon="icons/eview16/task-repositories.gif"
             name="Task Repositories (Experimental)">
       </view>
@@ -107,17 +107,17 @@
         point="org.eclipse.ui.editors">
      <editor
            icon="icons/eview16/task.gif"
-           class="org.eclipse.mylar.tasklist.ui.MylarTaskEditor"
+           class="org.eclipse.mylar.internal.tasklist.ui.MylarTaskEditor"
            name="Task Viewer"
            id="org.eclipse.mylar.tasklist.ui.taskEditor"/>
 	    <editor
            icon="icons/eview16/task.gif"
-           class="org.eclipse.mylar.tasklist.ui.CategoryEditor"
+           class="org.eclipse.mylar.internal.tasklist.ui.CategoryEditor"
            name="Category Editor"
            id="org.eclipse.mylar.tasklist.ui.catEditor"/>
     <editor
            icon="icons/eview16/task-list.gif"
-           class="org.eclipse.mylar.tasklist.internal.planner.ui.TaskPlannerEditorPart"
+           class="org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerEditorPart"
            name="Mylar Task Planner"
            id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
   </extension>
@@ -128,7 +128,7 @@
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
 
 		<action
-              class="org.eclipse.mylar.tasklist.ui.actions.AddRepositoryTaskAction"
+              class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
               enablesFor="*"
               icon="icons/etool16/task-new.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
@@ -138,7 +138,7 @@
               tooltip="Add Repository Task"> 
   		</action>          
 		<action
-              class="org.eclipse.mylar.tasklist.ui.actions.NewQueryAction"
+              class="org.eclipse.mylar.internal.tasklist.ui.actions.NewQueryAction"
               enablesFor="*"
               icon="icons/etool16/category-query-new.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
@@ -153,7 +153,7 @@
   <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Task List"
-         class="org.eclipse.mylar.tasklist.ui.preferences.MylarTaskListPreferencePage"
+         class="org.eclipse.mylar.internal.tasklist.ui.preferences.MylarTaskListPreferencePage"
          id="org.eclipse.mylar.tasklist.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
       </page> 

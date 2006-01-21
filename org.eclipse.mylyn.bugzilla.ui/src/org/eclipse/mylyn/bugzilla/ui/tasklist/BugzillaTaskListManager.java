@@ -17,11 +17,11 @@ import java.util.Map;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.IOfflineBugListener;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.internal.TaskCategory;
-import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
 
 /**
  * @author Mik Kersten and Ken Sueda

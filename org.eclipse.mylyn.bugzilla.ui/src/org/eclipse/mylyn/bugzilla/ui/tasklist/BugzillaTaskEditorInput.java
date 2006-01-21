@@ -21,7 +21,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
-import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.ui.IPersistableElement;
 
 

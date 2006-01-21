@@ -15,7 +15,7 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylar.tasklist.ui.TaskListImages.MylarTasklistOverlayDescriptor;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages.MylarTasklistOverlayDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 /**

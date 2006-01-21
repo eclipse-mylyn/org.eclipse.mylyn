@@ -21,12 +21,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.internal.Task;
-import org.eclipse.mylar.tasklist.internal.TaskCategory;
-import org.eclipse.mylar.tasklist.internal.TaskListManager;
-import org.eclipse.mylar.tasklist.internal.planner.CompletedTaskCollector;
-import org.eclipse.mylar.tasklist.internal.planner.TaskReportGenerator;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.Task;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.TaskListManager;
+import org.eclipse.mylar.internal.tasklist.planner.CompletedTaskCollector;
+import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 
 /**
  * @author Mik Kersten

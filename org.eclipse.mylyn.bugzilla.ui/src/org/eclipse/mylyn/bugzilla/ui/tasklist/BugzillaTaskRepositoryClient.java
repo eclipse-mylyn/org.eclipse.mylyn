@@ -13,14 +13,14 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.RepositorySettingsPage;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
-import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
 
 /**
  * @author Mik Kersten

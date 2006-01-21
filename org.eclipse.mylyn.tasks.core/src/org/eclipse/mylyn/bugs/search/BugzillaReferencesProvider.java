@@ -34,7 +34,7 @@ import org.eclipse.mylar.core.AbstractRelationProvider;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 

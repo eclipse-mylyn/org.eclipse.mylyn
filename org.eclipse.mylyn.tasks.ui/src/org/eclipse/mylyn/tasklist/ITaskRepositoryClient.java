@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tasklist;
 
-import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.RepositorySettingsPage;
 
 /**
  * @author Mik Kersten

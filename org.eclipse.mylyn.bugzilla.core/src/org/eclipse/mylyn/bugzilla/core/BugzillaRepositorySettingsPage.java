@@ -16,7 +16,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.tasklist.ui.wizards.RepositorySettingsPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.RepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;

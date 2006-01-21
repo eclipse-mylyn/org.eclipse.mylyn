@@ -37,9 +37,9 @@ import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.bugzilla.core.internal.ProductParser;
 import org.eclipse.mylar.bugzilla.core.search.BugzillaQueryPageParser;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.TaskRepository;
-import org.eclipse.mylar.tasklist.internal.TaskRepositoryManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.Workbench;
 

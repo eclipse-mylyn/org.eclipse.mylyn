@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.tasklist.internal.Task;
+import org.eclipse.mylar.internal.tasklist.Task;
 
 /**
  * @author Mik Kersten

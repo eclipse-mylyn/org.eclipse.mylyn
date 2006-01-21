@@ -16,8 +16,8 @@ package org.eclipse.mylar.tasklist;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.mylar.tasklist.internal.Task.TaskStatus;
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.Task.TaskStatus;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 
 /**
  * @author Mik Kersten

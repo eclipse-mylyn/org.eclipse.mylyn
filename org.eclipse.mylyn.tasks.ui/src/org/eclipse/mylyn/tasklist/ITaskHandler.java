@@ -11,8 +11,8 @@
 package org.eclipse.mylar.tasklist;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
-import org.eclipse.mylar.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**

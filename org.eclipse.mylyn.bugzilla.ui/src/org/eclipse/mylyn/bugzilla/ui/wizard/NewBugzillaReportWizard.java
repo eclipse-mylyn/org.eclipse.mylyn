@@ -12,7 +12,7 @@ package org.eclipse.mylar.bugzilla.ui.wizard;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
-import org.eclipse.mylar.tasklist.ui.wizards.SelectRepositoryPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.SelectRepositoryPage;
 
 /**
  * @author Mik Kersten

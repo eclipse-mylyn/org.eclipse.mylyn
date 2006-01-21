@@ -12,7 +12,7 @@ package org.eclipse.mylar.tasklist;
 
 import java.util.List;
 
-import org.eclipse.mylar.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 
 /**
  * Manipulate categories via TaskListManager
