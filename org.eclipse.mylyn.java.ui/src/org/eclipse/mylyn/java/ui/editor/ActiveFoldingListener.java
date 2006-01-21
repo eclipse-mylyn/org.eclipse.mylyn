@@ -68,10 +68,10 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	 */
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
-    	MylarPlugin.getContextManager().addListener(this);
+		MylarPlugin.getContextManager().addListener(this);
 		JavaPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-		
+
 		enabled = MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED);
 		try {
 			Field field = JavaEditor.class.getDeclaredField("fProjectionModelUpdater");
@@ -88,7 +88,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 	public void dispose() {
 		MylarPlugin.getContextManager().removeListener(this);
-		
+
 		JavaPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 		MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
@@ -153,6 +153,19 @@ public class ActiveFoldingListener implements IMylarContextListener {
 				IMember member = (IMember) object;
 				if (element.getInterest().isInteresting()) {
 					updater.expandElements(new IJavaElement[] { member });
+					// expand the next child (e.g. for anonymous types)
+					if (member instanceof IParent) {
+						IParent parent = (IParent) member;
+						IJavaElement[] children;
+						try {
+							children = parent.getChildren();
+							if (children.length == 1) {
+								updater.expandElements(new IJavaElement[] { children[0] });
+							}
+						} catch (JavaModelException e) {
+							// ignore
+						}
+					}
 				} else {
 					updater.collapseElements(new IJavaElement[] { member });
 				}
@@ -191,7 +204,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 	}
 
 	public void landmarkRemoved(IMylarElement element) {
-		// ignore 
+		// ignore
 	}
 
 	public void edgesChanged(IMylarElement node) {

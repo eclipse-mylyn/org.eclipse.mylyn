@@ -17,4 +17,9 @@ package org.eclipse.mylar.core.util;
 public interface ITimerThreadListener {
 
     public void fireTimedOut();
+
+	/**
+	 * Called every time TimerThread's sleepInterval lapses
+	 */
+	public void intervalElapsed();
 }
