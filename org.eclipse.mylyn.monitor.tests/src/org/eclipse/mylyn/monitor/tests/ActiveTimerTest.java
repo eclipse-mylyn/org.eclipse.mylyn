@@ -30,6 +30,10 @@ public class ActiveTimerTest extends TestCase {
 			gotTimeOut = true;
 			thread.kill();
 		}
+
+		public void intervalElapsed() {
+			// ignore
+		}
 		
 	};
 	
@@ -37,6 +41,10 @@ public class ActiveTimerTest extends TestCase {
 
 		public void fireTimedOut() {
 			gotTimeOut = true;
+		}
+
+		public void intervalElapsed() {
+			// ignore
 		}
 		
 	};
