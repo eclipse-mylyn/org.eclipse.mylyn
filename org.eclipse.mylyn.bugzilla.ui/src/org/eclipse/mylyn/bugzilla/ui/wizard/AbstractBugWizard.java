@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.bugzilla.core.BugzillaException;
@@ -32,7 +33,6 @@ import org.eclipse.mylar.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositoryWizard;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
@@ -50,7 +50,7 @@ import org.eclipse.ui.progress.IProgressService;
  * @author Eric Booth
  * @author Mik Kersten (some hardening of prototype)
  */
-public abstract class AbstractBugWizard extends AbstractRepositoryWizard implements INewWizard {
+public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 
 	/** The ID of the posted bug report. */
 	private String id;
@@ -68,8 +68,11 @@ public abstract class AbstractBugWizard extends AbstractRepositoryWizard impleme
 	/** The workbench instance */
 	protected IWorkbench workbenchInstance;
 
-	public AbstractBugWizard() {
+	private final TaskRepository repository;
+
+	public AbstractBugWizard(TaskRepository repository) {
 		super();
+		this.repository = repository;
 		model = new NewBugModel();
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",

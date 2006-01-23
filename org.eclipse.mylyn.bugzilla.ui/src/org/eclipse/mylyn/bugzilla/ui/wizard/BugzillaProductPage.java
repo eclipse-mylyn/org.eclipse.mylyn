@@ -27,6 +27,7 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -63,6 +64,8 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 	 */
 	private String prevProduct;
 
+	private final TaskRepository repository;
+
 	/**
 	 * Constructor for BugzillaProductPage
 	 * 
@@ -70,10 +73,12 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 	 *            The instance of the workbench
 	 * @param bugWiz
 	 *            The bug wizard which created this page
+	 * @param repository The repository the data is coming from
 	 */
-	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz) {
+	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz, TaskRepository repository) {
 		super("Page1", "New Bug Report", DESCRIPTION, workbench);
 		this.bugWizard = bugWiz;
+		this.repository = repository;
 	}
 
 	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(BugzillaPlugin.getDefault()
@@ -98,11 +103,11 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				monitor.beginTask("Updating search options...", 55);
 
 				try {
-					BugzillaRepositoryUtil.updateQueryOptions(bugWizard.getRepository(), monitor);
+					BugzillaRepositoryUtil.updateQueryOptions(repository, monitor);
 
 					products = new ArrayList<String>();
 					for (String product : BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
-							bugWizard.getRepository().getUrl().toExternalForm())) {
+							repository.getUrl().toExternalForm())) {
 						products.add(product);
 					}
 					monitor.worked(1);
@@ -127,7 +132,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 	private void initProducts() {
 		// try to get the list of products from the server
 		if (!bugWizard.model.hasParsedProducts()) {
-			String repositoryUrl = bugWizard.getRepository().getUrl().toExternalForm();
+			String repositoryUrl = repository.getUrl().toExternalForm();
 			try {
 //				ProductConfiguration productConfiguration = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl);
 				String[] storedProducts = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
@@ -194,7 +199,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		// try to get the attributes from the bugzilla server
 		try {
 			if (!model.hasParsedAttributes() || !prevProduct.equals(model.getProduct())) {
-				String serverUrl = bugWizard.getRepository().getUrl().toExternalForm();
+				String serverUrl = repository.getUrl().toExternalForm();
 				if (model.isConnected()) {
 					BugzillaRepositoryUtil.setupNewBugAttributes(serverUrl, model, false);
 				} else {

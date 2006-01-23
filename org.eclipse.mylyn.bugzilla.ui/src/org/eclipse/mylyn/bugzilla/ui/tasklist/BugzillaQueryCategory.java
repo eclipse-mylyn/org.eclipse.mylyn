@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -128,6 +129,10 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 	}
 
 	public void refreshBugs() {
+		refreshBugs(new NullProgressMonitor());
+	}
+	
+	public void refreshBugs(IProgressMonitor monitor) {
 		hits.clear();
 		// refresh the view to show that the results are gone
 		Display.getDefault().asyncExec(new Runnable() {
@@ -155,7 +160,7 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 	
 			try {
 				// execute the search operation
-				catSearch.execute(new NullProgressMonitor());
+				catSearch.execute(monitor);
 				maxHitsReached = catSearch.isMaxReached();
 //				hasBeenRefreshed = true;
 				lastRefresh = new Date();

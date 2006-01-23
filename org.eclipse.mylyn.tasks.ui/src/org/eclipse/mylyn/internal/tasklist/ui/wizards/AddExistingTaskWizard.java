@@ -11,64 +11,27 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskCategory;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
+ * @author Brock Janiczak
  */
-public class AddExistingTaskWizard extends AbstractRepositoryWizard {
+public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
-	private ExistingTaskWizardPage existingTaskWizardPage = new ExistingTaskWizardPage();
-	
 	public AddExistingTaskWizard() {
-		super();
-		init();
-	}
+		super(new SelectRepositoryPage() {
 
-	@Override
-	public boolean performFinish() {
-		String handle = existingTaskWizardPage.getTaskId();
-		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(super.repository.getKind());
-		ITask newTask = client.createTaskFromExistingId(super.repository, handle);
-		
-		if (newTask != null && TaskListView.getDefault() != null) {
-			Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
-
-			if (selectedObject instanceof TaskCategory) {
-				MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory) selectedObject), newTask);
-			} else {
-				MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
+			@Override
+			protected IWizard createWizard(TaskRepository taskRepository) {
+				ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+						taskRepository.getKind());
+				return client.getAddExistingTaskWizard(taskRepository);
 			}
-			if (TaskListView.getDefault() != null) {
-				TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
-			}
-		}
-		
-		return true;
-	}
 
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-	}
-
-	private void init() {
-		super.setForcePreviousAndNextButtons(true);
-	}
-
-	@Override
-	public void addPages() {
-		super.addPages();
-		addPage(existingTaskWizardPage);
-	}
-
-	@Override
-	public boolean canFinish() {
-		return super.canFinish() && existingTaskWizardPage.isPageComplete();
+		});
 	}
 }

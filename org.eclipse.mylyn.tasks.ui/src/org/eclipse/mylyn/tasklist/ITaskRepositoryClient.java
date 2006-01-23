@@ -11,12 +11,13 @@
 
 package org.eclipse.mylar.tasklist;
 
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractNewQueryPage;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 
 
 /**
  * @author Mik Kersten
+ * @author Brock Janiczak
  */
 public interface ITaskRepositoryClient {
 
@@ -35,5 +36,7 @@ public interface ITaskRepositoryClient {
 	
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 	
-	public abstract AbstractNewQueryPage getQueryPage(TaskRepository repository);
+	public abstract IWizard getQueryWizard(TaskRepository repository);
+
+	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
 }

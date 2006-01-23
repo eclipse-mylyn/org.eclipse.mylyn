@@ -11,39 +11,29 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
 
 /**
  * @author Mik Kersten
+ * @author Brock Janiczak
  */
-public abstract class AbstractRepositoryWizard extends Wizard implements INewWizard {
+public class MultiRepositoryAwareWizard extends Wizard implements INewWizard {
 
 	private SelectRepositoryPage selectRepositoryPage;
 	
-	protected TaskRepository repository;
-
-	public AbstractRepositoryWizard() {
-		selectRepositoryPage = new SelectRepositoryPage(this);	
-	}
-
-	public AbstractRepositoryWizard(SelectRepositoryPage page) {
+	public MultiRepositoryAwareWizard(SelectRepositoryPage page) {
 		selectRepositoryPage = page;	
+		setForcePreviousAndNextButtons(true);
+		setNeedsProgressMonitor(true);
 	}
 	
-	public AbstractRepositoryWizard(String repositoryKind) {
-		selectRepositoryPage = new SelectRepositoryPage(this, repositoryKind);	
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		// ignore
 	}
 	
-	public void setRepository(TaskRepository taskRepository) {
-		this.repository = taskRepository;
-	}
-
-	public TaskRepository getRepository() {
-		return repository;
-	}
-
 	@Override
 	public void addPages() {
 		addPage(selectRepositoryPage);
@@ -51,10 +41,12 @@ public abstract class AbstractRepositoryWizard extends Wizard implements INewWiz
 
 	@Override
 	public boolean canFinish() {
-		return selectRepositoryPage.isPageComplete();
+		return false;
 	}
-
-	public void setSelectRepositoryPage(SelectRepositoryPage selectRepositoryPage) {
-		this.selectRepositoryPage = selectRepositoryPage;
+	
+	@Override
+	public boolean performFinish() {
+		// Can't finish on the first page
+		return false;
 	}
 }

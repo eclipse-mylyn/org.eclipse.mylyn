@@ -10,9 +10,18 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.ui.wizard;
 
-import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.bugzilla.ui.OfflineView;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.SelectRepositoryPage;
+import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -24,27 +33,22 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 	 * submitted
 	 */
 	private WizardAttributesPage attributePage;
+	private final TaskRepository repository;
 
-	public NewBugzillaReportWizard() {
-		this(false);
+	public NewBugzillaReportWizard(TaskRepository repository) {
+		this(false, repository);
 	}
 
-	public NewBugzillaReportWizard(boolean fromDialog) {
-		super();
+	public NewBugzillaReportWizard(boolean fromDialog, TaskRepository repository) {
+		super(repository);
+		this.repository = repository;
 		this.fromDialog = fromDialog;
 	}
 
 	@Override
 	public void addPages() {
 		super.addPages();
-	}
-
-	@Override
-	public IWizardPage getNextPage(IWizardPage page) {
-		if (page instanceof SelectRepositoryPage) {
-			addPage(new BugzillaProductPage(workbenchInstance, this));
-		}
-		return super.getNextPage(page);
+		addPage(new BugzillaProductPage(workbenchInstance, this, repository));
 	}
 
 	@Override
@@ -68,5 +72,60 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 
 	public void setAttributePage(WizardAttributesPage attributePage) {
 		this.attributePage = attributePage;
+	}
+	
+	@Override
+	public boolean performFinish() {
+		String bugIdString = this.getId();
+	    int bugId = -1;
+	    try {
+	    	if (bugIdString != null) {
+	    		bugId = Integer.parseInt(bugIdString);
+	    	} else {
+	    		return false;
+	    	}
+	    } catch (NumberFormatException nfe) {
+	    	// TODO handle error
+	        return false;
+	    }
+	
+//	    TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+	    BugzillaTask newTask = new BugzillaTask(
+	    		TaskRepositoryManager.getHandle(
+	    				repository.getUrl().toExternalForm(), bugId), 
+	    		"<bugzilla info>", true, true);				
+	    Object selectedObject = null;
+	    if(TaskListView.getDefault() != null)
+	    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
+    	
+	    ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
+	    if(taskHandler != null){
+	    	ITask addedTask = taskHandler.addTaskToRegistry(newTask);
+	    	if(addedTask instanceof BugzillaTask){
+		    	BugzillaTask newTask2 = (BugzillaTask)addedTask;
+	    		if(newTask2 != newTask){
+	    			newTask = newTask2;
+	    		}
+	    	}
+    	}
+	    
+	    if (selectedObject instanceof TaskCategory) {
+	    	MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory)selectedObject), newTask);
+//	        ((TaskCategory)selectedObject).addTask(newTask);
+	    } else { 
+	        MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
+	    }
+	    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
+	    newTask.openTaskInEditor(false);
+	    
+	    if(!newTask.isBugDownloaded())
+	    	newTask.scheduleDownloadReport();
+
+	    if(TaskListView.getDefault() != null) {
+			TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
+			TaskListView.getDefault().getViewer().refresh();
+	    }
+	    
+	    return true;
 	}
 }

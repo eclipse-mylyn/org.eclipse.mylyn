@@ -11,48 +11,25 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
  */
-public class NewQueryWizard extends AbstractRepositoryWizard {
+public class NewQueryWizard extends MultiRepositoryAwareWizard {
 
-	private AbstractNewQueryPage queryPage;
-	
 	public NewQueryWizard() {
-		super();
-		super.setSelectRepositoryPage(new NewQuerySelectRepositoryPage(this));
-		init();
-	}
-
-	@Override
-	public boolean performFinish() {
-		if (canFinish()) {
-			queryPage.addQuery();
-		}
-		return true;
-	}
-
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-	}
-
-	private void init() {
-		super.setForcePreviousAndNextButtons(true);
-	}
-
-	@Override
-	public void addPages() {
-		super.addPages();
-	}
-	
-	public void setQueryPage(AbstractNewQueryPage queryPage) {
-		this.queryPage = queryPage;
-	}
-	
-	@Override
-	public boolean canFinish() {
-		return super.canFinish() && queryPage != null && queryPage.isPageComplete();
+		super(new SelectRepositoryPage() {
+		
+			@Override
+			protected IWizard createWizard(TaskRepository taskRepository) {
+				ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(taskRepository.getKind());
+				return client.getQueryWizard(taskRepository);
+			}
+		
+		});
 	}
 }

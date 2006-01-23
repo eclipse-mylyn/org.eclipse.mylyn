@@ -11,25 +11,31 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardNode;
+import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Mik Kersten
+ * @author Brock Janiczak
  */
-public class SelectRepositoryPage extends WizardPage {
+public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	private static final String DESCRIPTION = "Select a repository, or add a new one using the Task Repositories view.";
 
@@ -37,7 +43,7 @@ public class SelectRepositoryPage extends WizardPage {
 
 	private TableViewer viewer;
 	
-	protected AbstractRepositoryWizard wizard;
+	protected MultiRepositoryAwareWizard wizard;
 	
 	private String repositoryKind = null;
 	
@@ -58,24 +64,17 @@ public class SelectRepositoryPage extends WizardPage {
 		}
 	}
 	
-	public SelectRepositoryPage(AbstractRepositoryWizard wizard) {
+	public SelectRepositoryPage() {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
-		this.wizard = wizard;
-		super.setWizard(wizard);
 	}
 	
-	public SelectRepositoryPage(AbstractRepositoryWizard wizard, String repositoryKind) {
-		this(wizard);
+	public SelectRepositoryPage(String repositoryKind) {
+		this();
 		this.repositoryKind = repositoryKind;
 	}
 	
-	@Override
-	public boolean canFlipToNextPage() {
-		return wizard.getRepository() != null;
-	}
-
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
@@ -90,17 +89,20 @@ public class SelectRepositoryPage extends WizardPage {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				if (selection.getFirstElement() instanceof TaskRepository) {
-					wizard.setRepository((TaskRepository)selection.getFirstElement());
-					SelectRepositoryPage.this.setPageComplete(true);
-					try {
-						wizard.getContainer().updateButtons();
-					} catch (NullPointerException npe) {
-						// ignore, back button couldn't be updated
-						// TODO: remove this catch block
-					}
+					setSelectedNode(new CustomWizardNode((TaskRepository)selection.getFirstElement()));
+					setPageComplete(true);
 				}
+				setPageComplete(false);
 			}
-		}); 
+		});
+		
+		viewer.addOpenListener(new IOpenListener() {
+		
+			public void open(OpenEvent event) {
+				getContainer().showPage(getNextPage());
+			}
+		
+		});
 		viewer.getTable().setFocus();
 		TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
 		if (defaultRepository != null) {
@@ -108,5 +110,59 @@ public class SelectRepositoryPage extends WizardPage {
 		}
 		
 		setControl(container);
+	}
+	
+	protected abstract IWizard createWizard(TaskRepository taskRepository);
+	
+	private class CustomWizardNode implements IWizardNode {
+
+		private final TaskRepository repository;
+		private IWizard wizard;
+		
+		public CustomWizardNode(TaskRepository repository) {
+			this.repository = repository;
+		}
+		
+		public void dispose() {
+			if (wizard != null) {
+				wizard.dispose();
+			}
+		}
+
+		public Point getExtent() {
+			return new Point(-1, -1);
+		}
+
+		public IWizard getWizard() {
+			if (wizard == null) {
+				wizard = SelectRepositoryPage.this.createWizard(repository);
+			}
+			
+			return wizard;
+		}
+
+		public boolean isContentCreated() {
+			return wizard != null;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof CustomWizardNode)) {
+				return false;
+			}
+			CustomWizardNode that = (CustomWizardNode)obj;
+			if (this == that) {
+				return true;
+			}
+			
+			return this.repository.getKind().equals(that.repository.getKind()) &&
+				   this.repository.getUrl().equals(that.repository.getUrl());
+		}
+		
+		@Override
+		public int hashCode() {
+			return 31 * this.repository.getUrl().hashCode() + this.repository.getKind().hashCode();
+		}
+		
 	}
 }

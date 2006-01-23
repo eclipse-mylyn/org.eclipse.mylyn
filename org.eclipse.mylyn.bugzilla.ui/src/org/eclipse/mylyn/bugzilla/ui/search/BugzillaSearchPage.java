@@ -131,6 +131,8 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 
 		Composite control = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
 		control.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
@@ -157,6 +159,7 @@ public class BugzillaSearchPage extends DialogPage implements ISearchPage {
 		layout.numColumns = 1;
 		group.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);
 
 		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);

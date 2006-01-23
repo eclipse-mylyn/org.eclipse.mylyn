@@ -79,7 +79,6 @@ public class BugzillaQueryDialog extends Dialog {
 		title = "New Bugzilla Query";
 	}
 	
-	
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
 		isNew = true;
@@ -122,15 +121,21 @@ public class BugzillaQueryDialog extends Dialog {
 	public boolean isCustom() {
 		return isCustom;
 	}
-
+	
+	/*
+	 * XXX This is being used to create the contents for a wizard page.  Yuck!
+	 * Visibility of this method has also been increased
+	 */
 	@Override
-	protected Control createContents(Composite parent) {
-		searchOptionPage.createControl(parent);
+	public Control createDialogArea(Composite parent) {
+		Composite composite = (Composite)super.createDialogArea(parent);
+		
+		searchOptionPage.createControl(composite);
 		searchOptionPage.setVisible(true);
 
 		if (isNew) {
 
-			Group custom = new Group(parent, SWT.NONE);
+			Group custom = new Group(composite, SWT.NONE);
 			GridLayout layout = new GridLayout(2, false);
 			custom.setLayout(layout);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -178,7 +183,6 @@ public class BugzillaQueryDialog extends Dialog {
 			});
 		}
 
-		Control control = super.createContents(parent);
 		if (startingUrl != null) {
 			try {
 				searchOptionPage.updateDefaults(startingUrl, maxHits);
@@ -187,7 +191,7 @@ public class BugzillaQueryDialog extends Dialog {
 			}
 		}
 
-		return control;
+		return composite;
 	}
 
 	@Override
@@ -276,6 +280,7 @@ public class BugzillaQueryDialog extends Dialog {
 
 				public void setSelectedWorkingSets(IWorkingSet[] workingSets) {
 				}
+
 			};
 		}
 

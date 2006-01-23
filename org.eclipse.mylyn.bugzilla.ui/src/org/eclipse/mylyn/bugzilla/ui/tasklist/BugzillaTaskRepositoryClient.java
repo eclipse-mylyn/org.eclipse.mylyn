@@ -11,13 +11,15 @@
 
 package org.eclipse.mylar.bugzilla.ui.tasklist;
 
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractNewQueryPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
@@ -75,11 +77,29 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 		} else {
 			((BugzillaTask) newTask).scheduleDownloadReport();
 		}
-//		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask) newTask);
 		return newTask;
 	}
 
-	public AbstractNewQueryPage getQueryPage(TaskRepository repository) {
-		return new BugzillaQueryWizardPage(repository);
+	public IWizard getQueryWizard(TaskRepository repository) {
+		return new AddBugzillaQueryWizard(repository);
+	}
+
+	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
+		
+		// TODO create a propper subclass for Bugzilla
+		return new AbstractAddExistingTaskWizard(repository) {
+			
+			private ExistingTaskWizardPage page;
+
+			public void addPages() {
+				super.addPages();
+				this.page = new ExistingTaskWizardPage();
+				addPage(page);
+			}
+			
+			protected String getTaskId() {
+				return page.getTaskId();
+			}
+		};
 	}
 }
