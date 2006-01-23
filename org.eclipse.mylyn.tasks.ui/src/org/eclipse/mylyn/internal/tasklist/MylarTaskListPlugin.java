@@ -73,6 +73,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
 
+	public static final String TITLE_DIALOG = "Mylar Information";
+
 	private ResourceBundle resourceBundle;
 
 	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1 * 3600 * 1000; // every
@@ -527,10 +529,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		// return ReportOpenMode.EXTERNAL_BROWSER;
 		// }
 	}
-
-	// public TaskListWriter getTaskListExternalizer() {
-	// return externalizer;
-	// }
 
 	public List<ITaskHandler> getTaskHandlers() {
 		return taskHandlers;

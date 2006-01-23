@@ -48,15 +48,6 @@ public class DeleteAction extends Action {
 	public void run() {
 		ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-//			if (selectedObject instanceof ITaskListElement
-//					&& MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
-//				boolean deleted = MylarTaskListPlugin.getDefault().getHandlerForElement(
-//						(ITaskListElement) selectedObject).deleteElement((ITaskListElement) selectedObject);
-//				if (deleted) {
-//					// TODO: refactor category removal?
-//					new RemoveFromCategoryAction(view).run(); 
-//				}
-//			} else 
 			if (selectedObject instanceof ITask || selectedObject instanceof IQueryHit) {
 				ITask task = null;
 				if (selectedObject instanceof IQueryHit) {
