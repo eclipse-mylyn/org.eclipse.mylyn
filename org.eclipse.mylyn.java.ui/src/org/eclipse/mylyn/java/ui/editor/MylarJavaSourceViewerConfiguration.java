@@ -64,21 +64,10 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 			ITextEditor editor, String partitioning) {
 		super(colorManager, preferenceStore, editor, partitioning);
 	}
-
-//	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-//		IContentAssistant assistant = super.getContentAssistant(sourceViewer);
-//
-//		if (getEditor() != null && assistant instanceof ContentAssistant) {
-//			IContentAssistProcessor javaProcessor = new MylarJavaCompletionProcessor(getEditor(),
-//					(ContentAssistant)assistant, IDocument.DEFAULT_CONTENT_TYPE);
-//			((ContentAssistant)assistant).setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-//
-//			return assistant;
-//		}
-//
-//		return null;
-//	}
 	
+	/**
+	 * Copied from super
+	 */
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 
 		if (getEditor() != null) {
