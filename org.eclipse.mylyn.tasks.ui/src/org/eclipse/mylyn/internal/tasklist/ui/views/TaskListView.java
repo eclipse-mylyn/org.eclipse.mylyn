@@ -159,7 +159,7 @@ public class TaskListView extends ViewPart {
 
 	private NewCategoryAction newCategoryAction;
 
-	private RenameAction rename;
+	private RenameAction renameAction;
 
 	private CollapseAllAction collapseAll;
 
@@ -236,7 +236,7 @@ public class TaskListView extends ViewPart {
 				// TODO: could be lazier and not refresh entire list
 				refresh(null);
 			}
-		} 
+		}
 
 		public void tasklistRead() {
 			refresh(null);
@@ -627,8 +627,7 @@ public class TaskListView extends ViewPart {
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
 			if (o1 instanceof ITaskCategory || o1 instanceof IRepositoryQuery) {
 				if (o2 instanceof ITaskCategory || o2 instanceof IRepositoryQuery) {
-					return ((ITaskListElement) o1).getDescription().compareTo(
-							((ITaskListElement) o2).getDescription());
+					return ((ITaskListElement) o1).getDescription().compareTo(((ITaskListElement) o2).getDescription());
 				} else {
 					return -1;
 				}
@@ -808,8 +807,8 @@ public class TaskListView extends ViewPart {
 
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.F2 && e.stateMask == 0) {
-					if (rename.isEnabled()) {
-						rename.run();
+					if (renameAction.isEnabled()) {
+						renameAction.run();
 					}
 				} else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
 					copyDescriptionAction.run();
@@ -850,7 +849,7 @@ public class TaskListView extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 				if (selectedObject instanceof ITaskListElement) {
-					updateActionEnablement(rename, (ITaskListElement) selectedObject);
+					updateActionEnablement(renameAction, (ITaskListElement) selectedObject);
 				}
 			}
 		});
@@ -982,16 +981,16 @@ public class TaskListView extends ViewPart {
 				addAction(removeFromCategoryAction, manager, element);
 			}
 		}
-		// manager.add(new Separator("tasks"));
 		addAction(deleteAction, manager, element);
+		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskCategory) {
+			addAction(renameAction, manager, element);
+		}
 		if (element instanceof ITaskCategory) {
 			manager.add(goIntoAction);
 		}
 		if (drilledIntoCategory != null) {
 			manager.add(goUpAction);
 		}
-		// addAction(rename, manager, element);
-		// addAction(copyDescriptionAction, manager, element);
 
 		manager.add(new Separator("local"));
 		manager.add(newLocalTaskAction);
@@ -1114,7 +1113,7 @@ public class TaskListView extends ViewPart {
 		newLocalTaskAction = new NewLocalTaskAction(this);
 		newCategoryAction = new NewCategoryAction(this);
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
-		rename = new RenameAction(this);
+		renameAction = new RenameAction(this);
 
 		deleteAction = new DeleteAction(this);
 		collapseAll = new CollapseAllAction(this);
