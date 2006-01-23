@@ -982,7 +982,8 @@ public class TaskListView extends ViewPart {
 			}
 		}
 		addAction(deleteAction, manager, element);
-		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskCategory) {
+		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskCategory
+				|| element instanceof IRepositoryQuery) {
 			addAction(renameAction, manager, element);
 		}
 		if (element instanceof ITaskCategory) {

@@ -34,7 +34,7 @@ import org.eclipse.mylar.tasklist.IRepositoryQuery;
  */
 public class TaskListManager {
 	
-	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archived Reports";
+	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archive";
 	
 	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
 
