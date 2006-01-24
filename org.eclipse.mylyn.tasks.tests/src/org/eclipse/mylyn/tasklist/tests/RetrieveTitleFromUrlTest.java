@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.tasklist;
+package org.eclipse.mylar.tasklist.tests;
 
 import java.lang.reflect.InvocationTargetException;
 

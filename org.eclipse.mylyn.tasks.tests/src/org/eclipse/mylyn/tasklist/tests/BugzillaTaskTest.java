@@ -9,9 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.tasklist;
+package org.eclipse.mylar.tasklist.tests;
 
 import java.util.Date;
+
+import junit.framework.TestCase;
 
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
@@ -22,20 +24,35 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
 /**
  * @author Mik Kersten
  */
-public class TaskTestUtil {
+public class BugzillaTaskTest extends TestCase {
 
-	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
+	@Override
+	protected void setUp() throws Exception {
+		// ignore
+		super.setUp();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		// ignore
+		super.tearDown();
+	}
+
+	public void testCompletionDate() {
+		BugzillaTask task = new BugzillaTask("handle", "description", true, true);
 		BugReport report = new BugReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-		bugzillaTask.setBugReport(report);
-		Attribute resolvedAttribute = new Attribute(BugReport.ATTR_STATUS);
-		if (completed) {
-			resolvedAttribute.setValue(BugReport.VAL_STATUS_RESOLVED);
-		} else {
-			resolvedAttribute.setValue(BugReport.VAL_STATUS_NEW);
-		}
-		report.addAttribute(resolvedAttribute);
+		task.setBugReport(report);
+		assertNull(task.getCompletionDate());
 
 		Date now = new Date();
 		report.addComment(new Comment(report, 1, now, "author", "author-name"));
+		assertNull(task.getCompletionDate());
+
+		Attribute resolvedAttribute = new Attribute(BugReport.ATTR_STATUS);
+		resolvedAttribute.setValue(BugReport.VAL_STATUS_RESOLVED);
+		report.addAttribute(resolvedAttribute);
+		assertEquals(now, task.getCompletionDate());
+
 	}
+
 }

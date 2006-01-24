@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tests.tasklist;
+package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
 
@@ -16,13 +16,13 @@ import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextManager;
+import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tests.core.AbstractContextTest;
 import org.eclipse.swt.widgets.Shell;
 
 /**
