@@ -41,6 +41,8 @@ public class BugReport implements Serializable, IBugzillaBug {
 
 	public static final String VAL_STATUS_RESOLVED = "RESOLVED";
 
+	public static final String VAL_STATUS_NEW = "NEW";
+	
 	private static final long serialVersionUID = 3258693199936631348L;
 
 	/** Bug id */

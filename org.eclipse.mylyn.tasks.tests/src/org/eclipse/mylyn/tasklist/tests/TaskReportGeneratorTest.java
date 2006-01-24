@@ -79,7 +79,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		task1.setCompleted(true);
+		TaskTestUtil.setBugTaskCompleted(task1, true);
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
@@ -112,7 +112,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
 				true, true);
 		manager.moveToRoot(task1);
-		task1.setCompleted(true);
+		TaskTestUtil.setBugTaskCompleted(task1, true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.addCategory(cat1);
 
@@ -136,8 +136,8 @@ public class TaskReportGeneratorTest extends TestCase {
 		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
 				true, true);
 		manager.moveToRoot(task1);
-		task1.setCompleted(false);
-		
+		TaskTestUtil.setBugTaskCompleted(task1, false);
+
 		BugzillaQueryCategory bugQuery = new BugzillaQueryCategory("repositoryUrl", "queryUrl",
 				"TaskReportGeneratorBugzillaQueryCategory", "maxHits");
 
@@ -156,9 +156,9 @@ public class TaskReportGeneratorTest extends TestCase {
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
-		
-		task1.setCompleted(true);
-		
+
+		TaskTestUtil.setBugTaskCompleted(task1, true);		
+
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
