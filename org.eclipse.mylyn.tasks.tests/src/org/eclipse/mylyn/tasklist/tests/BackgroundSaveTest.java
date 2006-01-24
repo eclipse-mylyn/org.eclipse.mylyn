@@ -15,8 +15,8 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.tasklist.BackgroundSaveTimer;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListSaveManager;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * Tests the mechanism for saving the task data periodically. If this test fails

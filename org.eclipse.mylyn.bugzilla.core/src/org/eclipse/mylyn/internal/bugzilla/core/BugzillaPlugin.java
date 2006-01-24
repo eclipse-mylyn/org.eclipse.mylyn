@@ -46,7 +46,7 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfigurationFactory;
 import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

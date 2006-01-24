@@ -32,7 +32,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.internal.core.DegreeOfSeparation;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
