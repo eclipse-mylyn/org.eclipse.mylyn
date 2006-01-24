@@ -11,13 +11,18 @@
 <a href="mailto:mylar-dev@eclipse.org">mylar-dev@eclipse.org</a> </p>
 <p><b>Contents</b></p>
 <ul>
+	<li>Contributing to Mylar<ul>
 	<li><a href="#setup">Workspace setup</a></li>
-	<li>Using Bugzilla</li>
-	<li><a href="#writingPatches">Writing and submitting patches</a></li>
+	<li><a href="#writingPatches">Creating patches</a></li>
 <!--	<li>Building</li>-->
+	</li>
 	<li>Building the 3.1 Branch</li>
-</ul>
-	<h3><a name="setup">Workspace setup</a></h3>
+</ul></li>
+	<li>Extending Mylar<ul>
+		<li>Extensibility Overview</li>
+	</ul></li>
+</ul><hr>
+<h3><a name="setup">Workspace setup</a></h3>
 	<ul>
 		<li>Building Mylar feature from HEAD requires
 		the latest Eclipse milestone release and
@@ -35,15 +40,8 @@ and leave the password blank.</li>
 		workbench window can be in the foreground or background, but should not 
 		be interacted with during the test execution.</li>
 	</ul>
-<h3>Using bugzilla</h3>
-	<ul>
-		<li>...</li>
-	</ul>
-	<p><b><i>Tip</i></b><i>: When writing comments, Bugzilla will 
-		automatically convert the text &quot;bug 1234&quot; to a hyperlink which will 
-		direct the reader to bug 1234.</i></p>
-	<h3>&nbsp;</h3>
-	<h3><a name="writingPatches">Writing patches</a> </h3>
+<h3>&nbsp;</h3>
+<h3><a name="writingPatches">Writing patches</a> </h3>
 	<ul>
 		<li>All changes to Mylar should be made using the latest development 
 		release of Mylar, and need to have a corresponding bug report activated.&nbsp; 
@@ -71,24 +69,50 @@ and leave the password blank.</li>
 	</ul>
 		</li>
 	</ul>
-	<p><i><b>Tip</b>: Looking for a good place in the code to start? Browse the
-		<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&keywords_type=allwords&keywords=helpwanted&bug_">Help Wanted</a> list 
+	<p><i><b>Tip</b>: Interested in contributing and don't know where to start? Browse the
+	<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&product=Mylar&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&keywords_type=allwords&keywords=helpwanted&bug_">
+	helpwanted</a> list 
 	of Bugzilla reports.</i></p>
+	<h3>&nbsp;</h3>
+<h3>Using Bugzilla</h3>
+	<ul>
+		<li>...</li>
+	</ul>
+	<p><b><i>Tip</i></b><i>: When writing comments, Bugzilla will 
+		automatically convert the text &quot;bug 1234&quot; to a hyperlink which will 
+		direct the reader to bug 1234.</i></p>
+	<h3>&nbsp;</h3>
 	<h3>Building the Eclipse 3.1 branch</h3>
 	<ul>
 		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
 		project, Team -&gt; Switch to Another Branch..., then 
 		Refresh the Branches and select e_3_1 </li>
-		<li>Merge...</li>
+		<li>The list of files that should not be overwritten is in: 
+		org.eclipse.mylar/build/merge-eclipse-3.1.txt</li>
 	</ul>
-<h3>Extending the Task List to other providers</h3>
-	<p>Mylar 0.4.7has preliminary support for multiple repositories, and the 
-	Bugzilla plug-in extends this via some very preliminary APIs and extension 
-	points. However, there is considerably more work that needs to go into 
-	improving and eventually stabilizing those APIs and extension points. 
-	Currently the only guarantee is that they need to change over the next few 
-	weeks, with JIRA support as the current driver. We're using the following 
-	report to track progress on this, so add yourself to the CC list (it's a bit 
-	of a monster with 35 comments, but summarizes the current thinking): <br>
-	https://bugs.eclipse.org/bugs/show_bug.cgi?id=120952</p>
+<h3>&nbsp;</h3>
+<h3><a name="extending-overview">Extensibility Overview</a></h3>
+<p>Mylar will will not be </p>
+<p>Officially, Mylar can't promise any APIs until the 1.0 release. We're a 
+technology project that's exploring novel functionality, and the user interface 
+and interaction need to stabilize considerably more before APIs can follow suit.<br>
+<br>
+However, for those willing to innovate on the bleeding edge (hi Brock ;), we are 
+starting to form the very initial, and guaranteed to change, APIs for task and 
+repository integration. I expect that these will become a bit more stable by 
+Mylar 0.5. And yes, making the Jira support part of Mylar is on the table, in 
+order to make that better integrated, easier to contribute to, and have it 
+evolve gracefully along with the formation of the APIs. I'll post more regarding 
+that on:</p>
+<p>&nbsp;</p>
+<p>Mylar 0.4.7 has preliminary support for multiple repositories, and the 
+Bugzilla plug-in extends this via some very preliminary APIs and extension 
+points. However, there is considerably more work that needs to go into improving 
+and eventually stabilizing those APIs and extension points. Currently the only 
+guarantee is that they need to change over the next few weeks, with JIRA support 
+as the current driver. We're using the following report to track progress on 
+this, so add yourself to the CC list (it's a bit of a monster with 35 comments, 
+but summarizes the current thinking): <br>
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=120952</p>
+<p>&nbsp;</p>
 </body></html>
