@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.tests;
 
 import java.util.MissingResourceException;
@@ -16,15 +17,13 @@ import java.util.ResourceBundle;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The main plugin class to be used in the desktop.
- */
-public class MylarTestsPlugin extends AbstractUIPlugin{
-	//The shared instance.
+public class MylarTestsPlugin extends AbstractUIPlugin {
+	// The shared instance.
 	private static MylarTestsPlugin plugin;
-	//Resource bundle.
+
+	// Resource bundle.
 	private ResourceBundle resourceBundle;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -36,10 +35,9 @@ public class MylarTestsPlugin extends AbstractUIPlugin{
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
-		
 
 	}
-	
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -58,8 +56,8 @@ public class MylarTestsPlugin extends AbstractUIPlugin{
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not
+	 * found.
 	 */
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = MylarTestsPlugin.getDefault().getResourceBundle();
