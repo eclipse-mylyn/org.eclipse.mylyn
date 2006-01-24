@@ -83,16 +83,15 @@ public class DatePicker extends Composite {
 
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
-		gridLayout.horizontalSpacing = 2;
-		gridLayout.verticalSpacing = 2;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
 
-		setSize(new org.eclipse.swt.graphics.Point(135, 18));// 28
-		dateText = new Text(this, SWT.READ_ONLY);
-		dateText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		setSize(new org.eclipse.swt.graphics.Point(135, 19));
+		dateText = new Text(this, SWT.NONE);
 		dateText.setLayoutData(dateTextGridData);
 		pickButton = new Button(this, SWT.ARROW | SWT.DOWN);
 		pickButton.setLayoutData(pickButtonGridData);
@@ -100,7 +99,8 @@ public class DatePicker extends Composite {
 
 			public void widgetSelected(SelectionEvent arg0) {
 				Display display = Display.getCurrent();
-				showDatePicker(display.getCursorLocation().x, display.getCursorLocation().y);
+				pickButton.setEnabled(false);
+				showDatePicker((display.getCursorLocation().x), (display.getCursorLocation().y));
 			}
 
 			public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -136,7 +136,6 @@ public class DatePicker extends Composite {
 			date = new GregorianCalendar();
 		}
 		datePickerPanel.setDate(date);
-		// pickerShell.setSize(new Point(225, 180));
 		pickerShell.setSize(new Point(240, 180));
 		pickerShell.setLocation(new Point(x, y));
 
@@ -163,7 +162,7 @@ public class DatePicker extends Composite {
 		for (SelectionListener listener : pickerListeners) {
 			listener.widgetSelected(null);
 		}
-
+		pickButton.setEnabled(true);
 		pickerShell.close();
 	}
 
@@ -178,6 +177,12 @@ public class DatePicker extends Composite {
 		dateText.setText(text);
 	}
 
+	public void setEnabled(boolean enabled) {
+		dateText.setEnabled(enabled);
+		pickButton.setEnabled(enabled);
+		super.setEnabled(enabled);
+	}
+	
 	class DatePickerPanel extends Composite implements KeyListener {
 
 		private Combo timeCombo = null;
@@ -211,7 +216,7 @@ public class DatePicker extends Composite {
 			gridLayout.horizontalSpacing = 3;
 			gridLayout.verticalSpacing = 3;
 			this.setLayout(gridLayout);
-			setSize(new org.eclipse.swt.graphics.Point(277, 200));
+			setSize(new org.eclipse.swt.graphics.Point(400, 200));//277, 200
 			createTimeCombo();
 			createMonthCombo();
 			createYearSpinner();
