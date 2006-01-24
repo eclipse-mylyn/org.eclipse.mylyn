@@ -22,9 +22,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.core.util.ZipFileUtil;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.tests.core.AbstractContextTest;
 
 /**
  * @author Mik Kersten
