@@ -24,11 +24,11 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskHandler;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * Tests changes to the main mylar data directory location.
