@@ -24,7 +24,6 @@ import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.tasklist.ui.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -57,10 +56,11 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	private IBugzillaAttributeListener ATTRIBUTE_LISTENER = new IBugzillaAttributeListener() {
 		public void attributeChanged(String attribute, String value) {
+			// TODO: get rid of this?
 			if (attribute.equals("Priority")) {
 				bugTask.setPriority(value);
-				if (TaskListView.getDefault() != null)
-					TaskListView.getDefault().notifyTaskDataChanged(bugTask);
+//				if (TaskListView.getDefault() != null)
+//					TaskListView.getDefault().notifyTaskDataChanged(bugTask);
 			}
 		}
 	};

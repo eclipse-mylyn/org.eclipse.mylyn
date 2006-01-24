@@ -232,7 +232,8 @@ public class BugzillaTask extends Task {
 	 */
 	public void setDirty(boolean isDirty) {
 		this.isDirty = isDirty;
-		notifyTaskDataChange();
+//		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(this);
+//		notifyTaskDataChange();
 	}
 
 	/**
@@ -425,21 +426,24 @@ public class BugzillaTask extends Task {
 			super(name);
 			setRule(rule);
 			state = BugTaskState.WAITING;
-			notifyTaskDataChange();
+			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
+//			notifyTaskDataChange();
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				state = BugTaskState.DOWNLOADING;
-				notifyTaskDataChange();
+				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
+//				notifyTaskDataChange();
 				// Update time this bugtask was last downloaded.
 				lastRefresh = new Date();
 				bugReport = downloadReport();
 
 				state = BugTaskState.FREE;
 				updateTaskDetails();
-				notifyTaskDataChange();
+				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
+//				notifyTaskDataChange();
 				saveBugReport(true);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not download report", false);

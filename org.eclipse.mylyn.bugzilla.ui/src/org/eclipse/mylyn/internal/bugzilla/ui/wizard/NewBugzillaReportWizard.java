@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
@@ -77,18 +79,23 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 
 	@Override
 	public boolean performFinish() {
+		super.performFinish();
 		String bugIdString = this.getId();
 		int bugId = -1;
+		boolean validId = false;
 		try {
 			if (bugIdString != null) {
 				bugId = Integer.parseInt(bugIdString);
-			} else {
-				return false;
-			}
+				validId = true;
+			} 
 		} catch (NumberFormatException nfe) {
-			// TODO handle error
-			return false;
+			// ignore
 		}
+		if (!validId) {
+			MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
+					"Could not create bug id, no valid id");
+			return false;
+		} 
 
 		// TaskRepository repository =
 		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);

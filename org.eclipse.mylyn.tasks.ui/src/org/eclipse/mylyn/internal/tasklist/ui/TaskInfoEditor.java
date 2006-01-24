@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.part.EditorPart;
@@ -149,25 +150,30 @@ public class TaskInfoEditor extends EditorPart {
 			// ignore
 		}
 
-		public void taskChanged(ITask updateTask) {
+		public void taskChanged(final ITask updateTask) {
 			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
-				if (!description.isDisposed()) {
-					description.setText(updateTask.getDescription());
-					// TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
-					parentEditor.changeTitle();
-				}
-				if (!priorityCombo.isDisposed()) {
-					int selectionIndex = priorityCombo.indexOf(updateTask.getPriority());
-					priorityCombo.select(selectionIndex);
-				}
-				if (!statusCombo.isDisposed()) {
-					int selectionIndex = statusCombo.indexOf(updateTask.getStatus().toString());
-					statusCombo.select(selectionIndex);
-				}
-				if (updateTask.isLocal() && !endDate.isDisposed()) {
-					endDate.setText(getTaskDateString(updateTask));
-				}
-
+				if (Workbench.getInstance() != null && !Workbench.getInstance().getDisplay().isDisposed()) {
+					Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (!description.isDisposed()) {
+								description.setText(updateTask.getDescription());
+								// TaskInfoEditor.this.setPartName(updateTask.getDescription(true));
+								parentEditor.changeTitle();
+							}
+							if (!priorityCombo.isDisposed()) {
+								int selectionIndex = priorityCombo.indexOf(updateTask.getPriority());
+								priorityCombo.select(selectionIndex);
+							}
+							if (!statusCombo.isDisposed()) {
+								int selectionIndex = statusCombo.indexOf(updateTask.getStatus().toString());
+								statusCombo.select(selectionIndex);
+							}
+							if (updateTask.isLocal() && !endDate.isDisposed()) {
+								endDate.setText(getTaskDateString(updateTask));
+							}
+						}
+					});
+				}				
 			}
 		}
 
@@ -228,7 +234,8 @@ public class TaskInfoEditor extends EditorPart {
 		// MylarTaskListPlugin.getTaskListManager().setStatus(task,
 		// statusCombo.getItem(statusCombo.getSelectionIndex()));
 
-		refreshTaskListView(task);
+//		refreshTaskListView(task);
+		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
 		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
 
 		markDirty(false);
@@ -754,11 +761,6 @@ public class TaskInfoEditor extends EditorPart {
 		// l = toolkit.createLabel(container, "Go to Task List Preferences to
 		// change task context directory");
 		// l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-	}
-
-	private void refreshTaskListView(ITask task) {
-		if (TaskListView.getDefault() != null)
-			TaskListView.getDefault().notifyTaskDataChanged(task);
 	}
 
 	private void markDirty(boolean dirty) {

@@ -241,7 +241,7 @@ public class TaskListView extends ViewPart {
 				refresh(null);
 			}
 		}
-
+ 
 		public void tasklistRead() {
 			refresh(null);
 		}
@@ -251,17 +251,23 @@ public class TaskListView extends ViewPart {
 				getViewer().refresh();
 		}
 
-		private void refresh(ITaskListElement element) {
-			if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-				if (element == null) {
-					getViewer().getControl().setRedraw(false);
-					getViewer().refresh();
-					getViewer().getControl().setRedraw(true);
-				} else {
-					getViewer().refresh(element, true);
-				}
+		private void refresh(final ITaskListElement element) {
+			if (Workbench.getInstance() != null && !Workbench.getInstance().getDisplay().isDisposed()) {
+				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
+							if (element == null) {
+								getViewer().getControl().setRedraw(false);
+								getViewer().refresh();
+								getViewer().getControl().setRedraw(true);
+							} else {
+								getViewer().refresh(element, true);
+							}  
+						}
+					}
+				});
 			}
-		}
+		}	
 	};
 
 	private final class PriorityDropDownAction extends Action implements IMenuCreator {
@@ -1237,42 +1243,12 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-	// public String[] getLabelPriorityFromUser(String kind) {
-	// String[] result = new String[2];
-	// Dialog dialog = null;
-	// boolean isTask = kind.equals("task");
-	// if (isTask) {
-	// dialog = new TaskInputDialog(
-	// Workbench.getInstance().getActiveWorkbenchWindow().getShell());
-	// } else {
-	// dialog = new InputDialog(
-	// Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-	// "Enter name",
-	// "Enter a name for the " + kind + ": ",
-	// "",
-	// null);
-	// }
-	//    	
-	// int dialogResult = dialog.open();
-	// if (dialogResult == Window.OK) {
-	// if (isTask) {
-	// result[0] = ((TaskInputDialog)dialog).getTaskname();
-	// result[1] = ((TaskInputDialog)dialog).getSelectedPriority();
-	// } else {
-	// result[0] = ((InputDialog)dialog).getValue();
-	// }
-	// return result;
-	// } else {
-	// return null;
-	// }
-	// }
-
-	public void notifyTaskDataChanged(ITask task) {
-		if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) {
-			getViewer().refresh();
-			expandToActiveTasks();
-		}
-	}
+//	public void notifyTaskDataChanged(ITask task) {
+//		if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) {
+//			getViewer().refresh();
+//			expandToActiveTasks();
+//		}
+//	}
 
 	public static TaskListView getDefault() {
 		return INSTANCE;
@@ -1403,9 +1379,4 @@ public class TaskListView extends ViewPart {
 	public ITaskCategory getDrilledIntoCategory() {
 		return drilledIntoCategory;
 	}
-
-	// @Override
-	// public String getTitleToolTip() {
-	// return "xxx";
-	// }
 }

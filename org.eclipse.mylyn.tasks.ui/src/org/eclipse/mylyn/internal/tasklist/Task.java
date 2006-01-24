@@ -21,7 +21,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -153,11 +152,7 @@ public class Task implements ITask {
 		}
 	}
 
-	/**
-	 * Opens the task in an editor.
-	 * 
-	 * @return Resulting <code>IStatus</code> of the operation
-	 */
+	@Deprecated
 	protected void openTaskEditor() {
 
 		// get the active page so that we can reuse it
@@ -176,22 +171,22 @@ public class Task implements ITask {
 		}
 	}
 
-	/**
-	 * Refreshes the tasklist viewer.
-	 * 
-	 * TODO: shouldn't be coupled to the TaskListView
-	 */
-	public void notifyTaskDataChange() {
-		final Task task = this;
-		if (Workbench.getInstance() != null && !Workbench.getInstance().getDisplay().isDisposed()) {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (TaskListView.getDefault() != null)
-						TaskListView.getDefault().notifyTaskDataChanged(task);
-				}
-			});
-		}
-	}
+//	/**
+//	 * Refreshes the tasklist viewer.
+//	 * 
+//	 * TODO: shouldn't be coupled to the TaskListView
+//	 */
+//	public void notifyTaskDataChange() {
+//		final Task task = this;
+//		if (Workbench.getInstance() != null && !Workbench.getInstance().getDisplay().isDisposed()) {
+//			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					if (TaskListView.getDefault() != null)
+//						TaskListView.getDefault().notifyTaskDataChanged(task);
+//				}
+//			});
+//		}
+//	}
 
 	public String getToolTipText() {
 		return getDescription();

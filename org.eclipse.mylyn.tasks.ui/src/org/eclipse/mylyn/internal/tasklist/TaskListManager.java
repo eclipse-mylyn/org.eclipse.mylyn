@@ -112,6 +112,7 @@ public class TaskListManager {
 				taskListWriter.writeTaskList(taskList, taskListFile);
 				MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID, nextTaskId);
 			} else {
+				Thread.dumpStack();
 				MylarStatusHandler.log("task list save attempted before initialization", this);
 			}
 		} catch (Exception e) {
