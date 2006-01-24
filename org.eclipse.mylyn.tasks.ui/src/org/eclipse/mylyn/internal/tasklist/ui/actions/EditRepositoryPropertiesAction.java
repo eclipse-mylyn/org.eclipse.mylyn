@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.tasklist.TaskRepository;

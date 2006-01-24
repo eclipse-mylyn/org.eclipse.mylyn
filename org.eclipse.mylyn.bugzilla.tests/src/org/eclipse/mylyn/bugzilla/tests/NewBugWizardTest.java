@@ -19,9 +19,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.bugzilla.core.NewBugModel;
-import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
-import org.eclipse.mylar.bugzilla.ui.wizard.AbstractWizardDataPage;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
+import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractWizardDataPage;
 import org.eclipse.ui.PlatformUI;
 
 /**

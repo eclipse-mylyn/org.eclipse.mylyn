@@ -18,8 +18,8 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 
 /**
  * @author Mik Kersten

@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasklist.planner.ui;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPrefConstants;
 import org.eclipse.ui.IEditorInput;

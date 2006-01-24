@@ -18,7 +18,7 @@ import javax.security.auth.login.LoginException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.bugzilla.core.internal.BugParser;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 
 /**
  * @author Mik Kersten

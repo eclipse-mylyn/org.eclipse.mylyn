@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
-import org.eclipse.mylar.bugzilla.core.internal.BugParser;
+import org.eclipse.mylar.internal.bugzilla.core.internal.BugParser;
 
 /**
  * Tests for parsing Bugzilla reports

@@ -14,9 +14,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.core.util.ITimerThreadListener;
-import org.eclipse.mylar.core.util.TimerThread;
+import org.eclipse.mylar.internal.core.util.ITimerThreadListener;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.TimerThread;
 
 /**
  * Timer that periodically runs saveRequested() on its client as a job

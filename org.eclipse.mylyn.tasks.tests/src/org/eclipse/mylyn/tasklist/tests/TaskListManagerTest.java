@@ -18,11 +18,11 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryCategory;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;

@@ -22,8 +22,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.bugzilla.core.NewBugModel;
-import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 
 /**
  * Tests NewBugParser -- parses product attributes for new bug reports

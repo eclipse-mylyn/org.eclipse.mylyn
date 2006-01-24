@@ -18,9 +18,9 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryHit;
-import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryCategory;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;

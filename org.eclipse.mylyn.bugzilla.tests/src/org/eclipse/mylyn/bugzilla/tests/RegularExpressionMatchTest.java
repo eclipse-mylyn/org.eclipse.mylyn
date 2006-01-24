@@ -18,9 +18,9 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchEngine;
-import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchEngine;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
