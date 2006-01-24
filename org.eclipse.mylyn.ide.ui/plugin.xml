@@ -4,22 +4,22 @@
 <plugin>
    <extension
          point="org.eclipse.mylar.core.context">
-      <structureBridge class="org.eclipse.mylar.ide.ResourceStructureBridge"/> 
+      <structureBridge class="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/> 
    </extension>
    <extension
          point="org.eclipse.mylar.ui.context">
       <uiBridge
-            class="org.eclipse.mylar.ide.ui.ResourceUiBridge"
+            class="org.eclipse.mylar.internal.ide.ui.ResourceUiBridge"
             contentType="*"/>
       <labelProvider
-            class="org.eclipse.mylar.ide.ui.ResourceContextLabelProvider"
+            class="org.eclipse.mylar.internal.ide.ui.ResourceContextLabelProvider"
             contentType="*"/>
    </extension>   
    <extension point="org.eclipse.ui.views"> 
    	  <view
           allowMultiple="false"
           category="org.eclipse.mylar"
-          class="org.eclipse.mylar.ide.ui.views.ActiveSearchView"
+          class="org.eclipse.mylar.internal.ide.ui.views.ActiveSearchView"
           icon="icons/eview16/active-search.gif"
           id="org.eclipse.mylar.ui.views.active.search"
           name="Active Search (Experimental)"/>
@@ -28,7 +28,7 @@
  	<extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Team"
-         class="org.eclipse.mylar.ide.team.ui.preferences.MylarTeamPreferencePage"
+         class="org.eclipse.mylar.internal.ide.ui.preferences.MylarTeamPreferencePage"
          id="org.eclipse.mylar.team.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
       </page>  
@@ -39,7 +39,7 @@
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action
-           class="org.eclipse.mylar.ide.ui.actions.ApplyMylarToNavigatorAction"
+           class="org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToNavigatorAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
@@ -54,7 +54,7 @@
 		id="org.eclipse.mylar.problems.contribution" 
    		targetID="org.eclipse.ui.views.ProblemView">
     	<action
-           class="org.eclipse.mylar.ide.ui.actions.ApplyMylarToProblemsListAction"
+           class="org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToProblemsListAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
@@ -82,7 +82,7 @@
             id="org.eclipse.mylar.java.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
         <action
-              class="org.eclipse.mylar.ide.ui.actions.CommitContextAction"
+              class="org.eclipse.mylar.internal.ide.ui.actions.CommitContextAction"
               enablesFor="*"
               icon="icons/elcl16/cvs_persp.gif"
               id="org.eclipse.mylar.ui.clear.context"
@@ -104,7 +104,7 @@
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+	  		class="org.eclipse.mylar.internal.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
@@ -112,7 +112,7 @@
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+	  		class="org.eclipse.mylar.internal.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>

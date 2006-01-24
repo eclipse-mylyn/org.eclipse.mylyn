@@ -13,7 +13,7 @@
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+	  		class="org.eclipse.mylar.internal.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
@@ -21,7 +21,7 @@
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+	  		class="org.eclipse.mylar.internal.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution> 
@@ -30,7 +30,7 @@
            id="org.eclipse.mylar.ui.tasklist.contribution"
            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
         <action
-              class="org.eclipse.mylar.ui.actions.ClearContextAction"
+              class="org.eclipse.mylar.internal.ui.actions.ClearContextAction"
               enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
               id="org.eclipse.mylar.ui.clear.context"
@@ -59,7 +59,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             name="Mylar"
-            class="org.eclipse.mylar.ui.preferences.MylarPreferencePage"
+            class="org.eclipse.mylar.internal.ui.preferences.MylarPreferencePage"
             id="org.eclipse.mylar.ui.preferences">
       </page>  
    </extension>
@@ -110,14 +110,14 @@
          <action
                definitionId="org.eclipse.mylar.ui.interest.increment"
                label="Make landmark"
-               class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+               class="org.eclipse.mylar.internal.ui.actions.InterestIncrementAction"
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylar.ui.actions.InterestIncrementAction">
          </action>
          <action
                definitionId="org.eclipse.mylar.ui.interest.decrement"
                label="Make less interesting"
-               class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+               class="org.eclipse.mylar.internal.ui.actions.InterestDecrementAction"
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylar.ui.actions.InterestDecrementAction">
          </action>
@@ -208,7 +208,7 @@
       <decorator
             lightweight="true"
             label="Mylar Interest Decorator"
-            class="org.eclipse.mylar.ui.InterestDecoratorLightweight"
+            class="org.eclipse.mylar.internal.ui.InterestDecoratorLightweight"
             state="true"
             id="org.eclipse.mylar.ui.decorator.interest">
          <description>
@@ -227,7 +227,7 @@
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
-           class="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
+           class="org.eclipse.mylar.internal.ui.actions.ApplyMylarToOutlineAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
@@ -242,7 +242,7 @@
          id="org.eclipse.mylar.tasklist.contribution.context"
          targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
       <action
-            class="org.eclipse.mylar.ui.actions.ToggleContextCaptureAction"
+            class="org.eclipse.mylar.internal.ui.actions.ToggleContextCaptureAction"
             icon="icons/elcl16/capture-pause.gif"
             id="org.eclipse.mylar.ui.context.capture.pause"
             label="Pause Capturing Context"
@@ -253,7 +253,7 @@
    </extension>
    
    <extension point="org.eclipse.mylar.tasklist.providers"> 
-    <dynamicPopupMenu class="org.eclipse.mylar.ui.internal.TaskListHighlighterMenuContributor"/>
+    <dynamicPopupMenu class="org.eclipse.mylar.internal.ui.TaskListHighlighterMenuContributor"/>
    </extension>
  
       <extension point="org.eclipse.ui.workingSets">
@@ -261,8 +261,8 @@
             id="org.eclipse.mylar.workingSetPage"
             name="Mylar Task Context"
             icon="icons/elcl16/interest-working-set.gif"
-            pageClass="org.eclipse.mylar.ui.internal.MylarWorkingSetPage"
-            updaterClass="org.eclipse.mylar.core.search.MylarWorkingSetUpdater">
+            pageClass="org.eclipse.mylar.internal.ui.MylarWorkingSetPage"
+            updaterClass="org.eclipse.mylar.internal.core.search.MylarWorkingSetUpdater">
         </workingSet>
     </extension>
 </plugin>

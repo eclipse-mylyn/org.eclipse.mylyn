@@ -11,17 +11,17 @@
 	    <structureBridge
            activeSearchIcon="icons/elcl16/edge-ref-java.gif"
            activeSearchLabel="Java Search"
-           class="org.eclipse.mylar.java.JavaStructureBridge"
+           class="org.eclipse.mylar.internal.java.JavaStructureBridge"
            name="Java Structure Bridge"
-           parent="org.eclipse.mylar.ide.ResourceStructureBridge"/>
+           parent="org.eclipse.mylar.internal.ide.ResourceStructureBridge"/>
 	</extension>
 	   
 	<extension point="org.eclipse.mylar.ui.context">
 	    <uiBridge
-	          class="org.eclipse.mylar.java.ui.JavaUiBridge"
+	          class="org.eclipse.mylar.internal.java.ui.JavaUiBridge"
 	          contentType="java"/>
 	    <labelProvider
-	          class="org.eclipse.mylar.java.ui.JavaContextLabelProvider"
+	          class="org.eclipse.mylar.internal.java.ui.JavaContextLabelProvider"
 	          contentType="java"/>
 	</extension>
 	
@@ -29,7 +29,7 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             name="Mylar Active Suite"
-            delegate="org.eclipse.mylar.java.internal.junit.MylarJUnitLaunchConfiguration"
+            delegate="org.eclipse.mylar.internal.java.ui.junit.MylarJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylar.java.junit.launchconfig"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
@@ -47,7 +47,7 @@
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             name="Mylar Active Plug-in Suite"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
-            delegate="org.eclipse.mylar.java.internal.junit.MylarPdeJUnitLaunchConfiguration"
+            delegate="org.eclipse.mylar.internal.java.ui.junit.MylarPdeJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylar.pde.junit.launchconfig">
          <fileExtension
@@ -82,7 +82,7 @@
       <launchConfigurationTabGroup
             type="org.eclipse.mylar.java.junit.launchconfig"
             helpContextId="org.eclipse.jdt.junit.junit_tab_group"
-            class="org.eclipse.mylar.java.internal.junit.MylarJUnitTabGroup"
+            class="org.eclipse.mylar.internal.java.ui.junit.MylarJUnitTabGroup"
             id="org.eclipse.mylar.java.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
@@ -101,7 +101,7 @@
       <launchConfigurationTabGroup
             type="org.eclipse.mylar.pde.junit.launchconfig"
             helpContextId="org.eclipse.jdt.junit.junit_tab_group"
-            class="org.eclipse.mylar.java.internal.junit.MylarPdeJUnitTabGroup"
+            class="org.eclipse.mylar.internal.java.ui.junit.MylarPdeJUnitTabGroup"
             id="org.eclipse.mylar.pde.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
@@ -145,7 +145,7 @@
    	  <view
             allowMultiple="false"
             category="org.eclipse.mylar"
-            class="org.eclipse.mylar.java.ui.views.ActiveHierarchyView"
+            class="org.eclipse.mylar.internal.java.ui.views.ActiveHierarchyView"
             icon="icons/eview16/active-hierarchy.gif"
             id="org.eclipse.mylar.ui.views.active.hierarchy"
             name="Active Hierarchy"/>
@@ -156,7 +156,7 @@
 		id="org.eclipse.mylar.java.explorer.contribution" 
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
     	<action
-           class="org.eclipse.mylar.java.ui.actions.ApplyMylarToPackageExplorerAction"
+           class="org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.actions.filter.packageExplorer"
@@ -182,7 +182,7 @@
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+	  		class="org.eclipse.mylar.internal.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
@@ -190,7 +190,7 @@
 	  		tooltip="Mark the selected element as a landmark"
 	  		menubarPath="mylar" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+	  		class="org.eclipse.mylar.internal.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>
@@ -203,7 +203,7 @@
             visible="true"> 
             
   		<action
-          class="org.eclipse.mylar.java.ui.actions.ToggleAutoFoldAction"
+          class="org.eclipse.mylar.internal.java.ui.actions.ToggleAutoFoldAction"
           definitionId="org.eclipse.mylar.java.ui.editor.folding.auto"
           icon="icons/elcl16/interest-folding.gif"
           id="org.eclipse.mylar.java.ui.editor.folding.auto"
@@ -215,7 +215,7 @@
         <action
                definitionId="org.eclipse.mylar.java.ui.search.context"
                label="Search the current task context"
-               class="org.eclipse.mylar.java.ui.actions.FindReferencesInTaskscapeAction"
+               class="org.eclipse.mylar.internal.java.ui.actions.FindReferencesInTaskscapeAction"
                id="org.eclipse.mylar.java.ui.search.context">
          </action>
     </actionSet>
@@ -227,7 +227,7 @@
             label="Mylar Java Browsing"
             visible="false"> 
 	    <action
-           class="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
+           class="org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
            id="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
            style="toggle"
 	       label="Apply Mylar" 
@@ -250,7 +250,7 @@
   <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Java"
-         class="org.eclipse.mylar.java.ui.preferences.MylarJavaPreferencePage"
+         class="org.eclipse.mylar.internal.java.ui.preferences.MylarJavaPreferencePage"
          id="org.eclipse.mylar.java.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
       </page>  
@@ -269,7 +269,7 @@
             name="Mylar Java Declarations Filter"
             enabled="false"
             description="Mylar Java Declarations Filter"
-            class="org.eclipse.mylar.java.ui.MembersFilter"
+            class="org.eclipse.mylar.internal.java.ui.MembersFilter"
             id="org.eclipse.mylar.java.ui.MembersFilter">
    		</filter>
   </extension>
@@ -285,7 +285,7 @@
             icon="icons/eview16/editor-mylar-java.gif"
             extensions="java"
             contributorClass="org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor"
-            class="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor"
+            class="org.eclipse.mylar.internal.java.ui.editor.MylarCompilationUnitEditor"
             id="org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor">
       		<contentTypeBinding contentTypeId="org.eclipse.jdt.core.javaSource" /> 
       </editor>  
@@ -330,7 +330,7 @@
       <wizard
             canFinishEarly="false"
             category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.java.ui.wizards.MylarPreferenceWizard"
+            class="org.eclipse.mylar.internal.java.ui.wizards.MylarPreferenceWizard"
             hasPages="true"
             icon="icons/etool16/wizard-prefs.gif"
             id="org.eclipse.mylar.java.ui.wizards.preferences"
