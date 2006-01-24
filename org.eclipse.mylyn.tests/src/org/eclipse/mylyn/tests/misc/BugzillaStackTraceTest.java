@@ -26,7 +26,7 @@ import org.eclipse.mylar.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.bugzilla.tests.BugzillaTestPlugin;
 import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.bugzilla.ui.tasklist.StackTrace;
-import org.eclipse.mylar.tests.core.support.FileTool;
+import org.eclipse.mylar.core.tests.support.FileTool;
 
 /**
  * Class to test the Bridge methods that do not require server queries
