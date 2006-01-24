@@ -21,7 +21,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tests.core.support.search.TestActiveSearchListener;
+import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.xml.XmlNodeHelper;
 import org.eclipse.mylar.xml.XmlReferencesProvider;
 import org.eclipse.mylar.xml.pde.PdeStructureBridge;

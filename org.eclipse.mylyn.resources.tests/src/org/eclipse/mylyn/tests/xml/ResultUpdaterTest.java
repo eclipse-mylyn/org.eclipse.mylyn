@@ -27,12 +27,12 @@ import org.eclipse.mylar.core.internal.CompositeContext;
 import org.eclipse.mylar.core.internal.MylarContext;
 import org.eclipse.mylar.core.internal.MylarContextRelation;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.core.tests.support.ResourceHelper;
+import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.java.JavaStructureBridge;
-import org.eclipse.mylar.tests.core.support.ResourceHelper;
-import org.eclipse.mylar.tests.core.support.search.ISearchPluginTest;
-import org.eclipse.mylar.tests.java.search.ActiveSearchNotifier;
-import org.eclipse.mylar.tests.java.search.SearchPluginTestHelper;
-import org.eclipse.mylar.tests.java.search.WorkspaceSetupHelper;
+import org.eclipse.mylar.java.tests.search.ActiveSearchNotifier;
+import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
+import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
 import org.eclipse.mylar.xml.XmlReferencesProvider;
 
 public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
