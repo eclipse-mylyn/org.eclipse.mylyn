@@ -36,7 +36,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.MylarPrefContstants;
+import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.monitor.monitors.ActionExecutionMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.ActivityChangeMonitor;
@@ -191,7 +191,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 	private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(MylarPrefContstants.PREF_DATA_DIR)) {
+			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
 					if (!isPerformingUpload()) {
 						for (IInteractionEventListener listener : MylarPlugin.getDefault().getInteractionListeners())
@@ -436,7 +436,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 		if (!isMonitoringEnabled())
 			return;
 		if (!notifiedOfUserIdSubmission
-				&& !MylarPlugin.getDefault().getPreferenceStore().contains(MylarPrefContstants.USER_ID)) {
+				&& !MylarPlugin.getDefault().getPreferenceStore().contains(MylarPreferenceContstants.USER_ID)) {
 			notifiedOfUserIdSubmission = true;
 			UsageSubmissionWizard wizard = new UsageSubmissionWizard(false);
 			wizard.init(PlatformUI.getWorkbench(), null);
