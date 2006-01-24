@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,10 +127,10 @@ public class MylarContextManager {
 			}
 			isStalled = true;
 		}
-		
+
 		public void intervalElapsed() {
 			// ignore
-			
+
 		}
 
 		public void interactionObserved(InteractionEvent event) {
@@ -166,7 +166,8 @@ public class MylarContextManager {
 		File storeDir = new File(MylarPlugin.getDefault().getDataDirectory());
 		storeDir.mkdirs();
 
-		activityHistory = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+		activityHistory = externalizer.readContextFromXML(CONTEXT_HISTORY_FILE_NAME,
+				getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		if (activityHistory == null) {
 			resetActivityHistory();
 		}
@@ -280,7 +281,7 @@ public class MylarContextManager {
 
 		if (isInterestDelta(previousInterest, previouslyPredicted, previouslyPropagated, node)) {
 			interestDelta.add(node); // TODO: check that the order of these
-										// is sensible
+			// is sensible
 		}
 		if (notifyListeners && !interestDelta.isEmpty()) {
 			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
@@ -351,10 +352,10 @@ public class MylarContextManager {
 				elementDelta.add(0, parentNode);
 			}
 			propegateDoiToParents(parentNode, previousInterest, decayOffset, level, elementDelta);// adapter.getResourceExtension(),
-																									// adapter.getParentHandle(parentHandle),
-																									// level,
-																									// doi,
-																									// parentChain);
+			// adapter.getParentHandle(parentHandle),
+			// level,
+			// doi,
+			// parentChain);
 		}
 	}
 
@@ -433,7 +434,7 @@ public class MylarContextManager {
 			}
 			suppressListenerNotification = false;
 			listeners.addAll(waitingListeners);
-			waitingListeners.clear(); 
+			waitingListeners.clear();
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "Could not activate context");
 		}
@@ -447,7 +448,7 @@ public class MylarContextManager {
 		return contextFile.exists() && contextFile.length() > 0;
 	}
 
-	public void contextDeactivated(String handleIdentifier) {	
+	public void contextDeactivated(String handleIdentifier) {
 		try {
 			IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
@@ -477,7 +478,7 @@ public class MylarContextManager {
 	public void contextDeleted(String handleIdentifier) {
 		IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		eraseContext(handleIdentifier, false);
-		if (context != null) { 
+		if (context != null) {
 			// TODO: this notification is redundant with eraseContext's
 			setContextCapturePaused(true);
 			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
@@ -511,7 +512,8 @@ public class MylarContextManager {
 	 * @return false if the map could not be read for any reason
 	 */
 	public MylarContext loadContext(String handleIdentifier) {
-		MylarContext loadedContext = externalizer.readContextFromXML(handleIdentifier, getFileForContext(handleIdentifier));
+		MylarContext loadedContext = externalizer.readContextFromXML(handleIdentifier,
+				getFileForContext(handleIdentifier));
 		if (loadedContext == null) {
 			return new MylarContext(handleIdentifier, MylarContextManager.getScalingFactors());
 		} else {

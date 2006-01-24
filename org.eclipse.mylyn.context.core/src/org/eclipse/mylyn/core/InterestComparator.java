@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Oct 22, 2004
-  */
+
 package org.eclipse.mylar.core;
 
 import java.util.Comparator;
@@ -20,18 +18,20 @@ import java.util.Comparator;
  */
 public class InterestComparator<T> implements Comparator<T> {
 
-    public int compare(T e1, T e2) {
-        if (e1 instanceof IMylarElement && e2 instanceof IMylarElement) {
-            IMylarElement info1 = (IMylarElement)e1;
-            IMylarElement info2 = (IMylarElement)e2;
-            if (info1 != null && info2 != null) {
-                float v1 = info1.getInterest().getValue();
-                float v2 = info2.getInterest().getValue();
-                if (v1 >= v2) return -1;
-                if (v1 < v2) return 1;
-            }
-        } 
-        return 0;
-    }
-    
+	public int compare(T e1, T e2) {
+		if (e1 instanceof IMylarElement && e2 instanceof IMylarElement) {
+			IMylarElement info1 = (IMylarElement) e1;
+			IMylarElement info2 = (IMylarElement) e2;
+			if (info1 != null && info2 != null) {
+				float v1 = info1.getInterest().getValue();
+				float v2 = info2.getInterest().getValue();
+				if (v1 >= v2)
+					return -1;
+				if (v1 < v2)
+					return 1;
+			}
+		}
+		return 0;
+	}
+
 }

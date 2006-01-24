@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jan 31, 2005
-  */
+
 package org.eclipse.mylar.core;
 
 import java.util.List;
@@ -24,145 +22,156 @@ import org.eclipse.mylar.core.search.IMylarSearchOperation;
  * @author Mik Kersten
  */
 public abstract class AbstractRelationProvider implements IMylarContextListener {
-	
-    private boolean enabled = false;
-    private String id;
-    private String structureKind;
-    private int degreeOfSeparation;
 
-    public String getId() {
-        return id;
-    }
-    
-    public AbstractRelationProvider(String structureKind, String id) {
-        this.id = id;
-        this.structureKind = structureKind;
-        if (MylarPlugin.getDefault().getPreferenceStore().contains(getGenericId())) {
-        	degreeOfSeparation = MylarPlugin.getDefault().getPreferenceStore().getInt(getGenericId());
-        } else {
-        	degreeOfSeparation = getDefaultDegreeOfSeparation();
-        }
-    }
-   
-    protected abstract int getDefaultDegreeOfSeparation();
+	private boolean enabled = false;
+
+	private String id;
+
+	private String structureKind;
+
+	private int degreeOfSeparation;
+
+	public String getId() {
+		return id;
+	}
+
+	public AbstractRelationProvider(String structureKind, String id) {
+		this.id = id;
+		this.structureKind = structureKind;
+		if (MylarPlugin.getDefault().getPreferenceStore().contains(getGenericId())) {
+			degreeOfSeparation = MylarPlugin.getDefault().getPreferenceStore().getInt(getGenericId());
+		} else {
+			degreeOfSeparation = getDefaultDegreeOfSeparation();
+		}
+	}
+
+	protected abstract int getDefaultDegreeOfSeparation();
 
 	protected abstract void findRelated(final IMylarElement node, int degreeOfSeparation);
-    
-    /**
-     * @param limitTo Only used in thye AbstractJavaRelationshipProvider for the search type
-     */
-    public abstract IMylarSearchOperation getSearchOperation(IMylarElement node, int limitTo, int degreeOfSeparation);
 
-    public abstract String getName();
-    
-    public boolean acceptResultElement(Object element){
-    	return true;
-    }
-        
-    public void contextActivated(IMylarContext taskscape) { 
-    	
-    }
-    
-    public void landmarkAdded(IMylarElement node) { 
-        if (enabled) {
-        	findRelated(node, degreeOfSeparation);
-        }
-    } 
-    
-    public void landmarkRemoved(IMylarElement node) {
-//        MylarPlugin.getTaskscapeManager().removeEdge(element, id);
-    }
-     
-    protected void searchCompleted(IMylarElement landmark) {
-    	if (landmark.getRelations().size() > 0) {
-    		MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
-    	}
-    }
-    
-    protected void incrementInterest(IMylarElement node, String elementKind, String elementHandle, int degreeOfSeparation) {
-        int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
-        InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, getSourceId(), getId(), null, predictedInterest);
-        MylarPlugin.getContextManager().handleInteractionEvent(event, false, false);
-        createEdge(node, elementKind, elementHandle);
-    }
+	/**
+	 * @param limitTo
+	 *            Only used in thye AbstractJavaRelationshipProvider for the
+	 *            search type
+	 */
+	public abstract IMylarSearchOperation getSearchOperation(IMylarElement node, int limitTo, int degreeOfSeparation);
 
-    /**
-     * Public for testing
-     */
-	public void createEdge(IMylarElement toNode, String elementKind, String targetHandle) {
-		CompositeContextElement targetNode = (CompositeContextElement)MylarPlugin.getContextManager().getElement(targetHandle);
-        if (targetNode == null) return;
-		MylarContextElement concreteTargetNode = null;
-        if (targetNode.getNodes().size() != 1) {
-        	return;
-        } else {
-        	concreteTargetNode = targetNode.getNodes().iterator().next();
-        }
-        if (concreteTargetNode != null) {
-	        for (MylarContextElement sourceNode : ((CompositeContextElement)toNode).getNodes()) {
-	        	MylarContextRelation edge = new MylarContextRelation(elementKind, getId(), sourceNode, concreteTargetNode, sourceNode.getContext());
-	        	sourceNode.addEdge(edge);
-			}
-        }
+	public abstract String getName();
+
+	public boolean acceptResultElement(Object element) {
+		return true;
 	}
-    
-    protected abstract String getSourceId();
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-    
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-    
-    public int getCurrentDegreeOfSeparation(){
-    	return degreeOfSeparation;
-    }
-    
-    public void nodeDeleted(IMylarElement node) {
-    	// we don't care when this happens
-    }
-    
-    public void presentationSettingsChanging(UpdateKind kind) { 
-    	// we don't care about this event
-    }
-    
-    public void presentationSettingsChanged(UpdateKind kind) { 
-    	// we don't care about this event
-    }
+	public void contextActivated(IMylarContext taskscape) {
 
-    public void contextDeactivated(IMylarContext taskscape) { 
-    	// we don't care about this event
-    }
+	}
 
-    public void interestChanged(IMylarElement info) { 
-    	// we don't care about this event
-    }
-    
-    public void interestChanged(List<IMylarElement> nodes) { 
-    	// we don't care about this event
-    }
+	public void landmarkAdded(IMylarElement node) {
+		if (enabled) {
+			findRelated(node, degreeOfSeparation);
+		}
+	}
 
-    public void edgesChanged(IMylarElement node) { 
-    	// we don't care about this event
-    }
-    
-    @Override
-    public String toString() {
-        return "(provider for: " + id + ")";
-    }
+	public void landmarkRemoved(IMylarElement node) {
+		// MylarPlugin.getTaskscapeManager().removeEdge(element, id);
+	}
 
-    public String getStructureKind() {
-        return structureKind;
-    }
+	protected void searchCompleted(IMylarElement landmark) {
+		if (landmark.getRelations().size() > 0) {
+			MylarPlugin.getContextManager().notifyRelationshipsChanged(landmark);
+		}
+	}
 
-	public void setDegreeOfSeparation(int degreeOfSeparation){
+	protected void incrementInterest(IMylarElement node, String elementKind, String elementHandle,
+			int degreeOfSeparation) {
+		int predictedInterest = 1;// (7-degreeOfSeparation) *
+									// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
+		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
+				getSourceId(), getId(), null, predictedInterest);
+		MylarPlugin.getContextManager().handleInteractionEvent(event, false, false);
+		createEdge(node, elementKind, elementHandle);
+	}
+
+	/**
+	 * Public for testing
+	 */
+	public void createEdge(IMylarElement toNode, String elementKind, String targetHandle) {
+		CompositeContextElement targetNode = (CompositeContextElement) MylarPlugin.getContextManager().getElement(
+				targetHandle);
+		if (targetNode == null)
+			return;
+		MylarContextElement concreteTargetNode = null;
+		if (targetNode.getNodes().size() != 1) {
+			return;
+		} else {
+			concreteTargetNode = targetNode.getNodes().iterator().next();
+		}
+		if (concreteTargetNode != null) {
+			for (MylarContextElement sourceNode : ((CompositeContextElement) toNode).getNodes()) {
+				MylarContextRelation edge = new MylarContextRelation(elementKind, getId(), sourceNode,
+						concreteTargetNode, sourceNode.getContext());
+				sourceNode.addEdge(edge);
+			}
+		}
+	}
+
+	protected abstract String getSourceId();
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public int getCurrentDegreeOfSeparation() {
+		return degreeOfSeparation;
+	}
+
+	public void nodeDeleted(IMylarElement node) {
+		// we don't care when this happens
+	}
+
+	public void presentationSettingsChanging(UpdateKind kind) {
+		// we don't care about this event
+	}
+
+	public void presentationSettingsChanged(UpdateKind kind) {
+		// we don't care about this event
+	}
+
+	public void contextDeactivated(IMylarContext taskscape) {
+		// we don't care about this event
+	}
+
+	public void interestChanged(IMylarElement info) {
+		// we don't care about this event
+	}
+
+	public void interestChanged(List<IMylarElement> nodes) {
+		// we don't care about this event
+	}
+
+	public void edgesChanged(IMylarElement node) {
+		// we don't care about this event
+	}
+
+	@Override
+	public String toString() {
+		return "(provider for: " + id + ")";
+	}
+
+	public String getStructureKind() {
+		return structureKind;
+	}
+
+	public void setDegreeOfSeparation(int degreeOfSeparation) {
 		this.degreeOfSeparation = degreeOfSeparation;
 		MylarPlugin.getDefault().getPreferenceStore().setValue(getGenericId(), degreeOfSeparation);
 	}
 
 	public abstract String getGenericId();
-	
+
 	public abstract void stopAllRunningJobs();
 }

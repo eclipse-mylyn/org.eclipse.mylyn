@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 29, 2004
- */
+
 package org.eclipse.mylar.core.internal;
 
 import java.io.Serializable;
@@ -28,9 +26,11 @@ public class ScalingFactors implements Serializable {
 
 	// weird
 	private ScalingFactor defaultDecay = new ScalingFactor("decay", .017f);
+
 	private ScalingFactor defaultEdit = new ScalingFactor("edit", .7f);
+
 	private ScalingFactor defaultPurge = new ScalingFactor("edit", -10f);
-	
+
 	// thesholds, not factors
 	private float landmark = 30f;
 
@@ -48,8 +48,7 @@ public class ScalingFactors implements Serializable {
 
 	private Map<InteractionEvent.Kind, ScalingFactor> factors = new HashMap<InteractionEvent.Kind, ScalingFactor>();
 
-	private static final ScalingFactor DEFAULT_SCALING_FACTOR = new ScalingFactor(
-			"<default>", 1);
+	private static final ScalingFactor DEFAULT_SCALING_FACTOR = new ScalingFactor("<default>", 1);
 
 	public ScalingFactors() {
 		factors.put(InteractionEvent.Kind.EDIT, defaultEdit);

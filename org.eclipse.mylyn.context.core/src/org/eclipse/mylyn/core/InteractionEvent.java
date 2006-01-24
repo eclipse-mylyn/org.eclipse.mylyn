@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on May 18, 2005
- */
+
 package org.eclipse.mylar.core;
 
 import java.io.Serializable;
@@ -108,7 +106,8 @@ public class InteractionEvent implements Serializable {
 		// contribution
 	}
 
-	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, float interestContribution) {
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
+			float interestContribution) {
 		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); // default
 		// contribution
 	}
@@ -133,7 +132,8 @@ public class InteractionEvent implements Serializable {
 		// contribution
 	}
 
-	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, String delta, float interestContribution) {
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
+			String delta, float interestContribution) {
 		this.date = Calendar.getInstance().getTime();
 		this.endDate = Calendar.getInstance().getTime();
 		this.kind = kind;
@@ -145,8 +145,8 @@ public class InteractionEvent implements Serializable {
 		this.interestContribution = interestContribution;
 	}
 
-	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation, String delta,
-			float interestContribution, Date startDate, Date endDate) {
+	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
+			String delta, float interestContribution, Date startDate, Date endDate) {
 		this.date = startDate;
 		this.endDate = endDate;
 		this.kind = kind;
@@ -163,35 +163,47 @@ public class InteractionEvent implements Serializable {
 		if (object == null || !(object instanceof InteractionEvent))
 			return false;
 		InteractionEvent event = (InteractionEvent) object;
-		return (date == null ? event.date == null : date.equals(event.date)) 
+		return (date == null ? event.date == null : date.equals(event.date))
 				&& (endDate == null ? event.endDate == null : endDate.equals(event.endDate))
 				&& (kind == null ? event.kind == null : kind.equals(event.kind))
 				&& (structureKind == null ? event.structureKind == null : structureKind.equals(event.structureKind))
-				&& (structureHandle == null ? event.structureHandle == null : structureHandle.equals(event.structureHandle))
+				&& (structureHandle == null ? event.structureHandle == null : structureHandle
+						.equals(event.structureHandle))
 				&& (originId == null ? event.originId == null : originId.equals(event.originId))
 				&& (navigation == null ? event.navigation == null : navigation.equals(event.navigation))
-				&& (delta == null ? event.delta == null : delta.equals(event.delta)) 
+				&& (delta == null ? event.delta == null : delta.equals(event.delta))
 				&& interestContribution == event.interestContribution;
 	}
 
 	@Override
 	public int hashCode() {
-		int hashCode = 0; 
-		if (date != null) hashCode += date.hashCode();
-		if (endDate != null) hashCode += endDate.hashCode();
-		if (kind != null) hashCode += kind.hashCode();
-		if (structureKind != null) hashCode += structureKind.hashCode();
-		if (structureHandle != null) hashCode += structureHandle.hashCode();
-		if (originId != null) hashCode += originId.hashCode();
-		if (navigation != null) hashCode += navigation.hashCode();
-		if (delta != null) hashCode += delta.hashCode();
-		hashCode += new Float(interestContribution).hashCode(); // TODO: could this lose precision?
+		int hashCode = 0;
+		if (date != null)
+			hashCode += date.hashCode();
+		if (endDate != null)
+			hashCode += endDate.hashCode();
+		if (kind != null)
+			hashCode += kind.hashCode();
+		if (structureKind != null)
+			hashCode += structureKind.hashCode();
+		if (structureHandle != null)
+			hashCode += structureHandle.hashCode();
+		if (originId != null)
+			hashCode += originId.hashCode();
+		if (navigation != null)
+			hashCode += navigation.hashCode();
+		if (delta != null)
+			hashCode += delta.hashCode();
+		hashCode += new Float(interestContribution).hashCode(); // TODO: could
+																// this lose
+																// precision?
 		return hashCode;
 	}
 
 	@Override
 	public String toString() {
-		return "(date: " + date + ", kind: " + kind + ", sourceHandle: " + structureHandle + ", origin: " + originId + ", delta: " + delta + ")";
+		return "(date: " + date + ", kind: " + kind + ", sourceHandle: " + structureHandle + ", origin: " + originId
+				+ ", delta: " + delta + ")";
 	}
 
 	public String getStructureHandle() {

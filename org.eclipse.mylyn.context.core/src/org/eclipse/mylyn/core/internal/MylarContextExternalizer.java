@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,16 +27,16 @@ import org.eclipse.mylar.core.util.MylarStatusHandler;
  */
 public class MylarContextExternalizer {
 
-//	private ContextReader reader = new ContextReader();
-//
-//	private ContextWriter writer = new ContextWriter();
-	
+	// private ContextReader reader = new ContextReader();
+	//
+	// private ContextWriter writer = new ContextWriter();
+
 	private IContextReader reader = new SaxContextReader();
 
 	private IContextWriter writer = new SaxContextWriter();
 
 	public static final String ELMNT_INTERACTION_HISTORY_OLD = "interactionEvent";
-	
+
 	public static final String ELMNT_INTERACTION_HISTORY = "InteractionHistory";
 
 	public static final String ATR_STRUCTURE_KIND = "StructureKind";
@@ -66,9 +66,11 @@ public class MylarContextExternalizer {
 	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.ENGLISH);
 
 	public void writeContextToXML(MylarContext context, File file) {
-		if (context.getInteractionHistory().isEmpty()) return;
+		if (context.getInteractionHistory().isEmpty())
+			return;
 		try {
-			if (!file.exists()) file.createNewFile();
+			if (!file.exists())
+				file.createNewFile();
 			OutputStream stream = new FileOutputStream(file);
 			writer.setOutputStream(stream);
 			writer.writeContextToStream(context);

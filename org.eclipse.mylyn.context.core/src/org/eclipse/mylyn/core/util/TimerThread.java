@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ package org.eclipse.mylar.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * @author Mik Kersten
  * @author Shawn Minto
@@ -26,17 +25,17 @@ public class TimerThread extends Thread implements Runnable {
 	private static final int SECOND = 1000;
 
 	public static final int DEFAULT_SLEEP_INTERVAL = 5 * SECOND;
-		
+
 	private int sleepInterval;
 
 	private int timeout = 0;
 
 	private int elapsed = 0;
-	
+
 	private List<ITimerThreadListener> listeners = new ArrayList<ITimerThreadListener>();
 
 	private boolean suspended = false;
-	
+
 	boolean killed = false;
 
 	public TimerThread(int timeoutInMillis, int sleepInterval) {
@@ -63,13 +62,15 @@ public class TimerThread extends Thread implements Runnable {
 					elapsed += sleepInterval;
 					sleep(sleepInterval);
 					if (!suspended) {
-						for (ITimerThreadListener listener : listeners) listener.intervalElapsed();
+						for (ITimerThreadListener listener : listeners)
+							listener.intervalElapsed();
 					}
 				}
 				if (elapsed >= timeout && !killed) {
 					if (!suspended) {
-						for (ITimerThreadListener listener : listeners) listener.fireTimedOut();
-					} 
+						for (ITimerThreadListener listener : listeners)
+							listener.fireTimedOut();
+					}
 					elapsed = 0;
 				}
 				sleep(sleepInterval);
@@ -90,7 +91,7 @@ public class TimerThread extends Thread implements Runnable {
 	public void kill() {
 		killed = true;
 	}
-	
+
 	public void resetTimer() {
 		suspended = false;
 		elapsed = 0;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 5, 2005
-  */
+
 package org.eclipse.mylar.core.internal.dt;
 
 /**
@@ -18,7 +16,8 @@ package org.eclipse.mylar.core.internal.dt;
  */
 public @interface MylarWebRef {
 
-    public String url();
-    public String name(); 
-    
+	public String url();
+
+	public String name();
+
 }

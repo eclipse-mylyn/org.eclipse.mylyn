@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 29, 2004
- */
+
 package org.eclipse.mylar.core;
 
 import java.util.List;
@@ -20,22 +18,18 @@ import java.util.List;
  */
 public interface IMylarContext {
 
-    public abstract List<InteractionEvent> getInteractionHistory();
-    
-    public List<IMylarElement> getInteresting();
-    
-    public abstract IMylarElement get(String element);
+	public abstract List<InteractionEvent> getInteractionHistory();
 
-    public abstract IMylarElement getActiveNode();
+	public List<IMylarElement> getInteresting();
 
-    public abstract void delete(IMylarElement node);
-    
-    public abstract void updateElementHandle(IMylarElement element, String newHandle);
+	public abstract IMylarElement get(String element);
 
-    public abstract List<IMylarElement> getAllElements();
+	public abstract IMylarElement getActiveNode();
 
-//  public abstract Set<IMylarElement> getInterestingResources();
-    
-//  public abstract List<IMylarElement> getLandmarks();
+	public abstract void delete(IMylarElement node);
+
+	public abstract void updateElementHandle(IMylarElement element, String newHandle);
+
+	public abstract List<IMylarElement> getAllElements();
 
 }

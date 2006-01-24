@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,7 +48,7 @@ public class MylarContext implements IMylarContext {
 	private int numUserEvents = 0;
 
 	protected ScalingFactors scaling;
-	
+
 	void parseInteractionHistory() {
 		nodes = new HashMap<String, MylarContextElement>();
 		landmarks = new HashMap<String, IMylarElement>();
@@ -127,8 +127,8 @@ public class MylarContext implements IMylarContext {
 
 	public List<IMylarElement> getInteresting() {
 		List<IMylarElement> elements = new ArrayList<IMylarElement>();
-			
-		for (String key : new ArrayList<String>(nodes.keySet())) { 
+
+		for (String key : new ArrayList<String>(nodes.keySet())) {
 			MylarContextElement info = nodes.get(key);
 			if (info.getInterest().isInteresting()) {
 				elements.add(info);
@@ -207,34 +207,43 @@ public class MylarContext implements IMylarContext {
 			collapsedHistory.addAll(((DegreeOfInterest) node.getInterest()).getCollapsedEvents());
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object object) {
 		if (object == null || !(object instanceof MylarContext))
 			return false;
 		MylarContext context = (MylarContext) object;
-		
-		return (handleIdentifier == null ? context.handleIdentifier == null : handleIdentifier.equals(context.handleIdentifier)) 
-			&& (interactionHistory == null ? context.interactionHistory == null : interactionHistory.equals(context.interactionHistory)) 
-			&& (nodes == null ? context.nodes == null : nodes.equals(context.nodes)) 
-			&& (activeNode == null ? context.activeNode == null : activeNode.equals(context.activeNode))
-			&& (tempRaised == null ? context.tempRaised == null : tempRaised.equals(context.tempRaised))
-			&& (landmarks == null ? context.landmarks == null : landmarks.equals(context.landmarks))
-			&& (scaling == null ? context.scaling == null : scaling.equals(context.scaling))
-			&& (numUserEvents == context.numUserEvents);
+
+		return (handleIdentifier == null ? context.handleIdentifier == null : handleIdentifier
+				.equals(context.handleIdentifier))
+				&& (interactionHistory == null ? context.interactionHistory == null : interactionHistory
+						.equals(context.interactionHistory))
+				&& (nodes == null ? context.nodes == null : nodes.equals(context.nodes))
+				&& (activeNode == null ? context.activeNode == null : activeNode.equals(context.activeNode))
+				&& (tempRaised == null ? context.tempRaised == null : tempRaised.equals(context.tempRaised))
+				&& (landmarks == null ? context.landmarks == null : landmarks.equals(context.landmarks))
+				&& (scaling == null ? context.scaling == null : scaling.equals(context.scaling))
+				&& (numUserEvents == context.numUserEvents);
 	}
 
 	@Override
 	public int hashCode() {
-		int hashCode = 0; 
-		if (handleIdentifier != null) hashCode += handleIdentifier.hashCode();
-		if (interactionHistory != null) hashCode += interactionHistory.hashCode();
-		if (nodes != null) hashCode += nodes.hashCode();
-		if (activeNode != null) hashCode += activeNode.hashCode();
-		if (tempRaised != null) hashCode += tempRaised.hashCode();
-		if (landmarks != null) hashCode += landmarks.hashCode();
-		if (scaling != null) hashCode += scaling.hashCode();
-		hashCode += 37*numUserEvents;
+		int hashCode = 0;
+		if (handleIdentifier != null)
+			hashCode += handleIdentifier.hashCode();
+		if (interactionHistory != null)
+			hashCode += interactionHistory.hashCode();
+		if (nodes != null)
+			hashCode += nodes.hashCode();
+		if (activeNode != null)
+			hashCode += activeNode.hashCode();
+		if (tempRaised != null)
+			hashCode += tempRaised.hashCode();
+		if (landmarks != null)
+			hashCode += landmarks.hashCode();
+		if (scaling != null)
+			hashCode += scaling.hashCode();
+		hashCode += 37 * numUserEvents;
 		return hashCode;
 	}
 }

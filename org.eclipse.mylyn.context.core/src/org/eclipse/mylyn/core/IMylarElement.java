@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,16 +19,16 @@ import org.eclipse.mylar.core.internal.MylarContextRelation;
  * @author Mik Kersten
  */
 public interface IMylarElement extends IMylarObject {
-       
-    public abstract String getHandleIdentifier();
-    
-    public abstract void setHandleIdentifier(String handle);
-   
-    public abstract IMylarContext getContext();
-    
-    public abstract Collection<MylarContextRelation> getRelations();
-        
-    public abstract MylarContextRelation getRelation(String targetHandle);
 
-    public abstract void clearRelations();
+	public abstract String getHandleIdentifier();
+
+	public abstract void setHandleIdentifier(String handle);
+
+	public abstract IMylarContext getContext();
+
+	public abstract Collection<MylarContextRelation> getRelations();
+
+	public abstract MylarContextRelation getRelation(String targetHandle);
+
+	public abstract void clearRelations();
 }

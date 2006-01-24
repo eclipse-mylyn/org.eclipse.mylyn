@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,44 +26,45 @@ import org.eclipse.ui.internal.Workbench;
  */
 public abstract class AbstractCommandMonitor implements IExecutionListener {
 
-    /**
-     * Workbench must be active.
-     */
-    public AbstractCommandMonitor() {
-        try {
-            ICommandService commandService = (ICommandService)Workbench.getInstance().getActiveWorkbenchWindow().getWorkbench().getAdapter(ICommandService.class);
-            commandService.addExecutionListener(this);
-        } catch (NullPointerException npe) {
-            MylarStatusHandler.log("Monitors can not be instantiated until the workbench is active: ", this);  
-        }
-    }
-    
-    public void dispose() {
-        try {
-            ICommandService commandService = (ICommandService)Workbench.getInstance().getActiveWorkbenchWindow().getWorkbench().getAdapter(ICommandService.class);
-            commandService.removeExecutionListener(this);
-        } catch (NullPointerException npe) {
-            MylarStatusHandler.log(npe, "Could not dispose monitor.");  
-        }
-    }
-    
-    public void postExecuteFailure(String commandId, ExecutionException exception) { 
-    	// don't care about this
-    }
+	/**
+	 * Workbench must be active.
+	 */
+	public AbstractCommandMonitor() {
+		try {
+			ICommandService commandService = (ICommandService) Workbench.getInstance().getActiveWorkbenchWindow()
+					.getWorkbench().getAdapter(ICommandService.class);
+			commandService.addExecutionListener(this);
+		} catch (NullPointerException npe) {
+			MylarStatusHandler.log("Monitors can not be instantiated until the workbench is active: ", this);
+		}
+	}
 
-    public void notHandled(String commandId, NotHandledException exception) { 
-    	// don't care about this
-    }     
-    
-    public void postExecuteSuccess(String commandId, Object returnValue) { 
-    	// don't care about this
-    }
+	public void dispose() {
+		try {
+			ICommandService commandService = (ICommandService) Workbench.getInstance().getActiveWorkbenchWindow()
+					.getWorkbench().getAdapter(ICommandService.class);
+			commandService.removeExecutionListener(this);
+		} catch (NullPointerException npe) {
+			MylarStatusHandler.log(npe, "Could not dispose monitor.");
+		}
+	}
 
-    public void preExecute(String commandId, ExecutionEvent event) {
-    	if (commandId != null) handleCommandExecution(commandId, event);
-    } 
-        
-    protected abstract void handleCommandExecution(String commandId, ExecutionEvent event);
+	public void postExecuteFailure(String commandId, ExecutionException exception) {
+		// don't care about this
+	}
+
+	public void notHandled(String commandId, NotHandledException exception) {
+		// don't care about this
+	}
+
+	public void postExecuteSuccess(String commandId, Object returnValue) {
+		// don't care about this
+	}
+
+	public void preExecute(String commandId, ExecutionEvent event) {
+		if (commandId != null)
+			handleCommandExecution(commandId, event);
+	}
+
+	protected abstract void handleCommandExecution(String commandId, ExecutionEvent event);
 }
-
-

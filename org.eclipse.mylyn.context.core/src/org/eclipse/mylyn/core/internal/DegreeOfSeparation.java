@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.core.internal;
 
 import org.eclipse.mylar.core.IDegreeOfSeparation;
@@ -18,9 +19,10 @@ import org.eclipse.mylar.core.IDegreeOfSeparation;
 public class DegreeOfSeparation implements IDegreeOfSeparation {
 
 	private String label;
+
 	private int degree;
-	
-	public DegreeOfSeparation(String label, int degree){
+
+	public DegreeOfSeparation(String label, int degree) {
 		this.label = label;
 		this.degree = degree;
 	}
