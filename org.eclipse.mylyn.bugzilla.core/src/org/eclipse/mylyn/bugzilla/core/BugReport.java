@@ -483,7 +483,8 @@ public class BugReport implements Serializable, IBugzillaBug {
 	}
 
 	public boolean isResolved() {
-		return isResolvedStatus(getAttribute(ATTR_STATUS).getValue());
+		Attribute status = getAttribute(ATTR_STATUS);
+		return status != null && isResolvedStatus(getAttribute(ATTR_STATUS).getValue());
 	}
 
 	/**

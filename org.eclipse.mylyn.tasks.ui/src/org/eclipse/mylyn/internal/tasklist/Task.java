@@ -57,8 +57,6 @@ public class Task implements ITask {
 	private boolean active = false;
 
 	protected String handle = "-1";
-	
-//	protected String repositoryUrl = null;
 
 	private boolean category = false;
 

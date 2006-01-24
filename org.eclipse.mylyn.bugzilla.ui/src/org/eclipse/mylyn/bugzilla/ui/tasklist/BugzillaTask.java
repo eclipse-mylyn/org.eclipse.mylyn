@@ -15,6 +15,7 @@ package org.eclipse.mylar.bugzilla.ui.tasklist;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
@@ -28,6 +29,7 @@ import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
@@ -145,7 +147,8 @@ public class BugzillaTask extends Task {
 	private void initFromHandle() {
 		int id = TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier());
 		String repositoryUrl = getRepositoryUrl();
-//		repositoryUrl = TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
+		// repositoryUrl =
+		// TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
 		if (repositoryUrl != null) {
 			String url = BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
 			if (url != null) {
@@ -580,13 +583,13 @@ public class BugzillaTask extends Task {
 	public String getRepositoryUrl() {
 		return TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
 	}
-	
+
 	@Override
 	public String getUrl() {
 		// fix for bug 103537 - should login automatically, but dont want to
 		// show the login info in the query string
-		return BugzillaRepositoryUtil
-				.getBugUrlWithoutLogin(getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(handle));
+		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(getRepositoryUrl(), TaskRepositoryManager
+				.getTaskIdAsInt(handle));
 	}
 
 	@Override
@@ -653,5 +656,18 @@ public class BugzillaTask extends Task {
 
 	public BugReportSyncState getSyncState() {
 		return syncState;
+	}
+
+	@Override
+	public Date getCompletionDate() {
+		if (bugReport != null) {
+			if (bugReport.isResolved()) {
+				List<Comment> comments = bugReport.getComments();
+				if (comments != null && !comments.isEmpty()) {
+					return comments.get(comments.size()-1).getCreated();
+				}
+			}
+		}
+		return null;
 	}
 }

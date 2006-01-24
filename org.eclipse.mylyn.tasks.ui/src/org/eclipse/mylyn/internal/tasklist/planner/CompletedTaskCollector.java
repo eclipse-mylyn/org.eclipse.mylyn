@@ -25,24 +25,25 @@ import org.eclipse.mylar.tasklist.ITask;
 public class CompletedTaskCollector implements ITaskCollector {
 
 	private Map<String, ITask> completedTasks = new HashMap<String, ITask>();
+
 	private Date periodStartDate;
-//	private long DAY = 24*3600*1000;
-	
+
 	public CompletedTaskCollector(Date periodStartDate) {
 		this.periodStartDate = periodStartDate;
-//		cutOffDate = new Date(new Date().getTime() - prevDays * DAY);
 	}
-	
+
 	public String getLabel() {
 		return "Completed Tasks";
 	}
 
 	public void consumeTask(ITask task) {
-		if (task.isCompleted() && task.getCompletionDate() != null && task.getCompletionDate().compareTo(periodStartDate) > 0 && !completedTasks.containsKey(task.getHandleIdentifier())) {
+		if (task.isCompleted() && task.getCompletionDate() != null
+				&& task.getCompletionDate().compareTo(periodStartDate) > 0
+				&& !completedTasks.containsKey(task.getHandleIdentifier())) {
 			completedTasks.put(task.getHandleIdentifier(), task);
 		}
 	}
-	
+
 	public List<ITask> getTasks() {
 		List<ITask> tasks = new ArrayList<ITask>();
 		tasks.addAll(completedTasks.values());
