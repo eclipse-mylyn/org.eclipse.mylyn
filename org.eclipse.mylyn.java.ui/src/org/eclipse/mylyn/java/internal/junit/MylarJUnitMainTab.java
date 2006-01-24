@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,32 +30,31 @@ import org.eclipse.swt.widgets.Label;
  * @author Mik Kersten
  */
 class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
-	
-	private static final String DESCRIPTION = 
-		"All interesting subclasses of TestCase will be added to the test suite.";
-	 
+
+	private static final String DESCRIPTION = "All interesting subclasses of TestCase will be added to the test suite.";
+
 	private boolean isPdeMode = false;
-	
+
 	public MylarJUnitMainTab(boolean isPdeMode) {
 		this.isPdeMode = isPdeMode;
 	}
-	
-	public void createControl(Composite parent) {	
+
+	public void createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
 		setControl(comp);
 
 		GridLayout topLayout = new GridLayout();
-		topLayout.numColumns= 3;
-		comp.setLayout(topLayout);		
-		
+		topLayout.numColumns = 3;
+		comp.setLayout(topLayout);
+
 		Label label = new Label(comp, SWT.NONE);
 		GridData gd = new GridData();
 		gd.horizontalSpan = 3;
 		label.setLayoutData(gd);
-		
+
 		label.setText(DESCRIPTION);
 	}
-	
+
 	public void performApply(ILaunchConfigurationWorkingCopy config) {
 		if (!isPdeMode) {
 			Set<IType> types = JUnitTestUtil.getTestCasesInContext();
@@ -78,7 +77,7 @@ class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
 	public String getName() {
 		return "JUnit";
 	}
-	
+
 	public Image getImage() {
 		return MylarJavaPlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
 	}

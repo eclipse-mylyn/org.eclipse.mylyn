@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,13 +26,13 @@ import org.eclipse.ui.IWorkbenchWindow;
  * @author Mik Kersten
  */
 public class ActiveSearchViewTracker implements IPartListener2, IWindowListener, IPageListener {
-	
+
 	public void partClosed(IWorkbenchPartReference partRef) {
 		if (partRef.getId().equals(ActiveSearchView.ID)) {
 			MylarPlugin.getContextManager().setActiveSearchEnabled(false);
 		}
 	}
-	
+
 	public void partOpened(IWorkbenchPartReference partRef) {
 		if (partRef.getId().equals(ActiveSearchView.ID)) {
 			MylarPlugin.getContextManager().setActiveSearchEnabled(true);
@@ -42,54 +42,54 @@ public class ActiveSearchViewTracker implements IPartListener2, IWindowListener,
 	public void partDeactivated(IWorkbenchPartReference partRef) {
 
 	}
-	
+
 	public void windowActivated(IWorkbenchWindow window) {
 	}
-	
+
 	public void windowDeactivated(IWorkbenchWindow window) {
 	}
-	
+
 	public void windowClosed(IWorkbenchWindow window) {
 		window.removePageListener(this);
 	}
-	
+
 	public void windowOpened(IWorkbenchWindow window) {
 		window.addPageListener(this);
 	}
-	
+
 	public void partActivated(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void partBroughtToTop(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void pageActivated(IWorkbenchPage page) {
 	}
-	
+
 	public void pageClosed(IWorkbenchPage page) {
 		page.removePartListener(this);
 	}
-	
+
 	public void pageOpened(IWorkbenchPage page) {
 		page.addPartListener(this);
 	}
 
 	public void partHidden(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void partVisible(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void partInputChanged(IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

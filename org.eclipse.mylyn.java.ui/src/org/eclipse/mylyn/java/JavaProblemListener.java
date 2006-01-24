@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,18 +32,22 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		try {
-			if (!MylarPlugin.getContextManager().isContextActive() || MylarPlugin.getContextManager().isContextCapturePaused())
+			if (!MylarPlugin.getContextManager().isContextActive()
+					|| MylarPlugin.getContextManager().isContextCapturePaused())
 				return;
 			for (int i = 0; i < changedResources.length; i++) {
 				IResource resource = changedResources[i];
 				if (resource instanceof IFile) {
 					IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
 					if (javaElement != null) {
-						IMylarElement element = MylarPlugin.getContextManager().getElement(javaElement.getHandleIdentifier());
+						IMylarElement element = MylarPlugin.getContextManager().getElement(
+								javaElement.getHandleIdentifier());
 						if (!javaStructureBridge.containsProblem(element)) {
-							MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
+							MylarPlugin.getContextManager().removeErrorPredictedInterest(element.getHandleIdentifier(),
+									JavaStructureBridge.CONTENT_TYPE, true);
 						} else {
-							MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE, true);
+							MylarPlugin.getContextManager().addErrorPredictedInterest(element.getHandleIdentifier(),
+									JavaStructureBridge.CONTENT_TYPE, true);
 						}
 					}
 				}
@@ -55,7 +59,8 @@ public class JavaProblemListener implements IProblemChangedListener, IPropertyCh
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
-			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
+			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
+					MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
 				enable();
 			} else {
 				disable();

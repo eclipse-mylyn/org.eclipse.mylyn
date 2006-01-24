@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,40 +21,42 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.internal.Workbench;
 
-
 /**
- * Class to activate the inplace Cross Reference view, via
- * the key binding defined in the plugin.xml.
+ * Class to activate the inplace Cross Reference view, via the key binding
+ * defined in the plugin.xml.
+ * 
+ * @author Mik Kersten
  */
 public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDelegate {
 
-    private ActiveSearchQuickView inplaceDialog;
+	private ActiveSearchQuickView inplaceDialog;
 
-    public void dispose() {
-        inplaceDialog = null;
-    }
+	public void dispose() {
+		inplaceDialog = null;
+	}
 
-    public void init(IWorkbenchWindow window) { 
-    	// don't have anything to initialize
-    }
+	public void init(IWorkbenchWindow window) {
+		// don't have anything to initialize
+	}
 
-    public void run(IAction action) {
-        IMylarElement activeNode = MylarPlugin.getContextManager().getActiveElement();
-        
-        Shell parent = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
-        inplaceDialog = new ActiveSearchQuickView(parent);
-//        inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
-        inplaceDialog.setWorkbenchPart(Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart());     
-        inplaceDialog.open(activeNode);      
-    }
+	public void run(IAction action) {
+		IMylarElement activeNode = MylarPlugin.getContextManager().getActiveElement();
 
-    public void selectionChanged(IAction action, ISelection selection) {
-        // Have selected something in the editor - therefore
-        // want to close the inplace view if haven't already done so
-        if (inplaceDialog != null && inplaceDialog.isOpen()) {
-            inplaceDialog.dispose();
-            inplaceDialog = null; 
-        }
-    }
-    
+		Shell parent = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+		inplaceDialog = new ActiveSearchQuickView(parent);
+		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
+		inplaceDialog.setWorkbenchPart(Workbench.getInstance().getActiveWorkbenchWindow().getActivePage()
+				.getActivePart());
+		inplaceDialog.open(activeNode);
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		// Have selected something in the editor - therefore
+		// want to close the inplace view if haven't already done so
+		if (inplaceDialog != null && inplaceDialog.isOpen()) {
+			inplaceDialog.dispose();
+			inplaceDialog = null;
+		}
+	}
+
 }

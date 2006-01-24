@@ -63,7 +63,7 @@ public class ResourceHelper {
 							throw e;
 						}
 						System.gc(); // help windows to really close file
-										// locks
+						// locks
 						try {
 							Thread.sleep(1000); // sleep a second
 						} catch (InterruptedException e1) {

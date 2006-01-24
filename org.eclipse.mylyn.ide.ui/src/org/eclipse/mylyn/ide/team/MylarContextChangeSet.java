@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,8 +38,10 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	private static final String LABEL_PREFIX = "Mylar Task";
 
 	private static final String LABEL_BUG = "Bug ";
-	 
-	private static final String CTX_TITLE = "title"; // HACK: copied from super
+
+	private static final String CTX_TITLE = "title"; // HACK: copied from
+
+	// super
 
 	private boolean suppressInterestContribution = false;
 
@@ -62,32 +64,35 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	}
 
 	/**
-	 * Encodes the handle in the title, since init won't get called on this class.
+	 * Encodes the handle in the title, since init won't get called on this
+	 * class.
 	 */
 	@Override
-    public void save(Preferences prefs) {
-    	super.save(prefs);
-    	prefs.put(CTX_TITLE, getTitleForPersistance());
-    }
+	public void save(Preferences prefs) {
+		super.save(prefs);
+		prefs.put(CTX_TITLE, getTitleForPersistance());
+	}
 
 	private String getTitleForPersistance() {
 		return getTitle() + " (" + task.getHandleIdentifier() + ")";
 	}
-	
+
 	public static String getHandleFromPersistedTitle(String title) {
 		int delimStart = title.lastIndexOf('(');
 		int delimEnd = title.lastIndexOf(')');
 		if (delimStart != -1 && delimEnd != -1) {
-			return title.substring(delimStart+1, delimEnd);
+			return title.substring(delimStart + 1, delimEnd);
 		} else {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String getComment() {
-		String completedPrefix = MylarIdePlugin.getDefault().getPreferenceStore().getString(MylarIdePlugin.COMMIT_PREFIX_COMPLETED);
-		String progressPrefix = MylarIdePlugin.getDefault().getPreferenceStore().getString(MylarIdePlugin.COMMIT_PREFIX_PROGRESS);
+		String completedPrefix = MylarIdePlugin.getDefault().getPreferenceStore().getString(
+				MylarIdePlugin.COMMIT_PREFIX_COMPLETED);
+		String progressPrefix = MylarIdePlugin.getDefault().getPreferenceStore().getString(
+				MylarIdePlugin.COMMIT_PREFIX_PROGRESS);
 		String comment = "";
 		comment = generateComment(task, completedPrefix, progressPrefix);
 		return comment;
@@ -96,14 +101,14 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void remove(IResource resource) {
 		super.remove(resource);
-//		resources.remove(resource);
+		// resources.remove(resource);
 	}
 
 	@Override
 	public void remove(IResource[] newResources) {
 		super.remove(newResources);
-//		for (int i = 0; i < newResources.length; i++)
-//			resources.remove(newResources[i]);
+		// for (int i = 0; i < newResources.length; i++)
+		// resources.remove(newResources[i]);
 	}
 
 	@Override
@@ -112,7 +117,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 		if (!suppressInterestContribution) {
 			MylarIdePlugin.getDefault().getInterestUpdater().addResourceToContext(info.getLocal());
 		}
-//		resources.add(info.getLocal());
+		// resources.add(info.getLocal());
 	}
 
 	@Override
@@ -123,17 +128,18 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public void add(IResource[] newResources) throws TeamException {
 		super.add(newResources);
-//		for (int i = 0; i < newResources.length; i++) resources.add(newResources[i]);
+		// for (int i = 0; i < newResources.length; i++)
+		// resources.add(newResources[i]);
 	}
 
 	public void restoreResources(IResource[] newResources) throws TeamException {
 		suppressInterestContribution = true;
 		try {
 			super.add(newResources);
-//			resources = new ArrayList<IResource>();
-//			for (int i = 0; i < newResources.length; i++) {
-//				resources.add(newResources[i]);
-//			}
+			// resources = new ArrayList<IResource>();
+			// for (int i = 0; i < newResources.length; i++) {
+			// resources.add(newResources[i]);
+			// }
 			setComment(getComment());
 		} catch (TeamException e) {
 			throw e;
@@ -141,19 +147,20 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 			suppressInterestContribution = false;
 		}
 	}
-	
+
 	@Override
 	public IResource[] getResources() {
-//		return super.getResources();
+		// return super.getResources();
 		List<IResource> allResources = getAllResourcesInChangeContext();
 		return allResources.toArray(new IResource[allResources.size()]);
 	}
-	  
+
 	public List<IResource> getAllResourcesInChangeContext() {
 		Set<IResource> allResources = new HashSet<IResource>();
 		allResources.addAll(Arrays.asList(super.getResources()));
 		if (MylarIdePlugin.getDefault() != null && task.isActive()) {
-			// TODO: if super is always managed correctly should remove following line
+			// TODO: if super is always managed correctly should remove
+			// following line
 			allResources.addAll(MylarIdePlugin.getDefault().getInterestingResources());
 		}
 		return new ArrayList<IResource>(allResources);
@@ -222,7 +229,7 @@ public class MylarContextChangeSet extends ActiveChangeSet {
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof MylarContextChangeSet && task != null) {
-			MylarContextChangeSet changeSet = (MylarContextChangeSet)object;
+			MylarContextChangeSet changeSet = (MylarContextChangeSet) object;
 			return task.equals(changeSet.getTask());
 		} else {
 			return super.equals(object);

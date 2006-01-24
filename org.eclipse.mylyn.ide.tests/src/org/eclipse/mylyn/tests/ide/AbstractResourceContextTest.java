@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,11 +27,11 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  * @author Mik Kersten
  */
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
-	
+
 	protected MylarContextManager manager = MylarPlugin.getContextManager();
 
 	protected ResourceSelectionMonitor monitor = new ResourceSelectionMonitor();
-	
+
 	protected ResourceStructureBridge structureBridge = new ResourceStructureBridge();
 
 	protected TestProject project;
@@ -39,9 +39,9 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 	protected MylarContext context;
 
 	protected ScalingFactors scaling = new ScalingFactors();
-	
+
 	protected String taskId = this.getClass().getName();
-	
+
 	protected ResourceNavigator navigator;
 
 	@Override
@@ -53,7 +53,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		context.reset();
 		manager.contextActivated(context);
 		MylarUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
-		navigator = (ResourceNavigator)openView(NavigatorRefreshListener.ID_NAVIGATOR);
+		navigator = (ResourceNavigator) openView(NavigatorRefreshListener.ID_NAVIGATOR);
 		assertNotNull(navigator);
 	}
 

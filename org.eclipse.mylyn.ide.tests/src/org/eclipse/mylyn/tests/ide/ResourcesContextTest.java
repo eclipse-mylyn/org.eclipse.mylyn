@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.mylar.ide.MylarIdePlugin;
  * @author Mik Kersten
  */
 public class ResourcesContextTest extends AbstractResourceContextTest {
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -39,12 +39,12 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 		super.tearDown();
 		MylarIdePlugin.getDefault().getInterestUpdater().setSyncExec(false);
 	}
-	
+
 	public void testResourceSelect() throws CoreException {
 		IFile file = project.getProject().getFile("file");
 		file.create(null, true, null);
 		assertTrue(file.exists());
-		
+
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
 		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
@@ -54,7 +54,7 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 		IFile file = project.getProject().getFile("new-file.txt");
 		file.create(null, true, null);
 		assertTrue(file.exists());
-		
+
 		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 	}
@@ -63,29 +63,31 @@ public class ResourcesContextTest extends AbstractResourceContextTest {
 		IFolder folder = project.getProject().getFolder("folder");
 		folder.create(true, true, null);
 		assertTrue(folder.exists());
-		
+
 		IMylarElement element = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
 		assertTrue(element.getInterest().isInteresting());
 	}
-	
+
 	public void testDecrementOfFile() throws CoreException, InvocationTargetException, InterruptedException {
 		IFolder folder = project.getProject().getFolder("folder");
-		folder.create(true, true, null); 
+		folder.create(true, true, null);
 		IFile file = project.getProject().getFile(new Path("folder/foo.txt"));
 		file.create(null, true, null);
-		
+
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
 		monitor.selectionChanged(navigator, new StructuredSelection(folder));
-		
-		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
-		IMylarElement folderElement = MylarPlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
-        
-        assertTrue(fileElement.getInterest().isInteresting());
-		assertTrue(folderElement.getInterest().isInteresting());
-        
-        MylarPlugin.getContextManager().manipulateInterestForNode(folderElement, false, false, "test");
 
-        assertFalse(folderElement.getInterest().isInteresting());
-        assertFalse(fileElement.getInterest().isInteresting());
-    }
+		IMylarElement fileElement = MylarPlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
+		IMylarElement folderElement = MylarPlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(folder));
+
+		assertTrue(fileElement.getInterest().isInteresting());
+		assertTrue(folderElement.getInterest().isInteresting());
+
+		MylarPlugin.getContextManager().manipulateInterestForNode(folderElement, false, false, "test");
+
+		assertFalse(folderElement.getInterest().isInteresting());
+		assertFalse(fileElement.getInterest().isInteresting());
+	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,21 +30,20 @@ public class ProblemsListInterestFilter extends InterestFilter {
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (!(element instanceof ConcreteMarker)) {
 			if (element instanceof MarkerNode) {
-				MarkerNode markerNode = (MarkerNode)element;
+				MarkerNode markerNode = (MarkerNode) element;
 				MarkerNode[] children = markerNode.getChildren();
 				for (int i = 0; i < children.length; i++) {
 					MarkerNode node = children[i];
 					if (node instanceof ConcreteMarker) {
-						return isInteresting((ConcreteMarker)node, viewer, parent);
+						return isInteresting((ConcreteMarker) node, viewer, parent);
 					} else {
 						return true;
 					}
 				}
 			}
-		} else { 
+		} else {
 			ConcreteMarker marker = (ConcreteMarker) element;
-			if ((marker instanceof ProblemMarker)
-				&& ((ProblemMarker)marker).getSeverity() == IMarker.SEVERITY_ERROR) {
+			if ((marker instanceof ProblemMarker) && ((ProblemMarker) marker).getSeverity() == IMarker.SEVERITY_ERROR) {
 				return true;
 			} else {
 				if (!MylarPlugin.getContextManager().isContextActive()) {
@@ -57,7 +56,8 @@ public class ProblemsListInterestFilter extends InterestFilter {
 	}
 
 	private boolean isInteresting(ConcreteMarker marker, Viewer viewer, Object parent) {
-		String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension()).getHandleForOffsetInObject(marker, 0);
+		String handle = MylarPlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension())
+				.getHandleForOffsetInObject(marker, 0);
 		if (handle == null) {
 			return false;
 		} else {

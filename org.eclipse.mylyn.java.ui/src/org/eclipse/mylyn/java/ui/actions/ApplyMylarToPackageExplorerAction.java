@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,28 +31,29 @@ import org.eclipse.mylar.ui.actions.AbstractApplyMylarAction;
 public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction implements IPropertyChangeListener {
 
 	public static ApplyMylarToPackageExplorerAction INSTANCE;
-	
+
 	public void init(IAction action) {
 		super.init(action);
 	}
-	
+
 	public ApplyMylarToPackageExplorerAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
 		configureAction();
 	}
-	
+
 	@Override
 	public void update() {
 		super.update();
 		configureAction();
 	}
-	
+
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
-		if (part != null) viewers.add(part.getTreeViewer());
+		if (part != null)
+			viewers.add(part.getTreeViewer());
 		return viewers;
 	}
 
@@ -67,7 +68,8 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 	}
 
 	private void configureAction() {
-		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
+		if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
+				MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_FILTER_ENABLE)) {
 			MylarUiPlugin.getDefault().getViewerManager().addManagedAction(this);
 		} else {
 			MylarUiPlugin.getDefault().getViewerManager().removeManagedAction(this);
@@ -78,4 +80,3 @@ public class ApplyMylarToPackageExplorerAction extends AbstractApplyMylarAction 
 		// ignore
 	}
 }
-

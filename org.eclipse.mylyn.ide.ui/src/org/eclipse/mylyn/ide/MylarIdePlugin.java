@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,7 +76,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		initPreferenceDefaults();
-		
+
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -123,7 +123,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			}
 		});
 	}
-	
+
 	private void initPreferenceDefaults() {
 		getPreferenceStore().setDefault(CHANGE_SET_MANAGE, true);
 
@@ -142,7 +142,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			}
 		}
 	}
-	
+
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
@@ -151,7 +151,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 			MylarPlugin.getDefault().getSelectionMonitors().remove(resourceSelectionMonitor);
 			MylarPlugin.getContextManager().removeListener(navigatorRefreshListener);
 			changeSetManager.disable();
-			
+
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {

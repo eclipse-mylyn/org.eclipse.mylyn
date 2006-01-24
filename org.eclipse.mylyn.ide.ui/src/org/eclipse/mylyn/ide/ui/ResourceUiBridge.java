@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 20, 2005
-  */
+
 package org.eclipse.mylar.ide.ui;
 
 import java.util.Collections;
@@ -40,69 +38,70 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * @author Mik Kersten
  */
 public class ResourceUiBridge implements IMylarUiBridge {
- 
-    public void open(IMylarElement node) {
-        IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
-        if (adapter == null) return;
-        IResource resource = (IResource)adapter.getObjectForHandle(node.getHandleIdentifier());
-        if (resource instanceof IFile && resource.exists()) {
-	        internalOpenEditor((IFile)resource, true);
-        }
-    }
+
+	public void open(IMylarElement node) {
+		IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
+		if (adapter == null)
+			return;
+		IResource resource = (IResource) adapter.getObjectForHandle(node.getHandleIdentifier());
+		if (resource instanceof IFile && resource.exists()) {
+			internalOpenEditor((IFile) resource, true);
+		}
+	}
 
 	public void setContextCapturePaused(boolean paused) {
 		// TODO Auto-generated method stub
-		
+
 	}
-    
+
 	public void restoreEditor(IMylarElement document) {
 		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
 		if (resource instanceof IFile) {
-			internalOpenEditor((IFile)resource, false);
+			internalOpenEditor((IFile) resource, false);
 		}
 	}
-	
+
 	private void internalOpenEditor(IFile file, boolean activate) {
 		try {
 			IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
 			IEditorDescriptor editorDescriptor = IDE.getDefaultEditor(file);
 			if (editorDescriptor != null && editorDescriptor.isInternal()) {
-				IDE.openEditor(activePage, (IFile)file, activate);
-			} 
+				IDE.openEditor(activePage, (IFile) file, activate);
+			}
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to open editor for: " + file, false);
 		}
 	}
-	
-    public void close(IMylarElement node) {
-        IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-        if (page != null) {
-            IEditorReference[] references = page.getEditorReferences();
-            for (int i = 0; i < references.length; i++) {
-                IEditorPart part = references[i].getEditor(false);
-                if (part != null) {
-                    if (part instanceof AbstractTextEditor) {
-                       ((AbstractTextEditor)part).close(false);
-                    } else if (part instanceof FormEditor) {
-                        ((FormEditor)part).close(false);
-                    }    
-                }
-            }
-        }
-    }
 
-    public boolean acceptsEditor(IEditorPart editorPart) {
-        return false;
-    }
+	public void close(IMylarElement node) {
+		IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		if (page != null) {
+			IEditorReference[] references = page.getEditorReferences();
+			for (int i = 0; i < references.length; i++) {
+				IEditorPart part = references[i].getEditor(false);
+				if (part != null) {
+					if (part instanceof AbstractTextEditor) {
+						((AbstractTextEditor) part).close(false);
+					} else if (part instanceof FormEditor) {
+						((FormEditor) part).close(false);
+					}
+				}
+			}
+		}
+	}
 
-    public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
-        return Collections.emptyList();
-    }
+	public boolean acceptsEditor(IEditorPart editorPart) {
+		return false;
+	}
 
-    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
-    	// no outline to refresh
-        
-    }
+	public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
+		return Collections.emptyList();
+	}
+
+	public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) {
+		// no outline to refresh
+
+	}
 
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;

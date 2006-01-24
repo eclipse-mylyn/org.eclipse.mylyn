@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,12 +27,12 @@ import org.eclipse.ui.PlatformUI;
 public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private static boolean asyncExecMode = true;
-	
+
 	public void elementChanged(ElementChangedEvent event) {
 		IJavaElementDelta delta = event.getDelta();
 		handleDelta(delta.getAffectedChildren());
 	}
-	
+
 	/**
 	 * Only handles first addition/removal
 	 */
@@ -43,20 +43,24 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			for (int i = 0; i < delta.length; i++) {
 				IJavaElementDelta child = delta[i];
 				if (child.getKind() == IJavaElementDelta.ADDED) {
-					if (added == null) added = child.getElement();
+					if (added == null)
+						added = child.getElement();
 				} else if (child.getKind() == IJavaElementDelta.REMOVED) {
-					if (removed == null) removed = child.getElement();
-				} 			
+					if (removed == null)
+						removed = child.getElement();
+				}
 				handleDelta(child.getAffectedChildren());
 			}
-			
-			if (added != null && removed != null) { 
+
+			if (added != null && removed != null) {
 				IMylarElement element = MylarPlugin.getContextManager().getElement(removed.getHandleIdentifier());
-				if (element != null) resetHandle(element, added.getHandleIdentifier());
+				if (element != null)
+					resetHandle(element, added.getHandleIdentifier());
 			} else if (removed != null) {
 				IMylarElement element = MylarPlugin.getContextManager().getElement(removed.getHandleIdentifier());
-				if (element != null) delete(element);
-			} 
+				if (element != null)
+					delete(element);
+			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "delta update failed", false);
 		}
@@ -68,26 +72,26 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
-			    workbench.getDisplay().asyncExec(new Runnable() {
-			        public void run() { 
-			        	MylarPlugin.getContextManager().updateHandle(element, newHandle);
-			        }
-			    });
+				workbench.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						MylarPlugin.getContextManager().updateHandle(element, newHandle);
+					}
+				});
 			}
 		}
 	}
-	
+
 	private void delete(final IMylarElement element) {
 		if (!asyncExecMode) {
 			MylarPlugin.getContextManager().delete(element);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
-			    workbench.getDisplay().asyncExec(new Runnable() {
-			        public void run() { 
-			        	MylarPlugin.getContextManager().delete(element);
-			        }
-			    });
+				workbench.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						MylarPlugin.getContextManager().delete(element);
+					}
+				});
 			}
 		}
 	}

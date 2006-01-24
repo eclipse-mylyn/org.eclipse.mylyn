@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,18 +35,18 @@ public class MylarEditorManager implements IMylarContextListener {
 
 	public void contextActivated(IMylarContext context) {
 		if (MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS)) {
-	        Workbench workbench = (Workbench)PlatformUI.getWorkbench();
-			try {				
+			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
+			try {
 				MylarPlugin.getContextManager().setContextCapturePaused(true);
 				for (IMylarUiBridge bridge : MylarUiPlugin.getDefault().getUiBridges()) {
 					bridge.setContextCapturePaused(true);
 				}
-		        workbench.largeUpdateStart();
-		        
-				List <IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
+				workbench.largeUpdateStart();
+
+				List<IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
 				int threshold = MylarUiPlugin.getPrefs().getInt(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM);
-				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < threshold-1; opened++) {
+				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
 					IMylarElement document = (IMylarElement) iter.next();
 					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(document.getContentType());
 					bridge.restoreEditor(document);
@@ -54,35 +54,36 @@ public class MylarEditorManager implements IMylarContextListener {
 				}
 				IMylarElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
-		            MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
-		        }
+					MylarUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
+				}
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "failed to open editors on activation", false);
-			} finally {				
+			} finally {
 				MylarPlugin.getContextManager().setContextCapturePaused(false);
 				for (IMylarUiBridge bridge : MylarUiPlugin.getDefault().getUiBridges()) {
 					bridge.setContextCapturePaused(false);
 				}
 				workbench.largeUpdateEnd();
 			}
-    	}
+		}
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-    	if (MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS)) {
-        	closeAllEditors();
-      	} 
+		if (MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS)) {
+			closeAllEditors();
+		}
 	}
 
 	public void closeAllEditors() {
-        try {
-            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-            if (page != null) page.closeAllEditors(true);
-        } catch (Throwable t) {
-            MylarStatusHandler.fail(t, "Could not auto close editor.", false);
-        } 
+		try {
+			IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+			if (page != null)
+				page.closeAllEditors(true);
+		} catch (Throwable t) {
+			MylarStatusHandler.fail(t, "Could not auto close editor.", false);
+		}
 	}
-	
+
 	public void presentationSettingsChanging(UpdateKind kind) {
 		// ignore
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.ide.team.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -30,7 +31,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private Button changeSetsManage;
-	
+
 	private Text commitPrefixCompleted = null;
 
 	private Text commitPrefixProgress = null;
@@ -60,7 +61,7 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 		getPreferenceStore().setValue(MylarIdePlugin.COMMIT_PREFIX_COMPLETED, commitPrefixCompleted.getText());
 		getPreferenceStore().setValue(MylarIdePlugin.COMMIT_PREFIX_PROGRESS, commitPrefixProgress.getText());
 		getPreferenceStore().setValue(MylarIdePlugin.CHANGE_SET_MANAGE, changeSetsManage.getSelection());
-		
+
 		if (changeSetsManage.getSelection()) {
 			MylarIdePlugin.getDefault().getChangeSetManager().enable();
 		} else {
@@ -101,13 +102,13 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 		changeSetsManage.setText("Manage change sets with task context");
 		changeSetsManage.setSelection(getPreferenceStore().getBoolean(MylarIdePlugin.CHANGE_SET_MANAGE));
 	}
-	
+
 	private void createCommitGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText("Task Context Commit");
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		Label completedLabel = createLabel(group, "Completed task prefix: ");
 		completedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 
@@ -115,7 +116,7 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 		commitPrefixCompleted = new Text(group, SWT.BORDER);
 		commitPrefixCompleted.setText(completedPrefix);
 		commitPrefixCompleted.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		Label progressLabel = createLabel(group, "In progress task prefix: ");
 		progressLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 

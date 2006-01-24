@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,25 +27,27 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 
 	private static ApplyMylarToNavigatorAction INSTANCE;
-	
+
 	public ApplyMylarToNavigatorAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
 	}
-	
+
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
-        if (navigator != null) viewers.add(navigator.getTreeViewer());
+		if (navigator != null)
+			viewers.add(navigator.getTreeViewer());
 		return viewers;
 	}
 
-//	@Override
-//	public void refreshViewer() {
-//		ResourceNavigator navigator = NavigatorRefreshListener.getResourceNavigator();
-//        if (navigator != null) navigator.getTreeViewer().refresh();
-//	}
+	// @Override
+	// public void refreshViewer() {
+	// ResourceNavigator navigator =
+	// NavigatorRefreshListener.getResourceNavigator();
+	// if (navigator != null) navigator.getTreeViewer().refresh();
+	// }
 
 	public static ApplyMylarToNavigatorAction getDefault() {
 		return INSTANCE;
@@ -53,6 +55,6 @@ public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

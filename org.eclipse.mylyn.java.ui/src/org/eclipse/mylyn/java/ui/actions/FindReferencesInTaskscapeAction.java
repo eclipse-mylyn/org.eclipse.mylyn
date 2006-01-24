@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,28 +36,30 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Shawn Minto
  */
-public class FindReferencesInTaskscapeAction extends Action implements IWorkbenchWindowActionDelegate{
-	
+public class FindReferencesInTaskscapeAction extends Action implements IWorkbenchWindowActionDelegate {
+
 	public void run(IAction action) {
 		IEditorPart editor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		if(editor != null && editor instanceof JavaEditor) {
+		if (editor != null && editor instanceof JavaEditor) {
 			IJavaElement[] resolved;
 			try {
-				resolved = SelectionConverter.codeResolve((JavaEditor)editor);
+				resolved = SelectionConverter.codeResolve((JavaEditor) editor);
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
 					IJavaElement element = resolved[0];
-					
+
 					MylarWorkingSetUpdater updater = MylarPlugin.getDefault().getWorkingSetUpdater();
-					if(updater != null && updater.getWorkingSet() != null) {
-						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(updater.getWorkingSet(), false);
-						JavaSearchQuery query = new JavaSearchQuery(new ElementQuerySpecification(element, IJavaSearchConstants.REFERENCES, scope, "Mylar Current Task Context"));
+					if (updater != null && updater.getWorkingSet() != null) {
+						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(
+								updater.getWorkingSet(), false);
+						JavaSearchQuery query = new JavaSearchQuery(new ElementQuerySpecification(element,
+								IJavaSearchConstants.REFERENCES, scope, "Mylar Current Task Context"));
 						if (query != null) {
 							NewSearchUI.activateSearchResultView();
-							
+
 							if (query.canRunInBackground()) {
 								NewSearchUI.runQueryInBackground(query);
 							} else {
-								IProgressService progressService= PlatformUI.getWorkbench().getProgressService();
+								IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 								NewSearchUI.runQueryInForeground(progressService, query);
 							}
 						}
@@ -66,14 +68,17 @@ public class FindReferencesInTaskscapeAction extends Action implements IWorkbenc
 			} catch (JavaModelException e) {
 				// ignore search if can't resolve
 			}
-		
+
 		}
-		
+
 	}
 
-	public void dispose() {}
+	public void dispose() {
+	}
 
-	public void init(IWorkbenchWindow window) {}
+	public void init(IWorkbenchWindow window) {
+	}
 
-	public void selectionChanged(IAction action, ISelection selection) {}
+	public void selectionChanged(IAction action, ISelection selection) {
+	}
 }

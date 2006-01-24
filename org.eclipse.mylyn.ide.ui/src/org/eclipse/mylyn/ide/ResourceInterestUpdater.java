@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ public class ResourceInterestUpdater {
 	public static final String SOURCE_ID = "org.eclipse.mylar.ide.resource.interest.updater";
 
 	private boolean syncExec = false;
-	
+
 	public void addResourceToContext(final IResource resource) {
 		try {
 			if (syncExec) {
@@ -47,28 +47,26 @@ public class ResourceInterestUpdater {
 	}
 
 	private void internalAddResourceToContext(IResource resource) {
-		if (!acceptResource(resource)) return;
-		
+		if (!acceptResource(resource))
+			return;
+
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(resource);
 		String handle = bridge.getHandleIdentifier(resource);
 
 		if (handle != null) {
 			IMylarElement element = MylarPlugin.getContextManager().getElement(handle);
 			if (element != null && !element.getInterest().isInteresting()) {
-				InteractionEvent interactionEvent = new InteractionEvent(
-						InteractionEvent.Kind.SELECTION,
-						bridge.getContentType(), 
-						handle, 
-						SOURCE_ID);
+				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
+						.getContentType(), handle, SOURCE_ID);
 				MylarPlugin.getContextManager().handleInteractionEvent(interactionEvent, true);
 			}
 		}
 	}
-	
+
 	private boolean acceptResource(IResource resource) {
 		return resource.isAccessible() && !resource.isDerived() && !resource.isPhantom();
 	}
-	
+
 	/**
 	 * For testing.
 	 */

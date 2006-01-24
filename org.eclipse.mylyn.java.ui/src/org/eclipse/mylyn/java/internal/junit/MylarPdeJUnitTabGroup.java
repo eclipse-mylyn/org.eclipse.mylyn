@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,28 +30,21 @@ import org.eclipse.pde.ui.launcher.TracingTab;
  * @author Mik Kersten
  */
 public class MylarPdeJUnitTabGroup extends AbstractPDELaunchConfigurationTabGroup {
-	
+
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = null;
 		if (PDECore.getDefault().getModelManager().isOSGiRuntime()) {
-			tabs = new ILaunchConfigurationTab[]{
-//					new JUnitMainTab(),
-					new MylarJUnitMainTab(true),
-					new PluginJUnitMainTab(), 
-					new JavaArgumentsTab(),
-					new PluginsTab(false),	
-					 new ConfigurationTab(true), new TracingTab(),
-					new EnvironmentTab(), new SourceLookupTab(), 
-					new CommonTab()};
+			tabs = new ILaunchConfigurationTab[] {
+					// new JUnitMainTab(),
+					new MylarJUnitMainTab(true), new PluginJUnitMainTab(), new JavaArgumentsTab(),
+					new PluginsTab(false), new ConfigurationTab(true), new TracingTab(), new EnvironmentTab(),
+					new SourceLookupTab(), new CommonTab() };
 		} else {
-			tabs = new ILaunchConfigurationTab[]{
-//					new JUnitMainTab(),
-					new MylarJUnitMainTab(true), 
-					new PluginJUnitMainTab(), 
-					new JavaArgumentsTab(),
-					new PluginsTab(false),
-					new TracingTab(), new EnvironmentTab(),
-					new SourceLookupTab(), new CommonTab()};
+			tabs = new ILaunchConfigurationTab[] {
+					// new JUnitMainTab(),
+					new MylarJUnitMainTab(true), new PluginJUnitMainTab(), new JavaArgumentsTab(),
+					new PluginsTab(false), new TracingTab(), new EnvironmentTab(), new SourceLookupTab(),
+					new CommonTab() };
 		}
 		setTabs(tabs);
 	}

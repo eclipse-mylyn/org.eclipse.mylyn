@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,8 @@ public class AllJavaTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylar.tests.java");
-		
-		//$JUnit-BEGIN$
+
+		// $JUnit-BEGIN$
 		suite.addTestSuite(CommitMessageTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
@@ -43,17 +43,17 @@ public class AllJavaTests {
 		suite.addTestSuite(ActiveHierarchyTest.class);
 		suite.addTestSuite(ActiveSearchTest.class);
 		suite.addTestSuite(ProblemsListTest.class);
-        suite.addTestSuite(InterestFilterTest.class);
-        suite.addTestSuite(ContextManagerTest.class);
-        suite.addTestSuite(JavaStructureTest.class);
-        suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
-        suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
-        suite.addTestSuite(JavaReferencesSearchTest.class);
-        suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
-        suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
-		//$JUnit-END$
-        
-        MylarIdePlugin.getDefault().setResourceMonitoringEnabled(true);
+		suite.addTestSuite(InterestFilterTest.class);
+		suite.addTestSuite(ContextManagerTest.class);
+		suite.addTestSuite(JavaStructureTest.class);
+		suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
+		suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
+		suite.addTestSuite(JavaReferencesSearchTest.class);
+		suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
+		suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
+		// $JUnit-END$
+
+		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(true);
 		return suite;
-	} 
+	}
 }

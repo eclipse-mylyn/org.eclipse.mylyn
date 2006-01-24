@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,12 +20,13 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
  * @author Mik Kersten
  */
 public class ShowQualifiedNamesAction extends Action {
-    	
+
 	public static final String LABEL = "Qualify Member Names";
+
 	public static final String ID = "org.eclipse.mylar.ui.views.elements.qualify";
-	
+
 	private ActiveSearchView view;
-	
+
 	public ShowQualifiedNamesAction(ActiveSearchView view) {
 		super(LABEL, Action.AS_CHECK_BOX);
 		this.view = view;
@@ -35,15 +36,15 @@ public class ShowQualifiedNamesAction extends Action {
 		setImageDescriptor(MylarImages.QUALIFY_NAMES);
 		update(MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
 	}
-	
+
 	public void update(boolean on) {
 		view.setQualifiedNameMode(on);
 		setChecked(on);
-		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on); 
+		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on);
 	}
-	
+
 	@Override
-	public void run() { 
+	public void run() {
 		update(!MylarUiPlugin.getDefault().getPreferenceStore().getBoolean(ID));
 	}
 }

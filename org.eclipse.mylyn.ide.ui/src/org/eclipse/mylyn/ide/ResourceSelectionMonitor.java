@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on Apr 20, 2005
-  */
+ */
 package org.eclipse.mylar.ide;
 
 import org.eclipse.core.internal.resources.File;
@@ -31,29 +31,29 @@ import org.eclipse.ui.part.EditorPart;
 public class ResourceSelectionMonitor extends AbstractUserInteractionMonitor {
 
 	@Override
-    protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
-        if (selection instanceof StructuredSelection) {
-            StructuredSelection structuredSelection = (StructuredSelection)selection;
-          
-            Object selectedObject = structuredSelection.getFirstElement();
-            if (selectedObject instanceof File) { 
-                File file = (File)selectedObject;
-                super.handleElementSelection(part, file);
-            }       
-        } else if (selection instanceof TextSelection) {
-        	if (part instanceof EditorPart) {
-        		try {
-	        		Object object = ((EditorPart)part).getEditorInput().getAdapter(IResource.class);
-	        		if (object instanceof IFile) {
-	        			IFile file = (IFile)object;
-	        			if (!MylarPlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
-		        			super.handleElementEdit(part, object);
-	        			}
-	        		}
-        		} catch (Throwable t) {
-        			MylarStatusHandler.fail(t, "failed to resolve resource edit", false);
-        		}
-        	}
-        }
-    }
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+		if (selection instanceof StructuredSelection) {
+			StructuredSelection structuredSelection = (StructuredSelection) selection;
+
+			Object selectedObject = structuredSelection.getFirstElement();
+			if (selectedObject instanceof File) {
+				File file = (File) selectedObject;
+				super.handleElementSelection(part, file);
+			}
+		} else if (selection instanceof TextSelection) {
+			if (part instanceof EditorPart) {
+				try {
+					Object object = ((EditorPart) part).getEditorInput().getAdapter(IResource.class);
+					if (object instanceof IFile) {
+						IFile file = (IFile) object;
+						if (!MylarPlugin.getDefault().getKnownContentTypes().contains(file.getFileExtension())) {
+							super.handleElementEdit(part, object);
+						}
+					}
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "failed to resolve resource edit", false);
+				}
+			}
+		}
+	}
 }

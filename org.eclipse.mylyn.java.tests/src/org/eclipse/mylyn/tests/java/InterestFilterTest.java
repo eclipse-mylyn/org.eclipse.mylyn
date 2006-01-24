@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,29 +24,30 @@ import org.eclipse.mylar.ui.InterestFilter;
 public class InterestFilterTest extends AbstractJavaContextTest {
 
 	private InterestFilter filter;
+
 	private PackageExplorerPart explorer;
-	
+
 	public void testInterestFilter() throws JavaModelException {
 		explorer = PackageExplorerPart.openInActivePerspective();
-    	assertNotNull(explorer);
-    	
+		assertNotNull(explorer);
+
 		ApplyMylarToPackageExplorerAction.getDefault().update(true);
-        filter = ApplyMylarToPackageExplorerAction.getDefault().getInterestFilter();
-        assertNotNull(filter);
-        
-        IMethod m1 = type1.createMethod("public void m10() { }", null, true, null);
-        
-        assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
+		filter = ApplyMylarToPackageExplorerAction.getDefault().getInterestFilter();
+		assertNotNull(filter);
+
+		IMethod m1 = type1.createMethod("public void m10() { }", null, true, null);
+
+		assertFalse(filter.select(explorer.getTreeViewer(), null, type1));
 		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-        manager.contextActivated(context);
+		manager.contextActivated(context);
 
-        monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
-        assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
+		monitor.selectionChanged(PackageExplorerPart.getFromActivePerspective(), new StructuredSelection(type1));
+		assertTrue(filter.select(explorer.getTreeViewer(), null, type1));
 
-        assertFalse(filter.select(explorer.getTreeViewer(), null, m1));
-        
-        filter.setExcludedMatches("*1*");
-        assertTrue(filter.select(explorer.getTreeViewer(), null, m1));
+		assertFalse(filter.select(explorer.getTreeViewer(), null, m1));
+
+		filter.setExcludedMatches("*1*");
+		assertTrue(filter.select(explorer.getTreeViewer(), null, m1));
 	}
-	
+
 }

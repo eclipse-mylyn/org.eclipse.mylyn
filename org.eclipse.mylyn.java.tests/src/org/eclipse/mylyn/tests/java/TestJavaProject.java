@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -161,9 +161,9 @@ public class TestJavaProject {
 	}
 
 	public void waitForIndexer() throws JavaModelException {
-		new SearchEngine().searchAllTypeNames(null, null, SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS, SearchEngine
-				.createJavaSearchScope(new IJavaElement[0]), new TypeNameRequestor() {
-			// nothing needs to be done here...we accept everything
-		}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+		new SearchEngine().searchAllTypeNames(null, null, SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS,
+				SearchEngine.createJavaSearchScope(new IJavaElement[0]), new TypeNameRequestor() {
+					// nothing needs to be done here...we accept everything
+				}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 	}
 }

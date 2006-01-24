@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,129 +67,134 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
  */
 public class ActiveSearchView extends ViewPart {
 
-    private static final String STOP_JOBS_LABEL = "Stop Active Search Jobs";
+	private static final String STOP_JOBS_LABEL = "Stop Active Search Jobs";
 
 	public static final String ID = "org.eclipse.mylar.ui.views.active.search";
-	
-    private TreeViewer viewer;
-    private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
-    private DelegatingContextLabelProvider labelProvider = new DelegatingContextLabelProvider();
-    
-    /**
-     * For testing.
-     */
+
+	private TreeViewer viewer;
+
+	private List<ToggleRelationshipProviderAction> relationshipProviderActions = new ArrayList<ToggleRelationshipProviderAction>();
+
+	private DelegatingContextLabelProvider labelProvider = new DelegatingContextLabelProvider();
+
+	/**
+	 * For testing.
+	 */
 	private boolean syncExecForTesting = true;
-    
-    private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() { 
-        public void interestChanged(IMylarElement node) { 
-            refresh(node, false);
-        } 
-        
-        public void interestChanged(List<IMylarElement> nodes) {
-            refresh(nodes.get(nodes.size()-1), false);
-        }
 
-        public void contextActivated(IMylarContext taskscape) {
-            refresh(null, true);
-        }
+	private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() {
+		public void interestChanged(IMylarElement node) {
+			refresh(node, false);
+		}
 
-        public void contextDeactivated(IMylarContext taskscape) {
-            refresh(null, true);
-        } 
-        
-        public void presentationSettingsChanging(UpdateKind kind) {
-            refresh(null, true);
-        }
-        
-        public void landmarkAdded(IMylarElement node) { 
-            refresh(null, true);
-        }
+		public void interestChanged(List<IMylarElement> nodes) {
+			refresh(nodes.get(nodes.size() - 1), false);
+		}
 
-        public void landmarkRemoved(IMylarElement node) { 
-            refresh(null, true);
-        }
+		public void contextActivated(IMylarContext taskscape) {
+			refresh(null, true);
+		}
 
-        public void edgesChanged(IMylarElement node) {
-            refresh(node, true);
-        }
+		public void contextDeactivated(IMylarContext taskscape) {
+			refresh(null, true);
+		}
 
-        public void nodeDeleted(IMylarElement node) {
-        	refresh(null, true);
-        }
+		public void presentationSettingsChanging(UpdateKind kind) {
+			refresh(null, true);
+		}
 
-        public void presentationSettingsChanged(UpdateKind kind) {
-        	if(viewer != null && !viewer.getTree().isDisposed()){
-        		if (kind == IMylarContextListener.UpdateKind.HIGHLIGHTER) viewer.refresh();
-        	}
-        }
-    };
+		public void landmarkAdded(IMylarElement node) {
+			refresh(null, true);
+		}
 
-    static class DoiOrderSorter extends ViewerSorter { 
-        protected InterestComparator<Object> comparator = new InterestComparator<Object>();
+		public void landmarkRemoved(IMylarElement node) {
+			refresh(null, true);
+		}
 
-        @Override
-        public int compare(Viewer viewer, Object e1, Object e2) {
-            return comparator.compare(e1, e2);  
-        }
-    }
+		public void edgesChanged(IMylarElement node) {
+			refresh(node, true);
+		}
 
-    public static ActiveSearchView getFromActivePerspective() {
-    	if (Workbench.getInstance() == null) return null;
-    	IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-        if (activePage == null)
-            return null;
-        IViewPart view= activePage.findView(ID);
-        if (view instanceof ActiveSearchView)
-            return (ActiveSearchView)view;
-        return null;    
-    }
-    
-    @Override
+		public void nodeDeleted(IMylarElement node) {
+			refresh(null, true);
+		}
+
+		public void presentationSettingsChanged(UpdateKind kind) {
+			if (viewer != null && !viewer.getTree().isDisposed()) {
+				if (kind == IMylarContextListener.UpdateKind.HIGHLIGHTER)
+					viewer.refresh();
+			}
+		}
+	};
+
+	static class DoiOrderSorter extends ViewerSorter {
+		protected InterestComparator<Object> comparator = new InterestComparator<Object>();
+
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			return comparator.compare(e1, e2);
+		}
+	}
+
+	public static ActiveSearchView getFromActivePerspective() {
+		if (Workbench.getInstance() == null)
+			return null;
+		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null)
+			return null;
+		IViewPart view = activePage.findView(ID);
+		if (view instanceof ActiveSearchView)
+			return (ActiveSearchView) view;
+		return null;
+	}
+
+	@Override
 	public void dispose() {
 		super.dispose();
 		MylarPlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
 	}
 
 	public ActiveSearchView() {
-        MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
-        for(AbstractRelationProvider provider: MylarPlugin.getContextManager().getActiveRelationProviders()){
-            provider.setEnabled(true); 
-        }
-        MylarPlugin.getContextManager().refreshRelatedElements();
+		MylarPlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
+		for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+			provider.setEnabled(true);
+		}
+		MylarPlugin.getContextManager().refreshRelatedElements();
 	}
 
 	/**
 	 * fix for bug 109235
+	 * 
 	 * @param node
 	 * @param updateLabels
 	 */
-    void refresh(final IMylarElement node, final boolean updateLabels) {
-        if (!syncExecForTesting) { // for testing
-//        	if (viewer != null && !viewer.getTree().isDisposed()) {
-//        		internalRefresh(node, updateLabels);
-//        	}
-	        Workbench.getInstance().getDisplay().syncExec(new Runnable() {
-	            public void run() { 
-	                try {  
-	                    internalRefresh(node, updateLabels);
-	                } catch (Throwable t) {
-	                	MylarStatusHandler.log(t, "active searchrefresh failed");
-	                }
-	            }
-	        });
-        } else {
-	        Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-	            public void run() { 
-	                try {  
-	                    internalRefresh(node, updateLabels);
-	                } catch (Throwable t) {
-	                	MylarStatusHandler.log(t, "active searchrefresh failed");
-	                }
-	            }
-	        });
-        }
-    }
-    
+	void refresh(final IMylarElement node, final boolean updateLabels) {
+		if (!syncExecForTesting) { // for testing
+			// if (viewer != null && !viewer.getTree().isDisposed()) {
+			// internalRefresh(node, updateLabels);
+			// }
+			Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					try {
+						internalRefresh(node, updateLabels);
+					} catch (Throwable t) {
+						MylarStatusHandler.log(t, "active searchrefresh failed");
+					}
+				}
+			});
+		} else {
+			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						internalRefresh(node, updateLabels);
+					} catch (Throwable t) {
+						MylarStatusHandler.log(t, "active searchrefresh failed");
+					}
+				}
+			});
+		}
+	}
+
 	private void internalRefresh(final IMylarElement node, boolean updateLabels) {
 		Object toRefresh = null;
 		if (node != null) {
@@ -198,141 +203,137 @@ public class ActiveSearchView extends ViewPart {
 		}
 		if (viewer != null && !viewer.getTree().isDisposed()) {
 			viewer.getControl().setRedraw(false);
-        	if (toRefresh != null && containsNode(viewer.getTree(), toRefresh)) {
-        		viewer.refresh(toRefresh, updateLabels);
-        	} else if (node == null) {
-        		viewer.refresh();
-        	} 
+			if (toRefresh != null && containsNode(viewer.getTree(), toRefresh)) {
+				viewer.refresh(toRefresh, updateLabels);
+			} else if (node == null) {
+				viewer.refresh();
+			}
 			viewer.expandToLevel(3);
 			viewer.getControl().setRedraw(true);
 		}
 	}
-    
+
 	private boolean containsNode(Tree tree, Object object) {
-    	boolean contains = false;
-    	for (int i = 0; i < tree.getItems().length; i++) {
-			TreeItem item = tree.getItems()[i]; 
-			if (object.equals(item.getData())) contains = true;
+		boolean contains = false;
+		for (int i = 0; i < tree.getItems().length; i++) {
+			TreeItem item = tree.getItems()[i];
+			if (object.equals(item.getData()))
+				contains = true;
 		}
 		return contains;
 	}
-    
-	@MylarWebRef(name="Drag and drop article", url="http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
-    private void initDrop() {
+
+	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
+	private void initDrop() {
 		Transfer[] types = new Transfer[] { LocalSelectionTransfer.getInstance() };
 		viewer.addDropSupport(DND.DROP_MOVE, types, new ActiveViewDropAdapter(viewer));
 	}
-	
+
 	private void initDrag() {
-		int ops= DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-		Transfer[] transfers= new Transfer[] {
-			LocalSelectionTransfer.getInstance(), 
-			ResourceTransfer.getInstance()};
+		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance() };
 		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] {
-			new ActiveViewSelectionDragAdapter(viewer),
-			new ActiveViewResourceDragAdapter(viewer)
-		};
+				new ActiveViewSelectionDragAdapter(viewer), new ActiveViewResourceDragAdapter(viewer) };
 		viewer.addDragSupport(ops, transfers, new ActiveViewDelegatingDragAdapter(dragListeners));
 	}
-    
-    /**
-     * This is a callback that will allow us
-     * to create the viewer and initialize it.
-     */
-    @Override
-    public void createPartControl(Composite parent) {
-        
-    	viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-        viewer.setUseHashlookup(true);
-        viewer.setContentProvider(new ContextContentProvider(viewer.getTree(), this.getViewSite(), true));
-//        viewer.setLabelProvider(labelProvider);
-        viewer.setLabelProvider(new DecoratingLabelProvider(
-        		labelProvider,
-                PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-        viewer.setSorter(new DoiOrderSorter()); 
-        viewer.setInput(getViewSite());
-        hookContextMenu();
-        initDrop();
-        initDrag();
-        
-        viewer.addOpenListener(new ContextNodeOpenListener(viewer));
-        
-        contributeToActionBars();
-        viewer.expandToLevel(2);
-    }
 
-    private void hookContextMenu() {
-        MenuManager menuMgr = new MenuManager("#PopupMenu");
-        menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow(IMenuManager manager) {
-                ActiveSearchView.this.fillContextMenu(manager);
-            }
-        });
-        Menu menu = menuMgr.createContextMenu(viewer.getControl());
-        viewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, viewer);
-    }
+	/**
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
+	 */
+	@Override
+	public void createPartControl(Composite parent) {
 
-    private void contributeToActionBars() {
-        IActionBars bars = getViewSite().getActionBars();
-        fillLocalPullDown(bars.getMenuManager());
-        fillLocalToolBar(bars.getToolBarManager());
-    }
- 
-    private void fillContextMenu(IMenuManager manager) {
-        manager.add(new Separator());
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.setUseHashlookup(true);
+		viewer.setContentProvider(new ContextContentProvider(viewer.getTree(), this.getViewSite(), true));
+		// viewer.setLabelProvider(labelProvider);
+		viewer.setLabelProvider(new DecoratingLabelProvider(labelProvider, PlatformUI.getWorkbench()
+				.getDecoratorManager().getLabelDecorator()));
+		viewer.setSorter(new DoiOrderSorter());
+		viewer.setInput(getViewSite());
+		hookContextMenu();
+		initDrop();
+		initDrag();
 
-    private void fillLocalToolBar(IToolBarManager manager) {
-    	IAction qualifyElements = new ShowQualifiedNamesAction(this);
-        manager.add(qualifyElements);
-    	fillActions(manager);
-    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-    
-    private void fillLocalPullDown(IMenuManager manager) {
-    	fillActions(manager);
-    	IAction stopAction = new Action(){
+		viewer.addOpenListener(new ContextNodeOpenListener(viewer));
+
+		contributeToActionBars();
+		viewer.expandToLevel(2);
+	}
+
+	private void hookContextMenu() {
+		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				ActiveSearchView.this.fillContextMenu(manager);
+			}
+		});
+		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuMgr, viewer);
+	}
+
+	private void contributeToActionBars() {
+		IActionBars bars = getViewSite().getActionBars();
+		fillLocalPullDown(bars.getMenuManager());
+		fillLocalToolBar(bars.getToolBarManager());
+	}
+
+	private void fillContextMenu(IMenuManager manager) {
+		manager.add(new Separator());
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
+	private void fillLocalToolBar(IToolBarManager manager) {
+		IAction qualifyElements = new ShowQualifiedNamesAction(this);
+		manager.add(qualifyElements);
+		fillActions(manager);
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
+	private void fillLocalPullDown(IMenuManager manager) {
+		fillActions(manager);
+		IAction stopAction = new Action() {
 			@Override
 			public void run() {
-	            for(AbstractRelationProvider provider: MylarPlugin.getContextManager().getActiveRelationProviders()){
-	            	provider.stopAllRunningJobs();
-	            }
+				for (AbstractRelationProvider provider : MylarPlugin.getContextManager().getActiveRelationProviders()) {
+					provider.stopAllRunningJobs();
+				}
 			}
-        };
-        stopAction.setToolTipText(STOP_JOBS_LABEL);
-        stopAction.setText(STOP_JOBS_LABEL);
-        stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
-        manager.add(stopAction);
-        manager.add(new Separator());
-        manager.add(new LinkActiveSearchWithEditorAction());
-    	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-    
-    private void fillActions(IContributionManager manager) {
-    	Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
-        for (Entry<String, IMylarStructureBridge> entry: bridges.entrySet()) {
-            IMylarStructureBridge bridge = entry.getValue(); //bridges.get(extension);
-            List<AbstractRelationProvider> providers = bridge.getRelationshipProviders(); 
-            if(providers != null && providers.size() > 0) {
-	            ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
-	            relationshipProviderActions.add(action); 
-	            manager.add(action); 
-            }
-        }
-    }
+		};
+		stopAction.setToolTipText(STOP_JOBS_LABEL);
+		stopAction.setText(STOP_JOBS_LABEL);
+		stopAction.setImageDescriptor(MylarImages.STOP_SEARCH);
+		manager.add(stopAction);
+		manager.add(new Separator());
+		manager.add(new LinkActiveSearchWithEditorAction());
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
 
-    /**
-     * Passing the focus request to the viewer's control.
-     */
-    @Override
-    public void setFocus() {
-    	viewer.refresh();
-        viewer.getControl().setFocus();
-        //TODO: foo
-    }
+	private void fillActions(IContributionManager manager) {
+		Map<String, IMylarStructureBridge> bridges = MylarPlugin.getDefault().getStructureBridges();
+		for (Entry<String, IMylarStructureBridge> entry : bridges.entrySet()) {
+			IMylarStructureBridge bridge = entry.getValue(); // bridges.get(extension);
+			List<AbstractRelationProvider> providers = bridge.getRelationshipProviders();
+			if (providers != null && providers.size() > 0) {
+				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(bridge);
+				relationshipProviderActions.add(action);
+				manager.add(action);
+			}
+		}
+	}
+
+	/**
+	 * Passing the focus request to the viewer's control.
+	 */
+	@Override
+	public void setFocus() {
+		viewer.refresh();
+		viewer.getControl().setFocus();
+		// TODO: foo
+	}
 
 	public TreeViewer getViewer() {
 		return viewer;
@@ -347,7 +348,6 @@ public class ActiveSearchView extends ViewPart {
 
 	public void setQualifiedNameMode(boolean qualifiedNameMode) {
 		DelegatingContextLabelProvider.setQualifyNamesMode(qualifiedNameMode);
-		refresh(null, true); 
+		refresh(null, true);
 	}
 }
-

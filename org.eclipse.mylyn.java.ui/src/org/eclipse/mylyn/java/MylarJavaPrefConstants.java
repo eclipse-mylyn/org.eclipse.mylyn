@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ public class MylarJavaPrefConstants {
 	public static final String MYLAR_JAVA_EDITOR_ID = "org.eclipse.mylar.java.ui.editor.MylarCompilationUnitEditor";
 
 	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylar.java.ui.editor.folding.auto.enabled";
-	
+
 	public static final String PACKAGE_EXPLORER_AUTO_FILTER_ENABLE = "org.eclipse.mylar.java.ui.explorer.filter.auto.enable";
 
 	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.predicted.errors";

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,13 +44,14 @@ public class InterestManipulatingEditorTracker extends AbstractEditorTracker {
 				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
 				element = MylarPlugin.getContextManager().getElement(bridge.getHandleIdentifier(object));
 			}
-			if (element == null) { // TODO: probably should be refactored into delegation
+			if (element == null) { // TODO: probably should be refactored into
+				// delegation
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IResource) {
-					IResource resource = (IResource)adapter;
+					IResource resource = (IResource) adapter;
 					IMylarStructureBridge resourceBridge = MylarPlugin.getDefault().getStructureBridge(resource);
 					element = MylarPlugin.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
-				} 
+				}
 			}
 			if (element != null) {
 				MylarPlugin.getContextManager().manipulateInterestForNode(element, false, false, SOURCE_ID);

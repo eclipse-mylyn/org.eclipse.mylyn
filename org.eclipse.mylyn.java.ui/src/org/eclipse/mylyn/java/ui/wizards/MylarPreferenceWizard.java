@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,30 +36,32 @@ import org.eclipse.ui.dialogs.IWorkingSetNewWizard;
 public class MylarPreferenceWizard extends Wizard implements INewWizard {
 
 	private MylarPreferenceWizardPage preferencePage;
-	
-//	public static final String AUTO_FOLD_PREF_ID = "org.eclipse.mylar.ui.auto.fold.isChecked";
-	
+
+	// public static final String AUTO_FOLD_PREF_ID =
+	// "org.eclipse.mylar.ui.auto.fold.isChecked";
+
 	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylar.ui.first.run";
-	
+
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
-	
-	public void init(String htmlDocs){
+
+	public void init(String htmlDocs) {
 		setDefaultPageImageDescriptor(MylarImages.MYLAR);
 		setWindowTitle("Mylar Preferences Wizard");
-		super.setDefaultPageImageDescriptor(MylarJavaPlugin.imageDescriptorFromPlugin(MylarJavaPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
-		preferencePage = new MylarPreferenceWizardPage("Mylar Configuration", htmlDocs); 
+		super.setDefaultPageImageDescriptor(MylarJavaPlugin.imageDescriptorFromPlugin(MylarJavaPlugin.PLUGIN_ID,
+				"icons/wizban/banner-prefs.gif"));
+		preferencePage = new MylarPreferenceWizardPage("Mylar Configuration", htmlDocs);
 	}
-	
+
 	public MylarPreferenceWizard() {
 		super();
 		init(MylarJavaPlugin.FIRST_USE);
 	}
-	
+
 	public MylarPreferenceWizard(String htmlDocs) {
 		super();
 		init(htmlDocs);
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		setPreferences();
@@ -68,46 +70,48 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 		return true;
 	}
-	
-    private void setPreferences() {
-		if(preferencePage.isMylarEditorDefault()){
-			if(!MylarJavaPlugin.isMylarEditorDefault()){
+
+	private void setPreferences() {
+		if (preferencePage.isMylarEditorDefault()) {
+			if (!MylarJavaPlugin.isMylarEditorDefault()) {
 				MylarJavaPlugin.setDefaultEditorForJavaFiles(true);
 			}
 		} else {
 			MylarJavaPlugin.setDefaultEditorForJavaFiles(false);
 		}
-		
-		if(preferencePage.isAutoFolding()){
+
+		if (preferencePage.isAutoFolding()) {
 			MylarPlugin.getDefault().getPreferenceStore().setValue(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED, true); //$NON-NLS-1$
-//		    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, AutoFoldingStructureProvider.ID);    
-            
-		    javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true); 
+			// javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER,
+			// AutoFoldingStructureProvider.ID);
+
+			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
 		} else {
 			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, false);
 		}
-		
-		if( preferencePage.closeEditors()){
+
+		if (preferencePage.closeEditors()) {
 			MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
 		} else {
 			MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, false); //$NON-NLS-1$
 		}
-		
-		if(preferencePage.isWorkingSet()){
-			IWorkingSetManager workingSetManager= MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
-			IWorkingSetNewWizard wizard= workingSetManager.createWorkingSetNewWizard(new String[]{"org.eclipse.mylar.workingSetPage"}); 
-			if (wizard != null && workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME) == null) { 
-				WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard); 
-				dialog.create(); 
+
+		if (preferencePage.isWorkingSet()) {
+			IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+			IWorkingSetNewWizard wizard = workingSetManager
+					.createWorkingSetNewWizard(new String[] { "org.eclipse.mylar.workingSetPage" });
+			if (wizard != null && workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME) == null) {
+				WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
+				dialog.create();
 				if (dialog.open() == Window.OK) {
-					IWorkingSet workingSet= wizard.getSelection();
+					IWorkingSet workingSet = wizard.getSelection();
 					if (workingSet != null) {
 						workingSetManager.addWorkingSet(workingSet);
 					}
 				}
-			}	
+			}
 		} else {
-			IWorkingSetManager workingSetManager= MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+			IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			IWorkingSet workingSet = workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME);
 			if (workingSet != null) {
 				workingSetManager.removeWorkingSet(workingSet);
@@ -115,11 +119,12 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 	}
 
-   @Override
-   	public void addPages() {
-	   addPage(preferencePage);
-   }
-   
-   	public void init(IWorkbench workbench, IStructuredSelection selection) {}
+	@Override
+	public void addPages() {
+		addPage(preferencePage);
+	}
+
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,7 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 			ITextEditor editor, String partitioning) {
 		super(colorManager, preferenceStore, editor, partitioning);
 	}
-	
+
 	/**
 	 * Copied from super
 	 */
@@ -72,45 +72,49 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 
 		if (getEditor() != null) {
 
-			ContentAssistant assistant= new ContentAssistant();
+			ContentAssistant assistant = new ContentAssistant();
 			assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 
 			assistant.setRestoreCompletionProposalSize(getSettings("completion_proposal_size")); //$NON-NLS-1$
 
-			IContentAssistProcessor javaProcessor= new MylarJavaCompletionProcessor(getEditor(), assistant, IDocument.DEFAULT_CONTENT_TYPE);
+			IContentAssistProcessor javaProcessor = new MylarJavaCompletionProcessor(getEditor(), assistant,
+					IDocument.DEFAULT_CONTENT_TYPE);
 			assistant.setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
 
-			ContentAssistProcessor singleLineProcessor= new JavaCompletionProcessor(getEditor(), assistant, IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
+			ContentAssistProcessor singleLineProcessor = new JavaCompletionProcessor(getEditor(), assistant,
+					IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
 			assistant.setContentAssistProcessor(singleLineProcessor, IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
 
-			ContentAssistProcessor stringProcessor= new JavaCompletionProcessor(getEditor(), assistant, IJavaPartitions.JAVA_STRING);
+			ContentAssistProcessor stringProcessor = new JavaCompletionProcessor(getEditor(), assistant,
+					IJavaPartitions.JAVA_STRING);
 			assistant.setContentAssistProcessor(stringProcessor, IJavaPartitions.JAVA_STRING);
-			
-			ContentAssistProcessor multiLineProcessor= new JavaCompletionProcessor(getEditor(), assistant, IJavaPartitions.JAVA_MULTI_LINE_COMMENT);
+
+			ContentAssistProcessor multiLineProcessor = new JavaCompletionProcessor(getEditor(), assistant,
+					IJavaPartitions.JAVA_MULTI_LINE_COMMENT);
 			assistant.setContentAssistProcessor(multiLineProcessor, IJavaPartitions.JAVA_MULTI_LINE_COMMENT);
 
-			ContentAssistProcessor javadocProcessor= new JavadocCompletionProcessor(getEditor(), assistant);
+			ContentAssistProcessor javadocProcessor = new JavadocCompletionProcessor(getEditor(), assistant);
 			assistant.setContentAssistProcessor(javadocProcessor, IJavaPartitions.JAVA_DOC);
 
 			ContentAssistPreference.configure(assistant, fPreferenceStore);
 
 			assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
-			
+
 			return assistant;
 		}
 
 		return null;
 	}
 
-    protected IDialogSettings getSettings(String sectionName) {
-        IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings().getSection(sectionName);
-        if (settings == null)
-            settings= JavaPlugin.getDefault().getDialogSettings().addNewSection(sectionName);
-        
-        return settings;
-    }
-	
+	protected IDialogSettings getSettings(String sectionName) {
+		IDialogSettings settings = JavaPlugin.getDefault().getDialogSettings().getSection(sectionName);
+		if (settings == null)
+			settings = JavaPlugin.getDefault().getDialogSettings().addNewSection(sectionName);
+
+		return settings;
+	}
+
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))

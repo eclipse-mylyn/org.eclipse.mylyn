@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,9 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.part.ResourceTransfer;
 
+/**
+ * @author Mik Kersten
+ */
 public class ActiveViewResourceDragAdapter extends DragSourceAdapter implements TransferDragSourceListener {
 
 	private ISelectionProvider fProvider;
@@ -37,44 +40,45 @@ public class ActiveViewResourceDragAdapter extends DragSourceAdapter implements 
 	 * Creates a new ActiveViewResourceDragAdapter for the given selection
 	 * provider.
 	 * 
-	 * @param provider the selection provider to access the viewer's selection
+	 * @param provider
+	 *            the selection provider to access the viewer's selection
 	 */
 	public ActiveViewResourceDragAdapter(ISelectionProvider provider) {
-		fProvider= provider;
+		fProvider = provider;
 		Assert.isNotNull(fProvider);
 	}
-	
+
 	public Transfer getTransfer() {
 		return ResourceTransfer.getInstance();
 	}
-	
+
 	public void dragStart(DragSourceEvent event) {
-		event.doit= convertSelection().size() > 0;
+		event.doit = convertSelection().size() > 0;
 	}
-	
+
 	public void dragSetData(DragSourceEvent event) {
-		List<IResource> resources= convertSelection();
-		event.data= (IResource[]) resources.toArray(new IResource[resources.size()]);
+		List<IResource> resources = convertSelection();
+		event.data = (IResource[]) resources.toArray(new IResource[resources.size()]);
 	}
-	
+
 	public void dragFinished(DragSourceEvent event) {
 		if (!event.doit)
 			return;
 
 		if (event.detail == DND.DROP_MOVE) {
 			handleFinishedDropMove(event);
-		}	
+		}
 	}
-	
+
 	private List<IResource> convertSelection() {
-		ISelection s= fProvider.getSelection();
+		ISelection s = fProvider.getSelection();
 		if (!(s instanceof IStructuredSelection))
 			return Collections.emptyList();
-		IStructuredSelection selection= (IStructuredSelection)s;
-		List<IResource> result= new ArrayList<IResource>(selection.size());
-		for (Iterator iter= selection.iterator(); iter.hasNext();) {
-			Object element= iter.next();
-			IResource resource= null;
+		IStructuredSelection selection = (IStructuredSelection) s;
+		List<IResource> result = new ArrayList<IResource>(selection.size());
+		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			Object element = iter.next();
+			IResource resource = null;
 			if (element instanceof IAdaptable) {
 				resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
 			}
@@ -83,7 +87,7 @@ public class ActiveViewResourceDragAdapter extends DragSourceAdapter implements 
 		}
 		return result;
 	}
-	
+
 	private void handleFinishedDropMove(DragSourceEvent event) {
 		// ignore
 	}

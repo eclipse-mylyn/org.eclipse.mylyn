@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,78 +29,80 @@ import org.eclipse.swt.dnd.TransferData;
 public class ActiveViewDelegatingDragAdapter implements DragSourceListener {
 
 	private TransferDragSourceListener[] fPossibleListeners;
+
 	private List fActiveListeners;
+
 	private TransferDragSourceListener fFinishListener;
-	
+
 	public ActiveViewDelegatingDragAdapter(TransferDragSourceListener[] listeners) {
 		setPossibleListeners(listeners);
 	}
-	
+
 	protected void setPossibleListeners(TransferDragSourceListener[] listeners) {
 		Assert.isNotNull(listeners);
 		Assert.isTrue(fActiveListeners == null, "Can only set possible listeners before drag operation has started"); //$NON-NLS-1$
-		fPossibleListeners= listeners;
+		fPossibleListeners = listeners;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void dragStart(DragSourceEvent event) {
-		fFinishListener= null;
-		boolean saveDoit= event.doit;
-		Object saveData= event.data;
-		boolean doIt= false;
-		List transfers= new ArrayList(fPossibleListeners.length);
-		fActiveListeners= new ArrayList(fPossibleListeners.length);
-		
-		for (int i= 0; i < fPossibleListeners.length; i++) {
-			TransferDragSourceListener listener= fPossibleListeners[i];
-			event.doit= saveDoit;
+		fFinishListener = null;
+		boolean saveDoit = event.doit;
+		Object saveData = event.data;
+		boolean doIt = false;
+		List transfers = new ArrayList(fPossibleListeners.length);
+		fActiveListeners = new ArrayList(fPossibleListeners.length);
+
+		for (int i = 0; i < fPossibleListeners.length; i++) {
+			TransferDragSourceListener listener = fPossibleListeners[i];
+			event.doit = saveDoit;
 			listener.dragStart(event);
 			if (event.doit) {
 				transfers.add(listener.getTransfer());
 				fActiveListeners.add(listener);
 			}
-			doIt= doIt || event.doit;
+			doIt = doIt || event.doit;
 		}
 		if (doIt) {
-			((DragSource)event.widget).setTransfer((Transfer[])transfers.toArray(new Transfer[transfers.size()]));
+			((DragSource) event.widget).setTransfer((Transfer[]) transfers.toArray(new Transfer[transfers.size()]));
 		}
-		event.data= saveData;
-		event.doit= doIt;
+		event.data = saveData;
+		event.doit = doIt;
 	}
 
 	public void dragSetData(DragSourceEvent event) {
-		fFinishListener= getListener(event.dataType);
+		fFinishListener = getListener(event.dataType);
 		if (fFinishListener != null)
 			fFinishListener.dragSetData(event);
 	}
-	
+
 	public void dragFinished(DragSourceEvent event) {
-		try{
+		try {
 			if (fFinishListener != null) {
 				fFinishListener.dragFinished(event);
 			} else {
 				// If the user presses Escape then we get a dragFinished without
 				// getting a dragSetData before.
-				fFinishListener= getListener(event.dataType);
+				fFinishListener = getListener(event.dataType);
 				if (fFinishListener != null)
 					fFinishListener.dragFinished(event);
 			}
-		} finally{
-			fFinishListener= null;
-			fActiveListeners= null;
-		}	
+		} finally {
+			fFinishListener = null;
+			fActiveListeners = null;
+		}
 	}
-	
+
 	private TransferDragSourceListener getListener(TransferData type) {
 		if (type == null)
 			return null;
-			
-		for (Iterator iter= fActiveListeners.iterator(); iter.hasNext();) {
-			TransferDragSourceListener listener= (TransferDragSourceListener)iter.next();
+
+		for (Iterator iter = fActiveListeners.iterator(); iter.hasNext();) {
+			TransferDragSourceListener listener = (TransferDragSourceListener) iter.next();
 			if (listener.getTransfer().isSupportedType(type)) {
 				return listener;
 			}
 		}
 		return null;
-	}	
+	}
 }
