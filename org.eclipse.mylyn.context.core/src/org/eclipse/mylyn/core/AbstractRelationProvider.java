@@ -13,10 +13,10 @@ package org.eclipse.mylar.core;
 
 import java.util.List;
 
-import org.eclipse.mylar.core.internal.CompositeContextElement;
-import org.eclipse.mylar.core.internal.MylarContextRelation;
-import org.eclipse.mylar.core.internal.MylarContextElement;
-import org.eclipse.mylar.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.internal.core.CompositeContextElement;
+import org.eclipse.mylar.internal.core.MylarContextElement;
+import org.eclipse.mylar.internal.core.MylarContextRelation;
+import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
 
 /**
  * @author Mik Kersten

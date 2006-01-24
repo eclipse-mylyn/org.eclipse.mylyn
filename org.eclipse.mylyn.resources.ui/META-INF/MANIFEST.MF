@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar XML Plugin
 Bundle-SymbolicName: org.eclipse.mylar.xml; singleton:=true
-Bundle-Version: 0.4.7.v20060120-2100
-Bundle-Activator: org.eclipse.mylar.xml.MylarXmlPlugin
+Bundle-Version: 0.4.7.v20060120
+Bundle-Activator: org.eclipse.mylar.internal.xml.MylarXmlPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -24,8 +24,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.xml,
- org.eclipse.mylar.xml.ant,
- org.eclipse.mylar.xml.pde
+Export-Package: org.eclipse.mylar.internal.xml,
+ org.eclipse.mylar.internal.xml.ant,
+ org.eclipse.mylar.internal.xml.pde
 Bundle-ClassPath: mylar-xml.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

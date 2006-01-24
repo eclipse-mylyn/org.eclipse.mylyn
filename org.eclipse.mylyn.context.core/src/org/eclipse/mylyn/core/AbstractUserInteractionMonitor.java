@@ -13,7 +13,7 @@ package org.eclipse.mylar.core;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.InteractionEvent.Kind;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPart;

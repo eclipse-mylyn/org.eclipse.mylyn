@@ -13,7 +13,7 @@ package org.eclipse.mylar.core;
 
 import java.util.Collection;
 
-import org.eclipse.mylar.core.internal.MylarContextRelation;
+import org.eclipse.mylar.internal.core.MylarContextRelation;
 
 /**
  * @author Mik Kersten

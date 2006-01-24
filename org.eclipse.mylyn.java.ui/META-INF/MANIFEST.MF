@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Java Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.java; singleton:=true
-Bundle-Version: 0.4.7.v20060120-2100
-Bundle-Activator: org.eclipse.mylar.java.MylarJavaPlugin
+Bundle-Version: 0.4.7.v20060120
+Bundle-Activator: org.eclipse.mylar.internal.java.MylarJavaPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -36,13 +36,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.team.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.java,
- org.eclipse.mylar.java.search,
- org.eclipse.mylar.java.ui,
- org.eclipse.mylar.java.ui.actions,
- org.eclipse.mylar.java.ui.editor,
- org.eclipse.mylar.java.ui.preferences,
- org.eclipse.mylar.java.ui.views,
- org.eclipse.mylar.java.ui.wizards
+Export-Package: org.eclipse.mylar.internal.java,
+ org.eclipse.mylar.internal.java.search,
+ org.eclipse.mylar.internal.java.ui,
+ org.eclipse.mylar.internal.java.ui.actions,
+ org.eclipse.mylar.internal.java.ui.editor,
+ org.eclipse.mylar.internal.java.ui.junit,
+ org.eclipse.mylar.internal.java.ui.preferences,
+ org.eclipse.mylar.internal.java.ui.views,
+ org.eclipse.mylar.internal.java.ui.wizards
 Bundle-ClassPath: mylar-java.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
