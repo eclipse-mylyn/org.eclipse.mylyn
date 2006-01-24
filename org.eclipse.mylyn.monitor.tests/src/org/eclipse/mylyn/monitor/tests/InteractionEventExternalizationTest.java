@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.monitor.InteractionEventLogger;
+import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
 
 /**
  * @author Mik Kersten

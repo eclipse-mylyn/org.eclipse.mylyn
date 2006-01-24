@@ -17,8 +17,8 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.monitor.InteractionEventLogger;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 
 /**
  * @author Mik Kersten
