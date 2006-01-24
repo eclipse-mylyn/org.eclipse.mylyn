@@ -19,9 +19,9 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IWorkbenchPage;
@@ -34,7 +34,7 @@ import org.eclipse.ui.internal.Workbench;
 public class MylarEditorManager implements IMylarContextListener {
 
 	public void contextActivated(IMylarContext context) {
-		if (MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS)) {
+		if (MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS)) {
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
 			try {
 				MylarPlugin.getContextManager().setContextCapturePaused(true);
@@ -69,7 +69,7 @@ public class MylarEditorManager implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		if (MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS)) {
+		if (MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS)) {
 			closeAllEditors();
 		}
 	}

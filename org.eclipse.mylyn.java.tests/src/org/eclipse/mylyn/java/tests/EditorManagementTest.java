@@ -24,8 +24,8 @@ import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.java.ActiveFoldingEditorTracker;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IViewPart;
@@ -49,7 +49,7 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
-		assertTrue(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS));
+		assertTrue(MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS));
 	}
 
 	@Override

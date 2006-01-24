@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.core;
 /**
  * @author Mik Kersten
  */
-public class MylarPrefContstants {
+public class MylarPreferenceContstants {
 
 	public static final String USER_ID = "org.eclipse.mylar.user.id";
 

@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.MylarContextManager;
-import org.eclipse.mylar.internal.core.MylarPrefContstants;
+import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.search.MylarWorkingSetUpdater;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -157,7 +157,7 @@ public class MylarPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		getPreferenceStore().setDefault(MylarPrefContstants.PREF_DATA_DIR, getDefaultDataDirectory());
+		getPreferenceStore().setDefault(MylarPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
 		if (contextManager == null)
 			contextManager = new MylarContextManager();
 	}
@@ -190,11 +190,11 @@ public class MylarPlugin extends AbstractUIPlugin {
 	}
 
 	public String getDataDirectory() {
-		return getPreferenceStore().getString(MylarPrefContstants.PREF_DATA_DIR);
+		return getPreferenceStore().getString(MylarPreferenceContstants.PREF_DATA_DIR);
 	}
 
 	public void setDataDirectory(String newPath) {
-		getPreferenceStore().setValue(MylarPrefContstants.PREF_DATA_DIR, newPath);
+		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
 	}
 
 	public static MylarPlugin getDefault() {
