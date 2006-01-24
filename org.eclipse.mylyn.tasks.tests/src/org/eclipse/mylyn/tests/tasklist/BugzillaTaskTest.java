@@ -43,16 +43,16 @@ public class BugzillaTaskTest extends TestCase {
 		BugReport report = new BugReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		task.setBugReport(report);
 		assertNull(task.getCompletionDate());
-		
+
 		Date now = new Date();
 		report.addComment(new Comment(report, 1, now, "author", "author-name"));
 		assertNull(task.getCompletionDate());
-		
+
 		Attribute resolvedAttribute = new Attribute(BugReport.ATTR_STATUS);
 		resolvedAttribute.setValue(BugReport.VAL_STATUS_RESOLVED);
 		report.addAttribute(resolvedAttribute);
 		assertEquals(now, task.getCompletionDate());
-		
+
 	}
-	
+
 }

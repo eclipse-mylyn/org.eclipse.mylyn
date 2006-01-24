@@ -27,7 +27,7 @@ public class RetrieveTitleFromUrlTest extends TestCase {
 	public void testRetrieve() throws InterruptedException, InvocationTargetException {
 		final String url = "http://eclipse.org/mylar/index.php";
 		final String knownTitle = "Mylar Technology Project";
-		
+
 		RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
 
 			public void setTitle(String title) {
@@ -35,7 +35,7 @@ public class RetrieveTitleFromUrlTest extends TestCase {
 			}
 		};
 		job.run(new NullProgressMonitor());
-		
+
 		assertTrue(job.isTitleRetrieved());
 		assertEquals(knownTitle, job.getPageTitle());
 	}

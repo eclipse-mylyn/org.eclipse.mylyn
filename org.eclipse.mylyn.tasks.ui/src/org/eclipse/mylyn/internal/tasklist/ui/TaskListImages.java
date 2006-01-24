@@ -41,12 +41,14 @@ public class TaskListImages {
 	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 190, 210, 238);
 
 	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170); // TODO:
-																							// use
-																							// theme?
+
+	// use
+	// theme?
 
 	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170); // TODO:
-																										// use
-																										// theme?
+
+	// use
+	// theme?
 
 	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
 
@@ -210,8 +212,8 @@ public class TaskListImages {
 
 		private ImageData getImageData(ImageDescriptor descriptor) {
 			ImageData data = descriptor.getImageData(); // see bug 51965:
-														// getImageData can
-														// return null
+			// getImageData can
+			// return null
 			if (data == null) {
 				data = DEFAULT_IMAGE_DATA;
 			}

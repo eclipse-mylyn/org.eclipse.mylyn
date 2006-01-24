@@ -157,7 +157,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		TaskTestUtil.setBugTaskCompleted(task1, true);		
+		TaskTestUtil.setBugTaskCompleted(task1, true);
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(1, generator.getAllCollectedTasks().size());

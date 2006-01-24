@@ -25,8 +25,9 @@ import org.eclipse.ui.IWorkbench;
 public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;// =
-																			// new
-																			// AbstractRepositorySettingsPage();
+
+	// new
+	// AbstractRepositorySettingsPage();
 
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();

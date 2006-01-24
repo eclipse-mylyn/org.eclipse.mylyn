@@ -38,7 +38,7 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 	public BackgroundSaveTimer(IBackgroundSaveListener listener) {
 		this.listener = listener;
 		timer = new TimerThread(saveInterval / 1000); // This constructor
-														// wants seconds
+		// wants seconds
 		timer.addListener(this);
 	}
 

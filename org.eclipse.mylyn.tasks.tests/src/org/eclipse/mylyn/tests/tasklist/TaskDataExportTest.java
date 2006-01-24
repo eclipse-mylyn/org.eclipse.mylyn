@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylar.tests.tasklist;
 
 import java.io.File;
@@ -37,7 +47,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		
+
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
 		wizard.addPages();
@@ -70,7 +80,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		for (File file : files) {
 			file.delete();
 		}
-		
+
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
 		MylarPlugin.getContextManager().contextDeactivated(mockContext.getHandleIdentifier());

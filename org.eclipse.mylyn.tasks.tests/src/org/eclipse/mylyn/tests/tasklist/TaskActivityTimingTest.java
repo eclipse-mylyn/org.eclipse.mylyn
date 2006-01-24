@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylar.tests.tasklist;
 
 import junit.framework.TestCase;
@@ -17,13 +27,13 @@ public class TaskActivityTimingTest extends TestCase {
 
 	// 5 seconds (minimum value since TimerThread sleeps
 	// for 5 seconds anyway before checking
-	
+
 	private static final int SLOP = 100;
-	
-	private static final int SLEEP_INTERVAL = SLOP*3;
-	
-	private static final int TIMEOUT = SLEEP_INTERVAL*2;
-	
+
+	private static final int SLEEP_INTERVAL = SLOP * 3;
+
+	private static final int TIMEOUT = SLEEP_INTERVAL * 2;
+
 	private static final int SLEEP_NOTIMEOUT = TIMEOUT - SLOP; // 1 second
 
 	// Introdueced long sleep for testing inactivity where TimerThread
@@ -74,7 +84,7 @@ public class TaskActivityTimingTest extends TestCase {
 		MylarTaskListPlugin.getTaskListManager().activateTask(task1);
 		TaskActivityTimer timer1 = manager.getTimerMap().get(task1);
 		// previous task was deactivated
-		assertEquals(1, manager.getTimerMap().values().size()); 
+		assertEquals(1, manager.getTimerMap().values().size());
 		assertTrue(timer1.isStarted());
 		Thread.sleep(SLEEP_TIMEOUT);
 
@@ -101,8 +111,8 @@ public class TaskActivityTimingTest extends TestCase {
 		elapsed = task1.getElapsedTime();
 		assertTrue("should be bigger than timeout", elapsed >= TIMEOUT);
 
-//		 Task should be inactive so no time accumulated
-		Thread.sleep(SLEEP_TIMEOUT); 
+		// Task should be inactive so no time accumulated
+		Thread.sleep(SLEEP_TIMEOUT);
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
 
 		long elapsedAfterDeactivation = task1.getElapsedTime();
@@ -120,8 +130,8 @@ public class TaskActivityTimingTest extends TestCase {
 		long elpasedAfterReactivation = task1.getElapsedTime();
 
 		// adds some slop
-		assertTrue("time: " + (elpasedAfterReactivation - elapsedAfterInactivity), 
-				elpasedAfterReactivation - elapsedAfterInactivity + 50 >= SLEEP_TIMEOUT);
+		assertTrue("time: " + (elpasedAfterReactivation - elapsedAfterInactivity), elpasedAfterReactivation
+				- elapsedAfterInactivity + 50 >= SLEEP_TIMEOUT);
 	}
 
 	public void testTimeout() throws InterruptedException {

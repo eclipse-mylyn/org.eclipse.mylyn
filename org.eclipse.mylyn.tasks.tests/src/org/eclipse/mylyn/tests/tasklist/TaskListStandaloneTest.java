@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,26 +35,26 @@ import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 public class TaskListStandaloneTest extends TestCase {
 
 	private TaskListManager manager;
-	
+
 	private File file;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
-		
+
 		// bugzilla externalizer requires workbench
-//		externalizers.add(new BugzillaTaskExternalizer());
-		
+		// externalizers.add(new BugzillaTaskExternalizer());
+
 		TaskListWriter writer = new TaskListWriter();
 		writer.setDelegateExternalizers(externalizers);
-		
+
 		file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
 		file.deleteOnExit();
 		manager = new TaskListManager(writer, file, 1);
 		manager.createNewTaskList();
-		assertEquals("should be empty: " + manager.getTaskList().getRootTasks(), 
-				0, manager.getTaskList().getRootTasks().size());
+		assertEquals("should be empty: " + manager.getTaskList().getRootTasks(), 0, manager.getTaskList()
+				.getRootTasks().size());
 	}
 
 	@Override
@@ -67,50 +67,50 @@ public class TaskListStandaloneTest extends TestCase {
 		ITask task = new Task("1", "1", true);
 		long now = new Date().getTime();
 		task.setReminderDate(new Date(now - 1000));
-		assertTrue(task.isPastReminder());	
-		
+		assertTrue(task.isPastReminder());
+
 		task.setReminderDate(new Date(now + 1000));
 		assertFalse(task.isPastReminder());
-		
+
 		task.setReminderDate(new Date(now - 1000));
 		task.setCompleted(true);
 		assertTrue(task.isPastReminder());
 	}
-	
+
 	public void testDates() {
 		Date start = Calendar.getInstance().getTime();
 		Date creation = new Date();
 		Task task = new Task("1", "task 1", true);
-		
+
 		manager.moveToRoot(task);
 		assertDatesCloseEnough(task.getCreationDate(), start);
-		
+
 		task.setCompleted(true);
 		assertDatesCloseEnough(task.getCompletionDate(), start);
-				
+
 		task.setReminderDate(start);
 		assertDatesCloseEnough(task.getReminderDate(), start);
-		
+
 		assertEquals(manager.getTaskList().getRoots().size(), 1);
 		manager.saveTaskList();
-		
+
 		assertNotNull(manager.getTaskList());
-//		TaskList list = new TaskList();
-//		manager.setTaskList(list);
-//		assertEquals(0, manager.getTaskList().getRootTasks().size());
-//		manager.readOrCreateTaskList();
-//		assertNotNull(manager.getTaskList());
+		// TaskList list = new TaskList();
+		// manager.setTaskList(list);
+		// assertEquals(0, manager.getTaskList().getRootTasks().size());
+		// manager.readOrCreateTaskList();
+		// assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 
 		List<ITask> readList = manager.getTaskList().getRootTasks();
 		ITask readTask = readList.get(0);
 		assertTrue(readTask.getDescription().equals("task 1"));
-		
+
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());
 		assertEquals(task.getCompletionDate(), readTask.getCompletionDate());
 		assertEquals(task.getReminderDate(), readTask.getReminderDate());
 	}
-	
+
 	public void assertDatesCloseEnough(Date first, Date second) {
 		assertTrue(second.getTime() - first.getTime() < 100);
 	}

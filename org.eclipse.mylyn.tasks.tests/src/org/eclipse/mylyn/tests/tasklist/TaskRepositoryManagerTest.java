@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,9 +30,11 @@ import org.eclipse.mylar.tasklist.TaskRepository;
 public class TaskRepositoryManagerTest extends TestCase {
 
 	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
+
 	private static final String DEFAULT_URL = "http://eclipse.org";
+
 	private TaskRepositoryManager manager;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -49,13 +51,13 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	public void testHandles() {
 		String url = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
-		String id = "123"; 
+		String id = "123";
 		String handle = TaskRepositoryManager.getHandle(url, id);
 		assertEquals(url, TaskRepositoryManager.getRepositoryUrl(handle));
 		assertEquals(id, TaskRepositoryManager.getTaskId(handle));
 		assertEquals(123, TaskRepositoryManager.getTaskIdAsInt(handle));
 	}
-	
+
 	public void testMultipleNotAdded() throws MalformedURLException {
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
 		manager.addRepository(repository);
@@ -66,22 +68,22 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	public void testGet() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-		
+
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
 		manager.addRepository(repository);
 		assertEquals(repository, manager.getRepository(DEFAULT_KIND, DEFAULT_URL));
 		assertNull(manager.getRepository(DEFAULT_KIND, "foo"));
 		assertNull(manager.getRepository("foo", DEFAULT_URL));
 	}
-	
+
 	public void testRepositoryPersistance() throws MalformedURLException {
 		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-		
+
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
 		manager.addRepository(repository);
-		
+
 		assertNotNull(MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES));
-		
+
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository);
 		manager.readRepositories();

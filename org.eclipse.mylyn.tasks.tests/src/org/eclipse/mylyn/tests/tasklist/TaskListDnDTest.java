@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,13 +63,13 @@ public class TaskListDnDTest extends TestCase {
 		String url = "http://eclipse.org/mylar";
 		String title = "Mylar Technology Project";
 		String urlData = url + "\n" + title;
-		
+
 		dropAdapter.performDrop(urlData);
 		List<ITask> tasks = manager.getTaskList().getRootTasks();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
 		assertEquals(url, tasks.get(0).getUrl());
-		
+
 		// TODO: Failing due to asynchronous retrieval of title from url
 		// assertEquals(title, tasks.get(0).getDescription(false));
 	}

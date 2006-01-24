@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,22 +21,22 @@ public class AllTasklistTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.tasklist");
-		
-		//$JUnit-BEGIN$
+
+		// $JUnit-BEGIN$
 		suite.addTestSuite(BugzillaTaskTest.class);
 		suite.addTestSuite(TaskReportGeneratorTest.class);
 		suite.addTestSuite(TaskTest.class);
 		suite.addTestSuite(TaskRepositoryManagerTest.class);
 		suite.addTestSuite(TaskListStandaloneTest.class);
-        suite.addTestSuite(TaskListManagerTest.class);
-        suite.addTestSuite(TaskListUiTest.class);
-        suite.addTestSuite(TaskListDnDTest.class);
-        suite.addTestSuite(TaskHistoryTest.class);
+		suite.addTestSuite(TaskListManagerTest.class);
+		suite.addTestSuite(TaskListUiTest.class);
+		suite.addTestSuite(TaskListDnDTest.class);
+		suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
-//		suite.addTestSuite(RetrieveTitleFromUrlTest.class);
-		//$JUnit-END$
+		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
+		// $JUnit-END$
 		return suite;
 	}
 }

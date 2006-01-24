@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Jan 13, 2005
- */
+
 package org.eclipse.mylar.tasklist;
 
 import java.util.List;

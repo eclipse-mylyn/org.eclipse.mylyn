@@ -78,7 +78,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 				// path = task.getHandleIdentifier();
 				// }
 				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());// ,
-																						// path);
+				// path);
 			}
 		}
 	}
