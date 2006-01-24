@@ -12,17 +12,18 @@
 <p><b>Contents</b></p>
 <ul>
 	<li>Contributing to Mylar<ul>
-	<li><a href="#setup">Workspace setup</a></li>
-	<li><a href="#writingPatches">Creating patches</a></li>
+	<li><a href="#contributing-setup">Workspace setup</a></li>
+	<li><a href="#contributing-patches">Creating patches</li>
 <!--	<li>Building</li>-->
+	</a>
 	</li>
-	<li>Building the 3.1 Branch</li>
+	<li><a href="#building-eclipse-3.1">Building the 3.1 Branch</a></li>
 </ul></li>
 	<li>Extending Mylar<ul>
-		<li>Extensibility Overview</li>
+		<li><a href="#extending-overview">Extensibility Overview</a></li>
 	</ul></li>
 </ul><hr>
-<h3><a name="setup">Workspace setup</a></h3>
+<h3><a name="contributing-setup">Workspace setup</a></h3>
 	<ul>
 		<li>Building Mylar feature from HEAD requires
 		the latest Eclipse milestone release and
@@ -41,7 +42,7 @@ and leave the password blank.</li>
 		be interacted with during the test execution.</li>
 	</ul>
 <h3>&nbsp;</h3>
-<h3><a name="writingPatches">Writing patches</a> </h3>
+<h3><a name="contributing-patches">Writing patches</a> </h3>
 	<ul>
 		<li>All changes to Mylar should be made using the latest development 
 		release of Mylar, and need to have a corresponding bug report activated.&nbsp; 
@@ -82,7 +83,7 @@ and leave the password blank.</li>
 		automatically convert the text &quot;bug 1234&quot; to a hyperlink which will 
 		direct the reader to bug 1234.</i></p>
 	<h3>&nbsp;</h3>
-	<h3>Building the Eclipse 3.1 branch</h3>
+	<h3><a name="building-eclipse-3.1">Building the Eclipse 3.1 branch</a></h3>
 	<ul>
 		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
 		project, Team -&gt; Switch to Another Branch..., then 
@@ -92,27 +93,13 @@ and leave the password blank.</li>
 	</ul>
 <h3>&nbsp;</h3>
 <h3><a name="extending-overview">Extensibility Overview</a></h3>
-<p>Mylar will will not be </p>
-<p>Officially, Mylar can't promise any APIs until the 1.0 release. We're a 
-technology project that's exploring novel functionality, and the user interface 
-and interaction need to stabilize considerably more before APIs can follow suit.<br>
-<br>
-However, for those willing to innovate on the bleeding edge (hi Brock ;), we are 
-starting to form the very initial, and guaranteed to change, APIs for task and 
-repository integration. I expect that these will become a bit more stable by 
-Mylar 0.5. And yes, making the Jira support part of Mylar is on the table, in 
-order to make that better integrated, easier to contribute to, and have it 
-evolve gracefully along with the formation of the APIs. I'll post more regarding 
-that on:</p>
-<p>&nbsp;</p>
-<p>Mylar 0.4.7 has preliminary support for multiple repositories, and the 
-Bugzilla plug-in extends this via some very preliminary APIs and extension 
-points. However, there is considerably more work that needs to go into improving 
-and eventually stabilizing those APIs and extension points. Currently the only 
-guarantee is that they need to change over the next few weeks, with JIRA support 
-as the current driver. We're using the following report to track progress on 
-this, so add yourself to the CC list (it's a bit of a monster with 35 comments, 
-but summarizes the current thinking): <br>
-https://bugs.eclipse.org/bugs/show_bug.cgi?id=120952</p>
+<p>Following the Eclipse conventions, Mylar will not make any API guarantees 
+until the 1.0 release.&nbsp; However, a driving goal of the Mylar project is to 
+provide a task management and focused UI framework that can be easily extended 
+by any Eclipse SDK and RCP based applications.&nbsp; The Mylar components are 
+loosely coupled by preliminary extension points and APIs, and these will be 
+stabilizing between the 0.5 and 1.0 releases.&nbsp; We strongly recommend that 
+anyone interest in extending Mylar email <a href="mailto:mylar-dev@eclipse.org">
+mylar-dev@eclipse.org</a> regarding the status of Mylar extensibility.</p>
 <p>&nbsp;</p>
 </body></html>
