@@ -74,6 +74,8 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class TaskInfoEditor extends EditorPart {
 
+	private static final String NO_TIME_ELAPSED = "0 seconds";
+
 	private static final String DESCRIPTION_OVERVIEW = "Task Summary";
 
 	private DatePicker datePicker;
@@ -519,12 +521,7 @@ public class TaskInfoEditor extends EditorPart {
 		});
 		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
-		removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
-		if (task.isActive()) {
-			removeReminder.setEnabled(false);
-		} else {
-			removeReminder.setEnabled(true);
-		}
+		removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);		
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -534,12 +531,32 @@ public class TaskInfoEditor extends EditorPart {
 			}
 		});
 
-		// 3 Blank columns after Reminder clear button
+		// 1 Blank column after Reminder clear button
 		Label dummy = toolkit.createLabel(sectionClient, "");
-		GridData dummyLabelDataLayout = new GridData(GridData.FILL_HORIZONTAL);
-		dummyLabelDataLayout.horizontalSpan = 3;
+		GridData dummyLabelDataLayout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+		dummyLabelDataLayout.horizontalSpan = 1;
+		dummyLabelDataLayout.widthHint = 30;
 		dummy.setLayoutData(dummyLabelDataLayout);
+		
+		// Creation date
+		label = toolkit.createLabel(sectionClient, "Creation date:");
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
+		String creationDateString = "";
+		try {
+			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
+		} catch (RuntimeException e) {
+			MylarStatusHandler.fail(e, "Could not format creation date", true);
+		}
+
+		Text creationDate = toolkit.createText(sectionClient, creationDateString, SWT.NONE);
+		GridData creationDateDataLayout = new GridData();
+		creationDateDataLayout.widthHint = 120;
+		creationDate.setLayoutData(creationDateDataLayout);
+		creationDate.setEditable(false);
+		creationDate.setEnabled(true);
+
+		
 		// Estimated time
 
 		label = toolkit.createLabel(sectionClient, "Estimated time:");
@@ -565,77 +582,13 @@ public class TaskInfoEditor extends EditorPart {
 		label = toolkit.createLabel(sectionClient, "hours ");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
+
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
 		GridData blankLabl2Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
 		blankLabl2Layout.horizontalSpan = 1;
 		blankLabl2Layout.widthHint = 25;
 		blankLabel2.setLayoutData(blankLabl2Layout);
-
-		// Creation date
-		label = toolkit.createLabel(sectionClient, "Creation date:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-
-		String creationDateString = "";
-		try {
-			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "Could not format creation date", true);
-		}
-
-		Text creationDate = toolkit.createText(sectionClient, creationDateString, SWT.NONE);
-		creationDate.setEditable(false);
-		creationDate.setEnabled(true);
-		// toolkit.paintBordersFor(sectionClient);
-
-		// Elapsed Time
-		label = toolkit.createLabel(sectionClient, "Elapsed time:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-
-		String elapsedTimeString = "0";
-		try {
-			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
-			if (elapsedTimeString.equals(""))
-				elapsedTimeString = "0";
-		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "Could not format elapsed time", true);
-		}
-
-		final Text elapsedTimeText = toolkit.createText(sectionClient, elapsedTimeString, SWT.NONE);
-
-		GridData td = new GridData();
-		td.widthHint = 124;
-		td.verticalIndent = 5;
-		td.heightHint = 18;
-		elapsedTimeText.setLayoutData(td);
-		elapsedTimeText.setEditable(false);
-
-		// Refresh Button
-		Button timeRefresh = toolkit.createButton(sectionClient, "Refresh", SWT.PUSH | SWT.CENTER);
-
-		timeRefresh.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String elapsedTimeString = "0";
-				try {
-					elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
-					if (elapsedTimeString.equals("")) {
-						elapsedTimeString = "0";
-					}
-
-				} catch (RuntimeException e1) {
-					MylarStatusHandler.fail(e1, "Could not format elapsed time", true);
-				}
-				elapsedTimeText.setText(elapsedTimeString);
-			}
-		});
-
-		// 1 Blank column
-		Label blankLabel3 = toolkit.createLabel(sectionClient, "");
-		GridData blankLabl3Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
-		blankLabl3Layout.horizontalSpan = 1;
-		blankLabl3Layout.widthHint = 25;
-		blankLabel3.setLayoutData(blankLabl2Layout);
 
 		// Completion date
 		label = toolkit.createLabel(sectionClient, "Completion date:");
@@ -646,10 +599,67 @@ public class TaskInfoEditor extends EditorPart {
 			completionDateString = getTaskDateString(task);
 		}
 		endDate = toolkit.createText(sectionClient, completionDateString, SWT.NONE);
+		GridData endDateDataLayout = new GridData();
+		endDateDataLayout.widthHint = 120;
+		endDate.setLayoutData(endDateDataLayout);
+
+		
 		endDate.setEditable(false);
 		endDate.setEnabled(true);
 		toolkit.paintBordersFor(sectionClient);
 
+		// Elapsed Time
+
+		label = toolkit.createLabel(sectionClient, "Elapsed time:");
+		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		
+		Composite elapsedComposite = toolkit.createComposite(sectionClient);
+		GridLayout elapsedLayout = new GridLayout();
+		elapsedLayout.numColumns = 2;
+		elapsedLayout.marginWidth = 1;
+		elapsedLayout.makeColumnsEqualWidth = false;
+		elapsedComposite.setLayout(elapsedLayout);
+		GridData elapsedCompositeGridData = new GridData();
+		elapsedCompositeGridData.horizontalSpan = 5;
+		elapsedComposite.setLayoutData(elapsedCompositeGridData);
+		
+
+
+		String elapsedTimeString = NO_TIME_ELAPSED;
+		try {
+			elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
+			if (elapsedTimeString.equals(""))
+				elapsedTimeString = NO_TIME_ELAPSED;
+		} catch (RuntimeException e) {
+			MylarStatusHandler.fail(e, "Could not format elapsed time", true);
+		}
+
+		final Text elapsedTimeText = toolkit.createText(elapsedComposite, elapsedTimeString, SWT.NONE);
+		GridData td = new GridData(GridData.FILL_HORIZONTAL);
+		elapsedTimeText.setLayoutData(td);
+		elapsedTimeText.setEditable(false);
+
+		// Refresh Button
+		Button timeRefresh = toolkit.createButton(elapsedComposite, "Refresh", SWT.PUSH | SWT.CENTER);
+
+		timeRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String elapsedTimeString = NO_TIME_ELAPSED;
+				try {
+					elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
+					if (elapsedTimeString.equals("")) {
+						elapsedTimeString = NO_TIME_ELAPSED;
+					}
+
+				} catch (RuntimeException e1) {
+					MylarStatusHandler.fail(e1, "Could not format elapsed time", true);
+				}
+				elapsedTimeText.setText(elapsedTimeString);
+			}
+		});
+
+		toolkit.paintBordersFor(elapsedComposite);
 	}
 
 	private String getTaskDateString(ITask task) {
@@ -690,15 +700,6 @@ public class TaskInfoEditor extends EditorPart {
 		layout.numColumns = 2;
 		container.setLayout(layout);
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// Label l = toolkit.createLabel(container, "Task Handle:");
-		// l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		// Text handle = toolkit.createText(container,
-		// task.getHandleIdentifier(), SWT.BORDER);
-		// TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
-		// td.colspan = 2;
-		// handle.setLayoutData(td);
-		// handle.setEditable(false);
-		// handle.setEnabled(false);
 
 		Label l2 = toolkit.createLabel(container, "Task context file:");
 		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
