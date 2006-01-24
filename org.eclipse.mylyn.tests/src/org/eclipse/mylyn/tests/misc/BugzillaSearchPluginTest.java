@@ -32,9 +32,9 @@ import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
-import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
-import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
 import org.eclipse.mylar.tasklist.TaskRepository;
+import org.eclipse.mylar.tests.java.search.SearchPluginTestHelper;
+import org.eclipse.mylar.tests.java.search.WorkspaceSetupHelper;
 
 /*TEST CASES TO HANDLE
  * 1. what is here

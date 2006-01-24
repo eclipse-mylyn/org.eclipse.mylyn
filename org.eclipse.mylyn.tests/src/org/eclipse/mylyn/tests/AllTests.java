@@ -15,16 +15,16 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylar.bugzilla.tests.AllBugzillaTests;
-import org.eclipse.mylar.core.tests.AllCoreTests;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.MylarIdePlugin;
-import org.eclipse.mylar.ide.tests.AllIdeTests;
-import org.eclipse.mylar.java.tests.AllJavaTests;
 import org.eclipse.mylar.monitor.tests.AllMonitorTests;
-import org.eclipse.mylar.tasklist.tests.AllTasklistTests;
+import org.eclipse.mylar.tests.core.AllCoreTests;
+import org.eclipse.mylar.tests.ide.AllIdeTests;
 import org.eclipse.mylar.tests.integration.AllIntegrationTests;
+import org.eclipse.mylar.tests.java.AllJavaTests;
 import org.eclipse.mylar.tests.misc.AllMiscTests;
-import org.eclipse.mylar.xml.tests.AllXmlTests;
+import org.eclipse.mylar.tests.tasklist.AllTasklistTests;
+import org.eclipse.mylar.tests.xml.AllXmlTests;
 	
 /**
  * @author Mik Kersten
