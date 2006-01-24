@@ -25,9 +25,9 @@ public class AllMonitorTests {
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(TaskTimerTest.class);
 		suite.addTestSuite(StatisticsReportingTest.class); // HACK: needs to be
-															// last due to
-															// loading race
-															// condition
+		// last due to
+		// loading race
+		// condition
 		suite.addTestSuite(InteractionLoggerTest.class);
 		suite.addTestSuite(ActiveTimerTest.class);
 		suite.addTestSuite(StatisticsLoggingTest.class);

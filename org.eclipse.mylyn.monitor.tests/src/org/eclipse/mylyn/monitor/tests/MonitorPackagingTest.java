@@ -64,9 +64,9 @@ public class MonitorPackagingTest extends AbstractContextTest {
 			numEntries++;
 			String zipEntryName = ((ZipEntry) entries.nextElement()).getName();
 			assertTrue("Unknown Entry: " + zipEntryName, zipEntryName.compareTo(monitorFile.getName()) == 0);// ||
-																												// zipEntryName.compareTo(logFile.getName())
-																												// ==
-																												// 0);
+			// zipEntryName.compareTo(logFile.getName())
+			// ==
+			// 0);
 		}
 		assertEquals("Results not correct size", 1, numEntries);
 
