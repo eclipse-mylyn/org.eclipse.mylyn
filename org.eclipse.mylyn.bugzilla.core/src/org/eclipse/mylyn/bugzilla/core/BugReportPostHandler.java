@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,12 +51,12 @@ public class BugReportPostHandler {
 	public static final String FORM_PREFIX_BUG_218 = "Bug ";
 
 	public static final String FORM_PREFIX_BUG_220 = "Issue ";
-	
+
 	/** The fields that are to be changed/maintained */
 	private Map<String, String> fields = new HashMap<String, String>();
 
 	private URL postUrl;
-	
+
 	private String charset;
 
 	/** The prefix for how to find the bug number from the return */
@@ -128,7 +128,7 @@ public class BugReportPostHandler {
 			}
 			postConnection.setRequestProperty("Content-Type", contentTypeString);
 			// get the url for the update with all of the changed values
-			byte[] body = getPostBody().getBytes(); 
+			byte[] body = getPostBody().getBytes();
 			postConnection.setRequestProperty("Content-Length", String.valueOf(body.length));
 
 			// allow outgoing streams and open a stream to post to
@@ -164,7 +164,10 @@ public class BugReportPostHandler {
 								"error") != -1)) {
 					// error handling is now passed up
 					// throw new LoginException("Bugzilla login problem");
-				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO: make this configurable
+				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO:
+						// make
+						// this
+						// configurable
 						|| aString.toLowerCase().matches(".*defect\\s+processed.*")) {
 					possibleFailure = false;
 				}
@@ -173,7 +176,7 @@ public class BugReportPostHandler {
 					int startIndex = -1;
 					int startIndexPrefix = aString.toLowerCase().indexOf(prefix.toLowerCase());
 					int startIndexPrefix2 = aString.toLowerCase().indexOf(prefix2.toLowerCase());
-					
+
 					if (startIndexPrefix != -1 || startIndexPrefix2 != -1) {
 						if (startIndexPrefix != -1) {
 							startIndex = startIndexPrefix + prefix.length();

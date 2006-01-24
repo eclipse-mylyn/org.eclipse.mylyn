@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,7 +69,8 @@ public class ViewBugzillaAction extends UIJob {
 				if (editorInput.getBug() == null) {
 					MessageDialog.openError(null, "Server Setting Error", "Incorrect server set for the bug.");
 				} else {
-					AbstractBugEditor abe = (AbstractBugEditor) page.openEditor(editorInput, IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
+					AbstractBugEditor abe = (AbstractBugEditor) page.openEditor(editorInput,
+							IBugzillaConstants.EXISTING_BUG_EDITOR_ID);
 					if (commentNumber == 0) {
 						abe.selectDescription();
 					} else if (commentNumber == 1) {
@@ -88,7 +89,8 @@ public class ViewBugzillaAction extends UIJob {
 			} catch (PartInitException e) {
 				BugzillaPlugin.log(e);
 			} catch (IOException e) {
-				BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while opening the bug report.", "Bugzilla Error");
+				BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e,
+						"occurred while opening the bug report.", "Bugzilla Error");
 			}
 		}
 		return new Status(IStatus.OK, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "", null);

@@ -24,7 +24,7 @@ public class BugzillaQueryWizardPage extends WizardPage {
 	private static final String TITLE = "New Bugzilla Query";
 
 	private static final String DESCRIPTION = "Enter the parameters for this query.";
-	
+
 	private BugzillaQueryDialog queryDialog;
 
 	public BugzillaQueryWizardPage(TaskRepository repository) {
@@ -38,7 +38,7 @@ public class BugzillaQueryWizardPage extends WizardPage {
 		Control control = queryDialog.createDialogArea(parent);
 		setControl(control);
 	}
-	
+
 	public BugzillaQueryDialog getQueryDialog() {
 		return queryDialog;
 	}

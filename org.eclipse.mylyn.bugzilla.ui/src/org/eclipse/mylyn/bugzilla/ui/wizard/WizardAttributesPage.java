@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui.wizard;
 
 import org.eclipse.ui.IWorkbench;
@@ -17,12 +18,6 @@ import org.eclipse.ui.IWorkbench;
  */
 public class WizardAttributesPage extends AbstractWizardDataPage {
 
-	/**
-	 * Constructor for WizardAttributesPage
-	 * 
-	 * @param workbench
-	 *            The instance of the workbench.
-	 */
 	public WizardAttributesPage(IWorkbench workbench) {
 		super("Page2", "New Bug Report", "Enter Bug", workbench);
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,27 +38,27 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 		// ignore
 	}
 
-	public void run(IAction action) {			
+	public void run(IAction action) {
 		if (action instanceof ObjectPluginAction) {
-    		ObjectPluginAction objectAction = (ObjectPluginAction)action;
-    		if (objectAction.getSelection() instanceof StructuredSelection) {
-    			StructuredSelection selection = (StructuredSelection)objectAction.getSelection();
-    			Object firstElement = selection.getFirstElement();
-    			String comment = null;
-    			boolean resolved = false;
-    			if (firstElement instanceof ChangeSetDiffNode) {
-    				comment = ((ChangeSetDiffNode)firstElement).getName();
-    			} else if (firstElement instanceof LogEntry){
-    				comment = ((LogEntry)firstElement).getComment();
-    			}
-    			if (comment != null) {
+			ObjectPluginAction objectAction = (ObjectPluginAction) action;
+			if (objectAction.getSelection() instanceof StructuredSelection) {
+				StructuredSelection selection = (StructuredSelection) objectAction.getSelection();
+				Object firstElement = selection.getFirstElement();
+				String comment = null;
+				boolean resolved = false;
+				if (firstElement instanceof ChangeSetDiffNode) {
+					comment = ((ChangeSetDiffNode) firstElement).getName();
+				} else if (firstElement instanceof LogEntry) {
+					comment = ((LogEntry) firstElement).getComment();
+				}
+				if (comment != null) {
 					String idString = MylarContextChangeSet.getIssueIdFromComment(comment);
 					String url = MylarContextChangeSet.getUrlFromComment(comment);
 					String repositoryUrl = getRepositoryUrlFromComment(url);
 					int id = -1;
 					try {
 						id = Integer.parseInt(idString);
-					} catch (NumberFormatException e) { 
+					} catch (NumberFormatException e) {
 						// ignore
 					}
 					if (id != -1) {
@@ -72,18 +72,16 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 						}
 						resolved = true;
 					} else if (url != null) {
-	    				BugzillaUITools.openUrl("Web Browser", "Web Browser", url);
-	    				resolved = true;
-					} 
-    			}
-    			
-    			if (!resolved) {
-					MessageDialog.openInformation(
-							Display.getCurrent().getActiveShell(), 
-							"Mylar Information", 
+						BugzillaUITools.openUrl("Web Browser", "Web Browser", url);
+						resolved = true;
+					}
+				}
+
+				if (!resolved) {
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylar Information",
 							"Could not resolve report corresponding to change set comment.");
 				}
-    		}
+			}
 		}
 	}
 

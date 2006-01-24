@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,10 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core;
 
 import org.eclipse.jface.viewers.ISelection;
-
 
 /**
  * Interface for a selection of a Bugzilla element in a view.
@@ -22,7 +22,7 @@ public interface IBugzillaReportSelection extends ISelection {
 	 * @return <code>true</code> if a comment was selected.
 	 */
 	public boolean hasComment();
-	
+
 	/**
 	 * @return the <code>Comment</code> object for this selection, or
 	 *         <code>null</code> if a comment was not selected.
@@ -78,12 +78,11 @@ public interface IBugzillaReportSelection extends ISelection {
 	 *            The server of the bug.
 	 */
 	public void setServer(String server);
-	
+
 	public boolean isCommentHeader();
-	
+
 	public boolean isDescription();
 
 	public String getBugSummary();
-	
 
 }

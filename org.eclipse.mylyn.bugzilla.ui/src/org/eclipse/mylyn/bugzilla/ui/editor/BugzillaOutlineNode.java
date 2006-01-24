@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	 * @param data
 	 *            The data, if necessary, this node represents.
 	 * @param parent
-	 * 			  The parent of this node
+	 *            The parent of this node
 	 */
 	public BugzillaOutlineNode(int id, String server, String key, Image image, Object data, String summary) {
 		this.id = id;
@@ -88,15 +88,19 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 	}
 
 	/**
-	 * @return The children of this node, represented as an <code>Object</code> array.
+	 * @return The children of this node, represented as an <code>Object</code>
+	 *         array.
 	 */
 	public BugzillaOutlineNode[] getChildren() {
-		return (nodeChildren == null) ? new BugzillaOutlineNode[0] : nodeChildren.toArray(new BugzillaOutlineNode[nodeChildren.size()]);
+		return (nodeChildren == null) ? new BugzillaOutlineNode[0] : nodeChildren
+				.toArray(new BugzillaOutlineNode[nodeChildren.size()]);
 	}
 
 	/**
 	 * Adds a node to this node's list of children.
-	 * @param bugNode The new child.
+	 * 
+	 * @param bugNode
+	 *            The new child.
 	 */
 	public void addChild(BugzillaOutlineNode bugNode) {
 		if (nodeChildren == null) {
@@ -113,13 +117,13 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		return key;
 	}
 
-//	/**
-//	 * Set the label of this node.
-//	 * @param key The new label.
-//	 */
-//	public void setKey(String key) {
-//		this.key = key;
-//	}
+	// /**
+	// * Set the label of this node.
+	// * @param key The new label.
+	// */
+	// public void setKey(String key) {
+	// this.key = key;
+	// }
 
 	/**
 	 * TODO: remove, nodes don't need to know about image decorator
@@ -130,7 +134,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 
 	/**
 	 * Sets the decorator image for this node.
-	 * @param newImage The new image.
+	 * 
+	 * @param newImage
+	 *            The new image.
 	 */
 	public void setImage(Image newImage) {
 		this.image = newImage;
@@ -170,7 +176,9 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 
 	/**
 	 * Sets the data that this node represents.
-	 * @param data The new piece of data.
+	 * 
+	 * @param data
+	 *            The new piece of data.
 	 */
 	public void setData(Object data) {
 		this.data = data;
@@ -211,11 +219,14 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		String bugServer = bug.getRepository();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
 		Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
-		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());
+		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug
+				.getSummary());
 
-		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null, bug.getSummary()));
+		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Description", defaultImage, null, bug
+				.getSummary()));
 
-		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage, null, bug.getSummary());
+		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "NewBugModel Object", defaultImage,
+				null, bug.getSummary());
 		titleNode.addChild(topNode);
 
 		return titleNode;
@@ -236,9 +247,11 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 		String bugServer = bug.getRepository();
 		Image bugImage = BugzillaImages.getImage(BugzillaImages.BUG);
 		Image defaultImage = BugzillaImages.getImage(BugzillaImages.IMG_COMMENT);
-		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug.getSummary());
+		BugzillaOutlineNode topNode = new BugzillaOutlineNode(bugId, bugServer, bug.getLabel(), bugImage, bug, bug
+				.getSummary());
 
-		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug.getDescription(), bug.getSummary());
+		BugzillaOutlineNode desc = new BugzillaOutlineNode(bugId, bugServer, "Description", defaultImage, bug
+				.getDescription(), bug.getSummary());
 		desc.setIsDescription(true);
 
 		topNode.addChild(desc);
@@ -248,18 +261,22 @@ public class BugzillaOutlineNode implements IBugzillaReportSelection {
 			Comment comment = iter.next();
 
 			if (comments == null) {
-				comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug.getSummary());
+				comments = new BugzillaOutlineNode(bugId, bugServer, "Comments", defaultImage, comment, bug
+						.getSummary());
 				comments.setIsCommentHeader(true);
 			}
-			comments.addChild(new BugzillaOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage, comment, bug.getSummary()));
+			comments.addChild(new BugzillaOutlineNode(bugId, bugServer, comment.getCreated().toString(), defaultImage,
+					comment, bug.getSummary()));
 		}
 		if (comments != null) {
 			topNode.addChild(comments);
 		}
 
-		topNode.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Comment", defaultImage, null, bug.getSummary()));
+		topNode
+				.addChild(new BugzillaOutlineNode(bugId, bugServer, "New Comment", defaultImage, null, bug.getSummary()));
 
-		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "BugReport Object", defaultImage, null, bug.getSummary());
+		BugzillaOutlineNode titleNode = new BugzillaOutlineNode(bugId, bugServer, "BugReport Object", defaultImage,
+				null, bug.getSummary());
 		titleNode.addChild(topNode);
 
 		return titleNode;

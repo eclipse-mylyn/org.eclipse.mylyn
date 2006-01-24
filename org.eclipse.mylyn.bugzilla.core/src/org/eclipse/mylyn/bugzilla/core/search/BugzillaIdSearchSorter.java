@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.search;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-
 
 /**
  * Sorts results of Bugzilla search by bug id.
@@ -35,27 +35,24 @@ public class BugzillaIdSearchSorter extends ViewerSorter {
 		try {
 			// cast the object and get its bug id
 			IMarker entry1 = (IMarker) e1;
-			Integer id1 = (Integer) entry1.getAttribute(
-				IBugzillaConstants.HIT_MARKER_ATTR_ID);
-				
+			Integer id1 = (Integer) entry1.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
+
 			// cast the other object and get its bug id
 			IMarker entry2 = (IMarker) e2;
-			Integer id2 = (Integer) entry2.getAttribute(
-				IBugzillaConstants.HIT_MARKER_ATTR_ID);
+			Integer id2 = (Integer) entry2.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
 
 			// if neither is null, compare the bug id's
 			if (id1 != null && id2 != null) {
 				return id1.compareTo(id2);
 			}
-		} 
-		catch (Exception ignored) {
+		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}
-		
+
 		// if that didn't work, use the default compare method
 		return super.compare(viewer, e1, e2);
 	}
-	
+
 	/**
 	 * Returns the category of the given element. The category is a number used
 	 * to allocate elements to bins; the bins are arranged in ascending numeric
@@ -69,16 +66,15 @@ public class BugzillaIdSearchSorter extends ViewerSorter {
 	public int category(Object element) {
 		try {
 			IMarker marker = (IMarker) element;
-			
+
 			// return the bugs id
 			if (marker.getType().equals(IBugzillaConstants.HIT_MARKER_ID)) {
-				return ((Integer)marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID)).intValue();
+				return ((Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID)).intValue();
 			}
-		} 
-		catch (Exception ignored) {
+		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}
-		
+
 		// if that didn't work, use the default category method
 		return super.category(element);
 	}

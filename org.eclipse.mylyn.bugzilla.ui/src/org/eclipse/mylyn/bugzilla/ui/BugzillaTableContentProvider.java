@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -26,27 +27,29 @@ public class BugzillaTableContentProvider extends BugzillaContentProvider implem
 
 	/** The page the Bugzilla search results are displayed in */
 	private BugzillaSearchResultView bugPage;
-	
+
 	/**
 	 * Constructor
-	 * @param page The page the Bugzilla search results are displayed in
+	 * 
+	 * @param page
+	 *            The page the Bugzilla search results are displayed in
 	 */
 	public BugzillaTableContentProvider(BugzillaSearchResultView page) {
 		bugPage = page;
 	}
-	
+
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput instanceof BugzillaSearchResult) {
 			bugResult = (BugzillaSearchResult) newInput;
 		}
 	}
-	
+
 	@Override
 	public void elementsChanged(Object[] updatedElements) {
-		TableViewer viewer= getViewer();
-		boolean tableLimited= SearchPreferencePage.isTableLimited();
-		for (int i= 0; i < updatedElements.length; i++) {
+		TableViewer viewer = getViewer();
+		boolean tableLimited = SearchPreferencePage.isTableLimited();
+		for (int i = 0; i < updatedElements.length; i++) {
 			if (bugResult.getMatchCount(updatedElements[i]) > 0) {
 				if (viewer.testFindItem(updatedElements[i]) != null)
 					viewer.update(updatedElements[i], null);
@@ -76,10 +79,10 @@ public class BugzillaTableContentProvider extends BugzillaContentProvider implem
 	 */
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof BugzillaSearchResult) {
-			Object[] elements= ((BugzillaSearchResult)inputElement).getElements();
-			int tableLimit= SearchPreferencePage.getTableLimit();
+			Object[] elements = ((BugzillaSearchResult) inputElement).getElements();
+			int tableLimit = SearchPreferencePage.getTableLimit();
 			if (SearchPreferencePage.isTableLimited() && elements.length > tableLimit) {
-				Object[] shownElements= new Object[tableLimit];
+				Object[] shownElements = new Object[tableLimit];
 				System.arraycopy(elements, 0, shownElements, 0, tableLimit);
 				return shownElements;
 			}

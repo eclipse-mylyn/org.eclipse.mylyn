@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ public class AllBugzillaTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(EncodingTest.class);
 		suite.addTestSuite(NewBugWizardTest.class);
 		suite.addTestSuite(RegularExpressionMatchTest.class);
@@ -32,8 +32,8 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaParserTestNoBug.class);
 		suite.addTestSuite(BugzillaProductParserTest.class);
 		// TODO: enable
-//		suite.addTest(new TestSuite(BugzillaParserTest.class));
-		//$JUnit-END$
+		// suite.addTest(new TestSuite(BugzillaParserTest.class));
+		// $JUnit-END$
 		return suite;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,7 +78,7 @@ public class BugzillaQueryDialog extends Dialog {
 		searchOptionPage = new BugzillaSearchOptionPage(repository);
 		title = "New Bugzilla Query";
 	}
-	
+
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
 		isNew = true;
@@ -86,7 +86,7 @@ public class BugzillaQueryDialog extends Dialog {
 		searchOptionPage = new BugzillaSearchOptionPage(null);
 		title = "New Bugzilla Query";
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -121,15 +121,15 @@ public class BugzillaQueryDialog extends Dialog {
 	public boolean isCustom() {
 		return isCustom;
 	}
-	
+
 	/*
-	 * XXX This is being used to create the contents for a wizard page.  Yuck!
+	 * XXX This is being used to create the contents for a wizard page. Yuck!
 	 * Visibility of this method has also been increased
 	 */
 	@Override
 	public Control createDialogArea(Composite parent) {
-		Composite composite = (Composite)super.createDialogArea(parent);
-		
+		Composite composite = (Composite) super.createDialogArea(parent);
+
 		searchOptionPage.createControl(composite);
 		searchOptionPage.setVisible(true);
 

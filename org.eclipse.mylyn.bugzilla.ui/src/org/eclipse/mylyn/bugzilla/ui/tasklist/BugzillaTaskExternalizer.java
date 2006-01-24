@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,8 +47,8 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-	public static final String BUGZILLA_ARCHIVE_LABEL = TaskListManager.ARCHIVE_CATEGORY_DESCRIPTION
-			+ " (" + BugzillaPlugin.REPOSITORY_KIND + ")";
+	public static final String BUGZILLA_ARCHIVE_LABEL = TaskListManager.ARCHIVE_CATEGORY_DESCRIPTION + " ("
+			+ BugzillaPlugin.REPOSITORY_KIND + ")";
 
 	private static final String BUGZILLA = "Bugzilla";
 
@@ -59,7 +59,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	private static final String SYNC_STATE = "offlineSyncState";
 
 	private static final String DESCRIPTION = "Description";
-	
+
 	private static final String URL = "URL";
 
 	private static final String BUGZILLA_TASK_REGISTRY = "BugzillaTaskRegistry" + TAG_CATEGORY;
@@ -100,8 +100,8 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		if (element.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
 			readRegistry(node, taskList);
 		} else {
-			BugzillaQueryCategory cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(URL), element.getAttribute(DESCRIPTION), element
-					.getAttribute(MAX_HITS));
+			BugzillaQueryCategory cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element
+					.getAttribute(URL), element.getAttribute(DESCRIPTION), element.getAttribute(MAX_HITS));
 			taskList.internalAddQuery(cat);
 		}
 	}
@@ -124,11 +124,11 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		Element element = (Element) node;
 		IRepositoryQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
-			cat = new BugzillaCustomQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(NAME), element.getAttribute(QUERY_STRING), element
-					.getAttribute(MAX_HITS));
+			cat = new BugzillaCustomQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(NAME),
+					element.getAttribute(QUERY_STRING), element.getAttribute(MAX_HITS));
 		} else if (node.getNodeName().equals(TAG_BUGZILLA_QUERY)) {
-			cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(QUERY_STRING), element.getAttribute(NAME), element
-					.getAttribute(MAX_HITS));
+			cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(QUERY_STRING),
+					element.getAttribute(NAME), element.getAttribute(MAX_HITS));
 		}
 		if (cat != null) {
 			tlist.internalAddQuery(cat);
@@ -177,7 +177,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	public boolean canCreateElementFor(IRepositoryQuery category) {
 		return category instanceof BugzillaQueryCategory;
 	}
-	
+
 	public boolean canCreateElementFor(ITask task) {
 		return task instanceof BugzillaTask;
 	}
@@ -298,7 +298,8 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		} else {
 			throw new TaskListExternalizerException("Description not stored for bug report");
 		}
-		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(handle), null, status);
+		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), TaskRepositoryManager
+				.getTaskIdAsInt(handle), null, status);
 		query.addHit(hit);
 	}
 

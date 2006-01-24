@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.search;
 
 import org.eclipse.core.resources.IMarker;
@@ -18,20 +19,22 @@ import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer;
 /**
  * Label provider for Bugzilla search items.
  */
-public class BugzillaLabelProvider extends LabelProvider 
-{
+public class BugzillaLabelProvider extends LabelProvider {
 	/** A list of the default severity labels */
-	private static final String [] severityLabel = {"blocker", "critical", "major", "normal", "minor", "trivial", "enhancement"};
-	
+	private static final String[] severityLabel = { "blocker", "critical", "major", "normal", "minor", "trivial",
+			"enhancement" };
+
 	/** A list of the default priority labels */
-	private static final String [] priorityLabel = {"P1", "P2", "P3", "P4", "P5", "--"};
-	
+	private static final String[] priorityLabel = { "P1", "P2", "P3", "P4", "P5", "--" };
+
 	/** A list of the default state labels */
-	private static final String [] stateLabel = {"Unconfirmed", "New", "Assigned", "Reopened", "Resolved", "Verified", "Closed"};
-	
+	private static final String[] stateLabel = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved", "Verified",
+			"Closed" };
+
 	/** A list of the default result labels */
-	private static final String [] resultLabel = {"", "fixed", "invalid", "wont fix", "later", "remind", "duplicate", "works for me"};
-	
+	private static final String[] resultLabel = { "", "fixed", "invalid", "wont fix", "later", "remind", "duplicate",
+			"works for me" };
+
 	/**
 	 * Returns the text for the label of the given element.
 	 * 
@@ -46,46 +49,31 @@ public class BugzillaLabelProvider extends LabelProvider
 
 				// get the severity of the bug
 				String severity = severityLabel[((Integer) marker
-						.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY))
-						.intValue()];
+						.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY)).intValue()];
 
 				// get the priority of the bug
 				String priority = priorityLabel[((Integer) marker
-						.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY))
-						.intValue()];
+						.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_PRIORITY)).intValue()];
 
 				// get the state of the bug
-				String state = stateLabel[((Integer) marker
-						.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE))
+				String state = stateLabel[((Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE))
 						.intValue()];
 
 				// get the resolution of the bug
-				String result = resultLabel[((Integer) marker
-						.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT))
+				String result = resultLabel[((Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT))
 						.intValue()];
 
 				// return a string containing the information about the bug to
 				// be displayed
 				// in the searh window
-				String assignedTo = HtmlStreamTokenizer.unescape(marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_OWNER).toString());
-				String description = HtmlStreamTokenizer.unescape(marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_DESC).toString());
-				return "Bug "
-						+ marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID)
-						+ " ("
-						+ severity
-						+ " - "
-						+ priority
-						+ " - "
-						+ state
-						+ (result.length() > 0 ? " " + result : "")
-						+ ") "
-						+ " - "
-						+ description
-						+ " ("
-						+ assignedTo
-						+ ") ";
-			}
-			catch (Exception ignored) {
+				String assignedTo = HtmlStreamTokenizer.unescape(marker.getAttribute(
+						IBugzillaConstants.HIT_MARKER_ATTR_OWNER).toString());
+				String description = HtmlStreamTokenizer.unescape(marker.getAttribute(
+						IBugzillaConstants.HIT_MARKER_ATTR_DESC).toString());
+				return "Bug " + marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID) + " (" + severity + " - "
+						+ priority + " - " + state + (result.length() > 0 ? " " + result : "") + ") " + " - "
+						+ description + " (" + assignedTo + ") ";
+			} catch (Exception ignored) {
 				// ignore if there is a problem
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 
 		ITask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(), bugId),
 				"<bugzilla info>", true, true);
-		
+
 		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
 		if (taskHandler != null) {
 			ITask addedTask = taskHandler.addTaskToRegistry(newTask);
@@ -85,10 +85,10 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 	}
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
-		
+
 		// TODO create a propper subclass for Bugzilla
 		return new AbstractAddExistingTaskWizard(repository) {
-			
+
 			private ExistingTaskWizardPage page;
 
 			public void addPages() {
@@ -96,7 +96,7 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 				this.page = new ExistingTaskWizardPage();
 				addPage(page);
 			}
-			
+
 			protected String getTaskId() {
 				return page.getTaskId();
 			}

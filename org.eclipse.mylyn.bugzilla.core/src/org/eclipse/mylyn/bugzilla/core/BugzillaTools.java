@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,16 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.core;
 
-
-
 /**
  * Miscellaneous constants and functions for this plugin.
  */
 public class BugzillaTools {
-	
+
 	/** The default string used for locally created bugs. */
 	public static final String OFFLINE_SERVER_DEFAULT = "[local]";
-	
+
 	/**
 	 * Returns a unique handle for the bugzilla selection. Contains the bug id,
 	 * the bug server, and (if applicable) the comment number.
@@ -33,36 +31,36 @@ public class BugzillaTools {
 		if (bugSel.hasComment()) {
 			int number = bugSel.getComment().getNumber() + 1;
 			handle += ";" + number;
-		} else if(bugSel.isCommentHeader()){
+		} else if (bugSel.isCommentHeader()) {
 			handle += ";1";
-		} else if(bugSel.isDescription()){
+		} else if (bugSel.isDescription()) {
 			handle += ";0";
 		}
 		return handle;
 	}
-    
-    public static String getName(IBugzillaReportSelection bugSel) {
-        String name = bugSel.getServer() + ": Bug#: " + bugSel.getId() + ": " + bugSel.getBugSummary();
-        if (bugSel.hasComment()) {
-        	name+= " : Comment#: " + bugSel.getComment().getNumber();
-        } else if(bugSel.isCommentHeader()){
-        	name+= " : Comment Header";
-		} else if(bugSel.isDescription()){
-			name+= ": Description";
+
+	public static String getName(IBugzillaReportSelection bugSel) {
+		String name = bugSel.getServer() + ": Bug#: " + bugSel.getId() + ": " + bugSel.getBugSummary();
+		if (bugSel.hasComment()) {
+			name += " : Comment#: " + bugSel.getComment().getNumber();
+		} else if (bugSel.isCommentHeader()) {
+			name += " : Comment Header";
+		} else if (bugSel.isDescription()) {
+			name += ": Description";
 		}
-        return name;
-    }
-    
-    public static String getHandle(IBugzillaBug bug) {
+		return name;
+	}
+
+	public static String getHandle(IBugzillaBug bug) {
 		return getHandle(bug.getRepository(), bug.getId());
 	}
-    
-    public static String getHandle(String server, int id) {
-    	return server + ";" + id;
-    }
-    
-    public static String getName(IBugzillaBug bug) {
-        return bug.getRepository() + ": Bug#: " + bug.getId() + ": " + bug.getSummary();
-    }
-	
+
+	public static String getHandle(String server, int id) {
+		return server + ";" + id;
+	}
+
+	public static String getName(IBugzillaBug bug) {
+		return bug.getRepository() + ": Bug#: " + bug.getId() + ": " + bug.getSummary();
+	}
+
 }

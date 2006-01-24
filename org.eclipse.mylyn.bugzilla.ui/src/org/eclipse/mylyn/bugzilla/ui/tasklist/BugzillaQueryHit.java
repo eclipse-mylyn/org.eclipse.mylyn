@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.Image;
 public class BugzillaQueryHit implements IQueryHit {
 
 	private String repositoryUrl;
-	
+
 	private String description;
 
 	private String priority;
@@ -40,7 +40,8 @@ public class BugzillaQueryHit implements IQueryHit {
 
 	private String status;
 
-	public BugzillaQueryHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task, String status) {
+	public BugzillaQueryHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task,
+			String status) {
 		this.description = description;
 		this.priority = priority;
 		this.repositoryUrl = repositoryUrl;
@@ -87,7 +88,7 @@ public class BugzillaQueryHit implements IQueryHit {
 	}
 
 	public String getDescription() {
-//		return HtmlStreamTokenizer.unescape(description);
+		// return HtmlStreamTokenizer.unescape(description);
 		if (task != null) {
 			return task.getDescription();
 		} else {
@@ -98,16 +99,16 @@ public class BugzillaQueryHit implements IQueryHit {
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
 	}
-	
+
 	public String getHandleIdentifier() {
 		return TaskRepositoryManager.getHandle(repositoryUrl, id);
-//		return "Bugzilla" + "-" + getId();
+		// return "Bugzilla" + "-" + getId();
 	}
 
-//	public String getServerName() {
-//		// TODO need the right server name - get from the handle
-//		return "Bugzilla";
-//	}
+	// public String getServerName() {
+	// // TODO need the right server name - get from the handle
+	// return "Bugzilla";
+	// }
 
 	public int getId() {
 		return id;
@@ -153,12 +154,13 @@ public class BugzillaQueryHit implements IQueryHit {
 	}
 
 	public boolean isCompleted() {
-//		if (status != null) {
-//			return BugReport.isResolvedStatus(status);
-//		} 
+		// if (status != null) {
+		// return BugReport.isResolvedStatus(status);
+		// }
 		// TODO: move to BugReport?
-		if (status != null && (status.startsWith("RESO") || status.startsWith("CLO") 
-				|| status.startsWith("VERI") || status.startsWith("FIXED"))) {
+		if (status != null
+				&& (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI") || status
+						.startsWith("FIXED"))) {
 			return true;
 		}
 		return false;

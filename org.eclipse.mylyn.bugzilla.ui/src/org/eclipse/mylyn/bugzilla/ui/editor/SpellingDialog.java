@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui.editor;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -23,21 +24,23 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * TODO this is used only for spell checking which is not yet implemented, therefore this is not properly tested
+ * TODO this is used only for spell checking which is not yet implemented,
+ * therefore this is not properly tested
+ * 
  * @author Shawn Minto
  */
-public class SpellingDialog extends Dialog{
+public class SpellingDialog extends Dialog {
 
 	private String title;
-	
+
 	private Text wordToFix;
-	
+
 	private List suggestions;
-	
+
 	private IDocument document;
 
 	private ICompletionProposal[] proposals;
-	
+
 	protected SpellingDialog(Shell parentShell, String title, IDocument document) {
 		super(parentShell);
 		this.title = title;
@@ -47,27 +50,27 @@ public class SpellingDialog extends Dialog{
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Control c = super.createDialogArea(parent);
-		
-		Composite spellingComposite = new Composite(parent,SWT.NONE);
-		
+
+		Composite spellingComposite = new Composite(parent, SWT.NONE);
+
 		GridLayout spellingLayout = new GridLayout();
 		spellingLayout.numColumns = 1;
 		spellingComposite.setLayout(spellingLayout);
-		
-		wordToFix = new Text(spellingComposite,SWT.BORDER | SWT.READ_ONLY);
+
+		wordToFix = new Text(spellingComposite, SWT.BORDER | SWT.READ_ONLY);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.widthHint = 150;
 		wordToFix.setLayoutData(gd);
-		
+
 		suggestions = new List(spellingComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.widthHint = 150;
 		gd.heightHint = AbstractBugEditor.WRAP_LENGTH;
 		suggestions.setLayoutData(gd);
-		
+
 		return c;
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -76,29 +79,27 @@ public class SpellingDialog extends Dialog{
 
 	public void open(String word, ICompletionProposal[] proposals) {
 		create();
-		
+
 		this.proposals = proposals;
-		
+
 		wordToFix.setText(word);
 		suggestions.removeAll();
-		
-		for(int i = 0; i < proposals.length; i++){
+
+		for (int i = 0; i < proposals.length; i++) {
 			suggestions.setItem(i, proposals[i].getDisplayString());
 		}
-		
+
 		super.open();
 	}
 
 	@Override
 	protected void handleShellCloseEvent() {
-		if(getReturnCode() == Dialog.OK){
+		if (getReturnCode() == Dialog.OK) {
 			int i = suggestions.getSelectionIndex();
-			if(i > 0 && i < proposals.length)
+			if (i > 0 && i < proposals.length)
 				proposals[i].apply(document);
 		}
 		super.handleShellCloseEvent();
 	}
 
-	
-	
 }

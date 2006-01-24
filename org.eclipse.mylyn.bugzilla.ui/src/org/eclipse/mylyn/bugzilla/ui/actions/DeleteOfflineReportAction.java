@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui.actions;
 
 import org.eclipse.mylar.bugzilla.ui.BugzillaImages;
@@ -16,50 +17,49 @@ import org.eclipse.mylar.bugzilla.ui.OfflineView;
 /**
  * Action of removing a bookmark
  */
-public class DeleteOfflineReportAction extends AbstractOfflineReportsAction 
-{
+public class DeleteOfflineReportAction extends AbstractOfflineReportsAction {
 	/** The instance of the offlineReports view */
 	private OfflineView view;
-	
+
 	/** True if all of the bookmarks are to be deleted */
 	private boolean deleteAll;
-	
+
 	/**
 	 * Constructor
-	 * @param offlineReportsView The offlineReports view being used
-	 * @param deleteAllOfflineReports <code>true</code> if all of the offlineReports should be deleted, else <code>false</code>
+	 * 
+	 * @param offlineReportsView
+	 *            The offlineReports view being used
+	 * @param deleteAllOfflineReports
+	 *            <code>true</code> if all of the offlineReports should be
+	 *            deleted, else <code>false</code>
 	 */
-	public DeleteOfflineReportAction(OfflineView offlineReportsView, boolean deleteAllOfflineReports) 
-	{
+	public DeleteOfflineReportAction(OfflineView offlineReportsView, boolean deleteAllOfflineReports) {
 		deleteAll = deleteAllOfflineReports;
-		
+
 		// set the appropriate icons and tool tips for the action depending
 		// on whether it will delete all items or not
-		if (deleteAll) 
-		{
+		if (deleteAll) {
 			setToolTipText("Remove All Offline Reports");
 			setText("Remove all");
 			setImageDescriptor(BugzillaImages.REMOVE_ALL);
-		}
-		else 
-		{
-			setToolTipText( "Remove Selected Offline Reports" );
-			setText( "Remove" );
+		} else {
+			setToolTipText("Remove Selected Offline Reports");
+			setText("Remove");
 			setImageDescriptor(BugzillaImages.REMOVE);
 		}
-		
+
 		view = offlineReportsView;
 	}
-	
+
 	/**
-	 * Delete the appropriate offline reports 
+	 * Delete the appropriate offline reports
+	 * 
 	 * @see org.eclipse.jface.action.IAction#run()
 	 */
 	@Override
-	public void run() 
-	{
+	public void run() {
 		OfflineView.checkWindow();
-		
+
 		// call the appropriate delete function
 		if (deleteAll)
 			view.deleteAllOfflineReports();

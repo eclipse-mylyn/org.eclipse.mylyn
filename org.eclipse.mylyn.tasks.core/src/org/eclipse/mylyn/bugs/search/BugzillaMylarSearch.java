@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,6 @@ import org.eclipse.mylar.core.InterestComparator;
 import org.eclipse.mylar.core.search.IActiveSearchListener;
 import org.eclipse.mylar.core.search.IMylarSearchOperation;
 
-
 /**
  * Used to facilitate bugzilla searches based on IJavaElements
  * 
@@ -38,22 +37,28 @@ import org.eclipse.mylar.core.search.IMylarSearchOperation;
 public class BugzillaMylarSearch implements IMylarSearchOperation {
 
 	// scope identifiers
-    public static final int LOCAL_QUAL = 1; // local implies a bugzilla task, not just an offline report
-    public static final int LOCAL_UNQUAL = 2; 
+	public static final int LOCAL_QUAL = 1; // local implies a bugzilla task,
+											// not just an offline report
+
+	public static final int LOCAL_UNQUAL = 2;
+
 	public static final int FULLY_QUAL = 3;
+
 	public static final int UNQUAL = 4;
 
 	private int scope;
-	
+
 	private IJavaElement element;
-	
-    private String handle = "";
-    
-    private String serverUrl = "";
-    
+
+	private String handle = "";
+
+	private String serverUrl = "";
+
 	/**
 	 * Constructor
-	 * @param scope The scope of this search
+	 * 
+	 * @param scope
+	 *            The scope of this search
 	 */
 	public BugzillaMylarSearch(int scope, IJavaElement element, String serverUrl) {
 		this.scope = scope;
@@ -61,126 +66,127 @@ public class BugzillaMylarSearch implements IMylarSearchOperation {
 		this.serverUrl = serverUrl;
 	}
 
-	public IStatus run(IProgressMonitor monitor){
+	public IStatus run(IProgressMonitor monitor) {
 		return run(monitor, Job.DECORATE);
 	}
-	
+
 	public IStatus run(IProgressMonitor monitor, int priority) {
-        handle = element.getHandleIdentifier() + " " + scope;
-        List<IJavaElement> landmarks = new ArrayList<IJavaElement>();
-        landmarks.add(element);
+		handle = element.getHandleIdentifier() + " " + scope;
+		List<IJavaElement> landmarks = new ArrayList<IJavaElement>();
+		landmarks.add(element);
 
-        if (!BugzillaSearchManager.doesJobExist(handle)) {
+		if (!BugzillaSearchManager.doesJobExist(handle)) {
 
-        	// perform the bugzilla search
-        	// get only the useful landmarks (IMember)
-            List<IMember> members = getMemberLandmarks(landmarks);
+			// perform the bugzilla search
+			// get only the useful landmarks (IMember)
+			List<IMember> members = getMemberLandmarks(landmarks);
 
-            // go through all of the landmarks that we are given and perform a
-            // search on them
-            for(IMember m : members){
+			// go through all of the landmarks that we are given and perform a
+			// search on them
+			for (IMember m : members) {
 
-            	// FIXME: decide whether to do leave the caching of searches in for now or not
-                // check if we have the info cached
-//                List<BugzillaReportNode> landmarkDoi = MylarTaskListPlugin.getBridge()
-//                        .getFromLandmarksHash(m, scope);
+				// FIXME: decide whether to do leave the caching of searches in
+				// for now or not
+				// check if we have the info cached
+				// List<BugzillaReportNode> landmarkDoi =
+				// MylarTaskListPlugin.getBridge()
+				// .getFromLandmarksHash(m, scope);
 
-//                if (landmarkDoi != null) {
-//                    //TODO decide when to queue up and do a refresh search
-//                    notifySearchCompleted(landmarkDoi);
-//                    continue;
-//                }
+				// if (landmarkDoi != null) {
+				// //TODO decide when to queue up and do a refresh search
+				// notifySearchCompleted(landmarkDoi);
+				// continue;
+				// }
 
-                // create a search operation so that we can search
-                BugzillaMylarSearchOperation op = new BugzillaMylarSearchOperation(
-                        this, m, scope);
+				// create a search operation so that we can search
+				BugzillaMylarSearchOperation op = new BugzillaMylarSearchOperation(this, m, scope);
 
-                // create a new search job so that it can be scheduled and
-                // run as a background thread
-                Job searchJob = new BugzillaMylarSearchJob(
-                        "Querying Bugzilla Server - Mylar - "
-                                + op.getSearchMemberName(), op);
+				// create a new search job so that it can be scheduled and
+				// run as a background thread
+				Job searchJob = new BugzillaMylarSearchJob("Querying Bugzilla Server - Mylar - "
+						+ op.getSearchMemberName(), op);
 
-                // schedule the new search job
-                searchJob.setPriority(priority);
-                searchJob.schedule();
+				// schedule the new search job
+				searchJob.setPriority(priority);
+				searchJob.schedule();
 
-                // save this searchJobs handle so that we can cancel it if need be
-                BugzillaSearchManager.addJob(handle, searchJob);
-            }
-        }
+				// save this searchJobs handle so that we can cancel it if need
+				// be
+				BugzillaSearchManager.addJob(handle, searchJob);
+			}
+		}
 		return Status.OK_STATUS;
 	}
 
-    /** List of listeners wanting to know about the searches */
-    private List<IActiveSearchListener> listeners = new ArrayList<IActiveSearchListener>();
-    
-    /**
-     * Add a listener for when the bugzilla search is completed
-     * 
-     * @param l
-     *            The listener to add
-     */
-    public void addListener(IActiveSearchListener l) {
-        // add the listener to the list
-        listeners.add(l);
-    }
+	/** List of listeners wanting to know about the searches */
+	private List<IActiveSearchListener> listeners = new ArrayList<IActiveSearchListener>();
 
-    /**
-     * Remove a listener for when the bugzilla search is completed
-     * 
-     * @param l
-     *            The listener to remove
-     */
-    public void removeListener(IActiveSearchListener l) {
-        // remove the listener from the list
-        listeners.remove(l);
-    }
+	/**
+	 * Add a listener for when the bugzilla search is completed
+	 * 
+	 * @param l
+	 *            The listener to add
+	 */
+	public void addListener(IActiveSearchListener l) {
+		// add the listener to the list
+		listeners.add(l);
+	}
 
-    /**
-     * Notify all of the listeners that the bugzilla search is completed
-     * 
-     * @param doiList
-     *            A list of BugzillaSearchHitDoiInfo
-     * @param member
-     *            The IMember that the search was performed on
-     */
-    public void notifySearchCompleted(List<BugzillaReportNode> doiList) {
-        // go through all of the listeners and call searchCompleted(colelctor,
-        // member)
-        BugzillaSearchManager.removeSearchJob(handle);
-        for (IActiveSearchListener listener : listeners) {
-            listener.searchCompleted(doiList);
-        }
-    }
-	
-    /**
-     * Get only the landmarks that are IMember and sort them according to their
-     * DOI value (highest to lowest)
-     * 
-     * @param landmarks
-     *            The landmarks to check
-     * @return List of IMember landmarks sorted by DOI value
-     */
-    public static List<IMember> getMemberLandmarks(List<IJavaElement> landmarks) {
-        List<IMember> memberLandmarks = new ArrayList<IMember>();
+	/**
+	 * Remove a listener for when the bugzilla search is completed
+	 * 
+	 * @param l
+	 *            The listener to remove
+	 */
+	public void removeListener(IActiveSearchListener l) {
+		// remove the listener from the list
+		listeners.remove(l);
+	}
 
-        for(IJavaElement je : landmarks) {
+	/**
+	 * Notify all of the listeners that the bugzilla search is completed
+	 * 
+	 * @param doiList
+	 *            A list of BugzillaSearchHitDoiInfo
+	 * @param member
+	 *            The IMember that the search was performed on
+	 */
+	public void notifySearchCompleted(List<BugzillaReportNode> doiList) {
+		// go through all of the listeners and call searchCompleted(colelctor,
+		// member)
+		BugzillaSearchManager.removeSearchJob(handle);
+		for (IActiveSearchListener listener : listeners) {
+			listener.searchCompleted(doiList);
+		}
+	}
 
-            // keep only the IMember landmarks
-            if (je instanceof IMember) {
-                memberLandmarks.add((IMember)je);
-            }
-        }
+	/**
+	 * Get only the landmarks that are IMember and sort them according to their
+	 * DOI value (highest to lowest)
+	 * 
+	 * @param landmarks
+	 *            The landmarks to check
+	 * @return List of IMember landmarks sorted by DOI value
+	 */
+	public static List<IMember> getMemberLandmarks(List<IJavaElement> landmarks) {
+		List<IMember> memberLandmarks = new ArrayList<IMember>();
 
-        // sort the landmarks
-        Collections.sort(memberLandmarks, new InterestComparator<IMember>());
+		for (IJavaElement je : landmarks) {
 
-        return memberLandmarks;
-    }
+			// keep only the IMember landmarks
+			if (je instanceof IMember) {
+				memberLandmarks.add((IMember) je);
+			}
+		}
+
+		// sort the landmarks
+		Collections.sort(memberLandmarks, new InterestComparator<IMember>());
+
+		return memberLandmarks;
+	}
 
 	public String getServerUrl() {
 		return serverUrl;
 	}
-    
+
 }

@@ -29,11 +29,11 @@ import org.eclipse.swt.widgets.Composite;
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private static final String TITLE = "Bugzilla Repository Settings";
-	
+
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
 	private Button validateServerButton;
-	
+
 	public BugzillaRepositorySettingsPage() {
 		super(TITLE, DESCRIPTION);
 	}
@@ -45,36 +45,35 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 			public void mouseDoubleClick(MouseEvent e) {
 				// ignore
-				
+
 			}
 
 			public void mouseDown(MouseEvent e) {
 				// ignore
-				
+
 			}
 
 			public void mouseUp(MouseEvent e) {
 				validateServer();
 			}
-			
+
 		});
 		// ignore
 	}
-	
+
 	@Override
 	public boolean isPageComplete() {
 		return super.isPageComplete();
 	}
-	
+
 	private void validateServer() {
 		try {
 			URL serverURL = new URL(super.serverUrlEditor.getStringValue());
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
 			if (cntx == null || !(cntx instanceof HttpURLConnection)) {
-				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
-						"Could not connect.");
+				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Could not connect.");
 			}
-			
+
 			HttpURLConnection serverConnection = (HttpURLConnection) cntx;
 
 			serverConnection.connect();
@@ -82,17 +81,17 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			int responseCode = serverConnection.getResponseCode();
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
+				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 						"No Bugzilla server found at: " + serverURL);
 			} else {
-				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
-					"Valid Bugzilla server found at: " + serverURL);
+				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+						"Valid Bugzilla server found at: " + serverURL);
 				super.getWizard().getContainer().updateButtons();
 			}
 			getWizard().getContainer().updateButtons();
 		} catch (Exception e) {
-			if (!MessageDialog.openQuestion(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
-					"Could not connect: " + e.getMessage())) {
+			if (!MessageDialog.openQuestion(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Could not connect: "
+					+ e.getMessage())) {
 			}
 		}
 	}

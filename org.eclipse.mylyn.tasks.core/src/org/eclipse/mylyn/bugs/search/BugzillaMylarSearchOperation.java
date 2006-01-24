@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -230,8 +230,8 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 					// make a search hit from the bug and then add it to the
 					// collector
-					BugzillaSearchHit hit = new BugzillaSearchHit(bug.getRepository(), bug.getId(), bug.getDescription(), "", "", "",
-							"", "", "", "");
+					BugzillaSearchHit hit = new BugzillaSearchHit(bug.getRepository(), bug.getId(), bug
+							.getDescription(), "", "", "", "", "", "", "");
 					try {
 						searchCollector.accept(hit);
 					} catch (CoreException e) {
@@ -288,7 +288,8 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 *            The progress monitor to use for the search
 	 * @return The BugzillaResultCollector with the search results
 	 */
-	private BugzillaResultCollector search(String url, TaskRepository repository, BugzillaResultCollector searchCollector, IProgressMonitor monitor) {
+	private BugzillaResultCollector search(String url, TaskRepository repository,
+			BugzillaResultCollector searchCollector, IProgressMonitor monitor) {
 
 		// set the initial number of matches to 0
 		int matches = 0;
@@ -331,7 +332,8 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 		// get the search url
 		String url = Util.getExactSearchURL(repositoryUrl, javaElement);
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 		return search(url, repository, collector, monitor);
 	}
 
@@ -350,11 +352,12 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 		// get the search url
 		String url = Util.getInexactSearchURL(repositoryUrl, javaElement);
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-		
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+
 		return search(url, repository, collector, monitor);
 	}
-	
+
 	/**
 	 * Perform a second pass parse to determine if there are any stack traces in
 	 * the bug - currently only used for the exact search results

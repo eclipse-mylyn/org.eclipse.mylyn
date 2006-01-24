@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,23 +26,25 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
-
 /**
  * An outline page for a <code>BugEditor</code>.
  */
-public class BugzillaOutlinePage extends ContentOutlinePage{
+public class BugzillaOutlinePage extends ContentOutlinePage {
 
 	private BugzillaOutlineNode topTreeNode;
-    
+
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if ((part instanceof AbstractBugEditor) && (selection instanceof IStructuredSelection)) {
-				if (((IStructuredSelection)selection).getFirstElement() instanceof IBugzillaReportSelection) {
-					if(((IStructuredSelection)getSelection()).getFirstElement() instanceof IBugzillaReportSelection){
-						IBugzillaReportSelection brs1 = (IBugzillaReportSelection)((IStructuredSelection)getSelection()).getFirstElement();
-						IBugzillaReportSelection brs2 = ((IBugzillaReportSelection)((IStructuredSelection)selection).getFirstElement());
-						if(BugzillaTools.getHandle(brs1).compareTo(BugzillaTools.getHandle(brs2)) == 0){
-							// don't need to make a selection for the same element
+				if (((IStructuredSelection) selection).getFirstElement() instanceof IBugzillaReportSelection) {
+					if (((IStructuredSelection) getSelection()).getFirstElement() instanceof IBugzillaReportSelection) {
+						IBugzillaReportSelection brs1 = (IBugzillaReportSelection) ((IStructuredSelection) getSelection())
+								.getFirstElement();
+						IBugzillaReportSelection brs2 = ((IBugzillaReportSelection) ((IStructuredSelection) selection)
+								.getFirstElement());
+						if (BugzillaTools.getHandle(brs1).compareTo(BugzillaTools.getHandle(brs2)) == 0) {
+							// don't need to make a selection for the same
+							// element
 							return;
 						}
 					}
@@ -51,9 +53,9 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			}
 		}
 	};
-	
-    private TreeViewer viewer;
-    
+
+	private TreeViewer viewer;
+
 	/**
 	 * Creates a new <code>BugzillaOutlinePage</code>.
 	 * 
@@ -76,9 +78,9 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			@Override
 			public Image getImage(Object element) {
 				if (element instanceof BugzillaOutlineNode) {
-					BugzillaOutlineNode node = (BugzillaOutlineNode)element;
+					BugzillaOutlineNode node = (BugzillaOutlineNode) element;
 					if (node.getComment() != null) {
-						return node.getImage(); 
+						return node.getImage();
 					} else {
 						return BugzillaImages.getImage(BugzillaImages.BUG);
 					}
@@ -86,14 +88,13 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 					return super.getImage(element);
 				}
 			}
-			
+
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BugzillaOutlineNode) {
-					BugzillaOutlineNode node = (BugzillaOutlineNode)element;
+					BugzillaOutlineNode node = (BugzillaOutlineNode) element;
 					if (node.getComment() != null) {
-						return node.getComment().getAuthorName() 
-						+ " (" + node.getName() + ")";
+						return node.getComment().getAuthorName() + " (" + node.getName() + ")";
 					} else {
 						return node.getName();
 					}
@@ -105,7 +106,7 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			viewer.setInput(topTreeNode);
 			viewer.setComparer(new BugzillaOutlineComparer());
 			viewer.expandAll();
-		} catch (Exception e) {  
+		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not create bugzilla outline", true);
 		}
 		getSite().getPage().addSelectionListener(selectionListener);
@@ -117,19 +118,20 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 		getSite().getPage().removeSelectionListener(selectionListener);
 	}
 
-    public TreeViewer getOutlineTreeViewer(){
-        return viewer;
-    }
-    
+	public TreeViewer getOutlineTreeViewer() {
+		return viewer;
+	}
+
 	/**
 	 * A content provider for the tree for this view.
+	 * 
 	 * @see ITreeContentProvider
 	 */
 	protected class BugTaskOutlineContentProvider implements ITreeContentProvider {
 
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof BugzillaOutlineNode) {
-				Object[] children = ((BugzillaOutlineNode)parentElement).getChildren();
+				Object[] children = ((BugzillaOutlineNode) parentElement).getChildren();
 				if (children.length > 0) {
 					return children;
 				}
@@ -143,14 +145,14 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 
 		public boolean hasChildren(Object element) {
 			if (element instanceof BugzillaOutlineNode) {
-				return ((BugzillaOutlineNode)element).getChildren().length > 0;
+				return ((BugzillaOutlineNode) element).getChildren().length > 0;
 			}
 			return false;
 		}
 
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof BugzillaOutlineNode) {
-				Object[] children = ((BugzillaOutlineNode)inputElement).getChildren();
+				Object[] children = ((BugzillaOutlineNode) inputElement).getChildren();
 				if (children.length > 0) {
 					return children;
 				}
@@ -158,11 +160,11 @@ public class BugzillaOutlinePage extends ContentOutlinePage{
 			return new Object[0];
 		}
 
-		public void dispose() { 
+		public void dispose() {
 			// don't care when we are disposed
 		}
 
-		public void inputChanged(Viewer viewerChanged, Object oldInput, Object newInput) { 
+		public void inputChanged(Viewer viewerChanged, Object oldInput, Object newInput) {
 			// don't care when the input changes
 		}
 	}

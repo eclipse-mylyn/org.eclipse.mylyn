@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,12 +108,14 @@ public class BugzillaQueryPageParser {
 					urlString += "?";
 
 				urlString += "GoAheadAndLogIn=1&Bugzilla_login="
-						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8) + "&Bugzilla_password="
+						+ URLEncoder.encode(repository.getUserName(), BugzillaPlugin.ENCODING_UTF_8)
+						+ "&Bugzilla_password="
 						+ URLEncoder.encode(repository.getPassword(), BugzillaPlugin.ENCODING_UTF_8);
 			} catch (UnsupportedEncodingException e) {
 				/*
 				 * Do nothing. Every implementation of the Java platform is
-				 * required to support the standard charset BugzillaPlugin.ENCODING_UTF_8
+				 * required to support the standard charset
+				 * BugzillaPlugin.ENCODING_UTF_8
 				 */
 			}
 		}

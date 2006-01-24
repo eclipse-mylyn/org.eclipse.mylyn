@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,8 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 	 *            The instance of the workbench
 	 * @param bugWiz
 	 *            The bug wizard which created this page
-	 * @param repository The repository the data is coming from
+	 * @param repository
+	 *            The repository the data is coming from
 	 */
 	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz, TaskRepository repository) {
 		super("Page1", "New Bug Report", DESCRIPTION, workbench);
@@ -134,48 +135,54 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		if (!bugWizard.model.hasParsedProducts()) {
 			String repositoryUrl = repository.getUrl().toExternalForm();
 			try {
-//				ProductConfiguration productConfiguration = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl);
+				// ProductConfiguration productConfiguration =
+				// BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl);
 				String[] storedProducts = BugzillaRepositoryUtil.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT,
 						repositoryUrl);
 				if (storedProducts.length > 0) {
-//					String[] storedProducts = BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl).getProducts();
+					// String[] storedProducts =
+					// BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl).getProducts();
 					products = Arrays.asList(storedProducts);
 				} else {
 					products = BugzillaRepositoryUtil.getProductList(repositoryUrl);
 				}
-//				bugWizard.model.setConnected(true);
+				// bugWizard.model.setConnected(true);
 				bugWizard.model.setParsedProductsStatus(true);
-//			} catch (IOException e) {
-//				bugWizard.model.setConnected(false);
-//
-//				if (e instanceof IOException) {
-//					MessageDialog.openError(null, "Bugzilla Connect Error", "Unable to connect to Bugzilla server.\n"
-//							+ "Product configuration will be read from the workspace.");
-//
-//					products = Arrays.asList(BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl).getProducts());
-//					bugWizard.model.setParsedProductsStatus(true);
-//				} 
+				// } catch (IOException e) {
+				// bugWizard.model.setConnected(false);
+				//
+				// if (e instanceof IOException) {
+				// MessageDialog.openError(null, "Bugzilla Connect Error",
+				// "Unable to connect to Bugzilla server.\n"
+				// + "Product configuration will be read from the workspace.");
+				//
+				// products =
+				// Arrays.asList(BugzillaPlugin.getDefault().getProductConfiguration(repositoryUrl).getProducts());
+				// bugWizard.model.setParsedProductsStatus(true);
+				// }
 			} catch (Exception e) {
 				bugWizard.model.setConnected(false);
-				MylarStatusHandler.fail(e, "Unable to get products, possibly due to Bugzilla version incompatability", true);
+				MylarStatusHandler.fail(e, "Unable to get products, possibly due to Bugzilla version incompatability",
+						true);
 			}
 		}
 	}
 
 	/**
 	 * Populates the listBox with all available products.
-	 * @param read 
+	 * 
+	 * @param read
 	 */
 	@Override
 	protected void populateList(boolean init) {
 		if (init) {
 			initProducts();
 		}
-		
+
 		if (products != null) {
 			listBox.removeAll();
 			Iterator<String> itr = products.iterator();
-	
+
 			while (itr.hasNext()) {
 				String prod = itr.next();
 				listBox.add(prod);

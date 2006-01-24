@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 27, 2005
-  */
+
 package org.eclipse.mylar.bugs;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -21,26 +19,26 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
-
 /**
  * @author Mik Kersten
  */
 public class BugzillaEditingMonitor extends AbstractUserInteractionMonitor {
 
-    public BugzillaEditingMonitor() {
-        super();
-    }
+	public BugzillaEditingMonitor() {
+		super();
+	}
 
-    @Override
-    protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
-        if(!(part instanceof AbstractBugEditor) && !(part instanceof BugzillaTaskEditor))
-            return;
-        
-        if(selection instanceof StructuredSelection){
-            StructuredSelection ss = (StructuredSelection)selection;
-            Object object = ss.getFirstElement();
-            if(object instanceof BugzillaReportSelection) super.handleElementSelection(part, object);
-        }
-    }
+	@Override
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+		if (!(part instanceof AbstractBugEditor) && !(part instanceof BugzillaTaskEditor))
+			return;
+
+		if (selection instanceof StructuredSelection) {
+			StructuredSelection ss = (StructuredSelection) selection;
+			Object object = ss.getFirstElement();
+			if (object instanceof BugzillaReportSelection)
+				super.handleElementSelection(part, object);
+		}
+	}
 
 }

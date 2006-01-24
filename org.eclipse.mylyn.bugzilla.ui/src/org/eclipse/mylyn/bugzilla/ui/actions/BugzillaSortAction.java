@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui.actions;
 
 import org.eclipse.jface.action.Action;
@@ -20,23 +21,28 @@ public class BugzillaSortAction extends Action {
 
 	/** The category that this class sorts Bugzilla search results by. */
 	private int bugSortOrder;
-	
+
 	/** The view where the Bugzilla search results are displayed. */
 	private BugzillaSearchResultView bugPage;
-	
+
 	/**
 	 * Constructor
-	 * @param label The string used as the text for the action, or null if there is no text
-	 * @param page The view where the Bugzilla search results are displayed.
-	 * @param sortOrder The category that this class sorts Bugzilla search results by
+	 * 
+	 * @param label
+	 *            The string used as the text for the action, or null if there
+	 *            is no text
+	 * @param page
+	 *            The view where the Bugzilla search results are displayed.
+	 * @param sortOrder
+	 *            The category that this class sorts Bugzilla search results by
 	 */
 	public BugzillaSortAction(String label, BugzillaSearchResultView page, int sortOrder) {
 		super(label);
-		bugPage= page;
-		bugSortOrder= sortOrder;
+		bugPage = page;
+		bugSortOrder = sortOrder;
 	}
 
-	/** 
+	/**
 	 * Reorder the Bugzilla search results.
 	 */
 	@Override

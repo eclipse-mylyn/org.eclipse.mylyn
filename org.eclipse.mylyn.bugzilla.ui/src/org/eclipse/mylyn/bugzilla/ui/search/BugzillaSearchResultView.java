@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,33 +46,45 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IShowInTargetList;
 
-
 /**
  * Displays the results of a Bugzilla search.
+ * 
  * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage
  */
-public class BugzillaSearchResultView extends AbstractTextSearchViewPage implements IAdaptable  {
-	
+public class BugzillaSearchResultView extends AbstractTextSearchViewPage implements IAdaptable {
+
 	// The categories to sort bug results by
 	public static final int ORDER_ID = 1;
+
 	public static final int ORDER_SEVERITY = 2;
+
 	public static final int ORDER_PRIORITY = 3;
+
 	public static final int ORDER_STATUS = 4;
+
 	public static final int ORDER_DEFAULT = ORDER_ID;
 
-	private static final String KEY_SORTING= IBugzillaConstants.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
+	private static final String KEY_SORTING = IBugzillaConstants.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
 
 	private BugzillaContentProvider bugContentProvider;
+
 	private int bugCurrentSortOrder;
+
 	private BugzillaSortAction bugSortByIDAction;
+
 	private BugzillaSortAction bugSortBySeverityAction;
+
 	private BugzillaSortAction bugSortByPriorityAction;
+
 	private BugzillaSortAction bugSortByStatusAction;
+
 	private AddFavoriteAction addToFavoritesAction;
+
 	private OpenBugsAction openInEditorAction;
-	
-	private static final String[] SHOW_IN_TARGETS= new String[] { IPageLayout.ID_RES_NAV };
-	private static final IShowInTargetList SHOW_IN_TARGET_LIST= new IShowInTargetList() {
+
+	private static final String[] SHOW_IN_TARGETS = new String[] { IPageLayout.ID_RES_NAV };
+
+	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
 		}
@@ -86,19 +98,20 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	public BugzillaSearchResultView() {
 		// Only use the table layout.
 		super(FLAG_LAYOUT_FLAT);
-		
+
 		bugSortByIDAction = new BugzillaSortAction("Bug ID", this, ORDER_ID);
 		bugSortBySeverityAction = new BugzillaSortAction("Bug severity", this, ORDER_SEVERITY);
 		bugSortByPriorityAction = new BugzillaSortAction("Bug priority", this, ORDER_PRIORITY);
 		bugSortByStatusAction = new BugzillaSortAction("Bug status", this, ORDER_STATUS);
 		bugCurrentSortOrder = ORDER_DEFAULT;
-		
+
 		addToFavoritesAction = new AddFavoriteAction("Mark Result as Favorite", this);
 		openInEditorAction = new OpenBugsAction("Open Bug in Editor", this);
-		
-		bugPropertyChangeListener= new IPropertyChangeListener() {
+
+		bugPropertyChangeListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (SearchPreferencePage.LIMIT_TABLE.equals(event.getProperty()) || SearchPreferencePage.LIMIT_TABLE_TO.equals(event.getProperty()))
+				if (SearchPreferencePage.LIMIT_TABLE.equals(event.getProperty())
+						|| SearchPreferencePage.LIMIT_TABLE_TO.equals(event.getProperty()))
 					if (getViewer() instanceof TableViewer) {
 						getViewPart().updateLabel();
 						getViewer().refresh();
@@ -127,43 +140,47 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	public StructuredViewer getViewer() {
 		return super.getViewer();
 	}
- 
+
 	@Override
-	protected void configureTreeViewer(TreeViewer viewer) {	
-		// The tree layout is not used, so this function does not need to do anything.
+	protected void configureTreeViewer(TreeViewer viewer) {
+		// The tree layout is not used, so this function does not need to do
+		// anything.
 	}
 
 	@Override
 	protected void configureTableViewer(TableViewer viewer) {
 		viewer.setUseHashlookup(true);
-		viewer.setLabelProvider(new DecoratingLabelProvider(new BugzillaLabelProvider(), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		viewer.setLabelProvider(new DecoratingLabelProvider(new BugzillaLabelProvider(), PlatformUI.getWorkbench()
+				.getDecoratorManager().getLabelDecorator()));
 		viewer.setContentProvider(new BugzillaTableContentProvider(this));
 
 		// Set the order when the search view is loading so that the items are
 		// sorted right away
 		setSortOrder(bugCurrentSortOrder);
 
-		bugContentProvider= (BugzillaContentProvider) viewer.getContentProvider();
+		bugContentProvider = (BugzillaContentProvider) viewer.getContentProvider();
 	}
 
 	/**
 	 * Sets the new sorting category, and reorders all of the bug reports.
-	 * @param sortOrder The new category to sort bug reports by
+	 * 
+	 * @param sortOrder
+	 *            The new category to sort bug reports by
 	 */
 	public void setSortOrder(int sortOrder) {
-		bugCurrentSortOrder= sortOrder;
-		StructuredViewer viewer= getViewer();
-		
+		bugCurrentSortOrder = sortOrder;
+		StructuredViewer viewer = getViewer();
+
 		switch (sortOrder) {
 		case ORDER_ID:
 			viewer.setSorter(new BugzillaIdSearchSorter());
-			break;			
+			break;
 		case ORDER_PRIORITY:
 			viewer.setSorter(new BugzillaPrioritySearchSorter());
-			break;		
+			break;
 		case ORDER_SEVERITY:
 			viewer.setSorter(new BugzillaSeveritySearchSorter());
-			break;		
+			break;
 		case ORDER_STATUS:
 			viewer.setSorter(new BugzillaStateSearchSorter());
 			break;
@@ -174,11 +191,13 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 			viewer.setSorter(new BugzillaIdSearchSorter());
 			break;
 		}
-		
+
 		getSettings().put(KEY_SORTING, bugCurrentSortOrder);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
@@ -189,19 +208,21 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	}
 
 	@Override
-	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate) throws PartInitException {
+	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate)
+			throws PartInitException {
 		try {
 			Object element = getCurrentMatch().getElement();
 			if (element instanceof IMarker) {
-				
-				String repositoryUrl = (String)((IMarker)element).getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
-				Integer id = (Integer) ((IMarker)element).getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
+
+				String repositoryUrl = (String) ((IMarker) element)
+						.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
+				Integer id = (Integer) ((IMarker) element).getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
 				BugzillaUITools.show(repositoryUrl, id.intValue());
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			// if an error occurs, handle and log it
-			ExceptionHandler.handle(e, SearchMessages.Search_Error_search_title, SearchMessages.Search_Error_search_message); //$NON-NLS-2$ //$NON-NLS-1$
+			ExceptionHandler.handle(e, SearchMessages.Search_Error_search_title,
+					SearchMessages.Search_Error_search_message); //$NON-NLS-2$ //$NON-NLS-1$
 			BugzillaPlugin.log(e.getStatus());
 		}
 	}
@@ -209,20 +230,20 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 	@Override
 	protected void fillContextMenu(IMenuManager mgr) {
 		super.fillContextMenu(mgr);
-		
+
 		// Create the submenu for sorting
-		MenuManager sortMenu= new MenuManager(SearchMessages.SortDropDownAction_label); //$NON-NLS-1$
+		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label); //$NON-NLS-1$
 		sortMenu.add(bugSortByIDAction);
 		sortMenu.add(bugSortByPriorityAction);
 		sortMenu.add(bugSortBySeverityAction);
 		sortMenu.add(bugSortByStatusAction);
-		
+
 		// Check the right sort option
 		bugSortByIDAction.setChecked(bugCurrentSortOrder == bugSortByIDAction.getSortOrder());
 		bugSortByPriorityAction.setChecked(bugCurrentSortOrder == bugSortByPriorityAction.getSortOrder());
 		bugSortBySeverityAction.setChecked(bugCurrentSortOrder == bugSortBySeverityAction.getSortOrder());
 		bugSortByStatusAction.setChecked(bugCurrentSortOrder == bugSortByStatusAction.getSortOrder());
-		
+
 		// Add the new context menu items
 		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenu);
 		mgr.appendToGroup(IContextMenuConstants.GROUP_ADDITIONS, addToFavoritesAction);

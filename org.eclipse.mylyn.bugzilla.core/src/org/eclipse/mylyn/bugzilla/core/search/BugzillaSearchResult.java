@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.search;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -18,23 +19,24 @@ import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.IFileMatchAdapter;
 
-
-
 /**
  * The collection of all the bugzilla matches.
+ * 
  * @see org.eclipse.search.ui.text.AbstractTextSearchResult
  */
-public class BugzillaSearchResult extends AbstractTextSearchResult{
+public class BugzillaSearchResult extends AbstractTextSearchResult {
 
 	/**
 	 * The query producing this result.
 	 */
 	private BugzillaSearchQuery bugQuery;
-	
+
 	/**
 	 * Constructor for <code>BugzillaSearchResult</code> class.
 	 * 
-	 * @param query <code>BugzillaSearchQuery</code> that is producing this result.
+	 * @param query
+	 *            <code>BugzillaSearchQuery</code> that is producing this
+	 *            result.
 	 */
 	public BugzillaSearchResult(BugzillaSearchQuery query) {
 		super();
@@ -44,16 +46,19 @@ public class BugzillaSearchResult extends AbstractTextSearchResult{
 	@Override
 	public IEditorMatchAdapter getEditorMatchAdapter() {
 		IBugzillaResultEditorMatchAdapter adapter = BugzillaPlugin.getResultEditorMatchAdapter();
-		if(adapter == null){
+		if (adapter == null) {
 			return null;
 		} else {
 			adapter.setResult(this);
 			return adapter;
 		}
 	}
-	
+
 	/**
-	 * This function always returns <code>null</code>, as the matches for this implementation of <code>AbstractTextSearchResult</code> never contain files.
+	 * This function always returns <code>null</code>, as the matches for
+	 * this implementation of <code>AbstractTextSearchResult</code> never
+	 * contain files.
+	 * 
 	 * @see org.eclipse.search.ui.text.AbstractTextSearchResult#getFileMatchAdapter()
 	 */
 	@Override
@@ -61,9 +66,9 @@ public class BugzillaSearchResult extends AbstractTextSearchResult{
 		return null;
 	}
 
-
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.search.ui.ISearchResult#getLabel()
 	 */
 	public String getLabel() {
@@ -72,6 +77,7 @@ public class BugzillaSearchResult extends AbstractTextSearchResult{
 
 	/**
 	 * Get the singular label for the number of results
+	 * 
 	 * @return The singular label
 	 */
 	protected String getSingularLabel() {
@@ -80,27 +86,34 @@ public class BugzillaSearchResult extends AbstractTextSearchResult{
 
 	/**
 	 * Get the plural label for the number of results
+	 * 
 	 * @return The plural label
 	 */
 	protected String getPluralLabel() {
 		return "Bugzilla search - " + getMatchCount() + " matches";
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.search.ui.ISearchResult#getTooltip()
 	 */
 	public String getTooltip() {
 		return getLabel();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.search.ui.ISearchResult#getImageDescriptor()
 	 */
 	public ImageDescriptor getImageDescriptor() {
 		return SearchPluginImages.DESC_OBJ_TSEARCH_DPDN;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.search.ui.ISearchResult#getQuery()
 	 */
 	public ISearchQuery getQuery() {

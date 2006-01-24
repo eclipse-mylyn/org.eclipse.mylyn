@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -122,7 +122,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	 */
 	public ExistingBugEditor() {
 		super();
-		
+
 		// Set up the input for comparing the bug report to the server
 		CompareConfiguration config = new CompareConfiguration();
 		config.setLeftEditable(false);
@@ -141,7 +141,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			throw new PartInitException("Invalid Input: Must be ExistingBugEditorInput");
 		ExistingBugEditorInput editorInput = (ExistingBugEditorInput) input;
 		repository = editorInput.getRepository();
-		
+
 		setSite(site);
 		setInput(input);
 		bugzillaInput = editorInput;
@@ -153,9 +153,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	/**
-	 * This overrides the existing implementation in order to add
-	 * an "add to favorites" option to the context menu.
-	 *  
+	 * This overrides the existing implementation in order to add an "add to
+	 * favorites" option to the context menu.
+	 * 
 	 * @see org.eclipse.mylar.bugzilla.ui.AbstractBugEditor#createContextMenu()
 	 */
 	@Override
@@ -164,8 +164,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		contextMenuManager.setRemoveAllWhenShown(true);
 		contextMenuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				//				manager.add(new AddToFavoritesAction(ExistingBugEditor.this));
-				//				manager.add(new Separator());
+				// manager.add(new
+				// AddToFavoritesAction(ExistingBugEditor.this));
+				// manager.add(new Separator());
 				manager.add(cutAction);
 				manager.add(copyAction);
 				manager.add(pasteAction);
@@ -212,7 +213,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
 				radioData.widthHint = AbstractBugEditor.WRAP_LENGTH;
-				radioOptions[i] = new Combo(buttonComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				radioOptions[i] = new Combo(buttonComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
 				radioOptions[i].setBackground(background);
@@ -276,20 +278,21 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		});
 		compareButton.addListener(SWT.FocusIn, new GenericListener());
 
-		//		TODO used for spell checking.  Add back when we want to support this
-		//		checkSpellingButton = new Button(buttonComposite, SWT.NONE);
-		//		checkSpellingButton.setFont(TEXT_FONT);
-		//		compareButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		//		compareButtonData.widthHint = 100;
-		//		compareButtonData.heightHint = 20;
-		//		checkSpellingButton.setText("CheckSpelling");
-		//		checkSpellingButton.setLayoutData(compareButtonData);
-		//		checkSpellingButton.addListener(SWT.Selection, new Listener() {
-		//			public void handleEvent(Event e) {
-		//				checkSpelling();
-		//			}
-		//		});
-		//		checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
+		// TODO used for spell checking. Add back when we want to support this
+		// checkSpellingButton = new Button(buttonComposite, SWT.NONE);
+		// checkSpellingButton.setFont(TEXT_FONT);
+		// compareButtonData = new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		// compareButtonData.widthHint = 100;
+		// compareButtonData.heightHint = 20;
+		// checkSpellingButton.setText("CheckSpelling");
+		// checkSpellingButton.setLayoutData(compareButtonData);
+		// checkSpellingButton.addListener(SWT.Selection, new Listener() {
+		// public void handleEvent(Event e) {
+		// checkSpelling();
+		// }
+		// });
+		// checkSpellingButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
 	/**
@@ -332,8 +335,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		if (bug.getCharset() != null) {
 			form.setCharset(bug.getCharset());
 		}
-		
-		//Add the user's address to the CC list if they haven't specified a CC
+
+		// Add the user's address to the CC list if they haven't specified a CC
 		setDefaultCCValue();
 
 		// go through all of the attributes and add them to the bug post
@@ -343,7 +346,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				String value = a.getNewValue();
 				// add the attribute to the bug post
 				form.add(a.getParameterName(), checkText(value));
-			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && a.isHidden()) {
+			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
+					&& a.isHidden()) {
 				// we have a hidden attribute and we should send it back.
 				form.add(a.getParameterName(), a.getValue());
 			}
@@ -392,7 +396,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 							// TODO what do we do if the editor is closed
 							if (ExistingBugEditor.this != null && !ExistingBugEditor.this.isDisposed()) {
 								changeDirtyStatus(false);
-								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(ExistingBugEditor.this, true);
+								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+										.closeEditor(ExistingBugEditor.this, true);
 							}
 							OfflineView.removeReport(bug);
 						}
@@ -400,7 +405,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				} catch (final BugzillaException e) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred while posting the bug.", "I/O Error");
+							BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e,
+									"occurred while posting the bug.", "I/O Error");
 						}
 					});
 					submitButton.setEnabled(true);
@@ -408,8 +414,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				} catch (final PossibleBugzillaFailureException e) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure", "Bugzilla may not have posted your bug.\n"
-									+ e.getMessage(), form.getError());
+							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
+									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
 							BugzillaPlugin.log(e);
 						}
 					});
@@ -419,7 +425,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							MessageDialog
-									.openError(null, "Login Error",
+									.openError(
+											null,
+											"Login Error",
 											"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
 						}
 					});
@@ -437,7 +445,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					op.run(monitor);
 				} catch (Exception e) {
 					MylarStatusHandler.log(e, "Failed to submit bug");
-					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR, "Failed to submit bug", e);
+					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR,
+							"Failed to submit bug", e);
 				}
 
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
@@ -447,13 +456,14 @@ public class ExistingBugEditor extends AbstractBugEditor {
 							ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 							if (task instanceof BugzillaTask) {
 								BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
-										(BugzillaTask)task);
-//								ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getTaskHandlerForElement(task);
-//							    if(taskHandler != null) { 
-//						    		taskHandler.itemOpened(task);
-//							    }
+										(BugzillaTask) task);
+								// ITaskHandler taskHandler =
+								// MylarTaskListPlugin.getDefault().getTaskHandlerForElement(task);
+								// if(taskHandler != null) {
+								// taskHandler.itemOpened(task);
+								// }
 							}
-//							new RefreshBugzillaReportsAction().run();
+							// new RefreshBugzillaReportsAction().run();
 						}
 					}
 				});
@@ -505,19 +515,20 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsData.horizontalSpan = 1;
 		addCommentsData.grabExcessVerticalSpace = false;
 		addCommentsComposite.setLayoutData(addCommentsData);
-		//	End Additional (read-only) Comments Area
+		// End Additional (read-only) Comments Area
 
 		StyledText t = null;
 		for (Iterator<Comment> it = bug.getComments().iterator(); it.hasNext();) {
 			Comment comment = it.next();
-			String commentHeader = "Additional comment #" + comment.getNumber() + " from " + comment.getAuthorName() + " on " + df.format(comment.getCreated());
+			String commentHeader = "Additional comment #" + comment.getNumber() + " from " + comment.getAuthorName()
+					+ " on " + df.format(comment.getCreated());
 			t = newLayout(addCommentsComposite, 4, commentHeader, HEADER);
 			t.addListener(SWT.FocusIn, new CommentListener(comment));
 			t = newLayout(addCommentsComposite, 4, comment.getText(), VALUE);
 			t.setFont(COMMENT_FONT);
 			t.addListener(SWT.FocusIn, new CommentListener(comment));
 
-			//code for outline
+			// code for outline
 			texts.add(textsindex, t);
 			textHash.put(comment, t);
 			textsindex++;
@@ -534,7 +545,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		addCommentsTitleData.horizontalSpan = 4;
 		addCommentsTitleData.grabExcessVerticalSpace = false;
 		addCommentsTitleComposite.setLayoutData(addCommentsTitleData);
-		newLayout(addCommentsTitleComposite, 4, "Additional Comments:", HEADER).addListener(SWT.FocusIn, new NewCommentListener());
+		newLayout(addCommentsTitleComposite, 4, "Additional Comments:", HEADER).addListener(SWT.FocusIn,
+				new NewCommentListener());
 		addCommentsText = new Text(addCommentsComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		addCommentsText.setFont(COMMENT_FONT);
 		GridData addCommentsTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -685,7 +697,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	@Override
 	protected void updateBug() {
 
-		// go through all of the attributes and update the main values to the new ones
+		// go through all of the attributes and update the main values to the
+		// new ones
 		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
 			Attribute a = it.next();
 			if (a.getNewValue() != null && a.getNewValue().compareTo(a.getValue()) != 0) {
@@ -709,7 +722,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		if (bug == null)
 			return;
 
-		// go through all of the attributes and restore the new values to the main ones
+		// go through all of the attributes and restore the new values to the
+		// main ones
 		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
 			Attribute a = it.next();
 			a.setNewValue(a.getValue());
@@ -734,18 +748,21 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			final BugReport serverBug;
 			try {
 				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepository(), bug.getId());
-				// If no bug was found on the server, throw an exception so that the
-				// user gets the same message that appears when there is a problem reading the server.
+				// If no bug was found on the server, throw an exception so that
+				// the
+				// user gets the same message that appears when there is a
+				// problem reading the server.
 				if (serverBug == null)
 					throw new Exception();
 			} catch (Exception e) {
 				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						MessageDialog.openInformation(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Could not open bug.", "Bug #"
-								+ bug.getId() + " could not be read from the server.");
+						MessageDialog.openInformation(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+								"Could not open bug.", "Bug #" + bug.getId() + " could not be read from the server.");
 					}
 				});
-				return new Status(IStatus.OK, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "Could not get the bug report from the server.", null);
+				return new Status(IStatus.OK, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
+						"Could not get the bug report from the server.", null);
 			}
 			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -795,7 +812,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			keywordsText.setText(keywords.toString());
 		}
 
-		/* 
+		/*
 		 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
 		 */
 		public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -809,8 +826,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
-					"Description", true, bug.getSummary()))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider,
+					new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
+							"Description", true, bug.getSummary()))));
 		}
 	}
 
@@ -824,15 +842,18 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		/**
 		 * Creates a new <code>CommentListener</code>.
-		 * @param comment The comment that this listener is for.
+		 * 
+		 * @param comment
+		 *            The comment that this listener is for.
 		 */
 		public CommentListener(Comment comment) {
 			this.comment = comment;
 		}
 
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
-					comment.getCreated().toString(), comment, bug.getSummary()))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
+					new BugzillaReportSelection(bug.getId(), bug.getRepository(), comment.getCreated().toString(),
+							comment, bug.getSummary()))));
 		}
 	}
 
@@ -842,8 +863,9 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	 */
 	protected class NewCommentListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
-					"New Comment", false, bug.getSummary()))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
+					new BugzillaReportSelection(bug.getId(), bug.getRepository(), "New Comment", false, bug
+							.getSummary()))));
 		}
 	}
 
@@ -874,7 +896,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					ExistingBugEditor.this.changeDirtyStatus(true);
 				} else if (e.widget == radioOptions[i]) {
 					Operation o = bug.getOperation(radios[i].getText());
-					o.setOptionSelection(((Combo) radioOptions[i]).getItem(((Combo) radioOptions[i]).getSelectionIndex()));
+					o.setOptionSelection(((Combo) radioOptions[i]).getItem(((Combo) radioOptions[i])
+							.getSelectionIndex()));
 
 					if (bug.getSelectedOperation() != null)
 						bug.getSelectedOperation().setChecked(false);
@@ -929,7 +952,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 	private void validateInput() {
 		Operation o = bug.getSelectedOperation();
-		if (o != null && o.getKnobName().compareTo("resolve") == 0 && (addCommentsText.getText() == null || addCommentsText.getText().equals(""))) {
+		if (o != null && o.getKnobName().compareTo("resolve") == 0
+				&& (addCommentsText.getText() == null || addCommentsText.getText().equals(""))) {
 			submitButton.setEnabled(false);
 		} else {
 			submitButton.setEnabled(true);
@@ -947,20 +971,21 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	}
 
 	/**
-	 * Sets the cc field to the user's address if a cc has not been
-	 * specified to ensure that commenters are on the cc list.
+	 * Sets the cc field to the user's address if a cc has not been specified to
+	 * ensure that commenters are on the cc list.
+	 * 
 	 * @author Wesley Coelho
 	 */
 	private void setDefaultCCValue() {
 		Attribute newCCattr = bug.getAttributeForKnobName("newcc");
 		Attribute owner = bug.getAttribute("Assigned To");
 
-		//Don't add the cc if the user is the bug owner
+		// Don't add the cc if the user is the bug owner
 		if (owner != null && owner.getValue().indexOf(repository.getUserName()) > -1) {
 			return;
 		}
 
-		//Add the user to the cc list
+		// Add the user to the cc list
 		if (newCCattr != null) {
 			if (newCCattr.getNewValue().equals("")) {
 				newCCattr.setNewValue(repository.getUserName());
@@ -968,55 +993,64 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		}
 	}
 
-	//	TODO used for spell checking.  Add back when we want to support this
-	//	protected Button checkSpellingButton;
+	// TODO used for spell checking. Add back when we want to support this
+	// protected Button checkSpellingButton;
 	//	
-	//	private void checkSpelling() {
-	//		SpellingContext context= new SpellingContext();
-	//		context.setContentType(Platform.getContentTypeManager().getContentType(IContentTypeManager.CT_TEXT));
-	//		IDocument document = new Document(addCommentsTextBox.getText());
-	//		ISpellingProblemCollector collector= new SpellingProblemCollector(document);
-	//		EditorsUI.getSpellingService().check(document, context, collector, new NullProgressMonitor());	
-	//	}
+	// private void checkSpelling() {
+	// SpellingContext context= new SpellingContext();
+	// context.setContentType(Platform.getContentTypeManager().getContentType(IContentTypeManager.CT_TEXT));
+	// IDocument document = new Document(addCommentsTextBox.getText());
+	// ISpellingProblemCollector collector= new
+	// SpellingProblemCollector(document);
+	// EditorsUI.getSpellingService().check(document, context, collector, new
+	// NullProgressMonitor());
+	// }
 	//	
-	//	private class SpellingProblemCollector implements ISpellingProblemCollector {
+	// private class SpellingProblemCollector implements
+	// ISpellingProblemCollector {
 	//
-	//		private IDocument document;
+	// private IDocument document;
 	//		
-	//		private SpellingDialog spellingDialog;
+	// private SpellingDialog spellingDialog;
 	//		
-	//		public SpellingProblemCollector(IDocument document){
-	//			this.document = document;
-	//			spellingDialog = new SpellingDialog(Display.getCurrent().getActiveShell(), "Spell Checking", document);
-	//		}
+	// public SpellingProblemCollector(IDocument document){
+	// this.document = document;
+	// spellingDialog = new
+	// SpellingDialog(Display.getCurrent().getActiveShell(), "Spell Checking",
+	// document);
+	// }
 	//		
-	//		/*
-	//		 * @see org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#accept(org.eclipse.ui.texteditor.spelling.SpellingProblem)
-	//		 */
-	//		public void accept(SpellingProblem problem) {
-	//			try {
-	//				int line= document.getLineOfOffset(problem.getOffset()) + 1;
-	//				String word= document.get(problem.getOffset(), problem.getLength());
+	// /*
+	// * @see
+	// org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#accept(org.eclipse.ui.texteditor.spelling.SpellingProblem)
+	// */
+	// public void accept(SpellingProblem problem) {
+	// try {
+	// int line= document.getLineOfOffset(problem.getOffset()) + 1;
+	// String word= document.get(problem.getOffset(), problem.getLength());
 	//				
-	//				spellingDialog.open(word, problem.getProposals());
+	// spellingDialog.open(word, problem.getProposals());
 	//				
-	//			} catch (BadLocationException x) {
-	//				// drop this SpellingProblem
-	//			}
-	//		}
+	// } catch (BadLocationException x) {
+	// // drop this SpellingProblem
+	// }
+	// }
 	//
-	//		/*
-	//		 * @see org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#beginCollecting()
-	//		 */
-	//		public void beginCollecting() {
+	// /*
+	// * @see
+	// org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#beginCollecting()
+	// */
+	// public void beginCollecting() {
 	//			
-	//		}
+	// }
 	//
-	//		/*
-	//		 * @see org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#endCollecting()
-	//		 */
-	//		public void endCollecting() {
-	//			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Spell Checking Finished", "The spell check has finished");
-	//		}
-	//	}
+	// /*
+	// * @see
+	// org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#endCollecting()
+	// */
+	// public void endCollecting() {
+	// MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+	// "Spell Checking Finished", "The spell check has finished");
+	// }
+	// }
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,6 @@ import org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.ui.IPersistableElement;
 
-
 /**
  * @author Eric Booth
  * @author Mik Kersten
@@ -34,9 +33,9 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	private String bugTitle;
 
 	private BugReport offlineBug;
-	
+
 	private BugzillaTask bugTask;
-	
+
 	private boolean offline;
 
 	public BugzillaTaskEditorInput(BugzillaTask bugTask, boolean offline) throws LoginException, IOException {
@@ -49,7 +48,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	}
 
 	protected void setBugTitle(String str) {
-		//		03-20-03 Allows editor to store title (once it is known)
+		// 03-20-03 Allows editor to store title (once it is known)
 		bugTitle = str;
 	}
 
@@ -65,7 +64,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 
 	@Override
 	public String getName() {
-		return bugTask.getDescription(); 
+		return bugTask.getDescription();
 	}
 
 	@Override
@@ -94,39 +93,39 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 	 * @see BugzillaRepositoryUtil
 	 * @see BugReport
 	 */
-//	public BugReport getServerBug() {
-//		return serverBug;
-//	}
-	
+	// public BugReport getServerBug() {
+	// return serverBug;
+	// }
 	/**
 	 * Returns the offline bug for this input's Bugzilla task
 	 */
 	public BugReport getOfflineBug() {
-		if(offline || bugTask.getSyncState() == BugReportSyncState.OUTGOING || bugTask.getSyncState() == BugReportSyncState.CONFLICT)
+		if (offline || bugTask.getSyncState() == BugReportSyncState.OUTGOING
+				|| bugTask.getSyncState() == BugReportSyncState.CONFLICT)
 			return offlineBug;
 		else
 			return super.getBug();
 	}
 
-	public void setOfflineBug(BugReport offlineBug){
+	public void setOfflineBug(BugReport offlineBug) {
 		this.offlineBug = offlineBug;
 	}
-	
+
 	/**
 	 * Gets the bug page input stream
 	 */
-//	public InputStream getInputStream() throws IOException {
-//		try {
-//			return url.openStream();
-//		}
-//		catch (Exception e) {
-//			throw new IOException(e.getMessage());
-//		}
-//
-//	}
-
+	// public InputStream getInputStream() throws IOException {
+	// try {
+	// return url.openStream();
+	// }
+	// catch (Exception e) {
+	// throw new IOException(e.getMessage());
+	// }
+	//
+	// }
 	/**
-	 * Returns true if the argument is a bug report editor input on the same bug id.
+	 * Returns true if the argument is a bug report editor input on the same bug
+	 * id.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -136,7 +135,7 @@ public class BugzillaTaskEditorInput extends ExistingBugEditorInput {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @return Returns the <code>BugzillaTask</code>
 	 */

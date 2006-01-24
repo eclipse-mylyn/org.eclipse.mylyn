@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui.search;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -25,10 +26,9 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Dialog for naming a saved query.
  */
-public class SaveQueryDialog extends Dialog
-{
+public class SaveQueryDialog extends Dialog {
 	private Text queryName;
-	
+
 	/**
 	 * The Ok button.
 	 */
@@ -38,7 +38,7 @@ public class SaveQueryDialog extends Dialog
 	 * The title of the dialog.
 	 */
 	private String title;
-	
+
 	public SaveQueryDialog(Shell parentShell, String dialogTitle) {
 		super(parentShell);
 		this.title = dialogTitle;
@@ -62,12 +62,12 @@ public class SaveQueryDialog extends Dialog
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		// create composite
-		Composite composite = (Composite)super.createDialogArea(parent);
-		
+		Composite composite = (Composite) super.createDialogArea(parent);
+
 		createMainDialogArea(composite);
 		return composite;
 	}
-	
+
 	protected void createMainDialogArea(Composite parent) {
 		queryName = new Text(parent, SWT.SINGLE | SWT.BORDER);
 		queryName.setLayoutData(new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));

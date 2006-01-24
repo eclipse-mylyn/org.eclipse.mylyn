@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	public static final String VAL_STATUS_RESOLVED = "RESOLVED";
 
 	public static final String VAL_STATUS_NEW = "NEW";
-	
+
 	private static final long serialVersionUID = 3258693199936631348L;
 
 	/** Bug id */
@@ -90,7 +90,7 @@ public class BugReport implements Serializable, IBugzillaBug {
 	protected boolean hasChanges = false;
 
 	protected String charset = null;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -162,14 +162,14 @@ public class BugReport implements Serializable, IBugzillaBug {
 	 */
 	public void setSummary(String summary) {
 		Attribute attribute = new Attribute(ATTR_SUMMARY);
-		attribute.setValue(summary); 
+		attribute.setValue(summary);
 		addAttribute(attribute);
 	}
 
 	private String decodeStringFromCharset(String string) {
 		String decoded = string;
 		if (charset != null && Charset.availableCharsets().containsKey(charset)) {
-			try { 
+			try {
 				decoded = new String(string.getBytes(), charset);
 			} catch (UnsupportedEncodingException e) {
 				// ignore
@@ -246,10 +246,11 @@ public class BugReport implements Serializable, IBugzillaBug {
 		if (!attributes.containsKey(attribute.getName())) {
 			attributeKeys.add(attribute.getName());
 		}
-		
+
 		attribute.setValue(decodeStringFromCharset(attribute.getValue()));
-		
-		// put the value of the attribute into the map, using its name as the key
+
+		// put the value of the attribute into the map, using its name as the
+		// key
 		attributes.put(attribute.getName(), attribute);
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.tests;
 
 import java.io.File;
@@ -24,7 +25,6 @@ import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.bugzilla.core.internal.NewBugParser;
 
-
 /**
  * Tests NewBugParser -- parses product attributes
  */
@@ -40,15 +40,16 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 
 	public void testProductVE() throws Exception {
 		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/ve-page.html"));
-		
+
 		Reader in = new FileReader(f);
 
 		NewBugModel nbm = new NewBugModel();
-		new NewBugParser(in).parseBugAttributes(nbm, true); // ** TRUE vs FALSE **
+		new NewBugParser(in).parseBugAttributes(nbm, true); // ** TRUE vs FALSE
+															// **
 
 		// attributes for this but model
 		List<Attribute> attributes = nbm.getAttributes();
-//		printList(attributes);
+		// printList(attributes);
 
 		Iterator<Attribute> itr = attributes.iterator();
 		Attribute att = itr.next();
@@ -56,13 +57,13 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 		// Attribute: Severity
 		assertEquals("Attribute: Severity", "Severity", att.getName());
 
-		Map<String, String> attOptions =  att.getOptionValues(); // HashMap of
-															  // options for the
-															  // current
-															  // attribute
+		Map<String, String> attOptions = att.getOptionValues(); // HashMap of
+		// options for the
+		// current
+		// attribute
 		Object[] options = attOptions.keySet().toArray(); // Array of keys for
-														  // the options of the
-														  // current attribute
+		// the options of the
+		// current attribute
 		assertEquals("# Severity options", 7, options.length);
 
 		int i = 0;
@@ -128,7 +129,7 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 		att = itr.next();
 		assertEquals("Attribute: Version", "Version", att.getName());
 
-		//attOptions = (HashMap) att.getOptionValues();
+		// attOptions = (HashMap) att.getOptionValues();
 		options = att.getOptionValues().keySet().toArray();
 		assertEquals("# Version options", 3, options.length);
 
@@ -143,7 +144,7 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 		att = itr.next();
 		assertEquals("Attribute: Platform", "Platform", att.getName());
 
-		options =  att.getOptionValues().keySet().toArray();
+		options = att.getOptionValues().keySet().toArray();
 		assertEquals("# Platform options", 6, options.length);
 
 		i = 0;
@@ -197,27 +198,27 @@ public class BugzillaNewBugParserTestVE extends TestCase {
 		att = itr.next();
 		assertEquals("Attribute: priority", "priority", att.getName());
 
-		options =  att.getOptionValues().keySet().toArray();
+		options = att.getOptionValues().keySet().toArray();
 		assertEquals("No priority options", 0, options.length);
 
 	}
 
-//	private void printList(List<Attribute> attributes) {
-//
-//		Iterator<Attribute> itr = attributes.iterator();
-//		System.out.println("Attributes for this Product:");
-//		System.out.println("============================");
-//
-//		while (itr.hasNext()) {
-//			Attribute attr = itr.next();
-//			System.out.println();
-//			System.out.println(attr.getName() + ":  ");
-//			System.out.println("-----------");
-//
-//			Map<String, String> options =  attr.getOptionValues();
-//			Object[] it = options.keySet().toArray();
-//			for (int i = 0; i < it.length; i++)
-//				System.out.println((String) it[i]);
-//		}
-//	}
+	// private void printList(List<Attribute> attributes) {
+	//
+	// Iterator<Attribute> itr = attributes.iterator();
+	// System.out.println("Attributes for this Product:");
+	// System.out.println("============================");
+	//
+	// while (itr.hasNext()) {
+	// Attribute attr = itr.next();
+	// System.out.println();
+	// System.out.println(attr.getName() + ": ");
+	// System.out.println("-----------");
+	//
+	// Map<String, String> options = attr.getOptionValues();
+	// Object[] it = options.keySet().toArray();
+	// for (int i = 0; i < it.length; i++)
+	// System.out.println((String) it[i]);
+	// }
+	// }
 }

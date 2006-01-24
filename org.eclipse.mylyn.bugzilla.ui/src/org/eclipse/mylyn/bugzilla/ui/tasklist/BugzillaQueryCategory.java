@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,14 +52,14 @@ import org.eclipse.ui.internal.Workbench;
 public class BugzillaQueryCategory implements IRepositoryQuery {
 
 	private String repositoryUrl;
-	
+
 	private String queryUrl;
 
 	private int maxHits;
 
 	private List<IQueryHit> hits = new ArrayList<IQueryHit>();
 
-//	private boolean hasBeenRefreshed = false;
+	// private boolean hasBeenRefreshed = false;
 
 	protected Date lastRefresh;
 
@@ -78,13 +78,8 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 		public void searchCompleted(BugzillaResultCollector collector) {
 			for (BugzillaSearchHit hit : collector.getResults()) {
 
-				addHit(new BugzillaQueryHit(
-						hit.getId() + ": " + hit.getDescription(), 
-						hit.getPriority(), 
-						repositoryUrl,
-						hit.getId(), 
-						null,
-						hit.getState()));
+				addHit(new BugzillaQueryHit(hit.getId() + ": " + hit.getDescription(), hit.getPriority(),
+						repositoryUrl, hit.getId(), null, hit.getState()));
 			}
 		}
 
@@ -131,7 +126,7 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 	public void refreshBugs() {
 		refreshBugs(new NullProgressMonitor());
 	}
-	
+
 	public void refreshBugs(IProgressMonitor monitor) {
 		hits.clear();
 		// refresh the view to show that the results are gone
@@ -142,33 +137,37 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 			}
 		});
 
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
+				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 		if (repository == null) {
-            Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                	MessageDialog.openInformation(
-        					Display.getDefault().getActiveShell(), IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-        					"No task repository associated with this query. Open the query to associate it with a repository.");  
-                }
-            });
-//			MylarStatusHandler.fail(null, "could not find repository for url: " + repositoryUrl, true);
+			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog
+							.openInformation(Display.getDefault().getActiveShell(),
+									IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+									"No task repository associated with this query. Open the query to associate it with a repository.");
+				}
+			});
+			// MylarStatusHandler.fail(null, "could not find repository for url:
+			// " + repositoryUrl, true);
 		} else {
-			final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(
-					repository, getQueryUrl(), maxHits);
+			final BugzillaCategorySearchOperation catSearch = new BugzillaCategorySearchOperation(repository,
+					getQueryUrl(), maxHits);
 			catSearch.addResultsListener(listener);
 			final IStatus[] status = new IStatus[1];
-	
+
 			try {
 				// execute the search operation
 				catSearch.execute(monitor);
 				maxHitsReached = catSearch.isMaxReached();
-//				hasBeenRefreshed = true;
+				// hasBeenRefreshed = true;
 				lastRefresh = new Date();
-	
+
 				// get the status of the search operation
 				status[0] = catSearch.getStatus();
-	
-				// determine if there was an error, if it was cancelled, or if it is
+
+				// determine if there was an error, if it was cancelled, or if
+				// it is
 				// ok
 				if (status[0].getCode() == IStatus.CANCEL) {
 					// it was cancelled, so just return
@@ -255,19 +254,19 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 		tooltip += " (max set to: " + maxHits + ")";
 		tooltip += BugzillaTask.getLastRefreshTime(lastRefresh);
 		return tooltip;
-//		if (hits.size() > 0 || !label) {
-//		if (!hasBeenRefreshed && label) {
-//			return description + " <needs refresh>";
-//		} else if (maxHitsReached && label) {
-//			return description + " <first " + maxHits + " hits>";
-//		} else {
-//			return description;
-//		}
-//	} else if (!hasBeenRefreshed) {
-//		return description + " <needs refresh>";
-//	} else {
-//		return description + " <no hits>";
-//	}
+		// if (hits.size() > 0 || !label) {
+		// if (!hasBeenRefreshed && label) {
+		// return description + " <needs refresh>";
+		// } else if (maxHitsReached && label) {
+		// return description + " <first " + maxHits + " hits>";
+		// } else {
+		// return description;
+		// }
+		// } else if (!hasBeenRefreshed) {
+		// return description + " <needs refresh>";
+		// } else {
+		// return description + " <no hits>";
+		// }
 	}
 
 	public int getMaxHits() {
@@ -290,9 +289,9 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 		this.description = description;
 	}
 
-//	public String getStringForSortingDescription() {
-//		return getDescription(true);
-//	}
+	// public String getStringForSortingDescription() {
+	// return getDescription(true);
+	// }
 
 	public void setHandleIdentifier(String id) {
 		this.handle = id;

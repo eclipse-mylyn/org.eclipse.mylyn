@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,11 +51,17 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 public abstract class AbstractWizardDataPage extends WizardPage implements Listener {
 
 	public static final String ATTRIBUTE_URL = "URL";
+
 	public static final String ATTRIBUTE_PRIORITY = "Priority";
+
 	public static final String ATTRIBUTE_COMPONENT = "Component";
+
 	public static final String ATTRIBUTE_SEVERITY = "Severity";
+
 	public static final String ATTRIBUTE_VERSION = "Version";
+
 	public static final String ATTRIBUTE_PLATFORM = "Platform";
+
 	public static final String ATTRIBUTE_OS = "OS";
 
 	/** The instance of the workbench */
@@ -291,7 +297,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 	@Override
 	public boolean isPageComplete() {
 		AbstractBugWizard wizard = (AbstractBugWizard) getWizard();
-		if (summaryText.getText() == null || summaryText.getText().equals("") || descriptionText.getText() == null || descriptionText.getText().equals("")) {
+		if (summaryText.getText() == null || summaryText.getText().equals("") || descriptionText.getText() == null
+				|| descriptionText.getText().equals("")) {
 			wizard.attributeCompleted = false;
 			return false;
 		}
@@ -318,7 +325,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			Map<String, String> values = attribute.getOptionValues();
 
 			try {
-				if (values == null) values = new HashMap<String, String>();
+				if (values == null)
+					values = new HashMap<String, String>();
 				if (key.equals(ATTRIBUTE_OS)) {
 					String os = oSCombo.getItem(oSCombo.getSelectionIndex());
 					attribute.setValue(os);
@@ -339,7 +347,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 					attribute.setValue(priority);
 				} else if (key.equals(ATTRIBUTE_URL)) {
 					String url = urlText.getText();
-					if (url.equalsIgnoreCase("http://")) url = "";
+					if (url.equalsIgnoreCase("http://"))
+						url = "";
 					attribute.setValue(url);
 				} else if (key.equals("Assign To")) {
 					String assignTo = assignedToText.getText();
@@ -446,7 +455,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			} else if (key.equals("version")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 
-				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				versionCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -461,7 +471,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 				versionCombo.addListener(SWT.Modify, this);
 			} else if (key.equals("bug_severity")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				severityCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -477,7 +488,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 
 			} else if (key.equals("rep_platform")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				platformCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -492,7 +504,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 				platformCombo.addListener(SWT.Modify, this);
 			} else if (key.equals("component")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				componentCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -507,7 +520,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 				componentCombo.addListener(SWT.Modify, this);
 			} else if (key.equals("priority")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				priorityCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
@@ -637,16 +651,16 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 	 * CE Windows Mobile 2003 Windows Mobile 2005 Windows ME Windows 2000
 	 * Windows NT Windows XP Windows 2003 Server Windows All MacOS X Linux
 	 * Linux-GTK Linux-Motif HP-UX Neutrino QNX-Photon Solaris Solaris-GTK
-	 * Solaris-Motif SymbianOS-Series 80 Unix All other 
+	 * Solaris-Motif SymbianOS-Series 80 Unix All other
 	 * 
-	 * The following are the platforsm in Bugzilla:
-	 *  All Macintosh PC Power PC Sun Other
+	 * The following are the platforsm in Bugzilla: All Macintosh PC Power PC
+	 * Sun Other
 	 * 
-	 * The following are Java's Archictures: [PA_RISC, ppc, sparc, x86,
-	 * x86_64, ia64, ia64_32]
+	 * The following are Java's Archictures: [PA_RISC, ppc, sparc, x86, x86_64,
+	 * ia64, ia64_32]
 	 * 
-	 * The following are Java's OS's: [aix, hpux, linux, macosx, qnx,
-	 * solaris, win32]
+	 * The following are Java's OS's: [aix, hpux, linux, macosx, qnx, solaris,
+	 * win32]
 	 */
 	/**
 	 * Sets the OS and Platform for the new bug
@@ -716,8 +730,10 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			}
 
 			// Set the OS and the Platform in the model
-			if (bugzillaOS != null) opSysAttribute.setValue(bugzillaOS);
-			if (bugzillaPlatform != null) platformAttribute.setValue(bugzillaPlatform);
+			if (bugzillaOS != null)
+				opSysAttribute.setValue(bugzillaOS);
+			if (bugzillaPlatform != null)
+				platformAttribute.setValue(bugzillaPlatform);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not set platform options", false);
 		}

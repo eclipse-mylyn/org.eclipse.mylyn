@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -177,7 +177,8 @@ public class BugzillaHyperLinkDetector extends AbstractMylarHyperlinkDetector {
 
 	private Comment findComment(List<Comment> commentList, int offset, int i) {
 		for (Comment comment : commentList) {
-			if (comment.getStartPosition() <= offset && (comment.getStartPosition() + comment.getLength() >= offset + i)) {
+			if (comment.getStartPosition() <= offset
+					&& (comment.getStartPosition() + comment.getLength() >= offset + i)) {
 				return comment;
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.internal;
 
 import java.io.BufferedReader;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 
 import org.eclipse.mylar.bugzilla.core.BugzillaPlugin;
 
-
 /**
  * A factory for creating ProductConfiguration objects that encapsulate valid
  * combinations of products, components, and versions.
@@ -39,7 +39,7 @@ public class ProductConfigurationFactory {
 	private ProductConfigurationFactory() {
 		// no initial setup needed
 	}
-	
+
 	/**
 	 * Returns the factory singletoninstance.
 	 */
@@ -57,31 +57,33 @@ public class ProductConfigurationFactory {
 	public ProductConfiguration getConfiguration(String server) throws IOException {
 		URL serverURL = new URL(server + "/query.cgi");
 		ProductConfiguration configuration = new ProductConfiguration();
-		ArrayList<String []> componentsMatrix = new ArrayList<String []>();
-		ArrayList<String []> versionsMatrix = new ArrayList<String []>();
+		ArrayList<String[]> componentsMatrix = new ArrayList<String[]>();
+		ArrayList<String[]> versionsMatrix = new ArrayList<String[]>();
 		URLConnection c = serverURL.openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
 		String line;
 		while ((line = in.readLine()) != null) {
 			if (line.startsWith("  cpts[")) {
-				String [] components = parseComponents(line);
-				if (components.length > 0) componentsMatrix.add(components);
-			}
-			else if (line.startsWith("  vers[")) {
-				String [] versions = parseComponents(line);
-				if (versions.length > 0) versionsMatrix.add(versions);
-			}
-			else if (line.indexOf("<select name=\"product\"") != -1) {
-				String [] products = parseProducts(in);
+				String[] components = parseComponents(line);
+				if (components.length > 0)
+					componentsMatrix.add(components);
+			} else if (line.startsWith("  vers[")) {
+				String[] versions = parseComponents(line);
+				if (versions.length > 0)
+					versionsMatrix.add(versions);
+			} else if (line.indexOf("<select name=\"product\"") != -1) {
+				String[] products = parseProducts(in);
 				for (int i = 0; i < products.length; i++) {
 					String product = products[i];
 					configuration.addProduct(product);
-					// If components don't jibe with the products, just don't make them available.
+					// If components don't jibe with the products, just don't
+					// make them available.
 					if (products.length == componentsMatrix.size()) {
 						configuration.addComponents(product, componentsMatrix.get(i));
 					}
-					
-					// If versions don't jibe with the products, just don't make them available
+
+					// If versions don't jibe with the products, just don't make
+					// them available
 					if (products.length == versionsMatrix.size()) {
 						configuration.addVersions(product, versionsMatrix.get(i));
 					}
@@ -90,28 +92,27 @@ public class ProductConfigurationFactory {
 		}
 		return configuration;
 	}
-	
+
 	/**
-	 * Returns an array of valid components or versions by parsing the JavaScript
-	 * array in the Bugzilla query page.
+	 * Returns an array of valid components or versions by parsing the
+	 * JavaScript array in the Bugzilla query page.
 	 */
-	protected String [] parseComponents(String line) {
+	protected String[] parseComponents(String line) {
 		ArrayList<String> components = new ArrayList<String>();
 		int start = line.indexOf('\'');
 		if (start >= 0) {
 			boolean inName = true;
 			StringBuffer name = new StringBuffer();
-			for (int i = start+1; i < line.length(); i++){
+			for (int i = start + 1; i < line.length(); i++) {
 				char ch = line.charAt(i);
 				if (inName) {
 					if (ch == '\'') {
 						components.add(name.toString());
 						name.setLength(0);
 						inName = false;
-					}
-					else name.append(ch);
-				}
-				else {
+					} else
+						name.append(ch);
+				} else {
 					if (ch == '\'') {
 						inName = true;
 					}
@@ -120,30 +121,30 @@ public class ProductConfigurationFactory {
 		}
 		return components.toArray(new String[0]);
 	}
-	
+
 	/**
-	 * Returns an array of valid product names by parsing the product selection list
-	 * in the Bugzilla query page.
+	 * Returns an array of valid product names by parsing the product selection
+	 * list in the Bugzilla query page.
 	 */
 	protected String[] parseProducts(BufferedReader in) throws IOException {
 		ArrayList<String> products = new ArrayList<String>();
 		String line;
 		while ((line = in.readLine()) != null) {
-			if (line.indexOf("</select>") != -1) break;
+			if (line.indexOf("</select>") != -1)
+				break;
 			int optionIndex = line.indexOf("<option value=\"");
 			if (optionIndex != -1) {
 				boolean inName = false;
 				StringBuffer name = new StringBuffer();
-				for (int i = optionIndex; i< line.length(); i++) {
+				for (int i = optionIndex; i < line.length(); i++) {
 					char ch = line.charAt(i);
 					if (inName) {
 						if (ch == '<') {
 							products.add(name.toString());
 							break;
-						}
-						else name.append(ch);
-					}
-					else {
+						} else
+							name.append(ch);
+					} else {
 						if (ch == '>') {
 							inName = true;
 						}
@@ -153,12 +154,13 @@ public class ProductConfigurationFactory {
 		}
 		return products.toArray(new String[0]);
 	}
-	
+
 	/**
 	 * Restores a ProductConfiguration from a file.
 	 */
 	public ProductConfiguration readConfiguration(File file) throws IOException {
-		if (!file.exists()) return null;
+		if (!file.exists())
+			return null;
 		FileInputStream fin = null;
 		ProductConfiguration configuration = null;
 		try {
@@ -176,7 +178,7 @@ public class ProductConfigurationFactory {
 		}
 		return configuration;
 	}
-	
+
 	/**
 	 * Saves a ProductConfiguration to a file.
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.internal;
 
 import java.net.URL;
@@ -22,12 +23,16 @@ import javax.swing.text.html.HTML.Tag;
 public class HtmlTag {
 	/** tag's name */
 	private String tagName;
+
 	/** tag type enum */
 	private Tag tagType;
+
 	/** true if the tag is a closing tag */
 	private boolean isEndTag;
+
 	/** tag's attributes (keys are lowercase attribute names) */
 	private HashMap<String, String> attributes;
+
 	/** tag's base url */
 	private URL baseUrl;
 
@@ -45,7 +50,7 @@ public class HtmlTag {
 	/**
 	 * Copy constructor.
 	 */
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public HtmlTag(HtmlTag htmltag) {
 		tagName = null;
 		tagType = Type.UNKNOWN;
@@ -55,7 +60,7 @@ public class HtmlTag {
 		baseUrl = htmltag.baseUrl;
 		tagType = htmltag.tagType;
 		isEndTag = htmltag.isEndTag;
-		attributes = (HashMap)htmltag.attributes.clone();
+		attributes = (HashMap) htmltag.attributes.clone();
 	}
 
 	/**
@@ -96,15 +101,17 @@ public class HtmlTag {
 	 * Sets the tag's name and type, if known.
 	 * 
 	 * @throws IllegalArgumentException
-	 * 		if the argument is <code>null</code> or empty string
+	 *             if the argument is <code>null</code> or empty string
 	 */
 	public void setTagName(String s) throws IllegalArgumentException {
-	    if (s == null || s.length() == 0) throw new IllegalArgumentException("Empty tag name"); 
+		if (s == null || s.length() == 0)
+			throw new IllegalArgumentException("Empty tag name");
 		if (s.charAt(0) == '/') {
 			isEndTag = true;
 			s = s.substring(1);
 		}
-	    if (s.length() == 0) throw new IllegalArgumentException("Empty tag name"); 
+		if (s.length() == 0)
+			throw new IllegalArgumentException("Empty tag name");
 		tagName = s;
 		tagType = tags.get(s.toUpperCase());
 		if (tagType == null) {
@@ -134,7 +141,8 @@ public class HtmlTag {
 	}
 
 	/**
-	 * Returns <code>true</code> if the tag contains attribute with the given name.
+	 * Returns <code>true</code> if the tag contains attribute with the given
+	 * name.
 	 */
 	public boolean hasAttribute(String s) {
 		return getAttribute(s) != null;
@@ -149,25 +157,22 @@ public class HtmlTag {
 
 	public StringBuffer getURLs() {
 		StringBuffer sb = new StringBuffer();
-		
+
 		Iterator<String> attributeNames = attributes.keySet().iterator();
 		Iterator<String> attributeValues = attributes.values().iterator();
 		while (attributeNames.hasNext()) {
 			String attributeName = attributeNames.next();
 			if (attributeName.compareTo("href") == 0 || attributeName.compareTo("src") == 0) {
 				String target = attributeValues.next();
-				if (!target.endsWith(".jpg")
-					&& !target.endsWith(".gif")
-					&& !target.endsWith(".css")
-					&& !target.endsWith(".js")
-					&& !target.startsWith("mailto")
-					&& target.lastIndexOf("#") == -1
-					&& target.length() > 0) {
-						
+				if (!target.endsWith(".jpg") && !target.endsWith(".gif") && !target.endsWith(".css")
+						&& !target.endsWith(".js") && !target.startsWith("mailto") && target.lastIndexOf("#") == -1
+						&& target.length() > 0) {
+
 					for (int i = 0; i < target.length(); i++) {
 						char ch = target.charAt(i);
 						if (!Character.isWhitespace(ch)) {
-							if (i > 0) target = target.substring(i+1);
+							if (i > 0)
+								target = target.substring(i + 1);
 							break;
 						}
 					}
@@ -177,29 +182,29 @@ public class HtmlTag {
 						// Absolute URL
 						if (target.substring(0, 7).compareToIgnoreCase("http://") == 0)
 							sb.append(target);
-					} 
-					else {
+					} else {
 						// Relative URL
 
 						String baseDir = baseUrl.getPath();
 						int lastSep = -1;
 						for (int i = 0; i < baseDir.length(); i++) {
 							char ch = baseDir.charAt(i);
-							if (ch == '/') lastSep = i;
-							else if (ch == '?') break;
+							if (ch == '/')
+								lastSep = i;
+							else if (ch == '?')
+								break;
 						}
-						if (lastSep >= 0) baseDir = baseDir.substring(0, lastSep);
+						if (lastSep >= 0)
+							baseDir = baseDir.substring(0, lastSep);
 						while (baseDir.length() > 1 && baseDir.endsWith("/.")) {
-							baseDir = baseDir.substring(0, baseDir.length()-2);
+							baseDir = baseDir.substring(0, baseDir.length() - 2);
 						}
-						
+
 						if (target.startsWith("//")) {
 							sb.append(baseUrl.getProtocol() + ":" + target);
-						}
-						else if (target.startsWith("/")) {
+						} else if (target.startsWith("/")) {
 							sb.append(baseUrl.getProtocol() + "://" + baseUrl.getHost() + target);
-						}
-						else {
+						} else {
 							while (target.startsWith("../")) {
 								if (baseDir.length() > 0) {
 									// can't go above root
@@ -211,8 +216,7 @@ public class HtmlTag {
 						}
 					}
 				}
-			} 
-			else {
+			} else {
 				attributeValues.next();
 			}
 		}
@@ -250,12 +254,15 @@ public class HtmlTag {
 	 */
 	public static class Type extends Tag {
 		public static final Tag UNKNOWN = new Tag();
+
 		public static final Tag THEAD = new Type("THEAD");
+
 		public static final Tag DOCTYPE = new Type("!DOCTYPE");
+
 		public static final Tag LABEL = new Type("LABEL");
-		
+
 		private Type(String name) {
-		    super(name);
+			super(name);
 		}
 	}
 

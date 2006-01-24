@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,28 +20,31 @@ import org.eclipse.mylar.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 
-
 /**
- * The <code>IEditorInput</code> implementation for <code>ExistingBugEditor</code>.
+ * The <code>IEditorInput</code> implementation for
+ * <code>ExistingBugEditor</code>.
  * 
  * @author Mik Kersten (some hardening of initial prototype)
  */
 public class ExistingBugEditorInput extends AbstractBugEditorInput {
 
 	private TaskRepository repository;
-	
+
 	protected int bugId;
 
 	protected BugReport bug;
-	
+
 	/**
 	 * Creates a new <code>ExistingBugEditorInput</code>.
-	 * @param bug The bug for this editor input.
+	 * 
+	 * @param bug
+	 *            The bug for this editor input.
 	 */
 	public ExistingBugEditorInput(BugReport bug) {
 		this.bug = bug;
 		this.bugId = bug.getId();
-		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, bug.getRepository());
+		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
+				bug.getRepository());
 	}
 
 	/**
@@ -57,27 +60,29 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		this.bugId = bugId;
 		// get the bug from the server if it exists
 		bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);
-		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
+		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
+				repositoryUrl);
 	}
-	
+
 	public ExistingBugEditorInput(String repositoryUrl, int bugId, boolean offline) throws LoginException, IOException {
 		this.bugId = bugId;
-		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
-		if(!offline){
+		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
+				repositoryUrl);
+		if (!offline) {
 			try {
 				bug = BugzillaRepositoryUtil.getBug(repositoryUrl, bugId);
 			} catch (IOException e) {
 				bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, bugId);
-//    			IWorkbench workbench = PlatformUI.getWorkbench();
-//    			workbench.getDisplay().asyncExec(new Runnable() {
-//    	            public void run() {
-//    					MessageDialog.openInformation(
-//							Display.getDefault().getActiveShell(), 
-//							"Mylar Bugzilla Client", 
-//							"Unable to download bug report, using offline copy.");
-//
-//    	            }
-//    	        });
+				// IWorkbench workbench = PlatformUI.getWorkbench();
+				// workbench.getDisplay().asyncExec(new Runnable() {
+				// public void run() {
+				// MessageDialog.openInformation(
+				// Display.getDefault().getActiveShell(),
+				// "Mylar Bugzilla Client",
+				// "Unable to download bug report, using offline copy.");
+				//
+				// }
+				// });
 			}
 		} else {
 			bug = BugzillaRepositoryUtil.getCurrentBug(repositoryUrl, bugId);

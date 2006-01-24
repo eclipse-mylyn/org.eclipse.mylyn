@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,21 +34,25 @@ public class OpenBugsAction extends Action {
 
 	/**
 	 * Constructor
-	 * @param text The text for this action
-	 * @param resultView The <code>BugzillaSearchResultView</code> this action works on
+	 * 
+	 * @param text
+	 *            The text for this action
+	 * @param resultView
+	 *            The <code>BugzillaSearchResultView</code> this action works
+	 *            on
 	 */
 	public OpenBugsAction(String text, BugzillaSearchResultView resultView) {
 		setText(text);
 		this.resultView = resultView;
 	}
-	
+
 	/**
-	 * Open the selected bug reports in their own editors. 
+	 * Open the selected bug reports in their own editors.
 	 */
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		
+
 		// Get the selected items
 		ISelection s = resultView.getViewer().getSelection();
 		if (s instanceof IStructuredSelection) {
@@ -62,15 +66,15 @@ public class OpenBugsAction extends Action {
 					String repositoryUrl = (String) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY);
 					Integer id = (Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID);
 					BugzillaUITools.show(repositoryUrl, id.intValue());
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					// if an error occurs, handle and log it
-					ExceptionHandler.handle(e, SearchMessages.Search_Error_search_title, SearchMessages.Search_Error_search_message); //$NON-NLS-2$ //$NON-NLS-1$
+					ExceptionHandler.handle(e, SearchMessages.Search_Error_search_title,
+							SearchMessages.Search_Error_search_message); //$NON-NLS-2$ //$NON-NLS-1$
 					BugzillaPlugin.log(e.getStatus());
 				}
 			}
-			
+
 		}
 	}
-	
+
 }

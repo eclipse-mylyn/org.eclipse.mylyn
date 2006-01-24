@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.search;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.bugzilla.core.IBugzillaConstants;
-
 
 /**
  * Sorts results of Bugzilla search by bug state.
@@ -31,55 +31,45 @@ public class BugzillaStateSearchSorter extends ViewerSorter {
 	 *      java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) 
-	{
-		try 
-		{
+	public int compare(Viewer viewer, Object e1, Object e2) {
+		try {
 			// cast the object and get its state
 			IMarker entry1 = (IMarker) e1;
-			Integer state1 = (Integer) entry1.getAttribute(
-				IBugzillaConstants.HIT_MARKER_ATTR_STATE);
-				
+			Integer state1 = (Integer) entry1.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE);
+
 			// cast the other object and get its state
 			IMarker entry2 = (IMarker) e2;
-			Integer state2 = (Integer) entry2.getAttribute(
-				IBugzillaConstants.HIT_MARKER_ATTR_STATE);
+			Integer state2 = (Integer) entry2.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_STATE);
 
 			// if neither is null, compare the bugs states
-			if (state1 != null && state2 != null) 
-			{
+			if (state1 != null && state2 != null) {
 				// compare the states
 				int rc = state1.compareTo(state2);
-				
+
 				// compare the resolution if the states are the same
-				if (rc == 0) 
-				{
+				if (rc == 0) {
 					// get the resolution of the bug
-					Integer result1 = (Integer) entry1.getAttribute(
-						IBugzillaConstants.HIT_MARKER_ATTR_RESULT);
-						
+					Integer result1 = (Integer) entry1.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT);
+
 					// get the resolution of the other bug
-					Integer result2 = (Integer) entry2.getAttribute(
-						IBugzillaConstants.HIT_MARKER_ATTR_RESULT);
-					
+					Integer result2 = (Integer) entry2.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_RESULT);
+
 					// if neither state is null, compare them
-					if (result1 != null && result2 != null) 
-					{
+					if (result1 != null && result2 != null) {
 						rc = result1.compareTo(result2);
 					}
 				}
-				return rc;	
+				return rc;
 			}
 
-		} 
-		catch (Exception ignored) {
+		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}
-		
+
 		// if that didn't work, use the default compare method
 		return super.compare(viewer, e1, e2);
 	}
-	
+
 	/**
 	 * Returns the category of the given element. The category is a number used
 	 * to allocate elements to bins; the bins are arranged in ascending numeric
@@ -90,22 +80,18 @@ public class BugzillaStateSearchSorter extends ViewerSorter {
 	 * @see org.eclipse.jface.viewers.ViewerSorter#category(Object)
 	 */
 	@Override
-	public int category(Object element) 
-	{
-		try 
-		{
-			IMarker marker = (IMarker)element;
-			
+	public int category(Object element) {
+		try {
+			IMarker marker = (IMarker) element;
+
 			// return the bugs id
-			if (marker.getType().equals(IBugzillaConstants.HIT_MARKER_ID)) 
-			{
-				return ((Integer)marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID)).intValue();
+			if (marker.getType().equals(IBugzillaConstants.HIT_MARKER_ID)) {
+				return ((Integer) marker.getAttribute(IBugzillaConstants.HIT_MARKER_ATTR_ID)).intValue();
 			}
-		} 
-		catch (Exception ignored) {
+		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}
-		
+
 		// if that didn't work, use the default category method
 		return super.category(element);
 	}

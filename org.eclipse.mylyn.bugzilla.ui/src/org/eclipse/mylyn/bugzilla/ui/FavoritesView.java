@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,16 +65,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
 
-
 /**
  * A view that shows any bug marked as favorites.
  */
 public class FavoritesView extends ViewPart {
-	
-	private static Composite savedParent;	
-	
+
+	private static Composite savedParent;
+
 	private IMemento savedMemento;
-	
+
 	private static DeleteFavoriteAction remove;
 
 	public static DeleteFavoriteAction removeAll;
@@ -82,25 +81,18 @@ public class FavoritesView extends ViewPart {
 	public static SelectAllAction selectAll;
 
 	private static ViewFavoriteAction open;
-	
+
 	private Table table;
 
 	private MenuManager contextMenu;
-	
+
 	private static TableViewer viewer;
-	
-	private String[] columnHeaders = {
-		"Bug",
-		"Query",
-		"Date"
-	};
-	
-	private ColumnLayoutData columnLayouts[] = {
-		new ColumnWeightData(10),
-		new ColumnWeightData(3),
-		new ColumnWeightData(5)
-	};
-	
+
+	private String[] columnHeaders = { "Bug", "Query", "Date" };
+
+	private ColumnLayoutData columnLayouts[] = { new ColumnWeightData(10), new ColumnWeightData(3),
+			new ColumnWeightData(5) };
+
 	/**
 	 * Constructor initializes favorites' source file initializes actions
 	 */
@@ -111,7 +103,7 @@ public class FavoritesView extends ViewPart {
 		remove = new DeleteFavoriteAction(this, false);
 		removeAll = new DeleteFavoriteAction(this, true);
 	}
-	
+
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
@@ -127,13 +119,13 @@ public class FavoritesView extends ViewPart {
 		init(site);
 		this.savedMemento = memento;
 	}
-	
+
 	@Override
 	public void createPartControl(Composite parent) {
 		FavoritesView.savedParent = parent;
 		setPartName("Bugzilla Favorites");
 		createTable();
-	
+
 		viewer = new TableViewer(table);
 		viewer.setUseHashlookup(true);
 		createColumns();
@@ -141,30 +133,30 @@ public class FavoritesView extends ViewPart {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.verticalSpan = 20;
 		viewer.getTable().setLayoutData(gd);
-	
+
 		viewer.setContentProvider(new FavoritesViewContentProvider(this));
 		viewer.setLabelProvider(new FavoritesViewLabelProvider());
 		viewer.setInput(BugzillaPlugin.getDefault().getFavorites().elements());
-		
+
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				FavoritesView.this.widgetSelected(event);
 			}
 		});
-		
+
 		fillToolbar();
 		createContextMenu();
-		
+
 		Menu menu = contextMenu.createContextMenu(table);
 		table.setMenu(menu);
-		
+
 		hookGlobalActions();
 		parent.layout();
-						
+
 		// Restore state from the previous session.
 		restoreState();
 	}
-	
+
 	@Override
 	public void setFocus() {
 		// don't need to do anything when the focus is set
@@ -177,56 +169,56 @@ public class FavoritesView extends ViewPart {
 
 		for (int i = 0; i < columnHeaders.length; i++) {
 			TableColumn tc = new TableColumn(table, SWT.NONE, i);
-	 
+
 			tc.setText(columnHeaders[i]);
 			tc.pack();
 			tc.setResizable(columnLayouts[i].resizable);
 			layout.addColumnData(columnLayouts[i]);
 		}
 	}
-	
+
 	private void createTable() {
-		
+
 		table = new Table(savedParent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		table.setLinesVisible(true);
-		
+
 		// Add action support for a double-click
 		table.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				open.run();
 			}
 		});
 	}
-	
+
 	private void fillToolbar() {
 		IActionBars actionBars = getViewSite().getActionBars();
 		IToolBarManager toolbar = actionBars.getToolBarManager();
-		
+
 		remove.setEnabled(false);
 		toolbar.add(remove);
 		toolbar.add(removeAll);
 		toolbar.add(new Separator());
 		toolbar.add(selectAll);
-	
+
 		// create actions to handle the sorting of the favorites
 		sortByIDAction = new SortByAction(FavoritesFile.ID_SORT);
 		sortByIDAction.setText("by &Bug ID");
 		sortByIDAction.setToolTipText("Sorts by bug number");
-		
+
 		sortByPriorityAction = new SortByAction(FavoritesFile.PRIORITY_SORT);
 		sortByPriorityAction.setText("by &Priority");
 		sortByPriorityAction.setToolTipText("Sorts by riority of the bug");
-		
+
 		sortBySeverityAction = new SortByAction(FavoritesFile.SEVERITY_SORT);
 		sortBySeverityAction.setText("by &Severity");
 		sortBySeverityAction.setToolTipText("Sorts by severity of the bug");
-		
+
 		sortByStatusAction = new SortByAction(FavoritesFile.STATE_SORT);
 		sortByStatusAction.setText("by S&tatus");
 		sortByStatusAction.setToolTipText("Sorts by status of the bug");
-	
+
 		// get the menu manager and create a submenu to contain sorting
 		IMenuManager menu = actionBars.getMenuManager();
 		IMenuManager submenu = new MenuManager("&Sort");
@@ -237,37 +229,40 @@ public class FavoritesView extends ViewPart {
 		submenu.add(sortBySeverityAction);
 		submenu.add(sortByPriorityAction);
 		submenu.add(sortByStatusAction);
-		
+
 		updateSortingState();
 	}
-	
+
 	/**
 	 * Function to make sure that the appropriate sort is checked
 	 */
 	void updateSortingState() {
 		int curCriterion = FavoritesFile.lastSel;
-		
+
 		sortByIDAction.setChecked(curCriterion == FavoritesFile.ID_SORT);
 		sortBySeverityAction.setChecked(curCriterion == FavoritesFile.SEVERITY_SORT);
 		sortByPriorityAction.setChecked(curCriterion == FavoritesFile.PRIORITY_SORT);
 		sortByStatusAction.setChecked(curCriterion == FavoritesFile.STATE_SORT);
 		viewer.setInput(viewer.getInput());
 	}
-	
+
 	// Sorting actions for the favorites view
 	SortByAction sortByIDAction, sortBySeverityAction, sortByPriorityAction, sortByStatusAction;
-	
+
 	/**
 	 * Inner class to handle sorting
+	 * 
 	 * @author Shawn Minto
 	 */
 	class SortByAction extends Action {
 		/** The criteria to sort the favorites menu based on */
 		private int criterion;
-		
+
 		/**
 		 * Constructor
-		 * @param criteria The criteria to sort the favorites menu based on
+		 * 
+		 * @param criteria
+		 *            The criteria to sort the favorites menu based on
 		 */
 		public SortByAction(int criteria) {
 			this.criterion = criteria;
@@ -282,7 +277,7 @@ public class FavoritesView extends ViewPart {
 			updateSortingState();
 		}
 	}
-	
+
 	/**
 	 * Create context menu.
 	 */
@@ -295,11 +290,11 @@ public class FavoritesView extends ViewPart {
 				updateActionEnablement();
 			}
 		});
-	   
+
 		// Register menu for extension.
 		getSite().registerContextMenu("#FavoritesView", contextMenu, viewer);
 	}
-	
+
 	/**
 	 * Hook global actions
 	 */
@@ -308,17 +303,16 @@ public class FavoritesView extends ViewPart {
 		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAll);
 		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), remove);
 		table.addKeyListener(new KeyAdapter() {
-			
+
 			@Override
 			public void keyPressed(KeyEvent event) {
-				if (event.character == SWT.DEL && event.stateMask == 0 && 
-						remove.isEnabled()) {
+				if (event.character == SWT.DEL && event.stateMask == 0 && remove.isEnabled()) {
 					remove.run();
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Populate context menu
 	 */
@@ -331,22 +325,22 @@ public class FavoritesView extends ViewPart {
 		mgr.add(new DeleteFavoriteAction(this, true));
 		mgr.add(new SelectAllAction());
 	}
-	
+
 	/**
-	 * Update action enablement depending on whether or not any items are selected.
-	 * Displays name of current item in status bar.
+	 * Update action enablement depending on whether or not any items are
+	 * selected. Displays name of current item in status bar.
 	 */
 	public static void updateActionEnablement() {
-		
+
 		boolean hasSelected = viewer.getTable().getSelectionCount() > 0;
 		remove.setEnabled(hasSelected);
 		open.setEnabled(hasSelected);
-		
+
 		boolean hasItems = viewer.getTable().getItemCount() > 0;
 		removeAll.setEnabled(hasItems);
 		selectAll.setEnabled(hasItems);
 	}
-	
+
 	@Override
 	public void saveState(IMemento memento) {
 		TableItem[] sel = table.getSelection();
@@ -357,7 +351,7 @@ public class FavoritesView extends ViewPart {
 			memento.createChild("descriptor", new Integer(table.indexOf(sel[i])).toString());
 		}
 	}
-	
+
 	private void restoreState() {
 		if (savedMemento == null)
 			return;
@@ -368,7 +362,7 @@ public class FavoritesView extends ViewPart {
 				int[] objList = new int[descriptors.length];
 				for (int nX = 0; nX < descriptors.length; nX++) {
 					String id = descriptors[nX].getID();
-					objList[nX] = BugzillaPlugin.getDefault().getFavorites().find(Integer.valueOf(id).intValue());		
+					objList[nX] = BugzillaPlugin.getDefault().getFavorites().find(Integer.valueOf(id).intValue());
 				}
 				table.setSelection(objList);
 			}
@@ -382,7 +376,10 @@ public class FavoritesView extends ViewPart {
 	 * Returns list of names of selected items.
 	 */
 	public List<BugzillaOpenStructure> getBugIdsOfSelected() {
-		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();//TableItem[] sel = table.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();// TableItem[]
+																						// sel
+																						// =
+																						// table.getSelection();
 		List<?> sel = selection.toList();
 		List<BugzillaOpenStructure> Ids = new ArrayList<BugzillaOpenStructure>();
 
@@ -395,20 +392,20 @@ public class FavoritesView extends ViewPart {
 				Ids.add(new BugzillaOpenStructure(entry.getServer(), id, -1));
 			}
 		}
-		
+
 		return Ids;
 	}
-	
+
 	/**
 	 * Calls remove function in FavoritesFile
 	 */
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public void deleteSelectedFavorites() {
-		List<Favorite> selection = ((IStructuredSelection)viewer.getSelection()).toList();
+		List<Favorite> selection = ((IStructuredSelection) viewer.getSelection()).toList();
 		BugzillaPlugin.getDefault().getFavorites().remove(selection);
 		viewer.setInput(viewer.getInput());
 	}
-	
+
 	/**
 	 * Removes all of the favorites in the FavoritesFile.
 	 */
@@ -416,7 +413,7 @@ public class FavoritesView extends ViewPart {
 		BugzillaPlugin.getDefault().getFavorites().removeAll();
 		viewer.setInput(viewer.getInput());
 	}
-	
+
 	/**
 	 * Refreshes the view.
 	 */
@@ -424,23 +421,24 @@ public class FavoritesView extends ViewPart {
 		if (viewer != null)
 			viewer.setInput(viewer.getInput());
 	}
-	
 
 	/**
 	 * @see SelectionListener#widgetSelected(SelectionEvent)
 	 */
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public void widgetSelected(SelectionChangedEvent e) {
 
-		IStructuredSelection selection =
-					(IStructuredSelection) e.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) e.getSelection();
 
 		boolean enable = selection.size() > 0;
 		selectAll.setEnabled(enable);
 		remove.setEnabled(enable);
 		open.setEnabled(enable);
-		
-		IStructuredSelection viewerSelection = (IStructuredSelection)viewer.getSelection();//TableItem[] sel = table.getSelection();
+
+		IStructuredSelection viewerSelection = (IStructuredSelection) viewer.getSelection();// TableItem[]
+																							// sel
+																							// =
+																							// table.getSelection();
 		List<Favorite> sel = viewerSelection.toList();
 		if (sel.size() > 0) {
 			IStatusLineManager manager = this.getViewSite().getActionBars().getStatusLineManager();
@@ -449,14 +447,13 @@ public class FavoritesView extends ViewPart {
 
 		updateActionEnablement();
 	}
-	
+
 	/**
 	 * Attempts to display this view on the workbench.
 	 */
 	public static void checkWindow() {
 		if (savedParent == null || savedParent.isDisposed()) {
-			IWorkbenchWindow w = BugzillaPlugin.getDefault().getWorkbench()
-					.getActiveWorkbenchWindow();
+			IWorkbenchWindow w = BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
 			if (w != null) {
 				IWorkbenchPage page = w.getActivePage();
 				if (page != null) {
@@ -469,18 +466,18 @@ public class FavoritesView extends ViewPart {
 			}
 		}
 	}
-	
+
 	/**
 	 * Action class - "Select All"
 	 */
 	public class SelectAllAction extends AbstractFavoritesAction {
-		
+
 		public SelectAllAction() {
 			setToolTipText("Select all favorites");
 			setText("Select all");
 			setImageDescriptor(BugzillaImages.SELECT_ALL);
 		}
-		
+
 		@Override
 		public void run() {
 			checkWindow();
@@ -488,46 +485,48 @@ public class FavoritesView extends ViewPart {
 			viewer.setSelection(viewer.getSelection(), true);
 			updateActionEnablement();
 		}
-	}		
-	
+	}
+
 	private class FavoritesViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		/**
-		 * Returns the label text for the given column of a recommendation in the table.
+		 * Returns the label text for the given column of a recommendation in
+		 * the table.
 		 */
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof Favorite) {
 				Favorite f = (Favorite) element;
 				switch (columnIndex) {
-					case 0:
-						return f.toString();
-					case 1:
-						return f.getQuery();
-					case 2:
-						return f.getDate().toString();
-					default:
-						return "Undefined column text";
+				case 0:
+					return f.toString();
+				case 1:
+					return f.getQuery();
+				case 2:
+					return f.getDate().toString();
+				default:
+					return "Undefined column text";
 				}
 			}
 			return ""; //$NON-NLS-1$
 		}
 
 		/*
-		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
+		 *      int)
 		 */
 		public Image getColumnImage(Object arg0, int arg1) {
 			return null;
 		}
 	}
-	
+
 	public void refresh() {
 		// don't need to do anything to refresh
 	}
-	
+
 	private class FavoritesViewContentProvider implements IStructuredContentProvider {
 
 		private List results;
-	
+
 		/**
 		 * The constructor.
 		 */
@@ -536,31 +535,33 @@ public class FavoritesView extends ViewPart {
 		}
 
 		/**
-		 * Returns the elements to display in the viewer 
-		 * when its input is set to the given element. 
-		 * These elements can be presented as rows in a table, items in a list, etc.
-		 * The result is not modified by the viewer.
-		 *
-		 * @param inputElement the input element
+		 * Returns the elements to display in the viewer when its input is set
+		 * to the given element. These elements can be presented as rows in a
+		 * table, items in a list, etc. The result is not modified by the
+		 * viewer.
+		 * 
+		 * @param inputElement
+		 *            the input element
 		 * @return the array of elements to display in the viewer
 		 */
 		public Object[] getElements(Object inputElement) {
 			if (results != null) {
 				return results.toArray();
-			}
-			else return null;
+			} else
+				return null;
 		}
 
 		/**
-		 * Notifies this content provider that a given viewer's input has been changed.
+		 * Notifies this content provider that a given viewer's input has been
+		 * changed.
 		 * 
 		 * @see IContentProvider#inputChanged
 		 */
 		public void inputChanged(Viewer viewerChanged, Object oldInput, Object newInput) {
 			this.results = (List) newInput;
-		
+
 			if (viewerChanged.getInput() != null) {
-				viewerChanged.getControl().getDisplay().syncExec(new Runnable() {		
+				viewerChanged.getControl().getDisplay().syncExec(new Runnable() {
 					public void run() {
 						FavoritesView.this.refresh();
 					}

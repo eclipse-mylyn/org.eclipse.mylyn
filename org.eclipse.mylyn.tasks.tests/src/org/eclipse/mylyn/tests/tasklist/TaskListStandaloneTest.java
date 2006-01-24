@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.tests;
+package org.eclipse.mylar.tests.tasklist;
 
 import java.io.File;
 import java.util.ArrayList;

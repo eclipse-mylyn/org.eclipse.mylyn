@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,7 @@ import org.eclipse.mylar.bugzilla.core.internal.HtmlStreamTokenizer.Token;
  * This class parses bugs so that they can be displayed using the bug editor
  */
 public class BugParser {
-	
+
 	private static final String ATTR_CHARSET = "charset";
 
 	/** Parser for dates in the report */
@@ -273,8 +273,8 @@ public class BugParser {
 	 *            The INPUT tag
 	 * @throws IOException
 	 */
-	private static void parseInput(BugReport bug, String attributeName, HtmlTag tag, String serverUrl, String userName, String password)
-			throws IOException {
+	private static void parseInput(BugReport bug, String attributeName, HtmlTag tag, String serverUrl, String userName,
+			String password) throws IOException {
 
 		Attribute a = new Attribute(attributeName);
 		a.setParameterName(tag.getAttribute("name"));
@@ -461,7 +461,7 @@ public class BugParser {
 			}
 		} catch (Exception e) {
 			date = Calendar.getInstance().getTime(); // XXX: could not
-														// determine date
+			// determine date
 		}
 		return new Comment(bug, number, date, author, authorName);
 	}
@@ -524,7 +524,7 @@ public class BugParser {
 			if (charsetFromContentType != null) {
 				bug.setCharset(charsetFromContentType);
 				contentTypeResolved = true;
-			}	
+			}
 		}
 		ParserState state = ParserState.START;
 		Comment comment = null;
@@ -544,11 +544,12 @@ public class BugParser {
 			if (!contentTypeResolved) {
 				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.META
 						&& !((HtmlTag) (token.getValue())).isEndTag()) {
-					String charsetFromHtml = getCharsetFromString(token.toString());	
-					if (charsetFromHtml != null) bug.setCharset(charsetFromHtml);
+					String charsetFromHtml = getCharsetFromString(token.toString());
+					if (charsetFromHtml != null)
+						bug.setCharset(charsetFromHtml);
 				}
 			}
-			
+
 			// make sure that bugzilla doesn't want us to login
 			if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
 					&& !((HtmlTag) (token.getValue())).isEndTag()) {
@@ -739,11 +740,15 @@ public class BugParser {
 	public static String getCharsetFromString(String string) {
 		int charsetStartIndex = string.indexOf(ATTR_CHARSET);
 		if (charsetStartIndex != -1) {
-			int charsetEndIndex = string.indexOf("\"", charsetStartIndex); // TODO: could be space after?
+			int charsetEndIndex = string.indexOf("\"", charsetStartIndex); // TODO:
+			// could
+			// be
+			// space
+			// after?
 			if (charsetEndIndex == -1) {
 				charsetEndIndex = string.length();
 			}
-			String charsetString = string.substring(charsetStartIndex+8, charsetEndIndex);
+			String charsetString = string.substring(charsetStartIndex + 8, charsetEndIndex);
 			if (Charset.availableCharsets().containsKey(charsetString)) {
 				return charsetString;
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -119,72 +119,80 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 
 		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY,
 				refreshQueries.getBooleanValue());
-		
+
 		try {
 			int numMaxResults = maxResults.getIntValue();
-			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS,
-					numMaxResults);
+			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS, numMaxResults);
 		} catch (NumberFormatException nfe) {
 			// ignore and leave as default
 			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS,
 					BugzillaPlugin.getDefault().getPreferenceStore().getDefaultInt(IBugzillaConstants.MAX_RESULTS));
-		} 
-		
-//		ProductConfiguration configuration = null;
-//		String urlString = bugzillaServer.getStringValue();
-//		try {
-//			URL serverURL = new URL(urlString + "/show_bug.cgi");
-//			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
-//			if (cntx == null || !(cntx instanceof HttpURLConnection))
-//				return false;
-//
-//			HttpURLConnection serverConnection = (HttpURLConnection) cntx;
-//
-//			serverConnection.connect();
-//
-//			int responseCode = serverConnection.getResponseCode();
-//
-//			if (responseCode != HttpURLConnection.HTTP_OK)
-//				throw new BugzillaException("No Bugzilla server detected at " + bugzillaServer.getStringValue() + ".");
-//
-//			try {
-//				configuration = ProductConfigurationFactory.getInstance().getConfiguration(
-//						bugzillaServer.getStringValue());
-//			} catch (IOException ex) {
-//				MessageDialog.openInformation(null, "Bugzilla query parameters check",
-//						"An error occurred while pre-fetching valid search attributes: \n\n" + ex.getClass().getName()
-//								+ ": " + ex.getMessage() + "\n\nOffline submission of new bugs will be disabled.");
-//			}
-//		} catch (Exception e) {
-//			if (!MessageDialog.openQuestion(null, "Bugzilla Server Error", "Error validating Bugzilla Server.\n\n"
-//					+ e.getMessage() + "\n\nKeep specified server location anyway?")) {
-//				return false;
-//			}
-//		}
-//		BugzillaPlugin.getDefault().setProductConfiguration(urlString, configuration);
-//		IPath configFile = BugzillaPlugin.getDefault().getProductConfigurationCachePath(urlString);
-//		if (configuration != null) {
-//
-//			try {
-//				ProductConfigurationFactory.getInstance().writeConfiguration(configuration, configFile.toFile());
-//			} catch (IOException e) {
-//				BugzillaPlugin.log(e);
-//				configFile.toFile().delete();
-//			}
-//		} else {
-//			configFile.toFile().delete();
-//		}
-		
-		
+		}
+
+		// ProductConfiguration configuration = null;
+		// String urlString = bugzillaServer.getStringValue();
+		// try {
+		// URL serverURL = new URL(urlString + "/show_bug.cgi");
+		// URLConnection cntx =
+		// BugzillaPlugin.getDefault().getUrlConnection(serverURL);
+		// if (cntx == null || !(cntx instanceof HttpURLConnection))
+		// return false;
+		//
+		// HttpURLConnection serverConnection = (HttpURLConnection) cntx;
+		//
+		// serverConnection.connect();
+		//
+		// int responseCode = serverConnection.getResponseCode();
+		//
+		// if (responseCode != HttpURLConnection.HTTP_OK)
+		// throw new BugzillaException("No Bugzilla server detected at " +
+		// bugzillaServer.getStringValue() + ".");
+		//
+		// try {
+		// configuration =
+		// ProductConfigurationFactory.getInstance().getConfiguration(
+		// bugzillaServer.getStringValue());
+		// } catch (IOException ex) {
+		// MessageDialog.openInformation(null, "Bugzilla query parameters
+		// check",
+		// "An error occurred while pre-fetching valid search attributes: \n\n"
+		// + ex.getClass().getName()
+		// + ": " + ex.getMessage() + "\n\nOffline submission of new bugs will
+		// be disabled.");
+		// }
+		// } catch (Exception e) {
+		// if (!MessageDialog.openQuestion(null, "Bugzilla Server Error", "Error
+		// validating Bugzilla Server.\n\n"
+		// + e.getMessage() + "\n\nKeep specified server location anyway?")) {
+		// return false;
+		// }
+		// }
+		// BugzillaPlugin.getDefault().setProductConfiguration(urlString,
+		// configuration);
+		// IPath configFile =
+		// BugzillaPlugin.getDefault().getProductConfigurationCachePath(urlString);
+		// if (configuration != null) {
+		//
+		// try {
+		// ProductConfigurationFactory.getInstance().writeConfiguration(configuration,
+		// configFile.toFile());
+		// } catch (IOException e) {
+		// BugzillaPlugin.log(e);
+		// configFile.toFile().delete();
+		// }
+		// } else {
+		// configFile.toFile().delete();
+		// }
+
 		// save the preferences that were changed
 		// BugzillaPlugin.getDefault().savePluginPreferences();
 
-//		bugzillaServer.store();
+		// bugzillaServer.store();
 
 		// store the username and password from the editor field
-//		user = bugzillaUser.getStringValue();
-//		password = bugzillaPassword.getStringValue();
-//		storeCache(user, password, true);
+		// user = bugzillaUser.getStringValue();
+		// password = bugzillaPassword.getStringValue();
+		// storeCache(user, password, true);
 		return true;
 	}
 
@@ -193,7 +201,7 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 		// refreshQueries.setSelection(getPreferenceStore().getBoolean(MylarTasksPlugin.REFRESH_QUERIES));
 		return true;
 	}
-	
+
 	@Override
 	protected void initialize() {
 		super.initialize();
@@ -203,27 +211,28 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 		// Don't need to do anything here with the workbench
 	}
 
-//	/**
-//	 * Hack private class to make StringFieldEditor.refreshValidState() a
-//	 * publicly acessible method.
-//	 * 
-//	 * @see org.eclipse.jface.preference.StringFieldEditor#refreshValidState()
-//	 */
-//	private static class MyStringFieldEditor extends StringFieldEditor {
-//		public MyStringFieldEditor(String name, String labelText, int style, Composite parent) {
-//			super(name, labelText, style, parent);
-//		}
-//
-//		@Override
-//		public void refreshValidState() {
-//			super.refreshValidState();
-//		}
-//
-//		@Override
-//		public Text getTextControl() {
-//			return super.getTextControl();
-//		}
-//	}
+	// /**
+	// * Hack private class to make StringFieldEditor.refreshValidState() a
+	// * publicly acessible method.
+	// *
+	// * @see org.eclipse.jface.preference.StringFieldEditor#refreshValidState()
+	// */
+	// private static class MyStringFieldEditor extends StringFieldEditor {
+	// public MyStringFieldEditor(String name, String labelText, int style,
+	// Composite parent) {
+	// super(name, labelText, style, parent);
+	// }
+	//
+	// @Override
+	// public void refreshValidState() {
+	// super.refreshValidState();
+	// }
+	//
+	// @Override
+	// public Text getTextControl() {
+	// return super.getTextControl();
+	// }
+	// }
 
 	public static final String INFO_PASSWORD = "org.eclipse.team.cvs.core.password"; //$NON-NLS-1$ 
 

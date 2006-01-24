@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist.tests;
+package org.eclipse.mylar.tests.tasklist;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 public class AllTasklistTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasklist.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.tasklist");
 		
 		//$JUnit-BEGIN$
 		suite.addTestSuite(BugzillaTaskTest.class);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui.editor;
 
 import org.eclipse.mylar.bugzilla.core.Comment;
@@ -22,21 +23,21 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	 * The id of the Bugzilla object that the selection was on.
 	 */
 	protected int id;
-	
+
 	/** The server of the Bugzilla object that the selection was on. */
 	protected String server;
-	
+
 	/** The contents of the selection. */
 	protected String contents;
-	
+
 	protected String bugSummary;
-	
+
 	/**
 	 * The comment, if a comment was selected. If the selection was not a
 	 * comment, then this is <code>null</code>.
 	 */
 	protected Comment comment;
-	
+
 	/**
 	 * Creates a new <code>BugzillaReportSelection</code> with no supplied
 	 * contents or comment.
@@ -49,7 +50,7 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	public BugzillaReportSelection(int id, String server, String summary) {
 		this(id, server, null, null, summary);
 	}
-	
+
 	/**
 	 * Creates a new <code>BugzillaReportSelection</code> with no supplied
 	 * comment.
@@ -65,7 +66,7 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 		this(id, server, contents, null, summary);
 		this.isDescription = isDescription;
 	}
-	
+
 	/**
 	 * Creates a new <code>BugzillaReportSelection</code> with no supplied
 	 * contents.
@@ -82,7 +83,7 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	public BugzillaReportSelection(int id, String server, Comment comment, String summary) {
 		this(id, server, null, comment, summary);
 	}
-	
+
 	/**
 	 * Creates a new <code>BugzillaReportSelection</code>.
 	 * 
@@ -104,7 +105,7 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 		this.comment = comment;
 		this.bugSummary = summary;
 	}
-	
+
 	public boolean hasComment() {
 		return comment != null;
 	}
@@ -145,9 +146,10 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 		return (server == null) || ((contents == null) && (comment == null));
 	}
 
-    private boolean isCommentHeader = false;
-    private boolean isDescription = false;
-	
+	private boolean isCommentHeader = false;
+
+	private boolean isDescription = false;
+
 	public boolean isCommentHeader() {
 		return isCommentHeader;
 	}
@@ -155,7 +157,7 @@ public class BugzillaReportSelection implements IBugzillaReportSelection {
 	public boolean isDescription() {
 		return isDescription;
 	}
-	
+
 	public void setIsCommentHeader(boolean isCommentHeader) {
 		this.isCommentHeader = isCommentHeader;
 	}

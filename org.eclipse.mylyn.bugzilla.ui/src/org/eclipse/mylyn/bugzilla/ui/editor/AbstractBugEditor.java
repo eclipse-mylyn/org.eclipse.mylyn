@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,7 +101,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected TaskRepository repository;
-	
+
 	public static final int WRAP_LENGTH = 90;
 
 	protected Display display;
@@ -169,7 +169,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected Button submitButton;
 
-	//	protected Button saveButton;
+	// protected Button saveButton;
 
 	protected int scrollIncrement;
 
@@ -242,8 +242,10 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				if (select instanceof BugzillaOutlineNode) {
 					BugzillaOutlineNode n = (BugzillaOutlineNode) select;
 
-					if (n != null && lastSelected != null && BugzillaTools.getHandle(n).equals(BugzillaTools.getHandle(lastSelected))) {
-						// we don't need to set the selection if it is alredy set
+					if (n != null && lastSelected != null
+							&& BugzillaTools.getHandle(n).equals(BugzillaTools.getHandle(lastSelected))) {
+						// we don't need to set the selection if it is alredy
+						// set
 						return;
 					}
 					lastSelected = n;
@@ -266,11 +268,12 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	};
 
 	/**
-	 * Creates a new <code>AbstractBugEditor</code>. Sets up the default fonts and
-	 * cut/copy/paste actions.
+	 * Creates a new <code>AbstractBugEditor</code>. Sets up the default
+	 * fonts and cut/copy/paste actions.
 	 */
 	public AbstractBugEditor() {
-		// set the scroll increments so the editor scrolls normally with the scroll wheel
+		// set the scroll increments so the editor scrolls normally with the
+		// scroll wheel
 		FontData[] fd = TEXT_FONT.getFontData();
 		int cushion = 4;
 		scrollIncrement = fd[0].getHeight() + cushion;
@@ -279,7 +282,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 		// set up actions for the context menu
 		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
-		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);//WorkbenchMessages.getString("Workbench.cutToolTip")); //$NON-NLS-1$
+		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);// WorkbenchMessages.getString("Workbench.cutToolTip"));
+																			// //$NON-NLS-1$
 		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 		cutAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 		cutAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
@@ -287,15 +291,17 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		cutAction.setActionDefinitionId(cutActionDefId);
 
 		pasteAction = new RetargetAction(ActionFactory.PASTE.getId(), WorkbenchMessages.Workbench_paste);
-		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);//WorkbenchMessages.getString("Workbench.pasteToolTip")); //$NON-NLS-1$
+		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);// WorkbenchMessages.getString("Workbench.pasteToolTip"));
+																				// //$NON-NLS-1$
 		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
+		pasteAction.setDisabledImageDescriptor(WorkbenchImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		pasteAction.setAccelerator(SWT.CTRL | 'v');
 		pasteAction.setActionDefinitionId(pasteActionDefId);
 
 		copyAction = new BugzillaEditorCopyAction(this);
-		copyAction.setText(WorkbenchMessages.Workbench_copy);//WorkbenchMessages.getString("Workbench.copy"));
+		copyAction.setText(WorkbenchMessages.Workbench_copy);// WorkbenchMessages.getString("Workbench.copy"));
 		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
@@ -317,7 +323,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	}
 
 	/**
-	 * @return The action used to copy selected text from a bug editor to the clipboard.
+	 * @return The action used to copy selected text from a bug editor to the
+	 *         clipboard.
 	 */
 	protected BugzillaEditorCopyAction getCopyAction() {
 		return copyAction;
@@ -433,7 +440,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		infoArea.setLayout(infoLayout);
 		infoArea.setBackground(background);
 		if (getBug() == null) {
-			//			close();
+			// close();
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Client Errror",
 					"Could not resolve the requested bug, check Bugzilla server and version.");
 
@@ -495,8 +502,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	}
 
 	/**
-	 * Creates all of the layouts that display the information on
-	 * the bug.
+	 * Creates all of the layouts that display the information on the bug.
 	 */
 	protected void createLayouts() {
 		createAttributeLayout();
@@ -515,7 +521,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		String keywords = "";
 		String url = "";
 
-		// Attributes Composite- this holds all the combo fiels and text 
+		// Attributes Composite- this holds all the combo fiels and text
 		// fields
 		Composite attributesComposite = new Composite(infoArea, SWT.NONE);
 		GridLayout attributesLayout = new GridLayout();
@@ -551,7 +557,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 		String ccValue = null;
 
-		//	Populate Attributes
+		// Populate Attributes
 		for (Iterator<Attribute> it = getBug().getAttributes().iterator(); it.hasNext();) {
 			Attribute attribute = it.next();
 			String key = attribute.getParameterName();
@@ -605,7 +611,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("version")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 
-				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				versionCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 				versionCombo.setFont(TEXT_FONT);
 				versionCombo.setLayoutData(data);
 				versionCombo.setBackground(background);
@@ -623,7 +630,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			} else if (key.equals("priority")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 
-				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				priorityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 				priorityCombo.setFont(TEXT_FONT);
 				priorityCombo.setLayoutData(data);
 				priorityCombo.setBackground(background);
@@ -640,7 +648,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				currentCol += 2;
 			} else if (key.equals("bug_severity")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				severityCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				severityCombo.setFont(TEXT_FONT);
 				severityCombo.setLayoutData(data);
@@ -658,7 +667,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				currentCol += 2;
 			} else if (key.equals("target_milestone")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				milestoneCombo.setFont(TEXT_FONT);
 				milestoneCombo.setLayoutData(data);
@@ -676,7 +686,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				currentCol += 2;
 			} else if (key.equals("rep_platform")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				platformCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				platformCombo.setFont(TEXT_FONT);
 				platformCombo.setLayoutData(data);
@@ -720,7 +731,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				currentCol += 2;
 			} else if (key.equals("component")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
-				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY);
+				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
 
 				componentCombo.setFont(TEXT_FONT);
 				componentCombo.setLayoutData(data);
@@ -758,7 +770,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			}
 		}
 
-		//  URL, Keywords, Summary Text Fields
+		// URL, Keywords, Summary Text Fields
 		addUrlText(url, attributesComposite);
 
 		// keywords text field (not editable)
@@ -865,15 +877,19 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	}
 
 	/**
-	 * Adds radio buttons to this composite. 
-	 * @param buttonComposite Composite to add the radio buttons to.
+	 * Adds radio buttons to this composite.
+	 * 
+	 * @param buttonComposite
+	 *            Composite to add the radio buttons to.
 	 */
 	abstract protected void addRadioButtons(Composite buttonComposite);
 
 	/**
-	 * Adds buttons to this composite. 
-	 * Subclasses can override this method to provide different/additional buttons.
-	 * @param buttonComposite Composite to add the buttons to.
+	 * Adds buttons to this composite. Subclasses can override this method to
+	 * provide different/additional buttons.
+	 * 
+	 * @param buttonComposite
+	 *            Composite to add the buttons to.
 	 */
 	protected void addActionButtons(Composite buttonComposite) {
 		submitButton = new Button(buttonComposite, SWT.NONE);
@@ -890,21 +906,23 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 
-		// This is not needed anymore since we have the save working properly with ctrl-s and file->save		
-		//		saveButton = new Button(buttonComposite, SWT.NONE);
-		//		saveButton.setFont(TEXT_FONT);
-		//		GridData saveButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		//		saveButtonData.widthHint = 100;
-		//		saveButtonData.heightHint = 20;
-		//		saveButton.setText("Save Offline");
-		//		saveButton.setLayoutData(saveButtonData);
-		//		saveButton.addListener(SWT.Selection, new Listener() {
-		//			public void handleEvent(Event e) {
-		//				saveBug();
-		//				updateEditor();
-		//			}
-		//		});
-		//		saveButton.addListener(SWT.FocusIn, new GenericListener());
+		// This is not needed anymore since we have the save working properly
+		// with ctrl-s and file->save
+		// saveButton = new Button(buttonComposite, SWT.NONE);
+		// saveButton.setFont(TEXT_FONT);
+		// GridData saveButtonData = new
+		// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		// saveButtonData.widthHint = 100;
+		// saveButtonData.heightHint = 20;
+		// saveButton.setText("Save Offline");
+		// saveButton.setLayoutData(saveButtonData);
+		// saveButton.addListener(SWT.Selection, new Listener() {
+		// public void handleEvent(Event e) {
+		// saveBug();
+		// updateEditor();
+		// }
+		// });
+		// saveButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
 	/**
@@ -986,7 +1004,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			styledText.setBackground(background);
 			data.horizontalIndent = HORZ_INDENT;
 			styledText.setLayoutData(data);
-			StyleRange sr = new StyleRange(styledText.getOffsetAtLine(0), text.length(), foreground, background, SWT.BOLD);
+			StyleRange sr = new StyleRange(styledText.getOffsetAtLine(0), text.length(), foreground, background,
+					SWT.BOLD);
 			styledText.setStyleRange(sr);
 			styledText.getCaret().setVisible(false);
 			styledText.setEnabled(false);
@@ -1015,7 +1034,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			titleText.setText(checkText(text));
 			titleText.setFont(HEADER_FONT);
 			titleText.setBackground(background);
-			StyleRange sr = new StyleRange(titleText.getOffsetAtLine(0), text.length(), foreground, background, SWT.BOLD);
+			StyleRange sr = new StyleRange(titleText.getOffsetAtLine(0), text.length(), foreground, background,
+					SWT.BOLD);
 			titleText.setStyleRange(sr);
 			titleText.getCaret().setVisible(false);
 			titleText.setEditable(false);
@@ -1126,7 +1146,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				}
 
 				public void mouseDown(MouseEvent e) {
-					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil.getBugUrlWithoutLogin(bugzillaInput.getBug().getRepository(), bugzillaInput.getBug().getId()));
+					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil
+							.getBugUrlWithoutLogin(bugzillaInput.getBug().getRepository(), bugzillaInput.getBug()
+									.getId()));
 					if (e.stateMask == SWT.MOD3) {
 						// XXX come back to look at this ui
 						close();
@@ -1147,7 +1169,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 		text = getTitleString();
 		generalTitleText.setText(text);
-		StyleRange sr = new StyleRange(generalTitleText.getOffsetAtLine(0), text.length(), foreground, background, SWT.BOLD);
+		StyleRange sr = new StyleRange(generalTitleText.getOffsetAtLine(0), text.length(), foreground, background,
+				SWT.BOLD);
 		generalTitleText.setStyleRange(sr);
 		generalTitleText.addListener(SWT.FocusIn, new GenericListener());
 
@@ -1194,7 +1217,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			IBugzillaBug bug = getBug();
 
 			if (bug.hasChanges()) {
-				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
+				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug,
+						BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
 			} else {
 				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
 			}
@@ -1204,8 +1228,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "bug save offline failed", true);
 		}
-		//		OfflineView.checkWindow();
-		//		OfflineView.refreshView();
+		// OfflineView.checkWindow();
+		// OfflineView.refreshView();
 	}
 
 	/**
@@ -1225,7 +1249,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * might change.
 	 */
 	protected void updateEditor() {
-		// Reset all summary occurrences, since it might have 
+		// Reset all summary occurrences, since it might have
 		// been edited.
 		String title = getTitleString();
 		titleLabel.setText(title);
@@ -1236,7 +1260,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * Break text up into lines of about 80 characters so that it is displayed
 	 * properly in bugzilla
 	 * 
-	 * @param origText The string to be formatted
+	 * @param origText
+	 *            The string to be formatted
 	 * @return The formatted text
 	 */
 	protected String formatText(String origText) {
@@ -1271,11 +1296,15 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	/**
 	 * function to set the url to post the bug to
-	 * @param form A reference to a BugReportPostHandler that the bug is going to be posted to
-	 * @param formName The form that we wish to use to submit the bug
+	 * 
+	 * @param form
+	 *            A reference to a BugReportPostHandler that the bug is going to
+	 *            be posted to
+	 * @param formName
+	 *            The form that we wish to use to submit the bug
 	 */
 	protected void setURL(BugReportPostHandler form, String formName) {
-//		String baseURL = BugzillaPlugin.getDefault().getServerName();
+		// String baseURL = BugzillaPlugin.getDefault().getServerName();
 		String baseURL = repository.getUrl().toExternalForm();
 		if (!baseURL.endsWith("/"))
 			baseURL += "/";
@@ -1319,9 +1348,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	}
 
 	/**
-	 * Updates the title of the editor to reflect dirty status.
-	 * If the bug report has been modified but not saved, then
-	 * an indicator will appear in the title.
+	 * Updates the title of the editor to reflect dirty status. If the bug
+	 * report has been modified but not saved, then an indicator will appear in
+	 * the title.
 	 */
 	protected void updateEditorTitle() {
 		setPartName(bugzillaInput.getName());
@@ -1402,8 +1431,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected class GenericListener implements Listener {
 		public void handleEvent(Event event) {
 			IBugzillaBug bug = getBug();
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
-					bug.getLabel(), false, bug.getSummary()))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
+					new BugzillaReportSelection(bug.getId(), bug.getRepository(), bug.getLabel(), false, bug
+							.getSummary()))));
 		}
 	}
 
@@ -1430,7 +1460,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected HashMap<Object, StyledText> textHash = new HashMap<Object, StyledText>();
 
-	/** Index into the styled texts*/
+	/** Index into the styled texts */
 	protected int textsindex = 0;
 
 	protected Text addCommentsTextBox = null;
@@ -1495,7 +1525,9 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	/**
 	 * Scroll to a specified piece of text
-	 * @param selectionComposite The StyledText to scroll to
+	 * 
+	 * @param selectionComposite
+	 *            The StyledText to scroll to
 	 */
 	private void focusOn(Control selectionComposite, boolean highlight) {
 

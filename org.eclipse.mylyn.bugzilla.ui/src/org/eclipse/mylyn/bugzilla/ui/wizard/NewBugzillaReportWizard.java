@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 	 * submitted
 	 */
 	private WizardAttributesPage attributePage;
+
 	private final TaskRepository repository;
 
 	public NewBugzillaReportWizard(TaskRepository repository) {
@@ -73,59 +74,59 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 	public void setAttributePage(WizardAttributesPage attributePage) {
 		this.attributePage = attributePage;
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		String bugIdString = this.getId();
-	    int bugId = -1;
-	    try {
-	    	if (bugIdString != null) {
-	    		bugId = Integer.parseInt(bugIdString);
-	    	} else {
-	    		return false;
-	    	}
-	    } catch (NumberFormatException nfe) {
-	    	// TODO handle error
-	        return false;
-	    }
-	
-//	    TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
-	    BugzillaTask newTask = new BugzillaTask(
-	    		TaskRepositoryManager.getHandle(
-	    				repository.getUrl().toExternalForm(), bugId), 
-	    		"<bugzilla info>", true, true);				
-	    Object selectedObject = null;
-	    if(TaskListView.getDefault() != null)
-	    	selectedObject = ((IStructuredSelection)TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
-    	
-	    ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
-	    if(taskHandler != null){
-	    	ITask addedTask = taskHandler.addTaskToRegistry(newTask);
-	    	if(addedTask instanceof BugzillaTask){
-		    	BugzillaTask newTask2 = (BugzillaTask)addedTask;
-	    		if(newTask2 != newTask){
-	    			newTask = newTask2;
-	    		}
-	    	}
-    	}
-	    
-	    if (selectedObject instanceof TaskCategory) {
-	    	MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory)selectedObject), newTask);
-//	        ((TaskCategory)selectedObject).addTask(newTask);
-	    } else { 
-	        MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
-	    }
-	    BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask)newTask);
-	    newTask.openTaskInEditor(false);
-	    
-	    if(!newTask.isBugDownloaded())
-	    	newTask.scheduleDownloadReport();
+		int bugId = -1;
+		try {
+			if (bugIdString != null) {
+				bugId = Integer.parseInt(bugIdString);
+			} else {
+				return false;
+			}
+		} catch (NumberFormatException nfe) {
+			// TODO handle error
+			return false;
+		}
 
-	    if(TaskListView.getDefault() != null) {
+		// TaskRepository repository =
+		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		BugzillaTask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(),
+				bugId), "<bugzilla info>", true, true);
+		Object selectedObject = null;
+		if (TaskListView.getDefault() != null)
+			selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
+					.getFirstElement();
+
+		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
+		if (taskHandler != null) {
+			ITask addedTask = taskHandler.addTaskToRegistry(newTask);
+			if (addedTask instanceof BugzillaTask) {
+				BugzillaTask newTask2 = (BugzillaTask) addedTask;
+				if (newTask2 != newTask) {
+					newTask = newTask2;
+				}
+			}
+		}
+
+		if (selectedObject instanceof TaskCategory) {
+			MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory) selectedObject), newTask);
+			// ((TaskCategory)selectedObject).addTask(newTask);
+		} else {
+			MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
+		}
+		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask) newTask);
+		newTask.openTaskInEditor(false);
+
+		if (!newTask.isBugDownloaded())
+			newTask.scheduleDownloadReport();
+
+		if (TaskListView.getDefault() != null) {
 			TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
 			TaskListView.getDefault().getViewer().refresh();
-	    }
-	    
-	    return true;
+		}
+
+		return true;
 	}
 }

@@ -11,7 +11,7 @@
 /*
  * Created on Dec 21, 2004
   */
-package org.eclipse.mylar.tasklist.tests;
+package org.eclipse.mylar.tests.tasklist;
 
 import java.net.URL;
 import java.util.List;

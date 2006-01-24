@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.compare;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -25,12 +26,16 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
  */
 public class BugzillaCompareInput extends CompareEditorInput {
 
-	private boolean threeWay= false;
+	private boolean threeWay = false;
+
 	private Object root;
+
 	private IStructureComparator ancestor = null;
+
 	private IStructureComparator left = null;
+
 	private IStructureComparator right = null;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -47,8 +52,8 @@ public class BugzillaCompareInput extends CompareEditorInput {
 		if (left == null || right == null) {
 			return null;
 		}
-		Differencer d= new Differencer();
-		root= d.findDifferences(threeWay, monitor, null, ancestor, left, right);
+		Differencer d = new Differencer();
+		root = d.findDifferences(threeWay, monitor, null, ancestor, left, right);
 		return root;
 	}
 
@@ -59,7 +64,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	public IStructureComparator getAncestor() {
 		return ancestor;
 	}
-	
+
 	/**
 	 * Sets the original object that's to be compared (appears on the top of the
 	 * compare view).
@@ -72,7 +77,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 		BugzillaStructureCreator structureCreator = new BugzillaStructureCreator();
 		ancestor = structureCreator.getStructure(newAncestor);
 	}
-	
+
 	/**
 	 * @return The local object that's to be compared (appears on the left side
 	 *         of the compare view).
@@ -80,7 +85,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	public IStructureComparator getLeft() {
 		return left;
 	}
-	
+
 	/**
 	 * Sets the local object that's to be compared (appears on the left side of
 	 * the compare view).
@@ -92,7 +97,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 		BugzillaStructureCreator structureCreator = new BugzillaStructureCreator();
 		left = structureCreator.getStructure(newLeft);
 	}
-	
+
 	/**
 	 * @return The online object that's to be compared (appears on the right
 	 *         side of the compare view).
@@ -100,7 +105,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	public IStructureComparator getRight() {
 		return right;
 	}
-	
+
 	/**
 	 * Sets the online object that's to be compared (appears on the right side
 	 * of the compare view).
@@ -112,7 +117,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 		BugzillaStructureCreator structureCreator = new BugzillaStructureCreator();
 		right = structureCreator.getStructure(newRight);
 	}
-	
+
 	/**
 	 * @return <code>true</code> if a three-way comparison is to be done.
 	 */

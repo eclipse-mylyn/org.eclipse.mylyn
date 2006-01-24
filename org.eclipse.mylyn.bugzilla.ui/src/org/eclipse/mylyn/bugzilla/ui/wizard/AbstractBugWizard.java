@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	protected NewBugModel model;
 
 	/**
-	 * Flag to indicate if the wizard can be completed based on the attributes page
+	 * Flag to indicate if the wizard can be completed based on the attributes
+	 * page
 	 */
 	protected boolean attributeCompleted = false;
 
@@ -77,7 +78,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		id = null; // Since there is no bug posted yet.
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",
 				"icons/wizban/bug-wizard.gif"));
-//		setForcePreviousAndNextButtons(true);
+		// setForcePreviousAndNextButtons(true);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
@@ -88,7 +89,7 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		super.addPages();
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		if (getWizardDataPage().serverSelected()) {

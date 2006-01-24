@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,55 +29,55 @@ import org.eclipse.ui.PlatformUI;
  * @author Ian Bull
  */
 public class NewBugWizardTest extends TestCase {
-	
+
 	public void testPlatformOptions() throws Exception {
-		
+
 		File f = FileTool.getFileInPlugin(BugzillaTestPlugin.getDefault(), new Path("testdata/pages/cdt-page.html"));
 		Reader in = new FileReader(f);
-		
+
 		NewBugModel model = new NewBugModel();
 		AbstractWizardDataPage page = new TestWizardDataPage();
-		new NewBugParser(in).parseBugAttributes(model, true); // ** TRUE vs FALSE **
+		new NewBugParser(in).parseBugAttributes(model, true); // ** TRUE vs
+																// FALSE **
 		page.setPlatformOptions(model);
-		
+
 		String os = Platform.getOS();
-		if ( os.equals("win32") )
+		if (os.equals("win32"))
 			assertEquals("Windows All", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
-		else if ( os.equals("solaris") )
+		else if (os.equals("solaris"))
 			assertEquals("Solaris", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
-		else if ( os.equals("qnx") )
+		else if (os.equals("qnx"))
 			assertEquals("QNX-Photon", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
-		else if ( os.equals("macosx") )
+		else if (os.equals("macosx"))
 			assertEquals("MacOS X", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
-		else if ( os.equals("linux")) 
+		else if (os.equals("linux"))
 			assertEquals("Linux", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
-		else if ( os.equals("hpux"))
+		else if (os.equals("hpux"))
 			assertEquals("HP-UX", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
-		else if ( os.equals("aix" ))
+		else if (os.equals("aix"))
 			assertEquals("AIX", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
-		
+
 		String platform = Platform.getOSArch();
-		if ( platform.equals("x86"))
+		if (platform.equals("x86"))
 			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
-		else if ( platform.equals("x86_64"))
+		else if (platform.equals("x86_64"))
 			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
-		else if ( platform.equals("ia64"))
+		else if (platform.equals("ia64"))
 			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
-		else if ( platform.equals("ia64_32"))
+		else if (platform.equals("ia64_32"))
 			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
-		else if ( platform.equals("sparc"))
+		else if (platform.equals("sparc"))
 			assertEquals("Sun", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
-		else if ( platform.equals("ppc"))
+		else if (platform.equals("ppc"))
 			assertEquals("Power", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
-		
+
 	}
-	
+
 	static class TestWizardDataPage extends AbstractWizardDataPage {
 
 		public TestWizardDataPage() {
 			super("", "", "", PlatformUI.getWorkbench());
 		}
 	}
- 	
-	
+
 }

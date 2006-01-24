@@ -1,4 +1,4 @@
-package org.eclipse.mylar.tasklist.tests;
+package org.eclipse.mylar.tests.tasklist;
 
 import junit.framework.TestCase;
 

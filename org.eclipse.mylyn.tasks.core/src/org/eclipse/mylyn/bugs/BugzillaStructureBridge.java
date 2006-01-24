@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -84,8 +84,9 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 		result = null;
 
 		// HACK: determine appropriate repository
-		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(BugzillaPlugin.REPOSITORY_KIND);
-		
+		final TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(
+				BugzillaPlugin.REPOSITORY_KIND);
+
 		String[] parts = handle.split(";");
 		if (parts.length >= 2) {
 			String server = parts[0];
@@ -132,7 +133,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 						}
 					}
 				};
- 
+
 				IProgressService service = PlatformUI.getWorkbench().getProgressService();
 				try {
 					service.run(false, false, op);
@@ -143,9 +144,10 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 				}
 				return null;
 			}
-//			BugzillaOutlineNode node = BugzillaOutlineNode.parseBugReport(result);
-//			return findNode(node, commentNumber);
-		} 
+			// BugzillaOutlineNode node =
+			// BugzillaOutlineNode.parseBugReport(result);
+			// return findNode(node, commentNumber);
+		}
 		return null;
 	}
 
@@ -257,7 +259,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 	public void setParentBridge(IMylarStructureBridge bridge) {
 		// ignore
 	}
-	
+
 	public List<String> getChildHandles(String handle) {
 		return Collections.emptyList();
 	}

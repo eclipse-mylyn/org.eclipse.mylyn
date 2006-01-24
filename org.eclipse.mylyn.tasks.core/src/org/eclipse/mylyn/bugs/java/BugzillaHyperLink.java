@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,9 +27,9 @@ import org.eclipse.ui.progress.IProgressService;
 public class BugzillaHyperLink implements IHyperlink {
 
 	private IRegion region;
-	
+
 	private int id;
-	
+
 	public BugzillaHyperLink(IRegion nlsKeyRegion, int id) {
 		this.region = nlsKeyRegion;
 		this.id = id;
@@ -48,8 +48,10 @@ public class BugzillaHyperLink implements IHyperlink {
 	}
 
 	public void open() {
-//		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(BugzillaPlugin.REPOSITORY_KIND);
-		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
+		// TaskRepository repository =
+		// MylarTaskListPlugin.getRepositoryManager().getRepositoryForActiveTask(BugzillaPlugin.REPOSITORY_KIND);
+		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+				BugzillaPlugin.REPOSITORY_KIND);
 		if (repository != null) {
 			OpenBugzillaReportJob job = new OpenBugzillaReportJob(repository.getUrl().toExternalForm(), id);
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -59,7 +61,7 @@ public class BugzillaHyperLink implements IHyperlink {
 				MylarStatusHandler.fail(e, "Could not open report", true);
 			}
 		} else {
-			MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, 
+			MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 					"Could not determine repository for report");
 		}
 	}

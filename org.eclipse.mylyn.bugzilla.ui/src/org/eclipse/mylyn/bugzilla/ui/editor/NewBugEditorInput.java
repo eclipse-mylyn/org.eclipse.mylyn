@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.ui.editor;
 
 import org.eclipse.mylar.bugzilla.core.NewBugModel;
@@ -16,12 +17,14 @@ import org.eclipse.mylar.bugzilla.core.NewBugModel;
  * The <code>IEditorInput</code> implementation for <code>NewBugEditor</code>.
  */
 public class NewBugEditorInput extends AbstractBugEditorInput {
-	
+
 	protected NewBugModel bug;
-	
+
 	/**
 	 * Creates a new <code>NewBugEditorInput</code>.
-	 * @param bug The bug for this editor input.
+	 * 
+	 * @param bug
+	 *            The bug for this editor input.
 	 */
 	public NewBugEditorInput(NewBugModel bug) {
 		this.bug = bug;
@@ -30,7 +33,7 @@ public class NewBugEditorInput extends AbstractBugEditorInput {
 	public String getName() {
 		return bug.getLabel();
 	}
-	
+
 	@Override
 	public NewBugModel getBug() {
 		return bug;

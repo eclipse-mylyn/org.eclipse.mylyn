@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 18, 2005
-  */
+
 package org.eclipse.mylar.bugs;
 
 import org.eclipse.mylar.bugs.search.BugzillaReferencesProvider;
@@ -28,48 +26,49 @@ import org.eclipse.swt.graphics.Image;
  * @author Mik Kersten
  */
 public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
-	
+
 	@Override
 	protected Image getImage(IMylarElement node) {
-		return MylarImages.getImage(MylarImages.BUG); 
+		return MylarImages.getImage(MylarImages.BUG);
 	}
 
 	@Override
 	protected Image getImage(IMylarRelation edge) {
-		return MylarImages.getImage(MylarBugsPlugin.EDGE_REF_BUGZILLA); 
+		return MylarImages.getImage(MylarBugsPlugin.EDGE_REF_BUGZILLA);
 	}
 
 	@Override
 	protected Image getImageForObject(Object object) {
-		return MylarImages.getImage(MylarImages.BUG); 
+		return MylarImages.getImage(MylarImages.BUG);
 	}
 
 	@Override
 	protected String getTextForObject(Object node) {
 		return "" + node;
 	}
-	
-    /**
-     * TODO: slow?
-     */
+
+	/**
+	 * TODO: slow?
+	 */
 	@Override
-	protected String getText(IMylarElement node) {        
-        // try to get from the cache before downloading
-        Object report;
-    	BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getHandleIdentifier());
-    	BugReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getHandleIdentifier());
-    	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(BugzillaStructureBridge.CONTENT_TYPE);
-		
-    	if(reportNode != null && cachedReport == null){
-    		report = reportNode;
-    	} else{
-     		report = bridge.getObjectForHandle(node.getHandleIdentifier());
-    	}
-        return bridge.getName(report);
+	protected String getText(IMylarElement node) {
+		// try to get from the cache before downloading
+		Object report;
+		BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getHandleIdentifier());
+		BugReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getHandleIdentifier());
+		IMylarStructureBridge bridge = MylarPlugin.getDefault()
+				.getStructureBridge(BugzillaStructureBridge.CONTENT_TYPE);
+
+		if (reportNode != null && cachedReport == null) {
+			report = reportNode;
+		} else {
+			report = bridge.getObjectForHandle(node.getHandleIdentifier());
+		}
+		return bridge.getName(report);
 	}
 
 	@Override
 	protected String getText(IMylarRelation edge) {
-		return BugzillaReferencesProvider.NAME;  
+		return BugzillaReferencesProvider.NAME;
 	}
-} 
+}

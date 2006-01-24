@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2003 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,18 +48,20 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
-
 /**
  * An editor used to view a locally created bug that does not yet exist on a
  * server. It uses a <code>NewBugModel</code> object to store the data.
  */
 public class NewBugEditor extends AbstractBugEditor {
-	
+
 	protected NewBugModel bug;
+
 	protected Text descriptionText;
+
 	protected String newSummary = "";
+
 	protected String newDescription = "";
-	
+
 	/**
 	 * Creates a new <code>NewBugEditor</code>.
 	 */
@@ -80,7 +82,7 @@ public class NewBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void createDescriptionLayout() {
-		
+
 		// Description Area
 		Composite descriptionComposite = new Composite(infoArea, SWT.NONE);
 		GridLayout descriptionLayout = new GridLayout();
@@ -91,25 +93,22 @@ public class NewBugEditor extends AbstractBugEditor {
 		descriptionData.horizontalSpan = 1;
 		descriptionData.grabExcessVerticalSpace = false;
 		descriptionComposite.setLayoutData(descriptionData);
-		//	End Description Area
-		
-		Composite descriptionTitleComposite =
-			new Composite(descriptionComposite, SWT.NONE);
+		// End Description Area
+
+		Composite descriptionTitleComposite = new Composite(descriptionComposite, SWT.NONE);
 		GridLayout descriptionTitleLayout = new GridLayout();
 		descriptionTitleLayout.horizontalSpacing = 0;
 		descriptionTitleLayout.marginWidth = 0;
 		descriptionTitleComposite.setLayout(descriptionTitleLayout);
 		descriptionTitleComposite.setBackground(background);
-		GridData descriptionTitleData =
-			new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		GridData descriptionTitleData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTitleData.horizontalSpan = 4;
 		descriptionTitleData.grabExcessVerticalSpace = false;
 		descriptionTitleComposite.setLayoutData(descriptionTitleData);
-		newLayout(descriptionTitleComposite, 4, "Description:", HEADER).addListener(SWT.FocusIn, new DescriptionListener());
-		
-		descriptionText = 
-			new Text(descriptionComposite,
-				SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+		newLayout(descriptionTitleComposite, 4, "Description:", HEADER).addListener(SWT.FocusIn,
+				new DescriptionListener());
+
+		descriptionText = new Text(descriptionComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		descriptionText.setFont(COMMENT_FONT);
 		GridData descriptionTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		descriptionTextData.horizontalSpan = 4;
@@ -128,10 +127,10 @@ public class NewBugEditor extends AbstractBugEditor {
 		});
 		descriptionText.addListener(SWT.FocusIn, new DescriptionListener());
 
-        super.descriptionTextBox = descriptionText;
-        
+		super.descriptionTextBox = descriptionText;
+
 		this.createSeparatorSpace(descriptionComposite);
-}
+	}
 
 	@Override
 	protected void createCommentLayout() {
@@ -149,13 +148,13 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected String getTitleString() {
 		return bug.getLabel();
 	}
-	
+
 	@Override
 	protected void submitBug() {
-		final BugReportPostHandler form = new BugReportPostHandler(); 
+		final BugReportPostHandler form = new BugReportPostHandler();
 		form.setPrefix(BugReportPostHandler.FORM_PREFIX_BUG_218);
 		form.setPrefix2(BugReportPostHandler.FORM_PREFIX_BUG_220);
-		
+
 		form.setPostfix(BugReportPostHandler.FORM_POSTFIX_216);
 		form.setPostfix2(BugReportPostHandler.FORM_POSTFIX_218);
 		updateBug();
@@ -165,9 +164,7 @@ public class NewBugEditor extends AbstractBugEditor {
 		Iterator<Attribute> itr = bug.getAttributes().iterator();
 		while (itr.hasNext()) {
 			Attribute a = itr.next();
-			if (a != null && a.getParameterName() != null
-					&& a.getParameterName().compareTo("") != 0
-					&& !a.isHidden()) {
+			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
 				String key = a.getName();
 				String value = null;
 
@@ -195,8 +192,7 @@ public class NewBugEditor extends AbstractBugEditor {
 					value = "";
 
 				form.add(a.getParameterName(), value);
-			} else if (a != null && a.getParameterName() != null
-					&& a.getParameterName().compareTo("") != 0
+			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
 					&& a.isHidden()) {
 				// we have a hidden attribute, add it to the posting
 				form.add(a.getParameterName(), a.getValue());
@@ -220,84 +216,77 @@ public class NewBugEditor extends AbstractBugEditor {
 			form.add("comment", bug.getDescription());
 		}
 
-		
 		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
-//						 update the bug on the server
+						// update the bug on the server
 						try {
 							String id = form.post();
 
 							// If the bug was successfully sent...
 							if (id != null && NewBugEditor.this != null && !NewBugEditor.this.isDisposed()) {
 								changeDirtyStatus(false);
-								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(NewBugEditor.this, false);
+								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+										.closeEditor(NewBugEditor.this, false);
 							}
 							OfflineView.removeReport(bug);
 						} catch (BugzillaException e) {
-							MessageDialog
-									.openError(
-											null,
-											"I/O Error",
-											"Bugzilla could not post your bug.");
+							MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
 							BugzillaPlugin.log(e);
 						} catch (PossibleBugzillaFailureException e) {
-							WebBrowserDialog
-							.openAcceptAgreement(
-									null,
-									"Possible Bugzilla Client Failure",
+							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
 									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
 							BugzillaPlugin.log(e);
-						}catch (LoginException e) {
+						} catch (LoginException e) {
 							e.printStackTrace();
-							// if we had an error with logging in, display an error
-							MessageDialog.openError(
-											null,
-											"Posting Error",
-											"Bugzilla could not post your bug since your login name or password is incorrect."
-													+ "\nPlease check your settings in the bugzilla preferences. ");
+							// if we had an error with logging in, display an
+							// error
+							MessageDialog.openError(null, "Posting Error",
+									"Bugzilla could not post your bug since your login name or password is incorrect."
+											+ "\nPlease check your settings in the bugzilla preferences. ");
 						}
 					}
 				});
 			}
 		};
-		
-		Job job = new Job("Submitting New Bug"){
+
+		Job job = new Job("Submitting New Bug") {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				try{
+				try {
 					op.run(monitor);
-				} catch (Exception e){
+				} catch (Exception e) {
 					MylarStatusHandler.log(e, "Failed to submit bug");
-					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR, "Failed to submit bug", e);
+					return new Status(Status.ERROR, "org.eclipse.mylar.bugzilla.ui", Status.ERROR,
+							"Failed to submit bug", e);
 				}
-				
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable(){
+
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
-						if(TaskListView.getDefault() != null && 
-								TaskListView.getDefault().getViewer() != null){
+						if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null) {
 							new RefreshBugzillaReportsAction().run();
 						}
 					}
 				});
 				return Status.OK_STATUS;
 			}
-			
+
 		};
-		
+
 		job.schedule();
 	}
 
 	@Override
 	protected void updateBug() {
-		// go through all of the attributes and update the main values to the new ones
-		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {
+		// go through all of the attributes and update the main values to the
+		// new ones
+		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
 			Attribute a = it.next();
 			a.setValue(a.getNewValue());
 		}
-		
+
 		// Update some other fields as well.
 		bug.setSummary(newSummary);
 		bug.setDescription(newDescription);
@@ -305,8 +294,9 @@ public class NewBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void restoreBug() {
-		// go through all of the attributes and restore the new values to the main ones
-		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext(); ) {
+		// go through all of the attributes and restore the new values to the
+		// main ones
+		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
 			Attribute a = it.next();
 			a.setNewValue(a.getValue());
 		}
@@ -335,10 +325,12 @@ public class NewBugEditor extends AbstractBugEditor {
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(), "New Description", false, bug.getSummary()))));
+			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
+					new BugzillaReportSelection(bug.getId(), bug.getRepository(), "New Description", false, bug
+							.getSummary()))));
 		}
 	}
-	
+
 	@Override
 	public void handleSummaryEvent() {
 		String sel = summaryText.getText();
@@ -352,5 +344,5 @@ public class NewBugEditor extends AbstractBugEditor {
 	protected void addCCList(String value, Composite attributesComposite) {
 		// do nothing here right now
 	}
-	
+
 }

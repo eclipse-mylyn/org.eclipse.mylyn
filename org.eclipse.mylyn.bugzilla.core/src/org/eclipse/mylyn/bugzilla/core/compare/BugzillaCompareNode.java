@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.bugzilla.core.compare;
 
 import java.io.ByteArrayInputStream;
@@ -28,38 +29,44 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * A node for the tree used to compare bugs in the compare viewer.
  */
 public class BugzillaCompareNode implements IStreamContentAccessor, IStructureComparator, ITypedElement {
-	
+
 	/** The label for this piece of data. */
 	private String key;
-	
+
 	/** The data for this node. */
 	private String value;
-	
+
 	/** The children of this node. */
 	private ArrayList<BugzillaCompareNode> nodeChildren;
-	
+
 	/** This node's image. */
 	private Image image;
-	
+
 	/**
 	 * Constructor. The image for this node is set to <code>null</code>.
-	 * @param key The label for this node.
-	 * @param value The data for this node.
+	 * 
+	 * @param key
+	 *            The label for this node.
+	 * @param value
+	 *            The data for this node.
 	 */
 	public BugzillaCompareNode(String key, String value) {
 		this(key, value, null);
 	}
-	
+
 	/**
 	 * Constructor.
-	 * @param key The label for this node.
-	 * @param value The data for this node.
-	 * @param image The image for this node.
+	 * 
+	 * @param key
+	 *            The label for this node.
+	 * @param value
+	 *            The data for this node.
+	 * @param image
+	 *            The image for this node.
 	 */
 	public BugzillaCompareNode(String key, String value, Image image) {
 		super();
@@ -68,7 +75,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		this.nodeChildren = null;
 		this.image = image;
 	}
-	
+
 	/**
 	 * This function checks to make sure the given string is not
 	 * <code>null</code>. If it is, the empty string is returned instead.
@@ -85,10 +92,12 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	public Object[] getChildren() {
 		return (nodeChildren == null) ? new Object[0] : nodeChildren.toArray();
 	}
-	
+
 	/**
 	 * Adds a node to this node's list of children.
-	 * @param bugNode The new child.
+	 * 
+	 * @param bugNode
+	 *            The new child.
 	 */
 	public void addChild(BugzillaCompareNode bugNode) {
 		if (nodeChildren == null) {
@@ -107,7 +116,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	public String getKey() {
 		return key;
 	}
-	
+
 	/**
 	 * Set the label for this node.
 	 * 
@@ -117,14 +126,14 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
+
 	/**
 	 * @return The data for this node.
 	 */
 	public String getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * Set the data for this node.
 	 * 
@@ -134,11 +143,11 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	public void setValue(String value) {
 		this.value = checkText(value);
 	}
-	
+
 	public Image getImage() {
 		return image;
 	}
-	
+
 	/**
 	 * Sets the image for this object. This image is used when displaying this
 	 * object in the UI.
@@ -158,13 +167,12 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		}
 		return super.equals(arg0);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return getKey().hashCode();
 	}
-	
-	
+
 	public String getName() {
 		return getKey();
 	}
@@ -187,11 +195,13 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		BugzillaCompareNode topNode = new BugzillaCompareNode("Bug #" + bug.getId(), null, defaultImage);
 		Date creationDate = bug.getCreated();
 		if (creationDate == null) {
-			creationDate = Calendar.getInstance().getTime(); // XXX: this could be backwards
+			creationDate = Calendar.getInstance().getTime(); // XXX: this
+																// could be
+																// backwards
 		}
 		BugzillaCompareNode child = new BugzillaCompareNode("Creation Date", creationDate.toString(), defaultImage);
 		topNode.addChild(child);
-		
+
 		String keywords = "";
 		if (bug.getKeywords() != null) {
 			for (Iterator<String> iter = bug.getKeywords().iterator(); iter.hasNext();) {
@@ -199,21 +209,23 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 			}
 		}
 		topNode.addChild(new BugzillaCompareNode("Keywords", keywords, defaultImage));
-		
+
 		Image attributeImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		BugzillaCompareNode attributes = new BugzillaCompareNode("Attributes", null, attributeImage);
 		for (Iterator<Attribute> iter = bug.getAttributes().iterator(); iter.hasNext();) {
 			Attribute attribute = iter.next();
-			if(attribute.getName().compareTo("delta_ts") == 0 || attribute.getName().compareTo("Last Modified") == 0 || attribute.getName().compareTo("longdesclength") == 0)
+			if (attribute.getName().compareTo("delta_ts") == 0 || attribute.getName().compareTo("Last Modified") == 0
+					|| attribute.getName().compareTo("longdesclength") == 0)
 				continue;
-			// Since the bug report may not be saved offline, get the attribute's new
+			// Since the bug report may not be saved offline, get the
+			// attribute's new
 			// value, which is what is in the submit viewer.
 			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getNewValue(), attributeImage));
 		}
 		topNode.addChild(attributes);
-		
+
 		topNode.addChild(new BugzillaCompareNode("Description", bug.getDescription(), defaultImage));
-		
+
 		BugzillaCompareNode comments = new BugzillaCompareNode("Comments", null, defaultImage);
 		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
 			Comment comment = iter.next();
@@ -221,19 +233,19 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 			comments.addChild(new BugzillaCompareNode(comment.getCreated().toString(), bodyString, defaultImage));
 		}
 		topNode.addChild(comments);
-		
+
 		topNode.addChild(new BugzillaCompareNode("New Comment", bug.getNewNewComment(), defaultImage));
-		
+
 		BugzillaCompareNode ccList = new BugzillaCompareNode("CC List", null, defaultImage);
 		for (Iterator<String> iter = bug.getCC().iterator(); iter.hasNext();) {
 			String cc = iter.next();
 			ccList.addChild(new BugzillaCompareNode("CC", cc, defaultImage));
 		}
 		topNode.addChild(ccList);
-		
+
 		BugzillaCompareNode titleNode = new BugzillaCompareNode("BugReport Object", null, defaultImage);
 		titleNode.addChild(topNode);
-		
+
 		return titleNode;
 	}
 
