@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -169,7 +170,7 @@ public class Task implements ITask {
 
 		IEditorInput input = new TaskEditorInput(this);
 		try {
-			page.openEditor(input, MylarTaskListPrefConstants.TASK_EDITOR_ID);
+			page.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID);
 		} catch (PartInitException ex) {
 			MylarStatusHandler.log(ex, "open failed");
 		}

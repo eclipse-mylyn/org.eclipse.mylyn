@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -155,7 +155,7 @@ public class TaskInputDialog extends Dialog {
 
 		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
 			String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
-					MylarTaskListPrefConstants.DEFAULT_URL_PREFIX);
+					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 			if (url.equals(defaultPrefix)) {
 				getDescButton.setEnabled(false);
 			} else {
@@ -179,7 +179,7 @@ public class TaskInputDialog extends Dialog {
 		}
 
 		String defaultPrefix = MylarPlugin.getDefault().getPreferenceStore().getString(
-				MylarTaskListPrefConstants.DEFAULT_URL_PREFIX);
+				TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 		if (!defaultPrefix.equals("")) {
 			return defaultPrefix;
 		}

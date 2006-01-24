@@ -28,6 +28,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Mik Kersten
@@ -109,7 +110,7 @@ public class TaskListManager {
 		try {
 			if (taskListInitialized) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
-				MylarPlugin.getDefault().getPreferenceStore().setValue(MylarTaskListPrefConstants.TASK_ID, nextTaskId);
+				MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID, nextTaskId);
 			} else {
 				MylarStatusHandler.log("task list save attempted before initialization", this);
 			}

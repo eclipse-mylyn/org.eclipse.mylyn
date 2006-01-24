@@ -8,11 +8,12 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**

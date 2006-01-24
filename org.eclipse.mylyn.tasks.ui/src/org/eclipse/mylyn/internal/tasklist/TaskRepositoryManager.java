@@ -28,6 +28,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.ITaskRepositoryListener;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**

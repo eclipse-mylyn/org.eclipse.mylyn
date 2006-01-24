@@ -14,6 +14,7 @@ import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Ken Sueda

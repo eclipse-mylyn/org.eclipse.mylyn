@@ -22,6 +22,7 @@ import org.eclipse.mylar.internal.tasklist.ui.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -190,7 +191,7 @@ public class TaskCategory implements ITaskCategory, Serializable {
 
 		IEditorInput input = new CategoryEditorInput(this);
 		try {
-			page.openEditor(input, MylarTaskListPrefConstants.CATEGORY_EDITOR_ID);
+			page.openEditor(input, TaskListPreferenceConstants.CATEGORY_EDITOR_ID);
 		} catch (PartInitException ex) {
 			MylarStatusHandler.log(ex, "open failed");
 		}

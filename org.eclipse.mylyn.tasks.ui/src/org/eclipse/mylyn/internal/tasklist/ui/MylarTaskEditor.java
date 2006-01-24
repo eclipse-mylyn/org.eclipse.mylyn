@@ -22,11 +22,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPrefConstants;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -153,7 +153,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			webBrowser.setUrl(task.getUrl());
 
 			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(
-					MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL);
+					TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
 			if (task.isLocal() || openWithBrowser)
 				setActivePage(index);
 		} catch (SWTError e) {

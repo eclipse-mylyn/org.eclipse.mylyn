@@ -14,12 +14,12 @@ package org.eclipse.mylar.internal.tasklist.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.tasklist.ITaskHandler;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Mik Kersten and Ken Sueda

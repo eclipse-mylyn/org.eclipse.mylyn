@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasklist;
 /**
  * @author Mik Kersten
  */
-public class MylarTaskListPrefConstants {
+public class TaskListPreferenceConstants {
 
 	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ui.editors.auto.manage";
 

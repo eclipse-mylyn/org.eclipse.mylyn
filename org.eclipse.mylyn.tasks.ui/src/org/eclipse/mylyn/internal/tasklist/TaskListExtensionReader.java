@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.IContextEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.tasklist.ITaskHandler;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Shawn Minto
