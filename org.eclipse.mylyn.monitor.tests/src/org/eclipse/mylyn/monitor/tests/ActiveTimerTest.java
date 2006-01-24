@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,10 @@ import junit.framework.TestCase;
 public class ActiveTimerTest extends TestCase {
 
 	private boolean gotTimeOut = false;
+
 	private TimerThread thread;
-	private ITimerThreadListener listener = new ITimerThreadListener(){
+
+	private ITimerThreadListener listener = new ITimerThreadListener() {
 
 		public void fireTimedOut() {
 			gotTimeOut = true;
@@ -34,10 +36,10 @@ public class ActiveTimerTest extends TestCase {
 		public void intervalElapsed() {
 			// ignore
 		}
-		
+
 	};
-	
-	private ITimerThreadListener listener2 = new ITimerThreadListener(){
+
+	private ITimerThreadListener listener2 = new ITimerThreadListener() {
 
 		public void fireTimedOut() {
 			gotTimeOut = true;
@@ -46,44 +48,46 @@ public class ActiveTimerTest extends TestCase {
 		public void intervalElapsed() {
 			// ignore
 		}
-		
+
 	};
-	
-	public void testActiveTimer(){
+
+	public void testActiveTimer() {
 		thread = new TimerThread(600, 100);
 		thread.addListener(listener);
 		int i = 0;
 		gotTimeOut = false;
 		thread.start();
-		while(!gotTimeOut){
+		while (!gotTimeOut) {
 			i++;
-			try{
+			try {
 				Thread.sleep(100);
-			} catch(InterruptedException e){}
+			} catch (InterruptedException e) {
+			}
 		}
 		assertFalse("Too long of a wait", i > 8);
 		assertFalse("Too short of a wait", i < 6);
 
-		
 		thread = new TimerThread(1000, 100);
 		thread.addListener(listener2);
 		i = 0;
 		gotTimeOut = false;
 		thread.start();
-		for(int j = 0; j < 10; j++){
-			try{
+		for (int j = 0; j < 10; j++) {
+			try {
 				Thread.sleep(100);
-			} catch(InterruptedException e){}
+			} catch (InterruptedException e) {
+			}
 			thread.resetTimer();
 		}
-		while(!gotTimeOut){
+		while (!gotTimeOut) {
 			i++;
-			try{
+			try {
 				Thread.sleep(100);
-			} catch(InterruptedException e){}
+			} catch (InterruptedException e) {
+			}
 		}
 		thread.kill();
 		assertFalse("Too long of a wait", i > 12);
-		assertFalse("Too short of a wait", i < 10);	
+		assertFalse("Too short of a wait", i < 10);
 	}
 }

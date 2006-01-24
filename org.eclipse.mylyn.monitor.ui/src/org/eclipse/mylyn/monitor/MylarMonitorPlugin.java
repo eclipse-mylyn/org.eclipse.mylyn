@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -238,8 +238,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 
 				if (getPreferenceStore().getBoolean(PREF_MONITORING_ENABLED)) {
 					getPreferenceStore().setValue(PREF_MONITORING_ENABLED, false); // will
-																					// be
-																					// reset
+					// be
+					// reset
 					startMonitoring();
 				}
 
@@ -436,7 +436,8 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	private void checkForFirstMonitorUse() {
 		if (!isMonitoringEnabled())
 			return;
-		if (!notifiedOfUserIdSubmission && !MylarPlugin.getDefault().getPreferenceStore().contains(MylarPrefContstants.USER_ID)) {
+		if (!notifiedOfUserIdSubmission
+				&& !MylarPlugin.getDefault().getPreferenceStore().contains(MylarPrefContstants.USER_ID)) {
 			notifiedOfUserIdSubmission = true;
 			UsageSubmissionWizard wizard = new UsageSubmissionWizard(false);
 			wizard.init(PlatformUI.getWorkbench(), null);

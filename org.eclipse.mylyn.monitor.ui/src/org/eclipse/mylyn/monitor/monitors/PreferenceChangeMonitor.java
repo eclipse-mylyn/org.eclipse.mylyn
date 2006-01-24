@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,18 +24,14 @@ public class PreferenceChangeMonitor implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		String newValue = obfuscateValueIfContainsPath(event.getNewValue().toString());
-        InteractionEvent interactionEvent = InteractionEvent.makePreference(
-                event.getProperty(),
-                newValue
-        ); 
-        if (MylarPlugin.getDefault() != null) {
-        	MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
-        }
+		InteractionEvent interactionEvent = InteractionEvent.makePreference(event.getProperty(), newValue);
+		if (MylarPlugin.getDefault() != null) {
+			MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		}
 	}
 
 	private String obfuscateValueIfContainsPath(String preferenceValue) {
-		if (preferenceValue.indexOf(java.io.File.separator) != -1
-			|| preferenceValue.indexOf('/') != -1) {
+		if (preferenceValue.indexOf(java.io.File.separator) != -1 || preferenceValue.indexOf('/') != -1) {
 			return MylarMonitorPlugin.OBFUSCATED_LABEL;
 		} else {
 			return preferenceValue;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,60 +36,60 @@ import org.eclipse.ui.internal.browser.WebBrowserEditor;
 /**
  * @author Mik Kersten
  */
-public class BrowserMonitor extends AbstractUserInteractionMonitor implements IPartListener, IWindowListener, IPageListener {
+public class BrowserMonitor extends AbstractUserInteractionMonitor implements IPartListener, IWindowListener,
+		IPageListener {
 
 	public static final String URL_LIST_DELIM = ",";
-	
+
 	private UrlTrackingListener urlTrackingListener = new UrlTrackingListener();
+
 	private List<String> acceptedUrls = new ArrayList<String>();
-		
+
 	class UrlTrackingListener implements LocationListener {
 
 		public void changing(LocationEvent event) {
 			// ignore
 		}
 
-		public void changed(LocationEvent locationEvent) { 
+		public void changed(LocationEvent locationEvent) {
 			String url = locationEvent.location;
 			boolean accept = false;
 			for (String urlMatch : acceptedUrls) {
-				if (url.indexOf(urlMatch) != -1) accept = true;
+				if (url.indexOf(urlMatch) != -1)
+					accept = true;
 			}
 			if (accept) {
-			    InteractionEvent interactionEvent = new InteractionEvent(
-			    		InteractionEvent.Kind.SELECTION, 
-			    		"url", 
-			    		url, 
-			    		WebBrowserEditor.WEB_BROWSER_EDITOR_ID, 
-			    		"null", 
-			    		"", 
-			    		0); 
-				MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO: move			
+				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, "url", url,
+						WebBrowserEditor.WEB_BROWSER_EDITOR_ID, "null", "", 0);
+				MylarPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO:
+																						// move
 			}
 		}
-	}	
-	
+	}
+
 	@Override
 	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
 		// ignore, this is a special case
 	}
-	
-	//---- Part Listener
+
+	// ---- Part Listener
 
 	public void partOpened(IWorkbenchPart part) {
 		if (part instanceof WebBrowserEditor) {
-			Browser browser = getBrowser((WebBrowserEditor)part);
-			if (browser != null) browser.addLocationListener(urlTrackingListener);
+			Browser browser = getBrowser((WebBrowserEditor) part);
+			if (browser != null)
+				browser.addLocationListener(urlTrackingListener);
 		}
 	}
-	
+
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof WebBrowserEditor) {
-			Browser browser = getBrowser((WebBrowserEditor)part);
-			if (browser != null) browser.removeLocationListener(urlTrackingListener);
+			Browser browser = getBrowser((WebBrowserEditor) part);
+			if (browser != null)
+				browser.removeLocationListener(urlTrackingListener);
 		}
 	}
-	
+
 	public void partActivated(IWorkbenchPart part) {
 	}
 
@@ -98,42 +98,47 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 
 	public void partDeactivated(IWorkbenchPart part) {
 	}
-	
+
 	private Browser getBrowser(final WebBrowserEditor browserEditor) {
-        try { // HACK: using reflection to gain accessibility
-            Class browserClass = browserEditor.getClass();
-            Field browserField = browserClass.getDeclaredField("webBrowser");
-            browserField.setAccessible(true);
-            Object browserObject = browserField.get(browserEditor);
-            if (browserObject != null && browserObject instanceof BrowserViewer) {
-            	return ((BrowserViewer)browserObject).getBrowser();
-            } 
-        } catch (Exception e) {
-        	MylarStatusHandler.log(e, "could not add browser listener");
-        }
-        return null;
+		try { // HACK: using reflection to gain accessibility
+			Class browserClass = browserEditor.getClass();
+			Field browserField = browserClass.getDeclaredField("webBrowser");
+			browserField.setAccessible(true);
+			Object browserObject = browserField.get(browserEditor);
+			if (browserObject != null && browserObject instanceof BrowserViewer) {
+				return ((BrowserViewer) browserObject).getBrowser();
+			}
+		} catch (Exception e) {
+			MylarStatusHandler.log(e, "could not add browser listener");
+		}
+		return null;
 	}
-	
-	//--- Window listener
-	
+
+	// --- Window listener
+
 	public void windowActivated(IWorkbenchWindow window) {
 	}
+
 	public void windowDeactivated(IWorkbenchWindow window) {
 	}
+
 	public void windowClosed(IWorkbenchWindow window) {
 		window.removePageListener(this);
 	}
+
 	public void windowOpened(IWorkbenchWindow window) {
 		window.addPageListener(this);
 	}
-	
-	//---- IPageListener
-	
+
+	// ---- IPageListener
+
 	public void pageActivated(IWorkbenchPage page) {
 	}
+
 	public void pageClosed(IWorkbenchPage page) {
 		page.removePartListener(this);
 	}
+
 	public void pageOpened(IWorkbenchPage page) {
 		page.addPartListener(this);
 	}
@@ -144,13 +149,13 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 
 	public void setAcceptedUrls(String urlBuffer) {
 		acceptedUrls = new ArrayList<String>();
-		
-		if(urlBuffer != null) {	
+
+		if (urlBuffer != null) {
 			StringTokenizer token = new StringTokenizer(urlBuffer, URL_LIST_DELIM);
 			while (token.hasMoreTokens()) {
 				acceptedUrls.add(token.nextToken());
 			}
 		}
 	}
-	
+
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,7 +62,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	 * TODO: should these be queued for better performance?
 	 */
 	public void interactionObserved(InteractionEvent event) {
-//		System.err.println("> " + event);   
+		// System.err.println("> " + event);
 		try {
 			if (started) {
 				String xml = interactionEventToXml(event);
@@ -131,7 +131,7 @@ public class InteractionEventLogger implements IInteractionEventListener {
 	}
 
 	/**
-	 * @return	true if successfully cleared
+	 * @return true if successfully cleared
 	 */
 	public synchronized void clearInteractionHistory() throws IOException {
 		stopObserving();
@@ -221,15 +221,21 @@ public class InteractionEventLogger implements IInteractionEventListener {
 		res.append(OPEN + tag + CLOSE + ENDL);
 		res.append(TAB + OPEN + "kind" + CLOSE + e.getKind().toString() + OPEN + SLASH + "kind" + CLOSE + ENDL);
 		res.append(TAB + OPEN + "date" + CLOSE + format.format(e.getDate()) + OPEN + SLASH + "date" + CLOSE + ENDL);
-		res.append(TAB + OPEN + "endDate" + CLOSE + format.format(e.getEndDate()) + OPEN + SLASH + "endDate" + CLOSE + ENDL);
-		res.append(TAB + OPEN + "originId" + CLOSE + XmlStringConverter.convertToXmlString(e.getOriginId()) + OPEN + SLASH + "originId" + CLOSE + ENDL);
-		res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getContentType()) + OPEN + SLASH + "structureKind" + CLOSE
+		res.append(TAB + OPEN + "endDate" + CLOSE + format.format(e.getEndDate()) + OPEN + SLASH + "endDate" + CLOSE
 				+ ENDL);
-		res.append(TAB + OPEN + "structureHandle" + CLOSE + XmlStringConverter.convertToXmlString(e.getStructureHandle()) + OPEN + SLASH + "structureHandle"
+		res.append(TAB + OPEN + "originId" + CLOSE + XmlStringConverter.convertToXmlString(e.getOriginId()) + OPEN
+				+ SLASH + "originId" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "structureKind" + CLOSE + XmlStringConverter.convertToXmlString(e.getContentType())
+				+ OPEN + SLASH + "structureKind" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "structureHandle" + CLOSE
+				+ XmlStringConverter.convertToXmlString(e.getStructureHandle()) + OPEN + SLASH + "structureHandle"
 				+ CLOSE + ENDL);
-		res.append(TAB + OPEN + "navigation" + CLOSE + XmlStringConverter.convertToXmlString(e.getNavigation()) + OPEN + SLASH + "navigation" + CLOSE + ENDL);
-		res.append(TAB + OPEN + "delta" + CLOSE + XmlStringConverter.convertToXmlString(e.getDelta()) + OPEN + SLASH + "delta" + CLOSE + ENDL);
-		res.append(TAB + OPEN + "interestContribution" + CLOSE + "" + e.getInterestContribution() + OPEN + SLASH + "interestContribution" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "navigation" + CLOSE + XmlStringConverter.convertToXmlString(e.getNavigation()) + OPEN
+				+ SLASH + "navigation" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "delta" + CLOSE + XmlStringConverter.convertToXmlString(e.getDelta()) + OPEN + SLASH
+				+ "delta" + CLOSE + ENDL);
+		res.append(TAB + OPEN + "interestContribution" + CLOSE + "" + e.getInterestContribution() + OPEN + SLASH
+				+ "interestContribution" + CLOSE + ENDL);
 		res.append(OPEN + SLASH + tag + CLOSE + ENDL);
 		return res.toString();
 	}
@@ -332,8 +338,8 @@ public class InteractionEventLogger implements IInteractionEventListener {
 			} catch (NumberFormatException nfe) {
 				// ignore for empty interest values
 			}
-			InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId, navigation, delta, interestFloatVal,
-					format.parse(startDate), format.parse(endDate));
+			InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId,
+					navigation, delta, interestFloatVal, format.parse(startDate), format.parse(endDate));
 			return ie;
 
 		} catch (ParseException e) {

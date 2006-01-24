@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.monitor.ui.preferences;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,34 +39,36 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class MylarMonitorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	private static final String DESCRIPTION = 
-		"If enabled the Mylar monitor logs selections, edits, commands, and preference changes. "
-		+ "If you would like to help improve the user experience by anonymously sharing non-private "
-		+ "parts of this data, run the Usage Feedback Wizard.";
-	 
+	private static final String DESCRIPTION = "If enabled the Mylar monitor logs selections, edits, commands, and preference changes. "
+			+ "If you would like to help improve the user experience by anonymously sharing non-private "
+			+ "parts of this data, run the Usage Feedback Wizard.";
+
 	private IntegerFieldEditor userStudyId;
+
 	private Button enableMonitoring;
+
 	private Text logFileText;
+
 	private Text uploadUrl;
-	
+
 	public MylarMonitorPreferencePage() {
 		super();
-		setPreferenceStore(MylarMonitorPlugin.getPrefs());	
+		setPreferenceStore(MylarMonitorPlugin.getPrefs());
 		setDescription(DESCRIPTION);
 	}
-	
+
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
-		container.setLayout (layout);
-		
+		container.setLayout(layout);
+
 		if (MylarMonitorPlugin.getDefault().getCustomizingPlugin() != null) {
 			Label label = new Label(parent, SWT.NULL);
 			label.setText(MylarMonitorPlugin.getDefault().getCustomizedByMessage());
 			label.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
 		}
-		
+
 		createLogFileSection(container);
 		createUsageSection(container);
 		updateEnablement();
@@ -83,16 +86,16 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 			logFileText.setEnabled(true);
 		}
 	}
-	
+
 	private void createLogFileSection(Composite parent) {
 		final Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText("Monitoring");
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		enableMonitoring = new Button(group, SWT.CHECK);
 		enableMonitoring.setText("Enable logging to: ");
-		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));		
+		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));
 		enableMonitoring.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -103,36 +106,36 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 				// ignore
 			}
 		});
-		
-//		Label label = new Label(group, SWT.NULL);
-//		label.setText("");	
-		
+
+		// Label label = new Label(group, SWT.NULL);
+		// label.setText("");
+
 		String logFilePath = MylarMonitorPlugin.getDefault().getMonitorLogFile().getPath();
 		logFilePath = logFilePath.replaceAll("\\\\", "/");
-		logFileText = new Text(group, SWT.BORDER);		
+		logFileText = new Text(group, SWT.BORDER);
 		logFileText.setText(logFilePath);
 		logFileText.setEditable(false);
 		logFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-//		Button browse = createButton(group, "Browse...");
-//		browse.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				FileDialog dialog = new FileDialog(getShell());
-//				dialog.setText("Folder Selection");
-////				dialog.setMessage("Specify the monitor log file");
-//				String dir = logFileText.getText();
-//				dir = dir.replaceAll("\\\\", "/");
-//				dialog.setFilterPath(dir);
-//
-//				dir = dialog.open();
-//				if(dir == null || dir.equals(""))
-//					return;
-//				logFileText.setText(dir);
-//			}
-//		}); 
+
+		// Button browse = createButton(group, "Browse...");
+		// browse.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// FileDialog dialog = new FileDialog(getShell());
+		// dialog.setText("Folder Selection");
+		// // dialog.setMessage("Specify the monitor log file");
+		// String dir = logFileText.getText();
+		// dir = dir.replaceAll("\\\\", "/");
+		// dialog.setFilterPath(dir);
+		//
+		// dir = dialog.open();
+		// if(dir == null || dir.equals(""))
+		// return;
+		// logFileText.setText(dir);
+		// }
+		// });
 	}
-	
+
 	private void createUsageSection(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText("Usage Feedback");
@@ -143,21 +146,21 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		userStudyId.setErrorMessage("Your user id must be an integer");
 		int uidNum = MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPrefContstants.USER_ID);
 		if (uidNum > 0) {
-			userStudyId.setStringValue(uidNum + "");	
+			userStudyId.setStringValue(uidNum + "");
 			userStudyId.setEmptyStringAllowed(false);
 		}
-			
+
 		Label label = new Label(group, SWT.NULL);
 		label.setText(" Upload URL: ");
 		uploadUrl = new Text(group, SWT.BORDER);
-		uploadUrl.setEditable(false); 
+		uploadUrl.setEditable(false);
 		uploadUrl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		uploadUrl.setText(MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl());		
-		
+		uploadUrl.setText(MylarMonitorPlugin.getDefault().getStudyParameters().getScriptsUrl());
+
 		Label events = new Label(group, SWT.NULL);
-		events.setText(" Events since upload:");		
+		events.setText(" Events since upload:");
 		Label logged = new Label(group, SWT.NULL);
-		logged.setText("" + getPreferenceStore().getInt(MylarMonitorPlugin.PREF_NUM_USER_EVENTS));		
+		logged.setText("" + getPreferenceStore().getInt(MylarMonitorPlugin.PREF_NUM_USER_EVENTS));
 
 		if (uidNum <= 0) {
 			userStudyId.setEnabled(false, group);
@@ -167,13 +170,13 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 			events.setEnabled(false);
 		}
 	}
-	
+
 	public void performDefaults() {
 		super.performDefaults();
 		logFileText.setText(MylarMonitorPlugin.getDefault().getMonitorLogFile().getPath());
-//		logFileText.setText(getPreferenceStore().getDefaultString(MylarMonitorPlugin.PREF_LOG_FILE));
+		// logFileText.setText(getPreferenceStore().getDefaultString(MylarMonitorPlugin.PREF_LOG_FILE));
 	}
-	
+
 	@Override
 	public boolean performOk() {
 		if (enableMonitoring.getSelection()) {
@@ -181,15 +184,15 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 		} else {
 			MylarMonitorPlugin.getDefault().stopMonitoring();
 		}
-		
-//		String taskDirectory = logFileText.getText();
-//		taskDirectory = taskDirectory.replaceAll("\\\\", "/");	
-//		getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR, taskDirectory);
-		
+
+		// String taskDirectory = logFileText.getText();
+		// taskDirectory = taskDirectory.replaceAll("\\\\", "/");
+		// getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR,
+		// taskDirectory);
+
 		int uidNum = -1;
 		try {
-			if (userStudyId.getStringValue() == null
-					|| userStudyId.getStringValue().equals("")) {
+			if (userStudyId.getStringValue() == null || userStudyId.getStringValue().equals("")) {
 				uidNum = -1;
 				userStudyId.setStringValue(uidNum + "");
 			} else {
@@ -197,39 +200,36 @@ public class MylarMonitorPreferencePage extends PreferencePage implements IWorkb
 			}
 
 			if (uidNum <= 0 && uidNum != -1) {
-				MessageDialog.openError(Display.getDefault().getActiveShell(),
-						"User ID Incorrect",
+				MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect",
 						"The user study id must be a posative integer");
 				return false;
 			}
 			if (uidNum != -1 && uidNum % 17 != 1) {
-				MessageDialog.openError(
-					Display.getDefault().getActiveShell(),
-					"User ID Incorrect",
-					"Your user study id is not valid, please make sure it is correct or get a new id");
+				MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect",
+						"Your user study id is not valid, please make sure it is correct or get a new id");
 				return false;
 			}
 		} catch (NumberFormatException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(),
-					"User ID Incorrect",
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "User ID Incorrect",
 					"The user study id must be a posative integer");
 			return false;
 		}
 		MylarPlugin.getDefault().getPreferenceStore().setValue(MylarPrefContstants.USER_ID, uidNum);
 		return true;
 	}
-	
+
 	@Override
 	public boolean performCancel() {
 		enableMonitoring.setSelection(getPreferenceStore().getBoolean(MylarMonitorPlugin.PREF_MONITORING_ENABLED));
-		userStudyId.setStringValue(MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPrefContstants.USER_ID)+"");
+		userStudyId.setStringValue(MylarPlugin.getDefault().getPreferenceStore().getInt(MylarPrefContstants.USER_ID)
+				+ "");
 		return true;
 	}
 
-//	private Button createButton(Composite parent, String text) {
-//		Button button = new Button(parent, SWT.TRAIL);
-//		button.setText(text);
-//		button.setVisible(true);
-//		return button;
-//	}
+	// private Button createButton(Composite parent, String text) {
+	// Button button = new Button(parent, SWT.TRAIL);
+	// button.setText(text);
+	// button.setVisible(true);
+	// return button;
+	// }
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylar.monitor.reports.tests;
@@ -31,39 +31,41 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
 /**
- * Provides access to files for testing. 
- * TODO: Copied from the bugzilla component - consider refactoring as common utility 
+ * Provides access to files for testing. TODO: Copied from the bugzilla
+ * component - consider refactoring as common utility
  */
 public class FileTool {
-	
-	private final static int MAX_RETRY= 5;
-	
+
+	private final static int MAX_RETRY = 5;
+
 	/**
 	 * A buffer.
 	 */
 	private static byte[] buffer = new byte[8192];
-	
+
 	/**
-	 * Unzips the given zip file to the given destination directory
-	 * extracting only those entries the pass through the given
-	 * filter.
+	 * Unzips the given zip file to the given destination directory extracting
+	 * only those entries the pass through the given filter.
 	 * 
-	 * @param zipFile the zip file to unzip
-	 * @param dstDir the destination directory
-	 * @throws IOException in case of problem
+	 * @param zipFile
+	 *            the zip file to unzip
+	 * @param dstDir
+	 *            the destination directory
+	 * @throws IOException
+	 *             in case of problem
 	 */
 	public static void unzip(ZipFile zipFile, File dstDir) throws IOException {
 		unzip(zipFile, dstDir, dstDir, 0);
 	}
-	
+
 	private static void unzip(ZipFile zipFile, File rootDstDir, File dstDir, int depth) throws IOException {
-	
+
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();
-	
+
 		try {
-			while(entries.hasMoreElements()){
+			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
-				if(entry.isDirectory()){
+				if (entry.isDirectory()) {
 					continue;
 				}
 				String entryName = entry.getName();
@@ -76,17 +78,17 @@ public class FileTool {
 					dst = new FileOutputStream(file);
 					transferData(src, dst);
 				} finally {
-					if(dst != null){
+					if (dst != null) {
 						try {
 							dst.close();
-						} catch(IOException e){
+						} catch (IOException e) {
 							// don't worry in the finally
 						}
 					}
-					if(src != null){
+					if (src != null) {
 						try {
 							src.close();
-						} catch(IOException e){
+						} catch (IOException e) {
 							// don't worry in the finally
 						}
 					}
@@ -95,35 +97,38 @@ public class FileTool {
 		} finally {
 			try {
 				zipFile.close();
-			} catch(IOException e){
+			} catch (IOException e) {
 				// don't worry in the finally
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns the given file path with its separator
-	 * character changed from the given old separator to the
-	 * given new separator.
+	 * Returns the given file path with its separator character changed from the
+	 * given old separator to the given new separator.
 	 * 
-	 * @param path a file path
-	 * @param oldSeparator a path separator character
-	 * @param newSeparator a path separator character
-	 * @return the file path with its separator character
-	 * changed from the given old separator to the given new
-	 * separator
+	 * @param path
+	 *            a file path
+	 * @param oldSeparator
+	 *            a path separator character
+	 * @param newSeparator
+	 *            a path separator character
+	 * @return the file path with its separator character changed from the given
+	 *         old separator to the given new separator
 	 */
-	public static String changeSeparator(String path, char oldSeparator, char newSeparator){
+	public static String changeSeparator(String path, char oldSeparator, char newSeparator) {
 		return path.replace(oldSeparator, newSeparator);
 	}
-	
+
 	/**
-	 * Copies all bytes in the given source file to
-	 * the given destination file.
+	 * Copies all bytes in the given source file to the given destination file.
 	 * 
-	 * @param source the given source file
-	 * @param destination the given destination file
-	 * @throws IOException in case of error
+	 * @param source
+	 *            the given source file
+	 * @param destination
+	 *            the given destination file
+	 * @throws IOException
+	 *             in case of error
 	 */
 	public static void transferData(File source, File destination) throws IOException {
 		destination.getParentFile().mkdirs();
@@ -134,37 +139,39 @@ public class FileTool {
 			os = new FileOutputStream(destination);
 			transferData(is, os);
 		} finally {
-			if(os != null){
+			if (os != null) {
 				try {
 					os.close();
-				} catch(IOException e){
+				} catch (IOException e) {
 					// don't worry in the finally
 				}
 			}
-			if(is != null){
+			if (is != null) {
 				try {
 					is.close();
-				} catch(IOException e){
+				} catch (IOException e) {
 					// don't worry in the finally
 				}
 			}
 		}
 	}
-	
+
 	/**
-	 * Copies all bytes in the given source stream to
-	 * the given destination stream. Neither streams
-	 * are closed.
+	 * Copies all bytes in the given source stream to the given destination
+	 * stream. Neither streams are closed.
 	 * 
-	 * @param source the given source stream
-	 * @param destination the given destination stream
-	 * @throws IOException in case of error
+	 * @param source
+	 *            the given source stream
+	 * @param destination
+	 *            the given destination stream
+	 * @throws IOException
+	 *             in case of error
 	 */
 	public static void transferData(InputStream source, OutputStream destination) throws IOException {
 		int bytesRead = 0;
-		while(bytesRead != -1){
+		while (bytesRead != -1) {
 			bytesRead = source.read(buffer, 0, buffer.length);
-			if(bytesRead != -1){
+			if (bytesRead != -1) {
 				destination.write(buffer, 0, bytesRead);
 			}
 		}
@@ -173,16 +180,19 @@ public class FileTool {
 	/**
 	 * Copies the given source file to the given destination file.
 	 * 
-	 * @param src the given source file
-	 * @param dst the given destination file
-	 * @throws IOException in case of error
+	 * @param src
+	 *            the given source file
+	 * @param dst
+	 *            the given destination file
+	 * @throws IOException
+	 *             in case of error
 	 */
 	public static void copy(File src, File dst) throws IOException {
-		if(src.isDirectory()){
+		if (src.isDirectory()) {
 			String[] srcChildren = src.list();
-			for(int i = 0; i < srcChildren.length; ++i){
-				File srcChild= new File(src, srcChildren[i]);
-				File dstChild= new File(dst, srcChildren[i]);
+			for (int i = 0; i < srcChildren.length; ++i) {
+				File srcChild = new File(src, srcChildren[i]);
+				File dstChild = new File(dst, srcChildren[i]);
 				copy(srcChild, dstChild);
 			}
 		} else
@@ -191,32 +201,32 @@ public class FileTool {
 
 	public static File getFileInPlugin(Plugin plugin, IPath path) {
 		try {
-			URL installURL= plugin.getBundle().getEntry(path.toString());
-			URL localURL= Platform.asLocalURL(installURL);
+			URL installURL = plugin.getBundle().getEntry(path.toString());
+			URL localURL = Platform.asLocalURL(installURL);
 			return new File(localURL.getFile());
 		} catch (IOException e) {
 			return null;
 		}
 	}
-	
+
 	public static File createTempFileInPlugin(Plugin plugin, IPath path) {
-		IPath stateLocation= plugin.getStateLocation();
-		stateLocation= stateLocation.append(path);
+		IPath stateLocation = plugin.getStateLocation();
+		stateLocation = stateLocation.append(path);
 		return stateLocation.toFile();
 	}
-	
+
 	public static StringBuffer read(String fileName) throws IOException {
 		return read(new FileReader(fileName));
 	}
 
 	public static StringBuffer read(Reader reader) throws IOException {
-		StringBuffer s= new StringBuffer();
+		StringBuffer s = new StringBuffer();
 		try {
-			char[] charBuffer= new char[8196];
-			int chars= reader.read(charBuffer);
+			char[] charBuffer = new char[8196];
+			int chars = reader.read(charBuffer);
 			while (chars != -1) {
 				s.append(charBuffer, 0, chars);
-				chars= reader.read(charBuffer);
+				chars = reader.read(charBuffer);
 			}
 		} finally {
 			try {
@@ -229,7 +239,7 @@ public class FileTool {
 	}
 
 	public static void write(String fileName, StringBuffer content) throws IOException {
-		Writer writer= new FileWriter(fileName);
+		Writer writer = new FileWriter(fileName);
 		try {
 			writer.write(content.toString());
 		} finally {
@@ -240,18 +250,18 @@ public class FileTool {
 			}
 		}
 	}
-	
+
 	public static void delete(File file) {
 		if (file.exists()) {
-			for (int i= 0; i < MAX_RETRY; i++) {
+			for (int i = 0; i < MAX_RETRY; i++) {
 				if (file.delete())
-					i= MAX_RETRY;
+					i = MAX_RETRY;
 				else {
 					try {
 						Thread.sleep(1000); // sleep a second
 					} catch (InterruptedException e) {
 						// don't care if the sleep is interrupted
-					} 
+					}
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -84,7 +84,8 @@ public class DataOverviewCollectorTest extends TestCase {
 		dataOverviewCollector = new DataOverviewCollector("test-");
 		collectors.add(dataOverviewCollector);
 
-		ReportGenerator generator = new ReportGenerator(MylarMonitorPlugin.getDefault().getInteractionLogger(), collectors);
+		ReportGenerator generator = new ReportGenerator(MylarMonitorPlugin.getDefault().getInteractionLogger(),
+				collectors);
 		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles);
 
 		// cleanup
