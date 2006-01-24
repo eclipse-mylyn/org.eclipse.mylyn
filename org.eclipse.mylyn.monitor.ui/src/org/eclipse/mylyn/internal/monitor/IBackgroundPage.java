@@ -9,16 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor;
+package org.eclipse.mylar.internal.monitor;
 
 import java.io.File;
 
 import org.eclipse.jface.wizard.IWizardPage;
 
 /**
- * @author Mik Kersten
+ * @author Leah Findlater
  */
-public interface IQuestionnairePage extends IWizardPage {
+public interface IBackgroundPage extends IWizardPage {
 
 	public abstract File createFeedbackFile();
 }

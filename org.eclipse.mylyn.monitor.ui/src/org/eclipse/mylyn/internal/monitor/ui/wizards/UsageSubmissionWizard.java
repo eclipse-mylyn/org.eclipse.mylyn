@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.monitor.ui.wizards;
+package org.eclipse.mylar.internal.monitor.ui.wizards;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,13 +42,13 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.MylarPrefContstants;
-import org.eclipse.mylar.core.util.DateUtil;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.core.util.ZipFileUtil;
-import org.eclipse.mylar.monitor.IBackgroundPage;
-import org.eclipse.mylar.monitor.IQuestionnairePage;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.internal.core.MylarPrefContstants;
+import org.eclipse.mylar.internal.core.util.DateUtil;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.monitor.IBackgroundPage;
+import org.eclipse.mylar.internal.monitor.IQuestionnairePage;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;

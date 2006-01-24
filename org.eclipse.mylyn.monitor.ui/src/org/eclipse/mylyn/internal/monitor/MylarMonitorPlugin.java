@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor;
+package org.eclipse.mylar.internal.monitor;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,20 +35,19 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.MylarPrefContstants;
-import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.monitor.internal.StudyParameters;
-import org.eclipse.mylar.monitor.monitors.ActionExecutionMonitor;
-import org.eclipse.mylar.monitor.monitors.ActivityChangeMonitor;
-import org.eclipse.mylar.monitor.monitors.BrowserMonitor;
-import org.eclipse.mylar.monitor.monitors.KeybindingCommandMonitor;
-import org.eclipse.mylar.monitor.monitors.MenuCommandMonitor;
-import org.eclipse.mylar.monitor.monitors.PerspectiveChangeMonitor;
-import org.eclipse.mylar.monitor.monitors.PreferenceChangeMonitor;
-import org.eclipse.mylar.monitor.monitors.SelectionMonitor;
-import org.eclipse.mylar.monitor.monitors.WindowChangeMonitor;
-import org.eclipse.mylar.monitor.ui.wizards.UsageSubmissionWizard;
+import org.eclipse.mylar.internal.core.MylarContextManager;
+import org.eclipse.mylar.internal.core.MylarPrefContstants;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.monitor.monitors.ActionExecutionMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.ActivityChangeMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.BrowserMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.KeybindingCommandMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.MenuCommandMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.PerspectiveChangeMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.PreferenceChangeMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
+import org.eclipse.mylar.internal.monitor.monitors.WindowChangeMonitor;
+import org.eclipse.mylar.internal.monitor.ui.wizards.UsageSubmissionWizard;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellEvent;
@@ -111,7 +110,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String MONITOR_LOG_NAME_OLD = "workspace";
 
 	// public static final String PREF_LOG_FILE =
-	// "org.eclipse.mylar.monitor.log.file";
+	// "org.eclipse.mylar.internal.monitor.log.file";
 	public static final String PREF_MONITORING_ENABLED = "org.eclipse.mylar.monitor.enabled";
 
 	public static final String PREF_NUM_USER_EVENTS = "org.eclipse.mylar.monitor.events.observed";

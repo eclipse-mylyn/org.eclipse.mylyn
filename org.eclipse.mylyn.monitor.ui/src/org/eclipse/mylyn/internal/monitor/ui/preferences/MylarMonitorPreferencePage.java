@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui.preferences;
+package org.eclipse.mylar.internal.monitor.ui.preferences;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.MylarPrefContstants;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.internal.core.MylarPrefContstants;
+import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

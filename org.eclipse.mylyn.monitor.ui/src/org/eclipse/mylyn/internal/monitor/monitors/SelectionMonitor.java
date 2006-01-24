@@ -11,7 +11,7 @@
 /*
  * Created on Jun 10, 2005
  */
-package org.eclipse.mylar.monitor.monitors;
+package org.eclipse.mylar.internal.monitor.monitors;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,8 +32,8 @@ import org.eclipse.mylar.core.AbstractUserInteractionMonitor;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.MylarContextManager;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IWorkbenchPart;

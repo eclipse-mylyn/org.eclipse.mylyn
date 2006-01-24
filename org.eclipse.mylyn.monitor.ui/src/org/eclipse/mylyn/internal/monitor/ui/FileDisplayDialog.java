@@ -11,7 +11,7 @@
 /**
  * 
  */
-package org.eclipse.mylar.monitor.ui;
+package org.eclipse.mylar.internal.monitor.ui;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;

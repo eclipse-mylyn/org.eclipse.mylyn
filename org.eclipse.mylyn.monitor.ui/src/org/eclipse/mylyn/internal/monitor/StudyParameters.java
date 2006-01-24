@@ -9,11 +9,8 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.internal;
+package org.eclipse.mylar.internal.monitor;
 
-import org.eclipse.mylar.monitor.IBackgroundPage;
-import org.eclipse.mylar.monitor.IQuestionnairePage;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 
 /**
  * @author Mik Kersten

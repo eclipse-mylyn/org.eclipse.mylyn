@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor;
+package org.eclipse.mylar.internal.monitor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,11 +30,10 @@ import java.util.zip.ZipFile;
 import org.eclipse.mylar.core.IInteractionEventListener;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.InteractionEvent.Kind;
-import org.eclipse.mylar.core.internal.MylarContextExternalizer;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.core.util.XmlStringConverter;
-import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer;
-import org.eclipse.mylar.monitor.internal.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.internal.core.MylarContextExternalizer;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.XmlStringConverter;
+import org.eclipse.mylar.internal.monitor.HtmlStreamTokenizer.Token;
 
 /**
  * @author Mik Kersten

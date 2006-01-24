@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.internal;
+package org.eclipse.mylar.internal.monitor;
 
 import java.io.BufferedReader;
 import java.io.IOException;

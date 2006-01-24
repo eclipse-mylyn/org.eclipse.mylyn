@@ -12,7 +12,7 @@
    <extension point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.monitor.ui.wizards.UsageSubmissionWizard"
+            class="org.eclipse.mylar.internal.monitor.ui.wizards.UsageSubmissionWizard"
             icon="icons/etool16/wizard-study.gif"
             id="org.eclipse.mylar.monitor.ui.uploadStatistics.StatisticsUploadWizard"
             name="Usage Feedback">
@@ -22,7 +22,7 @@
    <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Monitor"
-         class="org.eclipse.mylar.monitor.ui.preferences.MylarMonitorPreferencePage"
+         class="org.eclipse.mylar.internal.monitor.ui.preferences.MylarMonitorPreferencePage"
          id="org.eclipse.mylar.monitor.ui.preferences"
 		 category="org.eclipse.mylar.ui.preferences">
       </page>  

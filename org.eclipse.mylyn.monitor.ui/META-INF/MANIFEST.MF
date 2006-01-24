@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Monitor Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.monitor; singleton:=true
-Bundle-Version: 0.4.7.v20060120-2100
-Bundle-Activator: org.eclipse.mylar.monitor.MylarMonitorPlugin
+Bundle-Version: 0.4.7.v20060120
+Bundle-Activator: org.eclipse.mylar.internal.monitor.MylarMonitorPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -28,10 +28,9 @@ Bundle-ClassPath: mylar-monitor.jar,
 Export-Package: org.apache.commons.httpclient,
  org.apache.commons.httpclient.methods,
  org.apache.commons.httpclient.methods.multipart,
- org.eclipse.mylar.monitor,
- org.eclipse.mylar.monitor.internal,
- org.eclipse.mylar.monitor.monitors,
- org.eclipse.mylar.monitor.ui,
- org.eclipse.mylar.monitor.ui.preferences,
- org.eclipse.mylar.monitor.ui.wizards
+ org.eclipse.mylar.internal.monitor,
+ org.eclipse.mylar.internal.monitor.monitors,
+ org.eclipse.mylar.internal.monitor.ui,
+ org.eclipse.mylar.internal.monitor.ui.preferences,
+ org.eclipse.mylar.internal.monitor.ui.wizards
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
