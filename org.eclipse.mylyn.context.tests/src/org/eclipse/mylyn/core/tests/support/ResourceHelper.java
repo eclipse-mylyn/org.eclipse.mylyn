@@ -30,7 +30,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.core.tests.MylarCoreTestsPlugin;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.pde.internal.PDE;
 import org.eclipse.pde.internal.PluginProject;
 

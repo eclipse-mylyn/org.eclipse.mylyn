@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.ide.ui.ProblemsListDoiSorter;
+import org.eclipse.mylar.internal.ide.ui.ProblemsListDoiSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IViewPart;

@@ -29,10 +29,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.internal.IContextWriter;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.core.util.XmlStringConverter;
+import org.eclipse.mylar.internal.core.IContextWriter;
+import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

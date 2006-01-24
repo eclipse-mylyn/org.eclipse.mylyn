@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.MylarIdePlugin;
+import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 
 /**
  * @author Mik Kersten

@@ -17,8 +17,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.util.TypeInfoHistory;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.java.MylarJavaPlugin;
-import org.eclipse.mylar.java.TypeHistoryManager;
+import org.eclipse.mylar.internal.java.MylarJavaPlugin;
+import org.eclipse.mylar.internal.java.TypeHistoryManager;
 
 /**
  * @author Mik Kersten

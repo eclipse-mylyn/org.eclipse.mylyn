@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.AbstractRelationProvider;
-import org.eclipse.mylar.core.search.IActiveSearchListener;
+import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
 
 public class TestActiveSearchListener implements IActiveSearchListener {
 

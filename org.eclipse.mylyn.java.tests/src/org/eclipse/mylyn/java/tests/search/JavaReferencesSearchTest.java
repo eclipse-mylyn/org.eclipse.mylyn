@@ -22,14 +22,14 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.CompositeContext;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.java.JavaStructureBridge;
-import org.eclipse.mylar.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.xml.pde.PdeStructureBridge;
+import org.eclipse.mylar.internal.core.CompositeContext;
+import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.internal.java.JavaStructureBridge;
+import org.eclipse.mylar.internal.java.search.JavaReferencesProvider;
+import org.eclipse.mylar.internal.xml.pde.PdeStructureBridge;
 
 /**
  * @author Shawn Minto

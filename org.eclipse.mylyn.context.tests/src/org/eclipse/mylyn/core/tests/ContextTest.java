@@ -13,8 +13,8 @@ package org.eclipse.mylar.core.tests;
 
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarRelation;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.internal.ScalingFactors;
+import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.internal.core.ScalingFactors;
 
 /**
  * @author Mik Kersten

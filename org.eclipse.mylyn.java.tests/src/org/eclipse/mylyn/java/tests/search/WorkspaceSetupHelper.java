@@ -24,9 +24,9 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.internal.ScalingFactors;
 import org.eclipse.mylar.core.tests.support.ResourceHelper;
+import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.internal.core.ScalingFactors;
 import org.eclipse.mylar.java.tests.TestJavaProject;
 
 public class WorkspaceSetupHelper {

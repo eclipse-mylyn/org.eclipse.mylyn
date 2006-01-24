@@ -13,7 +13,7 @@
  */
 package org.eclipse.mylar.core.tests;
 
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 
 /**
  * @author Mik Kersten

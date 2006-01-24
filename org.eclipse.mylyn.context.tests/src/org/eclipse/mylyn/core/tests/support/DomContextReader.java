@@ -23,11 +23,11 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.InteractionEvent.Kind;
-import org.eclipse.mylar.core.internal.IContextReader;
-import org.eclipse.mylar.core.internal.MylarContextManager;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.util.MylarStatusHandler;
-import org.eclipse.mylar.core.util.XmlStringConverter;
+import org.eclipse.mylar.internal.core.IContextReader;
+import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.internal.core.MylarContextManager;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -16,10 +16,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.core.internal.CompositeContext;
-import org.eclipse.mylar.core.internal.MylarContext;
-import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
+import org.eclipse.mylar.internal.core.CompositeContext;
+import org.eclipse.mylar.internal.core.MylarContext;
+import org.eclipse.mylar.internal.core.MylarContextManager;
 
 /**
  * @author Shawn Minto

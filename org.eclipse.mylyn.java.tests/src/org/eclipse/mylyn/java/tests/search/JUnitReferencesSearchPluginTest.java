@@ -16,10 +16,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.search.IMylarSearchOperation;
 import org.eclipse.mylar.core.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.core.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.java.search.JUnitReferencesProvider;
+import org.eclipse.mylar.internal.core.search.IMylarSearchOperation;
+import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
 
 public class JUnitReferencesSearchPluginTest extends TestCase implements ISearchPluginTest {
 

@@ -21,7 +21,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.java.InterestUpdateDeltaListener;
+import org.eclipse.mylar.internal.java.InterestUpdateDeltaListener;
 import org.eclipse.ui.IViewPart;
 
 /**

@@ -24,9 +24,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ide.ResourceSelectionMonitor;
-import org.eclipse.mylar.ide.ResourceStructureBridge;
-import org.eclipse.mylar.ui.actions.AbstractInterestManipulationAction;
+import org.eclipse.mylar.internal.ide.ResourceSelectionMonitor;
+import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
+import org.eclipse.mylar.internal.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.Workbench;
 
