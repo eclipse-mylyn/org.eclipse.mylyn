@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,19 +24,21 @@ import org.eclipse.ui.IWorkbenchPage;
  * @author Mik Kersten
  */
 public class TaskDeactivateAction extends Action {
-	
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.deactivate";
-		
+
 	public TaskDeactivateAction() {
 		setId(ID);
 		setText("Deactivate");
 		setImageDescriptor(TaskListImages.TASK_INACTIVE);
 	}
-	
+
 	public void run(ITask task) {
 		MylarPlugin.getContextManager().actionObserved(this, Boolean.FALSE.toString());
-        IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (page == null) return;
+		IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+				.getActivePage();
+		if (page == null)
+			return;
 		try {
 			if (task != null) {
 				MylarTaskListPlugin.getTaskListManager().deactivateTask(task);
@@ -45,9 +47,9 @@ public class TaskDeactivateAction extends Action {
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, " Closing task editor on task deactivation failed");
-		}		
+		}
 	}
-	
+
 	public void run() {
 		run(TaskListView.getDefault().getSelectedTask());
 	}

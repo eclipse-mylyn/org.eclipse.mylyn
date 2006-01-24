@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,27 +33,27 @@ public class EditRepositoryPropertiesAction extends Action {
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.properties";
 
 	private TaskRepositoriesView repositoriesView;
-	
+
 	public EditRepositoryPropertiesAction(TaskRepositoriesView repositoriesView) {
 		this.repositoriesView = repositoriesView;
 		setText("Properties");
 		setId(ID);
 	}
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
-	
+
 	public void run() {
 		try {
-			IStructuredSelection selection = (IStructuredSelection)repositoriesView.getViewer().getSelection();
+			IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
 			if (selection.getFirstElement() instanceof TaskRepository) {
-				EditRepositoryWizard wizard = new EditRepositoryWizard((TaskRepository)selection.getFirstElement());
+				EditRepositoryWizard wizard = new EditRepositoryWizard((TaskRepository) selection.getFirstElement());
 				Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
 				if (wizard != null && shell != null && !shell.isDisposed()) {
 					WizardDialog dialog = new WizardDialog(shell, wizard);
 					dialog.create();
-//					dialog.getShell().setText("Mylar Tasks");
+					// dialog.getShell().setText("Mylar Tasks");
 					dialog.setBlockOnOpen(true);
 					if (dialog.open() == Dialog.CANCEL) {
 						dialog.close();

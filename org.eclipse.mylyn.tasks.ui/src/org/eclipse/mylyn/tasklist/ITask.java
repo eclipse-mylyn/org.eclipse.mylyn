@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public interface ITask extends ITaskListElement {
 	public List<String> getPlans();
 
 	public abstract TaskStatus getStatus();
-	
+
 	public abstract void setCompleted(boolean completed);
 
 	public abstract List<String> getRelatedLinks();
@@ -50,22 +50,23 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void removeLink(String url);
 
-	public abstract boolean hasValidUrl();	
+	public abstract boolean hasValidUrl();
 
 	public abstract void setUrl(String url);
 
 	public abstract String getUrl();
 
-//	public abstract String getRepositoryUrl();
+	// public abstract String getRepositoryUrl();
 
-//	public abstract void setRepositoryUrl(String repositoryUrl);
-	
+	// public abstract void setRepositoryUrl(String repositoryUrl);
+
 	public abstract String getNotes();
 
 	public abstract void setNotes(String notes);
 
 	/**
-	 * @param time in milliseconds
+	 * @param time
+	 *            in milliseconds
 	 */
 	public abstract void setElapsedTime(long elapsed);
 

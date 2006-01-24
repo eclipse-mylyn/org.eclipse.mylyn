@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,23 +30,23 @@ import org.eclipse.ui.IWorkbench;
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String LABEL_SERVER = "Server: ";
-	
+
 	protected static final String LABEL_USER = "User Name: ";
 
 	protected static final String LABEL_PASSWORD = "Password: ";
-	
+
 	protected static final String URL_PREFIX_HTTPS = "https://";
 
 	protected static final String URL_PREFIX_HTTP = "http://";
-	
+
 	protected StringFieldEditor serverUrlEditor;
- 
+
 	protected StringFieldEditor userNameEditor;
 
 	protected RepositoryStringFieldEditor passwordEditor;
-	
+
 	protected TaskRepository repository;
-		
+
 	public AbstractRepositorySettingsPage(String title, String description) {
 		super(title);
 		super.setTitle(title);
@@ -58,8 +58,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
 
-		serverUrlEditor = new StringFieldEditor("", LABEL_SERVER,
-				StringFieldEditor.UNLIMITED, container) {
+		serverUrlEditor = new StringFieldEditor("", LABEL_SERVER, StringFieldEditor.UNLIMITED, container) {
 
 			@Override
 			protected boolean doCheckState() {
@@ -73,21 +72,21 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		};
 		serverUrlEditor.setErrorMessage("Server path must be a valid http(s):// url");
-		
+
 		userNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
 		passwordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, container);
 		passwordEditor.getTextControl().setEchoChar('*');
-		
+
 		if (repository != null) {
 			serverUrlEditor.setStringValue(repository.getUrl().toExternalForm());
 			userNameEditor.setStringValue(repository.getUserName());
 			passwordEditor.setStringValue(repository.getPassword());
 		}
-		
+
 		createAdditionalControls(container);
 		setControl(container);
 	}
-	
+
 	protected abstract void createAdditionalControls(Composite parent);
 
 	public URL getServerUrl() {
@@ -98,15 +97,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			return null;
 		}
 	}
-	
+
 	public String getUserName() {
 		return userNameEditor.getStringValue();
 	}
-	
+
 	public String getPassword() {
 		return passwordEditor.getStringValue();
 	}
-	
+
 	private boolean isValidUrl(String name) {
 		if (name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) {
 			try {
@@ -119,14 +118,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			return false;
 		}
 	}
-	
+
 	public void init(IWorkbench workbench) {
 		// ignore
 	}
 
 	/**
-	 * Exposes StringFieldEditor.refreshValidState() 
-	 * TODO: is there a better way?
+	 * Exposes StringFieldEditor.refreshValidState() TODO: is there a better
+	 * way?
 	 */
 	private static class RepositoryStringFieldEditor extends StringFieldEditor {
 		public RepositoryStringFieldEditor(String name, String labelText, int style, Composite parent) {

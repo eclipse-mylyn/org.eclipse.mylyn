@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,14 +37,17 @@ import org.eclipse.ui.part.EditorPart;
 public class CategoryEditor extends EditorPart {
 
 	private CategoryEditorInput input = null;
+
 	private boolean isDirty = false;
+
 	private Text description = null;
-	
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		input.setCategoryName(description.getText());
 		isDirty = false;
-		if (TaskListView.getDefault() != null) TaskListView.getDefault().notifyTaskDataChanged(null);
+		if (TaskListView.getDefault() != null)
+			TaskListView.getDefault().notifyTaskDataChanged(null);
 		firePropertyChange(PROP_DIRTY);
 	}
 
@@ -54,11 +57,10 @@ public class CategoryEditor extends EditorPart {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
 		setInput(input);
-		this.input = (CategoryEditorInput)input;
+		this.input = (CategoryEditorInput) input;
 		setPartName(input.getName());
 		setTitleToolTip(input.getToolTipText());
 	}
@@ -79,7 +81,7 @@ public class CategoryEditor extends EditorPart {
 		ScrolledForm sform = toolkit.createScrolledForm(parent);
 		sform.getBody().setLayout(new TableWrapLayout());
 		Composite editorComposite = sform.getBody();
-		
+
 		createSummarySection(editorComposite, toolkit);
 	}
 
@@ -89,15 +91,15 @@ public class CategoryEditor extends EditorPart {
 
 	private void createSummarySection(Composite parent, FormToolkit toolkit) {
 		Section summarySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		summarySection.setText("Category Summary");			
+		summarySection.setText("Category Summary");
 		summarySection.setLayout(new TableWrapLayout());
-		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));	
+		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		Composite summaryContainer = toolkit.createComposite(summarySection);
-		summarySection.setClient(summaryContainer);		
+		summarySection.setClient(summaryContainer);
 		TableWrapLayout layout = new TableWrapLayout();
-		layout.numColumns = 2;						
+		layout.numColumns = 2;
 		summaryContainer.setLayout(layout);
-		
+
 		Label label = toolkit.createLabel(summaryContainer, "Description: ", SWT.NULL);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		description = toolkit.createText(summaryContainer, input.getCategoryName(), SWT.BORDER);
@@ -105,10 +107,10 @@ public class CategoryEditor extends EditorPart {
 		description.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				markDirty();
-			}			
+			}
 		});
 	}
-	
+
 	private void markDirty() {
 		isDirty = true;
 		firePropertyChange(PROP_DIRTY);

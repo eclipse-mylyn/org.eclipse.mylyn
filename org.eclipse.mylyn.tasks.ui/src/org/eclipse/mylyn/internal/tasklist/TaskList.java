@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,7 @@ public class TaskList implements Serializable {
 	void removeFromRoot(ITask task) {
 		rootTasks.remove(task);
 	}
-	
+
 	void addCategory(ITaskCategory cat) {
 		categories.add(cat);
 	}
@@ -142,13 +142,14 @@ public class TaskList implements Serializable {
 		}
 		return null;
 	}
-		
+
 	private ITask findTaskHelper(List<? extends ITaskListElement> elements, String handle) {
-		if (handle == null) return null;
+		if (handle == null)
+			return null;
 		for (ITaskListElement element : elements) {
 			if (element instanceof ITask) {
 				if (element.getHandleIdentifier().compareTo(handle) == 0)
-					return (ITask) element; 
+					return (ITask) element;
 			} else if (element instanceof IQueryHit) {
 				IQueryHit hit = (IQueryHit) element;
 				if (hit.getHandleIdentifier().compareTo(handle) == 0 && hit.getCorrespondingTask() != null) {
@@ -189,7 +190,7 @@ public class TaskList implements Serializable {
 		}
 		return included;
 	}
-	
+
 	public List<IRepositoryQuery> getQueries() {
 		return queries;
 	}
@@ -208,7 +209,8 @@ public class TaskList implements Serializable {
 		int max = 0;
 		for (ITask task : tasks) {
 			if (task.participatesInTaskHandles()) {
-				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().indexOf('-') + 1, task.getHandleIdentifier().length());
+				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().indexOf('-') + 1,
+						task.getHandleIdentifier().length());
 				if (!"".equals(string)) {
 					ihandle = Integer.parseInt(string);
 				}
@@ -239,7 +241,7 @@ public class TaskList implements Serializable {
 		}
 		return allTasks;
 	}
-	
+
 	public List<TaskCategory> getTaskCategories() {
 		List<TaskCategory> cats = new ArrayList<TaskCategory>();
 		for (ITaskCategory cat : categories) {
@@ -257,13 +259,15 @@ public class TaskList implements Serializable {
 	}
 
 	/**
-	 * Use to obtain the QueryHit object associated with a particular
-	 * task handle if it exists. 
-	 * @param handle handle of task 
+	 * Use to obtain the QueryHit object associated with a particular task
+	 * handle if it exists.
+	 * 
+	 * @param handle
+	 *            handle of task
 	 * @return IQueryHit corresponding to the first hit found in all queries
 	 */
 	public IQueryHit getQueryHitForHandle(String handle) {
-		IQueryHit foundHit = null;		
+		IQueryHit foundHit = null;
 		for (IRepositoryQuery query : queries) {
 			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
 				return foundHit;
@@ -272,10 +276,10 @@ public class TaskList implements Serializable {
 		return foundHit;
 	}
 
-//	public void clearActiveTasks() {
-//		for (ITask task : activeTasks) {
-//			task.setActive(false);
-//		}
-//		activeTasks.clear();
-//	}
+	// public void clearActiveTasks() {
+	// for (ITask task : activeTasks) {
+	// task.setActive(false);
+	// }
+	// activeTasks.clear();
+	// }
 }

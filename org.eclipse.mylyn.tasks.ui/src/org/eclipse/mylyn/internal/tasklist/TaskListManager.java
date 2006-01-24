@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,31 +33,31 @@ import org.eclipse.mylar.tasklist.IRepositoryQuery;
  * @author Mik Kersten
  */
 public class TaskListManager {
-	
+
 	public static final String ARCHIVE_CATEGORY_DESCRIPTION = "Archive";
-	
+
 	private Map<ITask, TaskActivityTimer> timerMap = new HashMap<ITask, TaskActivityTimer>();
 
 	private List<ITaskActivityListener> listeners = new ArrayList<ITaskActivityListener>();
-	
+
 	private TaskListWriter taskListWriter;
-	
+
 	private File taskListFile;
 
 	private TaskList taskList = new TaskList();
 
 	private boolean taskListInitialized = false;
-	
+
 	private int nextTaskId;
 
 	private int timerSleepInterval = TimerThread.DEFAULT_SLEEP_INTERVAL;
-	
-	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) { 
+
+	public TaskListManager(TaskListWriter taskListWriter, File file, int startId) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
 		this.nextTaskId = startId;
 	}
-	
+
 	public TaskList createNewTaskList() {
 		taskList = new TaskList();
 		taskListInitialized = true;
@@ -66,12 +66,13 @@ public class TaskListManager {
 
 	/**
 	 * Exposed for unit testing
+	 * 
 	 * @return unmodifiable collection of ITaskActivityListeners
 	 */
 	public List<ITaskActivityListener> getListeners() {
 		return Collections.unmodifiableList(listeners);
 	}
-	
+
 	public String genUniqueTaskHandle() {
 		return TaskRepositoryManager.PREFIX_LOCAL + nextTaskId++;
 	}
@@ -89,8 +90,10 @@ public class TaskListManager {
 				createNewTaskList();
 			}
 			taskListInitialized = true;
-			for (ITaskActivityListener listener : listeners) listener.tasklistRead();
-			// only activate the first task to avoid confusion of mutliple active tasks on startup
+			for (ITaskActivityListener listener : listeners)
+				listener.tasklistRead();
+			// only activate the first task to avoid confusion of mutliple
+			// active tasks on startup
 			List<ITask> activeTasks = taskList.getActiveTasks();
 			if (activeTasks.size() > 0) {
 				activateTask(activeTasks.get(0));
@@ -126,64 +129,75 @@ public class TaskListManager {
 
 	public void moveToRoot(ITask task) {
 		if (task.getCategory() instanceof TaskCategory) {
-			((TaskCategory)task.getCategory()).removeTask(task);
+			((TaskCategory) task.getCategory()).removeTask(task);
 		}
 		task.setCategory(null);
-		if (!taskList.getRootTasks().contains(task)) taskList.addRootTask(task);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		if (!taskList.getRootTasks().contains(task))
+			taskList.addRootTask(task);
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
 
 	public void moveToCategory(TaskCategory category, ITask task) {
 		taskList.removeFromRoot(task);
 		if (task.getCategory() instanceof TaskCategory) {
-			((TaskCategory)task.getCategory()).removeTask(task);
+			((TaskCategory) task.getCategory()).removeTask(task);
 		}
 		if (!category.getChildren().contains(task)) {
 			category.addTask(task);
 		}
 		task.setCategory(category);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
 
 	public void addCategory(ITaskCategory cat) {
 		taskList.addCategory(cat);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
-	
+
 	public void removeFromCategory(TaskCategory category, ITask task) {
 		if (!category.isArchive()) {
 			category.removeTask(task);
 			task.setCategory(null);
 		}
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
-	
+
 	public void removeFromRoot(ITask task) {
 		taskList.removeFromRoot(task);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
-	
+
 	public void addQuery(IRepositoryQuery cat) {
 		taskList.addQuery(cat);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
 
 	public void deleteTask(ITask task) {
 		TaskActivityTimer taskTimer = timerMap.remove(task);
-		if (taskTimer != null) taskTimer.stopTimer();
+		if (taskTimer != null)
+			taskTimer.stopTimer();
 		taskList.setActive(task, false);
 		taskList.deleteTask(task);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
 
 	public void deleteCategory(ITaskCategory cat) {
 		taskList.deleteCategory(cat);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
 
 	public void deleteQuery(IRepositoryQuery query) {
 		taskList.deleteQuery(query);
-		for (ITaskActivityListener listener : listeners) listener.taskListModified();
+		for (ITaskActivityListener listener : listeners)
+			listener.taskListModified();
 	}
 
 	public void addListener(ITaskActivityListener listener) {
@@ -196,6 +210,7 @@ public class TaskListManager {
 
 	/**
 	 * Deactivates previously active tasks if not in multiple active mode.
+	 * 
 	 * @param task
 	 */
 	public void activateTask(ITask task) {
@@ -216,8 +231,9 @@ public class TaskListManager {
 
 	public void deactivateTask(ITask task) {
 		TaskActivityTimer taskTimer = timerMap.remove(task);
-		if (taskTimer != null) taskTimer.stopTimer();
-		taskList.setActive(task, false); 
+		if (taskTimer != null)
+			taskTimer.stopTimer();
+		taskList.setActive(task, false);
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
 			listener.taskDeactivated(task);
 		}
@@ -231,13 +247,13 @@ public class TaskListManager {
 			listener.taskChanged(task);
 		}
 	}
-	
+
 	public void notifyListUpdated() {
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
 			listener.taskListModified();
 		}
 	}
-	
+
 	public void setTaskListFile(File f) {
 		this.taskListFile = f;
 	}
@@ -249,9 +265,11 @@ public class TaskListManager {
 	}
 
 	/**
-	 * Use to obtain the QueryHit object associated with a particular
-	 * task handle  if it exists. 
-	 * @param handle handle of task 
+	 * Use to obtain the QueryHit object associated with a particular task
+	 * handle if it exists.
+	 * 
+	 * @param handle
+	 *            handle of task
 	 * @return IQueryHit corresponding to the first hit found in all queries
 	 */
 	public IQueryHit getQueryHitForHandle(String handle) {
@@ -259,7 +277,7 @@ public class TaskListManager {
 			return null;
 		return taskList.getQueryHitForHandle(handle);
 	}
-	
+
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;
 	}
@@ -281,7 +299,7 @@ public class TaskListManager {
 
 	public void markComplete(ITask task, boolean complete) {
 		task.setCompleted(complete);
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {			
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
 			listener.taskChanged(task); // to ensure comleted filter notices
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ import org.eclipse.ui.internal.Workbench;
  * @author Mik Kersten
  */
 public class AddRepositoryTaskAction extends Action implements IViewActionDelegate {
-    
+
 	private static final String WIZARD_LABEL = "Add an existing repository task/issue";
 
 	public void init(IViewPart view) {

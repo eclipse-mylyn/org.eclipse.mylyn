@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,9 +24,9 @@ public class CopyDescriptionAction extends Action {
 	private static final String DESCRIPTION_PREFIX = "Bugzilla Bug ";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
-	
+
 	private TaskListView view;
-	
+
 	public CopyDescriptionAction(TaskListView view) {
 		this.view = view;
 		setText("Copy Description");
@@ -38,18 +38,18 @@ public class CopyDescriptionAction extends Action {
 
 	@Override
 	public void run() {
-		 ISelection selection = this.view.getViewer().getSelection();
-	    Object obj = ((IStructuredSelection)selection).getFirstElement();
-	    if (obj instanceof ITaskListElement) {
-	    	ITaskListElement element = (ITaskListElement)obj;
-	    	String description = DESCRIPTION_PREFIX + element.getDescription();
-	    	
-	    	// HACK: this should be done using proper copying
-	    	StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
-	    	styledText.setText(description);
-	    	styledText.selectAll();
-	    	styledText.copy();
-	    	styledText.dispose();
-	    }
+		ISelection selection = this.view.getViewer().getSelection();
+		Object obj = ((IStructuredSelection) selection).getFirstElement();
+		if (obj instanceof ITaskListElement) {
+			ITaskListElement element = (ITaskListElement) obj;
+			String description = DESCRIPTION_PREFIX + element.getDescription();
+
+			// HACK: this should be done using proper copying
+			StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
+			styledText.setText(description);
+			styledText.selectAll();
+			styledText.copy();
+			styledText.dispose();
+		}
 	}
 }

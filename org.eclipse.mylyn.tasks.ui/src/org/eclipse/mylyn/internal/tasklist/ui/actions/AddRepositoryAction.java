@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ import org.eclipse.ui.internal.Workbench;
  * @author Mik Kersten
  */
 public class AddRepositoryAction extends Action {
-    
+
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
 
 	public AddRepositoryAction() {
@@ -35,11 +35,11 @@ public class AddRepositoryAction extends Action {
 		setText("Add Repository");
 		setId(ID);
 	}
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
-	
+
 	public void run() {
 		try {
 			AddRepositoryWizard wizard = new AddRepositoryWizard();
@@ -47,7 +47,7 @@ public class AddRepositoryAction extends Action {
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
-//				dialog.getShell().setText("Mylar Tasks");
+				// dialog.getShell().setText("Mylar Tasks");
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Dialog.CANCEL) {
 					dialog.close();

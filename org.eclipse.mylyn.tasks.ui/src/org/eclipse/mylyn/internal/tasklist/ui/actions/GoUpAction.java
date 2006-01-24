@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import org.eclipse.ui.part.DrillDownAdapter;
 public class GoUpAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.up";
-		
+
 	public GoUpAction(DrillDownAdapter drillDownAdapter) {
 		setText("Go Up To Root");
 		setToolTipText("Go Up To Root");
@@ -28,7 +28,7 @@ public class GoUpAction extends Action {
 
 	@Override
 	public void run() {
-		if(TaskListView.getDefault() != null) {
+		if (TaskListView.getDefault() != null) {
 			TaskListView.getDefault().goUpToRoot();
 		}
 	}

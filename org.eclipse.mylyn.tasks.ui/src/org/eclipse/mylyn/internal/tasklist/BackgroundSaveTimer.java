@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,7 +26,7 @@ import org.eclipse.mylar.core.util.TimerThread;
 public class BackgroundSaveTimer implements ITimerThreadListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 1 * 60 * 1000;
-	
+
 	private int saveInterval = DEFAULT_SAVE_INTERVAL;
 
 	private IBackgroundSaveListener listener = null;
@@ -24,22 +34,22 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 	private TimerThread timer = null;
 
 	private boolean forceSyncExec = false;
-	
+
 	public BackgroundSaveTimer(IBackgroundSaveListener listener) {
 		this.listener = listener;
-		timer = new TimerThread(saveInterval / 1000); // This constructor wants seconds
+		timer = new TimerThread(saveInterval / 1000); // This constructor
+														// wants seconds
 		timer.addListener(this);
 	}
 
 	public void start() {
 		timer.start();
 	}
-	
 
 	public void stop() {
 		timer.kill();
 	}
-	
+
 	public void setSaveIntervalMillis(int saveIntervalMillis) {
 		this.saveInterval = saveIntervalMillis;
 		timer.setTimeoutMillis(saveIntervalMillis);

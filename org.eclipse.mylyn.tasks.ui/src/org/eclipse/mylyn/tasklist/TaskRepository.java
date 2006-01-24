@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,35 +26,35 @@ public class TaskRepository {
 	public static final String AUTH_PASSWORD = "org.eclipse.mylar.tasklist.repositories.password"; //$NON-NLS-1$ 
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
-	
+
 	private static final String AUTH_SCHEME = "Basic";
 
 	private static final String AUTH_REALM = "";
-	
+
 	private URL serverUrl;
-	
+
 	private String kind;
-	
+
 	public TaskRepository(String kind, URL serverUrl) {
 		this.serverUrl = serverUrl;
 		this.kind = kind;
 	}
-	
+
 	public URL getUrl() {
 		return serverUrl;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getCredentials() {
 		return Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
 	}
-	
+
 	public boolean hasCredentials() {
 		String username = getUserName();
 		String password = getPassword();
 		return username != null && !username.equals("") && password != null && !password.equals("");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String getUserName() {
 		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
@@ -64,7 +64,7 @@ public class TaskRepository {
 			return null;
 		}
 	}
-		
+
 	@SuppressWarnings("unchecked")
 	public String getPassword() {
 		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
@@ -74,7 +74,7 @@ public class TaskRepository {
 			return null;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void setAuthenticationCredentials(String username, String password) {
 		Map<String, String> map = Platform.getAuthorizationInfo(serverUrl, AUTH_REALM, AUTH_SCHEME);
@@ -83,7 +83,7 @@ public class TaskRepository {
 			map = new java.util.HashMap<String, String>();
 		}
 
-		if (username != null){
+		if (username != null) {
 			map.put(AUTH_USERNAME, username);
 		}
 		if (password != null) {
@@ -100,7 +100,7 @@ public class TaskRepository {
 	@Override
 	public boolean equals(Object object) {
 		if (serverUrl != null && object instanceof TaskRepository) {
-			return serverUrl.equals(((TaskRepository)object).getUrl());
+			return serverUrl.equals(((TaskRepository) object).getUrl());
 		} else {
 			return super.equals(object);
 		}
@@ -114,7 +114,7 @@ public class TaskRepository {
 			return super.hashCode();
 		}
 	}
-	
+
 	public String toString() {
 		return serverUrl.toExternalForm();
 	}

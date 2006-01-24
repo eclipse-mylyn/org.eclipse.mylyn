@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author Mik Kersten 
+ * @author Mik Kersten
  */
 public class TaskActivityTimer implements ITimerThreadListener, IInteractionEventListener, ShellListener {
 
@@ -35,7 +35,7 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	private long lastActivity;
 
 	private boolean started;
-	
+
 	public TaskActivityTimer(ITask task, int timeout, int sleepInterval) {
 		this.task = task;
 		timer = new TimerThread(timeout, sleepInterval);
@@ -51,7 +51,7 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	}
 
 	public void stopTimer() {
-		if(!timer.isSuspended()) {
+		if (!timer.isSuspended()) {
 			addElapsedToActivityTime();
 		}
 		timer.kill();
@@ -60,17 +60,17 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(this);
 		started = false;
 	}
-	
+
 	public void fireTimedOut() {
 		suspendTiming();
 	}
-	
+
 	public void shellDeactivated(ShellEvent e) {
 		suspendTiming();
 	}
-	
+
 	public void interactionObserved(InteractionEvent event) {
-//		lastActivity = Calendar.getInstance().getTimeInMillis();
+		// lastActivity = Calendar.getInstance().getTimeInMillis();
 		timer.resetTimer();
 	}
 
@@ -83,13 +83,13 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 		addElapsedToActivityTime();
 		timer.setSuspended(true);
 	}
-	
+
 	private void addElapsedToActivityTime() {
 		long elapsed = Calendar.getInstance().getTimeInMillis() - lastActivity;
 		task.setElapsedTime(task.getElapsedTime() + elapsed);
-		lastActivity = Calendar.getInstance().getTimeInMillis();		
+		lastActivity = Calendar.getInstance().getTimeInMillis();
 	}
-	
+
 	public void shellClosed(ShellEvent e) {
 		timer.kill();
 	}
@@ -101,13 +101,13 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	public void shellIconified(ShellEvent e) {
 		// ignore
 	}
-	
+
 	public void startObserving() {
-		
+
 	}
-	
-	public void stopObserving() { 
-		
+
+	public void stopObserving() {
+
 	}
 
 	/**
@@ -120,11 +120,12 @@ public class TaskActivityTimer implements ITimerThreadListener, IInteractionEven
 	public String toString() {
 		return "timer for task: " + task.toString();
 	}
+
 	public boolean isSuspended() {
 		return timer.isSuspended();
 	}
 
 	public void intervalElapsed() {
-		addElapsedToActivityTime();		
+		addElapsedToActivityTime();
 	}
 }

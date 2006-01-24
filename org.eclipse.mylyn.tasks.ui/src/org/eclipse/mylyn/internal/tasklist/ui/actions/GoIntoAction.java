@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,9 +25,10 @@ import org.eclipse.ui.IViewPart;
 public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.into";
-//		
-//	private DrillDownAdapter drillDownAdapter;
-//	
+
+	//		
+	// private DrillDownAdapter drillDownAdapter;
+	//	
 	public GoIntoAction() {
 		setId(ID);
 		setText("Go Into Category");
@@ -37,11 +38,11 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	public void init(IViewPart view) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void run() {
-		if(TaskListView.getDefault() != null) {
+		if (TaskListView.getDefault() != null) {
 			TaskListView.getDefault().goIntoCategory();
 		}
 	}
@@ -49,9 +50,9 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 	public void run(IAction action) {
 		run();
 	}
-	
+
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

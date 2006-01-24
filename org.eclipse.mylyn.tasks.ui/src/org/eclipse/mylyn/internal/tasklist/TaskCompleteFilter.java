@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,10 +28,11 @@ public class TaskCompleteFilter extends AbstractTaskFilter {
 			}
 			return !task.isCompleted();
 		} else if (element instanceof IQueryHit) {
-			IQueryHit hit = (IQueryHit)element;
+			IQueryHit hit = (IQueryHit) element;
 			if (hit.getCorrespondingTask() != null) {
 				if (shouldAlwaysShow(hit.getCorrespondingTask())) {
-//				if (hit.getCorrespondingTask().isActive() || hit.getCorrespondingTask().isPastReminder()) {
+					// if (hit.getCorrespondingTask().isActive() ||
+					// hit.getCorrespondingTask().isPastReminder()) {
 					return true;
 				}
 			}

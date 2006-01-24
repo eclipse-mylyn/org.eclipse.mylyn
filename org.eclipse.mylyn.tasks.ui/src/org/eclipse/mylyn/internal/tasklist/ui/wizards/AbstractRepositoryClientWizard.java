@@ -23,9 +23,9 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 	private SelectRepositoryClientPage selectRepositoryClientPage = new SelectRepositoryClientPage(this);
 
 	protected AbstractRepositorySettingsPage abstractRepositorySettingsPage;
-	
+
 	protected ITaskRepositoryClient repositoryClient;
-	
+
 	public void setRepositoryClient(ITaskRepositoryClient repository) {
 		this.repositoryClient = repository;
 	}

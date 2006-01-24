@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,24 +27,24 @@ public class TaskPlanLabelProvider extends LabelProvider implements ITableLabelP
 
 	// {".", "Description", "Priority", "Estimated Time", "Reminder Date"};
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (! (element instanceof ITaskListElement)) { 
-        	return null;
-        }
+		if (!(element instanceof ITaskListElement)) {
+			return null;
+		}
 		if (columnIndex == 0) {
-			return ((ITaskListElement)element).getIcon();
+			return ((ITaskListElement) element).getIcon();
 		} else {
 			return null;
 		}
-		
+
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			switch(columnIndex) {
+			switch (columnIndex) {
 			case 1:
 				return task.getPriority();
-			case 2: 
+			case 2:
 				return task.getDescription();
 			case 3:
 				return DateUtil.getFormattedDurationShort(task.getElapsedTime());
@@ -56,8 +56,8 @@ public class TaskPlanLabelProvider extends LabelProvider implements ITableLabelP
 				} else {
 					return "";
 				}
-			}	
-		}		
+			}
+		}
 		return null;
 	}
 }

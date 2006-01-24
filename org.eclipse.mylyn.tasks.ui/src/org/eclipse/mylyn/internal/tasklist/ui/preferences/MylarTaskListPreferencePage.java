@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,9 +77,10 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		container.setLayoutData(gridData);
 		GridLayout gl = new GridLayout(1, false);
 		container.setLayout(gl);
-		//		closeEditors = new Button(container, SWT.CHECK);
-		//		closeEditors.setText("Close all editors on task deactivation (defaults to close only editors of interesting resources)");
-		//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));
+		// closeEditors = new Button(container, SWT.CHECK);
+		// closeEditors.setText("Close all editors on task deactivation
+		// (defaults to close only editors of interesting resources)");
+		// closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));
 
 		multipleActive = new Button(container, SWT.CHECK);
 		multipleActive.setText("Enable multiple task contexts to be active");
@@ -98,10 +99,10 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL));
-		//		reportExternal = new Button(container, SWT.RADIO);
-		//		reportExternal.setText("External browser");
-		//		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
-		//		reportExternal.setEnabled(false);
+		// reportExternal = new Button(container, SWT.RADIO);
+		// reportExternal.setText("External browser");
+		// reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
+		// reportExternal.setEnabled(false);
 	}
 
 	@Override
@@ -109,51 +110,59 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
 		if (!taskDirectory.equals(MylarPlugin.getDefault().getDataDirectory())) {
-			//Order matters:
+			// Order matters:
 			MylarTaskListPlugin.getDefault().getTaskListSaveManager().saveTaskListAndContexts();
 			if (copyExistingDataCheckbox.getSelection()) {
 				MylarTaskListPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(taskDirectory);
 			}
 			MylarPlugin.getDefault().setDataDirectory(taskDirectory);
-//			getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR, taskDirectory);
-//			MylarTaskListPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getDataDirectory());
+			// getPreferenceStore().setValue(MylarPlugin.PREF_DATA_DIR,
+			// taskDirectory);
+			// MylarTaskListPlugin.getDefault().setDataDirectory(MylarPlugin.getDefault().getDataDirectory());
 		}
 
-		getPreferenceStore().setValue(MylarTaskListPrefConstants.COPY_TASK_DATA, copyExistingDataCheckbox.getSelection());
+		getPreferenceStore().setValue(MylarTaskListPrefConstants.COPY_TASK_DATA,
+				copyExistingDataCheckbox.getSelection());
 		getPreferenceStore().setValue(MylarTaskListPrefConstants.REPORT_OPEN_EDITOR, reportEditor.getSelection());
 		getPreferenceStore().setValue(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
-		//		getPreferenceStore().setValue(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL, reportExternal.getSelection());
+		// getPreferenceStore().setValue(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL,
+		// reportExternal.getSelection());
 		getPreferenceStore().setValue(MylarTaskListPrefConstants.DEFAULT_URL_PREFIX, taskURLPrefixText.getText());
 		getPreferenceStore().setValue(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS, multipleActive.getSelection());
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean performCancel() {
-		//		closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));		
+		// closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));
 		reportEditor.setSelection(getPreferenceStore().getBoolean(MylarTaskListPrefConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL));
-		//		reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
+		// reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
 		multipleActive.setSelection(getPreferenceStore().getBoolean(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS));
-		//		saveCombo.setText(getPreferenceStore().getString(MylarTaskListPlugin.SAVE_TASKLIST_MODE));
+		// saveCombo.setText(getPreferenceStore().getString(MylarTaskListPlugin.SAVE_TASKLIST_MODE));
 		return true;
 	}
 
 	public void performDefaults() {
 		super.performDefaults();
 		copyExistingDataCheckbox.setSelection(true);
-//		IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-//		String taskDirectory = rootPath.toString() + "/" + MylarPlugin.DATA_DIR_NAME;
+		// IPath rootPath =
+		// ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		// String taskDirectory = rootPath.toString() + "/" +
+		// MylarPlugin.DATA_DIR_NAME;
 		taskDirectoryText.setText(MylarPlugin.getDefault().getDefaultDataDirectory());
 
-//		copyExistingDataCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.COPY_TASK_DATA));
-		reportEditor.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPrefConstants.REPORT_OPEN_EDITOR));
-		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL));
-		//		reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
+		// copyExistingDataCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.COPY_TASK_DATA));
+		reportEditor
+				.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPrefConstants.REPORT_OPEN_EDITOR));
+		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL));
+		// reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
 		taskURLPrefixText.setText(getPreferenceStore().getDefaultString(MylarTaskListPrefConstants.DEFAULT_URL_PREFIX));
-		
-		multipleActive.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS));
+
+		multipleActive.setSelection(getPreferenceStore().getDefaultBoolean(
+				MylarTaskListPrefConstants.MULTIPLE_ACTIVE_TASKS));
 	}
 
 	private Label createLabel(Composite parent, String text) {
@@ -171,9 +180,10 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		taskDirComposite.setText("Mylar Data Directory (task list and contexts)");
 		taskDirComposite.setLayout(new GridLayout(2, false));
 		taskDirComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+
 		String taskDirectory = MylarPlugin.getDefault().getDataDirectory();
-//		String taskDirectory = getPreferenceStore().getString(MylarPlugin.PREF_DATA_DIR);
+		// String taskDirectory =
+		// getPreferenceStore().getString(MylarPlugin.PREF_DATA_DIR);
 		taskDirectory = taskDirectory.replaceAll("\\\\", "/");
 		taskDirectoryText = new Text(taskDirComposite, SWT.BORDER);
 		taskDirectoryText.setText(taskDirectory);
@@ -201,7 +211,8 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 		copyExistingDataCheckbox = new Button(taskDirComposite, SWT.CHECK);
 		copyExistingDataCheckbox.setText("Copy existing data to new location");
-		copyExistingDataCheckbox.setSelection(getPreferenceStore().getBoolean(MylarTaskListPrefConstants.COPY_TASK_DATA));
+		copyExistingDataCheckbox.setSelection(getPreferenceStore()
+				.getBoolean(MylarTaskListPrefConstants.COPY_TASK_DATA));
 
 	}
 

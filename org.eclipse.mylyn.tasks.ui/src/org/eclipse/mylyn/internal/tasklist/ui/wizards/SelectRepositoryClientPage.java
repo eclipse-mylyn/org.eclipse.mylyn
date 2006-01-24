@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,11 +36,11 @@ public class SelectRepositoryClientPage extends WizardPage {
 	private static final String TITLE = "Select a repository kind";
 
 	private TableViewer viewer;
-	
+
 	private AbstractRepositoryClientWizard wizard;
-	
+
 	class RepositoryContentProvider implements IStructuredContentProvider {
-		
+
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
@@ -51,7 +51,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 			return MylarTaskListPlugin.getRepositoryManager().getRepositoryClients().toArray();
 		}
 	}
-	
+
 	public SelectRepositoryClientPage(AbstractRepositoryClientWizard wizard) {
 		super(TITLE);
 		setTitle(TITLE);
@@ -59,7 +59,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 		this.wizard = wizard;
 		super.setWizard(wizard);
 	}
-	
+
 	@Override
 	public boolean canFlipToNextPage() {
 		return wizard.getRepositoryClient() != null;
@@ -69,7 +69,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 		Composite container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
-		
+
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
@@ -77,14 +77,14 @@ public class SelectRepositoryClientPage extends WizardPage {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof ITaskRepositoryClient) {
-					wizard.setRepositoryClient((ITaskRepositoryClient)selection.getFirstElement());
+					wizard.setRepositoryClient((ITaskRepositoryClient) selection.getFirstElement());
 					SelectRepositoryClientPage.this.setPageComplete(true);
 					wizard.getContainer().updateButtons();
 				}
 			}
-			
+
 		});
 		setControl(container);
 	}

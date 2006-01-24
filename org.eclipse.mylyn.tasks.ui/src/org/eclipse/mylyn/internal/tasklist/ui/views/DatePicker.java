@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,7 +90,7 @@ public class DatePicker extends Composite {
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
 
-		setSize(new org.eclipse.swt.graphics.Point(135, 18));//28
+		setSize(new org.eclipse.swt.graphics.Point(135, 18));// 28
 		dateText = new Text(this, SWT.READ_ONLY);
 		dateText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		dateText.setLayoutData(dateTextGridData);
@@ -429,5 +429,4 @@ public class DatePicker extends Composite {
 
 	}
 
-} 
-
+}

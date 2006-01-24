@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.jface.action.Action;
@@ -30,7 +40,7 @@ import org.eclipse.ui.part.ViewPart;
  * @author Mik Kersten
  */
 public class TaskRepositoriesView extends ViewPart {
-	
+
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories";
 
 	private TableViewer viewer;
@@ -40,14 +50,14 @@ public class TaskRepositoriesView extends ViewPart {
 	private Action deleteRepositoryAction = new DeleteTaskRepositoryAction(this);
 
 	private Action repositoryPropertiesAction = new EditRepositoryPropertiesAction(this);
-	
+
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
 		public void repositorySetUpdated() {
 			TaskRepositoriesView.this.getViewer().refresh();
 		}
 	};
-	
+
 	class ViewContentProvider implements IStructuredContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -65,22 +75,22 @@ public class TaskRepositoriesView extends ViewPart {
 	}
 
 	public static TaskRepositoriesView getFromActivePerspective() {
-		IWorkbenchPage activePage= Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
 			return null;
-		IViewPart view= activePage.findView(ID);
+		IViewPart view = activePage.findView(ID);
 		if (view instanceof TaskRepositoriesView)
-			return (TaskRepositoriesView)view;
-		return null;	
+			return (TaskRepositoriesView) view;
+		return null;
 	}
-	
+
 	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
 		viewer.setSorter(new ViewerSorter());
 		viewer.setInput(getViewSite());
-		
+
 		hookContextMenu();
 		contributeToActionBars();
 	}

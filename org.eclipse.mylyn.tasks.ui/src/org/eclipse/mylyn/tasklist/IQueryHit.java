@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,15 +18,15 @@ import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 public interface IQueryHit extends ITaskListElement {
 
 	public String getRepositoryUrl();
-	
+
 	public void setRepositoryUrl(String repositoryUrl);
-	
+
 	public ITask getOrCreateCorrespondingTask();
 
 	/**
-	 * @return	null	if there is no corresponding report
+	 * @return null if there is no corresponding report
 	 */
 	public ITask getCorrespondingTask();
-	
+
 	public void setCorrespondingTask(ITask task);
 }

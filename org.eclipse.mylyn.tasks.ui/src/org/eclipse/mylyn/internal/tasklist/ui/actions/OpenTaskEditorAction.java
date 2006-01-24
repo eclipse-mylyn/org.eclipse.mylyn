@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ import org.eclipse.mylar.tasklist.ITaskHandler;
 public class OpenTaskEditorAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.open";
-	
+
 	private final TaskListView view;
 
 	/**
@@ -42,21 +42,21 @@ public class OpenTaskEditorAction extends Action {
 
 	@Override
 	public void run() {
-	    ISelection selection = this.view.getViewer().getSelection();
-	    Object obj = ((IStructuredSelection)selection).getFirstElement();
-	    if (obj instanceof ITaskListElement) {
-	    	ITaskListElement element = (ITaskListElement)obj;
-	    	ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(element);
-		    if(taskHandler != null){
-	    		taskHandler.itemOpened(element);
-	    	} else{
-	    		if(element instanceof Task){
-	    			((Task)element).openTaskInEditor(false);	
-	    		} else if (element instanceof TaskCategory) {
-	    			((TaskCategory)element).openCategoryInEditor(false);
-	    		}
-	    	}
-	    }
-	    this.view.getViewer().refresh(obj);
+		ISelection selection = this.view.getViewer().getSelection();
+		Object obj = ((IStructuredSelection) selection).getFirstElement();
+		if (obj instanceof ITaskListElement) {
+			ITaskListElement element = (ITaskListElement) obj;
+			ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(element);
+			if (taskHandler != null) {
+				taskHandler.itemOpened(element);
+			} else {
+				if (element instanceof Task) {
+					((Task) element).openTaskInEditor(false);
+				} else if (element instanceof TaskCategory) {
+					((TaskCategory) element).openCategoryInEditor(false);
+				}
+			}
+		}
+		this.view.getViewer().refresh(obj);
 	}
 }

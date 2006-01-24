@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ public class DeleteAction extends Action {
 	public DeleteAction(TaskListView view) {
 		this.view = view;
 		setText("Delete");
-		setId(ID); 
+		setId(ID);
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 	}
 
@@ -51,7 +51,7 @@ public class DeleteAction extends Action {
 			if (selectedObject instanceof ITask || selectedObject instanceof IQueryHit) {
 				ITask task = null;
 				if (selectedObject instanceof IQueryHit) {
-					task = ((IQueryHit)selectedObject).getCorrespondingTask();
+					task = ((IQueryHit) selectedObject).getCorrespondingTask();
 				} else {
 					task = (ITask) selectedObject;
 				}
@@ -91,7 +91,7 @@ public class DeleteAction extends Action {
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
 						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
 				if (deleteConfirmed) {
-					MylarTaskListPlugin.getTaskListManager().deleteQuery((IRepositoryQuery)selectedObject);
+					MylarTaskListPlugin.getTaskListManager().deleteQuery((IRepositoryQuery) selectedObject);
 				}
 			} else if (selectedObject instanceof TaskCategory) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
@@ -123,7 +123,6 @@ public class DeleteAction extends Action {
 	}
 
 	public static String genDeleteConfirmationMessage(ITask task) {
-		return "Delete the selected task and discard task context?\n\n"
-			+ task.getDescription();
+		return "Delete the selected task and discard task context?\n\n" + task.getDescription();
 	}
 }

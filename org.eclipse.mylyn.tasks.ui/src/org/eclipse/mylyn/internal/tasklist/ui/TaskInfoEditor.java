@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -266,7 +266,7 @@ public class TaskInfoEditor extends EditorPart {
 
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
-		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));		
+		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// Put the info onto the editor
 		createContent(editorComposite, toolkit);
 		form.setFocus();
@@ -300,7 +300,7 @@ public class TaskInfoEditor extends EditorPart {
 			createSummarySection(parent, toolkit);
 			createPlanningSection(parent, toolkit);
 			createDocumentationSection(parent, toolkit);
-			//// createRelatedLinksSection(parent, toolkit);
+			// // createRelatedLinksSection(parent, toolkit);
 			createResourcesSection(parent, toolkit);
 		} catch (SWTException e) {
 			MylarStatusHandler.log(e, "content failed");
@@ -309,7 +309,8 @@ public class TaskInfoEditor extends EditorPart {
 	}
 
 	private void createSummarySection(Composite parent, FormToolkit toolkit) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | Section.TWISTIE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION
+				| Section.TWISTIE);
 		section.setText(DESCRIPTION_OVERVIEW);
 		section.setExpanded(true);
 		if (!task.isLocal()) {
@@ -336,14 +337,13 @@ public class TaskInfoEditor extends EditorPart {
 		container.setLayout(compLayout);
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-
 		Label l = toolkit.createLabel(container, "Description:");
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		description = toolkit.createText(container, task.getDescription(), SWT.NONE);	
+		description = toolkit.createText(container, task.getDescription(), SWT.NONE);
 		description.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		description.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		toolkit.paintBordersFor(container);
-		
+
 		if (!task.isLocal()) {
 			description.setEnabled(false);
 		} else {
@@ -409,7 +409,7 @@ public class TaskInfoEditor extends EditorPart {
 				}
 			});
 		}
-		
+
 		statusCombo = new Combo(statusComposite, SWT.READ_ONLY);
 
 		for (TaskStatus status : Task.TaskStatus.values()) {
@@ -435,7 +435,7 @@ public class TaskInfoEditor extends EditorPart {
 			});
 		}
 		statusCombo.setEnabled(false);
-		
+
 	}
 
 	private void createDocumentationSection(Composite parent, FormToolkit toolkit) {
@@ -443,7 +443,7 @@ public class TaskInfoEditor extends EditorPart {
 		section.setText("Documentation");
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_BOTH));		
+		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 		section.addExpansionListener(new IExpansionListener() {
 			public void expansionStateChanging(ExpansionEvent e) {
 				form.reflow(true);
@@ -458,7 +458,7 @@ public class TaskInfoEditor extends EditorPart {
 		container.setLayout(new GridLayout());
 
 		notes = toolkit.createText(container, task.getNotes(), SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		
+
 		GridData notesDataLayout = new GridData(GridData.FILL_BOTH);
 		notes.setLayoutData(notesDataLayout);
 		notes.addModifyListener(new ModifyListener() {
@@ -516,7 +516,7 @@ public class TaskInfoEditor extends EditorPart {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				// ignore
 			}
-		});	
+		});
 		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 		removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
@@ -533,8 +533,7 @@ public class TaskInfoEditor extends EditorPart {
 				TaskInfoEditor.this.markDirty(true);
 			}
 		});
-		
-		
+
 		// 3 Blank columns after Reminder clear button
 		Label dummy = toolkit.createLabel(sectionClient, "");
 		GridData dummyLabelDataLayout = new GridData(GridData.FILL_HORIZONTAL);
@@ -551,7 +550,7 @@ public class TaskInfoEditor extends EditorPart {
 		estimated.setDigits(0);
 		estimated.setMaximum(100);
 		estimated.setMinimum(0);
-		estimated.setIncrement(1);		
+		estimated.setIncrement(1);
 		estimated.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				TaskInfoEditor.this.markDirty(true);
@@ -565,7 +564,6 @@ public class TaskInfoEditor extends EditorPart {
 
 		label = toolkit.createLabel(sectionClient, "hours ");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		
 
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
@@ -573,7 +571,7 @@ public class TaskInfoEditor extends EditorPart {
 		blankLabl2Layout.horizontalSpan = 1;
 		blankLabl2Layout.widthHint = 25;
 		blankLabel2.setLayoutData(blankLabl2Layout);
-		
+
 		// Creation date
 		label = toolkit.createLabel(sectionClient, "Creation date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -588,9 +586,8 @@ public class TaskInfoEditor extends EditorPart {
 		Text creationDate = toolkit.createText(sectionClient, creationDateString, SWT.NONE);
 		creationDate.setEditable(false);
 		creationDate.setEnabled(true);
-//		toolkit.paintBordersFor(sectionClient);
-		
-		
+		// toolkit.paintBordersFor(sectionClient);
+
 		// Elapsed Time
 		label = toolkit.createLabel(sectionClient, "Elapsed time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -612,15 +609,15 @@ public class TaskInfoEditor extends EditorPart {
 		td.heightHint = 18;
 		elapsedTimeText.setLayoutData(td);
 		elapsedTimeText.setEditable(false);
-		
+
 		// Refresh Button
 		Button timeRefresh = toolkit.createButton(sectionClient, "Refresh", SWT.PUSH | SWT.CENTER);
-		
+
 		timeRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String elapsedTimeString = "0";
-				try {					
+				try {
 					elapsedTimeString = DateUtil.getFormattedDuration(task.getElapsedTime(), true);
 					if (elapsedTimeString.equals("")) {
 						elapsedTimeString = "0";
@@ -632,14 +629,14 @@ public class TaskInfoEditor extends EditorPart {
 				elapsedTimeText.setText(elapsedTimeString);
 			}
 		});
-		
+
 		// 1 Blank column
 		Label blankLabel3 = toolkit.createLabel(sectionClient, "");
 		GridData blankLabl3Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
 		blankLabl3Layout.horizontalSpan = 1;
 		blankLabl3Layout.widthHint = 25;
 		blankLabel3.setLayoutData(blankLabl2Layout);
-		
+
 		// Completion date
 		label = toolkit.createLabel(sectionClient, "Completion date:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -785,5 +782,4 @@ public class TaskInfoEditor extends EditorPart {
 		return "(info editor for task: " + task + ")";
 	}
 
-	
 }

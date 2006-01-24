@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -208,6 +208,7 @@ public class TaskListView extends ViewPart {
 	private static final int DEFAULT_SORT_DIRECTION = -1;
 
 	private int sortIndex = 2;
+
 	private int sortDirection = DEFAULT_SORT_DIRECTION;
 
 	private TaskActivationHistory taskHistory = new TaskActivationHistory();
@@ -630,7 +631,9 @@ public class TaskListView extends ViewPart {
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
 			if (o1 instanceof ITaskCategory || o1 instanceof IRepositoryQuery) {
 				if (o2 instanceof ITaskCategory || o2 instanceof IRepositoryQuery) {
-					return sortDirection * ((ITaskListElement) o1).getDescription().compareTo(((ITaskListElement) o2).getDescription());
+					return sortDirection
+							* ((ITaskListElement) o1).getDescription().compareTo(
+									((ITaskListElement) o2).getDescription());
 				} else {
 					return -1;
 				}
@@ -724,14 +727,14 @@ public class TaskListView extends ViewPart {
 				if (m != null) {
 					sortIndex = m.getInteger("sortIndex");
 					Integer sortDirInt = m.getInteger("sortDirection");
-					if(sortDirInt != null) {
+					if (sortDirInt != null) {
 						sortDirection = sortDirInt.intValue();
 					}
 				} else {
 					sortIndex = 2;
 					sortDirection = DEFAULT_SORT_DIRECTION;
 				}
-				
+
 			} else {
 				sortIndex = 2; // default priority
 				sortDirection = DEFAULT_SORT_DIRECTION;

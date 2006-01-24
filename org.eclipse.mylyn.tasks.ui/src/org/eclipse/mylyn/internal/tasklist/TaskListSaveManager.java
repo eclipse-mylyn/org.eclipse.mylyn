@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,55 +32,60 @@ import org.eclipse.swt.events.DisposeListener;
 public class TaskListSaveManager implements ITaskActivityListener, DisposeListener, IBackgroundSaveListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
-	
+
 	private static final String FILE_SUFFIX_BACKUP = "-backup.xml";
 
 	private BackgroundSaveTimer saveTimer = null;
-	
+
 	/**
 	 * Fort testing.
 	 */
 	private boolean forceBackgroundSave = false;
-	
+
 	public TaskListSaveManager() {
 		saveTimer = new BackgroundSaveTimer(this);
 		saveTimer.setSaveIntervalMillis(DEFAULT_SAVE_INTERVAL);
 		saveTimer.start();
-	} 
-	
-	/** 
-	 * Called periodically by the save timer 
+	}
+
+	/**
+	 * Called periodically by the save timer
 	 */
 	public void saveRequested() {
-		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isShellActive() || forceBackgroundSave) {
+		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isShellActive()
+				|| forceBackgroundSave) {
 			try {
 				saveTaskListAndContexts();
-//				MylarStatusHandler.log("Automatically saved task list", this);
+				// MylarStatusHandler.log("Automatically saved task list",
+				// this);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not auto save task list", false);
 			}
 		}
 	}
-	
+
 	public void saveTaskListAndContexts() {
 		if (MylarTaskListPlugin.getDefault() != null) {
 			MylarTaskListPlugin.getTaskListManager().saveTaskList();
 			for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
-//				String path = task.getContextPath();
-//				File file = MylarPlugin.getContextManager().getFileForContext(task.getContextPath());
-//				if (!file.canWrite()) {
-//					MylarStatusHandler.fail(new Exception(), "could not write context path, resetting: " + path, true);
-//					task.setContextPath(task.getHandleIdentifier());
-//					path = task.getHandleIdentifier();
-//				}
-				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());//, path);
+				// String path = task.getContextPath();
+				// File file =
+				// MylarPlugin.getContextManager().getFileForContext(task.getContextPath());
+				// if (!file.canWrite()) {
+				// MylarStatusHandler.fail(new Exception(), "could not write
+				// context path, resetting: " + path, true);
+				// task.setContextPath(task.getHandleIdentifier());
+				// path = task.getHandleIdentifier();
+				// }
+				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());// ,
+																						// path);
 			}
 		}
 	}
-	
+
 	/**
-	 * Copies all files in the current data directory to
-	 * the specified folder. Will overwrite.
+	 * Copies all files in the current data directory to the specified folder.
+	 * Will overwrite.
 	 */
 	public void copyDataDirContentsTo(String targetFolderPath) {
 		File mainDataDir = new File(MylarPlugin.getDefault().getDataDirectory());
@@ -92,26 +97,29 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 			}
 		}
 	}
-	
+
 	public void createTaskListBackupFile() {
-		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator
+				+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
 		copy(taskListFile, new File(backup));
 	}
-	
+
 	public String getBackupFilePath() {
-		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator
+				+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 		return path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
 	}
 
 	public void reverseBackup() {
-		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
+		String path = MylarPlugin.getDefault().getDataDirectory() + File.separator
+				+ MylarTaskListPlugin.DEFAULT_TASK_LIST_FILE;
 		File taskListFile = new File(path);
 		String backup = path.substring(0, path.lastIndexOf('.')) + FILE_SUFFIX_BACKUP;
 		copy(new File(backup), taskListFile);
 	}
-	
+
 	private boolean copy(File src, File dst) {
 		try {
 			InputStream in = new FileInputStream(src);
@@ -130,12 +138,12 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 			return false;
 		}
 	}
-	
-	/** For testing only **/
+
+	/** For testing only * */
 	public BackgroundSaveTimer getSaveTimer() {
 		return saveTimer;
 	}
-	
+
 	public void taskActivated(ITask task) {
 
 	}
@@ -159,7 +167,7 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	public void taskListModified() {
 		saveTaskListAndContexts();
 	}
-	
+
 	public void widgetDisposed(DisposeEvent e) {
 		saveTaskListAndContexts();
 	}

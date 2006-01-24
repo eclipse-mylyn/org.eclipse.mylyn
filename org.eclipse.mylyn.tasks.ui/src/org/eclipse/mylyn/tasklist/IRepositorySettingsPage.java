@@ -12,7 +12,7 @@
 package org.eclipse.mylar.tasklist;
 
 /**
- * @author beatmik
+ * @author Mik Kersten
  */
 public interface IRepositorySettingsPage {
 

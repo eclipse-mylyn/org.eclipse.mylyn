@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ public class OpenTaskInExternalBrowserAction extends Action {
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.external";
 
 	public OpenTaskInExternalBrowserAction() {
-		setText("Open in External Browser"); 
+		setText("Open in External Browser");
 		setToolTipText("Open in External Browser");
 		setId(ID);
 	}
@@ -52,7 +52,7 @@ public class OpenTaskInExternalBrowserAction extends Action {
 				String urlString = task.getUrl();
 				if (task.hasValidUrl()) {
 					URL url;
-					try { 
+					try {
 						url = new URL(urlString);
 						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 						support.getExternalBrowser().openURL(url);

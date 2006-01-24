@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -116,10 +116,10 @@ public class TaskListToolTipHandler {
 	}
 
 	protected Image getToolTipImage(Object object) {
-//		ITaskListElement projectNode = getTask(object);
-//		if (projectNode != null) {
-//			// TODO Code for determining image
-//		}
+		// ITaskListElement projectNode = getTask(object);
+		// if (projectNode != null) {
+		// // TODO Code for determining image
+		// }
 		if (object instanceof Control) {
 			return (Image) ((Control) object).getData("TIP_IMAGE");
 		}
@@ -196,8 +196,7 @@ public class TaskListToolTipHandler {
 					return;
 				}
 
-				if (tipShell.getShell() != null 
-						&& tipShell.getShell().getParent() != null
+				if (tipShell.getShell() != null && tipShell.getShell().getParent() != null
 						&& Display.getCurrent().getActiveShell() != null
 						&& tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()) {
 					tipShell = createTipShell(Display.getCurrent().getActiveShell());
@@ -210,31 +209,31 @@ public class TaskListToolTipHandler {
 				tipShell.setVisible(true);
 			}
 		});
-		//		/*
-		//		 * Trap F1 Help to pop up a custom help box
-		//		 */
-		//		control.addHelpListener(new HelpListener() {
-		//			public void helpRequested(HelpEvent event) {
-		//				if (tipWidget == null)
-		//					return;
-		//				Object help = getToolTipHelp(tipWidget);
-		//				if (help == null)
-		//					return;
-		//				if (help.getClass() != String.class) {
-		//					return;
-		//				}
-		//				if (tipShell.isVisible()) {
-		//					tipShell.setVisible(false);
-		//					Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
-		//					helpShell.setLayout(new FillLayout());
-		//					Label label = new Label(helpShell, SWT.NONE);
-		//					label.setText((String) help);
-		//					helpShell.pack();
-		//					setHoverLocation(helpShell, tipPosition);
-		//					helpShell.open();
-		//				}
-		//			}
-		//		});
+		// /*
+		// * Trap F1 Help to pop up a custom help box
+		// */
+		// control.addHelpListener(new HelpListener() {
+		// public void helpRequested(HelpEvent event) {
+		// if (tipWidget == null)
+		// return;
+		// Object help = getToolTipHelp(tipWidget);
+		// if (help == null)
+		// return;
+		// if (help.getClass() != String.class) {
+		// return;
+		// }
+		// if (tipShell.isVisible()) {
+		// tipShell.setVisible(false);
+		// Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
+		// helpShell.setLayout(new FillLayout());
+		// Label label = new Label(helpShell, SWT.NONE);
+		// label.setText((String) help);
+		// helpShell.pack();
+		// setHoverLocation(helpShell, tipPosition);
+		// helpShell.open();
+		// }
+		// }
+		// });
 	}
 
 	/**

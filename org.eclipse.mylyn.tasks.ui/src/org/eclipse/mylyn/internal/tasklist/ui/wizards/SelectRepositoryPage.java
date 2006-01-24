@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,13 +42,13 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 	private static final String TITLE = "Select a repository";
 
 	private TableViewer viewer;
-	
+
 	protected MultiRepositoryAwareWizard wizard;
-	
+
 	private String repositoryKind = null;
-	
+
 	class RepositoryContentProvider implements IStructuredContentProvider {
-		
+
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
@@ -63,66 +63,68 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			}
 		}
 	}
-	
+
 	public SelectRepositoryPage() {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 	}
-	
+
 	public SelectRepositoryPage(String repositoryKind) {
 		this();
 		this.repositoryKind = repositoryKind;
 	}
-	
+
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
 		container.setLayout(layout);
-		
+
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
 		viewer.setInput(MylarTaskListPlugin.getRepositoryManager().getRepositoryClients());
-		
+
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof TaskRepository) {
-					setSelectedNode(new CustomWizardNode((TaskRepository)selection.getFirstElement()));
+					setSelectedNode(new CustomWizardNode((TaskRepository) selection.getFirstElement()));
 					setPageComplete(true);
 				}
 				setPageComplete(false);
 			}
 		});
-		
+
 		viewer.addOpenListener(new IOpenListener() {
-		
+
 			public void open(OpenEvent event) {
 				getContainer().showPage(getNextPage());
 			}
-		
+
 		});
 		viewer.getTable().setFocus();
-		TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
+		TaskRepository defaultRepository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(
+				repositoryKind);
 		if (defaultRepository != null) {
-			 viewer.setSelection(new StructuredSelection(defaultRepository));
+			viewer.setSelection(new StructuredSelection(defaultRepository));
 		}
-		
+
 		setControl(container);
 	}
-	
+
 	protected abstract IWizard createWizard(TaskRepository taskRepository);
-	
+
 	private class CustomWizardNode implements IWizardNode {
 
 		private final TaskRepository repository;
+
 		private IWizard wizard;
-		
+
 		public CustomWizardNode(TaskRepository repository) {
 			this.repository = repository;
 		}
-		
+
 		public void dispose() {
 			if (wizard != null) {
 				wizard.dispose();
@@ -137,32 +139,32 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			if (wizard == null) {
 				wizard = SelectRepositoryPage.this.createWizard(repository);
 			}
-			
+
 			return wizard;
 		}
 
 		public boolean isContentCreated() {
 			return wizard != null;
 		}
-		
+
 		@Override
 		public boolean equals(Object obj) {
 			if (!(obj instanceof CustomWizardNode)) {
 				return false;
 			}
-			CustomWizardNode that = (CustomWizardNode)obj;
+			CustomWizardNode that = (CustomWizardNode) obj;
 			if (this == that) {
 				return true;
 			}
-			
-			return this.repository.getKind().equals(that.repository.getKind()) &&
-				   this.repository.getUrl().equals(that.repository.getUrl());
+
+			return this.repository.getKind().equals(that.repository.getKind())
+					&& this.repository.getUrl().equals(that.repository.getUrl());
 		}
-		
+
 		@Override
 		public int hashCode() {
 			return 31 * this.repository.getUrl().hashCode() + this.repository.getKind().hashCode();
 		}
-		
+
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,10 +37,10 @@ public class TaskPlannerEditorInput implements IEditorInput {
 	private List<ITask> completedTasks = null;
 
 	private List<ITask> inProgressTasks = null;
-  
+
 	private TaskReportGenerator taskReportGenerator = null;
 
-//	private int prevDaysToReport = -1;
+	// private int prevDaysToReport = -1;
 
 	private Date reportStartDate = null;
 
@@ -57,7 +57,8 @@ public class TaskPlannerEditorInput implements IEditorInput {
 		try {
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			service.run(false, true, taskReportGenerator);
-			while (!taskReportGenerator.isFinished()) Thread.sleep(500);
+			while (!taskReportGenerator.isFinished())
+				Thread.sleep(500);
 		} catch (InvocationTargetException e) {
 			// operation was canceled
 		} catch (InterruptedException e) {

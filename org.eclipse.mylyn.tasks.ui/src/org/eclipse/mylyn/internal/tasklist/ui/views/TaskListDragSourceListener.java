@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import org.eclipse.swt.dnd.DragSourceListener;
 class TaskListDragSourceListener implements DragSourceListener {
 
 	static final String DELIM = ", ";
-	
+
 	private final TaskListView view;
 
 	/**
@@ -39,22 +39,24 @@ class TaskListDragSourceListener implements DragSourceListener {
 
 	public void dragSetData(DragSourceEvent event) {
 		event.data = "task-drag";
-//		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
-//		String data = "task-drag";
-//		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-//			if (selectedObject instanceof ITaskListElement) {
-//				ITaskListElement element = (ITaskListElement) selectedObject;
-//				if (element.isDragAndDropEnabled()) {
-//					data += "task"
-//					data += element.getHandleIdentifier() + DELIM;
-//				}
-//			}
-//		}
-//		if (data != null) {
-//			event.data = data;
-//		} else {
-//			event.data = "null";
-//		}
+		// StructuredSelection selection = (StructuredSelection)
+		// this.view.getViewer().getSelection();
+		// String data = "task-drag";
+		// for (Object selectedObject : ((IStructuredSelection)
+		// selection).toList()) {
+		// if (selectedObject instanceof ITaskListElement) {
+		// ITaskListElement element = (ITaskListElement) selectedObject;
+		// if (element.isDragAndDropEnabled()) {
+		// data += "task"
+		// data += element.getHandleIdentifier() + DELIM;
+		// }
+		// }
+		// }
+		// if (data != null) {
+		// event.data = data;
+		// } else {
+		// event.data = "null";
+		// }
 	}
 
 	public void dragFinished(DragSourceEvent event) {

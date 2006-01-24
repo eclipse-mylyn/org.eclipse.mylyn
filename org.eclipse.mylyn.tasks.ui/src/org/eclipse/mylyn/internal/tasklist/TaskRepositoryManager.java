@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,7 @@ public class TaskRepositoryManager {
 	public ITaskRepositoryClient getRepositoryClient(String kind) {
 		return repositoryClients.get(kind);
 	}
-	
+
 	public void addRepositoryClient(ITaskRepositoryClient repositoryClient) {
 		if (!repositoryClients.values().contains(repositoryClient)) {
 			repositoryClients.put(repositoryClient.getKind(), repositoryClient);
@@ -147,7 +147,7 @@ public class TaskRepositoryManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * TODO: implement default support, this just returns first found
 	 */
@@ -160,8 +160,8 @@ public class TaskRepositoryManager {
 		} else {
 			Collection values = repositoryMap.values();
 			if (!values.isEmpty()) {
-				HashSet repoistorySet = (HashSet)values.iterator().next();
-				return (TaskRepository)repoistorySet.iterator().next();
+				HashSet repoistorySet = (HashSet) values.iterator().next();
+				return (TaskRepository) repoistorySet.iterator().next();
 			}
 		}
 		return null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,15 +31,16 @@ public interface ITaskHandler {
 	public abstract ITask addTaskToRegistry(ITask newTask);
 
 	/**
-	 *  This is called both before and after the tasklist is read
+	 * This is called both before and after the tasklist is read
 	 */
 	public abstract void restoreState(TaskListView taskListView);
 
 	public abstract boolean enableAction(Action action, ITaskListElement element);
 
-//	public abstract boolean deleteElement(ITaskListElement element);
-	
-//	public abstract void itemRemoved(ITaskListElement element, ITaskCategory category);
-	
-//	public abstract ITask getCorrespondingTask(IQueryHit element);
+	// public abstract boolean deleteElement(ITaskListElement element);
+
+	// public abstract void itemRemoved(ITaskListElement element, ITaskCategory
+	// category);
+
+	// public abstract ITask getCorrespondingTask(IQueryHit element);
 }

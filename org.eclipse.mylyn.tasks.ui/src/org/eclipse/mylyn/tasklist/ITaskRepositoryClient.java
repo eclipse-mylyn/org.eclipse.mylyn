@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.mylar.tasklist;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 
-
 /**
  * @author Mik Kersten
  * @author Brock Janiczak
@@ -27,15 +26,16 @@ public interface ITaskRepositoryClient {
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
 	public abstract String getKind();
-	
+
 	/**
-	 * @param id	identifier, e.g. "123" bug Bugzilla bug 123
-	 * @return		null if task could not be created
+	 * @param id
+	 *            identifier, e.g. "123" bug Bugzilla bug 123
+	 * @return null if task could not be created
 	 */
 	public abstract ITask createTaskFromExistingId(TaskRepository repository, String id);
-	
+
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
-	
+
 	public abstract IWizard getQueryWizard(TaskRepository repository);
 
 	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);

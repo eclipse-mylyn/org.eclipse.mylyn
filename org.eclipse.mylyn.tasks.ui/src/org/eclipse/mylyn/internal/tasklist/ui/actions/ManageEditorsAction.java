@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,35 +24,33 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 public class ManageEditorsAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.ui.editors.auto.manage";
-	
+
 	public ManageEditorsAction() {
 		super("Manage Editors with Context", IAction.AS_CHECK_BOX);
 		setId(ID);
 		update(MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS));
 	}
-	
+
 	@Override
 	public void run() {
 		update(isChecked());
-	} 
-    
-    public void update(boolean on) {
-    	setChecked(on);
-    	MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, on);
-		
-    	if (on) {
-			boolean previousValue = WorkbenchPlugin.getDefault().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
-			MylarTaskListPlugin.getPrefs().setValue(
-					IPreferenceConstants.REUSE_EDITORS_BOOLEAN, 
-					previousValue);
-			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(
-					IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+	}
+
+	public void update(boolean on) {
+		setChecked(on);
+		MylarTaskListPlugin.getPrefs().setValue(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS, on);
+
+		if (on) {
+			boolean previousValue = WorkbenchPlugin.getDefault().getPreferenceStore().getBoolean(
+					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+			MylarTaskListPlugin.getPrefs().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, previousValue);
+			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
 					false);
 		} else {
-			boolean previousValue = MylarTaskListPlugin.getPrefs().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
-			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(
-					IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
-					previousValue);			
-		}	
+			boolean previousValue = MylarTaskListPlugin.getPrefs().getBoolean(
+					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+					previousValue);
+		}
 	}
 }

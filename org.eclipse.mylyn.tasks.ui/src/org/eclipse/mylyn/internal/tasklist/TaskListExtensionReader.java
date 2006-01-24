@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,26 +33,26 @@ import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
 public class TaskListExtensionReader {
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories";
-	
+
 	public static final String ELMNT_REPOSITORY_CLIENT = "repositoryClient";
 
 	public static final String ELMNT_TYPE = "type";
-	
+
 	public static final String ELMNT_QUERY_PAGE = "queryPage";
 
 	public static final String ELMNT_SETTINGS_PAGE = "settingsPage";
-	
+
 	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasklist.providers";
-	
+
 	public static final String ELMNT_TASK_HANDLER = "taskHandler";
 
 	public static final String ATTR_EXTERNALIZER_CLASS = "externalizerClass";
 
 	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass";
 
-//	public static final String TASK_LISTENER_ELEMENT = "taskListener";
+	// public static final String TASK_LISTENER_ELEMENT = "taskListener";
 
-//	public static final String TASK_LISTENER_CLASS_ID = "class";
+	// public static final String TASK_LISTENER_CLASS_ID = "class";
 
 	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
 
@@ -67,7 +67,8 @@ public class TaskListExtensionReader {
 	private static boolean extensionsRead = false;
 
 	public static void initExtensions(TaskListWriter writer) {
-		// code from "contributing to eclipse" with modifications for deprecated code
+		// code from "contributing to eclipse" with modifications for deprecated
+		// code
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 		if (!extensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -80,14 +81,16 @@ public class TaskListExtensionReader {
 						readTaskHandler(elements[j], externalizers);
 					} else if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) == 0) {
 						readRepository(elements[j]);
-//					} else if (elements[j].getName().compareTo(TASK_LISTENER_ELEMENT) == 0) {
-//						readTaskListener(elements[j]);
+						// } else if
+						// (elements[j].getName().compareTo(TASK_LISTENER_ELEMENT)
+						// == 0) {
+						// readTaskListener(elements[j]);
 					} else if (elements[j].getName().compareTo(DYNAMIC_POPUP_ELEMENT) == 0) {
 						readDynamicPopupContributor(elements[j]);
 					}
 				}
 			}
-			
+
 			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
 			for (int i = 0; i < repositoryExtensions.length; i++) {
@@ -120,8 +123,8 @@ public class TaskListExtensionReader {
 			if (editor instanceof IContextEditorFactory) {
 				MylarTaskListPlugin.getDefault().addContextEditor((IContextEditorFactory) editor);
 			} else {
-				MylarStatusHandler.log("Could not load editor: " + editor.getClass().getCanonicalName() + " must implement "
-						+ IContextEditorFactory.class.getCanonicalName(), null);
+				MylarStatusHandler.log("Could not load editor: " + editor.getClass().getCanonicalName()
+						+ " must implement " + IContextEditorFactory.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
@@ -133,8 +136,8 @@ public class TaskListExtensionReader {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
 			if (repository instanceof ITaskRepositoryClient && type != null) {
-//				MylarTaskListPlugin.getRepositoryManager().addType((String)type);
-				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((ITaskRepositoryClient)repository);
+				// MylarTaskListPlugin.getRepositoryManager().addType((String)type);
+				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((ITaskRepositoryClient) repository);
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
 			}
@@ -142,20 +145,24 @@ public class TaskListExtensionReader {
 			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
 		}
 	}
-	
-//	private static void readTaskListener(IConfigurationElement element) {
-//		try {
-//			Object taskListener = element.createExecutableExtension(TASK_LISTENER_CLASS_ID);
-//			if (taskListener instanceof ITaskActivityListener) {
-//				MylarTaskListPlugin.getTaskListManager().addListener((ITaskActivityListener) taskListener);
-//			} else {
-//				MylarStatusHandler.log("Could not load tasklist listener: " + taskListener.getClass().getCanonicalName()
-//						+ " must implement " + ITaskActivityListener.class.getCanonicalName(), null);
-//			}
-//		} catch (CoreException e) {
-//			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
-//		}
-//	}
+
+	// private static void readTaskListener(IConfigurationElement element) {
+	// try {
+	// Object taskListener =
+	// element.createExecutableExtension(TASK_LISTENER_CLASS_ID);
+	// if (taskListener instanceof ITaskActivityListener) {
+	// MylarTaskListPlugin.getTaskListManager().addListener((ITaskActivityListener)
+	// taskListener);
+	// } else {
+	// MylarStatusHandler.log("Could not load tasklist listener: " +
+	// taskListener.getClass().getCanonicalName()
+	// + " must implement " + ITaskActivityListener.class.getCanonicalName(),
+	// null);
+	// }
+	// } catch (CoreException e) {
+	// MylarStatusHandler.log(e, "Could not load tasklist listener extension");
+	// }
+	// }
 
 	private static void readDynamicPopupContributor(IConfigurationElement element) {
 		try {

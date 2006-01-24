@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,20 +18,19 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-
 /**
  * @author Eric Booth
  */
 public class TaskEditorInput implements IEditorInput {
 
 	private static final int MAX_LABEL_LENGTH = 60;
-	
+
 	private ITask task;
-	
+
 	private String id;
-	
+
 	private String label;
-	
+
 	public TaskEditorInput(ITask task) {
 		this.task = task;
 		id = task.getHandleIdentifier();
@@ -45,41 +44,50 @@ public class TaskEditorInput implements IEditorInput {
 			return description.substring(0, MAX_LABEL_LENGTH) + "...";
 		}
 	}
-	
-	
- 	public boolean exists() {
+
+	public boolean exists() {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
 	 */
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IEditorInput#getName()
 	 */
 	public String getName() {
 		return "Task #" + id;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IEditorInput#getPersistable()
 	 */
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
 	 */
 	public String getToolTipText() {
 		return label;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
@@ -92,14 +100,14 @@ public class TaskEditorInput implements IEditorInput {
 	public ITask getTask() {
 		return task;
 	}
-	
+
 	/**
 	 * @return Returns the id.
 	 */
 	public String getId() {
 		return id;
 	}
-	
+
 	/**
 	 * @return Returns the label.
 	 */
@@ -107,9 +115,10 @@ public class TaskEditorInput implements IEditorInput {
 		label = truncateDescription(task.getDescription());
 		return label;
 	}
-	
+
 	/**
-	 * Returns true if the argument is a bug report editor input on the same bug id.
+	 * Returns true if the argument is a bug report editor input on the same bug
+	 * id.
 	 */
 	@Override
 	public boolean equals(Object o) {

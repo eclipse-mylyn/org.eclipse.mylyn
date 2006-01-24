@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,7 +53,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	public static final String HANDLE = "Handle";
 
 	public static final String REPOSITORY_URL = "RepositoryUrl";
-	
+
 	public static final String TAG_CATEGORY = "Category";
 
 	public static final String TAG_TASK = "Task";
@@ -142,7 +142,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(getTaskTagName());
-//		node.setAttribute(PATH, task.getRemoteContextPath());
+		// node.setAttribute(PATH, task.getRemoteContextPath());
 		node.setAttribute(LABEL, task.getDescription());
 		node.setAttribute(HANDLE, task.getHandleIdentifier());
 		node.setAttribute(PRIORITY, task.getPriority());
@@ -162,9 +162,9 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		if (task.getUrl() != null) {
 			node.setAttribute(ISSUEURL, task.getUrl());
 		}
-//		if (task.getRepositoryUrl() != null) {
-//			node.setAttribute(REPOSITORY_URL, task.getRepositoryUrl());
-//		}
+		// if (task.getRepositoryUrl() != null) {
+		// node.setAttribute(REPOSITORY_URL, task.getRepositoryUrl());
+		// }
 		node.setAttribute(NOTES, task.getNotes());
 		node.setAttribute(ELAPSED, "" + task.getElapsedTime());
 		node.setAttribute(ESTIMATED, "" + task.getEstimateTimeHours());
@@ -222,7 +222,8 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 					if (externalizer.canReadTask(child)) {
 						ITask task = externalizer.readTask(child, tlist, category, null);
 						category.addTask(task);
-						if (!category.isArchive()) task.setCategory(category);
+						if (!category.isArchive())
+							task.setCategory(category);
 						read = true;
 					}
 				}
@@ -268,11 +269,11 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			task.setPriority(DEFAULT_PRIORITY);
 		}
-//		if (element.hasAttribute(PATH)) {
-//			task.setRemoteContextPath(element.getAttribute(PATH));
-//		} else {
-//			task.setRemoteContextPath(task.getHandleIdentifier());
-//		}
+		// if (element.hasAttribute(PATH)) {
+		// task.setRemoteContextPath(element.getAttribute(PATH));
+		// } else {
+		// task.setRemoteContextPath(task.getHandleIdentifier());
+		// }
 
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true);
@@ -294,7 +295,8 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 			long elapsed = 0;
 			try {
 				long read = Long.parseLong(element.getAttribute(ELAPSED));
-				if (read > 0) elapsed = read;
+				if (read > 0)
+					elapsed = read;
 			} catch (NumberFormatException e) {
 				// ignore
 			}
@@ -402,7 +404,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(MAX_HITS, query.getMaxHits() + "");
 		node.setAttribute(QUERY_STRING, query.getQueryUrl());
 		node.setAttribute(REPOSITORY_URL, query.getRepositoryUrl());
-		
+
 		for (IQueryHit hit : query.getHits()) {
 			try {
 				Element element = null;

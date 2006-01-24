@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -149,18 +149,16 @@ public class TaskPlannerEditorPart extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		ScrolledForm sform = toolkit.createScrolledForm(parent);		
+		ScrolledForm sform = toolkit.createScrolledForm(parent);
 		Composite editorComposite = sform.getBody();
 
 		editorComposite.setLayout(new GridLayout());
 		GridData gridData = new GridData();
- 		gridData.horizontalAlignment = GridData.FILL_BOTH;
- 		gridData.grabExcessHorizontalSpace = true;
- 		gridData.grabExcessVerticalSpace = true;
- 		editorComposite.setLayoutData(gridData);
-	
-		
-		
+		gridData.horizontalAlignment = GridData.FILL_BOTH;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		editorComposite.setLayoutData(gridData);
+
 		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate());
 		String label = LABEL_TASK_ACTIVITY;
 
@@ -172,37 +170,32 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		sashForm.setLayout(new GridLayout());
 		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-			
+
 		TaskPlannerContentProvider activityContentProvider = new TaskPlannerContentProvider(allTasks);
 		final TableViewer activityViewer = createTableSection(sashForm, toolkit, label, activityColumnNames,
-				activityColumnWidths, activitySortConstants);		
+				activityColumnWidths, activitySortConstants);
 		activityViewer.setContentProvider(activityContentProvider);
 		activityViewer.setLabelProvider(new TaskActivityLabelProvider());
 		setSorters(activityColumnNames, activitySortConstants, activityViewer.getTable(), activityViewer, false);
 		activityViewer.setInput(editorInput);
-		
-		
-		
+
 		MenuManager activityContextMenuMgr = new MenuManager("#ActivityPlannerPopupMenu");
 		activityContextMenuMgr.setRemoveAllWhenShown(true);
 		activityContextMenuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				TaskPlannerEditorPart.this.fillContextMenu(activityViewer, manager);
-				
+
 			}
 		});
 		Menu menu = activityContextMenuMgr.createContextMenu(activityViewer.getControl());
 		activityViewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(activityContextMenuMgr, activityViewer);
-		
 
 		Composite planContainer = toolkit.createComposite(sashForm);
 		GridLayout planLayout = new GridLayout();
 		planLayout.marginTop = 10;
 		planContainer.setLayout(planLayout);
 
-	
-		
 		TaskPlannerContentProvider planContentProvider = new TaskPlannerContentProvider();
 		final TableViewer planViewer = createTableSection(planContainer, toolkit, "Task Plan", planColumnNames,
 				planColumnWidths, planSortConstants);
@@ -213,8 +206,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 		initDrop(planViewer, planContentProvider);
 		setSorters(planColumnNames, planSortConstants, planViewer.getTable(), planViewer, true);
 		planViewer.setInput(editorInput);
-		
-		MenuManager  planContextMenuMgr = new MenuManager("#PlanPlannerPopupMenu");
+
+		MenuManager planContextMenuMgr = new MenuManager("#PlanPlannerPopupMenu");
 		planContextMenuMgr.setRemoveAllWhenShown(true);
 		planContextMenuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -229,17 +222,14 @@ public class TaskPlannerEditorPart extends EditorPart {
 		createButtons(editorComposite, toolkit, planViewer, planContentProvider);
 	}
 
-	
-
 	private void fillContextMenu(TableViewer viewer, IMenuManager manager) {
-		if(!viewer.getSelection().isEmpty()) {			
+		if (!viewer.getSelection().isEmpty()) {
 			manager.add(new OpenTaskEditorAction(viewer));
 			manager.add(new RemoveTaskAction(viewer));
 			manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		}
 	}
-	
-	
+
 	@Override
 	public void setFocus() {
 	}
@@ -247,8 +237,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 	private void createSummarySection(Composite parent, FormToolkit toolkit, Date startDate) {
 		Section summarySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		summarySection.setText(LABEL_DIALOG);
-//		summarySection.setLayout(new TableWrapLayout());
-//		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		// summarySection.setLayout(new TableWrapLayout());
+		// summarySection.setLayoutData(new
+		// TableWrapData(TableWrapData.FILL_GRAB));
 		summarySection.setLayout(new GridLayout());
 		summarySection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Composite summaryContainer = toolkit.createComposite(summarySection);
@@ -380,7 +371,6 @@ public class TaskPlannerEditorPart extends EditorPart {
 		detailContainer.setLayout(new GridLayout());
 		detailContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-
 		return createTable(detailContainer, toolkit, columnNames, columnWidths, sortConstants);
 	}
 
@@ -388,10 +378,10 @@ public class TaskPlannerEditorPart extends EditorPart {
 			int[] sortConstants) {
 		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 		Table table = toolkit.createTable(parent, style);
-		
+
 		table.setLayout(new GridLayout());
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setEnabled(true);
@@ -408,7 +398,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		TableViewer tableViewer = new TableViewer(table);
 		tableViewer.setUseHashlookup(true);
-		tableViewer.setColumnProperties(columnNames);		
+		tableViewer.setColumnProperties(columnNames);
 
 		final OpenTaskEditorAction openAction = new OpenTaskEditorAction(tableViewer);
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -475,21 +465,23 @@ public class TaskPlannerEditorPart extends EditorPart {
 			}
 		});
 
-//		Button delete = toolkit.createButton(container, "Remove Selected", SWT.PUSH | SWT.CENTER);
-//		delete.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				for (Object object : ((IStructuredSelection) viewer.getSelection()).toList()) {
-//					if (object instanceof ITask) {
-//						ITask task = (ITask) object;
-//						if (task != null) {
-//							contentProvider.removeTask(task);
-//						}
-//					}
-//				}
-//				viewer.refresh();
-//			}
-//		});
+		// Button delete = toolkit.createButton(container, "Remove Selected",
+		// SWT.PUSH | SWT.CENTER);
+		// delete.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// for (Object object : ((IStructuredSelection)
+		// viewer.getSelection()).toList()) {
+		// if (object instanceof ITask) {
+		// ITask task = (ITask) object;
+		// if (task != null) {
+		// contentProvider.removeTask(task);
+		// }
+		// }
+		// }
+		// viewer.refresh();
+		// }
+		// });
 	}
 
 	@MylarWebRef(name = "Drag and drop article", url = "http://www.eclipse.org/articles/Article-Workbench-DND/drag_drop.html")
@@ -503,9 +495,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 			@Override
 			public boolean performDrop(Object data) {
-				
-				IStructuredSelection selection = ((IStructuredSelection) TaskListView
-						.getDefault().getViewer().getSelection());
+
+				IStructuredSelection selection = ((IStructuredSelection) TaskListView.getDefault().getViewer()
+						.getSelection());
 
 				for (Iterator iter = selection.iterator(); iter.hasNext();) {
 					Object selectedObject = iter.next();
@@ -514,15 +506,12 @@ public class TaskPlannerEditorPart extends EditorPart {
 						updateEstimatedHours(contentProvider);
 						continue;
 					} else if (selectedObject instanceof ITaskListElement) {
-						if (MylarTaskListPlugin.getDefault()
-								.getHandlerForElement(
-										(ITaskListElement) selectedObject) != null) {
+						if (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
 							ITask task = null;
 							if (selectedObject instanceof ITask) {
 								task = (ITask) selectedObject;
 							} else if (selectedObject instanceof IQueryHit) {
-								task = ((IQueryHit) selectedObject)
-										.getOrCreateCorrespondingTask();
+								task = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
 							}
 							if (task != null) {
 								contentProvider.addTask(task);
@@ -535,7 +524,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 					}
 				}
 				tableViewer.refresh();
-				return true;				
+				return true;
 			}
 
 			@Override
@@ -573,8 +562,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 				if (element instanceof ITask) {
 					if (columnIndex == 5) {
 						if (((ITask) element).getReminderDate() != null) {
-							return DateFormat.getDateInstance(DateFormat.MEDIUM)
-								.format(((ITask) element).getReminderDate());
+							return DateFormat.getDateInstance(DateFormat.MEDIUM).format(
+									((ITask) element).getReminderDate());
 						} else {
 							return null;
 						}
@@ -650,22 +639,22 @@ public class TaskPlannerEditorPart extends EditorPart {
 		totalEstimatedHoursLabel.setText(LABEL_ESTIMATED + total + " hours");
 	}
 
-//	public class OpenTaskEditorAction extends Action {
-//
-//		private TableViewer viewer;
-//
-//		public OpenTaskEditorAction(TableViewer viewer) {
-//			this.viewer = viewer;
-//		}
-//
-//		@Override
-//		public void run() {
-//			ISelection selection = viewer.getSelection();
-//			Object obj = ((IStructuredSelection) selection).getFirstElement();
-//			if (obj instanceof Task) {
-//				((Task) obj).openTaskInEditor(false);
-//			}
-//			viewer.refresh(obj);
-//		}
-//	}
+	// public class OpenTaskEditorAction extends Action {
+	//
+	// private TableViewer viewer;
+	//
+	// public OpenTaskEditorAction(TableViewer viewer) {
+	// this.viewer = viewer;
+	// }
+	//
+	// @Override
+	// public void run() {
+	// ISelection selection = viewer.getSelection();
+	// Object obj = ((IStructuredSelection) selection).getFirstElement();
+	// if (obj instanceof Task) {
+	// ((Task) obj).openTaskInEditor(false);
+	// }
+	// viewer.refresh(obj);
+	// }
+	// }
 }

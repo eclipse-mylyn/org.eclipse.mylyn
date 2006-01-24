@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,27 +33,27 @@ public class DeleteTaskRepositoryAction extends Action {
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.delete";
 
 	private TaskRepositoriesView repositoriesView;
-	
+
 	public DeleteTaskRepositoryAction(TaskRepositoriesView repositoriesView) {
 		this.repositoriesView = repositoriesView;
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setText("Delete Repository");
 		setId(ID);
 	}
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
-	
+
 	public void run() {
 		try {
 			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
 					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
 			if (deleteConfirmed) {
-				IStructuredSelection selection = (IStructuredSelection)repositoriesView.getViewer().getSelection();
-				for (Object selectedObject: selection.toList()) {
+				IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
+				for (Object selectedObject : selection.toList()) {
 					if (selectedObject instanceof TaskRepository) {
-						MylarTaskListPlugin.getRepositoryManager().removeRepository((TaskRepository)selectedObject);
+						MylarTaskListPlugin.getRepositoryManager().removeRepository((TaskRepository) selectedObject);
 					}
 				}
 			}

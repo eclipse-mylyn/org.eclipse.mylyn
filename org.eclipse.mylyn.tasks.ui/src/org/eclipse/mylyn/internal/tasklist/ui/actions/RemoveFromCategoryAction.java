@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,8 @@ public class RemoveFromCategoryAction extends Action {
 					ITask task = (ITask) selectedObject;
 					if (task.isActive()) {
 						MessageDialog.openInformation(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-								MylarTaskListPlugin.TITLE_DIALOG, "Task must be deactivated in order to remove from category.");
+								MylarTaskListPlugin.TITLE_DIALOG,
+								"Task must be deactivated in order to remove from category.");
 						return;
 					}
 
@@ -70,7 +71,7 @@ public class RemoveFromCategoryAction extends Action {
 							return;
 
 						MylarTaskListPlugin.getTaskListManager().deleteTask(task);
-						MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());																			// task.getContextPath());
+						MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier()); // task.getContextPath());
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ public class Task implements ITask {
 
 	public enum TaskStatus {
 		NOT_STARTED, IN_PROGRESS, COMPLETED;
-		
+
 		@Override
 		public String toString() {
 			switch (this) {
@@ -87,7 +87,7 @@ public class Task implements ITask {
 	private Date creationDate = null;
 
 	private Date reminderDate = null;
-	
+
 	/**
 	 * @return null if root
 	 */
@@ -128,7 +128,7 @@ public class Task implements ITask {
 	public void setParent(ITask parent) {
 		this.parent = parent;
 	}
-	
+
 	/**
 	 * Package visible in order to prevent sets that don't update the index.
 	 */
@@ -280,13 +280,13 @@ public class Task implements ITask {
 	public long getElapsedTime() {
 		return timeActive;
 	}
-	
+
 	public void setElapsedTime(long elapsedTime) {
 		if (elapsedTime >= 0) {
 			this.timeActive = elapsedTime;
-		} else{
+		} else {
 			MylarStatusHandler.log("Attempt to set negative time on task: " + getDescription(), this);
-		} 
+		}
 	}
 
 	public int getEstimateTimeHours() {
@@ -313,9 +313,9 @@ public class Task implements ITask {
 		this.parentCategory = cat;
 	}
 
-//	public void internalSetCategory(TaskCategory cat) {
-//		this.parentCategory = cat;
-//	}
+	// public void internalSetCategory(TaskCategory cat) {
+	// this.parentCategory = cat;
+	// }
 
 	public ITaskCategory getCategory() {
 		return parentCategory;
@@ -371,17 +371,17 @@ public class Task implements ITask {
 		return true;
 	}
 
-//	public Color getForeground() {
-//		if (isCompleted()) {
-//			return TaskListImages.GRAY_LIGHT;
-//		} else if (isActive()) {
-//			return TaskListImages.COLOR_TASK_ACTIVE;
-//		} else if (isOverdue()) {
-//			return TaskListImages.COLOR_TASK_OVERDUE;
-//		} else {
-//			return null;
-//		}
-//	}
+	// public Color getForeground() {
+	// if (isCompleted()) {
+	// return TaskListImages.GRAY_LIGHT;
+	// } else if (isActive()) {
+	// return TaskListImages.COLOR_TASK_ACTIVE;
+	// } else if (isOverdue()) {
+	// return TaskListImages.COLOR_TASK_OVERDUE;
+	// } else {
+	// return null;
+	// }
+	// }
 
 	public Font getFont() {
 		if (isActive())
@@ -414,7 +414,8 @@ public class Task implements ITask {
 	}
 
 	public Date getCreationDate() {
-		if (creationDate == null) creationDate = new Date();
+		if (creationDate == null)
+			creationDate = new Date();
 		return creationDate;
 	}
 
@@ -458,7 +459,7 @@ public class Task implements ITask {
 
 	public boolean hasValidUrl() {
 		String taskUrl = getUrl();
-		if (taskUrl != null && !taskUrl.equals("") && !taskUrl.equals("http://") && !taskUrl.equals("https://") ) {
+		if (taskUrl != null && !taskUrl.equals("") && !taskUrl.equals("http://") && !taskUrl.equals("https://")) {
 			try {
 				new URL(taskUrl);
 				return true;
@@ -469,13 +470,13 @@ public class Task implements ITask {
 		return false;
 	}
 
-//	public String getRepositoryUrl() {
-//		return repositoryUrl;
-//	}
-//
-//	public void setRepositoryUrl(String repositoryUrl) {
-//		this.repositoryUrl = repositoryUrl;
-//	}
+	// public String getRepositoryUrl() {
+	// return repositoryUrl;
+	// }
+	//
+	// public void setRepositoryUrl(String repositoryUrl) {
+	// this.repositoryUrl = repositoryUrl;
+	// }
 
 	public TaskStatus getStatus() {
 		if (isCompleted()) {
@@ -486,8 +487,7 @@ public class Task implements ITask {
 	}
 
 	/**
-	 * For testing
-	 * TODO: move
+	 * For testing TODO: move
 	 */
 	public void setForceSyncOpen(boolean forceSyncOpen) {
 		this.forceSyncOpen = forceSyncOpen;

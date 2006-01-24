@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,8 +29,9 @@ import org.eclipse.swt.widgets.Shell;
 public class DateChooserDialog extends Dialog {
 
 	private DatePicker picker = null;
+
 	private Calendar reminderDate = null;
-		
+
 	public DateChooserDialog(Shell parentShell) {
 		super(parentShell);
 	}
@@ -40,21 +41,20 @@ public class DateChooserDialog extends Dialog {
 		this.reminderDate = Calendar.getInstance();
 		this.reminderDate.setTime(reminderDate);
 	}
-	
+
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 		GridLayout gl = new GridLayout(1, false);
 		composite.setLayout(gl);
 		GridData data = new GridData(GridData.FILL_BOTH);
-		
+
 		picker = new DatePicker(composite, SWT.NONE);
-//		picker.setDate()
-		
+		// picker.setDate()
+
 		data.heightHint = 90; // HACK
 		picker.setLayoutData(data);
 		return composite;
 	}
-
 
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
@@ -63,7 +63,7 @@ public class DateChooserDialog extends Dialog {
 		}
 		super.buttonPressed(buttonId);
 	}
-	
+
 	public Calendar getReminderDate() {
 		return reminderDate;
 	}

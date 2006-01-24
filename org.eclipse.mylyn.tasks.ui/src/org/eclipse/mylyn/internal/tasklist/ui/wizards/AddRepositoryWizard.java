@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,8 @@ import org.eclipse.ui.IWorkbench;
  */
 public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 
-//	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;// = new AbstractRepositorySettingsPage();
+	// private AbstractRepositorySettingsPage abstractRepositorySettingsPage;//
+	// = new AbstractRepositorySettingsPage();
 
 	public AddRepositoryWizard() {
 		super();
@@ -31,10 +32,11 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository repository = new TaskRepository(repositoryClient.getKind(), super.abstractRepositorySettingsPage.getServerUrl());
+			TaskRepository repository = new TaskRepository(repositoryClient.getKind(),
+					super.abstractRepositorySettingsPage.getServerUrl());
 			if (repository != null) {
-				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage
-						.getPassword());
+				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
+						abstractRepositorySettingsPage.getPassword());
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				return true;
 			}
@@ -48,7 +50,7 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-//		addPage(abstractRepositorySettingsPage);
+		// addPage(abstractRepositorySettingsPage);
 	}
 
 	public AbstractRepositorySettingsPage getRepositorySettingsPage() {
@@ -61,6 +63,7 @@ public class AddRepositoryWizard extends AbstractRepositoryClientWizard {
 
 	@Override
 	public boolean canFinish() {
-		return super.canFinish() && abstractRepositorySettingsPage != null && abstractRepositorySettingsPage.isPageComplete();
+		return super.canFinish() && abstractRepositorySettingsPage != null
+				&& abstractRepositorySettingsPage.isPageComplete();
 	}
 }

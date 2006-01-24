@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkbench;
 public abstract class AbstractAddExistingTaskWizard extends Wizard {
 
 	private final TaskRepository repository;
-	
+
 	public AbstractAddExistingTaskWizard(TaskRepository repository) {
 		this.repository = repository;
 		init();
@@ -36,11 +36,13 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 
 	@Override
 	public final boolean performFinish() {
-		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(this.repository.getKind());
+		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+				this.repository.getKind());
 		ITask newTask = client.createTaskFromExistingId(repository, getTaskId());
-		
+
 		if (newTask != null && TaskListView.getDefault() != null) {
-			Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection()).getFirstElement();
+			Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
+					.getFirstElement();
 
 			if (selectedObject instanceof TaskCategory) {
 				MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory) selectedObject), newTask);
@@ -51,7 +53,7 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 				TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
 			}
 		}
-		
+
 		return true;
 	}
 

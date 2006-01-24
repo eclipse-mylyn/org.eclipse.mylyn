@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,30 +40,39 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class TasksReminderDialog extends Dialog {
 	private List<ITask> tasks = null;
+
 	private Table table = null;
+
 	private TableViewer tableViewer = null;
-	private String[] columnNames = new String[] { "Description", "Priority", "Reminder Day"};
-	
+
+	private String[] columnNames = new String[] { "Description", "Priority", "Reminder Day" };
+
 	private static final int DISMISS_ALL_ID = 200;
+
 	private static final int DISMISS_ID = 201;
+
 	private static final int SNOOZE_ID = 202;
+
 	private static final String DISMISS_ALL_LABEL = "Dismiss All";
+
 	private static final String DISMISS_LABEL = "Dismiss Selected";
+
 	private static final String SNOOZE_ALL_LABEL = "Remind tommorrow";
+
 	private static long DAY = 24 * 3600 * 1000;
-	
+
 	public TasksReminderDialog(Shell parentShell, List<ITask> remTasks) {
-		super(parentShell);		
-		tasks = remTasks;		
+		super(parentShell);
+		tasks = remTasks;
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.MODELESS | SWT.BORDER | SWT.TITLE);
 	}
-	
+
 	@Override
 	protected void configureShell(Shell shell) {
-	        super.configureShell(shell);
-	        shell.setText("Reminders");
+		super.configureShell(shell);
+		shell.setText("Reminders");
 	}
-	 
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
@@ -72,32 +81,32 @@ public class TasksReminderDialog extends Dialog {
 		composite.setLayout(gl);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		composite.setLayoutData(data);
-		
+
 		Composite container = new Composite(composite, SWT.NONE);
 		gl = new GridLayout(1, false);
 		container.setLayout(gl);
-		createTable(container);		
+		createTable(container);
 		createTableViewer();
-		
+
 		return composite;
 	}
-	
+
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-        createButton(parent, DISMISS_ALL_ID, DISMISS_ALL_LABEL, false);
-        createButton(parent, DISMISS_ID, DISMISS_LABEL, false);
-        createButton(parent, SNOOZE_ID, SNOOZE_ALL_LABEL, true);        
-    }
-	
+		createButton(parent, DISMISS_ALL_ID, DISMISS_ALL_LABEL, false);
+		createButton(parent, DISMISS_ID, DISMISS_LABEL, false);
+		createButton(parent, SNOOZE_ID, SNOOZE_ALL_LABEL, true);
+	}
+
 	private void createTable(Composite parent) {
 		int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-		table = new Table(parent, style );		
+		table = new Table(parent, style);
 		GridLayout tlayout = new GridLayout();
 		table.setLayout(tlayout);
 		GridData wd = new GridData(GridData.FILL_BOTH);
 		wd.heightHint = 300;
 		table.setLayoutData(wd);
-				
+
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 
@@ -120,8 +129,8 @@ public class TasksReminderDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				tableViewer.setSorter(new ReminderTaskSorter(ReminderTaskSorter.PRIORITY));
 			}
-		});		
-		
+		});
+
 		column = new TableColumn(table, SWT.LEFT, 2);
 		column.setText(columnNames[2]);
 		column.setWidth(100);
@@ -130,18 +139,17 @@ public class TasksReminderDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				tableViewer.setSorter(new ReminderTaskSorter(ReminderTaskSorter.DATE));
 			}
-		});		
+		});
 	}
-	
+
 	private void createTableViewer() {
 		tableViewer = new TableViewer(table);
-		tableViewer.setUseHashlookup(true);		
+		tableViewer.setUseHashlookup(true);
 		tableViewer.setContentProvider(new ReminderTasksContentProvider());
 		tableViewer.setLabelProvider(new ReminderTasksLabelProvider());
 		tableViewer.setInput(tasks);
 	}
-	
-	
+
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == DISMISS_ALL_ID) {
 			for (ITask t : tasks) {
@@ -149,8 +157,8 @@ public class TasksReminderDialog extends Dialog {
 			}
 			okPressed();
 		} else if (buttonId == DISMISS_ID) {
-			Object sel = ((IStructuredSelection)tableViewer.getSelection()).getFirstElement();
-			if (sel != null && sel instanceof ITask ) {
+			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
+			if (sel != null && sel instanceof ITask) {
 				ITask t = (ITask) sel;
 				t.setReminded(true);
 				tasks.remove(t);
@@ -158,14 +166,14 @@ public class TasksReminderDialog extends Dialog {
 					okPressed();
 				} else {
 					tableViewer.refresh();
-				}				
+				}
 			}
-		} else if (buttonId == SNOOZE_ID) {	
-			Object sel = ((IStructuredSelection)tableViewer.getSelection()).getFirstElement();
-			if (sel != null && sel instanceof ITask ) {
+		} else if (buttonId == SNOOZE_ID) {
+			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
+			if (sel != null && sel instanceof ITask) {
 				ITask t = (ITask) sel;
 				t.setReminded(false);
-				t.setReminderDate( new Date(new Date().getTime() + DAY));
+				t.setReminderDate(new Date(new Date().getTime() + DAY));
 				tasks.remove(t);
 				if (tasks.isEmpty()) {
 					okPressed();
@@ -176,7 +184,7 @@ public class TasksReminderDialog extends Dialog {
 		}
 		super.buttonPressed(buttonId);
 	}
-	
+
 	private class ReminderTasksContentProvider implements IStructuredContentProvider {
 
 		public Object[] getElements(Object inputElement) {
@@ -189,9 +197,8 @@ public class TasksReminderDialog extends Dialog {
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
-	
-	private static class ReminderTasksLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+
+	private static class ReminderTasksLabelProvider extends LabelProvider implements ITableLabelProvider {
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
@@ -216,9 +223,11 @@ public class TasksReminderDialog extends Dialog {
 	private static class ReminderTaskSorter extends ViewerSorter {
 
 		public final static int DESCRIPTION = 1;
+
 		public final static int PRIORITY = 2;
-		public final static int DATE = 3;	
- 
+
+		public final static int DATE = 3;
+
 		private int criteria;
 
 		public ReminderTaskSorter(int criteria) {
@@ -232,27 +241,27 @@ public class TasksReminderDialog extends Dialog {
 			ITask t2 = (ITask) obj2;
 
 			switch (criteria) {
-				case DESCRIPTION:
-					return compareDescription(t1, t2);
-				case PRIORITY:
-					return comparePriority(t1, t2);
-				case DATE:
-					return compareDate(t1, t2);
-				default:
-					return 0;
+			case DESCRIPTION:
+				return compareDescription(t1, t2);
+			case PRIORITY:
+				return comparePriority(t1, t2);
+			case DATE:
+				return compareDate(t1, t2);
+			default:
+				return 0;
 			}
 		}
-		
+
 		private int compareDescription(ITask task1, ITask task2) {
 			return task1.getDescription().compareTo(task2.getDescription());
 		}
-		
+
 		private int comparePriority(ITask task1, ITask task2) {
 			return task1.getPriority().compareTo(task2.getPriority());
 		}
-		
+
 		private int compareDate(ITask task1, ITask task2) {
 			return task2.getReminderDate().compareTo(task1.getReminderDate());
-		}		
+		}
 	}
 }

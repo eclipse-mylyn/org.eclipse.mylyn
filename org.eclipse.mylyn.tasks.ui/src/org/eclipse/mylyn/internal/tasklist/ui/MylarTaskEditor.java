@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	private Browser webBrowser;
 
 	private TaskEditorInput taskEditorInput;
-	
+
 	private TaskEditorListener partListener;
 
 	private List<IEditorPart> editorsToNotifyOnChange = new ArrayList<IEditorPart>();
@@ -102,7 +102,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		partListener = new TaskEditorListener();
 		activePage.addPartListener(partListener);
 		taskInfoEditor = new TaskInfoEditor();
-		
+
 	}
 
 	@Override
@@ -152,7 +152,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			setPageText(index, ISSUE_WEB_PAGE_LABEL);
 			webBrowser.setUrl(task.getUrl());
 
-			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL);
+			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(
+					MylarTaskListPrefConstants.REPORT_OPEN_INTERNAL);
 			if (task.isLocal() || openWithBrowser)
 				setActivePage(index);
 		} catch (SWTError e) {
@@ -207,7 +208,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		 */
 		task = taskEditorInput.getTask();
 		try {
-			taskInfoEditor.init(this.getEditorSite(), this.getEditorInput());			
+			taskInfoEditor.init(this.getEditorSite(), this.getEditorInput());
 			taskInfoEditor.setTask(task);
 			// Set the title on the editor's tab
 			this.setPartName(taskEditorInput.getLabel());
@@ -232,20 +233,20 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
 		 */
 		public void partActivated(IWorkbenchPart part) {
-			if (part.equals(MylarTaskEditor.this)) {				
+			if (part.equals(MylarTaskEditor.this)) {
 				ITask task = taskEditorInput.getTask();
 				IQueryHit hit = null;
 				MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(task.getHandleIdentifier());
-				
+
 				if (TaskListView.getDefault() != null) {
-					Viewer viewer = TaskListView.getDefault().getViewer();				
+					Viewer viewer = TaskListView.getDefault().getViewer();
 					viewer.setSelection(new StructuredSelection(task));
 					// if no task exists, select the query hit if exists
 					if (viewer.getSelection().isEmpty()
 							&& (hit = MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(
 									task.getHandleIdentifier())) != null) {
 						viewer.setSelection(new StructuredSelection(hit));
-					} 
+					}
 					viewer.refresh();
 				}
 			}
@@ -286,12 +287,12 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	public void changeTitle() {
 		this.setPartName(taskEditorInput.getLabel());
 	}
-	
-	public void markDirty() {		
-		firePropertyChange(PROP_DIRTY);		
+
+	public void markDirty() {
+		firePropertyChange(PROP_DIRTY);
 		return;
 	}
-	
+
 	@Override
 	public void setFocus() {
 		// taskInfoEditor.setFocus();
@@ -310,7 +311,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			}
 		}
 	}
-	
+
 	public void dispose() {
 		for (IEditorPart part : editorsToNotifyOnChange) {
 			part.dispose();
@@ -334,5 +335,5 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		}
 
 	}
-	
+
 }
