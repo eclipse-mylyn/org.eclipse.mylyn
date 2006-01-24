@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,7 +90,8 @@ public class AntStructureBridge implements IMylarStructureBridge {
 				// get the handle for the parent node
 				return getHandleIdentifier(parent);
 			} else {
-				// if the parent is null, we just need to return the handle for the file
+				// if the parent is null, we just need to return the handle for
+				// the file
 				int delimeterIndex = handle.indexOf(";");
 				if (delimeterIndex != -1) {
 					String parentHandle = handle.substring(0, delimeterIndex);
@@ -117,7 +118,8 @@ public class AntStructureBridge implements IMylarStructureBridge {
 			int first = handle.indexOf(HANDLE_PATH_SEPARATOR);
 			String filename = "";
 			if (first == -1) {
-				// we have just the filename, so return the IFile for this filename
+				// we have just the filename, so return the IFile for this
+				// filename
 				filename = handle;
 				IPath path = new Path(filename);
 				IFile f = (IFile) ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
@@ -139,8 +141,10 @@ public class AntStructureBridge implements IMylarStructureBridge {
 				return file;
 			} else {
 				// XXX needed if the editor is the only way to get the model
-				// get the active editor, which should be the ant editor so we can get the AntModel
-				IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+				// get the active editor, which should be the ant editor so we
+				// can get the AntModel
+				IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.getActiveEditor();
 				if (editorPart instanceof AntEditor) {
 					AntModel antModel = ((AntEditor) editorPart).getAntModel();
 					if (antModel != null)
@@ -148,7 +152,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 				} else {
 					String content = XmlNodeHelper.getContents(file.getContents());
 					IDocument d = new Document(content);
-					// create the ant model and get the element from it 
+					// create the ant model and get the element from it
 					IProblemRequestor p = new AntAnnotationModel(file);
 					AntModel am = new AntModel(d, p, new LocationProvider(fei));
 					am.reconcile();
@@ -156,13 +160,14 @@ public class AntStructureBridge implements IMylarStructureBridge {
 				}
 			}
 		} catch (Exception e) {
-			// ignore this, means that the file or node doesn't exist 
+			// ignore this, means that the file or node doesn't exist
 		}
 		return null;
 	}
 
 	/**
 	 * Handle is filename;XPath
+	 * 
 	 * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
 	 */
 	public String getHandleIdentifier(Object object) {
@@ -184,7 +189,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 					return helper.getHandle();
 			} catch (Throwable t) {
 				// fail silently, since node.getIFile() can throw NPE
-				//            	MylarPlugin.fail(t, "couldn't get xml node handle", false);
+				// MylarPlugin.fail(t, "couldn't get xml node handle", false);
 			}
 		} else if (object instanceof File) {
 			File file = (File) object;
@@ -257,7 +262,8 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleForOffsetInObject(Object, int)
+	 * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleForOffsetInObject(Object,
+	 *      int)
 	 */
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		if (resource == null)
@@ -289,7 +295,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 					FileEditorInput fei = new FileEditorInput(file);
 					String content = XmlNodeHelper.getContents(file.getContents());
 					IDocument d = new Document(content);
-					// create the ant model and get the element from it 
+					// create the ant model and get the element from it
 					IProblemRequestor p = new AntAnnotationModel(file);
 					AntModel am = new AntModel(d, p, new LocationProvider(fei));
 					am.reconcile();

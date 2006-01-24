@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on Apr 6, 2005
-  */
+ */
 package org.eclipse.mylar.xml.ant;
 
 import java.lang.reflect.Method;
@@ -44,129 +44,133 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class AntUiBridge implements IMylarUiBridge {
-    
-    /**
-     * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarElement)
-     */
-    public void open(IMylarElement node) {
-        // get the handle of the node
-        String handle = node.getHandleIdentifier();
-        
-        int first = handle.indexOf(";");
-        String filename = "";
-        if(first == -1)
-            filename = handle;
-        else
-            filename = handle.substring(0, first);
-        
-        try{
-            // get the file
-            IPath path = new Path(filename);
-            IFile f = (IFile)((Workspace)ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
-            
-            // open the xml file looking at the proper line
-            IEditorPart editor = openInEditor(f, true);
-         
-            // if the editor is null, we had a problem and should return
-            if(editor == null){
-                MylarStatusHandler.log("Unable to open editor for file: " + filename, this);
-                return;
-            }
-            
-            // get the contents and create a new document so that we can get
-            // the offsets to highlight
-//            String content = XmlNodeHelper.getContents(f.getContents());
-            
-//            IDocument d = new Document(content);
 
-//            if(first != -1){
-//                int start = Integer.parseInt(handle.substring(first + 1));
-//
-//                // get the offsets for the element
-//                int startOffset = d.getLineOffset(start);
-//                int length = 0;
-//                
-//                // set the selection if the selection provider is not null
-//                ISelectionProvider selectionProvider = editor.getEditorSite().getSelectionProvider();
-//                if(selectionProvider != null)
-//                    selectionProvider.setSelection(new TextSelection(startOffset, length));
-//            }
-            
+	/**
+	 * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarElement)
+	 */
+	public void open(IMylarElement node) {
+		// get the handle of the node
+		String handle = node.getHandleIdentifier();
 
-        } catch(Exception e){
-            MylarStatusHandler.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
-        }
-    }
-    
-    /**
-     * Open a file in the appropriate editor
-     * @param file The IFile to open
-     * @param activate Whether to activate the editor or not
-     * @return The IEditorPart that the file opened in
-     * @throws PartInitException
-     */
-    private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
-        if (file != null) {
-            IWorkbenchPage p= MylarXmlPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            if (p != null && file.exists()) {
-            	try{
-            		IEditorPart editorPart= IDE.openEditor(p, file, activate);
-            		return editorPart;
-            	} catch (Exception e){
-            		// ignore this
-            	}
-//                initializeHighlightRange(editorPart);
-            }
-        }
-        return null;
-    }
+		int first = handle.indexOf(";");
+		String filename = "";
+		if (first == -1)
+			filename = handle;
+		else
+			filename = handle.substring(0, first);
 
+		try {
+			// get the file
+			IPath path = new Path(filename);
+			IFile f = (IFile) ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
 
-    public void close(IMylarElement node) {
-        IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-        if (page != null) {
-            IEditorReference[] references = page.getEditorReferences();
-            for (int i = 0; i < references.length; i++) {
-                IEditorPart part = references[i].getEditor(false);
-                if (part != null) {
-                        if (part.getEditorInput() instanceof IFileEditorInput) {
-                        IFileEditorInput input = (IFileEditorInput)part.getEditorInput();
-                        if ((input.getFile().getFullPath().toString()).equals(node.getHandleIdentifier())) {
-                            if (part instanceof FormEditor) {
-                                ((FormEditor)part).close(true);
-                            } else if (part instanceof AbstractTextEditor) {
-                                ((AbstractTextEditor)part).close(true);
-                            }   
-                        }
-                    } 
-                }
-            }
-        }
-    }
+			// open the xml file looking at the proper line
+			IEditorPart editor = openInEditor(f, true);
 
-    public boolean acceptsEditor(IEditorPart editorPart) {
-        return editorPart instanceof AntEditor;
-    }
+			// if the editor is null, we had a problem and should return
+			if (editor == null) {
+				MylarStatusHandler.log("Unable to open editor for file: " + filename, this);
+				return;
+			}
 
-    /**
-     * HACK: use reflection to get the TreeViewer
-     */
-    public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
-    	List<TreeViewer> viewers = new ArrayList<TreeViewer>();
-        if(editor instanceof AntEditor){
-            try{
-                AntEditor ae = (AntEditor)editor;
-                AntEditorContentOutlinePage outline = (AntEditorContentOutlinePage)ae.getAdapter(IContentOutlinePage.class);
-                Class clazz = ContentOutlinePage.class;
-                Method method= clazz.getDeclaredMethod("getTreeViewer", new Class[] { });
-                method.setAccessible(true);
-                viewers.add((TreeViewer)method.invoke(outline, new Object[] { }));
-            } catch (Exception e) {
-            	MylarStatusHandler.log(e, "couldn't get outline");
-            }
-        }
-        return viewers;
-    }
+			// get the contents and create a new document so that we can get
+			// the offsets to highlight
+			// String content = XmlNodeHelper.getContents(f.getContents());
+
+			// IDocument d = new Document(content);
+
+			// if(first != -1){
+			// int start = Integer.parseInt(handle.substring(first + 1));
+			//
+			// // get the offsets for the element
+			// int startOffset = d.getLineOffset(start);
+			// int length = 0;
+			//                
+			// // set the selection if the selection provider is not null
+			// ISelectionProvider selectionProvider =
+			// editor.getEditorSite().getSelectionProvider();
+			// if(selectionProvider != null)
+			// selectionProvider.setSelection(new TextSelection(startOffset,
+			// length));
+			// }
+
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
+		}
+	}
+
+	/**
+	 * Open a file in the appropriate editor
+	 * 
+	 * @param file
+	 *            The IFile to open
+	 * @param activate
+	 *            Whether to activate the editor or not
+	 * @return The IEditorPart that the file opened in
+	 * @throws PartInitException
+	 */
+	private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
+		if (file != null) {
+			IWorkbenchPage p = MylarXmlPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (p != null && file.exists()) {
+				try {
+					IEditorPart editorPart = IDE.openEditor(p, file, activate);
+					return editorPart;
+				} catch (Exception e) {
+					// ignore this
+				}
+				// initializeHighlightRange(editorPart);
+			}
+		}
+		return null;
+	}
+
+	public void close(IMylarElement node) {
+		IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		if (page != null) {
+			IEditorReference[] references = page.getEditorReferences();
+			for (int i = 0; i < references.length; i++) {
+				IEditorPart part = references[i].getEditor(false);
+				if (part != null) {
+					if (part.getEditorInput() instanceof IFileEditorInput) {
+						IFileEditorInput input = (IFileEditorInput) part.getEditorInput();
+						if ((input.getFile().getFullPath().toString()).equals(node.getHandleIdentifier())) {
+							if (part instanceof FormEditor) {
+								((FormEditor) part).close(true);
+							} else if (part instanceof AbstractTextEditor) {
+								((AbstractTextEditor) part).close(true);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public boolean acceptsEditor(IEditorPart editorPart) {
+		return editorPart instanceof AntEditor;
+	}
+
+	/**
+	 * HACK: use reflection to get the TreeViewer
+	 */
+	public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
+		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
+		if (editor instanceof AntEditor) {
+			try {
+				AntEditor ae = (AntEditor) editor;
+				AntEditorContentOutlinePage outline = (AntEditorContentOutlinePage) ae
+						.getAdapter(IContentOutlinePage.class);
+				Class clazz = ContentOutlinePage.class;
+				Method method = clazz.getDeclaredMethod("getTreeViewer", new Class[] {});
+				method.setAccessible(true);
+				viewers.add((TreeViewer) method.invoke(outline, new Object[] {}));
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "couldn't get outline");
+			}
+		}
+		return viewers;
+	}
 
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
@@ -174,31 +178,34 @@ public class AntUiBridge implements IMylarUiBridge {
 
 	public void restoreEditor(IMylarElement document) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setContextCapturePaused(boolean paused) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-//    public void refreshOutline(Object element, boolean updateLabels, boolean setSelection) { 
-//        IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//        TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
-//        if (treeViewer != null) {
-//            if (element == null || element instanceof IFile) {
-//            	treeViewer.getControl().setRedraw(false);
-//            	treeViewer.refresh(true);
-//            	treeViewer.getControl().setRedraw(true);
-//            } else if (element instanceof AntElementNode) {
-//            	treeViewer.getControl().setRedraw(false);
-//            	treeViewer.refresh(element, updateLabels);
-//            	treeViewer.getControl().setRedraw(true); 
-//                if (setSelection) {
-//	                if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() != element)
-//	                    treeViewer.setSelection(new StructuredSelection(element));
-//                }
-//            } 
-//        }
-//    }
+	// public void refreshOutline(Object element, boolean updateLabels, boolean
+	// setSelection) {
+	// IEditorPart editorPart =
+	// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	// TreeViewer treeViewer = getOutlineTreeViewer(editorPart);
+	// if (treeViewer != null) {
+	// if (element == null || element instanceof IFile) {
+	// treeViewer.getControl().setRedraw(false);
+	// treeViewer.refresh(true);
+	// treeViewer.getControl().setRedraw(true);
+	// } else if (element instanceof AntElementNode) {
+	// treeViewer.getControl().setRedraw(false);
+	// treeViewer.refresh(element, updateLabels);
+	// treeViewer.getControl().setRedraw(true);
+	// if (setSelection) {
+	// if(((StructuredSelection)treeViewer.getSelection()).getFirstElement() !=
+	// element)
+	// treeViewer.setSelection(new StructuredSelection(element));
+	// }
+	// }
+	// }
+	// }
 }

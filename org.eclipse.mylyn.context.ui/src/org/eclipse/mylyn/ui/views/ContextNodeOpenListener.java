@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on Feb 17, 2005
-  */
+ */
 package org.eclipse.mylar.ui.views;
 
 import org.eclipse.jface.viewers.*;
@@ -24,24 +24,25 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
  * @author Mik Kersten
  */
 public class ContextNodeOpenListener implements IOpenListener {
-    
-    private final Viewer viewer;
 
-    public ContextNodeOpenListener(Viewer viewer) {
-        this.viewer = viewer;
-    }
+	private final Viewer viewer;
 
-    public void open(OpenEvent event) {
-        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        Object object = selection.getFirstElement();
-        IMylarElement node = null;
-        if(object instanceof IMylarElement){
-            node = (IMylarElement)object ;
-        } else if (!(object instanceof IMylarRelation)) {
-        	IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
-        	String handle = bridge.getHandleIdentifier(object);
-        	node = MylarPlugin.getContextManager().getElement(handle);
-        }
-        if (node != null) MylarUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
-    }
+	public ContextNodeOpenListener(Viewer viewer) {
+		this.viewer = viewer;
+	}
+
+	public void open(OpenEvent event) {
+		StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+		Object object = selection.getFirstElement();
+		IMylarElement node = null;
+		if (object instanceof IMylarElement) {
+			node = (IMylarElement) object;
+		} else if (!(object instanceof IMylarRelation)) {
+			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(object);
+			String handle = bridge.getHandleIdentifier(object);
+			node = MylarPlugin.getContextManager().getElement(handle);
+		}
+		if (node != null)
+			MylarUiPlugin.getDefault().getUiBridge(node.getContentType()).open(node);
+	}
 }

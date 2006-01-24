@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,8 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 /**
- * This action is not persistent, in order to avoid Mylar not working on startup.
+ * This action is not persistent, in order to avoid Mylar not working on
+ * startup.
  * 
  * @author Mik Kersten
  */
@@ -37,7 +38,7 @@ public class ToggleContextCaptureAction extends Action implements IViewActionDel
 		} else {
 			pause();
 		}
-//		super.setChecked(!super.isChecked());
+		// super.setChecked(!super.isChecked());
 	}
 
 	public void pause() {

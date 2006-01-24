@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  *******************************************************************************/
 
 package org.eclipse.mylar.ui.actions;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,9 @@ import org.eclipse.ui.internal.Workbench;
  * @author Mik Kersten
  */
 public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
-	
+
 	private static ApplyMylarToOutlineAction INSTANCE;
-	
+
 	public ApplyMylarToOutlineAction() {
 		super(new InterestFilter());
 		INSTANCE = this;
@@ -50,8 +49,8 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 			MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
 			installInterestFilter(on, viewer);
 		}
-	} 
-	
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public List<StructuredViewer> getViewers() {
@@ -62,7 +61,8 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 				IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
 				List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
 				for (TreeViewer viewer : outlineViewers) {
-					if (viewer != null && !viewers.contains(viewer)) viewers.add(viewer);
+					if (viewer != null && !viewers.contains(viewer))
+						viewers.add(viewer);
 				}
 			}
 		} catch (NullPointerException e) {
@@ -77,6 +77,6 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

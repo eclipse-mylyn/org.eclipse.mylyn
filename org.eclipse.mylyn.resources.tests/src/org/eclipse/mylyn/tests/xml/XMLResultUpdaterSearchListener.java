@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,11 +34,11 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 	private List<IMylarElement> results = null;
 
 	private IMylarElement node;
-	
+
 	private int degreeOfSeparation;
 
-	public XMLResultUpdaterSearchListener(AbstractRelationProvider prov,
-			IMylarElement searchNode, int degreeOfSeparation) {
+	public XMLResultUpdaterSearchListener(AbstractRelationProvider prov, IMylarElement searchNode,
+			int degreeOfSeparation) {
 		super(prov);
 		this.node = searchNode;
 		this.degreeOfSeparation = degreeOfSeparation;
@@ -49,7 +49,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 	@Override
 	public void searchCompleted(List<?> l) {
 		results = new ArrayList<IMylarElement>();
-		
+
 		if (l.isEmpty())
 			return;
 
@@ -73,9 +73,7 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 						try {
 							XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), m
 									.getOffset());
-							IMylarStructureBridge bridge = MylarPlugin
-									.getDefault().getStructureBridge(
-											f.getName());
+							IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(f.getName());
 							String handle = xnode.getHandle();
 							Object o = bridge.getObjectForHandle(handle);
 							String name = bridge.getName(o);
@@ -92,19 +90,21 @@ public class XMLResultUpdaterSearchListener extends TestActiveSearchListener {
 		}
 
 		for (String handle : nodes.keySet()) {
-			incrementInterest(node, PdeStructureBridge.CONTENT_TYPE, handle,
-					degreeOfSeparation);
+			incrementInterest(node, PdeStructureBridge.CONTENT_TYPE, handle, degreeOfSeparation);
 		}
 		gathered = true;
 	}
 
-	protected void incrementInterest(IMylarElement node, String elementKind, String elementHandle, int degreeOfSeparation) {
-        int predictedInterest = 1;//(7-degreeOfSeparation) * TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
-        InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle, XmlReferencesProvider.SOURCE_ID, XmlReferencesProvider.SOURCE_ID, null, predictedInterest);
-        MylarPlugin.getContextManager().handleInteractionEvent(event);
+	protected void incrementInterest(IMylarElement node, String elementKind, String elementHandle,
+			int degreeOfSeparation) {
+		int predictedInterest = 1;// (7-degreeOfSeparation) *
+									// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
+		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
+				XmlReferencesProvider.SOURCE_ID, XmlReferencesProvider.SOURCE_ID, null, predictedInterest);
+		MylarPlugin.getContextManager().handleInteractionEvent(event);
 
-    }
-	
+	}
+
 	@Override
 	public boolean resultsGathered() {
 		return gathered;

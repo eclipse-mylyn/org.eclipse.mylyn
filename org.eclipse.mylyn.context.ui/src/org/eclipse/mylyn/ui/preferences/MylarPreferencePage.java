@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,7 +96,9 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private static String[] columnNames = new String[] { LABEL_COLUMN, COLOR_COLUMN, TYPE_COLUMN, };
 
-	static final String[] TYPE_ARRAY = { "Gradient", "Solid" }; //, "Intersection" };
+	static final String[] TYPE_ARRAY = { "Gradient", "Solid" }; // ,
+																// "Intersection"
+																// };
 
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since the
@@ -171,7 +173,8 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	public boolean performOk() {
 		getPreferenceStore().setValue(MylarUiPrefContstants.HIGHLIGHTER_PREFIX,
 				MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
-		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION, exclusionFieldEditor.getStringValue());
+		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION,
+				exclusionFieldEditor.getStringValue());
 
 		int value = autoOpenEditorsNum.getIntValue();
 		if (value > 0) {
@@ -256,7 +259,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		if (!colorDialogEditor.isDirty() || !colorDialogEditor.isValueValid()) {
 			return;
 		}
-		
+
 		if (obj instanceof RGB) {
 			// create new color
 			RGB rgb = (RGB) obj;

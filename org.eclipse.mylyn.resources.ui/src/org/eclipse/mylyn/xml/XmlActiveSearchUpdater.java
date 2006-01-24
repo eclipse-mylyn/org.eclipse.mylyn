@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,20 +27,21 @@ import org.eclipse.search.ui.text.Match;
 
 /**
  * COPIED FROM: org.eclipse.search.internal.ui.text.SearchResultUpdater
+ * 
  * @author Shawn Minto
- *
+ * 
  */
 public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryListener {
 	private FileSearchResult fResult;
 
 	public XmlActiveSearchUpdater(FileSearchResult result) {
-		fResult= result;
+		fResult = result;
 		NewSearchUI.addQueryListener(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
 	public void resourceChanged(IResourceChangeEvent event) {
-		IResourceDelta delta= event.getDelta();
+		IResourceDelta delta = event.getDelta();
 		if (delta != null)
 			handleDelta(delta);
 	}
@@ -50,28 +51,28 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 			d.accept(new IResourceDeltaVisitor() {
 				public boolean visit(IResourceDelta delta) throws CoreException {
 					switch (delta.getKind()) {
-						case IResourceDelta.ADDED :
-							return false;
-						case IResourceDelta.REMOVED:
-							IResource res = delta.getResource();
-							if (res instanceof IFile) {
-								Match[] matches = fResult.getMatches(res);
-								fResult.removeMatches(matches);
-	
-								
-								
-								for (int j = 0; j < matches.length; j++) {
-//									Match m = matches[j];
-//									XmlNodeHelper xnode = XmlReferencesProvider.nodeMap.remove(m);
-//									System.out.println("REMOVED RES: " + xnode.getHandle());
-//									System.out.println(XmlReferencesProvider.nodeMap);
-								}
+					case IResourceDelta.ADDED:
+						return false;
+					case IResourceDelta.REMOVED:
+						IResource res = delta.getResource();
+						if (res instanceof IFile) {
+							Match[] matches = fResult.getMatches(res);
+							fResult.removeMatches(matches);
+
+							for (int j = 0; j < matches.length; j++) {
+								// Match m = matches[j];
+								// XmlNodeHelper xnode =
+								// XmlReferencesProvider.nodeMap.remove(m);
+								// System.out.println("REMOVED RES: " +
+								// xnode.getHandle());
+								// System.out.println(XmlReferencesProvider.nodeMap);
 							}
-							break;
-						case IResourceDelta.CHANGED :
-							// TODO want to do something on chages to invalidate
-							// handle changed resource
-							break;
+						}
+						break;
+					case IResourceDelta.CHANGED:
+						// TODO want to do something on chages to invalidate
+						// handle changed resource
+						break;
 					}
 					return true;
 				}
@@ -91,7 +92,7 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 			NewSearchUI.removeQueryListener(this);
 		}
 	}
-	
+
 	public void queryStarting(ISearchQuery query) {
 		// don't care
 	}

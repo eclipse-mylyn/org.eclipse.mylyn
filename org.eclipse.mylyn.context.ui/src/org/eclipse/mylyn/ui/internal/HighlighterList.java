@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,16 +20,15 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
-
 /**
  * List class that wraps List of highlighters
  * 
  */
 public class HighlighterList {
 
-    public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter(
-            "white (default)", MylarUiPlugin.getDefault().getColorMap().WHITE, false);
-    
+	public static final Highlighter DEFAULT_HIGHLIGHTER = new Highlighter("white (default)", MylarUiPlugin.getDefault()
+			.getColorMap().WHITE, false);
+
 	private List<Highlighter> highlighters;
 
 	public HighlighterList() {
@@ -48,34 +47,31 @@ public class HighlighterList {
 		highlighters = new ArrayList<Highlighter>();
 		this.internalizeFromString(attributes);
 	}
-	
+
 	public void setToDefaultList() {
 		this.highlighters.clear();
 		highlighters.add(DEFAULT_HIGHLIGHTER);
-		highlighters.add(new Highlighter("yellow", MylarUiPlugin.getDefault()
-				.getColorMap().HIGHLIGHTER_YELLOW, false));
-		highlighters.add(new Highlighter("rose", MylarUiPlugin.getDefault()
-				.getColorMap().PANTONE_PASTEL_ROSE, false));
-		highlighters.add(new Highlighter("purple", MylarUiPlugin.getDefault()
-				.getColorMap().PANTONE_PASTEL_PURPLE, false));
-		highlighters.add(new Highlighter("blue", MylarUiPlugin.getDefault()
-				.getColorMap().PANTONE_PASTEL_BLUE, false));
-		highlighters.add(new Highlighter("green", MylarUiPlugin.getDefault()
-				.getColorMap().PANTONE_PASTERL_GREEN, false));
-		highlighters.add(new Highlighter("blue gradient", MylarUiPlugin.getDefault().getColorMap().HIGLIGHTER_BLUE_GRADIENT, true));
-		highlighters.add(new Highlighter("orange gradient", MylarUiPlugin.getDefault().getColorMap().HIGHLIGHTER_ORANGE_GRADIENT, true));
+		highlighters.add(new Highlighter("yellow", MylarUiPlugin.getDefault().getColorMap().HIGHLIGHTER_YELLOW, false));
+		highlighters.add(new Highlighter("rose", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_ROSE, false));
+		highlighters.add(new Highlighter("purple", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_PURPLE,
+				false));
+		highlighters.add(new Highlighter("blue", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTEL_BLUE, false));
+		highlighters
+				.add(new Highlighter("green", MylarUiPlugin.getDefault().getColorMap().PANTONE_PASTERL_GREEN, false));
+		highlighters.add(new Highlighter("blue gradient",
+				MylarUiPlugin.getDefault().getColorMap().HIGLIGHTER_BLUE_GRADIENT, true));
+		highlighters.add(new Highlighter("orange gradient",
+				MylarUiPlugin.getDefault().getColorMap().HIGHLIGHTER_ORANGE_GRADIENT, true));
 
-		Highlighter intersectionHighlighter = new Highlighter(
-				"intersection",
-				MylarUiPlugin.getDefault().getColorMap().HIGLIGHTER_RED_INTERSECTION,
-				false);
+		Highlighter intersectionHighlighter = new Highlighter("intersection",
+				MylarUiPlugin.getDefault().getColorMap().HIGLIGHTER_RED_INTERSECTION, false);
 		intersectionHighlighter.setIntersection(true);
-		MylarUiPlugin.getDefault().setIntersectionHighlighter(
-				intersectionHighlighter);
-		
-		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
-//		MylarUiPlugin.getDefault().setDefaultHighlighter(
-//				highlighters.get(0));
+		MylarUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
+
+		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
+				IMylarContextListener.UpdateKind.HIGHLIGHTER);
+		// MylarUiPlugin.getDefault().setDefaultHighlighter(
+		// highlighters.get(0));
 	}
 
 	public void add(Highlighter hl) {
@@ -107,16 +103,19 @@ public class HighlighterList {
 
 	public void removeHighlighter(Highlighter hl) {
 		this.highlighters.remove(hl);
-//		MylarUiPlugin.getDefault().setDefaultHighlighter(
-//				this.highlighters.get(0));
+		// MylarUiPlugin.getDefault().setDefaultHighlighter(
+		// this.highlighters.get(0));
 	}
-	
+
 	public String externalizeToString() {
-		// Add an initial flag so that we know if the highlighterlist has been save before.
+		// Add an initial flag so that we know if the highlighterlist has been
+		// save before.
 		// This is only used when mylar is first launched with eclipse.
-		// if the preference store returns a null string, then we would initialize
+		// if the preference store returns a null string, then we would
+		// initialize
 		// the default highlighter.
-		// but if this flag is in place, we will know if highlighterlist has ever been saved
+		// but if this flag is in place, we will know if highlighterlist has
+		// ever been saved
 		String result = "flag:";
 		for (Iterator<Highlighter> it = highlighters.iterator(); it.hasNext();) {
 			Highlighter highlighter = it.next();
@@ -124,10 +123,10 @@ public class HighlighterList {
 		}
 		return result;
 	}
-	
+
 	public void internalizeFromString(String attributes) {
 		if (attributes != null) {
-            this.highlighters.clear();
+			this.highlighters.clear();
 			String[] data = attributes.split(":");
 			// skip the flag
 			//
@@ -137,18 +136,19 @@ public class HighlighterList {
 			}
 		}
 	}
-	
+
 	public void updateHighlighterWithGamma(ColorMap.GammaSetting prev, ColorMap.GammaSetting curr) {
-		int res = ColorMap.GammaSetting.compare(prev, curr);		
+		int res = ColorMap.GammaSetting.compare(prev, curr);
 		if (res < 0) {
 			lightenAllColors(Math.abs(res));
-			
+
 		} else if (res > 0) {
 			darkenAllColors(Math.abs(res));
-		} 
-		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
+		}
+		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
+				IMylarContextListener.UpdateKind.HIGHLIGHTER);
 	}
-	
+
 	private void darkenAllColors(int degree) {
 		for (Highlighter hl : highlighters) {
 			Color c = hl.getCore();
@@ -158,14 +158,15 @@ public class HighlighterList {
 			} else {
 				HSV[1] *= 3;
 			}
-			if (HSV[1] > 1) HSV[1] = 1;
-			
+			if (HSV[1] > 1)
+				HSV[1] = 1;
+
 			int[] newRGB = ColorCoordinatesChange.HSVtoRGB(HSV[0], HSV[1], HSV[2]);
 			Color rgb = new Color(Display.getDefault(), newRGB[0], newRGB[1], newRGB[2]);
 			hl.setCore(rgb);
 		}
 	}
-	
+
 	private void lightenAllColors(int degree) {
 		for (Highlighter hl : highlighters) {
 			Color c = hl.getCore();
@@ -174,7 +175,7 @@ public class HighlighterList {
 				HSV[1] *= 0.5;
 			} else {
 				HSV[1] *= 0.333;
-			}			
+			}
 			int[] newRGB = ColorCoordinatesChange.HSVtoRGB(HSV[0], HSV[1], HSV[2]);
 			Color rgb = new Color(Display.getDefault(), newRGB[0], newRGB[1], newRGB[2]);
 			hl.setCore(rgb);

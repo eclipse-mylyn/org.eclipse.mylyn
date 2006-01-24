@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,18 +32,18 @@ import org.eclipse.mylar.ui.actions.EditHighlightersAction;
 public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String CHOOSE_HIGHLIGHTER = "Choose Highlighter";
-	
+
 	public MenuManager getSubMenuManager(TaskListView view, ITaskListElement selection) {
 		final ITaskListElement selectedElement = selection;
 		final TaskListView taskListView = view;
 		final MenuManager subMenuManager = new MenuManager(CHOOSE_HIGHLIGHTER);
 		for (Iterator<Highlighter> it = MylarUiPlugin.getDefault().getHighlighters().iterator(); it.hasNext();) {
-          final Highlighter highlighter = it.next();
-          if (selectedElement instanceof ITaskListElement) {
-        	  Action action = new Action() {
-            	  @Override
-              		public void run() {
-            		  	ITask task = null;
+			final Highlighter highlighter = it.next();
+			if (selectedElement instanceof ITaskListElement) {
+				Action action = new Action() {
+					@Override
+					public void run() {
+						ITask task = null;
 						if (selectedElement instanceof ITask) {
 							task = (ITask) selectedElement;
 						} else if (selectedElement instanceof IQueryHit) {
@@ -52,29 +52,35 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 							}
 						}
 
-//            		  	if (!task.isActive()) {
-//	        	    		MessageDialog.openError(Workbench.getInstance()
-//	        						.getActiveWorkbenchWindow().getShell(), "Mylar Highlighting",
-//	        						"Please activate the task before setting a highlighter.");
-//	        				return;
-//	        	    	} else {
-	        	    		MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(), highlighter.getName());
-	        	    		taskListView.getViewer().refresh();
-	        	    		MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind.HIGHLIGHTER);
-//	        	    	}
-            	  }
-              };
-              if (highlighter.isGradient()) {
-                  action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter.getLandmarkColor()));
-              } else {
-            	  action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(), highlighter.getLandmarkColor()));
-              }
-              action.setText(highlighter.toString());
-              subMenuManager.add(action);
-          	}
-		} 
+						// if (!task.isActive()) {
+						// MessageDialog.openError(Workbench.getInstance()
+						// .getActiveWorkbenchWindow().getShell(), "Mylar
+						// Highlighting",
+						// "Please activate the task before setting a
+						// highlighter.");
+						// return;
+						// } else {
+						MylarUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
+								highlighter.getName());
+						taskListView.getViewer().refresh();
+						MylarPlugin.getContextManager().notifyPostPresentationSettingsChange(
+								IMylarContextListener.UpdateKind.HIGHLIGHTER);
+						// }
+					}
+				};
+				if (highlighter.isGradient()) {
+					action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter
+							.getLandmarkColor()));
+				} else {
+					action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getLandmarkColor(),
+							highlighter.getLandmarkColor()));
+				}
+				action.setText(highlighter.toString());
+				subMenuManager.add(action);
+			}
+		}
 		subMenuManager.add(new Separator());
 		subMenuManager.add(new EditHighlightersAction());
 		return subMenuManager;
-  	}
+	}
 }

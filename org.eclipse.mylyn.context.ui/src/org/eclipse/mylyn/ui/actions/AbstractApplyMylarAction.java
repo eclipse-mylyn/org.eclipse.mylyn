@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,8 @@ import org.eclipse.ui.IViewPart;
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2, IPropertyChangeListener {
+public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2,
+		IPropertyChangeListener {
 
 	private static final String ACTION_LABEL = "Apply Mylar";
 
@@ -144,7 +145,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 					viewer.addFilter(interestFilter);
 					viewer.getControl().setRedraw(true);
 					return true;
-				} 
+				}
 			} else {
 				MylarStatusHandler.log("Could not install interest filter", this);
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylar.ui.internal;
 
 import java.util.ArrayList;
@@ -28,40 +29,39 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
 
-
 /**
  * @author Shawn Minto
  */
 public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private Text workingSetNameText;
+
 	private IWorkingSet workingSet;
-	
+
 	public static final String WORKING_SET_NAME = "Mylar Task Context (for search)";
-		
+
 	public MylarWorkingSetPage() {
-		super("org.eclipse.mylar.monitor.workingSetPage", 
-			"Mylar Task Context Working Set", 
-			MylarUiPlugin.imageDescriptorFromPlugin(MylarUiPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
-		setDescription(
-			"Create the Mylar Task Context working set.  It will be updated automatically to contain\n" +
-			"all of the resources related to the active task.");
+		super("org.eclipse.mylar.monitor.workingSetPage", "Mylar Task Context Working Set", MylarUiPlugin
+				.imageDescriptorFromPlugin(MylarUiPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
+		setDescription("Create the Mylar Task Context working set.  It will be updated automatically to contain\n"
+				+ "all of the resources related to the active task.");
 	}
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
-		
-		Composite composite= new Composite(parent, SWT.NONE);
+
+		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		setControl(composite);
 
-		Label label= new Label(composite, SWT.WRAP);
-		label.setText("Name"); 
-		GridData gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		Label label = new Label(composite, SWT.WRAP);
+		label.setText("Name");
+		GridData gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
-		workingSetNameText= new Text(composite, SWT.SINGLE | SWT.BORDER);
+		workingSetNameText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		workingSetNameText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		workingSetNameText.setFocus();
 		workingSetNameText.setEditable(false);
@@ -69,26 +69,29 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		label = new Label(composite, SWT.WRAP);
 		label.setText("");
-		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
-		
+
 		label = new Label(composite, SWT.WRAP);
-		label.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
+		label
+				.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
 		label.setFont(MylarUiPrefContstants.BOLD);
-		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
 		label = new Label(composite, SWT.WRAP);
 		label.setText("");
-		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
-		
-//		label = new Label(composite, SWT.WRAP);
-//		label.setText("PLEASE DO NOT ACTIVATE THIS WORKING SET AT ANYTIME.\nTHIS WORKING SET IS ONLY USEFUL FOR SEARCHING.");
-//		label.setFont(UiUtil.BOLD);
-//		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
-//		label.setLayoutData(gd);
-		
+
+		// label = new Label(composite, SWT.WRAP);
+		// label.setText("PLEASE DO NOT ACTIVATE THIS WORKING SET AT
+		// ANYTIME.\nTHIS WORKING SET IS ONLY USEFUL FOR SEARCHING.");
+		// label.setFont(UiUtil.BOLD);
+		// gd= new GridData(GridData.GRAB_HORIZONTAL |
+		// GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		// label.setLayoutData(gd);
+
 		Dialog.applyDialogFont(composite);
 	}
 
@@ -101,28 +104,28 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	public void finish() {
-		String workingSetName= workingSetNameText.getText();
-		ArrayList<IAdaptable> elements= new ArrayList<IAdaptable>(1);
+		String workingSetName = workingSetNameText.getText();
+		ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(1);
 		MylarWorkingSetUpdater.getElementsFromTaskscape(elements);
 		if (workingSet == null) {
-			IWorkingSetManager workingSetManager= MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
-			if((workingSet = workingSetManager.getWorkingSet(workingSetName)) == null){
-				workingSet= workingSetManager.createWorkingSet(workingSetName, elements.toArray(new IAdaptable[elements.size()]));
+			IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+			if ((workingSet = workingSetManager.getWorkingSet(workingSetName)) == null) {
+				workingSet = workingSetManager.createWorkingSet(workingSetName, elements
+						.toArray(new IAdaptable[elements.size()]));
 			}
 		}
 	}
 
 	@Override
 	public boolean isPageComplete() {
-		String workingSetName= workingSetNameText.getText();
-		IWorkingSetManager workingSetManager= MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
-		if (workingSetManager.getWorkingSet(workingSetName) != null){
+		String workingSetName = workingSetNameText.getText();
+		IWorkingSetManager workingSetManager = MylarUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
+		if (workingSetManager.getWorkingSet(workingSetName) != null) {
 			setErrorMessage("Cannot create another Active Taskscape Working Set");
 			return false;
 		} else {
 			return true;
 		}
 	}
-	
-	
+
 }

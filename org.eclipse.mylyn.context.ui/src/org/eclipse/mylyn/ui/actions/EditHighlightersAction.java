@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,39 +34,39 @@ import org.eclipse.ui.internal.Workbench;
 public class EditHighlightersAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.highlighters.edit";
-	
+
 	public EditHighlightersAction() {
 		setText("Edit Highlighters...");
-        setToolTipText("Edit Highlighters...");
-        setId(ID);
-        setImageDescriptor(MylarImages.COLOR_PALETTE);
-	} 
-	
+		setToolTipText("Edit Highlighters...");
+		setId(ID);
+		setImageDescriptor(MylarImages.COLOR_PALETTE);
+	}
+
 	@Override
 	public void run() {
 		IPreferencePage page = new MylarPreferencePage();
 		showPreferencePage("org.eclipse.mylar.ui.preferences", page);
 	}
-	
+
 	protected void showPreferencePage(String id, IPreferencePage page) {
 		final IPreferenceNode targetNode = new PreferenceNode(id, page);
-		
+
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(Workbench.getInstance()
-				.getActiveWorkbenchWindow().getShell(), manager);
-		final boolean [] result = new boolean[] { false };
+		final PreferenceDialog dialog = new PreferenceDialog(Workbench.getInstance().getActiveWorkbenchWindow()
+				.getShell(), manager);
+		final boolean[] result = new boolean[] { false };
 		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 			public void run() {
 				dialog.create();
 				dialog.setMessage(targetNode.getLabelText());
-				result[0]= (dialog.open() == Window.OK);
+				result[0] = (dialog.open() == Window.OK);
 			}
-		});		
-	}	
+		});
+	}
 
 	public void init(IViewPart view) {
-		
+
 	}
 
 	public void run(IAction action) {
@@ -74,6 +74,6 @@ public class EditHighlightersAction extends Action implements IViewActionDelegat
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		
+
 	}
 }

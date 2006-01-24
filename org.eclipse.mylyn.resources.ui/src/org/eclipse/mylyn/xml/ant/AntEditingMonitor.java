@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,59 +34,60 @@ import org.eclipse.ui.part.FileEditorInput;
  */
 public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 
-    public AntEditingMonitor() {
-        super();
-    }
+	public AntEditingMonitor() {
+		super();
+	}
 
-    @Override
-    protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
-        if (part instanceof AntEditor) {
+	@Override
+	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection) {
+		if (part instanceof AntEditor) {
 
-            TextSelection textSelection = null;
-            IEditorInput in = null;
+			TextSelection textSelection = null;
+			IEditorInput in = null;
 
-            // assume that we are editing an xml file due to the editor used
-            // this is the build.xml and other ant file editor
-            AntEditor editor = (AntEditor) part;
+			// assume that we are editing an xml file due to the editor used
+			// this is the build.xml and other ant file editor
+			AntEditor editor = (AntEditor) part;
 
-            if (!(editor.getSelectionProvider().getSelection() instanceof TextSelection)) return;
+			if (!(editor.getSelectionProvider().getSelection() instanceof TextSelection))
+				return;
 
-            textSelection = (TextSelection) editor.getSelectionProvider()
-                    .getSelection();
-            in = editor.getEditorInput();
+			textSelection = (TextSelection) editor.getSelectionProvider().getSelection();
+			in = editor.getEditorInput();
 
-            // check if we have a text selection
-            if (textSelection != null) {
-                try {
-  
-                    AntElementNode node = editor.getAntModel().getNode(textSelection.getOffset(), false);
+			// check if we have a text selection
+			if (textSelection != null) {
+				try {
 
-                    if(node == null){
-                    	return;
-                    }
-                    
-                    FileEditorInput fei = (FileEditorInput)in;
-                 
-                    Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] { } );
-                    method.setAccessible(true);
+					AntElementNode node = editor.getAntModel().getNode(textSelection.getOffset(), false);
 
-                    String path = (String)method.invoke(node, new Object[] { });
-                    if(path == null)
-                    	return;
-                    XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
-                    super.handleElementSelection(part, xnode);
-                } catch (Exception e) {
-                	MylarStatusHandler.log(e, "selection resolve failed");
-                }
-            }
-        }     
-        return;
-    }
-    
-	public static AntElementNode getNode(AntModel antModel, String elementPath) throws SecurityException, NoSuchMethodException {
+					if (node == null) {
+						return;
+					}
+
+					FileEditorInput fei = (FileEditorInput) in;
+
+					Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
+					method.setAccessible(true);
+
+					String path = (String) method.invoke(node, new Object[] {});
+					if (path == null)
+						return;
+					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
+					super.handleElementSelection(part, xnode);
+				} catch (Exception e) {
+					MylarStatusHandler.log(e, "selection resolve failed");
+				}
+			}
+		}
+		return;
+	}
+
+	public static AntElementNode getNode(AntModel antModel, String elementPath) throws SecurityException,
+			NoSuchMethodException {
 		AntProjectNode topNode;
 		try {
-			topNode = antModel.getProjectNode(); 
+			topNode = antModel.getProjectNode();
 			return getNode(topNode, elementPath);
 		} catch (Exception e) {
 			return null;
@@ -96,28 +97,32 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 	/**
 	 * HACK: using reflection to gain accessibility
 	 */
-	private static AntElementNode getNode(AntElementNode topNode, String elementPath) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		if (topNode == null) return null;
-		
-		Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] { } );
-        method.setAccessible(true);
-        
-		String path = (String)method.invoke(topNode, new Object[] { });
-		if (path.compareTo(elementPath) == 0){
+	private static AntElementNode getNode(AntElementNode topNode, String elementPath) throws NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException {
+		if (topNode == null)
+			return null;
+
+		Method method = AntElementNode.class.getDeclaredMethod("getElementPath", new Class[] {});
+		method.setAccessible(true);
+
+		String path = (String) method.invoke(topNode, new Object[] {});
+		if (path.compareTo(elementPath) == 0) {
 			return topNode;
 		}
-        
-		if (topNode.getChildNodes() == null) return null;
-		
-		for (Object obj: topNode.getChildNodes()){
-			if (obj instanceof AntElementNode){
-				AntElementNode node = (AntElementNode)obj;
-				path = (String)method.invoke(node, new Object[] { });
+
+		if (topNode.getChildNodes() == null)
+			return null;
+
+		for (Object obj : topNode.getChildNodes()) {
+			if (obj instanceof AntElementNode) {
+				AntElementNode node = (AntElementNode) obj;
+				path = (String) method.invoke(node, new Object[] {});
 				if (path.compareTo(elementPath) == 0) {
 					return node;
 				} else {
 					AntElementNode node2 = getNode(node, elementPath);
-					if (node2 != null) return node2;
+					if (node2 != null)
+						return node2;
 				}
 			}
 		}

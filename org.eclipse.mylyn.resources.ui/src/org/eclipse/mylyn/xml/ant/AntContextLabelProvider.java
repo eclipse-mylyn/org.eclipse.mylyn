@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImage(IMylarElement node) {
-		return MylarImages.getImage(MylarImages.FILE_XML); 
+		return MylarImages.getImage(MylarImages.FILE_XML);
 	}
 
 	@Override
@@ -38,24 +38,24 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getText(IMylarElement node) {
-        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
-        return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
+		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
+		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
 	@Override
 	protected String getText(IMylarRelation edge) {
-		return XmlReferencesProvider.NAME;  
+		return XmlReferencesProvider.NAME;
 	}
 
 	@Override
 	protected Image getImageForObject(Object object) {
-		return MylarImages.getImage(MylarImages.FILE_XML); 
+		return MylarImages.getImage(MylarImages.FILE_XML);
 	}
 
 	@Override
 	protected String getTextForObject(Object object) {
-        IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
-        return bridge.getName(object);
+		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
+		return bridge.getName(object);
 	}
 
-} 
+}

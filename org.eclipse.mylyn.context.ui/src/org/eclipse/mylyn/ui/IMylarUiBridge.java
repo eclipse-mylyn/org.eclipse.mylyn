@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,22 +22,22 @@ import org.eclipse.ui.IEditorPart;
  * @author Mik Kersten
  */
 public interface IMylarUiBridge {
-	
-    public abstract void open(IMylarElement node);
-    
-    public abstract void setContextCapturePaused(boolean paused);
-    
-    public abstract void restoreEditor(IMylarElement document);
-    
-    public abstract void close(IMylarElement node);
-    
-    public abstract boolean acceptsEditor(IEditorPart editorPart);
 
-    /**
-     * Note that a single editor part can correspond to multipe outlines 
-     * (e.g. the PDE manifest editor).
-     */
-    public abstract List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart);
+	public abstract void open(IMylarElement node);
+
+	public abstract void setContextCapturePaused(boolean paused);
+
+	public abstract void restoreEditor(IMylarElement document);
+
+	public abstract void close(IMylarElement node);
+
+	public abstract boolean acceptsEditor(IEditorPart editorPart);
+
+	/**
+	 * Note that a single editor part can correspond to multipe outlines (e.g.
+	 * the PDE manifest editor).
+	 */
+	public abstract List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart);
 
 	public abstract Object getObjectForTextSelection(TextSelection selection, IEditorPart editor);
 

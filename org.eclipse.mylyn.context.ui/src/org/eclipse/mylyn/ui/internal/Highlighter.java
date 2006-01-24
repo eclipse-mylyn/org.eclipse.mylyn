@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -120,7 +120,7 @@ public class Highlighter {
 			step += 2;
 		}
 		return color; // darkest color supported
-		//        return landmarkColor; 
+		// return landmarkColor;
 	}
 
 	private void initializeHighlight() {
@@ -154,12 +154,12 @@ public class Highlighter {
 			int blueStep = (int) Math.ceil((core.getBlue() - base.getBlue()) / NUM_LEVELS);
 
 			int OFFSET = 5;
-			int red = base.getRed() + redStep*OFFSET;
-			int green = base.getGreen() + greenStep*OFFSET;
-			int blue = base.getBlue() + blueStep*OFFSET;
+			int red = base.getRed() + redStep * OFFSET;
+			int green = base.getGreen() + greenStep * OFFSET;
+			int blue = base.getBlue() + blueStep * OFFSET;
 			for (int i = 0; i < NUM_LEVELS - OFFSET; i++) {
 				if (red > 255)
-					red = 255; // TODO: fix this mess   
+					red = 255; // TODO: fix this mess
 				if (green > 255)
 					green = 255;
 				if (blue > 255)

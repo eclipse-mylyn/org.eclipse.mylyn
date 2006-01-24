@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  * Created on Apr 7, 2005
-  */
+ */
 package org.eclipse.mylar.ui;
 
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -24,90 +24,100 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.internal.MylarContextManager;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 
-
 /**
- * This is a generic interest filter that can be applied to any StructuredViewer.
- * It figures out whether an object is interesting by getting it's handle from the 
- * corresponding structure bridge.
+ * This is a generic interest filter that can be applied to any
+ * StructuredViewer. It figures out whether an object is interesting by getting
+ * it's handle from the corresponding structure bridge.
  * 
  * @author Mik Kersten
  */
 public class InterestFilter extends ViewerFilter implements IPropertyChangeListener {
 
 	private Object temporarilyUnfiltered = null;
-	
+
 	private String excludedMatches = null;
-	
+
 	public InterestFilter() {
 		MylarUiPlugin.getPrefs().addPropertyChangeListener(this);
 	}
-	
+
 	@Override
-    public boolean select(Viewer viewer, Object parent, Object element) {
+	public boolean select(Viewer viewer, Object parent, Object element) {
 		try {
-        	if (!(viewer instanceof StructuredViewer)) return true;
-        	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
-        	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
-        	
-        	IMylarElement node = null;
-            if (element instanceof IMylarElement) {
-                node = (IMylarElement)element;
-            } else { 
-                IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-                if (!bridge.canFilter(element)) {
-                	return true;    
-                }
-                if (matchesExclusion(element, bridge)) return true;
-                
-                String handle = bridge.getHandleIdentifier(element);
-                node = MylarPlugin.getContextManager().getElement(handle);
-            }
-            if (node != null) {
-            	if (node.getInterest().isPredicted()) {
-            		return false;
-            	} else {
-            		return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
-            	}
-            } 
-        } catch (Throwable t) {
-        	MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
-        } 
-        return false;
-    }   
-	
+			if (!(viewer instanceof StructuredViewer))
+				return true;
+			if (!containsMylarInterestFilter((StructuredViewer) viewer))
+				return true;
+			if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent))
+				return true;
+
+			IMylarElement node = null;
+			if (element instanceof IMylarElement) {
+				node = (IMylarElement) element;
+			} else {
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
+				if (!bridge.canFilter(element)) {
+					return true;
+				}
+				if (matchesExclusion(element, bridge))
+					return true;
+
+				String handle = bridge.getHandleIdentifier(element);
+				node = MylarPlugin.getContextManager().getElement(handle);
+			}
+			if (node != null) {
+				if (node.getInterest().isPredicted()) {
+					return false;
+				} else {
+					return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+				}
+			}
+		} catch (Throwable t) {
+			MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
+		}
+		return false;
+	}
+
 	boolean testselect(Viewer viewer, Object parent, Object element) {
 		try {
-        	if (!(viewer instanceof StructuredViewer)) return true;
-        	if (!containsMylarInterestFilter((StructuredViewer)viewer)) return true;
-        	if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent)) return true;
-        	
-            IMylarElement node = null;
-            if (element instanceof IMylarElement) {
-                node = (IMylarElement)element;
-            } else { 
-                IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
-                if (!bridge.canFilter(element)) return true;    
-                if (matchesExclusion(element, bridge)) return true;
-                
-                String handle = bridge.getHandleIdentifier(element);
-                node = MylarPlugin.getContextManager().getElement(handle);
-            }
-            if (node != null) {
-            	if (node.getInterest().isPredicted()) {
-            		return false;
-            	} else {
-            		return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
-            	}
-            } 
-        } catch (Throwable t) {
-        	MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
-        } 
-        return false;
+			if (!(viewer instanceof StructuredViewer))
+				return true;
+			if (!containsMylarInterestFilter((StructuredViewer) viewer))
+				return true;
+			if (temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent))
+				return true;
+
+			IMylarElement node = null;
+			if (element instanceof IMylarElement) {
+				node = (IMylarElement) element;
+			} else {
+				IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(element);
+				if (!bridge.canFilter(element))
+					return true;
+				if (matchesExclusion(element, bridge))
+					return true;
+
+				String handle = bridge.getHandleIdentifier(element);
+				node = MylarPlugin.getContextManager().getElement(handle);
+			}
+			if (node != null) {
+				if (node.getInterest().isPredicted()) {
+					return false;
+				} else {
+					return node.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+				}
+			}
+		} catch (Throwable t) {
+			MylarStatusHandler.log(t, "interest filter failed on viewer: " + viewer.getClass());
+		}
+		return false;
 	}
-	
+
 	private boolean matchesExclusion(Object element, IMylarStructureBridge bridge) {
-		if (excludedMatches == null) return false;
-		if (excludedMatches.equals("*")) return false;
+		if (excludedMatches == null)
+			return false;
+		if (excludedMatches.equals("*"))
+			return false;
 		try {
 			String name = bridge.getName(element);
 			return name.matches(excludedMatches.replaceAll("\\*", ".*").replaceAll("\\.", "\\."));
@@ -120,7 +130,8 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 		boolean found = false;
 		for (int i = 0; i < viewer.getFilters().length; i++) {
 			ViewerFilter filter = viewer.getFilters()[i];
-			if (filter instanceof InterestFilter) found = true;
+			if (filter instanceof InterestFilter)
+				found = true;
 		}
 		return found;
 	}
@@ -128,7 +139,7 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 	public void setTemporarilyUnfiltered(Object temprarilyUnfiltered) {
 		this.temporarilyUnfiltered = temprarilyUnfiltered;
 	}
-	
+
 	public void resetTemporarilyUnfiltered() {
 		this.temporarilyUnfiltered = null;
 	}
@@ -147,9 +158,9 @@ public class InterestFilter extends ViewerFilter implements IPropertyChangeListe
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION.equals(event.getProperty())
-			&& event.getNewValue() instanceof String) {
+				&& event.getNewValue() instanceof String) {
 
-			excludedMatches = (String)event.getNewValue();
+			excludedMatches = (String) event.getNewValue();
 		}
 	}
 }

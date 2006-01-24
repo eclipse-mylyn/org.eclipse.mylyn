@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2005 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,7 +88,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			}
 		}
 	};
-	
+
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
 		@Override
@@ -151,7 +151,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 
 		public void setContextCapturePaused(boolean paused) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	};
 
@@ -170,8 +170,8 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 		initializeActions();
 	}
 
-//	public void earlyStartup() {
-//	}
+	// public void earlyStartup() {
+	// }
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -181,8 +181,9 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					MylarPlugin.getContextManager().addListener(viewerManager);
-					
-					Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(contentOutlineManager);
+
+					Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(
+							contentOutlineManager);
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 					for (int i = 0; i < windows.length; i++) {
 						windows[i].addPageListener(contentOutlineManager);
@@ -230,7 +231,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM, 8);
-		
+
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_STANDARD, true);
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_DARKENED, false);
@@ -299,7 +300,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 	public List<IMylarUiBridge> getUiBridges() {
 		return new ArrayList<IMylarUiBridge>(bridges.values());
 	}
-	
+
 	/**
 	 * @return the corresponding adapter if found, or an adapter with no
 	 *         behavior otherwise (so null is never returned)
@@ -443,14 +444,16 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 			// deprecated code
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry
+						.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 					for (int j = 0; j < elements.length; j++) {
 						if (elements[j].getName().compareTo(UiExtensionPointReader.ELEMENT_UI_BRIDGE) == 0) {
 							readBridge(elements[j]);
-						} else if (elements[j].getName().compareTo(UiExtensionPointReader.ELEMENT_UI_CONTEXT_LABEL_PROVIDER) == 0) {
+						} else if (elements[j].getName().compareTo(
+								UiExtensionPointReader.ELEMENT_UI_CONTEXT_LABEL_PROVIDER) == 0) {
 							readLabelProvider(elements[j]);
 						}
 					}
@@ -464,10 +467,11 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				Object provider = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_UI_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (provider instanceof ILabelProvider && contentType != null) {
-					MylarUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType, (ILabelProvider) provider);
+					MylarUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType,
+							(ILabelProvider) provider);
 				} else {
-					MylarStatusHandler.log("Could not load label provider: " + provider.getClass().getCanonicalName() + " must implement "
-							+ ILabelProvider.class.getCanonicalName(), thisReader);
+					MylarStatusHandler.log("Could not load label provider: " + provider.getClass().getCanonicalName()
+							+ " must implement " + ILabelProvider.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load label provider extension");
@@ -481,8 +485,8 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				if (bridge instanceof IMylarUiBridge && contentType != null) {
 					MylarUiPlugin.getDefault().internalAddBridge((String) contentType, (IMylarUiBridge) bridge);
 				} else {
-					MylarStatusHandler.log("Could not load bridge: " + bridge.getClass().getCanonicalName() + " must implement "
-							+ IMylarUiBridge.class.getCanonicalName(), thisReader);
+					MylarStatusHandler.log("Could not load bridge: " + bridge.getClass().getCanonicalName()
+							+ " must implement " + IMylarUiBridge.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load bridge extension");
