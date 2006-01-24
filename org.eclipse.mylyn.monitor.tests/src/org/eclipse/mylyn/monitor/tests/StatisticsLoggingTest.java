@@ -15,12 +15,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylar.core.tests.ContextTest;
 import org.eclipse.mylar.monitor.InteractionEventLogger;
 import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.reports.InteractionEventSummary;
 import org.eclipse.mylar.monitor.reports.ReportGenerator;
 import org.eclipse.mylar.monitor.reports.collectors.SummaryCollector;
-import org.eclipse.mylar.tests.core.ContextTest;
 
 /**
  * @author Mik Kersten
