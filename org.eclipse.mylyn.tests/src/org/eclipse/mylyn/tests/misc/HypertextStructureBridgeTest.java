@@ -13,7 +13,7 @@ package org.eclipse.mylar.tests.misc;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.hypertext.HypertextStructureBridge;
+import org.eclipse.mylar.internal.hypertext.HypertextStructureBridge;
 
 /**
  * @author Mik Kersten

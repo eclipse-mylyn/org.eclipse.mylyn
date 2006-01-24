@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tests.integration;
 
-import org.eclipse.mylar.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
