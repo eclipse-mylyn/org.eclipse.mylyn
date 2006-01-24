@@ -205,7 +205,10 @@ public class TaskListView extends ViewPart {
 
 	public static final String tableSortIdentifier = "org.eclipse.mylar.tasklist.ui.views.tasklist.sortIndex";
 
+	private static final int DEFAULT_SORT_DIRECTION = -1;
+
 	private int sortIndex = 2;
+	private int sortDirection = DEFAULT_SORT_DIRECTION;
 
 	private TaskActivationHistory taskHistory = new TaskActivationHistory();
 
@@ -627,7 +630,7 @@ public class TaskListView extends ViewPart {
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
 			if (o1 instanceof ITaskCategory || o1 instanceof IRepositoryQuery) {
 				if (o2 instanceof ITaskCategory || o2 instanceof IRepositoryQuery) {
-					return ((ITaskListElement) o1).getDescription().compareTo(((ITaskListElement) o2).getDescription());
+					return sortDirection * ((ITaskListElement) o1).getDescription().compareTo(((ITaskListElement) o2).getDescription());
 				} else {
 					return -1;
 				}
@@ -654,7 +657,7 @@ public class TaskListView extends ViewPart {
 					if (column != null && column.equals(columnNames[1])) {
 						return 0;
 					} else if (column == columnNames[2]) {
-						return element1.getPriority().compareTo(element2.getPriority());
+						return sortDirection * element1.getPriority().compareTo(element2.getPriority());
 					} else if (column == columnNames[3]) {
 						String c1 = element1.getDescription();
 						String c2 = element2.getDescription();
@@ -663,7 +666,7 @@ public class TaskListView extends ViewPart {
 						} catch (Exception e) {
 						}
 
-						return c1.compareTo(c2);
+						return sortDirection * c1.compareTo(c2);
 
 					} else {
 						return 0;
@@ -694,7 +697,7 @@ public class TaskListView extends ViewPart {
 		IMemento sorter = memento.createChild(tableSortIdentifier);
 		IMemento m = sorter.createChild("sorter");
 		m.putInteger("sortIndex", sortIndex);
-
+		m.putInteger("sortDirection", sortDirection);
 		MylarTaskListPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
 
 		if (MylarTaskListPlugin.getDefault() != null) {
@@ -720,11 +723,18 @@ public class TaskListView extends ViewPart {
 				IMemento m = sorterMemento.getChild("sorter");
 				if (m != null) {
 					sortIndex = m.getInteger("sortIndex");
+					Integer sortDirInt = m.getInteger("sortDirection");
+					if(sortDirInt != null) {
+						sortDirection = sortDirInt.intValue();
+					}
 				} else {
 					sortIndex = 2;
+					sortDirection = DEFAULT_SORT_DIRECTION;
 				}
+				
 			} else {
 				sortIndex = 2; // default priority
+				sortDirection = DEFAULT_SORT_DIRECTION;
 			}
 			getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
 		}
@@ -767,6 +777,7 @@ public class TaskListView extends ViewPart {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					sortIndex = index;
+					sortDirection *= DEFAULT_SORT_DIRECTION;
 					getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
 				}
 			});
