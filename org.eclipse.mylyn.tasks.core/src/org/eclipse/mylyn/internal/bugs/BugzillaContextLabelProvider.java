@@ -1,0 +1,74 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylar.internal.bugs;
+
+import org.eclipse.mylar.bugzilla.core.BugReport;
+import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarStructureBridge;
+import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.internal.bugs.search.BugzillaReferencesProvider;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
+import org.eclipse.mylar.internal.ui.AbstractContextLabelProvider;
+import org.eclipse.mylar.internal.ui.MylarImages;
+import org.eclipse.swt.graphics.Image;
+
+/**
+ * @author Mik Kersten
+ */
+public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
+
+	@Override
+	protected Image getImage(IMylarElement node) {
+		return MylarImages.getImage(MylarImages.BUG);
+	}
+
+	@Override
+	protected Image getImage(IMylarRelation edge) {
+		return MylarImages.getImage(MylarBugsPlugin.EDGE_REF_BUGZILLA);
+	}
+
+	@Override
+	protected Image getImageForObject(Object object) {
+		return MylarImages.getImage(MylarImages.BUG);
+	}
+
+	@Override
+	protected String getTextForObject(Object node) {
+		return "" + node;
+	}
+
+	/**
+	 * TODO: slow?
+	 */
+	@Override
+	protected String getText(IMylarElement node) {
+		// try to get from the cache before downloading
+		Object report;
+		BugzillaReportNode reportNode = MylarBugsPlugin.getReferenceProvider().getCached(node.getHandleIdentifier());
+		BugReport cachedReport = MylarBugsPlugin.getDefault().getCache().getCached(node.getHandleIdentifier());
+		IMylarStructureBridge bridge = MylarPlugin.getDefault()
+				.getStructureBridge(BugzillaStructureBridge.CONTENT_TYPE);
+
+		if (reportNode != null && cachedReport == null) {
+			report = reportNode;
+		} else {
+			report = bridge.getObjectForHandle(node.getHandleIdentifier());
+		}
+		return bridge.getName(report);
+	}
+
+	@Override
+	protected String getText(IMylarRelation edge) {
+		return BugzillaReferencesProvider.NAME;
+	}
+}

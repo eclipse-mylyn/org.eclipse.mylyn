@@ -5,8 +5,8 @@
    
    <extension point="org.eclipse.mylar.tasklist.providers">
       <taskHandler
-            taskHandlerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskHandler"
-            externalizerClass="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
+            taskHandlerClass="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskHandler"
+            externalizerClass="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
             id="org.eclipse.mylar.bugzilla.ui.tasklist"
             >
       </taskHandler>
@@ -18,7 +18,7 @@
          point="org.eclipse.mylar.tasklist.repositories">
 
       <repositoryClient
-            class="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskRepositoryClient"
+            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskRepositoryClient"
             id="org.eclipse.mylar.bugzilla.tasklist.repositories"
             name="Bugzilla Client"
             type="bugzilla"/>
@@ -89,19 +89,19 @@
       <editor
             name="Bugzilla viewer"
             icon="icons/elcl16/bug.gif"
-            class="org.eclipse.mylar.bugzilla.ui.editor.ExistingBugEditor"
+            class="org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor"
             id="org.eclipse.mylar.bugzilla.ui.existingBugEditor">
       </editor>
       <editor
       		name="Bugzilla viewer"
       		icon="icons/elcl16/bug.gif"
-      		class="org.eclipse.mylar.bugzilla.ui.editor.NewBugEditor"
+      		class="org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditor"
       		id="org.eclipse.mylar.bugzilla.ui.newBugEditor">
       </editor>
            <editor
            icon="icons/elcl16/bug.gif"
            name="Bugzilla task viewer"
-           class="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTaskEditor"
+           class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor"
            id="org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor"/>
    </extension>   
    <extension
@@ -117,7 +117,7 @@
          id="org.eclipse.mylar.bugzilla.core.search.searchPage"
          name="Bugzilla Search Page">
       <page
-            class="org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchPage"
+            class="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage"
             enabled="true"
             icon="icons/elcl16/bug-search.gif"
             id="org.eclipse.mylar.bugzilla.core.search.bugzillaSearchPage"
@@ -128,8 +128,8 @@
          id="BugzillaSearchPage"
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
-            class="org.eclipse.mylar.bugzilla.ui.search.BugzillaSearchResultView"
-            searchResultClass="org.eclipse.mylar.bugzilla.core.search.BugzillaSearchResult"
+            class="org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchResultView"
+            searchResultClass="org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchResult"
             id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>
    </extension>
    
@@ -139,7 +139,7 @@
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
   		
   		<action
-               class="org.eclipse.mylar.bugzilla.ui.actions.SynchronizeReportsAction"
+               class="org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction"
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
@@ -149,7 +149,7 @@
          </action>
          
          <action
-               class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
+               class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
                enablesFor="*"
                icon="icons/etool16/task-bug-new.gif"
                id="org.eclipse.mylar.bugzilla.tasklist.addNew"
@@ -167,7 +167,7 @@
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
          <action
-               class="org.eclipse.mylar.bugzilla.ui.actions.SynchronizeReportsAction"
+               class="org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction"
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
@@ -176,9 +176,9 @@
                tooltip="Synchronize Report(s)">
             <enablement>
                <or>
-                    <objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaTask"/>
-					<objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryCategory"/>
-               		<objectClass name="org.eclipse.mylar.bugzilla.ui.tasklist.BugzillaQueryHit"/>
+                    <objectClass name="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask"/>
+					<objectClass name="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryCategory"/>
+               		<objectClass name="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit"/>
                </or>
             </enablement>
          </action>
@@ -197,7 +197,7 @@
   		  -->
   			
   			<action
-           class="org.eclipse.mylar.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
+           class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
            enablesFor="*"
            icon="icons/etool16/task-bug-new.gif"
            id="org.eclipse.mylar.bugzilla.tasklist.addNew"

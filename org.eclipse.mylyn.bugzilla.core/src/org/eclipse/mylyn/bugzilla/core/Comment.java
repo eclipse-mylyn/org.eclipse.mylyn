@@ -14,6 +14,7 @@ package org.eclipse.mylar.bugzilla.core;
 import java.io.Serializable;
 import java.util.Date;
 
+
 /**
  * A comment posted on a bug.
  */

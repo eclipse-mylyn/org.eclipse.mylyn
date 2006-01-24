@@ -13,6 +13,7 @@ package org.eclipse.mylar.bugzilla.core;
 import java.io.Serializable;
 import java.util.List;
 
+
 /**
  * Interface representing a Bugzilla bug report.
  */
