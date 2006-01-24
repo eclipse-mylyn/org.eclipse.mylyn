@@ -26,6 +26,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.util.MylarStatusHandler;
 import org.eclipse.mylar.ide.MylarIdePlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -44,15 +45,8 @@ public class ResourceUiBridge implements IMylarUiBridge {
         IMylarStructureBridge adapter = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
         if (adapter == null) return;
         IResource resource = (IResource)adapter.getObjectForHandle(node.getHandleIdentifier());
-        if (resource != null && resource.exists()) {
-	        if (resource instanceof IFile) {
-	            IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-	            try {
-	                if (page != null) IDE.openEditor(page, (IFile)resource, true);
-	            } catch (PartInitException e) { 
-	            	MylarStatusHandler.log(e, "open failed");
-	            }
-	        }
+        if (resource instanceof IFile && resource.exists()) {
+	        internalOpenEditor((IFile)resource, true);
         }
     }
 
@@ -63,16 +57,23 @@ public class ResourceUiBridge implements IMylarUiBridge {
     
 	public void restoreEditor(IMylarElement document) {
 		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
-		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
 		if (resource instanceof IFile) {
-			try {
-				IDE.openEditor(activePage, (IFile)resource, false);
-			} catch (PartInitException e) {
-				MylarStatusHandler.fail(e, "failed to open editor for: " + resource, false);
-			}	
+			internalOpenEditor((IFile)resource, false);
 		}
 	}
-    
+	
+	private void internalOpenEditor(IFile file, boolean activate) {
+		try {
+			IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+			IEditorDescriptor editorDescriptor = IDE.getDefaultEditor(file);
+			if (editorDescriptor != null && editorDescriptor.isInternal()) {
+				IDE.openEditor(activePage, (IFile)file, activate);
+			} 
+		} catch (PartInitException e) {
+			MylarStatusHandler.fail(e, "failed to open editor for: " + file, false);
+		}
+	}
+	
     public void close(IMylarElement node) {
         IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
         if (page != null) {

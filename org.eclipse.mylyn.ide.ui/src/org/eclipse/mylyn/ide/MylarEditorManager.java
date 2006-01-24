@@ -33,8 +33,6 @@ import org.eclipse.ui.internal.Workbench;
  */
 public class MylarEditorManager implements IMylarContextListener {
 
-//	public static final int ACTIVATION_THRESHOLD = 8; 
-	
 	public void contextActivated(IMylarContext context) {
 		if (MylarTaskListPlugin.getPrefs().getBoolean(MylarTaskListPrefConstants.AUTO_MANAGE_EDITORS)) {
 	        Workbench workbench = (Workbench)PlatformUI.getWorkbench();
