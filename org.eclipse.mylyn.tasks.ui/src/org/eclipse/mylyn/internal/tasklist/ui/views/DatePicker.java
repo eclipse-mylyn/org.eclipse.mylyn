@@ -149,7 +149,7 @@ public class DatePicker extends Composite {
 			public void keyReleased(KeyEvent e) {
 			}
 		});
-
+		pickerShell.pack();
 		pickerShell.open();
 	}
 
