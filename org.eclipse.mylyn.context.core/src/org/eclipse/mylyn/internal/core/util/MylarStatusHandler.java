@@ -121,7 +121,7 @@ public class MylarStatusHandler {
 								&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 							shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						}
-						ErrorDialog.openError(shell, "Mylar error", MylarStatusHandler.ERROR_MESSAGE, status);
+						ErrorDialog.openError(shell, "Mylar Error", MylarStatusHandler.ERROR_MESSAGE, status);
 					}
 				});
 			} catch (Throwable t) {
