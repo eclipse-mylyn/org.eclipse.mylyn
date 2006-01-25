@@ -26,7 +26,7 @@ import org.eclipse.mylar.internal.ide.team.MylarChangeSetManager;
 import org.eclipse.mylar.internal.ide.ui.NavigatorRefreshListener;
 import org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToProblemsListAction;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;

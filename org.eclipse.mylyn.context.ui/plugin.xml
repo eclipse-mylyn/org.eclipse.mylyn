@@ -39,7 +39,7 @@
               tooltip="Clear Context">
            <enablement>
               <or>
-                 <objectClass name="org.eclipse.mylar.tasklist.ITask"/>
+                 <objectClass name="org.eclipse.mylar.internal.tasklist.ITask"/>
               </or>
            </enablement>
         </action>
