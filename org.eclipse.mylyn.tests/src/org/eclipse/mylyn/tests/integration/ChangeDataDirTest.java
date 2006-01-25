@@ -20,14 +20,15 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskHandler;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
@@ -128,8 +129,10 @@ public class ChangeDataDirTest extends TestCase {
 	}
 
 	private void addBugzillaTask(BugzillaTask newTask) {
-		BugzillaTaskHandler handler = new BugzillaTaskHandler();
-		handler.addTaskToRegistry(newTask);
+		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		client.addTaskToArchive(newTask);
+//		BugzillaTaskHandler handler = new BugzillaTaskHandler();
+//		handler.addTaskToArchive(newTask);
 		MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 	}
 
