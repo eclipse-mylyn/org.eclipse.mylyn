@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
-import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
@@ -91,7 +91,7 @@ public class TaskListExtensionReader {
 				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER) == 0) {
-						readHandlerAndExternalizer(elements[j], externalizers);
+						readExternalizer(elements[j], externalizers);
 					} else if (elements[j].getName().compareTo(DYNAMIC_POPUP_ELEMENT) == 0) {
 						readDynamicPopupContributor(elements[j]);
 					}
@@ -139,8 +139,8 @@ public class TaskListExtensionReader {
 		try {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
-			if (repository instanceof ITaskRepositoryClient && type != null) {
-				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((ITaskRepositoryClient) repository);
+			if (repository instanceof TaskRepositoryClient && type != null) {
+				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((TaskRepositoryClient) repository);
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
 			}
@@ -165,7 +165,7 @@ public class TaskListExtensionReader {
 		}
 	}
 
-	private static void readHandlerAndExternalizer(IConfigurationElement element, List<ITaskListExternalizer> externalizers) {
+	private static void readExternalizer(IConfigurationElement element, List<ITaskListExternalizer> externalizers) {
 		try {
 			Object externalizerObject = element.createExecutableExtension(ATTR_EXTERNALIZER_CLASS);
 			if (externalizerObject instanceof ITaskListExternalizer) {
@@ -176,13 +176,13 @@ public class TaskListExtensionReader {
 						+ " must implement " + ITaskListExternalizer.class.getCanonicalName(), null);
 			}
 
-			Object taskHandler = element.createExecutableExtension(ATTR_ACTION_CONTRIBUTOR_CLASS);
-			if (taskHandler instanceof ITaskHandler) {
-				MylarTaskListPlugin.getDefault().addTaskHandler((ITaskHandler) taskHandler);
-			} else {
-				MylarStatusHandler.log("Could not load contributor: " + taskHandler.getClass().getCanonicalName()
-						+ " must implement " + ITaskHandler.class.getCanonicalName(), null);
-			}
+//			Object taskHandler = element.createExecutableExtension(ATTR_ACTION_CONTRIBUTOR_CLASS);
+//			if (taskHandler instanceof ITaskHandler) {
+//				MylarTaskListPlugin.getDefault().addTaskHandler((ITaskHandler) taskHandler);
+//			} else {
+//				MylarStatusHandler.log("Could not load contributor: " + taskHandler.getClass().getCanonicalName()
+//						+ " must implement " + ITaskHandler.class.getCanonicalName(), null);
+//			}
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load task handler extension");
 		}

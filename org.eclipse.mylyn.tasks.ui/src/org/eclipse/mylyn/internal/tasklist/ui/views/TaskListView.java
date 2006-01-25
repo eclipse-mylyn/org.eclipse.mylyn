@@ -25,7 +25,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -44,7 +43,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
@@ -1025,18 +1023,15 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-	/**
-	 * Refactor handler stuff
-	 */
 	private void addAction(Action action, IMenuManager manager, ITaskListElement element) {
 		manager.add(action);
 		if (element != null) {
-			ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(element);
-			if (handler != null) {
-				action.setEnabled(handler.enableAction(action, element));
-			} else {
-				updateActionEnablement(action, element);
-			}
+//			ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(element);
+//			if (handler != null) {
+//				action.setEnabled(handler.enableAction(action, element));
+//			} else {
+			updateActionEnablement(action, element);
+//			}
 		}
 	}
 
@@ -1196,9 +1191,9 @@ public class TaskListView extends ViewPart {
 		});
 	}
 
-	public void showMessage(String message) {
-		MessageDialog.openInformation(getViewer().getControl().getShell(), "TaskList Message", message);
-	}
+//	public void showMessage(String message) {
+//		MessageDialog.openInformation(getViewer().getControl().getShell(), "TaskList Message", message);
+//	}
 
 	/**
 	 * Passing the focus request to the viewer's control.

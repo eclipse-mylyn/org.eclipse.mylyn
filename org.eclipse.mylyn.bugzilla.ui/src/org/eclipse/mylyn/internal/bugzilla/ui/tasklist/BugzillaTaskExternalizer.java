@@ -26,7 +26,7 @@ import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -73,7 +73,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 	private static final String TAG_TASK = "BugzillaReport";
 
-	private ITaskRepositoryClient repositoryClient;
+	private TaskRepositoryClient repositoryClient;
 	
 	public BugzillaTaskExternalizer() {
 		repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
@@ -93,7 +93,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		parent.appendChild(node);
 	}
 
-	public ITaskRepositoryClient getRepositoryClient() {
+	public TaskRepositoryClient getRepositoryClient() {
 		return repositoryClient;
 	}
 	
@@ -271,7 +271,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			}
 		}
 
-		ITaskRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		TaskRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 		if (repositoryClient != null) {
 			repositoryClient.addTaskToArchive(task);
 		}

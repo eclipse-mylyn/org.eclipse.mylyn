@@ -60,16 +60,6 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="taskHandlerClass" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.mylar.tasklist.ITaskHandler"/>
-               </appInfo>
-            </annotation>
-         </attribute>
          <attribute name="id" type="string">
             <annotation>
                <documentation>

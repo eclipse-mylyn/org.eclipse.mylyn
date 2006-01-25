@@ -23,7 +23,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListExtensionReader;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
@@ -35,7 +34,6 @@ import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
-import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.events.ShellEvent;
@@ -63,7 +61,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListSaveManager taskListSaveManager = new TaskListSaveManager();
 
-	private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO:
+	// private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>();
+	// // TODO:
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -300,16 +299,20 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				try {
 					TaskListExtensionReader.initExtensions(taskListWriter);
 					taskRepositoryManager.readRepositories();
-					
+
 					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.addListener(taskListSaveManager);
 
-					restoreTaskHandlerState();
+					// restoreTaskHandlerState();
 					taskListManager.readExistingOrCreateNewList();
-					restoreTaskHandlerState();
-
 					migrateHandlesToRepositorySupport();
-					
+
+					if (getPrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
+						for (TaskRepositoryClient repositoryClient : taskRepositoryManager.getRepositoryClients()) {
+							repositoryClient.synchronize();
+						}
+					}
+
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
@@ -383,8 +386,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			}
 			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
-						.removeDisposeListener(taskListSaveManager);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeDisposeListener(
+						taskListSaveManager);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Java stop failed", false);
@@ -398,7 +401,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, true);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EXTERNAL, false);
+		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, false);
+
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
+		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 
 		store.setDefault(TaskListPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
 	}
@@ -441,6 +447,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public static IPreferenceStore getPrefs() {
+		// TODO: should be using the task list's prefernece store, but can't
+		// change without migrating because this will cause people to lose
+		// repositories
 		return MylarPlugin.getDefault().getPreferenceStore();
 	}
 
@@ -514,27 +523,27 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	public List<ITaskHandler> getTaskHandlers() {
-		return taskHandlers;
-	}
+	// public List<ITaskHandler> getTaskHandlers() {
+	// return taskHandlers;
+	// }
 
-	public ITaskHandler getHandlerForElement(ITaskListElement element) {
-		for (ITaskHandler taskHandler : taskHandlers) {
-			if (taskHandler.acceptsItem(element))
-				return taskHandler;
-		}
-		return null;
-	}
+	// public ITaskHandler getHandlerForElement(ITaskListElement element) {
+	// for (ITaskHandler taskHandler : taskHandlers) {
+	// if (taskHandler.acceptsItem(element))
+	// return taskHandler;
+	// }
+	// return null;
+	// }
 
-	public void addTaskHandler(ITaskHandler taskHandler) {
-		taskHandlers.add(taskHandler);
-	}
+	// public void addTaskHandler(ITaskHandler taskHandler) {
+	// taskHandlers.add(taskHandler);
+	// }
 
-	private void restoreTaskHandlerState() {
-		for (ITaskHandler handler : taskHandlers) {
-			handler.restoreState(TaskListView.getDefault());
-		}
-	}
+	// private void restoreTaskHandlerState() {
+	// for (ITaskHandler handler : taskHandlers) {
+	// handler.restoreState(TaskListView.getDefault());
+	// }
+	// }
 
 	private List<IDynamicSubMenuContributor> menuContributors = new ArrayList<IDynamicSubMenuContributor>();
 

@@ -506,19 +506,21 @@ public class TaskPlannerEditorPart extends EditorPart {
 						updateEstimatedHours(contentProvider);
 						continue;
 					} else if (selectedObject instanceof ITaskListElement) {
-						if (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
-							ITask task = null;
-							if (selectedObject instanceof ITask) {
-								task = (ITask) selectedObject;
-							} else if (selectedObject instanceof IQueryHit) {
-								task = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
-							}
-							if (task != null) {
-								contentProvider.addTask(task);
-								updateEstimatedHours(contentProvider);
-								continue;
-							}
+						// if
+						// (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement)
+						// selectedObject) != null) {
+						ITask task = null;
+						if (selectedObject instanceof ITask) {
+							task = (ITask) selectedObject;
+						} else if (selectedObject instanceof IQueryHit) {
+							task = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
 						}
+						if (task != null) {
+							contentProvider.addTask(task);
+							updateEstimatedHours(contentProvider);
+							continue;
+						}
+						// }
 					} else {
 						return false;
 					}

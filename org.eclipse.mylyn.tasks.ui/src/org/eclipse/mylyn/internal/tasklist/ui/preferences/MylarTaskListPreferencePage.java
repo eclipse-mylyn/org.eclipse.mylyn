@@ -47,8 +47,10 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 	private Button reportInternal = null;
 
-	private Button multipleActive = null;
+	private Button refreshQueries = null;
 
+//	private Button refreshQueries;
+	
 	public MylarTaskListPreferencePage() {
 		super();
 		setPreferenceStore(MylarTaskListPlugin.getPrefs());
@@ -77,14 +79,20 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		container.setLayoutData(gridData);
 		GridLayout gl = new GridLayout(1, false);
 		container.setLayout(gl);
+		
+//		refreshQueries = new Button(container, SWT.CHECK)
+//		refreshQueries.setText("Automatically refresh Bugzilla reports and queries on startup", BooleanFieldEditor.DEFAULT,
+//				getFieldEditorParent());
+//		
+		
 		// closeEditors = new Button(container, SWT.CHECK);
 		// closeEditors.setText("Close all editors on task deactivation
 		// (defaults to close only editors of interesting resources)");
 		// closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));
 
-		multipleActive = new Button(container, SWT.CHECK);
-		multipleActive.setText("Enable multiple task contexts to be active");
-		multipleActive.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
+		refreshQueries = new Button(container, SWT.CHECK);
+		refreshQueries.setText("Automatically perform a repository refresh on startup");
+		refreshQueries.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 	}
 
 	private void createBugzillaReportOption(Composite parent) {
@@ -128,7 +136,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		// getPreferenceStore().setValue(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL,
 		// reportExternal.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.DEFAULT_URL_PREFIX, taskURLPrefixText.getText());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, multipleActive.getSelection());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, refreshQueries.getSelection());
 
 		return true;
 	}
@@ -139,7 +147,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
 		// reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
-		multipleActive.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
+		refreshQueries.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		// saveCombo.setText(getPreferenceStore().getString(MylarTaskListPlugin.SAVE_TASKLIST_MODE));
 		return true;
 	}
@@ -161,8 +169,8 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		// reportExternal.setSelection(getPreferenceStore().getDefaultBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
 		taskURLPrefixText.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.DEFAULT_URL_PREFIX));
 
-		multipleActive.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
+		refreshQueries.setSelection(getPreferenceStore().getDefaultBoolean(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 	}
 
 	private Label createLabel(Composite parent, String text) {

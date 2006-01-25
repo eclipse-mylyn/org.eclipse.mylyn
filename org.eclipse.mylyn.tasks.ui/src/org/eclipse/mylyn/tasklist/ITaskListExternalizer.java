@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
  */
 public interface ITaskListExternalizer {
 
-	public abstract ITaskRepositoryClient getRepositoryClient();
+	public abstract TaskRepositoryClient getRepositoryClient();
 	
 	/**
 	 * Note that registries get read as a normal category, but get written out

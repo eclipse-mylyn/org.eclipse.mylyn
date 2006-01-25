@@ -37,7 +37,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.graphics.Font;
@@ -115,8 +115,8 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 	}
 
 	public void addHit(IQueryHit hit) {
-		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-		ITask correspondingTask = client.getFromBugzillaTaskRegistry(
+		TaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		ITask correspondingTask = client.getTaskFromArchive(
 				hit.getHandleIdentifier());
 		hit.setCorrespondingTask(correspondingTask);
 		hits.add(hit);

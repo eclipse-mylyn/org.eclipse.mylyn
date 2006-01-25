@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.IRepositoryQuery;
-import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepositoryClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -104,7 +104,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	/**
 	 * TODO: make local task externalizer use repository.
 	 */
-	public ITaskRepositoryClient getRepositoryClient() {
+	public TaskRepositoryClient getRepositoryClient() {
 		return null;
 	}
 	

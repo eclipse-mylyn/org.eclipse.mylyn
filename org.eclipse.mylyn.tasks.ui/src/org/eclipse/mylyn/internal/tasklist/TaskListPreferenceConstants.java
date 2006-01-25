@@ -54,4 +54,6 @@ public class TaskListPreferenceConstants {
 
 	public static final String CONTEXTS_MIGRATED = "org.eclipse.mylar.tasklist.repositories.migrated.single";
 
+	public static final String REPOSITORY_SYNCH_ON_STARTUP = "org.eclipse.mylar.tasklist.repositories.synch.startup";
+
 }

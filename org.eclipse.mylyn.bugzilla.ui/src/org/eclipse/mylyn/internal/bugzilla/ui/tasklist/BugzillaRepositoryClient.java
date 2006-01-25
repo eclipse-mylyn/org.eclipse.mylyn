@@ -11,28 +11,24 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener;
+import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
-import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Display;
@@ -40,15 +36,14 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Mik Kersten
  */
-public class BugzillaRepositoryClient implements ITaskRepositoryClient, IOfflineBugListener {
+public class BugzillaRepositoryClient extends TaskRepositoryClient implements IOfflineBugListener {
+
+	private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
 
 	private static final String LABEL = "Bugzilla (supports uncustomized 2.16-2.20)";
 
-	private Map<String, BugzillaTask> bugzillaTaskArchive = new HashMap<String, BugzillaTask>();
-
-	private TaskCategory archiveCategory = null;
-	
 	public BugzillaRepositoryClient() {
+		super();
 		// TODO: remove on dispose?
 		BugzillaPlugin.getDefault().addOfflineStatusListener(this);
 	}
@@ -69,43 +64,12 @@ public class BugzillaRepositoryClient implements ITaskRepositoryClient, IOffline
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
-	public void addTaskToArchive(ITask newTask) {
-		if (newTask instanceof BugzillaTask 
-				&& !bugzillaTaskArchive.containsKey(newTask.getHandleIdentifier())) { 
-			bugzillaTaskArchive.put(newTask.getHandleIdentifier(), (BugzillaTask)newTask);
-			if (archiveCategory != null) {
-				archiveCategory.internalAddTask(newTask);
-			}
-		}
+	public void synchronize() {
+		RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction();
+		refresh.setShowProgress(false);
+		refresh.run();
+		refresh.setShowProgress(true);
 	}
-			 
-//			ITask taskToAdd = getFromBugzillaTaskRegistry(newTask.getHandleIdentifier());
-//			BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager()
-//					.getFromBugzillaTaskRegistry(newTask.getHandleIdentifier());
-			 
-//			if (retrievedTask instanceof BugzillaTask) {
-//				if (bugzillaTaskArchive.get(newTask.getHandleIdentifier()) == null) {
-
-//				}
-//				retrievedTask = (BugzillaTask) newTask;
-//			}
-//		}
-//	}
-
-	public ITask getFromBugzillaTaskRegistry(String handle) {
-		return bugzillaTaskArchive.get(handle);
-	}
-
-	public List<ITask> getArchiveTasks() {
-		List<ITask> archiveTasks = new ArrayList<ITask>();
-		archiveTasks.addAll(bugzillaTaskArchive.values());
-		return archiveTasks;
-	}
-
-	public void setArchiveCategory(TaskCategory category) {
-		this.archiveCategory = category;
-	}
- 
 	
 	public ITask createTaskFromExistingId(TaskRepository repository, String id) {
 		int bugId = -1;
@@ -116,30 +80,15 @@ public class BugzillaRepositoryClient implements ITaskRepositoryClient, IOffline
 				return null;
 			}
 		} catch (NumberFormatException nfe) {
-			TaskListView.getDefault().showMessage("Invalid report id.");
+			MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG, "Invalid report id: " + id);
 			return null;
 		}
 
 		BugzillaTask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(), bugId),
-				"<bugzilla info>", true, true);
+				DESCRIPTION_DEFAULT, true, true);
 
-		// ITaskHandler taskHandler =
-		// MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
-		// if (taskHandler != null) {
 		addTaskToArchive(newTask);
 		newTask.scheduleDownloadReport();
-//		if (addedTask instanceof BugzillaTask) {
-//			BugzillaTask newTask2 = (BugzillaTask) addedTask;
-//			if (newTask2 == newTask) {
-//				((BugzillaTask) newTask).scheduleDownloadReport();
-//			} else {
-//				newTask = newTask2;
-//				((BugzillaTask) newTask).updateTaskDetails();
-//			}
-//			// }
-//		} else {
-//			((BugzillaTask) newTask).scheduleDownloadReport();
-//		}
 		return newTask;
 	}
 

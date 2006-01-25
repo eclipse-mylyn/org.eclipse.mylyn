@@ -21,7 +21,7 @@ import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 
@@ -106,7 +106,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
 					.getFirstElement();
 
-		ITaskRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		TaskRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 		if (repositoryClient != null) {
 			repositoryClient.addTaskToArchive(newTask);
 		}
@@ -129,7 +129,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 		}
 		
-		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		TaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 		client.addTaskToArchive(newTask);
 //		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskArchive((BugzillaTask) newTask);
 		

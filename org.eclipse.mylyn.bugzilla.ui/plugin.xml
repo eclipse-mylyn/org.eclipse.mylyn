@@ -4,11 +4,9 @@
 <plugin>
    
    <extension point="org.eclipse.mylar.tasklist.providers">
-      <taskHandler
-            taskHandlerClass="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskHandler"
+      <taskHandler 
             externalizerClass="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
-            id="org.eclipse.mylar.bugzilla.ui.tasklist"
-            >
+            id="org.eclipse.mylar.bugzilla.ui.tasklist">
       </taskHandler>
    </extension>
    

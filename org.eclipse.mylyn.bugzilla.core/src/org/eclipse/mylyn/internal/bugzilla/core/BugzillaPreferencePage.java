@@ -15,7 +15,6 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -37,8 +36,6 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 	private static final String bugzillaMaxResultsLabel = "Maximum returned results: ";
 
 	private IntegerFieldEditor maxResults;
-
-	private BooleanFieldEditor refreshQueries;
 
 	/**
 	 * Constructor for the preferences page
@@ -84,13 +81,13 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 				new String[][] { { IBugzillaConstants.SERVER_220, IBugzillaConstants.SERVER_VERSION },
 						{ IBugzillaConstants.SERVER_218, IBugzillaConstants.SERVER_VERSION },
 						{ IBugzillaConstants.SERVER_216, IBugzillaConstants.SERVER_VERSION } }, getFieldEditorParent());
-		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY,
-				"Automatically refresh Bugzilla reports and queries on startup", BooleanFieldEditor.DEFAULT,
-				getFieldEditorParent());
+//		refreshQueries = new BooleanFieldEditor(IBugzillaConstants.REFRESH_QUERY,
+//				"Automatically refresh Bugzilla reports and queries on startup", BooleanFieldEditor.DEFAULT,
+//				getFieldEditorParent());
 
 		addField(maxResults);
 		addField(bugzillaVersionEditor);
-		addField(refreshQueries);
+//		addField(refreshQueries);
 	}
 
 	public static void initDefaults(IPreferenceStore store) {
@@ -117,8 +114,8 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 			}
 		}
 
-		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY,
-				refreshQueries.getBooleanValue());
+//		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY,
+//				refreshQueries.getBooleanValue());
 
 		try {
 			int numMaxResults = maxResults.getIntValue();

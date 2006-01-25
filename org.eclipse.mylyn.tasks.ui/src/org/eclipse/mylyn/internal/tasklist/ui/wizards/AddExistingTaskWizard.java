@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
+import org.eclipse.mylar.tasklist.TaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 
@@ -27,7 +27,7 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
 			@Override
 			protected IWizard createWizard(TaskRepository taskRepository) {
-				ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+				TaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 						taskRepository.getKind());
 				return client.getAddExistingTaskWizard(taskRepository);
 			}
