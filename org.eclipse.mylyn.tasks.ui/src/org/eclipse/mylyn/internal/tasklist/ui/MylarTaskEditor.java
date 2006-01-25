@@ -109,23 +109,33 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		try {
 			int index = 0;
 			index = createTaskSummaryPage();
+			int selectedIndex = index;
 			for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditors()) {
 				if (factory.canCreateEditorFor(task)) {
-					IEditorPart editor = factory.createEditor(this);
-					editorsToNotifyOnChange.add(editor);
-					index = addPage(editor, factory.createEditorInput(task));
-					setPageText(index++, factory.getTitle());
+					try {
+						IEditorPart editor = factory.createEditor(this);
+						IEditorInput input = factory.createEditorInput(task);
+						if (editor != null && input != null) {
+							editorsToNotifyOnChange.add(editor);
+							index = addPage(editor, input);
+							selectedIndex = index;
+							setPageText(index++, factory.getTitle());
+						}
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "Could not create editor via factory: " + factory, true);
+					}
 				}
 			}
 			// HACK: check URL properly
 			if (task.getUrl().length() > 8) {
 				createBrowserPage();
 			}
+			setActivePage(selectedIndex);
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
 		}
 	}
-	
+
 	public IEditorPart getActiveEditor() {
 		return super.getActiveEditor();
 	}
@@ -143,7 +153,6 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		return 0;
 	}
 
-
 	private void createBrowserPage() {
 		try {
 			webBrowser = new Browser(getContainer(), SWT.NONE);
@@ -153,8 +162,9 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 			boolean openWithBrowser = MylarTaskListPlugin.getPrefs().getBoolean(
 					TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
-			if (task.isLocal() || openWithBrowser)
+			if (task.isLocal() || openWithBrowser) {
 				setActivePage(index);
+			}
 		} catch (SWTError e) {
 			MylarStatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
 		} catch (RuntimeException e) {
@@ -303,7 +313,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-//		super.pageChange(newPageIndex);
+		// super.pageChange(newPageIndex);
 		for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditors()) {
 			for (IEditorPart editor : editorsToNotifyOnChange) {
 				factory.notifyEditorActivationChange(editor);

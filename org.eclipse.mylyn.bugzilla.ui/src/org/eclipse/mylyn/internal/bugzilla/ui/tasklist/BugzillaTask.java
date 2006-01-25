@@ -392,7 +392,6 @@ public class BugzillaTask extends Task {
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				state = BugTaskState.DOWNLOADING;
-				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
 //				notifyTaskDataChange();
 				// Update time this bugtask was last downloaded.
 				lastRefresh = new Date();
@@ -403,6 +402,7 @@ public class BugzillaTask extends Task {
 				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
 //				notifyTaskDataChange();
 				saveBugReport(true);
+				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not download report", false);
 			}
