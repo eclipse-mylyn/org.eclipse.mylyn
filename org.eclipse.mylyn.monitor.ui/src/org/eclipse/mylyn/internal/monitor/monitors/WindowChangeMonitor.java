@@ -15,7 +15,7 @@ import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Logs all bug root window selections (i.e. the window that the workbench is
@@ -34,7 +34,7 @@ public class WindowChangeMonitor implements IWindowListener {
 	private IWorkbenchWindow rootWindow;
 
 	public WindowChangeMonitor() {
-		rootWindow = Workbench.getInstance().getActiveWorkbenchWindow();
+		rootWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 	}
 
 	// TODO: Should we add the default set of monitors to the new window as

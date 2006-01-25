@@ -30,7 +30,7 @@ import org.eclipse.mylar.internal.monitor.monitors.PerspectiveChangeMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -147,7 +147,7 @@ public class MonitorTest extends TestCase {
 	}
 
 	private void generateSelection() {
-		selectionMonitor.selectionChanged(Workbench.getInstance().getActiveWorkbenchWindow().getActivePage()
+		selectionMonitor.selectionChanged(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 				.getActivePart(), new StructuredSelection("yo"));
 	}
 
