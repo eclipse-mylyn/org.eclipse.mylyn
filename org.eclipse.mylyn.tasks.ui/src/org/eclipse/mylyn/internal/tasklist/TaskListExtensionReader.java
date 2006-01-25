@@ -72,36 +72,40 @@ public class TaskListExtensionReader {
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 		if (!extensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_TASK_CONTRIBUTOR);
-			IExtension[] extensions = extensionPoint.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER) == 0) {
-						readTaskHandler(elements[j], externalizers);
-					} else if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) == 0) {
-						readRepository(elements[j]);
-						// } else if
-						// (elements[j].getName().compareTo(TASK_LISTENER_ELEMENT)
-						// == 0) {
-						// readTaskListener(elements[j]);
-					} else if (elements[j].getName().compareTo(DYNAMIC_POPUP_ELEMENT) == 0) {
-						readDynamicPopupContributor(elements[j]);
-					}
-				}
-			}
-
+			
+			// HACK: has to be read first
 			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
 			for (int i = 0; i < repositoryExtensions.length; i++) {
 				IConfigurationElement[] elements = repositoryExtensions[i].getConfigurationElements();
 				for (int j = 0; j < elements.length; j++) {
 					if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) == 0) {
-						readRepository(elements[j]);
+						readRepositoryClient(elements[j]);
 					}
 				}
 			}
-
+			
+			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_TASK_CONTRIBUTOR);
+			IExtension[] extensions = extensionPoint.getExtensions();
+			for (int i = 0; i < extensions.length; i++) {
+				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+				for (int j = 0; j < elements.length; j++) {
+					if (elements[j].getName().compareTo(ELMNT_TASK_HANDLER) == 0) {
+						readHandlerAndExternalizer(elements[j], externalizers);
+					} else if (elements[j].getName().compareTo(DYNAMIC_POPUP_ELEMENT) == 0) {
+						readDynamicPopupContributor(elements[j]);
+					}
+				}
+			}
+//			for (int i = 0; i < extensions.length; i++) {
+//				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+//				for (int j = 0; j < elements.length; j++) {
+//					if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) == 0) {
+//						readRepositoryClient(elements[j]);
+//					}
+//				}
+//			}
+			
 			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
 			IExtension[] editors = editorsExtensionPoint.getExtensions();
 			for (int i = 0; i < editors.length; i++) {
@@ -131,12 +135,11 @@ public class TaskListExtensionReader {
 		}
 	}
 
-	private static void readRepository(IConfigurationElement element) {
+	private static void readRepositoryClient(IConfigurationElement element) {
 		try {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
 			if (repository instanceof ITaskRepositoryClient && type != null) {
-				// MylarTaskListPlugin.getRepositoryManager().addType((String)type);
 				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((ITaskRepositoryClient) repository);
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
@@ -145,24 +148,6 @@ public class TaskListExtensionReader {
 			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
 		}
 	}
-
-	// private static void readTaskListener(IConfigurationElement element) {
-	// try {
-	// Object taskListener =
-	// element.createExecutableExtension(TASK_LISTENER_CLASS_ID);
-	// if (taskListener instanceof ITaskActivityListener) {
-	// MylarTaskListPlugin.getTaskListManager().addListener((ITaskActivityListener)
-	// taskListener);
-	// } else {
-	// MylarStatusHandler.log("Could not load tasklist listener: " +
-	// taskListener.getClass().getCanonicalName()
-	// + " must implement " + ITaskActivityListener.class.getCanonicalName(),
-	// null);
-	// }
-	// } catch (CoreException e) {
-	// MylarStatusHandler.log(e, "Could not load tasklist listener extension");
-	// }
-	// }
 
 	private static void readDynamicPopupContributor(IConfigurationElement element) {
 		try {
@@ -180,13 +165,14 @@ public class TaskListExtensionReader {
 		}
 	}
 
-	private static void readTaskHandler(IConfigurationElement element, List<ITaskListExternalizer> externalizers) {
+	private static void readHandlerAndExternalizer(IConfigurationElement element, List<ITaskListExternalizer> externalizers) {
 		try {
-			Object externalizer = element.createExecutableExtension(ATTR_EXTERNALIZER_CLASS);
-			if (externalizer instanceof ITaskListExternalizer) {
+			Object externalizerObject = element.createExecutableExtension(ATTR_EXTERNALIZER_CLASS);
+			if (externalizerObject instanceof ITaskListExternalizer) {
+				ITaskListExternalizer externalizer = (ITaskListExternalizer)externalizerObject;
 				externalizers.add((ITaskListExternalizer) externalizer);
 			} else {
-				MylarStatusHandler.log("Could not load externalizer: " + externalizer.getClass().getCanonicalName()
+				MylarStatusHandler.log("Could not load externalizer: " + externalizerObject.getClass().getCanonicalName()
 						+ " must implement " + ITaskListExternalizer.class.getCanonicalName(), null);
 			}
 

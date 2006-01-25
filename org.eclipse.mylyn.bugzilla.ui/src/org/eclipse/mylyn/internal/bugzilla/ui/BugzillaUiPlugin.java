@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRefreshManager;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskListManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -24,7 +23,7 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
-	private BugzillaTaskListManager bugzillaTaskListManager;
+//	private BugzillaTaskListManager bugzillaTaskListManager;
 
 	private BugzillaRefreshManager bugzillaRefreshManager;
 
@@ -37,9 +36,9 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
-		bugzillaTaskListManager = new BugzillaTaskListManager();
+//		bugzillaTaskListManager = new BugzillaTaskListManager();
 		bugzillaRefreshManager = new BugzillaRefreshManager();
-		BugzillaPlugin.getDefault().addOfflineStatusListener(bugzillaTaskListManager);
+//		BugzillaPlugin.getDefault().addOfflineStatusListener(bugzillaTaskListManager);
 
 	}
 
@@ -71,9 +70,9 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.internal.bugzilla.ui", path);
 	}
 
-	public BugzillaTaskListManager getBugzillaTaskListManager() {
-		return bugzillaTaskListManager;
-	}
+//	public BugzillaTaskListManager getBugzillaTaskListManager() {
+//		return bugzillaTaskListManager;
+//	}
 
 	public BugzillaRefreshManager getBugzillaRefreshManager() {
 		return bugzillaRefreshManager;

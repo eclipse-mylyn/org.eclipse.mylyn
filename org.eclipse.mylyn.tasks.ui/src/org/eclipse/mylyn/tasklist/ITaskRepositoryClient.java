@@ -11,10 +11,15 @@
 
 package org.eclipse.mylar.tasklist;
 
+import java.util.List;
+
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 
 /**
+ * Mixes UI with task creation, but OK for now.
+ * 
  * @author Mik Kersten
  * @author Brock Janiczak
  */
@@ -27,6 +32,15 @@ public interface ITaskRepositoryClient {
 	 */
 	public abstract String getKind();
 
+
+	public ITask getFromBugzillaTaskRegistry(String handle);
+	
+	public void addTaskToArchive(ITask newTask);
+	
+	public List<ITask> getArchiveTasks();
+	
+	public void setArchiveCategory(TaskCategory category);
+	
 	/**
 	 * @param id
 	 *            identifier, e.g. "123" bug Bugzilla bug 123

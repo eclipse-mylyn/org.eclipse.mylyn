@@ -399,7 +399,7 @@ public class BugzillaTask extends Task {
 
 				state = BugTaskState.FREE;
 				updateTaskDetails();
-				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
+//				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
 //				notifyTaskDataChange();
 				saveBugReport(true);
 				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);

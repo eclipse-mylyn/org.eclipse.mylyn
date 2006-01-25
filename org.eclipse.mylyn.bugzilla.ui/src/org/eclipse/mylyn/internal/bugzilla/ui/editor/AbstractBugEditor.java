@@ -106,7 +106,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected Display display;
 
-	public static final Font TITLE_FONT = JFaceResources.getHeaderFont();
+	public static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 

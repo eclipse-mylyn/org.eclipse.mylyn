@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
@@ -34,7 +33,76 @@ import org.eclipse.mylar.tasklist.ITask;
  */
 public class BugzillaTaskHandler implements ITaskHandler {
 
-//	public void itemOpened(ITaskListElement element) {
+	public boolean acceptsItem(ITaskListElement element) {
+		return element instanceof BugzillaTask || element instanceof BugzillaQueryHit
+				|| element instanceof BugzillaQueryCategory;
+	}
+
+//	public void taskClosed(ITask element, IWorkbenchPage page) {
+//		try {
+//			IEditorInput input = null;
+//			if (element instanceof BugzillaTask) {
+//				input = new BugzillaTaskEditorInput((BugzillaTask) element, true);
+//			}
+//			IEditorPart editor = page.findEditor(input);
+//
+//			if (editor != null) {
+//				page.closeEditor(editor, false);
+//			}
+//		} catch (Exception e) {
+//			MylarStatusHandler.log(e, "Error while trying to close a bugzilla task");
+//		}
+//	}
+
+	public void restoreState(TaskListView taskListView) {
+		if (BugzillaPlugin.getDefault().refreshOnStartUpEnabled()) {
+			RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction();
+			refresh.setShowProgress(false);
+			refresh.run();
+			refresh.setShowProgress(true);
+		}
+	}
+
+	public boolean enableAction(Action action, ITaskListElement element) {
+
+		if (element instanceof BugzillaQueryHit) {
+			BugzillaQueryHit hit = (BugzillaQueryHit) element;
+			if (hit.getCorrespondingTask() != null && hit.getCorrespondingTask().hasValidUrl()) {
+				return true;
+			}
+			return false;
+		} else if (element instanceof BugzillaTask) {
+			if (action instanceof OpenTaskInExternalBrowserAction) {
+				if (((ITask) element).hasValidUrl()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
+					|| action instanceof OpenTaskListElementAction || action instanceof RemoveFromCategoryAction) {
+				return true;
+			} else {
+				return false;
+			}
+		} else if (element instanceof BugzillaQueryCategory) {
+			if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
+					|| action instanceof OpenTaskListElementAction || action instanceof RenameAction) {
+				return true;
+			} else if (action instanceof GoIntoAction) {
+				BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
+				if (cat.getHits().size() > 0) {
+					return true;
+				}
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+
+}
+
+//public void itemOpened(ITaskListElement element) {
 //
 //		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 //
@@ -122,89 +190,6 @@ public class BugzillaTaskHandler implements ITaskHandler {
 //			}
 //		}
 //	}
-
-	public boolean acceptsItem(ITaskListElement element) {
-		return element instanceof BugzillaTask || element instanceof BugzillaQueryHit
-				|| element instanceof BugzillaQueryCategory;
-	}
-
-//	public void taskClosed(ITask element, IWorkbenchPage page) {
-//		try {
-//			IEditorInput input = null;
-//			if (element instanceof BugzillaTask) {
-//				input = new BugzillaTaskEditorInput((BugzillaTask) element, true);
-//			}
-//			IEditorPart editor = page.findEditor(input);
-//
-//			if (editor != null) {
-//				page.closeEditor(editor, false);
-//			}
-//		} catch (Exception e) {
-//			MylarStatusHandler.log(e, "Error while trying to close a bugzilla task");
-//		}
-//	}
-
-	public ITask addTaskToRegistry(ITask newTask) {
-		if (newTask instanceof BugzillaTask) {
-			BugzillaTask bugTask = BugzillaUiPlugin.getDefault().getBugzillaTaskListManager()
-					.getFromBugzillaTaskRegistry(newTask.getHandleIdentifier());
-			if (bugTask == null) {
-				BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry(
-						(BugzillaTask) newTask);
-				bugTask = (BugzillaTask) newTask;
-			}
-			return bugTask;
-		}
-		return null;
-	}
-
-	public void restoreState(TaskListView taskListView) {
-		if (BugzillaPlugin.getDefault().refreshOnStartUpEnabled()) {
-			RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction();
-			refresh.setShowProgress(false);
-			refresh.run();
-			refresh.setShowProgress(true);
-		}
-	}
-
-	public boolean enableAction(Action action, ITaskListElement element) {
-
-		if (element instanceof BugzillaQueryHit) {
-			BugzillaQueryHit hit = (BugzillaQueryHit) element;
-			if (hit.getCorrespondingTask() != null && hit.getCorrespondingTask().hasValidUrl()) {
-				return true;
-			}
-			return false;
-		} else if (element instanceof BugzillaTask) {
-			if (action instanceof OpenTaskInExternalBrowserAction) {
-				if (((ITask) element).hasValidUrl()) {
-					return true;
-				} else {
-					return false;
-				}
-			} else if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
-					|| action instanceof OpenTaskListElementAction || action instanceof RemoveFromCategoryAction) {
-				return true;
-			} else {
-				return false;
-			}
-		} else if (element instanceof BugzillaQueryCategory) {
-			if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
-					|| action instanceof OpenTaskListElementAction || action instanceof RenameAction) {
-				return true;
-			} else if (action instanceof GoIntoAction) {
-				BugzillaQueryCategory cat = (BugzillaQueryCategory) element;
-				if (cat.getHits().size() > 0) {
-					return true;
-				}
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
-
-}
 
 // public ITask getCorrespondingTask(IQueryHit queryHit) {
 // if (queryHit instanceof BugzillaQueryHit) {

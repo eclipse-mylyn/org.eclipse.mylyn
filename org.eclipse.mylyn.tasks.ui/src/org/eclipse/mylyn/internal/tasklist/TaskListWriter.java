@@ -270,11 +270,12 @@ public class TaskListWriter {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(
-											newTask);
-									if (taskHandler != null) {
-										newTask = taskHandler.addTaskToRegistry(newTask);
-									}
+									externalizer.getRepositoryClient().addTaskToArchive(newTask);
+//									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(
+//											newTask);
+//									if (taskHandler != null) {
+//										newTask = taskHandler.addTaskToArchive(newTask);
+//									}
 									tlist.addRootTask(newTask);
 
 									wasRead = true;
@@ -480,11 +481,13 @@ public class TaskListWriter {
 								if (externalizer.canReadTask(child)) {
 									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, tlist, null, null);
-									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(
-											newTask);
-									if (taskHandler != null) {
-										newTask = taskHandler.addTaskToRegistry(newTask);
-									}
+									externalizer.getRepositoryClient().addTaskToArchive(newTask);
+									
+//									ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(
+//											newTask);
+//									if (taskHandler != null) {
+//										newTask = taskHandler.addTaskToArchive(newTask);
+//									}
 									tlist.addRootTask(newTask);
 
 									wasRead = true;

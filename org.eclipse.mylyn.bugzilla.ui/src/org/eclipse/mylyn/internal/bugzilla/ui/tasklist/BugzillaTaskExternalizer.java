@@ -14,20 +14,19 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import java.util.Date;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.DelegatingLocalTaskExternalizer;
-import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.TaskListExternalizerException;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -74,11 +73,16 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 	private static final String TAG_TASK = "BugzillaReport";
 
+	private ITaskRepositoryClient repositoryClient;
+	
+	public BugzillaTaskExternalizer() {
+		repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+	} 
+	
 	@Override
 	public void createRegistry(Document doc, Node parent) {
 		Element node = doc.createElement(BUGZILLA_TASK_REGISTRY);
-		for (BugzillaTask task : BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().getBugzillaTaskRegistry()
-				.values()) {
+		for (ITask task : repositoryClient.getArchiveTasks()) {
 			try {
 				createTaskElement(task, doc, node);
 			} catch (Exception e) {
@@ -89,6 +93,10 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		parent.appendChild(node);
 	}
 
+	public ITaskRepositoryClient getRepositoryClient() {
+		return repositoryClient;
+	}
+	
 	@Override
 	public boolean canReadCategory(Node node) {
 		return node.getNodeName().equals(getCategoryTagName()) || node.getNodeName().equals(BUGZILLA_TASK_REGISTRY);
@@ -155,17 +163,19 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	public void readRegistry(Node node, TaskList taskList) throws TaskListExternalizerException {
 		boolean hasCaughtException = false;
 		NodeList list = node.getChildNodes();
-		TaskCategory cat = new TaskCategory(BUGZILLA_ARCHIVE_LABEL);
-		cat.setIsArchive(true);
-		taskList.internalAddCategory(cat);
-		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().setTaskRegistyCategory(cat);
+		TaskCategory archiveCategory = new TaskCategory(BUGZILLA_ARCHIVE_LABEL);
+		archiveCategory.setIsArchive(true);
+		taskList.internalAddCategory(archiveCategory);
+		repositoryClient.setArchiveCategory(archiveCategory);
+//		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().setTaskRegistyCategory(cat);
 		for (int i = 0; i < list.getLength(); i++) {
 			try {
 				Node child = list.item(i);
 				ITask task = readTask(child, taskList, null, null);
 				if (task instanceof BugzillaTask) {
-					BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry(
-							(BugzillaTask) task);
+					repositoryClient.addTaskToArchive(task);
+//					BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskArchive(
+//							(BugzillaTask) task);
 				}
 			} catch (TaskListExternalizerException e) {
 				hasCaughtException = true;
@@ -261,13 +271,17 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			}
 		}
 
-		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(task);
-		if (taskHandler != null) {
-			ITask addedTask = taskHandler.addTaskToRegistry(task);
-			if (addedTask instanceof BugzillaTask)
-				task = (BugzillaTask) addedTask;
+		ITaskRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		if (repositoryClient != null) {
+			repositoryClient.addTaskToArchive(task);
 		}
 		return task;
+//		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(task);
+//		if (taskHandler != null) {
+//			ITask addedTask = taskHandler.addTaskToArchive(task);
+//			if (addedTask instanceof BugzillaTask)
+//				task = (BugzillaTask) addedTask;
+//		}
 	}
 
 	public boolean canReadQueryHit(Node node) {

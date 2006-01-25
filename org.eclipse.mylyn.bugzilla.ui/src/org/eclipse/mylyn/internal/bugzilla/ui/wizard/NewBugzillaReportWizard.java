@@ -13,16 +13,15 @@ package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 
@@ -107,16 +106,21 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
 					.getFirstElement();
 
-		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
-		if (taskHandler != null) {
-			ITask addedTask = taskHandler.addTaskToRegistry(newTask);
-			if (addedTask instanceof BugzillaTask) {
-				BugzillaTask newTask2 = (BugzillaTask) addedTask;
-				if (newTask2 != newTask) {
-					newTask = newTask2;
-				}
-			}
+		ITaskRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		if (repositoryClient != null) {
+			repositoryClient.addTaskToArchive(newTask);
 		}
+		
+//		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
+//		if (taskHandler != null) {
+//			ITask addedTask = taskHandler.addTaskToArchive(newTask);
+//			if (addedTask instanceof BugzillaTask) {
+//				BugzillaTask newTask2 = (BugzillaTask) addedTask;
+//				if (newTask2 != newTask) {
+//					newTask = newTask2;
+//				}
+//			}
+//		}
 
 		if (selectedObject instanceof TaskCategory) {
 			MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory) selectedObject), newTask);
@@ -124,7 +128,10 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 		} else {
 			MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 		}
-		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask) newTask);
+		
+		ITaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		client.addTaskToArchive(newTask);
+//		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskArchive((BugzillaTask) newTask);
 		
 //		newTask.openTaskInEditor(false);
 		TaskListUiUtil.openEditor(newTask);

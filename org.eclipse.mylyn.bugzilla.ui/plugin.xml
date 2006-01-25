@@ -18,7 +18,7 @@
          point="org.eclipse.mylar.tasklist.repositories">
 
       <repositoryClient
-            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskRepositoryClient"
+            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient"
             id="org.eclipse.mylar.bugzilla.tasklist.repositories"
             name="Bugzilla Client"
             type="bugzilla"/>
