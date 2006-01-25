@@ -24,7 +24,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.internal.tasklist.AbstractTaskRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
@@ -129,7 +129,7 @@ public class ChangeDataDirTest extends TestCase {
 	}
 
 	private void addBugzillaTask(BugzillaTask newTask) {
-		AbstractTaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 		client.addTaskToArchive(newTask);
 //		BugzillaTaskHandler handler = new BugzillaTaskHandler();
 //		handler.addTaskToArchive(newTask);
