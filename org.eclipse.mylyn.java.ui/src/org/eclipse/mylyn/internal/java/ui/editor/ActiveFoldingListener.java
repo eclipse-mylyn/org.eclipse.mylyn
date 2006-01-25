@@ -229,7 +229,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 //
 // public void updateFolding(final boolean expand, boolean async) {
 // if (async) {
-// Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 // public void run() {
 // internalUpdateFolding(expand);
 // }
@@ -258,7 +258,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 // }
 //
 // public void resetFolding() {
-// Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 // public void run() {
 // ActiveFoldingListener.resetProjection(editor);
 // }

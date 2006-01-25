@@ -16,8 +16,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * Self-registering on construction.
@@ -31,7 +31,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 	 */
 	public AbstractCommandMonitor() {
 		try {
-			ICommandService commandService = (ICommandService) Workbench.getInstance().getActiveWorkbenchWindow()
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getWorkbench().getAdapter(ICommandService.class);
 			commandService.addExecutionListener(this);
 		} catch (NullPointerException npe) {
@@ -41,7 +41,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 
 	public void dispose() {
 		try {
-			ICommandService commandService = (ICommandService) Workbench.getInstance().getActiveWorkbenchWindow()
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getWorkbench().getAdapter(ICommandService.class);
 			commandService.removeExecutionListener(this);
 		} catch (NullPointerException npe) {

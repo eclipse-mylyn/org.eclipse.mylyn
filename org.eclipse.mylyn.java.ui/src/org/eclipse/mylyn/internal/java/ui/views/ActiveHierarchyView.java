@@ -60,7 +60,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
@@ -210,7 +209,7 @@ public class ActiveHierarchyView extends ViewPart {
 			if (!asyncRefreshMode) { // for testing
 				refreshViewer();
 			} else {
-				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						refreshViewer();
 					}

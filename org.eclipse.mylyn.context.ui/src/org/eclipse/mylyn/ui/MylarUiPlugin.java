@@ -50,7 +50,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -185,7 +184,7 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 				try {
 					MylarPlugin.getContextManager().addListener(viewerManager);
 
-					Workbench.getInstance().getActiveWorkbenchWindow().getPartService().addPartListener(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(
 							contentOutlineManager);
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 					for (int i = 0; i < windows.length; i++) {

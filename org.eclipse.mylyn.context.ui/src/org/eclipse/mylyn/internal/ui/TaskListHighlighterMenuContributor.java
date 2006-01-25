@@ -53,7 +53,7 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 						}
 
 						// if (!task.isActive()) {
-						// MessageDialog.openError(Workbench.getInstance()
+						// MessageDialog.openError(PlatformUI.getWorkbench()
 						// .getActiveWorkbenchWindow().getShell(), "Mylar
 						// Highlighting",
 						// "Please activate the task before setting a

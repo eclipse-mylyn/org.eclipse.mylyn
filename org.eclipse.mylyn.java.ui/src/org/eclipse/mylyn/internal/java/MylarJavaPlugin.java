@@ -36,7 +36,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.EditorRegistry;
 import org.eclipse.ui.internal.registry.FileEditorMapping;
@@ -102,7 +101,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					}
 					getPreferenceStore().addPropertyChangeListener(problemListener);
 
-					ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow()
+					ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 							.getSelectionService();
 					service.addPostSelectionListener(packageExplorerManager);
 
@@ -124,7 +123,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					if (!MylarPlugin.getDefault().suppressWizardsOnStartup()
 							&& !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
 						MylarPreferenceWizard wizard = new MylarPreferenceWizard(FIRST_USE);
-						Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+						Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						if (wizard != null && shell != null && !shell.isDisposed()) {
 							WizardDialog dialog = new WizardDialog(shell, wizard);
 							dialog.create();
@@ -164,9 +163,9 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 				getPreferenceStore().removePropertyChangeListener(ApplyMylarToPackageExplorerAction.getDefault());
 			}
 
-			if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null
-					&& !Workbench.getInstance().isClosing()) {
-				ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+					&& !PlatformUI.getWorkbench().isClosing()) {
+				ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 				service.removePostSelectionListener(packageExplorerManager);
 			}
 			JavaCore.removeElementChangedListener(javaElementChangeListener);
@@ -190,8 +189,8 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		}
 
 		// update editors that are already opened
-		if (Workbench.getInstance().getActiveWorkbenchWindow() != null) {
-			IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
 				for (int i = 0; i < references.length; i++) {

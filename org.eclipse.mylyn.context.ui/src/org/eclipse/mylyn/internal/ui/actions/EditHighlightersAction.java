@@ -26,7 +26,7 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -53,7 +53,7 @@ public class EditHighlightersAction extends Action implements IViewActionDelegat
 
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(Workbench.getInstance().getActiveWorkbenchWindow()
+		final PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getShell(), manager);
 		final boolean[] result = new boolean[] { false };
 		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {

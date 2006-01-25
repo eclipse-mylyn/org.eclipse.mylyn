@@ -28,7 +28,7 @@ import org.eclipse.mylar.internal.ide.ResourceSelectionMonitor;
 import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -49,7 +49,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 	private IPackageFragment javaPackage;
 
-	private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+	private IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -112,7 +112,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 	public void testManipulation() throws JavaModelException {
 		InterestManipulationAction action = new InterestManipulationAction();
 
-		IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m22() { }", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);

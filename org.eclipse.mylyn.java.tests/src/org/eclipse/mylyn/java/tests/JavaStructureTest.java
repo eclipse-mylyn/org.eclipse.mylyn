@@ -29,7 +29,7 @@ import org.eclipse.mylar.internal.core.ScalingFactors;
 import org.eclipse.mylar.internal.java.JavaEditingMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -40,7 +40,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private JavaEditingMonitor monitor = new JavaEditingMonitor();
 
-	private IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+	private IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 
 	private TestJavaProject project;
 

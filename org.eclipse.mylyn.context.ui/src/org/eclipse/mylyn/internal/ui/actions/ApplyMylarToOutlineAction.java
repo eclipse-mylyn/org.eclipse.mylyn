@@ -22,7 +22,7 @@ import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.InterestFilter;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Shawn Minto
@@ -56,7 +56,7 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		try {
-			IEditorPart[] parts = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
+			IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
 			for (int i = 0; i < parts.length; i++) {
 				IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
 				List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);

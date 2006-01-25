@@ -20,7 +20,7 @@ import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -86,6 +86,6 @@ public abstract class AbstractContextTest extends TestCase {
 	}
 
 	protected IViewPart openView(String id) throws PartInitException {
-		return Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(id);
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
 	}
 }

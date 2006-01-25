@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.ide.ui.ProblemsListLabelProvider;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.markers.internal.MarkerFilter;
 import org.eclipse.ui.views.markers.internal.ProblemView;
 import org.eclipse.ui.views.markers.internal.TableView;
@@ -96,7 +96,7 @@ public class ApplyMylarToProblemsListAction extends AbstractApplyMylarAction {
 	}
 
 	protected ProblemView getProblemView() {
-		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
 			return null;
 		IViewPart view = activePage.findView("org.eclipse.ui.views.ProblemView");

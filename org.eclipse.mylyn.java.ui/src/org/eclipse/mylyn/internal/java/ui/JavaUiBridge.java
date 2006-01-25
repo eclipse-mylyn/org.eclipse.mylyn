@@ -39,8 +39,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
@@ -100,7 +100,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 
 	public void restoreEditor(IMylarElement document) {
 		IResource resource = MylarIdePlugin.getDefault().getResourceForElement(document);
-		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (resource instanceof IFile) {
 			try {
 				IDE.openEditor(activePage, (IFile) resource, false);
@@ -115,7 +115,7 @@ public class JavaUiBridge implements IMylarUiBridge {
 	 */
 	public void close(IMylarElement node) {
 		try {
-			IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
 				for (int i = 0; i < references.length; i++) {

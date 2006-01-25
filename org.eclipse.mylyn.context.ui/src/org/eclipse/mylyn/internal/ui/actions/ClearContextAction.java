@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -39,7 +39,7 @@ public class ClearContextAction implements IViewActionDelegate {
 		Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
 				.getFirstElement();
 		if (selectedObject != null && selectedObject instanceof ITask) {
-			boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getShell(), "Confirm clear context", "Clear context for the selected task?");
 			if (!deleteConfirmed)
 				return;
@@ -61,13 +61,13 @@ public class ClearContextAction implements IViewActionDelegate {
 		// ((BugzillaHit)selectedObject).getAssociatedTask();
 		// if(task != null){
 		// if (task.isActive()) {
-		// MessageDialog.openError(Workbench.getInstance()
+		// MessageDialog.openError(PlatformUI.getWorkbench()
 		// .getActiveWorkbenchWindow().getShell(), "Clear context failed",
 		// "Task must be deactivated before clearing task context.");
 		// return;
 		// }
 		// boolean deleteConfirmed = MessageDialog.openQuestion(
-		// Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 		// "Confirm clear context",
 		// "Clear context for the selected task?");
 		// if (!deleteConfirmed)

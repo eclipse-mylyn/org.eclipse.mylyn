@@ -36,9 +36,9 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -126,7 +126,7 @@ public class AntUiBridge implements IMylarUiBridge {
 	}
 
 	public void close(IMylarElement node) {
-		IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
 			IEditorReference[] references = page.getEditorReferences();
 			for (int i = 0; i < references.length; i++) {

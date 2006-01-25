@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
@@ -112,14 +112,14 @@ public class MylarStatusHandler {
 		final Status status = new Status(Status.ERROR, MylarPlugin.PLUGIN_ID, IStatus.OK, message, throwable);
 		log(status);
 
-		if (informUser && Workbench.getInstance() != null) {
+		if (informUser && PlatformUI.getWorkbench() != null) {
 			try {
-				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						Shell shell = null;
-						if (Workbench.getInstance() != null
-								&& Workbench.getInstance().getActiveWorkbenchWindow() != null) {
-							shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+						if (PlatformUI.getWorkbench() != null
+								&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+							shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						}
 						ErrorDialog.openError(shell, "Mylar error", MylarStatusHandler.ERROR_MESSAGE, status);
 					}

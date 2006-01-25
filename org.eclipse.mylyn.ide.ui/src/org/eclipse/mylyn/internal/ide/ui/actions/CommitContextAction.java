@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -50,7 +50,7 @@ public class CommitContextAction implements IViewActionDelegate {
 		try {
 			MylarCommitWizard wizard = new MylarCommitWizard(resources, task);
 
-			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				wizard.loadSize();
 				WizardDialog dialog = new WizardDialog(shell, wizard);

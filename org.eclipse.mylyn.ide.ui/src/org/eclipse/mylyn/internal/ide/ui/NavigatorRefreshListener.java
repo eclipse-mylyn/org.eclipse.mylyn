@@ -26,7 +26,7 @@ import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
@@ -37,9 +37,9 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 	public static final String ID_NAVIGATOR = "org.eclipse.ui.views.ResourceNavigator";
 
 	public static ResourceNavigator getResourceNavigator() {
-		if (Workbench.getInstance() == null || Workbench.getInstance().getActiveWorkbenchWindow() == null)
+		if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null)
 			return null;
-		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
 			return null;
 		IViewPart view = activePage.findView(ID_NAVIGATOR);

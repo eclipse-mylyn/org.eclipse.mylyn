@@ -57,7 +57,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
@@ -137,9 +136,9 @@ public class ActiveSearchView extends ViewPart {
 	}
 
 	public static ActiveSearchView getFromActivePerspective() {
-		if (Workbench.getInstance() == null)
+		if (PlatformUI.getWorkbench() == null)
 			return null;
-		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
 			return null;
 		IViewPart view = activePage.findView(ID);
@@ -173,7 +172,7 @@ public class ActiveSearchView extends ViewPart {
 			// if (viewer != null && !viewer.getTree().isDisposed()) {
 			// internalRefresh(node, updateLabels);
 			// }
-			Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					try {
 						internalRefresh(node, updateLabels);
@@ -183,7 +182,7 @@ public class ActiveSearchView extends ViewPart {
 				}
 			});
 		} else {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					try {
 						internalRefresh(node, updateLabels);

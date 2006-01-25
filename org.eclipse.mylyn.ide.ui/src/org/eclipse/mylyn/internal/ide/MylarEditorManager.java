@@ -76,7 +76,7 @@ public class MylarEditorManager implements IMylarContextListener {
 
 	public void closeAllEditors() {
 		try {
-			IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null)
 				page.closeAllEditors(true);
 		} catch (Throwable t) {

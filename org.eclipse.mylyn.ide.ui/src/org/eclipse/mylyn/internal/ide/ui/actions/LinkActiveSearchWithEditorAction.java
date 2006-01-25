@@ -27,7 +27,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -61,7 +61,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 	public void update(boolean on) {
 		setChecked(on);
 		MylarUiPlugin.getDefault().getPreferenceStore().setValue(ID, on);
-		ISelectionService service = Workbench.getInstance().getActiveWorkbenchWindow().getSelectionService();
+		ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 		if (on) {
 			service.addPostSelectionListener(selectionTracker);
 		} else {

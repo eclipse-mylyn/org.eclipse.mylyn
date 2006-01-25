@@ -29,9 +29,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
@@ -63,7 +63,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 
 	private void internalOpenEditor(IFile file, boolean activate) {
 		try {
-			IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IEditorDescriptor editorDescriptor = IDE.getDefaultEditor(file);
 			if (editorDescriptor != null && editorDescriptor.isInternal()) {
 				IDE.openEditor(activePage, (IFile) file, activate);
@@ -74,7 +74,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 	}
 
 	public void close(IMylarElement node) {
-		IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
 			IEditorReference[] references = page.getEditorReferences();
 			for (int i = 0; i < references.length; i++) {

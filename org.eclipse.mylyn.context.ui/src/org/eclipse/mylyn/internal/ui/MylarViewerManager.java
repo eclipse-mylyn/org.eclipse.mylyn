@@ -28,7 +28,7 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
 import org.eclipse.mylar.ui.MylarUiPlugin;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -132,7 +132,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 		if (syncRefreshMode) {
 			internalRefresh(nodesToRefresh, updateLabels);
 		} else {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					internalRefresh(nodesToRefresh, updateLabels);
 				}
@@ -288,7 +288,7 @@ public class MylarViewerManager implements IMylarContextListener, IPropertyChang
 // boolean setSelection = nodesToRefresh.indexOf(node) ==
 // nodesToRefresh.size()-1;
 // IEditorPart editorPart =
-// Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 // IMylarUiBridge bridge =
 // MylarUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 // bridge.refreshOutline(objectToRefresh, updateLabels, setSelection);

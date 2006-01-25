@@ -27,7 +27,7 @@ import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -61,7 +61,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 
 		// ApplyMylarToOutlineAction.getDefault().update(true);
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		IEditorPart[] parts = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
+		IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
 		for (int i = 0; i < parts.length; i++) {
 			if (parts[i].getTitle().equals("Type1.java")) {
 				IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);

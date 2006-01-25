@@ -19,7 +19,7 @@ import org.eclipse.mylar.internal.ide.ui.views.ActiveSearchQuickView;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Class to activate the inplace Cross Reference view, via the key binding
@@ -42,10 +42,10 @@ public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDeleg
 	public void run(IAction action) {
 		IMylarElement activeNode = MylarPlugin.getContextManager().getActiveElement();
 
-		Shell parent = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		inplaceDialog = new ActiveSearchQuickView(parent);
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
-		inplaceDialog.setWorkbenchPart(Workbench.getInstance().getActiveWorkbenchWindow().getActivePage()
+		inplaceDialog.setWorkbenchPart(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 				.getActivePart());
 		inplaceDialog.open(activeNode);
 	}

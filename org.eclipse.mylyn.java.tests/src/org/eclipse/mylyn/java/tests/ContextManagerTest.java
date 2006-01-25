@@ -41,7 +41,7 @@ import org.eclipse.mylar.internal.java.JavaProblemListener;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -173,7 +173,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testEdgeReset() throws CoreException, InterruptedException, InvocationTargetException {
-		IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
 		IPackageFragment p2 = project.createPackage("p2");
 
@@ -213,7 +213,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		IViewPart problemsPart = JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
 		assertNotNull(problemsPart);
 
-		IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
 		IPackageFragment p2 = project.createPackage("p2");
 
@@ -251,7 +251,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testParentInterestAfterDecay() throws JavaModelException {
-		IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
@@ -274,7 +274,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testIncremenOfParentDoi() throws JavaModelException, Exception {
-		IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 		IMylarElement node = MylarPlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertFalse(node.getInterest().isInteresting());
@@ -306,7 +306,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		LandmarksModelListener listener = new LandmarksModelListener();
 		manager.addListener(listener);
 
-		IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 
 		StructuredSelection sm1 = new StructuredSelection(m1);

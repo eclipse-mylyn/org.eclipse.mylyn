@@ -49,7 +49,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
@@ -142,7 +141,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 	}
 
 	public void close(IMylarElement node) {
-		IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
 			IEditorReference[] references = page.getEditorReferences();
 			for (int i = 0; i < references.length; i++) {

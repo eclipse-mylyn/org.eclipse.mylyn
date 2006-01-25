@@ -30,7 +30,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
@@ -39,7 +38,7 @@ import org.eclipse.ui.progress.IProgressService;
 public class FindReferencesInTaskscapeAction extends Action implements IWorkbenchWindowActionDelegate {
 
 	public void run(IAction action) {
-		IEditorPart editor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (editor != null && editor instanceof JavaEditor) {
 			IJavaElement[] resolved;
 			try {

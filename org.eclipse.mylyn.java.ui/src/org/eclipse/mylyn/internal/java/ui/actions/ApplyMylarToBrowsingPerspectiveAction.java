@@ -24,7 +24,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * This class is a bit weird since it doesn't obey the same contract as the
@@ -105,7 +105,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 	}
 
 	private StructuredViewer getBrowsingViewerFromActivePerspective(String id, String className) {
-		IWorkbenchPage activePage = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
 			return null;
 		try {

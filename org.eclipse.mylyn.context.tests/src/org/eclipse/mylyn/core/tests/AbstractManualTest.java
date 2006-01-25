@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -31,10 +31,10 @@ public abstract class AbstractManualTest extends TestCase {
 
 		questionResponse = false;
 		final String finalMsg = message;
-		Workbench.getInstance().getDisplay().syncExec(new Runnable() {
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				try {
-					IWorkbenchWindow iww = Workbench.getInstance().getActiveWorkbenchWindow();
+					IWorkbenchWindow iww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
 					Shell shell = iww.getShell();
 					questionResponse = MessageDialog.openQuestion(shell, "JUnit Verification", finalMsg);

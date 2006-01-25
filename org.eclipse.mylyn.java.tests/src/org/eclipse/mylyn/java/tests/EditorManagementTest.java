@@ -30,7 +30,7 @@ import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -45,7 +45,7 @@ public class EditorManagementTest extends AbstractJavaContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);

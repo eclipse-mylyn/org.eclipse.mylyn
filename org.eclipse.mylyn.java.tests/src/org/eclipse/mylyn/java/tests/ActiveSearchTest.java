@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Perspective;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchPage;
 
 /**
@@ -63,7 +63,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		}
 		assertEquals(0, view.getViewer().getTree().getItemCount());
 
-		IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() {\n m1(); \n}", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
@@ -118,7 +118,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		if (view != null) {
 			assertEquals(0, view.getViewer().getTree().getItemCount());
 
-			IWorkbenchPart part = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActivePart();
+			IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 			IMethod m1 = type1.createMethod("void m1() {\n m2() \n}", null, true, null);
 			IMethod m2 = type1.createMethod("void m2() { }", null, true, null);
 			StructuredSelection sm2 = new StructuredSelection(m2);
