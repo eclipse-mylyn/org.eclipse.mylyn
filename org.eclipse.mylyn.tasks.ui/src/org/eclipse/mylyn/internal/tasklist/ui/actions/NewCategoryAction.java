@@ -18,7 +18,7 @@ import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -39,7 +39,7 @@ public class NewCategoryAction extends Action {
 
 	@Override
 	public void run() {
-		InputDialog dialog = new InputDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 				"Enter name", "Enter a name for the Category: ", "", null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {

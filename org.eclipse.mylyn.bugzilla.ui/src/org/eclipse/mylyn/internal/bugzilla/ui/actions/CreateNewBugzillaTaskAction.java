@@ -27,7 +27,7 @@ import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -64,7 +64,7 @@ public class CreateNewBugzillaTaskAction extends Action implements IViewActionDe
 
 		});
 
-		Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
 
 			WizardDialog dialog = new WizardDialog(shell, wizard);

@@ -46,8 +46,8 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -124,7 +124,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	protected AbstractBugEditorInput bugzillaInput;
 
-	private BugzillaTaskEditor parentEditor = null;
+	private MylarTaskEditor parentEditor = null;
 
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
@@ -1131,7 +1131,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * elements which can change).
 	 */
 	protected void setGeneralTitleText() {
-		String text = "[Open in New Browser]";
+		String text = "[Open in Internal Browser]";
 		linkToBug.setText(text);
 		linkToBug.setFont(TEXT_FONT);
 		if (this instanceof ExistingBugEditor) {
@@ -1612,7 +1612,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		attributesListeners.remove(listener);
 	}
 
-	public void setParentEditor(BugzillaTaskEditor editor) {
-		parentEditor = editor;
+	public void setParentEditor(MylarTaskEditor parentEditor) {
+		this.parentEditor = parentEditor;
 	}
 }

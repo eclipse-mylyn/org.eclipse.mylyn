@@ -103,7 +103,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.dialogs.FilteredTree;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.PluginTransfer;
@@ -244,8 +243,8 @@ public class TaskListView extends ViewPart {
 		}
 
 		private void refresh(final ITaskListElement element) {
-			if (Workbench.getInstance() != null && !Workbench.getInstance().getDisplay().isDisposed()) {
-				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 							if (element == null) {
@@ -395,7 +394,7 @@ public class TaskListView extends ViewPart {
 
 	public static TaskListView openInActivePerspective() {
 		try {
-			return (TaskListView) Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().showView(ID);
+			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
 		} catch (Exception e) {
 			return null;
 		}
@@ -1210,7 +1209,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public String getBugIdFromUser() {
-		InputDialog dialog = new InputDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 				"Enter Bugzilla ID", "Enter the Bugzilla ID: ", "", null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {

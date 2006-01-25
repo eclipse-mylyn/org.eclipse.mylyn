@@ -26,8 +26,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 /**
@@ -36,8 +36,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 public class TaskListUiUtil {
 
 	public static void closeEditorInActivePage(ITask task) {
-		IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page == null) {
 			return;
 		}
@@ -71,18 +70,45 @@ public class TaskListUiUtil {
 		if (!asyncExec) {
 			openEditorInActivePage(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID);
 		} else {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					openEditorInActivePage(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID);
 				}
 			});
+			
+//			OpenTaskEditorJob openTaskEditorJob = new OpenTaskEditorJob("Opening Task", editorInput);
+//			openTaskEditorJob.schedule();
 		}
 	}
 
+//	private static class OpenTaskEditorJob extends Job {
+//
+//		private IEditorInput editorInput;
+//
+//		public OpenTaskEditorJob(String name, IEditorInput editorInput) {
+//			super(name);
+//			this.editorInput = editorInput;
+//		}
+//
+//		@Override
+//		protected IStatus run(IProgressMonitor monitor) {
+//			try {
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						openEditorInActivePage(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID);
+//					}
+//				});
+//				return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
+//			} catch (Exception e) {
+//				MylarStatusHandler.fail(e, "Could not open task editor", true);
+//			}
+//			return Status.CANCEL_STATUS;
+//		}
+//	}
+
 	public static IEditorPart openEditorInActivePage(IEditorInput input, String editorId) {
 		try {
-			final IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage();
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "Open for editor failed: " + input + ", id: " + editorId, true);
@@ -92,7 +118,7 @@ public class TaskListUiUtil {
 
 	public static void openEditor(ITaskCategory category) {
 		final IEditorInput input = new CategoryEditorInput(category);
-		Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				openEditorInActivePage(input, TaskListPreferenceConstants.CATEGORY_EDITOR_ID);
 			}
@@ -101,7 +127,7 @@ public class TaskListUiUtil {
 
 	public static void openUrl(String title, String tooltip, String url) {
 		try {
-			IWebBrowser b = null;
+			IWebBrowser browser = null;
 			int flags = 0;
 			if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
 				flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
@@ -111,9 +137,9 @@ public class TaskListUiUtil {
 				flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
 						| WorkbenchBrowserSupport.NAVIGATION_BAR;
 			}
-			b = WorkbenchBrowserSupport.getInstance().createBrowser(flags, "org.eclipse.mylar.tasklist." + title,
+			browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, MylarTaskListPlugin.PLUGIN_ID + title,
 					title, tooltip);
-			b.openURL(new URL(url));
+			browser.openURL(new URL(url));
 		} catch (PartInitException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
 					"Browser could not be initiated");

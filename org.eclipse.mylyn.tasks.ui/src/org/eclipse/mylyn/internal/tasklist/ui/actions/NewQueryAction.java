@@ -21,7 +21,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.NewQueryWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -37,7 +37,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate {
 	public void run(IAction action) {
 		try {
 			NewQueryWizard wizard = new NewQueryWizard();
-			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (wizard != null && shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();

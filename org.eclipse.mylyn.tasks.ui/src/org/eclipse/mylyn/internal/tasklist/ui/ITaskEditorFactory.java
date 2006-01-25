@@ -11,20 +11,22 @@
 
 package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.mylar.core.IMylarContext;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
 /**
  * @author Mik Kersten
  */
-public interface IContextEditorFactory {
+public interface ITaskEditorFactory {
 
-	public IEditorPart createEditor();
+	public IEditorPart createEditor(MylarTaskEditor parentEditor);
 
-	public IEditorInput createEditorInput(IMylarContext context);
+	public IEditorInput createEditorInput(ITask task);
 
 	public String getTitle();
 
 	public void notifyEditorActivationChange(IEditorPart editor);
+
+	public boolean canCreateEditorFor(ITask task);
 }

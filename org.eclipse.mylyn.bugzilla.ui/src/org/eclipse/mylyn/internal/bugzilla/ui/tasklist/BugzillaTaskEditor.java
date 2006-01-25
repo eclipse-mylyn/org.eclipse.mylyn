@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
@@ -272,7 +272,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	public void makeNewPage(BugReport serverBug, String newCommentText) {
 		if (serverBug == null) {
-			MessageDialog.openInformation(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					"Could not open bug.", "Bug #" + offlineBug.getId()
 							+ " could not be read from the server.  Try refreshing the bug task.");
 			return;

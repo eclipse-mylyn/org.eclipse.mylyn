@@ -43,7 +43,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Shawn Minto
@@ -142,7 +141,7 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 		if (repository == null) {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog
 							.openInformation(Display.getDefault().getActiveShell(),

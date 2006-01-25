@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
@@ -48,7 +47,7 @@ import org.eclipse.ui.part.MultiPageSelectionProvider;
  */
 public class MylarTaskEditor extends MultiPageEditorPart {
 
-	private static final String TASK_INFO_PAGE_LABEL = "Task Info";
+	private static final String TASK_INFO_PAGE_LABEL = "Overview";
 
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
@@ -102,28 +101,31 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		partListener = new TaskEditorListener();
 		activePage.addPartListener(partListener);
 		taskInfoEditor = new TaskInfoEditor();
-
+		taskInfoEditor.setParentEditor(this);
 	}
 
 	@Override
 	protected void createPages() {
 		try {
-			int index = createTaskSummaryPage();
-			if (task.getUrl().length() > 9) {
-				createTaskIssueWebPage();
+			int index = 0;
+			index = createTaskSummaryPage();
+			for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditors()) {
+				if (factory.canCreateEditorFor(task)) {
+					IEditorPart editor = factory.createEditor(this);
+					editorsToNotifyOnChange.add(editor);
+					index = addPage(editor, factory.createEditorInput(task));
+					setPageText(index++, factory.getTitle());
+				}
 			}
-			for (IContextEditorFactory factory : MylarTaskListPlugin.getDefault().getContextEditors()) {
-				taskInfoEditor.setParentEditor(this);
-				IEditorPart editor = factory.createEditor();
-				editorsToNotifyOnChange.add(editor);
-				index = addPage(editor, factory.createEditorInput(MylarPlugin.getContextManager().getActiveContext()));
-				setPageText(index++, factory.getTitle());
+			// HACK: check URL properly
+			if (task.getUrl().length() > 8) {
+				createBrowserPage();
 			}
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
 		}
 	}
-
+	
 	public IEditorPart getActiveEditor() {
 		return super.getActiveEditor();
 	}
@@ -141,11 +143,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		return 0;
 	}
 
-	/**
-	 * Creates page 2 of the multi-page editor, which displays the task issue
-	 * web page
-	 */
-	private void createTaskIssueWebPage() {
+
+	private void createBrowserPage() {
 		try {
 			webBrowser = new Browser(getContainer(), SWT.NONE);
 			int index = addPage(webBrowser);
@@ -173,7 +172,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		if (webBrowser != null) {
 			webBrowser.setUrl(task.getUrl());
 		} else if (task.getUrl().length() > 9) {
-			createTaskIssueWebPage();
+			createBrowserPage();
 		}
 	}
 
@@ -304,8 +303,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-		super.pageChange(newPageIndex);
-		for (IContextEditorFactory factory : MylarTaskListPlugin.getDefault().getContextEditors()) {
+//		super.pageChange(newPageIndex);
+		for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditors()) {
 			for (IEditorPart editor : editorsToNotifyOnChange) {
 				factory.notifyEditorActivationChange(editor);
 			}

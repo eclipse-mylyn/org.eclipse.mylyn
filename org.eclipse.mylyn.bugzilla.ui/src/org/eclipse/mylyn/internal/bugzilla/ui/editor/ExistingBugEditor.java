@@ -81,7 +81,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a
@@ -755,16 +754,16 @@ public class ExistingBugEditor extends AbstractBugEditor {
 				if (serverBug == null)
 					throw new Exception();
 			} catch (Exception e) {
-				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						MessageDialog.openInformation(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 								"Could not open bug.", "Bug #" + bug.getId() + " could not be read from the server.");
 					}
 				});
 				return new Status(IStatus.OK, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
 						"Could not get the bug report from the server.", null);
 			}
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					compareInput.setTitle("Bug #" + bug.getId());
 					compareInput.setLeft(bug);

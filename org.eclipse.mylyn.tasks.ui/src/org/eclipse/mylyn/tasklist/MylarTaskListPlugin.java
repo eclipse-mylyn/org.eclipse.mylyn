@@ -24,16 +24,16 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITaskHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListExtensionReader;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasklist.TaskListWriter;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.planner.ReminderRequiredCollector;
 import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
-import org.eclipse.mylar.internal.tasklist.ui.IContextEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.TasksReminderDialog;
@@ -43,7 +43,6 @@ import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -66,7 +65,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>(); // TODO:
 
-	private List<IContextEditorFactory> contextEditors = new ArrayList<IContextEditorFactory>();
+	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
 	private TaskListWriter taskListWriter;
 
@@ -307,9 +306,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.addListener(taskListSaveManager);
 
-					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-					Workbench.getInstance().getActiveWorkbenchWindow().getShell().addDisposeListener(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
 							taskListSaveManager);
 
 					restoreTaskHandlerState();
@@ -384,9 +383,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			if (MylarPlugin.getDefault() != null) {
 				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 			}
-			if (Workbench.getInstance() != null && Workbench.getInstance().getActiveWorkbenchWindow() != null) {
-				Workbench.getInstance().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
-				Workbench.getInstance().getActiveWorkbenchWindow().getShell()
+			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()
 						.removeDisposeListener(taskListSaveManager);
 			}
 		} catch (Exception e) {
@@ -470,9 +469,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		parser.addCollector(new ReminderRequiredCollector());
 		parser.collectTasks();
 		if (!parser.getAllCollectedTasks().isEmpty()) {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					TasksReminderDialog dialog = new TasksReminderDialog(Workbench.getInstance().getDisplay()
+					TasksReminderDialog dialog = new TasksReminderDialog(PlatformUI.getWorkbench().getDisplay()
 							.getActiveShell(), parser.getAllCollectedTasks());
 					dialog.setBlockOnOpen(false);
 					dialog.open();
@@ -567,13 +566,13 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		this.highlighter = highlighter;
 	}
 
-	public List<IContextEditorFactory> getContextEditors() {
-		return contextEditors;
+	public List<ITaskEditorFactory> getTaskEditors() {
+		return taskEditors;
 	}
 
-	public void addContextEditor(IContextEditorFactory contextEditor) {
+	public void addContextEditor(ITaskEditorFactory contextEditor) {
 		if (contextEditor != null)
-			this.contextEditors.add(contextEditor);
+			this.taskEditors.add(contextEditor);
 	}
 
 	public TaskListSaveManager getTaskListSaveManager() {

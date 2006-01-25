@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Ken Sueda
@@ -49,7 +49,7 @@ public class RemoveFromCategoryAction extends Action {
 				if (selectedObject instanceof ITask && !((ITask) selectedObject).isLocal()) {
 					ITask task = (ITask) selectedObject;
 					if (task.isActive()) {
-						MessageDialog.openInformation(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 								MylarTaskListPlugin.TITLE_DIALOG,
 								"Task must be deactivated in order to remove from category.");
 						return;
@@ -65,7 +65,7 @@ public class RemoveFromCategoryAction extends Action {
 					ITaskCategory cat = task.getCategory();
 					if (cat != null) {
 						String message = DeleteAction.genDeleteConfirmationMessage(task);
-						boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance()
+						boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 								.getActiveWorkbenchWindow().getShell(), "Confirm delete", message);
 						if (!deleteConfirmed)
 							return;

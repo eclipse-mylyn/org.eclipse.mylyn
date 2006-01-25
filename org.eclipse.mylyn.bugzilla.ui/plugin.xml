@@ -24,6 +24,11 @@
             type="bugzilla"/>
    </extension> 
   
+   <extension
+         point="org.eclipse.mylar.tasklist.editors">
+      <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugReportEditorFactory"/>
+   </extension>
+  
    
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">

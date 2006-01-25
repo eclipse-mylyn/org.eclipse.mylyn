@@ -44,7 +44,7 @@ import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten (some rewriting)
@@ -71,7 +71,7 @@ public class BugzillaRepositoryUtil {
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 					BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
 			if (repository == null) {
-				Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog.openInformation(Display.getDefault().getActiveShell(),
 								IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);

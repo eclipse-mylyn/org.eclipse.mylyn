@@ -24,15 +24,15 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaOpenStructure;
 import org.eclipse.mylar.internal.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlinePage;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -64,9 +64,10 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 		// ITask task =
 		// MylarTaskListPlugin.getTaskListManager().getTaskForHandle(BugTaskUtil.getHandle(bugId),
 		// true);
-		if (task != null && task instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask) task;
-			bugzillaTask.openTask(commentNumer, true);
+		if (task != null) {
+			TaskListUiUtil.openEditor(task);
+//			BugzillaTask bugzillaTask = (BugzillaTask) task;
+//			bugzillaTask.openTask(commentNumer, true);
 		} else {
 			List<BugzillaOpenStructure> openList = new ArrayList<BugzillaOpenStructure>(1);
 			openList.add(new BugzillaOpenStructure(server, bugId, commentNumer));
@@ -80,7 +81,7 @@ public class BugzillaUiBridge implements IMylarUiBridge {
 	}
 
 	public void close(IMylarElement node) {
-		IWorkbenchPage page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
 			IEditorReference[] references = page.getEditorReferences();
 			for (int i = 0; i < references.length; i++) {

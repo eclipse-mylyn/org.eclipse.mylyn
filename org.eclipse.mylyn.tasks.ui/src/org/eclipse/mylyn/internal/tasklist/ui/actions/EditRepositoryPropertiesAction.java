@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -49,7 +49,7 @@ public class EditRepositoryPropertiesAction extends Action {
 			IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
 			if (selection.getFirstElement() instanceof TaskRepository) {
 				EditRepositoryWizard wizard = new EditRepositoryWizard((TaskRepository) selection.getFirstElement());
-				Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				if (wizard != null && shell != null && !shell.isDisposed()) {
 					WizardDialog dialog = new WizardDialog(shell, wizard);
 					dialog.create();

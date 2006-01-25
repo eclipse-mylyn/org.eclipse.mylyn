@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -36,15 +36,15 @@ public class NewLocalTaskAction extends Action {
 
 	public NewLocalTaskAction(TaskListView view) {
 		this.view = view;
-		setText("Add Task");
-		setToolTipText("Add Task");
+		setText("Add New Task");
+		setToolTipText("Add New Task");
 		setId(ID);
 		setImageDescriptor(TaskListImages.TASK_NEW);
 	}
 
 	@Override
 	public void run() {
-		TaskInputDialog dialog = new TaskInputDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());
+		TaskInputDialog dialog = new TaskInputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			Task newTask = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), dialog

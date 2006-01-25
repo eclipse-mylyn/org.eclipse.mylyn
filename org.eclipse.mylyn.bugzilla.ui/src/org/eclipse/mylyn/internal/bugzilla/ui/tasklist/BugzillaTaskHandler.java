@@ -15,7 +15,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction;
@@ -27,9 +26,6 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -132,21 +128,21 @@ public class BugzillaTaskHandler implements ITaskHandler {
 				|| element instanceof BugzillaQueryCategory;
 	}
 
-	public void taskClosed(ITask element, IWorkbenchPage page) {
-		try {
-			IEditorInput input = null;
-			if (element instanceof BugzillaTask) {
-				input = new BugzillaTaskEditorInput((BugzillaTask) element, true);
-			}
-			IEditorPart editor = page.findEditor(input);
-
-			if (editor != null) {
-				page.closeEditor(editor, false);
-			}
-		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Error while trying to close a bugzilla task");
-		}
-	}
+//	public void taskClosed(ITask element, IWorkbenchPage page) {
+//		try {
+//			IEditorInput input = null;
+//			if (element instanceof BugzillaTask) {
+//				input = new BugzillaTaskEditorInput((BugzillaTask) element, true);
+//			}
+//			IEditorPart editor = page.findEditor(input);
+//
+//			if (editor != null) {
+//				page.closeEditor(editor, false);
+//			}
+//		} catch (Exception e) {
+//			MylarStatusHandler.log(e, "Error while trying to close a bugzilla task");
+//		}
+//	}
 
 	public ITask addTaskToRegistry(ITask newTask) {
 		if (newTask instanceof BugzillaTask) {
@@ -229,7 +225,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 // } else {
 // String message = MESSAGE_CONFIRM_DELETE;
 // boolean deleteConfirmed =
-// MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+// MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 // .getShell(), "Confirm delete", message);
 // if (!deleteConfirmed)
 // return;
@@ -244,7 +240,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 // public boolean deleteElement(ITaskListElement element) {
 // if (element instanceof BugzillaQueryCategory) {
 // boolean deleteConfirmed =
-// MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+// MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 // .getShell(), "Confirm delete", "Delete the selected query and all contained
 // tasks?");
 // if (!deleteConfirmed)
@@ -254,7 +250,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 // } else if (element instanceof BugzillaTask) {
 // BugzillaTask task = (BugzillaTask) element;
 // if (task.isActive()) {
-// MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+// MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 // "Delete failed",
 // "Task must be deactivated in order to delete.");
 // return false;
@@ -262,7 +258,7 @@ public class BugzillaTaskHandler implements ITaskHandler {
 //
 // // String message = task.getDeleteConfirmationMessage();
 // boolean deleteConfirmed =
-// MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+// MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 // .getShell(), "Confirm delete", MESSAGE_CONFIRM_DELETE);
 // if (!deleteConfirmed)
 // return false;

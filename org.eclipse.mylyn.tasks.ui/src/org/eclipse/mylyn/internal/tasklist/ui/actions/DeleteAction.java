@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
 
 /**
@@ -55,18 +55,18 @@ public class DeleteAction extends Action {
 					task = (ITask) selectedObject;
 				}
 				if (task == null) {
-					MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Mylar Tasks", "No task data to delte.");
 					return;
 				}
 				if (task.isActive()) {
-					MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Mylar Tasks", "Task must be deactivated in order to delete.");
 					return;
 				}
 
 				String message = genDeleteConfirmationMessage(task);
-				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getShell(), "Confirm Delete", message);
 				if (!deleteConfirmed) {
 					return;
@@ -87,13 +87,13 @@ public class DeleteAction extends Action {
 //				}
 //				view.getViewer().refresh();
 			} else if (selectedObject instanceof IRepositoryQuery) {
-				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
 				if (deleteConfirmed) {
 					MylarTaskListPlugin.getTaskListManager().deleteQuery((IRepositoryQuery) selectedObject);
 				}
 			} else if (selectedObject instanceof TaskCategory) {
-				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
+				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getShell(), "Confirm Delete", "Delete the selected category and all contained tasks?");
 				if (!deleteConfirmed)
 					return;
@@ -115,7 +115,7 @@ public class DeleteAction extends Action {
 				MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
 				view.getViewer().refresh();
 			} else {
-				MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Delete failed",
+				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Delete failed",
 						"Nothing selected.");
 				return;
 			}

@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.IContextEditorFactory;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
@@ -120,11 +120,11 @@ public class TaskListExtensionReader {
 	private static void readEditorFactory(IConfigurationElement element) {
 		try {
 			Object editor = element.createExecutableExtension(EDITOR_FACTORY_CLASS);
-			if (editor instanceof IContextEditorFactory) {
-				MylarTaskListPlugin.getDefault().addContextEditor((IContextEditorFactory) editor);
+			if (editor instanceof ITaskEditorFactory) {
+				MylarTaskListPlugin.getDefault().addContextEditor((ITaskEditorFactory) editor);
 			} else {
 				MylarStatusHandler.log("Could not load editor: " + editor.getClass().getCanonicalName()
-						+ " must implement " + IContextEditorFactory.class.getCanonicalName(), null);
+						+ " must implement " + ITaskEditorFactory.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load tasklist listener extension");

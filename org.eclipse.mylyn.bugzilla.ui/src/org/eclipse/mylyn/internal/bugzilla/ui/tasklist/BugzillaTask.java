@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -263,7 +262,7 @@ public class BugzillaTask extends Task {
 			return BugzillaRepositoryUtil.getBug(getRepositoryUrl(), TaskRepositoryManager
 					.getTaskIdAsInt(getHandleIdentifier()));
 		} catch (LoginException e) {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 				public void run() {
 					MessageDialog
@@ -272,7 +271,7 @@ public class BugzillaTask extends Task {
 				}
 			});
 		} catch (IOException e) {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					((ApplicationWindow) BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow())
 							.setStatus("Download of bug " + TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier())
@@ -289,48 +288,16 @@ public class BugzillaTask extends Task {
 //		openTask(-1, offline);
 //	}
 
-	/**
-	 * Opens this task's bug report in an editor revealing the selected comment.
-	 * 
-	 * @param commentNumber
-	 *            The comment number to reveal
-	 */
-	public void openTask(int commentNumber, boolean offline) {
-		// if (state != BugTaskState.FREE) {
-		// return;
-		// }
-		//		
-		// state = BugTaskState.OPENING;
-		// notifyTaskDataChange();
-		OpenBugTaskJob job = new OpenBugTaskJob("Opening Bugzilla task in editor...", this, offline);
-		job.schedule();
-		// job.addJobChangeListener(new IJobChangeListener(){
-		//
-		// public void aboutToRun(IJobChangeEvent event) {
-		// // don't care about this event
-		// }
-		//
-		// public void awake(IJobChangeEvent event) {
-		// // don't care about this event
-		// }
-		// public void done(IJobChangeEvent event) {
-		// state = BugTaskState.FREE;
-		// notifyTaskDataChange();
-		// }
-		//
-		// public void running(IJobChangeEvent event) {
-		// // don't care about this event
-		// }
-		//
-		// public void scheduled(IJobChangeEvent event) {
-		// // don't care about this event
-		// }
-		//
-		// public void sleeping(IJobChangeEvent event) {
-		// // don't care about this event
-		// }
-		// });
-	}
+//	/**
+//	 * Opens this task's bug report in an editor revealing the selected comment.
+//	 * 
+//	 * @param commentNumber
+//	 *            The comment number to reveal
+//	 */
+//	public void openTask(int commentNumber, boolean offline) {
+//		OpenBugTaskJob job = new OpenBugTaskJob("Opening Bugzilla task in editor...", this, offline);
+//		job.schedule();
+//	}
 
 	/**
 	 * @return <code>true</code> if the bug report for this BugzillaTask was
@@ -351,7 +318,7 @@ public class BugzillaTask extends Task {
 	 */
 	protected void openTaskEditor(final BugzillaTaskEditorInput input, final boolean offline) {
 
-		Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
 					// if we can reach the server, get the latest for the bug
@@ -466,35 +433,6 @@ public class BugzillaTask extends Task {
 					+ ": " + bugReport.getSummary()));
 		} catch (NullPointerException npe) {
 			MylarStatusHandler.fail(npe, "Task details update failed", false);
-		}
-	}
-
-	private class OpenBugTaskJob extends Job {
-
-		protected BugzillaTask bugTask;
-
-		private boolean offline;
-
-		public OpenBugTaskJob(String name, BugzillaTask bugTask, boolean offline) {
-			super(name);
-			this.bugTask = bugTask;
-			this.offline = offline;
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				boolean isLikeOffline = offline || syncState == BugReportSyncState.OUTGOING
-						|| syncState == BugReportSyncState.CONFLICT;
-				final BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugTask, isLikeOffline);
-
-				openTaskEditor(input, offline);
-				return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Unable to open Bug report: "
-						+ TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier()), true);
-			}
-			return Status.CANCEL_STATUS;
 		}
 	}
 
