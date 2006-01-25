@@ -203,7 +203,7 @@
             visible="true"> 
             
   		<action
-          class="org.eclipse.mylar.internal.java.ui.actions.ToggleAutoFoldAction"
+          class="org.eclipse.mylar.internal.java.ui.actions.ToggleActiveFoldingAction"
           definitionId="org.eclipse.mylar.java.ui.editor.folding.auto"
           icon="icons/elcl16/interest-folding.gif"
           id="org.eclipse.mylar.java.ui.editor.folding.auto"
