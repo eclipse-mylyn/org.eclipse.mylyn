@@ -17,12 +17,12 @@ import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.planner.CompletedTaskCollector;
 import org.eclipse.mylar.internal.tasklist.planner.ITaskCollector;
 import org.eclipse.mylar.internal.tasklist.planner.InProgressTaskCollector;
 import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
-import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.PlatformUI;

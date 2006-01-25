@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasklist.ui;
+package org.eclipse.mylar.internal.tasklist;
 
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;

@@ -9,10 +9,8 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
-import org.eclipse.mylar.internal.tasklist.TaskList;
-import org.eclipse.mylar.internal.tasklist.TaskListExternalizerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,7 +26,7 @@ import org.w3c.dom.Node;
  */
 public interface ITaskListExternalizer {
 
-	public abstract TaskRepositoryClient getRepositoryClient();
+	public abstract AbstractTaskRepositoryClient getRepositoryClient();
 	
 	/**
 	 * Note that registries get read as a normal category, but get written out

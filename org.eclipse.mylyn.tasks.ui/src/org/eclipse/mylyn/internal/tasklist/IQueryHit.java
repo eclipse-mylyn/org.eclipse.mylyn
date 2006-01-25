@@ -8,12 +8,24 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+package org.eclipse.mylar.internal.tasklist;
 
-package org.eclipse.mylar.tasklist;
 
 /**
  * @author Mik Kersten
  */
-public interface IRepositorySettingsPage {
+public interface IQueryHit extends ITaskListElement {
 
+	public String getRepositoryUrl();
+
+	public void setRepositoryUrl(String repositoryUrl);
+
+	public ITask getOrCreateCorrespondingTask();
+
+	/**
+	 * @return null if there is no corresponding report
+	 */
+	public ITask getCorrespondingTask();
+
+	public void setCorrespondingTask(ITask task);
 }

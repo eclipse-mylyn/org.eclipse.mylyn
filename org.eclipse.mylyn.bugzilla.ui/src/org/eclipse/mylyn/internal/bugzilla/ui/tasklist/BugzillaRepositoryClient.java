@@ -22,21 +22,21 @@ import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
+import org.eclipse.mylar.internal.tasklist.AbstractTaskRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
-import org.eclipse.mylar.tasklist.IRepositoryQuery;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TaskRepositoryClient;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
  */
-public class BugzillaRepositoryClient extends TaskRepositoryClient implements IOfflineBugListener {
+public class BugzillaRepositoryClient extends AbstractTaskRepositoryClient implements IOfflineBugListener {
 
 	private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
 

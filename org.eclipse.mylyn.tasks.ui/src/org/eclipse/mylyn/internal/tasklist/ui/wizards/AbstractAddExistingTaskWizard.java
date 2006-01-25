@@ -14,12 +14,12 @@ package org.eclipse.mylar.internal.tasklist.ui.wizards;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasklist.AbstractTaskRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TaskRepositoryClient;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.ui.IWorkbench;
 
 /**
@@ -36,7 +36,7 @@ public abstract class AbstractAddExistingTaskWizard extends Wizard {
 
 	@Override
 	public final boolean performFinish() {
-		TaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+		AbstractTaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 				this.repository.getKind());
 		ITask newTask = client.createTaskFromExistingId(repository, getTaskId());
 

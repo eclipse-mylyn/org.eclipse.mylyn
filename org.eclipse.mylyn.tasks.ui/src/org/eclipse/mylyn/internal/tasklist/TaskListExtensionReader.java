@@ -22,9 +22,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.tasklist.ITaskListExternalizer;
-import org.eclipse.mylar.tasklist.TaskRepositoryClient;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Shawn Minto
@@ -139,8 +136,8 @@ public class TaskListExtensionReader {
 		try {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
-			if (repository instanceof TaskRepositoryClient && type != null) {
-				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((TaskRepositoryClient) repository);
+			if (repository instanceof AbstractTaskRepositoryClient && type != null) {
+				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((AbstractTaskRepositoryClient) repository);
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
 			}

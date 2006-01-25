@@ -19,12 +19,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskList;
-import org.eclipse.mylar.tasklist.IQueryHit;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.IRepositoryQuery;
 
 /**
  * @author Ken Sueda

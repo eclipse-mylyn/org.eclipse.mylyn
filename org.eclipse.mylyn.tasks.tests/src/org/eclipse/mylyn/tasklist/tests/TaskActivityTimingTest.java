@@ -15,10 +15,10 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskActivityTimer;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Mik Kersten

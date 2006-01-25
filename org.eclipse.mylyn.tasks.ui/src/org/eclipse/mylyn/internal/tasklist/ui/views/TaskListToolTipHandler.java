@@ -15,8 +15,8 @@
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
-import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;

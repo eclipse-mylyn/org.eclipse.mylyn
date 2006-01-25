@@ -14,7 +14,7 @@
 package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 

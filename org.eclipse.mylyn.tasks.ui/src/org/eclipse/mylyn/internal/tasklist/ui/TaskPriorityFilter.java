@@ -8,13 +8,12 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
-import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
-import org.eclipse.mylar.tasklist.IQueryHit;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Ken Sueda

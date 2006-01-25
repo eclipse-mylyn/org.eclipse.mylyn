@@ -8,14 +8,30 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
+package org.eclipse.mylar.internal.tasklist;
 
-package org.eclipse.mylar.tasklist;
+import java.util.List;
+
 
 /**
  * @author Mik Kersten
  */
-public interface ITaskRepositoryListener {
+public interface IRepositoryQuery extends ITaskListElement {
 
-	public abstract void repositorySetUpdated();
+	public String getQueryUrl();
+
+	public void setQueryUrl(String query);
+
+	public String getRepositoryUrl();
+
+	public void setRepositoryUrl(String url);
+
+	public List<IQueryHit> getHits();
+
+	public int getMaxHits();
+
+	public void setMaxHits(int maxHits);
+
+	public void addHit(IQueryHit hit);
 
 }

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.net.URL;
 import java.util.Map;

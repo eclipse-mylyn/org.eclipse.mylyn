@@ -16,15 +16,15 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITaskActivityListener;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
-import org.eclipse.mylar.internal.tasklist.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskActivityListener;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
 

@@ -18,7 +18,6 @@ import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.ITimerThreadListener;
 import org.eclipse.mylar.internal.core.util.TimerThread;
-import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.PlatformUI;

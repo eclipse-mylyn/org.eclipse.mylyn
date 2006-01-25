@@ -19,7 +19,7 @@ import java.util.Map;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITask;
 
 /**
  * Collects tasks that are not complete but have been worked on during the

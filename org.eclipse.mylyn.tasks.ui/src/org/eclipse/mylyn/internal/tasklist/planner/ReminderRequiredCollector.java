@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.mylar.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITask;
 
 /**
  * @author Ken Sueda

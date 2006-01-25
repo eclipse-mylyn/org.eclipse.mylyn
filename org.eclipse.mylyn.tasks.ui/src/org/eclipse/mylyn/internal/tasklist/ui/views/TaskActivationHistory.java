@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 
 /**
  * @author Ken Sueda (original prototype)

@@ -11,13 +11,13 @@
 /*
  * Created on Jan 13, 2005
  */
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.internal.tasklist.Task.TaskStatus;
-import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
+
 
 /**
  * @author Mik Kersten
@@ -55,10 +55,6 @@ public interface ITask extends ITaskListElement {
 	public abstract void setUrl(String url);
 
 	public abstract String getUrl();
-
-	// public abstract String getRepositoryUrl();
-
-	// public abstract void setRepositoryUrl(String repositoryUrl);
 
 	public abstract String getNotes();
 

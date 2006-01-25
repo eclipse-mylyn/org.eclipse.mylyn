@@ -8,25 +8,22 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.util.List;
 
+
 /**
+ * Manipulate categories via TaskListManager
+ * 
  * @author Mik Kersten
  */
-public interface ITaskActivityListener {
+public interface ITaskCategory extends ITaskListElement {
 
-	public abstract void taskActivated(ITask task);
+	public List<ITask> getChildren();
 
-	public abstract void tasksActivated(List<ITask> tasks);
+	public boolean isArchive();
 
-	public abstract void taskDeactivated(ITask task);
+	public void setIsArchive(boolean isArchive);
 
-	public abstract void taskChanged(ITask task);
-
-	public abstract void tasklistRead();
-
-	public abstract void taskListModified();
 }

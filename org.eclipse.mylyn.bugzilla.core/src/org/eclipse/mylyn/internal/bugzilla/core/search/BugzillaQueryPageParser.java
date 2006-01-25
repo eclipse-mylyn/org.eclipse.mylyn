@@ -35,7 +35,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlTag;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.tasklist.TaskRepository;
+import org.eclipse.mylar.internal.tasklist.TaskRepository;
 
 /**
  * Class to parse the update data from the server

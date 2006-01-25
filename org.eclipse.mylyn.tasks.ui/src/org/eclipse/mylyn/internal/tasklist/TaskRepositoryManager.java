@@ -25,11 +25,6 @@ import java.util.StringTokenizer;
 
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.TaskRepositoryClient;
-import org.eclipse.mylar.tasklist.ITaskRepositoryListener;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.tasklist.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -38,7 +33,7 @@ public class TaskRepositoryManager {
 
 	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.";
 
-	private Map<String, TaskRepositoryClient> repositoryClients = new HashMap<String, TaskRepositoryClient>();
+	private Map<String, AbstractTaskRepositoryClient> repositoryClients = new HashMap<String, AbstractTaskRepositoryClient>();
 
 	private Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 
@@ -58,21 +53,21 @@ public class TaskRepositoryManager {
 
 	private static final String PREF_STORE_DELIM = ", ";
 
-	public Collection<TaskRepositoryClient> getRepositoryClients() {
+	public Collection<AbstractTaskRepositoryClient> getRepositoryClients() {
 		return Collections.unmodifiableCollection(repositoryClients.values());
 	}
 
-	public TaskRepositoryClient getRepositoryClient(String kind) {
+	public AbstractTaskRepositoryClient getRepositoryClient(String kind) {
 		return repositoryClients.get(kind);
 	}
 
-	public void addRepositoryClient(TaskRepositoryClient repositoryClient) {
+	public void addRepositoryClient(AbstractTaskRepositoryClient repositoryClient) {
 		if (!repositoryClients.values().contains(repositoryClient)) {
 			repositoryClients.put(repositoryClient.getKind(), repositoryClient);
 		}
 	}
 
-	public void removeRepositoryClient(TaskRepositoryClient repositoryClient) {
+	public void removeRepositoryClient(AbstractTaskRepositoryClient repositoryClient) {
 		repositoryClients.remove(repositoryClient);
 	}
 
@@ -125,7 +120,7 @@ public class TaskRepositoryManager {
 
 	public List<TaskRepository> getAllRepositories() {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		for (TaskRepositoryClient repositoryClient : repositoryClients.values()) {
+		for (AbstractTaskRepositoryClient repositoryClient : repositoryClients.values()) {
 			if (repositoryMap.containsKey(repositoryClient.getKind())) {
 				repositories.addAll(repositoryMap.get(repositoryClient.getKind()));
 			}
@@ -169,7 +164,7 @@ public class TaskRepositoryManager {
 	}
 
 	public Map<String, Set<TaskRepository>> readRepositories() {
-		for (TaskRepositoryClient repositoryClient : repositoryClients.values()) {
+		for (AbstractTaskRepositoryClient repositoryClient : repositoryClients.values()) {
 			String read = MylarTaskListPlugin.getPrefs().getString(PREF_REPOSITORIES + repositoryClient.getKind());
 			Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 			if (read != null) {
@@ -194,7 +189,7 @@ public class TaskRepositoryManager {
 
 	private void saveRepositories() {
 		String store = "";
-		for (TaskRepositoryClient repositoryClient : repositoryClients.values()) {
+		for (AbstractTaskRepositoryClient repositoryClient : repositoryClients.values()) {
 			if (repositoryMap.containsKey(repositoryClient.getKind())) {
 				for (TaskRepository repository : repositoryMap.get(repositoryClient.getKind())) {
 					store += repository.getUrl().toExternalForm() + PREF_STORE_DELIM;

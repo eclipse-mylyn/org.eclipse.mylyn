@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,12 +23,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListExtensionReader;
-import org.eclipse.mylar.internal.tasklist.TaskListManager;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasklist.TaskListSaveManager;
-import org.eclipse.mylar.internal.tasklist.TaskListWriter;
-import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.planner.ReminderRequiredCollector;
 import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
@@ -308,7 +302,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					migrateHandlesToRepositorySupport();
 
 					if (getPrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
-						for (TaskRepositoryClient repositoryClient : taskRepositoryManager.getRepositoryClients()) {
+						for (AbstractTaskRepositoryClient repositoryClient : taskRepositoryManager.getRepositoryClients()) {
 							repositoryClient.synchronize();
 						}
 					}

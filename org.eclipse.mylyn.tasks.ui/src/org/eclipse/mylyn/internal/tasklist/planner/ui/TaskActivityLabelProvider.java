@@ -18,9 +18,9 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.views.TasklistLabelProvider;
-import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 

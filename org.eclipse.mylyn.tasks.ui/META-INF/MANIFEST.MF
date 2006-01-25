@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar TaskList Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasklist; singleton:=true
 Bundle-Version: 0.4.7.v20060125
-Bundle-Activator: org.eclipse.mylar.tasklist.MylarTaskListPlugin
+Bundle-Activator: org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -21,6 +21,5 @@ Export-Package: org.eclipse.mylar.internal.tasklist,
  org.eclipse.mylar.internal.tasklist.ui.actions,
  org.eclipse.mylar.internal.tasklist.ui.preferences,
  org.eclipse.mylar.internal.tasklist.ui.views,
- org.eclipse.mylar.internal.tasklist.ui.wizards,
- org.eclipse.mylar.tasklist
+ org.eclipse.mylar.internal.tasklist.ui.wizards
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

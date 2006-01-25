@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasklist;
+package org.eclipse.mylar.internal.tasklist;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,13 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 
 /**
  * @author Mik Kersten
  */
-public abstract class TaskRepositoryClient {
+public abstract class AbstractTaskRepositoryClient {
 
 	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
 

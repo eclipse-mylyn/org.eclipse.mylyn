@@ -20,8 +20,6 @@ import java.util.List;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.ITaskCategory;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 

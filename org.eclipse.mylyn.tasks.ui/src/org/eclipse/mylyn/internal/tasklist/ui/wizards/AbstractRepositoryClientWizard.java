@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.tasklist.TaskRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractTaskRepositoryClient;
 import org.eclipse.ui.INewWizard;
 
 /**
@@ -24,13 +24,13 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 
 	protected AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 
-	protected TaskRepositoryClient repositoryClient;
+	protected AbstractTaskRepositoryClient repositoryClient;
 
-	public void setRepositoryClient(TaskRepositoryClient repository) {
+	public void setRepositoryClient(AbstractTaskRepositoryClient repository) {
 		this.repositoryClient = repository;
 	}
 
-	public TaskRepositoryClient getRepositoryClient() {
+	public AbstractTaskRepositoryClient getRepositoryClient() {
 		return repositoryClient;
 	}
 

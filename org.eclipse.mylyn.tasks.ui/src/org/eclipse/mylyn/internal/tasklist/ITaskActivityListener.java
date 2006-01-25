@@ -8,25 +8,25 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasklist;
 
-import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
+package org.eclipse.mylar.internal.tasklist;
+
+import java.util.List;
 
 /**
  * @author Mik Kersten
  */
-public interface IQueryHit extends ITaskListElement {
+public interface ITaskActivityListener {
 
-	public String getRepositoryUrl();
+	public abstract void taskActivated(ITask task);
 
-	public void setRepositoryUrl(String repositoryUrl);
+	public abstract void tasksActivated(List<ITask> tasks);
 
-	public ITask getOrCreateCorrespondingTask();
+	public abstract void taskDeactivated(ITask task);
 
-	/**
-	 * @return null if there is no corresponding report
-	 */
-	public ITask getCorrespondingTask();
+	public abstract void taskChanged(ITask task);
 
-	public void setCorrespondingTask(ITask task);
+	public abstract void tasklistRead();
+
+	public abstract void taskListModified();
 }

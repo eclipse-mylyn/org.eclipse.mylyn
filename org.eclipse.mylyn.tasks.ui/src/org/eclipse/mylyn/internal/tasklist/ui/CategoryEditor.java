@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
