@@ -31,7 +31,7 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
-import org.eclipse.mylar.internal.tasklist.AbstractTaskRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
 import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
@@ -39,7 +39,6 @@ import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -56,7 +55,7 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 	private String queryUrl;
 
 	private boolean customQuery = false;
-	
+
 	private int maxHits;
 
 	private List<IQueryHit> hits = new ArrayList<IQueryHit>();
@@ -115,9 +114,9 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 	}
 
 	public void addHit(IQueryHit hit) {
-		AbstractTaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-		ITask correspondingTask = client.getTaskFromArchive(
-				hit.getHandleIdentifier());
+		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+				BugzillaPlugin.REPOSITORY_KIND);
+		ITask correspondingTask = client.getTaskFromArchive(hit.getHandleIdentifier());
 		hit.setCorrespondingTask(correspondingTask);
 		hits.add(hit);
 	}
@@ -132,13 +131,14 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 
 	public void refreshBugs(IProgressMonitor monitor) {
 		hits.clear();
+
 		// refresh the view to show that the results are gone
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				if (TaskListView.getDefault() != null)
-					TaskListView.getDefault().getViewer().refresh();
-			}
-		});
+		// Display.getDefault().asyncExec(new Runnable() {
+		// public void run() {
+		// if (TaskListView.getDefault() != null)
+		// TaskListView.getDefault().getViewer().refresh();
+		// }
+		// });
 
 		TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 				BugzillaPlugin.REPOSITORY_KIND, repositoryUrl);
@@ -314,5 +314,9 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 
 	public void setCustomQuery(boolean customQuery) {
 		this.customQuery = customQuery;
+	}
+
+	public String getRepositoryKind() {
+		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 }

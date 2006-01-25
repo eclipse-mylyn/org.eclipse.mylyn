@@ -28,6 +28,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class Task implements ITask {
 
+	private static final String REPOSITORY_KIND_LOCAL = "local";
+	
 	public enum TaskStatus {
 		NOT_STARTED, IN_PROGRESS, COMPLETED;
 
@@ -411,6 +413,10 @@ public class Task implements ITask {
 		} else {
 			return TaskStatus.NOT_STARTED;
 		}
+	}
+
+	public String getRepositoryKind() {
+		return REPOSITORY_KIND_LOCAL;
 	}
 
 }

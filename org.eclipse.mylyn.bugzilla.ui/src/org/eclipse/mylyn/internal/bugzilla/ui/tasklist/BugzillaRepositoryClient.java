@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
-import org.eclipse.mylar.internal.tasklist.AbstractTaskRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Mik Kersten
  */
-public class BugzillaRepositoryClient extends AbstractTaskRepositoryClient implements IOfflineBugListener {
+public class BugzillaRepositoryClient extends AbstractRepositoryClient implements IOfflineBugListener {
 
 	private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
 
@@ -69,6 +69,23 @@ public class BugzillaRepositoryClient extends AbstractTaskRepositoryClient imple
 		refresh.setShowProgress(false);
 		refresh.run();
 		refresh.setShowProgress(true);
+	}
+	
+	@Override
+	public void synchronize(ITask task) {
+		if (task instanceof BugzillaTask) {
+			BugzillaTask bugzillaTask = (BugzillaTask)task;
+			boolean hasLocalChanges = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING
+				|| bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
+			if (!hasLocalChanges) {
+				bugzillaTask.downloadReport();
+			}
+			if (bugzillaTask.getSyncState() == BugReportSyncState.INCOMMING) {
+				bugzillaTask.setSyncState(BugReportSyncState.OK);
+			} else if (bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT) {
+				bugzillaTask.setSyncState(BugReportSyncState.OUTGOING);
+			}
+		}		
 	}
 	
 	public ITask createTaskFromExistingId(TaskRepository repository, String id) {

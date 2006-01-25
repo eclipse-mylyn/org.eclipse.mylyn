@@ -38,6 +38,9 @@ public interface ITaskListElement {
 
 	public abstract void setHandleIdentifier(String id);
 
+	/**
+	 * TODO: refactor to use repository kinds?
+	 */
 	public abstract boolean isLocal();
 
 	public abstract boolean isActivatable();

@@ -98,7 +98,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	/**
 	 * TODO: make local task externalizer use repository.
 	 */
-	public AbstractTaskRepositoryClient getRepositoryClient() {
+	public AbstractRepositoryClient getRepositoryClient() {
 		return null;
 	}
 	

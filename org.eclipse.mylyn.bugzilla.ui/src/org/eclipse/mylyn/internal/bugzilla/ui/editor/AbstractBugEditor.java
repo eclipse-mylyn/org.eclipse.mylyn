@@ -1613,6 +1613,5 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	}
 
 	public void setParentEditor(MylarTaskEditor parentEditor) {
-		this.parentEditor = parentEditor;
 	}
 }

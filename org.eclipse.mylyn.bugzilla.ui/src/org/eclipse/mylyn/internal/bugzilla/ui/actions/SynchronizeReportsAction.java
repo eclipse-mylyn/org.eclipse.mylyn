@@ -122,7 +122,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 	}
 
 	private void synchronizeCategory(final BugzillaQueryCategory cat) {
-		Job j = new Job(LABEL_SYNCHRONIZE_JOB) {
+		Job job = new Job(LABEL_SYNCHRONIZE_JOB) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -144,7 +144,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 
 		};
 
-		j.schedule();
+		job.schedule();
 	}
 
 	public void init(IViewPart view) {

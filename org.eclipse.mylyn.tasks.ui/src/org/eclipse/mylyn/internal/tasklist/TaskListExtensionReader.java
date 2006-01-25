@@ -136,8 +136,8 @@ public class TaskListExtensionReader {
 		try {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
-			if (repository instanceof AbstractTaskRepositoryClient && type != null) {
-				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((AbstractTaskRepositoryClient) repository);
+			if (repository instanceof AbstractRepositoryClient && type != null) {
+				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((AbstractRepositoryClient) repository);
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
 			}

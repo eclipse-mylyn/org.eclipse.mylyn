@@ -24,7 +24,7 @@
   
    <extension
          point="org.eclipse.mylar.tasklist.editors">
-      <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugReportEditorFactory"/>
+      <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportEditorFactory"/>
    </extension>
   
    
@@ -176,7 +176,7 @@
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
                label="Synchronize Report(s)"
                menubarPath="reports"
-               tooltip="Synchronize Report(s)">
+               tooltip="Synchronize with Repository">
             <enablement>
                <or>
                     <objectClass name="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask"/>

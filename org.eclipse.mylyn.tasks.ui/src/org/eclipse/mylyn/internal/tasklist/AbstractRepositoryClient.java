@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettings
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractTaskRepositoryClient {
+public abstract class AbstractRepositoryClient {
 
 	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
 
@@ -46,6 +46,8 @@ public abstract class AbstractTaskRepositoryClient {
 	 * Synchronize state with the repository (e.g. queries, task contents)
 	 */
 	public abstract void synchronize();
+	
+	public abstract void synchronize(ITask task);
 
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 

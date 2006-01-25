@@ -22,6 +22,8 @@ public interface IRepositoryQuery extends ITaskListElement {
 
 	public void setQueryUrl(String query);
 
+	public String getRepositoryKind();
+	
 	public String getRepositoryUrl();
 
 	public void setRepositoryUrl(String url);

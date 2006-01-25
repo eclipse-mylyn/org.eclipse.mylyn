@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.internal.tasklist.AbstractTaskRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -127,7 +127,7 @@ public class BugzillaQueryHit implements IQueryHit {
 	public ITask getOrCreateCorrespondingTask() {
 		if (task == null) {
 			task = new BugzillaTask(this, true);
-			AbstractTaskRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 			client.addTaskToArchive(task);
 //			BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskArchive(task);
 		}

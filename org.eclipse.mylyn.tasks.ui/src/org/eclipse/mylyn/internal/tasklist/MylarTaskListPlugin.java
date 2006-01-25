@@ -302,7 +302,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					migrateHandlesToRepositorySupport();
 
 					if (getPrefs().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP)) {
-						for (AbstractTaskRepositoryClient repositoryClient : taskRepositoryManager.getRepositoryClients()) {
+						for (AbstractRepositoryClient repositoryClient : taskRepositoryManager.getRepositoryClients()) {
 							repositoryClient.synchronize();
 						}
 					}
