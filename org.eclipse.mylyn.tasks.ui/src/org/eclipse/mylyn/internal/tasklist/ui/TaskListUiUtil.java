@@ -16,14 +16,13 @@ import java.net.URL;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorPart; 
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -47,16 +46,6 @@ public class TaskListUiUtil {
 		}
 	}
 
-	public static void openEditor(final IQueryHit hit) {
-		ITask task = hit.getOrCreateCorrespondingTask();
-		if (task != null) {
-			openEditor(task);
-		} else {
-			MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG,
-					"Could not create task for query hit: " + hit);
-		}
-	}
-
 	public static void openEditor(final ITask task) {
 		openEditor(task, true);
 	}
@@ -67,48 +56,14 @@ public class TaskListUiUtil {
 	public static void openEditor(final ITask task, boolean asyncExec) {
 
 		final IEditorInput editorInput = new TaskEditorInput(task);
-		if (!asyncExec) {
-			openEditorInActivePage(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID);
-		} else {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					openEditorInActivePage(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID);
-				}
-			});
-			
-//			OpenTaskEditorJob openTaskEditorJob = new OpenTaskEditorJob("Opening Task", editorInput);
-//			openTaskEditorJob.schedule();
-		}
+
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		
+		openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 	}
 
-//	private static class OpenTaskEditorJob extends Job {
-//
-//		private IEditorInput editorInput;
-//
-//		public OpenTaskEditorJob(String name, IEditorInput editorInput) {
-//			super(name);
-//			this.editorInput = editorInput;
-//		}
-//
-//		@Override
-//		protected IStatus run(IProgressMonitor monitor) {
-//			try {
-//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//						openEditorInActivePage(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID);
-//					}
-//				});
-//				return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
-//			} catch (Exception e) {
-//				MylarStatusHandler.fail(e, "Could not open task editor", true);
-//			}
-//			return Status.CANCEL_STATUS;
-//		}
-//	}
-
-	public static IEditorPart openEditorInActivePage(IEditorInput input, String editorId) {
+	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {
 		try {
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "Open for editor failed: " + input + ", id: " + editorId, true);
@@ -120,7 +75,8 @@ public class TaskListUiUtil {
 		final IEditorInput input = new CategoryEditorInput(category);
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				openEditorInActivePage(input, TaskListPreferenceConstants.CATEGORY_EDITOR_ID);
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				openEditor(input, TaskListPreferenceConstants.CATEGORY_EDITOR_ID, page);
 			}
 		});
 	}

@@ -61,7 +61,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	private TaskEditorListener partListener;
 
-	private List<IEditorPart> editorsToNotifyOnChange = new ArrayList<IEditorPart>();
+	private List<IEditorPart> editors = new ArrayList<IEditorPart>();
 
 	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
 		private ISelection globalSelection;
@@ -116,7 +116,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 						IEditorPart editor = factory.createEditor(this);
 						IEditorInput input = factory.createEditorInput(task);
 						if (editor != null && input != null) {
-							editorsToNotifyOnChange.add(editor);
+							editors.add(editor);
 							index = addPage(editor, input);
 							selectedIndex = index;
 							setPageText(index++, factory.getTitle());
@@ -126,8 +126,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 					}
 				}
 			}
-			// HACK: check URL properly
-			if (task.getUrl().length() > 8) {
+			if (hasValidUrl()) {
 				createBrowserPage();
 			}
 			setActivePage(selectedIndex);
@@ -144,6 +143,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		try {
 			taskInfoEditor.createPartControl(getContainer());
 			taskInfoEditor.setParentEditor(this);
+			editors.add(taskInfoEditor);
+
 			int index = addPage(taskInfoEditor.getControl());
 			setPageText(index, TASK_INFO_PAGE_LABEL);
 			return index;
@@ -174,18 +175,25 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		if (!taskInfoEditor.getControl().isDisposed()) {
-			taskInfoEditor.doSave(monitor);
-		} else {
-			MylarStatusHandler.log("attempted to save disposed editor: " + taskInfoEditor, this);
-		}
+		for (IEditorPart editor : editors) {
+			editor.doSave(monitor);
+		}		
+
 		if (webBrowser != null) {
 			webBrowser.setUrl(task.getUrl());
-		} else if (task.getUrl().length() > 9) {
+		} else if (hasValidUrl()) {
 			createBrowserPage();
 		}
 	}
 
+	/**
+	 * HACK: perform real check
+	 */
+	private boolean hasValidUrl() {
+		return task.getUrl().length() > 9;
+	}
+
+	
 	/**
 	 * Saves the multi-page editor's document as another file. Also updates the
 	 * text for page 0's tab, and updates this multi-page editor's input to
@@ -195,7 +203,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void doSaveAs() {
+	public void doSaveAs() {	
 		IEditorPart editor = getEditor(0);
 		editor.doSaveAs();
 		setPageText(0, editor.getTitle());
@@ -233,14 +241,17 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	@Override
 	public boolean isDirty() {
-		return taskInfoEditor.isDirty();
+		for (IEditorPart editor : editors) {
+			if (editor.isDirty()) {
+				return true;
+			}
+		}
+		return false;
+		// return taskInfoEditor.isDirty();
 	}
 
 	private class TaskEditorListener implements IPartListener {
 
-		/**
-		 * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
-		 */
 		public void partActivated(IWorkbenchPart part) {
 			if (part.equals(MylarTaskEditor.this)) {
 				ITask task = taskEditorInput.getTask();
@@ -315,14 +326,14 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	protected void pageChange(int newPageIndex) {
 		// super.pageChange(newPageIndex);
 		for (ITaskEditorFactory factory : MylarTaskListPlugin.getDefault().getTaskEditors()) {
-			for (IEditorPart editor : editorsToNotifyOnChange) {
+			for (IEditorPart editor : editors) {
 				factory.notifyEditorActivationChange(editor);
 			}
 		}
 	}
 
 	public void dispose() {
-		for (IEditorPart part : editorsToNotifyOnChange) {
+		for (IEditorPart part : editors) {
 			part.dispose();
 		}
 		if (taskInfoEditor != null)
@@ -342,7 +353,5 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		if (activePage != null) {
 			activePage.removePartListener(partListener);
 		}
-
 	}
-
 }
