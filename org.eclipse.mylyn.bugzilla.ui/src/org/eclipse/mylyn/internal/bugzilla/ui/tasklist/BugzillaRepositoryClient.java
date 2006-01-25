@@ -101,10 +101,6 @@ public class BugzillaRepositoryClient implements ITaskRepositoryClient, IOffline
 		archiveTasks.addAll(bugzillaTaskArchive.values());
 		return archiveTasks;
 	}
-	
-//	public Map<String, BugzillaTask> getBugzillaTaskRegistry() {
-//		return bugzillaTaskArchive;
-//	}
 
 	public void setArchiveCategory(TaskCategory category) {
 		this.archiveCategory = category;

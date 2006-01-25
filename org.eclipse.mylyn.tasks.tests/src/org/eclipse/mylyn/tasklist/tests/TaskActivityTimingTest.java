@@ -109,7 +109,7 @@ public class TaskActivityTimingTest extends TestCase {
 		Thread.sleep(SLEEP_TIMEOUT);
 
 		elapsed = task1.getElapsedTime();
-		assertTrue("should be bigger than timeout", elapsed >= TIMEOUT);
+		assertTrue("should be bigger than timeout", elapsed + SLOP >= TIMEOUT);
 
 		// Task should be inactive so no time accumulated
 		Thread.sleep(SLEEP_TIMEOUT);
