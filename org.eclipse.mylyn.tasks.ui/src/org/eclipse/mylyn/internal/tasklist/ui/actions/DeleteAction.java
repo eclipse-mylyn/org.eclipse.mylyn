@@ -16,15 +16,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.IQueryHit;
-import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.WorkbenchImages;
 
@@ -75,18 +74,18 @@ public class DeleteAction extends Action {
 
 				MylarTaskListPlugin.getTaskListManager().deleteTask(task);
 				MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
-				IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage();
-
-				if (page == null) {
-					return;
-				}
-				try {
-					view.closeTaskEditors(task, page);
-				} catch (Exception e) {
-					MylarStatusHandler.log(e, "closing editors failed");
-				}
-				view.getViewer().refresh();
+				TaskListUiUtil.closeEditorInActivePage(task);
+//				IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+//						.getActivePage();
+//				if (page == null) {
+//					return;
+//				}
+//				try {
+//					view.closeTaskEditors(task, page);
+//				} catch (Exception e) {
+//					MylarStatusHandler.log(e, "closing editors failed");
+//				}
+//				view.getViewer().refresh();
 			} else if (selectedObject instanceof IRepositoryQuery) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(Workbench.getInstance().getActiveWorkbenchWindow()
 						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
@@ -102,15 +101,16 @@ public class DeleteAction extends Action {
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (ITask task : cat.getChildren()) {
 					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
-					IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-							.getActivePage();
-					if (page != null) {
-						try {
-							this.view.closeTaskEditors(task, page);
-						} catch (Exception e) {
-							MylarStatusHandler.log(e, " deletion failed");
-						}
-					}
+					TaskListUiUtil.closeEditorInActivePage(task);
+//					IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+//							.getActivePage();
+//					if (page != null) {
+//						try {
+//							this.view.closeTaskEditors(task, page);
+//						} catch (Exception e) {
+//							MylarStatusHandler.log(e, " deletion failed");
+//						}
+//					}
 				}
 				MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
 				view.getViewer().refresh();

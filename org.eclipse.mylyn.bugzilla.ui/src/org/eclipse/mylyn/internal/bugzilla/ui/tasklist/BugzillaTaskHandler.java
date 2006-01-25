@@ -11,35 +11,22 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaOpenStructure;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.ViewBugzillaAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
-import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITaskHandler;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CopyDescriptionAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoIntoAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskEditorAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskInExternalBrowserAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -51,92 +38,94 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class BugzillaTaskHandler implements ITaskHandler {
 
-	public void itemOpened(ITaskListElement element) {
-
-		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-
-		if (element instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask) element;
-			MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
-			if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
-				bugzillaTask.openTaskInEditor(offline);
-			} else if (mode == MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
-				if (offline) {
-					MessageDialog.openInformation(null, "Unable to open bug",
-							"Unable to open the selected bugzilla task since you are currently offline");
-					return;
-				}
-				String title = "Bug #" + TaskRepositoryManager.getTaskIdAsInt(bugzillaTask.getHandleIdentifier());
-				BugzillaUITools.openUrl(title, title, bugzillaTask.getUrl());
-			} else {
-				// not supported
-			}
-		} else if (element instanceof BugzillaCustomQueryCategory) {
-			BugzillaCustomQueryCategory queryCategory = (BugzillaCustomQueryCategory) element;
-			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
-					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
-			if (sqd.open() == Dialog.OK) {
-				queryCategory.setDescription(sqd.getName());
-				queryCategory.setQueryUrl(sqd.getUrl());
-				int maxHits = -1;
-				try {
-					maxHits = Integer.parseInt(sqd.getMaxHits());
-				} catch (Exception e) {
-				}
-				queryCategory.setMaxHits(maxHits);
-
-				new SynchronizeReportsAction(queryCategory).run();
-			}
-		} else if (element instanceof BugzillaQueryCategory) {
-			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory) element;
-			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
-					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
-					queryCategory.getMaxHits() + "");
-			if (queryDialog.open() == Dialog.OK) {
-				queryCategory.setDescription(queryDialog.getName());
-				queryCategory.setQueryUrl(queryDialog.getUrl());
-				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl().toExternalForm());
-				int maxHits = -1;
-				try {
-					maxHits = Integer.parseInt(queryDialog.getMaxHits());
-				} catch (Exception e) {
-				}
-				queryCategory.setMaxHits(maxHits);
-
-				new SynchronizeReportsAction(queryCategory).run();
-			}
-		} else if (element instanceof BugzillaQueryHit) {
-			BugzillaQueryHit hit = (BugzillaQueryHit) element;
-			MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
-			if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
-				if (hit.getCorrespondingTask() != null) {
-					hit.getCorrespondingTask().openTaskInEditor(offline);
-				} else {
-					if (offline) {
-						MessageDialog.openInformation(null, "Unable to open bug",
-								"Unable to open the selected bugzilla report since you are currently offline");
-						return;
-					}
-					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaQueryHit) element)
-							.getRepositoryUrl(), ((BugzillaQueryHit) element).getId(), -1);
-					List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
-					selectedBugs.add(open);
-					ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
-					viewBugs.schedule();
-				}
-			} else if (mode == MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
-				if (offline) {
-					MessageDialog.openInformation(null, "Unable to open bug",
-							"Unable to open the selected bugzilla report since you are currently offline");
-					return;
-				}
-				String title = "Bug #" + TaskRepositoryManager.getTaskIdAsInt(hit.getHandleIdentifier());
-				BugzillaUITools.openUrl(title, title, hit.getBugUrl());
-			} else {
-				// not supported
-			}
-		}
-	}
+//	public void itemOpened(ITaskListElement element) {
+//
+//		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
+//
+//		if (element instanceof BugzillaTask) {
+//			BugzillaTask bugzillaTask = (BugzillaTask) element;
+//			TaskListUiUtil.openEditor(bugzillaTask);
+//			MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
+//			if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
+//				bugzillaTask.openTaskInEditor(offline);
+//			} else if (mode == MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+//				if (offline) {
+//					MessageDialog.openInformation(null, "Unable to open bug",
+//							"Unable to open the selected bugzilla task since you are currently offline");
+//					return;
+//				}
+//				String title = "Bug #" + TaskRepositoryManager.getTaskIdAsInt(bugzillaTask.getHandleIdentifier());
+//				TaskListUiUtil.openUrl(title, title, bugzillaTask.getUrl());
+//			} else {
+//				// not supported
+//			}
+//		} else if (element instanceof BugzillaCustomQueryCategory) {
+//			BugzillaCustomQueryCategory queryCategory = (BugzillaCustomQueryCategory) element;
+//			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
+//					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
+//			if (sqd.open() == Dialog.OK) {
+//				queryCategory.setDescription(sqd.getName());
+//				queryCategory.setQueryUrl(sqd.getUrl());
+//				int maxHits = -1;
+//				try {
+//					maxHits = Integer.parseInt(sqd.getMaxHits());
+//				} catch (Exception e) {
+//				}
+//				queryCategory.setMaxHits(maxHits);
+//
+//				new SynchronizeReportsAction(queryCategory).run();
+//			}
+//		} else if (element instanceof BugzillaQueryCategory) {
+//			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory) element;
+//			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
+//					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
+//					queryCategory.getMaxHits() + "");
+//			if (queryDialog.open() == Dialog.OK) {
+//				queryCategory.setDescription(queryDialog.getName());
+//				queryCategory.setQueryUrl(queryDialog.getUrl());
+//				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl().toExternalForm());
+//				int maxHits = -1;
+//				try {
+//					maxHits = Integer.parseInt(queryDialog.getMaxHits());
+//				} catch (Exception e) {
+//				}
+//				queryCategory.setMaxHits(maxHits);
+//
+//				new SynchronizeReportsAction(queryCategory).run();
+//			}
+//		} else if (element instanceof BugzillaQueryHit) {
+//			BugzillaQueryHit hit = (BugzillaQueryHit) element;
+//			MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
+//			if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
+//				if (hit.getCorrespondingTask() != null) {
+//					hit.getCorrespondingTask().openTaskInEditor(offline);
+//				} else {
+//					if (offline) {
+//						MessageDialog.openInformation(null, "Unable to open bug",
+//								"Unable to open the selected bugzilla report since you are currently offline");
+//						return;
+//					}
+//					BugzillaOpenStructure open = new BugzillaOpenStructure(((BugzillaQueryHit) element)
+//							.getRepositoryUrl(), ((BugzillaQueryHit) element).getId(), -1);
+//					List<BugzillaOpenStructure> selectedBugs = new ArrayList<BugzillaOpenStructure>();
+//					selectedBugs.add(open);
+//					ViewBugzillaAction viewBugs = new ViewBugzillaAction("Display bugs in editor", selectedBugs);
+//					viewBugs.schedule();
+//				}
+//			}
+//			else if (mode == MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
+//				if (offline) {
+//					MessageDialog.openInformation(null, "Unable to open bug",
+//							"Unable to open the selected bugzilla report since you are currently offline");
+//					return;
+//				}
+//				String title = "Bug #" + TaskRepositoryManager.getTaskIdAsInt(hit.getHandleIdentifier());
+//				TaskListUiUtil.openUrl(title, title, hit.getBugUrl());
+//			} else {
+//				// not supported
+//			}
+//		}
+//	}
 
 	public boolean acceptsItem(ITaskListElement element) {
 		return element instanceof BugzillaTask || element instanceof BugzillaQueryHit
@@ -198,14 +187,14 @@ public class BugzillaTaskHandler implements ITaskHandler {
 					return false;
 				}
 			} else if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
-					|| action instanceof OpenTaskEditorAction || action instanceof RemoveFromCategoryAction) {
+					|| action instanceof OpenTaskListElementAction || action instanceof RemoveFromCategoryAction) {
 				return true;
 			} else {
 				return false;
 			}
 		} else if (element instanceof BugzillaQueryCategory) {
 			if (action instanceof DeleteAction || action instanceof CopyDescriptionAction
-					|| action instanceof OpenTaskEditorAction || action instanceof RenameAction) {
+					|| action instanceof OpenTaskListElementAction || action instanceof RenameAction) {
 				return true;
 			} else if (action instanceof GoIntoAction) {
 				BugzillaQueryCategory cat = (BugzillaQueryCategory) element;

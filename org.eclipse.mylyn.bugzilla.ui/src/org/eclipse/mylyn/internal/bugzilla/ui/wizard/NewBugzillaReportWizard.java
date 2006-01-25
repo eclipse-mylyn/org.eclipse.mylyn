@@ -20,6 +20,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -124,7 +125,9 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 		}
 		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskRegistry((BugzillaTask) newTask);
-		newTask.openTaskInEditor(false);
+		
+//		newTask.openTaskInEditor(false);
+		TaskListUiUtil.openEditor(newTask);
 
 		if (!newTask.isBugDownloaded())
 			newTask.scheduleDownloadReport();

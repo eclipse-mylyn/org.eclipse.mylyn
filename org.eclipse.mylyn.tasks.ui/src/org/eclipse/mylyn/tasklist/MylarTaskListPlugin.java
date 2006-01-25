@@ -517,20 +517,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	/**
-	 * TODO: remove
-	 */
-	public ReportOpenMode getReportMode() {
-		return ReportOpenMode.EDITOR;
-		// if (getPrefs().getBoolean(REPORT_OPEN_EDITOR)) {
-		// return ReportOpenMode.EDITOR;
-		// } else if (getPrefs().getBoolean(REPORT_OPEN_INTERNAL)) {
-		// return ReportOpenMode.INTERNAL_BROWSER;
-		// } else {
-		// return ReportOpenMode.EXTERNAL_BROWSER;
-		// }
-	}
-
 	public List<ITaskHandler> getTaskHandlers() {
 		return taskHandlers;
 	}

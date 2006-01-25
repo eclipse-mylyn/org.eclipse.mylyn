@@ -18,6 +18,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
@@ -72,7 +73,8 @@ public class NewLocalTaskAction extends Action {
 			} else {
 				MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 			}
-			newTask.openTaskInEditor(false);
+			TaskListUiUtil.openEditor(newTask);
+//			newTask.openTaskInEditor(false);
 			view.getViewer().setSelection(new StructuredSelection(newTask));
 			view.getViewer().refresh();
 		}

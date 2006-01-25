@@ -284,10 +284,10 @@ public class BugzillaTask extends Task {
 		return null;
 	}
 
-	@Override
-	public void openTaskInEditor(boolean offline) {
-		openTask(-1, offline);
-	}
+//	@Override
+//	public void openTaskInEditor(boolean offline) {
+//		openTask(-1, offline);
+//	}
 
 	/**
 	 * Opens this task's bug report in an editor revealing the selected comment.
@@ -354,22 +354,19 @@ public class BugzillaTask extends Task {
 		Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					MylarTaskListPlugin.ReportOpenMode mode = MylarTaskListPlugin.getDefault().getReportMode();
-					if (mode == MylarTaskListPlugin.ReportOpenMode.EDITOR) {
-						// if we can reach the server, get the latest for the
-						// bug
-						if (!isBugDownloaded() && offline) {
-							MessageDialog.openInformation(null, "Unable to open bug",
-									"Unable to open the selected bugzilla task since you are currently offline");
-							return;
-						} else if (!isBugDownloaded() && syncState != BugReportSyncState.OUTGOING
-								&& syncState != BugReportSyncState.CONFLICT) {
-							input.getBugTask().downloadReport();
-							input.setOfflineBug(input.getBugTask().getBugReport());
-						} else if (syncState == BugReportSyncState.OUTGOING || syncState == BugReportSyncState.CONFLICT) {
-							input.setOfflineBug(bugReport);
-						}
+					// if we can reach the server, get the latest for the bug
+					if (!isBugDownloaded() && offline) {
+						MessageDialog.openInformation(null, "Unable to open bug",
+								"Unable to open the selected bugzilla task since you are currently offline");
+						return;
+					} else if (!isBugDownloaded() && syncState != BugReportSyncState.OUTGOING
+							&& syncState != BugReportSyncState.CONFLICT) {
+						input.getBugTask().downloadReport();
+						input.setOfflineBug(input.getBugTask().getBugReport());
+					} else if (syncState == BugReportSyncState.OUTGOING || syncState == BugReportSyncState.CONFLICT) {
+						input.setOfflineBug(bugReport);
 					}
+					
 					// get the active workbench page
 					IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
 							.getActivePage();
@@ -377,12 +374,6 @@ public class BugzillaTask extends Task {
 						return;
 					page.openEditor(input, BUGZILLA_EDITOR_ID);
 
-					// else if (mode ==
-					// MylarTaskListPlugin.ReportOpenMode.INTERNAL_BROWSER) {
-					// String title = "Bug #" +
-					// BugzillaTask.getBugId(getHandle());
-					// BugzillaUITools.openUrl(title, title, getBugUrl());
-					// }
 					if (syncState == BugReportSyncState.INCOMMING) {
 						syncState = BugReportSyncState.OK;
 						Display.getDefault().asyncExec(new Runnable() {

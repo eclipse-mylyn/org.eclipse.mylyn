@@ -55,6 +55,8 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 
 	private String queryUrl;
 
+	private boolean customQuery = false;
+	
 	private int maxHits;
 
 	private List<IQueryHit> hits = new ArrayList<IQueryHit>();
@@ -303,5 +305,13 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+	}
+
+	public boolean isCustomQuery() {
+		return customQuery;
+	}
+
+	public void setCustomQuery(boolean customQuery) {
+		this.customQuery = customQuery;
 	}
 }

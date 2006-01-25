@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.tasklist.IQueryHit;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
@@ -147,7 +148,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		newTask.setPriority(MylarTaskListPlugin.PriorityLevel.P3.toString());
 		newTask.setUrl(url);
-		newTask.openTaskInEditor(true);
+		TaskListUiUtil.openEditor(newTask);
+//		newTask.openTaskInEditor(true);
 
 		return true;
 

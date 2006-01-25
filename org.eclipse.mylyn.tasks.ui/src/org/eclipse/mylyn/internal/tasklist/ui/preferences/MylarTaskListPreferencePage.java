@@ -92,7 +92,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		container.setText("Open Bug Reports With");
+		container.setText("Open Repository Tasks With");
 		reportEditor = new Button(container, SWT.RADIO);
 		reportEditor.setText("Bug editor");
 		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));

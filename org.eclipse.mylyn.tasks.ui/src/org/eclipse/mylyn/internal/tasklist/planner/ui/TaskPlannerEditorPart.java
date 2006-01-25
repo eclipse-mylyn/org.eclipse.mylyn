@@ -639,11 +639,11 @@ public class TaskPlannerEditorPart extends EditorPart {
 		totalEstimatedHoursLabel.setText(LABEL_ESTIMATED + total + " hours");
 	}
 
-	// public class OpenTaskEditorAction extends Action {
+	// public class OpenTaskListElementAction extends Action {
 	//
 	// private TableViewer viewer;
 	//
-	// public OpenTaskEditorAction(TableViewer viewer) {
+	// public OpenTaskListElementAction(TableViewer viewer) {
 	// this.viewer = viewer;
 	// }
 	//

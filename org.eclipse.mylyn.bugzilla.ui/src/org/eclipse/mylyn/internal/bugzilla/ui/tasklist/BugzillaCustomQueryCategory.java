@@ -13,10 +13,12 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 /**
  * @author Mik Kersten
+ * 
+ * TODO: remove
  */
 public class BugzillaCustomQueryCategory extends BugzillaQueryCategory {
 
-	public BugzillaCustomQueryCategory(String repositoryUrl, String description, String maxHits, String queryString) {
-		super(repositoryUrl, maxHits, description, queryString);
+	public BugzillaCustomQueryCategory(String repositoryUrl, String maxHits, String description, String queryString) {
+		super(repositoryUrl, queryString, description, maxHits);
 	}
 }

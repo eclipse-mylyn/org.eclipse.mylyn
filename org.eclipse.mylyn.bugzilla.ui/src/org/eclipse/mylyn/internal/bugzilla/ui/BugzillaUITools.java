@@ -11,8 +11,6 @@
 package org.eclipse.mylar.internal.bugzilla.ui;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.security.auth.login.LoginException;
 
@@ -33,13 +31,10 @@ import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.internal.ui.util.ExceptionHandler;
 import org.eclipse.search.ui.NewSearchUI;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 public class BugzillaUITools {
 
@@ -222,29 +217,6 @@ public class BugzillaUITools {
 					page.closeEditor(compareEditor, false);
 				}
 			}
-		}
-	}
-
-	public static void openUrl(String title, String tooltip, String url) {
-		try {
-			IWebBrowser b = null;
-			int flags = 0;
-			if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-				flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR;
-
-			} else {
-				flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
-						| WorkbenchBrowserSupport.NAVIGATION_BAR;
-			}
-			b = WorkbenchBrowserSupport.getInstance().createBrowser(flags, "org.eclipse.mylar.tasklist." + title,
-					title, tooltip);
-			b.openURL(new URL(url));
-		} catch (PartInitException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
-					"Browser could not be initiated");
-		} catch (MalformedURLException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
 		}
 	}
 

@@ -11,12 +11,9 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.security.auth.login.LoginException;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -48,14 +45,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITaskHandler;
-import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskPriorityFilter;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.TaskCompleteFilter;
-import org.eclipse.mylar.internal.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListPatternFilter;
 import org.eclipse.mylar.internal.tasklist.ui.actions.CollapseAllAction;
@@ -70,8 +65,8 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NextTaskDropDownAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskEditorAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskInExternalBrowserAction;
+import org.eclipse.mylar.internal.tasklist.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RenameAction;
@@ -79,10 +74,10 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.WorkOfflineAction;
 import org.eclipse.mylar.tasklist.IQueryHit;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -101,14 +96,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
@@ -151,7 +143,7 @@ public class TaskListView extends ViewPart {
 
 	private CopyDescriptionAction copyDescriptionAction;
 
-	private OpenTaskEditorAction openTaskEditor;
+	private OpenTaskListElementAction openTaskEditor;
 
 	private OpenTaskInExternalBrowserAction openUrlInExternal;
 
@@ -241,7 +233,7 @@ public class TaskListView extends ViewPart {
 				refresh(null);
 			}
 		}
- 
+
 		public void tasklistRead() {
 			refresh(null);
 		}
@@ -262,12 +254,12 @@ public class TaskListView extends ViewPart {
 								getViewer().getControl().setRedraw(true);
 							} else {
 								getViewer().refresh(element, true);
-							}  
+							}
 						}
 					}
 				});
 			}
-		}	
+		}
 	};
 
 	private final class PriorityDropDownAction extends Action implements IMenuCreator {
@@ -1076,7 +1068,7 @@ public class TaskListView extends ViewPart {
 				action.setEnabled(true);
 			} else if (action instanceof NewLocalTaskAction) {
 				action.setEnabled(false);
-			} else if (action instanceof OpenTaskEditorAction) {
+			} else if (action instanceof OpenTaskListElementAction) {
 				action.setEnabled(true);
 			} else if (action instanceof CopyDescriptionAction) {
 				action.setEnabled(true);
@@ -1105,7 +1097,7 @@ public class TaskListView extends ViewPart {
 				} else {
 					action.setEnabled(false);
 				}
-			} else if (action instanceof OpenTaskEditorAction) {
+			} else if (action instanceof OpenTaskListElementAction) {
 				action.setEnabled(true);
 			} else if (action instanceof CopyDescriptionAction) {
 				action.setEnabled(true);
@@ -1141,7 +1133,7 @@ public class TaskListView extends ViewPart {
 		autoClose = new ManageEditorsAction();
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
-		openTaskEditor = new OpenTaskEditorAction(this);
+		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
 		openUrlInExternal = new OpenTaskInExternalBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterOnPriority = new PriorityDropDownAction();
@@ -1197,21 +1189,6 @@ public class TaskListView extends ViewPart {
 		// return false;
 	}
 
-	public void closeTaskEditors(ITask task, IWorkbenchPage page) throws LoginException, IOException {
-		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(task);
-		if (taskHandler != null) {
-			taskHandler.taskClosed(task, page);
-		} else if (task instanceof Task) {
-			IEditorInput input = new TaskEditorInput((Task) task);
-
-			IEditorPart editor = page.findEditor(input);
-
-			if (editor != null) {
-				page.closeEditor(editor, false);
-			}
-		}
-	}
-
 	private void hookOpenAction() {
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -1243,12 +1220,13 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-//	public void notifyTaskDataChanged(ITask task) {
-//		if (getViewer().getTree() != null && !getViewer().getTree().isDisposed()) {
-//			getViewer().refresh();
-//			expandToActiveTasks();
-//		}
-//	}
+	// public void notifyTaskDataChanged(ITask task) {
+	// if (getViewer().getTree() != null && !getViewer().getTree().isDisposed())
+	// {
+	// getViewer().refresh();
+	// expandToActiveTasks();
+	// }
+	// }
 
 	public static TaskListView getDefault() {
 		return INSTANCE;

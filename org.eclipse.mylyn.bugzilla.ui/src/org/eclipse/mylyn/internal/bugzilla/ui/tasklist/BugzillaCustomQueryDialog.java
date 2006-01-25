@@ -20,6 +20,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * 
+ * @author Shawn Minto
+ * @author Mik Kersten (some hardening of prototype)
+ */
 public class BugzillaCustomQueryDialog extends Dialog {
 	private String url;
 

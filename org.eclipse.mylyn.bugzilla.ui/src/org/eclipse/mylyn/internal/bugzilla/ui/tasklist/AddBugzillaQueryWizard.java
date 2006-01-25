@@ -45,15 +45,21 @@ public class AddBugzillaQueryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		queryPage.getQueryDialog().okPressed();
-		final BugzillaQueryCategory queryCategory;
+		final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(
+				repository.getUrl().toExternalForm(), 
+				queryPage.getQueryDialog().getUrl(), 
+				queryPage.getQueryDialog().getName(), 
+				queryPage.getQueryDialog().getMaxHits());
 		if (!queryPage.getQueryDialog().isCustom()) {
-			queryCategory = new BugzillaQueryCategory(repository.getUrl().toExternalForm(), queryPage.getQueryDialog()
-					.getUrl(), queryPage.getQueryDialog().getName(), queryPage.getQueryDialog().getMaxHits());
-		} else {
-			queryCategory = new BugzillaCustomQueryCategory(repository.getUrl().toExternalForm(), queryPage
-					.getQueryDialog().getName(), queryPage.getQueryDialog().getUrl(), queryPage.getQueryDialog()
-					.getMaxHits());
-		}
+			queryCategory.setCustomQuery(true);
+		} 
+//		else {
+//			queryCategory = new BugzillaCustomQueryCategory(
+//					repository.getUrl().toExternalForm(), 
+//					queryPage.getQueryDialog().getName(), 
+//					queryPage.getQueryDialog().getUrl(), 
+//					queryPage.getQueryDialog().getMaxHits());
+//		}
 		MylarTaskListPlugin.getTaskListManager().addQuery(queryCategory);
 		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 		if (!offline) {

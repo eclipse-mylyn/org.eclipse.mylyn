@@ -11,19 +11,23 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositorySettingsPage;
+import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.tasklist.ITaskHandler;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
+import org.eclipse.mylar.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskRepositoryClient;
 import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.tasklist.TaskRepository;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
@@ -102,4 +106,42 @@ public class BugzillaTaskRepositoryClient implements ITaskRepositoryClient {
 			}
 		};
 	}
-}
+
+	public void openEditQueryDialog(IRepositoryQuery query) {
+		if (query instanceof BugzillaCustomQueryCategory) {
+			BugzillaCustomQueryCategory queryCategory = (BugzillaCustomQueryCategory) query;
+			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
+					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
+			if (sqd.open() == Dialog.OK) {
+				queryCategory.setDescription(sqd.getName());
+				queryCategory.setQueryUrl(sqd.getUrl());
+				int maxHits = -1;
+				try {
+					maxHits = Integer.parseInt(sqd.getMaxHits());
+				} catch (Exception e) {
+				}
+				queryCategory.setMaxHits(maxHits);
+	
+				new SynchronizeReportsAction(queryCategory).run();
+			}
+		} else if (query instanceof BugzillaQueryCategory) {
+			BugzillaQueryCategory queryCategory = (BugzillaQueryCategory) query;
+			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
+					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
+					queryCategory.getMaxHits() + "");
+			if (queryDialog.open() == Dialog.OK) {
+				queryCategory.setDescription(queryDialog.getName());
+				queryCategory.setQueryUrl(queryDialog.getUrl());
+				queryCategory.setRepositoryUrl(queryDialog.getRepository().getUrl().toExternalForm());
+				int maxHits = -1;
+				try {
+					maxHits = Integer.parseInt(queryDialog.getMaxHits());
+				} catch (Exception e) {
+				}
+				queryCategory.setMaxHits(maxHits);
+	
+				new SynchronizeReportsAction(queryCategory).run();
+			}
+		}
+	}
+} 

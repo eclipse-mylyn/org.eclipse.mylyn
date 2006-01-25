@@ -45,10 +45,10 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
 import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -1146,7 +1146,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				}
 
 				public void mouseDown(MouseEvent e) {
-					BugzillaUITools.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil
+					TaskListUiUtil.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil
 							.getBugUrlWithoutLogin(bugzillaInput.getBug().getRepository(), bugzillaInput.getBug()
 									.getId()));
 					if (e.stateMask == SWT.MOD3) {

@@ -14,7 +14,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
-import org.eclipse.ui.IWorkbenchPage;
 
 /**
  * TODO: usage should be refactored to TaskListManager
@@ -23,9 +22,9 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public interface ITaskHandler {
 
-	public abstract void itemOpened(ITaskListElement element);
+//	public abstract void itemOpened(ITaskListElement element);
 
-	public abstract void taskClosed(ITask element, IWorkbenchPage page);
+//	public abstract void taskClosed(ITask element, IWorkbenchPage page);
 
 	public abstract boolean acceptsItem(ITaskListElement element);
 

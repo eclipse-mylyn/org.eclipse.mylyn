@@ -236,7 +236,6 @@ public class TaskInfoEditor extends EditorPart {
 
 //		refreshTaskListView(task);
 		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
-		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
 
 		markDirty(false);
 	}

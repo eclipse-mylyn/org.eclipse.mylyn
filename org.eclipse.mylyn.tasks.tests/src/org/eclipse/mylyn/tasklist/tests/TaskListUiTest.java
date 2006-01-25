@@ -20,6 +20,7 @@ import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskPriorityFilter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskActivityListener;
@@ -197,10 +198,12 @@ public class TaskListUiTest extends TestCase {
 		numListenersBefore = listeners.size();
 
 		// open a task in editor
-		cat1task1.setForceSyncOpen(true);
-		cat1task1.openTaskInEditor(false);
-		cat1task2.setForceSyncOpen(true);
-		cat1task2.openTaskInEditor(false);
+//		cat1task1.setForceSyncOpen(true);
+		TaskListUiUtil.openEditor(cat1task1, false);
+//		cat1task1.openTaskInEditor(false);
+//		cat1task2.setForceSyncOpen(true);
+//		cat1task2.openTaskInEditor(false);
+		TaskListUiUtil.openEditor(cat1task2, false);
 
 		listeners = manager.getListeners();
 		numListenersDuring = listeners.size();

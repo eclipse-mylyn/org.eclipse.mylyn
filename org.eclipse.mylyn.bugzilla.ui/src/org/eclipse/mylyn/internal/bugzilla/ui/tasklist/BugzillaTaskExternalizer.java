@@ -124,11 +124,17 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		Element element = (Element) node;
 		IRepositoryQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
-			cat = new BugzillaCustomQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(NAME),
-					element.getAttribute(QUERY_STRING), element.getAttribute(MAX_HITS));
+			cat = new BugzillaCustomQueryCategory(
+					element.getAttribute(REPOSITORY_URL), 
+					element.getAttribute(QUERY_STRING), 
+					element.getAttribute(NAME),
+					element.getAttribute(MAX_HITS));
 		} else if (node.getNodeName().equals(TAG_BUGZILLA_QUERY)) {
-			cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element.getAttribute(QUERY_STRING),
-					element.getAttribute(NAME), element.getAttribute(MAX_HITS));
+			cat = new BugzillaQueryCategory(
+					element.getAttribute(REPOSITORY_URL), 
+					element.getAttribute(QUERY_STRING),
+					element.getAttribute(NAME), 
+					element.getAttribute(MAX_HITS));
 		}
 		if (cat != null) {
 			tlist.internalAddQuery(cat);

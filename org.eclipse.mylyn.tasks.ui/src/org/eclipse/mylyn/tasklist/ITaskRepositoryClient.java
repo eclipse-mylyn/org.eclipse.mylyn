@@ -38,5 +38,7 @@ public interface ITaskRepositoryClient {
 
 	public abstract IWizard getQueryWizard(TaskRepository repository);
 
+	public abstract void openEditQueryDialog(IRepositoryQuery query);
+
 	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
 }

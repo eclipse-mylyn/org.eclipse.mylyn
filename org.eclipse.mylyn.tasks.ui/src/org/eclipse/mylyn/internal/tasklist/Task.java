@@ -19,17 +19,11 @@ import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.TaskEditorInput;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.tasklist.ITask;
 import org.eclipse.mylar.tasklist.ITaskCategory;
-import org.eclipse.mylar.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
 
 /**
  * @author Mik Kersten
@@ -95,11 +89,6 @@ public class Task implements ITask {
 
 	private List<ITask> children = new ArrayList<ITask>();
 
-	/**
-	 * For testing
-	 */
-	private boolean forceSyncOpen;
-
 	@Override
 	public String toString() {
 		return description;
@@ -139,55 +128,7 @@ public class Task implements ITask {
 	public boolean isActive() {
 		return active;
 	}
-
-	public void openTaskInEditor(boolean offline) {
-		if (forceSyncOpen) {
-			openTaskEditor();
-		} else {
-			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					openTaskEditor();
-				}
-			});
-		}
-	}
-
-	@Deprecated
-	protected void openTaskEditor() {
-
-		// get the active page so that we can reuse it
-		IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage();
-
-		if (page == null) {
-			return;
-		}
-
-		IEditorInput input = new TaskEditorInput(this);
-		try {
-			page.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID);
-		} catch (PartInitException ex) {
-			MylarStatusHandler.log(ex, "open failed");
-		}
-	}
-
-//	/**
-//	 * Refreshes the tasklist viewer.
-//	 * 
-//	 * TODO: shouldn't be coupled to the TaskListView
-//	 */
-//	public void notifyTaskDataChange() {
-//		final Task task = this;
-//		if (Workbench.getInstance() != null && !Workbench.getInstance().getDisplay().isDisposed()) {
-//			Workbench.getInstance().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-//					if (TaskListView.getDefault() != null)
-//						TaskListView.getDefault().notifyTaskDataChanged(task);
-//				}
-//			});
-//		}
-//	}
-
+	
 	public String getToolTipText() {
 		return getDescription();
 	}
@@ -466,14 +407,6 @@ public class Task implements ITask {
 		return false;
 	}
 
-	// public String getRepositoryUrl() {
-	// return repositoryUrl;
-	// }
-	//
-	// public void setRepositoryUrl(String repositoryUrl) {
-	// this.repositoryUrl = repositoryUrl;
-	// }
-
 	public TaskStatus getStatus() {
 		if (isCompleted()) {
 			return TaskStatus.COMPLETED;
@@ -482,10 +415,4 @@ public class Task implements ITask {
 		}
 	}
 
-	/**
-	 * For testing TODO: move
-	 */
-	public void setForceSyncOpen(boolean forceSyncOpen) {
-		this.forceSyncOpen = forceSyncOpen;
-	}
 }

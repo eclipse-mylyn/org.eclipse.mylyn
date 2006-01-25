@@ -17,9 +17,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugs.java.OpenBugzillaReportJob;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.team.MylarContextChangeSet;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
@@ -72,7 +72,7 @@ public class OpenCorrespondingTaskAction implements IViewActionDelegate {
 						}
 						resolved = true;
 					} else if (url != null) {
-						BugzillaUITools.openUrl("Web Browser", "Web Browser", url);
+						TaskListUiUtil.openUrl("Web Browser", "Web Browser", url);
 						resolved = true;
 					}
 				}
