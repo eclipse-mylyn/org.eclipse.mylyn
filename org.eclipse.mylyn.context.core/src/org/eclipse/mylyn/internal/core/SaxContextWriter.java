@@ -21,6 +21,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -56,6 +57,7 @@ public class SaxContextWriter implements IContextWriter {
 			transformer.transform(new SAXSource(new SaxWriter(), new MylarContextInputSource(context)),
 					new StreamResult(outputStream));
 		} catch (TransformerException e) {
+			MylarStatusHandler.fail(e, "could not write context", false);
 			throw new IOException(e.getMessage());
 		}
 
