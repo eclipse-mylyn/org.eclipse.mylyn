@@ -83,6 +83,8 @@ public class OpenTaskListElementAction extends Action {
 						}
 					});
 				}
+			} else {
+				TaskListUiUtil.openEditor(task);
 			}
 			// } else if (element instanceof IQueryHit) {
 			// TaskListUiUtil.openEditor((IQueryHit) element);

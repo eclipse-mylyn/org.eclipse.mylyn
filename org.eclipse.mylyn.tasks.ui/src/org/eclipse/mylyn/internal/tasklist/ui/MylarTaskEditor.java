@@ -127,7 +127,10 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				}
 			}
 			if (hasValidUrl()) {
-				createBrowserPage();
+				int browserIndex = createBrowserPage();
+				if (selectedIndex == 0) {
+					selectedIndex = browserIndex;
+				}
 			}
 			setActivePage(selectedIndex);
 		} catch (PartInitException e) {
@@ -154,7 +157,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		return 0;
 	}
 
-	private void createBrowserPage() {
+	private int createBrowserPage() {
 		try {
 			webBrowser = new Browser(getContainer(), SWT.NONE);
 			int index = addPage(webBrowser);
@@ -166,11 +169,13 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			if (task.isLocal() || openWithBrowser) {
 				setActivePage(index);
 			}
+			return index;
 		} catch (SWTError e) {
 			MylarStatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
 		} catch (RuntimeException e) {
 			MylarStatusHandler.fail(e, "could not create issue report page", false);
 		}
+		return 0;
 	}
 
 	@Override
