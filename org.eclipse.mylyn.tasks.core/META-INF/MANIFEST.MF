@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Bugs Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.bugs; singleton:=true
-Bundle-Version: 0.4.7.v20060125
+Bundle-Version: 0.4.7.v20060126
 Bundle-Activator: org.eclipse.mylar.internal.bugs.MylarBugsPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
