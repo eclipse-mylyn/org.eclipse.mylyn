@@ -393,11 +393,12 @@ public class ExistingBugEditor extends AbstractBugEditor {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							// TODO what do we do if the editor is closed
-							if (ExistingBugEditor.this != null && !ExistingBugEditor.this.isDisposed()) {
-								changeDirtyStatus(false);
-								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
-										.closeEditor(ExistingBugEditor.this, true);
-							}
+//							if (ExistingBugEditor.this != null && !ExistingBugEditor.this.isDisposed()) {
+//								changeDirtyStatus(false);
+//								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+//										.closeEditor(ExistingBugEditor.this, true);
+//							}
+							close();
 							OfflineView.removeReport(bug);
 						}
 					});

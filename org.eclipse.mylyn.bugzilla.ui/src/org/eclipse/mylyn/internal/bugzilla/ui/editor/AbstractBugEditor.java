@@ -283,7 +283,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		// set up actions for the context menu
 		cutAction = new RetargetAction(ActionFactory.CUT.getId(), WorkbenchMessages.Workbench_cut);
 		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);// WorkbenchMessages.getString("Workbench.cutToolTip"));
-																			// //$NON-NLS-1$
+		// //$NON-NLS-1$
 		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 		cutAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 		cutAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
@@ -292,7 +292,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 		pasteAction = new RetargetAction(ActionFactory.PASTE.getId(), WorkbenchMessages.Workbench_paste);
 		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);// WorkbenchMessages.getString("Workbench.pasteToolTip"));
-																				// //$NON-NLS-1$
+		// //$NON-NLS-1$
 		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setDisabledImageDescriptor(WorkbenchImages
@@ -1146,9 +1146,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 				}
 
 				public void mouseDown(MouseEvent e) {
-					TaskListUiUtil.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil
-							.getBugUrlWithoutLogin(bugzillaInput.getBug().getRepository(), bugzillaInput.getBug()
-									.getId()));
+					TaskListUiUtil.openUrl(getTitle(), getTitleToolTip(), BugzillaRepositoryUtil.getBugUrlWithoutLogin(
+							bugzillaInput.getBug().getRepository(), bugzillaInput.getBug().getId()));
 					if (e.stateMask == SWT.MOD3) {
 						// XXX come back to look at this ui
 						close();
@@ -1599,7 +1598,11 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		activeDisplay.asyncExec(new Runnable() {
 			public void run() {
 				if (getSite() != null && getSite().getPage() != null && !AbstractBugEditor.this.isDisposed())
-					getSite().getPage().closeEditor(AbstractBugEditor.this, false);
+					if (parentEditor != null) {
+						getSite().getPage().closeEditor(parentEditor, false);
+					} else {
+						getSite().getPage().closeEditor(AbstractBugEditor.this, false);
+					}
 			}
 		});
 	}
@@ -1613,5 +1616,6 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	}
 
 	public void setParentEditor(MylarTaskEditor parentEditor) {
+		this.parentEditor = parentEditor;
 	}
 }
