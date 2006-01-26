@@ -955,7 +955,7 @@ public class TaskListView extends ViewPart {
 		updateDrillDownActions();
 
 		ITaskListElement element = null;
-		;
+		
 		final Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 		if (selectedObject instanceof ITaskListElement) {
 			element = (ITaskListElement) selectedObject;
@@ -965,32 +965,39 @@ public class TaskListView extends ViewPart {
 		if ((element instanceof ITask) || (element instanceof IQueryHit)) {
 			ITask task = null;
 			if (element instanceof IQueryHit) {
-				task = ((IQueryHit) element).getOrCreateCorrespondingTask();
+				task = ((IQueryHit) element).getCorrespondingTask();
 			} else {
 				task = (ITask) element;
 			}
 
 			addAction(openUrlInExternal, manager, element);
-
-			if (task.isLocal()) {
-				if (task.isCompleted()) {
-					addAction(markCompleteAction, manager, element);
-				} else {
-					addAction(markIncompleteAction, manager, element);
+			
+			if (task != null) {
+				if (task.isLocal()) {
+					if (task.isCompleted()) {
+						addAction(markCompleteAction, manager, element);
+					} else {
+						addAction(markIncompleteAction, manager, element);
+					}
 				}
-			}
 
-			if (task.isActive()) {
-				manager.add(deactivateAction);
+				if (task.isActive()) {
+					manager.add(deactivateAction);
+				} else {
+					manager.add(activateAction);
+				}
+
+				if (!task.isLocal()) {
+					addAction(removeFromCategoryAction, manager, element);
+				}
+				
+				addAction(deleteAction, manager, element);
 			} else {
 				manager.add(activateAction);
 			}
-
-			if (!task.isLocal()) {
-				addAction(removeFromCategoryAction, manager, element);
-			}
+			
 		}
-		addAction(deleteAction, manager, element);
+		
 		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskCategory
 				|| element instanceof IRepositoryQuery) {
 			addAction(renameAction, manager, element);

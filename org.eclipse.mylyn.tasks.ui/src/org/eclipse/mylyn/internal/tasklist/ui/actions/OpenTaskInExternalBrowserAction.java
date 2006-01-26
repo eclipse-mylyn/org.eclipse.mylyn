@@ -46,7 +46,7 @@ public class OpenTaskInExternalBrowserAction extends Action {
 				task = (ITask) selectedObject;
 			} else if (selectedObject instanceof IQueryHit) {
 				IQueryHit hit = (IQueryHit) selectedObject;
-				task = hit.getCorrespondingTask();
+				task = hit.getOrCreateCorrespondingTask();
 			}
 			if (task != null) {
 				String urlString = task.getUrl();
