@@ -11,6 +11,11 @@
 
 package org.eclipse.mylar.internal.tasklist.planner.ui;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,11 +37,14 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.DateUtil;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
@@ -58,6 +66,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -72,6 +81,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.EditorPart;
 
 /**
@@ -89,9 +99,11 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class TaskPlannerEditorPart extends EditorPart {
 
+	private static final String LABEL_PLANNED_ACTIVITY = "Planned Activity";
+
 	private static final String LABEL_DIALOG = "Summary";
 
-	private static final String LABEL_TASK_ACTIVITY = "Task Activity";
+	private static final String LABEL_PAST_ACTIVITY = "Past Activity";
 
 	private TaskPlannerEditorInput editorInput = null;
 
@@ -116,7 +128,15 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private static final String LABEL_ESTIMATED = "Total estimated: ";
 
+	private static final String NO_TIME_ELAPSED = "&nbsp;";
+
+	private static final String BLANK_CELL = "&nbsp;";
+
 	private Label totalEstimatedHoursLabel;
+
+	private TaskPlannerContentProvider activityContentProvider;
+
+	private TaskPlannerContentProvider planContentProvider;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -160,7 +180,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		editorComposite.setLayoutData(gridData);
 
 		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate());
-		String label = LABEL_TASK_ACTIVITY;
+		String label = LABEL_PAST_ACTIVITY;
 
 		List<ITask> allTasks = new ArrayList<ITask>();
 		allTasks.addAll(editorInput.getCompletedTasks());
@@ -171,7 +191,7 @@ public class TaskPlannerEditorPart extends EditorPart {
 		sashForm.setLayout(new GridLayout());
 		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		TaskPlannerContentProvider activityContentProvider = new TaskPlannerContentProvider(allTasks);
+		activityContentProvider = new TaskPlannerContentProvider(allTasks);
 		final TableViewer activityViewer = createTableSection(sashForm, toolkit, label, activityColumnNames,
 				activityColumnWidths, activitySortConstants);
 		activityViewer.setContentProvider(activityContentProvider);
@@ -196,9 +216,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 		planLayout.marginTop = 10;
 		planContainer.setLayout(planLayout);
 
-		TaskPlannerContentProvider planContentProvider = new TaskPlannerContentProvider();
-		final TableViewer planViewer = createTableSection(planContainer, toolkit, "Task Plan", planColumnNames,
-				planColumnWidths, planSortConstants);
+		planContentProvider = new TaskPlannerContentProvider();
+		final TableViewer planViewer = createTableSection(planContainer, toolkit, LABEL_PLANNED_ACTIVITY,
+				planColumnNames, planColumnWidths, planSortConstants);
 		planViewer.setContentProvider(planContentProvider);
 		planViewer.setLabelProvider(new TaskPlanLabelProvider());
 		createPlanCellEditorListener(planViewer.getTable(), planViewer, planContentProvider);
@@ -206,6 +226,12 @@ public class TaskPlannerEditorPart extends EditorPart {
 		initDrop(planViewer, planContentProvider);
 		setSorters(planColumnNames, planSortConstants, planViewer.getTable(), planViewer, true);
 		planViewer.setInput(editorInput);
+
+		planViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateEstimatedHours(planContentProvider);
+			}
+		});
 
 		MenuManager planContextMenuMgr = new MenuManager("#PlanPlannerPopupMenu");
 		planContextMenuMgr.setRemoveAllWhenShown(true);
@@ -220,6 +246,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 		totalEstimatedHoursLabel = toolkit.createLabel(editorComposite, LABEL_ESTIMATED + "0 hours  ", SWT.NULL);
 		createButtons(editorComposite, toolkit, planViewer, planContentProvider);
+		
+		
 	}
 
 	private void fillContextMenu(TableViewer viewer, IMenuManager manager) {
@@ -248,8 +276,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 		layout.numColumns = 2;
 		summaryContainer.setLayout(layout);
 
-		String fomratString = "yyyy-MM-dd, h:mm a";
-		SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
+		String formatString = "yyyy-MM-dd, h:mm a";
+		SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
 
 		if (startDate != null) {
 			String dateLabel = "Activity since " + format.format(startDate);
@@ -465,6 +493,14 @@ public class TaskPlannerEditorPart extends EditorPart {
 			}
 		});
 
+		Button exportToHTML = toolkit.createButton(container, "Export to HTML...", SWT.PUSH | SWT.CENTER);
+		exportToHTML.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				exportToHtml();
+			}
+		});
+
 		// Button delete = toolkit.createButton(container, "Remove Selected",
 		// SWT.PUSH | SWT.CENTER);
 		// delete.addSelectionListener(new SelectionAdapter() {
@@ -506,21 +542,19 @@ public class TaskPlannerEditorPart extends EditorPart {
 						updateEstimatedHours(contentProvider);
 						continue;
 					} else if (selectedObject instanceof ITaskListElement) {
-						// if
-						// (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement)
-						// selectedObject) != null) {
-						ITask task = null;
-						if (selectedObject instanceof ITask) {
-							task = (ITask) selectedObject;
-						} else if (selectedObject instanceof IQueryHit) {
-							task = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
-						}
-						if (task != null) {
-							contentProvider.addTask(task);
-							updateEstimatedHours(contentProvider);
-							continue;
-						}
-						// }
+//						if (MylarTaskListPlugin.getDefault().getHandlerForElement((ITaskListElement) selectedObject) != null) {
+							ITask task = null;
+							if (selectedObject instanceof ITask) {
+								task = (ITask) selectedObject;
+							} else if (selectedObject instanceof IQueryHit) {
+								task = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
+							}
+							if (task != null) {
+								contentProvider.addTask(task);
+								updateEstimatedHours(contentProvider);
+								continue;
+							}
+//						}
 					} else {
 						return false;
 					}
@@ -659,4 +693,171 @@ public class TaskPlannerEditorPart extends EditorPart {
 	// viewer.refresh(obj);
 	// }
 	// }
+
+	private void exportToHtml() {
+		File outputFile;
+		try {
+			FileDialog dialog = new FileDialog(Workbench.getInstance().getActiveWorkbenchWindow().getShell());
+			dialog.setText("Specify a file name");
+			dialog.setFilterExtensions(new String[] { "*.html", "*.*" });
+
+			String filename = dialog.open();
+			if (!filename.endsWith(".html"))
+				filename += ".html";
+			outputFile = new File(filename);
+			// outputStream = new FileOutputStream(outputFile, true);
+			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+			writer.write("<html><head></head><body>"
+			// + "<link rel=\"stylesheet\"
+					// href=\"http://eclipse.org/mylar/style.css\"
+					// type=\"text/css\"></head><body>"
+					);
+
+			exportSummarySection(writer);
+
+			exportActivitySection(writer);
+
+			exportPlanSection(writer);
+
+			writer.write("</body></html>");
+			writer.close();
+		} catch (FileNotFoundException e) {
+			MylarStatusHandler.log(e, "could not resolve file");
+		} catch (IOException e) {
+			MylarStatusHandler.log(e, "could not write to file");
+		}
+	}
+
+	private void exportPlanSection(BufferedWriter writer) throws IOException {
+
+		writer.write("<H2>" + LABEL_PLANNED_ACTIVITY + "</H2>");
+
+		writer.write("<table border=\"1\" width=\"100%\" id=\"plannedActivityTable\">");
+		writer.write("<tr>");
+		writer
+				.write("<td width=\"59\"><b>Type</b></td><td width=\"55\"><b>Priority</b></td><td width=\"495\"><b>Description</b></td>");
+		writer.write("<td><b>Elapsed</b></td><td><b>Estimated</b></td><td><b>Reminder</b></td>");
+		writer.write("</tr>");
+
+		for (Object element : planContentProvider.getElements(null)) {
+			if (element instanceof ITask) {
+				ITask currentTask = (ITask) element;
+
+				String formatString = "dd-MM-yyyy";
+				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+
+				String elapsedTimeString = DateUtil.getFormattedDuration(currentTask.getElapsedTime(), false);
+				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
+				if (elapsedTimeString.equals(""))
+					elapsedTimeString = BLANK_CELL;
+
+				Date reminderDate = currentTask.getReminderDate();
+				String reminderDateString = BLANK_CELL;
+				if (reminderDate != null) {
+					reminderDateString = format.format(reminderDate);
+				}
+
+				writer.write("<tr>");
+				writer.write("<td width=\"59\">ICON</td><td width=\"55\">" + currentTask.getPriority()
+						+ "</td><td width=\"495\">" + currentTask.getDescription() + "</td>");
+				writer.write("<td>" + elapsedTimeString + "</td><td>" + estimatedTimeString + "</td><td>"
+						+ reminderDateString + "</td>");
+				writer.write("</tr>");
+
+			}
+		}
+		writer.write("</table>");
+		writer.write("<BR></BR>");
+		writer.write("<H3>" + totalEstimatedHoursLabel.getText() + "</H3>");
+
+	}
+
+	private void exportActivitySection(BufferedWriter writer) throws IOException {
+
+		writer.write("<H2>" + LABEL_PAST_ACTIVITY + "</H2>");
+
+		writer.write("<table border=\"1\" width=\"100%\" id=\"activityTable\">");
+		writer.write("<tr>");
+		writer
+				.write("<td width=\"59\"><b>Type</b></td><td width=\"55\"><b>Priority</b></td><td width=\"495\"><b>Description</b></td>");
+		writer
+				.write("<td><b>Created</b></td><td><b>Completed</b></td><td><b>Elapsed</b></td><td><b>Estimated</b></td>");
+		writer.write("</tr>");
+
+		for (Object element : activityContentProvider.getElements(null)) {
+			if (element instanceof ITask) {
+				ITask currentTask = (ITask) element;
+
+				String formatString = "dd-MM-yyyy";
+				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+
+				String elapsedTimeString = DateUtil.getFormattedDuration(currentTask.getElapsedTime(), false);
+				String estimatedTimeString = currentTask.getEstimateTimeHours() + " hours";
+				if (elapsedTimeString.equals(""))
+					elapsedTimeString = NO_TIME_ELAPSED;
+
+				Date creationDate = currentTask.getCreationDate();
+				String creationDateString = "";
+				if (creationDate != null) {
+					creationDateString = format.format(creationDate);
+				}
+
+				String completionDateString = "";
+				Date completedDate = currentTask.getCompletionDate();
+				if (completedDate != null) {
+					completionDateString = format.format(completedDate);
+				}
+
+				writer.write("<tr>");
+				writer.write("<td width=\"59\">ICON</td><td width=\"55\">" + currentTask.getPriority()
+						+ "</td><td width=\"495\">" + currentTask.getDescription() + "</td><td>" + creationDateString
+						+ "</td>");
+				writer.write("<td>" + completionDateString + "</td><td>" + elapsedTimeString + "</td><td>"
+						+ estimatedTimeString + "</td>");
+				writer.write("</tr>");
+
+			}
+		}
+		writer.write("</table>");
+
+	}
+
+	private void exportSummarySection(BufferedWriter writer) throws IOException {
+		Date startDate = editorInput.getReportStartDate();
+		writer.write("<H2>" + LABEL_DIALOG + "</H2>");
+
+		String formatString = "yyyy-MM-dd, h:mm a";
+		SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
+
+		writer.write("<table border=\"0\" width=\"75%\" id=\"table1\">\n<tr>\n");
+		writer.write("<td width=\"138\">Activity since:</td> ");
+		String dateLabel = "Not Available";
+		if (startDate != null) {
+			dateLabel = format.format(startDate);
+		}
+		writer.write("<td>" + dateLabel + "</td>");
+		writer.write("<td width=\"169\">&nbsp;</td><td width=\"376\">&nbsp;</td>\n</tr>");
+
+		writer.write("<tr><td width=\"138\">Number Completed:</td><td>" + editorInput.getCompletedTasks().size()
+				+ "</td>");
+
+		writer.write("<td width=\"169\">Total time on completed:</td><td width=\"376\">"
+				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks(), false) + "</td>");
+		writer.write("</tr>");
+
+		writer.write("<tr><td width=\"138\">Number in Progress:</td><td>" + editorInput.getInProgressTasks().size()
+				+ "</td>");
+		writer.write("<td width=\"169\">Total time on incompleted:</td><td width=\"376\">"
+				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks(), false) + "</td>");
+		writer.write("</tr>");
+
+		writer.write("<tr><td width=\"138\">Total estimated time:</td><td>" + totalEstimatedHoursLabel.getText()
+				+ "</td>");
+		writer.write("<td width=\"169\">Total time:</td><td width=\"376\">" + getTotalTime() + "</td>");
+		writer.write("</tr>");
+
+		writer.write("</table>");
+
+	}
+
 }

@@ -87,6 +87,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		createCategorySelectionGroup(container);
 		
 		setControl(container);
+		numDays.setFocus();
 	}
 	
 	
@@ -121,7 +122,6 @@ public class TaskPlannerWizardPage extends WizardPage {
 			}
 		});
 		numDays.setText("" + DEFAULT_DAYS);
-		numDays.setFocus();
 		numDaysToReport = DEFAULT_DAYS;
 		
 		dateRadioButton = new Button(reportPeriodGroup, SWT.RADIO);
