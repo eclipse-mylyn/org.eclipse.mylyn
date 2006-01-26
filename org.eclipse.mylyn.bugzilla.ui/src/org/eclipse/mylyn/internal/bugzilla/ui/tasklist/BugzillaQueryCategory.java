@@ -254,7 +254,9 @@ public class BugzillaQueryCategory implements IRepositoryQuery {
 		if (maxHitsReached) {
 			tooltip += " MAX REACHED";
 		}
-		tooltip += " (max set to: " + maxHits + ")";
+		if (maxHits != -1) {
+			tooltip += " (max set to: " + maxHits + ")";
+		}
 		tooltip += BugzillaTask.getLastRefreshTime(lastRefresh);
 		return tooltip;
 		// if (hits.size() > 0 || !label) {

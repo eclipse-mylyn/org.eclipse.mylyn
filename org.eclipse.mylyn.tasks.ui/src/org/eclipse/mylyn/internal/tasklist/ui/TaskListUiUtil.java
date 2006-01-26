@@ -51,15 +51,23 @@ public class TaskListUiUtil {
 	}
 
 	/**
-	 * Set asyncExec true for testing purposes.
+	 * Set asyncExec false for testing purposes.
 	 */
 	public static void openEditor(final ITask task, boolean asyncExec) {
 
 		final IEditorInput editorInput = new TaskEditorInput(task);
 
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		
-		openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		if (asyncExec) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+				}
+			});
+		} else {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		}
 	}
 
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {

@@ -14,6 +14,8 @@ package org.eclipse.mylar.internal.tasklist.ui.actions;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
@@ -28,7 +30,6 @@ import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -61,28 +62,40 @@ public class OpenTaskListElementAction extends Action {
 				task = (ITask) element;
 			}
 
-			// ITask task = (ITask) element;
-			if (!task.isLocal()) {
-				final AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
-						task.getRepositoryKind());
-				if (client != null) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							SynchronizeTaskWithRepositoryJob synchronizeTaskWithRepositoryJob = new SynchronizeTaskWithRepositoryJob(
-									client, task);
-							synchronizeTaskWithRepositoryJob.schedule();
+			final AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+					task.getRepositoryKind());
+			if (!task.isLocal() && client != null) {
+				SynchronizeTaskWithRepositoryJob synchronizeTaskWithRepositoryJob = new SynchronizeTaskWithRepositoryJob(
+						client, task);
 
-							while (synchronizeTaskWithRepositoryJob.getResult() == null) {
-								try {
-									Thread.sleep(100);
-								} catch (InterruptedException e) {
-									// ignore
-								}
-							}
-							TaskListUiUtil.openEditor(task);
-						}
-					});
-				}
+				synchronizeTaskWithRepositoryJob.addJobChangeListener(new IJobChangeListener() {
+
+					public void aboutToRun(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void awake(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void done(IJobChangeEvent event) {
+						TaskListUiUtil.openEditor(task);
+					}
+
+					public void running(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void scheduled(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void sleeping(IJobChangeEvent event) {
+						// ignore
+					}
+
+				});
+				synchronizeTaskWithRepositoryJob.schedule();
 			} else {
 				TaskListUiUtil.openEditor(task);
 			}
@@ -98,6 +111,9 @@ public class OpenTaskListElementAction extends Action {
 		}
 	}
 
+	/**
+	 * Consider refactoring to make generic
+	 */
 	private static class SynchronizeTaskWithRepositoryJob extends Job {
 
 		private static final String JOB_LABEL = "Synchronizing task with repository";
@@ -114,7 +130,8 @@ public class OpenTaskListElementAction extends Action {
 
 		public IStatus run(IProgressMonitor monitor) {
 			try {
-				monitor.beginTask(JOB_LABEL, 100);
+				monitor.beginTask(JOB_LABEL, 10);
+				monitor.worked(1);
 				client.synchronize(task);
 				monitor.done();
 				return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);

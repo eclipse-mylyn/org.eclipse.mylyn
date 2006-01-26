@@ -17,7 +17,7 @@
 <!--	<li>Building</li>-->
 	</a>
 	</li>
-	<li><a href="#building-eclipse-3.1">Building the 3.1 Branch</a></li>
+	<li><a href="#building-distribution">Building a distribution</a></li>
 </ul></li>
 	<li>Extending Mylar<ul>
 		<li><a href="#extending-overview">Extensibility Overview</a></li>
@@ -60,9 +60,9 @@ and leave the password blank.</li>
 		and ensure that no&nbsp; have been added.</li>
 		<li>Minimize the amount of changes to existing code to make review 
 		easier.&nbsp; </li>
+		<li>Ensure that there is no console output.&nbsp; For logging errors use </li>
 		<li>To submit a patch<ul>
-		<li>Ensure there are no build errors, warnings, or <tt>println(..)</tt> 
-		calls, and that <tt>org.eclipse.mylar.tests.AllTests</tt> passes.</li>
+		<li>Ensure there are no build errors, warnings, and that <tt>org.eclipse.mylar.tests.AllTests</tt> passes.</li>
 		<li>Synchronize using Incoming mode and ensure that there are no 
 		conflicts, and merge them locally if there are.</li>
 		<li>Right click the task context change set, create the patch, and 
@@ -75,23 +75,41 @@ and leave the password blank.</li>
 	helpwanted</a> list 
 	of Bugzilla reports.</i></p>
 	<h3>&nbsp;</h3>
-<h3><a name=building-bugzilla>Building the Bugzilla Client</a></h3>
+<h3><a name=building-bugzilla>Building a distribution</a></h3>
 <ul>
+	<li>Using PDE Build support to create a Mylar distribution from HEAD, using 
+	a plain Eclipse 3.2<ul>
+	<li>org.eclipse.mylar-feature/feature.xml -&gt; Overview -&gt; change version 
+	number to current date (e.g. 0.4.7.v20060125-0800)<ul>
+	<li>On Plug-ins tab -&gt; Versions... -&gt; Force feature version into plug-in and 
+	fragment manifests</li>
+	<li>Repeat above for org.eclipse.mylar-bugzilla-feature.xml</li>
+</ul>
+	</li>
+	<li>org.eclipse.mylar-site/e3.2/site.xml<ul>
+	<li>Delete old features (grayed out)</li>
+	<li>Add new mylar-bugzilla and mylar features</li>
+	<li>Hit Build All (if this fails restart Eclipse and try again)</li>
+</ul>
+	</li>
+</ul>
+	</li>
+	<li>To install, add the path of org.eclipse.mylar-site/e3.2/site.xml as a 
+	local update site</li>
 	<li>Bugzilla support can be built independently of the Mylar UI by checking 
 	out the following projects mylar.bugzilla.core, mylar.bugzilla.ui, 
 	mylar.tasklist, mylar.core </li>
-</ul>
-<p>&nbsp;</p>
-	<h3><a name="building-eclipse-3.1">Building the Eclipse 3.1 branch</a></h3>
-	<ul>
-		<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
+	<li>To build the 3.1 branch, follow above steps after merging<ul>
+	<li>Right-click the org.eclipse.mylar.java, mylar.ide, and mylar.xml
 		project, Team -&gt; Switch to Another Branch..., then 
 		Refresh the Branches and select e_3_1 </li>
-		<li>The list of files that should not be overwritten is in: 
+	<li>The list of files that should not be overwritten is in: 
 		org.eclipse.mylar/build/merge-eclipse-3.1.txt</li>
-	</ul>
+</ul>
+	</li>
+</ul>
 <h3>&nbsp;</h3>
-<h3><a name="extending-overview">Extensibility Overview</a></h3>
+	<h3><a name="extending-overview">Extensibility Overview</a></h3>
 <p>Following the Eclipse conventions, Mylar will not make any API guarantees 
 until the 1.0 release.&nbsp; However, a driving goal of the Mylar project is to 
 provide a task management and focused UI framework that can be easily extended 
