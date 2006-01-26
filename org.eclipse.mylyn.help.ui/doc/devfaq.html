@@ -60,7 +60,8 @@ and leave the password blank.</li>
 		and ensure that no&nbsp; have been added.</li>
 		<li>Minimize the amount of changes to existing code to make review 
 		easier.&nbsp; </li>
-		<li>Ensure that there is no console output.&nbsp; For logging errors use </li>
+		<li>Ensure that there is no console output.&nbsp; For logging errors use 
+		<tt>MylarStatusHandler</tt>.</li>
 		<li>To submit a patch<ul>
 		<li>Ensure there are no build errors, warnings, and that <tt>org.eclipse.mylar.tests.AllTests</tt> passes.</li>
 		<li>Synchronize using Incoming mode and ensure that there are no 
@@ -109,7 +110,7 @@ and leave the password blank.</li>
 	</li>
 </ul>
 <h3>&nbsp;</h3>
-	<h3><a name="extending-overview">Extensibility Overview</a></h3>
+<h3><a name="extending-overview">Extensibility Overview</a></h3>
 <p>Following the Eclipse conventions, Mylar will not make any API guarantees 
 until the 1.0 release.&nbsp; However, a driving goal of the Mylar project is to 
 provide a task management and focused UI framework that can be easily extended 
