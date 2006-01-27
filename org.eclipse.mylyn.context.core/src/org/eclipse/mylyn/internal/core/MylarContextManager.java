@@ -750,7 +750,7 @@ public class MylarContextManager {
 				// reduce interest of children
 				for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
 					IMylarElement childElement = getElement(childHandle);
-					if (childElement.getInterest().isInteresting()) {
+					if (childElement.getInterest().isInteresting() && !childElement.equals(element)) {
 						manipulateInterestForNode(childElement, increment, forceLandmark, sourceId);
 					}
 				}
