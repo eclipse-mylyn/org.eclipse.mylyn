@@ -42,13 +42,7 @@ public class TaskListImages {
 
 	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170); // TODO:
 
-	// use
-	// theme?
-
 	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170); // TODO:
-
-	// use
-	// theme?
 
 	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
 
@@ -90,6 +84,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
 
+	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
+	
 	public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif");
 
 	public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");

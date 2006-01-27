@@ -140,7 +140,7 @@
 		<action
               class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
               enablesFor="*"
-              icon="icons/etool16/task-server.gif"
+              icon="icons/eview16/task-repository.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
               menubarPath="reports"
               label="Add Repository Task"

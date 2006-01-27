@@ -25,7 +25,7 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 
-	private static final String REPOSITORY_INFO = "Repository Report";
+	private static final String REPOSITORY_INFO = "Bugzilla";
 
 	public void notifyEditorActivationChange(IEditorPart editor) {
 
