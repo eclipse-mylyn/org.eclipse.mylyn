@@ -40,7 +40,7 @@ public class BugzillaImages {
 
 	public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
 
-	public static final ImageDescriptor TASK_BUG = create(T_TOOL, "task-bug.gif");
+	public static final ImageDescriptor TASK_BUG = create(T_TOOL, "task-repository.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_ELCL, "overlay-incoming.gif");
 

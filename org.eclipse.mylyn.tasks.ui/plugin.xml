@@ -106,12 +106,12 @@
   	<extension
         point="org.eclipse.ui.editors">
      <editor
-           icon="icons/eview16/task.gif"
+           icon="icons/etool16/task.gif"
            class="org.eclipse.mylar.internal.tasklist.ui.MylarTaskEditor"
            name="Task Viewer"
            id="org.eclipse.mylar.tasklist.ui.taskEditor"/>
 	    <editor
-           icon="icons/eview16/task.gif"
+           icon="icons/etool16/task.gif"
            class="org.eclipse.mylar.internal.tasklist.ui.CategoryEditor"
            name="Category Editor"
            id="org.eclipse.mylar.tasklist.ui.catEditor"/>
