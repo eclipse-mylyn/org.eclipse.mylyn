@@ -68,9 +68,9 @@ public class MylarImages {
 
 	public static final ImageDescriptor CONTENT_ASSIST_SEPARATOR = create(T_TOOL, "content-assist-separator.gif");
 
-	public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-bug.gif");
+	public static final ImageDescriptor TASK_BUGZILLA = create(T_TOOL, "task-repository.gif");
 
-	public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-bug-new.gif");
+	public static final ImageDescriptor TASK_BUGZILLA_NEW = create(T_TOOL, "task-repository-new.gif");
 
 	public static final ImageDescriptor TASK = create(T_TOOL, "task.gif");
 
