@@ -244,7 +244,7 @@ public class TaskListManager {
 	
 	public void notifyRepositoryInfoChanged(ITask task) {
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
-			listener.localInfoChanged(task);
+			listener.repositoryInfoChanged(task);
 		}
 	}
 
