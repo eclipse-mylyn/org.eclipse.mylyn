@@ -110,7 +110,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	public void testBugzillaTaskMove() {
 		String handle = TaskRepositoryManager.getHandle("server", 1);
-		BugzillaTask bugzillaTask = new BugzillaTask(handle, "bug1", true, true);
+		BugzillaTask bugzillaTask = new BugzillaTask(handle, "bug1", true);
 		addBugzillaTask(bugzillaTask);
 		Date refreshDate = new Date();
 		bugzillaTask.setLastRefresh(refreshDate);
