@@ -32,7 +32,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
 
 	private static final String DEFAULT_URL = "http://eclipse.org";
-
+	
+	private static final String ANOTHER_URL = "http://codehaus.org";
+	
 	private TaskRepositoryManager manager;
 
 	@Override
@@ -88,5 +90,28 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository);
 		manager.readRepositories();
 		assertEquals(repositoryList, manager.getAllRepositories());
+	}
+	
+	public void testRepositoryPersistanceAfterDelete() throws MalformedURLException {
+		manager.clearRepositories();
+
+		assertEquals("", MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND));
+		
+		TaskRepository repository = new TaskRepository(DEFAULT_KIND, new URL(DEFAULT_URL));
+		manager.addRepository(repository);
+		
+		assertFalse(MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND).equals(""));
+		
+		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, new URL(ANOTHER_URL));
+		manager.addRepository(repository2);
+		
+		String saveString = MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
+		assertNotNull(saveString);
+		
+		manager.removeRepository(repository2); 
+		
+		String newSaveString = MylarTaskListPlugin.getPrefs().getString(TaskRepositoryManager.PREF_REPOSITORIES + DEFAULT_KIND);
+		
+		assertFalse(saveString.equals(newSaveString));
 	}
 }

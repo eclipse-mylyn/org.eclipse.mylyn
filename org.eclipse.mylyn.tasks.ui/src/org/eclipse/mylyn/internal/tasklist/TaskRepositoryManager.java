@@ -188,25 +188,31 @@ public class TaskRepositoryManager {
 	}
 
 	private void saveRepositories() {
-		String store = "";
+		String repositoriesToStore = "";
 		for (AbstractRepositoryClient repositoryClient : repositoryClients.values()) {
 			if (repositoryMap.containsKey(repositoryClient.getKind())) {
 				for (TaskRepository repository : repositoryMap.get(repositoryClient.getKind())) {
-					store += repository.getUrl().toExternalForm() + PREF_STORE_DELIM;
+					repositoriesToStore += repository.getUrl().toExternalForm() + PREF_STORE_DELIM;
 				}
 				String prefId = PREF_REPOSITORIES + repositoryClient.getKind();
-				MylarTaskListPlugin.getPrefs().setValue(prefId, store);
-			}
+				MylarTaskListPlugin.getPrefs().setValue(prefId, repositoriesToStore);
+			} 
 		}
 
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySetUpdated();
 		}
 	}
-
+	
+	/**
+	 * For testing.
+	 */
 	public void clearRepositories() {
 		repositoryMap.clear();
-		saveRepositories();
+		for (AbstractRepositoryClient repositoryClient : repositoryClients.values()) {
+			String prefId = PREF_REPOSITORIES + repositoryClient.getKind();
+			MylarTaskListPlugin.getPrefs().setValue(prefId, "");
+		}
 	}
 
 	public static String getTaskId(String taskHandle) {
