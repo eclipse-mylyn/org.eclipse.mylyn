@@ -37,6 +37,8 @@ public class BugReport implements Serializable, IBugzillaBug {
 
 	public static final String ATTR_STATUS = "Status";
 
+	public static final String ATTR_PRIORITY = "Priority";
+	
 	public static final String VAL_STATUS_VERIFIED = "VERIFIED";
 
 	public static final String VAL_STATUS_CLOSED = "CLOSED";

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 
@@ -47,7 +48,7 @@ public abstract class AbstractRepositoryClient {
 	 */
 	public abstract void synchronize();
 	
-	public abstract void synchronize(ITask task);
+	public abstract Job synchronize(ITask task);
 
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 

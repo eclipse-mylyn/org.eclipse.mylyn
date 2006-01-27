@@ -66,7 +66,7 @@ public class TaskListManagerTest extends TestCase {
 		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		String id = "123";
 		String handle = TaskRepositoryManager.getHandle(repository, id);
-		BugzillaTask bugTask = new BugzillaTask(handle, "label 124", true, true);
+		BugzillaTask bugTask = new BugzillaTask(handle, "label 124", true);
 		assertEquals(repository, bugTask.getRepositoryUrl());
 
 		manager.moveToRoot(bugTask);
@@ -168,11 +168,11 @@ public class TaskListManagerTest extends TestCase {
 		Task task6 = new Task(manager.genUniqueTaskHandle(), "task 6", true);
 		manager.moveToCategory(cat2, task6);
 
-		BugzillaTask report = new BugzillaTask("123", "label 123", true, true);
+		BugzillaTask report = new BugzillaTask("123", "label 123", true);
 		manager.moveToCategory(cat2, report);
 		assertEquals(cat2, report.getCategory());
 
-		BugzillaTask report2 = new BugzillaTask("124", "label 124", true, true);
+		BugzillaTask report2 = new BugzillaTask("124", "label 124", true);
 		manager.moveToRoot(report2);
 
 		assertEquals(5, manager.getTaskList().getRoots().size());

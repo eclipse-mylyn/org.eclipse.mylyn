@@ -70,7 +70,7 @@ public class TaskReportGeneratorTest extends TestCase {
 
 	public void testCompletedBugzillaTasksRetrieved() throws InvocationTargetException, InterruptedException {
 		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(),
-				"bugzillatask 1", true, true);
+				"bugzillatask 1", true);
 		manager.moveToRoot(task1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -110,7 +110,7 @@ public class TaskReportGeneratorTest extends TestCase {
 
 	public void testCompletedBugzillaTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
 		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
-				true, true);
+				true);
 		manager.moveToRoot(task1);
 		TaskTestUtil.setBugTaskCompleted(task1, true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
@@ -134,7 +134,7 @@ public class TaskReportGeneratorTest extends TestCase {
 
 	public void testCompletedBugzillaTasksInQueryRetrieved() throws InvocationTargetException, InterruptedException {
 		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
-				true, true);
+				true);
 		manager.moveToRoot(task1);
 		TaskTestUtil.setBugTaskCompleted(task1, false);
 

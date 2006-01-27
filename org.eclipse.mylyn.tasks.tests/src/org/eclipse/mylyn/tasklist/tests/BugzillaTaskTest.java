@@ -39,7 +39,7 @@ public class BugzillaTaskTest extends TestCase {
 	}
 
 	public void testCompletionDate() {
-		BugzillaTask task = new BugzillaTask("handle", "description", true, true);
+		BugzillaTask task = new BugzillaTask("handle", "description", true);
 		BugReport report = new BugReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		task.setBugReport(report);
 		assertNull(task.getCompletionDate());

@@ -12,7 +12,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
@@ -100,7 +99,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 		// TaskRepository repository =
 		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 		BugzillaTask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(),
-				bugId), "<bugzilla info>", true, true);
+				bugId), "<bugzilla info>", true);
 		Object selectedObject = null;
 		if (TaskListView.getDefault() != null)
 			selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
@@ -135,14 +134,16 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 		
 //		newTask.openTaskInEditor(false);
 		TaskListUiUtil.openEditor(newTask);
-
-		if (!newTask.isBugDownloaded())
-			newTask.scheduleDownloadReport();
-
-		if (TaskListView.getDefault() != null) {
-			TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
-			TaskListView.getDefault().getViewer().refresh();
+		
+		if (!newTask.isBugDownloaded()) {
+			client.synchronize(newTask);
+//			newTask.scheduleDownloadReport();
 		}
+
+//		if (TaskListView.getDefault() != null) {
+//			TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
+//			TaskListView.getDefault().getViewer().refresh();
+//		}
 
 		return true;
 	}

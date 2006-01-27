@@ -364,10 +364,6 @@ public class Task implements ITask {
 		this.description = description;
 	}
 
-	public String getStringForSortingDescription() {
-		return getDescription();
-	}
-
 	public void addPlan(String plan) {
 		if (plan != null && !plans.contains(plan))
 			plans.add(plan);

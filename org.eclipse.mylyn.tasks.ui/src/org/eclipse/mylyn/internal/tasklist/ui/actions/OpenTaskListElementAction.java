@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -21,8 +18,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
 import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
@@ -65,37 +60,42 @@ public class OpenTaskListElementAction extends Action {
 			final AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 					task.getRepositoryKind());
 			if (!task.isLocal() && client != null) {
-				SynchronizeTaskWithRepositoryJob synchronizeTaskWithRepositoryJob = new SynchronizeTaskWithRepositoryJob(
-						client, task);
+				Job refreshJob = client.synchronize(task);
+				// SynchronizeTaskWithRepositoryJob
+				// synchronizeTaskWithRepositoryJob = new
+				// SynchronizeTaskWithRepositoryJob(
+				// client, task);
+				if (refreshJob == null) {
+					TaskListUiUtil.openEditor(task);
+				} else {
+					refreshJob.addJobChangeListener(new IJobChangeListener() {
 
-				synchronizeTaskWithRepositoryJob.addJobChangeListener(new IJobChangeListener() {
+						public void done(IJobChangeEvent event) {
+							TaskListUiUtil.openEditor(task);
+						}
 
-					public void aboutToRun(IJobChangeEvent event) {
-						// ignore
-					}
+						public void aboutToRun(IJobChangeEvent event) {
+							// ignore
+						}
 
-					public void awake(IJobChangeEvent event) {
-						// ignore
-					}
+						public void awake(IJobChangeEvent event) {
+							// ignore
+						}
 
-					public void done(IJobChangeEvent event) {
-						TaskListUiUtil.openEditor(task);
-					}
+						public void running(IJobChangeEvent event) {
+							// ignore
+						}
 
-					public void running(IJobChangeEvent event) {
-						// ignore
-					}
+						public void scheduled(IJobChangeEvent event) {
+							// ignore
+						}
 
-					public void scheduled(IJobChangeEvent event) {
-						// ignore
-					}
-
-					public void sleeping(IJobChangeEvent event) {
-						// ignore
-					}
-
-				});
-				synchronizeTaskWithRepositoryJob.schedule();
+						public void sleeping(IJobChangeEvent event) {
+							// ignore
+						}
+					});
+				}
+				// synchronizeTaskWithRepositoryJob.schedule();
 			} else {
 				TaskListUiUtil.openEditor(task);
 			}
@@ -111,35 +111,38 @@ public class OpenTaskListElementAction extends Action {
 		}
 	}
 
-	/**
-	 * Consider refactoring to make generic
-	 */
-	private static class SynchronizeTaskWithRepositoryJob extends Job {
-
-		private static final String JOB_LABEL = "Synchronizing task with repository";
-
-		private AbstractRepositoryClient client;
-
-		private ITask task;
-
-		public SynchronizeTaskWithRepositoryJob(AbstractRepositoryClient client, ITask task) {
-			super(JOB_LABEL);
-			this.client = client;
-			this.task = task;
-		}
-
-		public IStatus run(IProgressMonitor monitor) {
-			try {
-				monitor.beginTask(JOB_LABEL, 10);
-				monitor.worked(1);
-				client.synchronize(task);
-				monitor.done();
-				return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Could not open task editor", true);
-			}
-			return Status.CANCEL_STATUS;
-		}
-	}
+	// /**
+	// * Consider refactoring to make generic
+	// */
+	// private static class SynchronizeTaskWithRepositoryJob extends Job {
+	//
+	// private static final String JOB_LABEL = "Synchronizing task with
+	// repository";
+	//
+	// private AbstractRepositoryClient client;
+	//
+	// private ITask task;
+	//
+	// public SynchronizeTaskWithRepositoryJob(AbstractRepositoryClient client,
+	// ITask task) {
+	// super(JOB_LABEL);
+	// this.client = client;
+	// this.task = task;
+	// }
+	//
+	// public IStatus run(IProgressMonitor monitor) {
+	// try {
+	// monitor.beginTask(JOB_LABEL, 10);
+	// monitor.worked(1);
+	// client.synchronize(task);
+	// monitor.done();
+	// return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "",
+	// null);
+	// } catch (Exception e) {
+	// MylarStatusHandler.fail(e, "Could not open task editor", true);
+	// }
+	// return Status.CANCEL_STATUS;
+	// }
+	// }
 
 }

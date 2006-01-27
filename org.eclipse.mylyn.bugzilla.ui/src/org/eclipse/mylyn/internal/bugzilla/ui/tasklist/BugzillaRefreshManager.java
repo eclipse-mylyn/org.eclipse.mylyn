@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 
 public class BugzillaRefreshManager {
 
@@ -56,12 +60,20 @@ public class BugzillaRefreshManager {
 	}
 
 	private void updateRefreshState() {
-		if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
-			BugzillaTask t = toBeRefreshed.remove(0);
-			Job j = t.getRefreshJob();
-			if (j != null) {
-				currentlyRefreshing.put(t, j);
-				j.schedule();
+		AbstractRepositoryClient repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		if (repositoryClient == null) {
+			MylarStatusHandler.log("Could not refresh, null client", this);
+			return;
+		} else {
+			if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
+				BugzillaTask t = toBeRefreshed.remove(0);
+				Job refreshJob = repositoryClient.synchronize(t);
+//				Job j = t.getRefreshJob();
+				if (refreshJob != null) {
+					currentlyRefreshing.put(t, refreshJob);
+//					repositoryClient.synchronize(t);
+//					j.schedule();
+				}
 			}
 		}
 	}

@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
@@ -22,6 +23,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
@@ -64,6 +66,11 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
+//	public SyncrhonizeBugzillaReportJob getRefreshJob(BugzillaTask bugzillaTask) {
+//		SyncrhonizeBugzillaReportJob job = new SyncrhonizeBugzillaReportJob(this, bugzillaTask);
+//		return job;
+//	}
+	
 	public void synchronize() {
 		RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction();
 		refresh.setShowProgress(false);
@@ -72,20 +79,27 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 	}
 	
 	@Override
-	public void synchronize(ITask task) {
+	public Job synchronize(ITask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask)task;
+		
+			// TODO: refactor these conditions
+			boolean canNotSynch = bugzillaTask.isDirty() || bugzillaTask.getState() != BugTaskState.FREE;
 			boolean hasLocalChanges = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING
 				|| bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
-			if (!hasLocalChanges) {
-				bugzillaTask.downloadReport();
+			if (!canNotSynch && !hasLocalChanges) {
+				SyncrhonizeBugzillaReportJob syncrhonizeBugzillaReportJob = new SyncrhonizeBugzillaReportJob((BugzillaTask)task);
+				syncrhonizeBugzillaReportJob.schedule();
+				return syncrhonizeBugzillaReportJob;
+//				bugzillaTask.downloadReport();
 			}
-			if (bugzillaTask.getSyncState() == BugReportSyncState.INCOMMING) {
-				bugzillaTask.setSyncState(BugReportSyncState.OK);
+			if (bugzillaTask.getSyncState() == BugReportSyncState.INCOMING) {
+				bugzillaTask.setSyncState(BugReportSyncState.SYNCHRONIZED);
 			} else if (bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT) {
 				bugzillaTask.setSyncState(BugReportSyncState.OUTGOING);
 			}
 		}		
+		return null;
 	}
 	
 	public ITask createTaskFromExistingId(TaskRepository repository, String id) {
@@ -102,10 +116,11 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 		}
 
 		BugzillaTask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(), bugId),
-				DESCRIPTION_DEFAULT, true, true);
+				DESCRIPTION_DEFAULT, true);
 
 		addTaskToArchive(newTask);
-		newTask.scheduleDownloadReport();
+		synchronize(newTask);
+//		newTask.scheduleDownloadReport();
 		return newTask;
 	}
 
@@ -175,9 +190,9 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 		if (status == BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES) {
 			state = BugReportSyncState.OUTGOING;
 		} else if (status == BugzillaOfflineStaus.SAVED) {
-			state = BugReportSyncState.OK;
+			state = BugReportSyncState.SYNCHRONIZED;
 		} else if (status == BugzillaOfflineStaus.SAVED_WITH_INCOMMING_CHANGES) {
-			state = BugReportSyncState.INCOMMING;
+			state = BugReportSyncState.INCOMING;
 		} else if (status == BugzillaOfflineStaus.CONFLICT) {
 			state = BugReportSyncState.CONFLICT;
 		}

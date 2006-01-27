@@ -13,60 +13,31 @@
  */
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  */
 public class BugzillaTask extends Task {
 
-//	private static final String BUGZILLA_EDITOR_ID = "org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor";
-
-	private static final String PROGRESS_LABEL_DOWNLOAD = "Downloading Bugzilla Reports...";
-
 	public enum BugReportSyncState {
-		OUTGOING, OK, INCOMMING, CONFLICT
+		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
 	}
-
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 3257007648544469815L;
-
-	public static final String FILE_EXTENSION = ".bug_reports";
 
 	public enum BugTaskState {
 		FREE, WAITING, DOWNLOADING, COMPARING, OPENING
@@ -112,31 +83,21 @@ public class BugzillaTask extends Task {
 		return toolTip;
 	}
 
-	public static final ISchedulingRule rule = new ISchedulingRule() {
-		public boolean isConflicting(ISchedulingRule schedulingRule) {
-			return schedulingRule == this;
-		}
-
-		public boolean contains(ISchedulingRule schedulingRule) {
-			return schedulingRule == this;
-		}
-	};
-
 	public BugzillaTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
 		isDirty = false;
-		scheduleDownloadReport();
+//		scheduleDownloadReport();
 		initFromHandle();
 	}
 
-	public BugzillaTask(String handle, String label, boolean noDownload, boolean newTask) {
-		super(handle, label, newTask);
-		isDirty = false;
-		if (!noDownload) {
-			scheduleDownloadReport();
-		}
-		initFromHandle();
-	}
+//	public BugzillaTask(String handle, String label, boolean noDownload, boolean newTask) {
+//		super(handle, label, newTask);
+//		isDirty = false;
+//		if (!noDownload) {
+//			scheduleDownloadReport();
+//		}
+//		initFromHandle();
+//	}
 
 	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
 		this(hit.getHandleIdentifier(), hit.getDescription(), newTask);
@@ -184,13 +145,11 @@ public class BugzillaTask extends Task {
 	 */
 	public void setBugReport(BugReport bugReport) {
 		this.bugReport = bugReport;
-	}
-
-	/**
-	 * @return Returns the serialVersionUID.
-	 */
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
+		
+		// TODO: remove?
+		setDescription(HtmlStreamTokenizer.unescape(TaskRepositoryManager
+				.getTaskIdAsInt(getHandleIdentifier())
+				+ ": " + bugReport.getSummary()));
 	}
 
 	/**
@@ -216,18 +175,10 @@ public class BugzillaTask extends Task {
 		this.state = state;
 	}
 
-	/**
-	 * @return Returns <code>true</code> if the bug report has saved changes
-	 *         that need synchronizing with the Bugzilla server.
-	 */
 	public boolean isDirty() {
 		return isDirty;
 	}
 
-	/**
-	 * @param isDirty
-	 *            The isDirty to set.
-	 */
 	public void setDirty(boolean isDirty) {
 		this.isDirty = isDirty;
 		// MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(this);
@@ -239,47 +190,6 @@ public class BugzillaTask extends Task {
 	 */
 	public BugTaskState getState() {
 		return state;
-	}
-
-	/**
-	 * Try to download the bug from the server.
-	 * 
-	 * @param bugId
-	 *            The ID of the bug report to download.
-	 * 
-	 * @return The bug report, or <code>null</code> if it was unsuccessfully
-	 *         downloaded.
-	 */
-	public BugReport downloadReport() {
-		try {
-			if (BugzillaPlugin.getDefault() == null) {
-				MylarStatusHandler.log("Bug Beport download failed for: "
-						+ TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier())
-						+ " due to bugzilla core not existing", this);
-				return null;
-			}
-			return BugzillaRepositoryUtil.getBug(getRepositoryUrl(), TaskRepositoryManager
-					.getTaskIdAsInt(getHandleIdentifier()));
-		} catch (LoginException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-				public void run() {
-					MessageDialog
-							.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-									"The bugzilla report failed to be downloaded since your username or password is incorrect.");
-				}
-			});
-		} catch (IOException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					((ApplicationWindow) BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow())
-							.setStatus("Download of bug " + TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier())
-									+ " failed due to I/O exception");
-				}
-			});
-			// MylarPlugin.log(e, "download failed due to I/O exception");
-		}
-		return null;
 	}
 
 	// @Override
@@ -313,59 +223,65 @@ public class BugzillaTask extends Task {
 		return "bugzilla report id: " + getHandleIdentifier();
 	}
 
-//	private void openTaskEditor(final BugzillaTaskEditorInput input, final boolean offline) {
-//
-//		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//			public void run() {
-//				try {
-//					// if we can reach the server, get the latest for the bug
-//					if (!isBugDownloaded() && offline) {
-//						MessageDialog.openInformation(null, "Unable to open bug",
-//								"Unable to open the selected bugzilla task since you are currently offline");
-//						return;
-//					} else if (!isBugDownloaded() && syncState != BugReportSyncState.OUTGOING
-//							&& syncState != BugReportSyncState.CONFLICT) {
-//						input.getBugTask().downloadReport();
-//						input.setOfflineBug(input.getBugTask().getBugReport());
-//					} else if (syncState == BugReportSyncState.OUTGOING || syncState == BugReportSyncState.CONFLICT) {
-//						input.setOfflineBug(bugReport);
-//					}
-//
-//					// get the active workbench page
-//					IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-//							.getActivePage();
-//					if (page == null)
-//						return;
-//					page.openEditor(input, BUGZILLA_EDITOR_ID);
-//
-//					if (syncState == BugReportSyncState.INCOMMING) {
-//						syncState = BugReportSyncState.OK;
-//						Display.getDefault().asyncExec(new Runnable() {
-//							public void run() {
-//								if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null
-//										&& !TaskListView.getDefault().getViewer().getControl().isDisposed()) {
-//									TaskListView.getDefault().getViewer().refresh();
-//								}
-//							}
-//						});
-//					} else if (syncState == BugReportSyncState.CONFLICT) {
-//						syncState = BugReportSyncState.OUTGOING;
-//						Display.getDefault().asyncExec(new Runnable() {
-//							public void run() {
-//								if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null
-//										&& !TaskListView.getDefault().getViewer().getControl().isDisposed()) {
-//									TaskListView.getDefault().getViewer().refresh();
-//								}
-//							}
-//						});
-//					}
-//				} catch (Exception ex) {
-//					MylarStatusHandler.log(ex, "couldn't open bugzilla task");
-//					return;
-//				}
-//			}
-//		});
-//	}
+	// private void openTaskEditor(final BugzillaTaskEditorInput input, final
+	// boolean offline) {
+	//
+	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+	// public void run() {
+	// try {
+	// // if we can reach the server, get the latest for the bug
+	// if (!isBugDownloaded() && offline) {
+	// MessageDialog.openInformation(null, "Unable to open bug",
+	// "Unable to open the selected bugzilla task since you are currently
+	// offline");
+	// return;
+	// } else if (!isBugDownloaded() && syncState != BugReportSyncState.OUTGOING
+	// && syncState != BugReportSyncState.CONFLICT) {
+	// input.getBugTask().downloadReport();
+	// input.setOfflineBug(input.getBugTask().getBugReport());
+	// } else if (syncState == BugReportSyncState.OUTGOING || syncState ==
+	// BugReportSyncState.CONFLICT) {
+	// input.setOfflineBug(bugReport);
+	// }
+	//
+	// // get the active workbench page
+	// IWorkbenchPage page =
+	// MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+	// .getActivePage();
+	// if (page == null)
+	// return;
+	// page.openEditor(input, BUGZILLA_EDITOR_ID);
+	//
+	// if (syncState == BugReportSyncState.INCOMMING) {
+	// syncState = BugReportSyncState.OK;
+	// Display.getDefault().asyncExec(new Runnable() {
+	// public void run() {
+	// if (TaskListView.getDefault() != null &&
+	// TaskListView.getDefault().getViewer() != null
+	// && !TaskListView.getDefault().getViewer().getControl().isDisposed()) {
+	// TaskListView.getDefault().getViewer().refresh();
+	// }
+	// }
+	// });
+	// } else if (syncState == BugReportSyncState.CONFLICT) {
+	// syncState = BugReportSyncState.OUTGOING;
+	// Display.getDefault().asyncExec(new Runnable() {
+	// public void run() {
+	// if (TaskListView.getDefault() != null &&
+	// TaskListView.getDefault().getViewer() != null
+	// && !TaskListView.getDefault().getViewer().getControl().isDisposed()) {
+	// TaskListView.getDefault().getViewer().refresh();
+	// }
+	// }
+	// });
+	// }
+	// } catch (Exception ex) {
+	// MylarStatusHandler.log(ex, "couldn't open bugzilla task");
+	// return;
+	// }
+	// }
+	// });
+	// }
 
 	/**
 	 * @return The number of seconds ago that this task's bug report was
@@ -376,70 +292,22 @@ public class BugzillaTask extends Task {
 		return (timeNow.getTime() - lastRefresh.getTime()) / 1000;
 	}
 
-	private class GetBugReportJob extends Job {
-		public GetBugReportJob(String name) {
-			super(name);
-			setRule(rule);
-			state = BugTaskState.WAITING;
-			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
-			// notifyTaskDataChange();
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				state = BugTaskState.DOWNLOADING;
-				// notifyTaskDataChange();
-				// Update time this bugtask was last downloaded.
-				lastRefresh = new Date();
-				bugReport = downloadReport();
-
-				state = BugTaskState.FREE;
-				updateTaskDetails();
-				// MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
-				// notifyTaskDataChange();
-				saveBugReport(true);
-				MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
-
-				// TODO: need to do this because all the hits need to be refreshed, fix
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (TaskListView.getDefault() != null)
-							TaskListView.getDefault().getViewer().refresh();
-					}
-				});
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Could not download report", false);
-			}
-			if (BugzillaUiPlugin.getDefault() != null) {
-				BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().removeRefreshingTask(BugzillaTask.this);
-			}
-			return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
-		}
-	}
-
-	public void updateTaskDetails() {
-		try {
-			if (bugReport == null)
-				bugReport = downloadReport();
-			if (bugReport == null)
-				return;
-			setPriority(bugReport.getAttribute("Priority").getValue());
-
-			// TODO: this part might be redundant with overridden isCompleted()
-			// String status = bugReport.getAttribute("Status").getValue();
-			// if (bugReport.isResolved()) {
-			// setCompleted(true);
-			// } else if (status.equals("REOPENED")) {
-			// setCompleted(false);
-			// }
-			this.setDescription(HtmlStreamTokenizer.unescape(TaskRepositoryManager
-					.getTaskIdAsInt(getHandleIdentifier())
-					+ ": " + bugReport.getSummary()));
-		} catch (NullPointerException npe) {
-			MylarStatusHandler.fail(npe, "Task details update failed", false);
-		}
-	}
+//	public void updateTaskDetails() {
+//		try {
+//			// if (bugReport == null)
+//			// bugReport = downloadReport();
+//			// if (bugReport == null)
+//			// return;
+//			if (bugReport != null) {
+//
+//				this.setDescription(HtmlStreamTokenizer.unescape(TaskRepositoryManager
+//						.getTaskIdAsInt(getHandleIdentifier())
+//						+ ": " + bugReport.getSummary()));
+//			}
+//		} catch (NullPointerException npe) {
+//			MylarStatusHandler.fail(npe, "Task details update failed", false);
+//		}
+//	}
 
 	@Override
 	public String getToolTipText() {
@@ -467,41 +335,13 @@ public class BugzillaTask extends Task {
 		return true;
 	}
 
-	public void saveBugReport(boolean refresh) {
-		if (bugReport == null)
-			return;
-
-		// XXX use the server name for multiple repositories
-		// OfflineReportsFile offlineReports =
-		// BugzillaPlugin.getDefault().getOfflineReports();
-		// IBugzillaBug tempBug = OfflineView.find(getBugId(getHandle()));
-		// OfflineView.re
-		// if(location != -1){
-		// IBugzillaBug tmpBugReport = offlineReports.elements().get(location);
-		// List<IBugzillaBug> l = new ArrayList<IBugzillaBug>(1);
-		// l.add(tmpBugReport);
-		// offlineReports.remove(l);
-		// }
-		// OfflineView.removeReport(tempBug);
-		OfflineView.saveOffline(bugReport, false);
-
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		if (refresh && !workbench.getDisplay().isDisposed()) {
-			workbench.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					OfflineView.refresh();
-				}
-			});
-		}
-	}
-
 	@Override
 	public Image getIcon() {
-		if (syncState == BugReportSyncState.OK) {
+		if (syncState == BugReportSyncState.SYNCHRONIZED) {
 			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
 		} else if (syncState == BugReportSyncState.OUTGOING) {
 			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_OUTGOING);
-		} else if (syncState == BugReportSyncState.INCOMMING) {
+		} else if (syncState == BugReportSyncState.INCOMING) {
 			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_INCOMMING);
 		} else if (syncState == BugReportSyncState.CONFLICT) {
 			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_CONFLICT);
@@ -559,22 +399,17 @@ public class BugzillaTask extends Task {
 		return null;
 	}
 
-	public void scheduleDownloadReport() {
-		GetBugReportJob job = new GetBugReportJob(PROGRESS_LABEL_DOWNLOAD);
-		job.schedule();
-	}
-
-	public Job getRefreshJob() {
-		if (isDirty() || (state != BugTaskState.FREE)) {
-			return null;
-		}
-		GetBugReportJob job = new GetBugReportJob("Refreshing Bugzilla Reports...");
-		return job;
-	}
-
-	public String getStringForSortingDescription() {
-		return TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()) + "";
-	}
+//	public void scheduleDownloadReport() {
+//		GetBugReportJob job = new GetBugReportJob(PROGRESS_LABEL_DOWNLOAD);
+//		job.schedule();
+//	}
+//	public Job getRefreshJob() {
+//		if (isDirty() || (state != BugTaskState.FREE)) {
+//			return null;
+//		}
+//		GetBugReportJob job = new GetBugReportJob("Refreshing Bugzilla Reports...");
+//		return job;
+//	}
 
 	public static long getLastRefreshTimeInMinutes(Date lastRefresh) {
 		Date timeNow = new Date();
@@ -584,14 +419,15 @@ public class BugzillaTask extends Task {
 		return timeDifference;
 	}
 
-	private BugReportSyncState syncState = BugReportSyncState.OK;
+	private BugReportSyncState syncState = BugReportSyncState.SYNCHRONIZED;
 
 	public void setSyncState(BugReportSyncState syncState) {
-		if ((this.syncState == BugReportSyncState.INCOMMING && syncState == BugReportSyncState.OK)) {
-			// do nothing
-		} else {
-			this.syncState = syncState;
-		}
+		// if ((this.syncState == BugReportSyncState.INCOMING && syncState ==
+		// BugReportSyncState.SYNCHRONIZED)) {
+		// // do nothing
+		// } else {
+		this.syncState = syncState;
+		// }
 	}
 
 	public BugReportSyncState getSyncState() {
@@ -615,4 +451,12 @@ public class BugzillaTask extends Task {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
+	@Override
+	public String getPriority() {
+		if (bugReport != null && bugReport.getAttribute(BugReport.ATTR_PRIORITY) != null) {
+			return bugReport.getAttribute(BugReport.ATTR_PRIORITY).getValue();
+		} else {
+			return super.getPriority();
+		}
+	}
 }

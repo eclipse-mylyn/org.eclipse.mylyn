@@ -239,7 +239,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		} else {
 			throw new TaskListExternalizerException("Description not stored for bug report");
 		}
-		BugzillaTask task = new BugzillaTask(handle, label, true, false);
+		BugzillaTask task = new BugzillaTask(handle, label, false);
 		readTaskInfo(task, tlist, element, category, parent);
 
 		task.setState(BugTaskState.FREE);
@@ -260,10 +260,10 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 		if (element.hasAttribute(SYNC_STATE)) {
 			String syncState = element.getAttribute(SYNC_STATE);
-			if (syncState.compareTo(BugReportSyncState.OK.toString()) == 0) {
-				task.setSyncState(BugReportSyncState.OK);
-			} else if (syncState.compareTo(BugReportSyncState.INCOMMING.toString()) == 0) {
-				task.setSyncState(BugReportSyncState.INCOMMING);
+			if (syncState.compareTo(BugReportSyncState.SYNCHRONIZED.toString()) == 0) {
+				task.setSyncState(BugReportSyncState.SYNCHRONIZED);
+			} else if (syncState.compareTo(BugReportSyncState.INCOMING.toString()) == 0) {
+				task.setSyncState(BugReportSyncState.INCOMING);
 			} else if (syncState.compareTo(BugReportSyncState.OUTGOING.toString()) == 0) {
 				task.setSyncState(BugReportSyncState.OUTGOING);
 			} else if (syncState.compareTo(BugReportSyncState.CONFLICT.toString()) == 0) {

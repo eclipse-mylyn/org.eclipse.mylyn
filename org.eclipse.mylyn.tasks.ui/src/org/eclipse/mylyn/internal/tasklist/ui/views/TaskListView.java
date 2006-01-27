@@ -225,10 +225,16 @@ public class TaskListView extends ViewPart {
 
 		public void taskChanged(ITask task) {
 			refresh(task);
-			if (task.getCategory() != null) {
-				// TODO: could be lazier and not refresh entire list
-				refresh(null);
-			}
+//			if (task.getCategory() != null) {
+//				// TODO: could be lazier and not refresh entire list
+//				refresh(null);
+//			}
+			
+			if(!task.isLocal()) {				
+				for (IRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
+					refresh(query);
+				}				
+			}					
 		}
 
 		public void tasklistRead() {
