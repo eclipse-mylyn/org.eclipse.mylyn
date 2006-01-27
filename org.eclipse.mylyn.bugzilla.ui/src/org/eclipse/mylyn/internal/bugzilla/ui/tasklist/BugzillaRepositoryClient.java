@@ -207,7 +207,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 		if (task != null && task instanceof BugzillaTask) {
 			BugzillaTask bugTask = (BugzillaTask) task;
 			bugTask.setSyncState(state);
-			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(bugTask);
+			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugTask);
 		}
 	}
 }

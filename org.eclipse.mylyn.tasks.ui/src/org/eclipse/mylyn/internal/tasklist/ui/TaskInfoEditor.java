@@ -150,7 +150,7 @@ public class TaskInfoEditor extends EditorPart {
 			// ignore
 		}
 
-		public void taskChanged(final ITask updateTask) {
+		public void localInfoChanged(final ITask updateTask) {
 			if (updateTask != null && updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -177,6 +177,10 @@ public class TaskInfoEditor extends EditorPart {
 			}
 		}
 
+		public void repositoryInfoChanged(ITask task) {
+			localInfoChanged(task);	
+		}
+		
 		public void taskListModified() {
 			// TODO Auto-generated method stub
 
@@ -235,7 +239,7 @@ public class TaskInfoEditor extends EditorPart {
 		// statusCombo.getItem(statusCombo.getSelectionIndex()));
 
 //		refreshTaskListView(task);
-		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
+		MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
 
 		markDirty(false);
 	}

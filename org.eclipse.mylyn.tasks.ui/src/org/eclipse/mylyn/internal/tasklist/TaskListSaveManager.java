@@ -154,10 +154,14 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 		saveTaskListAndContexts();
 	}
 
-	public void taskChanged(ITask task) {
+	public void localInfoChanged(ITask task) {
 		saveTaskListAndContexts();
 	}
 
+	public void repositoryInfoChanged(ITask task) {
+		// ignore	
+	}
+	
 	public void tasklistRead() {
 		// ignore
 	}

@@ -182,7 +182,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				@Override
 				protected void setTitle(final String pageTitle) {
 					newTask.setDescription(pageTitle);
-					MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(newTask);
+					MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(newTask);
 				}
 			};
 			job.schedule();

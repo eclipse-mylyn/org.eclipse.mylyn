@@ -183,14 +183,16 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			// ignore
 		}
 
-		public void taskChanged(ITask task) {
-			// TODO Auto-generated method stub
-
+		public void localInfoChanged(ITask task) {
+			// ignore
 		}
 
+		public void repositoryInfoChanged(ITask task) {
+			// ignore
+		}
+		
 		public void taskListModified() {
-			// TODO Auto-generated method stub
-
+			// ignore
 		}
 	};
 

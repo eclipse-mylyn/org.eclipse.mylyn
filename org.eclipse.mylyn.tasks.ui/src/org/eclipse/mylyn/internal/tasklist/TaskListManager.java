@@ -236,9 +236,15 @@ public class TaskListManager {
 	/**
 	 * TODO: refactor into task deltas?
 	 */
-	public void notifyTaskChanged(ITask task) {
+	public void notifyLocalInfoChanged(ITask task) {
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
-			listener.taskChanged(task);
+			listener.localInfoChanged(task);
+		}
+	}
+	
+	public void notifyRepositoryInfoChanged(ITask task) {
+		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
+			listener.localInfoChanged(task);
 		}
 	}
 
@@ -294,7 +300,7 @@ public class TaskListManager {
 	public void markComplete(ITask task, boolean complete) {
 		task.setCompleted(complete);
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
-			listener.taskChanged(task); // to ensure comleted filter notices
+			listener.localInfoChanged(task); // to ensure comleted filter notices
 		}
 	}
 

@@ -223,18 +223,17 @@ public class TaskListView extends ViewPart {
 			updateDescription(null);
 		}
 
-		public void taskChanged(ITask task) {
+		public void localInfoChanged(ITask task) {
 			refresh(task);
-//			if (task.getCategory() != null) {
-//				// TODO: could be lazier and not refresh entire list
-//				refresh(null);
-//			}
-			
 			if(!task.isLocal()) {				
 				for (IRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
 					refresh(query);
 				}				
 			}					
+		}
+		
+		public void repositoryInfoChanged(ITask task) {
+			localInfoChanged(task);
 		}
 
 		public void tasklistRead() {
@@ -583,7 +582,7 @@ public class TaskListView extends ViewPart {
 						if (task.isLocal()) {
 							Integer intVal = (Integer) value;
 							task.setPriority("P" + (intVal + 1));
-							MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
+							MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
 						}
 						break;
 					case 3:
@@ -591,7 +590,7 @@ public class TaskListView extends ViewPart {
 							task.setDescription(((String) value).trim());
 							// MylarTaskListPlugin.getTaskListManager().notifyTaskPropertyChanged(task,
 							// columnNames[3]);
-							MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(task);
+							MylarTaskListPlugin.getTaskListManager().notifyLocalInfoChanged(task);
 						}
 						break;
 					}

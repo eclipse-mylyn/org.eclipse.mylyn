@@ -60,17 +60,17 @@ class SyncrhonizeBugzillaReportJob extends Job {
 		setRule(schedulingRule);
 		this.bugzillaTask = bugzillaTask;
 		bugzillaTask.setState(BugTaskState.WAITING);
-		MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(bugzillaTask);
+//		MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
 		// notifyTaskDataChange();
 	}
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(bugzillaTask);
 			bugzillaTask.setState(BugTaskState.DOWNLOADING);
 			bugzillaTask.setLastRefresh(new Date());
-			
+			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
+						
 			BugReport downloadedReport = downloadReport(bugzillaTask);
 			if (downloadedReport != null) {
 				bugzillaTask.setBugReport(downloadedReport);
@@ -79,7 +79,7 @@ class SyncrhonizeBugzillaReportJob extends Job {
 			}
 
 			bugzillaTask.setState(BugTaskState.FREE);
-			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(bugzillaTask);
+			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
 //			bugzillaTask.updateTaskDetails();
 			// MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
 			// notifyTaskDataChange();
