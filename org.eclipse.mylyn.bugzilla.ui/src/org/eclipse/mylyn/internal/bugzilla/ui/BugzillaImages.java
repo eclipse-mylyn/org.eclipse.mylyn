@@ -36,7 +36,7 @@ public class BugzillaImages {
 
 	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
 
-	public static final ImageDescriptor BUG_HIT = create(T_ELCL, "bug-small.gif");
+	public static final ImageDescriptor BUG_HIT = create(T_TOOL, "report-repository.gif");
 
 	public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
 
