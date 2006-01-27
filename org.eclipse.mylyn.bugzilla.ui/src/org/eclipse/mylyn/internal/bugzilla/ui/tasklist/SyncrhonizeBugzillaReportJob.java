@@ -41,7 +41,7 @@ import org.eclipse.ui.PlatformUI;
  */
 class SyncrhonizeBugzillaReportJob extends Job {
 
-	private static final String LABEL_REFRESH_JOB = "Synchronizing task with repository";
+	private static final String LABEL_REFRESH_JOB = "Synchronizing tasks with repository";
 
 	public final ISchedulingRule schedulingRule = new ISchedulingRule() {
 		public boolean isConflicting(ISchedulingRule schedulingRule) {

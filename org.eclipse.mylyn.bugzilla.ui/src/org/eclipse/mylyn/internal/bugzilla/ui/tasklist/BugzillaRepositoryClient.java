@@ -72,6 +72,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 //	}
 	
 	public void synchronize() {
+		// TODO: refactor out not to use action
 		RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction();
 		refresh.setShowProgress(false);
 		refresh.run();
