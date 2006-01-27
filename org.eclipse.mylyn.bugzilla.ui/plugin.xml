@@ -156,10 +156,10 @@
                enablesFor="*"
                icon="icons/etool16/task-repository-new.gif"
                id="org.eclipse.mylar.bugzilla.tasklist.addNew"
-               label="New Bugzilla Task"
+               label="New Repository Task"
                style="push"
                toolbarPath="reports"
-               tooltip="New Bugzilla Task"> 
+               tooltip="New Repository Task"> 
   		</action>
   			
 	    </viewContribution> 
@@ -186,6 +186,17 @@
             </enablement>
          </action>
           
+          
+		<action
+               class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
+               enablesFor="*"
+               icon="icons/etool16/task-repository-new.gif"
+               id="org.eclipse.mylar.bugzilla.tasklist.popup.addNew"
+               label="New Repository Task"
+               menubarPath="reports"
+               tooltip="New Repository Task"> 
+  		</action>
+          
           <!--
         <action
            class="org.eclipse.mylar.bugzilla.ui.actions.AddBugzillaQueryAction"
@@ -198,19 +209,6 @@
            tooltip="Add Bugzilla Query"> 
   			</action>
   		  -->
-  			
-	   	<!--
-  			<action
-           class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"
-           enablesFor="*"
-           icon="icons/etool16/task-bug.gif"
-           id="org.eclipse.mylar.bugzilla.tasklist.addExisting"
-           label="Add Existing Bugzilla Report"
-           menubarPath="reports"
-           style="push"
-           tooltip="Add Existing Bugzilla Report"> 
-  			</action>
-  			-->
       </viewerContribution>
    </extension>
 </plugin>

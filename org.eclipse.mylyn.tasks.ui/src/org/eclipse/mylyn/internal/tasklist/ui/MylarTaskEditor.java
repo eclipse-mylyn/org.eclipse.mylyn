@@ -47,7 +47,7 @@ import org.eclipse.ui.part.MultiPageSelectionProvider;
  */
 public class MylarTaskEditor extends MultiPageEditorPart {
 
-	private static final String TASK_INFO_PAGE_LABEL = "Overview";
+	private static final String TASK_INFO_PAGE_LABEL = "Personal";
 
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
@@ -133,6 +133,12 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 				}
 			}
 			setActivePage(selectedIndex);
+			
+			if (!task.isLocal()) {
+				 setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
+			} else if (hasValidUrl()){
+				 setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
+			}
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
 		}

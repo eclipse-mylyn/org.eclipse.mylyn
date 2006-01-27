@@ -112,6 +112,12 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class TaskListView extends ViewPart {
 
+	private static final String SEPARATOR_LOCAL = "local";
+
+	private static final String SEPARATOR_CONTEXT = "context";
+
+	private static final String SEPARATOR_REPORTS = "reports";
+
 	private static final String LABEL_NO_TASKS = "no task active";
 
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
@@ -120,7 +126,7 @@ public class TaskListView extends ViewPart {
 			MylarTaskListPlugin.PriorityLevel.P2.toString(), MylarTaskListPlugin.PriorityLevel.P3.toString(),
 			MylarTaskListPlugin.PriorityLevel.P4.toString(), MylarTaskListPlugin.PriorityLevel.P5.toString() };
 
-	private static final String SEPARATOR_ID_REPORTS = "reports";
+	private static final String SEPARATOR_ID_REPORTS = SEPARATOR_REPORTS;
 
 	private static final String PART_NAME = "Mylar Tasks";
 
@@ -936,7 +942,7 @@ public class TaskListView extends ViewPart {
 		manager.add(collapseAll);
 		// manager.add(new Separator());
 		// autoClose.setEnabled(true);
-		manager.add(new Separator("context"));
+		manager.add(new Separator(SEPARATOR_CONTEXT));
 		manager.add(autoClose);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(workOffline);
@@ -952,7 +958,7 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator("navigation"));
 		manager.add(previousTaskAction);
 		manager.add(nextTaskAction);
-		manager.add(new Separator("context"));
+		manager.add(new Separator(SEPARATOR_CONTEXT));
 		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1014,12 +1020,12 @@ public class TaskListView extends ViewPart {
 			manager.add(goUpAction);
 		}
 
-		manager.add(new Separator("local"));
+		manager.add(new Separator(SEPARATOR_LOCAL));
 		manager.add(newLocalTaskAction);
 		manager.add(newCategoryAction);
-		manager.add(new Separator("reports"));
+		manager.add(new Separator(SEPARATOR_REPORTS));
 
-		manager.add(new Separator("context"));
+		manager.add(new Separator(SEPARATOR_CONTEXT));
 		for (IDynamicSubMenuContributor contributor : MylarTaskListPlugin.getDefault().getDynamicMenuContributers()) {
 			MenuManager subMenuManager = contributor.getSubMenuManager(this, (ITaskListElement) selectedObject);
 			if (subMenuManager != null)

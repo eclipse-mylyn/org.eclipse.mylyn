@@ -125,7 +125,18 @@
   <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.eclipse.mylar.tasklist.ui.viewerContribution"
-            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">          
+            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+
+		<action
+              class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
+              enablesFor="*"
+              icon="icons/etool16/task-repository.gif"
+              id="org.eclipse.mylar.tasklist.actions.addQuery"
+              menubarPath="reports"
+              label="Add Repository Task"
+              style="push"
+              tooltip="Add Repository Task"> 
+  		</action>          
 		<action
               class="org.eclipse.mylar.internal.tasklist.ui.actions.NewQueryAction"
               enablesFor="*"
@@ -135,17 +146,6 @@
               label="New Repository Query"
               style="push"
               tooltip="New Repository Query"> 
-  		</action>
-
-		<action
-              class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
-              enablesFor="*"
-              icon="icons/eview16/task-repository.gif"
-              id="org.eclipse.mylar.tasklist.actions.addQuery"
-              menubarPath="reports"
-              label="Add Repository Task"
-              style="push"
-              tooltip="Add Repository Task"> 
   		</action>
       </viewerContribution>
    </extension>

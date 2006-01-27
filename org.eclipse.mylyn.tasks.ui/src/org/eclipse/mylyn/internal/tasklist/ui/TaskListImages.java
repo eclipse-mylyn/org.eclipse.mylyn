@@ -84,6 +84,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
 
+	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
+		
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 	
 	public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif");
