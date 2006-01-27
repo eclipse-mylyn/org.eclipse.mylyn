@@ -149,6 +149,7 @@ public class SaxContextWriter implements IContextWriter {
 
 			handler.startElement("", MylarContextExternalizer.ELMNT_INTERACTION_HISTORY,
 					MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
+			// List could get modified as we're writing
 			for (InteractionEvent ie : new ArrayList<InteractionEvent>(context.getInteractionHistory())) {
 				AttributesImpl ieAttributes = new AttributesImpl();
 
