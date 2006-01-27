@@ -67,23 +67,24 @@ class SyncrhonizeBugzillaReportJob extends Job {
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
+			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(bugzillaTask);
 			bugzillaTask.setState(BugTaskState.DOWNLOADING);
-			// notifyTaskDataChange();
-			// Update time this bugtask was last downloaded.
 			bugzillaTask.setLastRefresh(new Date());
+			
 			BugReport downloadedReport = downloadReport(bugzillaTask);
-			bugzillaTask.setBugReport(downloadedReport);
-			// bugReport = downloadReport();
+			if (downloadedReport != null) {
+				bugzillaTask.setBugReport(downloadedReport);
+				// XXX use the server name for multiple repositories
+				OfflineView.saveOffline(downloadedReport, false);
+			}
 
 			bugzillaTask.setState(BugTaskState.FREE);
+			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(bugzillaTask);
 //			bugzillaTask.updateTaskDetails();
 			// MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
 			// notifyTaskDataChange();
 
-			// XXX use the server name for multiple repositories
-			OfflineView.saveOffline(downloadedReport, false);
 			// saveBugReport(true);
-			MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(bugzillaTask);
 
 			// TODO: need to do this because all the hits need to be
 			// refreshed, fix

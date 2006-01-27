@@ -147,9 +147,11 @@ public class BugzillaTask extends Task {
 		this.bugReport = bugReport;
 		
 		// TODO: remove?
-		setDescription(HtmlStreamTokenizer.unescape(TaskRepositoryManager
-				.getTaskIdAsInt(getHandleIdentifier())
-				+ ": " + bugReport.getSummary()));
+		if (bugReport != null) {
+			setDescription(HtmlStreamTokenizer.unescape(TaskRepositoryManager
+					.getTaskIdAsInt(getHandleIdentifier())
+					+ ": " + bugReport.getSummary()));
+		}
 	}
 
 	/**
