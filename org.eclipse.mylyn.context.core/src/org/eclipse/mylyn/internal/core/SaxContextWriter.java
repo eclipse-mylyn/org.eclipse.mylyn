@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -148,7 +149,7 @@ public class SaxContextWriter implements IContextWriter {
 
 			handler.startElement("", MylarContextExternalizer.ELMNT_INTERACTION_HISTORY,
 					MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
-			for (InteractionEvent ie : context.getInteractionHistory()) {
+			for (InteractionEvent ie : new ArrayList<InteractionEvent>(context.getInteractionHistory())) {
 				AttributesImpl ieAttributes = new AttributesImpl();
 
 				ieAttributes.addAttribute("", MylarContextExternalizer.ATR_DELTA, MylarContextExternalizer.ATR_DELTA,
