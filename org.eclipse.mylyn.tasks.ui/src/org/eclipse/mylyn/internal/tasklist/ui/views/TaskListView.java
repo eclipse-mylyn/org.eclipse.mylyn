@@ -63,7 +63,6 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.GoUpAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.ManageEditorsAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.NewCategoryAction;
@@ -160,7 +159,7 @@ public class TaskListView extends ViewPart {
 
 	private DeleteAction deleteAction;
 
-	private ManageEditorsAction autoClose;
+//	private ManageEditorsAction autoClose;
 
 	private RemoveFromCategoryAction removeFromCategoryAction;
 
@@ -942,8 +941,8 @@ public class TaskListView extends ViewPart {
 		manager.add(collapseAll);
 		// manager.add(new Separator());
 		// autoClose.setEnabled(true);
-		manager.add(new Separator(SEPARATOR_CONTEXT));
-		manager.add(autoClose);
+//		manager.add(new Separator(SEPARATOR_CONTEXT));
+//		manager.add(autoClose);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(workOffline);
 	}
@@ -1142,7 +1141,7 @@ public class TaskListView extends ViewPart {
 
 		deleteAction = new DeleteAction(this);
 		collapseAll = new CollapseAllAction(this);
-		autoClose = new ManageEditorsAction();
+//		autoClose = new ManageEditorsAction();
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());

@@ -392,7 +392,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, true);
+//		store.setDefault(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, true);
 		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, "P5");
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, true);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);

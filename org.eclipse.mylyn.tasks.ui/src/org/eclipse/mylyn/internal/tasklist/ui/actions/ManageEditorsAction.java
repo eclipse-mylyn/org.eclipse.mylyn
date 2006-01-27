@@ -11,46 +11,40 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
-import org.eclipse.ui.internal.IPreferenceConstants;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /**
  * @author Mik Kersten
  */
-public class ManageEditorsAction extends Action {
+//public class ManageEditorsAction extends Action {
+//
+//	public static final String ID = "org.eclipse.mylar.ui.editors.auto.manage";
 
-	public static final String ID = "org.eclipse.mylar.ui.editors.auto.manage";
-
-	public ManageEditorsAction() {
-		super("Manage Editors with Context", IAction.AS_CHECK_BOX);
-		setId(ID);
-		update(MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS));
-	}
-
-	@Override
-	public void run() {
-		update(isChecked());
-	}
-
-	public void update(boolean on) {
-		setChecked(on);
-		MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, on);
-
-		if (on) {
-			boolean previousValue = WorkbenchPlugin.getDefault().getPreferenceStore().getBoolean(
-					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
-			MylarTaskListPlugin.getPrefs().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, previousValue);
-			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
-					false);
-		} else {
-			boolean previousValue = MylarTaskListPlugin.getPrefs().getBoolean(
-					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
-			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
-					previousValue);
-		}
-	}
-}
+//	public ManageEditorsAction() {
+//		super("Manage Editors with Context", IAction.AS_CHECK_BOX);
+//		setId(ID);
+//		update(MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS));
+//	}
+//
+//	@Override
+//	public void run() {
+//		update(isChecked());
+//	}
+//
+//	public void update(boolean on) {
+//		setChecked(on);
+//		MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, on);
+//
+//		if (on) {
+//			boolean previousValue = WorkbenchPlugin.getDefault().getPreferenceStore().getBoolean(
+//					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+//			MylarTaskListPlugin.getPrefs().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, previousValue);
+//			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+//					false);
+//		} else {
+//			boolean previousValue = MylarTaskListPlugin.getPrefs().getBoolean(
+//					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
+//			WorkbenchPlugin.getDefault().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+//					previousValue);
+//		}
+//	}
+//}

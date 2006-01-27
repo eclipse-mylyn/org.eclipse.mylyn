@@ -16,8 +16,6 @@ package org.eclipse.mylar.internal.tasklist;
  */
 public class TaskListPreferenceConstants {
 
-	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ui.editors.auto.manage";
-
 	public static final String PLANNER_WIZARD_ID = "org.eclipse.mylar.tasklist.ui.planner.wizard";
 
 	public static final String PLANNER_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.planner.editor";
