@@ -79,7 +79,7 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			initContextChangeSets();
 		}
 
-		public void taskChanged(ITask task) {
+		public void localInfoChanged(ITask task) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
@@ -105,8 +105,11 @@ public class MylarChangeSetManager implements IMylarContextListener {
 		}
 
 		public void taskListModified() {
-			// TODO Auto-generated method stub
+			// ignore
+		}
 
+		public void repositoryInfoChanged(ITask task) {
+			// ignore
 		}
 	};
 
