@@ -31,8 +31,8 @@ public class NewCategoryAction extends Action {
 
 	public NewCategoryAction(TaskListView view) {
 		this.view = view;
-		setText("Add Category");
-		setToolTipText("Add Category");
+		setText("New Category");
+		setToolTipText("New Category");
 		setId(ID);
 		setImageDescriptor(TaskListImages.CATEGORY_NEW);
 	}

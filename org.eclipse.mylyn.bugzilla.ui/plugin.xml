@@ -146,9 +146,9 @@
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize Reports"
+               label="Synchronize with Repository"
                menubarPath="additions"
-               tooltip="Synchronize Unresolved Reports">
+               tooltip="Synchronize with Repository">
          </action>
          
          <action
@@ -156,10 +156,10 @@
                enablesFor="*"
                icon="icons/etool16/task-bug-new.gif"
                id="org.eclipse.mylar.bugzilla.tasklist.addNew"
-               label="Add New Bugzilla Report"
+               label="New Bugzilla Task"
                style="push"
                toolbarPath="reports"
-               tooltip="Add New Bugzilla Report"> 
+               tooltip="New Bugzilla Task"> 
   		</action>
   			
 	    </viewContribution> 
@@ -174,7 +174,7 @@
                enablesFor="*"
                icon="icons/etool16/task-bug-refresh.gif"
                id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize Report(s)"
+               label="Synchronize with Repository"
                menubarPath="reports"
                tooltip="Synchronize with Repository">
             <enablement>
@@ -199,16 +199,6 @@
   			</action>
   		  -->
   			
-  			<action
-           class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
-           enablesFor="*"
-           icon="icons/etool16/task-bug-new.gif"
-           id="org.eclipse.mylar.bugzilla.tasklist.addNew"
-           label="New Bugzilla Task"
-           menubarPath="reports"
-           style="push"
-           tooltip="Add New Bugzilla Report"> 
-  			</action>
 	   	<!--
   			<action
            class="org.eclipse.mylar.bugzilla.ui.actions.CreateBugzillaTaskAction"

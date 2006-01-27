@@ -41,7 +41,7 @@ import org.eclipse.ui.IViewPart;
  */
 public class SynchronizeReportsAction extends Action implements IViewActionDelegate {
 
-	private static final String LABEL_SYNCHRONIZE_JOB = "Bugzilla Query Refresh";
+	private static final String LABEL_SYNCHRONIZE_JOB = "Refreshing query with repository";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.refresh.bugzilla";
 

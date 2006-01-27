@@ -36,8 +36,8 @@ public class NewLocalTaskAction extends Action {
 
 	public NewLocalTaskAction(TaskListView view) {
 		this.view = view;
-		setText("Add New Task");
-		setToolTipText("Add New Task");
+		setText("New Task");
+		setToolTipText("New Task");
 		setId(ID);
 		setImageDescriptor(TaskListImages.TASK_NEW);
 	}
