@@ -66,11 +66,11 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
-	public static final ImageDescriptor REPOSITORY = create("eview16", "task-repository.gif");
+	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
 
-	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "task-repository-new.gif");
+	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif");
 
-	public static final ImageDescriptor REPOSITORIES = create("eview16", "task-repositories.gif");
+	public static final ImageDescriptor REPOSITORIES = create("eview16", "repositories.gif");
 
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
 
