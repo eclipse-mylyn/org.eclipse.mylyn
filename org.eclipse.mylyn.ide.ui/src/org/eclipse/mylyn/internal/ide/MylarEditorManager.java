@@ -19,8 +19,6 @@ import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.ui.IMylarUiBridge;
 import org.eclipse.mylar.ui.MylarUiPlugin;
@@ -34,7 +32,7 @@ import org.eclipse.ui.internal.Workbench;
 public class MylarEditorManager implements IMylarContextListener {
 
 	public void contextActivated(IMylarContext context) {
-		if (MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS)) {
+		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
 			try {
 				MylarPlugin.getContextManager().setContextCapturePaused(true);
@@ -45,7 +43,7 @@ public class MylarEditorManager implements IMylarContextListener {
 
 				List<IMylarElement> documents = MylarPlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
-				int threshold = MylarUiPlugin.getPrefs().getInt(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM);
+				int threshold = MylarUiPlugin.getPrefs().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
 				for (Iterator iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
 					IMylarElement document = (IMylarElement) iter.next();
 					IMylarUiBridge bridge = MylarUiPlugin.getDefault().getUiBridge(document.getContentType());
@@ -69,7 +67,7 @@ public class MylarEditorManager implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		if (MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS)) {
+		if (MylarUiPlugin.getPrefs().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			closeAllEditors();
 		}
 	}

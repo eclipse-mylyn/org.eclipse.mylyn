@@ -233,7 +233,8 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM, 8);
+		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true);
+		store.setDefault(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, 8);
 
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_LIGHTENED, false);
 		store.setDefault(MylarUiPrefContstants.GAMMA_SETTING_STANDARD, true);

@@ -23,8 +23,10 @@ public class MylarUiPrefContstants {
 
 	public static final String INTEREST_FILTER_EXCLUSION = "org.eclipse.mylar.ui.interest.filter.exclusion";
 
-	public static final String MANAGE_EDITORS_AUTO_OPEN_NUM = "org.eclipse.mylar.ide.ui.editors.auto.open.num";
+	public static final String AUTO_MANAGE_EDITORS_OPEN_NUM = "org.eclipse.mylar.ide.ui.editors.auto.open.num";
 
+	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ide.ui.editors.auto.manage";
+	
 	public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
 
 	public static final String GAMMA_SETTING_DARKENED = "org.eclipse.mylar.ui.gamma.darkened";

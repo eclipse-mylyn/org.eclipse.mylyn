@@ -82,6 +82,8 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private HighlighterContentProvider contentProvider = null;
 
+	private Button manageEditorsButton = null;
+	
 	// Buttons for gamma setting
 	// private Button lightened;
 	// private Button darkened;
@@ -120,16 +122,17 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		layout.verticalSpacing = 4;
 		entryTable.setLayout(layout);
 
+		createEditorsSection(entryTable);
+		createExclusionFilterControl(entryTable);
+		
 		createTable(entryTable);
 		createTableViewer();
 		contentProvider = new HighlighterContentProvider();
 		tableViewer.setContentProvider(contentProvider);
 		tableViewer.setLabelProvider(new HighlighterLabelProvider());
 		tableViewer.setInput(MylarUiPlugin.getDefault().getHighlighterList());
-		// createGammaSettingControl(entryTable);
-		createEditorsSection(entryTable);
-		createExclusionFilterControl(entryTable);
 
+		// createGammaSettingControl(entryTable);
 		// lightened.setEnabled(false);
 		// darkened.setEnabled(false);
 		// standard.setEnabled(false);
@@ -175,10 +178,12 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 				MylarUiPlugin.getDefault().getHighlighterList().externalizeToString());
 		getPreferenceStore().setValue(MylarUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 				exclusionFieldEditor.getStringValue());
-
+		getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, 
+				manageEditorsButton.getSelection());
+		
 		int value = autoOpenEditorsNum.getIntValue();
 		if (value > 0) {
-			getPreferenceStore().setValue(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM, value);
+			getPreferenceStore().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM, value);
 		}
 
 		// ColorMap.GammaSetting gm = null;
@@ -706,18 +711,20 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 	private void createEditorsSection(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 
-		group.setLayout(new GridLayout(1, false));
+		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setText("Editor Management");
+		
+		manageEditorsButton = new Button(group, SWT.CHECK);
+		manageEditorsButton.setText("Enable auto editor opening/closing with context activation. ");
+		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(MylarUiPrefContstants.AUTO_MANAGE_EDITORS));
 
-		// Label label = new Label(group, SWT.LEFT);
-		// label.setText("");
-
-		autoOpenEditorsNum = new IntegerFieldEditor("", "Max number of editors to open on context activation:", group);
-		autoOpenEditorsNum.setErrorMessage("Your user id must be an integer");
-		int num = getPreferenceStore().getInt(MylarUiPrefContstants.MANAGE_EDITORS_AUTO_OPEN_NUM);
+		Composite numComposite = new Composite(group, SWT.NULL);
+		autoOpenEditorsNum = new IntegerFieldEditor("", "Max to open: ", numComposite, 4);
+		autoOpenEditorsNum.setErrorMessage("Must be an integer");
+		int num = getPreferenceStore().getInt(MylarUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
 		if (num > 0) {
-			autoOpenEditorsNum.setStringValue(num + "");
+			autoOpenEditorsNum.setStringValue("" + num);
 			autoOpenEditorsNum.setEmptyStringAllowed(false);
 		}
 		return;

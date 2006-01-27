@@ -20,10 +20,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.ui.MylarImages;
+import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.internal.ui.MylarWorkingSetPage;
 import org.eclipse.mylar.ui.MylarUiPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -91,9 +90,9 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		}
 
 		if (preferencePage.closeEditors()) {
-			MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
+			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, true); //$NON-NLS-1$
 		} else {
-			MylarTaskListPlugin.getPrefs().setValue(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, false); //$NON-NLS-1$
+			MylarUiPlugin.getPrefs().setValue(MylarUiPrefContstants.AUTO_MANAGE_EDITORS, false); //$NON-NLS-1$
 		}
 
 		if (preferencePage.isWorkingSet()) {
