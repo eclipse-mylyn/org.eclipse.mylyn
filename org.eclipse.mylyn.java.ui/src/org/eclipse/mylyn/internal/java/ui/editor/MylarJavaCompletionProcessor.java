@@ -52,7 +52,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 	/**
 	 * TODO: parametrize this based on JDT heuristics
 	 */
-	private static final int IMPLICIT_INTEREST_RELEVANCE = 400;
+	private static final int IMPLICIT_INTEREST_RELEVANCE = 300;
 
 	private Method resolveMemberMethod;
 
