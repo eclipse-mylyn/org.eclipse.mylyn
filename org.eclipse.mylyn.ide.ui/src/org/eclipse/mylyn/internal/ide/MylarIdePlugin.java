@@ -107,14 +107,15 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 						}
 					}
 
-					workbench.addWindowListener(interestEditorTracker);
-					for (int i = 0; i < windows.length; i++) {
-						windows[i].addPageListener(interestEditorTracker);
-						IWorkbenchPage[] pages = windows[i].getPages();
-						for (int j = 0; j < pages.length; j++) {
-							pages[j].addPartListener(interestEditorTracker);
-						}
-					}
+					interestEditorTracker.install(workbench);
+//					workbench.addWindowListener(interestEditorTracker);
+//					for (int i = 0; i < windows.length; i++) {
+//						windows[i].addPageListener(interestEditorTracker);
+//						IWorkbenchPage[] pages = windows[i].getPages();
+//						for (int j = 0; j < pages.length; j++) {
+//							pages[j].addPartListener(interestEditorTracker);
+//						}
+//					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Mylar IDE initialization failed", false);
 				}

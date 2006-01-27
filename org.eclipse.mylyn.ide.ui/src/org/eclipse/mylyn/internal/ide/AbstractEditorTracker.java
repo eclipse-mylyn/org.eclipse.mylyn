@@ -11,63 +11,19 @@
 
 package org.eclipse.mylar.internal.ide;
 
+import org.eclipse.mylar.internal.ui.AbstractPartTracker;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPageListener;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractEditorTracker implements IWindowListener, IPageListener, IPartListener {
-
-	// --- Window listener
-
-	public void windowActivated(IWorkbenchWindow window) {
-	}
-
-	public void windowDeactivated(IWorkbenchWindow window) {
-	}
-
-	public void windowClosed(IWorkbenchWindow window) {
-		window.removePageListener(this);
-	}
-
-	public void windowOpened(IWorkbenchWindow window) {
-		window.addPageListener(this);
-	}
-
-	// ---- IPageListener
-
-	public void pageActivated(IWorkbenchPage page) {
-	}
-
-	public void pageClosed(IWorkbenchPage page) {
-		page.removePartListener(this);
-	}
-
-	public void pageOpened(IWorkbenchPage page) {
-		page.addPartListener(this);
-	}
-
-	// ---- Part Listener
-
-	public void partActivated(IWorkbenchPart part) {
-	}
-
-	public void partBroughtToTop(IWorkbenchPart part) {
-	}
+public abstract class AbstractEditorTracker extends AbstractPartTracker {
 
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof IEditorPart) {
 			editorClosed((IEditorPart) part);
 		}
-	}
-
-	public void partDeactivated(IWorkbenchPart part) {
 	}
 
 	public void partOpened(IWorkbenchPart part) {
@@ -79,5 +35,18 @@ public abstract class AbstractEditorTracker implements IWindowListener, IPageLis
 	public abstract void editorOpened(IEditorPart part);
 
 	public abstract void editorClosed(IEditorPart part);
+
+	@Override
+	public void partActivated(IWorkbenchPart part) {
+		// ignore
+	}
+
+	public void partDeactivated(IWorkbenchPart part) {
+	}
+	
+	@Override
+	public void partBroughtToTop(IWorkbenchPart part) {
+		// ignore
+	}
 
 }

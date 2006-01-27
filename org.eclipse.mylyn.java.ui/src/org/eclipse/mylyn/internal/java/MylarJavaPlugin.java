@@ -34,7 +34,6 @@ import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.EditorRegistry;
@@ -55,7 +54,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private ActiveFoldingEditorTracker editorTracker;
 
-	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
+	private PackageExplorerExpansionManager packageExplorerExpansionManager = new PackageExplorerExpansionManager();
 
 	private TypeHistoryManager typeHistoryManager = new TypeHistoryManager();
 
@@ -92,7 +91,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					setPreferenceDefaults();
 					savePluginPreferences();
 
-					MylarPlugin.getContextManager().addListener(packageExplorerManager);
+					MylarPlugin.getContextManager().addListener(packageExplorerExpansionManager);
 					MylarPlugin.getContextManager().addListener(typeHistoryManager);
 					MylarPlugin.getContextManager().addListener(landmarkMarkerManager);
 
@@ -103,7 +102,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 					ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 							.getSelectionService();
-					service.addPostSelectionListener(packageExplorerManager);
+					service.addPostSelectionListener(packageExplorerExpansionManager);
 
 					javaEditingMonitor = new JavaEditingMonitor();
 					MylarPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
@@ -153,7 +152,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			plugin = null;
 			resourceBundle = null;
 
-			MylarPlugin.getContextManager().removeListener(packageExplorerManager);
+			MylarPlugin.getContextManager().removeListener(packageExplorerExpansionManager);
 			MylarPlugin.getContextManager().removeListener(typeHistoryManager);
 			MylarPlugin.getContextManager().removeListener(landmarkMarkerManager);
 
@@ -166,7 +165,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
 					&& !PlatformUI.getWorkbench().isClosing()) {
 				ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-				service.removePostSelectionListener(packageExplorerManager);
+				service.removePostSelectionListener(packageExplorerExpansionManager);
 			}
 			JavaCore.removeElementChangedListener(javaElementChangeListener);
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
@@ -178,15 +177,16 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private void installEditorTracker(IWorkbench workbench) {
 		editorTracker = new ActiveFoldingEditorTracker();
-		workbench.addWindowListener(editorTracker);
-		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-		for (int i = 0; i < windows.length; i++) {
-			windows[i].addPageListener(editorTracker);
-			IWorkbenchPage[] pages = windows[i].getPages();
-			for (int j = 0; j < pages.length; j++) {
-				pages[j].addPartListener(editorTracker);
-			}
-		}
+		editorTracker.install(workbench);
+//		workbench.addWindowListener(editorTracker);
+//		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
+//		for (int i = 0; i < windows.length; i++) {
+//			windows[i].addPageListener(editorTracker);
+//			IWorkbenchPage[] pages = windows[i].getPages();
+//			for (int j = 0; j < pages.length; j++) {
+//				pages[j].addPartListener(editorTracker);
+//			}
+//		}
 
 		// update editors that are already opened
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {

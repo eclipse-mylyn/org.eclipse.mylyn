@@ -42,13 +42,6 @@ public class ApplyMylarToNavigatorAction extends AbstractApplyMylarAction {
 		return viewers;
 	}
 
-	// @Override
-	// public void refreshViewer() {
-	// ResourceNavigator navigator =
-	// NavigatorRefreshListener.getResourceNavigator();
-	// if (navigator != null) navigator.getTreeViewer().refresh();
-	// }
-
 	public static ApplyMylarToNavigatorAction getDefault() {
 		return INSTANCE;
 	}

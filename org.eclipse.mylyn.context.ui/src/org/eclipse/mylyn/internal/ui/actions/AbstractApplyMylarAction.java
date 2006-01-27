@@ -48,6 +48,8 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	protected IAction initAction = null;
 
 	protected InterestFilter interestFilter;
+	
+	protected IViewPart viewPart;
 
 	public AbstractApplyMylarAction(InterestFilter interestFilter) {
 		super();
@@ -64,7 +66,8 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	public void init(IViewPart view) {
 		String id = view.getSite().getId();
-		prefId = PREF_ID_PREFIX + id;// .substring(id.lastIndexOf('.') + 1);
+		prefId = PREF_ID_PREFIX + id;
+		viewPart = view;
 	}
 
 	public void run(IAction action) {
@@ -97,7 +100,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				MylarPlugin.getDefault().getPreferenceStore().setValue(prefId, on);
 
 			for (StructuredViewer viewer : getViewers()) {
-				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer);
+				MylarUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
 				installInterestFilter(on, viewer);
 			}
 		} catch (Throwable t) {
@@ -176,7 +179,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	public void dispose() {
 		for (StructuredViewer viewer : getViewers()) {
-			MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer);
+			MylarUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 		}
 	}
 

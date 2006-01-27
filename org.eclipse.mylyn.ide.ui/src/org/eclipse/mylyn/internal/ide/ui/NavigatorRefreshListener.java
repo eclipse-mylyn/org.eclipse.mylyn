@@ -19,10 +19,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.ide.ResourceStructureBridge;
 import org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToNavigatorAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -48,32 +46,32 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 		return null;
 	}
 
-	protected void refresh(IMylarElement node) {
-		ResourceNavigator navigator = getResourceNavigator();
-		if (navigator == null || navigator.getTreeViewer() == null
-				|| navigator.getTreeViewer().getControl().isDisposed()) {
-			return;
-		}
-
-		if (node != null) {
-			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(
-					ResourceStructureBridge.CONTENT_TYPE);
-			Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
-			if (object != null) {
-				getResourceNavigator().getTreeViewer().update(object, null);
-				// new String[]{IBasicPropertyConstants.P_TEXT});
-			}
-		} else {
-			getResourceNavigator().getTreeViewer().refresh();
-		}
-	}
+//	protected void refresh(IMylarElement node) {
+//		ResourceNavigator navigator = getResourceNavigator();
+//		if (navigator == null || navigator.getTreeViewer() == null
+//				|| navigator.getTreeViewer().getControl().isDisposed()) {
+//			return;
+//		}
+//
+//		if (node != null) {
+//			IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(
+//					ResourceStructureBridge.CONTENT_TYPE);
+//			Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
+//			if (object != null) {
+//				getResourceNavigator().getTreeViewer().update(object, null);
+//				// new String[]{IBasicPropertyConstants.P_TEXT});
+//			}
+//		} else {
+//			getResourceNavigator().getTreeViewer().refresh();
+//		}
+//	}
 
 	public void contextActivated(IMylarContext taskscape) {
-		refresh(null);
+//		refresh(null);
+
 		try {
 			if (MylarPlugin.getContextManager().isContextActive() && ApplyMylarToNavigatorAction.getDefault() != null
 					&& ApplyMylarToNavigatorAction.getDefault().isChecked()) {
-
 				TreeViewer viewer = getResourceNavigator().getTreeViewer();
 				if (viewer != null) {
 					viewer.expandAll();
@@ -85,19 +83,19 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext taskscape) {
-		refresh(null);
+//		refresh(null);
 	}
 
 	public void presentationSettingsChanging(UpdateKind kind) {
-		refresh(null);
+//		refresh(null);
 	}
 
 	public void presentationSettingsChanged(UpdateKind kind) {
-		refresh(null);
+//		refresh(null);
 	}
 
 	public void interestChanged(IMylarElement node) {
-		refresh(node);
+//		refresh(node);
 	}
 
 	public void interestChanged(List<IMylarElement> nodes) {
@@ -106,15 +104,15 @@ public class NavigatorRefreshListener implements IMylarContextListener {
 	}
 
 	public void nodeDeleted(IMylarElement node) {
-		refresh(node);
+//		refresh(node);
 	}
 
 	public void landmarkAdded(IMylarElement node) {
-		refresh(node);
+//		refresh(node);
 	}
 
 	public void landmarkRemoved(IMylarElement node) {
-		refresh(node);
+//		refresh(node);
 	}
 
 	public void edgesChanged(IMylarElement node) {

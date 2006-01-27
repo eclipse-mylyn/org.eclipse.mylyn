@@ -44,7 +44,7 @@ import org.eclipse.ui.part.EditorPart;
  * 
  * @author Mik Kersten
  */
-public class PackageExplorerManager implements IMylarContextListener, ISelectionListener {
+public class PackageExplorerExpansionManager implements IMylarContextListener, ISelectionListener {
 
 	public void selectionChanged(IWorkbenchPart part, ISelection changedSelection) {
 		if (MylarPlugin.getContextManager().isContextCapturePaused())
@@ -100,17 +100,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 						if (elementToSelect != null
 								&& MylarJavaPlugin.getDefault().getPluginPreferences().getBoolean(
 										MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND)) {
-							// Object[] expanded = viewer.getExpandedElements();
-							// boolean needsExpansion = false;
-							// for (int i = 0; i < expanded.length; i++) {
-							// if (elementToSelect.equals(expanded[i]))
-							// needsExpansion = false;
-							// }
-							// if (needsExpansion) {
-							// viewer.getControl().setRedraw(false);
 							viewer.expandAll();
-							// viewer.getControl().setRedraw(true);
-							// }
 						}
 					}
 				}
@@ -144,55 +134,11 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 	}
 
 	public void interestChanged(List<IMylarElement> nodes) {
-		// if (nodes.size() == 0) return;
-		// IMylarElement lastNode = nodes.get(nodes.size()-1);
-		// interestChanged(lastNode);
+		// ignore
 	}
 
 	public void interestChanged(IMylarElement node) {
-		// try {
-		// if (MylarPlugin.getContextManager().hasActiveContext()
-		// && ApplyMylarToPackageExplorerAction.getDefault() != null
-		// && ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
-		//    			
-		// IJavaElement lastElement =
-		// JavaCore.create(node.getHandleIdentifier());
-		// PackageExplorerPart packageExplorer =
-		// PackageExplorerPart.getFromActivePerspective();
-		// if (packageExplorer != null && lastElement != null) {
-		// ISelection selection =
-		// packageExplorer.getTreeViewer().getSelection();
-		// boolean suppressSelection = false;
-		// boolean membersFilteredMode = false;
-		// if (selection instanceof StructuredSelection) {
-		// if (((StructuredSelection)selection).size() > 1) suppressSelection =
-		// true;
-		// }
-		// if (!isInLinkToEditorMode(packageExplorer)) suppressSelection = true;
-		// for (ViewerFilter filter :
-		// Arrays.asList(packageExplorer.getTreeViewer().getFilters())) {
-		// if (filter instanceof MembersFilter) membersFilteredMode = true;
-		// }
-		// if (!suppressSelection) {
-		// if (membersFilteredMode) {
-		// if (lastElement instanceof IMember) {
-		// ICompilationUnit toSelect =
-		// ((IMember)lastElement).getCompilationUnit();
-		// if (toSelect != null) {
-		// packageExplorer.getTreeViewer().setSelection(new
-		// StructuredSelection(toSelect), true);
-		// }
-		// }
-		// } else if (lastElement != null) {
-		// packageExplorer.getTreeViewer().setSelection(new
-		// StructuredSelection(lastElement), true);
-		// }
-		// }
-		// }
-		// }
-		// } catch (Throwable t) {
-		// MylarPlugin.log(t, "Could not update package explorer");
-		// }
+		// ignore
 	}
 
 	private boolean isInLinkToEditorMode(PackageExplorerPart packageExplorer) {
