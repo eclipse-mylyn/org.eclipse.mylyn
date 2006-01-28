@@ -424,12 +424,7 @@ public class BugzillaTask extends Task {
 	private BugReportSyncState syncState = BugReportSyncState.SYNCHRONIZED;
 
 	public void setSyncState(BugReportSyncState syncState) {
-		// if ((this.syncState == BugReportSyncState.INCOMING && syncState ==
-		// BugReportSyncState.SYNCHRONIZED)) {
-		// // do nothing
-		// } else {
 		this.syncState = syncState;
-		// }
 	}
 
 	public BugReportSyncState getSyncState() {

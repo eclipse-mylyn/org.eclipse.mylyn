@@ -77,6 +77,13 @@ class SynchronizeBugzillaReportJob extends Job {
 			}
 
 			bugzillaTask.setState(BugTaskState.FREE);
+			 
+//			if (bugzillaTask.getSyncState() == BugReportSyncState.INCOMING) {
+//				bugzillaTask.setSyncState(BugReportSyncState.SYNCHRONIZED);
+//			} else if (bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT) {
+//				bugzillaTask.setSyncState(BugReportSyncState.OUTGOING);
+//			}
+			
 			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);

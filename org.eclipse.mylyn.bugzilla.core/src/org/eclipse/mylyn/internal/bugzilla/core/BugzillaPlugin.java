@@ -432,6 +432,9 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		return listeners;
 	}
 
+	/**
+	 * TODO: delete
+	 */
 	public void fireOfflineStatusChanged(final IBugzillaBug bug, final BugzillaOfflineStaus status) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {

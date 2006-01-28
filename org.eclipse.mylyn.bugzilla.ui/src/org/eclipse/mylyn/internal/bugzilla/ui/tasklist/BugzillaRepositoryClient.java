@@ -85,13 +85,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 				|| bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
 			if (forceUpdate || (!canNotSynch && !hasLocalChanges)) {
 				SynchronizeBugzillaReportJob synchronizeBugzillaReportJob = new SynchronizeBugzillaReportJob((BugzillaTask)task);
-				synchronizeBugzillaReportJob.schedule();
+				synchronizeBugzillaReportJob.schedule();				
 				return synchronizeBugzillaReportJob;
-			}
-			if (bugzillaTask.getSyncState() == BugReportSyncState.INCOMING) {
-				bugzillaTask.setSyncState(BugReportSyncState.SYNCHRONIZED);
-			} else if (bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT) {
-				bugzillaTask.setSyncState(BugReportSyncState.OUTGOING);
 			}
 		}		
 		return null;
