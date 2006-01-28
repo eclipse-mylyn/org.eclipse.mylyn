@@ -1000,12 +1000,12 @@ public class TaskListView extends ViewPart {
 				if (!task.isLocal()) {
 					addAction(removeFromCategoryAction, manager, element);
 				}
-				
 				addAction(deleteAction, manager, element);
 			} else {
 				manager.add(activateAction);
 			}
-			
+		} else if (element instanceof ITaskCategory || element instanceof IRepositoryQuery) {
+			addAction(deleteAction, manager, element);
 		}
 		
 		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskCategory
@@ -1020,8 +1020,8 @@ public class TaskListView extends ViewPart {
 		}
 
 		manager.add(new Separator(SEPARATOR_LOCAL));
-		manager.add(newLocalTaskAction);
 		manager.add(newCategoryAction);
+		manager.add(newLocalTaskAction);
 		manager.add(new Separator(SEPARATOR_REPORTS));
 
 		manager.add(new Separator(SEPARATOR_CONTEXT));
