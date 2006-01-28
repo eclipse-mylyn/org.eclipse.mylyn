@@ -66,11 +66,11 @@ public class BugzillaRefreshManager {
 			return;
 		} else {
 			if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
-				BugzillaTask t = toBeRefreshed.remove(0);
-				Job refreshJob = repositoryClient.synchronize(t);
+				BugzillaTask bugzillaTask = toBeRefreshed.remove(0);
+				Job refreshJob = repositoryClient.synchronize(bugzillaTask, true);
 //				Job j = t.getRefreshJob();
 				if (refreshJob != null) {
-					currentlyRefreshing.put(t, refreshJob);
+					currentlyRefreshing.put(bugzillaTask, refreshJob);
 //					repositoryClient.synchronize(t);
 //					j.schedule();
 				}

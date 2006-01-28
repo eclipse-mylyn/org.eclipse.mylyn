@@ -48,7 +48,7 @@ public abstract class AbstractRepositoryClient {
 	 */
 	public abstract void synchronize();
 	
-	public abstract Job synchronize(ITask task);
+	public abstract Job synchronize(ITask task, boolean forceUpdate);
 
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 

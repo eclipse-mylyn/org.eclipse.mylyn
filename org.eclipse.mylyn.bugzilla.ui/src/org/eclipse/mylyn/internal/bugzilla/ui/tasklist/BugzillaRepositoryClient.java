@@ -66,11 +66,6 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 
-//	public SyncrhonizeBugzillaReportJob getRefreshJob(BugzillaTask bugzillaTask) {
-//		SyncrhonizeBugzillaReportJob job = new SyncrhonizeBugzillaReportJob(this, bugzillaTask);
-//		return job;
-//	}
-	
 	public void synchronize() {
 		// TODO: refactor out not to use action
 		RefreshBugzillaReportsAction refresh = new RefreshBugzillaReportsAction();
@@ -80,7 +75,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 	}
 	
 	@Override
-	public Job synchronize(ITask task) {
+	public Job synchronize(ITask task, boolean forceUpdate) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask)task;
 		
@@ -88,11 +83,10 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 			boolean canNotSynch = bugzillaTask.isDirty() || bugzillaTask.getState() != BugTaskState.FREE;
 			boolean hasLocalChanges = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING
 				|| bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
-			if (!canNotSynch && !hasLocalChanges) {
-				SyncrhonizeBugzillaReportJob syncrhonizeBugzillaReportJob = new SyncrhonizeBugzillaReportJob((BugzillaTask)task);
-				syncrhonizeBugzillaReportJob.schedule();
-				return syncrhonizeBugzillaReportJob;
-//				bugzillaTask.downloadReport();
+			if (forceUpdate || (!canNotSynch && !hasLocalChanges)) {
+				SynchronizeBugzillaReportJob synchronizeBugzillaReportJob = new SynchronizeBugzillaReportJob((BugzillaTask)task);
+				synchronizeBugzillaReportJob.schedule();
+				return synchronizeBugzillaReportJob;
 			}
 			if (bugzillaTask.getSyncState() == BugReportSyncState.INCOMING) {
 				bugzillaTask.setSyncState(BugReportSyncState.SYNCHRONIZED);
@@ -120,7 +114,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 				DESCRIPTION_DEFAULT, true);
 
 		addTaskToArchive(newTask);
-		synchronize(newTask);
+		synchronize(newTask, true);
 //		newTask.scheduleDownloadReport();
 		return newTask;
 	}
@@ -196,6 +190,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 			state = BugReportSyncState.INCOMING;
 		} else if (status == BugzillaOfflineStaus.CONFLICT) {
 			state = BugReportSyncState.CONFLICT;
+		} else if (status == BugzillaOfflineStaus.DELETED) {
+			state = BugReportSyncState.SYNCHRONIZED;
 		}
 		if (state == null) {
 			// this means that we got a status that we didn't understand

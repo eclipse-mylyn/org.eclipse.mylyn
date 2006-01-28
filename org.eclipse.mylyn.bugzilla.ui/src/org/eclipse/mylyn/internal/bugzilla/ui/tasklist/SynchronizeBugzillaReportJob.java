@@ -39,9 +39,9 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-class SyncrhonizeBugzillaReportJob extends Job {
+class SynchronizeBugzillaReportJob extends Job {
 
-	private static final String LABEL_REFRESH_JOB = "Synchronizing tasks with repository";
+	private static final String LABEL_REFRESH_JOB = "Synchronizing with task repository";
 
 	public final ISchedulingRule schedulingRule = new ISchedulingRule() {
 		public boolean isConflicting(ISchedulingRule schedulingRule) {
@@ -55,13 +55,11 @@ class SyncrhonizeBugzillaReportJob extends Job {
 
 	private BugzillaTask bugzillaTask;
 
-	public SyncrhonizeBugzillaReportJob(BugzillaTask bugzillaTask) {
+	public SynchronizeBugzillaReportJob(BugzillaTask bugzillaTask) {
 		super(LABEL_REFRESH_JOB);
 		setRule(schedulingRule);
 		this.bugzillaTask = bugzillaTask;
 		bugzillaTask.setState(BugTaskState.WAITING);
-//		MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
-		// notifyTaskDataChange();
 	}
 
 	@Override
@@ -80,20 +78,6 @@ class SyncrhonizeBugzillaReportJob extends Job {
 
 			bugzillaTask.setState(BugTaskState.FREE);
 			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
-//			bugzillaTask.updateTaskDetails();
-			// MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(BugzillaTask.this);
-			// notifyTaskDataChange();
-
-			// saveBugReport(true);
-
-			// TODO: need to do this because all the hits need to be
-			// refreshed, fix
-			// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			// public void run() {
-			// if (TaskListView.getDefault() != null)
-			// TaskListView.getDefault().getViewer().refresh();
-			// }
-			// });
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);
 		}

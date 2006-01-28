@@ -136,7 +136,7 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 		TaskListUiUtil.openEditor(newTask);
 		
 		if (!newTask.isBugDownloaded()) {
-			client.synchronize(newTask);
+			client.synchronize(newTask, true);
 //			newTask.scheduleDownloadReport();
 		}
 

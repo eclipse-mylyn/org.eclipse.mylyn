@@ -56,15 +56,13 @@ public class OpenTaskListElementAction extends Action {
 			} else {
 				task = (ITask) element;
 			}
+			
+			boolean forceUpdate = element instanceof IQueryHit;
 
 			final AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 					task.getRepositoryKind());
 			if (!task.isLocal() && client != null) {
-				Job refreshJob = client.synchronize(task);
-				// SynchronizeTaskWithRepositoryJob
-				// synchronizeTaskWithRepositoryJob = new
-				// SynchronizeTaskWithRepositoryJob(
-				// client, task);
+				Job refreshJob = client.synchronize(task, forceUpdate);
 				if (refreshJob == null) {
 					TaskListUiUtil.openEditor(task);
 				} else {
@@ -95,12 +93,9 @@ public class OpenTaskListElementAction extends Action {
 						}
 					});
 				}
-				// synchronizeTaskWithRepositoryJob.schedule();
 			} else {
 				TaskListUiUtil.openEditor(task);
 			}
-			// } else if (element instanceof IQueryHit) {
-			// TaskListUiUtil.openEditor((IQueryHit) element);
 		} else if (element instanceof ITaskCategory) {
 			TaskListUiUtil.openEditor((ITaskCategory) element);
 		} else if (element instanceof IRepositoryQuery) {

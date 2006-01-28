@@ -122,6 +122,7 @@ public class OfflineReportsFile {
 					}
 
 					if (in.getCompareResult() == null) {
+						BugzillaPlugin.getDefault().fireOfflineStatusChanged(entry, status);
 						return true;
 					} else if (oldBug.hasChanges()) {
 						if (!MessageDialog
