@@ -97,8 +97,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			// If the bug report is sent successfully,
 			// then close the wizard and open the bug in an editor
 			if (postBug()) {
-				if (!fromDialog)
-					openBugEditor();
+//				if (!fromDialog)
+//					openBugEditor();
 				return true;
 			}
 			// If the report was not sent, keep the wizard open
