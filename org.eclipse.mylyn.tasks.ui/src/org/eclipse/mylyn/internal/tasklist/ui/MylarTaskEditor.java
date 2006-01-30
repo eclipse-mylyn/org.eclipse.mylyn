@@ -47,7 +47,7 @@ import org.eclipse.ui.part.MultiPageSelectionProvider;
  */
 public class MylarTaskEditor extends MultiPageEditorPart {
 
-	private static final String TASK_INFO_PAGE_LABEL = "Overview";
+	private static final String TASK_INFO_PAGE_LABEL = "Task Info";
 
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 

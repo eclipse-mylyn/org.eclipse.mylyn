@@ -229,7 +229,13 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void localInfoChanged(ITask task) {
-			refresh(task);
+			
+			if(task.getCategory() == null) {
+				refresh(null);
+			} else {
+				refresh(task.getCategory());
+			}
+			
 			if(!task.isLocal()) {				
 				for (IRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
 					refresh(query);
