@@ -94,21 +94,19 @@ public class TaskPlannerWizardPage extends WizardPage {
 	private void createReportPeriodGroup(Composite parent) {
 		Group reportPeriodGroup = new Group(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
+		layout.numColumns = 2;
 		reportPeriodGroup.setLayout(layout);
 		reportPeriodGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
 		reportPeriodGroup.setText("Report Period");
-		reportPeriodGroup.setFont(parent.getFont());	
-		
+		reportPeriodGroup.setFont(parent.getFont());
+
 		daysRadioButton = new Button(reportPeriodGroup, SWT.RADIO);
 		daysRadioButton.setSelection(true);
+		daysRadioButton.setText("Specify number of days to report on: ");
 
+		numDays = new Text(reportPeriodGroup, SWT.BORDER);
 		GridData gd = new GridData();
 		gd.widthHint = 50;
-
-		Label label = new Label(reportPeriodGroup, SWT.NULL);
-		label.setText("Specify number of days to report on: ");
-		numDays = new Text(reportPeriodGroup, SWT.BORDER);
 		numDays.setLayoutData(gd);
 		numDays.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -121,20 +119,19 @@ public class TaskPlannerWizardPage extends WizardPage {
 				}
 			}
 		});
+
 		numDays.setText("" + DEFAULT_DAYS);
 		numDaysToReport = DEFAULT_DAYS;
-		
-		dateRadioButton = new Button(reportPeriodGroup, SWT.RADIO);
-		
 
-		Label label2 = new Label(reportPeriodGroup, SWT.NULL);
-		label2.setText("Or provide report start date: ");
+		dateRadioButton = new Button(reportPeriodGroup, SWT.RADIO);
+		dateRadioButton.setText("Or provide report start date: ");
+
 		final DatePicker datePicker = new DatePicker(reportPeriodGroup, SWT.BORDER);
+		datePicker.setEnabled(false);
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {
 					reportStartDate = datePicker.getDate().getTime();
-					numDays.setEnabled(false);
 				}
 			}
 
@@ -142,18 +139,20 @@ public class TaskPlannerWizardPage extends WizardPage {
 				// ignore
 			}
 		});
-		
-		datePicker.setEnabled(false); // initially disabled
 
 		SelectionListener radioListener = new SelectionAdapter() {
-			
+
 			public void widgetSelected(SelectionEvent e) {
 				numDays.setEnabled(daysRadioButton.getSelection());
 				datePicker.setEnabled(dateRadioButton.getSelection());
+				if (daysRadioButton.getSelection())
+					numDays.setFocus();
+				if (dateRadioButton.getSelection())
+					datePicker.setFocus();
 			}
-			
+
 		};
-		
+
 		daysRadioButton.addSelectionListener(radioListener);
 		dateRadioButton.addSelectionListener(radioListener);
 
