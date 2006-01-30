@@ -293,7 +293,7 @@ public class MylarContextManager {
 		return node;
 	}
 
-	private boolean isInterestDelta(float previousInterest, boolean previouslyPredicted, boolean previouslyPropagated,
+	protected boolean isInterestDelta(float previousInterest, boolean previouslyPredicted, boolean previouslyPropagated,
 			IMylarElement node) {
 		float currentInterest = node.getInterest().getValue();
 		if (previousInterest <= 0 && currentInterest > 0) {
@@ -309,7 +309,7 @@ public class MylarContextManager {
 		}
 	}
 
-	private void checkForLandmarkDeltaAndNotify(float previousInterest, IMylarElement node) {
+	protected void checkForLandmarkDeltaAndNotify(float previousInterest, IMylarElement node) {
 		// TODO: don't call interestChanged if it's a landmark?
 		IMylarStructureBridge bridge = MylarPlugin.getDefault().getStructureBridge(node.getContentType());
 		if (bridge.canBeLandmark(node.getHandleIdentifier())) {
