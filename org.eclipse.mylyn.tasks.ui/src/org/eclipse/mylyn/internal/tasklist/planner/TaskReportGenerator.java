@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskList;
+import org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerWizardPage;
 
 /**
  * @author Ken Sueda
@@ -71,6 +72,11 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 		List<Object> rootElements;
 		if (filterCategories.size() == 0) {
 			rootElements = tasklist.getRoots();
+		} else if(filterCategories.contains(TaskPlannerWizardPage.ROOT_CATEGORY_HACK)) {
+			// TODO: Remove when root category issues fixed
+			rootElements = new ArrayList<Object>(tasklist.getRootTasks());
+			filterCategories.remove(TaskPlannerWizardPage.ROOT_CATEGORY_HACK);
+			rootElements.addAll(filterCategories);
 		} else {
 			rootElements = filterCategories;
 		}
@@ -104,7 +110,7 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 						}
 					}
 				}
-			}
+			} 
 		}
 		// Put the results all into one list (tasks)
 		for (ITaskCollector collector : collectors) {

@@ -37,8 +37,8 @@ public class RemoveTaskAction extends Action {
 		for (Object object : ((IStructuredSelection) viewer.getSelection()).toList()) {
 			if (object instanceof ITask) {
 				ITask task = (ITask) object;
-				if (task != null) {
-					((TaskPlannerContentProvider) (viewer.getContentProvider())).removeTask(task);
+				if (task != null) {									
+					((ITaskPlannerContentProvider) (viewer.getContentProvider())).removeTask(task);
 				}
 			}
 		}

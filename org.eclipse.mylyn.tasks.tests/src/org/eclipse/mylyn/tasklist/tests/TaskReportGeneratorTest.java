@@ -67,7 +67,28 @@ public class TaskReportGeneratorTest extends TestCase {
 		assertEquals(1, generator.getAllCollectedTasks().size());
 		assertEquals(task1, generator.getAllCollectedTasks().get(0));
 	}
+	
+	public void testCompletedTasksDateBoundsRetrieved() throws InvocationTargetException, InterruptedException {
+		Task task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		manager.moveToRoot(task1);
+		task1.setCompleted(true);
+		Thread.sleep(1000);
+		long now = new Date().getTime();
+		
+		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(now));
+		TaskReportGenerator generator = new TaskReportGenerator(manager.getTaskList());
+		generator.addCollector(collector);
+		generator.run(new NullProgressMonitor());
+		assertEquals(0, generator.getAllCollectedTasks().size());
 
+		generator = new TaskReportGenerator(manager.getTaskList());
+		collector = new CompletedTaskCollector(new Date(now - 8000));
+		generator.addCollector(collector);
+		generator.run(new NullProgressMonitor());
+		assertEquals(1, generator.getAllCollectedTasks().size());
+		assertEquals(task1, generator.getAllCollectedTasks().get(0));
+	}
+	
 	public void testCompletedBugzillaTasksRetrieved() throws InvocationTargetException, InterruptedException {
 		BugzillaTask task1 = new BugzillaTask(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(),
 				"bugzillatask 1", true);

@@ -51,6 +51,8 @@ public class TaskPlannerWizardPage extends WizardPage {
 	private static final String TITLE = "Mylar Task Planner";
 
 	private static final String DESCRIPTION = "Summarizes task activity and assists planning future tasks.";
+	
+	public static final String ROOT_CATEGORY_HACK = "Root Tasks";
 
 	private long DAY = 24 * 3600 * 1000;
 
@@ -102,7 +104,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 
 		daysRadioButton = new Button(reportPeriodGroup, SWT.RADIO);
 		daysRadioButton.setSelection(true);
-		daysRadioButton.setText("Specify number of days to report on: ");
+		daysRadioButton.setText("Number of days prior: ");
 
 		numDays = new Text(reportPeriodGroup, SWT.BORDER);
 		GridData gd = new GridData();
@@ -124,7 +126,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		numDaysToReport = DEFAULT_DAYS;
 
 		dateRadioButton = new Button(reportPeriodGroup, SWT.RADIO);
-		dateRadioButton.setText("Or provide report start date: ");
+		dateRadioButton.setText("Report start date: ");
 
 		final DatePicker datePicker = new DatePicker(reportPeriodGroup, SWT.BORDER);
 		datePicker.setEnabled(false);
@@ -155,7 +157,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 
 		daysRadioButton.addSelectionListener(radioListener);
 		dateRadioButton.addSelectionListener(radioListener);
-
+		
 	}
 	
 	
@@ -184,20 +186,27 @@ public class TaskPlannerWizardPage extends WizardPage {
 			filtersTable.setEnabled(false);
 			return;
 		}
+		
+		
+		// TODO: Hack to allow selection of a 'root tasks' category
+		TableItem rootItem = new TableItem(filtersTable, SWT.NONE);
+		rootItem.setText(ROOT_CATEGORY_HACK);		
+		rootItem.setData(ROOT_CATEGORY_HACK);
+		
+		
 		// populate categories
 		for (ITaskCategory category : manager.getTaskList().getTaskCategories()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(category.getIcon());
 			item.setText(category.getDescription());
-			item.setChecked(false);
 			item.setData(category);
 		}
+		
 		// populate qeries
 		for (IRepositoryQuery query : manager.getTaskList().getQueries()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(query.getIcon());
 			item.setText(query.getDescription());
-			item.setChecked(false);
 			item.setData(query);
 		}
 		for (int i = 0; i < columnNames.length; i++) {
@@ -317,5 +326,5 @@ public class TaskPlannerWizardPage extends WizardPage {
 			return new Date(today - offsetToday - lastDay);
 		}
 	}
-
+	
 }

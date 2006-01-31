@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.planner.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,9 +35,11 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TaskPlannerEditorInput implements IEditorInput {
 
-	private List<ITask> completedTasks = null;
+	private List<ITask> completedTasks = new ArrayList<ITask>();
 
-	private List<ITask> inProgressTasks = null;
+	private List<ITask> inProgressTasks = new ArrayList<ITask>();
+	
+	private List<ITask> plannedTasks = new ArrayList<ITask>();
 
 	private TaskReportGenerator taskReportGenerator = null;
 
@@ -67,6 +70,7 @@ public class TaskPlannerEditorInput implements IEditorInput {
 
 		completedTasks = completedTaskCollector.getTasks();
 		inProgressTasks = inProgressTaskCollector.getTasks();
+		plannedTasks = new ArrayList<ITask>();
 	}
 
 	public boolean exists() {
@@ -99,6 +103,10 @@ public class TaskPlannerEditorInput implements IEditorInput {
 
 	public List<ITask> getInProgressTasks() {
 		return inProgressTasks;
+	}
+	
+	public List<ITask> getPlannedTasks() {
+		return plannedTasks;
 	}
 
 	public long getTotalTimeSpentOnCompletedTasks() {
@@ -140,6 +148,31 @@ public class TaskPlannerEditorInput implements IEditorInput {
 			duration += task.getEstimateTimeHours();
 		}
 		return duration;
+	}
+	
+	public void removeCompletedTask( ITask task) {
+		completedTasks.remove(task);				
+	}
+	
+	public void removeInProgressTask(ITask task) {
+		inProgressTasks.remove(task);
+	}
+	
+	public void addPlannedTask(ITask task) {
+		if(!plannedTasks.contains(task)) {
+			plannedTasks.add(task);
+		}
+	}
+	public void removePlannedTask(ITask task) {
+		plannedTasks.remove(task);
+	}
+	
+	public int getPlannedEstimate() {
+		int estimated = 0;
+		for (ITask task : plannedTasks) {
+			estimated += task.getEstimateTimeHours();
+		}
+		return estimated;
 	}
 
 }

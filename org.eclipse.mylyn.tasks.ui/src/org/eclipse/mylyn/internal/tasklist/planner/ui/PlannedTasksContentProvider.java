@@ -11,29 +11,24 @@
 
 package org.eclipse.mylar.internal.tasklist.planner.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.internal.tasklist.ITask;
 
 /**
+ * @author Rob Elves
  * @author Ken Sueda
  */
-public class TaskPlannerContentProvider implements IStructuredContentProvider {
+public class PlannedTasksContentProvider implements IStructuredContentProvider, ITaskPlannerContentProvider {
 
-	private List<ITask> tasks = new ArrayList<ITask>();
+	TaskPlannerEditorInput editorInput;
 
-	public TaskPlannerContentProvider() {
-	}
-
-	public TaskPlannerContentProvider(List<ITask> allTasks) {
-		tasks = allTasks;
+	public PlannedTasksContentProvider(TaskPlannerEditorInput editorInput) {
+		this.editorInput = editorInput;
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return tasks.toArray();
+		return editorInput.getPlannedTasks().toArray();
 	}
 
 	public void dispose() {
@@ -42,17 +37,12 @@ public class TaskPlannerContentProvider implements IStructuredContentProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	public void addTask(ITask t) {
-		if (!tasks.contains(t)) {
-			tasks.add(t);
-		}
+	public void addTask(ITask task) {
+		editorInput.addPlannedTask(task);
 	}
 
-	public void removeTask(ITask t) {
-		tasks.remove(t);
+	public void removeTask(ITask task) {
+		editorInput.removePlannedTask(task);
 	}
 
-	public List<ITask> getTasks() {
-		return tasks;
-	}
 }
