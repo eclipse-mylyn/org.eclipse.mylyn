@@ -20,4 +20,155 @@
 	<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
 </ul>
 
+
+<h3><a name="install-failure">Why does Mylar fail to install or update?</a></h3>
+<p>The most likely reason is that you are using an <b>incompatible VM </b>(e.g. JDK 
+1.4), in which case you'll errors like the following in your log file.&nbsp; To 
+check JDK version that Eclipse was launched with to to Help -&gt; About Eclipse SDK 
+-&gt; Configuration Details and verify that the java.vm.version is 1.5.&nbsp; Mac 
+users should refer to the last
+<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=116347#c4">bug 1163477</a> 
+for instructions on how to change the 1.4 default.</p>
+<p>
+<tt>   Root exception:
+   java.lang.UnsupportedClassVersionError: org/eclipse/mylar/tasklist/MylarTasklistPlugin 
+   (Unsupported major.minor version 49.0)
+</tt>
+</p>
+<p>
+This can also be the result of using an <b>incompatible version of Eclipse</b>.&nbsp; 
+Separate versions and update sites exist
+<a href="http://eclipse.org/mylar/dl.php">for Eclipse 3.1 and for the latest 3.2 
+milestone</a>), in which case you'll see errors like the following in your 
+&lt;workspace&gt;/.metadata/.log file or in a Mylar view:</p>
+<p>
+<tt>java.lang.NoSuchMethodError:
+   org.eclipse.ui.internal.dialogs.FilteredTree.getFilterControl()Lorg/eclipse/swt/widgets/Text;
+
+   org.osgi.framework.BundleException: The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.mylar.java is invalid
+</tt>
+</p>
+<p>In this case the easiest thing to do is reinstall Mylar.&nbsp; <b>Your tasks won't be 
+lost</b>, by default they are stored in the &lt;workspace&gt;/.mylar/tasklist.xml file 
+which will be read next time Mylar starts.&nbsp;First, uninstall the old version of Mylar using Help -&gt; 
+Software Updates -&gt; Manage Configuration.&nbsp; You need to first Disable on all 
+Mylar features by right-clicking them, allow Eclipse to restart after the last 
+is disabled, and after restart.&nbsp; Then ensure that the 3rd toolbar button is 
+pressed (figure below) so that you see the disabled features to uninstall, and 
+Uninstall them using the popup menu.&nbsp; If you don't uninstall the the Update 
+Manager will think that you have the latest and tell you that there are no 
+updates. Note that manually removing the plug-ins 
+and features can lead to Eclipse configuration errors. After uninstalling update Eclipse 
+by adding the correct update site specified at: 
+	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a>, 
+and after that automatically or manually updating will install the correct 
+version.</p>
+<p>
+<img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
+	<p>
+&nbsp;</p>
+
+
+<h3>&nbsp;</h3>
+<h3><a name="tasklist-blank">Why did my tasks disappear?</a>&nbsp;&nbsp;&nbsp; </h3>
+<p>Either because Mylar failed to <a href="#install-failure">install or update</a>, 
+or because there was a problem reading the task list.&nbsp; By default Mylar 
+keeps your task list in &lt;workspace&gt;/.mylar/tasklist.xml.&nbsp; If you move 
+workspaces, and have not changed the Mylar data directory via the Task List 
+preference page, the new location will be used when Eclipse restarts (hit 
+Restore Defaults on that page to copy tasks back to the default location).&nbsp; 
+If your tasks ever disappear please
+<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">report this 
+as a critical bug</a>, and check the .mylar folder for a tasklist-backup.xml 
+file, which will contain the previous state task list.&nbsp; Make sure to copy 
+it somewhere it before adding any tasks or queries or restarting Eclipse because 
+it will get overwritten on any modification.</p>
+	<p>If your workspace folder is not backed up it is a good idea to either 
+	backup the tasklist.xml file manually or periodically use File -&gt; 
+	Import/Export -&gt; &nbsp;Other -&gt; Mylar Task Data.&nbsp; Note that when restoring 
+	an previous tasklist.xml file you should first close Eclipse.</p>
+	<p>
+	<img border="0" src="images/faq/tasklist-backup.gif" width="525" height="310"></p>
+
+<h3>&nbsp;</h3>
+<h3><a name="performance-summary">What are the effects of Mylar on Eclipse 
+performance?</a></h3>
+<p>The goal is for Mylar to have no noticeable effect on Eclipse's speed or 
+memory usage, you do not need to increase the amount of memory Eclipse runs with 
+to use Mylar, and any performance issue should be
+<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">reported as 
+a bug</a>.&nbsp; The current performance profile is:</p>
+<ol>
+	<li>Mylar only runs if a task is active, and has no impact on Eclipse if no 
+	task is active.</li>
+	<li>Task context models have negligible memory overhead.&nbsp; </li>
+	<li>When a task is active, additional view refresh is required to update the 
+	views based on interest model changes.&nbsp; This should not be noticeable 
+	on Windows where refresh is very quick, but could be more noticeable on 
+	other platforms.</li>
+	<li>The time to activate a task context is dominated by the time it takes 
+	Eclipse to open the editors in the context.&nbsp; You can set the preference 
+	for how many editors to open in the Mylar preference page (e.g. setting to 1 
+	will dramatically reduce activation time, but also remove the benefit of 
+	having open editors correspond to the task context).&nbsp; You can also turn off 
+	editor management entirely in the Mylar Tasks view pull-down.</li>
+	<li>Eclipse startup is slowed down by (4) if a task is active when Eclipse 
+	is shut down.</li>
+	<li>The low priority background searches that the Active Search view runs 
+	can be noticeable on slower machines.</li>
+</ol>
+<h3>&nbsp;</h3>
+<h3><a name="configuration-eclipse">What is the recommended Eclipse 
+configuration for running Mylar?</a></h3>
+<p>The following preferences settings are recommended:</p>
+	<ul>
+		<li>Use flat layout in the Package Explorer (local pull down -&gt; Layout 
+		-&gt; Flat). </li>
+		<li>Link the Package Explorer with the editor (toolbar -&gt; Link with 
+		Editor).&nbsp; This mode works well when Mylar is applied to the Package 
+		Explorer&nbsp; </li>
+		<li>Turn comment folding on to reduce clutter when using auto folding 
+		(Preferences -&gt; Java -&gt; Editor -&gt; Folding)</li>
+		<li>Use graphical CVS decorators only (Preferences -&gt; Team -&gt; CVS -&gt; Label Decorations 
+		-&gt; Text Decorations -&gt; clear all but Project; Icon Decorations -&gt; enable 
+		all).&nbsp; This helps reduce visual clutter.</li>
+		<li>Increase the number of editors to leave open (Preferences -&gt; General 
+		-&gt; Editors -&gt; Number of opened editors before closing).&nbsp; Since 
+		Mylar will manage the open editors with task activation, this number can 
+		be set higher or automatic closing disabled entirely.</li>
+	</ul>
+<h3>&nbsp;</h3>
+<h3><a name="upgrading-repositories">How do I upgrade to multiple 
+task repository support?</a></h3>
+<p>Bugzilla Client users follow these steps after updating in order to 
+migrate to multiple repository support from version 0.4.6 or older</p>
+<ul>
+	<li>After 
+updating and restarting, deactivate your active task, open the Mylar -&gt; Task 
+Repositories view and re-add your previous repository using the wizard.</li>
+<li>Ensure that you enter the correct Server URL by pressing the &#8220;validate&#8221; button 
+on the corresponding dialog, since this URL will be used for the migration.</li>
+	<li>Exit the workbench and restart Eclipse to complete the migration.</li>
+</ul>
+<p>&nbsp;</p>
+	<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
+<p>If you don't like Mylar's constant showing of Java members in the 
+			Package Explorer, select the drop-down menu, then &quot;Filters...&quot; and 
+			enable the &quot;Mylar Java Declarations Filter&quot;.&nbsp; It will then 
+			stick in the menu in case you want to toggle between modes.&nbsp; 
+Note that this will hide interest information about members that aren't in your 
+current file (e.g. showing you which methods are landmarks) so this mode is not 
+recommended, but can be useful for 1024x768 screen resolutions.</p>
+			<p>
+			<img border="0" src="images/0.3/filtering-declarations.gif" width="441" height="211"></p>
+<p>
+			&nbsp;</p>
+			<h3><a name="active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></h3>
+			<p>
+			As you work and elements become landmarks (bold decoration), and 
+			these elements populate the Active Search and Active Hierarchy 
+			views.&nbsp; To force an element to populate the views manually make 
+			it a landmark by right-clicking or hitting Ctrl+Alt+Shift+Up Arrow.&nbsp; 
+</p>
+<p>&nbsp;</p>
 </body></html>
