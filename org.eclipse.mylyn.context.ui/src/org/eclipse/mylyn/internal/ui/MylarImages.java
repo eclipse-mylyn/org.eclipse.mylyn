@@ -62,8 +62,6 @@ public class MylarImages {
 
 	public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
 
-	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
-
 	public static final ImageDescriptor STOP_SEARCH = create(T_ELCL, "stop_all.gif");
 
 	public static final ImageDescriptor CONTENT_ASSIST_SEPARATOR = create(T_TOOL, "content-assist-separator.gif");
