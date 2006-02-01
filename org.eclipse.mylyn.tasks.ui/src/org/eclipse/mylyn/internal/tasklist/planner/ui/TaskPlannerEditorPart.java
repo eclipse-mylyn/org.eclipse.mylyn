@@ -233,13 +233,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 		activityViewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(activityContextMenuMgr, activityViewer);
 
-		Composite planContainer = toolkit.createComposite(sashForm);
-		GridLayout planLayout = new GridLayout();
-		planLayout.marginTop = 10;
-		planContainer.setLayout(planLayout);
 
 		planContentProvider = new PlannedTasksContentProvider(editorInput);
-		final TableViewer planViewer = createTableSection(planContainer, toolkit, LABEL_PLANNED_ACTIVITY,
+		final TableViewer planViewer = createTableSection(sashForm, toolkit, LABEL_PLANNED_ACTIVITY,
 				planColumnNames, planColumnWidths, planSortConstants);
 		planViewer.setContentProvider(planContentProvider);
 		planViewer.setLabelProvider(new TaskPlanLabelProvider());
@@ -417,11 +413,12 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 	private TableViewer createTableSection(Composite parent, FormToolkit toolkit, String title, String[] columnNames,
 			int[] columnWidths, int[] sortConstants) {
-		Section tableSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		tableSection.setText(title);
-		tableSection.setExpanded(true);
+		Section tableSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR); // | ExpandableComposite.TWISTIE
+		tableSection.setText(title);		
+//	    tableSection.setExpanded(true);
+		tableSection.marginHeight = 8;
 		tableSection.setLayout(new GridLayout());
-		tableSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+		tableSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));	
 
 		Composite detailContainer = toolkit.createComposite(tableSection);
 		tableSection.setClient(detailContainer);
@@ -437,8 +434,10 @@ public class TaskPlannerEditorPart extends EditorPart {
 		Table table = toolkit.createTable(parent, style);
 
 		table.setLayout(new GridLayout());
-		table.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+		GridData tableGridData = new GridData(GridData.FILL_BOTH);
+		tableGridData.heightHint = 100;
+		table.setLayoutData(tableGridData);
+		
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setEnabled(true);
