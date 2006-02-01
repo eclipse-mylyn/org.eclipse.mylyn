@@ -26,6 +26,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -43,6 +44,8 @@ import org.eclipse.ui.IWorkbench;
  * The first page of the new bug wizard where the user chooses the bug's product
  */
 public class BugzillaProductPage extends AbstractWizardListPage {
+
+	private static final String TITLE = "New Bugzilla Task";
 
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
 			+ "Press the Update button if you do not see the desired product.";
@@ -77,9 +80,11 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 	 *            The repository the data is coming from
 	 */
 	public BugzillaProductPage(IWorkbench workbench, NewBugzillaReportWizard bugWiz, TaskRepository repository) {
-		super("Page1", "New Bug Report", DESCRIPTION, workbench);
+		super("Page1", TITLE, DESCRIPTION, workbench);
 		this.bugWizard = bugWiz;
 		this.repository = repository;
+		setImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",
+			"icons/wizban/bug-wizard.gif"));
 	}
 
 	protected ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(BugzillaPlugin.getDefault()

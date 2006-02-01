@@ -17,6 +17,7 @@ import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.bugs.search.BugzillaReferencesProvider;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.internal.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.ui.MylarImages;
@@ -29,7 +30,7 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImage(IMylarElement node) {
-		return MylarImages.getImage(MylarImages.BUG);
+		return MylarImages.getImage(BugzillaImages.REPORT_REPOSITORY);
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImageForObject(Object object) {
-		return MylarImages.getImage(MylarImages.BUG);
+		return MylarImages.getImage(BugzillaImages.REPORT_REPOSITORY);
 	}
 
 	@Override

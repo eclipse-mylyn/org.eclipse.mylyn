@@ -23,15 +23,16 @@ import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
- * @author Brock Janiczak
+ * @author	Mik Kersten
+ * @author 	Brock Janiczak
  */
-public class AddBugzillaQueryWizard extends Wizard {
+public class NewBugzillaQueryWizard extends Wizard {
 
 	private final TaskRepository repository;
 
 	private BugzillaQueryWizardPage queryPage;
 
-	public AddBugzillaQueryWizard(TaskRepository repository) {
+	public NewBugzillaQueryWizard(TaskRepository repository) {
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
 	}

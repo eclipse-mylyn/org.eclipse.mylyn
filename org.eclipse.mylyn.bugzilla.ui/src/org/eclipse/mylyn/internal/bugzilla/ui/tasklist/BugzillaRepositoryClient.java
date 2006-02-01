@@ -115,7 +115,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 	}
 
 	public IWizard getQueryWizard(TaskRepository repository) {
-		return new AddBugzillaQueryWizard(repository);
+		return new NewBugzillaQueryWizard(repository);
 	}
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
