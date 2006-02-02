@@ -61,10 +61,10 @@ public class TypeHistoryManager implements IMylarContextListener {
 					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
 							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
 
-					if (add && !TypeInfoHistory.getInstance().contains(info)) {
-						TypeInfoHistory.getInstance().accessed(info);
+					if (add && !TypeInfoHistory.getDefault().contains(info)) {
+						TypeInfoHistory.getDefault().accessed(info);
 					} else {
-						TypeInfoHistory.getInstance().remove(info);
+						TypeInfoHistory.getDefault().remove(info);
 					}
 				}
 			} catch (JavaModelException e) {
@@ -94,9 +94,9 @@ public class TypeHistoryManager implements IMylarContextListener {
 	 * Public for testing
 	 */
 	public void clearTypeHistory() {
-		TypeInfo[] typeInfos = TypeInfoHistory.getInstance().getTypeInfos();
+		TypeInfo[] typeInfos = TypeInfoHistory.getDefault().getTypeInfos();
 		for (int i = 0; i < typeInfos.length; i++) {
-			TypeInfoHistory.getInstance().remove(typeInfos[i]);
+			TypeInfoHistory.getDefault().remove(typeInfos[i]);
 		}
 		;
 	}

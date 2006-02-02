@@ -15,9 +15,7 @@ import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.EnvironmentTab;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
-import org.eclipse.debug.ui.sourcelookup.SourceLookupTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaArgumentsTab;
-import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.ui.launcher.AbstractPDELaunchConfigurationTabGroup;
 import org.eclipse.pde.ui.launcher.ConfigurationTab;
 import org.eclipse.pde.ui.launcher.PluginJUnitMainTab;
@@ -33,20 +31,31 @@ public class MylarPdeJUnitTabGroup extends AbstractPDELaunchConfigurationTabGrou
 
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = null;
-		if (PDECore.getDefault().getModelManager().isOSGiRuntime()) {
-			tabs = new ILaunchConfigurationTab[] {
-					// new JUnitMainTab(),
-					new MylarJUnitMainTab(true), new PluginJUnitMainTab(), new JavaArgumentsTab(),
-					new PluginsTab(false), new ConfigurationTab(true), new TracingTab(), new EnvironmentTab(),
-					new SourceLookupTab(), new CommonTab() };
-		} else {
-			tabs = new ILaunchConfigurationTab[] {
-					// new JUnitMainTab(),
-					new MylarJUnitMainTab(true), new PluginJUnitMainTab(), new JavaArgumentsTab(),
-					new PluginsTab(false), new TracingTab(), new EnvironmentTab(), new SourceLookupTab(),
-					new CommonTab() };
-		}
+		tabs = new ILaunchConfigurationTab[]{
+//				new JUnitMainTab(),
+				new PluginJUnitMainTab(), 
+				new JavaArgumentsTab(),
+				new PluginsTab(false),	
+				new ConfigurationTab(true), 
+				new TracingTab(),
+				new EnvironmentTab(), 
+				new CommonTab()};
 		setTabs(tabs);
+//		ILaunchConfigurationTab[] tabs = null;
+//		if (PDECore.getDefault().getModelManager().isOSGiRuntime()) {
+//			tabs = new ILaunchConfigurationTab[] {
+//					// new JUnitMainTab(),
+//					new MylarJUnitMainTab(true), new PluginJUnitMainTab(), new JavaArgumentsTab(),
+//					new PluginsTab(false), new ConfigurationTab(true), new TracingTab(), new EnvironmentTab(),
+//					new SourceLookupTab(), new CommonTab() };
+//		} else {
+//			tabs = new ILaunchConfigurationTab[] {
+//					// new JUnitMainTab(),
+//					new MylarJUnitMainTab(true), new PluginJUnitMainTab(), new JavaArgumentsTab(),
+//					new PluginsTab(false), new TracingTab(), new EnvironmentTab(), new SourceLookupTab(),
+//					new CommonTab() };
+//		}
+//		setTabs(tabs);
 	}
 
 }

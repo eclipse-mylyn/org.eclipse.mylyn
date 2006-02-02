@@ -13,7 +13,6 @@
  */
 package org.eclipse.mylar.internal.java.ui.editor;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
@@ -74,11 +74,12 @@ public class ActiveFoldingListener implements IMylarContextListener {
 
 		enabled = MylarPlugin.getDefault().getPreferenceStore().getBoolean(MylarJavaPrefConstants.AUTO_FOLDING_ENABLED);
 		try {
-			Field field = JavaEditor.class.getDeclaredField("fProjectionModelUpdater");
-			field.setAccessible(true);
-			Object fieldValue = field.get(editor);
-			if (fieldValue instanceof IJavaFoldingStructureProviderExtension) {
-				updater = (IJavaFoldingStructureProviderExtension) fieldValue;
+//			Field field = JavaEditor.class.getDeclaredField("fProjectionModelUpdater");
+//			field.setAccessible(true);
+//			Object fieldValue = field.get(editor);
+			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
+			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
+				updater = (IJavaFoldingStructureProviderExtension)adapter;
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "could not install auto folding, reflection denied", false);
