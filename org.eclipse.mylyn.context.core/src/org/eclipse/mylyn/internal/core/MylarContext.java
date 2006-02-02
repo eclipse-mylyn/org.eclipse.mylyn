@@ -47,7 +47,7 @@ public class MylarContext implements IMylarContext {
 
 	private int numUserEvents = 0;
 
-	protected ScalingFactors scaling;
+	protected ScalingFactors scalingFactors;
 
 	void parseInteractionHistory() {
 		nodes = new HashMap<String, MylarContextElement>();
@@ -60,7 +60,7 @@ public class MylarContext implements IMylarContext {
 
 	public MylarContext(String id, ScalingFactors scaling) {
 		this.handleIdentifier = id;
-		this.scaling = scaling;
+		this.scalingFactors = scaling;
 		parseInteractionHistory();
 	}
 
@@ -222,7 +222,7 @@ public class MylarContext implements IMylarContext {
 				&& (activeNode == null ? context.activeNode == null : activeNode.equals(context.activeNode))
 				&& (tempRaised == null ? context.tempRaised == null : tempRaised.equals(context.tempRaised))
 				&& (landmarks == null ? context.landmarks == null : landmarks.equals(context.landmarks))
-				&& (scaling == null ? context.scaling == null : scaling.equals(context.scaling))
+				&& (scalingFactors == null ? context.scalingFactors == null : scalingFactors.equals(context.scalingFactors))
 				&& (numUserEvents == context.numUserEvents);
 	}
 
@@ -241,9 +241,13 @@ public class MylarContext implements IMylarContext {
 			hashCode += tempRaised.hashCode();
 		if (landmarks != null)
 			hashCode += landmarks.hashCode();
-		if (scaling != null)
-			hashCode += scaling.hashCode();
+		if (scalingFactors != null)
+			hashCode += scalingFactors.hashCode();
 		hashCode += 37 * numUserEvents;
 		return hashCode;
+	}
+
+	public ScalingFactors getScalingFactors() {
+		return scalingFactors;
 	}
 }

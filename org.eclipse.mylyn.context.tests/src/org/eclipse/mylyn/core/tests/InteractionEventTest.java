@@ -11,23 +11,14 @@
 
 package org.eclipse.mylar.core.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.eclipse.mylar.core.InteractionEvent;
 
-/**
- * @author Mik Kersten
- */
-public class AllCoreTests {
+public class InteractionEventTest extends AbstractContextTest {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.core.tests");
-		// $JUnit-BEGIN$
-		suite.addTestSuite(ContextExternalizerTest.class);
-		suite.addTestSuite(DegreeOfInterestTest.class);
-		suite.addTestSuite(ContextTest.class);
-		suite.addTestSuite(InteractionEventTest.class);
-		// $JUnit-END$
-		return suite;
+	public void testCopy() {
+		InteractionEvent original = mockSelection();
+		InteractionEvent copy = InteractionEvent.makeCopy(original, original.getInterestContribution());
+		assertEquals(original, copy);
 	}
-
+	
 }

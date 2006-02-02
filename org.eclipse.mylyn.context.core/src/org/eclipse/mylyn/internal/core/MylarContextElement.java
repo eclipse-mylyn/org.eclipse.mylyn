@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylar.core.IDegreeOfInterest;
-import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarRelation;
 
 /**
  * Can only have one edge from a node to a particular target.
@@ -39,7 +39,7 @@ public class MylarContextElement implements IMylarElement {
 	public MylarContextElement(String kind, String elementHandle, MylarContext context) {
 		if (elementHandle == null)
 			throw new RuntimeException("malformed context: null handle");
-		interest = new DegreeOfInterest(context, MylarContextManager.getScalingFactors());
+		interest = new DegreeOfInterest(context, context.getScalingFactors()); 
 		this.handle = elementHandle;
 		this.kind = kind;
 		this.context = context;

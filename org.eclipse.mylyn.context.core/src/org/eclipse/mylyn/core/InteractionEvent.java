@@ -96,6 +96,8 @@ public class InteractionEvent implements Serializable {
 
 	private float interestContribution;
 
+	public static final String ID_UNKNOWN = "?";
+
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId) {
 		this(kind, structureKind, handle, originId, 1f); // default
 		// contribution
@@ -119,6 +121,17 @@ public class InteractionEvent implements Serializable {
 		return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1);
 	}
 
+	public String getStructureKind() {
+		return structureKind;
+	}
+
+	/**
+	 * Factory method.
+	 */
+	public static InteractionEvent makeCopy(InteractionEvent originalEvent, float newInterestContribution) {
+		return new InteractionEvent(originalEvent.getKind(), originalEvent.getStructureKind(), originalEvent.getStructureHandle(), originalEvent.getOriginId(), originalEvent.getNavigation(), newInterestContribution); // default
+	}
+		
 	/**
 	 * Factory method.
 	 */
@@ -194,9 +207,8 @@ public class InteractionEvent implements Serializable {
 			hashCode += navigation.hashCode();
 		if (delta != null)
 			hashCode += delta.hashCode();
-		hashCode += new Float(interestContribution).hashCode(); // TODO: could
-																// this lose
-																// precision?
+		// TODO: could this lose precision?
+		hashCode += new Float(interestContribution).hashCode(); 
 		return hashCode;
 	}
 
@@ -206,6 +218,10 @@ public class InteractionEvent implements Serializable {
 				+ ", delta: " + delta + ")";
 	}
 
+	public boolean isValidStructureHandle() {
+		return structureHandle != null && !structureHandle.equals("null") && !structureHandle.trim().equals(ID_UNKNOWN);
+	}
+	
 	public String getStructureHandle() {
 		return structureHandle;
 	}
