@@ -72,7 +72,7 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 					element = javaProposal.getJavaElement();
 					isImplicitlyInteresting = isImplicitlyInteresting(javaProposal);
 				}
-				if (element != null) {
+				if (element != null) { 
 					IMylarElement node = MylarPlugin.getContextManager().getElement(element.getHandleIdentifier());
 					if (node != null) {
 						float interest = node.getInterest().getValue();
@@ -87,8 +87,8 @@ public class MylarJavaCompletionProcessor extends JavaCompletionProcessor {
 					}
 				} else if (isImplicitlyInteresting) {
 					unresolvedProposals++;
-					// HACK: should be parametrized
-					interesting.put((float) unresolvedProposals - 100000, proposal);
+					// HACK: parametrize
+					interesting.put((float) unresolvedProposals - 1000000, proposal);
 				} else {
 					rest.add(proposal);
 				}

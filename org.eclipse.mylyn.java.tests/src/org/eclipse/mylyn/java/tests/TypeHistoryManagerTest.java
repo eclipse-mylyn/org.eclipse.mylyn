@@ -41,7 +41,7 @@ public class TypeHistoryManagerTest extends AbstractJavaContextTest {
 	public void testPredictedElementPopulation() throws JavaModelException {
 		manager.clearTypeHistory();
 		assertEquals(0, TypeInfoHistory.getDefault().getTypeInfos().length);
-
+ 
 		StructuredSelection sm1 = new StructuredSelection(type1);
 		monitor.selectionChanged(PackageExplorerPart.openInActivePerspective(), sm1);
 		assertEquals(1, TypeInfoHistory.getDefault().getTypeInfos().length);

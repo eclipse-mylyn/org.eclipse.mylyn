@@ -13,10 +13,10 @@
  */
 package org.eclipse.mylar.internal.java.ui.editor;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.text.IJavaPartitions;
+import org.eclipse.jdt.ui.text.JavaTextTools;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -27,17 +27,13 @@ public class MylarCompilationUnitEditor extends CompilationUnitEditor {
 	@Override
 	protected void initializeEditor() {
 		super.initializeEditor();
-		setSourceViewerConfiguration(new MylarJavaSourceViewerConfiguration(JavaPlugin.getDefault().getJavaTextTools()
-				.getColorManager(), getPreferenceStore(), this, IJavaPartitions.JAVA_PARTITIONING));
-	}
-
-	public IJavaElement getInputJavaElement() {
-		return super.getInputJavaElement();
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		initializeEditor();
+		JavaTextTools textTools = JavaPlugin.getDefault().getJavaTextTools();
+		setSourceViewerConfiguration(new MylarJavaSourceViewerConfiguration(textTools.getColorManager(),
+				getPreferenceStore(), this, IJavaPartitions.JAVA_PARTITIONING));
 		super.createPartControl(parent);
 	}
 }
