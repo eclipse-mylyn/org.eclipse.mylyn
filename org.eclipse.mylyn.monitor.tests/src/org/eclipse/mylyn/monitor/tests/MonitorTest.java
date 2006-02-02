@@ -119,6 +119,7 @@ public class MonitorTest extends TestCase {
 		assertEquals(0, browserMonitor.getAcceptedUrls().size());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testLogging() throws InterruptedException {
 		MylarMonitorPlugin.getDefault().startMonitoring();
 		logger.stopObserving();
