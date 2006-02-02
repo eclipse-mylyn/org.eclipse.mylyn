@@ -13,6 +13,7 @@
 	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
 	<li><a href="#install-failure">Why does Mylar fail to install?</a></li>
 	<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
+	<li><a href="#setup-linux-browser">Configuring Eclipse's Internal Browser on Linux</a></li>
 </ul>
 
 
@@ -141,6 +142,38 @@ and after that automatically or manually updating will install the correct
 version.</p>
 <p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
+	<hr>
+	<p>
+&nbsp;</p>
+
+
+<h3><a name="setup-linux-browser">Configuring Eclipse's Internal Browser on Linux</a></h3>
+	<p>Mylar Task Management features make user of the Internal Browser.&nbsp; 
+	These instructions have been tested on Fedora Core 4</p>
+	<ol>
+		<li>Run Mozilla (not firefox) to confirm that it works.</li>
+		<li>Confirm the location of your Mozilla install ( /usr/lib/mozilla-1.7.12 
+		on our test box)</li>
+		<li>Set necessary environment variables in &lt;home_directory&gt;/.bashrc, 
+		adding the following 3 lines<br>
+&nbsp;&nbsp;&nbsp; MOZILLA_FIVE_HOME=/usr/lib/mozilla-1.7.12<br>
+&nbsp;&nbsp;&nbsp; LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MOZILLA_FIVE_HOME<br>
+&nbsp;&nbsp;&nbsp; export MOZILLA_FIVE_HOME LD_LIBRARY_PATH </li>
+		<li>Log out and log in again (or type &quot;source .bashrc&quot; at the prompt)</li>
+		<li>Start Eclipse and test the internal web browser</li>
+	</ol>
+	<p>If you are get exceptions indicating missing libraries, check that the 
+	paths are accurate and that you in fact have the libraries requested. For 
+	example, on our test box a library was still missing after these steps. The 
+	libstdc++.so.5 was being reported as missing. To solve this problem, find an 
+	rpm online that will install the missing legacy library. In our case we 
+	found necessary rpm (compat-libstdc++-33-3.2.3-47.fc4.i386.rpm) on
+	<a title="http://www.rpmfind.net/" href="http://www.rpmfind.net">rpmfind.net</a> 
+	using their search facility.&nbsp; References:
+	<a title="http://www.eclipse.org/swt/faq.php" href="http://www.eclipse.org/swt/faq.php">
+	SWT FAQ</a></p>
+	<p>
+&nbsp;</p>
 	<hr>
 	<p>
 &nbsp;</p>
