@@ -21,5 +21,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-monitor-tests.jar
-Export-Package: org.eclipse.mylar.monitor.tests
+Export-Package: org.eclipse.mylar.monitor.reports.tests,
+ org.eclipse.mylar.monitor.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
