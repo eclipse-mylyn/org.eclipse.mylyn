@@ -62,7 +62,7 @@ public class ContextParsingTest extends TestCase {
 		}
 	}
 	
-	public void testInteractionHistoryWithoutDecay() {
+	public void testHistoryParsingWithDecayReset() {
 		ScalingFactors scalingFactors = new ScalingFactors();
 //		scalingFactors.setDecay(new ScalingFactor("decay", .05f)); 
 		MylarContext context = new MylarContext("test", scalingFactors);
