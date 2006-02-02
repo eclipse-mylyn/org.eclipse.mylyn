@@ -8,33 +8,92 @@
     <div align=center><h1>Mylar Frequently Asked Questions</h1></div>
 <ul>
 	<li>Setup<ul>
-	<li><a href="#install-failure">Why does Mylar fail to install?</a></li>
-	<li><a href="#tasklist-blank">Why did my tasks disappear?</a></li>
-	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
 	<li><a href="#configuration-eclipse">What is the recommended Eclipse configuration 
 	for running Mylar?</a></li>
+	<li><a href="#performance-summary">What are the effects of Mylar on Eclipse performance?</a></li>
+	<li><a href="#install-failure">Why does Mylar fail to install?</a></li>
+	<li><a href="#tasklist-blank">Why did my tasks disappear?</a> </li>
 </ul>
 
 
 	</li>
 	<li>Task Management and Bugzilla<ul>
-	<li><a href="#upgrading-repositories">How do I upgrade to multiple task repository support?</a>
-	</li>
-</ul>
-
-
-	</li>
+		<li><a href="#upgrading-repositories">How do I upgrade to multiple task repository support?</a>
+		</li>
+		<li><a href="#versions-repositories">Why is only one task appearing in Bugzilla queries?</a>
+		</li>
+	</ul></li>
 	<li>Java Development<ul>
-	<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
-	<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
-</ul>
-
-
-	</li>
+		<li><a href="#filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></li>
+		<li><a href="#active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></li>
+	</ul></li>
 </ul>
 
 
 	<hr>
+<h3><a name="configuration-eclipse">What is the recommended Eclipse 
+configuration for running Mylar?</a></h3>
+	<p>Some options that are default in Eclipse </p>
+	<ul>
+		<li>Package Explorer<ul>
+		<li>Use flat layout in the Package Explorer (local pull down -&gt; Layout 
+		-&gt; Flat).&nbsp; Hierarchical layout is not supported.</li>
+		<li>Link the Package Explorer with the editor (toolbar -&gt; Link with 
+		Editor).&nbsp; With Mylar applied this won't cause the jumping around 
+		problems it typically does.</li>
+		<li>Deselect the Referenced Libraries filter (local pull down -&gt; Filters 
+		-&gt; Referenced Libraries).&nbsp; With Mylar applied libraries won't blow 
+		up the tree.</li>
+	</ul>
+		</li>
+		<li>Editors<ul>
+		<li>Turn comment folding on to reduce clutter when using auto folding 
+		(Preferences -&gt; Java -&gt; Editor -&gt; Folding).</li>
+		<li>Increase the number of editors to leave open (Preferences -&gt; General 
+		-&gt; Editors -&gt; Number of opened editors before closing).&nbsp; Since 
+		Mylar will manage the open editors with task activation, this number can 
+		be set higher or automatic closing disabled entirely.</li>
+	</ul>
+		</li>
+		<li>Team<ul>
+		<li>Set Synchronize view to Change Sets mode (toolbar -&gt; Show Change 
+		Sets)</li>
+		<li>Use graphical CVS decorators only (Preferences -&gt; Team -&gt; CVS -&gt; Label Decorations 
+		-&gt; Text Decorations -&gt; clear all but Project; Icon Decorations -&gt; enable 
+		all).&nbsp; This helps reduce visual clutter.</li>
+	</ul>
+		</li>
+	</ul>
+	<hr>
+<h3>&nbsp;</h3>
+	<h3><a name="performance-summary">What are the effects of Mylar on Eclipse 
+performance?</a></h3>
+<p>The goal is for Mylar to have no noticeable effect on Eclipse's speed or 
+memory usage, you do not need to increase the amount of memory Eclipse runs with 
+to use Mylar, and any performance issue should be
+<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">reported as 
+a bug</a>.&nbsp; The current performance profile is:</p>
+<ol>
+	<li>Mylar only runs if a task is active, and has no impact on Eclipse if no 
+	task is active.</li>
+	<li>Task context models have negligible memory overhead.&nbsp; </li>
+	<li>When a task is active, additional view refresh is required to update the 
+	views based on interest model changes.&nbsp; This should not be noticeable 
+	on Windows where refresh is very quick, but could be more noticeable on 
+	other platforms.</li>
+	<li>The time to activate a task context is dominated by the time it takes 
+	Eclipse to open the editors in the context.&nbsp; You can set the preference 
+	for how many editors to open in the Mylar preference page (e.g. setting to 1 
+	will dramatically reduce activation time, but also remove the benefit of 
+	having open editors correspond to the task context).&nbsp; You can also turn off 
+	editor management entirely in the Mylar Tasks view pull-down.</li>
+	<li>Eclipse startup is slowed down by (4) if a task is active when Eclipse 
+	is shut down.</li>
+	<li>The low priority background searches that the Active Search view runs 
+	can be noticeable on slower machines.</li>
+</ol>
+	<hr>
+	<h3>&nbsp;</h3>
 	<h3><a name="install-failure">Why does Mylar fail to install or update?</a></h3>
 	<p>For supported platforms and known limitations please see
 	<a href="http://eclipse.org/mylar/dl.php">http://eclipse.org/mylar/dl.php</a> 
@@ -82,11 +141,11 @@ and after that automatically or manually updating will install the correct
 version.</p>
 <p>
 <img border="0" src="images/faq/eclipse-manage-configuration.gif" width="679" height="335"></p>
+	<hr>
 	<p>
 &nbsp;</p>
 
 
-<h3>&nbsp;</h3>
 <h3><a name="tasklist-blank">Why did my tasks disappear?</a>&nbsp;&nbsp;&nbsp; </h3>
 <p>Either because Mylar failed to <a href="#install-failure">install or update</a>, 
 or because there was a problem reading the task list.&nbsp; By default Mylar 
@@ -107,55 +166,10 @@ it will get overwritten on any modification.</p>
 	<p>
 	<img border="0" src="images/faq/tasklist-backup.gif" width="525" height="310"></p>
 
+	<hr>
+
 <h3>&nbsp;</h3>
-<h3><a name="performance-summary">What are the effects of Mylar on Eclipse 
-performance?</a></h3>
-<p>The goal is for Mylar to have no noticeable effect on Eclipse's speed or 
-memory usage, you do not need to increase the amount of memory Eclipse runs with 
-to use Mylar, and any performance issue should be
-<a href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar">reported as 
-a bug</a>.&nbsp; The current performance profile is:</p>
-<ol>
-	<li>Mylar only runs if a task is active, and has no impact on Eclipse if no 
-	task is active.</li>
-	<li>Task context models have negligible memory overhead.&nbsp; </li>
-	<li>When a task is active, additional view refresh is required to update the 
-	views based on interest model changes.&nbsp; This should not be noticeable 
-	on Windows where refresh is very quick, but could be more noticeable on 
-	other platforms.</li>
-	<li>The time to activate a task context is dominated by the time it takes 
-	Eclipse to open the editors in the context.&nbsp; You can set the preference 
-	for how many editors to open in the Mylar preference page (e.g. setting to 1 
-	will dramatically reduce activation time, but also remove the benefit of 
-	having open editors correspond to the task context).&nbsp; You can also turn off 
-	editor management entirely in the Mylar Tasks view pull-down.</li>
-	<li>Eclipse startup is slowed down by (4) if a task is active when Eclipse 
-	is shut down.</li>
-	<li>The low priority background searches that the Active Search view runs 
-	can be noticeable on slower machines.</li>
-</ol>
-<h3>&nbsp;</h3>
-<h3><a name="configuration-eclipse">What is the recommended Eclipse 
-configuration for running Mylar?</a></h3>
-<p>The following preferences settings are recommended:</p>
-	<ul>
-		<li>Use flat layout in the Package Explorer (local pull down -&gt; Layout 
-		-&gt; Flat). </li>
-		<li>Link the Package Explorer with the editor (toolbar -&gt; Link with 
-		Editor).&nbsp; This mode works well when Mylar is applied to the Package 
-		Explorer&nbsp; </li>
-		<li>Turn comment folding on to reduce clutter when using auto folding 
-		(Preferences -&gt; Java -&gt; Editor -&gt; Folding)</li>
-		<li>Use graphical CVS decorators only (Preferences -&gt; Team -&gt; CVS -&gt; Label Decorations 
-		-&gt; Text Decorations -&gt; clear all but Project; Icon Decorations -&gt; enable 
-		all).&nbsp; This helps reduce visual clutter.</li>
-		<li>Increase the number of editors to leave open (Preferences -&gt; General 
-		-&gt; Editors -&gt; Number of opened editors before closing).&nbsp; Since 
-		Mylar will manage the open editors with task activation, this number can 
-		be set higher or automatic closing disabled entirely.</li>
-	</ul>
-<h3>&nbsp;</h3>
-<h3><a name="upgrading-repositories">How do I upgrade to multiple 
+	<h3><a name="upgrading-repositories">How do I upgrade to multiple 
 task repository support?</a></h3>
 <p>Bugzilla Client users follow these steps after updating in order to 
 migrate to multiple repository support from version 0.4.6 or older</p>
@@ -167,6 +181,14 @@ Repositories view and re-add your previous repository using the wizard.</li>
 on the corresponding dialog, since this URL will be used for the migration.</li>
 	<li>Exit the workbench and restart Eclipse to complete the migration.</li>
 </ul>
+	<hr>
+	<p>&nbsp;</p>
+<h3><a name="versions-repositories">Why is only one task appearing in Bugzilla queries?</a></h3>
+	<p>This is a symptom of the wrong Bugzilla version selected in your Mylar 
+	Bugzilla preferences ( Window -&gt; Preferences -&gt; Mylar -&gt; Bugzilla Client ). 
+	For example, if you are connecting to the
+	Eclipse.org Bugzilla then the 2.20 option must be selected.</p>
+	<hr>
 <p>&nbsp;</p>
 	<h3><a name="filtering-declarations">How do I stop declarations from showing up in the Package Explorer?</a></h3>
 <p>If you don't like Mylar's constant showing of Java members in the 
@@ -178,6 +200,7 @@ current file (e.g. showing you which methods are landmarks) so this mode is not
 recommended, but can be useful for 1024x768 screen resolutions.</p>
 			<p>
 			<img border="0" src="images/0.3/filtering-declarations.gif" width="441" height="211"></p>
+	<hr>
 <p>
 			&nbsp;</p>
 			<h3><a name="active-search-empty">Why does nothing show up in the Active Search or Active Hierarchy?</a></h3>

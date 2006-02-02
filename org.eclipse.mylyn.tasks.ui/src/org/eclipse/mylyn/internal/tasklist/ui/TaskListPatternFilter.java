@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.ui.internal.dialogs.PatternFilter;
+import org.eclipse.ui.dialogs.PatternFilter;
 
+/**
+ * @author Mik Kersten
+ */
 public class TaskListPatternFilter extends PatternFilter {
 
 	@Override

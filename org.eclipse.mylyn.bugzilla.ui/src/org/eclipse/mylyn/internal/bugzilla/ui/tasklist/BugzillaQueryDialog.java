@@ -281,6 +281,10 @@ public class BugzillaQueryDialog extends Dialog {
 				public void setSelectedWorkingSets(IWorkingSet[] workingSets) {
 				}
 
+				public String[] getSelectedProjectNames() {
+					return null;
+				}
+
 			};
 		}
 
