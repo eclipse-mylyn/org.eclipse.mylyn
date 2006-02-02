@@ -29,7 +29,7 @@ import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
 /**
  * @author Mik Kersten
  */
-public class ContextHistoryParsingTest extends TestCase {
+public class ContextParsingTest extends TestCase {
 
 	private static final String PATH_USAGE_FILE = "testdata/usage-parsing.zip";
 
@@ -64,7 +64,7 @@ public class ContextHistoryParsingTest extends TestCase {
 	
 	public void testInteractionHistoryWithoutDecay() {
 		ScalingFactors scalingFactors = new ScalingFactors();
-//		scalingFactors.setDecay(new ScalingFactor("decay", .5f)); 
+//		scalingFactors.setDecay(new ScalingFactor("decay", .05f)); 
 		MylarContext context = new MylarContext("test", scalingFactors);
 		int numEvents = 0;
 		for (InteractionEvent event : events) {

@@ -46,6 +46,10 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class SelectionMonitor extends AbstractUserInteractionMonitor {
 
+	private static final String ID_JAVA_UNKNOWN = "(non-source element)";
+
+	private static final String LABEL_FAILED_TO_OBFUSCATE = "<failed to obfuscate>";
+
 	public static final String SELECTION_DEFAULT = "selected";
 
 	public static final String SELECTION_NEW = "new";
@@ -63,9 +67,9 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		String structureKind = "?";
-		String obfuscatedElementHandle = "?";
-		String elementHandle = "?";
+		String structureKind = InteractionEvent.ID_UNKNOWN;
+		String obfuscatedElementHandle = InteractionEvent.ID_UNKNOWN;
+		String elementHandle = InteractionEvent.ID_UNKNOWN;
 		InteractionEvent.Kind interactionKind = InteractionEvent.Kind.SELECTION;
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
@@ -79,7 +83,7 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 				obfuscatedElementHandle = obfuscateJavaElementHandle(javaElement);
 				lastSelectedElement = javaElement;
 			} else {
-				structureKind = "?: " + selectedObject.getClass();
+				structureKind =	InteractionEvent.ID_UNKNOWN + ": " + selectedObject.getClass();
 				if (selectedObject instanceof IAdaptable) {
 					IResource resource = (IResource) ((IAdaptable) selectedObject).getAdapter(IResource.class);
 					if (resource != null) {
@@ -164,7 +168,7 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 			// obfuscatedString = "" + new String(digest).hashCode();
 		} catch (NoSuchAlgorithmException e) {
 			MylarStatusHandler.log("SHA not available", this);
-			obfuscatedString = "<failed to obfuscate>";
+			obfuscatedString = LABEL_FAILED_TO_OBFUSCATE;
 		}
 		return obfuscatedString;
 	}
@@ -186,6 +190,13 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 			// MylarPlugin.log(this, "failed to resolve java element for
 			// element: " + javaElement.getHandleIdentifier());
 		}
-		return "(non-source element)";
+		return ID_JAVA_UNKNOWN;
+	}
+	
+	/**
+	 * Some events do not have a valid handle, e.g. hande is null or ?
+	 */
+	public static boolean isValidStructureHandle(InteractionEvent event) {
+		return event.isValidStructureHandle() && !event.getStructureHandle().equals(SelectionMonitor.ID_JAVA_UNKNOWN);
 	}
 }

@@ -25,7 +25,7 @@ public class AllMonitorReportTests {
 		// $JUnit-BEGIN$
 		// TODO: Add tests as they are developed
 		suite.addTestSuite(DataOverviewCollectorTest.class);
-		suite.addTestSuite(ContextHistoryParsingTest.class);
+		suite.addTestSuite(ContextParsingTest.class);
 		// $JUnit-END$
 
 		return suite;
