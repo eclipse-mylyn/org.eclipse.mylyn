@@ -87,7 +87,7 @@ public class TypeHistoryManager implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		clearTypeHistory();
+//		clearTypeHistory();
 	}
 
 	/**
@@ -97,8 +97,7 @@ public class TypeHistoryManager implements IMylarContextListener {
 		TypeInfo[] typeInfos = TypeInfoHistory.getDefault().getTypeInfos();
 		for (int i = 0; i < typeInfos.length; i++) {
 			TypeInfoHistory.getDefault().remove(typeInfos[i]);
-		}
-		;
+		} 
 	}
 
 	public void interestChanged(IMylarElement node) {
