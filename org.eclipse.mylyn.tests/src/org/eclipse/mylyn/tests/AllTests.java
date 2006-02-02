@@ -20,6 +20,7 @@ import org.eclipse.mylar.ide.tests.AllIdeTests;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.java.tests.AllJavaTests;
+import org.eclipse.mylar.monitor.reports.tests.AllMonitorReportTests;
 import org.eclipse.mylar.monitor.tests.AllMonitorTests;
 import org.eclipse.mylar.tasklist.tests.AllTasklistTests;
 import org.eclipse.mylar.tests.integration.AllIntegrationTests;
@@ -39,6 +40,7 @@ public class AllTests {
 
 		// TODO: the order of these tests matters, but shouldn't
 		// $JUnit-BEGIN$
+		suite.addTest(AllMonitorReportTests.suite());
 		suite.addTest(AllMonitorTests.suite());
 		suite.addTest(AllIntegrationTests.suite());
 		suite.addTest(AllCoreTests.suite());
