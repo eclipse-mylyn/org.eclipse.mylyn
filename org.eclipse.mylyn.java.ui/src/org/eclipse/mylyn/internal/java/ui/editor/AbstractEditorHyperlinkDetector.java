@@ -19,16 +19,16 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractMylarHyperlinkDetector implements IHyperlinkDetector {
+public abstract class AbstractEditorHyperlinkDetector implements IHyperlinkDetector {
 
 	private ITextEditor editor;
 
+	public abstract IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region,
+			boolean canShowMultipleHyperlinks);
+	
 	public ITextEditor getEditor() {
 		return editor;
 	}
-
-	public abstract IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region,
-			boolean canShowMultipleHyperlinks);
 
 	public void setEditor(ITextEditor editor) {
 		this.editor = editor;

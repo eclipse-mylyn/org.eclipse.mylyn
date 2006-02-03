@@ -13,23 +13,9 @@
  */
 package org.eclipse.mylar.internal.java.ui.editor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.ui.text.IColorManager;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
@@ -39,69 +25,69 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfiguration {
 
-	private List<AbstractMylarHyperlinkDetector> hyperlinkDetectors;
-
-	private boolean extensionsRead = false;
-
-	public static final String JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.java.javaEditorContributor";
-
-	public static final String JAVA_HYPERLINK_DETECTOR_ELEMENT = "hyperlinkDetector";
-
-	public static final String HYPERLINK_DETECTOR_CLASS = "class";
-
 	public MylarJavaSourceViewerConfiguration(IColorManager colorManager, IPreferenceStore preferenceStore,
 			ITextEditor editor, String partitioning) {
 		super(colorManager, preferenceStore, editor, partitioning);
 	}
 
-	@Override
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
-			return null;
-
-		IHyperlinkDetector[] inheritedDetectors = super.getHyperlinkDetectors(sourceViewer);
-
-		if (super.getEditor() == null)
-			return inheritedDetectors;
-
-		readDetectorsExtension();
-
-		if (hyperlinkDetectors == null)
-			return inheritedDetectors;
-
-		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
-		detectors.addAll(Arrays.asList(inheritedDetectors));
-		detectors.addAll(hyperlinkDetectors);
-		return detectors.toArray(new IHyperlinkDetector[hyperlinkDetectors.size()]);
-	}
-
-	private void readDetectorsExtension() {
-		if (!extensionsRead) {
-			hyperlinkDetectors = new ArrayList<AbstractMylarHyperlinkDetector>();
-			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID);
-			IExtension[] extensions = extensionPoint.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().compareTo(JAVA_HYPERLINK_DETECTOR_ELEMENT) == 0) {
-						try {
-							Object detector = elements[j].createExecutableExtension(HYPERLINK_DETECTOR_CLASS);
-							if (detector instanceof AbstractMylarHyperlinkDetector) {
-								((AbstractMylarHyperlinkDetector) detector).setEditor(super.getEditor());
-								hyperlinkDetectors.add((AbstractMylarHyperlinkDetector) detector);
-							} else {
-								MylarStatusHandler.log("Could not load hyperlink detector: "
-										+ detector.getClass().getCanonicalName() + " must implement "
-										+ AbstractMylarHyperlinkDetector.class.getCanonicalName(), this);
-							}
-						} catch (CoreException e) {
-							MylarStatusHandler.log(e, "Could not load java editor contributor");
-						}
-					}
-				}
-			}
-			extensionsRead = true;
-		}
-	}
+//	private HyperlinkDetectorExtensionReader detectorExtensionReader = new HyperlinkDetectorExtensionReader();
+//	
+//	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+//		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+//			return null;
+//
+//		IHyperlinkDetector[] inheritedDetectors = super.getHyperlinkDetectors(sourceViewer);
+//
+//		if (super.getEditor() == null)
+//			return inheritedDetectors;
+//
+//		List contributedDectectors = detectorExtensionReader.readHyperlinkDetectorsExtension(super.getEditor());
+//		if (contributedDectectors.isEmpty()) {
+//			return inheritedDetectors;
+//		} else {
+//			List allDetectors = new ArrayList();
+//			allDetectors.addAll(Arrays.asList(inheritedDetectors));
+//			allDetectors.addAll(contributedDectectors);
+//			return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[allDetectors.size()]);
+//		}
+//	}
+//
+//	private final class HyperlinkDetectorExtensionReader {
+//
+//		private List contributedDetectors = new ArrayList();
+//
+//		private boolean extensionsRead = false;
+//
+//		public static final String JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.java.javaEditorContributor";
+//
+//		public static final String JAVA_HYPERLINK_DETECTOR_ELEMENT = "hyperlinkDetector";
+//
+//		public static final String HYPERLINK_DETECTOR_CLASS = "class";
+//
+//		private List/*AbstractEditorHyperlinkDetector*/ readHyperlinkDetectorsExtension(ITextEditor textEditor) {
+//			if (!extensionsRead) {
+//				IExtensionRegistry registry = Platform.getExtensionRegistry();
+//				IExtensionPoint extensionPoint = registry.getExtensionPoint(JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID);
+//				IExtension[] extensions = extensionPoint.getExtensions();
+//				for (int i = 0; i < extensions.length; i++) {
+//					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+//					for (int j = 0; j < elements.length; j++) {
+//						if (elements[j].getName().compareTo(JAVA_HYPERLINK_DETECTOR_ELEMENT) == 0) {
+//							try {
+//								Object detector = elements[j].createExecutableExtension(HYPERLINK_DETECTOR_CLASS);
+//								if (detector instanceof AbstractEditorHyperlinkDetector) {
+//									((AbstractEditorHyperlinkDetector) detector).setEditor(textEditor);
+//									contributedDetectors.add(detector);
+//								}
+//							} catch (CoreException e) {
+//								MylarStatusHandler.log(e, "Could not load java editor contributor");
+//							}
+//						}
+//					}
+//				}
+//				extensionsRead = true;
+//			}
+//			return contributedDetectors;
+//		}
+//	}
 }

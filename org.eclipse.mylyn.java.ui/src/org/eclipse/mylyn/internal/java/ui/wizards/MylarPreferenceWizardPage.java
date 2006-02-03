@@ -34,24 +34,21 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private static final String WORKING_SET = "Add the \"active task context\" working set";
 
-	private static final String DEFAULT_EDITOR = "Set the Mylar editor to be the default for .java "
-			+ "(enables interest-based content assist)";
+	private static final String DEFAULT_EDITOR = "Enable task-context ranked content assist (requires Eclipse restart).";
 
 	private static final String OPEN_TASK_LIST = "Open the Mylar Tasks view";
 
-	private Button setMylarEditorDefault;
+	private Button contentAssistButton;
 
-	private boolean mylarEditorDefault = true;
-
-	private Button turnOnAutoFolding;
+	private Button turnOnAutoFoldingButton;
 
 	private boolean autoFolding = true;
 
-	private Button addMylarActiveWorkingSet;
+	private Button addMylarActiveWorkingSetButton;
 
 	private boolean workingSet = true;
 
-	private Button closeEditorsOnDeactivation;
+	private Button closeEditorsOnDeactivationButton;
 
 	private boolean closeEditors = true;
 
@@ -80,34 +77,34 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		layout.makeColumnsEqualWidth = false;
 		buttonComposite.setLayout(layout);
 
-		setMylarEditorDefault = new Button(buttonComposite, SWT.CHECK);
+		contentAssistButton = new Button(buttonComposite, SWT.CHECK);
 		GridData gd = new GridData();
-		setMylarEditorDefault.setLayoutData(gd);
-		setMylarEditorDefault.setSelection(true);
-		setMylarEditorDefault.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				mylarEditorDefault = setMylarEditorDefault.getSelection();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// don't care about this event
-			}
-		});
+		contentAssistButton.setLayoutData(gd);
+		contentAssistButton.setSelection(true);
+//		contentAssistButton.addSelectionListener(new SelectionListener() {
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				mylarContentAssistDefault = contentAssistButton.getSelection();
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				// don't care about this event
+//			}
+//		});
 
 		Label label = new Label(buttonComposite, SWT.NONE);
 		label.setText(DEFAULT_EDITOR);
 		gd = new GridData();
 		label.setLayoutData(gd);
 
-		turnOnAutoFolding = new Button(buttonComposite, SWT.CHECK);
+		turnOnAutoFoldingButton = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
-		turnOnAutoFolding.setLayoutData(gd);
-		turnOnAutoFolding.setSelection(true);
-		turnOnAutoFolding.addSelectionListener(new SelectionListener() {
+		turnOnAutoFoldingButton.setLayoutData(gd);
+		turnOnAutoFoldingButton.setSelection(true);
+		turnOnAutoFoldingButton.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				autoFolding = turnOnAutoFolding.getSelection();
+				autoFolding = turnOnAutoFoldingButton.getSelection();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -120,14 +117,14 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		gd = new GridData();
 		label.setLayoutData(gd);
 
-		closeEditorsOnDeactivation = new Button(buttonComposite, SWT.CHECK);
+		closeEditorsOnDeactivationButton = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
-		closeEditorsOnDeactivation.setLayoutData(gd);
-		closeEditorsOnDeactivation.setSelection(true);
-		closeEditorsOnDeactivation.addSelectionListener(new SelectionListener() {
+		closeEditorsOnDeactivationButton.setLayoutData(gd);
+		closeEditorsOnDeactivationButton.setSelection(true);
+		closeEditorsOnDeactivationButton.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				closeEditors = closeEditorsOnDeactivation.getSelection();
+				closeEditors = closeEditorsOnDeactivationButton.getSelection();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -140,13 +137,13 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		gd = new GridData();
 		label.setLayoutData(gd);
 
-		addMylarActiveWorkingSet = new Button(buttonComposite, SWT.CHECK);
+		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
 		gd = new GridData();
-		addMylarActiveWorkingSet.setSelection(true);
-		addMylarActiveWorkingSet.addSelectionListener(new SelectionListener() {
+		addMylarActiveWorkingSetButton.setSelection(true);
+		addMylarActiveWorkingSetButton.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				workingSet = addMylarActiveWorkingSet.getSelection();
+				workingSet = addMylarActiveWorkingSetButton.getSelection();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -209,8 +206,8 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		return closeEditors;
 	}
 
-	public boolean isMylarEditorDefault() {
-		return mylarEditorDefault;
+	public boolean isMylarContentAssistDefault() {
+		return contentAssistButton.getSelection();
 	}
 
 	public boolean isWorkingSet() {

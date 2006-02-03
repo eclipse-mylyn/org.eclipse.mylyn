@@ -319,9 +319,8 @@
             id="org.eclipse.mylar.java.ui.MembersFilter">
    		</filter>
   </extension>
-  
-  
-  <!-- ** EDITOR ****************************************** -->
+     
+  <!-- ** EDITOR ****************************************** 
 
   <extension
          id="editors"
@@ -361,6 +360,8 @@
   		<part id="org.eclipse.mylar.java.ui.editor.MylarClassFileEditor" /> 
    </actionSetPartAssociation>
   </extension>
+
+  -->
   
   <!--
   <extension point="org.eclipse.jdt.ui.foldingStructureProviders">
