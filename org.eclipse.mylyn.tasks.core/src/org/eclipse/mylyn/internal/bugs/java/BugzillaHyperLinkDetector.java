@@ -23,8 +23,6 @@ import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.internal.corext.dom.NodeFinder;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.ASTProvider;
-import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
-import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -34,7 +32,6 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.ui.editor.AbstractEditorHyperlinkDetector;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -53,7 +50,14 @@ public class BugzillaHyperLinkDetector extends AbstractEditorHyperlinkDetector {
 		if (site == null)
 			return null;
 
-		IJavaElement javaElement = getInputJavaElement(textEditor);
+		IJavaElement javaElement;
+		Object adapter = textEditor.getEditorInput().getAdapter(IJavaElement.class);
+		if (adapter instanceof IJavaElement) {
+			javaElement = (IJavaElement)adapter;
+		} else {
+			return null;
+		}
+		
 		if (javaElement == null)
 			return null;
 
@@ -182,17 +186,6 @@ public class BugzillaHyperLinkDetector extends AbstractEditorHyperlinkDetector {
 				return comment;
 			}
 		}
-		return null;
-	}
-
-	private IJavaElement getInputJavaElement(ITextEditor editor) {
-		IEditorInput editorInput = editor.getEditorInput();
-		if (editorInput instanceof IClassFileEditorInput)
-			return ((IClassFileEditorInput) editorInput).getClassFile();
-
-		if (editor instanceof CompilationUnitEditor)
-			return JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
-
 		return null;
 	}
 }
