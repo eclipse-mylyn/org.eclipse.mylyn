@@ -64,7 +64,7 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 //
 //		public static final String HYPERLINK_DETECTOR_CLASS = "class";
 //
-//		private List/*AbstractEditorHyperlinkDetector*/ readHyperlinkDetectorsExtension(ITextEditor textEditor) {
+//		private List/*AbstractHyperlinkDetector*/ readHyperlinkDetectorsExtension(ITextEditor textEditor) {
 //			if (!extensionsRead) {
 //				IExtensionRegistry registry = Platform.getExtensionRegistry();
 //				IExtensionPoint extensionPoint = registry.getExtensionPoint(JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID);
@@ -75,8 +75,8 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 //						if (elements[j].getName().compareTo(JAVA_HYPERLINK_DETECTOR_ELEMENT) == 0) {
 //							try {
 //								Object detector = elements[j].createExecutableExtension(HYPERLINK_DETECTOR_CLASS);
-//								if (detector instanceof AbstractEditorHyperlinkDetector) {
-//									((AbstractEditorHyperlinkDetector) detector).setEditor(textEditor);
+//								if (detector instanceof AbstractHyperlinkDetector) {
+//									((AbstractHyperlinkDetector) detector).setEditor(textEditor);
 //									contributedDetectors.add(detector);
 //								}
 //							} catch (CoreException e) {
