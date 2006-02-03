@@ -20,10 +20,12 @@
    </extension>
 -->
    
-   <extension
-         point="org.eclipse.mylar.java.javaEditorContributor">
+<!--
+   <extension 
+         point="org.eclipse.jdt.ui.javaEditorHyperlinkDetectors">
       <hyperlinkDetector class="org.eclipse.mylar.internal.bugs.java.BugzillaHyperLinkDetector"/>
    </extension> 
+-->
    
    	<extension point="org.eclipse.ui.popupMenus"> 
 		<objectContribution
