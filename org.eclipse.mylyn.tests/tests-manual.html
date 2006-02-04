@@ -1,13 +1,6 @@
 <html>
-  <head>
-    <meta http-equiv="Content-Language" content="en-us">
-    <title>
-      Mylar FAQ
-    </title>
-  </head>
   <body>
     <h2>Mylar Manual Tests</h2>
-	<p>(in progress)</p>
 	<p>Bugzilla Client</p>
 	<ul>
 		<li>No repositories added<ul>
@@ -19,11 +12,49 @@
 		<li>Restart, rerun, products should appear immediately</li>
 	</ul>
 		</li>
-		<li>Reports<ul>
-		<li>Open, modify, should have outgoing overlay</li>
-		<li>Open again, should retain outgoing overlay</li>
-		<li>Submit, outgoing overlay should disappear (should be no incoming, 
-		not working yet)</li>
+		<li>Reports &gt; Task list notification<ul>
+		<li><font color="#FF0000">Open, modify, save, should have outgoing overlay</font><ul>
+		<li>Synchronize, should get option to override local changes<ul>
+		<li>If overriding, overlay and changes go away</li>
+		<li>If no override, get conflict icon to show</li>
+	</ul>
+		</li>
+		<li>Open again, should retain outgoing overlay<ul>
+		<li>Submit, outgoing overlay should disappear (should be no incoming 
+		upon synchronize)</li>
+	</ul>
+		</li>
+		<li></li>
+	</ul>
+		</li>
+		<li></li>
+		<li>Copy report to a local category, modify, should have outgoing 
+		overlay on all instances (instance in category and in queries)</li>
+		<li>Open again, all should retain outgoing overlay</li>
+		<li>Submit, outgoing overlay should disappear on all (with no incoming)<br>
+&nbsp;</li>
+		<li>Open bug in external editor and add a comment.</li>
+		<li>Right click on bug/task and select Synchronize with Repository</li>
+		<li>Incoming overlay should appear on all instances (if in local 
+		categories and queries)</li>
+		<li>Open the bug/task, incoming overlay should no longer appear<br>
+&nbsp;</li>
+		<li>Open a bug, add a comment, save, close bug editor</li>
+		<li>Open report in External Browser and modify</li>
+		<li>Open bug in editor (note that outgoing changes exist so no synch 
+		takes place)</li>
+		<li>Submit local changes --&gt; Failed to submit bug dialog, Possible 
+		Bugzilla Client Failure with &quot;Mid-air collision&quot;</li>
+		<li>Synchronize reports --&gt; Update Local Copy dialog. Would you like to 
+		override local changes?</li>
+		<li>Select NO (Conflict overlay should appear?)</li>
+		<li>Open task (External conflict is now in local copy of bug and 
+		conflict overlay replaced with outgoing overlay)<br>
+&nbsp;</li>
+		<li>Same procedure as previous only select YES when presented with 
+		&quot;Update Local Copy&quot; dialog.</li>
+		<li>Open task (External conflicting content now in local copy of bug, 
+		task should be in SYNCHRONIZED state)</li>
 	</ul>
 		</li>
 	</ul>
