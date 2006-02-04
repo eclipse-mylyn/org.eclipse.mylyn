@@ -57,42 +57,40 @@ public class OpenTaskListElementAction extends Action {
 				task = (ITask) element;
 			}
 			
-			boolean forceUpdate = element instanceof IQueryHit;
+			boolean forceUpdate = false;//element instanceof IQueryHit;
 
 			final AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 					task.getRepositoryKind());
 			if (!task.isLocal() && client != null) {
-				Job refreshJob = client.synchronize(task, forceUpdate);
+				Job refreshJob = client.synchronize(task, forceUpdate, new IJobChangeListener() {
+
+					public void done(IJobChangeEvent event) {
+						TaskListUiUtil.openEditor(task);
+					}
+
+					public void aboutToRun(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void awake(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void running(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void scheduled(IJobChangeEvent event) {
+						// ignore
+					}
+
+					public void sleeping(IJobChangeEvent event) {
+						// ignore
+					}
+				}); 
 				if (refreshJob == null) {
 					TaskListUiUtil.openEditor(task);
-				} else {
-					refreshJob.addJobChangeListener(new IJobChangeListener() {
-
-						public void done(IJobChangeEvent event) {
-							TaskListUiUtil.openEditor(task);
-						}
-
-						public void aboutToRun(IJobChangeEvent event) {
-							// ignore
-						}
-
-						public void awake(IJobChangeEvent event) {
-							// ignore
-						}
-
-						public void running(IJobChangeEvent event) {
-							// ignore
-						}
-
-						public void scheduled(IJobChangeEvent event) {
-							// ignore
-						}
-
-						public void sleeping(IJobChangeEvent event) {
-							// ignore
-						}
-					});
-				}
+				} 
 			} else {
 				TaskListUiUtil.openEditor(task);
 			}

@@ -32,7 +32,7 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
+import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -84,14 +84,17 @@ public class OfflineReportsFile {
 	 * @param entry
 	 *            The bug to add
 	 */
-	public boolean add(IBugzillaBug entry, boolean saveChosen) throws CoreException {
+	public BugzillaOfflineStatus add(IBugzillaBug entry, boolean saveChosen) throws CoreException {
+		
+		BugzillaOfflineStatus status = BugzillaOfflineStatus.SAVED;
+		
 		try {
-			BugzillaOfflineStaus status = BugzillaOfflineStaus.SAVED;
+			
 			// check for bug and do a compare
 			int index = -1;
 			if ((index = find(entry.getId())) >= 0) {
 				IBugzillaBug oldBug = list.get(index);
-				if (oldBug instanceof BugReport && entry instanceof BugReport && !saveChosen) {
+				if (oldBug instanceof BugReport && entry instanceof BugReport) { //&& !saveChosen
 					CompareConfiguration config = new CompareConfiguration();
 					config.setLeftEditable(false);
 					config.setRightEditable(false);
@@ -114,17 +117,16 @@ public class OfflineReportsFile {
 						// true, in);
 					} catch (InterruptedException x) {
 						// cancelled by user
-						return false;
+						status =  BugzillaOfflineStatus.ERROR;
 					} catch (InvocationTargetException x) {
 						BugzillaPlugin.log(x);
 						MessageDialog.openError(null, "Compare Failed", x.getTargetException().getMessage());
-						return false;
+						status =  BugzillaOfflineStatus.ERROR;
 					}
 
 					if (in.getCompareResult() == null) {
-						BugzillaPlugin.getDefault().fireOfflineStatusChanged(entry, status);
-						return true;
-					} else if (oldBug.hasChanges()) {
+						status = BugzillaOfflineStatus.SAVED;
+					} else if (oldBug.hasChanges() && saveChosen) {
 						if (!MessageDialog
 								.openQuestion(
 										null,
@@ -134,26 +136,32 @@ public class OfflineReportsFile {
 												+ " Has Changes.\nWould you like to override local changes? Note: if you select No, your added comment will be saved with the updated bug, but all other changes will be lost.")) {
 							((BugReport) entry).setNewComment(((BugReport) oldBug).getNewComment());
 							((BugReport) entry).setHasChanged(true);
-							status = BugzillaOfflineStaus.CONFLICT;
+							status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES; //CONFLICT
 						} else {
 							((BugReport) entry).setHasChanged(false);
-							status = BugzillaOfflineStaus.SAVED;
+							status = BugzillaOfflineStatus.SAVED;
 						}
-
-					} else {
+						
+					} else if (oldBug.hasChanges() && !saveChosen) {
+						((BugReport) entry).setNewComment(((BugReport) oldBug).getNewComment());
+						((BugReport) entry).setHasChanged(true);
+						status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES; //.CONFLICT;					
+					} else if (!saveChosen) {
 						DiffNode node = (DiffNode) in.getCompareResult();
 						IDiffElement[] children = node.getChildren();
 						if (children.length != 0) {
 							for (IDiffElement element : children) {
 								if (((DiffNode) element).getKind() == Differencer.CHANGE) {
-									status = BugzillaOfflineStaus.SAVED_WITH_INCOMMING_CHANGES;
+									status = BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES;
 									break;
 								}
 							}
 						} else {
-							return true;
+							status = BugzillaOfflineStatus.SAVED; // do we ever get here?
 						}
 
+					} else {
+						status = BugzillaOfflineStatus.SAVED;
 					}
 					// Display.getDefault().asyncExec(new Runnable(){
 					// public void run() {
@@ -164,19 +172,20 @@ public class OfflineReportsFile {
 				}
 				list.remove(index);
 			}
-			if (entry.hasChanges() && status != BugzillaOfflineStaus.CONFLICT) {
-				status = BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES;
+			if (entry.hasChanges() && status != BugzillaOfflineStatus.CONFLICT) {
+				status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES;
 			}
 			// add the entry to the list and write the file to disk
 			list.add(entry);
 			writeFile();
 			BugzillaPlugin.getDefault().fireOfflineStatusChanged(entry, status);
-			return true;
+			
 		} catch (Exception e) {
-			IStatus status = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
-					"failed to add of offline reort", e);
-			throw new CoreException(status);
+			IStatus runtimestatus = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
+					"failed to add of offline report", e);
+			throw new CoreException(runtimestatus);
 		}
+		return status;
 	}
 
 	/**
@@ -389,51 +398,51 @@ public class OfflineReportsFile {
 	// }
 	// }
 
-	/**
-	 * Saves the given report to the offlineReportsFile, or, if it already
-	 * exists in the file, updates it.
-	 * 
-	 * @param bug
-	 *            The bug to add/update.
-	 */
-	public static void saveOffline(IBugzillaBug bug, boolean saveChosen) throws CoreException {
-		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
-		// If there is already an offline report for this bug, update the file.
-		if (bug.isSavedOffline()) {
-			file.update();
-		}
-		// If this bug has not been saved offline before, add it to the file.
-		else {
-			int index = -1;
-			// If there is already an offline report with the same id, don't
-			// save this report.
-			if ((index = file.find(bug.getId())) >= 0) {
-				removeReport(getOfflineBugs().get(index));
-				// MessageDialog.openInformation(null, "Bug's Id is already
-				// used.", "There is already a bug saved offline with an
-				// identical id.");
-				// return;
-			}
-			file.add(bug, saveChosen);
-			bug.setOfflineState(true);
-			// file.sort(OfflineReportsFile.lastSel);
-		}
-	}
+//	/**
+//	 * Saves the given report to the offlineReportsFile, or, if it already
+//	 * exists in the file, updates it.
+//	 * 
+//	 * @param bug
+//	 *            The bug to add/update.
+//	 */
+//	public static void saveOffline(IBugzillaBug bug, boolean saveChosen) throws CoreException {
+//		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+//		// If there is already an offline report for this bug, update the file.
+//		if (bug.isSavedOffline()) {
+//			file.update();
+//		}
+//		// If this bug has not been saved offline before, add it to the file.
+//		else {
+//			int index = -1;
+//			// If there is already an offline report with the same id, don't
+//			// save this report.
+//			if ((index = file.find(bug.getId())) >= 0) {
+//				removeReport(getOfflineBugs().get(index));
+//				// MessageDialog.openInformation(null, "Bug's Id is already
+//				// used.", "There is already a bug saved offline with an
+//				// identical id.");
+//				// return;
+//			}
+//			file.add(bug, saveChosen);
+//			bug.setOfflineState(true);
+//			// file.sort(OfflineReportsFile.lastSel);
+//		}
+//	}
 
-	public static List<IBugzillaBug> getOfflineBugs() {
-		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
-		return file.elements();
-	}
-
-	/**
-	 * Removes the given report from the offlineReportsFile.
-	 * 
-	 * @param bug
-	 *            The report to remove.
-	 */
-	public static void removeReport(IBugzillaBug bug) {
-		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
-		bugList.add(bug);
-		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
-	}
+//	public static List<IBugzillaBug> getOfflineBugs() {
+//		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+//		return file.elements();
+//	}
+//
+//	/**
+//	 * Removes the given report from the offlineReportsFile.
+//	 * 
+//	 * @param bug
+//	 *            The report to remove.
+//	 */
+//	public static void removeReport(IBugzillaBug bug) {
+//		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
+//		bugList.add(bug);
+//		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
+//	}
 }

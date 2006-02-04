@@ -26,7 +26,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.team.core,
  org.eclipse.team.cvs.core,
  org.eclipse.mylar.ide
-Eclipse-AutoStart: true
+Eclipse-AutoStart: true 
 Export-Package: org.eclipse.mylar.internal.bugs,
  org.eclipse.mylar.internal.bugs.java,
  org.eclipse.mylar.internal.bugs.search

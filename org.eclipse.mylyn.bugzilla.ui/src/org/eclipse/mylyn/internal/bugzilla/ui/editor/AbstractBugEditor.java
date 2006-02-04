@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,6 +27,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -37,16 +37,15 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.internal.bugzilla.core.BugReportPostHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTools;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaReportSelection;
-import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.ui.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
@@ -934,7 +933,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	 * @return If the text is <code>null</code>, then return the null string (<code>""</code>).
 	 *         Otherwise, return the text.
 	 */
-	public String checkText(String text) {
+	public static String checkText(String text) {
 		if (text == null)
 			return "";
 		else
@@ -1203,6 +1202,7 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	/**
 	 * Submit the changes to the bug to the bugzilla server.
+	 * (Public for testing purposes)
 	 */
 	protected abstract void submitBug();
 
@@ -1215,15 +1215,15 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 			updateBug();
 			IBugzillaBug bug = getBug();
 
-			if (bug.hasChanges()) {
-				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug,
-						BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
-			} else {
-				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
-			}
-
+//			if (bug.hasChanges()) {
+//				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug,
+//						BugzillaOfflineStaus.SAVED_WITH_OUTGOING_CHANGES);
+//			} else {
+//				BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStaus.SAVED);
+//			}
+			final BugzillaRepositoryClient bugzillaRepositoryClient = (BugzillaRepositoryClient)MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 			changeDirtyStatus(false);
-			OfflineView.saveOffline(getBug(), true);
+			bugzillaRepositoryClient.saveBugReport(bug);//OfflineView.saveOffline(getBug(), true);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "bug save offline failed", true);
 		}
@@ -1255,68 +1255,68 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 		setGeneralTitleText();
 	}
 
-	/**
-	 * Break text up into lines of about 80 characters so that it is displayed
-	 * properly in bugzilla
-	 * 
-	 * @param origText
-	 *            The string to be formatted
-	 * @return The formatted text
-	 */
-	protected String formatText(String origText) {
-		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
-			return origText;
-		}
+//	/**
+//	 * Break text up into lines of about 80 characters so that it is displayed
+//	 * properly in bugzilla
+//	 * 
+//	 * @param origText
+//	 *            The string to be formatted
+//	 * @return The formatted text
+//	 */
+//	public static String formatText(String origText) {
+//		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
+//			return origText;
+//		}
+//
+//		String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
+//		for (int i = 0; i < textArray.length; i++)
+//			textArray[i] = null;
+//		int j = 0;
+//		while (true) {
+//			int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
+//			if (spaceIndex == origText.length() || spaceIndex == -1) {
+//				textArray[j] = origText;
+//				break;
+//			}
+//			textArray[j] = origText.substring(0, spaceIndex);
+//			origText = origText.substring(spaceIndex + 1, origText.length());
+//			j++;
+//		}
+//
+//		String newText = "";
+//
+//		for (int i = 0; i < textArray.length; i++) {
+//			if (textArray[i] == null)
+//				break;
+//			newText += textArray[i] + "\n";
+//		}
+//		return newText;
+//	}
 
-		String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
-		for (int i = 0; i < textArray.length; i++)
-			textArray[i] = null;
-		int j = 0;
-		while (true) {
-			int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
-			if (spaceIndex == origText.length() || spaceIndex == -1) {
-				textArray[j] = origText;
-				break;
-			}
-			textArray[j] = origText.substring(0, spaceIndex);
-			origText = origText.substring(spaceIndex + 1, origText.length());
-			j++;
-		}
-
-		String newText = "";
-
-		for (int i = 0; i < textArray.length; i++) {
-			if (textArray[i] == null)
-				break;
-			newText += textArray[i] + "\n";
-		}
-		return newText;
-	}
-
-	/**
-	 * function to set the url to post the bug to
-	 * 
-	 * @param form
-	 *            A reference to a BugReportPostHandler that the bug is going to
-	 *            be posted to
-	 * @param formName
-	 *            The form that we wish to use to submit the bug
-	 */
-	protected void setURL(BugReportPostHandler form, String formName) {
-		// String baseURL = BugzillaPlugin.getDefault().getServerName();
-		String baseURL = repository.getUrl().toExternalForm();
-		if (!baseURL.endsWith("/"))
-			baseURL += "/";
-		try {
-			form.setURL(baseURL + formName);
-		} catch (MalformedURLException e) {
-			// we should be ok here
-		}
-
-		// add the login information to the bug post
-		form.add("Bugzilla_login", repository.getUserName());
-		form.add("Bugzilla_password", repository.getPassword());
-	}
+//	/**
+//	 * function to set the url to post the bug to
+//	 * 
+//	 * @param form
+//	 *            A reference to a BugzillaReportSubmitForm that the bug is going to
+//	 *            be posted to
+//	 * @param formName
+//	 *            The form that we wish to use to submit the bug
+//	 */
+//	public static void setURL(BugzillaReportSubmitForm form, TaskRepository repository, String formName) {
+//		// String baseURL = BugzillaPlugin.getDefault().getServerName();
+//		String baseURL = repository.getUrl().toExternalForm();
+//		if (!baseURL.endsWith("/"))
+//			baseURL += "/";
+//		try {
+//			form.setURL(baseURL + formName);
+//		} catch (MalformedURLException e) {
+//			// we should be ok here
+//		}
+//
+//		// add the login information to the bug post
+//		form.add("Bugzilla_login", repository.getUserName());
+//		form.add("Bugzilla_password", repository.getPassword());
+//	}
 
 	@Override
 	public void setFocus() {

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
@@ -48,7 +49,11 @@ public abstract class AbstractRepositoryClient {
 	 */
 	public abstract void synchronize();
 	
-	public abstract Job synchronize(ITask task, boolean forceUpdate);
+	/**
+	 * @param listener		can be null
+	 * @return TODO
+	 */
+	public abstract Job synchronize(ITask task, boolean forceUpdate, IJobChangeListener listener);
 
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
@@ -67,8 +72,8 @@ public abstract class AbstractRepositoryClient {
 		}
 	}
 
-	public ITask getTaskFromArchive(String handle) {
-		return archiveMap.get(handle);
+	public ITask getTaskFromArchive(String handleIdentifier) {
+		return archiveMap.get(handleIdentifier);
 	}
 
 	public List<ITask> getArchiveTasks() {
@@ -79,5 +84,12 @@ public abstract class AbstractRepositoryClient {
 
 	public void setArchiveCategory(TaskCategory category) {
 		this.archiveCategory = category;
+	}
+
+	/**
+	 * For testing.
+	 */
+	public void clearArchive() {
+		archiveMap.clear();
 	}
 }

@@ -12,29 +12,19 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.util.Iterator;
 
-import javax.security.auth.login.LoginException;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.internal.bugzilla.core.BugReportPostHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
-import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
-import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
-import org.eclipse.mylar.internal.bugzilla.ui.actions.RefreshBugzillaReportsAction;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,8 +35,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
@@ -151,131 +139,106 @@ public class NewBugEditor extends AbstractBugEditor {
 
 	@Override
 	protected void submitBug() {
-		final BugReportPostHandler form = new BugReportPostHandler();
-		form.setPrefix(BugReportPostHandler.FORM_PREFIX_BUG_218);
-		form.setPrefix2(BugReportPostHandler.FORM_PREFIX_BUG_220);
 
-		form.setPostfix(BugReportPostHandler.FORM_POSTFIX_216);
-		form.setPostfix2(BugReportPostHandler.FORM_POSTFIX_218);
 		updateBug();
 
-		setURL(form, "post_bug.cgi");
-		// go through all of the attributes and add them to the bug post
-		Iterator<Attribute> itr = bug.getAttributes().iterator();
-		while (itr.hasNext()) {
-			Attribute a = itr.next();
-			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-				String key = a.getName();
-				String value = null;
+		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository, bug);
+	
+		final BugzillaRepositoryClient bugzillaRepositoryClient = (BugzillaRepositoryClient) MylarTaskListPlugin
+				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 
-				// get the values from the attribute
-				if (key.equalsIgnoreCase("OS")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Version")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Severity")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Platform")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Component")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Priority")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("URL")) {
-					value = a.getValue();
-				} else if (key.equalsIgnoreCase("Assign To") || key.equalsIgnoreCase("Assigned To")) {
-					value = a.getValue();
+		IJobChangeListener closeEditorListener = new IJobChangeListener() {
+
+			public void done(IJobChangeEvent event) {
+				if (event.getJob().getResult().equals(Status.OK_STATUS)) {
+					close();
+				} else {
+					submitButton.setEnabled(true);
+					NewBugEditor.this.showBusy(false);
 				}
-
-				// add the attribute to the bug post
-				if (value == null)
-					value = "";
-
-				form.add(a.getParameterName(), value);
-			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
-					&& a.isHidden()) {
-				// we have a hidden attribute, add it to the posting
-				form.add(a.getParameterName(), a.getValue());
-
 			}
 
-		}
+			public void aboutToRun(IJobChangeEvent event) {
+				// ignore
+			}
 
-		// set the summary, and description
+			public void awake(IJobChangeEvent event) {
+				// ignore
+			}
 
-		// add the summary to the bug post
-		form.add("short_desc", bug.getSummary());
+			public void running(IJobChangeEvent event) {
+				// ignore
+			}
 
-		// format the description of the bug so that it is roughly in 80
-		// character lines
-		bug.setDescription(formatText(bug.getDescription()));
+			public void scheduled(IJobChangeEvent event) {
+				// ignore
+			}
 
-		if (bug.getDescription().length() != 0) {
-			// add the new comment to the bug post if there is some text in
-			// it
-			form.add("comment", bug.getDescription());
-		}
-
-		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(final IProgressMonitor monitor) throws CoreException {
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						// update the bug on the server
-						try {
-							String id = form.post();
-
-							// If the bug was successfully sent...
-							if (id != null && NewBugEditor.this != null && !NewBugEditor.this.isDisposed()) {
-								changeDirtyStatus(false);
-								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
-										.closeEditor(NewBugEditor.this, false);
-							}
-							OfflineView.removeReport(bug);
-						} catch (BugzillaException e) {
-							MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
-							BugzillaPlugin.log(e);
-						} catch (PossibleBugzillaFailureException e) {
-							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
-									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
-							BugzillaPlugin.log(e);
-						} catch (LoginException e) {
-							e.printStackTrace();
-							// if we had an error with logging in, display an
-							// error
-							MessageDialog.openError(null, "Posting Error",
-									"Bugzilla could not post your bug since your login name or password is incorrect."
-											+ "\nPlease check your settings in the bugzilla preferences. ");
-						}
-					}
-				});
+			public void sleeping(IJobChangeEvent event) {
+				// ignore
 			}
 		};
+		bugzillaRepositoryClient.submitBugReport(bug, bugzillaReportSubmitForm, closeEditorListener);
+		
+//		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+//			protected void execute(final IProgressMonitor monitor) throws CoreException {
+//				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+//					public void run() {
+//						// update the bug on the server
+//						try {
+//
+//							bugzillaRepositoryClient.submitBugReport(bug, bugReportPostHandler);
+//
+//							// If the bug was successfully sent...
+//							if (NewBugEditor.this != null && !NewBugEditor.this.isDisposed()) {
+//								changeDirtyStatus(false);
+//								close();
+//								// BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+//								// .closeEditor(NewBugEditor.this, false);
+//							}
+//						} catch (BugzillaException e) {
+//							MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
+//							BugzillaPlugin.log(e);
+//						} catch (PossibleBugzillaFailureException e) {
+//							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
+//									"Bugzilla may not have posted your bug.\n" + e.getMessage(), bugReportPostHandler
+//											.getError());
+//							BugzillaPlugin.log(e);
+//						} catch (LoginException e) {
+//							e.printStackTrace();
+//							// if we had an error with logging in, display an
+//							// error
+//							MessageDialog.openError(null, "Posting Error",
+//									"Bugzilla could not post your bug since your login name or password is incorrect."
+//											+ "\nPlease check your settings in the bugzilla preferences. ");
+//						}
+//					}
+//				});
+//			}
+//		};
+//		Job job = new Job("Submitting New Bug") {
+//
+//			@Override
+//			protected IStatus run(IProgressMonitor monitor) {
+//				try {
+//					op.run(monitor);
+//				} catch (Exception e) {
+//					MylarStatusHandler.log(e, "Failed to submit bug");
+//					return new Status(Status.ERROR, "org.eclipse.mylar.internal.bugzilla.ui", Status.ERROR,
+//							"Failed to submit bug", e);
+//				}
+//
+//				BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager()
+//						.getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+//				if (client != null) {
+//					client.synchronize();
+//				}
+//				return Status.OK_STATUS;
+//			}
+//
+//		};
+//		job.schedule();
 
-		Job job = new Job("Submitting New Bug") {
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					op.run(monitor);
-				} catch (Exception e) {
-					MylarStatusHandler.log(e, "Failed to submit bug");
-					return new Status(Status.ERROR, "org.eclipse.mylar.internal.bugzilla.ui", Status.ERROR,
-							"Failed to submit bug", e);
-				}
-
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null) {
-							new RefreshBugzillaReportsAction().run();
-						}
-					}
-				});
-				return Status.OK_STATUS;
-			}
-
-		};
-
-		job.schedule();
 	}
 
 	@Override

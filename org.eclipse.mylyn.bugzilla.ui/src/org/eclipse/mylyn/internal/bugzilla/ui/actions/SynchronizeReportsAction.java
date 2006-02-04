@@ -21,15 +21,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryCategory;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -82,17 +82,19 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					TaskCategory cat = (TaskCategory) obj;
 					for (ITask task : cat.getChildren()) {
 						if (task instanceof BugzillaTask) {
-							BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
-									(BugzillaTask) task);
+							BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(task.getRepositoryKind());
+							client.requestRefresh((BugzillaTask)task);
 						}
 					}
 				} else if (obj instanceof BugzillaTask) {
-					BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh((BugzillaTask) obj);
+					BugzillaTask bugTask = (BugzillaTask)obj;
+					BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(bugTask.getRepositoryKind());
+					client.requestRefresh(bugTask);
 				} else if (obj instanceof BugzillaQueryHit) {
 					BugzillaQueryHit hit = (BugzillaQueryHit) obj;
 					if (hit.getCorrespondingTask() != null) {
-						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
-								hit.getCorrespondingTask());
+						BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
+						client.requestRefresh(hit.getCorrespondingTask());
 					}
 				}
 				for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
@@ -129,8 +131,8 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 				cat.refreshBugs();
 				for (IQueryHit hit : cat.getHits()) {
 					if (hit.getCorrespondingTask() != null && hit instanceof BugzillaQueryHit) {
-						BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
-								(BugzillaTask) hit.getCorrespondingTask());
+						BugzillaRepositoryClient client = (BugzillaRepositoryClient) MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
+						client.requestRefresh((BugzillaTask) hit.getCorrespondingTask());
 					}
 				}
 				Display.getDefault().asyncExec(new Runnable() {

@@ -39,7 +39,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
+import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.core.internal.FavoritesFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfiguration;
@@ -435,7 +435,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	/**
 	 * TODO: delete
 	 */
-	public void fireOfflineStatusChanged(final IBugzillaBug bug, final BugzillaOfflineStaus status) {
+	public void fireOfflineStatusChanged(final IBugzillaBug bug, final BugzillaOfflineStatus status) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				for (IOfflineBugListener listener : listeners) {
@@ -482,4 +482,5 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 		prefs.setDefault(IBugzillaConstants.VALUES_TARGET, BugzillaRepositoryUtil
 				.queryOptionsToString(IBugzillaConstants.DEFAULT_TARGET_VALUES));
 	}
+
 }

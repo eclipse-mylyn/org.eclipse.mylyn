@@ -14,10 +14,10 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 
 public interface IOfflineBugListener {
 
-	public enum BugzillaOfflineStaus {
-		SAVED, SAVED_WITH_OUTGOING_CHANGES, DELETED, SAVED_WITH_INCOMMING_CHANGES, CONFLICT
+	public enum BugzillaOfflineStatus {
+		SAVED, SAVED_WITH_OUTGOING_CHANGES, DELETED, SAVED_WITH_INCOMMING_CHANGES, CONFLICT, ERROR
 	}
 
-	public void offlineStatusChange(IBugzillaBug bug, BugzillaOfflineStaus status);
+	public void offlineStatusChange(IBugzillaBug bug, BugzillaOfflineStatus status);
 
 }

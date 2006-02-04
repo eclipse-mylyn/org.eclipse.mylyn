@@ -18,14 +18,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -41,23 +40,14 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.bugzilla.core.Operation;
-import org.eclipse.mylar.internal.bugzilla.core.BugReportPostHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
-import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
@@ -80,7 +70,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a
@@ -311,169 +300,50 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		return bug.getLabel() + ": " + checkText(bug.getAttribute("Summary").getNewValue());
 	}
 
-	private String toCommaSeparatedList(String[] strings) {
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < strings.length; i++) {
-			buffer.append(strings[i]);
-			if (i != strings.length - 1) {
-				buffer.append(",");
-			}
-		}
-		return buffer.toString();
-	}
-
 	@Override
-	protected void submitBug() {
+	public void submitBug() {
+
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
-		final BugReportPostHandler form = new BugReportPostHandler();
 
-		// set the url for the bug to be submitted to
-		setURL(form, "process_bug.cgi");
+		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug, repository,
+				removeCC);
+		final BugzillaRepositoryClient bugzillaRepositoryClient = (BugzillaRepositoryClient) MylarTaskListPlugin
+				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 
-		if (bug.getCharset() != null) {
-			form.setCharset(bug.getCharset());
-		}
+		IJobChangeListener closeEditorListener = new IJobChangeListener() {
 
-		// Add the user's address to the CC list if they haven't specified a CC
-		setDefaultCCValue();
-
-		// go through all of the attributes and add them to the bug post
-		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-			Attribute a = it.next();
-			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-				String value = a.getNewValue();
-				// add the attribute to the bug post
-				form.add(a.getParameterName(), checkText(value));
-			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
-					&& a.isHidden()) {
-				// we have a hidden attribute and we should send it back.
-				form.add(a.getParameterName(), a.getValue());
-			}
-		}
-
-		// make sure that the comment is broken up into 80 character lines
-		bug.setNewNewComment(formatText(bug.getNewNewComment()));
-
-		// add the summary to the bug post
-		form.add("short_desc", bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
-
-		if (removeCC != null && removeCC.size() > 0) {
-			String[] s = new String[removeCC.size()];
-			form.add("cc", toCommaSeparatedList(removeCC.toArray(s)));
-			form.add("removecc", "true");
-		}
-
-		// add the operation to the bug post
-		Operation o = bug.getSelectedOperation();
-		if (o == null)
-			form.add("knob", "none");
-		else {
-			form.add("knob", o.getKnobName());
-			if (o.hasOptions()) {
-				String sel = o.getOptionValue(o.getOptionSelection());
-				form.add(o.getOptionName(), sel);
-			} else if (o.isInput()) {
-				String sel = o.getInputValue();
-				form.add(o.getInputName(), sel);
-			}
-		}
-		form.add("form_name", "process_bug");
-
-		// add the new comment to the bug post if there is some text in it
-		if (bug.getNewNewComment().length() != 0) {
-			form.add("comment", bug.getNewNewComment());
-		}
-
-		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(final IProgressMonitor monitor) throws CoreException {
-				try {
-					form.post();
-
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							// TODO what do we do if the editor is closed
-//							if (ExistingBugEditor.this != null && !ExistingBugEditor.this.isDisposed()) {
-//								changeDirtyStatus(false);
-//								BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
-//										.closeEditor(ExistingBugEditor.this, true);
-//							}
-							close();
-							OfflineView.removeReport(bug);
-						}
-					});
-				} catch (final BugzillaException e) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e,
-									"occurred while posting the bug.", "I/O Error");
-						}
-					});
-					submitButton.setEnabled(true);
-					ExistingBugEditor.this.showBusy(false);
-				} catch (final PossibleBugzillaFailureException e) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
-									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
-							BugzillaPlugin.log(e);
-						}
-					});
-					submitButton.setEnabled(true);
-					ExistingBugEditor.this.showBusy(false);
-				} catch (final LoginException e) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							MessageDialog
-									.openError(
-											null,
-											"Login Error",
-											"Bugzilla could not post your bug since your login name or password is incorrect.\nPlease check your settings in the bugzilla preferences. ");
-						}
-					});
+			public void done(IJobChangeEvent event) {
+				if (event.getJob().getResult().equals(Status.OK_STATUS)) {
+					close();
+				} else {
 					submitButton.setEnabled(true);
 					ExistingBugEditor.this.showBusy(false);
 				}
 			}
-		};
 
-		Job job = new Job("Submitting Bug") {
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					op.run(monitor);
-				} catch (Exception e) {
-					MylarStatusHandler.log(e, "Failed to submit bug");
-					return new Status(Status.ERROR, "org.eclipse.mylar.internal.bugzilla.ui", Status.ERROR,
-							"Failed to submit bug", e);
-				}
-
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						if (TaskListView.getDefault() != null && TaskListView.getDefault().getViewer() != null) {
-							String handle = TaskRepositoryManager.getHandle(bug.getRepository(), bug.getId());
-							ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
-							if (task instanceof BugzillaTask) {
-								BugzillaUiPlugin.getDefault().getBugzillaRefreshManager().requestRefresh(
-										(BugzillaTask) task);
-								// ITaskHandler taskHandler =
-								// MylarTaskListPlugin.getDefault().getTaskHandlerForElement(task);
-								// if(taskHandler != null) {
-								// taskHandler.itemOpened(task);
-								// }
-							}
-							// new RefreshBugzillaReportsAction().run();
-						}
-					}
-				});
-				return Status.OK_STATUS;
+			public void aboutToRun(IJobChangeEvent event) {
+				// ignore
 			}
 
-		};
+			public void awake(IJobChangeEvent event) {
+				// ignore
+			}
 
-		job.schedule();
-	}
+			public void running(IJobChangeEvent event) {
+				// ignore
+			}
+
+			public void scheduled(IJobChangeEvent event) {
+				// ignore
+			}
+
+			public void sleeping(IJobChangeEvent event) {
+				// ignore
+			}
+		};
+		bugzillaRepositoryClient.submitBugReport(bug, bugzillaReportSubmitForm, closeEditorListener);
+	} 
 
 	@Override
 	protected void createDescriptionLayout() {
@@ -970,28 +840,30 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		}
 	}
 
-	/**
-	 * Sets the cc field to the user's address if a cc has not been specified to
-	 * ensure that commenters are on the cc list.
-	 * 
-	 * @author Wesley Coelho
-	 */
-	private void setDefaultCCValue() {
-		Attribute newCCattr = bug.getAttributeForKnobName("newcc");
-		Attribute owner = bug.getAttribute("Assigned To");
-
-		// Don't add the cc if the user is the bug owner
-		if (owner != null && owner.getValue().indexOf(repository.getUserName()) > -1) {
-			return;
-		}
-
-		// Add the user to the cc list
-		if (newCCattr != null) {
-			if (newCCattr.getNewValue().equals("")) {
-				newCCattr.setNewValue(repository.getUserName());
-			}
-		}
-	}
+	// /**
+	// * Sets the cc field to the user's address if a cc has not been specified
+	// to
+	// * ensure that commenters are on the cc list.
+	// *
+	// * @author Wesley Coelho
+	// */
+	// private void setDefaultCCValue() {
+	// Attribute newCCattr = bug.getAttributeForKnobName("newcc");
+	// Attribute owner = bug.getAttribute("Assigned To");
+	//
+	// // Don't add the cc if the user is the bug owner
+	// if (owner != null && owner.getValue().indexOf(repository.getUserName()) >
+	// -1) {
+	// return;
+	// }
+	//
+	// // Add the user to the cc list
+	// if (newCCattr != null) {
+	// if (newCCattr.getNewValue().equals("")) {
+	// newCCattr.setNewValue(repository.getUserName());
+	// }
+	// }
+	// }
 
 	// TODO used for spell checking. Add back when we want to support this
 	// protected Button checkSpellingButton;

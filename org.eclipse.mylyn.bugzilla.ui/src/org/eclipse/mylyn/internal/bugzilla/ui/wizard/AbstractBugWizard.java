@@ -11,8 +11,6 @@
 package org.eclipse.mylar.internal.bugzilla.ui.wizard;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Iterator;
 
 import javax.security.auth.login.LoginException;
 
@@ -21,8 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.bugzilla.core.Attribute;
-import org.eclipse.mylar.internal.bugzilla.core.BugReportPostHandler;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -30,7 +27,6 @@ import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditorInput;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
@@ -76,8 +72,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 		this.repository = repository;
 		model = new NewBugModel();
 		id = null; // Since there is no bug posted yet.
-		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.internal.bugzilla.ui",
-				"icons/wizban/bug-wizard.gif"));
+		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
+				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 		// setForcePreviousAndNextButtons(true);
 	}
 
@@ -97,8 +93,8 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			// If the bug report is sent successfully,
 			// then close the wizard and open the bug in an editor
 			if (postBug()) {
-//				if (!fromDialog)
-//					openBugEditor();
+				// if (!fromDialog)
+				// openBugEditor();
 				return true;
 			}
 			// If the report was not sent, keep the wizard open
@@ -130,111 +126,24 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					public void run() {
-						BugReportPostHandler form = new BugReportPostHandler();
-						form.setPrefix(BugReportPostHandler.FORM_PREFIX_BUG_218);
-						form.setPrefix2(BugReportPostHandler.FORM_PREFIX_BUG_220);
-
-						form.setPostfix(BugReportPostHandler.FORM_POSTFIX_216);
-						form.setPostfix2(BugReportPostHandler.FORM_POSTFIX_218);
-
+						BugzillaReportSubmitForm form = BugzillaReportSubmitForm.makeNewBugPost2(repository, model);
 						try {
-							setURL(form, "post_bug.cgi");
-							// go through all of the attributes and add them to
-							// the bug post
-							Iterator<Attribute> itr = model.getAttributes().iterator();
-							while (itr.hasNext()) {
-								Attribute a = itr.next();
-								if (a != null && a.getParameterName() != null
-										&& a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-									String key = a.getName();
-									String value = null;
+							id = form.submitReportToRepository();
 
-									// get the values from the attribute
-									if (key.equalsIgnoreCase("OS")) {
-										value = a.getValue();
-									} else if (key.equalsIgnoreCase("Version")) {
-										value = a.getValue();
-									} else if (key.equalsIgnoreCase("Severity")) {
-										value = a.getValue();
-									} else if (key.equalsIgnoreCase("Platform")) {
-										value = a.getValue();
-									} else if (key.equalsIgnoreCase("Component")) {
-										value = a.getValue();
-									} else if (key.equalsIgnoreCase("Priority")) {
-										value = a.getValue();
-									} else if (key.equalsIgnoreCase("URL")) {
-										value = a.getValue();
-									} else if (key.equalsIgnoreCase("Assign To") || key.equalsIgnoreCase("Assigned To")) {
-										value = a.getValue();
-									}
-
-									// add the attribute to the bug post
-									if (value == null)
-										value = "";
-
-									form.add(a.getParameterName(), value);
-								} else if (a != null && a.getParameterName() != null
-										&& a.getParameterName().compareTo("") != 0 && a.isHidden()) {
-									// we have a hidden attribute, add it to the
-									// posting
-									form.add(a.getParameterName(), a.getValue());
-
-								}
-
+							if (id != null) {
+								sentSuccessfully = true;
 							}
-
-							// set the summary, and description
-
-							// add the summary to the bug post
-							form.add("short_desc", model.getSummary());
-
-							// dummy target milestone
-							form.add("target_milestone", "---");
-
-							if (BugzillaPlugin.getDefault().isServerCompatability220()) {
-								form.add("bug_status", "NEW");
-							}
-
-							// format the description of the bug so that it is
-							// roughly in 80
-							// character lines
-							formatDescription();
-
-							if (model.getDescription().length() != 0) {
-								// add the new comment to the bug post if there
-								// is some text in
-								// it
-								form.add("comment", model.getDescription());
-							}
-
-							// update the bug on the server
-							try {
-								id = form.post();
-
-								if (id != null) {
-									sentSuccessfully = true;
-								}
-
-							} catch (BugzillaException e) {
-								MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
-								BugzillaPlugin.log(e);
-							} catch (PossibleBugzillaFailureException e) {
-								WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
-										"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
-								BugzillaPlugin.log(e);
-							} catch (LoginException e) {
-								// if we had an error with logging in, display
-								// an error
-								MessageDialog.openError(null, "Posting Error",
-										"Bugzilla could not post your bug since your login name or password is incorrect."
-												+ "\nPlease check your settings in the bugzilla preferences. ");
-								sentSuccessfully = false;
-							}
-						} catch (MalformedURLException e) {
-							MessageDialog.openError(null, "Unsupported Protocol",
-									"The server that was specified for Bugzilla is not supported by your JVM."
-											+ "\nPlease make sure that you are using a JDK that supports SSL.");
+						} catch (BugzillaException e) {
+							MessageDialog.openError(null, "I/O Error", "Bugzilla could not post your bug.");
 							BugzillaPlugin.log(e);
+						} catch (PossibleBugzillaFailureException e) {
+							WebBrowserDialog.openAcceptAgreement(null, "Possible Bugzilla Client Failure",
+									"Bugzilla may not have posted your bug.\n" + e.getMessage(), form.getError());
+							BugzillaPlugin.log(e);
+						} catch (LoginException e) {
+							MessageDialog.openError(null, "Posting Error",
+									"Bugzilla could not post your bug since your login name or password is incorrect."
+											+ "\nPlease check your settings in the bugzilla preferences. ");
 							sentSuccessfully = false;
 						}
 					}
@@ -284,62 +193,6 @@ public abstract class AbstractBugWizard extends Wizard implements INewWizard {
 	 * reports are saved together in a single file in the plug-in's directory.
 	 */
 	abstract protected void saveBugOffline();
-
-	/**
-	 * Function to set the url to post the bug to.
-	 * 
-	 * @param form
-	 *            A reference to a BugReportPostHandler that the bug is going to
-	 *            be posted to
-	 * @param formName
-	 *            The form that we wish to use to submit the bug
-	 */
-	protected void setURL(BugReportPostHandler form, String formName) throws MalformedURLException {
-
-		// String baseURL = BugzillaPlugin.getDefault().getServerName();
-		String baseURL = repository.getUrl().toExternalForm();
-		if (!baseURL.endsWith("/"))
-			baseURL += "/";
-		form.setURL(baseURL + formName);
-
-		form.add("Bugzilla_login", repository.getUserName());
-		form.add("Bugzilla_password", repository.getPassword());
-	}
-
-	/**
-	 * Format the description into lines of about 80 characters so that it is
-	 * displayed properly in bugzilla, done automatically by Bugzilla 2.20
-	 */
-	protected void formatDescription() {
-		String origDesc = model.getDescription();
-		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
-			model.setDescription(origDesc);
-		} else {
-			String[] descArray = new String[(origDesc.length() / AbstractBugEditor.WRAP_LENGTH + 1) * 2];
-			for (int i = 0; i < descArray.length; i++)
-				descArray[i] = null;
-			int j = 0;
-			while (true) {
-				int spaceIndex = origDesc.indexOf(" ", AbstractBugEditor.WRAP_LENGTH - 5);
-				if (spaceIndex == origDesc.length() || spaceIndex == -1) {
-					descArray[j] = origDesc;
-					break;
-				}
-				descArray[j] = origDesc.substring(0, spaceIndex);
-				origDesc = origDesc.substring(spaceIndex + 1, origDesc.length());
-				j++;
-			}
-
-			String newDesc = "";
-
-			for (int i = 0; i < descArray.length; i++) {
-				if (descArray[i] == null)
-					break;
-				newDesc += descArray[i] + "\n";
-			}
-			model.setDescription(newDesc);
-		}
-	}
 
 	public String getId() {
 		return id;

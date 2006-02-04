@@ -14,7 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -60,7 +60,8 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 
 	@Override
 	protected void saveBugOffline() {
-		OfflineView.saveOffline(model, true);
+		BugzillaRepositoryClient client = (BugzillaRepositoryClient)MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+		client.saveOffline(model, true);
 	}
 
 	@Override
@@ -96,8 +97,6 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 			return false;
 		} 
 
-		// TaskRepository repository =
-		// MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(BugzillaPlugin.REPOSITORY_KIND);
 		BugzillaTask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(),
 				bugId), "<bugzilla info>", true);
 		Object selectedObject = null;
@@ -109,41 +108,20 @@ public class NewBugzillaReportWizard extends AbstractBugWizard {
 		if (repositoryClient != null) {
 			repositoryClient.addTaskToArchive(newTask);
 		}
-		
-//		ITaskHandler taskHandler = MylarTaskListPlugin.getDefault().getHandlerForElement(newTask);
-//		if (taskHandler != null) {
-//			ITask addedTask = taskHandler.addTaskToArchive(newTask);
-//			if (addedTask instanceof BugzillaTask) {
-//				BugzillaTask newTask2 = (BugzillaTask) addedTask;
-//				if (newTask2 != newTask) {
-//					newTask = newTask2;
-//				}
-//			}
-//		}
 
 		if (selectedObject instanceof TaskCategory) {
 			MylarTaskListPlugin.getTaskListManager().moveToCategory(((TaskCategory) selectedObject), newTask);
-			// ((TaskCategory)selectedObject).addTask(newTask);
 		} else {
 			MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 		}
 		
 		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 		client.addTaskToArchive(newTask);
-//		BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskArchive((BugzillaTask) newTask);
-		
-//		newTask.openTaskInEditor(false);
 		TaskListUiUtil.openEditor(newTask);
 		
 		if (!newTask.isBugDownloaded()) {
-			client.synchronize(newTask, true);
-//			newTask.scheduleDownloadReport();
+			client.synchronize(newTask, true, null);
 		}
-
-//		if (TaskListView.getDefault() != null) {
-//			TaskListView.getDefault().getViewer().setSelection(new StructuredSelection(newTask));
-//			TaskListView.getDefault().getViewer().refresh();
-//		}
 
 		return true;
 	}
