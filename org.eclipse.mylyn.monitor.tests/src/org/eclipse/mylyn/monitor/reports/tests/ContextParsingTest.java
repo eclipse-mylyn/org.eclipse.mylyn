@@ -70,7 +70,7 @@ public class ContextParsingTest extends TestCase {
 		for (InteractionEvent event : events) {
 			if (SelectionMonitor.isValidStructureHandle(event)) {
 				InteractionEvent newEvent = InteractionEvent.makeCopy(event, 1f);
-				context.parseEvent(newEvent);
+				context.parseEvent(newEvent); 
 				if (SelectionMonitor.isValidStructureHandle(event) && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
 					IMylarElement element = context.parseEvent(event);
 					
@@ -82,14 +82,14 @@ public class ContextParsingTest extends TestCase {
 					} 
 					
 					assertTrue("should be positive: " + element.getInterest().getValue(), element.getInterest().getValue() >= 0);
-//					System.err.println(">>> " + element.getInterest().getValue() + ", handle: "
-//							+ element.getHandleIdentifier());
+					System.err.println(">>> " + element.getInterest().getValue() + ", handle: "
+							+ element.getHandleIdentifier());
 					numEvents++;
 				}
 			}
 		}
 	}
-
+	
 	public void testScalingVactorSet() {
 		ScalingFactors scalingFactors = new ScalingFactors();
 		scalingFactors.setDecay(new ScalingFactor("decay", 0f)); 
