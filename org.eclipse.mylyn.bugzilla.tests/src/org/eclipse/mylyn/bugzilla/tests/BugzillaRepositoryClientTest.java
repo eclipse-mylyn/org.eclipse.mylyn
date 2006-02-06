@@ -37,24 +37,7 @@ import org.eclipse.ui.PartInitException;
 
 public class BugzillaRepositoryClientTest extends TestCase {
 
-//	private static final String VAL_NONE = "none";
-//
-//	private static final String ATTR_SHORT_DESC = "short_desc";
-//
-//	private static final String ATTR_KNOB = "knob";
-//
-//	private static final String ATTR_COMMENT = "comment";
-//
-//	private static final String VAL_PROCESS_BUG = "process_bug";
-//
-//	private static final String ATTR_FORM_NAME = "form_name";
-
 	private static final String DEFAULT_KIND = BugzillaPlugin.REPOSITORY_KIND;
-
-	// private static final String DEFAULT_URL = "http://eclipse.org";
-
-	// private static final String TEST_REPOSITORY_URL =
-	// "http://alaskan.cs.ubc.ca/bugzilla";
 
 	private static final String TEST_REPOSITORY_URL = "https://bugs.eclipse.org/bugs";
 
@@ -70,7 +53,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		manager = MylarTaskListPlugin.getRepositoryManager();
 		manager.clearRepositories();
 		repository = new TaskRepository(DEFAULT_KIND, new URL(TEST_REPOSITORY_URL));
-		// repository.setAuthenticationCredentials("relves@cs.ubc.ca", "test");
+		// repository.setAuthenticationCredentials("userid", "password");
 		manager.addRepository(repository);
 		assertNotNull(manager);
 
@@ -114,37 +97,72 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingId(repository, "1");
 		MylarTaskListPlugin.getTaskListManager().moveToRoot(task);
 		assertTrue(task.isBugDownloaded());
-		client.saveBugReport(task.getBugReport()); // (The initial local copy from server)
+		// (The initial local copy from server)
+		client.saveBugReport(task.getBugReport());
 		assertEquals(task.getSyncState(), BugReportSyncState.SYNCHRONIZED);
-		
+
 		// Modify it
-		String newComment = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
-		task.getBugReport().setNewNewComment(newComment);
-		// overwrites old fields/attributes with new content (ususually done by BugEditor)
-		updateBug(task.getBugReport()); 
+		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
+		task.getBugReport().setNewNewComment(newCommentText);
+		// overwrites old fields/attributes with new content (ususually done by
+		// BugEditor)
+		updateBug(task.getBugReport());
 		assertEquals(task.getSyncState(), BugReportSyncState.SYNCHRONIZED);
-		client.saveBugReport(task.getBugReport()); 
+		client.saveBugReport(task.getBugReport());
 		assertEquals(BugReportSyncState.OUTGOING, task.getSyncState());
-		
+
 		// Submit changes
 		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm();
 		client.submitBugReport(task.getBugReport(), form, null);
 		assertEquals(BugReportSyncState.SYNCHRONIZED, task.getSyncState());
-		assertTrue(task.getBugReport().getNewComment().equals(newComment));
-		
+
+		// TODO: Test that comment was appended
+		// ArrayList<Comment> comments = task.getBugReport().getComments();
+		// assertNotNull(comments);
+		// assertTrue(comments.size() > 0);
+		// Comment lastComment = comments.get(comments.size() - 1);
+		// assertEquals(newCommentText, lastComment.getText());
+
 		client.synchronize(task, true, null);
 		assertEquals(BugReportSyncState.SYNCHRONIZED, task.getSyncState());
+
+		// OUTGOING with forceddSynch=false
+		task.setSyncState(BugReportSyncState.OUTGOING);
+		client.synchronize(task, false, null);
+		assertEquals(BugReportSyncState.OUTGOING, task.getSyncState());
+
+		// OUTGOING with forcedSynch=true --> Update Local Copy dialog
+		// Choosing to override local changes results in SYNCHRONIZED
+		// Choosing not to override results in CONFLICT
+
+		task.setSyncState(BugReportSyncState.CONFLICT);
+		client.synchronize(task, false, null);
+		assertEquals(BugReportSyncState.CONFLICT, task.getSyncState());
+
+		// CONFLICT with forcedSynch=true --> Update Local Copy dialog
+
+		// Has no outgoing changes or conflicts yet needs synch
+		// because task doesn't have bug report (new query hit)
+		// Result: retrieved with no incoming status
+		task.setSyncState(BugReportSyncState.SYNCHRONIZED);
+		BugReport bugReport = task.getBugReport();
+		task.setBugReport(null);
+		client.synchronize(task, false, null);
+		assertEquals(BugReportSyncState.SYNCHRONIZED, task.getSyncState());
+		assertNotNull(task.getBugReport());
+		assertEquals(task.getBugReport().getId(), bugReport.getId());
 	}
 
 	class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
 
 		@Override
-		public String submitReportToRepository() throws BugzillaException, LoginException, PossibleBugzillaFailureException {
+		public String submitReportToRepository() throws BugzillaException, LoginException,
+				PossibleBugzillaFailureException {
 			return "test-submit";
 		}
-		
+
 	}
-	
+
 	//
 	// /*
 	// * Test method for
@@ -189,78 +207,86 @@ public class BugzillaRepositoryClientTest extends TestCase {
 
 	// Utility Methods for testing purposes
 
-//	private void populatePostHandler(BugzillaReportSubmitForm bugReportPostHandler, BugReport bug) {
-//
-//		// set the url for the bug to be submitted to
-//		AbstractBugEditor.setURL(bugReportPostHandler, repository, "process_bug.cgi");
-//
-//		if (bug.getCharset() != null) {
-//			bugReportPostHandler.setCharset(bug.getCharset());
-//		}
-//
-//		// Add the user's address to the CC list if they haven't specified a CC
-//		Attribute newCCattr = bug.getAttributeForKnobName("newcc");
-//		Attribute owner = bug.getAttribute("Assigned To");
-//
-//		// Don't add the cc if the user is the bug owner
-//		if (repository.getUserName() != null && !(owner != null && owner.getValue().indexOf(repository.getUserName()) > -1)) {
-//			// Add the user to the cc list
-//			if (newCCattr != null) {
-//				if (newCCattr.getNewValue().equals("")) {
-//					newCCattr.setNewValue(repository.getUserName());
-//				}
-//			}
-//		}
-//
-//		// go through all of the attributes and add them to the bug post
-//		for (Iterator<Attribute> it = bug.getAttributes().iterator(); it.hasNext();) {
-//			Attribute a = it.next();
-//			if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
-//				String value = a.getNewValue();
-//				// add the attribute to the bug post
-//				bugReportPostHandler.add(a.getParameterName(), AbstractBugEditor.checkText(value));
-//			} else if (a != null && a.getParameterName() != null && a.getParameterName().compareTo("") != 0
-//					&& a.isHidden()) {
-//				// we have a hidden attribute and we should send it back.
-//				bugReportPostHandler.add(a.getParameterName(), a.getValue());
-//			}
-//		}
-//
-//		// make sure that the comment is broken up into 80 character lines
-//		bug.setNewNewComment(AbstractBugEditor.formatText(bug.getNewNewComment()));
-//
-//		// add the summary to the bug post
-//		bugReportPostHandler.add(ATTR_SHORT_DESC, bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
-//
-//		// if (removeCC != null && removeCC.size() > 0) {
-//		// String[] s = new String[removeCC.size()];
-//		// bugReportPostHandler.add("cc",
-//		// toCommaSeparatedList(removeCC.toArray(s)));
-//		// bugReportPostHandler.add("removecc", "true");
-//		// }
-//
-//		// add the operation to the bug post
-//		Operation o = bug.getSelectedOperation();
-//		if (o == null)
-//			bugReportPostHandler.add(ATTR_KNOB, VAL_NONE);
-//		else {
-//			bugReportPostHandler.add(ATTR_KNOB, o.getKnobName());
-//			if (o.hasOptions()) {
-//				String sel = o.getOptionValue(o.getOptionSelection());
-//				bugReportPostHandler.add(o.getOptionName(), sel);
-//			} else if (o.isInput()) {
-//				String sel = o.getInputValue();
-//				bugReportPostHandler.add(o.getInputName(), sel);
-//			}
-//		}
-//		bugReportPostHandler.add(ATTR_FORM_NAME, VAL_PROCESS_BUG);
-//
-//		// add the new comment to the bug post if there is some text in it
-//		if (bug.getNewNewComment().length() != 0) {
-//			bugReportPostHandler.add(ATTR_COMMENT, bug.getNewNewComment());
-//		}
-//
-//	}
+	// private void populatePostHandler(BugzillaReportSubmitForm
+	// bugReportPostHandler, BugReport bug) {
+	//
+	// // set the url for the bug to be submitted to
+	// AbstractBugEditor.setURL(bugReportPostHandler, repository,
+	// "process_bug.cgi");
+	//
+	// if (bug.getCharset() != null) {
+	// bugReportPostHandler.setCharset(bug.getCharset());
+	// }
+	//
+	// // Add the user's address to the CC list if they haven't specified a CC
+	// Attribute newCCattr = bug.getAttributeForKnobName("newcc");
+	// Attribute owner = bug.getAttribute("Assigned To");
+	//
+	// // Don't add the cc if the user is the bug owner
+	// if (repository.getUserName() != null && !(owner != null &&
+	// owner.getValue().indexOf(repository.getUserName()) > -1)) {
+	// // Add the user to the cc list
+	// if (newCCattr != null) {
+	// if (newCCattr.getNewValue().equals("")) {
+	// newCCattr.setNewValue(repository.getUserName());
+	// }
+	// }
+	// }
+	//
+	// // go through all of the attributes and add them to the bug post
+	// for (Iterator<Attribute> it = bug.getAttributes().iterator();
+	// it.hasNext();) {
+	// Attribute a = it.next();
+	// if (a != null && a.getParameterName() != null &&
+	// a.getParameterName().compareTo("") != 0 && !a.isHidden()) {
+	// String value = a.getNewValue();
+	// // add the attribute to the bug post
+	// bugReportPostHandler.add(a.getParameterName(),
+	// AbstractBugEditor.checkText(value));
+	// } else if (a != null && a.getParameterName() != null &&
+	// a.getParameterName().compareTo("") != 0
+	// && a.isHidden()) {
+	// // we have a hidden attribute and we should send it back.
+	// bugReportPostHandler.add(a.getParameterName(), a.getValue());
+	// }
+	// }
+	//
+	// // make sure that the comment is broken up into 80 character lines
+	// bug.setNewNewComment(AbstractBugEditor.formatText(bug.getNewNewComment()));
+	//
+	// // add the summary to the bug post
+	// bugReportPostHandler.add(ATTR_SHORT_DESC,
+	// bug.getAttribute(BugReport.ATTR_SUMMARY).getNewValue());
+	//
+	// // if (removeCC != null && removeCC.size() > 0) {
+	// // String[] s = new String[removeCC.size()];
+	// // bugReportPostHandler.add("cc",
+	// // toCommaSeparatedList(removeCC.toArray(s)));
+	// // bugReportPostHandler.add("removecc", "true");
+	// // }
+	//
+	// // add the operation to the bug post
+	// Operation o = bug.getSelectedOperation();
+	// if (o == null)
+	// bugReportPostHandler.add(ATTR_KNOB, VAL_NONE);
+	// else {
+	// bugReportPostHandler.add(ATTR_KNOB, o.getKnobName());
+	// if (o.hasOptions()) {
+	// String sel = o.getOptionValue(o.getOptionSelection());
+	// bugReportPostHandler.add(o.getOptionName(), sel);
+	// } else if (o.isInput()) {
+	// String sel = o.getInputValue();
+	// bugReportPostHandler.add(o.getInputName(), sel);
+	// }
+	// }
+	// bugReportPostHandler.add(ATTR_FORM_NAME, VAL_PROCESS_BUG);
+	//
+	// // add the new comment to the bug post if there is some text in it
+	// if (bug.getNewNewComment().length() != 0) {
+	// bugReportPostHandler.add(ATTR_COMMENT, bug.getNewNewComment());
+	// }
+	//
+	// }
 
 	protected void updateBug(BugReport bug) {
 

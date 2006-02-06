@@ -32,7 +32,6 @@ import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.core.compare.BugzillaCompareInput;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -41,6 +40,12 @@ import org.eclipse.ui.PlatformUI;
  * Class to persist the data for the offline reports list
  */
 public class OfflineReportsFile {
+	
+	public enum BugzillaOfflineStatus {
+		SAVED, SAVED_WITH_OUTGOING_CHANGES, DELETED, SAVED_WITH_INCOMMING_CHANGES, CONFLICT, ERROR
+	}
+	
+	
 	/** The file that the offline reports are written to */
 	private File file;
 
@@ -94,7 +99,7 @@ public class OfflineReportsFile {
 			int index = -1;
 			if ((index = find(entry.getId())) >= 0) {
 				IBugzillaBug oldBug = list.get(index);
-				if (oldBug instanceof BugReport && entry instanceof BugReport) { //&& !saveChosen
+				if (oldBug instanceof BugReport && entry instanceof BugReport && !saveChosen ) { 
 					CompareConfiguration config = new CompareConfiguration();
 					config.setLeftEditable(false);
 					config.setRightEditable(false);
@@ -117,16 +122,17 @@ public class OfflineReportsFile {
 						// true, in);
 					} catch (InterruptedException x) {
 						// cancelled by user
-						status =  BugzillaOfflineStatus.ERROR;
+						// TODO: Check how errors are handled
+						return BugzillaOfflineStatus.ERROR;
 					} catch (InvocationTargetException x) {
 						BugzillaPlugin.log(x);
 						MessageDialog.openError(null, "Compare Failed", x.getTargetException().getMessage());
-						status =  BugzillaOfflineStatus.ERROR;
+						return  BugzillaOfflineStatus.ERROR;
 					}
 
 					if (in.getCompareResult() == null) {
 						status = BugzillaOfflineStatus.SAVED;
-					} else if (oldBug.hasChanges() && saveChosen) {
+					} else if (oldBug.hasChanges()) { 
 						if (!MessageDialog
 								.openQuestion(
 										null,
@@ -135,18 +141,13 @@ public class OfflineReportsFile {
 												+ entry.getId()
 												+ " Has Changes.\nWould you like to override local changes? Note: if you select No, your added comment will be saved with the updated bug, but all other changes will be lost.")) {
 							((BugReport) entry).setNewComment(((BugReport) oldBug).getNewComment());
-							((BugReport) entry).setHasChanged(true);
-							status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES; //CONFLICT
+							((BugReport) entry).setHasChanged(true);						
+							status = BugzillaOfflineStatus.CONFLICT; 
 						} else {
 							((BugReport) entry).setHasChanged(false);
 							status = BugzillaOfflineStatus.SAVED;
-						}
-						
-					} else if (oldBug.hasChanges() && !saveChosen) {
-						((BugReport) entry).setNewComment(((BugReport) oldBug).getNewComment());
-						((BugReport) entry).setHasChanged(true);
-						status = BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES; //.CONFLICT;					
-					} else if (!saveChosen) {
+						}				
+					} else  { 
 						DiffNode node = (DiffNode) in.getCompareResult();
 						IDiffElement[] children = node.getChildren();
 						if (children.length != 0) {
@@ -159,10 +160,8 @@ public class OfflineReportsFile {
 						} else {
 							status = BugzillaOfflineStatus.SAVED; // do we ever get here?
 						}
-
-					} else {
-						status = BugzillaOfflineStatus.SAVED;
 					}
+
 					// Display.getDefault().asyncExec(new Runnable(){
 					// public void run() {
 					//						
@@ -177,9 +176,7 @@ public class OfflineReportsFile {
 			}
 			// add the entry to the list and write the file to disk
 			list.add(entry);
-			writeFile();
-			BugzillaPlugin.getDefault().fireOfflineStatusChanged(entry, status);
-			
+			writeFile();			
 		} catch (Exception e) {
 			IStatus runtimestatus = new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK,
 					"failed to add of offline report", e);

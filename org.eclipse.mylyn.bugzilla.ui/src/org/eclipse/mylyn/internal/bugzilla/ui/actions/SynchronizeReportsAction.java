@@ -135,12 +135,12 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 						client.requestRefresh((BugzillaTask) hit.getCorrespondingTask());
 					}
 				}
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if (TaskListView.getDefault() != null)
-							TaskListView.getDefault().getViewer().refresh();
-					}
-				});
+//				Display.getDefault().asyncExec(new Runnable() {
+//					public void run() {
+//						if (TaskListView.getDefault() != null)
+//							TaskListView.getDefault().getViewer().refresh();
+//					}
+//				});
 				return Status.OK_STATUS;
 			}
 

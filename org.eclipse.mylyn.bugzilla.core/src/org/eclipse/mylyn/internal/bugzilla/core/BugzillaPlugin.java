@@ -20,7 +20,6 @@ import java.net.URLConnection;
 import java.net.Proxy.Type;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.core.internal.FavoritesFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.ProductConfiguration;
@@ -48,7 +46,6 @@ import org.eclipse.mylar.internal.bugzilla.core.search.IBugzillaResultEditorMatc
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.update.internal.core.UpdateCore;
 import org.eclipse.update.internal.ui.UpdateUI;
@@ -73,8 +70,6 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 
 	/** The file that contains all of the offline bug reports */
 	private OfflineReportsFile offlineReportsFile;
-
-	private List<IOfflineBugListener> listeners = new ArrayList<IOfflineBugListener>();
 
 	/** Product configuration for the current server */
 	private Map<String, ProductConfiguration> productConfigurations = new HashMap<String, ProductConfiguration>();
@@ -416,33 +411,6 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 
 	public int getMaxResults() {
 		return getPreferenceStore().getInt(IBugzillaConstants.MAX_RESULTS);
-	}
-
-	public void addOfflineStatusListener(IOfflineBugListener listener) {
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
-
-	public void removeOfflineStatusListener(IOfflineBugListener listener) {
-		listeners.remove(listener);
-	}
-
-	public List<IOfflineBugListener> getOfflineStatusListeners() {
-		return listeners;
-	}
-
-	/**
-	 * TODO: delete
-	 */
-	public void fireOfflineStatusChanged(final IBugzillaBug bug, final BugzillaOfflineStatus status) {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				for (IOfflineBugListener listener : listeners) {
-					listener.offlineStatusChange(bug, status);
-				}
-			}
-		});
 	}
 
 	private void setDefaultQueryOptions() {

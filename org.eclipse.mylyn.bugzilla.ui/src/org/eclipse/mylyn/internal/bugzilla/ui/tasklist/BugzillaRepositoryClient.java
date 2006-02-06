@@ -40,8 +40,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
+import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile.BugzillaOfflineStatus;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
@@ -67,7 +67,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaRepositoryClient extends AbstractRepositoryClient implements IOfflineBugListener {
+public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 
 	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla Repository";
 
@@ -87,16 +87,15 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 
 	private static final int MAX_REFRESH_JOBS = 5;
 
-	public static final int WRAP_LENGTH = 90; // will be moved to utility
-
+	private OfflineReportsFile offlineReportsFile;
+	
 	// class
 
 	public BugzillaRepositoryClient() {
 		super();
-		// TODO: remove on dispose?
-		BugzillaPlugin.getDefault().addOfflineStatusListener(this);
 		toBeRefreshed = new LinkedList<BugzillaTask>();
 		currentlyRefreshing = new HashMap<BugzillaTask, Job>();
+		offlineReportsFile = BugzillaPlugin.getDefault().getOfflineReports();
 	}
 
 	public String getLabel() {
@@ -169,34 +168,34 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 	}
 
 	@Override
-	public Job synchronize(ITask task, boolean forceUpdate, IJobChangeListener listener) {
+	public Job synchronize(ITask task, boolean forceSynch, IJobChangeListener listener) {
 		if (task instanceof BugzillaTask) {
-			final BugzillaTask bugzillaTask = (BugzillaTask) task;
+			final BugzillaTask bugzillaTask = (BugzillaTask) task;			
 			// TODO: refactor these conditions
-			// boolean canNotSynch = bugzillaTask.isDirty() ||
-			// bugzillaTask.getState() != BugTaskState.FREE;
-			// boolean hasLocalChanges = false;// bugzillaTask.getSyncState() ==
-			// BugReportSyncState.OUTGOING;
-			// || bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
-			// if (forceUpdate || (!canNotSynch && !hasLocalChanges)) {
-			// if (!canNotSynch && !hasLocalChanges) { //
-			final SynchronizeBugzillaJob synchronizeBugzillaJob = new SynchronizeBugzillaJob(bugzillaTask);
+			 boolean canNotSynch = bugzillaTask.isDirty() || bugzillaTask.getState() != BugTaskState.FREE;
+			 boolean hasLocalChanges = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING || bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
+			 if (forceSynch || (!canNotSynch && !hasLocalChanges) || !bugzillaTask.isBugDownloaded()) {
 
-			synchronizeBugzillaJob.setSaveSelect(forceUpdate);
-			if (listener != null) {
-				synchronizeBugzillaJob.addJobChangeListener(listener);
-			} 
+				final SynchronizeBugzillaJob synchronizeBugzillaJob = new SynchronizeBugzillaJob(bugzillaTask);
 
-			if (!forceSyncExecForTesting) {
-				synchronizeBugzillaJob.schedule();
+				synchronizeBugzillaJob.setForceSynch(forceSynch);
+				if (listener != null) {
+					synchronizeBugzillaJob.addJobChangeListener(listener);
+				}
+
+				if (!forceSyncExecForTesting) {
+					synchronizeBugzillaJob.schedule();
+				} else {
+					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							synchronizeBugzillaJob.run(new NullProgressMonitor());
+						}
+					});
+				}
+				return synchronizeBugzillaJob;
 			} else {
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						synchronizeBugzillaJob.run(new NullProgressMonitor());
-					}
-				});
+				return null;
 			}
-			return synchronizeBugzillaJob;
 		} else {
 			return null;
 		}
@@ -215,8 +214,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 				bugzillaTask.setSyncState(BugReportSyncState.SYNCHRONIZED);
 			}
 		} 
-		saveOffline(bugzillaBug, true);
-		System.err.println(">>>> " + ((BugzillaTask)task).getSyncState());
+		saveOffline(bugzillaBug, true);		
 		
 	}
 
@@ -355,16 +353,20 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 		}
 	}
 
-	public void offlineStatusChange(IBugzillaBug bug, BugzillaOfflineStatus status) {
-		System.err.println(">>>>>>>>>>>>> " + status);
-		 
+	private static void offlineStatusChange(IBugzillaBug bug, BugzillaOfflineStatus status, boolean forceSynch) {
+				 
 		BugReportSyncState state = null;
 		if (status == BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES) {
 			state = BugReportSyncState.OUTGOING;
 		} else if (status == BugzillaOfflineStatus.SAVED) {
 			state = BugReportSyncState.SYNCHRONIZED;
 		} else if (status == BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES) {
-			state = BugReportSyncState.INCOMING;
+			if(forceSynch) {
+				state = BugReportSyncState.INCOMING;
+			} else {
+				// User opened (forceSynch = false) so no need to denote incomming
+				state = BugReportSyncState.SYNCHRONIZED;
+			}
 		} else if (status == BugzillaOfflineStatus.CONFLICT) {
 			state = BugReportSyncState.CONFLICT;
 		} else if (status == BugzillaOfflineStatus.DELETED) {
@@ -447,12 +449,11 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 	private void internalSubmitBugReport(final IBugzillaBug bugReport, final BugzillaReportSubmitForm form) {
 		try {
 			form.submitReportToRepository();
-			removeReport(bugReport);
+			removeReport(bugReport); 
 			String handle = TaskRepositoryManager.getHandle(bugReport.getRepository(), bugReport.getId());
-			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
-
-			// first make sure no collision by syncing with server
+			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);			
 			synchronize(task, true, null);
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -472,7 +473,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 	private void updateRefreshState() {
 		if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
 			BugzillaTask bugzillaTask = toBeRefreshed.remove(0);
-			Job refreshJob = synchronize(bugzillaTask, false, null);
+			Job refreshJob = synchronize(bugzillaTask, true, null);
 			if (refreshJob != null) {
 				currentlyRefreshing.put(bugzillaTask, refreshJob);
 			}
@@ -539,15 +540,15 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 
 		BugzillaTask bugzillaTask;
 
-		boolean saveChosen = false;
+		boolean forceSynch = false;
 
 		public SynchronizeBugzillaJob(BugzillaTask bugzillaTask) {
 			super(SYNCHRONIZING_TASK_LABEL);
 			this.bugzillaTask = bugzillaTask;
 		}
 
-		public void setSaveSelect(boolean forceUpdate) {
-			this.saveChosen = forceUpdate;
+		public void setForceSynch(boolean forceUpdate) {
+			this.forceSynch = forceUpdate;
 		}
 
 		@Override
@@ -561,7 +562,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 				if (downloadedReport != null) {
 					bugzillaTask.setBugReport(downloadedReport);
 					// XXX use the server name for multiple repositories
-					saveOffline(downloadedReport, saveChosen); // false
+					saveOffline(downloadedReport, forceSynch);//false 
 				}
 
 				bugzillaTask.setState(BugTaskState.FREE);
@@ -591,27 +592,26 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 	 * @param saveChosen
 	 *            This is used to determine a refresh from a user save
 	 */
-	public BugzillaOfflineStatus saveOffline(final IBugzillaBug bug, final boolean saveChosen) {
+	public BugzillaOfflineStatus saveOffline(final IBugzillaBug bug, final boolean forceSynch) {
 
 		BugzillaOfflineStatus status = BugzillaOfflineStatus.ERROR;
 
 		if (!forceSyncExecForTesting) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					internalSaveOffline(bug, saveChosen);
+					internalSaveOffline(bug, forceSynch);
 				}
 			});
 		}  else {
-			internalSaveOffline(bug, saveChosen);
+			internalSaveOffline(bug, forceSynch);
 		}
 		return status;
 	}
 	 
-	private void internalSaveOffline(final IBugzillaBug bug, final boolean saveChosen) {
-		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
+	private void internalSaveOffline(final IBugzillaBug bug, final boolean forceSynch) {		
 		// If there is already an offline report for this bug, update the file.
 		if (bug.isSavedOffline()) {
-			file.update();
+			offlineReportsFile.update();
 		} else {
 			try {
 				// int index = -1;
@@ -627,8 +627,11 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 				// // identical id.");
 				// // return;
 				// }
-				file.add(bug, saveChosen);
+				BugzillaOfflineStatus offlineStatus = offlineReportsFile.add(bug, false);
 				bug.setOfflineState(true);
+				// saveForced forced to false (hack)
+				offlineStatusChange(bug, offlineStatus, forceSynch);
+				
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, e.getMessage(), false);
 			}
@@ -642,15 +645,9 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient implement
 		return file.elements();
 	}
 
-	/**
-	 * Removes the given report from the offlineReportsFile.
-	 * 
-	 * @param bug
-	 *            The report to remove.
-	 */
 	public static void removeReport(IBugzillaBug bug) {
-		BugzillaPlugin.getDefault().fireOfflineStatusChanged(bug, BugzillaOfflineStatus.DELETED);
-
+		bug.setOfflineState(false);	
+		offlineStatusChange(bug, BugzillaOfflineStatus.DELETED, false);
 		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
 		bugList.add(bug);
 		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);

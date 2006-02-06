@@ -57,7 +57,8 @@ public class OpenTaskListElementAction extends Action {
 				task = (ITask) element;
 			}
 			
-			boolean forceUpdate = false;//element instanceof IQueryHit;
+			//element instanceof IQueryHit;
+			boolean forceUpdate = false;
 
 			final AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 					task.getRepositoryKind());
