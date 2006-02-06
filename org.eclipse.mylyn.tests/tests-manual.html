@@ -13,50 +13,58 @@
 	</ul>
 		</li>
 		<li>Reports &gt; Task list notification<ul>
-		<li><font color="#FF0000">Open, modify, save, should have outgoing overlay</font><ul>
-		<li>Synchronize, should get option to override local changes<ul>
+		<li>Open, modify, save, should have outgoing decorator<ul>
+		<li>Case synchronize: should get option to override local changes<ul>
 		<li>If overriding, overlay and changes go away</li>
 		<li>If no override, get conflict icon to show</li>
 	</ul>
 		</li>
-		<li>Open again, should retain outgoing overlay<ul>
-		<li>Submit, outgoing overlay should disappear (should be no incoming 
-		upon synchronize)</li>
+		<li>Case open: should retain outgoing overlay</li>
+		<li>Case submit: outgoing overlay should disappear (should be no incoming 
+		upon synchronize)<br>
+&nbsp;</li>
 	</ul>
 		</li>
-		<li></li>
+		<li>Task in CONFLICT state<ul>
+			<li>Case open: remains with conflict decorator</li>
+			<li>Case synchronize: should get option to override local changes<ul>
+				<li>Case overriding: overlay and changes go away</li>
+				<li>Case no override: changes remain, conflict decorator appears<br>
+&nbsp;</li>
+			</ul></li>
+		</ul>
+		<p></li>
+		<li>Query hits not yet downloaded<ul>
+		<li>Case open: report downloaded (task icon appears), no decoration</li>
+		<li>Case synchronize: query hit remains not downloaded, no decoration<br>
+&nbsp;</li>
+	</ul></li>
+		<li>Open report&nbsp; in external editor and add a comment.<ul>
+		<li>Case synchronize: incoming decoration should appear on task<ul>
+		<li>Case open: task opens with new content, no decoration</li>
+	</ul></li>
+		<li>Case open: task opens with new content, no decoration<br>
+&nbsp;</li>
+	</ul></li>
+		<li>Open, modify, save, should have outgoing decorator, open report in 
+		external browser, add comment<ul>
+		<li>Case open: Outgoing decorator remains</li>
+		<li><font color="#FF0000">Case Submit: Failed to submit bug dialog, 
+		Possible Bugzilla Client Failure with &quot;Mid-air collision&quot; 
+		(Currently also getting &quot;Could not post bug. Check repository 
+		credentials..&quot;)</font></li>
+		<li>Case synchronize: should get option to override local changes<ul>
+		<li>If overriding, overlay and changes go away</li>
+		<li>If no override, get conflict icon to show<br>
+&nbsp;</li>
+	</ul></li>
+	</ul></li>
+		<li>Copy report to a local category, repeat above tests ensuring 
+		decoration always </li>
+		<li>Copy report to root category, repeat tests ensuring decoration 
+		always matches</li>
 	</ul>
-		</li>
-		<li></li>
-		<li>Copy report to a local category, modify, should have outgoing 
-		overlay on all instances (instance in category and in queries)</li>
-		<li>Open again, all should retain outgoing overlay</li>
-		<li>Submit, outgoing overlay should disappear on all (with no incoming)<br>
-&nbsp;</li>
-		<li>Open bug in external editor and add a comment.</li>
-		<li>Right click on bug/task and select Synchronize with Repository</li>
-		<li>Incoming overlay should appear on all instances (if in local 
-		categories and queries)</li>
-		<li>Open the bug/task, incoming overlay should no longer appear<br>
-&nbsp;</li>
-		<li>Open a bug, add a comment, save, close bug editor</li>
-		<li>Open report in External Browser and modify</li>
-		<li>Open bug in editor (note that outgoing changes exist so no synch 
-		takes place)</li>
-		<li>Submit local changes --&gt; Failed to submit bug dialog, Possible 
-		Bugzilla Client Failure with &quot;Mid-air collision&quot;</li>
-		<li>Synchronize reports --&gt; Update Local Copy dialog. Would you like to 
-		override local changes?</li>
-		<li>Select NO (Conflict overlay should appear?)</li>
-		<li>Open task (External conflict is now in local copy of bug and 
-		conflict overlay replaced with outgoing overlay)<br>
-&nbsp;</li>
-		<li>Same procedure as previous only select YES when presented with 
-		&quot;Update Local Copy&quot; dialog.</li>
-		<li>Open task (External conflicting content now in local copy of bug, 
-		task should be in SYNCHRONIZED state)</li>
-	</ul>
-		</li>
+		<p>&nbsp;</li>
 	</ul>
 	<p>Task List</p>
 	<ul>
