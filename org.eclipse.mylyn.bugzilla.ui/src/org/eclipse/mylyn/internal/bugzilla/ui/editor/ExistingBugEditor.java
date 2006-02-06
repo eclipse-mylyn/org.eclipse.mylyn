@@ -306,20 +306,24 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		submitButton.setEnabled(false);
 		ExistingBugEditor.this.showBusy(true);
 
-		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug, repository,
-				removeCC);
+		final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(bug,
+				repository, removeCC);
 		final BugzillaRepositoryClient bugzillaRepositoryClient = (BugzillaRepositoryClient) MylarTaskListPlugin
 				.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 
 		IJobChangeListener closeEditorListener = new IJobChangeListener() {
 
-			public void done(IJobChangeEvent event) {
-				if (event.getJob().getResult().equals(Status.OK_STATUS)) {
-					close();
-				} else {
-					submitButton.setEnabled(true);
-					ExistingBugEditor.this.showBusy(false);
-				}
+			public void done(final IJobChangeEvent event) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (event.getJob().getResult().equals(Status.OK_STATUS)) {
+							close();
+						} else {
+							submitButton.setEnabled(true);
+							ExistingBugEditor.this.showBusy(false);
+						}
+					}
+				});
 			}
 
 			public void aboutToRun(IJobChangeEvent event) {
@@ -343,7 +347,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 			}
 		};
 		bugzillaRepositoryClient.submitBugReport(bug, bugzillaReportSubmitForm, closeEditorListener);
-	} 
+	}
 
 	@Override
 	protected void createDescriptionLayout() {

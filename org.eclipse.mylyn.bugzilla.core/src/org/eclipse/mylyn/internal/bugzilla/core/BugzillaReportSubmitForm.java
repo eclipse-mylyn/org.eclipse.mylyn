@@ -468,7 +468,7 @@ public class BugzillaReportSubmitForm {
 					&& (prefix != null && prefix2 == null && postfix != null && postfix2 != null)) {
 				throw new PossibleBugzillaFailureException("Could not find bug number for new bug.");
 			} else if (possibleFailure) {
-				throw new PossibleBugzillaFailureException("Could not find \"Bug Processed\".");
+				throw new PossibleBugzillaFailureException("Could not find indication that bug was processed successfully.  Message from Bugzilla was: ");
 			}
 
 			// set the error to null if we dont think that there was one

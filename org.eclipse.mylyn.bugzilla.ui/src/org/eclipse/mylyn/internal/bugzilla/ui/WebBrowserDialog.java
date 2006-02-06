@@ -40,10 +40,6 @@ public class WebBrowserDialog extends MessageDialog {
 
 	public static int openAcceptAgreement(Shell parent, String title, String message, String data) {
 		WebBrowserDialog dialog = new WebBrowserDialog(parent, title, null, // accept
-				// the
-				// default
-				// window
-				// icon
 				message, NONE, new String[] { IDialogConstants.OK_LABEL }, 0, data);
 		// ok is the default
 		return dialog.open();
@@ -51,8 +47,6 @@ public class WebBrowserDialog extends MessageDialog {
 
 	@Override
 	public Control createCustomArea(Composite parent) {
-		// super.createCustomArea(parent);
-		// Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		parent.setLayout(layout);
 		layout.numColumns = 1;

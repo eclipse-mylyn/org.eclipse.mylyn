@@ -35,13 +35,16 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile.BugzillaOfflineStatus;
+import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
@@ -88,7 +91,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	private static final int MAX_REFRESH_JOBS = 5;
 
 	private OfflineReportsFile offlineReportsFile;
-	
+
 	// class
 
 	public BugzillaRepositoryClient() {
@@ -170,11 +173,12 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	@Override
 	public Job synchronize(ITask task, boolean forceSynch, IJobChangeListener listener) {
 		if (task instanceof BugzillaTask) {
-			final BugzillaTask bugzillaTask = (BugzillaTask) task;			
+			final BugzillaTask bugzillaTask = (BugzillaTask) task;
 			// TODO: refactor these conditions
-			 boolean canNotSynch = bugzillaTask.isDirty() || bugzillaTask.getState() != BugTaskState.FREE;
-			 boolean hasLocalChanges = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING || bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
-			 if (forceSynch || (!canNotSynch && !hasLocalChanges) || !bugzillaTask.isBugDownloaded()) {
+			boolean canNotSynch = bugzillaTask.isDirty() || bugzillaTask.getState() != BugTaskState.FREE;
+			boolean hasLocalChanges = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING
+					|| bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
+			if (forceSynch || (!canNotSynch && !hasLocalChanges) || !bugzillaTask.isBugDownloaded()) {
 
 				final SynchronizeBugzillaJob synchronizeBugzillaJob = new SynchronizeBugzillaJob(bugzillaTask);
 
@@ -205,19 +209,18 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		String handle = TaskRepositoryManager.getHandle(bugzillaBug.getRepository(), bugzillaBug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 		if (task instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask)task;
-			bugzillaTask.setBugReport((BugReport)bugzillaBug);
-			
+			BugzillaTask bugzillaTask = (BugzillaTask) task;
+			bugzillaTask.setBugReport((BugReport) bugzillaBug);
+
 			if (bugzillaBug.hasChanges()) {
 				bugzillaTask.setSyncState(BugReportSyncState.OUTGOING);
 			} else {
 				bugzillaTask.setSyncState(BugReportSyncState.SYNCHRONIZED);
 			}
-		} 
-		saveOffline(bugzillaBug, true);		
-		
-	}
+		}
+		saveOffline(bugzillaBug, true);
 
+	}
 
 	private BugReport downloadReport(final BugzillaTask bugzillaTask) {
 		try {
@@ -354,17 +357,18 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	}
 
 	private static void offlineStatusChange(IBugzillaBug bug, BugzillaOfflineStatus status, boolean forceSynch) {
-				 
+
 		BugReportSyncState state = null;
 		if (status == BugzillaOfflineStatus.SAVED_WITH_OUTGOING_CHANGES) {
 			state = BugReportSyncState.OUTGOING;
 		} else if (status == BugzillaOfflineStatus.SAVED) {
 			state = BugReportSyncState.SYNCHRONIZED;
 		} else if (status == BugzillaOfflineStatus.SAVED_WITH_INCOMMING_CHANGES) {
-			if(forceSynch) {
+			if (forceSynch) {
 				state = BugReportSyncState.INCOMING;
 			} else {
-				// User opened (forceSynch = false) so no need to denote incomming
+				// User opened (forceSynch = false) so no need to denote
+				// incomming
 				state = BugReportSyncState.SYNCHRONIZED;
 			}
 		} else if (status == BugzillaOfflineStatus.CONFLICT) {
@@ -427,16 +431,29 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						op.run(monitor);
-
-					} catch (Throwable t) {
+					} catch (final Throwable throwable) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-										"Could not post bug.  Check repository credentials and connectivity.");
+								// TODO: clean up exception handling
+								if (throwable.getCause() instanceof BugzillaException) {
+									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+											"Bugzilla could not post your bug.");
+								} else if (throwable.getCause() instanceof PossibleBugzillaFailureException) {
+									WebBrowserDialog.openAcceptAgreement(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+											"Possible problem posting Bugzilla report.\n\n"
+													+ throwable.getCause().getMessage(), form.getError());
+								} else if (throwable.getCause() instanceof LoginException) {
+									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+											"Bugzilla could not post your bug since your login name or password is incorrect."
+													+ "\nPlease check your settings in the bugzilla preferences. ");
+								} else {
+									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+											"Could not post bug.  Check repository credentials and connectivity.");
+								}
 							}
 						});
-						return new Status(Status.ERROR, "org.eclipse.mylar.internal.bugzilla.ui", Status.ERROR,
-								"Failed to submit bug", t);
+						return new Status(Status.INFO, "org.eclipse.mylar.internal.bugzilla.ui", Status.INFO,
+								"Failed to submit bug", throwable);
 					}
 					return Status.OK_STATUS;
 				}
@@ -446,14 +463,13 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		}
 	}
 
-	private void internalSubmitBugReport(final IBugzillaBug bugReport, final BugzillaReportSubmitForm form) {
+	private void internalSubmitBugReport(IBugzillaBug bugReport, BugzillaReportSubmitForm form) {
 		try {
 			form.submitReportToRepository();
-			removeReport(bugReport); 
+			removeReport(bugReport);
 			String handle = TaskRepositoryManager.getHandle(bugReport.getRepository(), bugReport.getId());
-			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);			
+			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 			synchronize(task, true, null);
-			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -524,16 +540,6 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 				}
 			}
 		}
-
-		// Display.getDefault().asyncExec(new Runnable() {
-		// public void run() {
-		// if (TaskListView.getDefault() != null
-		// && !TaskListView.getDefault().getViewer().getControl().isDisposed())
-		// {
-		// TaskListView.getDefault().getViewer().refresh();
-		// }
-		// }
-		// });
 	}
 
 	private class SynchronizeBugzillaJob extends Job {
@@ -562,7 +568,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 				if (downloadedReport != null) {
 					bugzillaTask.setBugReport(downloadedReport);
 					// XXX use the server name for multiple repositories
-					saveOffline(downloadedReport, forceSynch);//false 
+					saveOffline(downloadedReport, forceSynch);// false
 				}
 
 				bugzillaTask.setState(BugTaskState.FREE);
@@ -602,13 +608,13 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 					internalSaveOffline(bug, forceSynch);
 				}
 			});
-		}  else {
+		} else {
 			internalSaveOffline(bug, forceSynch);
 		}
 		return status;
 	}
-	 
-	private void internalSaveOffline(final IBugzillaBug bug, final boolean forceSynch) {		
+
+	private void internalSaveOffline(final IBugzillaBug bug, final boolean forceSynch) {
 		// If there is already an offline report for this bug, update the file.
 		if (bug.isSavedOffline()) {
 			offlineReportsFile.update();
@@ -631,14 +637,13 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 				bug.setOfflineState(true);
 				// saveForced forced to false (hack)
 				offlineStatusChange(bug, offlineStatus, forceSynch);
-				
+
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, e.getMessage(), false);
 			}
 			// file.sort(OfflineReportsFile.lastSel);
 		}
 	}
-	
 
 	public static List<IBugzillaBug> getOfflineBugs() {
 		OfflineReportsFile file = BugzillaPlugin.getDefault().getOfflineReports();
@@ -646,7 +651,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	}
 
 	public static void removeReport(IBugzillaBug bug) {
-		bug.setOfflineState(false);	
+		bug.setOfflineState(false);
 		offlineStatusChange(bug, BugzillaOfflineStatus.DELETED, false);
 		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
 		bugList.add(bug);
