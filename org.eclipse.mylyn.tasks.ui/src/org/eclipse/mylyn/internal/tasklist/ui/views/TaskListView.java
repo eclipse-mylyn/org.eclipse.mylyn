@@ -251,8 +251,7 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void taskListModified() {
-			if (!getViewer().getControl().isDisposed())
-				getViewer().refresh();
+			refresh(null);
 		}
 
 		private void refresh(final ITaskListElement element) {
@@ -262,10 +261,13 @@ public class TaskListView extends ViewPart {
 						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 							if (element == null) {
 								getViewer().getControl().setRedraw(false);
-								getViewer().refresh();
+//								getViewer().refresh();
+								filteredTree.textChanged(0);
 								getViewer().getControl().setRedraw(true);
 							} else {
+								getViewer().getControl().setRedraw(false);
 								getViewer().refresh(element, true);
+								getViewer().getControl().setRedraw(true); 
 							}
 						}
 					}

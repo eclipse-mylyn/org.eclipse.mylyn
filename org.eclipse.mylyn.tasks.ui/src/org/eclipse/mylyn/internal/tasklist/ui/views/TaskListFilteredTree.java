@@ -28,17 +28,20 @@ import org.eclipse.ui.dialogs.PatternFilter;
  */
 public class TaskListFilteredTree extends FilteredTree {
 
+	private static final int DELAY_REFRESH = 700;
+
 	private static final String LABEL_FIND = " Find: ";
 
-	private Job refreshJobHack;
+	private Job refreshJob;
 	
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 		Field refreshField;
 		try {
+			// HACK: using reflection to gain access
 			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
 			refreshField.setAccessible(true);
-			refreshJobHack = (Job)refreshField.get(this);
+			refreshJob = (Job)refreshField.get(this);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not get refresh job", false);
 		}
@@ -62,17 +65,13 @@ public class TaskListFilteredTree extends FilteredTree {
 	}
 
     protected void textChanged() {
-    	if (refreshJobHack != null) {
-    		refreshJobHack.schedule(800);
-    	} 
+    	textChanged(DELAY_REFRESH);
     	//refreshJob.schedule(200);
-    	
-//    	try {
-//			Thread.sleep(300);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//    	super.textChanged();
+    }
+    
+    public void textChanged(int delay) {
+    	if (refreshJob != null) {
+    		refreshJob.schedule(delay);
+    	} 
     }
 }
