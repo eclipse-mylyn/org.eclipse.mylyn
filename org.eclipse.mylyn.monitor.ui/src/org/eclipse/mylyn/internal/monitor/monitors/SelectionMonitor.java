@@ -58,6 +58,8 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 
 	public static final String SELECTION_PREDICTED = "predicted";
 
+	private static final Object ID_JAVA_UNKNOW_OLD = "(non-existing element)";
+
 	private IJavaElement lastSelectedElement = null;
 
 	@Override
@@ -83,7 +85,7 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 				obfuscatedElementHandle = obfuscateJavaElementHandle(javaElement);
 				lastSelectedElement = javaElement;
 			} else {
-				structureKind =	InteractionEvent.ID_UNKNOWN + ": " + selectedObject.getClass();
+				structureKind = InteractionEvent.ID_UNKNOWN + ": " + selectedObject.getClass();
 				if (selectedObject instanceof IAdaptable) {
 					IResource resource = (IResource) ((IAdaptable) selectedObject).getAdapter(IResource.class);
 					if (resource != null) {
@@ -192,11 +194,16 @@ public class SelectionMonitor extends AbstractUserInteractionMonitor {
 		}
 		return ID_JAVA_UNKNOWN;
 	}
-	
+
 	/**
 	 * Some events do not have a valid handle, e.g. hande is null or ?
 	 */
 	public static boolean isValidStructureHandle(InteractionEvent event) {
-		return event.isValidStructureHandle() && !event.getStructureHandle().equals(SelectionMonitor.ID_JAVA_UNKNOWN);
+		String handle = event.getStructureHandle();
+		return handle != null 
+			&& !handle.trim().equals("") 
+			&& !handle.equals(SelectionMonitor.ID_JAVA_UNKNOWN)
+			&& !handle.equals(SelectionMonitor.ID_JAVA_UNKNOW_OLD)
+			&& event.isValidStructureHandle();
 	}
 }
