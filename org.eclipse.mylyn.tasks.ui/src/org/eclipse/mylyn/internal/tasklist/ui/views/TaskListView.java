@@ -130,7 +130,7 @@ public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
 
-	private FilteredTree filteredTree;
+	private TaskListFilteredTree filteredTree;
 
 	private DrillDownAdapter drillDownAdapter;
 
@@ -415,11 +415,15 @@ public class TaskListView extends ViewPart {
 
 	public TaskListView() {
 		INSTANCE = this;
-		MylarTaskListPlugin.getTaskListManager().addListener(ACTIVITY_LISTENER); // TODO:
-		// remove
-		// on
-		// close?
+		MylarTaskListPlugin.getTaskListManager().addListener(ACTIVITY_LISTENER); 
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		MylarTaskListPlugin.getTaskListManager().removeListener(ACTIVITY_LISTENER); 
+	}
+
 
 	/**
 	 * TODO: should be updated when view mode switches to fast and vice-versa
@@ -764,13 +768,9 @@ public class TaskListView extends ViewPart {
 		getViewer().refresh();
 	}
 
-	/**
-	 * This is a callback that will allow us to create the viewer and initialize
-	 * it.
-	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
+		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
 				| SWT.HIDE_SELECTION, new TaskListPatternFilter());
 		filteredTree.setInitialText("");
 
@@ -1267,11 +1267,6 @@ public class TaskListView extends ViewPart {
 
 	public void removeFilter(AbstractTaskFilter filter) {
 		filters.remove(filter);
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
 	}
 
 	public void updateDrillDownActions() {
