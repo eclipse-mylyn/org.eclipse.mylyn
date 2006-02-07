@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
-
 /**
  * @author Mik Kersten
  */
