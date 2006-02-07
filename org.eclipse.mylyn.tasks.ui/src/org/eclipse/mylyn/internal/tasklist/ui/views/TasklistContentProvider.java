@@ -96,7 +96,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private List<Object> applyFilter(List<Object> list) {
-		String filterText = ((Text) this.view.tree.getFilterControl()).getText();
+		String filterText = ((Text) this.view.getFilteredTree().getFilterControl()).getText();
 		if (containsNoFilterText(filterText)) {
 			List<Object> filteredRoots = new ArrayList<Object>();
 			for (int i = 0; i < list.size(); i++) {
@@ -167,10 +167,10 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private List<Object> getFilteredChildrenFor(Object parent) {
-		if (containsNoFilterText(((Text) this.view.tree.getFilterControl()).getText())
-				|| ((Text) this.view.tree.getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
+		if (containsNoFilterText(((Text) this.view.getFilteredTree().getFilterControl()).getText())
+				|| ((Text) this.view.getFilteredTree().getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
 			List<Object> children = new ArrayList<Object>();
-			if (parent instanceof ITaskCategory) {
+			if (parent instanceof ITaskCategory) { 
 				if (((ITaskCategory) parent).isArchive()) {
 					for (ITask task : ((ITaskCategory) parent).getChildren()) {
 						if (contentTaskFilter.shouldAlwaysShow(task)) {

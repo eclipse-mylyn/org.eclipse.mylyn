@@ -130,7 +130,7 @@ public class TaskListView extends ViewPart {
 
 	private static TaskListView INSTANCE;
 
-	FilteredTree tree;
+	private FilteredTree filteredTree;
 
 	private DrillDownAdapter drillDownAdapter;
 
@@ -139,8 +139,6 @@ public class TaskListView extends ViewPart {
 	private GoIntoAction goIntoAction;
 
 	private GoUpAction goUpAction;
-
-//	private WorkOfflineAction workOffline;
 
 	private CopyDescriptionAction copyDescriptionAction;
 
@@ -157,8 +155,6 @@ public class TaskListView extends ViewPart {
 	private CollapseAllAction collapseAll;
 
 	private DeleteAction deleteAction;
-
-//	private ManageEditorsAction autoClose;
 
 	private RemoveFromCategoryAction removeFromCategoryAction;
 
@@ -178,6 +174,10 @@ public class TaskListView extends ViewPart {
 
 	private NextTaskDropDownAction nextTaskAction;
 
+//	private WorkOfflineAction workOffline;
+
+//	private ManageEditorsAction autoClose;
+		
 	private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
 
 	private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
@@ -770,9 +770,9 @@ public class TaskListView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		tree = new FilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
+		filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
 				| SWT.HIDE_SELECTION, new TaskListPatternFilter());
-		tree.setInitialText("");
+		filteredTree.setInitialText("");
 
 		getViewer().getTree().setHeaderVisible(true);
 		getViewer().getTree().setLinesVisible(true);
@@ -1249,7 +1249,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public TreeViewer getViewer() {
-		return tree.getViewer();
+		return filteredTree.getViewer();
 	}
 
 	public TaskCompleteFilter getCompleteFilter() {
@@ -1286,7 +1286,7 @@ public class TaskListView extends ViewPart {
 	 * HACK: This is used for the copy action
 	 */
 	public Composite getDummyComposite() {
-		return tree;
+		return filteredTree;
 	}
 
 	private boolean isInRenameAction = false;
@@ -1372,5 +1372,9 @@ public class TaskListView extends ViewPart {
 
 	public ITaskCategory getDrilledIntoCategory() {
 		return drilledIntoCategory;
+	}
+
+	public FilteredTree getFilteredTree() {
+		return filteredTree;
 	}
 }
