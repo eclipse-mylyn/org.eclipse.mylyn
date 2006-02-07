@@ -63,7 +63,7 @@ public class TaskListFilteredTree extends FilteredTree {
 
     protected void textChanged() {
     	if (refreshJobHack != null) {
-    		refreshJobHack.schedule(600);
+    		refreshJobHack.schedule(800);
     	} 
     	//refreshJob.schedule(200);
     	
