@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
-import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.Task;
@@ -99,9 +99,9 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 					collector.consumeTask(task);
 				}
 
-			} else if (element instanceof IRepositoryQuery) {
+			} else if (element instanceof AbstractRepositoryQuery) {
 				// process queries
-				IRepositoryQuery repositoryQuery = (IRepositoryQuery) element;
+				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
 				for (IQueryHit hit : repositoryQuery.getHits()) {
 					ITask correspondingTask = hit.getCorrespondingTask();
 					if (correspondingTask != null) {

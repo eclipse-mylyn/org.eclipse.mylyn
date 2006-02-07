@@ -33,13 +33,13 @@ public class BugzillaTasksTools {
 
 		String prefix = TaskRepositoryManager.getTaskIdAsInt(bugTask.getHandleIdentifier()) + ": ";
 
-		if (bugTask.getState() == BugzillaTask.BugTaskState.DOWNLOADING) {
+		if (bugTask.getBugzillaTaskState() == BugzillaTask.BugzillaTaskState.DOWNLOADING) {
 			return prefix + "<Downloading bug report from server...>";
-		} else if (bugTask.getState() == BugzillaTask.BugTaskState.OPENING) {
+		} else if (bugTask.getBugzillaTaskState() == BugzillaTask.BugzillaTaskState.OPENING) {
 			return prefix + "<Opening bug report in editor...>";
-		} else if (bugTask.getState() == BugzillaTask.BugTaskState.COMPARING) {
+		} else if (bugTask.getBugzillaTaskState() == BugzillaTask.BugzillaTaskState.COMPARING) {
 			return prefix + "<Comparing bug report with server...>";
-		} else if (bugTask.getState() == BugzillaTask.BugTaskState.WAITING) {
+		} else if (bugTask.getBugzillaTaskState() == BugzillaTask.BugzillaTaskState.WAITING) {
 			return prefix + "<Waiting to check server...>";
 		}
 

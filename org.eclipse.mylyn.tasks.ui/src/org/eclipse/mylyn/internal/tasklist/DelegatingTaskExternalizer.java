@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
  * @author Mik Kersten
  * @author Ken Sueda (XML serialization support)
  */
-public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
+public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	private static final String DEFAULT_PRIORITY = "P3";
 
@@ -105,7 +105,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	/**
 	 * Set these on the TaskListWriter instead
 	 */
-	void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
+	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
 		this.delegateExternalizers = externalizers;
 	}
 
@@ -210,7 +210,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getCategoryTagName());
 	}
 
-	public void readCategory(Node node, TaskList tlist) throws TaskListExternalizerException {
+	public void readCategory(Node node, TaskList tlist) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
 		TaskCategory category = new TaskCategory(element.getAttribute("Name"));
@@ -232,12 +232,12 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 				if (!read && canReadTask(child)) {
 					category.internalAddTask(readTask(child, tlist, category, null));
 				}
-			} catch (TaskListExternalizerException e) {
+			} catch (TaskExternalizationException e) {
 				hasCaughtException = true;
 			}
 		}
 		if (hasCaughtException)
-			throw new TaskListExternalizerException("Failed to load all tasks");
+			throw new TaskExternalizationException("Failed to load all tasks");
 	}
 
 	public boolean canReadTask(Node node) {
@@ -245,14 +245,14 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	public ITask readTask(Node node, TaskList tlist, ITaskCategory category, ITask parent)
-			throws TaskListExternalizerException {
+			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
 		String label;
 		if (element.hasAttribute(HANDLE)) {
 			handle = element.getAttribute(HANDLE);
 		} else {
-			throw new TaskListExternalizerException("Handle not stored for task");
+			throw new TaskExternalizationException("Handle not stored for task");
 		}
 		if (element.hasAttribute(LABEL)) {
 			label = element.getAttribute(LABEL);
@@ -265,7 +265,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	protected void readTaskInfo(ITask task, TaskList tlist, Element element, ITaskCategory category, ITask parent)
-			throws TaskListExternalizerException {
+			throws TaskExternalizationException {
 		if (element.hasAttribute(PRIORITY)) {
 			task.setPriority(element.getAttribute(PRIORITY));
 		} else {
@@ -395,11 +395,11 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		// nothing to do
 	}
 
-	public boolean canCreateElementFor(IRepositoryQuery category) {
+	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
 		return true;
 	}
 
-	public Element createQueryElement(IRepositoryQuery query, Document doc, Element parent) {
+	public Element createQueryElement(AbstractRepositoryQuery query, Document doc, Element parent) {
 		String queryTagName = getQueryTagNameForElement(query);
 		Element node = doc.createElement(queryTagName);
 		node.setAttribute(NAME, query.getDescription());
@@ -428,12 +428,12 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		return false;
 	}
 
-	public void readQuery(Node node, TaskList tlist) throws TaskListExternalizerException {
+	public void readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
 		// doesn't know how to read any queries
 
 	}
 
-	public String getQueryTagNameForElement(IRepositoryQuery query) {
+	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
 		return "";
 	}
 
@@ -463,7 +463,7 @@ public class DelegatingLocalTaskExternalizer implements ITaskListExternalizer {
 		return false;
 	}
 
-	public void readQueryHit(Node node, TaskList tlist, IRepositoryQuery query) throws TaskListExternalizerException {
+	public void readQueryHit(Node node, TaskList tlist, AbstractRepositoryQuery query) throws TaskExternalizationException {
 		// doesn't know how to read a query hit
 	}
 

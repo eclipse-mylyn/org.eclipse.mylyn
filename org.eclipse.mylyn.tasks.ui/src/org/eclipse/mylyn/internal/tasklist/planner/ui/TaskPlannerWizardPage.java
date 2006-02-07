@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
@@ -203,7 +203,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		}
 		
 		// populate qeries
-		for (IRepositoryQuery query : manager.getTaskList().getQueries()) {
+		for (AbstractRepositoryQuery query : manager.getTaskList().getQueries()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(query.getIcon());
 			item.setText(query.getDescription());

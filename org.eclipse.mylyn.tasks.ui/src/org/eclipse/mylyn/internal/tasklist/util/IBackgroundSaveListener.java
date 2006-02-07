@@ -8,17 +8,19 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylar.internal.tasklist.util;
 
 /**
- * @author Mik Kersten
+ * Interface implemented by clients who are to be notified of periodic requests
+ * to save data to disk.
  * 
- * TODO: remove
+ * @author Wesley Coelho
  */
-public class BugzillaCustomQueryCategory extends BugzillaQueryCategory {
+public interface IBackgroundSaveListener {
 
-	public BugzillaCustomQueryCategory(String repositoryUrl, String maxHits, String description, String queryString) {
-		super(repositoryUrl, queryString, description, maxHits);
-	}
+	/**
+	 * Called to notify the client of a PeriodicSaveTimer that a save should be
+	 * performed
+	 */
+	public void saveRequested();
 }

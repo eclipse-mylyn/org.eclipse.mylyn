@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
@@ -88,8 +88,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 		} else if (parent instanceof Task) {
 			Task t = (Task) parent;
 			return t.getChildren() != null && t.getChildren().size() > 0;
-		} else if (parent instanceof IRepositoryQuery) {
-			IRepositoryQuery t = (IRepositoryQuery) parent;
+		} else if (parent instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery t = (AbstractRepositoryQuery) parent;
 			return t.getHits() != null && t.getHits().size() > 0;
 		}
 		return false;
@@ -110,8 +110,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 					if (selectCategory((ITaskCategory) list.get(i))) {
 						filteredRoots.add(list.get(i));
 					}
-				} else if (list.get(i) instanceof IRepositoryQuery) {
-					if (selectQuery((IRepositoryQuery) list.get(i))) {
+				} else if (list.get(i) instanceof AbstractRepositoryQuery) {
+					if (selectQuery((AbstractRepositoryQuery) list.get(i))) {
 						filteredRoots.add(list.get(i));
 					}
 				}
@@ -129,7 +129,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 		return filterText == null || filterText.length() == 0;
 	}
 
-	private boolean selectQuery(IRepositoryQuery cat) {
+	private boolean selectQuery(AbstractRepositoryQuery cat) {
 		List<? extends ITaskListElement> list = cat.getHits();
 		if (list.size() == 0) {
 			return true;
@@ -189,8 +189,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 					}
 				}
 				return children;
-			} else if (parent instanceof IRepositoryQuery) {
-				List<? extends ITaskListElement> list = ((IRepositoryQuery) parent).getHits();
+			} else if (parent instanceof AbstractRepositoryQuery) {
+				List<? extends ITaskListElement> list = ((AbstractRepositoryQuery) parent).getHits();
 				for (int i = 0; i < list.size(); i++) {
 					if (!filter(list.get(i))) {
 						children.add(list.get(i));
@@ -211,8 +211,8 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 			if (parent instanceof ITaskCategory) {
 				children.addAll(((ITaskCategory) parent).getChildren());
 				return children;
-			} else if (parent instanceof IRepositoryQuery) {
-				children.addAll(((IRepositoryQuery) parent).getHits());
+			} else if (parent instanceof AbstractRepositoryQuery) {
+				children.addAll(((AbstractRepositoryQuery) parent).getHits());
 				return children;
 			} else if (parent instanceof Task) {
 				children.addAll(((Task) parent).getChildren());

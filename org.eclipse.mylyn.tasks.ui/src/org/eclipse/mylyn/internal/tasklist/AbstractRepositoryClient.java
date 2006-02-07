@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +29,58 @@ public abstract class AbstractRepositoryClient {
 
 	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
 
+	private static final int MAX_REFRESH_JOBS = 5;
+	
 	private TaskCategory archiveCategory = null;
+	
+	private List<AbstractRepositoryTask> toBeRefreshed = new LinkedList<AbstractRepositoryTask>();
 
+	private Map<AbstractRepositoryTask, Job> currentlyRefreshing = new HashMap<AbstractRepositoryTask, Job>();
+	
+	public void requestRefresh(AbstractRepositoryTask task) {
+		if (!currentlyRefreshing.containsKey(task) && !toBeRefreshed.contains(task)) {
+			toBeRefreshed.add(task);
+		}
+		updateRefreshState();
+	}
+
+	public void removeTaskToBeRefreshed(AbstractRepositoryTask task) {
+		toBeRefreshed.remove(task);
+		if (currentlyRefreshing.get(task) != null) {
+			currentlyRefreshing.get(task).cancel();
+			currentlyRefreshing.remove(task);
+		}
+		updateRefreshState();
+	}
+	
+	public void removeRefreshingTask(AbstractRepositoryTask task) {
+		if (currentlyRefreshing.containsKey(task)) {
+			currentlyRefreshing.remove(task);
+		}
+		updateRefreshState();
+	}
+	
+	public void clearAllRefreshes() {
+		toBeRefreshed.clear();
+		List<Job> l = new ArrayList<Job>();
+		l.addAll(currentlyRefreshing.values());
+		for (Job j : l) {
+			if (j != null)
+				j.cancel();
+		}
+		currentlyRefreshing.clear();
+	}
+
+	private void updateRefreshState() {
+		if (currentlyRefreshing.size() < MAX_REFRESH_JOBS && toBeRefreshed.size() > 0) {
+			AbstractRepositoryTask bugzillaTask = toBeRefreshed.remove(0);
+			Job refreshJob = synchronize(bugzillaTask, true, null);
+			if (refreshJob != null) {
+				currentlyRefreshing.put(bugzillaTask, refreshJob);
+			}
+		}
+	}
+	
 	public abstract String getLabel();
 
 	/**
@@ -55,11 +106,13 @@ public abstract class AbstractRepositoryClient {
 	 */
 	public abstract Job synchronize(ITask task, boolean forceUpdate, IJobChangeListener listener);
 
+	public abstract void synchronize(AbstractRepositoryQuery repositoryQuery);
+	
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
 	public abstract IWizard getQueryWizard(TaskRepository repository);
 
-	public abstract void openEditQueryDialog(IRepositoryQuery query);
+	public abstract void openEditQueryDialog(AbstractRepositoryQuery query);
 
 	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
 

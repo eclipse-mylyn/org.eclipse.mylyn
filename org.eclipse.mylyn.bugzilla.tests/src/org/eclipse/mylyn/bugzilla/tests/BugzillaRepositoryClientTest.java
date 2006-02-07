@@ -28,11 +28,11 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PartInitException;
 
 public class BugzillaRepositoryClientTest extends TestCase {
@@ -80,7 +80,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 
 		BugzillaTask task = (BugzillaTask) client.createTaskFromExistingId(repository, "1");
 		assertNotNull(task);
-		assertEquals(task.getSyncState(), BugReportSyncState.SYNCHRONIZED);
+		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
 
 		BugzillaTask retrievedTask = (BugzillaTask) client.getTaskFromArchive(task.getHandleIdentifier());
 		assertNotNull(retrievedTask);
@@ -99,7 +99,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		assertTrue(task.isBugDownloaded());
 		// (The initial local copy from server)
 		client.saveBugReport(task.getBugReport());
-		assertEquals(task.getSyncState(), BugReportSyncState.SYNCHRONIZED);
+		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
 
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
@@ -107,14 +107,14 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		// overwrites old fields/attributes with new content (ususually done by
 		// BugEditor)
 		updateBug(task.getBugReport());
-		assertEquals(task.getSyncState(), BugReportSyncState.SYNCHRONIZED);
+		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
 		client.saveBugReport(task.getBugReport());
-		assertEquals(BugReportSyncState.OUTGOING, task.getSyncState());
+		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
 		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm();
 		client.submitBugReport(task.getBugReport(), form, null);
-		assertEquals(BugReportSyncState.SYNCHRONIZED, task.getSyncState());
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		// TODO: Test that comment was appended
 		// ArrayList<Comment> comments = task.getBugReport().getComments();
@@ -124,31 +124,31 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		// assertEquals(newCommentText, lastComment.getText());
 
 		client.synchronize(task, true, null);
-		assertEquals(BugReportSyncState.SYNCHRONIZED, task.getSyncState());
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 
 		// OUTGOING with forceddSynch=false
-		task.setSyncState(BugReportSyncState.OUTGOING);
+		task.setSyncState(RepositoryTaskSyncState.OUTGOING);
 		client.synchronize(task, false, null);
-		assertEquals(BugReportSyncState.OUTGOING, task.getSyncState());
+		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// OUTGOING with forcedSynch=true --> Update Local Copy dialog
 		// Choosing to override local changes results in SYNCHRONIZED
 		// Choosing not to override results in CONFLICT
 
-		task.setSyncState(BugReportSyncState.CONFLICT);
+		task.setSyncState(RepositoryTaskSyncState.CONFLICT);
 		client.synchronize(task, false, null);
-		assertEquals(BugReportSyncState.CONFLICT, task.getSyncState());
+		assertEquals(RepositoryTaskSyncState.CONFLICT, task.getSyncState());
 
 		// CONFLICT with forcedSynch=true --> Update Local Copy dialog
 
 		// Has no outgoing changes or conflicts yet needs synch
 		// because task doesn't have bug report (new query hit)
 		// Result: retrieved with no incoming status
-		task.setSyncState(BugReportSyncState.SYNCHRONIZED);
+		task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 		BugReport bugReport = task.getBugReport();
 		task.setBugReport(null);
 		client.synchronize(task, false, null);
-		assertEquals(BugReportSyncState.SYNCHRONIZED, task.getSyncState());
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		assertNotNull(task.getBugReport());
 		assertEquals(task.getBugReport().getId(), bugReport.getId());
 	}

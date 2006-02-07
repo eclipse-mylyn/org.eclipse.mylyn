@@ -30,6 +30,9 @@ import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasklist.ui.TasksReminderDialog;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
+import org.eclipse.mylar.internal.tasklist.util.TaskListExtensionReader;
+import org.eclipse.mylar.internal.tasklist.util.TaskListSaveManager;
+import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.IStartup;
@@ -54,9 +57,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static TaskRepositoryManager taskRepositoryManager;
 
 	private TaskListSaveManager taskListSaveManager = new TaskListSaveManager();
-
-	// private List<ITaskHandler> taskHandlers = new ArrayList<ITaskHandler>();
-	// // TODO:
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -349,7 +349,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 
-				for (IRepositoryQuery query : taskListManager.getTaskList().getQueries()) {
+				for (AbstractRepositoryQuery query : taskListManager.getTaskList().getQueries()) {
 					query.setRepositoryUrl(repositoryUrl);
 					for (IQueryHit hit : query.getHits()) {
 						hit.setRepositoryUrl(repositoryUrl);

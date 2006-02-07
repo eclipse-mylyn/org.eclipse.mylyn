@@ -20,12 +20,12 @@ public interface IQueryHit extends ITaskListElement {
 
 	public void setRepositoryUrl(String repositoryUrl);
 
-	public ITask getOrCreateCorrespondingTask();
+	public AbstractRepositoryTask getOrCreateCorrespondingTask();
 
 	/**
 	 * @return null if there is no corresponding report
 	 */
-	public ITask getCorrespondingTask();
+	public AbstractRepositoryTask getCorrespondingTask();
 
-	public void setCorrespondingTask(ITask task);
+	public void setCorrespondingTask(AbstractRepositoryTask task);
 }

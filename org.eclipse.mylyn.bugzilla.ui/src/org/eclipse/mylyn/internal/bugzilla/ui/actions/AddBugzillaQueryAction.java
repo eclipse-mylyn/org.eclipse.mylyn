@@ -29,8 +29,8 @@ package org.eclipse.mylar.internal.bugzilla.ui.actions;
 // import org.eclipse.jface.dialogs.MessageDialog;
 // import org.eclipse.jface.viewers.ISelection;
 // import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
-// import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCustomQueryCategory;
-// import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryCategory;
+// import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCustomRepositoryQuery;
+// import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 // import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryDialog;
 // import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 // import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -74,14 +74,14 @@ package org.eclipse.mylar.internal.bugzilla.ui.actions;
 // return;
 // }
 //    		
-// final BugzillaQueryCategory queryCategory;
+// final BugzillaRepositoryQuery queryCategory;
 // if(!queryDialog.isCustom()){
 // queryCategory = new
-// BugzillaQueryCategory(repository.getUrl().toExternalForm(),
+// BugzillaRepositoryQuery(repository.getUrl().toExternalForm(),
 // queryDialog.getUrl(), queryDialog.getName(), queryDialog.getMaxHits());
 // } else {
 // queryCategory = new
-// BugzillaCustomQueryCategory(repository.getUrl().toExternalForm(),
+// BugzillaCustomRepositoryQuery(repository.getUrl().toExternalForm(),
 // queryDialog.getName(), queryDialog.getUrl(), queryDialog.getMaxHits());
 // }
 // MylarTaskListPlugin.getTaskListManager().addQuery(queryCategory);

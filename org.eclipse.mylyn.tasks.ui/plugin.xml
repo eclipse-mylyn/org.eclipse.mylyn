@@ -121,12 +121,49 @@
            name="Mylar Task Planner"
            id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
   </extension>
+  
+  
+   <extension point="org.eclipse.ui.viewActions"> 
+		<viewContribution 
+			id="org.eclipse.mylar.bugzilla.ui.tasklist.actions" 
+	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+  		
+  		<action
+               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
+               enablesFor="*"
+               icon="icons/etool16/repository-synchronize.gif"
+               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
+               label="Synchronize Queries"
+               menubarPath="additions"
+               tooltip="Synchronize with Repository">
+         </action>
+  			
+	    </viewContribution> 
+	</extension>
 
   <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
             id="org.eclipse.mylar.tasklist.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
 
+         <action
+               class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
+               enablesFor="*"
+               icon="icons/etool16/repository-synchronize.gif"
+               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
+               label="Synchronize with Repository"
+               menubarPath="reports"
+               tooltip="Synchronize with Repository">
+            <enablement>
+               <or>
+                    <objectClass name="org.eclipse.mylar.internal.tasklist.IQueryHit"/>
+					<objectClass name="org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery"/>
+               		<objectClass name="org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylar.internal.tasklist.ITaskCategory"/>
+               </or>
+            </enablement>
+         </action>
+         
 		<action
               class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
               enablesFor="*"

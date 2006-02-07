@@ -8,9 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 22, 2004
- */
+
 package org.eclipse.mylar.internal.tasklist;
 
 import java.io.Serializable;
@@ -31,11 +29,11 @@ public class TaskList implements Serializable {
 
 	private List<ITaskCategory> categories = new ArrayList<ITaskCategory>();
 
-	private List<IRepositoryQuery> queries = new ArrayList<IRepositoryQuery>();
+	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 	private transient List<ITask> activeTasks = new ArrayList<ITask>();
 
-	void addRootTask(ITask task) {
+	public void internalAddRootTask(ITask task) {
 		rootTasks.add(task);
 	}
 
@@ -47,7 +45,7 @@ public class TaskList implements Serializable {
 		categories.add(cat);
 	}
 
-	void addQuery(IRepositoryQuery query) {
+	void addQuery(AbstractRepositoryQuery query) {
 		queries.add(query);
 	}
 
@@ -61,7 +59,7 @@ public class TaskList implements Serializable {
 	/**
 	 * XXX Only public so that other externalizers can use it
 	 */
-	public void internalAddQuery(IRepositoryQuery query) {
+	public void internalAddQuery(AbstractRepositoryQuery query) {
 		queries.add(query);
 	}
 
@@ -103,7 +101,7 @@ public class TaskList implements Serializable {
 		categories.remove(category);
 	}
 
-	void deleteQuery(IRepositoryQuery query) {
+	void deleteQuery(AbstractRepositoryQuery query) {
 		queries.remove(query);
 	}
 
@@ -116,7 +114,7 @@ public class TaskList implements Serializable {
 				return foundTask;
 			}
 		}
-		for (IRepositoryQuery query : queries) {
+		for (AbstractRepositoryQuery query : queries) {
 			if ((foundTask = findTaskHelper(query.getHits(), handle)) != null) {
 				return foundTask;
 			}
@@ -179,14 +177,14 @@ public class TaskList implements Serializable {
 	public List<ITaskCategory> getUserCategories() {
 		List<ITaskCategory> included = new ArrayList<ITaskCategory>();
 		for (ITaskCategory category : categories) {
-			if (!category.getDescription().endsWith(DelegatingLocalTaskExternalizer.LABEL_AUTOMATIC)) {
+			if (!category.getDescription().endsWith(DelegatingTaskExternalizer.LABEL_AUTOMATIC)) {
 				included.add(category);
 			}
 		}
 		return included;
 	}
 
-	public List<IRepositoryQuery> getQueries() {
+	public List<AbstractRepositoryQuery> getQueries() {
 		return queries;
 	}
 
@@ -203,7 +201,7 @@ public class TaskList implements Serializable {
 		int ihandle = 0;
 		int max = 0;
 		for (ITask task : tasks) {
-			if (task.participatesInTaskHandles()) {
+			if (task.isLocal()) {
 				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().indexOf('-') + 1,
 						task.getHandleIdentifier().length());
 				if (!"".equals(string)) {
@@ -223,7 +221,7 @@ public class TaskList implements Serializable {
 			roots.add(t);
 		for (ITaskCategory cat : categories)
 			roots.add(cat);
-		for (IRepositoryQuery query : queries)
+		for (AbstractRepositoryQuery query : queries)
 			roots.add(query);
 		return roots;
 	}
@@ -263,7 +261,7 @@ public class TaskList implements Serializable {
 	 */
 	public IQueryHit getQueryHitForHandle(String handle) {
 		IQueryHit foundHit = null;
-		for (IRepositoryQuery query : queries) {
+		for (AbstractRepositoryQuery query : queries) {
 			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
 				return foundHit;
 			}

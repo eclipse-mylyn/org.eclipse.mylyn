@@ -288,10 +288,6 @@ public class Task implements ITask {
 		}
 	}
 
-	public boolean canEditDescription() {
-		return true;
-	}
-
 	public boolean isLocal() {
 		return true;
 	}
@@ -303,22 +299,6 @@ public class Task implements ITask {
 	public boolean isDragAndDropEnabled() {
 		return true;
 	}
-
-	public boolean participatesInTaskHandles() {
-		return true;
-	}
-
-	// public Color getForeground() {
-	// if (isCompleted()) {
-	// return TaskListImages.GRAY_LIGHT;
-	// } else if (isActive()) {
-	// return TaskListImages.COLOR_TASK_ACTIVE;
-	// } else if (isOverdue()) {
-	// return TaskListImages.COLOR_TASK_OVERDUE;
-	// } else {
-	// return null;
-	// }
-	// }
 
 	public Font getFont() {
 		if (isActive())

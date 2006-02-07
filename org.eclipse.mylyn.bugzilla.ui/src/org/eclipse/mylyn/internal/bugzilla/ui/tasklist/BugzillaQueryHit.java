@@ -15,8 +15,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
-import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -56,13 +56,10 @@ public class BugzillaQueryHit implements IQueryHit {
 		return task;
 	}
 
-	public void setCorrespondingTask(ITask task) {
-		if (task instanceof BugzillaTask)
-			setAssociatedTask((BugzillaTask) task);
-	}
-
-	private void setAssociatedTask(BugzillaTask task) {
-		this.task = task;
+	public void setCorrespondingTask(AbstractRepositoryTask task) {
+		if (task instanceof BugzillaTask) {
+			this.task = (BugzillaTask)task;
+		}
 	}
 
 	public Image getIcon() {
@@ -124,7 +121,7 @@ public class BugzillaQueryHit implements IQueryHit {
 		return false;
 	}
 
-	public ITask getOrCreateCorrespondingTask() {
+	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
 		if (task == null) {
 			task = new BugzillaTask(this, true);
 			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);

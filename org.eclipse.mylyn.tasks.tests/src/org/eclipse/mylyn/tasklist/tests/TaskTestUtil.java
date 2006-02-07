@@ -33,8 +33,9 @@ public class TaskTestUtil {
 		} else {
 			resolvedAttribute.setValue(BugReport.VAL_STATUS_NEW);
 		}
+		
 		report.addAttribute(resolvedAttribute);
-
+		
 		Date now = new Date();
 		report.addComment(new Comment(report, 1, now, "author", "author-name"));
 	}

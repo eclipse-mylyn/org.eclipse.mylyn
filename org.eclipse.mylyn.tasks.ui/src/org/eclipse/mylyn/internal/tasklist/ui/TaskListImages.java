@@ -60,6 +60,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
+	public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif");
+	
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
 
 	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif");
@@ -88,6 +90,8 @@ public class TaskListImages {
 		
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 	
+	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(T_TOOL, "repository-synchronize.gif");
+		
 	public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif");
 
 	public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");

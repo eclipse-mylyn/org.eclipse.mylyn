@@ -18,7 +18,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryCategory;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -159,7 +159,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		manager.moveToRoot(task1);
 		TaskTestUtil.setBugTaskCompleted(task1, false);
 
-		BugzillaQueryCategory bugQuery = new BugzillaQueryCategory("repositoryUrl", "queryUrl",
+		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl",
 				"TaskReportGeneratorBugzillaQueryCategory", "maxHits");
 
 		manager.addQuery(bugQuery);

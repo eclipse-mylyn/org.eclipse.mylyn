@@ -10,30 +10,18 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
-import java.util.List;
-
-
 /**
- * @author Mik Kersten
+ * @author Mik Kersten and Ken Sueda
  */
-public interface IRepositoryQuery extends ITaskListElement {
+public class TaskExternalizationException extends Exception {
 
-	public String getQueryUrl();
+	private static final long serialVersionUID = 5804522104992031907L;
 
-	public void setQueryUrl(String query);
+	public TaskExternalizationException() {
+		super();
+	}
 
-	public String getRepositoryKind();
-	
-	public String getRepositoryUrl();
-
-	public void setRepositoryUrl(String url);
-
-	public List<IQueryHit> getHits();
-
-	public int getMaxHits();
-
-	public void setMaxHits(int maxHits);
-
-	public void addHit(IQueryHit hit);
-
+	public TaskExternalizationException(String detailMessage) {
+		super(detailMessage);
+	}
 }

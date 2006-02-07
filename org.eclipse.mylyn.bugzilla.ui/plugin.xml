@@ -140,17 +140,7 @@
 		<viewContribution 
 			id="org.eclipse.mylar.bugzilla.ui.tasklist.actions" 
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-  		
-  		<action
-               class="org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction"
-               enablesFor="*"
-               icon="icons/etool16/task-bug-refresh.gif"
-               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize with Repository"
-               menubarPath="additions"
-               tooltip="Synchronize with Repository">
-         </action>
-         
+  		 
          <action
                class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
                enablesFor="*"
@@ -169,24 +159,6 @@
       <viewerContribution
             id="org.eclipse.mylar.bugzilla.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-         <action
-               class="org.eclipse.mylar.internal.bugzilla.ui.actions.SynchronizeReportsAction"
-               enablesFor="*"
-               icon="icons/etool16/task-bug-refresh.gif"
-               id="org.eclipse.mylar.bugzilla.ui.popup.refresh"
-               label="Synchronize with Repository"
-               menubarPath="reports"
-               tooltip="Synchronize with Repository">
-            <enablement>
-               <or>
-                    <objectClass name="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask"/>
-					<objectClass name="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryCategory"/>
-               		<objectClass name="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit"/>
-               </or>
-            </enablement>
-         </action>
-          
-          
 		<action
                class="org.eclipse.mylar.internal.bugzilla.ui.actions.CreateNewBugzillaTaskAction"
                enablesFor="*"

@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -33,9 +32,9 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 
 	private RadioGroupFieldEditor bugzillaVersionEditor;
 
-	private static final String bugzillaMaxResultsLabel = "Maximum returned results: ";
+//	private static final String bugzillaMaxResultsLabel = "Maximum returned results: ";
 
-	private IntegerFieldEditor maxResults;
+//	private IntegerFieldEditor maxResults;
 
 	/**
 	 * Constructor for the preferences page
@@ -73,8 +72,8 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors() {
 
-		maxResults = new IntegerFieldEditor(IBugzillaConstants.MAX_RESULTS, bugzillaMaxResultsLabel,
-				getFieldEditorParent());
+//		maxResults = new IntegerFieldEditor(IBugzillaConstants.MAX_RESULTS, bugzillaMaxResultsLabel,
+//				getFieldEditorParent());
 
 		// bugzillaVersionEditor.setPreferenceStore(BugzillaPlugin.getDefault().getPreferenceStore());
 		bugzillaVersionEditor = new RadioGroupFieldEditor(IBugzillaConstants.SERVER_VERSION, "Bugzilla Version", 3,
@@ -85,7 +84,7 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 //				"Automatically refresh Bugzilla reports and queries on startup", BooleanFieldEditor.DEFAULT,
 //				getFieldEditorParent());
 
-		addField(maxResults);
+//		addField(maxResults);
 		addField(bugzillaVersionEditor);
 //		addField(refreshQueries);
 	}
@@ -117,14 +116,14 @@ public class BugzillaPreferencePage extends FieldEditorPreferencePage implements
 //		BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.REFRESH_QUERY,
 //				refreshQueries.getBooleanValue());
 
-		try {
-			int numMaxResults = maxResults.getIntValue();
-			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS, numMaxResults);
-		} catch (NumberFormatException nfe) {
-			// ignore and leave as default
-			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS,
-					BugzillaPlugin.getDefault().getPreferenceStore().getDefaultInt(IBugzillaConstants.MAX_RESULTS));
-		}
+//		try {
+//			int numMaxResults = maxResults.getIntValue();
+//			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS, numMaxResults);
+//		} catch (NumberFormatException nfe) {
+//			// ignore and leave as default
+//			BugzillaPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MAX_RESULTS,
+//					BugzillaPlugin.getDefault().getPreferenceStore().getDefaultInt(IBugzillaConstants.MAX_RESULTS));
+//		}
 
 		// ProductConfiguration configuration = null;
 		// String urlString = bugzillaServer.getStringValue();

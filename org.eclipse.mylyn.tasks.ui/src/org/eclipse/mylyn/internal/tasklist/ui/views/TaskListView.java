@@ -44,7 +44,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
-import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
@@ -75,7 +75,6 @@ import org.eclipse.mylar.internal.tasklist.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.RenameAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.internal.tasklist.ui.actions.WorkOfflineAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -141,7 +140,7 @@ public class TaskListView extends ViewPart {
 
 	private GoUpAction goUpAction;
 
-	private WorkOfflineAction workOffline;
+//	private WorkOfflineAction workOffline;
 
 	private CopyDescriptionAction copyDescriptionAction;
 
@@ -237,7 +236,7 @@ public class TaskListView extends ViewPart {
 			}
 			
 			if(!task.isLocal()) {				
-				for (IRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
+				for (AbstractRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
 					refresh(query);
 				}				
 			}					
@@ -511,8 +510,8 @@ public class TaskListView extends ViewPart {
 					case 3:
 						return cat.getDescription();
 					}
-				} else if (element instanceof IRepositoryQuery) {
-					IRepositoryQuery cat = (IRepositoryQuery) element;
+				} else if (element instanceof AbstractRepositoryQuery) {
+					AbstractRepositoryQuery cat = (AbstractRepositoryQuery) element;
 					switch (columnIndex) {
 					case 0:
 						return new Boolean(false);
@@ -547,8 +546,8 @@ public class TaskListView extends ViewPart {
 						cat.setDescription(((String) value).trim());
 						break;
 					}
-				} else if (((TreeItem) element).getData() instanceof IRepositoryQuery) {
-					IRepositoryQuery cat = (IRepositoryQuery) ((TreeItem) element).getData();
+				} else if (((TreeItem) element).getData() instanceof AbstractRepositoryQuery) {
+					AbstractRepositoryQuery cat = (AbstractRepositoryQuery) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
 						break;
@@ -640,8 +639,8 @@ public class TaskListView extends ViewPart {
 		 */
 		@Override
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
-			if (o1 instanceof ITaskCategory || o1 instanceof IRepositoryQuery) {
-				if (o2 instanceof ITaskCategory || o2 instanceof IRepositoryQuery) {
+			if (o1 instanceof ITaskCategory || o1 instanceof AbstractRepositoryQuery) {
+				if (o2 instanceof ITaskCategory || o2 instanceof AbstractRepositoryQuery) {
 					return sortDirection
 							* ((ITaskListElement) o1).getDescription().compareTo(
 									((ITaskListElement) o2).getDescription());
@@ -649,7 +648,7 @@ public class TaskListView extends ViewPart {
 					return -1;
 				}
 			} else if (o1 instanceof ITaskListElement) {
-				if (o2 instanceof ITaskCategory || o2 instanceof IRepositoryQuery) {
+				if (o2 instanceof ITaskCategory || o2 instanceof AbstractRepositoryQuery) {
 					return -1;
 				} else if (o2 instanceof ITaskListElement) {
 					ITaskListElement element1 = (ITaskListElement) o1;
@@ -950,7 +949,7 @@ public class TaskListView extends ViewPart {
 //		manager.add(new Separator(SEPARATOR_CONTEXT));
 //		manager.add(autoClose);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		manager.add(workOffline);
+//		manager.add(workOffline);
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
@@ -1010,12 +1009,12 @@ public class TaskListView extends ViewPart {
 			} else {
 				manager.add(activateAction);
 			}
-		} else if (element instanceof ITaskCategory || element instanceof IRepositoryQuery) {
+		} else if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
 			addAction(deleteAction, manager, element);
 		}
 		
 		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskCategory
-				|| element instanceof IRepositoryQuery) {
+				|| element instanceof AbstractRepositoryQuery) {
 			addAction(renameAction, manager, element);
 		}
 		if (element instanceof ITaskCategory) {
@@ -1135,7 +1134,7 @@ public class TaskListView extends ViewPart {
 	private void makeActions() {
 
 		copyDescriptionAction = new CopyDescriptionAction(this);
-		workOffline = new WorkOfflineAction();
+//		workOffline = new WorkOfflineAction();
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);

@@ -13,9 +13,10 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
@@ -46,7 +47,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		queryPage.getQueryDialog().okPressed();
-		final BugzillaQueryCategory queryCategory = new BugzillaQueryCategory(
+		final BugzillaRepositoryQuery queryCategory = new BugzillaRepositoryQuery(
 				repository.getUrl().toExternalForm(), 
 				queryPage.getQueryDialog().getUrl(), 
 				queryPage.getQueryDialog().getName(), 
@@ -55,7 +56,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 			queryCategory.setCustomQuery(true);
 		} 
 //		else {
-//			queryCategory = new BugzillaCustomQueryCategory(
+//			queryCategory = new BugzillaCustomRepositoryQuery(
 //					repository.getUrl().toExternalForm(), 
 //					queryPage.getQueryDialog().getName(), 
 //					queryPage.getQueryDialog().getUrl(), 
@@ -68,7 +69,9 @@ public class NewBugzillaQueryWizard extends Wizard {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					monitor.beginTask("Executing query", 50);
 					try {
-						queryCategory.refreshBugs(new SubProgressMonitor(monitor, 50));
+						AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+						client.synchronize(queryCategory);
+//						queryCategory.refreshBugs(new SubProgressMonitor(monitor, 50));
 					} finally {
 						monitor.done();
 					}

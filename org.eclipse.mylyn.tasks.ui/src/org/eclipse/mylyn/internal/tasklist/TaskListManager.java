@@ -23,6 +23,8 @@ import java.util.Map;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.internal.tasklist.util.TaskActivityTimer;
+import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
 
 /**
  * @author Mik Kersten
@@ -127,7 +129,7 @@ public class TaskListManager {
 		}
 		task.setCategory(null);
 		if (!taskList.getRootTasks().contains(task))
-			taskList.addRootTask(task);
+			taskList.internalAddRootTask(task);
 		for (ITaskActivityListener listener : listeners)
 			listener.taskListModified();
 	}
@@ -166,7 +168,7 @@ public class TaskListManager {
 			listener.taskListModified();
 	}
 
-	public void addQuery(IRepositoryQuery cat) {
+	public void addQuery(AbstractRepositoryQuery cat) {
 		taskList.addQuery(cat);
 		for (ITaskActivityListener listener : listeners)
 			listener.taskListModified();
@@ -188,7 +190,7 @@ public class TaskListManager {
 			listener.taskListModified();
 	}
 
-	public void deleteQuery(IRepositoryQuery query) {
+	public void deleteQuery(AbstractRepositoryQuery query) {
 		taskList.deleteQuery(query);
 		for (ITaskActivityListener listener : listeners)
 			listener.taskListModified();

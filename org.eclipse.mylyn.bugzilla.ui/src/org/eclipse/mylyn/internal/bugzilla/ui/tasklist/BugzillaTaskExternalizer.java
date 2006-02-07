@@ -14,20 +14,21 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import java.util.Date;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugReportSyncState;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugzillaTaskState;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
-import org.eclipse.mylar.internal.tasklist.DelegatingLocalTaskExternalizer;
-import org.eclipse.mylar.internal.tasklist.IRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.internal.tasklist.DelegatingTaskExternalizer;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskList;
-import org.eclipse.mylar.internal.tasklist.TaskListExternalizerException;
+import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,7 +41,7 @@ import org.w3c.dom.NodeList;
  * @author Mik Kersten
  * @author Ken Sueda
  */
-public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
+public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String STATUS_RESO = "RESO";
 
@@ -103,21 +104,21 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 	}
 
 	@Override
-	public void readCategory(Node node, TaskList taskList) throws TaskListExternalizerException {
+	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		Element element = (Element) node;
 		if (element.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
 			readRegistry(node, taskList);
 		} else {
-			BugzillaQueryCategory cat = new BugzillaQueryCategory(element.getAttribute(REPOSITORY_URL), element
+			BugzillaRepositoryQuery cat = new BugzillaRepositoryQuery(element.getAttribute(REPOSITORY_URL), element
 					.getAttribute(URL), element.getAttribute(DESCRIPTION), element.getAttribute(MAX_HITS));
 			taskList.internalAddQuery(cat);
 		}
 	}
 
-	public String getQueryTagNameForElement(IRepositoryQuery query) {
-		if (query instanceof BugzillaCustomQueryCategory) {
+	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
+		if (query instanceof BugzillaCustomRepositoryQuery) {
 			return TAG_BUGZILLA_CUSTOM_QUERY;
-		} else if (query instanceof BugzillaQueryCategory) {
+		} else if (query instanceof BugzillaRepositoryQuery) {
 			return TAG_BUGZILLA_QUERY;
 		}
 		return "";
@@ -127,18 +128,18 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		return node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY) || node.getNodeName().equals(TAG_BUGZILLA_QUERY);
 	}
 
-	public void readQuery(Node node, TaskList tlist) throws TaskListExternalizerException {
+	public void readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
-		IRepositoryQuery cat = null;
+		AbstractRepositoryQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
-			cat = new BugzillaCustomQueryCategory(
+			cat = new BugzillaCustomRepositoryQuery(
 					element.getAttribute(REPOSITORY_URL), 
 					element.getAttribute(QUERY_STRING), 
 					element.getAttribute(NAME),
 					element.getAttribute(MAX_HITS));
 		} else if (node.getNodeName().equals(TAG_BUGZILLA_QUERY)) {
-			cat = new BugzillaQueryCategory(
+			cat = new BugzillaRepositoryQuery(
 					element.getAttribute(REPOSITORY_URL), 
 					element.getAttribute(QUERY_STRING),
 					element.getAttribute(NAME), 
@@ -152,15 +153,15 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			Node child = list.item(i);
 			try {
 				readQueryHit(child, tlist, cat);
-			} catch (TaskListExternalizerException e) {
+			} catch (TaskExternalizationException e) {
 				hasCaughtException = true;
 			}
 		}
 		if (hasCaughtException)
-			throw new TaskListExternalizerException("Failed to load all tasks");
+			throw new TaskExternalizationException("Failed to load all tasks");
 	}
 
-	public void readRegistry(Node node, TaskList taskList) throws TaskListExternalizerException {
+	public void readRegistry(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		NodeList list = node.getChildNodes();
 		TaskCategory archiveCategory = new TaskCategory(BUGZILLA_ARCHIVE_LABEL);
@@ -172,26 +173,26 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			try {
 				Node child = list.item(i);
 				ITask task = readTask(child, taskList, null, null);
-				if (task instanceof BugzillaTask) {
-					repositoryClient.addTaskToArchive(task);
+				if (task instanceof AbstractRepositoryTask) {
+					repositoryClient.addTaskToArchive((AbstractRepositoryTask)task);
 //					BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskArchive(
 //							(BugzillaTask) task);
 				}
-			} catch (TaskListExternalizerException e) {
+			} catch (TaskExternalizationException e) {
 				hasCaughtException = true;
 			}
 		}
 
 		if (hasCaughtException)
-			throw new TaskListExternalizerException("Failed to restore all tasks");
+			throw new TaskExternalizationException("Failed to restore all tasks");
 	}
 
 	public boolean canCreateElementFor(ITaskCategory cat) {
 		return false;
 	}
 
-	public boolean canCreateElementFor(IRepositoryQuery category) {
-		return category instanceof BugzillaQueryCategory;
+	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
+		return category instanceof BugzillaRepositoryQuery;
 	}
 
 	public boolean canCreateElementFor(ITask task) {
@@ -225,24 +226,24 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 	@Override
 	public ITask readTask(Node node, TaskList tlist, ITaskCategory category, ITask parent)
-			throws TaskListExternalizerException {
+			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
 		String label;
 		if (element.hasAttribute(HANDLE)) {
 			handle = element.getAttribute(HANDLE);
 		} else {
-			throw new TaskListExternalizerException("Handle not stored for bug report");
+			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
 		if (element.hasAttribute(LABEL)) {
 			label = element.getAttribute(LABEL);
 		} else {
-			throw new TaskListExternalizerException("Description not stored for bug report");
+			throw new TaskExternalizationException("Description not stored for bug report");
 		}
 		BugzillaTask task = new BugzillaTask(handle, label, false);
 		readTaskInfo(task, tlist, element, category, parent);
 
-		task.setState(BugTaskState.FREE);
+		task.setBugzillaTaskState(BugzillaTaskState.FREE);
 		task.setLastRefresh(new Date(new Long(element.getAttribute("LastDate")).longValue()));
 
 		if (element.getAttribute("Dirty").compareTo("true") == 0) {
@@ -260,14 +261,14 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 
 		if (element.hasAttribute(SYNC_STATE)) {
 			String syncState = element.getAttribute(SYNC_STATE);
-			if (syncState.compareTo(BugReportSyncState.SYNCHRONIZED.toString()) == 0) {
-				task.setSyncState(BugReportSyncState.SYNCHRONIZED);
-			} else if (syncState.compareTo(BugReportSyncState.INCOMING.toString()) == 0) {
-				task.setSyncState(BugReportSyncState.INCOMING);
-			} else if (syncState.compareTo(BugReportSyncState.OUTGOING.toString()) == 0) {
-				task.setSyncState(BugReportSyncState.OUTGOING);
-			} else if (syncState.compareTo(BugReportSyncState.CONFLICT.toString()) == 0) {
-				task.setSyncState(BugReportSyncState.CONFLICT);
+			if (syncState.compareTo(RepositoryTaskSyncState.SYNCHRONIZED.toString()) == 0) {
+				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+			} else if (syncState.compareTo(RepositoryTaskSyncState.INCOMING.toString()) == 0) {
+				task.setSyncState(RepositoryTaskSyncState.INCOMING);
+			} else if (syncState.compareTo(RepositoryTaskSyncState.OUTGOING.toString()) == 0) {
+				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+			} else if (syncState.compareTo(RepositoryTaskSyncState.CONFLICT.toString()) == 0) {
+				task.setSyncState(RepositoryTaskSyncState.CONFLICT);
 			}
 		}
 
@@ -288,7 +289,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		return node.getNodeName().equals(getQueryHitTagName());
 	}
 
-	public void readQueryHit(Node node, TaskList tlist, IRepositoryQuery query) throws TaskListExternalizerException {
+	public void readQueryHit(Node node, TaskList tlist, AbstractRepositoryQuery query) throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
 		String label;
@@ -297,17 +298,17 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 		if (element.hasAttribute(HANDLE)) {
 			handle = element.getAttribute(HANDLE);
 		} else {
-			throw new TaskListExternalizerException("Handle not stored for bug report");
+			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
 		if (element.hasAttribute(NAME)) {
 			label = element.getAttribute(NAME);
 		} else {
-			throw new TaskListExternalizerException("Description not stored for bug report");
+			throw new TaskExternalizationException("Description not stored for bug report");
 		}
 		if (element.hasAttribute(PRIORITY)) {
 			priority = element.getAttribute(PRIORITY);
 		} else {
-			throw new TaskListExternalizerException("Description not stored for bug report");
+			throw new TaskExternalizationException("Description not stored for bug report");
 		}
 		if (element.hasAttribute(COMPLETE)) {
 			status = element.getAttribute(COMPLETE);
@@ -316,7 +317,7 @@ public class BugzillaTaskExternalizer extends DelegatingLocalTaskExternalizer {
 			else
 				status = STATUS_NEW;
 		} else {
-			throw new TaskListExternalizerException("Description not stored for bug report");
+			throw new TaskExternalizationException("Description not stored for bug report");
 		}
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), TaskRepositoryManager
 				.getTaskIdAsInt(handle), null, status);

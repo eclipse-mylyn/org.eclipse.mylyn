@@ -114,10 +114,5 @@ public interface ITask extends ITaskListElement {
 	 */
 	public abstract void setReminded(boolean reminded);
 
-	/**
-	 * TODO: move
-	 */
-	public abstract boolean participatesInTaskHandles();
-
 	public abstract boolean isPastReminder();
 }

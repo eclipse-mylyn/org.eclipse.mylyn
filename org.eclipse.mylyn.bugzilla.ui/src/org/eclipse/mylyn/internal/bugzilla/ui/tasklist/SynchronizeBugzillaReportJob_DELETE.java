@@ -30,7 +30,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 //import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 //import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 //import org.eclipse.mylar.internal.bugzilla.ui.OfflineView;
-//import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugTaskState;
+//import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugzillaTaskState;
 //import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 //import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 //import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
@@ -60,13 +60,13 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 //		super(LABEL_REFRESH_JOB);
 //		setRule(schedulingRule);
 //		this.bugzillaTask = bugzillaTask;
-//		bugzillaTask.setState(BugTaskState.WAITING);
+//		bugzillaTask.setState(BugzillaTaskState.WAITING);
 //	}
 //
 //	@Override
 //	protected IStatus run(IProgressMonitor monitor) {
 //		try {
-//			bugzillaTask.setState(BugTaskState.DOWNLOADING);
+//			bugzillaTask.setState(BugzillaTaskState.DOWNLOADING);
 //			bugzillaTask.setLastRefresh(new Date());
 //			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
 //						
@@ -77,12 +77,12 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 //				OfflineView.saveOffline(downloadedReport, false);
 //			}
 //
-//			bugzillaTask.setState(BugTaskState.FREE);
+//			bugzillaTask.setState(BugzillaTaskState.FREE);
 //			 
-////			if (bugzillaTask.getSyncState() == BugReportSyncState.INCOMING) {
-////				bugzillaTask.setSyncState(BugReportSyncState.SYNCHRONIZED);
-////			} else if (bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT) {
-////				bugzillaTask.setSyncState(BugReportSyncState.OUTGOING);
+////			if (bugzillaTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+////				bugzillaTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+////			} else if (bugzillaTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+////				bugzillaTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 ////			}
 //			
 //			MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);

@@ -38,7 +38,7 @@ public interface ITaskListExternalizer {
 
 	public abstract String getTaskTagName();
 
-	public abstract String getQueryTagNameForElement(IRepositoryQuery query);
+	public abstract String getQueryTagNameForElement(AbstractRepositoryQuery query);
 
 	public abstract String getQueryHitTagName();
 
@@ -58,20 +58,20 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadCategory(Node node);
 
-	public abstract void readCategory(Node node, TaskList tlist) throws TaskListExternalizerException;
+	public abstract void readCategory(Node node, TaskList tlist) throws TaskExternalizationException;
 
 	public abstract boolean canReadTask(Node node);
 
 	public abstract ITask readTask(Node node, TaskList tlist, ITaskCategory category, ITask parent)
-			throws TaskListExternalizerException;
+			throws TaskExternalizationException;
 
-	public abstract boolean canCreateElementFor(IRepositoryQuery category);
+	public abstract boolean canCreateElementFor(AbstractRepositoryQuery category);
 
-	public abstract Element createQueryElement(IRepositoryQuery query, Document doc, Element parent);
+	public abstract Element createQueryElement(AbstractRepositoryQuery query, Document doc, Element parent);
 
 	public abstract boolean canReadQuery(Node node);
 
-	public abstract void readQuery(Node node, TaskList tlist) throws TaskListExternalizerException;
+	public abstract void readQuery(Node node, TaskList tlist) throws TaskExternalizationException;
 
 	public abstract boolean canCreateElementFor(IQueryHit queryHit);
 
@@ -79,6 +79,6 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadQueryHit(Node node);
 
-	public abstract void readQueryHit(Node node, TaskList tlist, IRepositoryQuery query)
-			throws TaskListExternalizerException;
+	public abstract void readQueryHit(Node node, TaskList tlist, AbstractRepositoryQuery query)
+			throws TaskExternalizationException;
 }

@@ -41,8 +41,8 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 
-//			boolean offline = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING
-//					|| bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
+//			boolean offline = bugzillaTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
+//					|| bugzillaTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 
 			try {
 				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(bugzillaTask, true);
@@ -82,8 +82,8 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 //		@Override
 //		protected IStatus run(IProgressMonitor monitor) {
 //			try {
-//				boolean offline = bugzillaTask.getSyncState() == BugReportSyncState.OUTGOING
-//						|| bugzillaTask.getSyncState() == BugReportSyncState.CONFLICT;
+//				boolean offline = bugzillaTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
+//						|| bugzillaTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 //
 //				editorInput = new BugzillaTaskEditorInput(bugzillaTask, offline);
 //				// openTaskEditor(input, offline);
