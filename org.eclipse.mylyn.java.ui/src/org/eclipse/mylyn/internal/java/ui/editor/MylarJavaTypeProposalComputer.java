@@ -22,11 +22,13 @@ import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
  */
 public class MylarJavaTypeProposalComputer extends JavaTypeCompletionProposalComputer {
  
-	private MylarJavaProposalProcessor proposalProcessor = new MylarJavaProposalProcessor();
-		
+	public MylarJavaTypeProposalComputer() {
+		MylarJavaProposalProcessor.getDefault().addMonitoredComputer(this);
+	}
+	
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		List proposals = super.computeCompletionProposals(context, monitor);
-		return proposalProcessor.projectInterestModel(proposals, false);
+		return MylarJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
 	}
 }

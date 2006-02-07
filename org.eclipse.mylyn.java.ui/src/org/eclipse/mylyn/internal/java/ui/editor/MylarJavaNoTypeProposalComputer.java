@@ -24,7 +24,9 @@ import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
  */
 public class MylarJavaNoTypeProposalComputer extends JavaNoTypeCompletionProposalComputer {
 
-	private MylarJavaProposalProcessor proposalProcessor = new MylarJavaProposalProcessor();
+	public MylarJavaNoTypeProposalComputer() {
+		MylarJavaProposalProcessor.getDefault().addMonitoredComputer(this);
+	}
 	
 	protected CompletionProposalCollector createCollector(JavaContentAssistInvocationContext context) {
 		return super.createCollector(context);
@@ -33,6 +35,6 @@ public class MylarJavaNoTypeProposalComputer extends JavaNoTypeCompletionProposa
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		List proposals = super.computeCompletionProposals(context, monitor);
-		return proposalProcessor.projectInterestModel(proposals, true);
+		return MylarJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
 	}
 }

@@ -11,24 +11,26 @@
 
 package org.eclipse.mylar.internal.java.ui.editor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
+import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.ui.MylarImages;
 
 /**
- * TODO: parametrize relevance levels
+ * TODO: parametrize relevance levels (requires JDT changes, bug 119063)
  * 
  * @author Mik Kersten
  */
 public class MylarJavaProposalProcessor {
 
-	static final int THRESHOLD_INTEREST = 1000;
+	static final int THRESHOLD_INTEREST = 10000;
 
 	private static final int THRESHOLD_IMPLICIT_INTEREST = THRESHOLD_INTEREST * 2;
 
@@ -36,23 +38,57 @@ public class MylarJavaProposalProcessor {
 
 	private static final String IDENTIFIER_THIS = "this";
 
-	public static final String LABEL_SEPARATOR = " ------------------------------------------";
-	
+	public static final String LABEL_SEPARATOR = " -------------------------------------------- ";
+
 	public static final MylarProposalSeparator PROPOSAL_SEPARATOR = new MylarProposalSeparator();
 
+	private List<IJavaCompletionProposalComputer> monitoredProposalComputers = new ArrayList<IJavaCompletionProposalComputer>();
+
+	private List<IJavaCompletionProposalComputer> alreadyComputedProposals = new ArrayList<IJavaCompletionProposalComputer>();
+
+	private List<IJavaCompletionProposalComputer> alreadyContainSeparator = new ArrayList<IJavaCompletionProposalComputer>();
+
+	private static MylarJavaProposalProcessor INSTANCE = new MylarJavaProposalProcessor();
+
+	private MylarJavaProposalProcessor() {
+	}
+
+	public static MylarJavaProposalProcessor getDefault() {
+		return INSTANCE;
+	}
+
+	public void addMonitoredComputer(IJavaCompletionProposalComputer proposalComputer) {
+		monitoredProposalComputers.add(proposalComputer);
+	}
+
 	@SuppressWarnings("unchecked")
-	public List projectInterestModel(List proposals, boolean addSeparator) {
+	public List projectInterestModel(IJavaCompletionProposalComputer proposalComputer, List proposals) {
 		if (!MylarPlugin.getContextManager().isContextActive()) {
 			return proposals;
 		} else {
+			boolean hasInterestingProposals = false;
 			for (Object object : proposals) {
 				if (object instanceof AbstractJavaCompletionProposal) {
-					boostRelevanceWithInterest((AbstractJavaCompletionProposal) object);
+					boolean foundInteresting = boostRelevanceWithInterest((AbstractJavaCompletionProposal) object);
+					if (!hasInterestingProposals && foundInteresting) {
+						hasInterestingProposals = true;
+					}
 				}
 			}
-			if (addSeparator) {
+			
+			// TODO: this annoying state needs to be maintainted to ensure the
+			// separator is added only once
+			if (hasInterestingProposals && alreadyContainSeparator.isEmpty()) {
 				proposals.add(MylarJavaProposalProcessor.PROPOSAL_SEPARATOR);
+				alreadyContainSeparator.add(proposalComputer);
 			}
+			 
+			alreadyComputedProposals.add(proposalComputer);
+			if (alreadyComputedProposals.size() == monitoredProposalComputers.size()) {
+				alreadyComputedProposals.clear();
+				alreadyContainSeparator.clear();
+			}
+ 			
 			return proposals;
 		}
 	}
@@ -63,12 +99,14 @@ public class MylarJavaProposalProcessor {
 		if (javaElement != null) {
 			IMylarElement mylarElement = MylarPlugin.getContextManager().getElement(javaElement.getHandleIdentifier());
 			float interest = mylarElement.getInterest().getValue();
-			if (interest >= MylarContextManager.getScalingFactors().getInteresting()) {
+			if (interest > MylarContextManager.getScalingFactors().getInteresting()) {
+				// TODO: losing precision here, only going to one decimal place
+				proposal.setRelevance(THRESHOLD_INTEREST + (int) (interest * 10));
 				hasInteresting = true;
 			}
-			proposal.setRelevance(THRESHOLD_INTEREST + (int) interest);
 		} else if (isImplicitlyInteresting(proposal)) {
 			proposal.setRelevance(THRESHOLD_IMPLICIT_INTEREST + proposal.getRelevance());
+			hasInteresting = true;
 		}
 		return hasInteresting;
 	}
@@ -80,8 +118,8 @@ public class MylarJavaProposalProcessor {
 
 	static class MylarProposalSeparator extends JavaCompletionProposal {
 		public MylarProposalSeparator() {
-			super("", 0, 0, MylarImages.getImage(MylarImages.CONTENT_ASSIST_SEPARATOR),
-					LABEL_SEPARATOR, MylarJavaProposalProcessor.THRESHOLD_INTEREST);
+			super("", 0, 0, MylarImages.getImage(MylarImages.CONTENT_ASSIST_SEPARATOR), LABEL_SEPARATOR,
+					MylarJavaProposalProcessor.THRESHOLD_INTEREST);
 		}
 	}
 }
