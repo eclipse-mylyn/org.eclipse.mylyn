@@ -123,7 +123,7 @@ public class BugzillaSearchResultCollector implements IBugzillaSearchResultColle
 	public static Map<String, Object> getAttributeMap(BugReport bug) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_ID, new Integer(bug.getId()));
-		map.put(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, bug.getRepository());
+		map.put(IBugzillaConstants.HIT_MARKER_ATTR_REPOSITORY, bug.getRepositoryUrl());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_DESC, bug.getDescription());
 		map.put(IBugzillaConstants.HIT_MARKER_ATTR_SEVERITY,
 				mapValue(bug.getAttribute("Severity").getValue(), severity));

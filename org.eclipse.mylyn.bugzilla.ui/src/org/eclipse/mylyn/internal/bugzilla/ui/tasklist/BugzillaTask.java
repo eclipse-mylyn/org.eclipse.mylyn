@@ -22,6 +22,7 @@ import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
+import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
@@ -75,6 +76,22 @@ public class BugzillaTask extends AbstractRepositoryTask {
 				super.setUrl(url);
 			}
 		}
+	}
+	
+	/**
+	 * TODO: move?
+	 */
+	public boolean readBugReport() {		
+		IBugzillaBug tempBug = OfflineReportsFile.findBug(getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()));
+		if (tempBug == null) {
+			bugReport = null;
+			return true;
+		}
+		bugReport = (BugReport) tempBug;
+
+		if (bugReport.hasChanges())
+			syncState = RepositoryTaskSyncState.OUTGOING;
+		return true;
 	}
 
 	@Override
@@ -148,20 +165,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	@Override
 	public String toString() {
 		return "bugzilla report id: " + getHandleIdentifier();
-	}
-
-	public boolean readBugReport() {
-		// XXX server name needs to be with the bug report		
-		IBugzillaBug tempBug = BugzillaRepositoryClient.find(TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()));
-		if (tempBug == null) {
-			bugReport = null;
-			return true;
-		}
-		bugReport = (BugReport) tempBug;
-
-		if (bugReport.hasChanges())
-			syncState = RepositoryTaskSyncState.OUTGOING;
-		return true;
 	}
 
 	@Override

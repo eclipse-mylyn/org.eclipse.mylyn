@@ -271,12 +271,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			task.setPriority(DEFAULT_PRIORITY);
 		}
-		// if (element.hasAttribute(PATH)) {
-		// task.setRemoteContextPath(element.getAttribute(PATH));
-		// } else {
-		// task.setRemoteContextPath(task.getHandleIdentifier());
-		// }
-
+		
 		if (element.getAttribute(ACTIVE).compareTo(TRUE) == 0) {
 			task.setActive(true);
 			tlist.setActive(task, true);

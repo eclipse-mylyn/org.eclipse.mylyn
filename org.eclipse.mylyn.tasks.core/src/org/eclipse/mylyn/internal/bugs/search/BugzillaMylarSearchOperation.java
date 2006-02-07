@@ -230,7 +230,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 
 					// make a search hit from the bug and then add it to the
 					// collector
-					BugzillaSearchHit hit = new BugzillaSearchHit(bug.getRepository(), bug.getId(), bug
+					BugzillaSearchHit hit = new BugzillaSearchHit(bug.getRepositoryUrl(), bug.getId(), bug
 							.getDescription(), "", "", "", "", "", "", "");
 					try {
 						searchCollector.accept(hit);

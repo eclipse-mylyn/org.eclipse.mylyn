@@ -621,7 +621,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		protected IStatus run(IProgressMonitor monitor) {
 			final BugReport serverBug;
 			try {
-				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepository(), bug.getId());
+				serverBug = BugzillaRepositoryUtil.getBug(bug.getRepositoryUrl(), bug.getId());
 				// If no bug was found on the server, throw an exception so that
 				// the
 				// user gets the same message that appears when there is a
@@ -701,7 +701,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider,
-					new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepository(),
+					new StructuredSelection(new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(),
 							"Description", true, bug.getSummary()))));
 		}
 	}
@@ -726,7 +726,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new BugzillaReportSelection(bug.getId(), bug.getRepository(), comment.getCreated().toString(),
+					new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(), comment.getCreated().toString(),
 							comment, bug.getSummary()))));
 		}
 	}
@@ -738,7 +738,7 @@ public class ExistingBugEditor extends AbstractBugEditor {
 	protected class NewCommentListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new BugzillaReportSelection(bug.getId(), bug.getRepository(), "New Comment", false, bug
+					new BugzillaReportSelection(bug.getId(), bug.getRepositoryUrl(), "New Comment", false, bug
 							.getSummary()))));
 		}
 	}

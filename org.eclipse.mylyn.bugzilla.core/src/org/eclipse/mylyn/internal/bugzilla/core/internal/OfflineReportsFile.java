@@ -97,7 +97,7 @@ public class OfflineReportsFile {
 			
 			// check for bug and do a compare
 			int index = -1;
-			if ((index = find(entry.getId())) >= 0) {
+			if ((index = find(entry.getRepositoryUrl(), entry.getId())) >= 0) {
 				IBugzillaBug oldBug = list.get(index);
 				if (oldBug instanceof BugReport && entry instanceof BugReport && !saveChosen ) { 
 					CompareConfiguration config = new CompareConfiguration();
@@ -211,13 +211,22 @@ public class OfflineReportsFile {
 	 * @return The index of the bug in the array if it exists, else -1. Locally
 	 *         created bugs are ignored.
 	 */
-	public int find(int id) {
+	public int find(String repositoryUrl, int id) {
 		for (int i = 0; i < list.size(); i++) {
 			IBugzillaBug currBug = list.get(i);
-			if (currBug != null && (currBug.getId() == id) && !currBug.isLocallyCreated())
+			if (currBug != null && currBug.getRepositoryUrl() != null 
+					&& (currBug.getRepositoryUrl().equals(repositoryUrl) && currBug.getId() == id) && !currBug.isLocallyCreated())
 				return i;
 		}
 		return -1;
+	}
+	
+	public static IBugzillaBug findBug(String repositoryUrl, int bugId) {
+		int location = BugzillaPlugin.getDefault().getOfflineReports().find(repositoryUrl, bugId);
+		if (location != -1) {
+			return BugzillaPlugin.getDefault().getOfflineReports().elements().get(location);
+		}
+		return null;
 	}
 
 	/**
@@ -317,6 +326,7 @@ public class OfflineReportsFile {
 		writeFile();
 	}
 
+}
 	// /**
 	// * Function to sort the offline reports list
 	// * @param sortOrder The way to sort the bugs in the offline reports list
@@ -442,4 +452,3 @@ public class OfflineReportsFile {
 //		bugList.add(bug);
 //		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
 //	}
-}

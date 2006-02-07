@@ -211,7 +211,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	}
 
 	public void saveBugReport(IBugzillaBug bugzillaBug) {
-		String handle = TaskRepositoryManager.getHandle(bugzillaBug.getRepository(), bugzillaBug.getId());
+		String handle = TaskRepositoryManager.getHandle(bugzillaBug.getRepositoryUrl(), bugzillaBug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
@@ -422,7 +422,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			return;
 		}
 
-		String handle = TaskRepositoryManager.getHandle(bug.getRepository(), bug.getId());
+		String handle = TaskRepositoryManager.getHandle(bug.getRepositoryUrl(), bug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
 		if (task != null && task instanceof BugzillaTask) {
 			BugzillaTask bugTask = (BugzillaTask) task;
@@ -485,7 +485,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		try {
 			form.submitReportToRepository();
 			removeReport(bugReport);
-			String handle = TaskRepositoryManager.getHandle(bugReport.getRepository(), bugReport.getId());
+			String handle = TaskRepositoryManager.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 			synchronize(task, true, null);
 		} catch (Exception e) {
@@ -653,14 +653,6 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		ArrayList<IBugzillaBug> bugList = new ArrayList<IBugzillaBug>();
 		bugList.add(bug);
 		BugzillaPlugin.getDefault().getOfflineReports().remove(bugList);
-	}
-
-	public static IBugzillaBug find(int bugId) {
-		int location = BugzillaPlugin.getDefault().getOfflineReports().find(bugId);
-		if (location != -1) {
-			return BugzillaPlugin.getDefault().getOfflineReports().elements().get(location);
-		}
-		return null;
 	}
 
 }

@@ -44,7 +44,7 @@ public class ExistingBugEditorInput extends AbstractBugEditorInput {
 		this.bug = bug;
 		this.bugId = bug.getId();
 		repository = MylarTaskListPlugin.getRepositoryManager().getRepository(BugzillaPlugin.REPOSITORY_KIND,
-				bug.getRepository());
+				bug.getRepositoryUrl());
 	}
 
 	/**

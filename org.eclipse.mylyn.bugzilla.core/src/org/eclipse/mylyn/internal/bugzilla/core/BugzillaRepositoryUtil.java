@@ -136,11 +136,11 @@ public class BugzillaRepositoryUtil {
 	 * @throws IOException,
 	 *             MalformedURLException, LoginException
 	 */
-	public static BugReport getCurrentBug(String serverUrl, int id) throws MalformedURLException, LoginException,
+	public static BugReport getCurrentBug(String repositoryUrl, int id) throws MalformedURLException, LoginException,
 			IOException {
 		// Look among the offline reports for a bug with the given id.
 		OfflineReportsFile reportsFile = BugzillaPlugin.getDefault().getOfflineReports();
-		int offlineId = reportsFile.find(id);
+		int offlineId = reportsFile.find(repositoryUrl, id);
 
 		// If an offline bug was found, return it if possible.
 		if (offlineId != -1) {
@@ -152,7 +152,7 @@ public class BugzillaRepositoryUtil {
 
 		// If a suitable offline report was not found, try to get one from the
 		// server.
-		return getBug(serverUrl, id);
+		return getBug(repositoryUrl, id);
 	}
 
 	/**
