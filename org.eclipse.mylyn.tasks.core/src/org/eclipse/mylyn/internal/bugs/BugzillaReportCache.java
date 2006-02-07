@@ -52,7 +52,7 @@ public class BugzillaReportCache {
 	private BugzillaCacheFile cacheFile;
 
 	private IPath getCacheFile() {
-		IPath stateLocation = Platform.getPluginStateLocation(MylarBugsPlugin.getDefault());
+		IPath stateLocation = Platform.getStateLocation(MylarBugsPlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("offlineReports");
 		return configFile;
 	}

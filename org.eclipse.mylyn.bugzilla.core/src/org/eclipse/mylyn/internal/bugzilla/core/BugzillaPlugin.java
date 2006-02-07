@@ -259,7 +259,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	 * Returns the path to the file cacheing the query favorites.
 	 */
 	private IPath getFavoritesFile() {
-		IPath stateLocation = Platform.getPluginStateLocation(BugzillaPlugin.getDefault());
+		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("favorites");
 		return configFile;
 	}
@@ -268,7 +268,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	 * Returns the path to the file cacheing the offline bug reports.
 	 */
 	private IPath getOfflineReportsFile() {
-		IPath stateLocation = Platform.getPluginStateLocation(BugzillaPlugin.getDefault());
+		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("offlineReports");
 		return configFile;
 	}
@@ -310,7 +310,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	 * Returns the path to the file cacheing the product configuration.
 	 */
 	protected IPath getProductConfigurationCachePath(String serverUrl) {
-		IPath stateLocation = Platform.getPluginStateLocation(BugzillaPlugin.getDefault());
+		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("productConfig." + serverUrl.replace('/', '-'));
 		return configFile;
 	}
@@ -339,7 +339,7 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 	 * Returns the path to the file caching bug reports created while offline.
 	 */
 	protected IPath getCachedBugReportPath() {
-		IPath stateLocation = Platform.getPluginStateLocation(BugzillaPlugin.getDefault());
+		IPath stateLocation = Platform.getStateLocation(BugzillaPlugin.getDefault().getBundle());
 		IPath bugFile = stateLocation.append("bugReports");
 		return bugFile;
 	}
