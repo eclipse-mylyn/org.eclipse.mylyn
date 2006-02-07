@@ -21,5 +21,6 @@ Export-Package: org.eclipse.mylar.internal.tasklist,
  org.eclipse.mylar.internal.tasklist.ui.actions,
  org.eclipse.mylar.internal.tasklist.ui.preferences,
  org.eclipse.mylar.internal.tasklist.ui.views,
- org.eclipse.mylar.internal.tasklist.ui.wizards
+ org.eclipse.mylar.internal.tasklist.ui.wizards,
+ org.eclipse.mylar.internal.tasklist.util
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
