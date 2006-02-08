@@ -32,13 +32,15 @@ import org.eclipse.ui.IViewPart;
  */
 public class SynchronizeReportsAction extends Action implements IViewActionDelegate {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.refresh.bugzilla";
+	private static final String LABEL = "Synchronize Repsitory Tasks";
+
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.synchronize";
 
 	private AbstractRepositoryQuery query = null;
 
 	public SynchronizeReportsAction() {
-		setText("Refresh Refresh");
-		setToolTipText("Synchronize Bugzilla");
+		setText(LABEL);
+		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TaskListImages.REPOSITORY_SYNCHRONIZE);
 	}
@@ -50,16 +52,7 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 
 	@Override
 	public void run() {
-
-//		boolean offline = MylarTaskListPlugin.getPrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
-//		if (offline) {
-//			MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-//					"Unable to refresh the query since you are currently offline");
-//			return;
-//		}
-
 		if (query != null) {
-//			synchronizeCategory(query);
 			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(query.getRepositoryKind());
 			client.synchronize(query);
 		} else if (TaskListView.getDefault() != null) {			
@@ -97,26 +90,6 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 			}
 		});
 	}
-
-//	private void synchronizeCategory(final AbstractRepositoryQuery query) {
-//		Job job = new Job(LABEL_SYNCHRONIZE_JOB) {
-//
-//			@Override
-//			protected IStatus run(IProgressMonitor monitor) {
-//				query.refreshBugs();
-//				for (IQueryHit hit : query.getHits()) {
-//					if (hit.getCorrespondingTask() != null && hit instanceof IQueryHit) {
-//						AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
-//						client.requestRefresh(hit.getCorrespondingTask());
-//					}
-//				}
-//				return Status.OK_STATUS;
-//			}
-//
-//		};
-//
-//		job.schedule();
-//	}
 
 	public void init(IViewPart view) {
 

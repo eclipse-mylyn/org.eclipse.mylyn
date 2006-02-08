@@ -50,9 +50,9 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOpe
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugzillaTaskState;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -62,12 +62,14 @@ import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.progress.IProgressConstants;
 
 /**
  * @author Mik Kersten
@@ -75,15 +77,15 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  */
 public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 
-	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla Repository";
+	private static final String LABEL_JOB_SUBMIT = "Submitting to Bugzilla repository";
 
-	private static final String SYNCHRONIZING_TASK_LABEL = "Synchronizing Bugzilla Task";
+	private static final String SYNCHRONIZING_TASK_LABEL = "Synchronizing Bugzilla task";
 
 	private static final String DESCRIPTION_DEFAULT = "<needs synchronize>";
 
 	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.16-2.20)";
 
-	private static final String LABEL_SYNCHRONIZE_JOB = "Synchronizing query with repository";
+	private static final String LABEL_SYNCHRONIZE_JOB = "Synchronizing Bugzilla query";
 
 	private boolean forceSyncExecForTesting = false;
 
@@ -249,6 +251,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		Job job = new Job(LABEL_SYNCHRONIZE_JOB) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
+				
 				repositoryQuery.clearHits();
 
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
@@ -536,7 +540,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 
 	private class SynchronizeBugzillaJob extends Job {
 
-		BugzillaTask bugzillaTask;
+		private BugzillaTask bugzillaTask;
 
 		boolean forceSynch = false;
 
@@ -552,6 +556,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
 			try {
+				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 				bugzillaTask.setBugzillaTaskState(BugzillaTaskState.DOWNLOADING);
 				bugzillaTask.setLastRefresh(new Date());
 				MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
@@ -559,7 +564,6 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 				BugReport downloadedReport = downloadReport(bugzillaTask);
 				if (downloadedReport != null) {
 					bugzillaTask.setBugReport(downloadedReport);
-					// XXX use the server name for multiple repositories
 					saveOffline(downloadedReport, forceSynch);// false
 				}
 
