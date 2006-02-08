@@ -30,7 +30,7 @@ public class TaskListFilteredTree extends FilteredTree {
 
 	private static final int DELAY_REFRESH = 700;
 
-	private static final String LABEL_FIND = " Find: ";
+	private static final String LABEL_FIND = " Find:";
 
 	private Job refreshJob;
 	
