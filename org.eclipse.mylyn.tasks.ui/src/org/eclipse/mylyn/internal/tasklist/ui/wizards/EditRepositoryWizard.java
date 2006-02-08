@@ -26,11 +26,11 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	private AbstractRepositorySettingsPage abstractRepositorySettingsPage;// =
 
-	// new
-	// AbstractRepositorySettingsPage();
+	private TaskRepository oldRepository;
 
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
+		oldRepository = repository;
 		// super.setForcePreviousAndNextButtons(true);
 		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 				repository.getKind());
@@ -47,6 +47,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			if (repository != null) {
 				repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(),
 						abstractRepositorySettingsPage.getPassword());
+				MylarTaskListPlugin.getRepositoryManager().removeRepository(oldRepository);
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
 				return true;
 			}

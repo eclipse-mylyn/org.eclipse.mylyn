@@ -26,17 +26,17 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author Ken Sueda
  */
-public class DateChooserDialog extends Dialog {
+public class DatePickerDialog extends Dialog {
 
 	private DatePicker picker = null;
 
 	private Calendar reminderDate = null;
 
-	public DateChooserDialog(Shell parentShell) {
+	public DatePickerDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
-	public DateChooserDialog(Shell parentShell, Date reminderDate) {
+	public DatePickerDialog(Shell parentShell, Date reminderDate) {
 		super(parentShell);
 		this.reminderDate = Calendar.getInstance();
 		this.reminderDate.setTime(reminderDate);

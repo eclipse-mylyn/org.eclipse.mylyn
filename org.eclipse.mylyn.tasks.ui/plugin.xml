@@ -56,7 +56,7 @@
             id="org.eclipse.mylar.tasklist.repositories"
             allowMultiple="false"
             category="org.eclipse.mylar"
-            class="org.eclipse.mylar.internal.tasklist.ui.TaskRepositoriesView"
+            class="org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView"
             icon="icons/eview16/repositories.gif"
             name="Task Repositories">
       </view>

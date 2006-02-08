@@ -188,9 +188,9 @@ public class TaskRepositoryManager {
 	}
 
 	private void saveRepositories() {
-		String repositoriesToStore = "";
 		for (AbstractRepositoryClient repositoryClient : repositoryClients.values()) {
 			if (repositoryMap.containsKey(repositoryClient.getKind())) {
+				String repositoriesToStore = "";
 				for (TaskRepository repository : repositoryMap.get(repositoryClient.getKind())) {
 					repositoriesToStore += repository.getUrl().toExternalForm() + PREF_STORE_DELIM;
 				}

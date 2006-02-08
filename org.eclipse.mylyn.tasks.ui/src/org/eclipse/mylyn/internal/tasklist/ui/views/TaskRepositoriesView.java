@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasklist.ui;
+package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -25,7 +25,6 @@ import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.DeleteTaskRepositoryAction;
 import org.eclipse.mylar.internal.tasklist.ui.actions.EditRepositoryPropertiesAction;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
