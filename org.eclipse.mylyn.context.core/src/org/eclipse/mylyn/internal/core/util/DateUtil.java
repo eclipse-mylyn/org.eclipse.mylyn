@@ -23,15 +23,19 @@ public class DateUtil {
 	}
 
 	public static String getFormattedDate(Calendar calendar) {
-		int monthInt = (calendar.get(Calendar.MONTH) + 1);
-		String month = "" + monthInt;
-		if (monthInt < 10)
-			month = "0" + month;
-		int dateInt = (calendar.get(Calendar.DATE));
-		String date = "" + dateInt;
-		if (dateInt < 10)
-			date = "0" + date;
-		return calendar.get(Calendar.YEAR) + "-" + month + "-" + date;
+		try {
+			int monthInt = (calendar.get(Calendar.MONTH) + 1);
+			String month = "" + monthInt;
+			if (monthInt < 10)
+				month = "0" + month;
+			int dateInt = (calendar.get(Calendar.DATE));
+			String date = "" + dateInt;
+			if (dateInt < 10)
+				date = "0" + date;
+			return calendar.get(Calendar.YEAR) + "-" + month + "-" + date;
+		} catch (Exception e) {
+			return "<unresolved date>";
+		}
 	}
 
 	public static String getFormattedTime() {
