@@ -9,13 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;

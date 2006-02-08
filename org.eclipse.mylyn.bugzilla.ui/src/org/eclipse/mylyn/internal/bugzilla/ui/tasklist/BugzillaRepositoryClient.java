@@ -38,7 +38,6 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
@@ -116,10 +115,6 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 
 	public String getLabel() {
 		return CLIENT_LABEL;
-	}
-
-	public String toString() {
-		return getLabel();
 	}
 
 	public AbstractRepositorySettingsPage getSettingsPage() {
