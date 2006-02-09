@@ -337,9 +337,9 @@ public class InteractionEventLogger implements IInteractionEventListener {
 			} catch (NumberFormatException nfe) {
 				// ignore for empty interest values
 			}
-			InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId,
+			InteractionEvent event = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId,
 					navigation, delta, interestFloatVal, format.parse(startDate), format.parse(endDate));
-			return ie;
+			return event;
 
 		} catch (ParseException e) {
 			System.err.println("readevent: " + xml);

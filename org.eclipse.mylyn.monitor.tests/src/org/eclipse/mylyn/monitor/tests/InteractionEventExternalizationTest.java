@@ -11,7 +11,9 @@
 package org.eclipse.mylar.monitor.tests;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.core.InteractionEvent;
@@ -25,18 +27,20 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 
 	private static final String PATH = "test-log.xml";
 
-	public void testManualExternalization() {
+	public void testManualExternalization() throws IOException {
 		List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 		File f = new File(PATH);
 		if (f.exists()) {
 			f.delete();
 		}
 		InteractionEventLogger logger = new InteractionEventLogger(f);
+		logger.clearInteractionHistory();
 		logger.startObserving();
 		String handle = "";
 		for (int i = 0; i < 100; i++) {
 			handle += "1";
-			InteractionEvent event = mockSelection(handle);
+			InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", handle,
+					"originId", "navigatedRelation", "delta", 2f, new Date(0), new Date());
 			events.add(event);
 			logger.interactionObserved(event);
 		}
@@ -47,5 +51,5 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 		for (int i = 0; i < events.size(); i++) {
 			assertEquals(events.get(i), readEvents.get(i));
 		}
-	} 
+	}
 }
