@@ -54,4 +54,14 @@ public class TaskListPreferenceConstants {
 
 	public static final String REPOSITORY_SYNCH_ON_STARTUP = "org.eclipse.mylar.tasklist.repositories.synch.startup";
 
+	public static final String REPOSITORY_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylar.tasklist.repositories.synch.schedule.enabled";
+	
+	public static final String REPOSITORY_SYNCH_SCHEDULE_VALUE = "org.eclipse.mylar.tasklist.repositories.synch.schedule.value";
+	
+	public static final String REPOSITORY_SYNCH_SCHEDULE_UNITS = "org.eclipse.mylar.tasklist.repositories.synch.schedule.units";
+
+	public static final String REPOSITORY_SYNCH_SCHEDULE_UNITS_MINUTES = "minute(s)";
+
+	public static final String REPOSITORY_SYNCH_SCHEDULE_UNITS_HOURS = "hour(s)";
+
 }

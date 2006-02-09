@@ -18,6 +18,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
@@ -26,6 +27,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.ScheduledTaskListRefreshJob;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskList;
@@ -217,4 +219,13 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(readCat2, readList.get(2).getCategory());
 	}
 
+	
+	public void testScheduledRefreshJob() throws InterruptedException {
+		int counter = 3;
+		ScheduledTaskListRefreshJob job = new ScheduledTaskListRefreshJob(500, manager);
+		job.run(new NullProgressMonitor());
+		Thread.sleep(1500);
+	    assertEquals(counter, job.getCount());		
+	}
+	
 }

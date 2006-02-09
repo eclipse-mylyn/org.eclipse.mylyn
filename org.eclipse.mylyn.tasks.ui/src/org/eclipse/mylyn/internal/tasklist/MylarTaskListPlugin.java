@@ -57,6 +57,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private static TaskRepositoryManager taskRepositoryManager;
 
 	private TaskListSaveManager taskListSaveManager = new TaskListSaveManager();
+	
+	private TaskListRefreshManager taskListRefreshManager = new TaskListRefreshManager();
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -311,6 +313,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+					getPrefs().addPropertyChangeListener(taskListRefreshManager);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
 							taskListSaveManager);
 				} catch (Exception e) {
@@ -368,6 +371,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		taskListRefreshManager.startRefreshJob();
 	}
 
 	@Override
@@ -398,6 +402,12 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EXTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, false);
+		
+		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE, "20");
+		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS, TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS_MINUTES);
+	
+		
 
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);

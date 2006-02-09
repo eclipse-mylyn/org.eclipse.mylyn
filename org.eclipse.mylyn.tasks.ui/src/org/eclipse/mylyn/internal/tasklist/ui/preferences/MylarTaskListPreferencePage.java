@@ -15,11 +15,15 @@ import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -48,8 +52,14 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	private Button reportInternal = null;
 
 	private Button refreshQueries = null;
+	
+	private Text refreshScheduleTime = null;
+	
+	private Combo hoursOrMinutes = null;
 
-//	private Button refreshQueries;
+	private Button userRefreshOnly;
+
+	private Button enableBackgroundRefresh;
 	
 	public MylarTaskListPreferencePage() {
 		super();
@@ -65,34 +75,13 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		createCreationGroup(container);
 		createTaskDirectoryControl(container);
 		createBugzillaReportOption(container);
-		createUserbooleanControl(container);
+		createTaskRefreshScheduleGroup(container);
+		updateRefreshGroupEnablements();
 		return container;
 	}
 
 	public void init(IWorkbench workbench) {
-		// TODO Auto-generated method stub
-	}
-
-	private void createUserbooleanControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		container.setLayoutData(gridData);
-		GridLayout gl = new GridLayout(1, false);
-		container.setLayout(gl);
-		
-//		refreshQueries = new Button(container, SWT.CHECK)
-//		refreshQueries.setText("Automatically refresh Bugzilla reports and queries on startup", BooleanFieldEditor.DEFAULT,
-//				getFieldEditorParent());
-//		
-		
-		// closeEditors = new Button(container, SWT.CHECK);
-		// closeEditors.setText("Close all editors on task deactivation
-		// (defaults to close only editors of interesting resources)");
-		// closeEditors.setSelection(getPreferenceStore().getBoolean(MylarPlugin.AUTO_MANAGE_EDITORS));
-
-		refreshQueries = new Button(container, SWT.CHECK);
-		refreshQueries.setText("Automatically perform a repository refresh on startup");
-		refreshQueries.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
+		// TODO Auto-generated method stub		
 	}
 
 	private void createBugzillaReportOption(Composite parent) {
@@ -138,6 +127,12 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		getPreferenceStore().setValue(TaskListPreferenceConstants.DEFAULT_URL_PREFIX, taskURLPrefixText.getText());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, refreshQueries.getSelection());
 
+		
+		// Set refresh schedule preferences and start/stop as necessary
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, enableBackgroundRefresh.getSelection());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE, refreshScheduleTime.getText());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS, hoursOrMinutes.getItem(hoursOrMinutes.getSelectionIndex()));
+		
 		return true;
 	}
 
@@ -149,6 +144,13 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		// reportExternal.setSelection(getPreferenceStore().getBoolean(MylarTaskListPlugin.REPORT_OPEN_EXTERNAL));
 		refreshQueries.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		// saveCombo.setText(getPreferenceStore().getString(MylarTaskListPlugin.SAVE_TASKLIST_MODE));
+		
+		enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+		refreshScheduleTime.setText(getPreferenceStore().getString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE));
+		hoursOrMinutes.select(hoursOrMinutes.indexOf(getPreferenceStore().getString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS)));
+	
+		
+		
 		return true;
 	}
 
@@ -171,6 +173,13 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 		refreshQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
+		
+		
+		enableBackgroundRefresh.setSelection(getPreferenceStore().getDefaultBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+		userRefreshOnly.setSelection(!enableBackgroundRefresh.getSelection());
+		refreshScheduleTime.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE));
+		hoursOrMinutes.select(hoursOrMinutes.indexOf(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS)));
+		
 	}
 
 	private Label createLabel(Composite parent, String text) {
@@ -232,13 +241,123 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 		Label urlLabel = createLabel(group, "Web link prefix (e.g. https://bugs.eclipse.org/bugs/show_bug.cgi?id=)");
 		urlLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-
+		
 		String taskURLPrefix = getPreferenceStore().getString(TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 		taskURLPrefixText = new Text(group, SWT.BORDER);
 		taskURLPrefixText.setText(taskURLPrefix);
 		taskURLPrefixText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
+	
+	// reference: org.eclipse.team.internal.ui.synchronize.ConfigureSynchronizeScheduleComposite
+	private void createTaskRefreshScheduleGroup(Composite parent) {
+		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		group.setText("Refresh Schedule");
+		group.setLayout(new GridLayout(1, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
+		{
+			userRefreshOnly = new Button(group, SWT.RADIO);
+			final GridData gridData = new GridData();
+			gridData.horizontalSpan = 2;
+			userRefreshOnly.setLayoutData(gridData);
+			userRefreshOnly.setText("Do not schedule periodic background synchronization");
+			userRefreshOnly.setSelection(!getPreferenceStore().getBoolean(
+					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+			userRefreshOnly.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					updateRefreshGroupEnablements();
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+		}
+		{
+			enableBackgroundRefresh = new Button(group, SWT.RADIO);
+			final GridData gridData = new GridData();
+			gridData.horizontalSpan = 2;
+			enableBackgroundRefresh.setLayoutData(gridData);
+			enableBackgroundRefresh.setText("Use the following schedule:");
+			enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(
+					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+			enableBackgroundRefresh.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					updateRefreshGroupEnablements();
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+		}
+		final Composite composite = new Composite(group, SWT.NONE);
+		final GridData gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_VERTICAL
+				| GridData.VERTICAL_ALIGN_BEGINNING);
+		gridData.horizontalSpan = 2;
+		composite.setLayoutData(gridData);
+		final GridLayout gridLayout_1 = new GridLayout();
+		gridLayout_1.numColumns = 3;
+		composite.setLayout(gridLayout_1);
+		{
+			final Label label = new Label(composite, SWT.NONE);
+			label.setText("Every: ");
+		}
+		{
+			refreshScheduleTime = new Text(composite, SWT.BORDER | SWT.RIGHT);
+			final GridData gridData_1 = new GridData();
+			gridData_1.widthHint = 35;
+			refreshScheduleTime.setLayoutData(gridData_1);
+			refreshScheduleTime.setText(getPreferenceStore().getString(
+					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE));
+			refreshScheduleTime.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					updateRefreshGroupEnablements();
+				}
+			});
+
+		}
+		{
+			hoursOrMinutes = new Combo(composite, SWT.READ_ONLY);
+			hoursOrMinutes.setItems(new String[] { TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS_MINUTES,
+					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS_HOURS });
+			hoursOrMinutes.setLayoutData(new GridData());
+			hoursOrMinutes.select(hoursOrMinutes.indexOf(getPreferenceStore().getString(
+					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS)));
+		}
+
+		refreshQueries = new Button(group, SWT.CHECK);
+		refreshQueries.setText("Automatically perform a repository refresh on startup");
+		refreshQueries.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
+
+	}
+	
+	public void updateRefreshGroupEnablements() {
+		if (enableBackgroundRefresh.getSelection()) {
+			try {
+				long number = Long.parseLong(refreshScheduleTime.getText());
+				if (number <= 0) {
+					this.setErrorMessage("Refresh schedule time must be > 0");
+					this.setValid(false);
+				} else {
+					this.setErrorMessage(null);
+					this.setValid(true);
+				}
+			} catch (NumberFormatException e) {
+				this.setErrorMessage("Refresh schedule time must be valid integer");
+				this.setValid(false);
+			}
+		} else {
+			this.setValid(true);
+			this.setErrorMessage(null);
+		}
+		refreshScheduleTime.setEnabled(enableBackgroundRefresh.getSelection());
+		hoursOrMinutes.setEnabled(enableBackgroundRefresh.getSelection());
+	}
+	
+
+	
 	private Button createButton(Composite parent, String text) {
 		Button button = new Button(parent, SWT.TRAIL);
 		button.setText(text);
