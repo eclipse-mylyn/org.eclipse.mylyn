@@ -82,8 +82,6 @@ public class ContextParsingTest extends TestCase {
 					} 
 					
 					assertTrue("should be positive: " + element.getInterest().getValue(), element.getInterest().getValue() >= 0);
-//					System.err.println(">>> " + element.getInterest().getValue() + ", handle: "
-//							+ element.getHandleIdentifier());
 					numEvents++;
 				}
 			}
