@@ -18,7 +18,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
@@ -46,9 +46,9 @@ public class TaskListHighlighterMenuContributor implements IDynamicSubMenuContri
 						ITask task = null;
 						if (selectedElement instanceof ITask) {
 							task = (ITask) selectedElement;
-						} else if (selectedElement instanceof IQueryHit) {
-							if (((IQueryHit) selectedElement).getCorrespondingTask() != null) {
-								task = ((IQueryHit) selectedElement).getCorrespondingTask();
+						} else if (selectedElement instanceof AbstractQueryHit) {
+							if (((AbstractQueryHit) selectedElement).getCorrespondingTask() != null) {
+								task = ((AbstractQueryHit) selectedElement).getCorrespondingTask();
 							}
 						}
 
