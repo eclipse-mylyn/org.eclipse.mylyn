@@ -522,6 +522,7 @@ public class TaskInfoEditor extends EditorPart {
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
+				task.setReminded(false);
 				TaskInfoEditor.this.markDirty(true);
 			}
 

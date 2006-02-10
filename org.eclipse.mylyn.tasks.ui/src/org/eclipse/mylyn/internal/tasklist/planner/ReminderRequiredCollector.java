@@ -31,8 +31,7 @@ public class ReminderRequiredCollector implements ITaskCollector {
 	}
 
 	public void consumeTask(ITask task) {
-		if (task.getReminderDate() != null && !task.hasBeenReminded() && task.getReminderDate().compareTo(curr) < 0) {
-			task.setReminded(true);
+		if (task.getReminderDate() != null && !task.hasBeenReminded() && task.getReminderDate().compareTo(curr) < 0) {			
 			tasks.add(task);
 		}
 	}
