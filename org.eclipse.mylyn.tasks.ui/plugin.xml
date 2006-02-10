@@ -145,6 +145,27 @@
       <viewerContribution
             id="org.eclipse.mylar.tasklist.ui.viewerContribution"
             targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+         
+		<action
+              class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
+              enablesFor="*"
+              icon="icons/etool16/task-repository.gif"
+              id="org.eclipse.mylar.tasklist.actions.addQuery"
+              menubarPath="reports"
+              label="Add Existing Repository Task"
+              style="push"
+              tooltip="Add Repository Task"> 
+  		</action>          
+		<action
+              class="org.eclipse.mylar.internal.tasklist.ui.actions.NewQueryAction"
+              enablesFor="*"
+              icon="icons/etool16/query-new.gif"
+              id="org.eclipse.mylar.tasklist.actions.addQuery"
+              menubarPath="reports"
+              label="New Repository Query"
+              style="push"
+              tooltip="New Repository Query"> 
+  		</action>
 
          <action
                class="org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction"
@@ -163,27 +184,6 @@
                </or>
             </enablement>
          </action>
-         
-		<action
-              class="org.eclipse.mylar.internal.tasklist.ui.actions.AddRepositoryTaskAction"
-              enablesFor="*"
-              icon="icons/etool16/task-repository.gif"
-              id="org.eclipse.mylar.tasklist.actions.addQuery"
-              menubarPath="reports"
-              label="Add Repository Task"
-              style="push"
-              tooltip="Add Repository Task"> 
-  		</action>          
-		<action
-              class="org.eclipse.mylar.internal.tasklist.ui.actions.NewQueryAction"
-              enablesFor="*"
-              icon="icons/etool16/query-new.gif"
-              id="org.eclipse.mylar.tasklist.actions.addQuery"
-              menubarPath="reports"
-              label="New Repository Query"
-              style="push"
-              tooltip="New Repository Query"> 
-  		</action>
       </viewerContribution>
    </extension>
 
