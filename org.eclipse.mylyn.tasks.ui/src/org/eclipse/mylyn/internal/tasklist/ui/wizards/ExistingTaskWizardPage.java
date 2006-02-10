@@ -28,7 +28,7 @@ public class ExistingTaskWizardPage extends WizardPage {
 
 	private static final String TITLE = "Add Existing Task";
 
-	private static final String DESCRIPTION = "Enter the identifier for the task, issue, or bug.";
+	private static final String DESCRIPTION = "Enter the identifier for the task, issue, or bug report.";
 
 	private Text taskIdText;
 
@@ -45,7 +45,7 @@ public class ExistingTaskWizardPage extends WizardPage {
 		layout.numColumns = 2;
 
 		GridData gd = new GridData();
-		gd.widthHint = 50;
+		gd.widthHint = 200;
 
 		Label label = new Label(container, SWT.NULL);
 		label.setText("Enter ID: ");
