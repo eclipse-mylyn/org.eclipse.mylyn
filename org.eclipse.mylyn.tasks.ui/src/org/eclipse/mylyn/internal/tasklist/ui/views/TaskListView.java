@@ -211,7 +211,7 @@ public class TaskListView extends ViewPart {
 	 */
 	protected boolean isPaused = false;
 
-	private final ITaskActivityListener ACTIVITY_LISTENER = new ITaskActivityListener() {
+	private final ITaskActivityListener TASK_REFERESH_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
 			updateDescription(task);
@@ -228,18 +228,18 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void localInfoChanged(ITask task) {
-			
+			refresh(task);
 			if(task.getCategory() == null) {
 				refresh(null);
 			} else {
 				refresh(task.getCategory());
-			}
+			} 
 			
-			if(!task.isLocal()) {				
-				for (AbstractRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
-					refresh(query);
-				}				
-			}					
+//			if(!task.isLocal()) {				
+//				for (AbstractRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
+//					refresh(query);
+//				}				
+//			}					
 		}
 		
 		public void repositoryInfoChanged(ITask task) {
@@ -260,14 +260,14 @@ public class TaskListView extends ViewPart {
 					public void run() {
 						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 							if (element == null) {
-								getViewer().getControl().setRedraw(false);
+//								getViewer().getControl().setRedraw(false);
 //								getViewer().refresh();
 								filteredTree.textChanged(0);
-								getViewer().getControl().setRedraw(true);
+//								getViewer().getControl().setRedraw(true);
 							} else {
-								getViewer().getControl().setRedraw(false);
+//								getViewer().getControl().setRedraw(false);
 								getViewer().refresh(element, true);
-								getViewer().getControl().setRedraw(true); 
+//								getViewer().getControl().setRedraw(true); 
 							}
 						}
 					}
@@ -417,15 +417,14 @@ public class TaskListView extends ViewPart {
 
 	public TaskListView() {
 		INSTANCE = this;
-		MylarTaskListPlugin.getTaskListManager().addListener(ACTIVITY_LISTENER); 
+		MylarTaskListPlugin.getTaskListManager().addListener(TASK_REFERESH_LISTENER); 
 	}
 	
 	@Override
 	public void dispose() {
 		super.dispose();
-		MylarTaskListPlugin.getTaskListManager().removeListener(ACTIVITY_LISTENER); 
+		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_REFERESH_LISTENER); 
 	}
-
 
 	/**
 	 * TODO: should be updated when view mode switches to fast and vice-versa
