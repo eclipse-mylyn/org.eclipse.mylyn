@@ -76,7 +76,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String TITLE_DIALOG = "Mylar Information";
 
 	//	TODO: Store in preferences
-	protected static final long REMINDER_REFRESH_DELAY = 1000*20;//60*5; 
+	protected static final long REMINDER_REFRESH_DELAY = 1000*60*5; 
 
 	private Job reminderJob;
 

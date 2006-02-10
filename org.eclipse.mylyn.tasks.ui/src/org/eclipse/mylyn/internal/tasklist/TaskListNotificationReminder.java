@@ -69,18 +69,22 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 	}
 
 	/**
-	 * equality based on description
+	 * equality based on tasks' equality (handle)
 	 */
 	public boolean equals(Object o) {
 		if (!(o instanceof TaskListNotificationReminder)) {
 			return false;
 		}
 		TaskListNotificationReminder notification = (TaskListNotificationReminder) o;
-		return notification.getDescription().equals(this.getDescription());
+		return notification.getTask().equals(task);		
+	}
+
+	private ITask getTask() {
+		return task;
 	}
 
 	public int hashCode() {
-		return task.getHandleIdentifier().hashCode();
+		return task.hashCode();
 
 	}
 

@@ -92,6 +92,7 @@ public class DatePicker extends Composite {
 
 		setSize(new org.eclipse.swt.graphics.Point(135, 19));
 		dateText = new Text(this, SWT.NONE);
+		dateText.setEditable(false);
 		dateText.setLayoutData(dateTextGridData);
 		pickButton = new Button(this, SWT.ARROW | SWT.DOWN);
 		pickButton.setLayoutData(pickButtonGridData);
@@ -178,7 +179,7 @@ public class DatePicker extends Composite {
 	}
 
 	public void setEnabled(boolean enabled) {
-		dateText.setEnabled(enabled);
+//		dateText.setEnabled(enabled);
 		pickButton.setEnabled(enabled);
 		super.setEnabled(enabled);
 	}

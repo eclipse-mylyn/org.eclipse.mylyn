@@ -34,8 +34,8 @@ public final class TaskListNotificationManager {
 
 	private static final long CLOSE_POPUP_DELAY = 1000 * 10;
 
-	private static final long OPEN_POPUP_DELAY = 1000 * 20;
-	
+	private static final long OPEN_POPUP_DELAY = 1000 * 60;
+
 	private static TaskListNotificationPopup popup;
 
 	private static List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
@@ -48,26 +48,28 @@ public final class TaskListNotificationManager {
 
 			try {
 
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if ((popup != null && popup.close()) || popup == null) {
-							closeJob.cancel();
-							cleanNotified();
-							synchronized (currentlyNotifying) {
-								if (currentlyNotifying.size() > 0) {
-									popup = new TaskListNotificationPopup(PlatformUI.getWorkbench().getDisplay()
-											.getActiveShell());
-									popup.setContents(currentlyNotifying);
-									popup.setBlockOnOpen(false);
-									popup.open();
-									closeJob.schedule(CLOSE_POPUP_DELAY);
-									popup.getShell().addShellListener(SHELL_LISTENER);
+				if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if ((popup != null && popup.close()) || popup == null) {
+								closeJob.cancel();
+								cleanNotified();
+								synchronized (currentlyNotifying) {
+									if (currentlyNotifying.size() > 0) {
+										popup = new TaskListNotificationPopup(PlatformUI.getWorkbench().getDisplay()
+												.getActiveShell());
+										popup.setContents(currentlyNotifying);
+										popup.setBlockOnOpen(false);
+										popup.open();
+										closeJob.schedule(CLOSE_POPUP_DELAY);
+										popup.getShell().addShellListener(SHELL_LISTENER);
+									}
 								}
 							}
-						}
 
-					}
-				});
+						}
+					});
+				}
 			} finally {
 				schedule(OPEN_POPUP_DELAY);
 			}
@@ -84,16 +86,17 @@ public final class TaskListNotificationManager {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (popup != null) {
-						synchronized (popup) {
-							popup.close();
+			if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (popup != null) {
+							synchronized (popup) {
+								popup.close();
+							}
 						}
 					}
-				}
-			});
-
+				});
+			}
 			if (monitor.isCanceled())
 				return Status.CANCEL_STATUS;
 
@@ -144,10 +147,10 @@ public final class TaskListNotificationManager {
 			currentlyNotifying.addAll(0, toNotify);
 		}
 	}
-	
+
 	public static void notify(ITaskListNotification toNotify) {
-		synchronized (currentlyNotifying) {			
-			currentlyNotifying.remove(toNotify);		
+		synchronized (currentlyNotifying) {
+			currentlyNotifying.remove(toNotify);
 			currentlyNotifying.add(0, toNotify);
 		}
 	}
@@ -159,22 +162,21 @@ public final class TaskListNotificationManager {
 	public static void stopNotification() {
 		openJob.cancel();
 	}
-	
+
 	/**
 	 * For testing purposes
 	 */
-	public static List getNotifications() {
-		synchronized (currentlyNotifying) {	
+	public static List<ITaskListNotification> getNotifications() {
+		synchronized (currentlyNotifying) {
 			return Collections.unmodifiableList(notifications);
 		}
 	}
-	
-	
+
 	/**
 	 * For testing purposes
 	 */
 	public static void clearNotifications() {
-		synchronized (currentlyNotifying) {	
+		synchronized (currentlyNotifying) {
 			currentlyNotifying.clear();
 		}
 	}
