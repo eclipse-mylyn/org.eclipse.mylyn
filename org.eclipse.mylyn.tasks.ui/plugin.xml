@@ -177,7 +177,7 @@
 		<action
               class="org.eclipse.mylar.internal.tasklist.ui.actions.NewQueryAction"
               enablesFor="*"
-              icon="icons/etool16/category-query-new.gif"
+              icon="icons/etool16/query-new.gif"
               id="org.eclipse.mylar.tasklist.actions.addQuery"
               menubarPath="reports"
               label="New Repository Query"

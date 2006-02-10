@@ -60,8 +60,6 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
-	public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif");
-	
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
 
 	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif");
@@ -76,27 +74,49 @@ public class TaskListImages {
 
 	public static final ImageDescriptor COLOR_PALETTE = create(T_ELCL, "color-palette.gif");
 
-	public static final ImageDescriptor TASK2 = create(T_TOOL, "task.gif");
+	public static final ImageDescriptor TASK = create(T_TOOL, "task.gif");
 
-	public static final ImageDescriptor TASK = createWithOverlay(TASK2, null, true, false);
-
-	public static final ImageDescriptor WEB_OVERLAY = create(T_TOOL, "overlay-web.gif");
-
-	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK2, WEB_OVERLAY, false, true);
+	// public static final ImageDescriptor TASK = createWithOverlay(TASK2, null,
+	// true, false);
 
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
 
-	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
-		
-	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
-	
-	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(T_TOOL, "repository-synchronize.gif");
-		
+	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
+
+	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK, OVERLAY_WEB, false, true);
+
 	public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif");
 
 	public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");
 
 	public static final ImageDescriptor CATEGORY_ARCHIVE = create(T_TOOL, "category-archive.gif");
+
+	public static final ImageDescriptor TASK_REMOTE = create(T_TOOL, "task-remote.gif");
+
+	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
+
+	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
+
+	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_ELCL, "overlay-incoming.gif");
+
+	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_ELCL, "overlay-outgoing.gif");
+
+	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_ELCL, "overlay-conflicting.gif");
+
+	public static final ImageDescriptor TASK_REPOSITORY_INCOMMING = createWithOverlay(TASK_REPOSITORY,
+			OVERLAY_INCOMMING, true, false);
+
+	public static final ImageDescriptor TASK_REPOSITORY_CONFLICT = createWithOverlay(TASK_REPOSITORY, OVERLAY_CONFLICT,
+			true, false);
+
+	public static final ImageDescriptor TASK_REPOSITORY_OUTGOING = createWithOverlay(TASK_REPOSITORY, OVERLAY_OUTGOING,
+			true, false);
+
+	public static final ImageDescriptor QUERY = create(T_TOOL, "query.gif");
+
+	public static final ImageDescriptor QUERY_NEW = create(T_TOOL, "query-new.gif");
+
+	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(T_TOOL, "repository-synchronize.gif");
 
 	public static final ImageDescriptor NAVIGATE_PREVIOUS = create(T_TOOL, "navigate-previous.gif");
 

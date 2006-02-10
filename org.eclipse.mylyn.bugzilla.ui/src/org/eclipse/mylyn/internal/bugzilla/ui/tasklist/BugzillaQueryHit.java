@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.IQueryHit;
@@ -66,7 +65,7 @@ public class BugzillaQueryHit implements IQueryHit {
 		if (task != null) {
 			return task.getIcon();
 		} else {
-			return BugzillaImages.getImage(BugzillaImages.BUGZILLA_HIT_INCOMMING);
+			return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
 		}
 	}
 

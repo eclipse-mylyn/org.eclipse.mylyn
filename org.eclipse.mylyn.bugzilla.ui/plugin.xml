@@ -91,18 +91,18 @@
          point="org.eclipse.ui.editors">
       <editor
             name="Bugzilla viewer"
-            icon="icons/etool16/report-repository.gif"
+            icon="icons/etool16/task-remote.gif"
             class="org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor"
             id="org.eclipse.mylar.bugzilla.ui.existingBugEditor">
       </editor>
       <editor
       		name="Bugzilla viewer"
-      		icon="icons/etool16/report-repository.gif"
+      		icon="icons/etool16/task-remote.gif"
       		class="org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugEditor"
       		id="org.eclipse.mylar.bugzilla.ui.newBugEditor">
       </editor>
            <editor
-           icon="icons/etool16/task-repository.gif"
+           icon="icons/etool16/task-repository.gif" 
            name="Bugzilla task viewer"
            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditor"
            id="org.eclipse.mylar.bugzilla.ui.tasklist.bugzillaTaskEditor"/>

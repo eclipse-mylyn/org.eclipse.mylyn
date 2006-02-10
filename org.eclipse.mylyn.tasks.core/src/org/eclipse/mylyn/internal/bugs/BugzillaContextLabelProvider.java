@@ -12,13 +12,13 @@
 package org.eclipse.mylar.internal.bugs;
 
 import org.eclipse.mylar.bugzilla.core.BugReport;
-import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.core.IMylarRelation;
 import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.bugs.search.BugzillaReferencesProvider;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.ui.MylarImages;
 import org.eclipse.swt.graphics.Image;
@@ -30,7 +30,7 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImage(IMylarElement node) {
-		return MylarImages.getImage(BugzillaImages.REPORT_REPOSITORY);
+		return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImageForObject(Object object) {
-		return MylarImages.getImage(BugzillaImages.REPORT_REPOSITORY);
+		return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
 	}
 
 	@Override

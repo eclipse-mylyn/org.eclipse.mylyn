@@ -23,7 +23,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -170,15 +169,15 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	@Override
 	public Image getIcon() {
 		if (syncState == RepositoryTaskSyncState.SYNCHRONIZED) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
+			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
 		} else if (syncState == RepositoryTaskSyncState.OUTGOING) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_OUTGOING);
+			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_OUTGOING);
 		} else if (syncState == RepositoryTaskSyncState.INCOMING) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_INCOMMING);
+			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_INCOMMING);
 		} else if (syncState == RepositoryTaskSyncState.CONFLICT) {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA_CONFLICT);
+			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_CONFLICT);
 		} else {
-			return TaskListImages.getImage(BugzillaImages.TASK_BUGZILLA);
+			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
 		}
 	}
 

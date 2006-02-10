@@ -15,7 +15,6 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages.MylarTasklistOverlayDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -34,43 +33,10 @@ public class BugzillaImages {
 
 	public static final ImageDescriptor IMG_TOOL_ADD_TO_FAVORITES = create(T_ELCL, "bug-favorite.gif");
 
-	public static final ImageDescriptor REPORT_REPOSITORY = create(T_TOOL, "report-repository.gif");
-
 	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
-	 
-	public static final ImageDescriptor BUG_HIT = create(T_TOOL, "report-repository.gif");
 
-	public static final ImageDescriptor IMG_COMMENT = create(T_ELCL, "bug-comment.gif");
-
-	public static final ImageDescriptor TASK_BUG = create(T_TOOL, "task-repository.gif");
-
-	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_ELCL, "overlay-incoming.gif");
-
-	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_ELCL, "overlay-outgoing.gif");
-
-	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_ELCL, "overlay-conflicting.gif");
-
-	public static final ImageDescriptor TASK_BUGZILLA = createWithOverlay(TASK_BUG, null, true, false);
-
-	public static final ImageDescriptor TASK_BUGZILLA_INCOMMING = createWithOverlay(TASK_BUGZILLA, OVERLAY_INCOMMING,
-			true, false);
-
-	public static final ImageDescriptor TASK_BUGZILLA_CONFLICT = createWithOverlay(TASK_BUGZILLA, OVERLAY_CONFLICT,
-			true, false);
-
-	public static final ImageDescriptor TASK_BUGZILLA_OUTGOING = createWithOverlay(TASK_BUGZILLA, OVERLAY_OUTGOING,
-			true, false);
-
-	public static final ImageDescriptor BUGZILLA_HIT = createWithOverlay(BUG_HIT, null, true, false);
-
-	public static final ImageDescriptor BUGZILLA_HIT_INCOMMING = BUGZILLA_HIT;// createWithOverlay(BUGZILLA_HIT,
-																				// OVERLAY_INCOMMING);
-	public static final ImageDescriptor CATEGORY_QUERY = create(T_TOOL, "category-query.gif");
-
-	public static final ImageDescriptor CATEGORY_QUERY_NEW = create(T_TOOL, "category-query-new.gif");
-
-	public static final ImageDescriptor TASK_BUG_REFRESH = create(T_TOOL, "task-bug-refresh.gif");
-
+	public static final ImageDescriptor BUG_COMMENT = create(T_ELCL, "bug-comment.gif");
+	
 	public static final ImageDescriptor REMOVE_ALL = create("", "remove-all.gif");
 
 	public static final ImageDescriptor REMOVE = create("", "remove.gif");
@@ -85,11 +51,6 @@ public class BugzillaImages {
 		} catch (MalformedURLException e) {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
-	}
-
-	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
-			boolean left) {
-		return new MylarTasklistOverlayDescriptor(base, overlay, top, left);
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {

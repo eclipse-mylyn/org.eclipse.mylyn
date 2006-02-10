@@ -31,7 +31,6 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSeveritySearchSor
 import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaStateSearchSorter;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTableContentProvider;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUITools;
-import org.eclipse.mylar.internal.bugzilla.ui.actions.AddFavoriteAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.BugzillaSortAction;
 import org.eclipse.mylar.internal.bugzilla.ui.actions.OpenBugsAction;
 import org.eclipse.search.internal.ui.SearchMessages;
@@ -78,7 +77,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 	private BugzillaSortAction bugSortByStatusAction;
 
-	private AddFavoriteAction addToFavoritesAction;
+//	private AddFavoriteAction addToFavoritesAction;
 
 	private OpenBugsAction openInEditorAction;
 
@@ -105,7 +104,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 		bugSortByStatusAction = new BugzillaSortAction("Bug status", this, ORDER_STATUS);
 		bugCurrentSortOrder = ORDER_DEFAULT;
 
-		addToFavoritesAction = new AddFavoriteAction("Mark Result as Favorite", this);
+//		addToFavoritesAction = new AddFavoriteAction("Mark Result as Favorite", this);
 		openInEditorAction = new OpenBugsAction("Open Bug in Editor", this);
 
 		bugPropertyChangeListener = new IPropertyChangeListener() {
@@ -246,7 +245,7 @@ public class BugzillaSearchResultView extends AbstractTextSearchViewPage impleme
 
 		// Add the new context menu items
 		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenu);
-		mgr.appendToGroup(IContextMenuConstants.GROUP_ADDITIONS, addToFavoritesAction);
+//		mgr.appendToGroup(IContextMenuConstants.GROUP_ADDITIONS, addToFavoritesAction);
 		mgr.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 	}
 }

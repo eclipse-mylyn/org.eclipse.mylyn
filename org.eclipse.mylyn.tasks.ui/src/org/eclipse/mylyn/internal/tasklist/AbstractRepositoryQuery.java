@@ -44,7 +44,7 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 	}
 
 	public Image getIcon() {
-		return TaskListImages.getImage(TaskListImages.CATEGORY_QUERY);
+		return TaskListImages.getImage(TaskListImages.QUERY);
 	}
 
 	public String getQueryUrl() {
