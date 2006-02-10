@@ -85,7 +85,6 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 
 	public int hashCode() {
 		return task.hashCode();
-
 	}
 
 }
