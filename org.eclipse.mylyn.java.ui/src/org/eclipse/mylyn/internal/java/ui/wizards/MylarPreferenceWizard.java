@@ -108,7 +108,6 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 			for (String id : disabledIds) {
 				newValue += id + SEPARATOR_CODEASSIST;
 			}
-			System.err.println(">>> " + newValue);
 			javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, newValue);
 //		} 
 //		else {
