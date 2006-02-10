@@ -156,7 +156,7 @@
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
-                    <objectClass name="org.eclipse.mylar.internal.tasklist.IQueryHit"/>
+                    <objectClass name="org.eclipse.mylar.internal.tasklist.AbstractQueryHit"/>
 					<objectClass name="org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery"/>
                		<objectClass name="org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask"/>
                  <objectClass name="org.eclipse.mylar.internal.tasklist.ITaskCategory"/>

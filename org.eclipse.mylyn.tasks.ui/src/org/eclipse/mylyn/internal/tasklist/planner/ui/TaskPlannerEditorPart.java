@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
@@ -552,8 +552,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 							ITask task = null;
 							if (selectedObject instanceof ITask) {
 								task = (ITask) selectedObject;
-							} else if (selectedObject instanceof IQueryHit) {
-								task = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
+							} else if (selectedObject instanceof AbstractQueryHit) {
+								task = ((AbstractQueryHit) selectedObject).getOrCreateCorrespondingTask();
 							}
 							if (task != null) {
 								contentProvider.addTask(task);

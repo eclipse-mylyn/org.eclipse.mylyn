@@ -274,7 +274,7 @@ public class TaskListManager {
 	 *            handle of task
 	 * @return IQueryHit corresponding to the first hit found in all queries
 	 */
-	public IQueryHit getQueryHitForHandle(String handle) {
+	public AbstractQueryHit getQueryHitForHandle(String handle) {
 		if (handle == null)
 			return null;
 		return taskList.getQueryHitForHandle(handle);

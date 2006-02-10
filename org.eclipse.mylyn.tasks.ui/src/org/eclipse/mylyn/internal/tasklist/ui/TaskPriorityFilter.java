@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -35,8 +35,8 @@ public class TaskPriorityFilter extends AbstractTaskFilter {
 	public boolean select(Object element) {
 		// System.out.println("Priority: " + priorityLevel);
 		if (element instanceof ITaskListElement) {
-			if (element instanceof IQueryHit && ((IQueryHit) element).getCorrespondingTask() != null) {
-				element = ((IQueryHit) element).getCorrespondingTask();
+			if (element instanceof AbstractQueryHit && ((AbstractQueryHit) element).getCorrespondingTask() != null) {
+				element = ((AbstractQueryHit) element).getCorrespondingTask();
 			}
 
 			if (element instanceof ITask) {

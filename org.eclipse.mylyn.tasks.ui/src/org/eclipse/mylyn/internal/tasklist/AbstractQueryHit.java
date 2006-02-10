@@ -13,18 +13,28 @@ package org.eclipse.mylar.internal.tasklist;
 /**
  * @author Mik Kersten
  */
-public interface IQueryHit extends ITaskListElement {
+public abstract class AbstractQueryHit implements ITaskListElement {
 
-	public String getRepositoryUrl();
+	protected String repositoryUrl;
+	
+	protected String description;
 
-	public void setRepositoryUrl(String repositoryUrl);
+	protected String priority;
+	
+	public String getRepositoryUrl() {
+		return repositoryUrl;
+	}
 
-	public AbstractRepositoryTask getOrCreateCorrespondingTask();
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
+
+	public abstract AbstractRepositoryTask getOrCreateCorrespondingTask();
 
 	/**
 	 * @return null if there is no corresponding report
 	 */
-	public AbstractRepositoryTask getCorrespondingTask();
+	public abstract AbstractRepositoryTask getCorrespondingTask();
 
-	public void setCorrespondingTask(AbstractRepositoryTask task);
+	public abstract void setCorrespondingTask(AbstractRepositoryTask task);
 }

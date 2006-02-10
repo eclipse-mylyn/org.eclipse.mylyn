@@ -363,7 +363,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 				for (AbstractRepositoryQuery query : taskListManager.getTaskList().getQueries()) {
 					query.setRepositoryUrl(repositoryUrl);
-					for (IQueryHit hit : query.getHits()) {
+					for (AbstractQueryHit hit : query.getHits()) {
 						hit.setRepositoryUrl(repositoryUrl);
 					}
 				}

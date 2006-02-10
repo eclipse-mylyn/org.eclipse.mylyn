@@ -76,15 +76,14 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK = create(T_TOOL, "task.gif");
 
-	// public static final ImageDescriptor TASK = createWithOverlay(TASK2, null,
-	// true, false);
-
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
 
 	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK, OVERLAY_WEB, false, true);
 
+	public static final ImageDescriptor TASK_WEB_REMOTE = create(T_TOOL, "overlay-web.gif");
+		
 	public static final ImageDescriptor CATEGORY = create(T_TOOL, "category.gif");
 
 	public static final ImageDescriptor CATEGORY_NEW = create(T_TOOL, "category-new.gif");

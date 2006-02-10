@@ -15,7 +15,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -27,13 +27,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Ken Sueda
  * @author Mik Kersten (hardening of prototype)
  */
-public class BugzillaQueryHit implements IQueryHit {
-
-	private String repositoryUrl;
-
-	private String description;
-
-	private String priority;
+public class BugzillaQueryHit extends AbstractQueryHit {
 
 	private int id;
 
@@ -92,10 +86,6 @@ public class BugzillaQueryHit implements IQueryHit {
 		} else {
 			return description;
 		}
-	}
-
-	public void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
 	}
 
 	public String getHandleIdentifier() {
@@ -186,7 +176,4 @@ public class BugzillaQueryHit implements IQueryHit {
 		// can't change the handle
 	}
 
-	public String getRepositoryUrl() {
-		return repositoryUrl;
-	}
 }

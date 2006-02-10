@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -58,8 +58,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				ITask toMove = null;
 				if (selectedObject instanceof ITask) {
 					toMove = (ITask) selectedObject;
-				} else if (selectedObject instanceof IQueryHit) {
-					toMove = ((IQueryHit) selectedObject).getOrCreateCorrespondingTask();
+				} else if (selectedObject instanceof AbstractQueryHit) {
+					toMove = ((AbstractQueryHit) selectedObject).getOrCreateCorrespondingTask();
 				}
 				if (toMove != null) {
 					tasksToMove.add(toMove);

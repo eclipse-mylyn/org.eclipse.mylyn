@@ -402,7 +402,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(QUERY_STRING, query.getQueryUrl());
 		node.setAttribute(REPOSITORY_URL, query.getRepositoryUrl());
 
-		for (IQueryHit hit : query.getHits()) {
+		for (AbstractQueryHit hit : query.getHits()) {
 			try {
 				Element element = null;
 				for (ITaskListExternalizer externalizer : delegateExternalizers) {
@@ -436,11 +436,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return TAG_QUERY_HIT;
 	}
 
-	public boolean canCreateElementFor(IQueryHit queryHit) {
+	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
 		return true;
 	}
 
-	public Element createQueryHitElement(IQueryHit queryHit, Document doc, Element parent) {
+	public Element createQueryHitElement(AbstractQueryHit queryHit, Document doc, Element parent) {
 		Element node = doc.createElement(getQueryHitTagName());
 		node.setAttribute(NAME, queryHit.getDescription());
 		node.setAttribute(HANDLE, queryHit.getHandleIdentifier());

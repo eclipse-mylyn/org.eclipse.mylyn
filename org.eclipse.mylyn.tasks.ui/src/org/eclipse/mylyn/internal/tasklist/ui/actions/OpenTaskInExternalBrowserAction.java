@@ -17,7 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.PlatformUI;
@@ -44,8 +44,8 @@ public class OpenTaskInExternalBrowserAction extends Action {
 			ITask task = null;
 			if (selectedObject instanceof ITask) {
 				task = (ITask) selectedObject;
-			} else if (selectedObject instanceof IQueryHit) {
-				IQueryHit hit = (IQueryHit) selectedObject;
+			} else if (selectedObject instanceof AbstractQueryHit) {
+				AbstractQueryHit hit = (AbstractQueryHit) selectedObject;
 				task = hit.getOrCreateCorrespondingTask();
 			}
 			if (task != null) {

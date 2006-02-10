@@ -122,12 +122,12 @@ public class TaskList implements Serializable {
 		return findTaskHelper(rootTasks, handle);
 	}
 
-	private IQueryHit findQueryHitHelper(List<? extends ITaskListElement> elements, String handle) {
+	private AbstractQueryHit findQueryHitHelper(List<? extends ITaskListElement> elements, String handle) {
 		if (handle == null)
 			return null;
 		for (ITaskListElement element : elements) {
-			if (element instanceof IQueryHit) {
-				IQueryHit hit = (IQueryHit) element;
+			if (element instanceof AbstractQueryHit) {
+				AbstractQueryHit hit = (AbstractQueryHit) element;
 				if (hit.getHandleIdentifier().compareTo(handle) == 0) {
 					return hit;
 				}
@@ -143,8 +143,8 @@ public class TaskList implements Serializable {
 			if (element instanceof ITask) {
 				if (element.getHandleIdentifier().compareTo(handle) == 0)
 					return (ITask) element;
-			} else if (element instanceof IQueryHit) {
-				IQueryHit hit = (IQueryHit) element;
+			} else if (element instanceof AbstractQueryHit) {
+				AbstractQueryHit hit = (AbstractQueryHit) element;
 				if (hit.getHandleIdentifier().compareTo(handle) == 0 && hit.getCorrespondingTask() != null) {
 					return hit.getCorrespondingTask();
 				}
@@ -259,8 +259,8 @@ public class TaskList implements Serializable {
 	 *            handle of task
 	 * @return IQueryHit corresponding to the first hit found in all queries
 	 */
-	public IQueryHit getQueryHitForHandle(String handle) {
-		IQueryHit foundHit = null;
+	public AbstractQueryHit getQueryHitForHandle(String handle) {
+		AbstractQueryHit foundHit = null;
 		for (AbstractRepositoryQuery query : queries) {
 			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {
 				return foundHit;

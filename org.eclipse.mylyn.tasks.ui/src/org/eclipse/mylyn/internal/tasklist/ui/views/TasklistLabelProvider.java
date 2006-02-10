@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
@@ -109,15 +109,15 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
 			for (ITaskListElement child : ((AbstractRepositoryQuery) object).getHits()) {
-				if (child instanceof IQueryHit) {
-					ITask task = ((IQueryHit) child).getCorrespondingTask();
+				if (child instanceof AbstractQueryHit) {
+					ITask task = ((AbstractQueryHit) child).getCorrespondingTask();
 					if (task != null && task.isActive()) {
 						return TaskListImages.COLOR_TASK_ACTIVE;
 					}
 				}
 			}
-		} else if (object instanceof IQueryHit && ((IQueryHit) object).getCorrespondingTask() == null) {
-			IQueryHit hit = (IQueryHit) object;
+		} else if (object instanceof AbstractQueryHit && ((AbstractQueryHit) object).getCorrespondingTask() == null) {
+			AbstractQueryHit hit = (AbstractQueryHit) object;
 			if (hit.isCompleted()) {
 				return TaskListImages.COLOR_TASK_COMPLETED;
 			}
@@ -139,8 +139,8 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 	private ITask getAssociatedTask(ITaskListElement element) {
 		if (element instanceof ITask) {
 			return (ITask) element;
-		} else if (element instanceof IQueryHit) {
-			return ((IQueryHit) element).getCorrespondingTask();
+		} else if (element instanceof AbstractQueryHit) {
+			return ((AbstractQueryHit) element).getCorrespondingTask();
 		} else {
 			return null;
 		}

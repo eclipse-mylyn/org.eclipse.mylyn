@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -74,8 +74,8 @@ public class SynchronizeReportsAction extends Action implements IViewActionDeleg
 					AbstractRepositoryTask bugTask = (AbstractRepositoryTask)obj;
 					AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(bugTask.getRepositoryKind());
 					client.requestRefresh(bugTask);
-				} else if (obj instanceof IQueryHit) {
-					IQueryHit hit = (IQueryHit) obj;
+				} else if (obj instanceof AbstractQueryHit) {
+					AbstractQueryHit hit = (AbstractQueryHit) obj;
 					if (hit.getCorrespondingTask() != null) {
 						AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(hit.getCorrespondingTask().getRepositoryKind());
 						client.requestRefresh(hit.getCorrespondingTask());

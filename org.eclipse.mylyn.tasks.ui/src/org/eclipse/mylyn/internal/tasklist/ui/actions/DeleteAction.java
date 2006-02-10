@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -47,10 +47,10 @@ public class DeleteAction extends Action {
 	public void run() {
 		ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-			if (selectedObject instanceof ITask || selectedObject instanceof IQueryHit) {
+			if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
 				ITask task = null;
-				if (selectedObject instanceof IQueryHit) {
-					task = ((IQueryHit) selectedObject).getCorrespondingTask();
+				if (selectedObject instanceof AbstractQueryHit) {
+					task = ((AbstractQueryHit) selectedObject).getCorrespondingTask();
 				} else {
 					task = (ITask) selectedObject;
 				}

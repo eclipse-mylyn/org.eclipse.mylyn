@@ -73,9 +73,9 @@ public interface ITaskListExternalizer {
 
 	public abstract void readQuery(Node node, TaskList tlist) throws TaskExternalizationException;
 
-	public abstract boolean canCreateElementFor(IQueryHit queryHit);
+	public abstract boolean canCreateElementFor(AbstractQueryHit queryHit);
 
-	public abstract Element createQueryHitElement(IQueryHit queryHit, Document doc, Element parent);
+	public abstract Element createQueryHitElement(AbstractQueryHit queryHit, Document doc, Element parent);
 
 	public abstract boolean canReadQueryHit(Node node);
 

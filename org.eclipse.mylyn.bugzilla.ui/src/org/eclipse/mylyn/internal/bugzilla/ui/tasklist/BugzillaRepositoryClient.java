@@ -52,7 +52,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -299,7 +299,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 					}
 				}
 
-				for (IQueryHit hit : repositoryQuery.getHits()) {
+				for (AbstractQueryHit hit : repositoryQuery.getHits()) {
 					if (hit.getCorrespondingTask() != null && hit instanceof BugzillaQueryHit) {
 						requestRefresh((BugzillaTask) hit.getCorrespondingTask());
 					}
@@ -527,7 +527,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			BugzillaRepositoryQuery bugzillaRepositoryQuery = (BugzillaRepositoryQuery) query;
 			synchronize(bugzillaRepositoryQuery);
 			// bqc.refreshBugs();
-			for (IQueryHit hit : bugzillaRepositoryQuery.getHits()) {
+			for (AbstractQueryHit hit : bugzillaRepositoryQuery.getHits()) {
 				if (hit.getCorrespondingTask() != null) {
 					BugzillaTask task = ((BugzillaTask) hit.getCorrespondingTask());
 					if (!task.isCompleted()) {

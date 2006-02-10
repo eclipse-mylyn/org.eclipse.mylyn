@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
@@ -49,10 +49,10 @@ public class OpenTaskListElementAction extends Action {
 	public void run() {
 		ISelection selection = viewer.getSelection();
 		Object element = ((IStructuredSelection) selection).getFirstElement();
-		if (element instanceof ITask || element instanceof IQueryHit) {
+		if (element instanceof ITask || element instanceof AbstractQueryHit) {
 			final ITask task;
-			if (element instanceof IQueryHit) {
-				task = ((IQueryHit) element).getOrCreateCorrespondingTask();
+			if (element instanceof AbstractQueryHit) {
+				task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
 			} else {
 				task = (ITask) element;
 			}

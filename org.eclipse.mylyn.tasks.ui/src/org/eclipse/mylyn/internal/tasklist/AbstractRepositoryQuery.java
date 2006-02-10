@@ -29,7 +29,7 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 
 	protected int maxHits;
 
-	private List<IQueryHit> hits = new ArrayList<IQueryHit>();
+	private List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
 
 	protected Date lastRefresh;
 
@@ -51,7 +51,7 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 		return queryUrl;
 	}
 
-	public List<IQueryHit> getHits() {
+	public List<AbstractQueryHit> getHits() {
 		return Collections.unmodifiableList(hits);
 	}
 
@@ -59,7 +59,7 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 		hits.clear();
 	}
 	
-	public void addHit(IQueryHit hit) {
+	public void addHit(AbstractQueryHit hit) {
 		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
 				getRepositoryKind());
 		ITask correspondingTask = client.getTaskFromArchive(hit.getHandleIdentifier());
@@ -69,7 +69,7 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 		hits.add(hit);
 	}
 
-	public void removeHit(IQueryHit hit) {
+	public void removeHit(AbstractQueryHit hit) {
 		hits.remove(hit);
 	}
 
@@ -82,7 +82,7 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 		if (hits.isEmpty()) {
 			return MylarTaskListPlugin.PriorityLevel.P1.toString();
 		}
-		for (IQueryHit hit : hits) {
+		for (AbstractQueryHit hit : hits) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
 			}

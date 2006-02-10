@@ -43,7 +43,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskActivityListener;
@@ -483,9 +483,9 @@ public class TaskListView extends ViewPart {
 					ITask task = null;
 					if (taskListElement instanceof ITask) {
 						task = (ITask) taskListElement;
-					} else if (taskListElement instanceof IQueryHit) {
-						if (((IQueryHit) taskListElement).getCorrespondingTask() != null) {
-							task = ((IQueryHit) taskListElement).getCorrespondingTask();
+					} else if (taskListElement instanceof AbstractQueryHit) {
+						if (((AbstractQueryHit) taskListElement).getCorrespondingTask() != null) {
+							task = ((AbstractQueryHit) taskListElement).getCorrespondingTask();
 						}
 					}
 					switch (columnIndex) {
@@ -571,15 +571,15 @@ public class TaskListView extends ViewPart {
 					ITask task = null;
 					if (taskListElement instanceof ITask) {
 						task = (ITask) taskListElement;
-					} else if (taskListElement instanceof IQueryHit) {
-						if (((IQueryHit) taskListElement).getCorrespondingTask() != null) {
-							task = ((IQueryHit) taskListElement).getCorrespondingTask();
+					} else if (taskListElement instanceof AbstractQueryHit) {
+						if (((AbstractQueryHit) taskListElement).getCorrespondingTask() != null) {
+							task = ((AbstractQueryHit) taskListElement).getCorrespondingTask();
 						}
 					}
 					switch (columnIndex) {
 					case 0:
-						if (taskListElement instanceof IQueryHit) {
-							task = ((IQueryHit) taskListElement).getOrCreateCorrespondingTask();
+						if (taskListElement instanceof AbstractQueryHit) {
+							task = ((AbstractQueryHit) taskListElement).getOrCreateCorrespondingTask();
 						}
 						if (task != null) {
 							if (task.isActive()) {
@@ -979,10 +979,10 @@ public class TaskListView extends ViewPart {
 		}
 
 		addAction(openTaskEditor, manager, element);
-		if ((element instanceof ITask) || (element instanceof IQueryHit)) {
+		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			ITask task = null;
-			if (element instanceof IQueryHit) {
-				task = ((IQueryHit) element).getCorrespondingTask();
+			if (element instanceof AbstractQueryHit) {
+				task = ((AbstractQueryHit) element).getCorrespondingTask();
 			} else {
 				task = (ITask) element;
 			}
@@ -1327,8 +1327,8 @@ public class TaskListView extends ViewPart {
 			Object element = structuredSelection.getFirstElement();
 			if (element instanceof ITask) {
 				return (ITask) structuredSelection.getFirstElement();
-			} else if (element instanceof IQueryHit) {
-				return ((IQueryHit) element).getOrCreateCorrespondingTask();
+			} else if (element instanceof AbstractQueryHit) {
+				return ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
 			}
 		}
 		return null;

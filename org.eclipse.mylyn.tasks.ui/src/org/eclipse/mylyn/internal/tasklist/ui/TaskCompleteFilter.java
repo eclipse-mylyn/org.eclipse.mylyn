@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.mylar.internal.tasklist.IQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 
@@ -26,8 +26,8 @@ public class TaskCompleteFilter extends AbstractTaskFilter {
 				return true;
 			}
 			return !task.isCompleted();
-		} else if (element instanceof IQueryHit) {
-			IQueryHit hit = (IQueryHit) element;
+		} else if (element instanceof AbstractQueryHit) {
+			AbstractQueryHit hit = (AbstractQueryHit) element;
 			if (hit.getCorrespondingTask() != null) {
 				if (shouldAlwaysShow(hit.getCorrespondingTask())) {
 					// if (hit.getCorrespondingTask().isActive() ||
