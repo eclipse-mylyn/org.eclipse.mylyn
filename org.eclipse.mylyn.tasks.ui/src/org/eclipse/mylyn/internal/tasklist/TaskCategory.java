@@ -56,9 +56,9 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		this.handle = handle;
 	}
 
-	public Image getStatusIcon() {
-		return null;
-	}
+//	public Image getStatusIcon() {
+//		return null;
+//	}
 
 	public Image getIcon() {
 		if (isArchive()) {
@@ -124,9 +124,9 @@ public class TaskCategory implements ITaskCategory, Serializable {
 		return true;
 	}
 
-	public boolean isActivatable() {
-		return false;
-	}
+//	public boolean isActivatable() {
+//		return false;
+//	}
 
 	public boolean isDragAndDropEnabled() {
 		return false;

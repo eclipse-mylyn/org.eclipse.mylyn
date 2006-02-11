@@ -16,9 +16,12 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -58,16 +61,28 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 			if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
 				return ((ITaskListElement) element).getIcon();
 			} else {
-				return ((ITaskListElement) element).getStatusIcon();
+				ITask task = super.getCorrespondingTask((ITaskListElement)element);
+				if (task != null) {
+					if (task.isActive()) {
+						return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
+					} else {
+						if (MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+							return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
+						} else {
+							return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+						}
+					}
+				} else {
+					return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+				}
 			}
 		} else if (columnIndex == 1) {
 			if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
 				return null;
 			}
 			return ((ITaskListElement) element).getIcon();
-		} else {
-			return null;
-		}
+		} 
+		return null;
 	}
 	
 	public Font getFont(Object element, int columnIndex) {

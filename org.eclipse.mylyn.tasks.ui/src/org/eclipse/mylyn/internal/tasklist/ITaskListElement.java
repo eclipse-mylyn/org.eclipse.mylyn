@@ -14,17 +14,15 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * TODO: refactor UI stuff out?
- * 
  * @author Mik Kersten
  */
 public interface ITaskListElement {
 
 	public abstract Image getIcon();
 
-	public abstract Image getStatusIcon();
+//	public abstract Image getStatusIcon();
 
-	public abstract boolean isDragAndDropEnabled();
+//	public abstract boolean isDragAndDropEnabled();
 
 	public abstract String getPriority();
 
@@ -41,7 +39,7 @@ public interface ITaskListElement {
 	 */
 	public abstract boolean isLocal();
 
-	public abstract boolean isActivatable();
+//	public abstract boolean isActivatable();
 
 	public abstract Font getFont();
 

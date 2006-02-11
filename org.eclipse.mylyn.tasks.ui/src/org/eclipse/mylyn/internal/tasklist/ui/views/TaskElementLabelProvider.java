@@ -76,7 +76,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return TaskListImages.COLOR_TASK_COMPLETED;
 			}
 		} else if (object instanceof ITaskListElement) {
-			ITask task = getAssociatedTask((ITaskListElement) object);
+			ITask task = getCorrespondingTask((ITaskListElement) object);
 			if (task != null) {
 				if (task.isCompleted()) {
 					return TaskListImages.COLOR_TASK_COMPLETED;
@@ -90,7 +90,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return null;
 	}
 	
-	private ITask getAssociatedTask(ITaskListElement element) {
+	protected ITask getCorrespondingTask(ITaskListElement element) {
 		if (element instanceof ITask) {
 			return (ITask) element;
 		} else if (element instanceof AbstractQueryHit) {

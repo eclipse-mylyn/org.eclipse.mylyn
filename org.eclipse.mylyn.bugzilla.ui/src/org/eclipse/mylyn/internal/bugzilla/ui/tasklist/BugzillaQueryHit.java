@@ -62,13 +62,13 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 	}
 
-	public Image getStatusIcon() {
-		if (task != null) {
-			return task.getStatusIcon();
-		} else {
-			return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
-		}
-	}
+//	public Image getStatusIcon() {
+//		if (task != null) {
+//			return task.getStatusIcon();
+//		} else {
+//			return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+//		}
+//	}
 
 	public String getPriority() {
 		if (task != null) {
@@ -119,9 +119,9 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		return task;
 	}
 
-	public boolean isActivatable() {
-		return true;
-	}
+//	public boolean isActivatable() {
+//		return true;
+//	}
 
 	public boolean isDragAndDropEnabled() {
 		return true;

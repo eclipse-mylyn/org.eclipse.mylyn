@@ -462,7 +462,8 @@ public class TaskListView extends ViewPart {
 		public boolean canModify(Object element, String property) {
 			int columnIndex = Arrays.asList(columnNames).indexOf(property);
 			if (columnIndex == 0 && element instanceof ITaskListElement) {
-				return ((ITaskListElement) element).isActivatable();
+				return element instanceof ITask || element instanceof AbstractQueryHit;
+//				return ((ITaskListElement) element).isActivatable();
 			} else if (columnIndex == 2 && element instanceof ITask) {
 				return ((ITask) element).isLocal();
 			} else if (element instanceof ITaskListElement && isInRenameAction) {

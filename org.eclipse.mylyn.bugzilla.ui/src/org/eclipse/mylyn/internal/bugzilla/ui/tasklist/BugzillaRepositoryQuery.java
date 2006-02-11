@@ -17,7 +17,6 @@ import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Shawn Minto
@@ -42,9 +41,9 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
 	
-	public boolean isActivatable() {
-		return false;
-	}
+//	public boolean isActivatable() {
+//		return false;
+//	}
 
 	public boolean isDragAndDropEnabled() {
 		return false;
@@ -63,9 +62,9 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 		return null;
 	}
 
-	public Image getStatusIcon() {
-		return null;
-	}
+//	public Image getStatusIcon() {
+//		return null;
+//	}
 
 	public boolean isCustomQuery() {
 		return customQuery;

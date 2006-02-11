@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Font;
@@ -311,28 +310,28 @@ public class Task implements ITask {
 		}
 	}
 
-	/**
-	 * TODO: tasks shouldn't know about images, or the context manager
-	 */
-	public Image getStatusIcon() {
-		if (isActive()) {
-			return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
-		} else {
-			if (MylarPlugin.getContextManager().hasContext(handle)) {
-				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
-			} else {
-				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
-			}
-		}
-	}
+//	/**
+//	 * TODO: tasks shouldn't know about images, or the context manager
+//	 */
+//	public Image getStatusIcon() {
+//		if (isActive()) {
+//			return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
+//		} else {
+//			if (MylarPlugin.getContextManager().hasContext(handle)) {
+//				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
+//			} else {
+//				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+//			}
+//		}
+//	}
 
 	public boolean isLocal() {
 		return true;
 	}
 
-	public boolean isActivatable() {
-		return true;
-	}
+//	public boolean isActivatable() {
+//		return true;
+//	}
 
 	public boolean isDragAndDropEnabled() {
 		return true;

@@ -46,6 +46,7 @@ import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
@@ -573,8 +574,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 			public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
 				Object selectedObject = ((IStructuredSelection) TaskListView.getDefault().getViewer().getSelection())
 						.getFirstElement();
-				if (selectedObject instanceof ITaskListElement
-						&& ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
+				if (!(selectedObject instanceof AbstractRepositoryQuery)) {
+// 						&& ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
 					return true;
 				}
 				return false;

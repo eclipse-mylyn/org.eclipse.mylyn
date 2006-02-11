@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -158,7 +159,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	@Override
 	public boolean validateDrop(Object targetObject, int operation, TransferData transferType) {
 		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
-		if (selectedObject instanceof ITaskListElement && ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
+		if (!(selectedObject instanceof AbstractRepositoryQuery)) {
+//		if (selectedObject instanceof ITaskListElement && ((ITaskListElement) selectedObject).isDragAndDropEnabled()) {
 			if (getCurrentTarget() instanceof TaskCategory) {
 				return true;
 			} else if (getCurrentTarget() instanceof ITaskListElement
