@@ -135,7 +135,8 @@ public final class TaskListNotificationManager {
 
 	private static void cleanNotified() {
 		synchronized (TaskListNotificationManager.class) {
-			for (ITaskListNotification notification : currentlyNotifying)
+			List<ITaskListNotification> toIterateOver = new ArrayList<ITaskListNotification>(currentlyNotifying);
+			for (ITaskListNotification notification : toIterateOver)
 				if (notification.isNotified())
 					currentlyNotifying.remove(notification);
 		}
