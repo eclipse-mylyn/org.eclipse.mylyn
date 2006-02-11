@@ -125,9 +125,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 	
 	public Font getFont(Object element) {
-		if (element instanceof ITaskListElement) {
-			ITaskListElement task = (ITaskListElement) element;
-			return task.getFont();
+		if (element instanceof ITask) {
+			ITask task = (ITask) element;
+			if (task.isActive())
+				return TaskListImages.BOLD;
+//			for (ITask child : getChildren()) {
+//				if (child.isActive())
+//					return TaskListImages.BOLD;
+//			}
+//			return task.getFont();
 		}
 		return null;
 	}
