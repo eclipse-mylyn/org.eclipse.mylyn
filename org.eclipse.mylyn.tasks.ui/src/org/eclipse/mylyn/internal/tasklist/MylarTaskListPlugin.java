@@ -370,17 +370,14 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 //		store.setDefault(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, true);
-		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, "P5");
+		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, true);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EXTERNAL, false);
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP, false);
 		
 		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE, "20");
-		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS, TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS_MINUTES);
-	
-		
+		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "300000");
 
 		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
@@ -471,7 +468,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			}
 			
 		};
-		
+		reminderJob.setPriority(Job.DECORATE);
 		reminderJob.schedule(REMINDER_REFRESH_DELAY);
 	}
 	

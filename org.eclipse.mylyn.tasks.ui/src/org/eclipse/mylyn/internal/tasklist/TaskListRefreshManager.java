@@ -21,13 +21,6 @@ public class TaskListRefreshManager implements IPropertyChangeListener {
 
 	private ScheduledTaskListRefreshJob refreshJob;
 
-	
-	private final long SECONDS = 1000;
-	private final long MINUTES = 60 * SECONDS;
-	private final long HOURS = 60*MINUTES;
-
-	private long miliseconds = 5 * MINUTES;
-
 	public void startRefreshJob() {
 		if (refreshJob != null) {
 			refreshJob.cancel();
@@ -37,16 +30,8 @@ public class TaskListRefreshManager implements IPropertyChangeListener {
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 
 		if (enabled) {
-			String interval = MylarTaskListPlugin.getPrefs().getString(
-					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE);
-			String units = MylarTaskListPlugin.getPrefs().getString(
-					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS);
-
-			if (units.equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS_MINUTES)) {
-				miliseconds = MINUTES * Long.parseLong(interval);
-			} else {
-				miliseconds = HOURS * Long.parseLong(interval);
-			}
+			long miliseconds = MylarTaskListPlugin.getPrefs().getLong(
+					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 
 			refreshJob = new ScheduledTaskListRefreshJob(miliseconds, MylarTaskListPlugin.getTaskListManager());
 			refreshJob.schedule(miliseconds);
@@ -54,9 +39,8 @@ public class TaskListRefreshManager implements IPropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
-				|| event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS)
-				|| event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE)) {
+		if (event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)				
+				|| event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
 			startRefreshJob();
 		}
 	}

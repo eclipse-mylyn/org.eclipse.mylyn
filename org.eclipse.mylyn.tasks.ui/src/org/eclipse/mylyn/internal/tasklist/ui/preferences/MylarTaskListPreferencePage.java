@@ -23,7 +23,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -55,8 +54,6 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 	
 	private Text refreshScheduleTime = null;
 	
-	private Combo hoursOrMinutes = null;
-
 	private Button userRefreshOnly;
 
 	private Button enableBackgroundRefresh;
@@ -130,8 +127,8 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		
 		// Set refresh schedule preferences and start/stop as necessary
 		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, enableBackgroundRefresh.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE, refreshScheduleTime.getText());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS, hoursOrMinutes.getItem(hoursOrMinutes.getSelectionIndex()));
+		long miliseconds = 60000*Long.parseLong(refreshScheduleTime.getText());
+		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, ""+miliseconds);
 		
 		return true;
 	}
@@ -146,10 +143,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		// saveCombo.setText(getPreferenceStore().getString(MylarTaskListPlugin.SAVE_TASKLIST_MODE));
 		
 		enableBackgroundRefresh.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		refreshScheduleTime.setText(getPreferenceStore().getString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE));
-		hoursOrMinutes.select(hoursOrMinutes.indexOf(getPreferenceStore().getString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS)));
-	
-		
+		refreshScheduleTime.setText(getMinutesString());
 		
 		return true;
 	}
@@ -172,16 +166,22 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 		taskURLPrefixText.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.DEFAULT_URL_PREFIX));
 
 		refreshQueries.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
-		
+				TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));		
 		
 		enableBackgroundRefresh.setSelection(getPreferenceStore().getDefaultBoolean(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		userRefreshOnly.setSelection(!enableBackgroundRefresh.getSelection());
-		refreshScheduleTime.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE));
-		hoursOrMinutes.select(hoursOrMinutes.indexOf(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS)));
+		refreshScheduleTime.setText(getPreferenceStore().getDefaultString(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS));
 		
 	}
 
+	
+	private String getMinutesString() {		
+		long miliseconds = getPreferenceStore().getLong(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+		long minutes = miliseconds / 60000;
+		return ""+minutes;
+	}
+	
+	
 	private Label createLabel(Composite parent, String text) {
 		Label label = new Label(parent, SWT.LEFT);
 		label.setText(text);
@@ -308,8 +308,8 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			final GridData gridData_1 = new GridData();
 			gridData_1.widthHint = 35;
 			refreshScheduleTime.setLayoutData(gridData_1);
-			refreshScheduleTime.setText(getPreferenceStore().getString(
-					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_VALUE));
+			
+			refreshScheduleTime.setText(getMinutesString());
 			refreshScheduleTime.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					updateRefreshGroupEnablements();
@@ -318,12 +318,8 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 
 		}
 		{
-			hoursOrMinutes = new Combo(composite, SWT.READ_ONLY);
-			hoursOrMinutes.setItems(new String[] { TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS_MINUTES,
-					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS_HOURS });
-			hoursOrMinutes.setLayoutData(new GridData());
-			hoursOrMinutes.select(hoursOrMinutes.indexOf(getPreferenceStore().getString(
-					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_UNITS)));
+			final Label label = new Label(composite, SWT.NONE);
+			label.setText("minutes");
 		}
 
 		refreshQueries = new Button(group, SWT.CHECK);
@@ -353,7 +349,7 @@ public class MylarTaskListPreferencePage extends PreferencePage implements IWork
 			this.setErrorMessage(null);
 		}
 		refreshScheduleTime.setEnabled(enableBackgroundRefresh.getSelection());
-		hoursOrMinutes.setEnabled(enableBackgroundRefresh.getSelection());
+//		hoursOrMinutes.setEnabled(enableBackgroundRefresh.getSelection());
 	}
 	
 
