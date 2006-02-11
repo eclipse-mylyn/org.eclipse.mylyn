@@ -38,6 +38,8 @@ public interface ITask extends ITaskListElement {
 	public abstract void addPlan(String plan);
 
 	public List<String> getPlans();
+	
+	public abstract boolean isCompleted();
 
 	public abstract TaskStatus getStatus();
 

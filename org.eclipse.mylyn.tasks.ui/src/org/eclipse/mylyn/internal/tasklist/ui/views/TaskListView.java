@@ -50,6 +50,7 @@ import org.eclipse.mylar.internal.tasklist.ITaskActivityListener;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
@@ -120,9 +121,9 @@ public class TaskListView extends ViewPart {
 
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
-	public static final String[] PRIORITY_LEVELS = { MylarTaskListPlugin.PriorityLevel.P1.toString(),
-			MylarTaskListPlugin.PriorityLevel.P2.toString(), MylarTaskListPlugin.PriorityLevel.P3.toString(),
-			MylarTaskListPlugin.PriorityLevel.P4.toString(), MylarTaskListPlugin.PriorityLevel.P5.toString() };
+	public static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
+		Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(),
+		Task.PriorityLevel.P4.toString(), Task.PriorityLevel.P5.toString() };
 
 	private static final String SEPARATOR_ID_REPORTS = SEPARATOR_REPORTS;
 
@@ -316,7 +317,7 @@ public class TaskListView extends ViewPart {
 			Action P1 = new Action(PRIORITY_LEVELS[0], AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setPriorityLevel(MylarTaskListPlugin.PriorityLevel.P1);
+					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
 					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[0]);
 					getViewer().refresh();
 				}
@@ -329,7 +330,7 @@ public class TaskListView extends ViewPart {
 			Action P2 = new Action(PRIORITY_LEVELS[1], AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setPriorityLevel(MylarTaskListPlugin.PriorityLevel.P2);
+					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
 					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[1]);
 					getViewer().refresh();
 				}
@@ -342,7 +343,7 @@ public class TaskListView extends ViewPart {
 			Action P3 = new Action(PRIORITY_LEVELS[2], AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setPriorityLevel(MylarTaskListPlugin.PriorityLevel.P3);
+					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
 					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[2]);
 					getViewer().refresh();
 				}
@@ -355,7 +356,7 @@ public class TaskListView extends ViewPart {
 			Action P4 = new Action(PRIORITY_LEVELS[3], AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setPriorityLevel(MylarTaskListPlugin.PriorityLevel.P4);
+					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
 					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[3]);
 					getViewer().refresh();
 				}
@@ -368,7 +369,7 @@ public class TaskListView extends ViewPart {
 			Action P5 = new Action(PRIORITY_LEVELS[4], AS_CHECK_BOX) {
 				@Override
 				public void run() {
-					MylarTaskListPlugin.setPriorityLevel(MylarTaskListPlugin.PriorityLevel.P5);
+					MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
 					PRIORITY_FILTER.displayPrioritiesAbove(PRIORITY_LEVELS[4]);
 					getViewer().refresh();
 				}
@@ -378,7 +379,7 @@ public class TaskListView extends ViewPart {
 			item = new ActionContributionItem(P5);
 			item.fill(dropDownMenu, -1);
 
-			String priority = MylarTaskListPlugin.getPriorityLevel();
+			String priority = MylarTaskListPlugin.getCurrentPriorityLevel();
 			if (priority.equals(PRIORITY_LEVELS[0])) {
 				P1.setChecked(true);
 			} else if (priority.equals(PRIORITY_LEVELS[1])) {
@@ -823,7 +824,7 @@ public class TaskListView extends ViewPart {
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setContentProvider(new TasklistContentProvider(this));
-		TasklistLabelProvider labelProvider = new TasklistLabelProvider();
+		TaskListLabelProvider labelProvider = new TaskListLabelProvider();
 		labelProvider.setBackgroundColor(parent.getBackground());
 		getViewer().setLabelProvider(labelProvider);
 		getViewer().setInput(getViewSite());
@@ -1063,24 +1064,25 @@ public class TaskListView extends ViewPart {
 	 */
 	private void updateActionEnablement(Action action, ITaskListElement element) {
 		if (element instanceof ITask) {
-			if (action instanceof MarkTaskCompleteAction) {
-				if (element.isCompleted()) {
-					action.setEnabled(false);
-				} else {
-					action.setEnabled(true);
-				}
-			} else if (action instanceof OpenTaskInExternalBrowserAction) {
+//			if (action instanceof MarkTaskCompleteAction) {
+//				if (element.isCompleted()) {
+//					action.setEnabled(false);
+//				} else {
+//					action.setEnabled(true);
+//				}
+//			} else 
+			if (action instanceof OpenTaskInExternalBrowserAction) {
 				if (((ITask) element).hasValidUrl()) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);
 				}
-			} else if (action instanceof MarkTaskIncompleteAction) {
-				if (element.isCompleted()) {
-					action.setEnabled(true);
-				} else {
-					action.setEnabled(false);
-				}
+//			} else if (action instanceof MarkTaskIncompleteAction) {
+//				if (element.isCompleted()) {
+//					action.setEnabled(true);
+//				} else {
+//					action.setEnabled(false);
+//				}
 			} else if (action instanceof DeleteAction) {
 				action.setEnabled(true);
 			} else if (action instanceof NewLocalTaskAction) {

@@ -20,8 +20,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public interface ITaskListElement {
 
-	public abstract boolean isCompleted();
-
 	public abstract Image getIcon();
 
 	public abstract Image getStatusIcon();
@@ -48,8 +46,5 @@ public interface ITaskListElement {
 	public abstract Font getFont();
 
 	public abstract String getToolTipText();
-
-	// public abstract String getStringForSortingDescription();
 }
 
-// public abstract Color getForeground();

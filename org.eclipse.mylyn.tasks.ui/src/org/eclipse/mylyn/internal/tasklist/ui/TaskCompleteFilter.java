@@ -12,7 +12,6 @@ package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 
 /**
  * @author Ken Sueda
@@ -30,16 +29,18 @@ public class TaskCompleteFilter extends AbstractTaskFilter {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
 			if (hit.getCorrespondingTask() != null) {
 				if (shouldAlwaysShow(hit.getCorrespondingTask())) {
-					// if (hit.getCorrespondingTask().isActive() ||
-					// hit.getCorrespondingTask().isPastReminder()) {
 					return true;
+				} else {
+					return !hit.getCorrespondingTask().isCompleted();
 				}
+			} else {
+				return true;
 			}
-			return !hit.isCompleted();
-		} else if (element instanceof ITaskListElement) {
-			ITaskListElement taskElement = (ITaskListElement) element;
-			return !taskElement.isCompleted();
-		}
+		} 
+//		else if (element instanceof ITaskListElement) {
+//			ITaskListElement taskElement = (ITaskListElement) element;
+//			return !taskElement.isCompleted();
+//		}
 		return false;
 	}
 }

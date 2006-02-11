@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
-import org.eclipse.mylar.internal.tasklist.ui.views.TasklistLabelProvider;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TaskActivityLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
 
-	private TasklistLabelProvider taskListLabelProvider = new TasklistLabelProvider();
+	private TaskListLabelProvider taskListLabelProvider = new TaskListLabelProvider();
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (!(element instanceof ITaskListElement)) {

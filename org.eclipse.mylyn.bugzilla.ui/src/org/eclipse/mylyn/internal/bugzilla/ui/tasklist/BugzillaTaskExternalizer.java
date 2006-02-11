@@ -310,15 +310,17 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		} else {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
+		
+		status = STATUS_NEW;
 		if (element.hasAttribute(COMPLETE)) {
 			status = element.getAttribute(COMPLETE);
-			if (status.equals(TRUE))
+			if (status.equals(TRUE)) {
 				status = STATUS_RESO;
-			else
-				status = STATUS_NEW;
-		} else {
-			throw new TaskExternalizationException("Description not stored for bug report");
-		}
+			} 
+		} 
+//		else {
+//			throw new TaskExternalizationException("Description not stored for bug report");
+//		}
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), TaskRepositoryManager
 				.getTaskIdAsInt(handle), null, status);
 		query.addHit(hit);

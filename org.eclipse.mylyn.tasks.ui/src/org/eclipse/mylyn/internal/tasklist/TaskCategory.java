@@ -69,9 +69,9 @@ public class TaskCategory implements ITaskCategory, Serializable {
 	}
 
 	public String getPriority() {
-		String highestPriority = MylarTaskListPlugin.PriorityLevel.P5.toString();
+		String highestPriority = Task.PriorityLevel.P5.toString();
 		if (tasks.isEmpty()) {
-			return MylarTaskListPlugin.PriorityLevel.P1.toString();
+			return Task.PriorityLevel.P1.toString();
 		}
 		for (ITask task : tasks) {
 			if (highestPriority.compareTo(task.getPriority()) > 0) {

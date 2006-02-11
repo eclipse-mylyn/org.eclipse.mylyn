@@ -78,9 +78,9 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 	}
 
 	public String getPriority() {
-		String highestPriority = MylarTaskListPlugin.PriorityLevel.P5.toString();
+		String highestPriority = Task.PriorityLevel.P5.toString();
 		if (hits.isEmpty()) {
-			return MylarTaskListPlugin.PriorityLevel.P1.toString();
+			return Task.PriorityLevel.P1.toString();
 		}
 		for (AbstractQueryHit hit : hits) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {

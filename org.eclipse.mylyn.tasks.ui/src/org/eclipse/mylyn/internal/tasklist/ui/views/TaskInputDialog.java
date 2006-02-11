@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskInputDialog extends Dialog {
 
-	private static final String LABEL_SHELL = "New Task";
+	private static final String LABEL_SHELL = "New Personal Task";
 
 	private static final String LABEL_DESCRIPTION = "Description:";
 

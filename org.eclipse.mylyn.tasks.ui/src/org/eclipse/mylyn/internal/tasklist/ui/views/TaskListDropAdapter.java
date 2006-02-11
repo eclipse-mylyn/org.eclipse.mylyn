@@ -146,7 +146,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		}
 
-		newTask.setPriority(MylarTaskListPlugin.PriorityLevel.P3.toString());
+		newTask.setPriority(Task.PriorityLevel.P3.toString());
 		newTask.setUrl(url);
 		TaskListUiUtil.openEditor(newTask);
 //		newTask.openTaskInEditor(true);

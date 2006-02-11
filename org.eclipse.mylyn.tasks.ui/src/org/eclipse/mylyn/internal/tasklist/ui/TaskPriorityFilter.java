@@ -14,6 +14,7 @@ import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.Task;
 
 /**
  * @author Ken Sueda
@@ -22,10 +23,10 @@ public class TaskPriorityFilter extends AbstractTaskFilter {
 
 	private static final String PRIORITY_PREFIX = "P";
 
-	private String priorityLevel = MylarTaskListPlugin.PriorityLevel.P5.toString();
+	private String priorityLevel = Task.PriorityLevel.P5.toString();
 
 	public TaskPriorityFilter() {
-		displayPrioritiesAbove(MylarTaskListPlugin.getPriorityLevel());
+		displayPrioritiesAbove(MylarTaskListPlugin.getCurrentPriorityLevel());
 	}
 
 	public void displayPrioritiesAbove(String level) {

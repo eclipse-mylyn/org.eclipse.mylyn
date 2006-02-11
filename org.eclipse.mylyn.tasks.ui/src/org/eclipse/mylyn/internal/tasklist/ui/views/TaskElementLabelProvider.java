@@ -8,15 +8,10 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Feb 18, 2005
- */
+
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableFontProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
@@ -34,34 +29,18 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TasklistLabelProvider extends LabelProvider implements IColorProvider, ITableLabelProvider,
-		ITableColorProvider, ITableFontProvider {
+public class TaskElementLabelProvider extends LabelProvider implements IColorProvider {
 
 	private Color backgroundColor = null;
-
+	
 	@Override
-	public String getText(Object obj) {
-		return getColumnText(obj, 3);
-	}
-
-	public String getColumnText(Object obj, int columnIndex) {
-		if (obj instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement) obj;
-			switch (columnIndex) {
-			case 0:
-				return null;
-			case 1:
-				return null;
-			case 2:
-				if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
-					return null;
-				}
-				return element.getPriority();
-			case 3:
-				return element.getDescription();
-			}
+	public String getText(Object object) { 
+		if (object instanceof ITaskListElement) {
+			ITaskListElement element = (ITaskListElement) object;
+			return element.getDescription();
+		} else {
+			return super.getText(object);
 		}
-		return null;
 	}
 
 	public Image getIcon(ITask task) {
@@ -72,33 +51,8 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 			return TaskListImages.getImage(TaskListImages.TASK);
 		}
 	}
-
-	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof ITaskListElement)) {
-			return null;
-		}
-		if (columnIndex == 0) {
-			if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
-				return ((ITaskListElement) element).getIcon();
-			} else {
-				// return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
-				return ((ITaskListElement) element).getStatusIcon();
-			}
-		} else if (columnIndex == 1) {
-			if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
-				return null;
-			}
-			return ((ITaskListElement) element).getIcon();
-		} else {
-			return null;
-		}
-	}
-
-	public void setBackgroundColor(Color c) {
-		this.backgroundColor = c;
-	}
-
-	public Color getForeground(Object object, int columnIndex) {
+	
+	public Color getForeground(Object object) {
 		if (object instanceof ITaskCategory) {
 			for (ITask child : ((ITaskCategory) object).getChildren()) {
 				if (child.isActive()) {
@@ -118,7 +72,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 			}
 		} else if (object instanceof AbstractQueryHit && ((AbstractQueryHit) object).getCorrespondingTask() == null) {
 			AbstractQueryHit hit = (AbstractQueryHit) object;
-			if (hit.isCompleted()) {
+			if (hit.getCorrespondingTask() != null && hit.getCorrespondingTask().isCompleted()) {
 				return TaskListImages.COLOR_TASK_COMPLETED;
 			}
 		} else if (object instanceof ITaskListElement) {
@@ -135,7 +89,7 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 		}
 		return null;
 	}
-
+	
 	private ITask getAssociatedTask(ITaskListElement element) {
 		if (element instanceof ITask) {
 			return (ITask) element;
@@ -145,8 +99,8 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 			return null;
 		}
 	}
-
-	public Color getBackground(Object element, int columnIndex) {
+	
+	public Color getBackground(Object element) {
 		try {
 			if (element instanceof ITask) {
 				ITask task = (ITask) element;
@@ -169,20 +123,16 @@ public class TasklistLabelProvider extends LabelProvider implements IColorProvid
 		}
 		return TaskListImages.BACKGROUND_WHITE;
 	}
-
-	public Font getFont(Object element, int columnIndex) {
+	
+	public Font getFont(Object element) {
 		if (element instanceof ITaskListElement) {
 			ITaskListElement task = (ITaskListElement) element;
 			return task.getFont();
 		}
 		return null;
 	}
-
-	public Color getForeground(Object element) {
-		return getForeground(element, 0);
-	}
-
-	public Color getBackground(Object element) {
-		return getBackground(element, 0);
+	
+	public void setBackgroundColor(Color c) {
+		this.backgroundColor = c;
 	}
 }

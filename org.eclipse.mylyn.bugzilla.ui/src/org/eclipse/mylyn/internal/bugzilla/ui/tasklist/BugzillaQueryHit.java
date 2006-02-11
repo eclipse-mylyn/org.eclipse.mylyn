@@ -35,8 +35,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	private String status;
 
-	public BugzillaQueryHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task,
-			String status) {
+	public BugzillaQueryHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task, String status) {
 		this.description = description;
 		this.priority = priority;
 		this.repositoryUrl = repositoryUrl;
@@ -129,7 +128,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	}
 
 	public Color getForeground() {
-		if ((task != null && task.isCompleted()) || isCompleted()) {
+		if ((task != null && task.isCompleted())) {
 			return TaskListImages.GRAY_LIGHT;
 		} else {
 			return null;
@@ -144,10 +143,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	}
 
 	public boolean isCompleted() {
-		// if (status != null) {
-		// return BugReport.isResolvedStatus(status);
-		// }
-		// TODO: move to BugReport?
 		if (status != null
 				&& (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI") || status
 						.startsWith("FIXED"))) {

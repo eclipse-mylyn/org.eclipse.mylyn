@@ -137,44 +137,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 		EDITOR, INTERNAL_BROWSER, EXTERNAL_BROWSER;
 	}
 
-	public enum PriorityLevel {
-		P1, P2, P3, P4, P5;
-
-		@Override
-		public String toString() {
-			switch (this) {
-			case P1:
-				return "P1";
-			case P2:
-				return "P2";
-			case P3:
-				return "P3";
-			case P4:
-				return "P4";
-			case P5:
-				return "P5";
-			default:
-				return "P5";
-			}
-		}
-
-		public static PriorityLevel fromString(String string) {
-			if (string == null)
-				return null;
-			if (string.equals("P1"))
-				return P1;
-			if (string.equals("P2"))
-				return P2;
-			if (string.equals("P3"))
-				return P3;
-			if (string.equals("P4"))
-				return P4;
-			if (string.equals("P5"))
-				return P5;
-			return null;
-		}
-	}
-
 	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
@@ -544,15 +506,18 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 //		}
 	}
 
-	public static void setPriorityLevel(PriorityLevel pl) {
+	/**
+	 * TODO: move
+	 */
+	public static void setCurrentPriorityLevel(Task.PriorityLevel pl) {
 		getPrefs().setValue(TaskListPreferenceConstants.SELECTED_PRIORITY, pl.toString());
 	}
 
-	public static String getPriorityLevel() {
+	public static String getCurrentPriorityLevel() {
 		if (getPrefs().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
 			return getPrefs().getString(TaskListPreferenceConstants.SELECTED_PRIORITY);
 		} else {
-			return PriorityLevel.P5.toString();
+			return Task.PriorityLevel.P5.toString();
 		}
 	}
 
