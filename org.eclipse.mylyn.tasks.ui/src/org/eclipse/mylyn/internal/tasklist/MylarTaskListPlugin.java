@@ -76,7 +76,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String TITLE_DIALOG = "Mylar Information";
 
 	//	TODO: Store in preferences
-	protected static final long REMINDER_REFRESH_DELAY = 1000*60*5; 
+	protected static final long REMINDER_REFRESH_DELAY = 1000*10; //60*5; 
 
 	private Job reminderJob;
 
@@ -343,8 +343,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		taskListRefreshManager.startRefreshJob();
-		TaskListNotificationManager.startNotification();
-		this.scheduleRemindersRefresh();		
+		checkReminders();
+		this.scheduleRemindersRefresh();
+		TaskListNotificationManager.startNotification(5000);				
 	}
 
 	@Override

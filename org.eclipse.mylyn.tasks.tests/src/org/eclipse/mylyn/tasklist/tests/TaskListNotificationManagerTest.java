@@ -68,7 +68,16 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskListNotificationReminder firstReminder = (TaskListNotificationReminder)notifications.get(0);
 		assertEquals(reminder2dup.getDescription(), firstReminder.getDescription());
 		
-
+		
+		TaskListNotificationManager.startNotification(0);
+		Thread.sleep(500);
+		TaskListNotificationManager.notify(reminder0);
+		TaskListNotificationManager.notify(reminder1);
+		TaskListNotificationManager.notify(reminder2);
+		TaskListNotificationManager.notify(reminder3);
+		TaskListNotificationManager.notify(reminder2dup);
+		assertEquals(3, notifications.size());
+		
 	}
 	
 	

@@ -54,11 +54,11 @@ public final class TaskListNotificationManager {
 							if ((popup != null && popup.close()) || popup == null) {
 								closeJob.cancel();
 								cleanNotified();
-								synchronized (currentlyNotifying) {
+								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(PlatformUI.getWorkbench().getDisplay()
 												.getActiveShell());
-										popup.setContents(currentlyNotifying);
+										popup.setContents(new ArrayList<ITaskListNotification>(currentlyNotifying));
 										popup.setBlockOnOpen(false);
 										popup.open();
 										closeJob.schedule(CLOSE_POPUP_DELAY);
@@ -134,7 +134,7 @@ public final class TaskListNotificationManager {
 	};
 
 	private static void cleanNotified() {
-		synchronized (currentlyNotifying) {
+		synchronized (TaskListNotificationManager.class) {
 			for (ITaskListNotification notification : currentlyNotifying)
 				if (notification.isNotified())
 					currentlyNotifying.remove(notification);
@@ -142,21 +142,21 @@ public final class TaskListNotificationManager {
 	}
 
 	public static void notify(List<ITaskListNotification> toNotify) {
-		synchronized (currentlyNotifying) {
+		synchronized (TaskListNotificationManager.class) {
 			currentlyNotifying.removeAll(toNotify);
 			currentlyNotifying.addAll(0, toNotify);
 		}
 	}
 
 	public static void notify(ITaskListNotification toNotify) {
-		synchronized (currentlyNotifying) {
+		synchronized (TaskListNotificationManager.class) {
 			currentlyNotifying.remove(toNotify);
 			currentlyNotifying.add(0, toNotify);
 		}
 	}
 
-	public static void startNotification() {
-		openJob.schedule(OPEN_POPUP_DELAY);
+	public static void startNotification(long initialStartupTime) {
+		openJob.schedule(initialStartupTime);
 	}
 
 	public static void stopNotification() {
@@ -167,7 +167,7 @@ public final class TaskListNotificationManager {
 	 * For testing purposes
 	 */
 	public static List<ITaskListNotification> getNotifications() {
-		synchronized (currentlyNotifying) {
+		synchronized (TaskListNotificationManager.class) {
 			return Collections.unmodifiableList(notifications);
 		}
 	}
@@ -176,7 +176,7 @@ public final class TaskListNotificationManager {
 	 * For testing purposes
 	 */
 	public static void clearNotifications() {
-		synchronized (currentlyNotifying) {
+		synchronized (TaskListNotificationManager.class) {
 			currentlyNotifying.clear();
 		}
 	}

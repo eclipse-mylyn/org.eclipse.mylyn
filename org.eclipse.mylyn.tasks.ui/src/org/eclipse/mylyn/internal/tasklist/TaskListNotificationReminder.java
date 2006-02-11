@@ -19,8 +19,6 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 
 	private final ITask task;
 
-	private boolean notified = false;
-
 	public TaskListNotificationReminder(ITask task) {
 		this.task = task;
 	}
@@ -58,14 +56,12 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 		return taskImage;
 	}
 
-	public void setNotified(boolean notified) {
+	public synchronized void setNotified(boolean notified) {
 		task.setReminded(true);
-		this.notified = notified;
-
 	}
 
-	public boolean isNotified() {
-		return notified;
+	public synchronized boolean isNotified() {
+		return task.hasBeenReminded();
 	}
 
 	/**

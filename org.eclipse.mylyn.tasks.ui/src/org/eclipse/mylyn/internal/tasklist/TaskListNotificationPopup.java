@@ -99,21 +99,18 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 		Composite sectionClient = toolkit.createComposite(section);
 		sectionClient.setLayout(new GridLayout());
-		synchronized (notifications) {
-			for (final ITaskListNotification notification : notifications) {
-				ImageHyperlink link = toolkit.createImageHyperlink(sectionClient, SWT.WRAP | SWT.TOP);
-				link.setBackground(parent.getBackground());
-				link.setFont(parent.getFont());
-				link.setText(notification.getDescription());
-				link.setImage(notification.getNotificationIcon());
-				link.addHyperlinkListener(new HyperlinkAdapter() {
-					public void linkActivated(HyperlinkEvent e) {
-						notification.setNotified(true);
-						notification.openResource();
-					}
-				});
-
-			}
+		for (final ITaskListNotification notification : notifications) {
+			ImageHyperlink link = toolkit.createImageHyperlink(sectionClient, SWT.WRAP | SWT.TOP);
+			link.setBackground(parent.getBackground());
+			link.setFont(parent.getFont());
+			link.setText(notification.getDescription());
+			link.setImage(notification.getNotificationIcon());
+			link.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					notification.setNotified(true);
+					notification.openResource();
+				}
+			});
 		}
 
 		section.setClient(sectionClient);
@@ -124,11 +121,9 @@ public class TaskListNotificationPopup extends PopupDialog {
 		Button buttonOpenAll = toolkit.createButton(buttonsComposite, "Open All", SWT.NONE);
 		buttonOpenAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				synchronized (notifications) {
-					for (ITaskListNotification notification : notifications) {
-						notification.setNotified(true);
-						notification.openResource();
-					}
+				for (ITaskListNotification notification : notifications) {
+					notification.setNotified(true);
+					notification.openResource();
 				}
 				close();
 			}
@@ -137,10 +132,8 @@ public class TaskListNotificationPopup extends PopupDialog {
 		Button buttonDismiss = toolkit.createButton(buttonsComposite, "Dismiss", SWT.NONE);
 		buttonDismiss.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				synchronized (notifications) {
-					for (ITaskListNotification notification : notifications) {
-						notification.setNotified(true);
-					}
+				for (ITaskListNotification notification : notifications) {
+					notification.setNotified(true);
 				}
 				close();
 			}
