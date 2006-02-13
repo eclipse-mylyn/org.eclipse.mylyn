@@ -27,7 +27,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaReportNode;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugzillaTaskState;
 import org.eclipse.mylar.internal.core.search.IActiveSearchListener;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
@@ -237,26 +236,26 @@ public class BugzillaSearchPluginTest extends TestCase {
 
 		manager.moveToCategory(cat, bugTask1);
 		// cat.addTask(bugTask1);
-		while (bugTask1.getBugzillaTaskState() != BugzillaTaskState.FREE) {
+		while (bugTask1.isCurrentlyDownloading()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 3692, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask2);
 		// cat.addTask(bugTask2);
-		while (bugTask2.getBugzillaTaskState() != BugzillaTaskState.FREE) {
+		while (bugTask2.isCurrentlyDownloading()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask3);
 		// cat.addTask(bugTask3);
-		while (bugTask3.getBugzillaTaskState() != BugzillaTaskState.FREE) {
+		while (bugTask3.isCurrentlyDownloading()) {
 			Thread.sleep(500);
 		}
 
 		BugzillaTask bugTask4 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask4);
 		// cat.addTask(bugTask4);
-		while (bugTask4.getBugzillaTaskState() != BugzillaTaskState.FREE) {
+		while (bugTask4.isCurrentlyDownloading()) {
 			Thread.sleep(500);
 		}
 
@@ -303,20 +302,20 @@ public class BugzillaSearchPluginTest extends TestCase {
 		BugzillaTask bugTask1 = new BugzillaTask(bugPrefix + 94185, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask1);
 		// cat.addTask(bugTask1);
-		while (bugTask1.getBugzillaTaskState() != BugzillaTaskState.FREE) {
+		while (bugTask1.isCurrentlyDownloading()) {
 			Thread.sleep(500);
 		}
 
 		BugzillaTask bugTask2 = new BugzillaTask(bugPrefix + 9583, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask2);
 		// cat.addTask(bugTask2);
-		while (bugTask2.getBugzillaTaskState() != BugzillaTaskState.FREE) {
+		while (bugTask2.isCurrentlyDownloading()) {
 			Thread.sleep(500);
 		}
 		BugzillaTask bugTask3 = new BugzillaTask(bugPrefix + 3693, "<bugzilla info>", true);
 		manager.moveToCategory(cat, bugTask3);
 		// cat.addTask(bugTask3);
-		while (bugTask3.getBugzillaTaskState() != BugzillaTaskState.FREE) {
+		while (bugTask3.isCurrentlyDownloading()) {
 			Thread.sleep(500);
 		}
 
