@@ -114,36 +114,6 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 		return false;
 	}
 
-	public String getToolTipText() {
-		String tooltip = "";
-		if (hits.size() == 1) {
-			tooltip += "1 hit";
-		} else {
-			tooltip += hits.size() + " hits";
-		}
-		// if (maxHitsReached) {
-		// tooltip += " MAX REACHED";
-		// }
-		if (maxHits != -1) {
-			tooltip += " (max set to: " + maxHits + ")";
-		}
-		tooltip += AbstractRepositoryTask.getLastRefreshTime(lastRefresh);
-		return tooltip;
-		// if (hits.size() > 0 || !label) {
-		// if (!hasBeenRefreshed && label) {
-		// return description + " <needs refresh>";
-		// } else if (maxHitsReached && label) {
-		// return description + " <first " + maxHits + " hits>";
-		// } else {
-		// return description;
-		// }
-		// } else if (!hasBeenRefreshed) {
-		// return description + " <needs refresh>";
-		// } else {
-		// return description + " <no hits>";
-		// }
-	}
-
 	public int getMaxHits() {
 		return maxHits;
 	}

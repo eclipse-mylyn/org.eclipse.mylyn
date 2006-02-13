@@ -149,13 +149,13 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		return false;
 	}
 
-	public String getToolTipText() {
-		if (task != null) {
-			return task.getToolTipText();
-		} else {
-			return getDescription();
-		}
-	}
+//	public String getToolTipText() {
+//		if (task != null) {
+//			return task.getToolTipText();
+//		} else {
+//			return getDescription();
+//		}
+//	}
 
 	public void setDescription(String description) {
 		// can't set the description to anything

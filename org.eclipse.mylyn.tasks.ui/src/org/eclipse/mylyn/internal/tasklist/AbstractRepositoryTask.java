@@ -34,29 +34,6 @@ public class AbstractRepositoryTask extends Task {
 	}
 
 	/**
-	 * TODO: Move
-	 */
-	public static String getLastRefreshTime(Date lastRefresh) {
-		String toolTip = "\n---------------\n" + "Last synchronized: ";
-		Date timeNow = new Date();
-		if (lastRefresh == null)
-			lastRefresh = new Date();
-		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
-		long minutes = timeDifference % 60;
-		timeDifference /= 60;
-		long hours = timeDifference % 24;
-		timeDifference /= 24;
-		if (timeDifference > 0) {
-			toolTip += timeDifference + ((timeDifference == 1) ? " day, " : " days, ");
-		}
-		if (hours > 0 || timeDifference > 0) {
-			toolTip += hours + ((hours == 1) ? " hour, " : " hours, ");
-		}
-		toolTip += minutes + ((minutes == 1) ? " minute " : " minutes ") + "ago";
-		return toolTip;
-	}
-
-	/**
 	 * @return Returns the lastRefresh.
 	 */
 	public Date getLastRefresh() {
@@ -86,18 +63,6 @@ public class AbstractRepositoryTask extends Task {
 	public long getTimeSinceLastRefresh() {
 		Date timeNow = new Date();
 		return (timeNow.getTime() - lastRefresh.getTime()) / 1000;
-	}
-
-	@Override
-	public String getToolTipText() {
-		if (lastRefresh == null)
-			return "";
-	
-		String toolTip = getDescription();
-	
-		toolTip += AbstractRepositoryTask.getLastRefreshTime(lastRefresh);
-	
-		return toolTip;
 	}
 
 	public String getRepositoryUrl() {

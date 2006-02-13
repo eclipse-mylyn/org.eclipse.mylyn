@@ -16,12 +16,6 @@ package org.eclipse.mylar.internal.tasklist;
  */
 public interface ITaskListElement {
 
-//	public abstract Image getIcon();
-
-//	public abstract Image getStatusIcon();
-
-//	public abstract boolean isDragAndDropEnabled();
-
 	public abstract String getPriority();
 
 	public abstract String getDescription();
@@ -37,10 +31,5 @@ public interface ITaskListElement {
 	 */
 	public abstract boolean isLocal();
 
-//	public abstract boolean isActivatable();
-
-//	public abstract Font getFont();
-
-	public abstract String getToolTipText();
 }
 

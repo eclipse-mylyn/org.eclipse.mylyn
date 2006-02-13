@@ -14,8 +14,12 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -85,7 +89,7 @@ public class TaskListToolTipHandler {
 		return tipShell;
 	}
 
-	private ITaskListElement getTask(Object hoverObject) {
+	private ITaskListElement getTaskListElement(Object hoverObject) {
 		if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
 			if (data != null) {
@@ -100,26 +104,64 @@ public class TaskListToolTipHandler {
 	}
 
 	protected String getToolTipText(Object object) {
-		ITaskListElement element = getTask(object);
-		if (element != null) {
-			if (element instanceof ITask && element.getToolTipText().length() < 30) { // HACK
-				return null;
+		ITaskListElement element = getTaskListElement(object);
+		if (element instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+			String tooltip = "";
+			if (query.getHits().size() == 1) {
+				tooltip += "1 hit";
 			} else {
-				return element.getToolTipText();
+				tooltip += query.getHits().size() + " hits";
 			}
-		}
-
-		if (object instanceof Control) {
+			if (query.getMaxHits() != -1) {
+				tooltip += " (max set to: " + query.getMaxHits() + ")";
+			}
+			tooltip += formatLastRefreshTime(query.getLastRefresh());
+			return tooltip;
+		} else if (element instanceof AbstractRepositoryTask || element instanceof AbstractQueryHit) {
+			AbstractRepositoryTask repositoryTask;
+			if (element instanceof AbstractQueryHit) {
+				repositoryTask = ((AbstractQueryHit)element).getCorrespondingTask();
+			} else {
+				repositoryTask = (AbstractRepositoryTask) element;
+			}
+			String toolTip = ((ITaskListElement)element).getDescription();
+			if (repositoryTask != null) {
+				Date lastRefresh = repositoryTask.getLastRefresh();
+				if (lastRefresh != null) {
+					toolTip += formatLastRefreshTime(repositoryTask.getLastRefresh());
+				}
+			}
+			return toolTip;	
+		} else if (element != null) {
+			return ((ITaskListElement) element).getDescription();
+		} else if (object instanceof Control) {
 			return (String) ((Control) object).getData("TIP_TEXT");
 		}
 		return null;
 	}
 
+	private String formatLastRefreshTime(Date lastRefresh) {
+		String toolTip = "\n---------------\n" + "Last synchronized: ";
+		Date timeNow = new Date();
+		if (lastRefresh == null)
+			lastRefresh = new Date();
+		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
+		long minutes = timeDifference % 60;
+		timeDifference /= 60;
+		long hours = timeDifference % 24;
+		timeDifference /= 24;
+		if (timeDifference > 0) {
+			toolTip += timeDifference + ((timeDifference == 1) ? " day, " : " days, ");
+		}
+		if (hours > 0 || timeDifference > 0) {
+			toolTip += hours + ((hours == 1) ? " hour, " : " hours, ");
+		}
+		toolTip += minutes + ((minutes == 1) ? " minute " : " minutes ") + "ago";
+		return toolTip;
+	}
+
 	protected Image getToolTipImage(Object object) {
-		// ITaskListElement projectNode = getTask(object);
-		// if (projectNode != null) {
-		// // TODO Code for determining image
-		// }
 		if (object instanceof Control) {
 			return (Image) ((Control) object).getData("TIP_IMAGE");
 		}
