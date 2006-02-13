@@ -405,6 +405,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 		attributesLayout.numColumns = 4;
 		attributesLayout.horizontalSpacing = 14;
 		attributesLayout.verticalSpacing = 6;
+		attributesLayout.makeColumnsEqualWidth = false;
 		attributesComposite.setLayout(attributesLayout);
 
 		GridData attributesData = new GridData(GridData.FILL_BOTH);
@@ -444,10 +445,10 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			if (values == null)
 				values = new HashMap<String, String>();
 
-			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			GridData data = new GridData(GridData.BEGINNING);
 			data.horizontalSpan = 1;
 			data.horizontalIndent = HORZ_INDENT;
-
+			data.widthHint = 150;
 			// create and populate the combo fields for the attributes
 			if (key.equals("op_sys")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
