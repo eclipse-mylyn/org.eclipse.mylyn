@@ -50,6 +50,8 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
  */
 public abstract class AbstractWizardDataPage extends WizardPage implements Listener {
 
+	private static final String KEY_MILESTONE = "target_milestone";
+
 	public static final String ATTRIBUTE_URL = "URL";
 
 	public static final String ATTRIBUTE_PRIORITY = "Priority";
@@ -63,6 +65,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 	public static final String ATTRIBUTE_PLATFORM = "Platform";
 
 	public static final String ATTRIBUTE_OS = "OS";
+
+	public static final String ATTRIBUTE_MILESTONE = "target_milestone";
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -102,6 +106,9 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 
 	/** Combo box for the OS that the bug occurred under */
 	protected Combo oSCombo;
+
+	/** Combo box for the Milestone that the bug addresses */
+	protected Combo milestoneCombo;
 
 	/** Enum for value */
 	protected final String VALUE = "VALUE";
@@ -316,7 +323,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 
 		nbm.setDescription(descriptionText.getText());
 		nbm.setSummary(summaryText.getText());
-
+		nbm.setTargetMilestone(milestoneCombo.getItem(milestoneCombo.getSelectionIndex()));
+		
 		// go through each of the attributes and sync their values with the
 		// combo boxes
 		for (Iterator<Attribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
@@ -339,6 +347,9 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 				} else if (key.equals(ATTRIBUTE_PLATFORM)) {
 					String platform = platformCombo.getItem(platformCombo.getSelectionIndex());
 					attribute.setValue(platform);
+				} else if (key.equals(ATTRIBUTE_MILESTONE)) {
+					String milestone = milestoneCombo.getItem(milestoneCombo.getSelectionIndex());
+					attribute.setValue(milestone);
 				} else if (key.equals(ATTRIBUTE_COMPONENT)) {
 					String component = componentCombo.getItem(componentCombo.getSelectionIndex());
 					attribute.setValue(component);
@@ -376,7 +387,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 	public void createControl(Composite parent) {
 		// whether the priority exists or not
 		boolean priExist = false;
-
+		boolean mileExist = false;
+		
 		String url = null;
 
 		// get the model for the new bug
@@ -413,7 +425,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 		// Add the product to the composite
 		newLayout(attributesComposite, 1, "Product", PROPERTY);
 		newLayout(attributesComposite, 1, nbm.getProduct(), VALUE);
-
+		
 		// Populate Attributes
 		for (Iterator<Attribute> it = nbm.getAttributes().iterator(); it.hasNext();) {
 			Attribute attribute = it.next();
@@ -502,6 +514,22 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 					index = 0;
 				platformCombo.select(index);
 				platformCombo.addListener(SWT.Modify, this);
+			} else if (key.equals(KEY_MILESTONE)) {				
+				newLayout(attributesComposite, 1, name, PROPERTY);
+				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
+						| SWT.READ_ONLY);
+				milestoneCombo.setLayoutData(data);
+				Set<String> s = values.keySet();
+				String[] a = s.toArray(new String[s.size()]);
+				for (int i = 0; i < a.length; i++) {
+					milestoneCombo.add(a[i]);
+				}
+				int index;
+				if ((index = milestoneCombo.indexOf(value)) == -1)
+					index = 0;
+				milestoneCombo.select(index);
+				milestoneCombo.addListener(SWT.Modify, this);
+				mileExist = true;
 			} else if (key.equals("component")) {
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				componentCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
@@ -542,15 +570,15 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			}
 		}
 
-		if (priExist) {
+		if (priExist && !mileExist) {
 			newLayout(attributesComposite, 1, "", PROPERTY);
 			newLayout(attributesComposite, 1, "", PROPERTY);
 		}
 
 		GridData summaryTextData;
-
+		
 		if (url != null) {
-			// add the assigned to text field
+			// add the assigned to text field			
 			newLayout(attributesComposite, 1, ATTRIBUTE_URL, PROPERTY);
 			urlText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 			summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);

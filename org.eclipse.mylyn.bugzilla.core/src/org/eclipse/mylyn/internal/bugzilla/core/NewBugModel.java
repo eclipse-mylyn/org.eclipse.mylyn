@@ -51,6 +51,8 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 	/** The description for the bug */
 	protected String description = "";
 
+	private String targetMilestone;
+	
 	/**
 	 * Flag to indicate status of connection to Bugzilla server to identify
 	 * whether ProductConfiguration should be used instead
@@ -208,5 +210,13 @@ public class NewBugModel implements Serializable, IBugzillaBug {
 
 	public boolean hasChanges() {
 		return true;
+	}
+
+	public void setTargetMilestone(String milestone) {
+		targetMilestone = milestone;
+	}
+	
+	public String getTargetMilestone() {
+		return targetMilestone;
 	}
 }

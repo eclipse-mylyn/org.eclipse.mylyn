@@ -250,8 +250,7 @@ public class BugzillaReportSubmitForm {
 		// add the summary to the bug post
 		form.add("short_desc", model.getSummary());
 
-		// XXX: dummy target milestone
-		form.add("target_milestone", "---");
+		form.add("target_milestone", model.getTargetMilestone());
 
 		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
 			form.add("bug_status", "NEW");
