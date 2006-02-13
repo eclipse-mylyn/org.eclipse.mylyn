@@ -240,35 +240,35 @@ litigation.
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.4.8.v20060213-1200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.4.8.v20060213-1200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.4.8.v20060213-1200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasklist"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.4.8.v20060213-1200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugs"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="0.4.8.v20060213-1200"
          unpack="false"/>
 
 </feature>
