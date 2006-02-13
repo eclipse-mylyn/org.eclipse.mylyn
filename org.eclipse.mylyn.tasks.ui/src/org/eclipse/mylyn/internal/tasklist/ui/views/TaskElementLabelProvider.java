@@ -135,16 +135,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return TaskListImages.ITALIC;
 			}
 		} 
+		if (element instanceof ITaskContainer) {
+			for (ITask child : ((ITaskContainer)element).getChildren()) {
+				if (child.isActive())
+					return TaskListImages.BOLD;
+			}
+		} 
 		ITask task = getCorrespondingTask((ITaskListElement)element);
 		if (task != null) {
 			if (task.isActive())
 				return TaskListImages.BOLD;
 			for (ITask child : task.getChildren()) {
-				if (child.isActive())
-					return TaskListImages.BOLD;
-			}
-		} else if (element instanceof ITaskContainer) {
-			for (ITask child : ((ITaskContainer)element).getChildren()) {
 				if (child.isActive())
 					return TaskListImages.BOLD;
 			}
