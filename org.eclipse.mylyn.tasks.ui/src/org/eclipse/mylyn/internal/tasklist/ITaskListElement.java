@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
  */
 public interface ITaskListElement {
 
-	public abstract Image getIcon();
+//	public abstract Image getIcon();
 
 //	public abstract Image getStatusIcon();
 

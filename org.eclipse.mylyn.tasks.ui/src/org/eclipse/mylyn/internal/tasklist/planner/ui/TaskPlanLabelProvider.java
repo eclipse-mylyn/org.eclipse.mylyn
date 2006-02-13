@@ -14,28 +14,23 @@ package org.eclipse.mylar.internal.tasklist.planner.ui;
 import java.text.DateFormat;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Ken Sueda
  */
-public class TaskPlanLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class TaskPlanLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider {
 
 	// {".", "Description", "Priority", "Estimated Time", "Reminder Date"};
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof ITaskListElement)) {
-			return null;
-		}
 		if (columnIndex == 0) {
-			return ((ITaskListElement) element).getIcon();
+			return super.getImage(element);
 		} else {
 			return null;
 		}
-
 	}
 
 	public String getColumnText(Object element, int columnIndex) {

@@ -21,6 +21,7 @@ import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -51,7 +52,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 	private static final String TITLE = "Mylar Task Planner";
 
 	private static final String DESCRIPTION = "Summarizes task activity and assists planning future tasks.";
-	
+
 	public static final String ROOT_CATEGORY_HACK = "Root Tasks";
 
 	private long DAY = 24 * 3600 * 1000;
@@ -59,8 +60,9 @@ public class TaskPlannerWizardPage extends WizardPage {
 	protected String[] columnNames = new String[] { "", "Description" };
 
 	private Date reportStartDate = null;
-	
+
 	private Button daysRadioButton = null;
+
 	private Button dateRadioButton = null;
 
 	private Text numDays;
@@ -68,6 +70,8 @@ public class TaskPlannerWizardPage extends WizardPage {
 	private int numDaysToReport = 0;
 
 	private Table filtersTable;
+	
+	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
 
 	public TaskPlannerWizardPage() {
 		super(TITLE);
@@ -82,17 +86,16 @@ public class TaskPlannerWizardPage extends WizardPage {
 		layout.numColumns = 1;
 
 		createReportPeriodGroup(container);
-		
+
 		Label spacer = new Label(container, SWT.NONE);
 		spacer.setText(" ");
-		
+
 		createCategorySelectionGroup(container);
-		
+
 		setControl(container);
 		numDays.setFocus();
 	}
-	
-	
+
 	private void createReportPeriodGroup(Composite parent) {
 		Group reportPeriodGroup = new Group(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -102,7 +105,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		reportPeriodGroup.setText("Report Period");
 		reportPeriodGroup.setFont(parent.getFont());
 
-		daysRadioButton = new Button(reportPeriodGroup, SWT.RADIO | SWT.LEFT | SWT.NO_FOCUS);		
+		daysRadioButton = new Button(reportPeriodGroup, SWT.RADIO | SWT.LEFT | SWT.NO_FOCUS);
 		daysRadioButton.setText("Number of days prior: ");
 		daysRadioButton.setSelection(true);
 
@@ -157,10 +160,8 @@ public class TaskPlannerWizardPage extends WizardPage {
 
 		daysRadioButton.addSelectionListener(radioListener);
 		dateRadioButton.addSelectionListener(radioListener);
-		
+
 	}
-	
-	
 
 	/**
 	 * Selection of specific category to report on in the Task Planner
@@ -169,16 +170,14 @@ public class TaskPlannerWizardPage extends WizardPage {
 	 *            container to add categories combo box to
 	 */
 	private void createCategorySelectionGroup(Composite composite) {
-		
-		
+
 		Group categorySelectionGroup = new Group(composite, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		categorySelectionGroup.setLayout(layout);
 		categorySelectionGroup.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL));
 		categorySelectionGroup.setText("Catagory Selection");
-		categorySelectionGroup.setFont(composite.getFont());	
-		
+		categorySelectionGroup.setFont(composite.getFont());
 
 		createFilterTable(categorySelectionGroup, true);
 		TaskListManager manager = MylarTaskListPlugin.getTaskListManager();
@@ -186,98 +185,90 @@ public class TaskPlannerWizardPage extends WizardPage {
 			filtersTable.setEnabled(false);
 			return;
 		}
-		
-		
+
 		// TODO: Hack to allow selection of a 'root tasks' category
 		TableItem rootItem = new TableItem(filtersTable, SWT.NONE);
-		rootItem.setText(ROOT_CATEGORY_HACK);		
+		rootItem.setText(ROOT_CATEGORY_HACK);
 		rootItem.setData(ROOT_CATEGORY_HACK);
-		
-		
+
 		// populate categories
 		for (ITaskContainer category : manager.getTaskList().getTaskCategories()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
-			item.setImage(category.getIcon());
+			item.setImage(labelProvider.getImage(category));
 			item.setText(category.getDescription());
 			item.setData(category);
 		}
-		
+
 		// populate qeries
 		for (AbstractRepositoryQuery query : manager.getTaskList().getQueries()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
-			item.setImage(query.getIcon());
+			item.setImage(labelProvider.getImage(query));
 			item.setText(query.getDescription());
 			item.setData(query);
 		}
 		for (int i = 0; i < columnNames.length; i++) {
 			filtersTable.getColumn(i).pack();
 		}
-		
+
 		createButtonsGroup(categorySelectionGroup);
-		
+
 		// default to all categories selected
 		setChecked(true);
 	}
 
-	
 	/**
 	 * 
-     * Creates the buttons for selecting all or none of the
-     * categories.
-     *
-     * @param parent parent composite
-     */
-    private final void createButtonsGroup(Composite parent) {
+	 * Creates the buttons for selecting all or none of the categories.
+	 * 
+	 * @param parent
+	 *            parent composite
+	 */
+	private final void createButtonsGroup(Composite parent) {
 
-        Font font = parent.getFont();
+		Font font = parent.getFont();
 		new Label(parent, SWT.NONE); // Blank cell on left
-        
-        Composite buttonComposite = new Composite(parent, SWT.NONE);
-        buttonComposite.setFont(parent.getFont());
 
-        GridLayout layout = new GridLayout();
-        layout.numColumns = 3;
-        layout.makeColumnsEqualWidth = true;
-        buttonComposite.setLayout(layout);
-        buttonComposite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
-                | GridData.HORIZONTAL_ALIGN_FILL));
+		Composite buttonComposite = new Composite(parent, SWT.NONE);
+		buttonComposite.setFont(parent.getFont());
 
-        Button selectButton = new Button(buttonComposite, SWT.NONE);
-        selectButton.setText("Select All");                
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 3;
+		layout.makeColumnsEqualWidth = true;
+		buttonComposite.setLayout(layout);
+		buttonComposite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
 
-        selectButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                setChecked(true);
-            }
-        });
-        
-       
-        selectButton.setFont(font);
-        setButtonLayoutData(selectButton);
+		Button selectButton = new Button(buttonComposite, SWT.NONE);
+		selectButton.setText("Select All");
 
-        Button deselectButton = new Button(buttonComposite, SWT.NONE);
-        deselectButton.setText("Deselect All");                
+		selectButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				setChecked(true);
+			}
+		});
 
-        deselectButton.addSelectionListener( new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-               setChecked(false);
-            }
-        });
-        
-        deselectButton.setFont(font);
-        setButtonLayoutData(deselectButton);       
+		selectButton.setFont(font);
+		setButtonLayoutData(selectButton);
 
-    }
-	
-    
-    private void setChecked(boolean checked) {
-    	for(TableItem item : filtersTable.getItems()) {
-    		item.setChecked(checked);
-    	}
-    }
-  
-	
-	
+		Button deselectButton = new Button(buttonComposite, SWT.NONE);
+		deselectButton.setText("Deselect All");
+
+		deselectButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				setChecked(false);
+			}
+		});
+
+		deselectButton.setFont(font);
+		setButtonLayoutData(deselectButton);
+
+	}
+
+	private void setChecked(boolean checked) {
+		for (TableItem item : filtersTable.getItems()) {
+			item.setChecked(checked);
+		}
+	}
+
 	private void createFilterTable(Composite composite, boolean enabled) {
 
 		Font font = composite.getFont();
@@ -313,7 +304,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		return result;
 	}
 
-	public Date getReportStartDate() {		
+	public Date getReportStartDate() {
 		if (dateRadioButton.getSelection() && reportStartDate != null) {
 			return reportStartDate;
 		} else {
@@ -326,5 +317,5 @@ public class TaskPlannerWizardPage extends WizardPage {
 			return new Date(today - offsetToday - lastDay);
 		}
 	}
-	
+
 }

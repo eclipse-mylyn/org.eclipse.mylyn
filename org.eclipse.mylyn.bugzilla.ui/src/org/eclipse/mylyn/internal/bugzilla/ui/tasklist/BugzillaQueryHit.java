@@ -20,7 +20,6 @@ import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Ken Sueda
@@ -53,13 +52,13 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 	}
 
-	public Image getIcon() {
-		if (task != null) {
-			return task.getIcon();
-		} else {
-			return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
-		}
-	}
+//	public Image getIcon() {
+//		if (task != null) {
+//			return task.getIcon();
+//		} else {
+//			return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
+//		}
+//	}
 
 //	public Image getStatusIcon() {
 //		if (task != null) {

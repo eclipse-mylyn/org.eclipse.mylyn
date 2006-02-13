@@ -15,11 +15,10 @@ import java.text.DateFormat;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskListElement;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -27,16 +26,13 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Ken Sueda
  */
-public class TaskActivityLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
+public class TaskActivityLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider, IColorProvider {
 
 	private TaskListLabelProvider taskListLabelProvider = new TaskListLabelProvider();
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof ITaskListElement)) {
-			return null;
-		}
 		if (columnIndex == 0) {
-			return ((ITaskListElement) element).getIcon();
+			return super.getImage(element);
 		} else {
 			return null;
 		}

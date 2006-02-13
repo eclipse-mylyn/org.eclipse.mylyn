@@ -15,9 +15,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Image;
-
 /**
  * @author Mik Kersten
  */
@@ -43,9 +40,9 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 		return description;
 	}
 
-	public Image getIcon() {
-		return TaskListImages.getImage(TaskListImages.QUERY);
-	}
+//	public Image getIcon() {
+//		return TaskListImages.getImage(TaskListImages.QUERY);
+//	}
 
 	public String getQueryUrl() {
 		return queryUrl;

@@ -21,6 +21,8 @@ import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
@@ -33,9 +35,52 @@ import org.eclipse.swt.graphics.Image;
 public class TaskElementLabelProvider extends LabelProvider implements IColorProvider {
 
 	private Color backgroundColor = null;
-	
+
 	@Override
-	public String getText(Object object) { 
+	public Image getImage(Object element) {
+		if (element instanceof TaskCategory) {
+			TaskCategory category = (TaskCategory) element;
+			if (category.isArchive()) {
+				return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
+			} else {
+				return TaskListImages.getImage(TaskListImages.CATEGORY);
+			}
+		} else if (element instanceof AbstractRepositoryQuery) {
+			return TaskListImages.getImage(TaskListImages.QUERY);
+		} else if (element instanceof AbstractQueryHit) {
+			AbstractQueryHit hit = (AbstractQueryHit)element;
+			if (hit.getCorrespondingTask() != null) {
+				return getImage(hit.getCorrespondingTask());
+			} else {
+				return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
+			}
+		} else if (element instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
+			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+				return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+				return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_OUTGOING);
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+				return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_INCOMMING);
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+				return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_CONFLICT);
+			} else {
+				return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
+			}
+		} else if (element instanceof ITask) {
+			ITask task = (ITask)element;
+			String url = task.getUrl();
+			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
+				return TaskListImages.getImage(TaskListImages.TASK_WEB);
+			} else {
+				return TaskListImages.getImage(TaskListImages.TASK);
+			}
+		} 
+		return super.getImage(element);
+	}
+
+	@Override
+	public String getText(Object object) {
 		if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
 			return element.getDescription();
@@ -44,15 +89,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		}
 	}
 
-	public Image getIcon(ITask task) {
-		String issueReportUrl = task.getUrl();
-		if (issueReportUrl != null && !issueReportUrl.trim().equals("") && !issueReportUrl.equals("http://")) {
-			return TaskListImages.getImage(TaskListImages.TASK_WEB);
-		} else {
-			return TaskListImages.getImage(TaskListImages.TASK);
-		}
-	}
-	
 	public Color getForeground(Object object) {
 		if (object instanceof ITaskContainer) {
 			for (ITask child : ((ITaskContainer) object).getChildren()) {
@@ -90,7 +126,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		}
 		return null;
 	}
-	
+
 	protected ITask getCorrespondingTask(ITaskListElement element) {
 		if (element instanceof ITask) {
 			return (ITask) element;
@@ -100,7 +136,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return null;
 		}
 	}
-	
+
 	public Color getBackground(Object element) {
 		try {
 			if (element instanceof ITask) {
@@ -124,24 +160,24 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		}
 		return TaskListImages.BACKGROUND_WHITE;
 	}
-	
+
 	public Font getFont(Object element) {
 		if (!(element instanceof ITaskListElement)) {
 			return null;
 		}
 		if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
 			if (repositoryTask.isCurrentlyDownloading()) {
 				return TaskListImages.ITALIC;
 			}
-		} 
+		}
 		if (element instanceof ITaskContainer) {
-			for (ITask child : ((ITaskContainer)element).getChildren()) {
+			for (ITask child : ((ITaskContainer) element).getChildren()) {
 				if (child.isActive())
 					return TaskListImages.BOLD;
 			}
-		} 
-		ITask task = getCorrespondingTask((ITaskListElement)element);
+		}
+		ITask task = getCorrespondingTask((ITaskListElement) element);
 		if (task != null) {
 			if (task.isActive())
 				return TaskListImages.BOLD;
@@ -149,14 +185,14 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (child.isActive())
 					return TaskListImages.BOLD;
 			}
-		} 
+		}
 		return null;
-//		if (element instanceof ITaskListElement) {
-//			ITaskListElement task = (ITaskListElement) element;
-//			return task.getFont();
-//		} 
+		// if (element instanceof ITaskListElement) {
+		// ITaskListElement task = (ITaskListElement) element;
+		// return task.getFont();
+		// }
 	}
-	
+
 	public void setBackgroundColor(Color c) {
 		this.backgroundColor = c;
 	}

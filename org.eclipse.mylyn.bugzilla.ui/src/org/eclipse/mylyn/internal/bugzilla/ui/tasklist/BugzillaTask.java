@@ -25,8 +25,6 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
@@ -165,20 +163,20 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		return "bugzilla report id: " + getHandleIdentifier();
 	}
 
-	@Override
-	public Image getIcon() {
-		if (syncState == RepositoryTaskSyncState.SYNCHRONIZED) {
-			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
-		} else if (syncState == RepositoryTaskSyncState.OUTGOING) {
-			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_OUTGOING);
-		} else if (syncState == RepositoryTaskSyncState.INCOMING) {
-			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_INCOMMING);
-		} else if (syncState == RepositoryTaskSyncState.CONFLICT) {
-			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_CONFLICT);
-		} else {
-			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
-		}
-	}
+//	@Override
+//	public Image getIcon() {
+//		if (syncState == RepositoryTaskSyncState.SYNCHRONIZED) {
+//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
+//		} else if (syncState == RepositoryTaskSyncState.OUTGOING) {
+//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_OUTGOING);
+//		} else if (syncState == RepositoryTaskSyncState.INCOMING) {
+//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_INCOMMING);
+//		} else if (syncState == RepositoryTaskSyncState.CONFLICT) {
+//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_CONFLICT);
+//		} else {
+//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
+//		}
+//	}
 
 	@Override
 	public boolean isCompleted() {

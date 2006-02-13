@@ -58,8 +58,9 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
-				return ((ITaskListElement) element).getIcon();
+			if (element instanceof ITaskContainer) {
+				return super.getImage(element);
+//				return ((ITaskListElement) element).getIcon();
 			} else {
 				ITask task = super.getCorrespondingTask((ITaskListElement)element);
 				if (task != null) {
@@ -80,7 +81,8 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 			if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 				return null;
 			}
-			return ((ITaskListElement) element).getIcon();
+			return super.getImage(element);
+//			return ((ITaskListElement) element).getIcon();
 		} 
 		return null;
 	}

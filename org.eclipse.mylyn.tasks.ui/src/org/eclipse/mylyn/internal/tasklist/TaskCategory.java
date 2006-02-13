@@ -17,9 +17,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Image;
-
 /**
  * @author Mik Kersten
  */
@@ -59,13 +56,13 @@ public class TaskCategory implements ITaskContainer, Serializable {
 //		return null;
 //	}
 
-	public Image getIcon() {
-		if (isArchive()) {
-			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
-		} else {
-			return TaskListImages.getImage(TaskListImages.CATEGORY);
-		}
-	}
+//	public Image getIcon() {
+//		if (isArchive()) {
+//			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
+//		} else {
+//			return TaskListImages.getImage(TaskListImages.CATEGORY);
+//		}
+//	}
 
 	public String getPriority() {
 		String highestPriority = Task.PriorityLevel.P5.toString();

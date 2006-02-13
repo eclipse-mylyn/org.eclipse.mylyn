@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
@@ -298,16 +296,16 @@ public class Task implements ITask {
 		return description;
 	}
 
-	/**
-	 * TODO: tasks shouldn't know about images, or the context manager
-	 */
-	public Image getIcon() {
-		if (url != null && !url.trim().equals("") && !url.equals("http://")) {
-			return TaskListImages.getImage(TaskListImages.TASK_WEB);
-		} else {
-			return TaskListImages.getImage(TaskListImages.TASK);
-		}
-	}
+//	/**
+//	 * TODO: tasks shouldn't know about images, or the context manager
+//	 */
+//	public Image getIcon() {
+//		if (url != null && !url.trim().equals("") && !url.equals("http://")) {
+//			return TaskListImages.getImage(TaskListImages.TASK_WEB);
+//		} else {
+//			return TaskListImages.getImage(TaskListImages.TASK);
+//		}
+//	}
 
 //	/**
 //	 * TODO: tasks shouldn't know about images, or the context manager

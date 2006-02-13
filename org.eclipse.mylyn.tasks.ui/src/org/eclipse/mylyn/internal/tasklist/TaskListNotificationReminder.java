@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist;
 
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
@@ -19,12 +20,15 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 
 	private final ITask task;
 
+	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
+	
 	public TaskListNotificationReminder(ITask task) {
 		this.task = task;
 	}
 
 	private Image getIcon() {
-		return task.getIcon();
+		return labelProvider.getImage(task);
+//		return task.getIcon();
 	}
 
 	public String getDescription() {
