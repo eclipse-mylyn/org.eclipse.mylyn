@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 
@@ -95,8 +95,8 @@ public class OpenTaskListElementAction extends Action {
 			} else {
 				TaskListUiUtil.openEditor(task);
 			}
-		} else if (element instanceof ITaskCategory) {
-			TaskListUiUtil.openEditor((ITaskCategory) element);
+		} else if (element instanceof ITaskContainer) {
+			TaskListUiUtil.openEditor((ITaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(

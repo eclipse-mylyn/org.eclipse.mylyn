@@ -147,7 +147,7 @@ public class TaskListManager {
 			listener.taskListModified();
 	}
 
-	public void addCategory(ITaskCategory cat) {
+	public void addCategory(ITaskContainer cat) {
 		taskList.addCategory(cat);
 		for (ITaskActivityListener listener : listeners)
 			listener.taskListModified();
@@ -184,7 +184,7 @@ public class TaskListManager {
 			listener.taskListModified();
 	}
 
-	public void deleteCategory(ITaskCategory cat) {
+	public void deleteCategory(ITaskContainer cat) {
 		taskList.deleteCategory(cat);
 		for (ITaskActivityListener listener : listeners)
 			listener.taskListModified();

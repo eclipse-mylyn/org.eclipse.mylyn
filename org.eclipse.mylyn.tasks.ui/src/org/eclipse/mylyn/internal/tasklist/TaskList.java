@@ -27,7 +27,7 @@ public class TaskList implements Serializable {
 
 	private List<ITask> rootTasks = new ArrayList<ITask>();
 
-	private List<ITaskCategory> categories = new ArrayList<ITaskCategory>();
+	private List<ITaskContainer> categories = new ArrayList<ITaskContainer>();
 
 	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
@@ -41,7 +41,7 @@ public class TaskList implements Serializable {
 		rootTasks.remove(task);
 	}
 
-	void addCategory(ITaskCategory cat) {
+	void addCategory(ITaskContainer cat) {
 		categories.add(cat);
 	}
 
@@ -52,7 +52,7 @@ public class TaskList implements Serializable {
 	/**
 	 * XXX Only public so that other externalizers can use it
 	 */
-	public void internalAddCategory(ITaskCategory cat) {
+	public void internalAddCategory(ITaskContainer cat) {
 		categories.add(cat);
 	}
 
@@ -97,7 +97,7 @@ public class TaskList implements Serializable {
 		return false;
 	}
 
-	void deleteCategory(ITaskCategory category) {
+	void deleteCategory(ITaskContainer category) {
 		categories.remove(category);
 	}
 
@@ -107,7 +107,7 @@ public class TaskList implements Serializable {
 
 	public ITask getTaskForHandle(String handle, boolean lookInArchives) {
 		ITask foundTask = null;
-		for (ITaskCategory cat : categories) {
+		for (ITaskContainer cat : categories) {
 			if (!lookInArchives && cat.isArchive())
 				continue;
 			if ((foundTask = findTaskHelper(cat.getChildren(), handle)) != null) {
@@ -170,13 +170,13 @@ public class TaskList implements Serializable {
 		return rootTasks;
 	}
 
-	public List<ITaskCategory> getCategories() {
+	public List<ITaskContainer> getCategories() {
 		return categories;
 	}
 
-	public List<ITaskCategory> getUserCategories() {
-		List<ITaskCategory> included = new ArrayList<ITaskCategory>();
-		for (ITaskCategory category : categories) {
+	public List<ITaskContainer> getUserCategories() {
+		List<ITaskContainer> included = new ArrayList<ITaskContainer>();
+		for (ITaskContainer category : categories) {
 			if (!category.getDescription().endsWith(DelegatingTaskExternalizer.LABEL_AUTOMATIC)) {
 				included.add(category);
 			}
@@ -219,7 +219,7 @@ public class TaskList implements Serializable {
 		List<Object> roots = new ArrayList<Object>();
 		for (ITask t : rootTasks)
 			roots.add(t);
-		for (ITaskCategory cat : categories)
+		for (ITaskContainer cat : categories)
 			roots.add(cat);
 		for (AbstractRepositoryQuery query : queries)
 			roots.add(query);
@@ -229,7 +229,7 @@ public class TaskList implements Serializable {
 	public Set<ITask> getAllTasks() {
 		Set<ITask> allTasks = new HashSet<ITask>();
 		allTasks.addAll(rootTasks);
-		for (ITaskCategory cat : categories) {
+		for (ITaskContainer cat : categories) {
 			allTasks.addAll(cat.getChildren());
 		}
 		return allTasks;
@@ -237,7 +237,7 @@ public class TaskList implements Serializable {
 
 	public List<TaskCategory> getTaskCategories() {
 		List<TaskCategory> cats = new ArrayList<TaskCategory>();
-		for (ITaskCategory cat : categories) {
+		for (ITaskContainer cat : categories) {
 			if (cat instanceof TaskCategory) {
 				cats.add((TaskCategory) cat);
 			}

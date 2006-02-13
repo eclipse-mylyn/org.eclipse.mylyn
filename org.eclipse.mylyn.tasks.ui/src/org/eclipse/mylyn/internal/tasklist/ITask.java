@@ -84,12 +84,12 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setPriority(String priority);
 
-	public abstract void setCategory(ITaskCategory category);
+	public abstract void setCategory(ITaskContainer category);
 
 	/**
 	 * @return null if root task
 	 */
-	public abstract ITaskCategory getCategory();
+	public abstract ITaskContainer getCategory();
 
 	public abstract long getElapsedTime();
 

@@ -42,12 +42,12 @@ public interface ITaskListExternalizer {
 
 	public abstract String getQueryHitTagName();
 
-	public abstract boolean canCreateElementFor(ITaskCategory category);
+	public abstract boolean canCreateElementFor(ITaskContainer category);
 
 	/**
 	 * @return the element that was created, null if failed
 	 */
-	public abstract Element createCategoryElement(ITaskCategory category, Document doc, Element parent);
+	public abstract Element createCategoryElement(ITaskContainer category, Document doc, Element parent);
 
 	public abstract boolean canCreateElementFor(ITask task);
 
@@ -62,7 +62,7 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadTask(Node node);
 
-	public abstract ITask readTask(Node node, TaskList tlist, ITaskCategory category, ITask parent)
+	public abstract ITask readTask(Node node, TaskList tlist, ITaskContainer category, ITask parent)
 			throws TaskExternalizationException;
 
 	public abstract boolean canCreateElementFor(AbstractRepositoryQuery category);

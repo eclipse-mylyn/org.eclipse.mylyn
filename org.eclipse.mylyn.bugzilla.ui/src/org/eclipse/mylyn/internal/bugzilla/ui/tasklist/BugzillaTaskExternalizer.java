@@ -20,7 +20,7 @@ import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.DelegatingTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
@@ -186,7 +186,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Failed to restore all tasks");
 	}
 
-	public boolean canCreateElementFor(ITaskCategory cat) {
+	public boolean canCreateElementFor(ITaskContainer cat) {
 		return false;
 	}
 
@@ -224,7 +224,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask readTask(Node node, TaskList tlist, ITaskCategory category, ITask parent)
+	public ITask readTask(Node node, TaskList tlist, ITaskContainer category, ITask parent)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;

@@ -26,7 +26,6 @@ import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -198,17 +197,17 @@ public class BugzillaTask extends AbstractRepositoryTask {
 				.getTaskIdAsInt(handle));
 	}
 
-	@Override
-	public Font getFont() {
-		Font f = super.getFont();
-		if (f != null)
-			return f;
-
-		if (isCurrentlyDownloading() || bugReport == null) {
-			return TaskListImages.ITALIC;
-		}
-		return null;
-	}
+//	@Override
+//	public Font getFont() {
+//		Font f = super.getFont();
+//		if (f != null)
+//			return f;
+//
+//		if (isCurrentlyDownloading() || bugReport == null) {
+//			return TaskListImages.ITALIC;
+//		}
+//		return null;
+//	}
 
 	@Override
 	public Date getCompletionDate() {

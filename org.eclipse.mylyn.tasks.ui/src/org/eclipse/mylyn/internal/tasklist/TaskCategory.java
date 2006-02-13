@@ -18,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Mik Kersten
  */
-public class TaskCategory implements ITaskCategory, Serializable {
+public class TaskCategory implements ITaskContainer, Serializable {
 
 	private static final long serialVersionUID = 3834024740813027380L;
 
@@ -128,17 +127,17 @@ public class TaskCategory implements ITaskCategory, Serializable {
 //		return false;
 //	}
 
-	public boolean isDragAndDropEnabled() {
-		return false;
-	}
-
-	public Font getFont() {
-		for (ITask child : getChildren()) {
-			if (child.isActive())
-				return TaskListImages.BOLD;
-		}
-		return null;
-	}
+//	public boolean isDragAndDropEnabled() {
+//		return false;
+//	}
+//
+//	public Font getFont() {
+//		for (ITask child : getChildren()) {
+//			if (child.isActive())
+//				return TaskListImages.BOLD;
+//		}
+//		return null;
+//	}
 
 	public boolean isCompleted() {
 		return false;

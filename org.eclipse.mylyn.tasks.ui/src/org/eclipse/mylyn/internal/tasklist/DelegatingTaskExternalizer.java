@@ -109,11 +109,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		this.delegateExternalizers = externalizers;
 	}
 
-	public boolean canCreateElementFor(ITaskCategory category) {
+	public boolean canCreateElementFor(ITaskContainer category) {
 		return category instanceof TaskCategory;
 	}
 
-	public Element createCategoryElement(ITaskCategory category, Document doc, Element parent) {
+	public Element createCategoryElement(ITaskContainer category, Document doc, Element parent) {
 		if (category.isArchive())
 			return parent;
 		Element node = doc.createElement(getCategoryTagName());
@@ -244,7 +244,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getTaskTagName());
 	}
 
-	public ITask readTask(Node node, TaskList tlist, ITaskCategory category, ITask parent)
+	public ITask readTask(Node node, TaskList tlist, ITaskContainer category, ITask parent)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
@@ -264,7 +264,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return task;
 	}
 
-	protected void readTaskInfo(ITask task, TaskList tlist, Element element, ITaskCategory category, ITask parent)
+	protected void readTaskInfo(ITask task, TaskList tlist, Element element, ITaskContainer category, ITask parent)
 			throws TaskExternalizationException {
 		if (element.hasAttribute(PRIORITY)) {
 			task.setPriority(element.getAttribute(PRIORITY));

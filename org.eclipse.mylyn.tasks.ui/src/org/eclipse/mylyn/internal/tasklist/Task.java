@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -109,7 +108,7 @@ public class Task implements ITask {
 
 	private String url = "";
 
-	private ITaskCategory parentCategory = null;
+	private ITaskContainer parentCategory = null;
 
 	private long timeActive = 0;
 
@@ -283,7 +282,7 @@ public class Task implements ITask {
 		children.remove(t);
 	}
 
-	public void setCategory(ITaskCategory cat) {
+	public void setCategory(ITaskContainer cat) {
 		this.parentCategory = cat;
 	}
 
@@ -291,7 +290,7 @@ public class Task implements ITask {
 	// this.parentCategory = cat;
 	// }
 
-	public ITaskCategory getCategory() {
+	public ITaskContainer getCategory() {
 		return parentCategory;
 	}
 
@@ -333,19 +332,19 @@ public class Task implements ITask {
 //		return true;
 //	}
 
-	public boolean isDragAndDropEnabled() {
-		return true;
-	}
+//	public boolean isDragAndDropEnabled() {
+//		return true;
+//	}
 
-	public Font getFont() {
-		if (isActive())
-			return TaskListImages.BOLD;
-		for (ITask child : getChildren()) {
-			if (child.isActive())
-				return TaskListImages.BOLD;
-		}
-		return null;
-	}
+//	public Font getFont() {
+//		if (isActive())
+//			return TaskListImages.BOLD;
+//		for (ITask child : getChildren()) {
+//			if (child.isActive())
+//				return TaskListImages.BOLD;
+//		}
+//		return null;
+//	}
 
 	public Date getCompletionDate() {
 		return completionDate;

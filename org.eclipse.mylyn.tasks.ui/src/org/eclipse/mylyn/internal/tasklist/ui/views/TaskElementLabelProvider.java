@@ -16,8 +16,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
@@ -53,8 +54,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 	
 	public Color getForeground(Object object) {
-		if (object instanceof ITaskCategory) {
-			for (ITask child : ((ITaskCategory) object).getChildren()) {
+		if (object instanceof ITaskContainer) {
+			for (ITask child : ((ITaskContainer) object).getChildren()) {
 				if (child.isActive()) {
 					return TaskListImages.COLOR_TASK_ACTIVE;
 				} else if (child.isPastReminder() && !child.isCompleted()) {
@@ -108,8 +109,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (highlighter != null) {
 					return highlighter.getHighlightColor(task);
 				}
-			} else if (element instanceof ITaskCategory) {
-				ITaskCategory category = (ITaskCategory) element;
+			} else if (element instanceof ITaskContainer) {
+				ITaskContainer category = (ITaskContainer) element;
 				if (category.isArchive()) {
 					return TaskListImages.BACKGROUND_ARCHIVE;
 				} else {
@@ -125,11 +126,34 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 	
 	public Font getFont(Object element) {
-		if (element instanceof ITaskListElement) {
-			ITaskListElement task = (ITaskListElement) element;
-			return task.getFont();
+		if (!(element instanceof ITaskListElement)) {
+			return null;
+		}
+		if (element instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
+			if (repositoryTask.isCurrentlyDownloading()) {
+				return TaskListImages.ITALIC;
+			}
+		} 
+		ITask task = getCorrespondingTask((ITaskListElement)element);
+		if (task != null) {
+			if (task.isActive())
+				return TaskListImages.BOLD;
+			for (ITask child : task.getChildren()) {
+				if (child.isActive())
+					return TaskListImages.BOLD;
+			}
+		} else if (element instanceof ITaskContainer) {
+			for (ITask child : ((ITaskContainer)element).getChildren()) {
+				if (child.isActive())
+					return TaskListImages.BOLD;
+			}
 		} 
 		return null;
+//		if (element instanceof ITaskListElement) {
+//			ITaskListElement task = (ITaskListElement) element;
+//			return task.getFont();
+//		} 
 	}
 	
 	public void setBackgroundColor(Color c) {

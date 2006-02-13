@@ -48,7 +48,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
@@ -635,10 +635,10 @@ public class TaskPlannerEditorPart extends EditorPart {
 	}
 
 	private void addPlannedTasksToCategory(PlannedTasksContentProvider contentProvider) {
-		List<ITaskCategory> categories = MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
+		List<ITaskContainer> categories = MylarTaskListPlugin.getTaskListManager().getTaskList().getUserCategories();
 		String[] categoryNames = new String[categories.size()];
 		int i = 0;
-		for (ITaskCategory category : categories) {
+		for (ITaskContainer category : categories) {
 			categoryNames[i++] = category.getDescription();
 		}
 		if (categories.size() > 0) {
@@ -647,8 +647,8 @@ public class TaskPlannerEditorPart extends EditorPart {
 			int confirm = dialog.open();
 			if (confirm == ComboSelectionDialog.OK) {
 				String selected = dialog.getSelectedString();
-				ITaskCategory destinationCategory = null;
-				for (ITaskCategory category : categories) {
+				ITaskContainer destinationCategory = null;
+				for (ITaskContainer category : categories) {
 					if (category.getDescription().equals(selected)) {
 						destinationCategory = category;
 						break; // will go to the first one

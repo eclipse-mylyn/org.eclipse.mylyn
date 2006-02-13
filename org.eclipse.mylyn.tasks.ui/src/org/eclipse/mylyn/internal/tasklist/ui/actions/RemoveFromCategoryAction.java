@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -62,7 +62,7 @@ public class RemoveFromCategoryAction extends Action {
 					} else {
 						MylarTaskListPlugin.getTaskListManager().removeFromRoot(task);
 					}
-					ITaskCategory cat = task.getCategory();
+					ITaskContainer cat = task.getCategory();
 					if (cat != null) {
 						String message = DeleteAction.genDeleteConfirmationMessage(task);
 						boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()

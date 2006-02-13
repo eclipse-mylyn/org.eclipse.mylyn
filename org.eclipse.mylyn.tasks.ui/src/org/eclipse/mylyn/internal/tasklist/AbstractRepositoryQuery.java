@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractRepositoryQuery implements ITaskListElement {
+public abstract class AbstractRepositoryQuery implements ITaskContainer {
 
 	protected String repositoryUrl;
 
@@ -49,6 +49,25 @@ public abstract class AbstractRepositoryQuery implements ITaskListElement {
 
 	public String getQueryUrl() {
 		return queryUrl;
+	}
+
+	public List<ITask> getChildren() {
+		List<ITask> tasks = new ArrayList<ITask>();
+		for (AbstractQueryHit hit : getHits()) {
+			ITask task = hit.getCorrespondingTask();
+			if (task != null) {
+				tasks.add(task);
+			}
+		}
+		return tasks;
+	}
+
+	public boolean isArchive() {
+		return false;
+	}
+
+	public void setIsArchive(boolean isArchive) {
+		// ignore
 	}
 
 	public List<AbstractQueryHit> getHits() {

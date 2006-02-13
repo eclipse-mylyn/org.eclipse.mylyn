@@ -13,14 +13,13 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -135,12 +134,12 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 	}
 
-	public Font getFont() {
-		if (task != null) {
-			return task.getFont();
-		}
-		return null;
-	}
+//	public Font getFont() {
+//		if (task != null) {
+//			return task.getFont();
+//		}
+//		return null;
+//	}
 
 	public boolean isCompleted() {
 		if (status != null

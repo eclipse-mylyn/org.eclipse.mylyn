@@ -38,7 +38,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.DelegatingTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskList;
@@ -99,7 +99,7 @@ public class TaskListWriter {
 			externalizer.createRegistry(doc, root);
 		}
 
-		for (ITaskCategory category : tlist.getCategories()) {
+		for (ITaskContainer category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category))
@@ -535,7 +535,7 @@ public class TaskListWriter {
 			externalizer.createRegistry(doc, root);
 		}
 
-		for (ITaskCategory category : tlist.getCategories()) {
+		for (ITaskContainer category : tlist.getCategories()) {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
 				if (externalizer.canCreateElementFor(category))

@@ -14,11 +14,11 @@ import java.util.List;
 
 
 /**
- * Manipulate categories via TaskListManager
+ * Manipulate containers via TaskListManager
  * 
  * @author Mik Kersten
  */
-public interface ITaskCategory extends ITaskListElement {
+public interface ITaskContainer extends ITaskListElement {
 
 	public List<ITask> getChildren();
 

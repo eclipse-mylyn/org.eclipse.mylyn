@@ -47,7 +47,7 @@ import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskActivityListener;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
@@ -135,7 +135,7 @@ public class TaskListView extends ViewPart {
 
 	private DrillDownAdapter drillDownAdapter;
 
-	private ITaskCategory drilledIntoCategory = null;
+	private ITaskContainer drilledIntoCategory = null;
 
 	private GoIntoAction goIntoAction;
 
@@ -505,8 +505,8 @@ public class TaskListView extends ViewPart {
 					case 3:
 						return taskListElement.getDescription();
 					}
-				} else if (element instanceof ITaskCategory) {
-					ITaskCategory cat = (ITaskCategory) element;
+				} else if (element instanceof ITaskContainer) {
+					ITaskContainer cat = (ITaskContainer) element;
 					switch (columnIndex) {
 					case 0:
 						return new Boolean(false);
@@ -540,8 +540,8 @@ public class TaskListView extends ViewPart {
 			int columnIndex = -1;
 			try {
 				columnIndex = Arrays.asList(columnNames).indexOf(property);
-				if (((TreeItem) element).getData() instanceof ITaskCategory) {
-					ITaskCategory cat = (ITaskCategory) ((TreeItem) element).getData();
+				if (((TreeItem) element).getData() instanceof ITaskContainer) {
+					ITaskContainer cat = (ITaskContainer) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
 						break;
@@ -646,8 +646,8 @@ public class TaskListView extends ViewPart {
 		 */
 		@Override
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
-			if (o1 instanceof ITaskCategory || o1 instanceof AbstractRepositoryQuery) {
-				if (o2 instanceof ITaskCategory || o2 instanceof AbstractRepositoryQuery) {
+			if (o1 instanceof ITaskContainer || o1 instanceof AbstractRepositoryQuery) {
+				if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
 					return sortDirection
 							* ((ITaskListElement) o1).getDescription().compareTo(
 									((ITaskListElement) o2).getDescription());
@@ -655,7 +655,7 @@ public class TaskListView extends ViewPart {
 					return -1;
 				}
 			} else if (o1 instanceof ITaskListElement) {
-				if (o2 instanceof ITaskCategory || o2 instanceof AbstractRepositoryQuery) {
+				if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
 					return -1;
 				} else if (o2 instanceof ITaskListElement) {
 					ITaskListElement element1 = (ITaskListElement) o1;
@@ -1012,15 +1012,15 @@ public class TaskListView extends ViewPart {
 			} else {
 				manager.add(activateAction);
 			}
-		} else if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
+		} else if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 			addAction(deleteAction, manager, element);
 		}
 		
-		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskCategory
+		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskContainer
 				|| element instanceof AbstractRepositoryQuery) {
 			addAction(renameAction, manager, element);
 		}
-		if (element instanceof ITaskCategory) {
+		if (element instanceof ITaskContainer) {
 			manager.add(goIntoAction);
 		}
 		if (drilledIntoCategory != null) {
@@ -1095,18 +1095,18 @@ public class TaskListView extends ViewPart {
 			} else if (action instanceof RenameAction) {
 				action.setEnabled(true);
 			}
-		} else if (element instanceof ITaskCategory) {
+		} else if (element instanceof ITaskContainer) {
 			if (action instanceof MarkTaskCompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (((ITaskCategory) element).isArchive())
+				if (((ITaskContainer) element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
 			} else if (action instanceof NewLocalTaskAction) {
-				if (((ITaskCategory) element).isArchive())
+				if (((ITaskContainer) element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1122,7 +1122,7 @@ public class TaskListView extends ViewPart {
 			} else if (action instanceof CopyDescriptionAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
-				if (((ITaskCategory) element).isArchive())
+				if (((ITaskContainer) element).isArchive())
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1306,8 +1306,8 @@ public class TaskListView extends ViewPart {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			Object element = structuredSelection.getFirstElement();
-			if (element instanceof ITaskCategory) {
-				drilledIntoCategory = (ITaskCategory) element;
+			if (element instanceof ITaskContainer) {
+				drilledIntoCategory = (ITaskContainer) element;
 				drillDownAdapter.goInto();
 				updateDrillDownActions();
 			}
@@ -1369,7 +1369,7 @@ public class TaskListView extends ViewPart {
 
 	}
 
-	public ITaskCategory getDrilledIntoCategory() {
+	public ITaskContainer getDrilledIntoCategory() {
 		return drilledIntoCategory;
 	}
 

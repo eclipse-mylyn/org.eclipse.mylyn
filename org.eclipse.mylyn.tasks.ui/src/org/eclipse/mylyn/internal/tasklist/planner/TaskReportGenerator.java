@@ -22,7 +22,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerWizardPage;
@@ -86,8 +86,8 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 		for (Object element : rootElements) {
 			monitor.worked(1);
-			if (element instanceof ITaskCategory) {
-				ITaskCategory cat = (ITaskCategory) element;
+			if (element instanceof ITaskContainer) {
+				ITaskContainer cat = (ITaskContainer) element;
 				for (ITask task : cat.getChildren())
 					for (ITaskCollector collector : collectors) {
 						collector.consumeTask(task);

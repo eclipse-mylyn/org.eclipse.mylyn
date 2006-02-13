@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskCategory;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
@@ -41,7 +41,7 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 			case 1:
 				return null;
 			case 2:
-				if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
+				if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 					return null;
 				} else {
 					return element.getPriority();
@@ -58,7 +58,7 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
+			if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 				return ((ITaskListElement) element).getIcon();
 			} else {
 				ITask task = super.getCorrespondingTask((ITaskListElement)element);
@@ -77,7 +77,7 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 				}
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof ITaskCategory || element instanceof AbstractRepositoryQuery) {
+			if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 				return null;
 			}
 			return ((ITaskListElement) element).getIcon();

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -41,7 +40,7 @@ public interface ITaskListElement {
 
 //	public abstract boolean isActivatable();
 
-	public abstract Font getFont();
+//	public abstract Font getFont();
 
 	public abstract String getToolTipText();
 }
