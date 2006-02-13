@@ -14,7 +14,7 @@ package org.eclipse.mylar.java.tests;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.corext.util.TypeInfoHistory;
+import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
@@ -40,16 +40,16 @@ public class TypeHistoryManagerTest extends AbstractJavaContextTest {
 
 	public void testPredictedElementPopulation() throws JavaModelException {
 		manager.clearTypeHistory();
-		assertEquals(0, TypeInfoHistory.getDefault().getTypeInfos().length);
+		assertEquals(0, OpenTypeHistory.getInstance().getTypeInfos().length);
  
 		StructuredSelection sm1 = new StructuredSelection(type1);
 		monitor.selectionChanged(PackageExplorerPart.openInActivePerspective(), sm1);
-		assertEquals(1, TypeInfoHistory.getDefault().getTypeInfos().length);
+		assertEquals(1, OpenTypeHistory.getInstance().getTypeInfos().length);
 
 		IType type2 = project.createType(p1, "Type2.java", "public class Type2 { }");
 		IMethod m1 = type2.createMethod("void m1() { }", null, true, null);
 		StructuredSelection sm2 = new StructuredSelection(m1);
 		monitor.selectionChanged(PackageExplorerPart.openInActivePerspective(), sm2);
-		assertEquals(2, TypeInfoHistory.getDefault().getTypeInfos().length);
+		assertEquals(2, OpenTypeHistory.getInstance().getTypeInfos().length);
 	}
 }

@@ -28,9 +28,9 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.core.search.HierarchyScope;
 import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
+import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.jdt.internal.corext.util.TypeInfo;
 import org.eclipse.jdt.internal.corext.util.TypeInfoFactory;
-import org.eclipse.jdt.internal.corext.util.TypeInfoHistory;
 import org.eclipse.mylar.core.IMylarContext;
 import org.eclipse.mylar.core.IMylarContextListener;
 import org.eclipse.mylar.core.IMylarElement;
@@ -61,10 +61,10 @@ public class TypeHistoryManager implements IMylarContextListener {
 					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
 							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
 
-					if (add && !TypeInfoHistory.getDefault().contains(info)) {
-						TypeInfoHistory.getDefault().accessed(info);
+					if (add && !OpenTypeHistory.getInstance().contains(info)) {
+						OpenTypeHistory.getInstance().accessed(info);
 					} else {
-						TypeInfoHistory.getDefault().remove(info);
+						OpenTypeHistory.getInstance().remove(info);
 					}
 				}
 			} catch (JavaModelException e) {
@@ -94,9 +94,9 @@ public class TypeHistoryManager implements IMylarContextListener {
 	 * Public for testing
 	 */
 	public void clearTypeHistory() {
-		TypeInfo[] typeInfos = TypeInfoHistory.getDefault().getTypeInfos();
+		TypeInfo[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
 		for (int i = 0; i < typeInfos.length; i++) {
-			TypeInfoHistory.getDefault().remove(typeInfos[i]);
+			OpenTypeHistory.getInstance().remove(typeInfos[i]);
 		} 
 	}
 
