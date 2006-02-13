@@ -519,6 +519,7 @@ public class TaskInfoEditor extends EditorPart {
 			calendar.setTime(task.getReminderDate());
 			datePicker.setDate(calendar);
 		}
+
 		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
@@ -537,7 +538,6 @@ public class TaskInfoEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				datePicker.setDate(null);
-				datePicker.setDateText("");
 				TaskInfoEditor.this.markDirty(true);
 			}
 		});

@@ -34,11 +34,11 @@ import org.eclipse.swt.graphics.Image;
  */
 public class BugzillaTask extends AbstractRepositoryTask {
 
-	public enum BugzillaTaskState {
-		FREE, WAITING, DOWNLOADING, COMPARING, OPENING
-	}
+//	public enum BugzillaTaskState {
+//		FREE, DOWNLOADING
+//	}
 
-	private BugzillaTaskState bugzillaTaskState;
+//	private BugzillaTaskState bugzillaTaskState;
 
 	/**
 	 * The bug report for this BugzillaTask. This is <code>null</code> if the
@@ -98,7 +98,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		if (this.isBugDownloaded() || !super.getDescription().startsWith("<")) {
 			return super.getDescription();
 		} else {
-			if (getBugzillaTaskState() == BugzillaTask.BugzillaTaskState.FREE) {
+			if (!isCurrentlyDownloading()) {
 				return TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()) + ": <Could not find bug>";
 			} else {
 				return TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()) + ":";
@@ -128,13 +128,13 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-	/**
-	 * @param bugzillaTaskState
-	 *            The bugzillaTaskState to set.
-	 */
-	public void setBugzillaTaskState(BugzillaTaskState state) {
-		this.bugzillaTaskState = state;
-	}
+//	/**
+//	 * @param bugzillaTaskState
+//	 *            The bugzillaTaskState to set.
+//	 */
+//	public void setBugzillaTaskState(BugzillaTaskState state) {
+//		this.bugzillaTaskState = state;
+//	}
 
 	public boolean isDirty() {
 		return isDirty;
@@ -146,12 +146,12 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		// notifyTaskDataChange();
 	}
 
-	/**
-	 * @return Returns the bugzillaTaskState of the Bugzilla task.
-	 */
-	public BugzillaTaskState getBugzillaTaskState() {
-		return bugzillaTaskState;
-	}
+//	/**
+//	 * @return Returns the bugzillaTaskState of the Bugzilla task.
+//	 */
+//	public BugzillaTaskState getBugzillaTaskState() {
+//		return bugzillaTaskState;
+//	}
 
 	/**
 	 * @return <code>true</code> if the bug report for this BugzillaTask was
@@ -204,7 +204,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		if (f != null)
 			return f;
 
-		if (getBugzillaTaskState() != BugzillaTask.BugzillaTaskState.FREE || bugReport == null) {
+		if (isCurrentlyDownloading() || bugReport == null) {
 			return TaskListImages.ITALIC;
 		}
 		return null;

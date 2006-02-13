@@ -14,18 +14,17 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import java.util.Date;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugzillaTaskState;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.DelegatingTaskExternalizer;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
-import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
+import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -243,7 +242,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		BugzillaTask task = new BugzillaTask(handle, label, false);
 		readTaskInfo(task, tlist, element, category, parent);
 
-		task.setBugzillaTaskState(BugzillaTaskState.FREE);
+//		task.setBugzillaTaskState(BugzillaTaskState.FREE);
+		task.setCurrentlyDownloading(false);
 		task.setLastRefresh(new Date(new Long(element.getAttribute("LastDate")).longValue()));
 
 		if (element.getAttribute("Dirty").compareTo("true") == 0) {

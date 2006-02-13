@@ -23,6 +23,7 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -95,8 +96,23 @@ public class TaskInputDialog extends Dialog {
 			}
 		});
 
-		final DatePicker datePicker = new DatePicker(composite, SWT.NULL);
-		datePicker.setDateText("<reminder>");
+		Label spacer = new Label(composite, SWT.NONE);
+		GridData spacerGD = new GridData();
+		spacerGD.horizontalSpan = 1;
+		spacer.setLayoutData(spacerGD);
+		
+		Composite reminderComp = new Composite(composite, SWT.NONE);
+		GridLayout reminderCompGL = new GridLayout(3, false);
+		reminderCompGL.marginHeight = 0;
+		reminderCompGL.marginWidth = 0;
+		reminderComp.setLayout(reminderCompGL);
+		GridData reminderCompGD = new GridData();
+		reminderCompGD.horizontalSpan = 4;		
+		reminderComp.setLayoutData(reminderCompGD);
+		Label reminderLabel = new Label(reminderComp, SWT.NONE);	
+		reminderLabel.setText("Reminder Date:");		
+		final DatePicker datePicker = new DatePicker(reminderComp, SWT.BORDER);
+//		datePicker.setDateText("<reminder>");
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {
@@ -108,7 +124,22 @@ public class TaskInputDialog extends Dialog {
 				// ignore
 			}
 		});
-
+		
+		Button removeReminder = new Button(reminderComp, SWT.PUSH | SWT.CENTER);
+		removeReminder.setText("Clear");
+		removeReminder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				datePicker.setDate(null);				
+			}
+		});
+//
+//		spacer = new Label(composite, SWT.NONE);		
+//		GridData spacer2GD = new GridData();
+//		spacer2GD.horizontalSpan = 2;
+//		spacer.setLayoutData(spacer2GD);
+		
+		
 		Label urlLabel = new Label(composite, SWT.WRAP);
 		urlLabel.setText("Web Link:");
 		urlLabel.setFont(parent.getFont());

@@ -47,12 +47,11 @@ import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaSearchHit;
 import org.eclipse.mylar.internal.bugzilla.ui.WebBrowserDialog;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaResultCollector;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaCategorySearchOperation.ICategorySearchListener;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask.BugzillaTaskState;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskCategory;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
@@ -176,8 +175,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		if (task instanceof BugzillaTask) {
 			final BugzillaTask bugzillaTask = (BugzillaTask) task;
 			// TODO: refactor these conditions
-			boolean canNotSynch = bugzillaTask.isDirty()
-					|| bugzillaTask.getBugzillaTaskState() != BugzillaTaskState.FREE;
+			boolean canNotSynch = bugzillaTask.isDirty() || bugzillaTask.isCurrentlyDownloading();
+//					|| bugzillaTask.getBugzillaTaskState() != BugzillaTaskState.FREE;
 			boolean hasLocalChanges = bugzillaTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 					|| bugzillaTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 			if (forceSynch || (!canNotSynch && !hasLocalChanges) || !bugzillaTask.isBugDownloaded()) {
@@ -557,7 +556,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		public IStatus run(IProgressMonitor monitor) {
 			try {
 				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-				bugzillaTask.setBugzillaTaskState(BugzillaTaskState.DOWNLOADING);
+				bugzillaTask.setCurrentlyDownloading(true);
+//				bugzillaTask.setBugzillaTaskState(BugzillaTaskState.DOWNLOADING);
 				bugzillaTask.setLastRefresh(new Date());
 				MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
 
@@ -567,7 +567,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 					saveOffline(downloadedReport, forceSynch);// false
 				}
 
-				bugzillaTask.setBugzillaTaskState(BugzillaTaskState.FREE);
+				bugzillaTask.setCurrentlyDownloading(false);
+//				bugzillaTask.setBugzillaTaskState(BugzillaTaskState.FREE);
 
 				if (bugzillaTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 					bugzillaTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);

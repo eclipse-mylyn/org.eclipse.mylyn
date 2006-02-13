@@ -21,6 +21,8 @@ public class AbstractRepositoryTask extends Task {
 	/** The last time this task's bug report was downloaded from the server. */
 	protected Date lastRefresh;
 	
+	protected boolean currentlyDownloading;
+	
 	protected RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
 		
 	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
@@ -113,6 +115,14 @@ public class AbstractRepositoryTask extends Task {
 			lastRefresh = new Date();
 		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
 		return timeDifference;
+	}
+
+	public boolean isCurrentlyDownloading() {
+		return currentlyDownloading;
+	}
+
+	public void setCurrentlyDownloading(boolean currentlyDownloading) {
+		this.currentlyDownloading = currentlyDownloading;
 	}
 
 }

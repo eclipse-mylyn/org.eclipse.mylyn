@@ -11,15 +11,19 @@
 
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -65,12 +69,14 @@ public class DatePicker extends Composite {
 	private DatePickerPanel datePickerPanel = null;
 
 	private List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
+	
+	SimpleDateFormat simpleDateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.ENGLISH);
 
 	public DatePicker(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
-
+	
 	private void initialize() {
 		GridData dateTextGridData = new org.eclipse.swt.layout.GridData();
 		dateTextGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -91,9 +97,34 @@ public class DatePicker extends Composite {
 		this.setLayout(gridLayout);
 
 		setSize(new org.eclipse.swt.graphics.Point(135, 19));
+		
+		simpleDateFormat.applyPattern("MM/dd/yy h:mm aa");
 		dateText = new Text(this, SWT.NONE);
-		dateText.setEditable(false);
 		dateText.setLayoutData(dateTextGridData);
+		
+		dateText.addFocusListener(new FocusListener() {
+//			DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(currentDate));
+			
+			Calendar calendar = Calendar.getInstance();
+						
+			public void focusGained(FocusEvent e) {
+			}
+
+			public void focusLost(FocusEvent e) {
+					Date reminderDate;
+					try {
+						reminderDate = simpleDateFormat.parse(dateText.getText());
+						calendar.setTime(reminderDate);
+						date = calendar;
+						updateDateText();
+					} catch (ParseException e1) {
+						updateDateText();
+					}			
+
+			}
+		});
+		
+		
 		pickButton = new Button(this, SWT.ARROW | SWT.DOWN);
 		pickButton.setLayoutData(pickButtonGridData);
 		pickButton.addSelectionListener(new SelectionListener() {
@@ -101,6 +132,7 @@ public class DatePicker extends Composite {
 			public void widgetSelected(SelectionEvent arg0) {
 				Display display = Display.getCurrent();
 				pickButton.setEnabled(false);
+				dateText.setEnabled(false);
 				showDatePicker((display.getCursorLocation().x), (display.getCursorLocation().y));
 			}
 
@@ -164,26 +196,26 @@ public class DatePicker extends Composite {
 			listener.widgetSelected(null);
 		}
 		pickButton.setEnabled(true);
+		dateText.setEnabled(true);
 		pickerShell.close();
 	}
 
 	private void updateDateText() {
 		if (date != null) {
 			Date currentDate = new Date(date.getTimeInMillis());
-			dateText.setText(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(currentDate));
+			dateText.setText(simpleDateFormat.format(currentDate));
+			//DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(currentDate));
+		} else {
+			dateText.setText("");
 		}
 	}
 
-	public void setDateText(String text) {
-		dateText.setText(text);
-	}
-
 	public void setEnabled(boolean enabled) {
-//		dateText.setEnabled(enabled);
+		dateText.setEnabled(enabled);
 		pickButton.setEnabled(enabled);
 		super.setEnabled(enabled);
 	}
-	
+
 	class DatePickerPanel extends Composite implements KeyListener {
 
 		private Combo timeCombo = null;
@@ -373,7 +405,7 @@ public class DatePicker extends Composite {
 						if (!label.getText().equals("")) {
 							date.set(Calendar.YEAR, yearSpinner.getSelection());
 							date.set(Calendar.MONTH, monthCombo.getSelectionIndex());
-							date.set(Calendar.DAY_OF_MONTH, Integer.parseInt(label.getText()));
+							date.set(Calendar.DAY_OF_MONTH, Integer.parseInt(label.getText()));							
 							dateSelected(false);
 						}
 
@@ -401,9 +433,9 @@ public class DatePicker extends Composite {
 				calendarLabels[i].setText("");
 			}
 
-			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek].setBackground(Display.getDefault()
+			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek - 1].setBackground(Display.getDefault()
 					.getSystemColor(SWT.COLOR_LIST_SELECTION));
-			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek].setForeground(Display.getDefault()
+			calendarLabels[date.get(Calendar.DAY_OF_MONTH) + dayofWeek - 1].setForeground(Display.getDefault()
 					.getSystemColor(SWT.COLOR_WHITE));
 
 		}
@@ -431,8 +463,6 @@ public class DatePicker extends Composite {
 		}
 
 		public void keyReleased(KeyEvent e) {
-		}
-
+		}	
 	}
-
 }

@@ -62,7 +62,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 		protected Control createDialogArea(Composite parent) {
 			Composite composite = (Composite) super.createDialogArea(parent);
 			final DatePicker datePicker = new DatePicker(composite, SWT.NULL);
-			datePicker.setDateText("<reminder>");
+//			datePicker.setDateText("<reminder>");
 			datePicker.addPickerSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent arg0) {
 					reminderDate = datePicker.getDate().getTime();
