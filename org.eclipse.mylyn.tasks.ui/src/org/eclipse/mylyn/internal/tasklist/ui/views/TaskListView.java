@@ -824,7 +824,7 @@ public class TaskListView extends ViewPart {
 		getViewer().setSorter(new TaskListTableSorter(columnNames[sortIndex]));
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
-		getViewer().setContentProvider(new TasklistContentProvider(this));
+		getViewer().setContentProvider(new TaskListContentProvider(this));
 		TaskListLabelProvider labelProvider = new TaskListLabelProvider();
 		labelProvider.setBackgroundColor(parent.getBackground());
 		getViewer().setLabelProvider(labelProvider);

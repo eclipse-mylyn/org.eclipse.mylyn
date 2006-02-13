@@ -176,7 +176,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			final BugzillaTask bugzillaTask = (BugzillaTask) task;
 			// TODO: refactor these conditions
 			boolean canNotSynch = bugzillaTask.isDirty() || bugzillaTask.isCurrentlyDownloading();
-//					|| bugzillaTask.getBugzillaTaskState() != BugzillaTaskState.FREE;
+			// || bugzillaTask.getBugzillaTaskState() != BugzillaTaskState.FREE;
 			boolean hasLocalChanges = bugzillaTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 					|| bugzillaTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 			if (forceSynch || (!canNotSynch && !hasLocalChanges) || !bugzillaTask.isBugDownloaded()) {
@@ -236,12 +236,14 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 				}
 			});
 		} catch (IOException e) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					((ApplicationWindow) BugzillaPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow())
-							.setStatus("Download of bug: " + bugzillaTask + " failed due to I/O exception");
-				}
-			});
+			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						((ApplicationWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow())
+								.setStatus("Download of bug: " + bugzillaTask + " failed due to I/O exception");
+					}
+				});
+			}
 		}
 		return null;
 	}
@@ -251,7 +253,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-				
+
 				repositoryQuery.clearHits();
 
 				TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
@@ -557,7 +559,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			try {
 				setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 				bugzillaTask.setCurrentlyDownloading(true);
-//				bugzillaTask.setBugzillaTaskState(BugzillaTaskState.DOWNLOADING);
+				// bugzillaTask.setBugzillaTaskState(BugzillaTaskState.DOWNLOADING);
 				bugzillaTask.setLastRefresh(new Date());
 				MylarTaskListPlugin.getTaskListManager().notifyRepositoryInfoChanged(bugzillaTask);
 
@@ -568,7 +570,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 				}
 
 				bugzillaTask.setCurrentlyDownloading(false);
-//				bugzillaTask.setBugzillaTaskState(BugzillaTaskState.FREE);
+				// bugzillaTask.setBugzillaTaskState(BugzillaTaskState.FREE);
 
 				if (bugzillaTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 					bugzillaTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);

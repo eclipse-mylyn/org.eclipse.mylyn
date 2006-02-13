@@ -23,13 +23,14 @@ import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Mik Kersten
  */
-public class TasklistContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
 	private final TaskListView view;
 
@@ -47,7 +48,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 
 	private ContentTaskFilter contentTaskFilter = new ContentTaskFilter();
 
-	public TasklistContentProvider(TaskListView view) {
+	public TaskListContentProvider(TaskListView view) {
 		this.view = view;
 	}
 
@@ -82,7 +83,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	public boolean hasChildren(Object parent) {
-		if (parent instanceof ITaskContainer) {
+		if (parent instanceof TaskCategory) {
 			ITaskContainer cat = (ITaskContainer) parent;
 			return cat.getChildren() != null && cat.getChildren().size() > 0;
 		} else if (parent instanceof Task) {
@@ -104,10 +105,10 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 					if (!filter(list.get(i))) {
 						filteredRoots.add(list.get(i));
 					}
-				} else if (list.get(i) instanceof ITaskContainer) {
+				} else if (list.get(i) instanceof TaskCategory) {
 					// if(((ITaskCategory)list.get(i)).isArchive())
 					// continue;
-					if (selectCategory((ITaskContainer) list.get(i))) {
+					if (selectCategory((TaskCategory) list.get(i))) {
 						filteredRoots.add(list.get(i));
 					}
 				} else if (list.get(i) instanceof AbstractRepositoryQuery) {
@@ -170,7 +171,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 		if (containsNoFilterText(((Text) this.view.getFilteredTree().getFilterControl()).getText())
 				|| ((Text) this.view.getFilteredTree().getFilterControl()).getText().startsWith(TaskListView.FILTER_LABEL)) {
 			List<Object> children = new ArrayList<Object>();
-			if (parent instanceof ITaskContainer) { 
+			if (parent instanceof TaskCategory) { 
 				if (((ITaskContainer) parent).isArchive()) {
 					for (ITask task : ((ITaskContainer) parent).getChildren()) {
 						if (contentTaskFilter.shouldAlwaysShow(task)) {
@@ -208,7 +209,7 @@ public class TasklistContentProvider implements IStructuredContentProvider, ITre
 			}
 		} else {
 			List<Object> children = new ArrayList<Object>();
-			if (parent instanceof ITaskContainer) {
+			if (parent instanceof TaskCategory) {
 				children.addAll(((ITaskContainer) parent).getChildren());
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {

@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListUiUtil;
 
 /**
@@ -35,9 +36,6 @@ public class OpenTaskListElementAction extends Action {
 
 	private final StructuredViewer viewer;
 
-	/**
-	 * @param view
-	 */
 	public OpenTaskListElementAction(StructuredViewer view) {
 		this.viewer = view;
 		setText("Open");
@@ -95,7 +93,7 @@ public class OpenTaskListElementAction extends Action {
 			} else {
 				TaskListUiUtil.openEditor(task);
 			}
-		} else if (element instanceof ITaskContainer) {
+		} else if (element instanceof TaskCategory) {
 			TaskListUiUtil.openEditor((ITaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
