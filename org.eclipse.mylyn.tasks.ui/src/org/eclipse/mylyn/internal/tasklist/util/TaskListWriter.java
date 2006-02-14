@@ -240,7 +240,7 @@ public class TaskListWriter {
 					Node child = list.item(i);
 					boolean wasRead = false;
 					try {
-						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.TAG_CATEGORY)) {
+						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadCategory(child)) {
 									externalizer.readCategory(child, tlist);
@@ -254,7 +254,7 @@ public class TaskListWriter {
 								// MylarPlugin.log("Did not read: " +
 								// child.getNodeName(), this);
 							}
-						} else if (child.getNodeName().endsWith(DelegatingTaskExternalizer.TAG_QUERY)) {
+						} else if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadQuery(child)) {
 									externalizer.readQuery(child, tlist);
@@ -465,7 +465,7 @@ public class TaskListWriter {
 					Node child = list.item(i);
 					boolean wasRead = false;
 					try {
-						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.TAG_CATEGORY)) {
+						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadCategory(child)) {
 									externalizer.readCategory(child, tlist);

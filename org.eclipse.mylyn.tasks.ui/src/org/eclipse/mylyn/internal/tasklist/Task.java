@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 public class Task implements ITask {
 
 	private static final String REPOSITORY_KIND_LOCAL = "local";
-	
+
 	public enum TaskStatus {
 		NOT_STARTED, IN_PROGRESS, COMPLETED;
 
@@ -46,7 +46,7 @@ public class Task implements ITask {
 
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
-	
+
 		@Override
 		public String toString() {
 			switch (this) {
@@ -64,7 +64,7 @@ public class Task implements ITask {
 				return "P5";
 			}
 		}
-	
+
 		public static PriorityLevel fromString(String string) {
 			if (string == null)
 				return null;
@@ -123,6 +123,8 @@ public class Task implements ITask {
 
 	private List<ITask> children = new ArrayList<ITask>();
 
+	protected String kind;
+
 	@Override
 	public String toString() {
 		return description;
@@ -162,7 +164,7 @@ public class Task implements ITask {
 	public boolean isActive() {
 		return active;
 	}
-	
+
 	public String getToolTipText() {
 		return getDescription();
 	}
@@ -284,10 +286,6 @@ public class Task implements ITask {
 		this.parentCategory = cat;
 	}
 
-	// public void internalSetCategory(TaskCategory cat) {
-	// this.parentCategory = cat;
-	// }
-
 	public ITaskContainer getCategory() {
 		return parentCategory;
 	}
@@ -296,53 +294,9 @@ public class Task implements ITask {
 		return description;
 	}
 
-//	/**
-//	 * TODO: tasks shouldn't know about images, or the context manager
-//	 */
-//	public Image getIcon() {
-//		if (url != null && !url.trim().equals("") && !url.equals("http://")) {
-//			return TaskListImages.getImage(TaskListImages.TASK_WEB);
-//		} else {
-//			return TaskListImages.getImage(TaskListImages.TASK);
-//		}
-//	}
-
-//	/**
-//	 * TODO: tasks shouldn't know about images, or the context manager
-//	 */
-//	public Image getStatusIcon() {
-//		if (isActive()) {
-//			return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
-//		} else {
-//			if (MylarPlugin.getContextManager().hasContext(handle)) {
-//				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
-//			} else {
-//				return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
-//			}
-//		}
-//	}
-
 	public boolean isLocal() {
 		return true;
 	}
-
-//	public boolean isActivatable() {
-//		return true;
-//	}
-
-//	public boolean isDragAndDropEnabled() {
-//		return true;
-//	}
-
-//	public Font getFont() {
-//		if (isActive())
-//			return TaskListImages.BOLD;
-//		for (ITask child : getChildren()) {
-//			if (child.isActive())
-//				return TaskListImages.BOLD;
-//		}
-//		return null;
-//	}
 
 	public Date getCompletionDate() {
 		return completionDate;
@@ -427,6 +381,15 @@ public class Task implements ITask {
 
 	public String getRepositoryKind() {
 		return REPOSITORY_KIND_LOCAL;
+	}
+
+	
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
 	}
 
 }

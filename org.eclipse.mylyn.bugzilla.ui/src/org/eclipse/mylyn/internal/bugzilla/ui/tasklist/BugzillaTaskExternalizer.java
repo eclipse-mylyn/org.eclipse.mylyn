@@ -61,15 +61,15 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String URL = "URL";
 
-	private static final String BUGZILLA_TASK_REGISTRY = "BugzillaTaskRegistry" + TAG_CATEGORY;
+	private static final String BUGZILLA_TASK_REGISTRY = "BugzillaTaskRegistry" + KEY_CATEGORY;
 
-	private static final String TAG_BUGZILLA_CATEGORY = "BugzillaQuery" + TAG_CATEGORY;
+	private static final String TAG_BUGZILLA_CATEGORY = "BugzillaQuery" + KEY_CATEGORY;
 
-	private static final String TAG_BUGZILLA_QUERY_HIT = "Bugzilla" + TAG_QUERY_HIT;
+	private static final String TAG_BUGZILLA_QUERY_HIT = "Bugzilla" + KEY_QUERY_HIT;
 
-	private static final String TAG_BUGZILLA_QUERY = "Bugzilla" + TAG_QUERY;
+	private static final String TAG_BUGZILLA_QUERY = "Bugzilla" + KEY_QUERY;
 
-	private static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustom" + TAG_QUERY;
+	private static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustom" + KEY_QUERY;
 
 	private static final String TAG_TASK = "BugzillaReport";
 
@@ -108,8 +108,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		if (element.getNodeName().equals(BUGZILLA_TASK_REGISTRY)) {
 			readRegistry(node, taskList);
 		} else {
-			BugzillaRepositoryQuery cat = new BugzillaRepositoryQuery(element.getAttribute(REPOSITORY_URL), element
-					.getAttribute(URL), element.getAttribute(DESCRIPTION), element.getAttribute(MAX_HITS));
+			BugzillaRepositoryQuery cat = new BugzillaRepositoryQuery(element.getAttribute(KEY_REPOSITORY_URL), element
+					.getAttribute(URL), element.getAttribute(DESCRIPTION), element.getAttribute(KEY_QUERY_MAX_HITS));
 			taskList.internalAddQuery(cat);
 		}
 	}
@@ -133,16 +133,16 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		AbstractRepositoryQuery cat = null;
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			cat = new BugzillaCustomRepositoryQuery(
-					element.getAttribute(REPOSITORY_URL), 
-					element.getAttribute(QUERY_STRING), 
-					element.getAttribute(NAME),
-					element.getAttribute(MAX_HITS));
+					element.getAttribute(KEY_REPOSITORY_URL), 
+					element.getAttribute(KEY_QUERY_STRING), 
+					element.getAttribute(KEY_NAME),
+					element.getAttribute(KEY_QUERY_MAX_HITS));
 		} else if (node.getNodeName().equals(TAG_BUGZILLA_QUERY)) {
 			cat = new BugzillaRepositoryQuery(
-					element.getAttribute(REPOSITORY_URL), 
-					element.getAttribute(QUERY_STRING),
-					element.getAttribute(NAME), 
-					element.getAttribute(MAX_HITS));
+					element.getAttribute(KEY_REPOSITORY_URL), 
+					element.getAttribute(KEY_QUERY_STRING),
+					element.getAttribute(KEY_NAME), 
+					element.getAttribute(KEY_QUERY_MAX_HITS));
 		}
 		if (cat != null) {
 			tlist.internalAddQuery(cat);
@@ -201,7 +201,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
 		BugzillaTask bugzillaTask = (BugzillaTask) task;
-		node.setAttribute(BUGZILLA, TRUE);
+		node.setAttribute(BUGZILLA, VAL_TRUE);
 		if (bugzillaTask.getLastRefresh() != null) {
 			node.setAttribute(LAST_DATE, new Long(bugzillaTask.getLastRefresh().getTime()).toString());
 		} else {
@@ -211,9 +211,9 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		node.setAttribute(SYNC_STATE, bugzillaTask.getSyncState().toString());
 
 		if (bugzillaTask.isDirty()) {
-			node.setAttribute(DIRTY, TRUE);
+			node.setAttribute(DIRTY, VAL_TRUE);
 		} else {
-			node.setAttribute(DIRTY, FALSE);
+			node.setAttribute(DIRTY, VAL_FALSE);
 		}
 		return node;
 	}
@@ -229,13 +229,13 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		Element element = (Element) node;
 		String handle;
 		String label;
-		if (element.hasAttribute(HANDLE)) {
-			handle = element.getAttribute(HANDLE);
+		if (element.hasAttribute(KEY_HANDLE)) {
+			handle = element.getAttribute(KEY_HANDLE);
 		} else {
 			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
-		if (element.hasAttribute(LABEL)) {
-			label = element.getAttribute(LABEL);
+		if (element.hasAttribute(KEY_LABEL)) {
+			label = element.getAttribute(KEY_LABEL);
 		} else {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
@@ -295,26 +295,26 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		String label;
 		String priority;
 		String status;
-		if (element.hasAttribute(HANDLE)) {
-			handle = element.getAttribute(HANDLE);
+		if (element.hasAttribute(KEY_HANDLE)) {
+			handle = element.getAttribute(KEY_HANDLE);
 		} else {
 			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
-		if (element.hasAttribute(NAME)) {
-			label = element.getAttribute(NAME);
+		if (element.hasAttribute(KEY_NAME)) {
+			label = element.getAttribute(KEY_NAME);
 		} else {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
-		if (element.hasAttribute(PRIORITY)) {
-			priority = element.getAttribute(PRIORITY);
+		if (element.hasAttribute(KEY_PRIORITY)) {
+			priority = element.getAttribute(KEY_PRIORITY);
 		} else {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
 		
 		status = STATUS_NEW;
-		if (element.hasAttribute(COMPLETE)) {
-			status = element.getAttribute(COMPLETE);
-			if (status.equals(TRUE)) {
+		if (element.hasAttribute(KEY_COMPLETE)) {
+			status = element.getAttribute(KEY_COMPLETE);
+			if (status.equals(VAL_TRUE)) {
 				status = STATUS_RESO;
 			} 
 		} 

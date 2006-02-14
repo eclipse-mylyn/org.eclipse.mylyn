@@ -184,16 +184,6 @@ public class TaskListImages {
 		return image;
 	}
 
-	// /**
-	// * TODO: get rid of this
-	// */
-	// public static ImageDescriptor getImageDescriptor(Image image) {
-	// for (ImageDescriptor imageDescriptor : imageMap.keySet()) {
-	// if (image.equals(imageMap.get(imageDescriptor))) return imageDescriptor;
-	// }
-	// return null;
-	// }
-
 	public static class MylarTasklistOverlayDescriptor extends CompositeImageDescriptor {
 
 		private ImageData base;

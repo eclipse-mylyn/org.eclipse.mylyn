@@ -16,12 +16,16 @@ import java.util.Date;
 /**
  * @author Mik Kersten and Robert Elves
  */
-public class AbstractRepositoryTask extends Task {
+public abstract class AbstractRepositoryTask extends Task {
 
 	/** The last time this task's bug report was downloaded from the server. */
 	protected Date lastRefresh;
 	
 	protected boolean currentlyDownloading;
+
+	public enum RepositoryTaskSyncState {
+		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
+	}
 	
 	protected RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
 		
@@ -29,21 +33,10 @@ public class AbstractRepositoryTask extends Task {
 		super(handle, label, newTask);
 	}
 
-	public enum RepositoryTaskSyncState {
-		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
-	}
-
-	/**
-	 * @return Returns the lastRefresh.
-	 */
 	public Date getLastRefresh() {
 		return lastRefresh;
 	}
 
-	/**
-	 * @param lastRefresh
-	 *            The lastRefresh to set.
-	 */
 	public void setLastRefresh(Date lastRefresh) {
 		this.lastRefresh = lastRefresh;
 	}

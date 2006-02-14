@@ -13,6 +13,7 @@
  */
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -29,8 +30,26 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskListLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider,
+public class TaskListLabelProvider implements ITableLabelProvider,
 		ITableColorProvider, ITableFontProvider {
+
+	private TaskElementLabelProvider taskElementLabelProvider = new TaskElementLabelProvider();
+	
+	private TaskElementLabelProvider labelProvider;
+	
+	private Color parentBackgroundColor;
+	
+	public TaskListLabelProvider(Color color) {
+		this.parentBackgroundColor = color;
+		labelProvider = taskElementLabelProvider;
+//		labelProvider = new DecoratingLabelProvider(taskElementLabelProvider,
+//				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
+//				new TaskDecorator());
+	}
+	
+	public TaskListLabelProvider() {
+		this.parentBackgroundColor = null;
+	}
 
 	public String getColumnText(Object obj, int columnIndex) {
 		if (obj instanceof ITaskListElement) {
@@ -47,7 +66,7 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 					return element.getPriority();
 				}
 			case 3:
-				return super.getText(obj);
+				return labelProvider.getText(obj);
 			}
 		}
 		return null;
@@ -59,10 +78,9 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 		}
 		if (columnIndex == 0) {
 			if (element instanceof ITaskContainer) {
-				return super.getImage(element);
-//				return ((ITaskListElement) element).getIcon();
+				return labelProvider.getImage(element);
 			} else {
-				ITask task = super.getCorrespondingTask((ITaskListElement)element);
+				ITask task = taskElementLabelProvider.getCorrespondingTask((ITaskListElement)element);
 				if (task != null) {
 					if (task.isActive()) {
 						return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
@@ -81,21 +99,47 @@ public class TaskListLabelProvider extends TaskElementLabelProvider implements I
 			if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 				return null;
 			}
-			return super.getImage(element);
-//			return ((ITaskListElement) element).getIcon();
+			return labelProvider.getImage(element);
 		} 
 		return null;
 	}
 	
 	public Font getFont(Object element, int columnIndex) {
-		return super.getFont(element);
+		return labelProvider.getFont(element);
 	}
 
 	public Color getForeground(Object element, int columnIndex) {
-		return getForeground(element);
+		return labelProvider.getForeground(element);
 	}
 
 	public Color getBackground(Object element, int columnIndex) {
-		return getBackground(element);
+		if (element instanceof ITaskContainer) {
+			ITaskContainer category = (ITaskContainer) element;
+			if (category.isArchive()) {
+				return TaskListImages.BACKGROUND_ARCHIVE;
+			} else {
+				return parentBackgroundColor;
+			}
+		} else if (element instanceof AbstractRepositoryQuery) {
+			return parentBackgroundColor;
+		}
+		
+		return labelProvider.getBackground(element);
+	}
+
+	public void addListener(ILabelProviderListener listener) {
+		taskElementLabelProvider.addListener(listener);
+	}
+
+	public void dispose() {
+		taskElementLabelProvider.dispose();
+	}
+
+	public boolean isLabelProperty(Object element, String property) {
+		return taskElementLabelProvider.isLabelProperty(element, property);
+	}
+
+	public void removeListener(ILabelProviderListener listener) {
+		taskElementLabelProvider.removeListener(listener);
 	}
 }

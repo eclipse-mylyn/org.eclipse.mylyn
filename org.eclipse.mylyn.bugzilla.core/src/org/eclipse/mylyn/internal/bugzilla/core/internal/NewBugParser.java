@@ -170,8 +170,6 @@ public class NewBugParser {
 			}
 		}
 
-		// if we have no attributes and we suspect a bad login, we assume that
-		// the login info was bad
 		if (possibleBadLogin && (nbm.getAttributes() == null || nbm.getAttributes().size() == 0)) {
 			throw new LoginException(errorMsg);
 		}

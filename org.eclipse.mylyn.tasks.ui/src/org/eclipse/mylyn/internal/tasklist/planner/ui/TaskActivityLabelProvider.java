@@ -19,7 +19,6 @@ import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
@@ -28,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TaskActivityLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider, IColorProvider {
 
-	private TaskListLabelProvider taskListLabelProvider = new TaskListLabelProvider();
+	private TaskElementLabelProvider taskListLabelProvider = new TaskElementLabelProvider();
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
@@ -74,9 +73,6 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 	}
 
 	public Color getForeground(Object element) {
-		// if (editorInput.createdDuringReportPeriod((ITask) tasks[i])) {
-		// table.getItem(i).setForeground(new Color(null, new RGB(0, 0, 255)));
-		// }
 		return taskListLabelProvider.getForeground(element);
 	}
 

@@ -35,6 +35,10 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setActive(boolean active);
 
+	public String getKind();
+
+	public void setKind(String kind);
+	
 	public abstract void addPlan(String plan);
 
 	public List<String> getPlans();

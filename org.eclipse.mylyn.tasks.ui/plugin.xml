@@ -100,7 +100,6 @@
               visible="true"/>
         <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
      </perspectiveExtension>
-      
 	</extension>
 
   	<extension
@@ -121,7 +120,6 @@
            name="Mylar Task Planner"
            id="org.eclipse.mylar.tasklist.ui.planner.editor"/>                      
   </extension>
-  
   
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
@@ -195,6 +193,10 @@
          category="org.eclipse.mylar.ui.preferences">
       </page> 
    </extension>
+
+
+
+
 
 <!--
    <extension point="org.eclipse.ui.commands">
