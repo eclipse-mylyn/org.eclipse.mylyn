@@ -31,8 +31,10 @@ public class BugzillaImages {
 
 	public static final String T_TOOL = "etool16";
 
-	public static final ImageDescriptor IMG_TOOL_ADD_TO_FAVORITES = create(T_ELCL, "bug-favorite.gif");
-
+	public static final String T_VIEW = "eview16";
+	
+	public static final ImageDescriptor OVERLAY_BUGZILLA = create(T_VIEW, "overlay-bugzilla.gif");
+	
 	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
 
 	public static final ImageDescriptor BUG_COMMENT = create(T_ELCL, "bug-comment.gif");

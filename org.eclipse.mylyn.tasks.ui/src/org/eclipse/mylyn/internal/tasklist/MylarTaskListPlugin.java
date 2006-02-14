@@ -78,7 +78,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private ITaskHighlighter highlighter;
 
 	private static boolean shellActive = true;
-
+	
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
 		@Override
@@ -348,7 +348,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		taskListRefreshManager.startRefreshJob();		
+		taskListRefreshManager.startRefreshJob();	
 		TaskListNotificationManager.startNotification(5000);				
 	}
 

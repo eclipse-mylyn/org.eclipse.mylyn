@@ -54,9 +54,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-				image = TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				image = TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_OUTGOING);
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 				image = TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_INCOMMING);
@@ -73,9 +71,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else {
 				image = TaskListImages.getImage(TaskListImages.TASK);
 			}
-		} 
+		}
 		return image;
-//		return decorator.decorateImage(image, element);
 	}
 
 	@Override
@@ -87,11 +84,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else {
 			text = super.getText(object);
 		}
-		return text;
-//		System.err.println("> " + object.getClass()+ ": " + decorator.decorateText(text, object));
-//		System.err.println(">>>>> " + PlatformUI.getWorkbench().getDecoratorManager().
-//		return PlatformUI.getWorkbench().getDecoratorManager().decorateText(text, object);
-//		return decorator.decorateText(text, object);  
+		return text; 
 	}
 
 	public Color getForeground(Object object) {
@@ -132,7 +125,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return null;
 	}
 
-	protected ITask getCorrespondingTask(ITaskListElement element) {
+	/**
+	 * TODO: move
+	 */
+	public static ITask getCorrespondingTask(ITaskListElement element) {
 		if (element instanceof ITask) {
 			return (ITask) element;
 		} else if (element instanceof AbstractQueryHit) {

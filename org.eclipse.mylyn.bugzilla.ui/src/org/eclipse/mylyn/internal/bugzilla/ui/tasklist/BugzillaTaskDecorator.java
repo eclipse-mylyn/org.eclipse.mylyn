@@ -9,52 +9,43 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasklist.ui.views;
+package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 
 /**
  * @author Mik Kersten
  */
+public class BugzillaTaskDecorator implements ILightweightLabelDecorator {
 
-public class TaskDecorator implements ILabelDecorator {
-
-	public Image decorateImage(Image image, Object element) {
-		// ignore
-		return null;
-	}
-
-	public String decorateText(String text, Object element) {
-		if (element instanceof AbstractQueryHit) {
-			AbstractQueryHit hit = (AbstractQueryHit)element;
-			if (hit.getCorrespondingTask() != null) {
-				return hit.getCorrespondingTask().getKind() + ": " + text;
-			}
+	public void decorate(Object element, IDecoration decoration) {
+		if (element instanceof BugzillaRepositoryQuery) {
+			decoration.addOverlay(BugzillaImages.OVERLAY_BUGZILLA, IDecoration.TOP_LEFT);
+		} else if (element instanceof BugzillaQueryHit) {
+//			BugzillaQueryHit hit = (BugzillaQueryHit)element;
+//			if (hit.getCorrespondingTask() != null) {
+//				ITask task = hit.getCorrespondingTask();
+//				decoration.addOverlay(BugzillaImages.OVERLAY_BUGZILLA, IDecoration.TOP_LEFT);
+//			}
 		}
-		return null;
 	}
 
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
-		
 	}
 
 	public void dispose() {
 		// ignore
-		
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
-		// ignore
 		return false;
 	}
 
 	public void removeListener(ILabelProviderListener listener) {
 		// ignore
-		
 	}
-
 }

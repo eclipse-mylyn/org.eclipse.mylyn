@@ -825,9 +825,14 @@ public class TaskListView extends ViewPart {
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setContentProvider(new TaskListContentProvider(this));
-		TaskListLabelProvider labelProvider = new TaskListLabelProvider(parent.getBackground());
+//		TaskListTableLabelProvider labelProvider = new TaskListTableLabelProvider(parent.getBackground());
 //		labelProvider.setBackgroundColor(parent.getBackground());
-		getViewer().setLabelProvider(labelProvider);
+//		getViewer().setLabelProvider(labelProvider);
+//		TableDecoratingLabelProvider
+
+		getViewer().setLabelProvider(new TaskListTableLabelProvider(new TaskElementLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground()));
+		
 //		getViewer().setLabelProvider(new DecoratingLabelProvider(labelProvider,
 //				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 				

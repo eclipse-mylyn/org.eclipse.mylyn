@@ -34,6 +34,20 @@
           </perspectiveExtension>
 	</extension>
 
+   <extension point="org.eclipse.ui.decorators">
+      <decorator
+            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskDecorator"
+            id="org.eclipse.mylar.bugzilla.ui.decorator.task"
+            label="Mylar Bugzilla Task Decorator"
+            lightweight="true"
+            objectClass="java.lang.Object"
+            state="true">
+         <description>
+			Mylar Bugzilla Task Decorator
+		 </description>
+      </decorator>
+   </extension>
+
 <!--      
 <extension
       id="org.eclipse.mylar.bugzilla.wizards"
