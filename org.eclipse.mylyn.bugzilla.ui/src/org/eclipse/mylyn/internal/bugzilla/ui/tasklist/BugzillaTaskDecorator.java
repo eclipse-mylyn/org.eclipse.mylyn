@@ -23,7 +23,7 @@ public class BugzillaTaskDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof BugzillaRepositoryQuery) {
-			decoration.addOverlay(BugzillaImages.OVERLAY_BUGZILLA, IDecoration.TOP_LEFT);
+			decoration.addOverlay(BugzillaImages.OVERLAY_BUGZILLA, IDecoration.TOP_RIGHT);
 		} else if (element instanceof BugzillaQueryHit) {
 //			BugzillaQueryHit hit = (BugzillaQueryHit)element;
 //			if (hit.getCorrespondingTask() != null) {
