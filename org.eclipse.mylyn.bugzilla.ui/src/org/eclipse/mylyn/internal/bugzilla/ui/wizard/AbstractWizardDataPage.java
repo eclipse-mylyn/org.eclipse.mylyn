@@ -576,28 +576,35 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			newLayout(attributesComposite, 1, "", PROPERTY);
 		}
 
+		Composite textComposite = new Composite(attributesComposite, SWT.NONE);		
+		textComposite.setLayout(new GridLayout(3, false));
+		GridData textCompositeGD = new GridData();
+		textCompositeGD.horizontalSpan = 4;
+		textCompositeGD.grabExcessHorizontalSpace = true;
+		textComposite.setLayoutData(textCompositeGD);
+		
 		GridData summaryTextData;
 		
 		if (url != null) {
 			// add the assigned to text field			
-			newLayout(attributesComposite, 1, ATTRIBUTE_URL, PROPERTY);
-			urlText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
+			newLayout(textComposite, 1, ATTRIBUTE_URL, PROPERTY);
+			urlText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 			summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
-			summaryTextData.horizontalSpan = 3;
-			summaryTextData.widthHint = 200;
+			summaryTextData.horizontalSpan = 2;
+//			summaryTextData.widthHint = 200;
 			urlText.setLayoutData(summaryTextData);
 			urlText.setText(url);
 			urlText.addListener(SWT.FocusOut, this);
 		}
 
-		newLayout(attributesComposite, 1, "Assigned To", PROPERTY);
-		Label l = new Label(attributesComposite, SWT.NONE);
+		newLayout(textComposite, 1, "Assigned To", PROPERTY);
+		Label l = new Label(textComposite, SWT.NONE);
 		l.setText("NOTE: If e-mail incorrect, submit will fail silently");
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		summaryTextData.horizontalSpan = 2;
+		summaryTextData.horizontalSpan = 1;
 		l.setLayoutData(summaryTextData);
-		assignedToText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
+		assignedToText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 		summaryTextData.horizontalSpan = 1;
@@ -606,11 +613,11 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 		assignedToText.setText("");
 
 		// add the summary text field
-		newLayout(attributesComposite, 1, "Summary", PROPERTY);
-		summaryText = new Text(attributesComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
+		newLayout(textComposite, 1, "Summary", PROPERTY);
+		summaryText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 		summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
-		summaryTextData.horizontalSpan = 3;
+		summaryTextData.horizontalSpan = 2;
 		summaryTextData.widthHint = 200;
 		summaryText.setLayoutData(summaryTextData);
 		summaryText.setText(nbm.getSummary());
