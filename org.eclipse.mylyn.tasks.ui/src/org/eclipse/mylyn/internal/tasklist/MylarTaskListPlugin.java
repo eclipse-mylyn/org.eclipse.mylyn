@@ -17,12 +17,8 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarPreferenceContstants;
@@ -51,8 +47,6 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
-	private static final String REMINDERS_REFRESH_JOB = "Reminders Refresh Job";
-
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
 
 	private static MylarTaskListPlugin INSTANCE;
@@ -74,11 +68,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
 
 	public static final String TITLE_DIALOG = "Mylar Information";
-
-	//	TODO: Store in preferences
-	protected static final long REMINDER_REFRESH_DELAY = 1000*10; //60*5; 
-
-	private Job reminderJob;
 
 	private ResourceBundle resourceBundle;
 
@@ -199,6 +188,22 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			// ignore
 		}
 	};
+	
+	private static ITaskListNotificationProvider NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
+
+		public List<ITaskListNotification> getNotifications() {
+			final TaskReportGenerator parser = new TaskReportGenerator(MylarTaskListPlugin.getTaskListManager()
+					.getTaskList());
+			parser.addCollector(new ReminderRequiredCollector());
+			parser.collectTasks();
+			List<ITaskListNotification> reminders = new ArrayList<ITaskListNotification>();
+			if (!parser.getAllCollectedTasks().isEmpty()) {				
+				for (ITask task: parser.getAllCollectedTasks()) {
+					reminders.add(new TaskListNotificationReminder(task));
+				}				
+			}
+			return reminders;
+		} };
 
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
@@ -283,7 +288,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
-					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+					TaskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
+					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);					
 					getPrefs().addPropertyChangeListener(taskListRefreshManager);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
 							taskListSaveManager);
@@ -342,9 +348,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		taskListRefreshManager.startRefreshJob();
-		checkReminders();
-		this.scheduleRemindersRefresh();
+		taskListRefreshManager.startRefreshJob();		
 		TaskListNotificationManager.startNotification(5000);				
 	}
 
@@ -445,63 +449,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			// INSTANCE.getPreferenceStore().setValue(PREVIOUS_SAVE_DATE,
 			// lastSave.getTime());
 		}
-	}
-
-	private void scheduleRemindersRefresh() {
-		
-		
-		reminderJob = new Job(REMINDERS_REFRESH_JOB) {
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					
-					checkReminders();
-
-						if (monitor.isCanceled())
-							return Status.CANCEL_STATUS;
-					
-
-				} finally {
-					schedule(REMINDER_REFRESH_DELAY);
-				}
-				return Status.OK_STATUS;
-			}
-			
-		};
-		reminderJob.setPriority(Job.DECORATE);
-		reminderJob.schedule(REMINDER_REFRESH_DELAY);
-	}
-	
-	
-	public void checkReminders() {
-		final TaskReportGenerator parser = new TaskReportGenerator(MylarTaskListPlugin.getTaskListManager()
-				.getTaskList());
-		parser.addCollector(new ReminderRequiredCollector());
-		parser.collectTasks();
-		if (!parser.getAllCollectedTasks().isEmpty()) {
-			List<ITaskListNotification> reminders = new ArrayList<ITaskListNotification>();
-			for (ITask task: parser.getAllCollectedTasks()) {
-				reminders.add(new TaskListNotificationReminder(task));
-			}
-			TaskListNotificationManager.notify(reminders);
-		}
-		
-//		if (!parser.getAllCollectedTasks().isEmpty()) {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-////					TasksReminderDialog dialog = new TasksReminderDialog(PlatformUI.getWorkbench().getDisplay()
-////							.getActiveShell(), parser.getAllCollectedTasks());
-//					
-//					
-//					TaskListNotificationPopup dialog = new TaskListNotificationPopup(PlatformUI.getWorkbench().getDisplay()
-//							.getActiveShell());
-//					dialog.setContents(parser.getAllCollectedTasks());
-//					dialog.setBlockOnOpen(false);
-//					dialog.open();
-//				}
-//			});
-//		}
 	}
 
 	/**

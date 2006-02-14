@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
@@ -46,8 +48,10 @@ public class TaskListNotificationPopup extends PopupDialog {
 	static boolean showDialogMenu = false;
 
 	static boolean showPersistAction = false;
+	
+	static String titleText;	
 
-	static String titleText = null;
+	static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
 
 	static String infoText = null;
 
@@ -80,13 +84,11 @@ public class TaskListNotificationPopup extends PopupDialog {
 		GridLayout parentLayout = new GridLayout();
 		parentLayout.marginHeight = 0;
 		parentLayout.marginWidth = 0;
-
+		getShell().setText(MYLAR_NOTIFICATION_LABEL);		
 		parent.setLayout(parentLayout);
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createForm(parent);
-
-		form.getBody().setBackground(parent.getBackground());
-
+		
 		GridLayout formLayout = new GridLayout();
 		parentLayout.marginHeight = 0;
 		parentLayout.marginWidth = 0;
@@ -94,8 +96,9 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 
-		// section.setText("Notifications:");
+		section.setText(MYLAR_NOTIFICATION_LABEL);
 		section.setLayout(new GridLayout());
+		section.setBackground(form.getBody().getDisplay().getSystemColor(SWT.COLOR_WHITE));
 
 		Composite sectionClient = toolkit.createComposite(section);
 		sectionClient.setLayout(new GridLayout());
@@ -109,6 +112,14 @@ public class TaskListNotificationPopup extends PopupDialog {
 				public void linkActivated(HyperlinkEvent e) {
 					notification.setNotified(true);
 					notification.openResource();
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();					
+					if(window != null) {
+						Shell windowShell = window.getShell();
+						if(windowShell != null) {
+							windowShell.moveAbove(null);
+							windowShell.open();						
+						}
+					}
 				}
 			});
 		}
@@ -125,11 +136,18 @@ public class TaskListNotificationPopup extends PopupDialog {
 					notification.setNotified(true);
 					notification.openResource();
 				}
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();					
+				if(window != null) {
+					Shell windowShell = window.getShell();
+					if(windowShell != null) {
+						windowShell.open();					
+					}
+				}
 				close();
 			}
 		});
 
-		Button buttonDismiss = toolkit.createButton(buttonsComposite, "Dismiss", SWT.NONE);
+		Button buttonDismiss = toolkit.createButton(buttonsComposite, "Close", SWT.NONE);
 		buttonDismiss.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				for (ITaskListNotification notification : notifications) {

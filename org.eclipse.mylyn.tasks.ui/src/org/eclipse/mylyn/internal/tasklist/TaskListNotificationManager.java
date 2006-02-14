@@ -36,11 +36,15 @@ public final class TaskListNotificationManager {
 
 	private static final long OPEN_POPUP_DELAY = 1000 * 60;
 
+	private static final boolean runSystem = true;
+
 	private static TaskListNotificationPopup popup;
 
 	private static List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
 
 	private static List<ITaskListNotification> currentlyNotifying = Collections.synchronizedList(notifications);
+
+	private static List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
 
 	private static Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
 		@Override
@@ -54,6 +58,7 @@ public final class TaskListNotificationManager {
 							if ((popup != null && popup.close()) || popup == null) {
 								closeJob.cancel();
 								cleanNotified();
+								collectNotifications();
 								synchronized (TaskListNotificationManager.class) {
 									if (currentlyNotifying.size() > 0) {
 										popup = new TaskListNotificationPopup(PlatformUI.getWorkbench().getDisplay()
@@ -61,6 +66,7 @@ public final class TaskListNotificationManager {
 										popup.setContents(new ArrayList<ITaskListNotification>(currentlyNotifying));
 										popup.setBlockOnOpen(false);
 										popup.open();
+										closeJob.setSystem(runSystem);
 										closeJob.schedule(CLOSE_POPUP_DELAY);
 										popup.getShell().addShellListener(SHELL_LISTENER);
 									}
@@ -110,9 +116,6 @@ public final class TaskListNotificationManager {
 		public void shellClosed(ShellEvent arg0) {
 		}
 
-		/**
-		 * bug 1002249: too slow to save state here
-		 */
 		public void shellDeactivated(ShellEvent arg0) {
 			popup.close();
 			// don't want notifications right away
@@ -134,29 +137,20 @@ public final class TaskListNotificationManager {
 	};
 
 	private static void cleanNotified() {
-		synchronized (TaskListNotificationManager.class) {
-			List<ITaskListNotification> toIterateOver = new ArrayList<ITaskListNotification>(currentlyNotifying);
-			for (ITaskListNotification notification : toIterateOver)
-				if (notification.isNotified())
-					currentlyNotifying.remove(notification);
-		}
+		 for (ITaskListNotification notification : currentlyNotifying) {
+			notification.setNotified(true);
+		 }
+		currentlyNotifying.clear();
 	}
 
-	public static void notify(List<ITaskListNotification> toNotify) {
-		synchronized (TaskListNotificationManager.class) {
-			currentlyNotifying.removeAll(toNotify);
-			currentlyNotifying.addAll(0, toNotify);
-		}
-	}
-
-	public static void notify(ITaskListNotification toNotify) {
-		synchronized (TaskListNotificationManager.class) {
-			currentlyNotifying.remove(toNotify);
-			currentlyNotifying.add(0, toNotify);
-		}
+	private static void collectNotifications() {
+		for (ITaskListNotificationProvider provider : notificationProviders) {
+			currentlyNotifying.addAll(provider.getNotifications());
+		}		
 	}
 
 	public static void startNotification(long initialStartupTime) {
+		openJob.setSystem(runSystem);
 		openJob.schedule(initialStartupTime);
 	}
 
@@ -164,21 +158,20 @@ public final class TaskListNotificationManager {
 		openJob.cancel();
 	}
 
-	/**
-	 * For testing purposes
-	 */
-	public static List<ITaskListNotification> getNotifications() {
-		synchronized (TaskListNotificationManager.class) {
-			return Collections.unmodifiableList(notifications);
-		}
+	public static void addNotificationProvider(ITaskListNotificationProvider notification_provider) {
+		notificationProviders.add(notification_provider);
+	}
+
+	public static void removeNotificationProvider(ITaskListNotificationProvider notification_provider) {
+		notificationProviders.remove(notification_provider);
 	}
 
 	/**
-	 * For testing purposes
+	 * public for testing purposes
 	 */
-	public static void clearNotifications() {
+	public static List<ITaskListNotification> getNotifications() {
 		synchronized (TaskListNotificationManager.class) {
-			currentlyNotifying.clear();
+			return currentlyNotifying;
 		}
 	}
 

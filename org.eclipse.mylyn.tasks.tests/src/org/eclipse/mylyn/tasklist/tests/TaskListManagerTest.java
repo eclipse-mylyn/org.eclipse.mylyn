@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListRefreshJob;
@@ -142,6 +143,23 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
 	}
+	
+	public void testRepositoryTaskExternalization() {
+		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
+		repositoryTask.setKind("kind");
+		manager.moveToRoot(repositoryTask);
+		manager.saveTaskList();
+
+		TaskList list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getRootTasks().size());
+		AbstractRepositoryTask readTask = (AbstractRepositoryTask)manager.getTaskList().getRootTasks().get(0);
+		
+		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
+		assertEquals(repositoryTask.getDescription(), readTask.getDescription());
+		assertEquals(repositoryTask.getKind(), readTask.getKind());
+	}
 
 	public void testCreationAndExternalization() {
 		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1", true);
@@ -186,10 +204,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		assertNotNull(manager.getTaskList());
-		assertEquals(3, manager.getTaskList().getRootTasks().size()); // contains
-																		// archived
-																		// reports
-																		// category
+		assertEquals(3, manager.getTaskList().getRootTasks().size()); 
 
 		List<ITask> readList = manager.getTaskList().getRootTasks();
 		assertTrue(readList.get(0).getDescription().equals("task 1"));
@@ -221,7 +236,6 @@ public class TaskListManagerTest extends TestCase {
 //		assertEquals(readCat2, readList.get(2).getCategory());
 	}
 
-	
 	public void testScheduledRefreshJob() throws InterruptedException {
 		int counter = 3;
 		ScheduledTaskListRefreshJob job = new ScheduledTaskListRefreshJob(500, manager);

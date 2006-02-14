@@ -11,11 +11,13 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.tasklist.ITaskListNotification;
+import org.eclipse.mylar.internal.tasklist.ITaskListNotificationProvider;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskListNotificationManager;
 import org.eclipse.mylar.internal.tasklist.TaskListNotificationPopup;
@@ -43,40 +45,43 @@ public class TaskListNotificationManagerTest extends TestCase {
 		super.tearDown();
 	}
 
+	// XXX: Currently failing due to running as system at platform startup
 	public void testTaskListNotificationManager() throws InterruptedException {
 
 		Task task0 = new Task("t0", "t0 - test 0", true);
 		Task task1 = new Task("t1", "t1 - test 1", true);
 		Task task2 = new Task("t2", "t2 - test 2", true);
-		Task task2dup = new Task("t2", "t2 - different description", true);
-
 		TaskListNotificationReminder reminder0 = new TaskListNotificationReminder(task0);
 		TaskListNotificationReminder reminder1 = new TaskListNotificationReminder(task1);
 		TaskListNotificationReminder reminder2 = new TaskListNotificationReminder(task2);
-		TaskListNotificationReminder reminder2dup = new TaskListNotificationReminder(task2dup);
-		TaskListNotificationReminder reminder3 = new TaskListNotificationReminder(task2);
 		
-		TaskListNotificationManager.notify(reminder0);
-		TaskListNotificationManager.notify(reminder1);
-		TaskListNotificationManager.notify(reminder2);
-		TaskListNotificationManager.notify(reminder3);
-		TaskListNotificationManager.notify(reminder2dup);
 
-		List<ITaskListNotification> notifications = TaskListNotificationManager.getNotifications();
-		assertEquals(3, notifications.size());
 		
-		TaskListNotificationReminder firstReminder = (TaskListNotificationReminder)notifications.get(0);
-		assertEquals(reminder2dup.getDescription(), firstReminder.getDescription());
+		final List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
+		notifications.add(reminder0);
+		notifications.add(reminder1);
+		notifications.add(reminder2);
+		
+		for (ITaskListNotification notification : notifications) {
+			assertFalse(notification.isNotified());
+		}
+		
+		ITaskListNotificationProvider provider = new ITaskListNotificationProvider() {
+
+			public List<ITaskListNotification> getNotifications() {
+				return notifications;
+			}
+			
+		};
 		
 		
-		TaskListNotificationManager.startNotification(0);
+		TaskListNotificationManager.addNotificationProvider(provider);
+		TaskListNotificationManager.startNotification(1);
 		Thread.sleep(500);
-		TaskListNotificationManager.notify(reminder0);
-		TaskListNotificationManager.notify(reminder1);
-		TaskListNotificationManager.notify(reminder2);
-		TaskListNotificationManager.notify(reminder3);
-		TaskListNotificationManager.notify(reminder2dup);
-		assertEquals(3, notifications.size());
+		List<ITaskListNotification> notified = TaskListNotificationManager.getNotifications();
+		for (ITaskListNotification notification : notified) {
+			assertTrue(notification.isNotified());
+		}
 		
 	}
 	
