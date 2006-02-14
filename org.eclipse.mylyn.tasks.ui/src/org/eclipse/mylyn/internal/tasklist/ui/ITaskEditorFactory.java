@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 

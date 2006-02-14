@@ -11,7 +11,7 @@
 /*
  * Created on 19-Jan-2005
  */
-package org.eclipse.mylar.internal.tasklist.ui;
+package org.eclipse.mylar.internal.tasklist.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.tasklist.ITask;

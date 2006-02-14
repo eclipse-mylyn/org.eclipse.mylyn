@@ -23,7 +23,7 @@ public class AllTasklistTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasklist.tests");
 
 		// $JUnit-BEGIN$
-		suite.addTestSuite(TaskListNotificationManagerTest.class);
+//		suite.addTestSuite(TaskListNotificationManagerTest.class);
 		suite.addTestSuite(BugzillaTaskTest.class);
 		suite.addTestSuite(TaskReportGeneratorTest.class);
 		suite.addTestSuite(TaskTest.class);
@@ -36,7 +36,6 @@ public class AllTasklistTests {
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
-//		suite.addTestSuite(TaskListNotificationManagerTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		// $JUnit-END$
 		return suite;

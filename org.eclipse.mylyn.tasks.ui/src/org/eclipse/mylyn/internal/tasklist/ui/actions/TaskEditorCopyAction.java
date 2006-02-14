@@ -11,7 +11,7 @@
 /*
  * Created on 20-Jan-2005
  */
-package org.eclipse.mylar.internal.tasklist.ui;
+package org.eclipse.mylar.internal.tasklist.ui.actions;
 
 import org.eclipse.jface.action.Action;
 

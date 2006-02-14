@@ -362,13 +362,13 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			if (MylarPlugin.getDefault() != null) {
 				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 			}
-			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().isClosing()) {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeDisposeListener(
 						taskListSaveManager);
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar Java stop failed", false);
+			MylarStatusHandler.fail(e, "Mylar Task List stop failed", false);
 		}
 	}
 
