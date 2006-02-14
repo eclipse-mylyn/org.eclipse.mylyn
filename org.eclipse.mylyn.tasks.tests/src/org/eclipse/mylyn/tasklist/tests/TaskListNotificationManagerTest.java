@@ -19,9 +19,9 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.tasklist.ITaskListNotification;
 import org.eclipse.mylar.internal.tasklist.ITaskListNotificationProvider;
 import org.eclipse.mylar.internal.tasklist.Task;
-import org.eclipse.mylar.internal.tasklist.TaskListNotificationManager;
-import org.eclipse.mylar.internal.tasklist.TaskListNotificationPopup;
-import org.eclipse.mylar.internal.tasklist.TaskListNotificationReminder;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationManager;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationPopup;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationReminder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -45,7 +45,6 @@ public class TaskListNotificationManagerTest extends TestCase {
 		super.tearDown();
 	}
 
-	// XXX: Currently failing due to running as system at platform startup
 	public void testTaskListNotificationManager() throws InterruptedException {
 
 		Task task0 = new Task("t0", "t0 - test 0", true);
@@ -54,8 +53,6 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskListNotificationReminder reminder0 = new TaskListNotificationReminder(task0);
 		TaskListNotificationReminder reminder1 = new TaskListNotificationReminder(task1);
 		TaskListNotificationReminder reminder2 = new TaskListNotificationReminder(task2);
-		
-
 		
 		final List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
 		notifications.add(reminder0);
@@ -74,11 +71,11 @@ public class TaskListNotificationManagerTest extends TestCase {
 			
 		};
 		
-		
-		TaskListNotificationManager.addNotificationProvider(provider);
-		TaskListNotificationManager.startNotification(1);
+		TaskListNotificationManager notificationManager = new TaskListNotificationManager();
+		notificationManager.addNotificationProvider(provider);	
+		notificationManager.startNotification(1);
 		Thread.sleep(500);
-		List<ITaskListNotification> notified = TaskListNotificationManager.getNotifications();
+		List<ITaskListNotification> notified = notificationManager.getNotifications();
 		for (ITaskListNotification notification : notified) {
 			assertTrue(notification.isNotified());
 		}

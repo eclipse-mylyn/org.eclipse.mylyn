@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.internal.tasklist.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylar.internal.tasklist.ITaskListNotification;
+import org.eclipse.mylar.internal.tasklist.ITaskListNotificationProvider;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.ui.PlatformUI;
@@ -26,7 +28,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Rob Elves
  */
-public final class TaskListNotificationManager {
+public class TaskListNotificationManager {
 
 	private static final String CLOSE_NOTIFICATION_JOB = "Close Notification Job";
 
@@ -38,15 +40,15 @@ public final class TaskListNotificationManager {
 
 	private static final boolean runSystem = true;
 
-	private static TaskListNotificationPopup popup;
+	private TaskListNotificationPopup popup;
 
-	private static List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
+	private List<ITaskListNotification> notifications = new ArrayList<ITaskListNotification>();
 
-	private static List<ITaskListNotification> currentlyNotifying = Collections.synchronizedList(notifications);
+	private List<ITaskListNotification> currentlyNotifying = Collections.synchronizedList(notifications);
 
-	private static List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
+	private List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
 
-	private static Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
+	private Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 
@@ -65,9 +67,9 @@ public final class TaskListNotificationManager {
 												.getActiveShell());
 										popup.setContents(new ArrayList<ITaskListNotification>(currentlyNotifying));
 										popup.setBlockOnOpen(false);
-										popup.open();
+										popup.open();										
 										closeJob.setSystem(runSystem);
-										closeJob.schedule(CLOSE_POPUP_DELAY);
+										closeJob.schedule(CLOSE_POPUP_DELAY);										
 										popup.getShell().addShellListener(SHELL_LISTENER);
 									}
 								}
@@ -88,7 +90,7 @@ public final class TaskListNotificationManager {
 
 	};
 
-	private static Job closeJob = new Job(CLOSE_NOTIFICATION_JOB) {
+	private Job closeJob = new Job(CLOSE_NOTIFICATION_JOB) {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
@@ -111,7 +113,7 @@ public final class TaskListNotificationManager {
 
 	};
 
-	private static ShellListener SHELL_LISTENER = new ShellListener() {
+	private ShellListener SHELL_LISTENER = new ShellListener() {
 
 		public void shellClosed(ShellEvent arg0) {
 		}
@@ -136,40 +138,40 @@ public final class TaskListNotificationManager {
 		}
 	};
 
-	private static void cleanNotified() {
+	private void cleanNotified() {
 		 for (ITaskListNotification notification : currentlyNotifying) {
 			notification.setNotified(true);
 		 }
 		currentlyNotifying.clear();
 	}
 
-	private static void collectNotifications() {
+	private void collectNotifications() {
 		for (ITaskListNotificationProvider provider : notificationProviders) {
 			currentlyNotifying.addAll(provider.getNotifications());
 		}		
 	}
 
-	public static void startNotification(long initialStartupTime) {
+	public void startNotification(long initialStartupTime) {
 		openJob.setSystem(runSystem);
 		openJob.schedule(initialStartupTime);
 	}
 
-	public static void stopNotification() {
+	public void stopNotification() {
 		openJob.cancel();
 	}
 
-	public static void addNotificationProvider(ITaskListNotificationProvider notification_provider) {
+	public void addNotificationProvider(ITaskListNotificationProvider notification_provider) {
 		notificationProviders.add(notification_provider);
 	}
 
-	public static void removeNotificationProvider(ITaskListNotificationProvider notification_provider) {
+	public void removeNotificationProvider(ITaskListNotificationProvider notification_provider) {
 		notificationProviders.remove(notification_provider);
 	}
 
 	/**
 	 * public for testing purposes
 	 */
-	public static List<ITaskListNotification> getNotifications() {
+	public List<ITaskListNotification> getNotifications() {
 		synchronized (TaskListNotificationManager.class) {
 			return currentlyNotifying;
 		}

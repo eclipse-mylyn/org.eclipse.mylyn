@@ -9,23 +9,25 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.internal.tasklist.ui;
 
 import java.util.List;
 
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.jface.util.Geometry;
+import org.eclipse.mylar.internal.tasklist.ITaskListNotification;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -41,6 +43,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskListNotificationPopup extends PopupDialog {
 
+	private static final int BUTTON_FONT_SIZE = 7;
+
 	static boolean takeFocusOnOpen = false;
 
 	static boolean persistBounds = false;
@@ -48,8 +52,8 @@ public class TaskListNotificationPopup extends PopupDialog {
 	static boolean showDialogMenu = false;
 
 	static boolean showPersistAction = false;
-	
-	static String titleText;	
+
+	static String titleText;
 
 	static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
 
@@ -63,61 +67,51 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	List<ITaskListNotification> notifications;
 
+	private Composite sectionClient;
+
 	public TaskListNotificationPopup(Shell parent) {
 		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE, takeFocusOnOpen, persistBounds, showDialogMenu,
 				showPersistAction, titleText, infoText);
-
-	}
-
-	protected void adjustBounds() {
-		initializeBounds();
 	}
 
 	public void setContents(List<ITaskListNotification> notifications) {
 		this.notifications = notifications;
 	}
 
-	// try it with eclipse forms
+	protected Control createContents(Composite parent) {
+		getShell().setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		return createDialogArea(parent);
+	}
+
 	protected final Control createDialogArea(final Composite parent) {
 
-		// parent.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		GridLayout parentLayout = new GridLayout();
-		parentLayout.marginHeight = 0;
-		parentLayout.marginWidth = 0;
-		getShell().setText(MYLAR_NOTIFICATION_LABEL);		
-		parent.setLayout(parentLayout);
+		getShell().setText(MYLAR_NOTIFICATION_LABEL);
+
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createForm(parent);
-		
-		GridLayout formLayout = new GridLayout();
-		parentLayout.marginHeight = 0;
-		parentLayout.marginWidth = 0;
-		form.getBody().setLayout(formLayout);
+		form.getBody().setLayout(new GridLayout());
 
 		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 
 		section.setText(MYLAR_NOTIFICATION_LABEL);
 		section.setLayout(new GridLayout());
-		section.setBackground(form.getBody().getDisplay().getSystemColor(SWT.COLOR_WHITE));
 
-		Composite sectionClient = toolkit.createComposite(section);
+		sectionClient = toolkit.createComposite(section);
 		sectionClient.setLayout(new GridLayout());
 		for (final ITaskListNotification notification : notifications) {
 			ImageHyperlink link = toolkit.createImageHyperlink(sectionClient, SWT.WRAP | SWT.TOP);
-			link.setBackground(parent.getBackground());
-			link.setFont(parent.getFont());
 			link.setText(notification.getDescription());
 			link.setImage(notification.getNotificationIcon());
 			link.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
 					notification.setNotified(true);
 					notification.openResource();
-					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();					
-					if(window != null) {
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					if (window != null) {
 						Shell windowShell = window.getShell();
-						if(windowShell != null) {
+						if (windowShell != null) {
 							windowShell.moveAbove(null);
-							windowShell.open();						
+							windowShell.open();
 						}
 					}
 				}
@@ -127,27 +121,49 @@ public class TaskListNotificationPopup extends PopupDialog {
 		section.setClient(sectionClient);
 
 		Composite buttonsComposite = toolkit.createComposite(sectionClient);
-		buttonsComposite.setLayout(new GridLayout(2, false));
-
+		buttonsComposite.setLayout(new RowLayout());
 		Button buttonOpenAll = toolkit.createButton(buttonsComposite, "Open All", SWT.NONE);
+
+		{
+			Font initialFont = buttonOpenAll.getFont();
+			FontData[] fontData = initialFont.getFontData();
+			for (int i = 0; i < fontData.length; i++) {
+				fontData[i].setHeight(BUTTON_FONT_SIZE);
+			}
+			Font newFont = new Font(getShell().getDisplay(), fontData);
+			buttonOpenAll.setFont(newFont);
+		}
 		buttonOpenAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				for (ITaskListNotification notification : notifications) {
 					notification.setNotified(true);
 					notification.openResource();
 				}
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();					
-				if(window != null) {
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (window != null) {
 					Shell windowShell = window.getShell();
-					if(windowShell != null) {
-						windowShell.open();					
+					if (windowShell != null) {
+						windowShell.open();
 					}
 				}
 				close();
 			}
 		});
 
+		RowData buttonOpenAllRowData = new RowData(45, 15);
+		buttonOpenAll.setLayoutData(buttonOpenAllRowData);
+
 		Button buttonDismiss = toolkit.createButton(buttonsComposite, "Close", SWT.NONE);
+
+		{
+			Font initialFont = buttonDismiss.getFont();
+			FontData[] fontData = initialFont.getFontData();
+			for (int i = 0; i < fontData.length; i++) {
+				fontData[i].setHeight(BUTTON_FONT_SIZE);
+			}
+			Font newFont = new Font(getShell().getDisplay(), fontData);
+			buttonDismiss.setFont(newFont);
+		}
 		buttonDismiss.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				for (ITaskListNotification notification : notifications) {
@@ -156,6 +172,9 @@ public class TaskListNotificationPopup extends PopupDialog {
 				close();
 			}
 		});
+
+		RowData buttonDismissRowData = new RowData(30, 15);
+		buttonDismiss.setLayoutData(buttonDismissRowData);
 		// toolkit.paintBordersFor(parent);
 		form.pack();
 		return parent;
@@ -165,40 +184,11 @@ public class TaskListNotificationPopup extends PopupDialog {
 	 * Initialize the shell's bounds.
 	 */
 	public void initializeBounds() {
-		// if we don't remember the dialog bounds then reset
-		// to be the defaults (behaves like inplace outline view)
-		Rectangle oldBounds = restoreBounds();
-		if (oldBounds != null) {
-			getShell().setBounds(oldBounds);
-			return;
-		}
-		Point size = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		Point location = getDefaultLocation(size);
-		getShell().setBounds(new Rectangle(location.x, location.y, size.x, size.y));
-	}
-
-	private Point getDefaultLocation(Point initialSize) {
-		Monitor monitor = getShell().getDisplay().getPrimaryMonitor();
-		if (getShell() != null) {
-			monitor = getShell().getMonitor();
-		}
-
-		Rectangle monitorBounds = monitor.getClientArea();
-		Point centerPoint;
-		if (getShell() != null) {
-			centerPoint = Geometry.centerPoint(getShell().getBounds());
-		} else {
-			centerPoint = Geometry.centerPoint(monitorBounds);
-		}
-
-		return new Point(centerPoint.x - (initialSize.x / 2), Math.max(monitorBounds.y, Math.min(centerPoint.y
-				- (initialSize.y * 2 / 3), monitorBounds.y + monitorBounds.height - initialSize.y)));
+		getShell().setBounds(restoreBounds());
 	}
 
 	private Rectangle restoreBounds() {
-		// bounds = new Rectangle(0,0,150,100);
-		bounds = form.getBounds();// new Rectangle(0, 0, 250, 200);
-
+		bounds = form.getBounds();
 		Rectangle maxBounds = null;
 		if (getShell() != null && !getShell().isDisposed())
 			maxBounds = getShell().getDisplay().getClientArea();

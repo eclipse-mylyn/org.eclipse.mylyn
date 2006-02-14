@@ -68,11 +68,11 @@ public class TaskInputDialog extends Dialog {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
-		GridLayout gl = new GridLayout(4, false);
+		GridLayout gl = new GridLayout(6, false);
 		composite.setLayout(gl);
 		GridData data = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER);
-		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH + 100);
+		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH + 250);
 		composite.setLayoutData(data);
 
 		Label taskNameLabel = new Label(composite, SWT.WRAP);
@@ -80,7 +80,9 @@ public class TaskInputDialog extends Dialog {
 		taskNameLabel.setFont(parent.getFont());
 
 		taskNameTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		taskNameTextWidget.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		GridData taskNameGD = new GridData();//GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
+		taskNameGD.widthHint = 200;
+		taskNameTextWidget.setLayoutData(taskNameGD);
 
 		final Combo c = new Combo(composite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY
 				| SWT.DROP_DOWN);
@@ -99,20 +101,21 @@ public class TaskInputDialog extends Dialog {
 		Label spacer = new Label(composite, SWT.NONE);
 		GridData spacerGD = new GridData();
 		spacerGD.horizontalSpan = 1;
+		spacerGD.widthHint = 5;
 		spacer.setLayoutData(spacerGD);
 		
 		Composite reminderComp = new Composite(composite, SWT.NONE);
 		GridLayout reminderCompGL = new GridLayout(3, false);
 		reminderCompGL.marginHeight = 0;
-		reminderCompGL.marginWidth = 0;
+		reminderCompGL.marginWidth = 0;		
 		reminderComp.setLayout(reminderCompGL);
 		GridData reminderCompGD = new GridData();
-		reminderCompGD.horizontalSpan = 4;		
+		reminderCompGD.horizontalSpan = 1;		
+		reminderCompGD.horizontalAlignment = SWT.RIGHT;
 		reminderComp.setLayoutData(reminderCompGD);
 		Label reminderLabel = new Label(reminderComp, SWT.NONE);	
 		reminderLabel.setText("Reminder Date:");		
 		final DatePicker datePicker = new DatePicker(reminderComp, SWT.BORDER);
-//		datePicker.setDateText("<reminder>");
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {
@@ -125,7 +128,7 @@ public class TaskInputDialog extends Dialog {
 			}
 		});
 		
-		Button removeReminder = new Button(reminderComp, SWT.PUSH | SWT.CENTER);
+		Button removeReminder = new Button(composite, SWT.PUSH | SWT.CENTER);
 		removeReminder.setText("Clear");
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -133,12 +136,6 @@ public class TaskInputDialog extends Dialog {
 				datePicker.setDate(null);				
 			}
 		});
-//
-//		spacer = new Label(composite, SWT.NONE);		
-//		GridData spacer2GD = new GridData();
-//		spacer2GD.horizontalSpan = 2;
-//		spacer.setLayoutData(spacer2GD);
-		
 		
 		Label urlLabel = new Label(composite, SWT.WRAP);
 		urlLabel.setText("Web Link:");
@@ -147,12 +144,13 @@ public class TaskInputDialog extends Dialog {
 		issueURLTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		issueURLTextWidget.setText(getDefaultIssueURL());
 		GridData urlData = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
-		urlData.horizontalSpan = 2;
+		urlData.horizontalSpan = 4;
+		urlData.grabExcessHorizontalSpace = true;
 		issueURLTextWidget.setLayoutData(urlData);
 
 		getDescButton = new Button(composite, SWT.PUSH);
 		getDescButton.setText("Get Description");
-		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		setButtonStatus();
 
 		issueURLTextWidget.addKeyListener(new KeyListener() {

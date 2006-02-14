@@ -28,6 +28,8 @@ import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationManager;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.util.TaskListExtensionReader;
 import org.eclipse.mylar.internal.tasklist.util.TaskListSaveManager;
@@ -58,6 +60,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private TaskListSaveManager taskListSaveManager = new TaskListSaveManager();
 	
 	private TaskListRefreshManager taskListRefreshManager = new TaskListRefreshManager();
+	
+	private TaskListNotificationManager taskListNotificationManager = new TaskListNotificationManager();
 	
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -288,7 +292,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
-					TaskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
+					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);					
 					getPrefs().addPropertyChangeListener(taskListRefreshManager);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
@@ -349,7 +353,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		taskListRefreshManager.startRefreshJob();	
-		TaskListNotificationManager.startNotification(5000);				
+		taskListNotificationManager.startNotification(5000);				
 	}
 
 	@Override
