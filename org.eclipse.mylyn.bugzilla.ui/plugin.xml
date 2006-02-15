@@ -11,11 +11,12 @@
    </extension>
    
    <extension
-         id="org.eclipse.mylar.bugzilla.repository"
+         id="org.eclipse.mylar.bugzilla.repository" 
          name="Bugzilla Repository"
          point="org.eclipse.mylar.tasklist.repositories">
 
-      <repositoryClient
+      <repositoryType
+            brandingIcon="icons/eview16/bugzilla-logo.gif"
             class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient"
             id="org.eclipse.mylar.bugzilla.tasklist.repositories"
             name="Bugzilla Repository Client"

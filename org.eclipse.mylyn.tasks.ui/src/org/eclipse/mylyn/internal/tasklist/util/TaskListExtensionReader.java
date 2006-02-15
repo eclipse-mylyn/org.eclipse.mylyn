@@ -19,12 +19,15 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.ITaskListExternalizer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
+import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Shawn Minto
@@ -34,7 +37,9 @@ public class TaskListExtensionReader {
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories";
 
-	public static final String ELMNT_REPOSITORY_CLIENT = "repositoryClient";
+	public static final String ELMNT_REPOSITORY_CLIENT = "repositoryType";
+
+	public static final String ATTR_BRANDING_ICON = "brandingIcon";
 
 	public static final String ELMNT_TYPE = "type";
 
@@ -72,7 +77,7 @@ public class TaskListExtensionReader {
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 		if (!extensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			
+
 			// HACK: has to be read first
 			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
@@ -84,7 +89,7 @@ public class TaskListExtensionReader {
 					}
 				}
 			}
-			
+
 			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_TASK_CONTRIBUTOR);
 			IExtension[] extensions = extensionPoint.getExtensions();
 			for (int i = 0; i < extensions.length; i++) {
@@ -97,15 +102,17 @@ public class TaskListExtensionReader {
 					}
 				}
 			}
-//			for (int i = 0; i < extensions.length; i++) {
-//				IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-//				for (int j = 0; j < elements.length; j++) {
-//					if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) == 0) {
-//						readRepositoryClient(elements[j]);
-//					}
-//				}
-//			}
-			
+			// for (int i = 0; i < extensions.length; i++) {
+			// IConfigurationElement[] elements =
+			// extensions[i].getConfigurationElements();
+			// for (int j = 0; j < elements.length; j++) {
+			// if (elements[j].getName().compareTo(ELMNT_REPOSITORY_CLIENT) ==
+			// 0) {
+			// readRepositoryClient(elements[j]);
+			// }
+			// }
+			// }
+
 			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
 			IExtension[] editors = editorsExtensionPoint.getExtensions();
 			for (int i = 0; i < editors.length; i++) {
@@ -141,9 +148,20 @@ public class TaskListExtensionReader {
 			Object repository = element.createExecutableExtension(ATTR_CLASS);
 			if (repository instanceof AbstractRepositoryClient && type != null) {
 				MylarTaskListPlugin.getRepositoryManager().addRepositoryClient((AbstractRepositoryClient) repository);
+				
+				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
+				if (iconPath != null) {
+					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getNamespace(),
+							iconPath);
+					if (descriptor != null) {
+						MylarTaskListPlugin.getDefault().getBrandingIcons().put((AbstractRepositoryClient) repository, TaskListImages.getImage(descriptor));
+					}
+				}
+			
 			} else {
 				MylarStatusHandler.log("could not not load extension: " + repository, null);
 			}
+
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
 		}
@@ -169,20 +187,25 @@ public class TaskListExtensionReader {
 		try {
 			Object externalizerObject = element.createExecutableExtension(ATTR_EXTERNALIZER_CLASS);
 			if (externalizerObject instanceof ITaskListExternalizer) {
-				ITaskListExternalizer externalizer = (ITaskListExternalizer)externalizerObject;
+				ITaskListExternalizer externalizer = (ITaskListExternalizer) externalizerObject;
 				externalizers.add((ITaskListExternalizer) externalizer);
 			} else {
-				MylarStatusHandler.log("Could not load externalizer: " + externalizerObject.getClass().getCanonicalName()
-						+ " must implement " + ITaskListExternalizer.class.getCanonicalName(), null);
+				MylarStatusHandler.log("Could not load externalizer: "
+						+ externalizerObject.getClass().getCanonicalName() + " must implement "
+						+ ITaskListExternalizer.class.getCanonicalName(), null);
 			}
 
-//			Object taskHandler = element.createExecutableExtension(ATTR_ACTION_CONTRIBUTOR_CLASS);
-//			if (taskHandler instanceof ITaskHandler) {
-//				MylarTaskListPlugin.getDefault().addTaskHandler((ITaskHandler) taskHandler);
-//			} else {
-//				MylarStatusHandler.log("Could not load contributor: " + taskHandler.getClass().getCanonicalName()
-//						+ " must implement " + ITaskHandler.class.getCanonicalName(), null);
-//			}
+			// Object taskHandler =
+			// element.createExecutableExtension(ATTR_ACTION_CONTRIBUTOR_CLASS);
+			// if (taskHandler instanceof ITaskHandler) {
+			// MylarTaskListPlugin.getDefault().addTaskHandler((ITaskHandler)
+			// taskHandler);
+			// } else {
+			// MylarStatusHandler.log("Could not load contributor: " +
+			// taskHandler.getClass().getCanonicalName()
+			// + " must implement " + ITaskHandler.class.getCanonicalName(),
+			// null);
+			// }
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load task handler extension");
 		}

@@ -13,7 +13,9 @@ package org.eclipse.mylar.internal.tasklist;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -36,6 +38,7 @@ import org.eclipse.mylar.internal.tasklist.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasklist.util.TaskListWriter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -82,6 +85,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private ITaskHighlighter highlighter;
 
 	private static boolean shellActive = true;
+	
+	private Map<AbstractRepositoryClient, Image> brandingIcons = new HashMap<AbstractRepositoryClient, Image>();
 	
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
@@ -563,6 +568,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static TaskRepositoryManager getRepositoryManager() {
 		return taskRepositoryManager;
+	}
+
+	public Map<AbstractRepositoryClient, Image> getBrandingIcons() {
+		return brandingIcons;
 	}
 }
 

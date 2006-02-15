@@ -87,7 +87,7 @@ public abstract class AbstractRepositoryClient {
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
 	public abstract String getKind();
-
+	
 	/**
 	 * @param id
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
