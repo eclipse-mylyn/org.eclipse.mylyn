@@ -407,8 +407,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 			try {
 				Object object = element
 						.createExecutableExtension(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_CLASS);
-				// MylarStatusHandler.log("> reading bridge: " +
-				// object.getClass(), null);
 				if (object instanceof IMylarStructureBridge) {
 					IMylarStructureBridge bridge = (IMylarStructureBridge) object;
 					MylarPlugin.getDefault().internalAddBridge(bridge);
@@ -417,7 +415,6 @@ public class MylarPlugin extends AbstractUIPlugin {
 								.createExecutableExtension(CoreExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
 						if (parent instanceof IMylarStructureBridge) {
 							((IMylarStructureBridge) bridge).setParentBridge(((IMylarStructureBridge) parent));
-							// ((IMylarStructureBridge)parent).addChildBridge(((IMylarStructureBridge)bridge));
 						} else {
 							MylarStatusHandler.log("Could not load parent bridge: "
 									+ parent.getClass().getCanonicalName() + " must implement "
