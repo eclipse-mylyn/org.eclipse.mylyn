@@ -513,7 +513,7 @@ public class TaskInfoEditor extends EditorPart {
 		Label label = toolkit.createLabel(sectionClient, "Reminder:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
-		datePicker = new DatePicker(sectionClient, SWT.NONE);
+		datePicker = new DatePicker(sectionClient, SWT.NONE, "<reminder>");
 
 		Calendar calendar = Calendar.getInstance();
 		if (task.getReminderDate() != null) {

@@ -131,7 +131,7 @@ public class TaskPlannerWizardPage extends WizardPage {
 		dateRadioButton = new Button(reportPeriodGroup, SWT.RADIO | SWT.LEFT | SWT.NO_FOCUS);
 		dateRadioButton.setText("Report start date: ");
 
-		final DatePicker datePicker = new DatePicker(reportPeriodGroup, SWT.BORDER);
+		final DatePicker datePicker = new DatePicker(reportPeriodGroup, SWT.BORDER, "<start date>");
 		datePicker.setEnabled(false);
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {

@@ -71,22 +71,17 @@ public class DatePicker extends Composite {
 	private List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 	
 	SimpleDateFormat simpleDateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.ENGLISH);
-
-	public DatePicker(Composite parent, int style) {
+	
+	private String initialText = "Select Date";
+	
+	public DatePicker(Composite parent, int style, String initialText) {
 		super(parent, style);
+		this.initialText = initialText;
 		initialize();
 	}
 	
 	private void initialize() {
-		GridData dateTextGridData = new org.eclipse.swt.layout.GridData();
-		dateTextGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		dateTextGridData.grabExcessHorizontalSpace = true;
-		dateTextGridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
-
-		GridData pickButtonGridData = new org.eclipse.swt.layout.GridData();
-		pickButtonGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
-		pickButtonGridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
-
+	
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		gridLayout.horizontalSpacing = 0;
@@ -96,12 +91,16 @@ public class DatePicker extends Composite {
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
 
-		setSize(new org.eclipse.swt.graphics.Point(135, 19));
+		setSize(new org.eclipse.swt.graphics.Point(120, 19));
 		
 		simpleDateFormat.applyPattern("MM/dd/yy h:mm aa");
 		dateText = new Text(this, SWT.NONE);
-		dateText.setLayoutData(dateTextGridData);
 		
+		GridData dateTextGridData = new org.eclipse.swt.layout.GridData();
+		dateTextGridData.widthHint = 95;	
+		
+		dateText.setLayoutData(dateTextGridData);
+		dateText.setText(initialText);
 		dateText.addFocusListener(new FocusListener() {
 //			DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(currentDate));
 			
@@ -126,6 +125,8 @@ public class DatePicker extends Composite {
 		
 		
 		pickButton = new Button(this, SWT.ARROW | SWT.DOWN);
+		GridData pickButtonGridData = new org.eclipse.swt.layout.GridData();
+		pickButtonGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
 		pickButton.setLayoutData(pickButtonGridData);
 		pickButton.addSelectionListener(new SelectionListener() {
 
@@ -163,12 +164,12 @@ public class DatePicker extends Composite {
 	private void showDatePicker(int x, int y) {
 		pickerShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP);
 		pickerShell.setText("Shell");
-		pickerShell.setLayout(new FillLayout());
-		datePickerPanel = new DatePickerPanel(pickerShell, SWT.NONE);
+		pickerShell.setLayout(new FillLayout());		
 		if (date == null) {
 			date = new GregorianCalendar();
 		}
-		datePickerPanel.setDate(date);
+//		datePickerPanel.setDate(date);
+		datePickerPanel = new DatePickerPanel(pickerShell, SWT.NONE, date);
 		pickerShell.setSize(new Point(240, 180));
 		pickerShell.setLocation(new Point(x, y));
 
@@ -206,7 +207,9 @@ public class DatePicker extends Composite {
 			dateText.setText(simpleDateFormat.format(currentDate));
 			//DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(currentDate));
 		} else {
-			dateText.setText("");
+			dateText.setEnabled(false);
+			dateText.setText(initialText);
+			dateText.setEnabled(true);
 		}
 	}
 
@@ -234,14 +237,17 @@ public class DatePicker extends Composite {
 
 		private Label[] calendarLabels = null;
 
-		public DatePickerPanel(Composite parent, int style) {
+		public DatePickerPanel(Composite parent, int style, Calendar initialDate) {
 			super(parent, style);
+			this.date = initialDate;
 			initialize();
 			updateCalendar();
 		}
 
 		private void initialize() {
-			date = new GregorianCalendar();
+			if(date == null) { 
+				date = new GregorianCalendar();
+			}
 			dateFormatSymbols = new DateFormatSymbols();
 			calendarLabels = new Label[42];
 			GridLayout gridLayout = new GridLayout();

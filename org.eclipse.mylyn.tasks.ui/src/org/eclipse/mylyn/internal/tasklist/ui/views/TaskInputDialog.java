@@ -68,11 +68,11 @@ public class TaskInputDialog extends Dialog {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
-		GridLayout gl = new GridLayout(6, false);
+		GridLayout gl = new GridLayout(5, false);
 		composite.setLayout(gl);
 		GridData data = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER);
-		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH + 250);
+		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH + 180);
 		composite.setLayoutData(data);
 
 		Label taskNameLabel = new Label(composite, SWT.WRAP);
@@ -80,8 +80,9 @@ public class TaskInputDialog extends Dialog {
 		taskNameLabel.setFont(parent.getFont());
 
 		taskNameTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		GridData taskNameGD = new GridData();//GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
+		GridData taskNameGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
 		taskNameGD.widthHint = 200;
+		taskNameGD.horizontalSpan = 1; 
 		taskNameTextWidget.setLayoutData(taskNameGD);
 
 		final Combo c = new Combo(composite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY
@@ -98,24 +99,24 @@ public class TaskInputDialog extends Dialog {
 			}
 		});
 
-		Label spacer = new Label(composite, SWT.NONE);
-		GridData spacerGD = new GridData();
-		spacerGD.horizontalSpan = 1;
-		spacerGD.widthHint = 5;
-		spacer.setLayoutData(spacerGD);
-		
-		Composite reminderComp = new Composite(composite, SWT.NONE);
-		GridLayout reminderCompGL = new GridLayout(3, false);
-		reminderCompGL.marginHeight = 0;
-		reminderCompGL.marginWidth = 0;		
-		reminderComp.setLayout(reminderCompGL);
-		GridData reminderCompGD = new GridData();
-		reminderCompGD.horizontalSpan = 1;		
-		reminderCompGD.horizontalAlignment = SWT.RIGHT;
-		reminderComp.setLayoutData(reminderCompGD);
-		Label reminderLabel = new Label(reminderComp, SWT.NONE);	
-		reminderLabel.setText("Reminder Date:");		
-		final DatePicker datePicker = new DatePicker(reminderComp, SWT.BORDER);
+//		Label spacer = new Label(composite, SWT.NONE);
+//		GridData spacerGD = new GridData();
+//		spacerGD.horizontalSpan = 1;
+////		spacerGD.widthHint = 5;
+//		spacer.setLayoutData(spacerGD);
+//		
+//		Composite reminderComp = new Composite(composite, SWT.NONE);
+//		GridLayout reminderCompGL = new GridLayout(3, false);
+//		reminderCompGL.marginHeight = 0;
+//		reminderCompGL.marginWidth = 0;		
+//		reminderComp.setLayout(reminderCompGL);
+//		GridData reminderCompGD = new GridData();
+//		reminderCompGD.horizontalSpan = 1;		
+//		reminderCompGD.horizontalAlignment = SWT.RIGHT;
+//		reminderComp.setLayoutData(reminderCompGD);
+//		Label reminderLabel = new Label(reminderComp, SWT.NONE);	
+//		reminderLabel.setText("Reminder Date:");		
+		final DatePicker datePicker = new DatePicker(composite, SWT.BORDER, "<reminder>");
 		datePicker.addPickerSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (datePicker.getDate() != null) {
@@ -133,9 +134,17 @@ public class TaskInputDialog extends Dialog {
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				datePicker.setDate(null);				
+				datePicker.setDate(null);
+				reminderDate = null;
 			}
 		});
+		
+//		
+//		datePicker.setLayout(new GridLayout());
+//		GridData datePickerGD = new GridData();
+//		datePickerGD.widthHint = 300;
+//		datePicker.setLayoutData(datePickerGD);
+		
 		
 		Label urlLabel = new Label(composite, SWT.WRAP);
 		urlLabel.setText("Web Link:");
@@ -144,7 +153,7 @@ public class TaskInputDialog extends Dialog {
 		issueURLTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		issueURLTextWidget.setText(getDefaultIssueURL());
 		GridData urlData = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
-		urlData.horizontalSpan = 4;
+		urlData.horizontalSpan = 3;
 		urlData.grabExcessHorizontalSpace = true;
 		issueURLTextWidget.setLayoutData(urlData);
 
