@@ -66,7 +66,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 
 	public static final String ATTRIBUTE_OS = "OS";
 
-	public static final String ATTRIBUTE_MILESTONE = "target_milestone";
+	public static final String ATTRIBUTE_MILESTONE = "Target Milestone";
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -323,7 +323,6 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 
 		nbm.setDescription(descriptionText.getText());
 		nbm.setSummary(summaryText.getText());
-		nbm.setTargetMilestone(milestoneCombo.getItem(milestoneCombo.getSelectionIndex()));
 		
 		// go through each of the attributes and sync their values with the
 		// combo boxes
@@ -737,7 +736,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			String bugzillaOS = null; // Bugzilla String for OS
 			String bugzillaPlatform = null; // Bugzilla String for Platform
 
-			if (java2buzillaOSMap.containsKey(OS)) {
+			if (java2buzillaOSMap.containsKey(OS) && opSysAttribute.getOptionValues() != null) {
 				bugzillaOS = java2buzillaOSMap.get(OS);
 				if (!opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
 					// If the OS we found is not in the list of available

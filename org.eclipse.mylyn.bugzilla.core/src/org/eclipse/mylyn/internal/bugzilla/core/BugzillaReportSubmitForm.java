@@ -228,6 +228,8 @@ public class BugzillaReportSubmitForm {
 					value = a.getValue();
 				} else if (key.equalsIgnoreCase("Priority")) {
 					value = a.getValue();
+				} else if (key.equalsIgnoreCase("Target Milestone")) {
+					value = a.getValue();
 				} else if (key.equalsIgnoreCase("URL")) {
 					value = a.getValue();
 				} else if (key.equalsIgnoreCase("Assign To") || key.equalsIgnoreCase("Assigned To")) {
@@ -249,8 +251,6 @@ public class BugzillaReportSubmitForm {
 
 		// add the summary to the bug post
 		form.add("short_desc", model.getSummary());
-
-		form.add("target_milestone", model.getTargetMilestone());
 
 		if (BugzillaPlugin.getDefault().isServerCompatability220()) {
 			form.add("bug_status", "NEW");
