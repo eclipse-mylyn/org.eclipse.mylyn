@@ -47,6 +47,24 @@ public class BugReport implements Serializable, IBugzillaBug {
 
 	public static final String VAL_STATUS_NEW = "NEW";
 
+	public static final String KEY_MILESTONE = "target_milestone";
+
+	public static final String ATTRIBUTE_URL = "URL";
+
+	public static final String ATTRIBUTE_PRIORITY = "Priority";
+
+	public static final String ATTRIBUTE_COMPONENT = "Component";
+
+	public static final String ATTRIBUTE_VERSION = "Version";
+
+	public static final String ATTRIBUTE_PLATFORM = "Platform";
+
+	public static final String ATTRIBUTE_MILESTONE = "Target Milestone";
+
+	public static final String ATTRIBUTE_OS = "OS";
+
+	public static final String ATTRIBUTE_SEVERITY = "Severity";
+	
 	private static final long serialVersionUID = 3258693199936631348L;
 
 	/** Bug id */
@@ -95,14 +113,6 @@ public class BugReport implements Serializable, IBugzillaBug {
 
 	protected String charset = null;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            The id of the bug
-	 * @param server
-	 *            The server that this bug is being created for
-	 */
 	public BugReport(int id, String server) {
 		this.id = id;
 		this.repositoryUrl = server;

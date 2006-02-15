@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.bugzilla.core.Attribute;
+import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
@@ -49,24 +50,6 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
  * @author Mik Kersten (hardening of initial prototype)
  */
 public abstract class AbstractWizardDataPage extends WizardPage implements Listener {
-
-	private static final String KEY_MILESTONE = "target_milestone";
-
-	public static final String ATTRIBUTE_URL = "URL";
-
-	public static final String ATTRIBUTE_PRIORITY = "Priority";
-
-	public static final String ATTRIBUTE_COMPONENT = "Component";
-
-	public static final String ATTRIBUTE_SEVERITY = "Severity";
-
-	public static final String ATTRIBUTE_VERSION = "Version";
-
-	public static final String ATTRIBUTE_PLATFORM = "Platform";
-
-	public static final String ATTRIBUTE_OS = "OS";
-
-	public static final String ATTRIBUTE_MILESTONE = "Target Milestone";
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -334,28 +317,28 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			try {
 				if (values == null)
 					values = new HashMap<String, String>();
-				if (key.equals(ATTRIBUTE_OS)) {
+				if (key.equals(BugReport.ATTRIBUTE_OS)) {
 					String os = oSCombo.getItem(oSCombo.getSelectionIndex());
 					attribute.setValue(os);
-				} else if (key.equals(ATTRIBUTE_VERSION)) {
+				} else if (key.equals(BugReport.ATTRIBUTE_VERSION)) {
 					String version = versionCombo.getItem(versionCombo.getSelectionIndex());
 					attribute.setValue(version);
-				} else if (key.equals(ATTRIBUTE_SEVERITY)) {
+				} else if (key.equals(BugReport.ATTRIBUTE_SEVERITY)) {
 					String severity = severityCombo.getItem(severityCombo.getSelectionIndex());
 					attribute.setValue(severity);
-				} else if (key.equals(ATTRIBUTE_PLATFORM)) {
+				} else if (key.equals(BugReport.ATTRIBUTE_PLATFORM)) {
 					String platform = platformCombo.getItem(platformCombo.getSelectionIndex());
 					attribute.setValue(platform);
-				} else if (key.equals(ATTRIBUTE_MILESTONE)) {
+				} else if (key.equals(BugReport.ATTRIBUTE_MILESTONE)) {
 					String milestone = milestoneCombo.getItem(milestoneCombo.getSelectionIndex());
 					attribute.setValue(milestone);
-				} else if (key.equals(ATTRIBUTE_COMPONENT)) {
+				} else if (key.equals(BugReport.ATTRIBUTE_COMPONENT)) {
 					String component = componentCombo.getItem(componentCombo.getSelectionIndex());
 					attribute.setValue(component);
-				} else if (key.equals(ATTRIBUTE_PRIORITY)) {
+				} else if (key.equals(BugReport.ATTRIBUTE_PRIORITY)) {
 					String priority = priorityCombo.getItem(priorityCombo.getSelectionIndex());
 					attribute.setValue(priority);
-				} else if (key.equals(ATTRIBUTE_URL)) {
+				} else if (key.equals(BugReport.ATTRIBUTE_URL)) {
 					String url = urlText.getText();
 					if (url.equalsIgnoreCase("http://"))
 						url = "";
@@ -514,7 +497,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 					index = 0;
 				platformCombo.select(index);
 				platformCombo.addListener(SWT.Modify, this);
-			} else if (key.equals(KEY_MILESTONE)) {				
+			} else if (key.equals(BugReport.KEY_MILESTONE)) {				
 				newLayout(attributesComposite, 1, name, PROPERTY);
 				milestoneCombo = new Combo(attributesComposite, SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
 						| SWT.READ_ONLY);
@@ -586,7 +569,7 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 		
 		if (url != null) {
 			// add the assigned to text field			
-			newLayout(textComposite, 1, ATTRIBUTE_URL, PROPERTY);
+			newLayout(textComposite, 1, BugReport.ATTRIBUTE_URL, PROPERTY);
 			urlText = new Text(textComposite, SWT.BORDER | SWT.SINGLE | SWT.WRAP);
 			summaryTextData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
@@ -727,8 +710,8 @@ public abstract class AbstractWizardDataPage extends WizardPage implements Liste
 			// Get OS
 			// Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
-			Attribute opSysAttribute = newBugModel.getAttribute(ATTRIBUTE_OS);
-			Attribute platformAttribute = newBugModel.getAttribute(ATTRIBUTE_PLATFORM);
+			Attribute opSysAttribute = newBugModel.getAttribute(BugReport.ATTRIBUTE_OS);
+			Attribute platformAttribute = newBugModel.getAttribute(BugReport.ATTRIBUTE_PLATFORM);
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();

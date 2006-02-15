@@ -47,6 +47,10 @@ public class BugzillaImages {
 
 	public static final ImageDescriptor OPEN = create("", "openresult.gif");
 
+	public static final ImageDescriptor OVERLAY_MAJOR = create(T_VIEW, "overlay-blocker.gif");
+
+	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif");
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

@@ -97,11 +97,16 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-	/**
-	 * @return Returns the bugReport.
-	 */
 	public BugReport getBugReport() {
 		return bugReport;
+	}
+	
+	public String getKind() {
+		if (bugReport != null) {
+			return bugReport.getAttribute(BugReport.ATTRIBUTE_SEVERITY).getValue();
+		} else {
+			return null;
+		}
 	}
 
 	/**

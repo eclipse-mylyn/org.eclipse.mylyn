@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.core.internal.NewBugParser;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.AbstractWizardDataPage;
@@ -43,33 +44,33 @@ public class NewBugWizardTest extends TestCase {
 
 		String os = Platform.getOS();
 		if (os.equals("win32"))
-			assertEquals("Windows All", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+			assertEquals("Windows All", model.getAttribute(BugReport.ATTRIBUTE_OS).getValue());
 		else if (os.equals("solaris"))
-			assertEquals("Solaris", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+			assertEquals("Solaris", model.getAttribute(BugReport.ATTRIBUTE_OS).getValue());
 		else if (os.equals("qnx"))
-			assertEquals("QNX-Photon", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+			assertEquals("QNX-Photon", model.getAttribute(BugReport.ATTRIBUTE_OS).getValue());
 		else if (os.equals("macosx"))
-			assertEquals("MacOS X", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+			assertEquals("MacOS X", model.getAttribute(BugReport.ATTRIBUTE_OS).getValue());
 		else if (os.equals("linux"))
-			assertEquals("Linux", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+			assertEquals("Linux", model.getAttribute(BugReport.ATTRIBUTE_OS).getValue());
 		else if (os.equals("hpux"))
-			assertEquals("HP-UX", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+			assertEquals("HP-UX", model.getAttribute(BugReport.ATTRIBUTE_OS).getValue());
 		else if (os.equals("aix"))
-			assertEquals("AIX", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_OS).getValue());
+			assertEquals("AIX", model.getAttribute(BugReport.ATTRIBUTE_OS).getValue());
 
 		String platform = Platform.getOSArch();
 		if (platform.equals("x86"))
-			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+			assertEquals("PC", model.getAttribute(BugReport.ATTRIBUTE_PLATFORM).getValue());
 		else if (platform.equals("x86_64"))
-			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+			assertEquals("PC", model.getAttribute(BugReport.ATTRIBUTE_PLATFORM).getValue());
 		else if (platform.equals("ia64"))
-			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+			assertEquals("PC", model.getAttribute(BugReport.ATTRIBUTE_PLATFORM).getValue());
 		else if (platform.equals("ia64_32"))
-			assertEquals("PC", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+			assertEquals("PC", model.getAttribute(BugReport.ATTRIBUTE_PLATFORM).getValue());
 		else if (platform.equals("sparc"))
-			assertEquals("Sun", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+			assertEquals("Sun", model.getAttribute(BugReport.ATTRIBUTE_PLATFORM).getValue());
 		else if (platform.equals("ppc"))
-			assertEquals("Power", model.getAttribute(AbstractWizardDataPage.ATTRIBUTE_PLATFORM).getValue());
+			assertEquals("Power", model.getAttribute(BugReport.ATTRIBUTE_PLATFORM).getValue());
 
 	}
 
