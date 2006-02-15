@@ -40,13 +40,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				}
 			} 
 		} else if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
-			if (repositoryTask.isPersistentInWorkspace()) {
-				decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
-			} else {
-				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
-			}
-			 
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;			 
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				decoration.addOverlay(TaskListImages.OVERLAY_OUTGOING, IDecoration.TOP_RIGHT);
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {

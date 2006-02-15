@@ -58,8 +58,6 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 				|| forceBackgroundSave) {
 			try {
 				saveTaskListAndContexts();
-				// MylarStatusHandler.log("Automatically saved task list",
-				// this);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not auto save task list", false);
 			}

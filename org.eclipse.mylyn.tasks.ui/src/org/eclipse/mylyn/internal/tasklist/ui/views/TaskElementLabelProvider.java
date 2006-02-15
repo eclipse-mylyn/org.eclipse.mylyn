@@ -52,7 +52,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
-			return TaskListImages.getImage(TaskListImages.TASK);
+			if (((AbstractRepositoryTask)element).isPersistentInWorkspace()) {
+				return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
+			} else {
+				return TaskListImages.getImage(TaskListImages.TASK_WEB);
+			}
 		} else if (element instanceof ITask) {
 			ITask task = (ITask)element;
 			String url = task.getUrl();
