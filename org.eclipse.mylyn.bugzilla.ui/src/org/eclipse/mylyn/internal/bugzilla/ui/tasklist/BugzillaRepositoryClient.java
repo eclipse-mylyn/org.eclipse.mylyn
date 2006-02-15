@@ -62,6 +62,7 @@ import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.ExistingTaskWizardPage;
@@ -224,15 +225,15 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	}
 
 	private BugReport downloadReport(final BugzillaTask bugzillaTask) {
-		try {
+		try {			
 			return BugzillaRepositoryUtil.getBug(bugzillaTask.getRepositoryUrl(), TaskRepositoryManager
 					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
-		} catch (LoginException e) {
+		} catch (final LoginException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
+				public void run() {					
 					MessageDialog
 							.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-									"The bugzilla report failed to be downloaded since your username or password is incorrect.");
+									"Ensure proper repository configuration in "+TaskRepositoriesView.NAME+".");
 				}
 			});
 		} catch (IOException e) {

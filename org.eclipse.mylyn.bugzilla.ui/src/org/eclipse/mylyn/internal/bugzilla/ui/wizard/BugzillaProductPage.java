@@ -27,16 +27,18 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugModel;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Shawn Minto
@@ -166,9 +168,14 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				// bugWizard.model.setParsedProductsStatus(true);
 				// }
 			} catch (Exception e) {
-				bugWizard.model.setConnected(false);
-				MylarStatusHandler.fail(e, "Unable to get products, possibly due to Bugzilla version incompatability",
-						true);
+				bugWizard.model.setConnected(false);						
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {					
+						MessageDialog
+								.openError(Display.getDefault().getActiveShell(), "New Bugzilla Task Error",
+										"Unable to get products. Ensure proper repository configuration in "+TaskRepositoriesView.NAME+".");
+					}
+				});
 			}
 		}
 	}
@@ -227,8 +234,16 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 					bugWizard.getAttributePage().setControl(null);
 				}
 			}
-		} catch (Exception e) {
-			BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred.", "Bugzilla Error");
+		} catch (final Exception e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(), "New Bugzilla Task Error", e
+							.getLocalizedMessage()
+							+ " Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
+				}
+			});			
+//			MylarStatusHandler.fail(e, e.getLocalizedMessage()+" Ensure proper repository configuration in "+TaskRepositoriesView.NAME+".", true);			
+//			BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e, "occurred.", "Bugzilla Error");
 		}
 		return super.getNextPage();
 	}

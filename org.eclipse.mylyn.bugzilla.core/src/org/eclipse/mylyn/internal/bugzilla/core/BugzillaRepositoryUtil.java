@@ -212,6 +212,14 @@ public class BugzillaRepositoryUtil {
 
 			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getRepository(
 					BugzillaPlugin.REPOSITORY_KIND, serverUrl);
+			
+			if(repository == null) {
+				throw new LoginException("Repository configuration error.");		
+			}
+			if(repository.getUserName() == null || repository.getUserName().trim().equals("") || repository.getPassword() == null) {
+				throw new LoginException("Login credentials missing.");					
+			}			
+			
 			String url = repository.getUrl().toExternalForm() + "/enter_bug.cgi";
 
 			// use the proper url if we dont know the product yet
