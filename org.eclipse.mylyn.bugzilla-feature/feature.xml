@@ -4,7 +4,7 @@
       label="Mylar Connector: Bugzilla"
       version="0.4.8.v20060215-0800"
       provider-name="Eclipse.org"
-      plugin="org.eclipse.mylar.bugzilla.core">
+      plugin="org.eclipse.mylar">
 
    <description>
       Bugzilla client integrated with Eclipse and Mylar, can be used standalone.
