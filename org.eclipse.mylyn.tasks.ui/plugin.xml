@@ -43,6 +43,21 @@
     </extension> 
 
 
+   <extension point="org.eclipse.ui.decorators">
+      <decorator
+            class="org.eclipse.mylar.internal.tasklist.ui.RepositoryTaskDecorator"
+            id="org.eclipse.mylar.tasklist.ui.decorator.repositories"
+            label="Mylar Repository Task Decorator"
+            lightweight="true"
+            objectClass="org.eclipse.mylar.internal.tasklist.ITaskListElement"
+            state="true">
+         <description>
+			Mylar JIRA Task Decorator
+		 </description>
+      </decorator>
+   </extension>
+   
+
    <extension
          point="org.eclipse.ui.views">
       <view

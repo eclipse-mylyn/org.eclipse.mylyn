@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
@@ -21,7 +22,6 @@ import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
@@ -31,60 +31,48 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskElementLabelProvider extends LabelProvider implements IColorProvider {
+public class TaskElementLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		Image image = null;
 		if (element instanceof TaskCategory) {
 			TaskCategory category = (TaskCategory) element;
 			if (category.isArchive()) {
-				image = TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
+				return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
 			} else {
-				image = TaskListImages.getImage(TaskListImages.CATEGORY);
+				return TaskListImages.getImage(TaskListImages.CATEGORY);
 			}
 		} else if (element instanceof AbstractRepositoryQuery) {
-			image = TaskListImages.getImage(TaskListImages.QUERY);
+			return TaskListImages.getImage(TaskListImages.QUERY);
 		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit)element;
 			if (hit.getCorrespondingTask() != null) {
-				image = getImage(hit.getCorrespondingTask());
+				return getImage(hit.getCorrespondingTask());
 			} else {
-				image = TaskListImages.getImage(TaskListImages.TASK_REMOTE);
+				return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-				image = TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_OUTGOING);
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-				image = TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_INCOMMING);
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-				image = TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_CONFLICT);
-			} else {
-				image = TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
-			}
+			return TaskListImages.getImage(TaskListImages.TASK);
 		} else if (element instanceof ITask) {
 			ITask task = (ITask)element;
 			String url = task.getUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
-				image = TaskListImages.getImage(TaskListImages.TASK_WEB);
+				return TaskListImages.getImage(TaskListImages.TASK_WEB);
 			} else {
-				image = TaskListImages.getImage(TaskListImages.TASK);
+				return TaskListImages.getImage(TaskListImages.TASK);
 			}
-		}
-		return image;
+		} 
+		return null;
 	}
 
 	@Override
 	public String getText(Object object) {
-		String text = "";
 		if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
-			text = element.getDescription();
+			return element.getDescription();
 		} else {
-			text = super.getText(object);
-		}
-		return text; 
+			return super.getText(object);
+		} 
 	}
 
 	public Color getForeground(Object object) {

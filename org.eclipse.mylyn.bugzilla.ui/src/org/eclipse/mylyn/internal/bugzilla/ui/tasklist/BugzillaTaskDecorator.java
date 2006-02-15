@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 
 /**
  * @author Mik Kersten
@@ -22,9 +21,10 @@ import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 public class BugzillaTaskDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
-		if (element instanceof BugzillaRepositoryQuery) {
-			decoration.addOverlay(BugzillaImages.OVERLAY_BUGZILLA, IDecoration.TOP_RIGHT);
-		} else if (element instanceof BugzillaQueryHit) {
+//		if (element instanceof BugzillaRepositoryQuery) {
+//			decoration.addOverlay(BugzillaImages.OVERLAY_BUGZILLA, IDecoration.TOP_RIGHT);
+//		} else 
+		if (element instanceof BugzillaQueryHit) {
 //			BugzillaQueryHit hit = (BugzillaQueryHit)element;
 //			if (hit.getCorrespondingTask() != null) {
 //				ITask task = hit.getCorrespondingTask();

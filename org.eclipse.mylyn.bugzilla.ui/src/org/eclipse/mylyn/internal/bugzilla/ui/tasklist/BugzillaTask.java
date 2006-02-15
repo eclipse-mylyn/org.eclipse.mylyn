@@ -31,12 +31,6 @@ import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
  */
 public class BugzillaTask extends AbstractRepositoryTask {
 
-//	public enum BugzillaTaskState {
-//		FREE, DOWNLOADING
-//	}
-
-//	private BugzillaTaskState bugzillaTaskState;
-
 	/**
 	 * The bug report for this BugzillaTask. This is <code>null</code> if the
 	 * bug report with the specified ID was unable to download.
@@ -125,14 +119,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-//	/**
-//	 * @param bugzillaTaskState
-//	 *            The bugzillaTaskState to set.
-//	 */
-//	public void setBugzillaTaskState(BugzillaTaskState state) {
-//		this.bugzillaTaskState = state;
-//	}
-
 	public boolean isDirty() {
 		return isDirty;
 	}
@@ -142,13 +128,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		// MylarTaskListPlugin.getTaskListManager().notifyTaskChanged(this);
 		// notifyTaskDataChange();
 	}
-
-//	/**
-//	 * @return Returns the bugzillaTaskState of the Bugzilla task.
-//	 */
-//	public BugzillaTaskState getBugzillaTaskState() {
-//		return bugzillaTaskState;
-//	}
 
 	/**
 	 * @return <code>true</code> if the bug report for this BugzillaTask was
@@ -162,21 +141,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	public String toString() {
 		return "bugzilla report id: " + getHandleIdentifier();
 	}
-
-//	@Override
-//	public Image getIcon() {
-//		if (syncState == RepositoryTaskSyncState.SYNCHRONIZED) {
-//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
-//		} else if (syncState == RepositoryTaskSyncState.OUTGOING) {
-//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_OUTGOING);
-//		} else if (syncState == RepositoryTaskSyncState.INCOMING) {
-//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_INCOMMING);
-//		} else if (syncState == RepositoryTaskSyncState.CONFLICT) {
-//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_CONFLICT);
-//		} else {
-//			return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
-//		}
-//	}
 
 	@Override
 	public boolean isCompleted() {
@@ -194,18 +158,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(getRepositoryUrl(), TaskRepositoryManager
 				.getTaskIdAsInt(handle));
 	}
-
-//	@Override
-//	public Font getFont() {
-//		Font f = super.getFont();
-//		if (f != null)
-//			return f;
-//
-//		if (isCurrentlyDownloading() || bugReport == null) {
-//			return TaskListImages.ITALIC;
-//		}
-//		return null;
-//	}
 
 	@Override
 	public Date getCompletionDate() {
@@ -232,111 +184,9 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getPriority();
 		}
 	}
+
+	@Override
+	public boolean isPersistentInWorkspace() {
+		return true;
+	}
 }
-
-//public void scheduleDownloadReport() {
-//GetBugReportJob job = new GetBugReportJob(PROGRESS_LABEL_DOWNLOAD);
-//job.schedule();
-//}
-//public Job getRefreshJob() {
-//if (isDirty() || (bugzillaTaskState != BugzillaTaskState.FREE)) {
-//	return null;
-//}
-//GetBugReportJob job = new GetBugReportJob("Refreshing Bugzilla Reports...");
-//return job;
-//}
-
-// @Override
-// public void openTaskInEditor(boolean offline) {
-// openTask(-1, offline);
-// }
-
-// /**
-// * Opens this task's bug report in an editor revealing the selected
-// comment.
-// *
-// * @param commentNumber
-// * The comment number to reveal
-// */
-// public void openTask(int commentNumber, boolean offline) {
-// OpenBugTaskJob job = new OpenBugTaskJob("Opening Bugzilla task in
-// editor...", this, offline);
-// job.schedule();
-// }
-
-//public void updateTaskDetails() {
-//try {
-//	// if (bugReport == null)
-//	// bugReport = downloadReport();
-//	// if (bugReport == null)
-//	// return;
-//	if (bugReport != null) {
-//
-//		this.setDescription(HtmlStreamTokenizer.unescape(TaskRepositoryManager
-//				.getTaskIdAsInt(getHandleIdentifier())
-//				+ ": " + bugReport.getSummary()));
-//	}
-//} catch (NullPointerException npe) {
-//	MylarStatusHandler.fail(npe, "Task details update failed", false);
-//}
-//}
-
-// private void openTaskEditor(final BugzillaTaskEditorInput input, final
-// boolean offline) {
-//
-// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-// public void run() {
-// try {
-// // if we can reach the server, get the latest for the bug
-// if (!isBugDownloaded() && offline) {
-// MessageDialog.openInformation(null, "Unable to open bug",
-// "Unable to open the selected bugzilla task since you are currently
-// offline");
-// return;
-// } else if (!isBugDownloaded() && syncState != RepositoryTaskSyncState.OUTGOING
-// && syncState != RepositoryTaskSyncState.CONFLICT) {
-// input.getBugTask().downloadReport();
-// input.setOfflineBug(input.getBugTask().getBugReport());
-// } else if (syncState == RepositoryTaskSyncState.OUTGOING || syncState ==
-// RepositoryTaskSyncState.CONFLICT) {
-// input.setOfflineBug(bugReport);
-// }
-//
-// // get the active workbench page
-// IWorkbenchPage page =
-// MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-// .getActivePage();
-// if (page == null)
-// return;
-// page.openEditor(input, BUGZILLA_EDITOR_ID);
-//
-// if (syncState == RepositoryTaskSyncState.INCOMMING) {
-// syncState = RepositoryTaskSyncState.OK;
-// Display.getDefault().asyncExec(new Runnable() {
-// public void run() {
-// if (TaskListView.getDefault() != null &&
-// TaskListView.getDefault().getViewer() != null
-// && !TaskListView.getDefault().getViewer().getControl().isDisposed()) {
-// TaskListView.getDefault().getViewer().refresh();
-// }
-// }
-// });
-// } else if (syncState == RepositoryTaskSyncState.CONFLICT) {
-// syncState = RepositoryTaskSyncState.OUTGOING;
-// Display.getDefault().asyncExec(new Runnable() {
-// public void run() {
-// if (TaskListView.getDefault() != null &&
-// TaskListView.getDefault().getViewer() != null
-// && !TaskListView.getDefault().getViewer().getControl().isDisposed()) {
-// TaskListView.getDefault().getViewer().refresh();
-// }
-// }
-// });
-// }
-// } catch (Exception ex) {
-// MylarStatusHandler.log(ex, "couldn't open bugzilla task");
-// return;
-// }
-// }
-// });
-// }

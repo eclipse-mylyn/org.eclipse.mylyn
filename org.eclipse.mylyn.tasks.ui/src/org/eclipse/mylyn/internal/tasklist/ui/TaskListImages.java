@@ -50,8 +50,10 @@ public class TaskListImages {
 
 	private static final String T_ELCL = "elcl16";
 
+	private static final String T_EVIEW = "eview16";
+		
 	private static final String T_TOOL = "etool16";
-
+	
 	private static final URL baseURL = MylarTaskListPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
@@ -92,12 +94,14 @@ public class TaskListImages {
 
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 
-	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_ELCL, "overlay-incoming.gif");
+	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
 
-	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_ELCL, "overlay-outgoing.gif");
+	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_EVIEW, "overlay-outgoing.gif");
 
-	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_ELCL, "overlay-conflicting.gif");
+	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_EVIEW, "overlay-conflicting.gif");
 
+	public static final ImageDescriptor OVERLAY_REPOSITORY = create(T_EVIEW, "overlay-repository.gif");
+	
 	public static final ImageDescriptor TASK_REPOSITORY_INCOMMING = createWithOverlay(TASK_REPOSITORY,
 			OVERLAY_INCOMMING, true, false);
 
