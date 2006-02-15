@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.core.MylarPlugin;
@@ -68,18 +69,8 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	public void saveTaskListAndContexts() {
 		if (MylarTaskListPlugin.getDefault() != null) {
 			MylarTaskListPlugin.getTaskListManager().saveTaskList();
-			for (ITask task : MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks()) {
-				// String path = task.getContextPath();
-				// File file =
-				// MylarPlugin.getContextManager().getFileForContext(task.getContextPath());
-				// if (!file.canWrite()) {
-				// MylarStatusHandler.fail(new Exception(), "could not write
-				// context path, resetting: " + path, true);
-				// task.setContextPath(task.getHandleIdentifier());
-				// path = task.getHandleIdentifier();
-				// }
-				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());// ,
-				// path);
+			for (ITask task : new ArrayList<ITask>(MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTasks())) {
+				MylarPlugin.getContextManager().saveContext(task.getHandleIdentifier());
 			}
 		}
 	}

@@ -241,6 +241,7 @@ public class TaskListToolTipHandler {
 				if (tipShell.getShell() != null && tipShell.getShell().getParent() != null
 						&& Display.getCurrent().getActiveShell() != null
 						&& tipShell.getShell().getParent() != Display.getCurrent().getActiveShell()) {
+					tipShell.close();					
 					tipShell = createTipShell(Display.getCurrent().getActiveShell());
 				}
 
