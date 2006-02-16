@@ -781,8 +781,8 @@ public class TaskListView extends ViewPart {
 		if (!MylarTaskListPlugin.getDefault().isInitialized()) {
 			MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
 					"Mylar Task List failed to initialize.\n\n" +
-					"See the Error Log view for details, and the FAQ at\n" +
-					URL_HOMEPAGE + " for solutions."); 
+					"See the Error Log view for details, and the FAQ for solutions.\n\n" +
+					URL_HOMEPAGE);  
 		}
 		
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
