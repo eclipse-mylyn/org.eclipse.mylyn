@@ -24,6 +24,8 @@ public interface ITaskEditorFactory {
 	public IEditorPart createEditor(MylarTaskEditor parentEditor);
 
 	public IEditorInput createEditorInput(ITask task);
+	
+	public boolean providesOutline();
 
 	public String getTitle();
 

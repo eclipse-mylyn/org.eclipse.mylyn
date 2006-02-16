@@ -65,6 +65,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 
 	private List<IEditorPart> editors = new ArrayList<IEditorPart>();
 
+	private IEditorPart contentOutlineProvider = null;
+		
 	private static class TaskEditorSelectionProvider extends MultiPageSelectionProvider {
 		private ISelection globalSelection;
 
@@ -123,6 +125,10 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 							selectedIndex = index;
 							setPageText(index++, factory.getTitle());
 						}
+						// HACK: overwrites if multiple present
+						if (factory.providesOutline()) {
+							contentOutlineProvider = editor;
+						}
 					} catch (Exception e) {
 						MylarStatusHandler.fail(e, "Could not create editor via factory: " + factory, true);
 					}
@@ -146,6 +152,16 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		}
 	}
 
+	@Override
+	public Object getAdapter(Class adapter) {
+		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) && 
+		if (contentOutlineProvider != null) {
+			return contentOutlineProvider.getAdapter(adapter);
+		} else {
+			return super.getAdapter(adapter);
+		}
+	}
+	
 	public IEditorPart getActiveEditor() {
 		return super.getActiveEditor();
 	}
@@ -205,7 +221,6 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 	private boolean hasValidUrl() {
 		return task.getUrl().length() > 9;
 	}
-
 	
 	/**
 	 * Saves the multi-page editor's document as another file. Also updates the
