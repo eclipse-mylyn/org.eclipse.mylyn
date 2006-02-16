@@ -64,9 +64,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListSaveManager taskListSaveManager = new TaskListSaveManager();
 	
-	private TaskListRefreshManager taskListRefreshManager = new TaskListRefreshManager();
+	private TaskListRefreshManager taskListRefreshManager;
 	
-	private TaskListNotificationManager taskListNotificationManager = new TaskListNotificationManager();
+	private TaskListNotificationManager taskListNotificationManager;
 	
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -87,6 +87,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	private ITaskHighlighter highlighter;
 
 	private static boolean shellActive = true;
+	
+	private boolean initialized = false;
 	
 	private Map<AbstractRepositoryClient, Image> brandingIcons = new HashMap<AbstractRepositoryClient, Image>();
 	
@@ -246,12 +248,9 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 	public MylarTaskListPlugin() {
 		super();
 		INSTANCE = this;
-		// List<ITaskListExternalizer> externalizers = new
-		// ArrayList<ITaskListExternalizer>();
 
 		try {
 			initializeDefaultPreferences(getPrefs());
-
 			taskListWriter = new TaskListWriter();
 
 			String path = MylarPlugin.getDefault().getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
@@ -260,10 +259,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			// TODO: decouple from core
 			int nextTaskId = 1;
 			if (MylarPlugin.getDefault() != null
-					&& MylarPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.TASK_ID)) { // TODO:
-				// fix
-				// to
-				// MylarTaskListPlugin
+					&& MylarPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.TASK_ID)) {
 				nextTaskId = MylarPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.TASK_ID);
 			}
 
@@ -271,7 +267,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			taskRepositoryManager = new TaskRepositoryManager();
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
-		}
+		} 
 	}
 
 	/**
@@ -288,7 +284,6 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					taskListManager.addListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 					taskListManager.addListener(taskListSaveManager);
 
-					// restoreTaskHandlerState();
 					taskListManager.readExistingOrCreateNewList();
 					migrateHandlesToRepositorySupport();
 
@@ -299,16 +294,49 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					}
 
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(SHELL_LISTENER);
+					
+					taskListNotificationManager = new TaskListNotificationManager();
 					taskListNotificationManager.addNotificationProvider(NOTIFICATION_PROVIDER);
+					taskListNotificationManager.startNotification(5000);	
+					
+					taskListRefreshManager = new TaskListRefreshManager();
+					taskListRefreshManager.startRefreshJob();	
+					
 					MylarPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);					
 					getPrefs().addPropertyChangeListener(taskListRefreshManager);
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().addDisposeListener(
 							taskListSaveManager);
+//					initialized = true;
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Task List initialization failed", true);
 				}
 			}
 		});
+	}
+
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		INSTANCE = null;
+		resourceBundle = null;
+		try {
+			taskListManager.removeListener(taskListSaveManager);
+			if (MylarPlugin.getDefault() != null) {
+				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+			}
+			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().isClosing()) {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeDisposeListener(
+						taskListSaveManager);
+			}
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Mylar Task List stop failed", false);
+		}
 	}
 
 	private void migrateHandlesToRepositorySupport() {
@@ -355,34 +383,7 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 			getPreferenceStore().setValue(TaskListPreferenceConstants.CONTEXTS_MIGRATED, true);
 		}
 	}
-
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		taskListRefreshManager.startRefreshJob();	
-		taskListNotificationManager.startNotification(5000);				
-	}
-
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		INSTANCE = null;
-		resourceBundle = null;
-		try {
-			taskListManager.removeListener(taskListSaveManager);
-			if (MylarPlugin.getDefault() != null) {
-				MylarPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
-			}
-			if (PlatformUI.getWorkbench() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().isClosing()) {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(SHELL_LISTENER);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().removeDisposeListener(
-						taskListSaveManager);
-			}
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar Task List stop failed", false);
-		}
-	}
-
+	
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 //		store.setDefault(TaskListPreferenceConstants.AUTO_MANAGE_EDITORS, true);
@@ -574,6 +575,10 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public Map<AbstractRepositoryClient, Image> getBrandingIcons() {
 		return brandingIcons;
+	}
+
+	public boolean isInitialized() {
+		return initialized;
 	}
 }
 

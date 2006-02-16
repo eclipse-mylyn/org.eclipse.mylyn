@@ -6,7 +6,7 @@
     <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
 
    <extension
-         name="Mylar Task List Startup"
+         name="Mylar Task List Startup (required)"
          point="org.eclipse.ui.startup">
    </extension>
 
@@ -49,11 +49,13 @@
             id="org.eclipse.mylar.tasklist.ui.decorator.repositories"
             label="Mylar Repository Task Decorator"
             lightweight="true"
-            objectClass="org.eclipse.mylar.internal.tasklist.ITaskListElement"
             state="true">
          <description>
 			Mylar JIRA Task Decorator
 		 </description>
+         <enablement>
+            <objectClass name="org.eclipse.mylar.internal.tasklist.ITaskListElement"/>
+         </enablement>
       </decorator>
    </extension>
    

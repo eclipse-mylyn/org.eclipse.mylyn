@@ -102,9 +102,12 @@ public class TaskListManager {
 		return true;
 	}
 
+	/**
+	 * Will not save an empty task list to avoid losing data on bad startup.
+	 */
 	public void saveTaskList() {
 		try {
-			if (taskListInitialized) {
+			if (taskListInitialized && taskList.getAllTasks().size() > 0) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
 				MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID, nextTaskId);
 			} else {
