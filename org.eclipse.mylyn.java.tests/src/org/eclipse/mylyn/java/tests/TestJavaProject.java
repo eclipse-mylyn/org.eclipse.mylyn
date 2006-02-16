@@ -25,10 +25,10 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -156,7 +156,7 @@ public class TestJavaProject {
 		// Plugin p = Platform.getPlugin(plugin);
 		URL pluginURL = plugin.getBundle().getEntry("/");
 		URL jarURL = new URL(pluginURL, file);
-		URL localJarURL = Platform.asLocalURL(jarURL);
+		URL localJarURL = FileLocator.toFileURL(jarURL);//Platform.asLocalURL(jarURL);
 		return new Path(localJarURL.getPath());
 	}
 
