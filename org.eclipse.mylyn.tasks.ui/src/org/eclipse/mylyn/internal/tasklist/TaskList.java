@@ -166,6 +166,18 @@ public class TaskList implements Serializable {
 		return activeTasks;
 	}
 
+	/**
+	 * HACK: returns first
+	 * @return
+	 */
+	public ITask getActiveTask() {
+		if (activeTasks.size() > 0) {
+			return activeTasks.get(0);
+		} else {
+			return null;
+		}
+	}
+	
 	public List<ITask> getRootTasks() {
 		return rootTasks;
 	}
@@ -269,10 +281,7 @@ public class TaskList implements Serializable {
 		return foundHit;
 	}
 
-	// public void clearActiveTasks() {
-	// for (ITask task : activeTasks) {
-	// task.setActive(false);
-	// }
-	// activeTasks.clear();
-	// }
+	public boolean isEmpty() {
+		return getAllTasks().size() == 0 && getCategories().size() == 0 && getQueries().size() == 0;
+	}
 }

@@ -18,10 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
@@ -283,19 +280,8 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 		public void partActivated(IWorkbenchPart part) {
 			if (part.equals(MylarTaskEditor.this)) {
 				ITask task = taskEditorInput.getTask();
-				AbstractQueryHit hit = null;
-				MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(task.getHandleIdentifier());
-
 				if (TaskListView.getDefault() != null) {
-					Viewer viewer = TaskListView.getDefault().getViewer();
-					viewer.setSelection(new StructuredSelection(task));
-					// if no task exists, select the query hit if exists
-					if (viewer.getSelection().isEmpty()
-							&& (hit = MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(
-									task.getHandleIdentifier())) != null) {
-						viewer.setSelection(new StructuredSelection(hit));
-					}
-					viewer.refresh();
+					TaskListView.getDefault().setSelectedTask(task);
 				}
 			}
 		}

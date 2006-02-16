@@ -249,6 +249,10 @@ public class TaskListView extends ViewPart {
 
 		public void tasklistRead() {
 			refresh(null);
+			ITask activeTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+			if (activeTask != null && getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
+				getViewer().setSelection(new StructuredSelection(activeTask), true);
+			}
 		}
 
 		public void taskListModified() {
@@ -825,17 +829,9 @@ public class TaskListView extends ViewPart {
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setContentProvider(new TaskListContentProvider(this));
-//		TaskListTableLabelProvider labelProvider = new TaskListTableLabelProvider(parent.getBackground());
-//		labelProvider.setBackgroundColor(parent.getBackground());
-//		getViewer().setLabelProvider(labelProvider);
-//		TableDecoratingLabelProvider
-
 		getViewer().setLabelProvider(new TaskListTableLabelProvider(new TaskElementLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground()));
 		
-//		getViewer().setLabelProvider(new DecoratingLabelProvider(labelProvider,
-//				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-				
 		getViewer().setInput(getViewSite());
 
 		getViewer().getTree().addKeyListener(new KeyListener() {
@@ -858,26 +854,6 @@ public class TaskListView extends ViewPart {
 			}
 
 		});
-
-		// HACK: to support right click anywhere to select an item
-		// getViewer().getTree().addMouseListener(new MouseListener() {
-		//
-		// public void mouseDoubleClick(MouseEvent e) {
-		// }
-		//
-		// public void mouseDown(MouseEvent e) {
-		// Tree t = getViewer().getTree();
-		// TreeItem item = t.getItem(new Point(e.x, e.y));
-		// if (e.button == 3 && item != null) {
-		// getViewer().setSelection(new StructuredSelection(item.getData()));
-		// } else if (item == null) {
-		// getViewer().setSelection(new StructuredSelection());
-		// }
-		// }
-		//
-		// public void mouseUp(MouseEvent e) {
-		// }
-		// });
 
 		// HACK: shouldn't need to update explicitly
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
@@ -1383,5 +1359,19 @@ public class TaskListView extends ViewPart {
 
 	public FilteredTree getFilteredTree() {
 		return filteredTree;
+	}
+
+
+	public void setSelectedTask(ITask task) {
+		if (task == null) return;
+		getViewer().setSelection(new StructuredSelection(task));
+		// if no task exists, select the query hit if exists
+		AbstractQueryHit hit = null;
+		if (getViewer().getSelection().isEmpty()
+				&& (hit = MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(
+						task.getHandleIdentifier())) != null) {
+			getViewer().setSelection(new StructuredSelection(hit));
+		}
+//		viewer.refresh();
 	}
 }

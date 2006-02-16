@@ -126,6 +126,13 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(task.getPlans().get(0).equals("default"));
 	}
 
+	public void testEmpty() {
+		TaskList list = new TaskList();
+		assertTrue(list.isEmpty());
+		list.internalAddRootTask(new Task("", "", true));
+		assertFalse(list.isEmpty()); 
+	}
+	
 	public void testQueryExternalization() {
 		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
 		assertEquals("repositoryUrl", query.getRepositoryUrl());

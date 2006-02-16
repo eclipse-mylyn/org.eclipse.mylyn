@@ -117,7 +117,7 @@ public class TaskListManager {
 		}
 		
 		try {
-			if (taskListInitialized && taskList.getAllTasks().size() > 0) {
+			if (taskListInitialized && !taskList.isEmpty()) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
 				MylarPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID, nextTaskId);
 			} else {
