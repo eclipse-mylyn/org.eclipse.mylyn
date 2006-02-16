@@ -26,8 +26,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
 /**
@@ -202,7 +202,7 @@ public class FileTool {
 	public static File getFileInPlugin(Plugin plugin, IPath path) {
 		try {
 			URL installURL = plugin.getBundle().getEntry(path.toString());
-			URL localURL = Platform.asLocalURL(installURL);
+			URL localURL = FileLocator.toFileURL(installURL);//Platform.asLocalURL(installURL);
 			return new File(localURL.getFile());
 		} catch (IOException e) {
 			return null;

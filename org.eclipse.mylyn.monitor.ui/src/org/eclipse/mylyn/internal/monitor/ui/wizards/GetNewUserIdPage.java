@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.monitor.ui.wizards;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -139,7 +140,7 @@ public class GetNewUserIdPage extends WizardPage {
 			URL url = Platform.getBundle(MylarMonitorPlugin.getDefault().getCustomizingPlugin()).getEntry(
 					MylarMonitorPlugin.getDefault().getStudyParameters().getFormsConsent());
 			try {
-				URL localURL = Platform.asLocalURL(url);
+				URL localURL = FileLocator.toFileURL(url);//Platform.asLocalURL(url);
 				browser.setUrl(localURL.toString());
 			} catch (Exception e) {
 				browser.setText("Feedback description could not be located.");
