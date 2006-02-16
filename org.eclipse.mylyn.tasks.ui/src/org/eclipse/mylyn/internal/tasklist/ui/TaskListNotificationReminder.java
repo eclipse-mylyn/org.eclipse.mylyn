@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.tasklist.ui;
 
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskListNotification;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskElementLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;

@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.tasklist.ui;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.mylar.internal.tasklist.ITaskListNotification;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

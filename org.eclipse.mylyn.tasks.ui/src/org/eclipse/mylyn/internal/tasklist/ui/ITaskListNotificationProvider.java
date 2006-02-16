@@ -9,19 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasklist;
+package org.eclipse.mylar.internal.tasklist.ui;
 
-import org.eclipse.swt.graphics.Image;
+import java.util.List;
 
-/**
- * @author Rob Elves
- */
-public interface ITaskListNotification {
+
+public interface ITaskListNotificationProvider {
+
+	List<ITaskListNotification> getNotifications();
 	
-	public void openResource();
-	public String getDescription();
-	public String getToolTip();
-	public Image getNotificationIcon();
-	public void setNotified(boolean notified);
-	public boolean isNotified();
 }

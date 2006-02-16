@@ -30,6 +30,8 @@ import org.eclipse.mylar.internal.tasklist.planner.TaskReportGenerator;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasklist.ui.ITaskHighlighter;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskListNotification;
+import org.eclipse.mylar.internal.tasklist.ui.ITaskListNotificationProvider;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
