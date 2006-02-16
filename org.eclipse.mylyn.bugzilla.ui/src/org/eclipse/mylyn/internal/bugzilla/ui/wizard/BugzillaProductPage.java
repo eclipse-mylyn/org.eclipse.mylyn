@@ -47,6 +47,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BugzillaProductPage extends AbstractWizardListPage {
 
+	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
+
 	private static final String TITLE = "New Bugzilla Task";
 
 	private static final String DESCRIPTION = "Pick a product on which to enter a bug.\n"
@@ -172,7 +174,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {					
 						MessageDialog
-								.openError(Display.getDefault().getActiveShell(), "New Bugzilla Task Error",
+								.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
 										"Unable to get products. Ensure proper repository configuration in "+TaskRepositoriesView.NAME+".");
 					}
 				});
@@ -237,7 +239,7 @@ public class BugzillaProductPage extends AbstractWizardListPage {
 		} catch (final Exception e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault().getActiveShell(), "New Bugzilla Task Error", e
+					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE, e
 							.getLocalizedMessage()
 							+ " Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
 				}

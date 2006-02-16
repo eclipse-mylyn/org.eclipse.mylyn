@@ -427,11 +427,14 @@ public class BugzillaReportSubmitForm {
 				error += aString == null ? "" : aString + "\n";
 
 				// // check if we have run into an error
+				
+				
 				if (result == null
 						&& (aString.toLowerCase().indexOf("check e-mail") != -1 || aString.toLowerCase().indexOf(
-								"error") != -1)) {
-					// error handling is now passed up
-					// throw new LoginException("Bugzilla login problem");
+								"error") != -1)) {					
+					 throw new LoginException("Bugzilla login problem.");
+				} else if (aString.indexOf("Invalid Username Or Password") != -1) {
+					throw new LoginException("Invalid Username or Password.");
 				} else if (aString.toLowerCase().matches(".*bug\\s+processed.*") // TODO:
 						// make
 						// this

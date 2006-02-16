@@ -464,7 +464,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 								} else if (throwable.getCause() instanceof LoginException) {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Bugzilla could not post your bug since your login name or password is incorrect."
-													+ "\nPlease check your settings in the bugzilla preferences. ");
+													+ " Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".");
 								} else {
 									MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 											"Could not post bug.  Check repository credentials and connectivity.");
