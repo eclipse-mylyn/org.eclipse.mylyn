@@ -7,6 +7,34 @@
 		<li>Search via search page</li>
 	</ul>
 		</li>
+		<li>New Bug submission (invalid credentials)<ul>
+		<li>Remove username and password from a repository configuration in the 
+		Task Repositories view</li>
+		<li>Initiate new repository task action</li>
+		<li>Select repository with missing credentials</li>
+		<li>After product selection user is presented with dialog:<ul>
+		<li>Login credentials missing. Ensure proper repository configuration in 
+		Task Repositories view.</li>
+	</ul></li>
+	</ul></li>
+		<li>New Bug submission (invalid password)<ul>
+		<li>Make repository password invalid in Task Repositories view.</li>
+		<li>Initiate new repository task action.</li>
+		<li>Select repository with invalid password</li>
+		<li>Dialog: Unable to get products.&nbsp; Ensure 
+		proper repository configuration in Task Repositories view.</li>
+	</ul></li>
+		<li>Submission of changes to existing bug with invalid repository 
+		credentials<ul>
+		<li>Mylar Bugzilla Client Dialog: Bugzilla could not post your bug since your login name or password is incorrect.
+		Ensure proper repository configuration in Task Repositories view.</li>
+	</ul>
+		</li>
+		<li>Synchronize Reports (invalid userid and password)<ul>
+		<li>Report Download Failed Dialog: Ensure proper repository 
+		configuration in Task Repositories view.</li>
+	</ul>
+		</li>
 		<li>Product configuration catching<ul>
 		<li>Run new bug wizard</li>
 		<li>Restart, rerun, products should appear immediately</li>
