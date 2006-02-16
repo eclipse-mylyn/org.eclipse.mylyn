@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="Mylar Connector: Bugzilla"
-      version="0.4.8.v20060215-1300"
+      version="0.4.8.v20060215-1930"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -214,61 +214,47 @@ litigation.
    </url>
 
    <requires>
+      <import feature="org.eclipse.mylar_feature" version="0.4.8.v20060215-1930"/>
       <import plugin="org.eclipse.ui" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.search" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.ide" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.views" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jface.text" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.pde.ui" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.editors" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.update.core"/>
       <import plugin="org.eclipse.update.ui"/>
+      <import plugin="org.eclipse.ui.views" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.jface.text" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.team.ui"/>
       <import plugin="org.eclipse.team.cvs.ui"/>
-      <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.editors" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.team.cvs.core"/>
+      <import plugin="org.eclipse.mylar.core"/>
+      <import plugin="org.eclipse.mylar.tasklist"/>
    </requires>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="0.4.8.v20060215-1300"
+         version="0.4.8.v20060215-1930"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="0.4.8.v20060215-1300"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylar.core"
-         download-size="0"
-         install-size="0"
-         version="0.4.8.v20060215-1300"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylar.tasklist"
-         download-size="0"
-         install-size="0"
-         version="0.4.8.v20060215-1300"
+         version="0.4.8.v20060215-1930"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugs"
          download-size="0"
          install-size="0"
-         version="0.4.8.v20060215-1300"
+         version="0.4.8.v20060215-1930"
          unpack="false"/>
 
 </feature>
