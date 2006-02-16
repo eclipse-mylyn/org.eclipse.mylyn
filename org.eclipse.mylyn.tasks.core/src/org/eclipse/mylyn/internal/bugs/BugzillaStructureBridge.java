@@ -108,7 +108,7 @@ public class BugzillaStructureBridge implements IMylarStructureBridge {
 			}
 			if (editorPart != null && editorPart instanceof AbstractBugEditor) {
 				AbstractBugEditor abe = ((AbstractBugEditor) editorPart);
-				BugzillaOutlineNode node = abe.getModel();
+				BugzillaOutlineNode node = abe.getOutlineModel();
 				return findNode(node, commentNumber);
 			}
 

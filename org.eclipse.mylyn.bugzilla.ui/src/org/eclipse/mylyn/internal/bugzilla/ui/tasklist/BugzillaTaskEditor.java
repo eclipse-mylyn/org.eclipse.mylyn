@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaAttributeListener;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.AbstractBugEditor;
+import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaOutlineNode;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.ExistingBugEditor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasklist.ui.editors.MylarTaskEditor;
@@ -29,10 +30,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
- * @author Eric Booth
  * @author Mik Kersten
  */
 public class BugzillaTaskEditor extends MylarTaskEditor {
@@ -49,9 +48,9 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 
 	private BugzillaTaskEditorInput bugzillaEditorInput;
 
-	// private TaskInfoEditor taskSummaryEditor = new TaskInfoEditor();
-
-	protected IContentOutlinePage outlinePage = null;
+//	private BugzillaOutlinePage outlinePage = null;
+	
+//	protected BugzillaOutlineNode bugzillaOutlineModel = null;
 
 	private IBugzillaAttributeListener ATTRIBUTE_LISTENER = new IBugzillaAttributeListener() {
 		public void attributeChanged(String attribute, String value) {
@@ -87,10 +86,6 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		return bugzillaEditor;
 	}
 
-	// public TaskInfoEditor getTaskEditor(){
-	// return taskSummaryEditor;
-	// }
-
 	public void gotoMarker(IMarker marker) {
 		// don't do anything
 	}
@@ -106,15 +101,6 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		setPageText(index, EDITOR_TAB_ITLE);
 	}
 
-	// private void createSummaryPage() {
-	// try{
-	// int index = addPage(taskSummaryEditor, new TaskEditorInput(bugTask));
-	// setPageText(index, "Summary");
-	// }catch(Exception e){
-	// MylarPlugin.log(e, "summary failed");
-	// }
-	// }
-
 	/**
 	 * Creates the pages of the multi-page editor.
 	 */
@@ -122,7 +108,6 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 	protected void createPages() {
 		createBugzillaSubmitPage();
 		super.createPages();
-		// createSummaryPage();
 	}
 
 	/**
@@ -147,7 +132,6 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		firePropertyChange(PROP_DIRTY);
 	}
 
-	@SuppressWarnings( { "deprecation", "deprecation" })
 	@Override
 	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
 		if (!(editorInput instanceof BugzillaTaskEditorInput))
@@ -155,7 +139,7 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		super.init(site, (IEditorInput) new TaskEditorInput(((BugzillaTaskEditorInput) editorInput).getBugTask()));
 		bugzillaEditorInput = (BugzillaTaskEditorInput) editorInput;
 		bugTask = bugzillaEditorInput.getBugTask();
-
+		bugzillaEditor.setBugzillaOutlineModel(BugzillaOutlineNode.parseBugReport(bugzillaEditorInput.getBug()));
 		offlineBug = bugzillaEditorInput.getOfflineBug();
 
 		super.setSite(site);
@@ -222,6 +206,23 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 		setPartName(prefix + "Bug #" + bugzillaEditorInput.getBugId());
 	}
 
+
+//	@Override
+//	public Object getAdapter(Class adapter) {
+//		if (IContentOutlinePage.class.equals(adapter)) {
+//			if (outlinePage == null && bugzillaEditorInput != null) {
+//				outlinePage = new BugzillaOutlinePage(bugzillaOutlineModel);
+//			}
+//			return outlinePage;
+//		}
+//		return super.getAdapter(adapter);
+//	}
+	
+	@Override
+	public Object getAdapter(Class adapter) {
+		return bugzillaEditor.getAdapter(adapter);
+	}
+	
 	// /**
 	// * Class to listen for editor events
 	// */
@@ -276,11 +277,6 @@ public class BugzillaTaskEditor extends MylarTaskEditor {
 							+ " could not be read from the server.  Try refreshing the bug task.");
 			return;
 		}
-	}
-
-	@Override
-	public Object getAdapter(Class adapter) {
-		return bugzillaEditor.getAdapter(adapter);
 	}
 
 	public void close() {

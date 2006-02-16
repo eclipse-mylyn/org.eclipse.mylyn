@@ -123,6 +123,8 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	protected AbstractBugEditorInput bugzillaInput;
 
 	private MylarTaskEditor parentEditor = null;
+	
+	protected BugzillaOutlineNode bugzillaOutlineModel = null;
 
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
@@ -1569,17 +1571,15 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 	public Object getAdapter(Class adapter) {
 		if (IContentOutlinePage.class.equals(adapter)) {
 			if (outlinePage == null && bugzillaInput != null) {
-				outlinePage = new BugzillaOutlinePage(model);
+				outlinePage = new BugzillaOutlinePage(bugzillaOutlineModel);
 			}
 			return outlinePage;
 		}
 		return super.getAdapter(adapter);
 	}
 
-	protected BugzillaOutlineNode model = null;
-
-	public BugzillaOutlineNode getModel() {
-		return model;
+	public BugzillaOutlineNode getOutlineModel() {
+		return bugzillaOutlineModel;
 	}
 
 	public BugzillaOutlinePage getOutline() {
@@ -1616,5 +1616,13 @@ public abstract class AbstractBugEditor extends EditorPart implements Listener {
 
 	public void setParentEditor(MylarTaskEditor parentEditor) {
 		this.parentEditor = parentEditor;
+	}
+
+	public BugzillaOutlineNode getBugzillaOutlineModel() {
+		return bugzillaOutlineModel;
+	}
+
+	public void setBugzillaOutlineModel(BugzillaOutlineNode bugzillaOutlineModel) {
+		this.bugzillaOutlineModel = bugzillaOutlineModel;
 	}
 }

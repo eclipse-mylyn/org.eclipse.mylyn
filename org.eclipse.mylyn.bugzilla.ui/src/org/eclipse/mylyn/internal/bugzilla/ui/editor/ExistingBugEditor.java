@@ -133,7 +133,8 @@ public class ExistingBugEditor extends AbstractBugEditor {
 		setSite(site);
 		setInput(input);
 		bugzillaInput = editorInput;
-		model = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
+		bugzillaOutlineModel = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
+		
 		bug = editorInput.getBug();
 		restoreBug();
 		isDirty = false;

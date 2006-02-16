@@ -274,7 +274,7 @@ public class NewBugEditor extends AbstractBugEditor {
 		setSite(site);
 		setInput(input);
 		bugzillaInput = ei;
-		model = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
+		bugzillaOutlineModel = BugzillaOutlineNode.parseBugReport(bugzillaInput.getBug());
 		bug = ei.getBug();
 		newSummary = bug.getSummary();
 		newDescription = bug.getDescription();

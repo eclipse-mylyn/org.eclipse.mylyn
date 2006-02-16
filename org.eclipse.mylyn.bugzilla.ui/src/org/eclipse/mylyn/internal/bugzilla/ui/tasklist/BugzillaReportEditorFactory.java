@@ -28,7 +28,7 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 	private static final String REPOSITORY_INFO = "Bugzilla";
 
 	public void notifyEditorActivationChange(IEditorPart editor) {
-
+		// ignore
 	}
 
 	public EditorPart createEditor(MylarTaskEditor parentEditor) {
@@ -66,41 +66,11 @@ public class BugzillaReportEditorFactory implements ITaskEditorFactory {
 		return REPOSITORY_INFO;
 	}
 
-//	private class GetBugzillaReportJob extends Job {
-//
-//		private static final String LABEL = "Download Bugzilla Report";
-//
-//		protected BugzillaTask bugzillaTask;
-//
-//		private BugzillaTaskEditorInput editorInput = null;
-//
-//		public GetBugzillaReportJob(BugzillaTask bugzillaTask) {
-//			super(LABEL);
-//			this.bugzillaTask = bugzillaTask;
-//		}
-//
-//		@Override
-//		protected IStatus run(IProgressMonitor monitor) {
-//			try {
-//				boolean offline = bugzillaTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
-//						|| bugzillaTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
-//
-//				editorInput = new BugzillaTaskEditorInput(bugzillaTask, offline);
-//				// openTaskEditor(input, offline);
-//				return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "", null);
-//			} catch (Exception e) {
-//				MylarStatusHandler.fail(e, "Unable to open Bug report: "
-//						+ TaskRepositoryManager.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()), true);
-//			}
-//			return Status.CANCEL_STATUS;
-//		}
-//
-//		public BugzillaTaskEditorInput getEditorInput() {
-//			return editorInput;
-//		}
-//	}
-
 	public boolean canCreateEditorFor(ITask task) {
 		return task instanceof BugzillaTask;
+	}
+
+	public boolean providesOutline() {
+		return true;
 	}
 }
