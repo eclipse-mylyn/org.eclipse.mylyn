@@ -122,39 +122,40 @@ public class BugzillaPlugin extends AbstractUIPlugin {
 
 	@SuppressWarnings("unchecked")
 	private void migrateOldAuthenticationData() {
-		String serverUrl = BugzillaPlugin.getDefault().getPreferenceStore().getString("BUGZILLA_SERVER");
-		String user = "";
-		String password = "";
-		Map<String, String> map = Platform.getAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
-				BugzillaPreferencePage.AUTH_SCHEME);
-
-		// get the information from the map and save it
-		if (map != null && !map.isEmpty()) {
-			String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
-			if (username != null)
-				user = username;
-
-			String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
-			if (pwd != null)
-				password = pwd;
-		}
-
+		String OLD_PREF_SERVER = "BUGZILLA_SERVER";
+		String serverUrl = BugzillaPlugin.getDefault().getPreferenceStore().getString(OLD_PREF_SERVER);
 		if (serverUrl != null && serverUrl.trim() != "") {
+			String user = "";
+			String password = "";
+			Map<String, String> map = Platform.getAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
+					BugzillaPreferencePage.AUTH_SCHEME);
+
+			// get the information from the map and save it
+			if (map != null && !map.isEmpty()) {
+				String username = map.get(BugzillaPreferencePage.INFO_USERNAME);
+				if (username != null)
+					user = username;
+
+				String pwd = map.get(BugzillaPreferencePage.INFO_PASSWORD);
+				if (pwd != null)
+					password = pwd;
+			}
 			TaskRepository repository;
 			try {
 				repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, new URL(serverUrl));
 				repository.setAuthenticationCredentials(user, password);
 				MylarTaskListPlugin.getRepositoryManager().addRepository(repository);
+				BugzillaPlugin.getDefault().getPreferenceStore().setValue(OLD_PREF_SERVER, "");  
 			} catch (MalformedURLException e) {
 				MylarStatusHandler.fail(e, "could not create default repository", true);
 			}
-		}
-		try {
-			// reset the authorization
-			Platform.addAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
-					BugzillaPreferencePage.AUTH_SCHEME, new HashMap<String, String>());
-		} catch (CoreException e) {
-			// ignore
+			try {
+				// reset the authorization
+				Platform.addAuthorizationInfo(BugzillaPreferencePage.FAKE_URL, "Bugzilla",
+						BugzillaPreferencePage.AUTH_SCHEME, new HashMap<String, String>());
+			} catch (CoreException e) {
+				// ignore
+			}
 		}
 	}
 

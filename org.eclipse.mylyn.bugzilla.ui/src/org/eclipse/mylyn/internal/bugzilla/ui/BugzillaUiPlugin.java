@@ -22,10 +22,6 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
-//	private BugzillaTaskListManager bugzillaTaskListManager;
-
-//	private BugzillaRefreshManager bugzillaRefreshManager;
-
 	private static BugzillaUiPlugin plugin;
 
 	public BugzillaUiPlugin() {
@@ -69,11 +65,4 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.internal.bugzilla.ui", path);
 	}
 
-//	public BugzillaTaskListManager getBugzillaTaskListManager() {
-//		return bugzillaTaskListManager;
-//	}
-
-//	public BugzillaRefreshManager getBugzillaRefreshManager() {
-//		return bugzillaRefreshManager;
-//	}
 }
