@@ -25,7 +25,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -42,7 +41,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.dt.MylarWebRef;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
@@ -54,7 +52,6 @@ import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
-import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskCompleteFilter;
@@ -113,8 +110,6 @@ import org.eclipse.ui.part.ViewPart;
  * @author Ken Sueda
  */
 public class TaskListView extends ViewPart {
-
-	private static final String URL_HOMEPAGE = "http://eclipse.org/mylar";
 
 	private static final String SEPARATOR_LOCAL = "local";
 
@@ -778,13 +773,6 @@ public class TaskListView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		if (!MylarTaskListPlugin.getDefault().isInitialized()) {
-			MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
-					"Mylar Task List failed to initialize.\n\n" +
-					"See the Error Log view for details, and the FAQ for solutions.\n\n" +
-					URL_HOMEPAGE);  
-		}
-		
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
 				| SWT.HIDE_SELECTION, new TaskListPatternFilter());
 		filteredTree.setInitialText("");

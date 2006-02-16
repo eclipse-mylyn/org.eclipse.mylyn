@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.TimerThread;
@@ -87,8 +88,9 @@ public class TaskListManager {
 				createNewTaskList();
 			}
 			taskListInitialized = true;
-			for (ITaskActivityListener listener : listeners)
+			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(listeners)) {
 				listener.tasklistRead();
+			}
 			// only activate the first task to avoid confusion of mutliple
 			// active tasks on startup
 			List<ITask> activeTasks = taskList.getActiveTasks();
@@ -106,6 +108,14 @@ public class TaskListManager {
 	 * Will not save an empty task list to avoid losing data on bad startup.
 	 */
 	public void saveTaskList() {
+		if (!MylarTaskListPlugin.getDefault().isInitialized()) {
+			MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
+					"Mylar Task List failed to initialize.\n\n" +
+					"See the Error Log view for details, and the FAQ for solutions.\n\n" +
+					MylarTaskListPlugin.URL_HOMEPAGE); 
+			return;
+		}
+		
 		try {
 			if (taskListInitialized && taskList.getAllTasks().size() > 0) {
 				taskListWriter.writeTaskList(taskList, taskListFile);

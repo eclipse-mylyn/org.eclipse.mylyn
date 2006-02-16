@@ -56,6 +56,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
 
+	public static final String URL_HOMEPAGE = "http://eclipse.org/mylar";
+	
 	private static MylarTaskListPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
