@@ -11,24 +11,33 @@
 
 package org.eclipse.mylar.internal.tasklist;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
 
 /**
  * @author Mik Kersten
  */
-public class TaskList implements Serializable {
+public class TaskList {
 
-	private static final long serialVersionUID = 3618984485791021105L;
+	private static final String LABEL_ARCHIVE = "Archive (automatic)";
 
-	private List<ITask> rootTasks = new ArrayList<ITask>();
-
+	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
+	
+	private TaskCategory archiveCategory = new TaskCategory(LABEL_ARCHIVE);
+	
 	private List<ITaskContainer> categories = new ArrayList<ITaskContainer>();
 
+	private List<ITask> rootTasks = new ArrayList<ITask>();
+	
+	{
+		archiveCategory.setIsArchive(true);
+		categories.add(archiveCategory);
+	}
+	
 	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 	private transient List<ITask> activeTasks = new ArrayList<ITask>();
@@ -297,6 +306,37 @@ public class TaskList implements Serializable {
 	}
 
 	public boolean isEmpty() {
-		return getAllTasks().size() == 0 && getCategories().size() == 0 && getQueries().size() == 0;
+		boolean archiveIsEmpty = getCategories().size() == 1 && getCategories().get(0).equals(archiveCategory) && archiveCategory.getChildren().isEmpty();
+		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
+	}
+
+	public void addTaskToArchive(ITask newTask) {
+		if (!archiveMap.containsKey(newTask.getHandleIdentifier())) {
+			archiveMap.put(newTask.getHandleIdentifier(), newTask);
+			if (archiveCategory != null) {
+				archiveCategory.internalAddTask(newTask);
+			}
+		}
+	}
+
+	public ITask getTaskFromArchive(String handleIdentifier) {
+		return archiveMap.get(handleIdentifier);
+	}
+
+	public List<ITask> getArchiveTasks() {
+		List<ITask> archiveTasks = new ArrayList<ITask>();
+		archiveTasks.addAll(archiveMap.values());
+		return archiveTasks;
+	}
+
+	public void setArchiveCategory(TaskCategory category) {
+		this.archiveCategory = category;
+	}
+
+	/**
+	 * For testing.
+	 */
+	public void clearArchive() {
+		archiveMap.clear();
 	}
 }

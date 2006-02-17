@@ -52,18 +52,6 @@ public class TaskCategory implements ITaskContainer, Serializable {
 		this.handle = handle;
 	}
 
-//	public Image getStatusIcon() {
-//		return null;
-//	}
-
-//	public Image getIcon() {
-//		if (isArchive()) {
-//			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
-//		} else {
-//			return TaskListImages.getImage(TaskListImages.CATEGORY);
-//		}
-//	}
-
 	public String getPriority() {
 		String highestPriority = Task.PriorityLevel.P5.toString();
 		if (tasks.isEmpty()) {
@@ -119,22 +107,6 @@ public class TaskCategory implements ITaskContainer, Serializable {
 	public boolean isLocal() {
 		return true;
 	}
-
-//	public boolean isActivatable() {
-//		return false;
-//	}
-
-//	public boolean isDragAndDropEnabled() {
-//		return false;
-//	}
-//
-//	public Font getFont() {
-//		for (ITask child : getChildren()) {
-//			if (child.isActive())
-//				return TaskListImages.BOLD;
-//		}
-//		return null;
-//	}
 
 	public boolean isCompleted() {
 		return false;

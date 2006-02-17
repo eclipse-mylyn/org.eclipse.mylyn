@@ -11,10 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
@@ -52,22 +50,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 	}
 
-//	public Image getIcon() {
-//		if (task != null) {
-//			return task.getIcon();
-//		} else {
-//			return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
-//		}
-//	}
-
-//	public Image getStatusIcon() {
-//		if (task != null) {
-//			return task.getStatusIcon();
-//		} else {
-//			return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
-//		}
-//	}
-
 	public String getPriority() {
 		if (task != null) {
 			return task.getPriority();
@@ -87,13 +69,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 
 	public String getHandleIdentifier() {
 		return TaskRepositoryManager.getHandle(repositoryUrl, id);
-		// return "Bugzilla" + "-" + getId();
 	}
-
-	// public String getServerName() {
-	// // TODO need the right server name - get from the handle
-	// return "Bugzilla";
-	// }
 
 	public int getId() {
 		return id;
@@ -110,16 +86,12 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
 		if (task == null) {
 			task = new BugzillaTask(this, true);
-			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-			client.addTaskToArchive(task);
-//			BugzillaUiPlugin.getDefault().getBugzillaTaskListManager().addToBugzillaTaskArchive(task);
+//			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+//			client.addTaskToArchive(task);
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);
 		}
 		return task;
 	}
-
-//	public boolean isActivatable() {
-//		return true;
-//	}
 
 	public boolean isDragAndDropEnabled() {
 		return true;
@@ -133,13 +105,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 	}
 
-//	public Font getFont() {
-//		if (task != null) {
-//			return task.getFont();
-//		}
-//		return null;
-//	}
-
 	public boolean isCompleted() {
 		if (status != null
 				&& (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI") || status
@@ -148,14 +113,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 		return false;
 	}
-
-//	public String getToolTipText() {
-//		if (task != null) {
-//			return task.getToolTipText();
-//		} else {
-//			return getDescription();
-//		}
-//	}
 
 	public void setDescription(String description) {
 		// can't set the description to anything

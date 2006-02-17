@@ -23,7 +23,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.ITask;
@@ -133,6 +132,19 @@ public class TaskListManagerTest extends TestCase {
 		assertFalse(list.isEmpty()); 
 	}
 	
+	public void testCategories() {
+		BugzillaTask task = new BugzillaTask("b1", "b 1", true);
+		TaskCategory category = new TaskCategory("cat");
+		category.getChildren().add(task);
+		manager.moveToRoot(task);
+		assertNotNull(manager.getTaskList());
+
+		TaskList list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getAllTasks().size());		
+	}
+	
 	public void testQueryExternalization() {
 		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
@@ -202,7 +214,7 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaTask report2 = new BugzillaTask("124", "label 124", true);
 		manager.moveToRoot(report2);
 
-		assertEquals(5, manager.getTaskList().getRoots().size());
+		assertEquals(""+ manager.getTaskList().getRoots(), 6, manager.getTaskList().getRoots().size());
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -222,25 +234,23 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(report2.getDescription(), readReport.getDescription());
 
 		List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
-		assertTrue(readCats.get(0).getDescription().equals(BugzillaTaskExternalizer.BUGZILLA_ARCHIVE_LABEL));
+//		assertTrue(readCats.get(0).getDescription().equals(BugzillaTaskExternalizer.BUGZILLA_ARCHIVE_LABEL));
 
-		// XXX re-enable
-		
-//		assertEquals("categories: " + manager.getTaskList().getCategories(), 3, manager.getTaskList().getCategories().size());
-//
-//		TaskCategory readCat = readCats.get(1);
-//		readList = readCat.getChildren();
-//		assertTrue(readList.get(0).getDescription().equals("task 3"));
-//		assertEquals(readCat, readList.get(0).getCategory());
-//		assertTrue(readList.get(0).getChildren().get(0).getDescription().equals("sub 2"));
-//		assertTrue(readList.get(1).getDescription().equals("task 4"));
-//
-//		TaskCategory readCat2 = readCats.get(2);
-//		readList = readCat2.getChildren();
-//		assertTrue(readList.get(0).getDescription().equals("task 5"));
-//		assertTrue(readList.get(1).getDescription().equals("task 6"));
-//		assertTrue(readList.get(2) instanceof BugzillaTask);
-//		assertEquals(readCat2, readList.get(2).getCategory());
+		assertEquals("categories: " + manager.getTaskList().getCategories(), 3, manager.getTaskList().getCategories().size());
+  
+		TaskCategory readCat = readCats.get(1);
+		readList = readCat.getChildren();
+		assertTrue(readList.get(0).getDescription().equals("task 3"));
+		assertEquals(readCat, readList.get(0).getCategory());
+		assertTrue(readList.get(0).getChildren().get(0).getDescription().equals("sub 2"));
+		assertTrue(readList.get(1).getDescription().equals("task 4"));
+
+		TaskCategory readCat2 = readCats.get(2);
+		readList = readCat2.getChildren();
+		assertTrue(readList.get(0).getDescription().equals("task 5"));
+		assertTrue(readList.get(1).getDescription().equals("task 6"));
+		assertTrue(readList.get(2) instanceof BugzillaTask);
+		assertEquals(readCat2, readList.get(2).getCategory());
 	}
 
 	public void testScheduledRefreshJob() throws InterruptedException {

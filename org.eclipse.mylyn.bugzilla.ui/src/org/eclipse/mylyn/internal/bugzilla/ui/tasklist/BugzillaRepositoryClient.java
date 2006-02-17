@@ -331,7 +331,9 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		BugzillaTask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(),
 				bugId), DESCRIPTION_DEFAULT, true);
 
-		addTaskToArchive(newTask);
+//		addTaskToArchive(newTask);
+		MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
+		
 		synchronize(newTask, true, null);
 		// newTask.scheduleDownloadReport();
 		return newTask;

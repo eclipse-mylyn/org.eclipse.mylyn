@@ -76,9 +76,9 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 	}
 	
 	public void addHit(AbstractQueryHit hit) {
-		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
-				getRepositoryKind());
-		ITask correspondingTask = client.getTaskFromArchive(hit.getHandleIdentifier());
+//		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
+//				getRepositoryKind());
+		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskFromArchive(hit.getHandleIdentifier());
 		if (correspondingTask instanceof AbstractRepositoryTask) {
 			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
 		}

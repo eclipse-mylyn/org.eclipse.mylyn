@@ -30,6 +30,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryClient;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -46,6 +47,8 @@ public class BugzillaRepositoryClientTest extends TestCase {
 	TaskRepositoryManager manager;
 
 	TaskRepository repository;
+	
+	TaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -56,6 +59,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		// repository.setAuthenticationCredentials("userid", "password");
 		manager.addRepository(repository);
 		assertNotNull(manager);
+		taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 
 		AbstractRepositoryClient abstractRepositoryClient = manager.getRepositoryClient(DEFAULT_KIND);
 
@@ -68,7 +72,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		client.clearArchive();
+		taskList.clearArchive();
 		client.clearAllRefreshes();
 		manager.clearRepositories();
 
@@ -82,7 +86,7 @@ public class BugzillaRepositoryClientTest extends TestCase {
 		assertNotNull(task);
 		assertEquals(task.getSyncState(), RepositoryTaskSyncState.SYNCHRONIZED);
 
-		BugzillaTask retrievedTask = (BugzillaTask) client.getTaskFromArchive(task.getHandleIdentifier());
+		BugzillaTask retrievedTask = (BugzillaTask) taskList.getTaskFromArchive(task.getHandleIdentifier());
 		assertNotNull(retrievedTask);
 		assertEquals(task.getHandleIdentifier(), retrievedTask.getHandleIdentifier());
 

@@ -27,11 +27,9 @@ import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettings
  */
 public abstract class AbstractRepositoryClient {
 
-	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
-
 	private static final int MAX_REFRESH_JOBS = 5;
 	
-	private TaskCategory archiveCategory = null;
+//	private TaskCategory archiveCategory = null;
 	
 	private List<AbstractRepositoryTask> toBeRefreshed = new LinkedList<AbstractRepositoryTask>();
 
@@ -116,33 +114,4 @@ public abstract class AbstractRepositoryClient {
 
 	public abstract IWizard getAddExistingTaskWizard(TaskRepository repository);
 
-	public void addTaskToArchive(ITask newTask) {
-		if (!archiveMap.containsKey(newTask.getHandleIdentifier())) {
-			archiveMap.put(newTask.getHandleIdentifier(), newTask);
-			if (archiveCategory != null) {
-				archiveCategory.internalAddTask(newTask);
-			}
-		}
-	}
-
-	public ITask getTaskFromArchive(String handleIdentifier) {
-		return archiveMap.get(handleIdentifier);
-	}
-
-	public List<ITask> getArchiveTasks() {
-		List<ITask> archiveTasks = new ArrayList<ITask>();
-		archiveTasks.addAll(archiveMap.values());
-		return archiveTasks;
-	}
-
-	public void setArchiveCategory(TaskCategory category) {
-		this.archiveCategory = category;
-	}
-
-	/**
-	 * For testing.
-	 */
-	public void clearArchive() {
-		archiveMap.clear();
-	}
 }

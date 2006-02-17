@@ -28,11 +28,11 @@ public interface ITaskListExternalizer {
 
 	public abstract AbstractRepositoryClient getRepositoryClient();
 	
-	/**
-	 * Note that registries get read as a normal category, but get written out
-	 * first.
-	 */
-	public abstract void createRegistry(Document doc, Node parent);
+//	/**
+//	 * Note that registries get read as a normal category, but get written out
+//	 * first.
+//	 */
+//	public abstract void createRegistry(Document doc, Node parent);
 
 	public abstract String getCategoryTagName();
 

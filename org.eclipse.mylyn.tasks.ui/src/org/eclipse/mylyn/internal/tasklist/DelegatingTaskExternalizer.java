@@ -394,9 +394,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return KEY_TASK;
 	}
 
-	public void createRegistry(Document doc, Node parent) {
-		// nothing to do
-	}
+//	public void createRegistry(Document doc, Node parent) {
+//		// nothing to do
+//	}
 
 	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
 		return true;
