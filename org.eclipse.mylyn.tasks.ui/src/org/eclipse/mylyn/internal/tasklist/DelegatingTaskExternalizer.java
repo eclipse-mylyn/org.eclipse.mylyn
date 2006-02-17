@@ -214,11 +214,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getCategoryTagName());
 	}
 
-	public void readCategory(Node node, TaskList tlist) throws TaskExternalizationException {
+	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
 		TaskCategory category = new TaskCategory(element.getAttribute("Name"));
-		tlist.internalAddCategory(category);
+		taskList.internalAddCategory(category);
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
@@ -226,15 +226,16 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			try {
 				for (ITaskListExternalizer externalizer : delegateExternalizers) {
 					if (externalizer.canReadTask(child)) {
-						ITask task = externalizer.readTask(child, tlist, category, null);
+						ITask task = externalizer.readTask(child, taskList, category, null);
 						category.addTask(task);
 						if (!category.isArchive())
 							task.setCategory(category);
 						read = true;
+						taskList.addTaskToArchive(task);
 					}
 				}
 				if (!read && canReadTask(child)) {
-					category.internalAddTask(readTask(child, tlist, category, null));
+					category.internalAddTask(readTask(child, taskList, category, null));
 				}
 			} catch (TaskExternalizationException e) {
 				hasCaughtException = true;

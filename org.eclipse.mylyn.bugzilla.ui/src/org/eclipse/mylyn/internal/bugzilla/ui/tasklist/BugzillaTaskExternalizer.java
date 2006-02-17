@@ -71,11 +71,11 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String TAG_TASK = "BugzillaReport";
 
-	private AbstractRepositoryClient repositoryClient;
-	
-	public BugzillaTaskExternalizer() {
-		repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-	} 
+//	private AbstractRepositoryClient repositoryClient;
+//	
+//	public BugzillaTaskExternalizer() {
+//		repositoryClient = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
+//	} 
 	
 //	@Override
 //	public void createRegistry(Document doc, Node parent) {
@@ -91,13 +91,13 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 //		parent.appendChild(node);
 //	}
 
-	public AbstractRepositoryClient getRepositoryClient() {
-		return repositoryClient;
-	}
+//	public AbstractRepositoryClient getRepositoryClient() {
+//		return repositoryClient;
+//	}
 	
 	@Override
 	public boolean canReadCategory(Node node) {
-		return node.getNodeName().equals(getCategoryTagName()) || node.getNodeName().equals(BUGZILLA_TASK_REGISTRY);
+		return node.getNodeName().equals(getCategoryTagName());// || node.getNodeName().equals(BUGZILLA_TASK_REGISTRY);
 	}
 
 	@Override

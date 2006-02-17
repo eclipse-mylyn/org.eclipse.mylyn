@@ -88,15 +88,10 @@ public class TaskListWriter {
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
 			MylarStatusHandler.log(e, "could not create document");
-			e.printStackTrace();
 		}
 
 		Element root = doc.createElement(ELEMENT_TASK_LIST);
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
-
-//		for (ITaskListExternalizer externalizer : externalizers) {
-//			externalizer.createRegistry(doc, root);
-//		}
 
 		for (ITask archiveTask : tlist.getArchiveTasks()) {
 			createTaskElement(doc, root, archiveTask);
@@ -215,12 +210,8 @@ public class TaskListWriter {
 	 * TODO: fix this old mess
 	 */
 	public void readTaskList(TaskList taskList, File inFile) {
-		// initExtensions();
-		// MylarTaskListPlugin.getDefault().restoreTaskHandlerState();
 		hasCaughtException = false;
 		try {
-			// parse file
-			//
 			if (!inFile.exists())
 				return;
 			Document doc = openAsDOM(inFile);
@@ -228,19 +219,11 @@ public class TaskListWriter {
 				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
 				return;
 			}
-			// read root node to get version number
-			//
 			Element root = doc.getDocumentElement();
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
 				MylarStatusHandler.log("version: " + readVersion + " not supported", this);
-				// NodeList list = root.getChildNodes();
-				// for (int i = 0; i < list.getLength(); i++) {
-				// Node child = list.item(i);
-				// readTasksToNewFormat(child, tlist);
-				// //tlist.addRootTask(readTaskAndSubTasks(child, null, tlist));
-				// }
 			} else {
 				NodeList list = root.getChildNodes();
 				for (int i = 0; i < list.getLength(); i++) {
@@ -248,19 +231,16 @@ public class TaskListWriter {
 					boolean wasRead = false;
 					try {
 						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
-							for (ITaskListExternalizer externalizer : externalizers) {
-								if (externalizer.canReadCategory(child)) {
-									externalizer.readCategory(child, taskList);
-									wasRead = true;
-									break;
-								}
-							}
-							if (!wasRead && delagatingExternalizer.canReadCategory(child)) {
+//							for (ITaskListExternalizer externalizer : externalizers) {
+//								if (externalizer.canReadCategory(child)) {
+//									externalizer.readCategory(child, taskList);
+//									wasRead = true;
+//									break;
+//								}
+//							}
+//							if (!wasRead && delagatingExternalizer.canReadCategory(child)) {
 								delagatingExternalizer.readCategory(child, taskList);
-							} else {
-								// MylarPlugin.log("Did not read: " +
-								// child.getNodeName(), this);
-							}
+//							} 
 						} else if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadQuery(child)) {
@@ -271,14 +251,10 @@ public class TaskListWriter {
 							}
 							if (!wasRead && delagatingExternalizer.canReadCategory(child)) {
 								delagatingExternalizer.readQuery(child, taskList);
-							} else {
-								// MylarPlugin.log("Did not read: " +
-								// child.getNodeName(), this);
-							}
+							} 
 						} else {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadTask(child)) {
-									// TODO add the tasks properly
 									ITask newTask = externalizer.readTask(child, taskList, null, null);
 //									externalizer.getRepositoryClient().addTaskToArchive(newTask);
 									taskList.addTaskToArchive(newTask);
@@ -291,10 +267,7 @@ public class TaskListWriter {
 							}
 							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
 								taskList.internalAddRootTask(delagatingExternalizer.readTask(child, taskList, null, null));
-							} else {
-								// MylarPlugin.log("Did not read: " +
-								// child.getNodeName(), this);
-							}
+							} 
 						}
 					} catch (Exception e) {
 						handleException(inFile, child, e);
