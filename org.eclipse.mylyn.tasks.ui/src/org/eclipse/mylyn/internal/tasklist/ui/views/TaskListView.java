@@ -122,8 +122,8 @@ public class TaskListView extends ViewPart {
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
 	public static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
-		Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(),
-		Task.PriorityLevel.P4.toString(), Task.PriorityLevel.P5.toString() };
+			Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(), Task.PriorityLevel.P4.toString(),
+			Task.PriorityLevel.P5.toString() };
 
 	private static final String SEPARATOR_ID_REPORTS = SEPARATOR_REPORTS;
 
@@ -175,10 +175,10 @@ public class TaskListView extends ViewPart {
 
 	private NextTaskDropDownAction nextTaskAction;
 
-//	private WorkOfflineAction workOffline;
+	// private WorkOfflineAction workOffline;
 
-//	private ManageEditorsAction autoClose;
-		
+	// private ManageEditorsAction autoClose;
+
 	private static TaskPriorityFilter PRIORITY_FILTER = new TaskPriorityFilter();
 
 	private static TaskCompleteFilter COMPLETE_FILTER = new TaskCompleteFilter();
@@ -215,44 +215,39 @@ public class TaskListView extends ViewPart {
 	private final ITaskActivityListener TASK_REFERESH_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
-			updateDescription(task);
+			if (task != null) {
+				updateDescription(task);
+				selectedAndFocusTask(task);
+				filteredTree.indicateActiveTask(task);
+			}
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
-			if (tasks.size() > 0) {
-				updateDescription(tasks.get(0));
+			if (tasks.size() == 1) {
+				taskActivated(tasks.get(0));
 			}
 		}
 
 		public void taskDeactivated(ITask task) {
 			updateDescription(null);
+			filteredTree.indicateNoActiveTask();
 		}
 
 		public void localInfoChanged(ITask task) {
 			refresh(task);
-			if(task.getCategory() == null) {
+			if (task.getCategory() == null) {
 				refresh(null);
 			} else {
 				refresh(task.getCategory());
-			} 
-			
-//			if(!task.isLocal()) {				
-//				for (AbstractRepositoryQuery query : MylarTaskListPlugin.getTaskListManager().getTaskList().getQueries()) {
-//					refresh(query);
-//				}				
-//			}					
+			}
 		}
-		
+
 		public void repositoryInfoChanged(ITask task) {
 			localInfoChanged(task);
 		}
 
 		public void tasklistRead() {
 			refresh(null);
-			ITask activeTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
-			if (activeTask != null && getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-				getViewer().setSelection(new StructuredSelection(activeTask), true);
-			}
 		}
 
 		public void taskListModified() {
@@ -265,14 +260,14 @@ public class TaskListView extends ViewPart {
 					public void run() {
 						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 							if (element == null) {
-//								getViewer().getControl().setRedraw(false);
-//								getViewer().refresh();
+								// getViewer().getControl().setRedraw(false);
+								// getViewer().refresh();
 								filteredTree.textChanged(0);
-//								getViewer().getControl().setRedraw(true);
+								// getViewer().getControl().setRedraw(true);
 							} else {
-//								getViewer().getControl().setRedraw(false);
+								// getViewer().getControl().setRedraw(false);
 								getViewer().refresh(element, true);
-//								getViewer().getControl().setRedraw(true); 
+								// getViewer().getControl().setRedraw(true);
 							}
 						}
 					}
@@ -422,13 +417,13 @@ public class TaskListView extends ViewPart {
 
 	public TaskListView() {
 		INSTANCE = this;
-		MylarTaskListPlugin.getTaskListManager().addListener(TASK_REFERESH_LISTENER); 
+		MylarTaskListPlugin.getTaskListManager().addListener(TASK_REFERESH_LISTENER);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_REFERESH_LISTENER); 
+		MylarTaskListPlugin.getTaskListManager().removeListener(TASK_REFERESH_LISTENER);
 	}
 
 	/**
@@ -439,21 +434,21 @@ public class TaskListView extends ViewPart {
 			return;
 
 		IViewReference reference = getSite().getPage().findViewReference(ID);
-		boolean isFastView = false;
+		boolean shouldSetDescription = false;
 		if (reference != null && reference.isFastView()) {
-			isFastView = true;
+			shouldSetDescription = true;
 		}
 
 		if (task != null) {
 			setTitleToolTip(PART_NAME + " (" + task.getDescription() + ")");
-			if (isFastView) {
+			if (shouldSetDescription) {
 				setContentDescription(task.getDescription());
 			} else {
 				setContentDescription("");
 			}
 		} else {
 			setTitleToolTip(PART_NAME);
-			if (isFastView) {
+			if (shouldSetDescription) {
 				setContentDescription(LABEL_NO_TASKS);
 			} else {
 				setContentDescription("");
@@ -467,7 +462,7 @@ public class TaskListView extends ViewPart {
 			int columnIndex = Arrays.asList(columnNames).indexOf(property);
 			if (columnIndex == 0 && element instanceof ITaskListElement) {
 				return element instanceof ITask || element instanceof AbstractQueryHit;
-//				return ((ITaskListElement) element).isActivatable();
+				// return ((ITaskListElement) element).isActivatable();
 			} else if (columnIndex == 2 && element instanceof ITask) {
 				return ((ITask) element).isLocal();
 			} else if (element instanceof ITaskListElement && isInRenameAction) {
@@ -777,8 +772,8 @@ public class TaskListView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
-				| SWT.HIDE_SELECTION, new TaskListPatternFilter());
+		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 		filteredTree.setInitialText("");
 
 		getViewer().getTree().setHeaderVisible(true);
@@ -829,9 +824,10 @@ public class TaskListView extends ViewPart {
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setContentProvider(new TaskListContentProvider(this));
-		getViewer().setLabelProvider(new TaskListTableLabelProvider(new TaskElementLabelProvider(),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), parent.getBackground()));
-		
+		getViewer().setLabelProvider(
+				new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI.getWorkbench()
+						.getDecoratorManager().getLabelDecorator(), parent.getBackground()));
+
 		getViewer().setInput(getViewSite());
 
 		getViewer().getTree().addKeyListener(new KeyListener() {
@@ -925,18 +921,9 @@ public class TaskListView extends ViewPart {
 
 	private void fillLocalPullDown(IMenuManager manager) {
 		updateDrillDownActions();
-		// manager.add(new Separator("reports"));
-		// manager.add(new Separator("local"));
-		// manager.add(newLocalTaskAction);
-		// manager.add(newCategoryAction);
 		manager.add(goUpAction);
 		manager.add(collapseAll);
-		// manager.add(new Separator());
-		// autoClose.setEnabled(true);
-//		manager.add(new Separator(SEPARATOR_CONTEXT));
-//		manager.add(autoClose);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-//		manager.add(workOffline);
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
@@ -957,7 +944,7 @@ public class TaskListView extends ViewPart {
 		updateDrillDownActions();
 
 		ITaskListElement element = null;
-		
+
 		final Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
 		if (selectedObject instanceof ITaskListElement) {
 			element = (ITaskListElement) selectedObject;
@@ -973,7 +960,7 @@ public class TaskListView extends ViewPart {
 			}
 
 			addAction(openUrlInExternal, manager, element);
-			
+
 			if (task != null) {
 				if (task.isLocal()) {
 					if (task.isCompleted()) {
@@ -999,7 +986,7 @@ public class TaskListView extends ViewPart {
 		} else if (element instanceof ITaskContainer || element instanceof AbstractRepositoryQuery) {
 			addAction(deleteAction, manager, element);
 		}
-		
+
 		if ((element instanceof ITask && ((ITask) element).isLocal()) || element instanceof ITaskContainer
 				|| element instanceof AbstractRepositoryQuery) {
 			addAction(renameAction, manager, element);
@@ -1035,12 +1022,13 @@ public class TaskListView extends ViewPart {
 	private void addAction(Action action, IMenuManager manager, ITaskListElement element) {
 		manager.add(action);
 		if (element != null) {
-//			ITaskHandler handler = MylarTaskListPlugin.getDefault().getHandlerForElement(element);
-//			if (handler != null) {
-//				action.setEnabled(handler.enableAction(action, element));
-//			} else {
+			// ITaskHandler handler =
+			// MylarTaskListPlugin.getDefault().getHandlerForElement(element);
+			// if (handler != null) {
+			// action.setEnabled(handler.enableAction(action, element));
+			// } else {
 			updateActionEnablement(action, element);
-//			}
+			// }
 		}
 	}
 
@@ -1049,25 +1037,25 @@ public class TaskListView extends ViewPart {
 	 */
 	private void updateActionEnablement(Action action, ITaskListElement element) {
 		if (element instanceof ITask) {
-//			if (action instanceof MarkTaskCompleteAction) {
-//				if (element.isCompleted()) {
-//					action.setEnabled(false);
-//				} else {
-//					action.setEnabled(true);
-//				}
-//			} else 
+			// if (action instanceof MarkTaskCompleteAction) {
+			// if (element.isCompleted()) {
+			// action.setEnabled(false);
+			// } else {
+			// action.setEnabled(true);
+			// }
+			// } else
 			if (action instanceof OpenTaskInExternalBrowserAction) {
 				if (((ITask) element).hasValidUrl()) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);
 				}
-//			} else if (action instanceof MarkTaskIncompleteAction) {
-//				if (element.isCompleted()) {
-//					action.setEnabled(true);
-//				} else {
-//					action.setEnabled(false);
-//				}
+				// } else if (action instanceof MarkTaskIncompleteAction) {
+				// if (element.isCompleted()) {
+				// action.setEnabled(true);
+				// } else {
+				// action.setEnabled(false);
+				// }
 			} else if (action instanceof DeleteAction) {
 				action.setEnabled(true);
 			} else if (action instanceof NewLocalTaskAction) {
@@ -1122,7 +1110,7 @@ public class TaskListView extends ViewPart {
 	private void makeActions() {
 
 		copyDescriptionAction = new CopyDescriptionAction(this);
-//		workOffline = new WorkOfflineAction();
+		// workOffline = new WorkOfflineAction();
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
@@ -1132,9 +1120,9 @@ public class TaskListView extends ViewPart {
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		renameAction = new RenameAction(this);
 
-		deleteAction = new DeleteAction(this);
+		deleteAction = new DeleteAction();
 		collapseAll = new CollapseAllAction(this);
-//		autoClose = new ManageEditorsAction();
+		// autoClose = new ManageEditorsAction();
 		markIncompleteAction = new MarkTaskCompleteAction(this);
 		markCompleteAction = new MarkTaskIncompleteAction(this);
 		openTaskEditor = new OpenTaskListElementAction(this.getViewer());
@@ -1201,16 +1189,17 @@ public class TaskListView extends ViewPart {
 		});
 	}
 
-//	public void showMessage(String message) {
-//		MessageDialog.openInformation(getViewer().getControl().getShell(), "TaskList Message", message);
-//	}
+	// public void showMessage(String message) {
+	// MessageDialog.openInformation(getViewer().getControl().getShell(),
+	// "TaskList Message", message);
+	// }
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
 	@Override
 	public void setFocus() {
-		getViewer().getControl().setFocus();
+		filteredTree.getViewer().getControl().setFocus();
 	}
 
 	public String getBugIdFromUser() {
@@ -1234,6 +1223,11 @@ public class TaskListView extends ViewPart {
 
 	public static TaskListView getDefault() {
 		return INSTANCE;
+	}
+
+	public void refreshAndFocus() {
+		getViewer().refresh();
+		selectedAndFocusTask(MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask());
 	}
 
 	public TreeViewer getViewer() {
@@ -1361,17 +1355,23 @@ public class TaskListView extends ViewPart {
 		return filteredTree;
 	}
 
-
-	public void setSelectedTask(ITask task) {
-		if (task == null) return;
+	public void selectedAndFocusTask(ITask task) {
+		if (task == null)
+			return;
 		getViewer().setSelection(new StructuredSelection(task));
 		// if no task exists, select the query hit if exists
 		AbstractQueryHit hit = null;
 		if (getViewer().getSelection().isEmpty()
-				&& (hit = MylarTaskListPlugin.getTaskListManager().getQueryHitForHandle(
+				&& (hit = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitForHandle(
 						task.getHandleIdentifier())) != null) {
-			getViewer().setSelection(new StructuredSelection(hit));
+			AbstractRepositoryQuery query = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryForHandle(
+					task.getHandleIdentifier());
+			getViewer().expandToLevel(query, 1);
+			getViewer().setSelection(new StructuredSelection(hit), true);
+		} else {
+			if (task.getCategory() != null) {
+				getViewer().expandToLevel(task.getCategory(), 1);
+			}
 		}
-//		viewer.refresh();
 	}
 }

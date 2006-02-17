@@ -34,10 +34,7 @@ public class DeleteAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.delete";
 
-	private final TaskListView view;
-
-	public DeleteAction(TaskListView view) {
-		this.view = view;
+	public DeleteAction() {
 		setText("Delete");
 		setId(ID);
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
@@ -75,17 +72,6 @@ public class DeleteAction extends Action {
 				MylarTaskListPlugin.getTaskListManager().deleteTask(task);
 				MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
 				TaskListUiUtil.closeEditorInActivePage(task);
-//				IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-//						.getActivePage();
-//				if (page == null) {
-//					return;
-//				}
-//				try {
-//					view.closeTaskEditors(task, page);
-//				} catch (Exception e) {
-//					MylarStatusHandler.log(e, "closing editors failed");
-//				}
-//				view.getViewer().refresh();
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
@@ -102,18 +88,8 @@ public class DeleteAction extends Action {
 				for (ITask task : cat.getChildren()) {
 					MylarPlugin.getContextManager().contextDeleted(task.getHandleIdentifier());
 					TaskListUiUtil.closeEditorInActivePage(task);
-//					IWorkbenchPage page = MylarTaskListPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-//							.getActivePage();
-//					if (page != null) {
-//						try {
-//							this.view.closeTaskEditors(task, page);
-//						} catch (Exception e) {
-//							MylarStatusHandler.log(e, " deletion failed");
-//						}
-//					}
 				}
 				MylarTaskListPlugin.getTaskListManager().deleteCategory(cat);
-				view.getViewer().refresh();
 			} else {
 				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Delete failed",
 						"Nothing selected.");

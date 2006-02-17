@@ -281,7 +281,7 @@ public class MylarTaskEditor extends MultiPageEditorPart {
 			if (part.equals(MylarTaskEditor.this)) {
 				ITask task = taskEditorInput.getTask();
 				if (TaskListView.getDefault() != null) {
-					TaskListView.getDefault().setSelectedTask(task);
+					TaskListView.getDefault().selectedAndFocusTask(task);
 				}
 			}
 		}

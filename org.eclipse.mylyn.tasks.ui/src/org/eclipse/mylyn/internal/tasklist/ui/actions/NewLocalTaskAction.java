@@ -77,8 +77,8 @@ public class NewLocalTaskAction extends Action {
 			}
 			TaskListUiUtil.openEditor(newTask);
 //			newTask.openTaskInEditor(false);
-			view.getViewer().setSelection(new StructuredSelection(newTask));
 			view.getViewer().refresh();
+			view.getViewer().setSelection(new StructuredSelection(newTask));
 		}
 	}
 }

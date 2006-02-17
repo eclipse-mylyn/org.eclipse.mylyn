@@ -23,7 +23,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
  */
 public class TaskActivateAction extends Action implements IViewActionDelegate {
 
@@ -51,7 +51,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 		if (task != null) {
 			MylarTaskListPlugin.getTaskListManager().activateTask(task);
 			if (TaskListView.getDefault() != null) {
-				TaskListView.getDefault().getViewer().refresh();
+				TaskListView.getDefault().refreshAndFocus();
 			}
 		}
 	}

@@ -661,8 +661,9 @@ public class TaskPlannerEditorPart extends EditorPart {
 							MylarTaskListPlugin.getTaskListManager().moveToCategory(taskCategory, task);
 						}
 					}
-					if (TaskListView.getDefault() != null)
-						TaskListView.getDefault().getViewer().refresh();
+					if (TaskListView.getDefault() != null) {
+						TaskListView.getDefault().refreshAndFocus();
+					}
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_DIALOG,
 							"Can not add plan tasks into a query category.");

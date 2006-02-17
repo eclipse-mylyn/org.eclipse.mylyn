@@ -20,7 +20,6 @@ import org.eclipse.mylar.internal.tasklist.AbstractRepositoryClient;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
-import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
@@ -84,10 +83,9 @@ public class NewBugzillaQueryWizard extends Wizard {
 				MylarStatusHandler.log(e, "There was a problem executing the query refresh");
 			}
 		}
-		if (TaskListView.getDefault() != null) {
-			// TODO: remove
-			TaskListView.getDefault().getViewer().refresh();
-		}
+//		if (TaskListView.getDefault() != null) {
+//			TaskListView.getDefault().getViewer().refresh();
+//		}
 
 		return true;
 	}
