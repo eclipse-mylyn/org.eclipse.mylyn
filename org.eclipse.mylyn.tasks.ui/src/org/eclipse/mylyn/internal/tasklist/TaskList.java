@@ -263,6 +263,18 @@ public class TaskList implements Serializable {
 		rootTasks.clear();
 	}
 
+	public AbstractRepositoryQuery getQueryForHandle(String handle) {
+		if (handle == null) {
+			return null;
+		}
+		for (AbstractRepositoryQuery query : queries) {
+			if ((findQueryHitHelper(query.getHits(), handle)) != null) {
+				return query;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Use to obtain the QueryHit object associated with a particular task
 	 * handle if it exists.
@@ -272,6 +284,9 @@ public class TaskList implements Serializable {
 	 * @return IQueryHit corresponding to the first hit found in all queries
 	 */
 	public AbstractQueryHit getQueryHitForHandle(String handle) {
+		if (handle == null) {
+			return null;
+		}
 		AbstractQueryHit foundHit = null;
 		for (AbstractRepositoryQuery query : queries) {
 			if ((foundHit = findQueryHitHelper(query.getHits(), handle)) != null) {

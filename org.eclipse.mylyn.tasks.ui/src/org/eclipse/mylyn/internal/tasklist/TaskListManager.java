@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.TimerThread;
@@ -108,14 +107,6 @@ public class TaskListManager {
 	 * Will not save an empty task list to avoid losing data on bad startup.
 	 */
 	public void saveTaskList() {
-		if (!MylarTaskListPlugin.getDefault().isInitialized()) {
-			MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
-					"Mylar Task List failed to initialize.\n\n" +
-					"See the Error Log view for details, and the FAQ for solutions.\n\n" +
-					MylarTaskListPlugin.URL_HOMEPAGE); 
-			return;
-		}
-		
 		try {
 			if (taskListInitialized && !taskList.isEmpty()) {
 				taskListWriter.writeTaskList(taskList, taskListFile);
@@ -279,20 +270,7 @@ public class TaskListManager {
 		return taskList.getTaskForHandle(handle, lookInArchives);
 	}
 
-	/**
-	 * Use to obtain the QueryHit object associated with a particular task
-	 * handle if it exists.
-	 * 
-	 * @param handle
-	 *            handle of task
-	 * @return IQueryHit corresponding to the first hit found in all queries
-	 */
-	public AbstractQueryHit getQueryHitForHandle(String handle) {
-		if (handle == null)
-			return null;
-		return taskList.getQueryHitForHandle(handle);
-	}
-
+	
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;
 	}
