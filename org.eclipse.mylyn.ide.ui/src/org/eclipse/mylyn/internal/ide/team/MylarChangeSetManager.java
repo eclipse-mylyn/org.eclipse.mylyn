@@ -92,11 +92,11 @@ public class MylarChangeSetManager implements IMylarContextListener {
 			}
 		}
 
-		public void taskActivated(ITask task) {
+		public void tasksActivated(List<ITask> task) {
 			// ignore
 		}
 
-		public void tasksActivated(List<ITask> tasks) {
+		public void taskActivated(ITask task) {
 			// ignore
 		}
 
