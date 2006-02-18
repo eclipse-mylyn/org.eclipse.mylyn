@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITask;
@@ -54,6 +55,14 @@ public class TaskListSaveManager implements ITaskActivityListener, DisposeListen
 	 * Called periodically by the save timer
 	 */
 	public void saveRequested() {
+		if (!MylarTaskListPlugin.getDefault().isInitialized()) {
+			MessageDialog.openInformation(null, MylarTaskListPlugin.TITLE_DIALOG,
+					"If task list is blank, Mylar Task List may have failed to initialize.\n\n" +
+					"First, try restarting to see if that corrects the problem.\n\n" +
+					"Then, check the Error Log view for messages, and the FAQ for solutions.\n\n" +
+					MylarTaskListPlugin.URL_HOMEPAGE);
+		}
+		
 		if (MylarTaskListPlugin.getDefault() != null && MylarTaskListPlugin.getDefault().isShellActive()
 				|| forceBackgroundSave) {
 			try {
