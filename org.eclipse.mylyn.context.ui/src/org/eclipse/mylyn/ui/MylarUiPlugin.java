@@ -198,7 +198,8 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 					if (!MylarTaskListPlugin.getDefault().isInitialized()) {
 						MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
 								"Mylar Task List may have failed to initialize.\n\n" +
-								"Check the Error Log view for messages, and the FAQ for solutions.\n\n" +
+								"First, try restarting to see if that corrects the problem.\n\n" +
+								"Then, check the Error Log view for messages, and the FAQ for solutions.\n\n" +
 								MylarTaskListPlugin.URL_HOMEPAGE); 
 						return;
 					}
