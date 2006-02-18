@@ -16,7 +16,10 @@ import java.lang.reflect.Field;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -70,6 +73,23 @@ public class TaskListFilteredTree extends FilteredTree {
 		
 		activeTaskLabel = new Label(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
+		activeTaskLabel.addMouseListener(new MouseListener() {
+
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore
+			}
+
+			public void mouseDown(MouseEvent e) {
+				TaskListView.getDefault().selectedAndFocusTask(
+						MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask()
+				);
+			}
+
+			public void mouseUp(MouseEvent e) {
+				// ignore
+			}
+			
+		});
 		
 		return container;
 	}
