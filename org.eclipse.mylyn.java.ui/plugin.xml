@@ -179,7 +179,9 @@
                <view id="org.eclipse.mylar.ui.views.active.hierarchy"
                     relative="org.eclipse.ui.views.ContentOutline"
                     relationship="stack"/>
+                <!--
                <viewShortcut id="org.eclipse.mylar.ui.views.active.search"/>
+               -->
                <!--
                <view id="org.eclipse.mylar.ui.views.active.search"
                     relative="org.eclipse.ui.views.ContentOutline"
