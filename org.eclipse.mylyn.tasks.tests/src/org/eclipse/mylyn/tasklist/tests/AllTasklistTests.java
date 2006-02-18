@@ -34,6 +34,7 @@ public class AllTasklistTests {
 		suite.addTestSuite(TaskListDnDTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
+		suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
