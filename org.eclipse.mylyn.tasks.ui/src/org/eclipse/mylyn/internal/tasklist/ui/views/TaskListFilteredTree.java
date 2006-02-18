@@ -73,6 +73,7 @@ public class TaskListFilteredTree extends FilteredTree {
 		
 		activeTaskLabel = new Label(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
+		activeTaskLabel.setSize(150, activeTaskLabel.getSize().y);
 		activeTaskLabel.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
