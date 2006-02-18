@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -194,15 +193,6 @@ public class MylarUiPlugin extends AbstractUIPlugin {
 					if (ApplyMylarToOutlineAction.getDefault() != null)
 						ApplyMylarToOutlineAction.getDefault().update();
 					MylarTaskListPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
-					
-					if (!MylarTaskListPlugin.getDefault().isInitialized()) {
-						MessageDialog.openError(null, MylarTaskListPlugin.TITLE_DIALOG,
-								"Mylar Task List may have failed to initialize.\n\n" +
-								"First, try restarting to see if that corrects the problem.\n\n" +
-								"Then, check the Error Log view for messages, and the FAQ for solutions.\n\n" +
-								MylarTaskListPlugin.URL_HOMEPAGE); 
-						return;
-					}
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Mylar UI initialization failed", true);
 				}
