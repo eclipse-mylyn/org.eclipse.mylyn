@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
@@ -62,6 +63,7 @@ import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasklist.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasklist.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractAddExistingTaskWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
@@ -306,6 +308,14 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 						requestRefresh((BugzillaTask) hit.getCorrespondingTask());
 					}
 				}
+				// TODO: refactor?
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (TaskListView.getDefault() != null) {
+							TaskListView.getDefault().getViewer().refresh();
+						}
+					}
+				});
 				return Status.OK_STATUS;
 			}
 		};
@@ -497,7 +507,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	}
 
 	private void refreshTasksAndQueries() {
-		List<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
+		Set<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
 
 		for (ITask task : tasks) {
 			if (task instanceof BugzillaTask && !task.isCompleted()) {

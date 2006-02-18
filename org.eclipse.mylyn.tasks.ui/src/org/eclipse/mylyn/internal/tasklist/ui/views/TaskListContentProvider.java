@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasklist.ui.views;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -131,15 +132,20 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean selectQuery(AbstractRepositoryQuery cat) {
-		List<? extends ITaskListElement> list = cat.getHits();
+		Set<? extends ITaskListElement> list = cat.getHits();
 		if (list.size() == 0) {
 			return true;
 		}
-		for (int i = 0; i < list.size(); i++) {
-			if (!filter(list.get(i))) {
+		for (ITaskListElement element : list) {
+			if (!filter(element)) {
 				return true;
 			}
 		}
+//		for (int i = 0; i < list.size(); i++) {
+//			if (!filter(list.get(i))) {
+//				return true;
+//			}
+//		}
 		return false;
 	}
 
@@ -155,15 +161,20 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			}
 			return false;
 		}
-		List<? extends ITaskListElement> list = cat.getChildren();
+		Set<? extends ITaskListElement> list = cat.getChildren();
 		if (list.size() == 0) {
 			return true;
 		}
-		for (int i = 0; i < list.size(); i++) {
-			if (!filter(list.get(i))) {
+		for (ITaskListElement element : list) {
+			if (!filter(element)) {
 				return true;
 			}
 		}
+//		for (int i = 0; i < list.size(); i++) {
+//			if (!filter(list.get(i))) {
+//				return true;
+//			}
+//		}
 		return false;
 	}
 
@@ -183,23 +194,33 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 					}
 					return children;
 				}
-				List<? extends ITaskListElement> list = ((ITaskContainer) parent).getChildren();
-				for (int i = 0; i < list.size(); i++) {
-					if (!filter(list.get(i))) {
-						children.add(list.get(i));
+				Set<? extends ITaskListElement> list = ((ITaskContainer) parent).getChildren();
+				for (ITaskListElement element : list) {
+					if (!filter(element)) {
+						children.add(element);
 					}
 				}
+//				for (int i = 0; i < list.size(); i++) {
+//					if (!filter(list.get(i))) {
+//						children.add(list.get(i));
+//					}
+//				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
-				List<? extends ITaskListElement> list = ((AbstractRepositoryQuery) parent).getHits();
-				for (int i = 0; i < list.size(); i++) {
-					if (!filter(list.get(i))) {
-						children.add(list.get(i));
+				Set<? extends ITaskListElement> list = ((AbstractRepositoryQuery) parent).getHits();
+				for (ITaskListElement element : list) {
+					if (!filter(element)) {
+						children.add(element);
 					}
 				}
+//				for (int i = 0; i < list.size(); i++) {
+//					if (!filter(list.get(i))) {
+//						children.add(list.get(i));
+//					}
+//				}
 				return children;
 			} else if (parent instanceof Task) {
-				List<ITask> subTasks = ((Task) parent).getChildren();
+				Set<ITask> subTasks = ((Task) parent).getChildren();
 				for (ITask t : subTasks) {
 					if (!filter(t)) {
 						children.add(t);

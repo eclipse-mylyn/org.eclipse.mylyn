@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Mik Kersten
@@ -26,7 +26,7 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 
 	protected int maxHits;
 
-	private List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
+	private Set<AbstractQueryHit> hits = new HashSet<AbstractQueryHit>();
 
 	protected Date lastRefresh;
 
@@ -48,8 +48,8 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 		return queryUrl;
 	}
 
-	public List<ITask> getChildren() {
-		List<ITask> tasks = new ArrayList<ITask>();
+	public Set<ITask> getChildren() {
+		Set<ITask> tasks = new HashSet<ITask>();
 		for (AbstractQueryHit hit : getHits()) {
 			ITask task = hit.getCorrespondingTask();
 			if (task != null) {
@@ -67,8 +67,8 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 		// ignore
 	}
 
-	public List<AbstractQueryHit> getHits() {
-		return Collections.unmodifiableList(hits);
+	public Set<AbstractQueryHit> getHits() {
+		return Collections.unmodifiableSet(hits);
 	}
 
 	public void clearHits() {

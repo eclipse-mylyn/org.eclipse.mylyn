@@ -15,7 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 
@@ -121,7 +123,7 @@ public class Task implements ITask {
 	 */
 	private transient ITask parent;
 
-	private List<ITask> children = new ArrayList<ITask>();
+	private Set<ITask> children = new HashSet<ITask>();
 
 	protected String kind;
 
@@ -270,7 +272,7 @@ public class Task implements ITask {
 		this.estimatedTimeHours = estimated;
 	}
 
-	public List<ITask> getChildren() {
+	public Set<ITask> getChildren() {
 		return children;
 	}
 

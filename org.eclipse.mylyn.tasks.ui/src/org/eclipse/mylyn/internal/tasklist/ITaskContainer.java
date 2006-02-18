@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public interface ITaskContainer extends ITaskListElement {
 
-	public List<ITask> getChildren();
+	public Set<ITask> getChildren();
 
 	public boolean isArchive();
 

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
-import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -65,10 +65,10 @@ public class TaskListDnDTest extends TestCase {
 		String urlData = url + "\n" + title;
 
 		dropAdapter.performDrop(urlData);
-		List<ITask> tasks = manager.getTaskList().getRootTasks();
+		Set<ITask> tasks = manager.getTaskList().getRootTasks();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
-		assertEquals(url, tasks.get(0).getUrl());
+		assertEquals(url, tasks.iterator().next().getUrl());
 
 		// TODO: Failing due to asynchronous retrieval of title from url
 		// assertEquals(title, tasks.get(0).getDescription(false));

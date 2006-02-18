@@ -9,7 +9,7 @@
             id="org.eclipse.mylar.bugzilla.ui.tasklist">
       </taskHandler>
    </extension>
-   
+  
    <extension
          id="org.eclipse.mylar.bugzilla.repository" 
          name="Bugzilla Repository"

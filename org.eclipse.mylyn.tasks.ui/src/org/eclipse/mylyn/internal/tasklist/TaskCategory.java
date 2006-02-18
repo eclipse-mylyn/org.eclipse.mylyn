@@ -13,18 +13,15 @@
  */
 package org.eclipse.mylar.internal.tasklist;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Mik Kersten
  */
-public class TaskCategory implements ITaskContainer, Serializable {
+public class TaskCategory implements ITaskContainer {
 
-	private static final long serialVersionUID = 3834024740813027380L;
-
-	private List<ITask> tasks = new ArrayList<ITask>();
+	private Set<ITask> tasks = new HashSet<ITask>();
 
 	protected String description = "";
 
@@ -34,6 +31,7 @@ public class TaskCategory implements ITaskContainer, Serializable {
 
 	public TaskCategory(String description) {
 		this.description = description;
+		this.handle = description;
 	}
 
 	public String getDescription() {
@@ -80,7 +78,7 @@ public class TaskCategory implements ITaskContainer, Serializable {
 		tasks.remove(task);
 	}
 
-	public List<ITask> getChildren() {
+	public Set<ITask> getChildren() {
 		return tasks;
 	}
 

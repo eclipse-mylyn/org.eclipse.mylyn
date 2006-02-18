@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasklist.tests;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.core.MylarPlugin;
@@ -85,7 +85,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 		assertNotNull(taskList);
-		List<ITask> tasks = taskList.getRootTasks();
+		Set<ITask> tasks = taskList.getRootTasks();
 		assertNotNull(tasks);
 		assertTrue(tasks.size() > 0);
 		for (ITask task : tasks) {
@@ -100,7 +100,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 		assertNotNull(taskList);
-		List<ITask> tasks = taskList.getRootTasks();
+		Set<ITask> tasks = taskList.getRootTasks();
 		assertNotNull(tasks);
 		assertTrue(tasks.size() > 0);
 		for (ITask task : tasks) {

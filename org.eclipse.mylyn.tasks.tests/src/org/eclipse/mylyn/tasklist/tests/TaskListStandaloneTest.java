@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -102,8 +103,8 @@ public class TaskListStandaloneTest extends TestCase {
 		// assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 
-		List<ITask> readList = manager.getTaskList().getRootTasks();
-		ITask readTask = readList.get(0);
+		Set<ITask> readList = manager.getTaskList().getRootTasks();
+		ITask readTask = readList.iterator().next();
 		assertTrue(readTask.getDescription().equals("task 1"));
 
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());

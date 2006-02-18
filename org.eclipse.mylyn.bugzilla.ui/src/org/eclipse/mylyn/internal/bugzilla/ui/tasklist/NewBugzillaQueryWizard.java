@@ -70,6 +70,9 @@ public class NewBugzillaQueryWizard extends Wizard {
 					try {
 						AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
 						client.synchronize(queryCategory);
+//						if (TaskListView.getDefault() != null) {
+//							TaskListView.getDefault().getViewer().refresh();
+//						}
 //						queryCategory.refreshBugs(new SubProgressMonitor(monitor, 50));
 					} finally {
 						monitor.done();

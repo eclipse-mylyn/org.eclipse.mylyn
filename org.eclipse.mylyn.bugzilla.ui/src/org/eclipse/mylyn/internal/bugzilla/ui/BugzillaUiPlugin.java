@@ -31,10 +31,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		BugzillaPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
-//		bugzillaTaskListManager = new BugzillaTaskListManager();
-//		bugzillaRefreshManager = new BugzillaRefreshManager();
-//		BugzillaPlugin.getDefault().addOfflineStatusListener(bugzillaTaskListManager);
-
 	}
 
 	/**
@@ -43,7 +39,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-//		bugzillaRefreshManager.clearAllRefreshes();
 	}
 
 	/**

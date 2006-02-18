@@ -15,6 +15,7 @@ package org.eclipse.mylar.internal.tasklist;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylar.internal.tasklist.Task.TaskStatus;
 
@@ -80,7 +81,7 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setEstimatedTimeHours(int estimated);
 
-	public abstract List<ITask> getChildren();
+	public abstract Set<ITask> getChildren();
 
 	public abstract void addSubTask(ITask task);
 

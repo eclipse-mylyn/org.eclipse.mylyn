@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class TaskList {
 
-	private static final String LABEL_ARCHIVE = "Archive (automatic)";
+	public static final String LABEL_ARCHIVE = "Archive (automatic)";
 
 	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
 	
@@ -31,12 +31,12 @@ public class TaskList {
 	
 	private List<ITaskContainer> categories = new ArrayList<ITaskContainer>();
 
-	private List<ITask> rootTasks = new ArrayList<ITask>();
+	private Set<ITask> rootTasks = new HashSet<ITask>();
 	
 	{
-		archiveCategory.setIsArchive(true);
+//		archiveCategory.setIsArchive(true);
 		categories.add(archiveCategory);
-	}
+	}  
 	
 	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
@@ -93,7 +93,7 @@ public class TaskList {
 		}
 	}
 
-	private boolean deleteTaskHelper(List<ITask> tasks, ITask t) {
+	private boolean deleteTaskHelper(Set<ITask> tasks, ITask t) {
 		for (ITask task : tasks) {
 			if (task.getHandleIdentifier().equals(t.getHandleIdentifier())) {
 				tasks.remove(task);
@@ -131,7 +131,7 @@ public class TaskList {
 		return findTaskHelper(rootTasks, handle);
 	}
 
-	private AbstractQueryHit findQueryHitHelper(List<? extends ITaskListElement> elements, String handle) {
+	private AbstractQueryHit findQueryHitHelper(Set<? extends ITaskListElement> elements, String handle) {
 		if (handle == null)
 			return null;
 		for (ITaskListElement element : elements) {
@@ -145,7 +145,7 @@ public class TaskList {
 		return null;
 	}
 
-	private ITask findTaskHelper(List<? extends ITaskListElement> elements, String handle) {
+	private ITask findTaskHelper(Set<? extends ITaskListElement> elements, String handle) {
 		if (handle == null)
 			return null;
 		for (ITaskListElement element : elements) {
@@ -187,7 +187,7 @@ public class TaskList {
 		}
 	}
 	
-	public List<ITask> getRootTasks() {
+	public Set<ITask> getRootTasks() {
 		return rootTasks;
 	}
 
@@ -218,7 +218,7 @@ public class TaskList {
 		return max;
 	}
 
-	private int largestTaskHandleHelper(List<ITask> tasks) {
+	private int largestTaskHandleHelper(Set<ITask> tasks) {
 		int ihandle = 0;
 		int max = 0;
 		for (ITask task : tasks) {
@@ -238,6 +238,7 @@ public class TaskList {
 
 	public List<Object> getRoots() {
 		List<Object> roots = new ArrayList<Object>();
+//		roots.add(archiveCategory);
 		for (ITask t : rootTasks)
 			roots.add(t);
 		for (ITaskContainer cat : categories)
@@ -310,14 +311,14 @@ public class TaskList {
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
 	}
 
-	public void addTaskToArchive(ITask newTask) {
-		if (!archiveMap.containsKey(newTask.getHandleIdentifier())) {
-			archiveMap.put(newTask.getHandleIdentifier(), newTask);
-			if (archiveCategory != null) {
-				archiveCategory.internalAddTask(newTask);
-			}
+	public void addTaskToArchive(ITask task) {
+//		System.err.println(">>> adding: " + newTask);
+		archiveMap.put(task.getHandleIdentifier(), task);
+		if (archiveCategory != null) {
+			archiveCategory.internalAddTask(task);
+			task.setCategory(archiveCategory);
 		}
-	}
+	}  
 
 	public ITask getTaskFromArchive(String handleIdentifier) {
 		return archiveMap.get(handleIdentifier);
@@ -338,5 +339,17 @@ public class TaskList {
 	 */
 	public void clearArchive() {
 		archiveMap.clear();
+	}
+
+	
+	public TaskCategory getCategoryForHandle(String categoryHandle) {
+		for (ITaskContainer cat : categories) {
+			if (cat instanceof TaskCategory) {
+				if (cat.getHandleIdentifier().equals(categoryHandle)) {
+					return (TaskCategory)cat;
+				}
+			}
+		}
+		return null;
 	}
 }

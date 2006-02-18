@@ -122,21 +122,20 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		Element node = doc.createElement(getCategoryTagName());
 		node.setAttribute(KEY_NAME, category.getDescription());
 
-		for (ITask task : ((TaskCategory) category).getChildren()) {
-			try {
-				Element element = null;
-				for (ITaskListExternalizer externalizer : delegateExternalizers) {
-					if (externalizer.canCreateElementFor(task)) {
-						element = externalizer.createTaskElement(task, doc, node);
-					}
-				}
-				if (element == null)
-					createTaskElement(task, doc, node);
-			} catch (Exception e) {
-				MylarStatusHandler.log(e, e.getMessage());
-			}
-
-		}
+//		for (ITask task : ((TaskCategory) category).getChildren()) {
+//			try {
+//				Element element = null;
+//				for (ITaskListExternalizer externalizer : delegateExternalizers) {
+//					if (externalizer.canCreateElementFor(task)) {
+//						element = externalizer.createTaskElement(task, doc, node);
+//					}
+//				}
+//				if (element == null)
+//					createTaskElement(task, doc, node);
+//			} catch (Exception e) {
+//				MylarStatusHandler.log(e, e.getMessage());
+//			}
+//		}
 		parent.appendChild(node);
 		return node;
 	}
@@ -150,6 +149,10 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		// node.setAttribute(PATH, task.getRemoteContextPath());
 		node.setAttribute(KEY_LABEL, task.getDescription());
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
+		if (task.getCategory() != null) {
+			node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier());
+		}
+		
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
 		node.setAttribute(KEY_KIND, task.getKind());
 		
@@ -217,7 +220,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
-		TaskCategory category = new TaskCategory(element.getAttribute("Name"));
+		TaskCategory category = new TaskCategory(element.getAttribute(KEY_NAME));
 		taskList.internalAddCategory(category);
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
@@ -225,6 +228,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			boolean read = false;
 			try {
 				for (ITaskListExternalizer externalizer : delegateExternalizers) {
+					
+					// LEGACY: categories used to contain tasks
 					if (externalizer.canReadTask(child)) {
 						ITask task = externalizer.readTask(child, taskList, category, null);
 						category.addTask(task);
@@ -249,7 +254,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getTaskTagName());
 	}
 
-	public ITask readTask(Node node, TaskList tlist, ITaskContainer category, ITask parent)
+	public ITask readTask(Node node, TaskList taskList, ITaskContainer category, ITask parent)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
@@ -264,12 +269,13 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			label = "Description was corrupted in stored tasklist";
 		}
+		
 		Task task = new Task(handle, label, false);
-		readTaskInfo(task, tlist, element, category, parent);
+		readTaskInfo(task, taskList, element, parent);
 		return task;
 	}
 
-	protected void readTaskInfo(ITask task, TaskList tlist, Element element, ITaskContainer category, ITask parent)
+	protected void readTaskInfo(ITask task, TaskList taskList, Element element, ITask parent)
 			throws TaskExternalizationException {
 		if (element.hasAttribute(KEY_PRIORITY)) {
 			task.setPriority(element.getAttribute(KEY_PRIORITY));
@@ -283,7 +289,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		
 		if (element.getAttribute(KEY_ACTIVE).compareTo(VAL_TRUE) == 0) {
 			task.setActive(true);
-			tlist.setActive(task, true);
+			taskList.setActive(task, true);
 		} else {
 			task.setActive(false);
 		}
@@ -360,16 +366,30 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			task.getPlans().add(element.getAttribute(KEY_PLAN + i));
 			ii++;
 		}
-		if (category != null) {
-			task.setCategory((TaskCategory) category);
-		} else {
-			task.setCategory(null);
+		
+		String categoryHandle = null;
+		if (element.hasAttribute(KEY_CATEGORY)) {
+			categoryHandle = element.getAttribute(KEY_CATEGORY);
+			TaskCategory category = taskList.getCategoryForHandle(categoryHandle);
+			if (category != null) {
+				task.setCategory(category);
+				category.addTask(task);
+			} else {
+				taskList.internalAddRootTask(task);
+			}
+		}  else {
+			taskList.internalAddRootTask(task);
 		}
+//		if (category != null) {
+//			task.setCategory((TaskCategory) category);
+//		} else {
+//			task.setCategory(null);
+//		}
 		task.setParent(parent);
 		NodeList list = element.getChildNodes();
 		for (int j = 0; j < list.getLength(); j++) {
 			Node child = list.item(j);
-			task.addSubTask(readTask(child, tlist, null, task));
+			task.addSubTask(readTask(child, taskList, null, task));
 		}
 	}
 
@@ -434,7 +454,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public void readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
 		// doesn't know how to read any queries
-
 	}
 
 	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {

@@ -16,6 +16,7 @@ package org.eclipse.mylar.internal.bugs.search;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
@@ -156,7 +157,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 		collector.setProgressMonitor(monitor);
 
 		// get all of the root tasks and start the search
-		List<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
+		Set<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
 		searchLocal(tasks, collector, elementName, monitor);
 		for (TaskCategory cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
 			searchLocal(cat.getChildren(), collector, elementName, monitor);
@@ -184,7 +185,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 		collector.setProgressMonitor(monitor);
 
 		// get all of the root tasks and start the search
-		List<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
+		Set<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getRootTasks();
 		searchLocal(tasks, collector, elementName, monitor);
 		for (TaskCategory cat : MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskCategories()) {
 			searchLocal(cat.getChildren(), collector, elementName, monitor);
@@ -205,7 +206,7 @@ public class BugzillaMylarSearchOperation extends WorkspaceModifyOperation imple
 	 * @param monitor
 	 *            The progress monitor
 	 */
-	private void searchLocal(List<ITask> tasks, BugzillaResultCollector searchCollector, String elementName,
+	private void searchLocal(Set<ITask> tasks, BugzillaResultCollector searchCollector, String elementName,
 			IProgressMonitor monitor) {
 		if (tasks == null)
 			return;
