@@ -11,8 +11,12 @@
 
 package org.eclipse.mylar.tasklist.tests;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.bugzilla.core.Attribute;
 import org.eclipse.mylar.bugzilla.core.BugReport;
 import org.eclipse.mylar.bugzilla.core.Comment;
@@ -24,6 +28,16 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
  */
 public class TaskTestUtil {
 
+	public static File getLocalFile(String path) {
+		try {
+			URL installURL = MylarTasksTestsPlugin.getDefault().getBundle().getEntry(path);
+			URL localURL = FileLocator.toFileURL(installURL);
+			return new File(localURL.getFile());
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	
 	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
 		BugReport report = new BugReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		bugzillaTask.setBugReport(report);

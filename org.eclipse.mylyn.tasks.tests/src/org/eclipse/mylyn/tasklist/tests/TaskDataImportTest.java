@@ -11,11 +11,8 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Set;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.tasklist.ITask;
@@ -37,11 +34,11 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	private TaskDataImportWizardPage wizardPage = null;
 
-	private String sourceDir = "taskdataimporttest";
+	private String sourceDir = "testdata/taskdataimporttest";
 
 	private File sourceDirFile = null;
 
-	private String sourceZipPath = "taskdataimporttest/mylardata-2006-02-16.zip";
+	private String sourceZipPath = "testdata/taskdataimporttest/mylardata-2006-02-16.zip";
 
 	private File sourceZipFile = null;
 
@@ -60,9 +57,9 @@ public class TaskDataImportTest extends AbstractContextTest {
 		manager.createNewTaskList();
 		assertTrue(manager.getTaskList().getRoots().size() == 1);
 
-		sourceDirFile = getLocalFile(sourceDir);
+		sourceDirFile = TaskTestUtil.getLocalFile(sourceDir);
 		assertTrue(sourceDirFile.exists());
-		sourceZipFile = getLocalFile(sourceZipPath);
+		sourceZipFile = TaskTestUtil.getLocalFile(sourceZipPath);
 		assertTrue(sourceZipFile.exists());
 
 		// make sure no tasks and categories exist prior to import tests
@@ -107,15 +104,4 @@ public class TaskDataImportTest extends AbstractContextTest {
 			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
 	}
-
-	private File getLocalFile(String path) {
-		try {
-			URL installURL = MylarTasksTestsPlugin.getDefault().getBundle().getEntry(path);
-			URL localURL = FileLocator.toFileURL(installURL);
-			return new File(localURL.getFile());
-		} catch (IOException e) {
-			return null;
-		}
-	}
-
 }

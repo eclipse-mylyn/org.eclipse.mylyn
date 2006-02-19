@@ -13,6 +13,7 @@
  */
 package org.eclipse.mylar.tasklist.tests;
 
+import java.io.File;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -65,6 +66,25 @@ public class TaskListManagerTest extends TestCase {
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
+	public void testLegacyTaskListReading() {
+		File legacyList = TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml");
+		assertTrue(legacyList.exists());
+		
+		manager.setTaskListFile(legacyList);
+		manager.readExistingOrCreateNewList();
+		
+		int allTasks = manager.getTaskList().getAllTasks().size();
+		int allRootTasks = manager.getTaskList().getRoots().size();
+		
+		manager.saveTaskList();
+		TaskList list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+		
+		assertEquals(allTasks, manager.getTaskList().getAllTasks().size());
+		assertEquals(allRootTasks, manager.getTaskList().getRootTasks().size());
+	}
+	
 	public void testRepositoryUrlHandles() {
 
 		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
