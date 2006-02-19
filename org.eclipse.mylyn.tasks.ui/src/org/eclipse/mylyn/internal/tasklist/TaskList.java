@@ -33,15 +33,15 @@ public class TaskList {
 
 	private Set<ITask> rootTasks = new HashSet<ITask>();
 	
-	{
-//		archiveCategory.setIsArchive(true);
-		categories.add(archiveCategory);
-	}  
-	
 	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 	private transient List<ITask> activeTasks = new ArrayList<ITask>();
 
+	public TaskList(){
+		archiveCategory.setIsArchive(true);
+		categories.add(archiveCategory);
+	}  
+	
 	public void internalAddRootTask(ITask task) {
 		rootTasks.add(task);
 	}

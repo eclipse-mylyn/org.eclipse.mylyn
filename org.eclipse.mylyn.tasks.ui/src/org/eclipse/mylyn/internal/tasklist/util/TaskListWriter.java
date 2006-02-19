@@ -227,18 +227,29 @@ public class TaskListWriter {
 			} else {
 				NodeList list = root.getChildNodes();
 				
-				// first read all the tasks and categories
+				// NOTE: order is important, first read the categories
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
-					boolean wasRead = false;
 					try {
+						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
+							delagatingExternalizer.readCategory(child, taskList);
+						}
+					} catch (Exception e) {
+						handleException(inFile, child, e);
+					}
+				}
+				
+				// then read the tasks
+				for (int i = 0; i < list.getLength(); i++) {
+					Node child = list.item(i);
+					try {
+						boolean wasRead = false;
 						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
 							&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
-								if (externalizer.canReadTask(child)) {
+								if (!wasRead && externalizer.canReadTask(child)) {
 									externalizer.readTask(child, taskList, null, null);
 									wasRead = true;
-									break;
 								}
 							}
 							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
@@ -250,14 +261,11 @@ public class TaskListWriter {
 					}
 				}
 				
-				// then read the query hits, which get corresponded to tasks
+				// then query hits hits, which get corresponded to tasks
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
-						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
-							delagatingExternalizer.readCategory(child, taskList);
-							
-						} else if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
+						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadQuery(child)) {
 									externalizer.readQuery(child, taskList);
