@@ -29,7 +29,7 @@ public class TaskList {
 	
 	private TaskCategory archiveCategory = new TaskCategory(LABEL_ARCHIVE);
 	
-	private List<ITaskContainer> categories = new ArrayList<ITaskContainer>();
+	private Set<ITaskContainer> categories = new HashSet<ITaskContainer>();
 
 	private Set<ITask> rootTasks = new HashSet<ITask>();
 	
@@ -191,7 +191,7 @@ public class TaskList {
 		return rootTasks;
 	}
 
-	public List<ITaskContainer> getCategories() {
+	public Set<ITaskContainer> getCategories() {
 		return categories;
 	}
 
@@ -257,8 +257,8 @@ public class TaskList {
 		return allTasks;
 	}
 
-	public List<TaskCategory> getTaskCategories() {
-		List<TaskCategory> cats = new ArrayList<TaskCategory>();
+	public Set<TaskCategory> getTaskCategories() {
+		Set<TaskCategory> cats = new HashSet<TaskCategory>();
 		for (ITaskContainer cat : categories) {
 			if (cat instanceof TaskCategory) {
 				cats.add((TaskCategory) cat);
@@ -307,7 +307,7 @@ public class TaskList {
 	}
 
 	public boolean isEmpty() {
-		boolean archiveIsEmpty = getCategories().size() == 1 && getCategories().get(0).equals(archiveCategory) && archiveCategory.getChildren().isEmpty();
+		boolean archiveIsEmpty = getCategories().size() == 1 && getCategories().iterator().next().equals(archiveCategory) && archiveCategory.getChildren().isEmpty();
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
 	}
 

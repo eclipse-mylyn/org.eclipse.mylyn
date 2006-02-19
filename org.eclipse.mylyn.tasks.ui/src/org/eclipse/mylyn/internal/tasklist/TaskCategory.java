@@ -23,19 +23,19 @@ public class TaskCategory implements ITaskContainer {
 
 	private Set<ITask> tasks = new HashSet<ITask>();
 
-	protected String description = "";
+//	protected String description = "";
 
 	private String handle = "";
 
 	private boolean isArchive = false;
 
-	public TaskCategory(String description) {
-		this.description = description;
-		this.handle = description;
+	public TaskCategory(String handleAndDescription) {
+//		this.description = description;
+		this.handle = handleAndDescription;
 	}
 
 	public String getDescription() {
-		return description;
+		return handle;
 	}
 
 	public String getHandleIdentifier() {
@@ -43,7 +43,7 @@ public class TaskCategory implements ITaskContainer {
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		this.handle = description;
 	}
 
 	public void setHandleIdentifier(String handle) {
@@ -88,10 +88,14 @@ public class TaskCategory implements ITaskContainer {
 			return false;
 		if (object instanceof TaskCategory) {
 			TaskCategory compare = (TaskCategory) object;
-			return this.getDescription().equals(compare.getDescription());
+			return this.getHandleIdentifier().equals(compare.getHandleIdentifier());
 		} else {
 			return false;
 		}
+	}
+	
+	public int hashCode() {
+		return handle.hashCode();
 	}
 
 	public ITask getOrCreateCorrespondingTask() {

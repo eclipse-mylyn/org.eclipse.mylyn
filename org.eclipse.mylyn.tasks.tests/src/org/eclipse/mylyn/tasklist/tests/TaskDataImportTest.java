@@ -66,8 +66,8 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertTrue(sourceZipFile.exists());
 
 		// make sure no tasks and categories exist prior to import tests
-		 assertEquals(manager.getTaskList().getTaskCategories().size(), 1);
-		
+		assertEquals(manager.getTaskList().getTaskCategories().size(), 1);
+
 	}
 
 	protected void tearDown() throws Exception {
@@ -89,8 +89,8 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertNotNull(tasks);
 		assertTrue(tasks.size() > 0);
 		for (ITask task : tasks) {
-			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));	
-		}		
+			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
+		}
 	}
 
 	/** Tests the wizard when it has been asked to import task data from folder */
@@ -104,10 +104,8 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertNotNull(tasks);
 		assertTrue(tasks.size() > 0);
 		for (ITask task : tasks) {
-			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));	
-		}		
-		
-
+			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
+		}
 	}
 
 	private File getLocalFile(String path) {

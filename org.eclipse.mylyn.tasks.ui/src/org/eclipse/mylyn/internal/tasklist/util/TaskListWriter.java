@@ -268,7 +268,10 @@ public class TaskListWriter {
 						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadQuery(child)) {
-									externalizer.readQuery(child, taskList);
+									AbstractRepositoryQuery query = externalizer.readQuery(child, taskList);
+									if (query != null) {
+										taskList.internalAddQuery(query);
+									}
 									break;
 								}
 							}

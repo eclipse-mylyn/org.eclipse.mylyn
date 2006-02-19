@@ -69,8 +69,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_NOTES = "Notes";
 
-	@Deprecated
-	public static final String KEY_BUGZILLA = "Bugzilla";
+//	@Deprecated
+//	public static final String KEY_BUGZILLA = "Bugzilla";
 
 	public static final String KEY_ACTIVE = "Active";
 
@@ -166,7 +166,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			node.setAttribute(KEY_ACTIVE, VAL_FALSE);
 		}
-		node.setAttribute(KEY_BUGZILLA, VAL_FALSE); // TODO: get rid of this
+//		node.setAttribute(KEY_BUGZILLA, VAL_FALSE); // TODO: get rid of this
 
 		if (task.getUrl() != null) {
 			node.setAttribute(KEY_ISSUEURL, task.getUrl());
@@ -374,10 +374,10 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			if (category != null) {
 				task.setCategory(category);
 				category.addTask(task);
-			} else {
+			} else if (parent == null){
 				taskList.internalAddRootTask(task);
 			}
-		}  else {
+		}  else if (parent == null) {
 			taskList.internalAddRootTask(task);
 		}
 //		if (category != null) {
@@ -452,8 +452,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return false;
 	}
 
-	public void readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
+	public AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
 		// doesn't know how to read any queries
+		return null;
 	}
 
 	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {

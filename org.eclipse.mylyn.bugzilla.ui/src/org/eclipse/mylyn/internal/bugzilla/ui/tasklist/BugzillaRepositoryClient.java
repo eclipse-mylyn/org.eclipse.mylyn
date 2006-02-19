@@ -373,8 +373,13 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	}
 
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
-		if (query instanceof BugzillaCustomRepositoryQuery) {
-			BugzillaCustomRepositoryQuery queryCategory = (BugzillaCustomRepositoryQuery) query;
+		if (!(query instanceof BugzillaRepositoryQuery)) {
+			return;
+		}
+		BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery)query;
+		
+		if (queryCategory.isCustomQuery()) {
+//			BugzillaCustomRepositoryQuery queryCategory = (BugzillaCustomRepositoryQuery) query;
 			BugzillaCustomQueryDialog sqd = new BugzillaCustomQueryDialog(Display.getCurrent().getActiveShell(),
 					queryCategory.getQueryUrl(), queryCategory.getDescription(), queryCategory.getMaxHits() + "");
 			if (sqd.open() == Dialog.OK) {
@@ -389,8 +394,8 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 
 				synchronize(queryCategory);
 			}
-		} else if (query instanceof BugzillaRepositoryQuery) {
-			BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) query;
+		} else {
+//			BugzillaRepositoryQuery queryCategory = (BugzillaRepositoryQuery) query;
 			BugzillaQueryDialog queryDialog = new BugzillaQueryDialog(Display.getCurrent().getActiveShell(),
 					queryCategory.getRepositoryUrl(), queryCategory.getQueryUrl(), queryCategory.getDescription(),
 					queryCategory.getMaxHits() + "");

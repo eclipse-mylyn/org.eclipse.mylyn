@@ -14,6 +14,8 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -144,6 +146,21 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());		
 	}
+
+	public void testBugzillaCustomQueryExternalization() {
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
+		query.setCustomQuery(true);
+		manager.addQuery(query);
+		manager.saveTaskList();
+		assertNotNull(manager.getTaskList());
+
+		TaskList list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getQueries().size());
+		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery)manager.getTaskList().getQueries().get(0);
+		assertTrue(readQuery.isCustomQuery());
+	}
 	
 	public void testQueryExternalization() {
 		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
@@ -181,40 +198,43 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testCreationAndExternalization() {
+		Set<ITask> rootTasks = new HashSet<ITask>();
 		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1", true);
 		manager.moveToRoot(task1);
+		rootTasks.add(task1);
 		Task sub1 = new Task(manager.genUniqueTaskHandle(), "sub 1", true);
 		task1.addSubTask(sub1);
 		sub1.setParent(task1);
 		Task task2 = new Task(manager.genUniqueTaskHandle(), "task 2", true);
 		manager.moveToRoot(task2);
+		rootTasks.add(task2);
 
+		Set<TaskCategory> categories = new HashSet<TaskCategory>();
+		Set<ITask> cat1Contents = new HashSet<ITask>();
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.addCategory(cat1);
+		categories.add(cat1);
 		Task task3 = new Task(manager.genUniqueTaskHandle(), "task 3", true);
 		manager.moveToCategory(cat1, task3);
+		cat1Contents.add(task3);
 		assertEquals(cat1, task3.getCategory());
 		Task sub2 = new Task(manager.genUniqueTaskHandle(), "sub 2", true);
 		task3.addSubTask(sub2);
 		sub2.setParent(task3);
 		Task task4 = new Task(manager.genUniqueTaskHandle(), "task 4", true);
 		manager.moveToCategory(cat1, task4);
+		cat1Contents.add(task4);
 
-		TaskCategory cat2 = new TaskCategory("Category 2");
-		manager.addCategory(cat2);
-		Task task5 = new Task(manager.genUniqueTaskHandle(), "task 5", true);
-		manager.moveToCategory(cat2, task5);
-		Task task6 = new Task(manager.genUniqueTaskHandle(), "task 6", true);
-		manager.moveToCategory(cat2, task6);
+		BugzillaTask reportInCat1 = new BugzillaTask("123", "label 123", true);
+		manager.moveToCategory(cat1, reportInCat1);
+		assertEquals(cat1, reportInCat1.getCategory());
+		cat1Contents.add(reportInCat1);
 
-		BugzillaTask report = new BugzillaTask("123", "label 123", true);
-		manager.moveToCategory(cat2, report);
-		assertEquals(cat2, report.getCategory());
+		BugzillaTask reportInRoot = new BugzillaTask("124", "label 124", true);
+		manager.moveToRoot(reportInRoot);
+		rootTasks.add(reportInRoot);
 
-		BugzillaTask report2 = new BugzillaTask("124", "label 124", true);
-		manager.moveToRoot(report2);
-
-		assertEquals(""+ manager.getTaskList().getRoots(), 6, manager.getTaskList().getRoots().size());
+		assertEquals(""+ manager.getTaskList().getRoots(), 5, manager.getTaskList().getRoots().size());
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
@@ -223,36 +243,25 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		assertNotNull(manager.getTaskList());
-		assertEquals(3, manager.getTaskList().getRootTasks().size()); 
-
+		assertEquals(rootTasks, manager.getTaskList().getRootTasks()); 
 		
-		// XXX: rewrite!!!
-//		Set<ITask> readList = manager.getTaskList().getRootTasks();
-//		assertTrue(readList.get(0).getDescription().equals("task 1"));
-//		assertTrue(readList.get(0).getChildren().get(0).getDescription().equals("sub 1"));
-//		assertTrue(readList.get(1).getDescription().equals("task 2"));
-//		assertTrue(readList.get(2) instanceof BugzillaTask);
-//		BugzillaTask readReport = (BugzillaTask) readList.get(2);
-//		assertEquals(report2.getDescription(), readReport.getDescription());
-//
-//		List<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
-////		assertTrue(readCats.get(0).getDescription().equals(BugzillaTaskExternalizer.BUGZILLA_ARCHIVE_LABEL));
-//
-//		assertEquals("categories: " + manager.getTaskList().getCategories(), 3, manager.getTaskList().getCategories().size());
-//  
-//		TaskCategory readCat = readCats.get(1);
-//		readList = readCat.getChildren();
-//		assertTrue(readList.get(0).getDescription().equals("task 3"));
-//		assertEquals(readCat, readList.get(0).getCategory());
-//		assertTrue(readList.get(0).getChildren().get(0).getDescription().equals("sub 2"));
-//		assertTrue(readList.get(1).getDescription().equals("task 4"));
-//
-//		TaskCategory readCat2 = readCats.get(2);
-//		readList = readCat2.getChildren();
-//		assertTrue(readList.get(0).getDescription().equals("task 5"));
-//		assertTrue(readList.get(1).getDescription().equals("task 6"));
-//		assertTrue(readList.get(2) instanceof BugzillaTask);
-//		assertEquals(readCat2, readList.get(2).getCategory());
+		Set<ITask> readList = manager.getTaskList().getRootTasks();
+		for (ITask task : readList) {
+			if (task.equals(task1)) {
+				assertEquals(task1.getDescription(), task.getDescription());
+				assertEquals(1, task.getChildren().size());		
+			}
+			if (task.equals(reportInRoot)) {
+				assertEquals(reportInRoot.getDescription(), task.getDescription());
+			}
+		}
+
+		Set<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
+		assertTrue(manager.getTaskList().getCategories().contains(cat1));
+		Iterator<TaskCategory> iterator = readCats.iterator();
+		TaskCategory readCat1 = iterator.next();
+		assertEquals(cat1, readCat1);
+		assertEquals(cat1Contents, readCat1.getChildren());
 	}
 
 	public void testScheduledRefreshJob() throws InterruptedException {
