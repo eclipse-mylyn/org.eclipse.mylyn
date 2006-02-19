@@ -217,8 +217,16 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
-		TaskCategory category = new TaskCategory(element.getAttribute(KEY_NAME));
-		taskList.internalAddCategory(category);
+		
+		TaskCategory category; 
+		if (element.hasAttribute(KEY_NAME)) { 
+			category = new TaskCategory(element.getAttribute(KEY_NAME));
+			taskList.internalAddCategory(category);
+		} else {
+			// LEGACY: registry categories did not have names, but need to be read
+			category = taskList.getArchiveCategory();
+		}
+		
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
@@ -230,8 +238,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 					if (externalizer.canReadTask(child)) {
 						ITask task = externalizer.readTask(child, taskList, category, null);
 						category.addTask(task);
-						if (!category.isArchive())
+						if (!category.isArchive()) {
 							task.setCategory(category);
+						}
 						read = true;
 						taskList.addTaskToArchive(task);
 					}

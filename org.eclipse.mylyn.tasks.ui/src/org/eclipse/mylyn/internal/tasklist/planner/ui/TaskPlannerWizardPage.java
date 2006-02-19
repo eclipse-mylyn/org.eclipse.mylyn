@@ -11,13 +11,15 @@
 
 package org.eclipse.mylar.internal.tasklist.planner.ui;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITaskContainer;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.ui.views.DatePicker;
@@ -293,12 +295,12 @@ public class TaskPlannerWizardPage extends WizardPage {
 
 	}
 
-	public java.util.List<Object> getSelectedFilters() {
-		java.util.List<Object> result = new ArrayList<Object>();
+	public Set<ITaskListElement> getSelectedFilters() {
+		Set<ITaskListElement> result = new HashSet<ITaskListElement>();
 		TableItem[] items = filtersTable.getItems();
 		for (TableItem item : items) {
-			if (item.getChecked()) {
-				result.add(item.getData());
+			if (item.getChecked() && item.getData() instanceof ITaskListElement) {
+				result.add((ITaskListElement)item.getData());
 			}
 		}
 		return result;

@@ -12,15 +12,17 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaQueryHit;
+import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
@@ -113,7 +115,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.addCategory(cat1);
 
-		ArrayList<Object> catagories = new ArrayList<Object>();
+		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
 		catagories.add(cat1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -137,7 +139,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.addCategory(cat1);
 
-		ArrayList<Object> catagories = new ArrayList<Object>();
+		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
 		catagories.add(cat1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -164,7 +166,7 @@ public class TaskReportGeneratorTest extends TestCase {
 
 		manager.addQuery(bugQuery);
 
-		ArrayList<Object> catagories = new ArrayList<Object>();
+		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
 		catagories.add(bugQuery);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));

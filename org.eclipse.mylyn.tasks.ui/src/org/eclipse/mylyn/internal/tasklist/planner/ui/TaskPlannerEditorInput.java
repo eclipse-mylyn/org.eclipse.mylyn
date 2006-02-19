@@ -15,10 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.planner.CompletedTaskCollector;
 import org.eclipse.mylar.internal.tasklist.planner.ITaskCollector;
@@ -47,7 +49,7 @@ public class TaskPlannerEditorInput implements IEditorInput {
 
 	private Date reportStartDate = null;
 
-	public TaskPlannerEditorInput(Date reportStartDate, List<Object> chosenCategories, TaskList tlist) {
+	public TaskPlannerEditorInput(Date reportStartDate, Set<ITaskListElement> chosenCategories, TaskList tlist) {
 		this.reportStartDate = reportStartDate;
 		taskReportGenerator = new TaskReportGenerator(tlist, chosenCategories);
 

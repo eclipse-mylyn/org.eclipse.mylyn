@@ -29,6 +29,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.ITask;
+import org.eclipse.mylar.internal.tasklist.ITaskContainer;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListRefreshJob;
 import org.eclipse.mylar.internal.tasklist.Task;
@@ -73,11 +74,21 @@ public class TaskListManagerTest extends TestCase {
 		manager.setTaskListFile(legacyList);
 		manager.readExistingOrCreateNewList();
 		
-		int allTasks = manager.getTaskList().getAllTasks().size();
+		Set<ITask> allTasks = manager.getTaskList().getAllTasks();
+		Set<ITaskContainer> allCategories = manager.getTaskList().getCategories();
 		int allRootTasks = manager.getTaskList().getRoots().size();
 		
 		manager.saveTaskList();
 		TaskList list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+		
+		assertEquals(allTasks, manager.getTaskList().getAllTasks().size());
+		assertEquals(allCategories, manager.getTaskList().getCategories().size());
+		assertEquals(allRootTasks, manager.getTaskList().getRootTasks().size());
+		
+		manager.saveTaskList();
+		list = new TaskList();
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		

@@ -236,8 +236,8 @@ public class TaskList {
 		return max;
 	}
 
-	public List<Object> getRoots() {
-		List<Object> roots = new ArrayList<Object>();
+	public Set<ITaskListElement> getRoots() {
+		Set<ITaskListElement> roots = new HashSet<ITaskListElement>();
 //		roots.add(archiveCategory);
 		for (ITask t : rootTasks)
 			roots.add(t);
@@ -349,5 +349,9 @@ public class TaskList {
 			}
 		}
 		return null;
+	}
+
+	public TaskCategory getArchiveCategory() {
+		return archiveCategory;
 	}
 }

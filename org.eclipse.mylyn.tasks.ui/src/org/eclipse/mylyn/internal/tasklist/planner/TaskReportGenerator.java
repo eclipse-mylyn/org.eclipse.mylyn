@@ -13,7 +13,9 @@ package org.eclipse.mylar.internal.tasklist.planner;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -23,6 +25,7 @@ import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskContainer;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.planner.ui.TaskPlannerWizardPage;
@@ -42,15 +45,15 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 	private List<ITask> tasks = new ArrayList<ITask>();
 
-	private List<Object> filterCategories;
+	private Set<ITaskListElement> filterCategories;
 
 	public TaskReportGenerator(TaskList tlist) {
 		this(tlist, null);
 	}
 
-	public TaskReportGenerator(TaskList tlist, List<Object> filterCategories) {
+	public TaskReportGenerator(TaskList tlist, Set<ITaskListElement> filterCategories) {
 		tasklist = tlist;
-		this.filterCategories = filterCategories != null ? filterCategories : new ArrayList<Object>();
+		this.filterCategories = filterCategories != null ? filterCategories : new HashSet<ITaskListElement>();
 	}
 
 	public void addCollector(ITaskCollector collector) {
@@ -69,12 +72,12 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-		List<Object> rootElements;
+		Set<ITaskListElement> rootElements;
 		if (filterCategories.size() == 0) {
 			rootElements = tasklist.getRoots();
 		} else if(filterCategories.contains(TaskPlannerWizardPage.ROOT_CATEGORY_HACK)) {
 			// TODO: Remove when root category issues fixed
-			rootElements = new ArrayList<Object>(tasklist.getRootTasks());
+			rootElements = new HashSet<ITaskListElement>(tasklist.getRootTasks());
 			filterCategories.remove(TaskPlannerWizardPage.ROOT_CATEGORY_HACK);
 			rootElements.addAll(filterCategories);
 		} else {

@@ -97,30 +97,29 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
-	private List<Object> applyFilter(List<Object> list) {
+	private List<ITaskListElement> applyFilter(Set<ITaskListElement> roots) {
 		String filterText = ((Text) this.view.getFilteredTree().getFilterControl()).getText();
 		if (containsNoFilterText(filterText)) {
-			List<Object> filteredRoots = new ArrayList<Object>();
-			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i) instanceof ITask) {
-					if (!filter(list.get(i))) {
-						filteredRoots.add(list.get(i));
+			List<ITaskListElement> filteredRoots = new ArrayList<ITaskListElement>();
+			for (ITaskListElement element : roots) {
+//			for (int i = 0; i < list.size(); i++) {
+				if (element instanceof ITask) {
+					if (!filter(element)) {
+						filteredRoots.add(element);
 					}
-				} else if (list.get(i) instanceof TaskCategory) {
-					// if(((ITaskCategory)list.get(i)).isArchive())
-					// continue;
-					if (selectCategory((TaskCategory) list.get(i))) {
-						filteredRoots.add(list.get(i));
+				} else if (element instanceof TaskCategory) {
+					if (selectCategory((TaskCategory)element)) {
+						filteredRoots.add(element);
 					}
-				} else if (list.get(i) instanceof AbstractRepositoryQuery) {
-					if (selectQuery((AbstractRepositoryQuery) list.get(i))) {
-						filteredRoots.add(list.get(i));
+				} else if (element instanceof AbstractRepositoryQuery) {
+					if (selectQuery((AbstractRepositoryQuery)element)) {
+						filteredRoots.add(element);
 					}
 				}
 			}
 			return filteredRoots;
 		} else {
-			return list;
+			return new ArrayList<ITaskListElement>(roots);
 		}
 	}
 
