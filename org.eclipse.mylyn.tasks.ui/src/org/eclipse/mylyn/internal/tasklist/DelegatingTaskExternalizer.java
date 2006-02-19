@@ -98,12 +98,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	private List<ITaskListExternalizer> delegateExternalizers = new ArrayList<ITaskListExternalizer>();
 
-	/**
-	 * TODO: make local task externalizer use repository.
-	 */
-	public AbstractRepositoryClient getRepositoryClient() {
-		return null;
-	}
+//	public AbstractRepositoryClient getRepositoryClient() {
+//		return null;
+//	}
 	
 	/**
 	 * Set these on the TaskListWriter instead
@@ -112,9 +109,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		this.delegateExternalizers = externalizers;
 	}
 
-	public boolean canCreateElementFor(ITaskContainer category) {
-		return category instanceof TaskCategory;
-	}
+//	public boolean canCreateElementFor(ITaskContainer category) {
+//		return category instanceof TaskCategory;
+//	}
 
 	public Element createCategoryElement(ITaskContainer category, Document doc, Element parent) {
 		if (category.isArchive())
@@ -149,9 +146,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		// node.setAttribute(PATH, task.getRemoteContextPath());
 		node.setAttribute(KEY_LABEL, task.getDescription());
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
-		if (task.getCategory() != null) {
-			node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier());
-		}
+		if (task.getCategory() != null && !task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
+			node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier()); 
+		} 
 		
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
 		node.setAttribute(KEY_KIND, task.getKind());

@@ -106,10 +106,6 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testPlans() {
-		// File file = new File("foo" + MylarTaskListPlugin.FILE_EXTENSION);
-		// file.deleteOnExit();
-		// TaskListManager manager = new TaskListManager(file);
-
 		Task task1 = new Task(MylarTaskListPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
 		task1.addPlan("default");
 		manager.moveToRoot(task1);
@@ -197,6 +193,44 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(repositoryTask.getKind(), readTask.getKind());
 	}
 
+	public void testRepositoryTasksAndCategoriesMultipleExtern() {
+		TaskCategory cat1 = new TaskCategory("Category 1");
+		manager.addCategory(cat1);
+
+		BugzillaTask reportInCat1 = new BugzillaTask("123", "label 123", true);
+		manager.moveToCategory(cat1, reportInCat1);
+		assertEquals(cat1, reportInCat1.getCategory());
+
+		manager.saveTaskList();
+		assertNotNull(manager.getTaskList());
+		TaskList list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+
+		// read once
+		Set<TaskCategory> readCats = manager.getTaskList().getTaskCategories();
+		assertTrue(manager.getTaskList().getCategories().contains(cat1));
+		Iterator<TaskCategory> iterator = readCats.iterator();
+		TaskCategory readCat1 = iterator.next();
+		assertEquals(cat1, readCat1);
+		assertEquals(1, readCat1.getChildren().size());
+		
+		manager.saveTaskList();
+		assertNotNull(manager.getTaskList());
+		list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+
+		// read again
+		readCats = manager.getTaskList().getTaskCategories();
+		assertTrue(manager.getTaskList().getCategories().contains(cat1));
+		
+		iterator = readCats.iterator();
+		readCat1 = iterator.next();
+		assertEquals(cat1, readCat1);
+		assertEquals(1, readCat1.getChildren().size());
+	}
+	
 	public void testCreationAndExternalization() {
 		Set<ITask> rootTasks = new HashSet<ITask>();
 		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1", true);

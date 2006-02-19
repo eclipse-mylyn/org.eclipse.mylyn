@@ -312,11 +312,9 @@ public class TaskList {
 	}
 
 	public void addTaskToArchive(ITask task) {
-//		System.err.println(">>> adding: " + newTask);
 		archiveMap.put(task.getHandleIdentifier(), task);
-		if (archiveCategory != null) {
+		if (archiveCategory != null) {  
 			archiveCategory.internalAddTask(task);
-			task.setCategory(archiveCategory);
 		}
 	}  
 

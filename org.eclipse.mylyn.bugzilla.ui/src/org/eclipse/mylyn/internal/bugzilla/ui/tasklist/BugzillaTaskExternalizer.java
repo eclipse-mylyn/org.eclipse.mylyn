@@ -28,9 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * The wierd thing here is that the registry gets read in as a normal category,
- * but gets written out by createRegistry
- * 
  * @author Mik Kersten
  */
 public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
@@ -116,9 +113,9 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 //			throw new TaskExternalizationException("Failed to restore all tasks");
 //	}
 
-	public boolean canCreateElementFor(ITaskContainer cat) {
-		return false;
-	}
+//	public boolean canCreateElementFor(ITaskContainer cat) {
+//		return false;
+//	}
 
 	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
 		return category instanceof BugzillaRepositoryQuery;
@@ -210,7 +207,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		return node.getNodeName().equals(getQueryHitTagName());
 	}
 
-	public void readQueryHit(Node node, TaskList tlist, AbstractRepositoryQuery query) throws TaskExternalizationException {
+	public void readQueryHit(Node node, TaskList taskList, AbstractRepositoryQuery query) throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
 		String label;
@@ -241,7 +238,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		} 
 		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), TaskRepositoryManager
 				.getTaskIdAsInt(handle), null, status);
-		ITask correspondingTask = tlist.getTaskForHandle(hit.getHandleIdentifier(), true);
+		ITask correspondingTask = taskList.getTaskForHandle(hit.getHandleIdentifier(), true);
 		if (correspondingTask instanceof BugzillaTask) {
 			hit.setCorrespondingTask((BugzillaTask)correspondingTask);
 		}

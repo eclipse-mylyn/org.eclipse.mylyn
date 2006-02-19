@@ -92,14 +92,14 @@ public class TaskListWriter {
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
 
 		for (ITaskContainer category : taskList.getCategories()) {
-			Element element = null;  
-			if (delagatingExternalizer.canCreateElementFor(category)) {
+//			Element element = null;  
+//			if (delagatingExternalizer.canCreateElementFor(category)) {
 				if (!category.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
 					delagatingExternalizer.createCategoryElement(category, doc, root);
 				}
-			} else if (element == null) {
-				MylarStatusHandler.log("Did not externalize: " + category, this);
-			}
+//			} else if (element == null) {
+//				MylarStatusHandler.log("Did not externalize: " + category, this);
+//			}
 		}
 
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
