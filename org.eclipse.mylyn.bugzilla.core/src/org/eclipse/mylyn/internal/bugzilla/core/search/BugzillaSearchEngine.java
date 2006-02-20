@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.tasklist.TaskRepository;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.search.ui.NewSearchUI;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;

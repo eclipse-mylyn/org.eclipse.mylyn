@@ -13,14 +13,14 @@ package org.eclipse.mylar.tasklist.tests;
 import java.io.File;
 import java.util.Set;
 
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.core.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskList;
-import org.eclipse.mylar.internal.tasklist.TaskListManager;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.TaskDataImportWizardPage;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.TaskList;
+import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 import org.eclipse.swt.widgets.Shell;
 
 /**
