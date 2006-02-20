@@ -648,6 +648,9 @@ public class TaskListView extends ViewPart {
 		 */
 		@Override
 		public int compare(Viewer compareViewer, Object o1, Object o2) {
+			if (o1 instanceof ITaskContainer && o2 instanceof ITask) {
+				return 1;
+			} 
 			if (o1 instanceof ITaskContainer || o1 instanceof AbstractRepositoryQuery) {
 				if (o2 instanceof ITaskContainer || o2 instanceof AbstractRepositoryQuery) {
 					return sortDirection
@@ -662,20 +665,7 @@ public class TaskListView extends ViewPart {
 				} else if (o2 instanceof ITaskListElement) {
 					ITaskListElement element1 = (ITaskListElement) o1;
 					ITaskListElement element2 = (ITaskListElement) o2;
-					// if (element1.isCompleted() && element2.isCompleted()) {
-					// return
-					// element1.getPriority().compareTo(element2.getPriority());
-					// }
-					// if (element1.isCompleted()) return 1;
-					// if (element2.isCompleted()) return -1;
-					// if (element1.hasCorrespondingActivatableTask() &&
-					// element2.hasCorrespondingActivatableTask()) {
-					// ITask task1 = element1.getOrCreateCorrespondingTask();
-					// ITask task2 = element2.getOrCreateCorrespondingTask();
-					//        				
-					// if (task1.isCompleted()) return 1;
-					// if (task2.isCompleted()) return -1;
-					// }
+
 					if (column != null && column.equals(columnNames[1])) {
 						return 0;
 					} else if (column == columnNames[2]) {
