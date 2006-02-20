@@ -186,11 +186,18 @@ public class TaskListManagerTest extends TestCase {
 		TaskList list = new TaskList();
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
-//		System.err.println(">>>> " + manager.getTaskList().getCategories());
 		assertEquals(2, manager.getTaskList().getCategories().size());	
 		assertEquals(1, manager.getTaskList().getAllTasks().size());		
 	}
 
+	public void testDelete() {
+		ITask task = new Task("handle", "label", true);
+		manager.getTaskList().addTaskToArchive(task);
+		manager.getTaskList().internalAddRootTask(task);
+		manager.deleteTask(task);
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+	}
+	
 	public void testBugzillaCustomQueryExternalization() {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label", "1");
 		query.setCustomQuery(true);

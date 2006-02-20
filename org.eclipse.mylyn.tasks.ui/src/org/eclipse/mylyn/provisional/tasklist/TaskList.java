@@ -26,8 +26,6 @@ public class TaskList {
 
 	public static final String LABEL_ROOT = "Root (automatic)";
 	
-	// private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
-
 	private TaskCategory archiveCategory = new TaskCategory(LABEL_ARCHIVE);
 
 	private TaskCategory rootCategory = new TaskCategory(LABEL_ROOT);
@@ -96,15 +94,16 @@ public class TaskList {
 				}
 			}
 		}
+		deleteTaskHelper(archiveCategory.getChildren(), task);
 	}
 
-	private boolean deleteTaskHelper(Set<ITask> tasks, ITask t) {
+	private boolean deleteTaskHelper(Set<ITask> tasks, ITask toDelete) {
 		for (ITask task : tasks) {
-			if (task.getHandleIdentifier().equals(t.getHandleIdentifier())) {
+			if (task.getHandleIdentifier().equals(toDelete.getHandleIdentifier())) {
 				tasks.remove(task);
 				return true;
 			} else {
-				if (deleteTaskHelper(task.getChildren(), t))
+				if (deleteTaskHelper(task.getChildren(), toDelete))
 					return true;
 			}
 		}

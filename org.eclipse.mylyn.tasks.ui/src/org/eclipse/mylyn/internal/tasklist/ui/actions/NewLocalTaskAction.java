@@ -75,6 +75,7 @@ public class NewLocalTaskAction extends Action {
 			} else {
 				MylarTaskListPlugin.getTaskListManager().moveToRoot(newTask);
 			}
+			MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(newTask);
 			TaskListUiUtil.openEditor(newTask);
 //			newTask.openTaskInEditor(false);
 			view.getViewer().refresh();

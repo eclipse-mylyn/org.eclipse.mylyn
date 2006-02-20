@@ -979,9 +979,9 @@ public class TaskListView extends ViewPart {
 					manager.add(activateAction);
 				}
 
-				if (!task.isLocal()) {
-					addAction(removeFromCategoryAction, manager, element);
-				}
+//				if (!task.isLocal()) {
+				addAction(removeFromCategoryAction, manager, element);
+//				}
 				addAction(deleteAction, manager, element);
 			} else {
 				manager.add(activateAction);

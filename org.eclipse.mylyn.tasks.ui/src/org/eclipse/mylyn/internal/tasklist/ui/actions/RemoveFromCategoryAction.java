@@ -46,7 +46,7 @@ public class RemoveFromCategoryAction extends Action {
 		try {
 			ISelection selection = TaskListView.getDefault().getViewer().getSelection();
 			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-				if (selectedObject instanceof ITask && !((ITask) selectedObject).isLocal()) {
+				if (selectedObject instanceof ITask) { // && !((ITask) selectedObject).isLocal()) {
 					ITask task = (ITask) selectedObject;
 					if (task.isActive()) {
 						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
