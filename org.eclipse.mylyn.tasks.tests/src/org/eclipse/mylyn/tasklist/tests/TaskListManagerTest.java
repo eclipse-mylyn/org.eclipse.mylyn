@@ -14,6 +14,7 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -68,9 +69,11 @@ public class TaskListManagerTest extends TestCase {
 		MylarTaskListPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
-	public void testLegacyTaskListReading() {
+	public void testLegacyTaskListReading() throws IOException {
 		File originalFile = manager.getTaskListFile();
-		File legacyListFile = TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml");
+		File legacyListFile = new File("temptasklist.xml");
+		legacyListFile.deleteOnExit();
+		TaskTestUtil.copy(TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml"), legacyListFile);
 		
 		assertEquals(362445, legacyListFile.length());
 		assertTrue(legacyListFile.exists());
@@ -82,9 +85,7 @@ public class TaskListManagerTest extends TestCase {
 		Set<ITask> allTasks = manager.getTaskList().getAllTasks();
 		Set<ITask> allRootTasks = manager.getTaskList().getRootTasks();
 		Set<ITaskContainer> allCategories = manager.getTaskList().getCategories();
-		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements();
-
-		System.err.println(">>> " + allRootTasks.size()); 
+		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements(); 
 		assertEquals(0, allRootTasks.size());
 		
 		manager.saveTaskList();
@@ -92,21 +93,23 @@ public class TaskListManagerTest extends TestCase {
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		
-		assertEquals(allTasks, manager.getTaskList().getAllTasks());
 		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
 		assertEquals(allCategories, manager.getTaskList().getCategories());
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
-				
+		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
+
 		// rewrite and test again
-//		manager.saveTaskList();
-//		list = new TaskList();
-//		manager.setTaskList(list);
-//		manager.readExistingOrCreateNewList();
-//		
-//		assertEquals(allTasks, manager.getTaskList().getAllTasks());
-//		assertEquals(allRootTasks, manager.getTaskList().getRootTasks());
-//		assertEquals(allCategories, manager.getTaskList().getCategories());
-//		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
+		manager.saveTaskList();
+		list = new TaskList();
+		manager.setTaskList(list);
+		manager.readExistingOrCreateNewList();
+		
+		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
+		assertEquals(allCategories, manager.getTaskList().getCategories());
+		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
+		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
+		
+		manager.deactivateTask(manager.getTaskList().getActiveTask());
 	}
 	
 	public void testRepositoryUrlHandles() {
@@ -177,13 +180,15 @@ public class TaskListManagerTest extends TestCase {
 	public void testCategories() {
 		BugzillaTask task = new BugzillaTask("b1", "b 1", true);
 		TaskCategory category = new TaskCategory("cat");
-		category.getChildren().add(task);
-		manager.moveToRoot(task);
+		manager.addCategory(category);
+		manager.moveToCategory(category, task);
 		assertNotNull(manager.getTaskList());
 
 		TaskList list = new TaskList();
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
+//		System.err.println(">>>> " + manager.getTaskList().getCategories());
+		assertEquals(2, manager.getTaskList().getCategories().size());	
 		assertEquals(1, manager.getTaskList().getAllTasks().size());		
 	}
 

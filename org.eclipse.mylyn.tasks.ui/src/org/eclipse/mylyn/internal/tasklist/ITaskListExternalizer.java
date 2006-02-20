@@ -26,14 +26,6 @@ import org.w3c.dom.Node;
  */
 public interface ITaskListExternalizer {
 
-//	public abstract AbstractRepositoryClient getRepositoryClient();
-	
-//	/**
-//	 * Note that registries get read as a normal category, but get written out
-//	 * first.
-//	 */
-//	public abstract void createRegistry(Document doc, Node parent);
-
 	public abstract String getCategoryTagName();
 
 	public abstract String getTaskTagName();
@@ -41,8 +33,6 @@ public interface ITaskListExternalizer {
 	public abstract String getQueryTagNameForElement(AbstractRepositoryQuery query);
 
 	public abstract String getQueryHitTagName();
-
-//	public abstract boolean canCreateElementFor(ITaskContainer category);
 
 	/**
 	 * @return the element that was created, null if failed

@@ -251,8 +251,8 @@ public class TaskList {
 	public Set<ITask> getAllTasks() {
 		Set<ITask> allTasks = new HashSet<ITask>();
 		allTasks.addAll(rootTasks);
-		for (ITaskContainer cat : categories) {
-			allTasks.addAll(cat.getChildren());
+		for (ITaskContainer container : categories) {
+			allTasks.addAll(container.getChildren());
 		}
 		return allTasks;
 	}

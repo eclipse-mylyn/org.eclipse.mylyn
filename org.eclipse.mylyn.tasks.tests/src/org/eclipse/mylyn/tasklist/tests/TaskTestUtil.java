@@ -12,7 +12,11 @@
 package org.eclipse.mylar.tasklist.tests;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Date;
 
@@ -37,6 +41,21 @@ public class TaskTestUtil {
 			return null;
 		}
 	}
+	
+	/**
+	 * Adaptred from Java Developers' almanac
+	 */
+    public static void copy(File source, File dest) throws IOException {
+        InputStream in = new FileInputStream(source);
+        OutputStream out = new FileOutputStream(dest);
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
 	
 	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
 		BugReport report = new BugReport(1, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);

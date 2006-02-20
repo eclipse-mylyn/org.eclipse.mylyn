@@ -91,15 +91,11 @@ public class TaskListWriter {
 		Element root = doc.createElement(ELEMENT_TASK_LIST);
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
 
+		// create the categories
 		for (ITaskContainer category : taskList.getCategories()) {
-//			Element element = null;  
-//			if (delagatingExternalizer.canCreateElementFor(category)) {
-				if (!category.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
-					delagatingExternalizer.createCategoryElement(category, doc, root);
-				}
-//			} else if (element == null) {
-//				MylarStatusHandler.log("Did not externalize: " + category, this);
-//			}
+			if (!category.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
+				delagatingExternalizer.createCategoryElement(category, doc, root);
+			}
 		}
 
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
@@ -135,8 +131,10 @@ public class TaskListWriter {
 		try {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
-				if (externalizer.canCreateElementFor(task))
+				if (externalizer.canCreateElementFor(task)) {
 					element = externalizer.createTaskElement(task, doc, root);
+					break;
+				}
 			}
 			if (element == null && delagatingExternalizer.canCreateElementFor(task)) {
 				delagatingExternalizer.createTaskElement(task, doc, root);
@@ -259,7 +257,7 @@ public class TaskListWriter {
 					} catch (Exception e) {
 						handleException(inFile, child, e);
 					}
-				}
+				} 
 				
 				// then query hits hits, which get corresponded to tasks
 				for (int i = 0; i < list.getLength(); i++) {
