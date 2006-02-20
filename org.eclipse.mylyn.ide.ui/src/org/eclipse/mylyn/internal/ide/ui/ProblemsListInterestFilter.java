@@ -15,8 +15,8 @@ package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.InterestFilter;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.ui.InterestFilter;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 import org.eclipse.ui.views.markers.internal.MarkerNode;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;

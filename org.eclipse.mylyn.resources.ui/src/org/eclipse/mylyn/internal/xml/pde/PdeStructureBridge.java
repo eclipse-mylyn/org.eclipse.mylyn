@@ -25,14 +25,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.core.AbstractRelationProvider;
-import org.eclipse.mylar.core.IDegreeOfSeparation;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.IMylarStructureBridge;
 import org.eclipse.mylar.internal.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.xml.XmlNodeHelper;
 import org.eclipse.mylar.internal.xml.XmlReferencesProvider;
+import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
+import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.plugin.ManifestEditor;
@@ -105,7 +105,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#getObjectForHandle(java.lang.String)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getObjectForHandle(java.lang.String)
 	 */
 	public Object getObjectForHandle(String handle) {
 		if (handle == null)
@@ -172,7 +172,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	/**
 	 * Handle is filename;hashcodeOfElementAndAttributes
 	 * 
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
 	 */
 	public String getHandleIdentifier(Object object) {
 		// we can only create handles for PluginObjectNodes and plugin.xml files
@@ -207,7 +207,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#getName(java.lang.Object)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getName(java.lang.Object)
 	 */
 	public String getName(Object object) {
 		if (object instanceof PluginObjectNode) {
@@ -226,7 +226,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#canBeLandmark(Object)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#canBeLandmark(Object)
 	 * 
 	 * TODO: make a non-handle based test
 	 */
@@ -239,7 +239,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#acceptsObject(java.lang.Object)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#acceptsObject(java.lang.Object)
 	 */
 	public boolean acceptsObject(Object object) {
 		// we only accept PluginObjectNodes and plugin.xml Files
@@ -257,21 +257,21 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#canFilter(java.lang.Object)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#canFilter(java.lang.Object)
 	 */
 	public boolean canFilter(Object element) {
 		return true;
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#isDocument(java.lang.String)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#isDocument(java.lang.String)
 	 */
 	public boolean isDocument(String handle) {
 		return handle.indexOf(';') == -1;
 	}
 
 	/**
-	 * @see org.eclipse.mylar.core.IMylarStructureBridge#getHandleForMarker(org.eclipse.ui.views.markers.internal.ProblemMarker)
+	 * @see org.eclipse.mylar.provisional.core.IMylarStructureBridge#getHandleForMarker(org.eclipse.ui.views.markers.internal.ProblemMarker)
 	 */
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		if (resource == null)

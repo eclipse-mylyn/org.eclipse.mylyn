@@ -11,14 +11,14 @@
 
 package org.eclipse.mylar.internal.xml.pde;
 
-import org.eclipse.mylar.core.IMylarRelation;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.ui.MylarImages;
 import org.eclipse.mylar.internal.xml.MylarXmlPlugin;
 import org.eclipse.mylar.internal.xml.XmlReferencesProvider;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarRelation;
+import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**

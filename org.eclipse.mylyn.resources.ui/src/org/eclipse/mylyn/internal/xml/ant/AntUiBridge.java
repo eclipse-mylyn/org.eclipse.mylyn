@@ -27,10 +27,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.xml.MylarXmlPlugin;
-import org.eclipse.mylar.ui.IMylarUiBridge;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
@@ -46,7 +46,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class AntUiBridge implements IMylarUiBridge {
 
 	/**
-	 * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarElement)
+	 * @see org.eclipse.mylar.provisional.ui.IMylarUiBridge#open(org.eclipse.mylar.provisional.core.IMylarElement)
 	 */
 	public void open(IMylarElement node) {
 		// get the handle of the node

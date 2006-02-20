@@ -22,8 +22,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPrefConstants;
 import org.eclipse.mylar.internal.ui.actions.AbstractApplyMylarAction;
-import org.eclipse.mylar.ui.InterestFilter;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.provisional.ui.InterestFilter;
+import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 
 /**
  * @author Mik Kersten

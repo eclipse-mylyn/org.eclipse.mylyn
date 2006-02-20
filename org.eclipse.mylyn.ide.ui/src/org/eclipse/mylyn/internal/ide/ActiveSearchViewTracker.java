@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.internal.ide;
 
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveSearchView;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWindowListener;

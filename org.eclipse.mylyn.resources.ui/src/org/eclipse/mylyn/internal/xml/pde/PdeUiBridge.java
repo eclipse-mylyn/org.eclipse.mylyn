@@ -30,10 +30,10 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.xml.MylarXmlPlugin;
-import org.eclipse.mylar.ui.IMylarUiBridge;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
 import org.eclipse.pde.internal.ui.editor.ISortableContentOutlinePage;
@@ -64,7 +64,7 @@ public class PdeUiBridge implements IMylarUiBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.ui.IMylarUiBridge#open(org.eclipse.mylar.core.IMylarElement)
+	 * @see org.eclipse.mylar.provisional.ui.IMylarUiBridge#open(org.eclipse.mylar.provisional.core.IMylarElement)
 	 */
 	public void open(IMylarElement node) {
 		// get the handle of the node

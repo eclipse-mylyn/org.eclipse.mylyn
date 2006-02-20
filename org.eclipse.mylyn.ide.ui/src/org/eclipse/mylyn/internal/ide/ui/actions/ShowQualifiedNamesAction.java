@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.ide.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.ide.ui.views.ActiveSearchView;
 import org.eclipse.mylar.internal.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 
 /**
  * @author Mik Kersten

@@ -12,10 +12,10 @@
 package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
 import org.eclipse.mylar.internal.ui.UiUtil;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;

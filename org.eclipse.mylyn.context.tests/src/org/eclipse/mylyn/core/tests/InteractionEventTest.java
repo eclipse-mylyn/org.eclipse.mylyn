@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.core.tests;
 
-import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 
 public class InteractionEventTest extends AbstractContextTest {
 

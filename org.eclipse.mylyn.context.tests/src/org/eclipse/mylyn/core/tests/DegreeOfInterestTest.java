@@ -13,11 +13,11 @@ package org.eclipse.mylar.core.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.internal.core.DegreeOfInterest;
 import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.core.ScalingFactors;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

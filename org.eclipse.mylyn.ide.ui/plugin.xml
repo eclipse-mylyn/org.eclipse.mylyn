@@ -91,7 +91,7 @@
               tooltip="Commit All ">
            <enablement>
               <or> 
-                 <objectClass name="org.eclipse.mylar.internal.tasklist.ITask"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.ITask"/>
               </or>
            </enablement>
         </action>
