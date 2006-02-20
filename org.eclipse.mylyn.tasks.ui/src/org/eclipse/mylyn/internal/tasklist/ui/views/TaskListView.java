@@ -27,7 +27,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -87,6 +86,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -125,7 +125,7 @@ public class TaskListView extends ViewPart {
 	public static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(),
 			Task.PriorityLevel.P2.toString(), Task.PriorityLevel.P3.toString(), Task.PriorityLevel.P4.toString(),
 			Task.PriorityLevel.P5.toString() };
-
+	
 	private static final String SEPARATOR_ID_REPORTS = SEPARATOR_REPORTS;
 
 	private static final String PART_NAME = "Mylar Tasks";
@@ -276,6 +276,8 @@ public class TaskListView extends ViewPart {
 			}
 		}
 	};
+
+	private TaskListTableLabelProvider taskListTableLabelProvider;
 
 	private final class PriorityDropDownAction extends Action implements IMenuCreator {
 		private Menu dropDownMenu = null;
@@ -811,13 +813,17 @@ public class TaskListView extends ViewPart {
 				}
 			});
 		}
-
+		
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI.getWorkbench()
+				.getDecoratorManager().getLabelDecorator(), parent.getBackground());
+		
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = new CheckboxCellEditor();
 		editors[1] = textEditor;
-		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);
+//		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVELS, SWT.READ_ONLY);		
+		editors[2] = new ImageTableCellEditor(getViewer().getTree(), getPirorityImages());
 		editors[3] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
@@ -825,12 +831,8 @@ public class TaskListView extends ViewPart {
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setContentProvider(new TaskListContentProvider(this));
-		getViewer().setLabelProvider(
-				new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI.getWorkbench()
-						.getDecoratorManager().getLabelDecorator(), parent.getBackground()));
-
+		getViewer().setLabelProvider(taskListTableLabelProvider);
 		getViewer().setInput(getViewSite());
-
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
@@ -1374,5 +1376,13 @@ public class TaskListView extends ViewPart {
 				getViewer().expandToLevel(task.getCategory(), 1);
 			}
 		}
+	}
+	
+	public Image[] getPirorityImages() {
+		Image[] images = new Image[Task.PriorityLevel.values().length];
+		for (int i = 0; i < Task.PriorityLevel.values().length; i++) {
+			images[i] = taskListTableLabelProvider.getImageForPriority(Task.PriorityLevel.values()[i]);
+		}
+		return images;
 	}
 }
