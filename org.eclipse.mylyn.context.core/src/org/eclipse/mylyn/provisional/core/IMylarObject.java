@@ -9,22 +9,17 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui;
-
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.core.InterestComparator;
+package org.eclipse.mylar.provisional.core;
 
 /**
+ * TODO: consider finding better name
+ * 
  * @author Mik Kersten
  */
-public class InterestSorter extends ViewerSorter {
+public interface IMylarObject {
 
-	protected InterestComparator<Object> comparator = new InterestComparator<Object>();
+	public abstract IDegreeOfInterest getInterest();
 
-	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		return comparator.compare(e1, e2);
-	}
+	public abstract String getContentType();
 
 }

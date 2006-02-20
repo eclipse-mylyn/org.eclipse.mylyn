@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.core;
 
-import org.eclipse.mylar.core.IDegreeOfSeparation;
+import org.eclipse.mylar.provisional.core.IDegreeOfSeparation;
 
 /**
  * @author Shawn Minto

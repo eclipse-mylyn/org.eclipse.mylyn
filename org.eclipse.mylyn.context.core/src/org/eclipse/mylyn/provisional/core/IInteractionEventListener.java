@@ -9,27 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core;
-
-import java.util.List;
+package org.eclipse.mylar.provisional.core;
 
 /**
  * @author Mik Kersten
  */
-public interface IMylarContext {
+public interface IInteractionEventListener {
 
-	public abstract List<InteractionEvent> getInteractionHistory();
+	public abstract void interactionObserved(InteractionEvent event);
 
-	public List<IMylarElement> getInteresting();
+	public abstract void startObserving();
 
-	public abstract IMylarElement get(String element);
-
-	public abstract IMylarElement getActiveNode();
-
-	public abstract void delete(IMylarElement node);
-
-	public abstract void updateElementHandle(IMylarElement element, String newHandle);
-
-	public abstract List<IMylarElement> getAllElements();
-
+	public abstract void stopObserving();
 }

@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core;
+package org.eclipse.mylar.provisional.core;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.InteractionEvent.Kind;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.core.InteractionEvent.Kind;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPart;

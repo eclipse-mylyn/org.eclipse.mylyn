@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylar.core.IDegreeOfInterest;
-import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.internal.core.dt.MylarInterest;
+import org.eclipse.mylar.provisional.core.IDegreeOfInterest;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

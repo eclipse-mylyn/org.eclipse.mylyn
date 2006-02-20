@@ -24,19 +24,19 @@ import java.util.Map.Entry;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.core.AbstractRelationProvider;
-import org.eclipse.mylar.core.IInteractionEventListener;
-import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.IMylarRelation;
-import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.InterestComparator;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.ITimerThreadListener;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.provisional.core.AbstractRelationProvider;
+import org.eclipse.mylar.provisional.core.IInteractionEventListener;
+import org.eclipse.mylar.provisional.core.IMylarContext;
+import org.eclipse.mylar.provisional.core.IMylarContextListener;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarRelation;
+import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.InterestComparator;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.widgets.Display;
 
 /**

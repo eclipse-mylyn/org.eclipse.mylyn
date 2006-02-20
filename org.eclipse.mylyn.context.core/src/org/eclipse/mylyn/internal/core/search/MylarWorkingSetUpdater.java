@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.provisional.core.IMylarContext;
+import org.eclipse.mylar.provisional.core.IMylarContextListener;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;

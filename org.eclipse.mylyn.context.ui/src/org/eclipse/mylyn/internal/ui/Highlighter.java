@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.ui;
 
 import java.util.*;
 
-import org.eclipse.mylar.core.IMylarElement;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 

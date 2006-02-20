@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.core;
 
 import java.util.*;
 
-import org.eclipse.mylar.core.IDegreeOfInterest;
-import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.IDegreeOfInterest;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

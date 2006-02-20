@@ -12,11 +12,11 @@
 package org.eclipse.mylar.internal.ui;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.IMylarStructureBridge;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.MylarContextRelation;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarStructureBridge;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.*;
 
 /**

@@ -17,10 +17,10 @@ import java.util.List;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.MylarPlugin;
-import org.eclipse.mylar.ui.IMylarUiBridge;
-import org.eclipse.mylar.ui.InterestFilter;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.ui.IMylarUiBridge;
+import org.eclipse.mylar.provisional.ui.InterestFilter;
+import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 

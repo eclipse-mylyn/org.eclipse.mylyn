@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.ui;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.core.IMylarRelation;
-import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarRelation;
 import org.eclipse.swt.graphics.Image;
 
 /**

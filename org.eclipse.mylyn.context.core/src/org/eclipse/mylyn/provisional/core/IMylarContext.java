@@ -9,19 +9,27 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core;
+package org.eclipse.mylar.provisional.core;
+
+import java.util.List;
 
 /**
  * @author Mik Kersten
  */
-public interface IMylarRelation extends IMylarObject {
+public interface IMylarContext {
 
-	public abstract String getLabel();
+	public abstract List<InteractionEvent> getInteractionHistory();
 
-	public abstract String getRelationshipHandle();
+	public List<IMylarElement> getInteresting();
 
-	public abstract IMylarElement getTarget();
+	public abstract IMylarElement get(String element);
 
-	public abstract IMylarElement getSource();
+	public abstract IMylarElement getActiveNode();
+
+	public abstract void delete(IMylarElement node);
+
+	public abstract void updateElementHandle(IMylarElement element, String newHandle);
+
+	public abstract List<IMylarElement> getAllElements();
 
 }

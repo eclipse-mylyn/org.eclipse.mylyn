@@ -9,28 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core;
-
-import java.util.List;
+package org.eclipse.mylar.provisional.core;
 
 /**
  * @author Mik Kersten
  */
-public interface IDegreeOfInterest {
+public interface IDegreeOfSeparation {
 
-	public abstract boolean isPropagated();
+	public abstract String getLabel();
 
-	public boolean isPredicted();
+	public abstract int getDegree();
 
-	public abstract boolean isLandmark();
-
-	public abstract boolean isInteresting();
-
-	public abstract float getEncodedValue();
-
-	public float getDecayValue();
-
-	public abstract float getValue();
-
-	public abstract List<InteractionEvent> getEvents();
 }

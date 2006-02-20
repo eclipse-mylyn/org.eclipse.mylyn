@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.ui.Highlighter;
 import org.eclipse.mylar.internal.ui.HighlighterImageDescriptor;
 import org.eclipse.mylar.internal.ui.MylarUiPrefContstants;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

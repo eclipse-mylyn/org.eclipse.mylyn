@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ui;
+package org.eclipse.mylar.provisional.ui;
 
 import java.util.List;
 
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarElement;
 import org.eclipse.ui.IEditorPart;
 
 /**

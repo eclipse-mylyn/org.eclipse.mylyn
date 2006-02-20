@@ -12,10 +12,10 @@
 package org.eclipse.mylar.internal.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.IMylarContextListener;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.ui.MylarImages;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.provisional.core.IMylarContextListener;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 
 /**
  * @author Mik Kersten

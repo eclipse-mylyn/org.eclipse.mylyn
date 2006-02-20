@@ -9,16 +9,26 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core;
+package org.eclipse.mylar.provisional.core;
+
+import java.util.Collection;
+
+import org.eclipse.mylar.internal.core.MylarContextRelation;
 
 /**
  * @author Mik Kersten
  */
-public interface IInteractionEventListener {
+public interface IMylarElement extends IMylarObject {
 
-	public abstract void interactionObserved(InteractionEvent event);
+	public abstract String getHandleIdentifier();
 
-	public abstract void startObserving();
+	public abstract void setHandleIdentifier(String handle);
 
-	public abstract void stopObserving();
+	public abstract IMylarContext getContext();
+
+	public abstract Collection<MylarContextRelation> getRelations();
+
+	public abstract MylarContextRelation getRelation(String targetHandle);
+
+	public abstract void clearRelations();
 }

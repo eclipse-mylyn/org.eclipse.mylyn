@@ -15,9 +15,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.core.IDegreeOfInterest;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.IMylarRelation;
+import org.eclipse.mylar.provisional.core.IDegreeOfInterest;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.IMylarRelation;
 
 /**
  * Can only have one edge from a node to a particular target.

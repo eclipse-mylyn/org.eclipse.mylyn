@@ -7,7 +7,7 @@
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
         id="org.eclipse.mylar.ui.interest"
-        objectClass="org.eclipse.mylar.core.IMylarElement">
+        objectClass="org.eclipse.mylar.provisional.core.IMylarElement">
      	<action  
   		  	label="Mylar: Mark as Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
@@ -39,7 +39,7 @@
               tooltip="Clear Context">
            <enablement>
               <or>
-                 <objectClass name="org.eclipse.mylar.internal.tasklist.ITask"/>
+                 <objectClass name="org.eclipse.mylar.provisional.tasklist.ITask"/>
               </or>
            </enablement>
         </action>

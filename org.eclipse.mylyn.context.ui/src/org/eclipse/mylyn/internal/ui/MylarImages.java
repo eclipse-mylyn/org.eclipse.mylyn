@@ -16,7 +16,7 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylar.ui.MylarUiPlugin;
+import org.eclipse.mylar.provisional.ui.MylarUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**

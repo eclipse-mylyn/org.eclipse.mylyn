@@ -13,9 +13,9 @@ package org.eclipse.mylar.internal.core;
 
 import java.util.*;
 
-import org.eclipse.mylar.core.IMylarContext;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.IMylarContext;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 
 /**
  * Delegates to contained Taskscapes.

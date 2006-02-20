@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar UI Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.ui; singleton:=true
-Bundle-Version: 0.4.8.v20060219-1900
-Bundle-Activator: org.eclipse.mylar.ui.MylarUiPlugin
+Bundle-Version: 0.4.8.v20060216-1700
+Bundle-Activator: org.eclipse.mylar.provisional.ui.MylarUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -18,5 +18,5 @@ Export-Package: org.eclipse.mylar.internal.ui,
  org.eclipse.mylar.internal.ui.actions,
  org.eclipse.mylar.internal.ui.preferences,
  org.eclipse.mylar.internal.ui.views,
- org.eclipse.mylar.ui
+ org.eclipse.mylar.provisional.ui
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

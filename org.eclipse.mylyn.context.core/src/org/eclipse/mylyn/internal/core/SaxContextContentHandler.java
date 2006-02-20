@@ -12,9 +12,9 @@ package org.eclipse.mylar.internal.core;
 
 import java.util.Date;
 
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.InteractionEvent.Kind;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
