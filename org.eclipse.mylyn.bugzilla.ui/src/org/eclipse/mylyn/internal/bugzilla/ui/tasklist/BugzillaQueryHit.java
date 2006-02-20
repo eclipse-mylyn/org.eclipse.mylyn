@@ -74,8 +74,6 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
 		if (task == null) {
 			task = new BugzillaTask(this, true);
-//			AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(BugzillaPlugin.REPOSITORY_KIND);
-//			client.addTaskToArchive(task);
 			MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);
 		}
 		return task;

@@ -136,7 +136,7 @@ public class TaskListManagerTest extends TestCase {
 		Task task1 = new Task("t1", "t1", true);
 		manager.moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		assertNull(task1.getCategory());
+		assertEquals(TaskList.LABEL_ROOT, task1.getCategory().getHandleIdentifier()); 
 
 		TaskCategory cat1 = new TaskCategory("c1");
 		manager.addCategory(cat1);
@@ -148,7 +148,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(0, cat1.getChildren().size());
-		assertNull(task1.getCategory());
+		assertEquals(TaskList.LABEL_ROOT, task1.getCategory().getHandleIdentifier());
 	}
 
 	public void testPlans() {
@@ -227,7 +227,9 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
 		repositoryTask.setKind("kind");
 		manager.getTaskList().addTaskToArchive(repositoryTask);
-		repositoryTask.setCategory(manager.getTaskList().getArchiveCategory());
+//		repositoryTask.setCategory(manager.getTaskList().getArchiveCategory());
+		assertEquals(1, manager.getTaskList().getArchiveTasks().size());
+		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		manager.saveTaskList();
   
 		manager.setTaskList(new TaskList());
@@ -253,7 +255,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(repositoryTask.getKind(), readTask.getKind());
 	}
 
-	public void testRepositoryTasksAndCategoriesMultipleExtern() {
+	public void testRepositoryTasksAndCategoriesMultiRead() {
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.addCategory(cat1);
 
@@ -263,8 +265,7 @@ public class TaskListManagerTest extends TestCase {
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
-		TaskList list = new TaskList();
-		manager.setTaskList(list);
+		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 
 		// read once
@@ -273,12 +274,11 @@ public class TaskListManagerTest extends TestCase {
 		Iterator<TaskCategory> iterator = readCats.iterator();
 		TaskCategory readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
-		assertEquals(1, readCat1.getChildren().size());
+		assertEquals(1, readCat1.getChildren().size()); 
 		
 		manager.saveTaskList();
-		assertNotNull(manager.getTaskList());
-		list = new TaskList();
-		manager.setTaskList(list);
+		assertNotNull(manager.getTaskList()); 
+		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 
 		// read again

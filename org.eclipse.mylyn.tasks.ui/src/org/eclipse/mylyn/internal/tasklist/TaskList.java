@@ -23,10 +23,14 @@ public class TaskList {
 
 	public static final String LABEL_ARCHIVE = "Archive (automatic)";
 
+	public static final String LABEL_ROOT = "Root (automatic)";
+	
 	// private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
 
 	private TaskCategory archiveCategory = new TaskCategory(LABEL_ARCHIVE);
 
+	private TaskCategory rootCategory = new TaskCategory(LABEL_ROOT);
+	
 	private Set<ITaskContainer> categories = new HashSet<ITaskContainer>();
 
 	private Set<ITask> rootTasks = new HashSet<ITask>();
@@ -42,10 +46,12 @@ public class TaskList {
 
 	public void internalAddRootTask(ITask task) {
 		rootTasks.add(task);
+		task.setCategory(rootCategory); 
 	}
 
 	void removeFromRoot(ITask task) {
 		rootTasks.remove(task);
+		task.setCategory(archiveCategory);
 	}
 
 	void addCategory(ITaskContainer cat) {
@@ -314,7 +320,7 @@ public class TaskList {
 	public void addTaskToArchive(ITask task) {
 		// archiveMap.put(task.getHandleIdentifier(), task);
 		archiveCategory.internalAddTask(task);
-//		task.setCategory(archiveCategory);
+//		task.setCategory(archiveCategory); 
 	}
 
 	public ITask getTaskFromArchive(String handleIdentifier) {
@@ -355,6 +361,10 @@ public class TaskList {
 			}
 		}
 		return null;
+	}
+
+	public TaskCategory getRootCategory() {
+		return rootCategory;
 	}
 
 	public TaskCategory getArchiveCategory() {

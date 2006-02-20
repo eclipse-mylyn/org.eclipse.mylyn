@@ -83,7 +83,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 		assertNotNull(taskList);
 		Set<ITask> tasks = taskList.getRootTasks();
-		assertNotNull(tasks);
 		assertTrue(tasks.size() > 0);
 		for (ITask task : tasks) {
 			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));
@@ -98,7 +97,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 		TaskList taskList = MylarTaskListPlugin.getTaskListManager().getTaskList();
 		assertNotNull(taskList);
 		Set<ITask> tasks = taskList.getRootTasks();
-		assertNotNull(tasks);
 		assertTrue(tasks.size() > 0);
 		for (ITask task : tasks) {
 			assertTrue(MylarPlugin.getContextManager().hasContext(task.getHandleIdentifier()));

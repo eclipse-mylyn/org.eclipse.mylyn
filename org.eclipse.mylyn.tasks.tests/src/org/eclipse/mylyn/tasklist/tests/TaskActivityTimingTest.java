@@ -57,6 +57,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	public void tearDown() {
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
+		MylarTaskListPlugin.getTaskListManager().deactivateTask(MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask());
 		MylarPlugin.getContextManager().setInactivityTimeout(originalActivityTimeout);
 		manager.setTimerSleepInterval(TimerThread.DEFAULT_SLEEP_INTERVAL);
 	}

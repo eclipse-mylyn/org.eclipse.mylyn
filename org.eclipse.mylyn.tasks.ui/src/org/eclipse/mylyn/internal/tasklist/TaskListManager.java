@@ -132,10 +132,10 @@ public class TaskListManager {
 	public void moveToRoot(ITask task) {
 		if (task.getCategory() instanceof TaskCategory) {
 			((TaskCategory) task.getCategory()).removeTask(task);
-		}
-		task.setCategory(null);
-		if (!taskList.getRootTasks().contains(task))
-			taskList.internalAddRootTask(task);
+		} 
+//		task.setCategory(null);
+//		if (!taskList.getRootTasks().contains(task))
+		taskList.internalAddRootTask(task);
 		for (ITaskActivityListener listener : listeners)
 			listener.taskListModified();
 	}
