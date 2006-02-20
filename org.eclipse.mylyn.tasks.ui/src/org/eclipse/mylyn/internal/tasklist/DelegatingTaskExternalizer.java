@@ -145,7 +145,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(getTaskTagName());
-		// node.setAttribute(PATH, task.getRemoteContextPath());
 		node.setAttribute(KEY_LABEL, task.getDescription());
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 		if (task.getCategory() != null) {
@@ -169,7 +168,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			node.setAttribute(KEY_ACTIVE, VAL_FALSE);
 		}
-		// node.setAttribute(KEY_BUGZILLA, VAL_FALSE); // TODO: get rid of this
 
 		if (task.getUrl() != null) {
 			node.setAttribute(KEY_ISSUEURL, task.getUrl());
@@ -288,6 +286,39 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	protected void readTaskInfo(ITask task, TaskList taskList, Element element, ITask parent,
 			TaskCategory legacyCategory) throws TaskExternalizationException {
+		
+		String categoryHandle = null;
+		if (element.hasAttribute(KEY_CATEGORY)) {
+			categoryHandle = element.getAttribute(KEY_CATEGORY);
+			TaskCategory category = null;
+			if (categoryHandle != null & categoryHandle.equals(VAL_ARCHIVE)) {
+				category = taskList.getArchiveCategory();
+			} else {
+				category = taskList.getCategoryForHandle(categoryHandle);
+			}
+			
+			if (category != null) {
+				if (category.equals(VAL_ARCHIVE)) {
+					taskList.addTaskToArchive(task);
+					task.setCategory(taskList.getArchiveCategory());
+				} else { 
+					task.setCategory(category);
+					category.addTask(task);
+				}
+			} else if (parent == null) {
+				taskList.internalAddRootTask(task);
+			}
+		} else if (legacyCategory != null) { //&& !legacyCategory.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
+			task.setCategory(legacyCategory);
+			legacyCategory.addTask(task);
+		} else if (legacyCategory == null && parent == null) { 
+			taskList.internalAddRootTask(task);
+		} else if (parent != null) {
+			task.setParent(parent);
+		} else {
+			taskList.addTaskToArchive(task);
+		}
+		
 		if (element.hasAttribute(KEY_PRIORITY)) {
 			task.setPriority(element.getAttribute(KEY_PRIORITY));
 		} else {
@@ -376,38 +407,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		while (element.hasAttribute(KEY_PLAN + ii)) {
 			task.getPlans().add(element.getAttribute(KEY_PLAN + i));
 			ii++;
-		}
-
-		String categoryHandle = null;
-		if (element.hasAttribute(KEY_CATEGORY)) {
-			categoryHandle = element.getAttribute(KEY_CATEGORY);
-			TaskCategory category = null;
-			if (categoryHandle != null & categoryHandle.equals(VAL_ARCHIVE)) {
-				category = taskList.getArchiveCategory();
-			} else {
-				category = taskList.getCategoryForHandle(categoryHandle);
-			}
-			
-			if (category != null) {
-				if (category.equals(VAL_ARCHIVE)) {
-					taskList.addTaskToArchive(task);
-					task.setCategory(taskList.getArchiveCategory()); 
-				} else { 
-					task.setCategory(category);
-					category.addTask(task);
-				}
-			} else if (parent == null) {
-				taskList.internalAddRootTask(task);
-			}
-		} else if (legacyCategory != null) { //&& !legacyCategory.getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
-			task.setCategory(legacyCategory);
-			legacyCategory.addTask(task);
-		} else if (legacyCategory == null && parent == null) { 
-			taskList.internalAddRootTask(task);
-		} else if (parent != null) {
-			task.setParent(parent);
-		} else {
-			taskList.addTaskToArchive(task);
 		}
 
 		NodeList list = element.getChildNodes();

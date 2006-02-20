@@ -23,23 +23,23 @@ public class TaskList {
 
 	public static final String LABEL_ARCHIVE = "Archive (automatic)";
 
-//	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
-	
+	// private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
+
 	private TaskCategory archiveCategory = new TaskCategory(LABEL_ARCHIVE);
-	
+
 	private Set<ITaskContainer> categories = new HashSet<ITaskContainer>();
 
 	private Set<ITask> rootTasks = new HashSet<ITask>();
-	
+
 	private List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
 
 	private transient List<ITask> activeTasks = new ArrayList<ITask>();
 
-	public TaskList(){
+	public TaskList() {
 		archiveCategory.setIsArchive(true);
 		categories.add(archiveCategory);
-	}  
-	
+	}
+
 	public void internalAddRootTask(ITask task) {
 		rootTasks.add(task);
 	}
@@ -175,6 +175,7 @@ public class TaskList {
 
 	/**
 	 * HACK: returns first
+	 * 
 	 * @return
 	 */
 	public ITask getActiveTask() {
@@ -184,7 +185,7 @@ public class TaskList {
 			return null;
 		}
 	}
-	
+
 	public Set<ITask> getRootTasks() {
 		return rootTasks;
 	}
@@ -236,14 +237,14 @@ public class TaskList {
 
 	public Set<ITaskListElement> getRootElements() {
 		Set<ITaskListElement> roots = new HashSet<ITaskListElement>();
-//		roots.add(archiveCategory);
+		// roots.add(archiveCategory);
 		for (ITask task : rootTasks)
 			roots.add(task);
 		for (ITaskContainer cat : categories)
 			roots.add(cat);
 		for (AbstractRepositoryQuery query : queries)
 			roots.add(query);
-		return roots; 
+		return roots;
 	}
 
 	public Set<ITask> getAllTasks() {
@@ -282,7 +283,7 @@ public class TaskList {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Use to obtain the QueryHit object associated with a particular task
 	 * handle if it exists.
@@ -305,16 +306,16 @@ public class TaskList {
 	}
 
 	public boolean isEmpty() {
-		boolean archiveIsEmpty = getCategories().size() == 1 && getCategories().iterator().next().equals(archiveCategory) && archiveCategory.getChildren().isEmpty();
+		boolean archiveIsEmpty = getCategories().size() == 1
+				&& getCategories().iterator().next().equals(archiveCategory) && archiveCategory.getChildren().isEmpty();
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
 	}
 
 	public void addTaskToArchive(ITask task) {
-//		archiveMap.put(task.getHandleIdentifier(), task);
-		if (archiveCategory != null) {  
-			archiveCategory.internalAddTask(task);
-		}
-	}  
+		// archiveMap.put(task.getHandleIdentifier(), task);
+		archiveCategory.internalAddTask(task);
+//		task.setCategory(archiveCategory);
+	}
 
 	public ITask getTaskFromArchive(String handleIdentifier) {
 		for (ITask task : archiveCategory.getChildren()) {
@@ -323,14 +324,14 @@ public class TaskList {
 			}
 		}
 		return null;
-//		return archiveMap.get(handleIdentifier);
+		// return archiveMap.get(handleIdentifier);
 	}
 
 	public Set<ITask> getArchiveTasks() {
 		return archiveCategory.getChildren();
-//		List<ITask> archiveTasks = new ArrayList<ITask>();
-//		archiveTasks.addAll(archiveMap.values());
-//		return archiveTasks;
+		// List<ITask> archiveTasks = new ArrayList<ITask>();
+		// archiveTasks.addAll(archiveMap.values());
+		// return archiveTasks;
 	}
 
 	public void setArchiveCategory(TaskCategory category) {
@@ -342,14 +343,14 @@ public class TaskList {
 	 */
 	public void clearArchive() {
 		archiveCategory.getChildren().clear();
-//		archiveMap.clear();
+		// archiveMap.clear();
 	}
-	
+
 	public TaskCategory getCategoryForHandle(String categoryHandle) {
 		for (ITaskContainer cat : categories) {
 			if (cat instanceof TaskCategory) {
 				if (cat.getHandleIdentifier().equals(categoryHandle)) {
-					return (TaskCategory)cat;
+					return (TaskCategory) cat;
 				}
 			}
 		}

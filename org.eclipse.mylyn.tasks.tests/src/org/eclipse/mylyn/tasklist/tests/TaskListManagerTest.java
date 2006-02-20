@@ -227,8 +227,9 @@ public class TaskListManagerTest extends TestCase {
 		BugzillaTask repositoryTask = new BugzillaTask("handle", "label", true);
 		repositoryTask.setKind("kind");
 		manager.getTaskList().addTaskToArchive(repositoryTask);
+		repositoryTask.setCategory(manager.getTaskList().getArchiveCategory());
 		manager.saveTaskList();
-
+  
 		manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getArchiveTasks().size());
