@@ -30,6 +30,7 @@ import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.ITaskContainer;
+import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.ScheduledTaskListRefreshJob;
 import org.eclipse.mylar.internal.tasklist.Task;
@@ -68,32 +69,44 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testLegacyTaskListReading() {
-		File legacyList = TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml");
-		assertTrue(legacyList.exists());
+		File previousFile = manager.getTaskListFile();
+		File legacyListFile = TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml");
 		
-		manager.setTaskListFile(legacyList);
+		assertEquals(362445, legacyListFile.length());
+		assertTrue(legacyListFile.exists());
+		 
+		manager.setTaskListFile(legacyListFile);
 		manager.readExistingOrCreateNewList();
+		manager.setTaskListFile(previousFile);
 		
 		Set<ITask> allTasks = manager.getTaskList().getAllTasks();
+		Set<ITask> allRootTasks = manager.getTaskList().getRootTasks();
 		Set<ITaskContainer> allCategories = manager.getTaskList().getCategories();
-		int allRootTasks = manager.getTaskList().getRoots().size();
+		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements();
+
+		System.err.println(">>> " + allRootTasks.size()); 
+		assertEquals(0, allRootTasks.size());
 		
 		manager.saveTaskList();
 		TaskList list = new TaskList();
 		manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		
-		assertEquals(allTasks, manager.getTaskList().getAllTasks().size());
-		assertEquals(allCategories, manager.getTaskList().getCategories().size());
-		assertEquals(allRootTasks, manager.getTaskList().getRootTasks().size());
-		
-		manager.saveTaskList();
-		list = new TaskList();
-		manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-		
-		assertEquals(allTasks, manager.getTaskList().getAllTasks().size());
-		assertEquals(allRootTasks, manager.getTaskList().getRootTasks().size());
+		assertEquals(allTasks, manager.getTaskList().getAllTasks());
+		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
+		assertEquals(allCategories, manager.getTaskList().getCategories());
+		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
+				
+		// rewrite and test again
+//		manager.saveTaskList();
+//		list = new TaskList();
+//		manager.setTaskList(list);
+//		manager.readExistingOrCreateNewList();
+//		
+//		assertEquals(allTasks, manager.getTaskList().getAllTasks());
+//		assertEquals(allRootTasks, manager.getTaskList().getRootTasks());
+//		assertEquals(allCategories, manager.getTaskList().getCategories());
+//		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
 	}
 	
 	public void testRepositoryUrlHandles() {
@@ -299,7 +312,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.moveToRoot(reportInRoot);
 		rootTasks.add(reportInRoot);
 
-		assertEquals(""+ manager.getTaskList().getRoots(), 5, manager.getTaskList().getRoots().size());
+		assertEquals(""+ manager.getTaskList().getRootElements(), 5, manager.getTaskList().getRootElements().size());
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());

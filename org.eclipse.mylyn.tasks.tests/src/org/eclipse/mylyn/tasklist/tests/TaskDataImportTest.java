@@ -55,7 +55,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertNotNull(wizardPage);
 
 		manager.createNewTaskList();
-		assertTrue(manager.getTaskList().getRoots().size() == 1);
+		assertTrue(manager.getTaskList().getRootElements().size() == 1);
 
 		sourceDirFile = TaskTestUtil.getLocalFile(sourceDir);
 		assertTrue(sourceDirFile.exists());

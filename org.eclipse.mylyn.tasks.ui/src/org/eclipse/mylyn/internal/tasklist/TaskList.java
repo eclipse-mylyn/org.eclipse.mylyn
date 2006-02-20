@@ -236,16 +236,16 @@ public class TaskList {
 		return max;
 	}
 
-	public Set<ITaskListElement> getRoots() {
+	public Set<ITaskListElement> getRootElements() {
 		Set<ITaskListElement> roots = new HashSet<ITaskListElement>();
 //		roots.add(archiveCategory);
-		for (ITask t : rootTasks)
-			roots.add(t);
+		for (ITask task : rootTasks)
+			roots.add(task);
 		for (ITaskContainer cat : categories)
 			roots.add(cat);
 		for (AbstractRepositoryQuery query : queries)
 			roots.add(query);
-		return roots;
+		return roots; 
 	}
 
 	public Set<ITask> getAllTasks() {

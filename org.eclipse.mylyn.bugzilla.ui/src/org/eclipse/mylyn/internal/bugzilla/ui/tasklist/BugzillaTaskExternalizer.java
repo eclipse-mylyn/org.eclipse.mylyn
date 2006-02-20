@@ -17,7 +17,7 @@ import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.DelegatingTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.ITaskContainer;
+import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
@@ -151,7 +151,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask readTask(Node node, TaskList taskList, ITaskContainer category, ITask parent)
+	public ITask readTask(Node node, TaskList taskList, TaskCategory category, ITask parent)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
 		String handle;
@@ -167,7 +167,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
 		BugzillaTask task = new BugzillaTask(handle, label, false);
-		readTaskInfo(task, taskList, element, parent);
+		readTaskInfo(task, taskList, element, parent, category);
 
 //		task.setBugzillaTaskState(BugzillaTaskState.FREE);
 		task.setCurrentlyDownloading(false);

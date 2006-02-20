@@ -63,7 +63,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.view.getViewSite())) {
-			return applyFilter(MylarTaskListPlugin.getTaskListManager().getTaskList().getRoots()).toArray();
+			return applyFilter(MylarTaskListPlugin.getTaskListManager().getTaskList().getRootElements()).toArray();
 		}
 		return getChildren(parent);
 	}
