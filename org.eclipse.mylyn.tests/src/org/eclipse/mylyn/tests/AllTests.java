@@ -38,7 +38,7 @@ public class AllTests {
 		MylarStatusHandler.setDumpErrors(true);
 		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(false);
 
-		// TODO: the order of these tests matters, but shouldn't
+		// TODO: the order of these tests might still matter, but shouldn't
 		// $JUnit-BEGIN$
 		suite.addTest(AllMonitorReportTests.suite());
 		suite.addTest(AllMonitorTests.suite());
@@ -47,9 +47,9 @@ public class AllTests {
 		suite.addTest(AllIdeTests.suite());
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllTasklistTests.suite());
-		suite.addTest(AllXmlTests.suite()); // HACK: first because it doesn't
-											// clean up properly
+		suite.addTest(AllXmlTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
+//		suite.addTest(AllJiraTests.suite());  
 		suite.addTest(AllMiscTests.suite());
 		// $JUnit-END$
 		return suite;
