@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
 import org.eclipse.mylar.internal.tasklist.ITaskListElement;
@@ -40,10 +39,6 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 	public String getRepositoryKind() {
 		return BugzillaPlugin.REPOSITORY_KIND;
 	}
-	
-//	public boolean isActivatable() {
-//		return false;
-//	}
 
 	public boolean isDragAndDropEnabled() {
 		return false;
@@ -61,10 +56,6 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 		}
 		return null;
 	}
-
-//	public Image getStatusIcon() {
-//		return null;
-//	}
 
 	public boolean isCustomQuery() {
 		return customQuery;

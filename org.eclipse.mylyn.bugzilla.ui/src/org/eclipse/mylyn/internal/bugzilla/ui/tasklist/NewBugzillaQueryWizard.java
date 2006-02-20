@@ -51,7 +51,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 				queryPage.getQueryDialog().getUrl(), 
 				queryPage.getQueryDialog().getName(), 
 				queryPage.getQueryDialog().getMaxHits());
-		if (!queryPage.getQueryDialog().isCustom()) {
+		if (queryPage.getQueryDialog().isCustom()) {
 			queryCategory.setCustomQuery(true);
 		} 
 //		else {

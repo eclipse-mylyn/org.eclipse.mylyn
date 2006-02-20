@@ -63,8 +63,6 @@ public class BugzillaQueryDialog extends Dialog {
 
 	private Button customButton;
 
-	private boolean isCustom = false;
-
 	private boolean isNew = false;
 
 	private boolean enabled = true;
@@ -74,7 +72,6 @@ public class BugzillaQueryDialog extends Dialog {
 	public BugzillaQueryDialog(TaskRepository repository) {
 		super(Display.getDefault().getActiveShell());
 		isNew = true;
-		isCustom = false;
 		searchOptionPage = new BugzillaSearchOptionPage(repository);
 		title = "New Bugzilla Query";
 	}
@@ -82,7 +79,6 @@ public class BugzillaQueryDialog extends Dialog {
 	public BugzillaQueryDialog(Shell parentShell) {
 		super(parentShell);
 		isNew = true;
-		isCustom = false;
 		searchOptionPage = new BugzillaSearchOptionPage(null);
 		title = "New Bugzilla Query";
 	}
@@ -119,7 +115,8 @@ public class BugzillaQueryDialog extends Dialog {
 	}
 
 	public boolean isCustom() {
-		return isCustom;
+		return customButton.getSelection();
+//		return isCustom;
 	}
 
 	/*
@@ -175,7 +172,6 @@ public class BugzillaQueryDialog extends Dialog {
 					enabled = !enabled;
 					searchOptionPage.setControlsEnabled(enabled);
 					queryText.setEnabled(!enabled);
-					isCustom = customButton.getSelection();
 				}
 
 				public void widgetDefaultSelected(SelectionEvent e) {

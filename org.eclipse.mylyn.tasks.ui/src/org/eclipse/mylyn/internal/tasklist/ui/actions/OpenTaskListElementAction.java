@@ -103,38 +103,4 @@ public class OpenTaskListElementAction extends Action {
 		}
 	}
 
-	// /**
-	// * Consider refactoring to make generic
-	// */
-	// private static class SynchronizeTaskWithRepositoryJob extends Job {
-	//
-	// private static final String JOB_LABEL = "Synchronizing task with
-	// repository";
-	//
-	// private AbstractRepositoryClient client;
-	//
-	// private ITask task;
-	//
-	// public SynchronizeTaskWithRepositoryJob(AbstractRepositoryClient client,
-	// ITask task) {
-	// super(JOB_LABEL);
-	// this.client = client;
-	// this.task = task;
-	// }
-	//
-	// public IStatus run(IProgressMonitor monitor) {
-	// try {
-	// monitor.beginTask(JOB_LABEL, 10);
-	// monitor.worked(1);
-	// client.synchronize(task);
-	// monitor.done();
-	// return new Status(IStatus.OK, MylarPlugin.PLUGIN_ID, IStatus.OK, "",
-	// null);
-	// } catch (Exception e) {
-	// MylarStatusHandler.fail(e, "Could not open task editor", true);
-	// }
-	// return Status.CANCEL_STATUS;
-	// }
-	// }
-
 }
