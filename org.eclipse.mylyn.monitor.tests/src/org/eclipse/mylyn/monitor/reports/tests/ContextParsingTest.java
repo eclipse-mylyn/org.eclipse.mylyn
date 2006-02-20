@@ -17,14 +17,14 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.core.IMylarElement;
-import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.internal.core.MylarContext;
 import org.eclipse.mylar.internal.core.ScalingFactor;
 import org.eclipse.mylar.internal.core.ScalingFactors;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
 import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
+import org.eclipse.mylar.provisional.core.IMylarElement;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

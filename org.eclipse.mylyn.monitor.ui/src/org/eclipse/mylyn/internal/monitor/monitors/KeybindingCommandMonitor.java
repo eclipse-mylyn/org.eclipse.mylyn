@@ -12,9 +12,9 @@
 package org.eclipse.mylar.internal.monitor.monitors;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.mylar.core.AbstractCommandMonitor;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
+import org.eclipse.mylar.provisional.core.AbstractCommandMonitor;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 
 /**
  * @author Mik Kersten

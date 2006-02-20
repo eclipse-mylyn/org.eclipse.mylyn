@@ -20,14 +20,14 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.monitor.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.internal.monitor.monitors.BrowserMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.KeybindingCommandMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.PerspectiveChangeMonitor;
 import org.eclipse.mylar.internal.monitor.monitors.SelectionMonitor;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
