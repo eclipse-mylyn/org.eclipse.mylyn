@@ -15,6 +15,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.core.InteractionEvent;
 import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.core.util.TimerThread;
+import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskListManager;
@@ -57,7 +58,10 @@ public class TaskActivityTimingTest extends TestCase {
 
 	public void tearDown() {
 		MylarTaskListPlugin.getTaskListManager().deactivateTask(task1);
-		MylarTaskListPlugin.getTaskListManager().deactivateTask(MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask());
+		ITask remaining = MylarTaskListPlugin.getTaskListManager().getTaskList().getActiveTask();
+		if (remaining != null) {
+			MylarTaskListPlugin.getTaskListManager().deactivateTask(remaining);
+		}
 		MylarPlugin.getContextManager().setInactivityTimeout(originalActivityTimeout);
 		manager.setTimerSleepInterval(TimerThread.DEFAULT_SLEEP_INTERVAL);
 	}
