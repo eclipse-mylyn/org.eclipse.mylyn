@@ -92,7 +92,7 @@ public class TaskListStandaloneTest extends TestCase {
 		task.setReminderDate(start);
 		assertDatesCloseEnough(task.getReminderDate(), start);
 
-		assertEquals(2, manager.getTaskList().getRoots().size());
+		assertEquals(2, manager.getTaskList().getRootElements().size());
 		manager.saveTaskList();
 
 		assertNotNull(manager.getTaskList());

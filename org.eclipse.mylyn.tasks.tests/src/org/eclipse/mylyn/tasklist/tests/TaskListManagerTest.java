@@ -69,7 +69,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testLegacyTaskListReading() {
-		File previousFile = manager.getTaskListFile();
+		File originalFile = manager.getTaskListFile();
 		File legacyListFile = TaskTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml");
 		
 		assertEquals(362445, legacyListFile.length());
@@ -77,7 +77,7 @@ public class TaskListManagerTest extends TestCase {
 		 
 		manager.setTaskListFile(legacyListFile);
 		manager.readExistingOrCreateNewList();
-		manager.setTaskListFile(previousFile);
+		manager.setTaskListFile(originalFile);
 		
 		Set<ITask> allTasks = manager.getTaskList().getAllTasks();
 		Set<ITask> allRootTasks = manager.getTaskList().getRootTasks();
