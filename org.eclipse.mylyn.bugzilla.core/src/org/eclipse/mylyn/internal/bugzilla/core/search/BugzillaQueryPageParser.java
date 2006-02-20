@@ -132,10 +132,11 @@ public class BugzillaQueryPageParser {
 								"Unsupported Protocol",
 								"The server that was specified for Bugzilla is not supported by your JVM.\nPlease make sure that you are using a JDK that supports SSL.");
 			} else {
+//				throw exception
 				// if there was a problem with the operation, display an error
 				// message
-				ErrorDialog.openError(null, "Incomplete operation", "Bugzilla could not complete the the update.",
-						new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, exception.getMessage(),
+				ErrorDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Bugzilla could not complete the the update.",
+						new Status(IStatus.ERROR, IBugzillaConstants.PLUGIN_ID, IStatus.OK, "url may be invalid",
 								exception));
 			}
 		}

@@ -19,7 +19,10 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -46,6 +49,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected RepositoryStringFieldEditor passwordEditor;
 
 	protected TaskRepository repository;
+	
+	private Button validateServerButton;
 
 	public AbstractRepositorySettingsPage(String title, String description) {
 		super(title);
@@ -83,12 +88,33 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			passwordEditor.setStringValue(repository.getPassword());
 		}
 
+		validateServerButton = new Button(container, SWT.PUSH);
+		validateServerButton.setText("Validate Settings");
+		validateServerButton.addMouseListener(new MouseListener() {
+
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore
+
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// ignore
+
+			}
+
+			public void mouseUp(MouseEvent e) {
+				validateSettings();
+			}
+		});
+		
 		createAdditionalControls(container);
 		setControl(container);
 	}
 
 	protected abstract void createAdditionalControls(Composite parent);
 
+	protected abstract void validateSettings();
+	
 	public URL getServerUrl() {
 		try {
 			return new URL(serverUrlEditor.getStringValue());

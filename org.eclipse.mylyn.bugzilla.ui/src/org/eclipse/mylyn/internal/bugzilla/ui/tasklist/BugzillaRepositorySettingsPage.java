@@ -11,18 +11,21 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.security.auth.login.LoginException;
+
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.search.BugzillaQueryPageParser;
 import org.eclipse.mylar.internal.tasklist.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.mylar.provisional.tasklist.TaskRepository;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -34,32 +37,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
-	private Button validateServerButton;
-
 	public BugzillaRepositorySettingsPage() {
 		super(TITLE, DESCRIPTION);
 	}
 
 	protected void createAdditionalControls(Composite parent) {
-		validateServerButton = new Button(parent, SWT.PUSH);
-		validateServerButton.setText("Validate Server URL");
-		validateServerButton.addMouseListener(new MouseListener() {
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// ignore
-
-			}
-
-			public void mouseDown(MouseEvent e) {
-				// ignore
-
-			}
-
-			public void mouseUp(MouseEvent e) {
-				validateServer();
-			}
-
-		});
 		// ignore
 	}
 
@@ -68,7 +50,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		return super.isPageComplete();
 	}
 
-	private void validateServer() {
+	protected void validateSettings() {
 		try {
 			URL serverURL = new URL(super.serverUrlEditor.getStringValue());
 			URLConnection cntx = BugzillaPlugin.getDefault().getUrlConnection(serverURL);
@@ -77,24 +59,29 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			}
 
 			HttpURLConnection serverConnection = (HttpURLConnection) cntx;
-
 			serverConnection.connect();
-
-			int responseCode = serverConnection.getResponseCode();
-
-			if (responseCode != HttpURLConnection.HTTP_OK) {
-				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-						"No Bugzilla server found at: " + serverURL);
-			} else {
-				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-						"Valid Bugzilla server found at: " + serverURL);
-				super.getWizard().getContainer().updateButtons();
-			}
-			getWizard().getContainer().updateButtons();
-		} catch (Exception e) {
-			if (!MessageDialog.openQuestion(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Could not connect: "
-					+ e.getMessage())) {
-			}
+			TaskRepository tempRepository = new TaskRepository(repository.getKind(), getServerUrl());
+			tempRepository.setAuthenticationCredentials(getUserName(), getPassword());
+			new BugzillaQueryPageParser(tempRepository, new NullProgressMonitor());
+		} catch (MalformedURLException e) {
+			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Server URL is invalid.");
+			return;
+		} catch (LoginException e) {
+			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+					"Unable to authenticate with server. Login credentials invalid.");
+			return;
+		} catch (IOException e) {
+			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "No Bugzilla server found at url");
+			return;
+		} catch (Throwable t) {
+			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+					"Unknown error occured. Check that server url and credentials are valid.");
+			return;
 		}
+
+		MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+				"Authentication credentials are valid.");
+
+		super.getWizard().getContainer().updateButtons();
 	}
 }
