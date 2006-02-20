@@ -746,8 +746,13 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 				writer.write("<tr>");
 				writer.write("<td width=\"59\">ICON</td><td width=\"55\">" + currentTask.getPriority()
-						+ "</td><td width=\"495\">" + currentTask.getDescription() + "</td>");
-				writer.write("<td>" + elapsedTimeString + "</td><td>" + estimatedTimeString + "</td><td>"
+						+ "</td><td width=\"495\">");
+				if (currentTask.hasValidUrl()) {
+					writer.write("<a href='" + currentTask.getUrl() + "'>" + currentTask.getDescription() + "</a>");
+				} else {
+					writer.write(currentTask.getDescription());
+				}
+				writer.write("</td><td>" + elapsedTimeString + "</td><td>" + estimatedTimeString + "</td><td>"
 						+ reminderDateString + "</td>");
 				writer.write("</tr>");
 
@@ -784,12 +789,12 @@ public class TaskPlannerEditorPart extends EditorPart {
 					elapsedTimeString = NO_TIME_ELAPSED;
 
 				Date creationDate = currentTask.getCreationDate();
-				String creationDateString = "";
+				String creationDateString = BLANK_CELL;
 				if (creationDate != null) {
 					creationDateString = format.format(creationDate);
 				}
 
-				String completionDateString = "";
+				String completionDateString = BLANK_CELL;
 				Date completedDate = currentTask.getCompletionDate();
 				if (completedDate != null) {
 					completionDateString = format.format(completedDate);
@@ -797,8 +802,15 @@ public class TaskPlannerEditorPart extends EditorPart {
 
 				writer.write("<tr>");
 				writer.write("<td width=\"59\">ICON</td><td width=\"55\">" + currentTask.getPriority()
-						+ "</td><td width=\"495\">" + currentTask.getDescription() + "</td><td>" + creationDateString
-						+ "</td>");
+						+ "</td><td width=\"495\">");
+				
+				if (currentTask.hasValidUrl()) {
+					writer.write("<a href='" + currentTask.getUrl() + "'>" + currentTask.getDescription() + "</a>");
+				} else {
+					writer.write(currentTask.getDescription());
+				}
+				
+				writer.write("</td><td>" + creationDateString+ "</td>");
 				writer.write("<td>" + completionDateString + "</td><td>" + elapsedTimeString + "</td><td>"
 						+ estimatedTimeString + "</td>");
 				writer.write("</tr>");
