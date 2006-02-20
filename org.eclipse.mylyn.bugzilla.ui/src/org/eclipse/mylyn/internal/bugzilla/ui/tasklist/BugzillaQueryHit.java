@@ -15,7 +15,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.tasklist.AbstractQueryHit;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
 import org.eclipse.swt.graphics.Color;
 
@@ -25,17 +24,13 @@ import org.eclipse.swt.graphics.Color;
  */
 public class BugzillaQueryHit extends AbstractQueryHit {
 
-	private int id;
-
 	private BugzillaTask task;
 
 	private String status;
 
 	public BugzillaQueryHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task, String status) {
-		this.description = description;
-		this.priority = priority;
-		this.repositoryUrl = repositoryUrl;
-		this.id = id;
+		super(repositoryUrl, description, ""+id);
+		super.priority = priority;
 		this.task = task;
 		this.status = status;
 	}
@@ -67,16 +62,9 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 	}
 
-	public String getHandleIdentifier() {
-		return TaskRepositoryManager.getHandle(repositoryUrl, id);
-	}
-
-	public int getId() {
-		return id;
-	}
-
 	public String getBugUrl() {
-		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, id);
+		Integer idInt = new Integer(id);
+		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(repositoryUrl, idInt);
 	}
 
 	public boolean isLocal() {

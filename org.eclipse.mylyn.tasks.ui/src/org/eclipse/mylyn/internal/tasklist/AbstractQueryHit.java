@@ -21,6 +21,14 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 
 	protected String priority;
 	
+	protected String id;
+	
+	protected AbstractQueryHit(String repositoryUrl, String description, String id) {
+		this.repositoryUrl = repositoryUrl;
+		this.description = description;
+		this.id = id;
+	}
+	
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -37,4 +45,12 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	public abstract AbstractRepositoryTask getCorrespondingTask();
 
 	public abstract void setCorrespondingTask(AbstractRepositoryTask task);
+
+	public String getHandleIdentifier() {
+		return TaskRepositoryManager.getHandle(repositoryUrl, id);
+	}
+
+	public String getId() {
+		return id;
+	}
 }

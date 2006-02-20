@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasklist;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -40,17 +41,13 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 		return description;
 	}
 
-//	public Image getIcon() {
-//		return TaskListImages.getImage(TaskListImages.QUERY);
-//	}
-
 	public String getQueryUrl() {
 		return queryUrl;
 	}
 
 	public Set<ITask> getChildren() {
 		Set<ITask> tasks = new HashSet<ITask>();
-		for (AbstractQueryHit hit : getHits()) {
+		for (AbstractQueryHit hit : new ArrayList<AbstractQueryHit>(getHits())) {
 			ITask task = hit.getCorrespondingTask();
 			if (task != null) {
 				tasks.add(task);
@@ -76,8 +73,6 @@ public abstract class AbstractRepositoryQuery implements ITaskContainer {
 	}
 	
 	public void addHit(AbstractQueryHit hit) {
-//		AbstractRepositoryClient client = MylarTaskListPlugin.getRepositoryManager().getRepositoryClient(
-//				getRepositoryKind());
 		ITask correspondingTask = MylarTaskListPlugin.getTaskListManager().getTaskList().getTaskFromArchive(hit.getHandleIdentifier());
 		if (correspondingTask instanceof AbstractRepositoryTask) {
 			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
