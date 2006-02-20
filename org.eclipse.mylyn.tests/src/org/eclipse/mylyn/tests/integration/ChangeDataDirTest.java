@@ -18,16 +18,16 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.mylar.core.InteractionEvent;
-import org.eclipse.mylar.core.MylarPlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTask;
 import org.eclipse.mylar.internal.core.MylarContextManager;
 import org.eclipse.mylar.internal.monitor.MylarMonitorPlugin;
-import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.internal.tasklist.ITask;
-import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
-import org.eclipse.mylar.internal.tasklist.Task;
-import org.eclipse.mylar.internal.tasklist.TaskListManager;
+import org.eclipse.mylar.provisional.core.InteractionEvent;
+import org.eclipse.mylar.provisional.core.MylarPlugin;
+import org.eclipse.mylar.provisional.tasklist.AbstractRepositoryTask;
+import org.eclipse.mylar.provisional.tasklist.ITask;
+import org.eclipse.mylar.provisional.tasklist.MylarTaskListPlugin;
+import org.eclipse.mylar.provisional.tasklist.Task;
+import org.eclipse.mylar.provisional.tasklist.TaskListManager;
 
 /**
  * Tests changes to the main mylar data directory location.
