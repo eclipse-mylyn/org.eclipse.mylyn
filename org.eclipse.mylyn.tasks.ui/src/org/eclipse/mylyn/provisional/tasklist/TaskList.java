@@ -318,9 +318,7 @@ public class TaskList {
 	}
 
 	public void addTaskToArchive(ITask task) {
-		// archiveMap.put(task.getHandleIdentifier(), task);
 		archiveCategory.internalAddTask(task);
-//		task.setCategory(archiveCategory); 
 	}
 
 	public ITask getTaskFromArchive(String handleIdentifier) {
