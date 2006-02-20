@@ -50,11 +50,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 	
 	private static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory";
 	
-	
-	// public static final String AUTO_FOLD_PREF_ID =
-	// "org.eclipse.mylar.internal.ui.auto.fold.isChecked";
-
-	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylar.ui.first.run";
+	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylar.ui.first.run.0_4_9";
 
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 
