@@ -145,8 +145,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (!(element instanceof ITaskListElement)) {
 			return null;
 		}
-		if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+		ITask task = getCorrespondingTask((ITaskListElement) element);
+		if (task instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
 			if (repositoryTask.isCurrentlyDownloading()) {
 				return TaskListImages.ITALIC;
 			}
@@ -157,7 +158,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return TaskListImages.BOLD;
 			}
 		}
-		ITask task = getCorrespondingTask((ITaskListElement) element);
 		if (task != null) {
 			if (task.isActive())
 				return TaskListImages.BOLD;

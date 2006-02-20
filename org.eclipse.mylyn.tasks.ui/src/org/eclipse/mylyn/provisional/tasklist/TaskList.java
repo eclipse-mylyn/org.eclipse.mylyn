@@ -291,12 +291,8 @@ public class TaskList {
 	}
 
 	/**
-	 * Use to obtain the QueryHit object associated with a particular task
-	 * handle if it exists.
-	 * 
-	 * @param handle
-	 *            handle of task
-	 * @return IQueryHit corresponding to the first hit found in all queries
+	 * NOTE: will only return first occurrence of the hit in the first
+	 * category it is matched in.
 	 */
 	public AbstractQueryHit getQueryHitForHandle(String handle) {
 		if (handle == null) {

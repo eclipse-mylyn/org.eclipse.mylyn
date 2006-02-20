@@ -235,16 +235,11 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void localInfoChanged(ITask task) {
-			refresh(task);
-			if (task.getCategory() == null || task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
-				refresh(null);
-			} else {
-				refresh(task.getCategory());
-			}
+			refreshTask(task);
 		}
 
 		public void repositoryInfoChanged(ITask task) {
-			localInfoChanged(task);
+			refreshTask(task);
 		}
 
 		public void tasklistRead() {
@@ -253,27 +248,6 @@ public class TaskListView extends ViewPart {
 
 		public void taskListModified() {
 			refresh(null);
-		}
-
-		private void refresh(final ITaskListElement element) {
-			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-							if (element == null) {
-								// getViewer().getControl().setRedraw(false);
-								// getViewer().refresh();
-								filteredTree.textChanged(0);
-								// getViewer().getControl().setRedraw(true);
-							} else {
-								// getViewer().getControl().setRedraw(false);
-								getViewer().refresh(element, true);
-								// getViewer().getControl().setRedraw(true);
-							}
-						}
-					}
-				});
-			}
 		}
 	};
 
@@ -417,6 +391,7 @@ public class TaskListView extends ViewPart {
 			return null;
 		}
 	}
+
 
 	public TaskListView() {
 		INSTANCE = this;
@@ -1344,9 +1319,11 @@ public class TaskListView extends ViewPart {
 		return drilledIntoCategory;
 	}
 
+	
 	public FilteredTree getFilteredTree() {
 		return filteredTree;
 	}
+	
 
 	public void selectedAndFocusTask(ITask task) {
 		if (task == null)
@@ -1367,6 +1344,41 @@ public class TaskListView extends ViewPart {
 			}
 		}
 	}
+	
+	protected void refreshTask(ITask task) {
+		refresh(task);
+		if (task.getCategory() == null || task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
+			refresh(null);
+		} else {
+			refresh(task.getCategory());
+		}
+		AbstractQueryHit hit = MylarTaskListPlugin.getTaskListManager().getTaskList().getQueryHitForHandle(task.getHandleIdentifier());
+		if (hit != null) {
+			refresh(hit);
+		}
+	}
+	
+	private void refresh(final ITaskListElement element) {
+		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
+						if (element == null) {
+							// getViewer().getControl().setRedraw(false);
+							// getViewer().refresh();
+							filteredTree.textChanged(0);
+							// getViewer().getControl().setRedraw(true);
+						} else {
+							// getViewer().getControl().setRedraw(false);
+							getViewer().refresh(element, true);
+							// getViewer().getControl().setRedraw(true);
+						}
+					}
+				}
+			});
+		}
+	}
+	
 	
 	public Image[] getPirorityImages() {
 		Image[] images = new Image[Task.PriorityLevel.values().length];
