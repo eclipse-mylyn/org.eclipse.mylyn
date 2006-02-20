@@ -52,6 +52,7 @@ import org.eclipse.mylar.internal.tasklist.ITaskListElement;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.Task;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
+import org.eclipse.mylar.internal.tasklist.TaskList;
 import org.eclipse.mylar.internal.tasklist.ui.AbstractTaskFilter;
 import org.eclipse.mylar.internal.tasklist.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasklist.ui.TaskCompleteFilter;
@@ -235,7 +236,7 @@ public class TaskListView extends ViewPart {
 
 		public void localInfoChanged(ITask task) {
 			refresh(task);
-			if (task.getCategory() == null) {
+			if (task.getCategory() == null || task.getCategory().getHandleIdentifier().equals(TaskList.LABEL_ARCHIVE)) {
 				refresh(null);
 			} else {
 				refresh(task.getCategory());
