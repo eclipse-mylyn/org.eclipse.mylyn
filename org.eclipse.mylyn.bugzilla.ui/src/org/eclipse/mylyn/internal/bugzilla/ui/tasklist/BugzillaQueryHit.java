@@ -29,7 +29,7 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	private String status;
 
 	public BugzillaQueryHit(String description, String priority, String repositoryUrl, int id, BugzillaTask task, String status) {
-		super(repositoryUrl, description, ""+id);
+		super(repositoryUrl, description, id);
 		super.priority = priority;
 		this.task = task;
 		this.status = status;

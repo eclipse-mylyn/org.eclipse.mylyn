@@ -45,8 +45,6 @@ public class TaskRepositoryManager {
 
 	public static final String PREFIX_LOCAL = "local-";
 
-	public static final String HANDLE_DELIM = "-";
-
 	public static final String PREFIX_REPOSITORY_OLD = "Bugzilla";
 
 	public static final String MISSING_REPOSITORY_HANDLE = "norepository" + MylarContextManager.CONTEXT_HANDLE_DELIM;
@@ -133,7 +131,7 @@ public class TaskRepositoryManager {
 		if (activeTasks.size() == 1) {
 			ITask activeTask = activeTasks.get(0);
 			if (!activeTask.isLocal()) {
-				String repositoryUrl = getRepositoryUrl(activeTask.getHandleIdentifier());
+				String repositoryUrl = AbstractRepositoryTask.getRepositoryUrl(activeTask.getHandleIdentifier());
 				for (TaskRepository repository : getRepositories(repositoryKind)) {
 					if (repository.getUrl().toExternalForm().equals(repositoryUrl)) {
 						return repository;
@@ -213,53 +211,5 @@ public class TaskRepositoryManager {
 			String prefId = PREF_REPOSITORIES + repositoryClient.getKind();
 			MylarTaskListPlugin.getPrefs().setValue(prefId, "");
 		}
-	}
-
-	public static String getTaskId(String taskHandle) {
-		int index = taskHandle.lastIndexOf(HANDLE_DELIM);
-		if (index != -1) {
-			String id = taskHandle.substring(index + 1);
-			return id;
-		}
-		return null;
-	}
-
-	public static String getRepositoryUrl(String taskHandle) {
-		int index = taskHandle.lastIndexOf(HANDLE_DELIM);
-		String url = null;
-		if (index != -1) {
-			url = taskHandle.substring(0, index);
-		}
-		if (url != null && url.equals(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
-			String repositoryKind = TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase();
-			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
-			if (repository != null) {
-				url = repository.getUrl().toExternalForm();
-			}
-		}
-		return url;
-	}
-
-	public static int getTaskIdAsInt(String taskHandle) {
-		String idString = getTaskId(taskHandle);
-		if (idString != null) {
-			return Integer.parseInt(idString);
-		} else {
-			return -1;
-		}
-	}
-
-	public static String getHandle(String repositoryUrl, String taskId) {
-		if (repositoryUrl == null) {
-			return MISSING_REPOSITORY_HANDLE + taskId;
-		} else {
-			// MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
-			// System.err.println(">> handle: " + repositoryUrl +
-			return repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId;
-		}
-	}
-
-	public static String getHandle(String repositoryUrl, int taskId) {
-		return getHandle(repositoryUrl, "" + taskId);
 	}
 }

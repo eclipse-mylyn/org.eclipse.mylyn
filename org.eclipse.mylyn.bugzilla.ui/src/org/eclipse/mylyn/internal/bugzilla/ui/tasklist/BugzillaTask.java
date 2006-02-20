@@ -24,7 +24,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryUtil;
 import org.eclipse.mylar.internal.bugzilla.core.internal.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
-import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 
 /**
  * @author Mik Kersten
@@ -56,7 +55,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	private void initFromHandle() {
-		int id = TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier());
+		int id = AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier());
 		String repositoryUrl = getRepositoryUrl();
 		// repositoryUrl =
 		// TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
@@ -72,7 +71,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	 * TODO: move?
 	 */
 	public boolean readBugReport() {		
-		IBugzillaBug tempBug = OfflineReportsFile.findBug(getRepositoryUrl(), TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()));
+		IBugzillaBug tempBug = OfflineReportsFile.findBug(getRepositoryUrl(), AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier()));
 		if (tempBug == null) {
 			bugReport = null;
 			return true;
@@ -90,9 +89,9 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getDescription();
 		} else {
 			if (!isCurrentlyDownloading()) {
-				return TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()) + ": <Could not find bug>";
+				return AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier()) + ": <Could not find bug>";
 			} else {
-				return TaskRepositoryManager.getTaskIdAsInt(getHandleIdentifier()) + ":";
+				return AbstractRepositoryTask.getTaskIdAsInt(getHandleIdentifier()) + ":";
 			}
 		}
 	}
@@ -118,7 +117,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		
 		// TODO: remove?
 		if (bugReport != null) {
-			setDescription(HtmlStreamTokenizer.unescape(TaskRepositoryManager
+			setDescription(HtmlStreamTokenizer.unescape(AbstractRepositoryTask
 					.getTaskIdAsInt(getHandleIdentifier())
 					+ ": " + bugReport.getSummary()));
 		}
@@ -160,7 +159,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	public String getUrl() {
 		// fix for bug 103537 - should login automatically, but dont want to
 		// show the login info in the query string
-		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(getRepositoryUrl(), TaskRepositoryManager
+		return BugzillaRepositoryUtil.getBugUrlWithoutLogin(getRepositoryUrl(), AbstractRepositoryTask
 				.getTaskIdAsInt(handle));
 	}
 

@@ -15,12 +15,12 @@ import java.util.Date;
 
 import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryQuery;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.DelegatingTaskExternalizer;
 import org.eclipse.mylar.internal.tasklist.ITask;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskExternalizationException;
 import org.eclipse.mylar.internal.tasklist.TaskList;
-import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,7 +36,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-	private static final String BUGZILLA = "Bugzilla";
+//	private static final String BUGZILLA = "Bugzilla";
 
 	private static final String LAST_DATE = "LastDate";
 
@@ -50,7 +50,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustom" + KEY_QUERY;
 
-	private static final String TAG_TASK = "BugzillaReport";
+	private static final String TAG_BUGZILLA_REPORT = "BugzillaReport";
 
 	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
@@ -128,7 +128,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
 		BugzillaTask bugzillaTask = (BugzillaTask) task;
-		node.setAttribute(BUGZILLA, VAL_TRUE);
+//		node.setAttribute(BUGZILLA, VAL_TRUE);
 		if (bugzillaTask.getLastRefresh() != null) {
 			node.setAttribute(LAST_DATE, new Long(bugzillaTask.getLastRefresh().getTime()).toString());
 		} else {
@@ -236,7 +236,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 				status = STATUS_RESO;
 			} 
 		} 
-		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), TaskRepositoryManager
+		BugzillaQueryHit hit = new BugzillaQueryHit(label, priority, query.getRepositoryUrl(), AbstractRepositoryTask
 				.getTaskIdAsInt(handle), null, status);
 		ITask correspondingTask = taskList.getTaskForHandle(hit.getHandleIdentifier(), true);
 		if (correspondingTask instanceof BugzillaTask) {
@@ -248,7 +248,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	@Override
 	public String getTaskTagName() {
-		return TAG_TASK;
+		return TAG_BUGZILLA_REPORT;
 	}
 
 	@Override

@@ -355,8 +355,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 					for (File file : dataDir.listFiles()) {
 						String oldHandle = file.getName().substring(0, file.getName().lastIndexOf('.'));
 						if (oldHandle.startsWith(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
-							String id = TaskRepositoryManager.getTaskId(oldHandle);
-							String newHandle = TaskRepositoryManager.getHandle(repositoryUrl, id);
+							String id = AbstractRepositoryTask.getTaskId(oldHandle);
+							String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
 							File newFile = MylarPlugin.getContextManager().getFileForContext(newHandle);
 							file.renameTo(newFile);
 						}
@@ -364,8 +364,8 @@ public class MylarTaskListPlugin extends AbstractUIPlugin implements IStartup {
 				}
 				for (ITask task : taskListManager.getTaskList().getAllTasks()) {
 					if (!task.isLocal()) {
-						String id = TaskRepositoryManager.getTaskId(task.getHandleIdentifier());
-						String newHandle = TaskRepositoryManager.getHandle(repositoryUrl, id);
+						String id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+						String newHandle = AbstractRepositoryTask.getHandle(repositoryUrl, id);
 						task.setHandleIdentifier(newHandle);
 					}
 				}

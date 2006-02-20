@@ -59,7 +59,6 @@ import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskCategory;
 import org.eclipse.mylar.internal.tasklist.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
-import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
 import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.internal.tasklist.ui.SynchronizeReportsAction;
 import org.eclipse.mylar.internal.tasklist.ui.TaskListImages;
@@ -148,7 +147,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 									Display.getCurrent().getActiveShell(),
 									IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 									"Bugzilla Task "
-											+ TaskRepositoryManager.getTaskIdAsInt(task.getHandleIdentifier())
+											+ AbstractRepositoryTask.getTaskIdAsInt(task.getHandleIdentifier())
 											+ " has been moved to the root since it is activated and has disappeared from a query.");
 				}
 			}
@@ -210,7 +209,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 	}
 
 	public void saveBugReport(IBugzillaBug bugzillaBug) {
-		String handle = TaskRepositoryManager.getHandle(bugzillaBug.getRepositoryUrl(), bugzillaBug.getId());
+		String handle = AbstractRepositoryTask.getHandle(bugzillaBug.getRepositoryUrl(), bugzillaBug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
@@ -228,7 +227,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 
 	private BugReport downloadReport(final BugzillaTask bugzillaTask) {
 		try {			
-			return BugzillaRepositoryUtil.getBug(bugzillaTask.getRepositoryUrl(), TaskRepositoryManager
+			return BugzillaRepositoryUtil.getBug(bugzillaTask.getRepositoryUrl(), AbstractRepositoryTask
 					.getTaskIdAsInt(bugzillaTask.getHandleIdentifier()));
 		} catch (final LoginException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -338,7 +337,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			return null;
 		}
 
-		BugzillaTask newTask = new BugzillaTask(TaskRepositoryManager.getHandle(repository.getUrl().toExternalForm(),
+		BugzillaTask newTask = new BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl().toExternalForm(),
 				bugId), DESCRIPTION_DEFAULT, true);
 
 //		addTaskToArchive(newTask);
@@ -440,7 +439,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 			return;
 		}
 
-		String handle = TaskRepositoryManager.getHandle(bug.getRepositoryUrl(), bug.getId());
+		String handle = AbstractRepositoryTask.getHandle(bug.getRepositoryUrl(), bug.getId());
 		ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, true);
 		if (task != null && task instanceof BugzillaTask) {
 			BugzillaTask bugTask = (BugzillaTask) task;
@@ -503,7 +502,7 @@ public class BugzillaRepositoryClient extends AbstractRepositoryClient {
 		try {
 			form.submitReportToRepository();
 			removeReport(bugReport);
-			String handle = TaskRepositoryManager.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
+			String handle = AbstractRepositoryTask.getHandle(bugReport.getRepositoryUrl(), bugReport.getId());
 			ITask task = MylarTaskListPlugin.getTaskListManager().getTaskForHandle(handle, false);
 			synchronize(task, true, null);
 		} catch (Exception e) {

@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.tasklist.AbstractRepositoryTask;
 import org.eclipse.mylar.internal.tasklist.MylarTaskListPlugin;
 import org.eclipse.mylar.internal.tasklist.TaskRepository;
 import org.eclipse.mylar.internal.tasklist.TaskRepositoryManager;
@@ -54,10 +55,10 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testHandles() {
 		String url = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		String id = "123";
-		String handle = TaskRepositoryManager.getHandle(url, id);
-		assertEquals(url, TaskRepositoryManager.getRepositoryUrl(handle));
-		assertEquals(id, TaskRepositoryManager.getTaskId(handle));
-		assertEquals(123, TaskRepositoryManager.getTaskIdAsInt(handle));
+		String handle = AbstractRepositoryTask.getHandle(url, id);
+		assertEquals(url, AbstractRepositoryTask.getRepositoryUrl(handle));
+		assertEquals(id, AbstractRepositoryTask.getTaskId(handle));
+		assertEquals(123, AbstractRepositoryTask.getTaskIdAsInt(handle));
 	}
 
 	public void testMultipleNotAdded() throws MalformedURLException {

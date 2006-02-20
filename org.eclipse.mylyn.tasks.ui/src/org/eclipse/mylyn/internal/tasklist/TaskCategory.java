@@ -23,14 +23,11 @@ public class TaskCategory implements ITaskContainer {
 
 	private Set<ITask> tasks = new HashSet<ITask>();
 
-//	protected String description = "";
-
 	private String handle = "";
 
 	private boolean isArchive = false;
 
 	public TaskCategory(String handleAndDescription) {
-//		this.description = description;
 		this.handle = handleAndDescription;
 	}
 

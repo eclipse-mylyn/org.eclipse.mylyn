@@ -12,10 +12,8 @@
 package org.eclipse.mylar.internal.tasklist;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,7 +23,7 @@ public class TaskList {
 
 	public static final String LABEL_ARCHIVE = "Archive (automatic)";
 
-	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
+//	private Map<String, ITask> archiveMap = new HashMap<String, ITask>();
 	
 	private TaskCategory archiveCategory = new TaskCategory(LABEL_ARCHIVE);
 	
@@ -312,20 +310,27 @@ public class TaskList {
 	}
 
 	public void addTaskToArchive(ITask task) {
-		archiveMap.put(task.getHandleIdentifier(), task);
+//		archiveMap.put(task.getHandleIdentifier(), task);
 		if (archiveCategory != null) {  
 			archiveCategory.internalAddTask(task);
 		}
 	}  
 
 	public ITask getTaskFromArchive(String handleIdentifier) {
-		return archiveMap.get(handleIdentifier);
+		for (ITask task : archiveCategory.getChildren()) {
+			if (task.getHandleIdentifier().equals(handleIdentifier)) {
+				return task;
+			}
+		}
+		return null;
+//		return archiveMap.get(handleIdentifier);
 	}
 
-	public List<ITask> getArchiveTasks() {
-		List<ITask> archiveTasks = new ArrayList<ITask>();
-		archiveTasks.addAll(archiveMap.values());
-		return archiveTasks;
+	public Set<ITask> getArchiveTasks() {
+		return archiveCategory.getChildren();
+//		List<ITask> archiveTasks = new ArrayList<ITask>();
+//		archiveTasks.addAll(archiveMap.values());
+//		return archiveTasks;
 	}
 
 	public void setArchiveCategory(TaskCategory category) {
@@ -336,9 +341,9 @@ public class TaskList {
 	 * For testing.
 	 */
 	public void clearArchive() {
-		archiveMap.clear();
+		archiveCategory.getChildren().clear();
+//		archiveMap.clear();
 	}
-
 	
 	public TaskCategory getCategoryForHandle(String categoryHandle) {
 		for (ITaskContainer cat : categories) {

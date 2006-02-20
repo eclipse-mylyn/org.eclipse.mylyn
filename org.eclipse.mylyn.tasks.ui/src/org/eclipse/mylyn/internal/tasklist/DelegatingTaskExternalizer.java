@@ -154,7 +154,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			} else {
 				node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier());
 			}
-		}
+		} 
 
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
 		node.setAttribute(KEY_KIND, task.getKind());
@@ -379,7 +379,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		}
 
 		String categoryHandle = null;
-
 		if (element.hasAttribute(KEY_CATEGORY)) {
 			categoryHandle = element.getAttribute(KEY_CATEGORY);
 			TaskCategory category = null;
@@ -390,8 +389,13 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			}
 			
 			if (category != null) {
-				task.setCategory(category);
-				category.addTask(task);
+				if (category.equals(VAL_ARCHIVE)) {
+					taskList.addTaskToArchive(task);
+					task.setCategory(taskList.getArchiveCategory()); 
+				} else { 
+					task.setCategory(category);
+					category.addTask(task);
+				}
 			} else if (parent == null) {
 				taskList.internalAddRootTask(task);
 			}
@@ -403,11 +407,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else if (parent != null) {
 			task.setParent(parent);
 		} else {
-//			System.err.println(">>>>> skipping: " + task);
 			taskList.addTaskToArchive(task);
 		}
-
-		// System.err.println(">>> " + task.getCategory());
 
 		NodeList list = element.getChildNodes();
 		for (int j = 0; j < list.getLength(); j++) {

@@ -13,6 +13,8 @@ package org.eclipse.mylar.internal.tasklist;
 
 import java.util.Date;
 
+import org.eclipse.mylar.internal.core.MylarContextManager;
+
 /**
  * @author Mik Kersten and Robert Elves
  */
@@ -28,6 +30,8 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 	
 	protected RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
+
+	public static final String HANDLE_DELIM = "-";
 		
 	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
@@ -64,7 +68,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 
 	public String getRepositoryUrl() {
-		return TaskRepositoryManager.getRepositoryUrl(getHandleIdentifier());
+		return AbstractRepositoryTask.getRepositoryUrl(getHandleIdentifier());
 	}
 
 	@Override
@@ -88,4 +92,54 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.currentlyDownloading = currentlyDownloading;
 	}
 
+	public static String getTaskId(String taskHandle) {
+		int index = taskHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
+		if (index != -1) {
+			String id = taskHandle.substring(index + 1);
+			return id;
+		}
+		return null;
+	}
+
+	public static String getRepositoryUrl(String taskHandle) {
+		int index = taskHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
+		String url = null;
+		if (index != -1) {
+			url = taskHandle.substring(0, index);
+		}
+		if (url != null && url.equals(TaskRepositoryManager.PREFIX_REPOSITORY_OLD)) {
+			String repositoryKind = TaskRepositoryManager.PREFIX_REPOSITORY_OLD.toLowerCase();
+			TaskRepository repository = MylarTaskListPlugin.getRepositoryManager().getDefaultRepository(repositoryKind);
+			if (repository != null) {
+				url = repository.getUrl().toExternalForm();
+			}
+		}
+		return url;
+	}
+
+	public static int getTaskIdAsInt(String taskHandle) {
+		String idString = getTaskId(taskHandle);
+		if (idString != null) {
+			return Integer.parseInt(idString);
+		} else {
+			return -1;
+		}
+	}
+
+	/**
+	 * @param taskId	must be an integer
+	 */
+	public static String getHandle(String repositoryUrl, String taskId) {
+		if (repositoryUrl == null) {
+			return TaskRepositoryManager.MISSING_REPOSITORY_HANDLE + taskId;
+		} else {
+			// MylarContextManager.CONTEXT_HANDLE_DELIM + taskId);
+			// System.err.println(">> handle: " + repositoryUrl +
+			return repositoryUrl + MylarContextManager.CONTEXT_HANDLE_DELIM + taskId;
+		}
+	}
+
+	public static String getHandle(String repositoryUrl, int taskId) {
+		return AbstractRepositoryTask.getHandle(repositoryUrl, "" + taskId);
+	}
 }
